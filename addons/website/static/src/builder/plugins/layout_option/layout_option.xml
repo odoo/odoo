@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.LayoutOption">
+    <BuilderRow label.translate="Layout">
+       <BuilderButtonGroup preview="false">
+            <BuilderButton action="'setGridLayout'" id="'grid_mode'">Grid</BuilderButton>
+            <BuilderButton action="'setColumnLayout'" id="'column_mode'">Column</BuilderButton>
+        </BuilderButtonGroup>
+        <SelectNumberColumn t-if="isActiveItem('column_mode')"/>
+    </BuilderRow>
+    <t t-if="isActiveItem('grid_mode')">
+        <AddElementOption level="1" applyTo="'.o_grid_mode'"/>
+        <SpacingOption level="1" applyTo="'.o_grid_mode'"/>
+    </t>
+</t>
+
+<t t-name="website.LayoutGridOption">
+    <AddElementOption applyTo="'.o_grid_mode'"/>
+    <SpacingOption applyTo="'.o_grid_mode'"/>
+</t>
+
+</templates>

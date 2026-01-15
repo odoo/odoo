@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.ActionList">
+    <div class="o-mail-ActionList flex-shrink-0 d-flex" t-att-class="{ 'align-items-center': props.inline,'flex-column': !props.inline }">
+        <t t-set="groupAttClass" t-value="{
+            [props.groupClass]: true,
+            'flex-column w-100 bg-transparent': !props.inline,
+            'o-inline rounded-3': props.inline,
+            'o-rounded-bubble': props.inline and !hasBtnBg,
+        }"/>
+        <t t-foreach="groups" t-as="group" t-key="group_index">
+            <span t-if="group.length" class="o-mail-ActionList-group btn-group" t-att-class="groupAttClass">
+                <Action t-foreach="group" t-as="action" t-key="action.id" t-props="getActionProps(action, group, { isFirstInGroup: action_first, index: action_index, isLastInGroup: action_last })"/>
+            </span>
+            <t t-if="!group_last" t-call="mail.ActionList.groupSeparator"/>
+        </t>
+    </div>
+</t>
+
+<t t-name="mail.ActionList.groupSeparator">
+    <span t-if="props.inline" class="text-muted align-self-stretch ms-2 me-1"/>
+    <hr t-else="" class="mx-2 my-1 o-rounded-bubble"/>
+</t>
+
+<t t-name="mail.Action">
+    <t t-if="action.dropdown">
+        <t t-component="Dropdown" menuClass="(action.dropdownMenuClass ?? '') + ' ' + store.discussDropdownMenuClass(this)" position="action.dropdownPosition" state="action.dropdownState">
+            <t t-call="mail.Action.main"/>
+            <t t-set-slot="content">
+                <t t-if="action.dropdownComponent" t-component="action.dropdownComponent" t-props="action.dropdownComponentProps"/>
+                <t t-elif="action.dropdownTemplate" t-call="{{ action.dropdownTemplate }}">
+                    <t t-set="templateParams" t-value="action.dropdownTemplateParams"/>
+                </t>
+                <t t-elif="action.definition?.isMoreAction">
+                    <t t-component="ActionList" actions="action.definition.actions" dropdown="true"/>
+                </t>
+                <t t-else="">No content.</t>
+            </t>
+        </t>
+    </t>
+    <t t-else="" t-call="mail.Action.main"/>
+</t>
+
+<t t-name="mail.Action.main">
+    <t t-set="isComposerRoundedBtn" t-value="props.inline and env.inComposer"/>
+    <t t-set="isThreadRoundedBtn" t-value="props.inline and action.tags.includes('JOIN_LEAVE_CALL') and action.icon and !action.inlineName"/>
+    <t t-set="btnClass" t-value="attClassObjectToString({
+        [action.btnClass ?? '']: true,
+        [action.tagClassNames]: true,
+        'position-relative': true,
+        'active': action.isActive,
+        'o-mail-ActionList-button btn btn-secondary btn-group-item': true,
+        'o-first': props.isFirstInGroup,
+        'o-last': props.isLastInGroup,
+        'o-odooControlPanelSwitchStyle': props.odooControlPanelSwitchStyle,
+        'o-hasBtnBg': hasBtnBg,
+        'rounded-circle': isComposerRoundedBtn or isThreadRoundedBtn,
+        'rounded-start-3': !isComposerRoundedBtn and !isThreadRoundedBtn and !action.tags.includes('JOIN_LEAVE_CALL') and props.inline and props.isFirstInGroup,
+        'rounded-end-3': !isComposerRoundedBtn and !isThreadRoundedBtn and !action.tags.includes('JOIN_LEAVE_CALL') and props.inline and props.isLastInGroup,
+        'px-2 o-py-1_5': props.inline and env.inMeetingView and !env.inComposer,
+        'o-px-1_5 py-1': props.inline and (hasBtnBg and !action.tags.includes('JOIN_LEAVE_CALL') and !env.inMeetingView) or (!hasBtnBg and env.inComposer),
+        'd-flex align-items-center': props.inline and hasBtnBg and action.tags.includes('JOIN_LEAVE_CALL') and !env.inChatWindow,
+        'o-p-1_5': props.inline and hasBtnBg and action.tags.includes('JOIN_LEAVE_CALL') and !env.inChatWindow and !env.inMeetingView,
+        'p-1 d-flex align-items-center': props.inline and hasBtnBg and action.tags.includes('JOIN_LEAVE_CALL') and env.inChatWindow,
+        'o-inline': props.inline,
+        'o-p-0_5': props.inline and !hasBtnBg and !env.inComposer,
+        'border-0': props.inline and !hasBtnBg and action.icon,
+        'border-2 o-px-0_5 o-mx-0_5': props.inline and !hasBtnBg and !action.icon,
+        'px-3 py-2': props.dropdown and ui.isSmall,
+        'py-1': props.dropdown and !ui.isSmall,
+        'text-start px-2': !props.inline and !ui.isSmall,
+        'btn-danger': action.tags.includes('DANGER'),
+        'btn-success': action.tags.includes('SUCCESS'),
+        'o-text-white border-0 o-simulateDarkTheme': store.shouldSimulateDarkTheme(this),
+        'bg-700': store.shouldSimulateDarkTheme(this) and !action.tags.includes('DANGER') and !action.tags.includes('SUCCESS') and !action.tags.includes('CALL_LAYOUT'),
+        'bg-transparent': store.shouldSimulateDarkTheme(this) and action.tags.includes('CALL_LAYOUT'),
+        'opacity-75 opacity-100-hover': action.tags.includes('CALL_LAYOUT'),
+    })"/>
+    <t t-set="attrs" t-value="{ 'aria-label': action.name, 'disabled': action.disabledCondition, 'name': action.id, 'data-sequence': action.sequence, 'data-sequence-group': action.sequenceGroup, 'data-sequence-quick': action.sequenceQuick }"/>
+    <t t-if="action.component and action.componentCondition" t-component="action.component" t-props="action.componentProps"/>
+    <DropdownItem t-elif="props.dropdown" class="btnClass + ' d-flex align-items-center ' + (ui.isSmall ? 'gap-2' : 'gap-1')" tag="'button'" onSelected="(ev) => this.onSelected(action, ev)" attrs="attrs">
+        <t t-call="mail.Action.content"/>
+    </DropdownItem>
+    <button t-else="" t-att-class="btnClass" t-att="Object.assign(attrs, { 'title': action.name })" t-on-click="(ev) => this.onSelected(action, ev)" t-att-data-hotkey="action.hotkey" t-att-style="props.style">
+        <t t-call="mail.Action.content"/>
+        <t t-if="action.badge" t-call="mail.Action.badge">
+            <t t-set="extraBadgeClass" t-value="'position-absolute me-n1 mt-n1 end-0'"/>
+        </t>
+    </button>
+</t>
+
+<t t-name="mail.Action.content">
+    <t t-if="action.icon?.template" t-call="{{ action.icon.template }}">
+        <t t-set="templateParams" t-value="action.icon.params"/>
+    </t>
+    <i t-elif="action.icon" t-attf-class="{{ action.icon }}" t-att-class="{ 'o-fs-small': props.dropdown, 'fa-fw': props.fw }"/>
+    <i t-elif="props.dropdown" class="fa-question fa-fw opacity-0" t-att-class="props.fw ? 'fa-fw' : ''"/>
+    <span t-if="action.name and (props.dropdown or (props.inline and (!action.icon or action.inlineName)))" class="o-mail-ActionList-actionLabel" t-attf-class="{{ action.nameClass }}" t-att-class="{ 'mx-1': props.dropdown }" t-out="(props.inline and action.inlineName) or action.name"/>
+    <t t-if="props.dropdown and action.badge" t-call="mail.Action.badge"/>
+</t>
+
+<t t-name="mail.Action.badge">
+    <span class="fw-bolder badge p-0 rounded-circle d-flex justify-content-center align-items-center" t-attf-class="{{ extraBadgeClass }}" t-att-class="{ 'bg-warning': action.tags.includes('WARNING_BADGE'), 'o-discuss-badge': action.tags.includes('IMPORTANT_BADGE') }" style="aspect-ratio: 1; font-size: 0.6rem;">
+        <i t-if="action.badgeIcon" t-att-class="action.badgeIcon"/><span t-elif="action.badgeText" t-esc="action.badgeText"/>
+    </span>
+</t>
+
+</templates>

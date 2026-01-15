@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <!-- add company id to partner details-->
+        <xpath expr="//div[@id='partner_vat_address_not_same_as_shipping']" position="before">
+            <div t-if="o.partner_id.company_registry and o.company_id.country_code == 'SK'">
+                ID: <span t-field="o.partner_id.company_registry"/>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@id='partner_vat_address_same_as_shipping']" position="before">
+            <div t-if="o.partner_id.company_registry and o.company_id.country_code == 'SK'">
+                ID: <span t-field="o.partner_id.company_registry"/>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@id='partner_vat_no_shipping']" position="before">
+            <div t-if="o.partner_id.company_registry and o.company_id.country_code == 'SK'">
+                ID: <span t-field="o.partner_id.company_registry"/>
+            </div>
+        </xpath>
+
+         <!-- add trade registry-->
+        <xpath expr="//div[@name='comment']" position="after">
+            <p t-if="o.company_id.trade_registry and o.company_id.country_code == 'SK'" name="trade_registry">
+                <strong>Trade registry: </strong><t t-out="o.company_id.trade_registry"/>
+            </p>
+        </xpath>
+    </template>
+</odoo>

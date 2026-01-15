@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website_event_track.email_reminder_modal">
+        <div id="modal_email_reminder" class="o_wetrack_js_modal_email_reminder text-start fs-6">
+            <div class="modal fade modal_shown show" data-bs-backdrop="static" data-bs-keyboard="false"
+                 tabindex="-1" aria-labelledby="staticBackdropLabel" style="display: block;" aria-modal="true"
+                 role="dialog">
+                <div class="modal-dialog">
+                    <form id="o_wetrack_email_reminder_form"
+                          class="js_website_submit_form">
+                        <div class="modal-content">
+                            <div class="modal-header align-items-center">
+                                <h4 class="modal-title">Add this talk to your agenda ?</h4>
+                                <button type="button" class="btn-close o_form_button_cancel" aria-label="Close"/>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <p>We will send you a link to add this talk to your agenda.</p>
+                                    <div class="col-lg-12 mt-2">
+                                        <label>Email*</label>
+                                        <input class="form-control" type="email" t-attf-name="email" autocomplete="off" required="required"/>
+                                        <input type="hidden"  name="track_id" t-att-value="track_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-top">
+                                <button type="submit" class="btn btn-primary btn-submit">Confirm</button>
+                                <button type="button" class="btn btn-secondary o_form_button_cancel">
+                                    No thanks
+                                </button>
+                                <button type="button" class="btn btn-secondary o_form_button_dont_ask_again">
+                                    No thanks &amp; don't ask again
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_production_tree_view_inherit_project_mrp" model="ir.ui.view">
+        <field name="name">mrp.production.list.view.inherit.project_mrp</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="project_id" optional="hide" groups="project.group_project_user"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="mrp_production_form_view_inherit_project_mrp" model="ir.ui.view">
+        <field name="name">mrp.production.view.inherited</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <field name="bom_id" position="attributes">
+                <attribute name="context">{
+                    'default_product_tmpl_id': product_tmpl_id,
+                    'default_project_id': project_id,
+                }</attribute>
+            </field>
+            <xpath expr="//page[@name='miscellaneous']//field[@name='is_delayed']" position="after">
+                <field name="project_id" groups="project.group_project_user"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

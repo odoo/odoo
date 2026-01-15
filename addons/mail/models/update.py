@@ -1,25 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import datetime
 import logging
-import werkzeug.urls
-import urllib2
-
 from ast import literal_eval
 
-from odoo import api, release, SUPERUSER_ID
+import requests
+
+from odoo import api, fields, release, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.models import AbstractModel
 from odoo.tools.translate import _
 from odoo.tools import config
-from odoo.tools import misc
 
 _logger = logging.getLogger(__name__)
 
 
-class PublisherWarrantyContract(AbstractModel):
-    _name = "publisher_warranty.contract"
+class Publisher_WarrantyContract(AbstractModel):
+    _name = 'publisher_warranty.contract'
+    _description = 'Publisher Warranty Contract'
 
     @api.model
     def _get_message(self):
@@ -28,16 +26,14 @@ class PublisherWarrantyContract(AbstractModel):
 
         dbuuid = IrParamSudo.get_param('database.uuid')
         db_create_date = IrParamSudo.get_param('database.create_date')
-        limit_date = datetime.datetime.now()
-        limit_date = limit_date - datetime.timedelta(15)
-        limit_date_str = limit_date.strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)
+        limit_date = fields.Datetime.now() - datetime.timedelta(15)
         nbr_users = Users.search_count([('active', '=', True)])
-        nbr_active_users = Users.search_count([("login_date", ">=", limit_date_str), ('active', '=', True)])
+        nbr_active_users = Users.search_count([("login_date", ">=", limit_date), ('active', '=', True)])
         nbr_share_users = 0
         nbr_active_share_users = 0
         if "share" in Users._fields:
             nbr_share_users = Users.search_count([("share", "=", True), ('active', '=', True)])
-            nbr_active_share_users = Users.search_count([("share", "=", True), ("login_date", ">=", limit_date_str), ('active', '=', True)])
+            nbr_active_share_users = Users.search_count([("share", "=", True), ("login_date", ">=", limit_date), ('active', '=', True)])
         user = self.env.user
         domain = [('application', '=', True), ('state', 'in', ['installed', 'to upgrade', 'to remove'])]
         apps = self.env['ir.module.module'].sudo().search_read(domain, ['name'])
@@ -51,7 +47,7 @@ class PublisherWarrantyContract(AbstractModel):
             "nbr_active_users": nbr_active_users,
             "nbr_share_users": nbr_share_users,
             "nbr_active_share_users": nbr_active_share_users,
-            "dbname": self._cr.dbname,
+            "dbname": self.env.cr.dbname,
             "db_create_date": db_create_date,
             "version": release.version,
             "language": user.lang,
@@ -70,19 +66,14 @@ class PublisherWarrantyContract(AbstractModel):
         Utility method to send a publisher warranty get logs messages.
         """
         msg = self._get_message()
-        arguments = {'arg0': msg, "action": "update"}
-        arguments_raw = werkzeug.urls.url_encode(arguments)
+        arguments = {'arg0': str(msg), "action": "update"}
 
         url = config.get("publisher_warranty_url")
 
-        uo = urllib2.urlopen(url, arguments_raw, timeout=30)
-        try:
-            submit_result = uo.read()
-            return literal_eval(submit_result)
-        finally:
-            uo.close()
+        r = requests.post(url, data=arguments, timeout=30)
+        r.raise_for_status()
+        return literal_eval(r.text)
 
-    @api.multi
     def update_notification(self, cron_mode=True):
         """
         Send a message to Odoo's publisher warranty server to check the
@@ -102,13 +93,9 @@ class PublisherWarrantyContract(AbstractModel):
             # old behavior based on res.log; now on mail.message, that is not necessarily installed
             user = self.env['res.users'].sudo().browse(SUPERUSER_ID)
             poster = self.sudo().env.ref('mail.channel_all_employees')
-            if not (poster and poster.exists()):
-                if not user.exists():
-                    return True
-                poster = user
             for message in result["messages"]:
                 try:
-                    poster.message_post(body=message, subtype='mt_comment', partner_ids=[user.partner_id.id])
+                    poster.message_post(body=message, subtype_xmlid='mail.mt_comment', partner_ids=[user.partner_id.id])
                 except Exception:
                     pass
             if result.get('enterprise_info'):
@@ -117,6 +104,9 @@ class PublisherWarrantyContract(AbstractModel):
                 set_param('database.expiration_date', result['enterprise_info'].get('expiration_date'))
                 set_param('database.expiration_reason', result['enterprise_info'].get('expiration_reason', 'trial'))
                 set_param('database.enterprise_code', result['enterprise_info'].get('enterprise_code'))
+                set_param('database.already_linked_subscription_url', result['enterprise_info'].get('database_already_linked_subscription_url'))
+                set_param('database.already_linked_email', result['enterprise_info'].get('database_already_linked_email'))
+                set_param('database.already_linked_send_mail_url', result['enterprise_info'].get('database_already_linked_send_mail_url'))
 
         except Exception:
             if cron_mode:

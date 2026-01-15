@@ -1,0 +1,11 @@
+<templates xml:space="preserve">
+    <t t-name="website_forum.WebsiteForumWysiwyg" t-inherit="html_editor.Wysiwyg" t-inherit-mode="primary">
+        <xpath expr="." position="inside">
+            <div t-if="props.resizable" class="o_wysiwyg_resizer" t-on-mousedown.prevent="onResizerMouseDown">
+                <div class="o_wysiwyg_resizer_hook"></div>
+                <div class="o_wysiwyg_resizer_hook"></div>
+                <div class="o_wysiwyg_resizer_hook"></div>
+            </div>
+        </xpath>
+    </t>
+</templates>

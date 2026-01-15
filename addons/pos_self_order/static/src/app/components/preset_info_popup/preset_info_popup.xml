@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.PresetInfoPopup">
+        <div class="position-absolute bg-dark bg-opacity-25 w-100 h-100 fixed-top" />
+        <div class="select_popup_preset_info position-absolute fixed-bottom d-flex flex-column justify-content-between w-100 p-4 bg-white shadow-lg">
+            <div class="d-flex justify-content-between align-items-center px-2 mt-2 mb-4">
+                <h2 class="mb-0">We need more info</h2>
+                <button class="btn-close" aria-label="close" t-on-click="close"/>
+            </div>
+            <div class="d-flex flex-column gap-3">
+                <select t-if="preset.needsSlot" class="slot-select form-select form-select-lg" t-model="state.selectedSlot">
+                    <option value="">
+                        Choose your time
+                    </option>
+                    <t t-foreach="slots" t-as="slot" t-key="slot_index">
+                        <option t-att-value="slot[0]" t-esc="formatDate(slot[0])" disabled="1" />
+                        <option t-foreach="Object.values(slot[1])"
+                            t-as="s" t-key="s_index"
+                            t-if="!s.isFull"
+                            t-att-value="s.datetime.toFormat('yyyy-MM-dd HH:mm:ss')"
+                            t-esc="s.datetime.toFormat('HH:mm')" />
+                    </t>
+                </select>
+                <select t-if="preset.needsPartner and existingPartners.length"
+                    class="partner-select form-select form-select-lg"
+                    t-on-change="selectExistingPartner"
+                    t-model="state.selectedPartnerId">
+                    <option value="">
+                        Select your address
+                    </option>
+                    <t t-foreach="existingPartners" t-as="partner" t-key="partner.id">
+                        <option t-att-value="partner.id" t-esc="partner.name + ' ' + partner.pos_contact_address" />
+                    </t>
+                </select>
+                <input t-if="preset.needsName || preset.needsPartner"
+                    type="text"
+                    class="form-control form-control-lg"
+                    placeholder="Name"
+                    t-model="state.name"
+                    t-att-disabled="partnerIsSelected" />
+                <input t-if="preset.needsEmail || preset.needsPartner"
+                    type="text"
+                    class="form-control form-control-lg"
+                    placeholder="Email"
+                    t-model="state.email"
+                    t-att-disabled="partnerIsSelected" />
+                <t t-if="preset.needsPartner">
+                    <input type="text"
+                        class="form-control form-control-lg"
+                        placeholder="Phone"
+                        t-model="state.phone"
+                        t-att-disabled="partnerIsSelected"/>
+                    <select class="partner-select form-select form-select-lg" t-model="state.countryId" t-att-disabled="partnerIsSelected">
+                        <option value="">
+                            Select a country
+                        </option>
+                        <t t-foreach="this.countries" t-as="country" t-key="country.id">
+                            <option t-att-value="country.id" t-esc="country.name" />
+                        </t>
+                    </select>
+                    <div class="d-flex gap-3">
+                        <input type="text"
+                            class="form-control form-control-lg w-75"
+                            placeholder="Street and Number"
+                            t-model="state.street"
+                            t-att-disabled="partnerIsSelected"/>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg w-25"
+                            placeholder="Zip"
+                            t-model="state.zip"
+                            t-att-disabled="partnerIsSelected"/>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <t t-set="availableState" t-value="this.states" />
+                        <select t-if="availableState.length" class="partner-select form-select form-select-lg" t-model="state.stateId" t-att-disabled="partnerIsSelected">
+                            <option value="">
+                                Select a state
+                            </option>
+                            <t t-foreach="availableState" t-as="state" t-key="state.id">
+                                <option t-att-value="state.id" t-esc="state.name" />
+                            </t>
+                        </select>
+                        <input type="text"
+                            class="form-control form-control-lg"
+                            placeholder="City"
+                            t-model="state.city"
+                            t-att-disabled="partnerIsSelected"/>
+                    </div>
+                </t>
+            </div>
+            <a
+                type="button"
+                t-on-click="() => this.setInformations()"
+                t-att-class="{'disabled': !this.validSelection}"
+                class="btn btn-primary py-3 mt-4 mb-2">
+                    <t t-if="this.validSelection">
+                        Continue
+                    </t>
+                    <t t-else="">
+                        Select
+                    </t>
+            </a>
+        </div>
+    </t>
+</templates>

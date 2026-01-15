@@ -2,136 +2,25 @@
 <odoo>
 <data noupdate="1">
 
-    <!-- Meeting Types (for interview meetings) -->
-    <record model="calendar.event.type" id="categ_meet_interview">
-        <field name="name">Interview</field>
-    </record>
-
-    <!-- Templates for interest / refusing applicants -->
-    <record id="email_template_data_applicant_refuse" model="mail.template">
-        <field name="name">Applicant: Refuse</field>
-        <field name="subject">Application refused</field>
-        <field name="email_to">${object.email_from}</field>
-        <field name="partner_to">${object.partner_id and object.partner_id.id or ''}</field>
-        <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
-        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="user_signature" eval="False"/>
-        <field name="body_html"><![CDATA[
-<p>Dear ${object.partner_name or 'applicant'},</p>
-<p>Thank you for your enquiry.<br />
-Unfortunately, your profile does not match with our needs</p>
-<p>If you have any questions, please let us know.</p>
-<p>Best regards,</p>]]></field>
-    </record>
-
-    <record id="email_template_data_applicant_interest" model="mail.template">
-        <field name="name">Applicant: Interest</field>
-        <field name="subject">Application approved</field>
-        <field name="email_to">${object.email_from}</field>
-        <field name="partner_to">${object.partner_id and object.partner_id.id or ''}</field>
-        <field name="lang">${object.partner_id and object.partner_id.lang or ''}</field>
-        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="user_signature" eval="False"/>
-        <field name="body_html"><![CDATA[
-<p>Dear ${object.partner_name or 'applicant'},</p>
-<p>Thank you for your enquiry.<br />
-Your resume got our interest. I will contact you as soon as possible to plan
-next steps of the recruitment process.</p>
-<p>If you have any questions, please let us know.</p>
-<p>Best regards,</p>]]></field>
-    </record>
-
-    <record id="email_template_data_applicant_employee" model="mail.template">
-        <field name="name">Applicant: Welcome new employee</field>
-        <field name="subject">Welcome ${object.name} </field>
-        <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="body_html"><![CDATA[
-<p>Dear all,</p>
-<p>I’m very pleased to announce that <strong> ${object.name} </strong> will be
-joining us as a ${object.job_id.name}
-%if object.department_id:
-    in ${object.department_id.name}.
-%endif
-.</p>
-<p>Please welcome him/her and help him/her finding his/her marks.</p>]]></field>
-    </record>
-
-        <!--    Resource(type_id)        -->
-
     <record model="hr.recruitment.degree" id="degree_graduate">
         <field name="name">Graduate</field>
         <field name="sequence">1</field>
+        <field name="score">0.50</field>
     </record>
     <record model="hr.recruitment.degree" id="degree_bachelor">
         <field name="name">Bachelor Degree</field>
         <field name="sequence">2</field>
+        <field name="score">0.70</field>
     </record>
     <record model="hr.recruitment.degree" id="degree_licenced">
         <field name="name">Master Degree</field>
         <field name="sequence">3</field>
+        <field name="score">0.90</field>
     </record>
     <record model="hr.recruitment.degree" id="degree_bac5">
         <field name="name">Doctoral Degree</field>
         <field name="sequence">4</field>
-    </record>
-
-    <record id="mail_alias_jobs" model="mail.alias">
-        <field name="alias_name">jobs</field>
-        <field name="alias_model_id" ref="model_hr_applicant"/>
-        <field name="alias_user_id" ref="base.user_root"/>
-        <field name="alias_parent_model_id" ref="model_hr_job"/>
-    </record>
-
-    <!-- Applicant-related subtypes for messaging / Chatter -->
-    <record id="mt_applicant_new" model="mail.message.subtype">
-        <field name="name">New Applicant</field>
-        <field name="res_model">hr.applicant</field>
-        <field name="default" eval="False"/>
-        <field name="hidden" eval="True"/>
-        <field name="description">Applicant created</field>
-    </record>
-    <record id="mt_applicant_stage_changed" model="mail.message.subtype">
-        <field name="name">Stage Changed</field>
-        <field name="res_model">hr.applicant</field>
-        <field name="default" eval="False"/>
-        <field name="description">Stage changed</field>
-    </record>
-    <record id="mt_applicant_hired" model="mail.message.subtype">
-        <field name="name">Applicant Hired</field>
-        <field name="res_model">hr.applicant</field>
-        <field name="default" eval="True"/>
-        <field name="description">Applicant hired</field>
-    </record>
-
-    <!-- Job-related subtypes for messaging / Chatter -->
-    <record id="mt_job_new" model="mail.message.subtype">
-        <field name="name">Job Position created</field>
-        <field name="res_model">hr.job</field>
-        <field name="default" eval="False"/>
-        <field name="hidden" eval="True"/>
-    </record>
-    <record id="mt_job_applicant_stage_changed" model="mail.message.subtype">
-        <field name="name">Applicant Stage Changed</field>
-        <field name="res_model">hr.job</field>
-        <field name="default" eval="False"/>
-        <field name="parent_id" eval="ref('mt_applicant_stage_changed')"/>
-        <field name="relation_field">job_id</field>
-    </record>
-    <record id="mt_job_applicant_hired" model="mail.message.subtype">
-        <field name="name">Applicant Hired</field>
-        <field name="res_model">hr.job</field>
-        <field name="default" eval="True"/>
-        <field name="parent_id" eval="ref('mt_applicant_hired')"/>
-        <field name="relation_field">job_id</field>
-    </record>
-
-    <!-- Department-related (parent) subtypes for messaging / Chatter -->
-    <record id="mt_department_new" model="mail.message.subtype">
-        <field name="name">Job Position Created</field>
-        <field name="res_model">hr.department</field>
-        <field name="sequence" eval="1"/>
-        <field name="parent_id" eval="ref('mt_job_new')"/>
-        <field name="relation_field">department_id</field>
+        <field name="score">1.00</field>
     </record>
 
     <!-- Applicant Categories(Tag) -->
@@ -151,5 +40,82 @@ joining us as a ${object.job_id.name}
             <field name="name">Job Campaign</field>
     </record>
 
+    <record model="hr.recruitment.stage" id="stage_job0">
+        <field name="name">New</field>
+        <field name="sequence">0</field>
+        <field name="template_id" ref="email_template_data_applicant_congratulations"/> 
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job1">
+        <field name="name">Qualification</field>
+        <field name="sequence">1</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job2">
+        <field name="name">First Interview</field>
+        <field name="sequence">2</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job3">
+        <field name="name">Second Interview</field>
+        <field name="sequence">3</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job4">
+        <field name="name">Contract Proposal</field>
+        <field name="sequence">4</field>
+    </record>
+    <record model="hr.recruitment.stage" id="stage_job5">
+        <field name="name">Contract Signed</field>
+        <field name="sequence">5</field>
+        <field name="fold" eval="True"/>
+        <field name="hired_stage">True</field>
+    </record>
+
+    <!-- applicant refuse reason -->
+    <record id="refuse_reason_1" model="hr.applicant.refuse.reason">
+        <field name="name">Does not fit the job requirements</field>
+        <field name="template_id" ref="email_template_data_applicant_refuse"/>
+        <field name="sequence">12</field>
+    </record>
+    <record id="refuse_reason_2" model="hr.applicant.refuse.reason">
+        <field name="name">Refused by applicant: job fit</field>
+        <field name="template_id" ref="email_template_data_applicant_not_interested"/>
+        <field name="sequence">11</field>
+    </record>
+    <record id="refuse_reason_5" model="hr.applicant.refuse.reason">
+        <field name="name">Job already fulfilled</field>
+        <field name="template_id" ref="email_template_data_applicant_refuse"/>
+        <field name="sequence">13</field>
+    </record>
+    <record id="refuse_reason_6" model="hr.applicant.refuse.reason">
+        <field name="name">Duplicate</field>
+        <field name="template_id" ref="email_template_data_applicant_refuse"/>
+        <field name="sequence">14</field>
+    </record>
+    <record id="refuse_reason_7" model="hr.applicant.refuse.reason">
+        <field name="name">Spam</field>
+        <field name="template_id" ref="email_template_data_applicant_refuse"/>
+        <field name="sequence">15</field>
+    </record>
+    <record id="refuse_reason_8" model="hr.applicant.refuse.reason">
+        <field name="name">Refused by applicant: salary</field>
+        <field name="template_id" ref="email_template_data_applicant_not_interested"/>
+        <field name="sequence">10</field>
+    </record>
+        
+    <record id="linkedin_job_platform" model="hr.job.platform">
+        <field name="name">Linkedin</field>
+        <field name="email">jobs-listings@linkedin.com</field>
+        <field name="regex">New application:.*from (.*)</field>
+    </record>
+
+    <record id="jobsdb_job_platform" model="hr.job.platform">
+        <field name="name">Jobsdb</field>
+        <field name="email">cs@jobsdb.com</field>
+        <field name="regex">from (.+?) for</field>
+    </record>
+
+    <record id="indeed_job_platform" model="hr.job.platform">
+        <field name="name">Indeed</field>
+        <field name="email">no-reply@indeed.com</field>
+        <field name="regex">^([^ ]+ [^ ]+)</field>
+    </record>
 </data>
 </odoo>

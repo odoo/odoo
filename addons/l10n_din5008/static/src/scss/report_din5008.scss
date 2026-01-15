@@ -1,0 +1,142 @@
+.din_page {
+    font-size: 9pt;
+
+    .container-fluid & { // center the invoice in portal preview
+       margin-left: auto;
+       margin-right: auto;
+    }
+    &.header {
+        table {
+            width: 100%;
+            img, div.h3, td, tr {
+                padding: 0;
+                margin: 0;
+            }
+            div.h3 {
+                color: $o-default-report-primary-color;
+                position: relative;
+                top: -10mm;
+                margin-bottom: -10mm;
+            }
+            img {
+                padding-top: 10mm;
+                float: right;
+            }
+        }
+    }
+    &.invoice_note {
+        tr {
+            .address, .information_block, .shipping_address, .invoice_address {
+                margin: 0;
+            }
+            .address {
+                height: 45mm;
+            }
+            .address, .shipping_address {
+                width: 85mm;
+                padding-left: 5mm;
+                .company_invoice_line {
+                    margin-top: 1mm;
+                }
+                .colored_address {
+                    color: $o-default-report-secondary-color;
+                }
+                font-size: 0.8em;
+            }
+            .information_block, .invoice_address {
+                width: 75mm;
+                min-height: 40mm;
+                margin-left: 20mm;
+                table {
+                    width: 100%;
+                }
+            }
+        }
+        h2 {
+            margin-left: 5mm;
+            margin-right: 10mm;
+            margin-top: 8.46mm;
+            color: $o-default-report-primary-color;
+        }
+        > .pt-5 {  // hide hardcoded address from base.template.layout
+            display: none;
+        }
+        .page {
+            margin-left: 5mm;
+            margin-right: 10mm;
+            > h2, h1, #informations, .mt-4 > h2 {
+                display: none;
+            }
+            [name=invoice_line_table], [name=stock_move_table], .o_main_table {
+                margin-top: 8.46mm;
+                th {
+                    color: $o-default-report-secondary-color;
+                }
+            }
+
+        }
+    }
+    &.footer {
+        padding-left: 5mm;
+        padding-right: 10mm;
+        font-size: 0.7em;
+        .page_number {
+            margin-top: 4.23mm;
+            width: 100%;
+            height: 4.23mm;
+        }
+        .company_details {
+            margin-top: 4.23mm;
+            width: 100%;
+            table {
+                border-top: solid 1px;
+                table-layout: fixed;
+                width: 100%;
+                td {
+                    vertical-align: baseline;
+                    padding-right: 3mm;
+                    li {
+                        font-size: 0.7em;
+                        p {
+                            line-height: 1.3em;
+                        }
+                    }
+                    &:last-child {
+                        padding-right: initial;
+                    }
+                }
+            }
+        }
+    }
+    table.o_main_table{
+        tr {
+            &.o_line_section td {
+                background-color: rgba($gray-300, .5);
+            }
+    
+            th {
+                font-weight: bolder;
+            }
+        }
+    }
+    div#total {
+        tr {
+            &.o_subtotal,
+            &.o_total {
+                td {
+                    border-top: 1px solid black !important;
+                }
+                &.o_border_bottom {
+                    td {
+                        border-bottom: 1px solid black !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.din_page_pdf {
+    width: 180mm;
+    margin-left: -1rem;
+}

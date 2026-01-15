@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import sys
+import contextlib
+import warnings
 
 LOG_NOTSET = 'notset'
 LOG_DEBUG = 'debug'
@@ -14,9 +14,16 @@ LOG_CRITICAL = 'critical'
 # There are here until we refactor tools so that this module doesn't depends on tools.
 
 def get_encodings(hint_encoding='utf-8'):
+    warnings.warn(
+        "Deprecated since Odoo 18. Mostly nonsensical as the "
+        "second/third encoding it yields is latin-1 which always succeeds...",
+        stacklevel=2,
+        category=DeprecationWarning,
+    )
     fallbacks = {
         'latin1': 'latin9',
         'iso-8859-1': 'iso8859-15',
+        'iso-8859-8-i': 'iso8859-8',
         'cp1252': '1252',
     }
     if hint_encoding:
@@ -42,8 +49,8 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
     that it may try multiple encodings to find one that works
     for decoding `value`, and defaults to 'utf-8' first.
 
-    :param: value: the value to convert
-    :param: hint_encoding: an optional encoding that was detecte
+    :param value: the value to convert
+    :param hint_encoding: an optional encoding that was detected
         upstream and should be tried first to decode ``value``.
     :param str errors: optional `errors` flag to pass to the unicode
         built-in to indicate how illegal character values should be
@@ -55,48 +62,51 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
     :raise: UnicodeError if value cannot be coerced to unicode
     :return: unicode string representing the given value
     """
+    warnings.warn(
+        "Deprecated since Odoo 18: ustr() is a garbage bag of weirdo fallbacks "
+        "which mostly don't do anything as\n"
+        "- the first attempt will always work if errors is not `strict`\n"
+        "- if utf8 fails it moves on to latin-1 which always works\n"
+        "- and it always tries hint-encoding twice",
+        stacklevel=2,
+        category=DeprecationWarning,
+    )
     # We use direct type comparison instead of `isinstance`
     # as much as possible, in order to make the most common
     # cases faster (isinstance/issubclass are significantly slower)
     ttype = type(value)
 
-    if ttype is unicode:
+    if ttype is str:
         return value
 
     # special short-circuit for str, as we still needs to support
     # str subclasses such as `odoo.tools.unquote`
-    if ttype is str or issubclass(ttype, str):
+    if ttype is bytes or issubclass(ttype, bytes):
 
         # try hint_encoding first, avoids call to get_encoding()
         # for the most common case
-        try:
-            return unicode(value, hint_encoding, errors=errors)
-        except Exception:
-            pass
+        with contextlib.suppress(Exception):
+            return value.decode(hint_encoding, errors=errors)
 
         # rare: no luck with hint_encoding, attempt other ones
         for ln in get_encodings(hint_encoding):
-            try:
-                return unicode(value, ln, errors=errors)
-            except Exception:
-                pass
+            with contextlib.suppress(Exception):
+                return value.decode(ln, errors=errors)
 
     if isinstance(value, Exception):
         return exception_to_unicode(value)
 
     # fallback for non-string values
     try:
-        return unicode(value)
-    except Exception:
-        raise UnicodeError('unable to convert %r' % (value,))
+        return str(value)
+    except Exception as e:
+        raise UnicodeError(f'unable to convert {value!r}') from e
 
 
 def exception_to_unicode(e):
-    if (sys.version_info[:2] < (2,6)) and hasattr(e, 'message'):
-        return ustr(e.message)
     if getattr(e, 'args', ()):
-        return "\n".join((ustr(a) for a in e.args))
+        return "\n".join(map(str, e.args))
     try:
-        return unicode(e)
+        return str(e)
     except Exception:
-        return u"Unknown message"
+        return "Unknown message"

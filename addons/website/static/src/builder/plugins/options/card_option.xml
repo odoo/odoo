@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CardOption">
+    <WebsiteBackgroundOption
+        withColors="true"
+        withImages="true"
+        withShapes="true"
+        withColorCombinations="true"
+    />
+    <BorderConfigurator label.translate="Border"/>
+    <ShadowOption/>
+    <t t-if="!this.props.disableWidth" t-call="website.CardWidthOption"/>
+    <CardImageOption/>
+</t>
+
+</templates>

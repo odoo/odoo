@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* board
+# 	* board
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~16\n"
+"Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-25 10:04+0000\n"
-"PO-Revision-Date: 2017-07-25 10:04+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2025-12-30 18:38+0000\n"
+"PO-Revision-Date: 2025-12-30 18:38+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,43 +16,29 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:25
-#, python-format
-msgid "&nbsp;"
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+msgid ""
+"\"Add to\n"
+"                  Dashboard\""
 msgstr ""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/favorite_menu.js:97
-#, python-format
-msgid "'%s' added to dashboard"
-msgstr ""
-
-#. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid "<b>Your personal dashboard is empty.</b>"
-msgstr ""
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:69
-#, python-format
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 msgid "Add"
 msgstr ""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:63
-#, python-format
-msgid "Add to my Dashboard"
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
+msgid "Add to my dashboard"
 msgstr ""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:332
-#, python-format
-msgid "Are you sure you want to remove this item?"
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.js:0
+msgid "Are you sure that you want to remove this item?"
 msgstr ""
 
 #. module: board
@@ -61,75 +47,88 @@ msgid "Board"
 msgstr ""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:7
-#, python-format
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
 msgid "Change Layout"
 msgstr ""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:5
-#, python-format
-msgid "Change Layout.."
-msgstr ""
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:36
-#, python-format
-msgid "Choose dashboard layout"
-msgstr ""
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/favorite_menu.js:99
-#, python-format
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
 msgid "Could not add filter to dashboard"
 msgstr ""
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board_display_name
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
+msgid "Dashboard"
+msgstr ""
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_board__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:86
-#, python-format
-msgid "Edit Layout"
-msgstr ""
-
-#. module: board
-#: model:ir.model.fields,field_description:board.field_board_board_id
+#: model:ir.model.fields,field_description:board.field_board_board__id
 msgid "ID"
 msgstr ""
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board___last_update
-msgid "Last Modified on"
+#. odoo-javascript
+#: code:addons/board/static/src/board_action.xml:0
+msgid "Invalid action"
 msgstr ""
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:49
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+msgid "Layout"
+msgstr ""
+
+#. module: board
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
-#: model:ir.ui.view,arch_db:board.board_my_dash_view
-#, python-format
+#: model_terms:ir.ui.view,arch_db:board.board_my_dash_view
 msgid "My Dashboard"
 msgstr ""
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid "To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add to\n"
-"                    Dashboard'</i> in the extended search options."
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+msgid "Please refresh your browser for the changes to take effect."
 msgstr ""
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid "You can filter and group data before inserting into the\n"
-"                    dashboard using the search options."
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+msgid ""
+"To add your first report into this dashboard, go to any\n"
+"                  menu, switch to list or graph view, and click"
 msgstr ""
 
+#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+msgid ""
+"You can filter and group data before inserting into the\n"
+"                  dashboard using the search options."
+msgstr ""
+
+#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+msgid "Your personal dashboard is empty"
+msgstr ""
+
+#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/board_controller.xml:0
+msgid "in the extended search options."
+msgstr ""
+
+#. module: board
+#. odoo-javascript
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+msgid "“%s” added to dashboard"
+msgstr ""

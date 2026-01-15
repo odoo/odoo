@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- Specific Forum Layout -->
+<template id="forum_index" name="Forum">
+    <t t-set="no_filters" t-value="filters not in ('solved', 'unsolved', 'unanswered')"/>
+    <t t-if="my == 'mine'">
+        <t t-set="_page_name" t-value="'my_posts'"/>
+        <t t-set="_page_name_label">My Posts</t>
+    </t>
+    <t t-elif="my == 'favourites'">
+        <t t-set="_page_name" t-value="'my_favourites'"/>
+        <t t-set="_page_name_label">My Favorites</t>
+    </t>
+    <t t-else="" t-set="_page_name" t-value="'list_questions'"/>
+
+    <t t-call="website_forum.header">
+        <!-- List questions or search/filters result -->
+        <table t-if="question_count != 0" class="o_wforum_table table mb-5" height="1">
+            <thead>
+                <tr class="d-none d-lg-table-row">
+                    <th class="o_wforum_table_title"></th>
+                    <th class="o_wforum_table_posters"></th>
+                    <th class="o_wforum_table_replies small fw-normal text-center">
+                        <a class="text-muted" t-attf-href="?#{ keep_query('search', 'filters', 'my', 'create_uid', sorting='child_count asc' if sorting == 'child_count desc' else 'child_count desc') }">
+                            Replies <i t-attf-class="fa fa-caret-#{ 'down' if sorting == 'child_count desc' else 'up' } #{ not sorting.startswith('child_count') and 'd-none ' }"></i>
+                        </a>
+                    </th>
+                    <th class="o_wforum_table_views small fw-normal text-center">
+                        <a class="text-muted" t-attf-href="?#{ keep_query('search', 'filters', 'my', 'create_uid', sorting='views asc' if sorting == 'views desc' else 'views desc') }">
+                            Views <i t-attf-class="fa fa-caret-#{'down' if sorting == 'views desc' else 'up'}  #{ not sorting.startswith('views') and 'd-none ' }"></i>
+                        </a>
+                    </th>
+                    <th class="o_wforum_table_activity small fw-normal text-center">
+                        <a class="text-muted" t-attf-href="?#{ keep_query('search', 'filters', 'my', 'create_uid', sorting='last_activity_date asc' if sorting == 'last_activity_date desc' else 'last_activity_date desc') }">
+                            Activity <i t-attf-class="fa fa-caret-#{ 'down' if sorting == 'last_activity_date desc' else 'up'}  #{ 'd-none ' if not sorting.startswith('last_activity') else '' }"></i>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <t t-foreach="question_ids" t-as="question" t-call="website_forum.display_post">
+                <t t-set="show_author_avatar" t-value="true"/>
+            </t>
+        </table>
+        <t t-if="question_count == 0 or original_search" t-call="website_forum.no_results_message">
+            <t t-set="record_name_plural">posts</t>
+            <t t-set="_forum_slug" t-value="slug(forum) if forum else 'all'"/>
+            <t t-set="go_back_url" t-valuef="/forum/#{_forum_slug}/"/>
+        </t>
+        <t t-call="website.pager"/>
+    </t>
+</template>
+
+<!-- Edition: ask your question -->
+<template id="new_question" name="New Post">
+    <t t-set="_page_name" t-value="'new_question'"/>
+    <t t-set="_page_name_label">Ask your question</t>
+    <t t-call="website_forum.header">
+        <div t-if="forum and forum.has_pending_post" class="alert border" role="alert">
+            <b>You already have a pending post.</b><br/>
+            <p>Please wait for a moderator to validate your previous post before continuing.</p>
+            <a t-attf-href="/forum/#{ slug(forum) }" title="All Topics"><i class="fa fa-angle-left me-2"/>Back to All Posts</a>
+        </div>
+
+        <form t-else="" t-attf-action="/forum/#{slug(forum)}/new" method="post" role="form" class="tag_text js_website_submit_form js_wforum_submit_form o_wforum_readable mt-lg-3">
+            <div class="row mb-3">
+                <label class="form-label col-lg-2" for="content">Title</label>
+                <div class="col">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="text" name="post_name" required="required" pattern=".*\S.*" t-att-value="post_name"
+                        class="form-control" placeholder="Write a clear, explicit and concise title" title="Title must not be empty"/>
+                    <input type="hidden" name="karma" t-att-value="user.karma" id="karma"/>
+                    <div class="form-text small text-muted">
+                        <a data-bs-toggle="collapse" href="#newQuestionExample" role="button" aria-expanded="false" aria-controls="newQuestionExample">
+                            Example
+                            <i class="fa fa-question-circle"/>
+                        </a>
+                        <div class="collapse" id="newQuestionExample">
+                            <div class="mt-2 text-success">
+                                <i class="fa fa-check"/> How to configure TPS and TVQ's canadian taxes?
+                            </div>
+                            <div class="text-danger">
+                                <i class="fa fa-times"/> Good morning to all! Please, can someone help solve my tax computation problem in Canada? Thanks!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="form-label col-lg-2" for="content">Description</label>
+                <div class="col">
+                    <textarea name="content" required="required" id="content" class="form-control o_wysiwyg_loader" t-att-data-karma="forum.karma_editor"
+                    t-att-content="question_content">
+                        <t t-out="question_content"/>
+                    </textarea>
+                    <div class="d-flex">
+                        <span class="form-text small text-muted me-1"><i class="fa fa-lightbulb-o"></i> Tip:</span>
+                        <div class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <span class="form-text small text-muted d-block">consider adding an example.</span>
+                                </div>
+                                <div class="carousel-item">
+                                    <span class="form-text small text-muted d-block">use '/' to insert images.</span>
+                                </div>
+                                <div class="carousel-item">
+                                    <span class="form-text small text-muted d-block">select text to format it.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <label class="form-label col-lg-2" for="post_tags">Tags</label>
+                <div class="col">
+                    <input type="hidden" name="karma_tag_create" t-att-value="forum.karma_tag_create" id="karma_tag_create"/>
+                    <input type="hidden" name="karma_edit_retag" t-att-value="forum.karma_edit_retag" id="karma_edit_retag"/>
+                    <div class="js_select_menu_wrapper"/>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col offset-lg-2">
+                    <button type="submit" t-attf-class="o_wforum_submit_post #{ 'oe_social_share_call' if forum.allow_share else '' } btn btn-primary #{ 'karma_required' if user.karma &lt; forum.karma_ask else ''}"
+                    t-att-data-karma="forum.karma_ask"
+                    data-hashtags="#question" data-social-target-type="question">Post Your Question</button>
+                    <a class="btn btn-link" title="Back to Question" t-attf-href="/forum/#{ slug(forum) }">Discard</a>
+                </div>
+            </div>
+        </form>
+    </t>
+</template>
+
+<!-- Edition: edit a post -->
+<template id="edit_post" name="Edit Post">
+    <t t-if="is_answer">
+        <t t-set="_page_name" t-value="'edit_answer'"/>
+        <t t-set="_page_name_label">Edit your answer</t>
+    </t>
+    <t t-else="">
+        <t t-set="_page_name" t-value="'edit_question'"/>
+        <t t-set="_page_name_label">Edit your question</t>
+    </t>
+    <t t-call="website_forum.header">
+        <div t-if="is_answer" class="row g-0">
+            <div class="col-lg-2 pt-3">
+                <label class="fw-bold">Question</label>
+            </div>
+            <article class="o_wforum_readable alert col bg-light">
+                <i class="text-muted fw-bold" t-out="post.parent_id.name"/>
+                <i t-field="post.parent_id.content" class="o_wforum_post_content oe_no_empty pb-3 text-muted text-break"/>
+                <small class="text-end text-muted">by <t t-out="post.parent_id.create_uid.sudo().name" /></small>
+            </article>
+        </div>
+
+        <form t-attf-action="/forum/#{slug(forum)}/post/#{slug(post)}/save" method="post" role="form" class="tag_text js_website_submit_form js_wforum_submit_form o_wforum_readable">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <div t-if="not is_answer" class="row mb-3">
+                <label class="form-label col-lg-2" for="post_name">Title</label>
+                <div class="col">
+                    <input type="text" name="post_name" required="required" pattern=".*\S.*" t-att-value="post.name"
+                        class="form-control" placeholder="Edit your Post" title="Title must not be empty"/>
+                    <div class="form-text small text-muted">
+                        <a data-bs-toggle="collapse" href="#newQuestionExample" role="button" aria-expanded="false" aria-controls="newQuestionExample">
+                            Example
+                            <i class="fa fa-question-circle"/>
+                        </a>
+                        <div class="collapse" id="newQuestionExample">
+                            <div class="my-2">Use a clear, explicit and concise title</div>
+                            <div class="text-success">
+                                <i class="fa fa-check"/> How to configure TPS and TVQ's canadian taxes?
+                            </div>
+                            <div class="text-danger">
+                                <i class="fa fa-times"/> Good morning to all! Please, can someone help solve my tax computation problem in Canada? Thanks!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <label t-if="not is_answer" class="form-label col-lg-2" for="content">Description</label>
+                <label t-else="" class="form-label col-lg-2">Your Answer</label>
+                <div class="col">
+                    <textarea name="content" id="content" required="required" class="form-control o_wysiwyg_loader" t-att-data-karma="forum.karma_editor" t-out="post.content" t-att-content="post.content"/>
+                    <div t-if="not is_answer" class="d-flex mb-2">
+                        <span class="form-text small text-muted me-1"><i class="fa fa-lightbulb-o"></i> Tip:</span>
+                        <div class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <span class="form-text small text-muted d-block">consider adding an example.</span>
+                                </div>
+                                <div class="carousel-item">
+                                    <span class="form-text small text-muted d-block">use '/' to insert images.</span>
+                                </div>
+                                <div class="carousel-item">
+                                    <span class="form-text small text-muted d-block">select text to format it.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="karma" t-att-value="user.karma" id="karma"/>
+            <div t-if="not is_answer" class="row mb-2">
+                <label class="form-label col-lg-2" for="post_tags">Tags</label>
+                <div class="col">
+                    <input type="hidden" name="karma_tag_create" t-att-value="forum.karma_tag_create" id="karma_tag_create"/>
+                    <input type="hidden" name="karma_edit_retag" t-att-value="forum.karma_edit_retag" id="karma_edit_retag"/>
+                    <t t-set="edit_tags_karma_fail" t-value="user.karma &lt; forum.karma_edit_retag"/>
+                    <t t-set="edit_tags_karma_error_message">You need to have sufficient karma to edit tags</t>
+                    <div class="js_select_menu_wrapper"
+                         t-attf-data-init-value="#{tags}"
+                         t-att-data-readonly="edit_tags_karma_fail"
+                         t-att-title="edit_tags_karma_fail and edit_tags_karma_error_message"/>
+               </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col offset-lg-2">
+                    <button type="submit" class="o_wforum_submit_post btn btn-primary">Save Changes</button>
+                    <a class="btn btn-link" title="Back to Question" t-attf-href="/forum/#{ slug(forum) }/#{ slug(post)}">
+                        Discard
+                    </a>
+                </div>
+            </div>
+        </form>
+    </t>
+</template>
+
+<template id="forum_index_tags" name="Forum Tags">
+    <t t-set="_page_name" t-valuef="tags"/>
+    <t t-set="_page_name_label">Tags</t>
+    <t t-call="website_forum.header">
+        <t t-if="len(pager_tag_chars) &gt; 1">
+            <t t-if="len(pager_tag_chars) &lt; 11">
+                <ul class="pagination overflow-auto mt0 mb0">
+                    <t t-foreach="pager_tag_chars" t-as="tuple_char">
+                        <li t-if="tuple_char_index &lt; 11" t-attf-class="page-item #{ 'active' if active_char_tag == tuple_char[1] else '' }">
+                            <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ quote_plus(tuple_char[1] )}?#{ keep_query('filters', 'search') }"
+                               class="page-link">
+                                <t t-out="tuple_char[0]"/>
+                            </a>
+                        </li>
+                    </t>
+                </ul>
+            </t>
+            <div t-else="" class="d-flex align-items-center" role="toolbar" aria-label="Toolbar with button groups">
+                <label for="filter" class="me-2">Show Tags Starting with</label>
+                <select name="filter" class="form-select w-auto" onchange="location = this.value;">
+                    <t t-foreach="pager_tag_chars" t-as="tuple_char">
+                        <option t-if="active_char_tag == tuple_char[1]" selected="selected" value="" t-out="tuple_char[0]"/>
+                        <option t-else="" t-attf-value="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1]) + '?' + keep_query('filters')}"
+                                t-out="tuple_char[0]"
+                        />
+                    </t>
+                </select>
+            </div>
+        </t>
+
+        <div class="row g-0 mt-3 mb-5" t-if="tags">
+            <div class="col-3 pe-3 o_js_forum_tag_follow" t-foreach="tags" t-as="tag">
+                <span t-attf-class="#{ 'd-block' if request.env.user._is_public() else 'd-flex align-items-baseline'}">
+                    <t t-call="website_forum.follow">
+                        <t t-set="email" t-value="user_id.email"/>
+                        <t t-set="object" t-value="tag"/>
+                        <t t-set="icons_design" t-value="True"/>
+                        <t t-set="div_class" t-value="'d-inline'"/>
+                        <t t-set="btn_classes" t-value="'px-2'"/>
+                        <t t-set="follow_btn_classes" t-value="'opacity-50'"/>
+                    </t>
+                    <a t-attf-class="#{ 'disabled' if len(tag.post_ids) == 0  else '' } o_js_forum_tag_link btn-link #{ '' if tag.message_is_follower else 'text-muted' }"
+                       t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?#{ keep_query(filters='tag') }">
+                        <t t-out="tag.name"/>&amp;nbsp;
+                        <span class="small">(<t t-out="tag.posts_count"/>)</span>
+                    </a>
+                </span>
+            </div>
+        </div>
+        <t t-else="">
+            <t t-set="tag_filter" t-value="keep_query('filters').split('=')[1] if keep_query('filters') else ''"/>
+            <t t-set="go_back_url" t-valuef="/forum/#{ slug(forum) }/tag"/>
+            <t t-set="record_name_plural">tags</t>
+            <t t-call="website_forum.no_results_message">
+                <t t-if="tag_filter and tag_filter != 'all'" t-set="result_msg">
+                    There are no tags matching the selected filter <t t-if="search">and search</t>.
+                </t>
+                <t t-elif="search" t-set="result_msg">
+                    There are no tags matching the selected search.
+                </t>
+                <t t-else="" t-set="result_msg">
+                    There are no tags being used in this forum.
+                </t>
+            </t>
+        </t>
+    </t>
+</template>
+
+    </data>
+</odoo>

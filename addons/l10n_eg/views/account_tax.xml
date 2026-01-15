@@ -1,0 +1,23 @@
+<data>
+    <record id="view_account_tax_form" model="ir.ui.view">
+        <field name="name">account.tax.form</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <field name="tax_scope" position="after">
+                <field name="l10n_eg_eta_code" invisible="country_code != 'EG'"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_tax_eta_code_tree" model="ir.ui.view">
+        <field name="name">account.tax.eta.code.list</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_tree" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="l10n_eg_eta_code" optional="hide"/>
+            </field>
+        </field>
+    </record>
+</data>

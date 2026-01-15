@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanMany2OneAvatarField">
+        <t t-set="relation" t-value="props.record.fields[props.name].relation"/>
+        <KanbanMany2One t-props="m2oProps">
+            <t t-set-slot="avatar">
+                <span class="o_avatar o_m2o_avatar">
+                    <img t-attf-src="/web/image/{{relation}}/{{props.record.data[props.name].id}}/avatar_128" class="rounded"/>
+                </span>
+            </t>
+            <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
+                    <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.record.id}}/avatar_128"/>
+                    <span t-out="autoCompleteItemScope.label"/>
+                </span>
+            </t>
+        </KanbanMany2One>
+    </t>
+
+</templates>

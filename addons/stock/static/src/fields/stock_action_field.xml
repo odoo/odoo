@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="stock.actionField" owl="1">
+        <a t-if="! disabled" href="#" t-on-click="_onClick" class="btn-link">
+            <t t-call="stock.actionFieldContent"/>
+        </a>
+        <t t-else="">
+            <t t-call="stock.actionFieldContent"/>
+        </t>
+    </t>
+
+    <t t-name="stock.actionFieldContent" owl="1">
+        <t t-if="fieldType === 'monetary'">
+            <MonetaryField t-props="extractProps()"/>
+        </t>
+        <t t-else="">
+            <FloatField t-props="extractProps()"/>
+        </t>
+    </t>
+</templates>

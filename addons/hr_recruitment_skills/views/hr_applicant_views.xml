@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_applicant_view_form" model="ir.ui.view">
+        <field name="name">hr.applicant.view.form.inherit.hr.recruitment.skills</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Skills">
+                    <div class="o_hr_skills_editable o_hr_skills_group o_group_skills">
+                        <field name="id" invisible="1"/>
+                        <group>
+                            <group>
+                                <field mode="list" nolabel="1" name="current_applicant_skill_ids" widget="skills_one2many"
+                                        context="{'default_applicant_id': id, 'no_timeline': True}" >
+                                    <list
+                                        class="o_applicant_skills"
+                                        decoration-muted="valid_to and valid_to &lt; context_today().strftime('%Y-%m-%d')"
+                                        decoration-danger="valid_to and valid_to &lt;= (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d') and valid_to &gt; context_today().strftime('%Y-%m-%d')"
+                                        decoration-warning="valid_to and valid_to &lt;= (context_today() + relativedelta(months=1)).strftime('%Y-%m-%d') and valid_to &gt; (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d')">
+                                        <field name="skill_type_id" optional="hidden"/>
+                                        <field name="skill_id"/>
+                                        <field name="skill_level_id"/>
+                                        <field name="level_progress" widget="progressbar"/>
+                                        <field name="valid_to" column_invisible="1"/>
+                                    </list>
+                                </field>
+                            </group>
+                            <group>
+                                <field name="matching_score" invisible="is_pool_applicant" nolabel="1" widget="skill_match_gauge_field" options="{'max_value': 100}" />
+                            </group>
+                        </group>
+                    </div>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <record id="action_find_matching_job" model="ir.actions.act_window">
+        <field name="name">Matching Positions</field>
+        <field name="res_model">hr.job</field>
+        <field name="view_mode">list</field>
+        <field name="target">current</field>
+        <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="binding_view_types">form</field>
+        <field name="context">{'active_applicant_id': active_id,}</field>
+    </record>
+
+    <record id="hr_applicant_view_search_bis" model="ir.ui.view">
+        <field name="name">hr.applicant.view.search.inherit.skills.bis</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_search_bis"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email_from']" position="after">
+                <field name="applicant_skill_ids"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_applicant_view_search" model="ir.ui.view">
+        <field name="name">hr.applicant.view.search.inherit.skills</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="applicant_skill_ids"/>
+            </xpath>
+            <filter name="stage" position="after">
+                <filter string="Skills" name="groupby_skills" context="{'group_by': 'skill_ids'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="crm_case_tree_view_job" model="ir.ui.view">
+        <field name="name">hr.applicant.view.list.inherit.hr.recruitment.skills</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job"/>
+        <field name="mode">extension</field>
+        <field name="arch" type="xml">
+            <field name="stage_id" position="after">
+                <field name="matching_score" string="Matching" widget="progressbar" options="{'overflow_class': 'bg-success'}" invisible="not matching_score"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="crm_case_tree_view_inherit_hr_recruitment_skills" model="ir.ui.view">
+        <field name="name">hr.applicant.view.tree.inherit.skills</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment_skills.crm_case_tree_view_job"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="class" add="o_search_matching_applicant" separator=" "/>
+            </xpath>
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button name="action_add_to_job" string="Move to this Job Position" type="object" class="btn-secondary"/>
+                </header>
+            </xpath>
+            <field name="application_status" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="priority" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="partner_phone" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="categ_ids" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="partner_name" position="after">
+                <xpath expr="//field[@name='matching_score']" position="move"/>
+                <field name="matching_skill_ids" widget="many2many_tags"/>
+                <field name="missing_skill_ids" widget="many2many_tags"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.ActionpadWidget">
+        <div class="actionpad d-flex flex-column gap-2">
+            <div t-if="ui.isSmall" class="d-flex gap-2">
+                <BackButton t-if="!props.showActionButton and pos.showBackButton()" onClick="() => pos.onClickBackButton()"/>
+                <t t-if="props.onClickMore">
+                    <SelectPartnerButton partner="props.partner"/>
+                    <button t-if="pos.config.use_presets and currentOrder"
+                        class="btn btn-secondary btn-lg flex-shrink-0 border-0"
+                        t-attf-class="{{`o_colorlist_item_color_${currentOrder.preset_id?.color}`}}"
+                        t-on-click="() => this.pos.selectPreset()">
+                        <span t-if="currentOrder.preset_id?.name" t-esc="currentOrder.preset_id?.name" />
+                        <span t-else="">Preset</span>
+                    </button>
+                    <button t-if="this.pos.showSaveOrderButton" t-att-disabled="this.pos.getOrder().isEmpty()" class="btn btn-secondary btn-lg ms-auto" t-on-click="() => this.pos.clickSaveOrder()">
+                        <i class="fa fa-upload"/>
+                    </button>
+                    <button class="button mobile-more-button btn btn-secondary btn-lg" t-att-class="{'ms-auto': !this.pos.showSaveOrderButton}" t-on-click="props.onClickMore">
+                        <i class="oi oi-fw oi-ellipsis-v" aria-hidden="true" />
+                    </button>
+                </t>
+            </div>
+            <t t-if="props.showActionButton">
+                <div class="mw-100 container validation" t-att-class="{'p-0': !showFastPaymentMethods}">
+                    <div class="gap-2" t-attf-class="{{showFastPaymentMethods ? 'row' : 'd-flex'}}">
+                        <BackButton t-if="pos.showBackButton() and !pos.config.module_pos_restaurant" class="{'col-3': showFastPaymentMethods}" onClick="() => pos.onClickBackButton()"/>
+                        <button class="pay pay-order-button button btn btn-primary btn-lg py-3 d-flex align-items-center justify-content-center flex-fill"
+                            t-att-class="{'col-3': showFastPaymentMethods}" t-on-click="props.actionToTrigger" t-out="props.actionName" />
+                        <t t-if="showFastPaymentMethods" t-foreach="this.pos.config.fast_payment_method_ids" t-as="paymentMethod" t-key="paymentMethod.id">
+                            <button class="fast-pay-button col-3 button btn btn-secondary btn-lg py-3 d-flex align-items-center justify-content-center flex-fill"
+                                t-on-click="() => props.fastValidate(paymentMethod)"
+                                t-out="paymentMethod.name"
+                            />
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

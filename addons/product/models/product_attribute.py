@@ -1,112 +1,168 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 
 
 class ProductAttribute(models.Model):
-    _name = "product.attribute"
+    _name = 'product.attribute'
     _description = "Product Attribute"
-    _order = 'sequence, name'
-
-    name = fields.Char('Name', required=True, translate=True)
-    value_ids = fields.One2many('product.attribute.value', 'attribute_id', 'Values', copy=True)
-    sequence = fields.Integer('Sequence', help="Determine the display order")
-    attribute_line_ids = fields.One2many('product.attribute.line', 'attribute_id', 'Lines')
-    create_variant = fields.Boolean(default=True, help="Check this if you want to create multiple variants for this attribute.")
-
-
-class ProductAttributevalue(models.Model):
-    _name = "product.attribute.value"
+    # if you change this _order, keep it in sync with the method
+    # `_sort_key_attribute_value` in `product.template`
     _order = 'sequence, id'
 
-    name = fields.Char('Value', required=True, translate=True)
-    sequence = fields.Integer('Sequence', help="Determine the display order")
-    attribute_id = fields.Many2one('product.attribute', 'Attribute', ondelete='cascade', required=True)
-    product_ids = fields.Many2many('product.product', string='Variants', readonly=True)
-    price_extra = fields.Float(
-        'Attribute Price Extra', compute='_compute_price_extra', inverse='_set_price_extra',
-        default=0.0, digits=dp.get_precision('Product Price'),
-        help="Price Extra: Extra price for the variant with this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200.")
-    price_ids = fields.One2many('product.attribute.price', 'value_id', 'Attribute Prices', readonly=True)
+    _check_multi_checkbox_no_variant = models.Constraint(
+        "CHECK(display_type != 'multi' OR create_variant = 'no_variant')",
+        'Multi-checkbox display type is not compatible with the creation of variants',
+    )
 
-    _sql_constraints = [
-        ('value_company_uniq', 'unique (name,attribute_id)', 'This attribute value already exists !')
-    ]
+    name = fields.Char(string="Attribute", required=True, translate=True)
+    active = fields.Boolean(
+        default=True,
+        help="If unchecked, it will allow you to hide the attribute without removing it.",
+    )
+    create_variant = fields.Selection(
+        selection=[
+            ('always', 'Instantly'),
+            ('dynamic', 'Dynamically'),
+            ('no_variant', 'Never'),
+        ],
+        default='always',
+        string="Variant Creation",
+        help="""- Instantly: All possible variants are created as soon as the attribute and its values are added to a product.
+        - Dynamically: Each variant is created only when its corresponding attributes and values are added to a sales order.
+        - Never: Variants are never created for the attribute.
+        Note: this cannot be changed once the attribute is used on a product.""",
+        required=True)
+    display_type = fields.Selection(
+        selection=[
+            ('radio', 'Radio'),
+            ('pills', 'Pills'),
+            ('select', 'Select'),
+            ('color', 'Color'),
+            ('multi', 'Multi-checkbox'),
+            ('image', 'Image'),
+        ],
+        default='radio',
+        required=True,
+        help="The display type used in the Product Configurator.")
+    sequence = fields.Integer(string="Sequence", help="Determine the display order", index=True, default=20)
 
-    @api.one
-    def _compute_price_extra(self):
-        if self._context.get('active_id'):
-            price = self.price_ids.filtered(lambda price: price.product_tmpl_id.id == self._context['active_id'])
-            self.price_extra = price.price_extra
-        else:
-            self.price_extra = 0.0
+    value_ids = fields.One2many(
+        comodel_name='product.attribute.value',
+        inverse_name='attribute_id',
+        string="Values", copy=True)
+    template_value_ids = fields.One2many(
+        comodel_name='product.template.attribute.value',
+        inverse_name='attribute_id',
+        string="Template Values")
+    attribute_line_ids = fields.One2many(
+        comodel_name='product.template.attribute.line',
+        inverse_name='attribute_id',
+        string="Lines")
+    product_tmpl_ids = fields.Many2many(
+        comodel_name='product.template',
+        string="Related Products",
+        compute='_compute_products',
+        store=True)
+    number_related_products = fields.Integer(compute='_compute_number_related_products')
 
-    def _set_price_extra(self):
-        if not self._context.get('active_id'):
-            return
+    # === COMPUTE METHODS === #
 
-        AttributePrice = self.env['product.attribute.price']
-        prices = AttributePrice.search([('value_id', 'in', self.ids), ('product_tmpl_id', '=', self._context['active_id'])])
-        updated = prices.mapped('value_id')
-        if prices:
-            prices.write({'price_extra': self.price_extra})
-        else:
-            for value in self - updated:
-                AttributePrice.create({
-                    'product_tmpl_id': self._context['active_id'],
-                    'value_id': value.id,
-                    'price_extra': self.price_extra,
-                })
+    @api.depends('product_tmpl_ids')
+    def _compute_number_related_products(self):
+        res = {
+            attribute.id: count
+            for attribute, count in self.env['product.template.attribute.line']._read_group(
+                domain=[('attribute_id', 'in', self.ids), ('product_tmpl_id.active', '=', 'True')],
+                groupby=['attribute_id'],
+                aggregates=['__count'],
+            )
+        }
+        for pa in self:
+            pa.number_related_products = res.get(pa.id, 0)
 
-    @api.multi
-    def name_get(self):
-        if not self._context.get('show_attribute', True):  # TDE FIXME: not used
-            return super(ProductAttributevalue, self).name_get()
-        return [(value.id, "%s: %s" % (value.attribute_id.name, value.name)) for value in self]
+    @api.depends('attribute_line_ids.active', 'attribute_line_ids.product_tmpl_id')
+    def _compute_products(self):
+        templates_by_attribute = {
+            attribute.id: templates
+            for attribute, templates in self.env['product.template.attribute.line']._read_group(
+                domain=[('attribute_id', 'in', self.ids)],
+                groupby=['attribute_id'],
+                aggregates=['product_tmpl_id:recordset']
+            )
+        }
+        for pa in self:
+            pa.with_context(active_test=False).product_tmpl_ids = templates_by_attribute.get(pa.id, False)
 
-    @api.multi
-    def unlink(self):
-        linked_products = self.env['product.product'].with_context(active_test=False).search([('attribute_value_ids', 'in', self.ids)])
-        if linked_products:
-            raise UserError(_('The operation cannot be completed:\nYou are trying to delete an attribute value with a reference on a product variant.'))
-        return super(ProductAttributevalue, self).unlink()
+    # === ONCHANGE METHODS === #
 
-    @api.multi
-    def _variant_name(self, variable_attributes):
-        return ", ".join([v.name for v in self.sorted(key=lambda r: r.attribute_id.name) if v.attribute_id in variable_attributes])
+    @api.onchange('display_type')
+    def _onchange_display_type(self):
+        if self.display_type == 'multi' and self.number_related_products == 0:
+            self.create_variant = 'no_variant'
 
+    # === CRUD METHODS === #
 
-class ProductAttributePrice(models.Model):
-    _name = "product.attribute.price"
+    def write(self, vals):
+        """Override to make sure attribute type can't be changed if it's used on
+        a product template.
 
-    product_tmpl_id = fields.Many2one('product.template', 'Product Template', ondelete='cascade', required=True)
-    value_id = fields.Many2one('product.attribute.value', 'Product Attribute Value', ondelete='cascade', required=True)
-    price_extra = fields.Float('Price Extra', digits=dp.get_precision('Product Price'))
+        This is important to prevent because changing the type would make
+        existing combinations invalid without recomputing them, and recomputing
+        them might take too long and we don't want to change products without
+        the user knowing about it."""
+        if 'create_variant' in vals:
+            for pa in self:
+                if vals['create_variant'] != pa.create_variant and pa.number_related_products:
+                    raise UserError(_(
+                        "You cannot change the Variants Creation Mode of the attribute %(attribute)s"
+                        " because it is used on the following products:\n%(products)s",
+                        attribute=pa.display_name,
+                        products=", ".join(pa.product_tmpl_ids.mapped('display_name')),
+                    ))
+        invalidate = 'sequence' in vals and any(record.sequence != vals['sequence'] for record in self)
+        res = super().write(vals)
+        if invalidate:
+            # prefetched o2m have to be resequenced
+            # (eg. product.template: attribute_line_ids)
+            self.env.flush_all()
+            self.env.invalidate_all()
+        return res
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_used_on_product(self):
+        for pa in self:
+            if pa.number_related_products:
+                raise UserError(_(
+                    "You cannot delete the attribute %(attribute)s because it is used on the"
+                    " following products:\n%(products)s",
+                    attribute=pa.display_name,
+                    products=", ".join(pa.product_tmpl_ids.mapped('display_name')),
+                ))
 
-class ProductAttributeLine(models.Model):
-    _name = "product.attribute.line"
-    _rec_name = 'attribute_id'
+    # === ACTION METHODS === #
 
-    product_tmpl_id = fields.Many2one('product.template', 'Product Template', ondelete='cascade', required=True)
-    attribute_id = fields.Many2one('product.attribute', 'Attribute', ondelete='restrict', required=True)
-    value_ids = fields.Many2many('product.attribute.value', string='Attribute Values')
+    def action_archive(self):
+        for attribute in self:
+            if attribute.number_related_products:
+                raise UserError(_(
+                    "You cannot archive this attribute as there are still products linked to it",
+                ))
+        return super().action_archive()
 
-    @api.constrains('value_ids', 'attribute_id')
-    def _check_valid_attribute(self):
-        if any(line.value_ids > line.attribute_id.value_ids for line in self):
-            raise ValidationError(_('Error ! You cannot use this attribute with the following value.'))
-        return True
+    @api.readonly
+    def action_open_product_template_attribute_lines(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Products"),
+            'res_model': 'product.template.attribute.line',
+            'view_mode': 'list,form',
+            'domain': [('attribute_id', '=', self.id), ('product_tmpl_id.active', '=', 'True')],
+        }
 
-    @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
-        # TDE FIXME: currently overriding the domain; however as it includes a
-        # search on a m2o and one on a m2m, probably this will quickly become
-        # difficult to compute - check if performance optimization is required
-        if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
-            args = ['|', ('attribute_id', operator, name), ('value_ids', operator, name)]
-            return self.search(args, limit=limit).name_get()
-        return super(ProductAttributeLine, self).name_search(name=name, args=args, operator=operator, limit=limit)
+    # === TOOLING === #
+
+    def _without_no_variant_attributes(self):
+        return self.filtered(lambda pa: pa.create_variant != 'no_variant')

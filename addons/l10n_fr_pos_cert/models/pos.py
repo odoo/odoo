@@ -1,194 +1,234 @@
-from datetime import datetime, timedelta
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from hashlib import sha256
-from json import dumps
-import pytz
+from json import dumps, loads
+import logging
+from collections import defaultdict
 
-from openerp import models, api, fields
-from openerp.fields import Datetime
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
+from odoo import models, api, fields, release, _
+from odoo.exceptions import UserError
 
-
-def ctx_tz(record, field):
-    res_lang = None
-    ctx = record._context
-    tz_name = pytz.timezone(ctx.get('tz') or record.env.user.tz)
-    timestamp = Datetime.from_string(record[field])
-    if ctx.get('lang'):
-        res_lang = record.env['res.lang'].search([('code', '=', ctx['lang'])], limit=1)
-    if res_lang:
-        timestamp = pytz.utc.localize(timestamp, is_dst=False)
-        return datetime.strftime(timestamp.astimezone(tz_name), res_lang.date_format + ' ' + res_lang.time_format)
-    return Datetime.context_timestamp(record, timestamp)
+_logger = logging.getLogger(__name__)
 
 
-class pos_config(models.Model):
+class PosConfig(models.Model):
     _inherit = 'pos.config'
 
-    @api.multi
     def open_ui(self):
-        for config in self.filtered(lambda c: c.company_id._is_accounting_unalterable()):
-            if config.current_session_id:
-                config.current_session_id._check_session_timing()
-        return super(pos_config, self).open_ui()
+        for config in self:
+            if not config.company_id.country_id:
+                raise UserError(_("You have to set a country in your company setting."))
+            if config.company_id._is_accounting_unalterable():
+                if config.current_session_id:
+                    config.current_session_id._check_session_timing()
+        return super().open_ui()
 
 
-class pos_session(models.Model):
+class PosSession(models.Model):
     _inherit = 'pos.session'
 
-    @api.multi
     def _check_session_timing(self):
         self.ensure_one()
-        date_today = datetime.utcnow()
-        session_start = Datetime.from_string(self.start_at)
-        if not date_today - timedelta(hours=24) <= session_start:
-            raise UserError(_("This session has been opened another day. To comply with the French law, you should close sessions on a daily basis. Please close session %s and open a new one.") % self.name)
         return True
 
-    @api.multi
     def open_frontend_cb(self):
-        for session in self.filtered(lambda s: s.config_id.company_id._is_accounting_unalterable()):
+        sessions_to_check = self.filtered(lambda s: s.config_id.company_id._is_accounting_unalterable())
+        sessions_to_check.filtered(lambda s: s.state == 'opening_control').start_at = fields.Datetime.now()
+        for session in sessions_to_check:
             session._check_session_timing()
-        return super(pos_session, self).open_frontend_cb()
+        return super().open_frontend_cb()
 
 
-ORDER_FIELDS = ['date_order', 'user_id', 'lines', 'statement_ids', 'pricelist_id', 'partner_id', 'session_id', 'pos_reference', 'sale_journal', 'fiscal_position_id']
+ORDER_FIELDS_BEFORE_17_4 = ['date_order', 'user_id', 'lines', 'payment_ids', 'pricelist_id', 'session_id', 'pos_reference', 'sale_journal', 'fiscal_position_id', 'partner_id']
+ORDER_FIELDS_FROM_17_4 = ['date_order', 'user_id', 'lines', 'payment_ids', 'pricelist_id', 'session_id', 'pos_reference', 'sale_journal', 'fiscal_position_id', 'pos_version']
 LINE_FIELDS = ['notice', 'product_id', 'qty', 'price_unit', 'discount', 'tax_ids', 'tax_ids_after_fiscal_position']
-ERR_MSG = _('According to the French law, you cannot modify a %s. Forbidden fields: %s.')
 
 
-class pos_order(models.Model):
+class PosOrder(models.Model):
     _inherit = 'pos.order'
 
     l10n_fr_hash = fields.Char(string="Inalteralbility Hash", readonly=True, copy=False)
     l10n_fr_secure_sequence_number = fields.Integer(string="Inalteralbility No Gap Sequence #", readonly=True, copy=False)
     l10n_fr_string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True, store=False)
+    previous_order_id = fields.Many2one('pos.order', string='Previous Order', readonly=True, compute='_compute_previous_order', store=True, copy=False)
+    pos_version = fields.Char(help="Version of Odoo that created the order", readonly=True, copy=False)
 
-    def _get_new_hash(self, secure_seq_number):
+    @api.depends('l10n_fr_secure_sequence_number')
+    def _compute_previous_order(self):
+        orders_by_company = defaultdict(list)
+        for order in self.filtered(lambda o: o.l10n_fr_secure_sequence_number):
+            orders_by_company[order.company_id.id].append(order)
+
+        for company_id, orders in orders_by_company.items():
+            # Since sequence number can't be zero, we don't consider
+            # it as a posible previous sequence number
+            prev_seq = [o.l10n_fr_secure_sequence_number - 1 for o in orders if o.l10n_fr_secure_sequence_number > 1]
+            prev_orders = self.search([
+                ('state', 'in', ['paid', 'done']),
+                ('company_id', '=', company_id),
+                ('l10n_fr_secure_sequence_number', 'in', prev_seq),
+            ])
+            prev_map = defaultdict(list)
+            for po in prev_orders:
+                prev_map[po.l10n_fr_secure_sequence_number].append(po)
+
+            for order in orders:
+                match = prev_map.get(order.l10n_fr_secure_sequence_number - 1, [])
+                if len(match) > 1:
+                    raise UserError(_('An error occurred when computing the inalterability. Impossible to get the unique previous posted point of sale order.'))
+                order.previous_order_id = match[0] if match else False
+
+    def _get_new_hash(self):
         """ Returns the hash to write on pos orders when they get posted"""
         self.ensure_one()
-        #get the only one exact previous order in the securisation sequence
-        prev_order = self.search([('state', 'in', ['paid', 'done', 'invoiced']),
-                                 ('company_id', '=', self.company_id.id),
-                                 ('l10n_fr_secure_sequence_number', '!=', 0),
-                                 ('l10n_fr_secure_sequence_number', '=', int(secure_seq_number) - 1)])
-        if prev_order and len(prev_order) != 1:
-            raise UserError(
-               _('An error occured when computing the inalterability. Impossible to get the unique previous posted point of sale order.'))
-
-        #build and return the hash
-        return self._compute_hash(prev_order.l10n_fr_hash if prev_order else '')
+        # build and return the hash
+        computed_hash = self._compute_hash(self.previous_order_id.l10n_fr_hash if self.previous_order_id else '')
+        _logger.info(
+            'Computed hash for order ID %s: %s \n String to hash: %s \n Previous hash: %s',
+            self.id,
+            computed_hash,
+            dumps(loads(self.l10n_fr_string_to_hash), indent=2),
+            self.previous_order_id.l10n_fr_hash
+        )
+        return computed_hash
 
     def _compute_hash(self, previous_hash):
         """ Computes the hash of the browse_record given as self, based on the hash
         of the previous record in the company's securisation sequence given as parameter"""
         self.ensure_one()
-        hash_string = sha256(previous_hash + self.l10n_fr_string_to_hash)
+        hash_string = sha256((previous_hash + self.l10n_fr_string_to_hash).encode('utf-8'))
         return hash_string.hexdigest()
 
     def _compute_string_to_hash(self):
-        def _getattrstring(obj, field_str):
-            field_value = obj[field_str]
-            if obj._fields[field_str].type == 'many2one':
-                field_value = field_value.id
-            if obj._fields[field_str].type in ['many2many', 'one2many']:
-                field_value = field_value.ids
+        def _getattrstring(field_value, field_type, model_name=None):
+            if field_type in ('many2many', 'one2many'):
+                if field_value:
+                    sorted_ids = sorted_relational_ids.get(model_name, [])
+                    value_set = set(field_value)
+                    field_value = [id for id in sorted_ids if id in value_set]
+                else:
+                    field_value = []
             return str(field_value)
+
+        def collect_sorted_relational_ids(orders_data, lines_data, order_field_defs, line_field_defs):
+            relational_ids = defaultdict(set)
+
+            for data_list, field_names, field_defs in (
+                (orders_data, fields_to_fetch, order_field_defs),
+                (lines_data, LINE_FIELDS, line_field_defs),
+            ):
+                for record in data_list:
+                    for field in field_names:
+                        field_def = field_defs.get(field)
+                        if field_def and field_def['type'] in ('many2many', 'one2many'):
+                            ids = record.get(field) or []
+                            relational_ids[field_def['comodel']].update(ids)
+
+            sorted_relational_ids = {}
+            for model_name, ids in relational_ids.items():
+                if ids:
+                    # Use search() to get IDs sorted by _order the same way Odoo ORM does for relational fields
+                    sorted_relational_ids[model_name] = self.env[model_name].search([('id', 'in', list(ids))]).ids
+
+            return sorted_relational_ids
+        fields_to_fetch = list(set(ORDER_FIELDS_BEFORE_17_4) | set(ORDER_FIELDS_FROM_17_4))
+        orders_data = self.read(fields_to_fetch + ['id'], load='')
+        lines_data = self.lines.read(LINE_FIELDS + ['id', 'order_id'], load='')
+
+        orders_by_id = {order['id']: order for order in orders_data}
+        lines_by_order = defaultdict(list)
+        for line in lines_data:
+            lines_by_order[line['order_id']].append(line)
+        order_field_defs = {
+            field: {
+                'type': self._fields[field].type,
+                'comodel': self._fields[field].comodel_name if hasattr(self._fields[field], 'comodel_name') else None
+            }
+            for field in fields_to_fetch
+        }
+        line_field_defs = {
+            field: {
+                'type': self.lines._fields[field].type,
+                'comodel': self.lines._fields[field].comodel_name if hasattr(self.lines._fields[field], 'comodel_name') else None
+            }
+            for field in LINE_FIELDS
+        }
+
+        sorted_relational_ids = collect_sorted_relational_ids(orders_data, lines_data, order_field_defs, line_field_defs)
 
         for order in self:
             values = {}
-            for field in ORDER_FIELDS:
+            if order.pos_version:
+                order_fields = ORDER_FIELDS_FROM_17_4
+            else:
+                order_fields = ORDER_FIELDS_BEFORE_17_4
+            for field in order_fields:
                 values[field] = _getattrstring(order, field)
+            order_data = orders_by_id[order.id]
 
-            for line in order.lines:
+            for field in order_fields:
+                field_def = order_field_defs[field]
+                values[field] = _getattrstring(order_data.get(field), field_def['type'], field_def['comodel'])
+
+            for line in lines_by_order[order.id]:
                 for field in LINE_FIELDS:
-                    k = 'line_%d_%s' % (line.id, field)
-                    values[k] = _getattrstring(line, field)
+                    k = 'line_%d_%s' % (line['id'], field)
+                    field_def = line_field_defs[field]
+                    values[k] = _getattrstring(line.get(field), field_def['type'], field_def['comodel'])
+
             #make the json serialization canonical
             #  (https://tools.ietf.org/html/draft-staykov-hu-json-canonical-form-00)
-            order.l10n_fr_string_to_hash = dumps(values, sort_keys=True, encoding="utf-8",
+            order.l10n_fr_string_to_hash = dumps(values, sort_keys=True,
                                                 ensure_ascii=True, indent=None,
                                                 separators=(',',':'))
 
-    @api.multi
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals['pos_version'] = release.version
+        return super().create(vals_list)
+
     def write(self, vals):
         has_been_posted = False
         for order in self:
             if order.company_id._is_accounting_unalterable():
                 # write the hash and the secure_sequence_number when posting or invoicing an pos.order
-                if vals.get('state') in ['paid', 'done', 'invoiced']:
+                if vals.get('state') in ['paid', 'done']:
                     has_been_posted = True
 
                 # restrict the operation in case we are trying to write a forbidden field
-                if (order.state in ['paid', 'done', 'invoiced'] and set(vals).intersection(ORDER_FIELDS)):
+                if order.pos_version:
+                    ORDER_FIELDS = ORDER_FIELDS_FROM_17_4
+                else:
+                    ORDER_FIELDS = ORDER_FIELDS_BEFORE_17_4
+                if (order.state in ['paid', 'done'] and set(vals).intersection(ORDER_FIELDS)):
                     raise UserError(_('According to the French law, you cannot modify a point of sale order. Forbidden fields: %s.') % ', '.join(ORDER_FIELDS))
                 # restrict the operation in case we are trying to overwrite existing hash
                 if (order.l10n_fr_hash and 'l10n_fr_hash' in vals) or (order.l10n_fr_secure_sequence_number and 'l10n_fr_secure_sequence_number' in vals):
                     raise UserError(_('You cannot overwrite the values ensuring the inalterability of the point of sale.'))
-        res = super(pos_order, self).write(vals)
+        res = super().write(vals)
         # write the hash and the secure_sequence_number when posting or invoicing a pos order
         if has_been_posted:
             for order in self.filtered(lambda o: o.company_id._is_accounting_unalterable() and
                                                 not (o.l10n_fr_secure_sequence_number or o.l10n_fr_hash)):
                 new_number = order.company_id.l10n_fr_pos_cert_sequence_id.next_by_id()
-                vals_hashing = {'l10n_fr_secure_sequence_number': new_number,
-                                'l10n_fr_hash': order._get_new_hash(new_number)}
-                res |= super(pos_order, order).write(vals_hashing)
+                res |= super(PosOrder, order).write({'l10n_fr_secure_sequence_number': new_number})
+                res |= super(PosOrder, order).write({'l10n_fr_hash': order._get_new_hash()})
         return res
 
-    @api.model
-    def _check_hash_integrity(self, company_id):
-        """Checks that all posted or invoiced pos orders have still the same data as when they were posted
-        and raises an error with the result.
-        """
-        def build_order_info(order):
-            entry_reference = _('(Receipt ref.: %s)')
-            order_reference_string = order.pos_reference and entry_reference % order.pos_reference or ''
-            return [ctx_tz(order, 'date_order'), order.l10n_fr_secure_sequence_number, order.name, order_reference_string, ctx_tz(order, 'write_date')]
-
-        orders = self.search([('state', 'in', ['paid', 'done', 'invoiced']),
-                             ('company_id', '=', company_id),
-                             ('l10n_fr_secure_sequence_number', '!=', 0)],
-                            order="l10n_fr_secure_sequence_number ASC")
-
-        if not orders:
-            raise UserError(_('There isn\'t any order flagged for data inalterability yet for the company %s. This mechanism only runs for point of sale orders generated after the installation of the module France - Certification CGI 286 I-3 bis. - POS') % self.env.user.company_id.name)
-        previous_hash = ''
-        start_order_info = []
-        for order in orders:
-            if order.l10n_fr_hash != order._compute_hash(previous_hash=previous_hash):
-                raise UserError(_('Corrupted data on point of sale order with id %s.') % order.id)
-            previous_hash = order.l10n_fr_hash
-
-        orders_sorted_date = orders.sorted(lambda o: o.date_order)
-        start_order_info = build_order_info(orders_sorted_date[0])
-        end_order_info = build_order_info(orders_sorted_date[-1])
-
-        report_dict = {'start_order_name': start_order_info[2],
-                       'start_order_ref': start_order_info[3],
-                       'start_order_date': start_order_info[0],
-                       'end_order_name': end_order_info[2],
-                       'end_order_ref': end_order_info[3],
-                       'end_order_date': end_order_info[0]}
-
-        # Raise on success
-        raise UserError(_('''Successful test !
-
-                         The point of sale orders are guaranteed to be in their original and inalterable state
-                         From: %(start_order_name)s %(start_order_ref)s recorded on %(start_order_date)s
-                         To: %(end_order_name)s %(end_order_ref)s recorded on %(end_order_date)s
-
-                         For this report to be legally meaningful, please download your certification from your customer account on Odoo.com (Only for Odoo Enterprise users).'''
-                         ) % report_dict)
+    @api.ondelete(at_uninstall=True)
+    def _unlink_except_pos_so(self):
+        for order in self:
+            if order.company_id._is_accounting_unalterable():
+                raise UserError(_("According to French law, you cannot delete a point of sale order."))
 
 
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
 
-    @api.multi
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
         if set(vals).intersection(LINE_FIELDS):
-            if any(l.company_id._is_accounting_unalterable() and l.order_id.state in ['done', 'invoiced'] for l in self):
+            if any(l.company_id._is_accounting_unalterable() and (l.order_id.account_move or l.order_id.state == 'done') for l in self):
                 raise UserError(_('According to the French law, you cannot modify a point of sale order line. Forbidden fields: %s.') % ', '.join(LINE_FIELDS))
         return super(PosOrderLine, self).write(vals)

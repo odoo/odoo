@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve" >
+    <t t-name="pos_self_order.ComboPage">
+        <div class="o_self_combo_page d-flex flex-column vh-100 overflow-hidden o_self_background o_self_fade">
+             <t t-set="productList" t-value="products"/>
+
+            <!-- Header -->
+            <div class="o_self_combo_page_header text-bg-primary"  t-att-class="{'o_self_shadow_top': scrollShadow.top}">
+                <div class="container o_self_container py-3 d-flex align-items-center position-relative" >
+                    <button class="btn btn-link btn-lg d-inline-flex align-items-center gap-2 p-0" t-on-click="() => this.goBack()">
+                        <i class="oi oi-close fa-fw" aria-hidden="true"/>
+                        <span  t-att-class="{'invisible': state.showStickyTitle}">Discard</span>
+                    </button>
+                    <h2 class="o_self_combo_name position-absolute mb-0 text-truncate text-center" t-att-class="{'d-none': !state.showStickyTitle}"   >
+                         <t t-esc="currentCombo.name" />
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Scroll -->
+            <div class="d-flex flex-column overflow-y-auto h-100 position-relative" t-ref="scrollContainer">
+               <div class="flex-grow-1 pb-4">
+                <div class="py-3 text-bg-primary">
+                    <div class="container o_self_container ">
+                         <!-- Name & Image -->
+                        <div class="d-flex flex-column align-items-center">
+                            <h1 class="mt-kiosk-p-3 mb-3" t-esc="currentCombo.name" t-ref="productName"/>
+                            <div class="o_self_combo_image ratio ratio-1x1 rounded-4 w-70 w-m-50 ">
+                                <img class="rounded-4" t-attf-src="/web/image/product.template/{{ props.productTemplate.id }}/image_512?unique=#{props.productTemplate.write_date}" loading="lazy"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="o_self_combo_page_body container o_self_container" t-att-class="{'confirmation_container':this.state.showResume}">
+                    <!-- Stepper -->
+                    <div t-if="!this.state.showResume" class="stepper_container w-100 mt-2 mt-md-3 mb-4 mb-kiosk-p-5"  id="k-combo-scroll-target" >
+                        <ComboStepper steps="comboChoices" selectedStep="selectedChoice" onStepClicked="(c)=>this.onChoiceClicked(c)" />
+                    </div>
+
+                    <!-- Product selection -->
+                    <div class="d-flex o_self_fade" t-if="!isAttributeSelection() and !this.state.showResume">
+                        <div class="d-flex flex-column w-100">
+                            <div t-if="selectedChoice.qty_free &gt; 0 and selectedChoice.qty_free  &lt; selectedChoice.qty_max" class="d-flex justify-content-center mb-3 mb-lg-4">
+                                <h2 class="m-0">Choose your <t t-esc="selectedChoice.name"/> — <span class="text-muted"><t t-esc="selectedChoice.qty_free"/> included</span></h2>
+                            </div>
+                            <div class="o_self_combo_products row  justify-content-center" t-att-class="{ 'small-item-nb': comboItems.length &lt; 3}">
+                                <div class="d-flex col-12 col-md-4 col-lg-3 col-kiosk-p-3" t-att-class="{'col-kiosk-p-4 ': comboItems.length &lt; 4}" t-foreach="comboItems" t-as="comboItem" t-key="comboItem.id" t-if="comboItem.product_id">
+                                    <t t-set="product" t-value="comboItem.product_id"/>
+                                    <t t-set="itemState" t-value="getItemState(comboItem)"/>
+                                    <t t-set="itemSelected" t-value="itemState.selected"/>
+                                    <t t-set="itemQty" t-value="itemState.qty || 0"/>
+                                    <t t-set="isOutOfStock" t-value="!product.self_order_available"/>
+                                    <t t-set="extraPrice" t-value="comboItem.extra_price"/>
+                                    <div t-on-click="() => this.selectItem(comboItem)"
+                                            class="combo_product_box btn btn-light position-relative d-flex flex-row-reverse flex-md-column align-items-center w-100 py-2 px-3 p-md-0 rounded-4 shadow-sm overflow-hidden border-2 text-start"
+                                            t-att-class="{'border-primary': itemSelected, 'border-transparent': !itemSelected, 'opacity-50': isOutOfStock }">
+                                        <div class="o_self_product_image w-25 w-sm-100 ratio ratio-1x1 flex-shrink-0 ms-2 ms-sm-0">
+                                            <img class="d-md-none  object-fit-cover rounded-4" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                            <img class="d-none d-md-block object-fit-cover" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                        </div>
+                                        <span t-if="extraPrice" class="d-none d-md-block badge position-absolute top-0 end-0 m-1 px-2 py-1 rounded-3 text-bg-primary fw-medium">
+                                        + <t t-out="selfOrder.formatMonetary(extraPrice)"/>
+                                        </span>
+                                        <div class="d-flex flex-column flex-grow-1 py-0 py-md-3 px-md-2 align-item-start align-items-md-center">
+                                            <div class="text-md-center">
+                                                <ProductNameWidget product="product"/>
+                                                 <span t-if="extraPrice" class="d-md-none badge top-0 ms-2 px-2 py-1 rounded-3 text-bg-primary small">
+                                                     + <t t-out="selfOrder.formatMonetary(extraPrice)"/>
+                                                 </span>
+                                            </div>
+                                            <div t-if="isOutOfStock " class="d-flex flex-grow-0 mt-2">
+                                                <div class="p-1 px-3 fs-lighter bg-secondary rounded">Out of stock</div>
+                                            </div>
+                                            <div t-elif="hasMultiItemSelection "  class="item_qty_container d-flex flex-grow-1 align-items-end mt-2">
+                                                <t t-set="addItemEnabled" t-value="canAddMoreItems()"/>
+                                                <div t-if="!itemQty" class="btn btn-secondary" t-att-class="{'opacity-50':!addItemEnabled}">
+                                                    Add
+                                                </div>
+                                                <div t-else="" class="btn-group">
+                                                    <button type="button" t-on-click= "(evt) => this.changeItemQuantity(evt, comboItem, -1)"
+                                                            class="btn btn-secondary btn py-2 px-3 px-lg-2 "><i class="oi oi-minus fa-fw"/></button>
+                                                    <div class="o-so-tabular-nums d-flex justify-content-center align-items-center m-0 py-2 px-3 text-bg-secondary fs-4 fw-bold" t-esc="itemQty"/>
+                                                    <button type="button" t-on-click = "(evt) => this.changeItemQuantity(evt, comboItem, 1)" t-att-disabled="!addItemEnabled"
+                                                            class="btn btn-secondary btn py-2 px-3 px-lg-2"><i class="oi oi-plus fa-fw" /></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Variant / Attribute selection -->
+                    <div t-elif="!this.state.showResume" class="d-flex flex-column rounded-4 o_self_fade">
+                        <t t-set="product" t-value="currentChoiceState.displayAttributesOfItem.product_id"/>
+                        <div class="d-flex align-items-center justify-content-start flex-shrink-0 gap-4 p-3 mb-2 mb-md-3 rounded-4 text-bg-700 position-relative overflow-hidden">
+                            <div class="position-absolute top-0 start-0 w-100 h-100 z-0" style="opacity: 0.3; filter: blur(16px);">
+                                <img class="w-100 h-100 object-fit-cover" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}"  loading="lazy"/>
+                            </div>
+                            <div class="o_self_variant_cover position-relative align-self-start rounded-4 ratio ratio-1x1 bg-white overflow-hidden z-1">
+                                <img class="object-fit-cover" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}"  loading="lazy"/>
+                            </div>
+                            <div class="o_self_variant_description d-flex flex-column justify-content-center">
+                                <h2 t-esc="product.name" class="mb-0 text-white"/>
+                                <span t-if="product.public_description" t-out="product.productDescriptionMarkup" class="product-description mt-1"/>
+                            </div>
+                        </div>
+                        <!-- Attributes -->
+                        <div class="">
+                            <AttributeSelection t-if="product.attribute_line_ids.length" productTemplate="product" onSelection="onAttributeSelection" />
+                        </div>
+                        <t t-if="hasMissingAttributeValues(currentChoiceState.displayAttributesOfItem) and shouldShowMissingDetails()" t-call="pos_self_order.MissingRequiredDetails" />
+                    </div>
+
+                    <!-- Confirmation -->
+                    <div t-else="" class="o_self_combo_confirmation d-flex flex-column o_self_fade" id="k-combo-scroll-target">
+                        <h2 class="mb-3">Validate your selection</h2>
+                        <div class="confirmation_box d-flex flex-column p-3 rounded-4 bg-white  shadow-sm ">
+                            <t t-foreach="getSelection()" t-as="selection" t-key="selection.combo_choice_id.id">
+                                <t t-foreach="selection.combo_items" t-as="combo_item" t-key="combo_item.combo_item_id.id">
+                                    <div t-attf-class="d-flex align-items-center cursor-pointer  {{!combo_item_last || !selection_last ? ' pb-3 mb-3 border-bottom border-medium' : 'mb-0'}}" t-on-click="()=>this.onChoiceClicked(selection_index)" >
+                                        <t t-set="product" t-value="combo_item.product_id"/>
+                                        <t t-set="item_qty" t-value="combo_item.qty"/>
+                                        <t t-set="attributes" t-value="combo_item.attributes"/>
+                                        <div class="o_self_product_image me-3 ratio ratio-1x1 w-25" >
+                                            <img class="object-fit-cover rounded-4" t-attf-src="/web/image/product.product/{{product.id}}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                        </div>
+                                        <div class="d-flex flex-column gap-1">
+                                            <div class="fs-4 fw-bold text-break">
+                                                <span t-if="item_qty &gt; 1" class="fw-normal"><t t-esc="item_qty"/>x </span><t t-esc="product.name"/>
+                                            </div>
+                                            <div class="text-muted fw-medium" t-foreach="attributes" t-as="attrVal" t-key="attrVal.attribute_line_id.id">
+                                                <t t-esc="attrVal.attribute_line_id.attribute_id.name" />:
+                                                <t class="text-muted" t-esc="attrVal.names" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+
+                    </div>
+                   </div>
+                </div>
+
+               <div t-if="this.state.showResume and selfOrder.ordering" class="container o_self_container">
+                   <div class="d-flex justify-content-end mt-auto pb-3">
+                       <t t-call="pos_self_order.QuantityWidget" />
+                    </div>
+               </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="o_self_footer bg-white border-top py-3" t-att-class="{'o_self_shadow_bottom': scrollShadow.bottom}">
+                <div class="container o_self_container ">
+                    <div t-if="isArchivedCombination()" class="alert alert-warning text-center mb-3">
+                            This combination does not exist.
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center gap-2 gap-md-5">
+                        <button t-if="this.isBackVisible()" class="btn btn-lg btn-secondary" t-on-click="back">
+                            <i class="oi oi-chevron-left d-md-none" />
+                            <span class="d-none d-md-inline">Back</span>
+                        </button>
+                        <div t-else=""/>
+                        <div class="d-flex justify-content-between align-items-center  gap-2 gap-md-5">
+                            <div class="ms-auto text-start">
+                                <h4 class="d-none d-sm-block text-muted opacity-75 mb-1">Combo</h4>
+                                <div class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary" t-esc="selfOrder.formatMonetary(getComboPrice())" />
+                            </div>
+                            <button t-if="!state.showResume" class="btn btn-lg btn-primary text-truncate ps-auto" t-on-click="next" t-att-disabled="!this.isNextEnabled()">
+                                <span><t t-if="!selectedChoice.qty_free and !hasSelectedItems" >No, thanks</t><t t-else="">Next</t></span>
+                            </button>
+                            <button t-elif="selfOrder.ordering" class="btn btn-lg btn-primary text-truncate ps-auto" t-on-click="next" t-att-disabled="!this.isNextEnabled()">
+                                <span >Add to cart</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </t>
+</templates>

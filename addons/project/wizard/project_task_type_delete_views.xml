@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_project_task_type_delete_wizard" model="ir.ui.view">
+        <field name="name">project.task.type.delete.wizard.form</field>
+        <field name="model">project.task.type.delete.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delete Stage">
+                <field name="tasks_count" invisible="1" />
+                <field name="stages_active" invisible="1" />
+                <div invisible="tasks_count &gt; 0">
+                    <p>Are you sure you want to delete these stages?</p>
+                </div>
+                <div invisible="not stages_active or tasks_count == 0">
+                    <p>You cannot delete stages containing tasks. You can either archive them or first delete all of their tasks.</p>
+                </div>
+                <div invisible="stages_active or tasks_count == 0">
+                    <p>You cannot delete stages containing tasks. You should first delete all of their tasks.</p>
+                </div>
+                <footer>
+                    <button string="Archive Stages" type="object" name="action_archive" class="btn btn-primary" invisible="not stages_active or tasks_count == 0" data-hotkey="q"/>
+                    <button string="Delete" type="object" name="action_unlink" class="btn btn-primary" invisible="tasks_count &gt; 0" data-hotkey="w"/>
+                    <button string="Discard" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_project_task_type_delete_confirmation_wizard" model="ir.ui.view">
+        <field name="name">project.task.type.delete.wizard.form</field>
+        <field name="model">project.task.type.delete.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delete Stage">
+                <div>
+                    <p>This will archive the stages and all the tasks they contain from the following projects:</p>
+                    <field name="project_ids" readonly="1">
+                        <list>
+                            <field name="name"/>
+                        </list>
+                    </field>
+                    <p>Are you sure you want to continue?</p>
+                </div>
+                <footer>
+                    <button string="Confirm" type="object" name="action_confirm" class="btn btn-primary" data-hotkey="q"/>
+                    <button string="Discard" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_project_task_type_unarchive_wizard" model="ir.ui.view">
+        <field name="name">project.task.type.delete.wizard.form</field>
+        <field name="model">project.task.type.delete.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delete Stage">
+                <div>
+                    <p>Would you like to unarchive all of the tasks contained in these stages as well?</p>
+                </div>
+                <footer>
+                    <button string="Confirm" type="object" name="action_unarchive_task" class="btn btn-primary"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

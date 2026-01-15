@@ -6,27 +6,22 @@
 #
 # For generic wsgi handlers a global application is defined.
 # For uwsgi this should work:
-#   $ uwsgi_python --http :9090 --pythonpath . --wsgi-file openerp-wsgi.py
+#   $ uwsgi_python --http :9090 --pythonpath . --wsgi-file odoo-wsgi.py
 #
 # For gunicorn additional globals need to be defined in the Gunicorn section.
 # Then the following command should run:
-#   $ gunicorn odoo:service.wsgi_server.application -c openerp-wsgi.py
+#   $ gunicorn odoo.http:root --pythonpath . -c odoo-wsgi.py
 
-import odoo
+from odoo.http import root as application  # noqa: F401
+from odoo.tools import config as conf  # noqa: F401
 
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # Common
-#----------------------------------------------------------
-odoo.multi_process = True # Nah!
+# ----------------------------------------------------------
 
-# Equivalent of --load command-line option
-odoo.conf.server_wide_modules = ['web']
-conf = odoo.tools.config
-
-# Path to the OpenERP Addons repository (comma-separated for
+# Path to the Odoo Addons repository (comma-separated for
 # multiple locations)
-
-conf['addons_path'] = '../../addons/trunk,../../web/trunk/addons'
+#conf['addons_path'] = './odoo/addons,./addons'
 
 # Optional database config if not using local socket
 #conf['db_name'] = 'mycompany'
@@ -35,17 +30,16 @@ conf['addons_path'] = '../../addons/trunk,../../web/trunk/addons'
 #conf['db_port'] = 5432
 #conf['db_password'] = 'secret'
 
-#----------------------------------------------------------
-# Generic WSGI handlers application
-#----------------------------------------------------------
-application = odoo.service.wsgi_server.application
+# ----------------------------------------------------------
+# Initializing the server
+# ----------------------------------------------------------
 
-odoo.service.server.load_server_wide_modules()
+application.initialize()
 
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # Gunicorn
-#----------------------------------------------------------
-# Standard OpenERP XML-RPC port is 8069
+# ----------------------------------------------------------
+# Standard port is 8069
 bind = '127.0.0.1:8069'
 pidfile = '.gunicorn.pid'
 workers = 4

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_slides.SlideUploadSourceTypes" owl="1">
+        <div t-if="props.attributes.urlInputName === 'video_url'" class="mb-3">
+            <label
+                t-att-for="props.attributes.urlInputName"
+                class="col-form-label"
+                t-out="props.attributes.urlInputLabel"
+            />
+            <input
+                t-model="state.url"
+                t-att-id="props.attributes.urlInputName"
+                t-att-name="props.attributes.urlInputName"
+                class="form-control"
+                autocomplete="off"
+                placeholder='e.g "https://www.youtube.com/watch?v=ebBez6bcSEc"'
+                required="required"
+                t-on-change="() => props.onChangeUrl(state.url)"
+            />
+        </div>
+        <t t-else="">
+            <div class="mb-3">
+                <label
+                    for="source_type"
+                    class="col-form-label"
+                    t-out="props.attributes.sourceTypeLabel"
+                /><br/>
+                <div class="d-flex flex-wrap">
+                    <div class="form-check ms-2">
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            name="source_type"
+                            id="source_type_local_file"
+                            data-value="local_file"
+                            checked="checked"
+                            t-on-click="() => props.onClickSourceType(true)"
+                        />
+                        <label
+                            class="form-check-label fw-normal"
+                            for="source_type_local_file"
+                        >
+                            Upload from Device
+                        </label>
+                    </div>
+                    <div class="form-check ms-2">
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            name="source_type"
+                            id="source_type_external"
+                            data-value="external"
+                            t-on-click="() => props.onClickSourceType(false)"
+                        />
+                        <label
+                            class="form-check-label fw-normal"
+                            for="source_type_external"
+                        >
+                            Retrieve from Google Drive
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div t-if="props.isLocalSource" class="mb-3">
+                <label
+                    for="upload"
+                    class="col-form-label"
+                    t-out="props.attributes.selectFileLabel"
+                />
+                <input
+                    id="upload"
+                    name="file"
+                    class="form-control h-100"
+                    t-att-accept="props.attributes.acceptedFiles"
+                    type="file"
+                    required="required"
+                    t-on-change.prevent="(ev) => props.onChangeFileInput(ev)"
+                />
+            </div>
+            <div t-else="" class="mb-3">
+                <label
+                    t-att-for="props.attributes.urlInputName"
+                    class="col-form-label"
+                    t-out="props.attributes.urlInputLabel"
+                />
+                <input
+                    t-model="state.url"
+                    t-att-id="props.attributes.urlInputName"
+                    t-att-name="props.attributes.urlInputName"
+                    class="form-control h-100"
+                    autocomplete="off"
+                    placeholder='e.g "https://drive.google.com/file/..."'
+                    required="required"
+                    t-on-change="() => props.onChangeUrl(state.url)"
+                />
+            </div>
+        </t>
+    </t>
+</templates>

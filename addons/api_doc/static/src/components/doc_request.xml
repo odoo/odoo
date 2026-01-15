@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web.DocRequest">
+    <div class="o_doc_request h-100">
+        <div class="d-flex flex-nowrap justify-content-between align-items-center mb-1">
+            <h4>Request</h4>
+            <div class="d-flex flex-nowrap">
+                <select class="me-1" t-on-change="event => this.selectLanguage(event.target.value)">
+                    <option
+                        t-foreach="LANGUAGES"
+                        t-as="lang"
+                        t-key="lang"
+                        t-att-selected="state.exampleLanguage === lang"
+                        t-att-value="lang"
+                        t-out="lang"
+                    />
+                </select>
+                <button
+                    class="btn primary d-flex flex-nowrap align-items-center"
+                    t-on-click="execute"
+                    t-att-disabled="state.exampleLanguage !== 'json'"
+                >
+                    <span>Run</span>
+                    <i class="fa fa-play ms-2" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+
+        <CodeEditor
+            mode="LANGUAGES[state.exampleLanguage]"
+            value="state.exampleLanguage === 'json' ? state.requestCode : state.exampleCode"
+            readonly="state.exampleLanguage !== 'json'"
+            onChange="value => this.state.requestCode = value"
+            maxLines="maxLines"
+            theme="'monokai'"
+            showLineNumbers="false"
+        />
+
+        <div class="mt-2 d-flex flex-nowrap align-items-center mb-1">
+            <h4>Response</h4>
+            <span t-if="hasResponse and !state.response.error" class="badge success ms-1">Success</span>
+            <span t-if="hasResponse and state.response.error" class="badge error ms-1">Failed</span>
+        </div>
+
+        <t t-if="hasResponse">
+            <CodeEditor
+                t-if="!state.response.error"
+                mode="'json'"
+                value="state.response.body"
+                readonly="true"
+                maxLines="maxLines"
+                theme="'monokai'"
+                showLineNumbers="false"
+            />
+            <div t-else="" class="alert error mt-1 d-flex flex-nowrap flex-column">
+                <h5 class="mb-2 d-flex flex-nowrap align-items-center">
+                    <i class="pe-1 fa fa-exclamation-triangle" aria-hidden="true"></i>
+                    <span>Error <t t-out="state.response.status"/> while executing request</span>
+                </h5>
+                <div>
+                    <div t-out="responseText"></div>
+                </div>
+            </div>
+        </t>
+        <p t-else="" class="text-muted">Run to get a response</p>
+    </div>
+</t>
+
+<t t-name="web.DocRequest.CodeEditor">
+    <div class="o-doc-code-editor position-relative p-2 rounded w-100">
+        <t t-call="web.CodeEditor"></t>
+        <button
+            class="position-absolute p-1 top-0 end-0 d-flex align-items-center cursor-pointer"
+            t-on-click="copyToClipboard"
+            type="button"
+        >
+            <i t-if="!state.copied" class="fa fa-clipboard fs-6 text-light"/>
+            <span t-else="" class="fs-6 text-light">Copied!</span>
+        </button>
+    </div>
+</t>
+
+</templates>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_line_tree_hsn_l10n_in" model="ir.ui.view">
+        <field name="name">account.move.line.list.l10n_in</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <list string="Products" editable="top" create="0">
+                <field name="move_id"
+                       optional="show"
+                       column_invisible="not context.get('send_and_print')"/>
+                <field name="product_id" readonly="1"/>
+                <field name="name" widget="section_and_note_text"/>
+                <field name="l10n_in_hsn_code"
+                       optional="show"
+                       column_invisible="context.get('tax_validation') or context.get('restrict_negative_discount_line')"/>
+                <field name="tax_ids"
+                       optional="show"
+                       widget="many2many_tax_tags" domain="[('type_tax_use', '=', 'sale')]"
+                       column_invisible="not context.get('tax_validation', False)"/>
+                <field name="discount"
+                       optional="show"
+                       column_invisible="not context.get('restrict_negative_discount_line', False)"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_move_line_tree_l10n_in" model="ir.ui.view">
+        <field name="name">account.move.line.list.l10n_in</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='credit']" position="after">
+                <field name="l10n_in_gstr_section" optional="hide" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

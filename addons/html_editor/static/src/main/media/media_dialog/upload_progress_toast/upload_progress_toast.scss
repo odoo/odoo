@@ -1,0 +1,26 @@
+.o_upload_progress_toast {
+    font-size: 16px;
+
+    .o_we_progressbar:last-child {
+        hr {
+            display: none;
+        }
+    }
+}
+
+$o-notification-max-width-sm: calc(400px - 3rem);
+$button-width: 3rem;
+
+.editor_notification_manager {
+    width: calc(100% - #{$button-width});
+    @include media-breakpoint-up(sm) {
+        width: calc(#{$o-notification-max-width-sm} + #{$button-width});
+    }
+}
+
+.editor_notification_body {
+    width: calc(100% - #{$button-width});
+    @include media-breakpoint-up(sm) {
+        width: $o-notification-max-width-sm;
+    }
+}

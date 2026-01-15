@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="base.group_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('product.group_product_variant'))]"/>
+        </record>
+
+        <!-- Clothes products -->
+        <record model="product.product" id="casual_t_shirt">
+            <field name="name">Casual T-shirt</field>
+            <field name="list_price">20.00</field>
+            <field name="standard_price">18.0</field>
+            <field name="description_sale">Casual t-shirt 100% cotton. Various colors and sizes available.</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/product_casual_t_shirt.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_upper')])]" />
+        </record>
+
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                        'xml_id': 'point_of_sale.casual_t_shirt_product_template',
+                        'record': obj().env.ref('point_of_sale.casual_t_shirt').product_tmpl_id,
+                        'noupdate': True,
+                    }]" />
+        </function>
+
+        <record model="product.template.attribute.line" id="product_attribute_line_color">
+            <field name="product_tmpl_id" ref="point_of_sale.casual_t_shirt_product_template"/>
+            <field name="attribute_id" ref="product.pa_color"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_color_black'),
+                    ref('product.pav_color_white'),
+                    ref('product.pav_color_purple'),
+                    ref('product.pav_color_green'),
+            ])]" />
+        </record>
+
+        <record model="product.template.attribute.line" id="product_attribute_line_size">
+            <field name="product_tmpl_id" ref="point_of_sale.casual_t_shirt_product_template"/>
+            <field name="attribute_id" ref="product.pa_size"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_size_s'),
+                    ref('product.pav_size_m'),
+                    ref('product.pav_size_l'),
+                    ref('product.pav_size_xl'),
+                    ref('product.pav_size_2xl'),
+                    ref('product.pav_size_3xl'),
+                    ref('product.pav_size_4xl'),
+                    ref('product.pav_size_5xl'),
+                ])]" />
+        </record>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value
+                model="base"
+                eval="[{
+                    'xml_id': 'point_of_sale.casual_t_shirt_black',
+                    'record': obj().env.ref('point_of_sale.product_attribute_line_color').product_template_value_ids[0],
+                    'noupdate': True,
+                },
+                {
+                    'xml_id': 'point_of_sale.casual_t_shirt_s',
+                    'record': obj().env.ref('point_of_sale.product_attribute_line_size').product_template_value_ids[0],
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base"
+                eval="[
+                {
+                    'xml_id': 'point_of_sale.product_casual_t_shirt',
+                    'record': obj().env.ref('point_of_sale.casual_t_shirt_product_template')._get_variant_for_combination(obj().env.ref('point_of_sale.casual_t_shirt_s') + obj().env.ref('point_of_sale.casual_t_shirt_black')),
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
+
+        <record model="product.product" id="t_shirt_slim">
+            <field name="name">T shirt slim</field>
+            <field name="list_price">15.00</field>
+            <field name="standard_price">12.0</field>
+            <field name="description_sale">Casual slim t-shirt 100% cotton. Various sizes available</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/product_t_shirt_slim.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_upper')])]" />
+        </record>
+
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                        'xml_id': 'point_of_sale.t_shirt_slim_template',
+                        'record': obj().env.ref('point_of_sale.t_shirt_slim').product_tmpl_id,
+                        'noupdate': True,
+                    }]" />
+        </function>
+
+        <record model="product.template.attribute.line" id="product_attribute_line_size_slim_shirt">
+            <field name="product_tmpl_id" ref="point_of_sale.t_shirt_slim_template"/>
+            <field name="attribute_id" ref="product.pa_size"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_size_s'),
+                    ref('product.pav_size_m'),
+                    ref('product.pav_size_l'),
+                    ref('product.pav_size_xl'),
+                    ref('product.pav_size_2xl'),
+                    ref('product.pav_size_3xl'),
+                    ref('product.pav_size_4xl'),
+                    ref('product.pav_size_5xl'),
+                ])]" />
+        </record>
+
+        <function model="ir.model.data" name="_update_xmlids">
+            <value
+                model="base"
+                eval="[{
+                    'xml_id': 'point_of_sale.t_shirt_slim_s',
+                    'record': obj().env.ref('point_of_sale.product_attribute_line_size_slim_shirt').product_template_value_ids[0],
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base"
+                eval="[
+                {
+                    'xml_id': 'point_of_sale.product_t_shirt_slim',
+                    'record': obj().env.ref('point_of_sale.t_shirt_slim_template')._get_variant_for_combination(obj().env.ref('point_of_sale.t_shirt_slim_s')),
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
+
+        <record model="product.product" id="t_shirt_black_embroidered">
+            <field name="name">Black embroidered t-shirt</field>
+            <field name="list_price">25.00</field>
+            <field name="standard_price">22.5</field>
+            <field name="description_sale">Casual slim t-shirt 100% cotton with white embroidery. Various sizes available</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/product_t_shirt_black_embroidered.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_upper')])]" />
+        </record>
+
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                        'xml_id': 'point_of_sale.t_shirt_black_embroidered_template',
+                        'record': obj().env.ref('point_of_sale.t_shirt_black_embroidered').product_tmpl_id,
+                        'noupdate': True,
+                    }]" />
+        </function>
+
+        <record model="product.template.attribute.line" id="product_attribute_line_size_black_shirt">
+            <field name="product_tmpl_id" ref="point_of_sale.t_shirt_black_embroidered_template"/>
+            <field name="attribute_id" ref="product.pa_size"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_size_s'),
+                    ref('product.pav_size_m'),
+                    ref('product.pav_size_l'),
+                    ref('product.pav_size_xl'),
+                    ref('product.pav_size_2xl'),
+                    ref('product.pav_size_3xl'),
+                    ref('product.pav_size_4xl'),
+                    ref('product.pav_size_5xl'),
+                ])]" />
+        </record>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value
+                model="base"
+                eval="[{
+                    'xml_id': 'point_of_sale.t_shirt_black_embroidered_s',
+                    'record': obj().env.ref('point_of_sale.product_attribute_line_size_black_shirt').product_template_value_ids[0],
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base"
+                eval="[
+                {
+                    'xml_id': 'point_of_sale.product_t_shirt_black_embroidered',
+                    'record': obj().env.ref('point_of_sale.t_shirt_black_embroidered_template')._get_variant_for_combination(obj().env.ref('point_of_sale.t_shirt_black_embroidered_s')),
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
+
+        <record model="product.template" id="product_template_blue_denim_jeans">
+            <field name="name">Blue Denim Jeans</field>
+            <field name="list_price">80.00</field>
+            <field name="standard_price">72.0</field>
+            <field name="description_sale">5-pocket jeans in cotton denim with a slight stretch for good comfort.</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/product_blue_denim_jeans.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_lower')])]" />
+            <field name="attribute_line_ids" eval="[
+                Command.create({
+                    'attribute_id': ref('product.pa_size'),
+                    'value_ids': [
+                        Command.set([
+                            ref('product.pav_size_s'),
+                            ref('product.pav_size_m'),
+                            ref('product.pav_size_l'),
+                            ref('product.pav_size_xl'),
+                            ref('product.pav_size_2xl'),
+                            ref('product.pav_size_3xl'),
+                            ref('product.pav_size_4xl'),
+                            ref('product.pav_size_5xl'),
+                        ])
+                    ]
+                })
+            ]"/>
+        </record>
+
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base"
+                eval="[
+                {
+                    'xml_id': 'point_of_sale.product_blue_denim_jeans',
+                    'record': obj().env.ref('point_of_sale.product_template_blue_denim_jeans').product_variant_ids[0],
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
+
+        <record model="product.template" id="product_template_blue_denim_jeans_slim">
+            <field name="name">Light Blue Jeans Slim</field>
+            <field name="list_price">70.00</field>
+            <field name="standard_price">62.0</field>
+            <field name="description_sale">5-pocket jeans in cotton denim..</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/product_blue_denim_jeans_slim.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_lower')])]" />
+            <field name="attribute_line_ids" eval="[
+                Command.create({
+                    'attribute_id': ref('product.pa_size'),
+                    'value_ids': [
+                        Command.set([
+                            ref('product.pav_size_s'),
+                            ref('product.pav_size_m'),
+                            ref('product.pav_size_l'),
+                            ref('product.pav_size_xl'),
+                            ref('product.pav_size_2xl'),
+                            ref('product.pav_size_3xl'),
+                            ref('product.pav_size_4xl'),
+                            ref('product.pav_size_5xl'),
+                        ])
+                    ]
+                })
+            ]"/>
+        </record>
+
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base"
+                eval="[
+                {
+                    'xml_id': 'point_of_sale.product_blue_denim_jeans_slim',
+                    'record': obj().env.ref('point_of_sale.product_template_blue_denim_jeans_slim').product_variant_ids[0],
+                    'noupdate': True,
+                },
+            ]"/>
+        </function>
+
+        <record model="product.product" id="product_green_hood">
+            <field name="name">Green Hood</field>
+            <field name="list_price">15.00</field>
+            <field name="standard_price">10.0</field>
+            <field name="description_sale">Versatile cotton hoodie with an adjustable drawstring hood and front zipper closure.</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/product_hood.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_others')])]" />
+        </record>
+        <record model="product.product" id="product_classic_brown_jacket">
+            <field name="name">Classic Brown Jacket</field>
+            <field name="list_price">50.00</field>
+            <field name="standard_price">45.0</field>
+            <field name="description_sale">Lightweight bomber jacket in linen with a ribbed stand-up collar and zip down the front.</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/product_classic_brown_jacket.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_upper')])]" />
+        </record>
+        <record model="product.product" id="product_crocheted_poncho_unisize">
+            <field name="name">Crocheted Poncho Unisize</field>
+            <field name="list_price">25.00</field>
+            <field name="standard_price">22.5</field>
+            <field name="description_sale">Poncho in a soft, crochet-look knit with a round, gently draped neckline.</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/product_crocheted_poncho_unisize.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_upper')])]" />
+        </record>
+        <record model="product.product" id="product_odoo_sneakers">
+            <field name="name">Odoo Sneakers</field>
+            <field name="list_price">60.40</field>
+            <field name="standard_price">54.36</field>
+            <field name="description_sale">Trainers in cotton canvas with a padded top edge, tongue and lacing at the front.</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/product_odoo_sneakers.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_others')])]" />
+        </record>
+
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                        'xml_id': 'point_of_sale.product_odoo_sneakers_template',
+                        'record': obj().env.ref('point_of_sale.product_odoo_sneakers').product_tmpl_id,
+                        'noupdate': True,
+                    }]" />
+        </function>
+
+        <record model="product.template.attribute.line" id="product_attribute_line_size_number">
+            <field name="product_tmpl_id" ref="point_of_sale.product_odoo_sneakers_template"/>
+            <field name="attribute_id" ref="product.pa_shoe_size"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_shoe_size_39'),
+                    ref('product.pav_shoe_size_40'),
+                    ref('product.pav_shoe_size_41'),
+                    ref('product.pav_shoe_size_42'),
+                    ref('product.pav_shoe_size_43'),
+            ])]" />
+        </record>
+
+        <record id="jeans_combo" model="product.combo">
+            <field name="name">Jeans Combo</field>
+            <field
+                name="combo_item_ids"
+                eval="[
+                    Command.clear(),
+                    Command.create({
+                        'product_id': ref('point_of_sale.product_blue_denim_jeans_slim'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('point_of_sale.product_blue_denim_jeans'),
+                        'extra_price': 0,
+                    }),
+                ]"
+            />
+        </record>
+
+        <record id="tshirt_combo" model="product.combo">
+            <field name="name">T-shirt Combo</field>
+            <field
+                name="combo_item_ids"
+                eval="[
+                    Command.clear(),
+                    Command.create({
+                        'product_id': ref('point_of_sale.product_casual_t_shirt'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('point_of_sale.product_t_shirt_slim'),
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': ref('point_of_sale.product_t_shirt_black_embroidered'),
+                        'extra_price': 0,
+                    }),
+                ]"
+            />
+        </record>
+
+        <record model="product.product" id="product_t_shirt_pants">
+            <field name="name">T-shirt &amp; Pants Combo</field>
+            <field name="description_sale">Combo</field>
+            <field name="type">combo</field>
+            <field name="purchase_ok">False</field>
+            <field name="weight">0.01</field>
+            <field name="list_price">80</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/product_t_shirt_pants.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_others')])]" />
+            <field name="combo_ids" eval="[(6, 0, [ref('jeans_combo'), ref('tshirt_combo')])]"/>
+            <field name="taxes_id" eval="[(5,)]"/>
+            <field name="supplier_taxes_id" eval="[(5,)]"/>
+        </record>
+
+        <record model="product.product" id="casual_denim_short">
+            <field name="name">Casual Denim Short</field>
+            <field name="list_price">35.00</field>
+            <field name="standard_price">31.5</field>
+            <field name="description_sale">Casual denim shorts, comfortable and stylish for everyday wear.</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/casual_denim_short.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_lower')])]" />
+        </record>
+
+        <record model="product.product" id="classic_leather_belt">
+            <field name="name">Classic Leather Belt</field>
+            <field name="list_price">25.00</field>
+            <field name="standard_price">22.50</field>
+            <field name="description_sale">Classic leather belt, a must-have accessory for any wardrobe.</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/classic_leather_belt.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_others')])]" />
+        </record>
+
+        <record model="product.product" id="cozy_sweater">
+            <field name="name">Cozy Sweater</field>
+            <field name="list_price">50.00</field>
+            <field name="standard_price">45.0</field>
+            <field name="description_sale">Cozy sweater, perfect for colder weather. Available in various colors.</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/cozy_sweater.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_upper')])]" />
+        </record>
+
+        <record model="product.product" id="leather_jacket">
+            <field name="name">Leather Jacket</field>
+            <field name="list_price">120.00</field>
+            <field name="standard_price">108.0</field>
+            <field name="description_sale">Stylish leather jacket, durable and fashionable for all occasions.</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/leather_jacket.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_upper')])]" />
+        </record>
+
+        <record model="product.product" id="summer_hat">
+            <field name="name">Summer Hat</field>
+            <field name="list_price">20.00</field>
+            <field name="standard_price">18.0</field>
+            <field name="description_sale">Summer hat, ideal for beach days and sunny weather.</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/summer_hat.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_others')])]" />
+        </record>
+
+        <record model="product.product" id="jean_jacket">
+            <field name="name">Jean Jacket</field>
+            <field name="list_price">65.00</field>
+            <field name="standard_price">58.5</field>
+            <field name="description_sale">Vintage jean jacket, a timeless piece for any casual outfit.</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/jean_jacket.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_upper')])]" />
+        </record>
+
+        <record model="product.product" id="sport_shoes">
+            <field name="name">Sport Shoes</field>
+            <field name="list_price">80.00</field>
+            <field name="standard_price">72.0</field>
+            <field name="description_sale">Athletic sport shoes, designed for comfort and performance.</field>
+            <field name="type">consu</field>
+            <field name="weight">0.01</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="image_1920" type="base64" file="point_of_sale/static/img/sport_shoes.png"/>
+            <field name="available_in_pos" eval="True"/>
+            <field name="categ_id" ref="product_category_clothes"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_others')])]" />
+        </record>
+
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                        'xml_id': 'point_of_sale.sport_shoes_template',
+                        'record': obj().env.ref('point_of_sale.sport_shoes').product_tmpl_id,
+                        'noupdate': True,
+                    }]" />
+        </function>
+
+        <record model="product.template.attribute.line" id="product_attribute_line_sport_shoes">
+            <field name="product_tmpl_id" ref="point_of_sale.sport_shoes_template"/>
+            <field name="attribute_id" ref="product.pa_shoe_size"/>
+            <field
+                name="value_ids"
+                eval="[Command.set([
+                    ref('product.pav_shoe_size_39'),
+                    ref('product.pav_shoe_size_40'),
+                    ref('product.pav_shoe_size_41'),
+                    ref('product.pav_shoe_size_42'),
+                    ref('product.pav_shoe_size_43'),
+            ])]" />
+        </record>
+    </data>
+</odoo>

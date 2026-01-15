@@ -1,0 +1,124 @@
+{%- set countryPascal = name|pascal -%}
+<odoo>
+    <!-- 
+        Sources:
+        government website, pwc, papayaglobal
+     -->
+    <record id="l10n_{{code}}_social_contribution" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_category_social_security_employee"/>
+        <field name="name">{{countryPascal}}: Social Contribution</field>
+        <field name="code">SOCIAL.EMPLOYEE</field>
+        <field name="sequence">50</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip.rule_parameter('l10n_{{code}}_social_employee_rate')
+result = categories.BASIC
+        </field>
+        <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
+    </record>
+
+    <record id="l10n_{{code}}_social_contribution_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_category_social_security_employer"/>
+        <field name="name">{{countryPascal}}: Social Contribution (Employer)</field>
+        <field name="code">SOCIAL.EMPLOYER</field>
+        <field name="sequence">50</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip.rule_parameter('l10n_{{code}}_social_employer_rate')
+result = categories.BASIC
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
+    </record>
+
+    <record id="l10n_{{code}}_social_employee_total" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_category_social_security_employee_total"/>
+        <field name="name">{{countryPascal}}: Social Security Total (Employee)</field>
+        <field name="code">SOCIAL.EMPLOYEE.TOTAL</field>
+        <field name="sequence">70</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['SOCIAL.EMPLOYEE']
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
+    </record>
+
+    <record id="l10n_{{code}}_social_employer_total" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_category_social_security_employer_total"/>
+        <field name="name">{{countryPascal}}: Social Security Total (Employer)</field>
+        <field name="code">SOCIAL.EMPLOYER.TOTAL</field>
+        <field name="sequence">70</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['SOCIAL.EMPLOYER']
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
+    </record>
+
+    <record id="l10n_{{code}}_taxable_amount" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_category_taxable_amount"/>
+        <field name="name">{{countryPascal}}: Taxable Amount</field>
+        <field name="code">TAXABLE</field>
+        <field name="sequence">115</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories.GROSS
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
+    </record>
+
+    <record id="l10n_{{code}}_withholding_taxes" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_category_withholding_taxes"/>
+        <field name="name">{{countryPascal}}: Withholding Taxes</field>
+        <field name="code">TAX</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+taxable = categories.TAXABLE
+brackets = payslip.rule_parameter('l10n_{{code}}_tax_brackets')
+for low, high, prev, rate in brackets:
+    if high == 'inf':
+        high = float('inf')
+    else:
+        if low &lt;= taxable &lt; high:
+            result = -(prev + (taxable - low) * rate / 100)
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
+    </record>
+
+    <record id="l10n_{{code}}_childcare_relief" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">{{countryPascal}}: Childcare relief</field>
+        <field name="code">CHILD</field>
+        <field name="sequence">165</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+children = payslip.dict.employee_id.children
+amounts = payslip.rule_parameter('l10n_{{code}}_childcare_relief')
+if not children:
+    result = 0
+elif children == 1:
+    result = amounts[0]
+elif children == 2:
+    result = amounts[0] + amounts[1]
+elif children == 3:
+    result = amounts[0] + amounts[1] + amounts[2]
+elif children &gt;= 4:
+    result = amounts[0] + amounts[1] + amounts[2] + (children - 3) * amounts[3]
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_hr_payroll_structure_{{code}}_employee_salary"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.AttributeSelection">
+         <t t-foreach="props.productTemplate.attribute_line_ids" t-as="attribute" t-key="attribute.id">
+             <h2 class="text-start py-3 m-0 d-flex align-items-center" t-att-id="attribute.attribute_id.id">
+                 <t t-out="attribute.attribute_id.name"/>
+                 <span t-if="attribute.attribute_id.display_type !== 'multi'" class="badge smaller rounded-pill bg-danger text-white ms-2">Required</span>
+             </h2>
+             <div class="self_order_attribute_selection row pb-3">
+                <t t-foreach="availableAttributeValue(attribute)" t-as="value" t-key="value.id">
+                    <t t-set="valueSelected" t-value="isValueSelected(attribute,value)"/>
+                    <div class="d-flex col-12 col-md-6 col-lg-4 position-relative">
+                        <button
+                            t-on-click="() => this.selectAttribute(attribute, value)" style="min-height:105px;"
+                            role="button" class="btn btn-light px-3 px-sm-3 py-3 py-sm-3 w-100 d-flex flex-column align-items-start align-items-md-center text-start text-md-center justify-content-center gap-0 border-2 shadow-sm rounded-4"
+                            t-attf-class="{{ valueSelected ? 'border-primary': 'border-transparent' }}">
+                            <div class="d-flex d-inline-flex justify-content-between w-100 align-items-center gap-1">
+                                <div class="text-center d-flex flex-column gap-2 align-items-center w-100">
+                                    <span t-esc="value.name" class="fs-4"/>
+                                </div>
+                                <span t-if="shouldShowPriceExtra(value)" t-esc="formatExtraPrice(value)"
+                                    class="d-block position-absolute badge top-0 end-0 me-3 mt-3 rounded-3 text-bg-primary fw-medium" />
+                                <img  t-if="value.image" t-attf-src="data:image/png;base64,{{value.image}}" class="img-fluid rounded-4" style="max-height:70px; max-width:70px"/>
+                                <div t-if="value.html_color and !value.image" t-attf-style="min-height: 25px; min-width: 25px; background-color: {{value.html_color}}" class="rounded-5"/> 
+                            </div>
+                        </button>
+                    </div>
+                </t>
+                 <t t-set="customValue" t-value="getCustomSelectedValue(attribute)"/>
+                 <div t-if="customValue">
+                     <input type="text" t-model="selectedValues.getCustomValue(attribute,customValue).custom_value" class="form-control px-3 py-3 rounded-4 bg-white shadow-sm mt-2" t-ref="customValueInput" placeholder="Enter your custom value" />
+                 </div>
+            </div>
+          </t>
+    </t>
+</templates>

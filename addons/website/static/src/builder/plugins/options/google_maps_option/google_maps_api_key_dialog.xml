@@ -1,0 +1,56 @@
+<t t-name="website.GoogleMapsApiKeyDialog">
+    <Dialog title="props.title" size="'md'" modalRef="modalRef">
+        <p>Use Google Map on your website (Contact Us page, snippets, etc).</p>
+        <div class="row mb-0">
+            <label class="col-sm-2 col-form-label" for="pin_address">API Key</label>
+            <div class="col">
+                <div class="input-group">
+                    <div class="input-group-text"><i class="fa fa-key"/></div>
+                    <input type="text" class="form-control" id="api_key_input"
+                            t-att-class="{ 'is-invalid': state.apiKeyValidation and !state.apiKeyValidation.isValid and state.apiKeyValidation.message }"
+                            t-model="state.apiKey"
+                            placeholder="BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"/>
+                </div>
+                <small t-if="state.apiKeyValidation and !state.apiKeyValidation.isValid and state.apiKeyValidation.message" id="api_key_help" class="text-danger">
+                    <t t-esc="state.apiKeyValidation.message"/>
+                </small>
+                <div class="small form-text text-muted">
+                    Hint: How to use Google Map on your website (Contact Us page and as a snippet)
+                    <br/>
+                    <a target="_blank" href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend,static_maps_backend&amp;keyType=CLIENT_SIDE&amp;reusekey=true">
+                        <i class="oi oi-arrow-right"/>
+                        Create a Google Project and Get a Key
+                    </a>
+                    <br/>
+                    <a target="_blank" href="https://cloud.google.com/maps-platform/pricing">
+                        <i class="oi oi-arrow-right"/>
+                        Enable billing on your Google Project
+                    </a>
+                </div>
+                <div class="alert alert-info mb-0 mt-3">
+                    Make sure your settings are properly configured:
+                    <ul class="mb-0">
+                        <li>
+                            Enable the right google map APIs in your google account
+                            <ul>
+                                <li>Maps Static API</li>
+                                <li>Maps JavaScript API</li>
+                                <li>Places API</li>
+                            </ul>
+                        </li>
+                        <li>
+                            Make sure billing is enabled
+                        </li>
+                        <li>
+                            Make sure to wait if errors keep being shown: sometimes enabling an API allows to use it immediately but Google keeps triggering errors for a while
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <t t-set-slot="footer">
+            <button t-on-click="onClickSave" class="btn btn-primary" data-hotkey="q">Save</button>
+            <button class="btn" t-on-click="() => this.props.close()" data-hotkey="x">Cancel</button>
+        </t>
+    </Dialog>
+</t>

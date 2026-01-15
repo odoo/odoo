@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment_provider_adyen" model="payment.provider">
+        <field name="name">Adyen</field>
+        <field name="image_128" type="base64" file="payment_adyen/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_adyen"/>
+        <!-- https://www.adyen.com/payment-methods -->
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_ach_direct_debit'),
+                         ref('payment.payment_method_affirm'),
+                         ref('payment.payment_method_afterpay'),
+                         ref('payment.payment_method_alipay'),
+                         ref('payment.payment_method_alipay_hk'),
+                         ref('payment.payment_method_alma'),
+                         ref('payment.payment_method_bacs_direct_debit'),
+                         ref('payment.payment_method_bancontact'),
+                         ref('payment.payment_method_benefit'),
+                         ref('payment.payment_method_bizum'),
+                         ref('payment.payment_method_blik'),
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_cash_app_pay'),
+                         ref('payment.payment_method_clearpay'),
+                         ref('payment.payment_method_dana'),
+                         ref('payment.payment_method_duitnow'),
+                         ref('payment.payment_method_elo'),
+                         ref('payment.payment_method_eps'),
+                         ref('payment.payment_method_fpx'),
+                         ref('payment.payment_method_gcash'),
+                         ref('payment.payment_method_gopay'),
+                         ref('payment.payment_method_hipercard'),
+                         ref('payment.payment_method_ideal'),
+                         ref('payment.payment_method_kakaopay'),
+                         ref('payment.payment_method_klarna'),
+                         ref('payment.payment_method_klarna_paynow'),
+                         ref('payment.payment_method_klarna_pay_over_time'),
+                         ref('payment.payment_method_knet'),
+                         ref('payment.payment_method_mbway'),
+                         ref('payment.payment_method_mobile_pay'),
+                         ref('payment.payment_method_momo'),
+                         ref('payment.payment_method_multibanco'),
+                         ref('payment.payment_method_napas_card'),
+                         ref('payment.payment_method_online_banking_czech_republic'),
+                         ref('payment.payment_method_online_banking_india'),
+                         ref('payment.payment_method_online_banking_slovakia'),
+                         ref('payment.payment_method_online_banking_thailand'),
+                         ref('payment.payment_method_open_banking'),
+                         ref('payment.payment_method_p24'),
+                         ref('payment.payment_method_paybright'),
+                         ref('payment.payment_method_paysafecard'),
+                         ref('payment.payment_method_paynow'),
+                         ref('payment.payment_method_paypal'),
+                         ref('payment.payment_method_paytm'),
+                         ref('payment.payment_method_paytrail'),
+                         ref('payment.payment_method_pix'),
+                         ref('payment.payment_method_promptpay'),
+                         ref('payment.payment_method_ratepay'),
+                         ref('payment.payment_method_samsung_pay'),
+                         ref('payment.payment_method_sepa_direct_debit'),
+                         ref('payment.payment_method_sofort'),
+                         ref('payment.payment_method_swish'),
+                         ref('payment.payment_method_touch_n_go'),
+                         ref('payment.payment_method_trustly'),
+                         ref('payment.payment_method_twint'),
+                         ref('payment.payment_method_upi'),
+                         ref('payment.payment_method_vipps'),
+                         ref('payment.payment_method_wallets_india'),
+                         ref('payment.payment_method_walley'),
+                         ref('payment.payment_method_wechat_pay'),
+                         ref('payment.payment_method_zip'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_provider_aps" model="payment.provider">
+        <field name="name">Amazon Payment Services</field>
+        <field name="image_128" type="base64" file="payment_aps/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_aps"/>
+        <!-- https://paymentservices.amazon.com/docs/EN/24.html -->
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_mada'),
+                         ref('payment.payment_method_knet'),
+                         ref('payment.payment_method_meeza'),
+                         ref('payment.payment_method_naps'),
+                         ref('payment.payment_method_omannet'),
+                         ref('payment.payment_method_benefit'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_provider_asiapay" model="payment.provider">
+        <field name="name">Asiapay</field>
+        <field name="image_128" type="base64" file="payment_asiapay/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_asiapay"/>
+        <!-- See https://www.asiapay.com/payment.html#option -->
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_alipay'),
+                         ref('payment.payment_method_wechat_pay'),
+                         ref('payment.payment_method_poli'),
+                         ref('payment.payment_method_afterpay'),
+                         ref('payment.payment_method_clearpay'),
+                         ref('payment.payment_method_humm'),
+                         ref('payment.payment_method_zip'),
+                         ref('payment.payment_method_paypal'),
+                         ref('payment.payment_method_atome'),
+                         ref('payment.payment_method_pace'),
+                         ref('payment.payment_method_shopback'),
+                         ref('payment.payment_method_grabpay'),
+                         ref('payment.payment_method_samsung_pay'),
+                         ref('payment.payment_method_hoolah'),
+                         ref('payment.payment_method_boost'),
+                         ref('payment.payment_method_duitnow'),
+                         ref('payment.payment_method_touch_n_go'),
+                         ref('payment.payment_method_bancnet'),
+                         ref('payment.payment_method_gcash'),
+                         ref('payment.payment_method_paynow'),
+                         ref('payment.payment_method_linepay'),
+                         ref('payment.payment_method_bangkok_bank'),
+                         ref('payment.payment_method_krungthai_bank'),
+                         ref('payment.payment_method_uob'),
+                         ref('payment.payment_method_scb'),
+                         ref('payment.payment_method_bank_of_ayudhya'),
+                         ref('payment.payment_method_kasikorn_bank'),
+                         ref('payment.payment_method_rabbit_line_pay'),
+                         ref('payment.payment_method_truemoney'),
+                         ref('payment.payment_method_fpx'),
+                         ref('payment.payment_method_fps'),
+                         ref('payment.payment_method_hd'),
+                         ref('payment.payment_method_maybank'),
+                         ref('payment.payment_method_pay_id'),
+                         ref('payment.payment_method_promptpay'),
+                         ref('payment.payment_method_techcom'),
+                         ref('payment.payment_method_tienphong'),
+                         ref('payment.payment_method_ttb'),
+                         ref('payment.payment_method_upi'),
+                         ref('payment.payment_method_vietcom'),
+                         ref('payment.payment_method_tendopay'),
+                         ref('payment.payment_method_alipay_hk'),
+                         ref('payment.payment_method_bharatqr'),
+                         ref('payment.payment_method_momo'),
+                         ref('payment.payment_method_octopus'),
+                         ref('payment.payment_method_maya'),
+                         ref('payment.payment_method_uatp'),
+                         ref('payment.payment_method_tenpay'),
+                         ref('payment.payment_method_enets'),
+                         ref('payment.payment_method_jkopay'),
+                         ref('payment.payment_method_payme'),
+                         ref('payment.payment_method_tmb'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_provider_authorize" model="payment.provider">
+        <field name="name">Authorize.net</field>
+        <field name="image_128"
+               type="base64"
+               file="payment_authorize/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_authorize"/>
+        <!-- https://www.authorize.net/solutions/merchantsolutions/onlinemerchantaccount/ -->
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_ach_direct_debit'),
+                         ref('payment.payment_method_card'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_provider_buckaroo" model="payment.provider">
+        <field name="name">Buckaroo</field>
+        <field name="image_128"
+               type="base64"
+               file="payment_buckaroo/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_buckaroo"/>
+        <!-- https://www.buckaroo-payments.com/products/payment-methods/ -->
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_bancontact'),
+                         ref('payment.payment_method_bank_reference'),
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_paypal'),
+                         ref('payment.payment_method_ideal'),
+                         ref('payment.payment_method_afterpay_riverty'),
+                         ref('payment.payment_method_sepa_direct_debit'),
+                         ref('payment.payment_method_alipay'),
+                         ref('payment.payment_method_wechat_pay'),
+                         ref('payment.payment_method_klarna'),
+                         ref('payment.payment_method_trustly'),
+                         ref('payment.payment_method_sofort'),
+                         ref('payment.payment_method_in3'),
+                         ref('payment.payment_method_tinka'),
+                         ref('payment.payment_method_billink'),
+                         ref('payment.payment_method_kbc_cbc'),
+                         ref('payment.payment_method_belfius'),
+                         ref('payment.payment_method_p24'),
+                         ref('payment.payment_method_poste_pay'),
+                         ref('payment.payment_method_eps'),
+                         ref('payment.payment_method_cartes_bancaires'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_provider_demo" model="payment.provider">
+        <field name="name">Demo</field>
+        <field name="sequence">40</field>
+        <field name="image_128" type="base64" file="payment_demo/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_demo"/>
+    </record>
+
+    <record id="payment_provider_dpo" model="payment.provider">
+        <field name="name">DPO Pay</field>
+        <field name="image_128" type="base64" file="payment_dpo/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_dpo"/>
+        <!-- https://dpogroup.com/Payment-methods/ -->
+        <field
+            name="payment_method_ids"
+            eval="[Command.set([
+                      ref('payment.payment_method_dpo'),
+                  ])]"
+        />
+    </record>
+
+    <record id="payment_provider_flutterwave" model="payment.provider">
+        <field name="name">Flutterwave</field>
+        <field name="image_128"
+               type="base64"
+               file="payment_flutterwave/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_flutterwave"/>
+        <!-- https://developer.flutterwave.com/v3.0.0/docs/payment-methods -->
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_mpesa'),
+                         ref('payment.payment_method_mobile_money'),
+                         ref('payment.payment_method_bank_transfer'),
+                         ref('payment.payment_method_bank_account'),
+                         ref('payment.payment_method_credit'),
+                         ref('payment.payment_method_paypal'),
+                         ref('payment.payment_method_ussd'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_provider_iyzico" model="payment.provider">
+        <field name="name">Iyzico</field>
+        <field name="image_128" type="base64" file="payment_iyzico/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_iyzico"/>
+        <field
+            name="payment_method_ids"
+            eval="[Command.set([
+                ref('payment.payment_method_card'),
+                ref('payment.payment_method_bank_transfer'),
+            ])]"
+        />
+    </record>
+
+    <record id="payment_provider_mercado_pago" model="payment.provider">
+        <field name="name">Mercado Pago</field>
+        <field name="image_128"
+               type="base64"
+               file="payment_mercado_pago/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_mercado_pago"/>
+
+         <!-- Payment methods must be fetched from the API. See
+            https://www.mercadopago.com.ar/developers/en/reference/payment_methods/_payment_methods/
+        -->
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_bank_transfer'),
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_mercado_pago_wallet'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_provider_mollie" model="payment.provider">
+        <field name="name">Mollie</field>
+        <field name="image_128" type="base64" file="payment_mollie/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_mollie"/>
+        <!-- https://www.mollie.com/en/payments -->
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_bancontact'),
+                         ref('payment.payment_method_bank_transfer'),
+                         ref('payment.payment_method_belfius'),
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_eps'),
+                         ref('payment.payment_method_ideal'),
+                         ref('payment.payment_method_kbc_cbc'),
+                         ref('payment.payment_method_paypal'),
+                         ref('payment.payment_method_paysafecard'),
+                         ref('payment.payment_method_p24'),
+                         ref('payment.payment_method_trustly'),
+                         ref('payment.payment_method_twint'),
+                     ])]"
+        />
+
+    </record>
+
+    <record id="payment_provider_nuvei" model="payment.provider">
+        <field name="name">Nuvei</field>
+        <field name="image_128" type="base64" file="payment_nuvei/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_nuvei"/>
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_astropay'),
+                         ref('payment.payment_method_boleto'),
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_nuvei_local'),
+                         ref('payment.payment_method_oxxopay'),
+                         ref('payment.payment_method_pix'),
+                         ref('payment.payment_method_pse'),
+                         ref('payment.payment_method_spei'),
+                         ref('payment.payment_method_webpay'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_provider_paymob" model="payment.provider">
+        <field name="name">Paymob</field>
+        <field name="image_128" type="base64" file="payment_paymob/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_paymob"/>
+        <!-- For each country available payment methods are different but card is common for all-->
+        <!-- https://developers.paymob.com/egypt/payment-methods -->
+        <field
+            name="payment_method_ids"
+            eval="[Command.set([
+                    ref('payment_method_aman'),
+                    ref('payment.payment_method_card'),
+                    ref('payment_method_contact'),
+                    ref('payment_method_easypaisa'),
+                    ref('payment_method_forsa'),
+                    ref('payment_method_halan'),
+                    ref('payment_method_installments_eg'),
+                    ref('payment_method_jazzcash'),
+                    ref('payment_method_kiosk'),
+                    ref('payment_method_mobile_wallet_eg'),
+                    ref('payment_method_omannet'),
+                    ref('payment_method_premium_card'),
+                    ref('payment_method_souhoola'),
+                    ref('payment_method_stcpay'),
+                    ref('payment_method_sympl'),
+                    ref('payment_method_tabby'),
+                    ref('payment_method_tamara'),
+                    ref('payment_method_valu'),
+                ])]"
+        />
+    </record>
+
+    <record id="payment_provider_paypal" model="payment.provider">
+        <field name="name">PayPal</field>
+        <field name="image_128" type="base64" file="payment_paypal/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_paypal"/>
+        <!-- https://www.paypal.com/us/selfhelp/article/Which-credit-cards-can-I-accept-with-PayPal-Merchant-Services-FAQ1525#business -->
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_paypal'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_provider_razorpay" model="payment.provider">
+        <field name="name">Razorpay</field>
+        <field name="image_128" type="base64" file="payment_razorpay/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_razorpay"/>
+        <!-- https://razorpay.com/docs/payments/payment-methods/#supported-payment-methods -->
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_emi_india'),
+                         ref('payment.payment_method_fpx'),
+                         ref('payment.payment_method_netbanking'),
+                         ref('payment.payment_method_paylater_india'),
+                         ref('payment.payment_method_paynow'),
+                         ref('payment.payment_method_upi'),
+                         ref('payment.payment_method_wallets_india'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_provider_redsys" model="payment.provider">
+        <field name="name">Redsys</field>
+        <field name="image_128" type="base64" file="payment_redsys/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_redsys"/>
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_bizum'),
+                         ref('payment.payment_method_card'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_provider_sepa_direct_debit" model="payment.provider">
+        <field name="name">SEPA Direct Debit</field>
+        <field name="sequence">20</field>
+        <field name="image_128"
+               type="base64"
+               file="base/static/img/icons/payment_sepa_direct_debit.png"/>
+        <field name="module_id" ref="base.module_payment_sepa_direct_debit"/>
+        <field name="payment_method_ids"
+           eval="[Command.set([
+                     ref('payment.payment_method_sepa_direct_debit'),
+                 ])]"
+        />
+    </record>
+
+    <record id="payment_provider_stripe" model="payment.provider">
+        <field name="name">Stripe</field>
+        <field name="image_128" type="base64" file="payment_stripe/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_stripe"/>
+        <!--
+            See https://stripe.com/payments/payment-methods-guide
+            See https://support.goteamup.com/hc/en-us/articles/115002089349-Which-cards-and-payment-types-can-I-accept-with-Stripe-
+        -->
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_ach_direct_debit'),
+                         ref('payment.payment_method_affirm'),
+                         ref('payment.payment_method_afterpay'),
+                         ref('payment.payment_method_alipay'),
+                         ref('payment.payment_method_amazon_pay'),
+                         ref('payment.payment_method_bacs_direct_debit'),
+                         ref('payment.payment_method_bancontact'),
+                         ref('payment.payment_method_becs_direct_debit'),
+                         ref('payment.payment_method_boleto'),
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_cash_app_pay'),
+                         ref('payment.payment_method_clearpay'),
+                         ref('payment.payment_method_eps'),
+                         ref('payment.payment_method_fpx'),
+                         ref('payment.payment_method_grabpay'),
+                         ref('payment.payment_method_ideal'),
+                         ref('payment.payment_method_klarna'),
+                         ref('payment.payment_method_mobile_pay'),
+                         ref('payment.payment_method_multibanco'),
+                         ref('payment.payment_method_p24'),
+                         ref('payment.payment_method_paynow'),
+                         ref('payment.payment_method_paypal'),
+                         ref('payment.payment_method_pix'),
+                         ref('payment.payment_method_promptpay'),
+                         ref('payment.payment_method_revolut_pay'),
+                         ref('payment.payment_method_sepa_direct_debit'),
+                         ref('payment.payment_method_sofort'),
+                         ref('payment.payment_method_twint'),
+                         ref('payment.payment_method_upi'),
+                         ref('payment.payment_method_wechat_pay'),
+                         ref('payment.payment_method_zip'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_provider_transfer" model="payment.provider">
+        <field name="name">Wire Transfer</field>
+        <field name="sequence">30</field>
+        <field name="image_128" type="base64" file="payment_custom/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_custom"/>
+    </record>
+
+    <record id="payment_provider_worldline" model="payment.provider">
+        <field name="name">Worldline</field>
+        <field name="image_128" type="base64" file="payment_worldline/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_worldline"/>
+        <!-- https://docs.direct.worldline-solutions.com/en/payment-methods-and-features/index -->
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_alipay_plus'),
+                         ref('payment.payment_method_bancontact'),
+                         ref('payment.payment_method_bizum'),
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_cofidis'),
+                         ref('payment.payment_method_eps'),
+                         ref('payment.payment_method_floa_bank'),
+                         ref('payment.payment_method_ideal'),
+                         ref('payment.payment_method_klarna'),
+                         ref('payment.payment_method_mbway'),
+                         ref('payment.payment_method_multibanco'),
+                         ref('payment.payment_method_p24'),
+                         ref('payment.payment_method_paypal'),
+                         ref('payment.payment_method_post_finance'),
+                         ref('payment.payment_method_twint'),
+                         ref('payment.payment_method_wechat_pay'),
+                     ])]"
+        />
+    </record>
+
+    <record id="payment_provider_xendit" model="payment.provider">
+        <field name="name">Xendit</field>
+        <field name="image_128"
+               type="base64"
+               file="payment_xendit/static/description/icon.png"
+        />
+        <field name="module_id" ref="base.module_payment_xendit"/>
+        <!-- See https://docs.xendit.co/payment-link/payment-channels for payment methods. -->
+        <field name="payment_method_ids"
+               eval="[(6, 0, [
+                   ref('payment.payment_method_7eleven'),
+                   ref('payment.payment_method_akulaku'),
+                   ref('payment.payment_method_appota'),
+                   ref('payment.payment_method_bangkok_bank'),
+                   ref('payment.payment_method_bank_bca'),
+                   ref('payment.payment_method_bank_permata'),
+                   ref('payment.payment_method_billease'),
+                   ref('payment.payment_method_bni'),
+                   ref('payment.payment_method_bri'),
+                   ref('payment.payment_method_bsi'),
+                   ref('payment.payment_method_card'),
+                   ref('payment.payment_method_cashalo'),
+                   ref('payment.payment_method_cebuana'),
+                   ref('payment.payment_method_cimb_niaga'),
+                   ref('payment.payment_method_dana'),
+                   ref('payment.payment_method_fpx'),
+                   ref('payment.payment_method_gcash'),
+                   ref('payment.payment_method_grabpay'),
+                   ref('payment.payment_method_jeniuspay'),
+                   ref('payment.payment_method_kfh'),
+                   ref('payment.payment_method_kredivo'),
+                   ref('payment.payment_method_krungthai_bank'),
+                   ref('payment.payment_method_linepay'),
+                   ref('payment.payment_method_linkaja'),
+                   ref('payment.payment_method_mandiri'),
+                   ref('payment.payment_method_maya'),
+                   ref('payment.payment_method_ovo'),
+                   ref('payment.payment_method_promptpay'),
+                   ref('payment.payment_method_qris'),
+                   ref('payment.payment_method_scb'),
+                   ref('payment.payment_method_shopeepay'),
+                   ref('payment.payment_method_truemoney'),
+                   ref('payment.payment_method_uob'),
+                   ref('payment.payment_method_wechat_pay'),
+                   ref('payment.payment_method_touch_n_go'),
+                   ref('payment.payment_method_viettelpay'),
+                   ref('payment.payment_method_vietcapital'),
+                   ref('payment.payment_method_vnptwallet'),
+                   ref('payment.payment_method_vpbank'),
+                   ref('payment.payment_method_woori'),
+                   ref('payment.payment_method_zalopay'),
+               ])]"/>
+    </record>
+
+</odoo>

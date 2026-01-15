@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.CategorySelector">
+        <div t-attf-class="{{this.pos.config.show_category_images ? 'category-list' : 'product-list'}} d-grid gap-1 gap-lg-2 p-2">
+            <t t-foreach="this.getCategoriesAndSub()" t-as="category" t-key="category.id">
+                <button t-on-click="() => this.pos.setSelectedCategory(category.id)"
+                    t-attf-class="o_colorlist_item_color_{{category.color or 'none'}}"
+                    t-att-class="{
+                        'border-0': category.isChildren and !this.isAncestorOrSelected(category), 
+                        'opacity-75 border-0': !category.isChildren and !category.isSelected,
+                        'justify-content-center': ui.isSmall
+                    }"
+                    class="category-button p-1 btn btn-light d-flex justify-content-center align-items-center rounded-3">
+                    <img t-if="category.imgSrc and !ui.isSmall" t-att-src="category.imgSrc"
+                        class="category-img-thumb h-100 rounded-3 object-fit-cover"
+                        alt="Category"
+                    />
+                    <span t-if="category.name"
+                          t-att-class="{'px-2': category.imgSrc, 'px-3': !category.imgSrc and this.pos.config.show_category_images}"
+                          class="text-center text-wrap-categ fs-5" t-esc="category.name" />
+                </button>
+            </t>
+        </div>
+    </t>
+</templates>

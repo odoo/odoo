@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!--  MAILING !-->
+        <record model="ir.ui.view" id="view_mail_mass_mailing_search">
+            <field name="name">mailing.mailing.search</field>
+            <field name="model">mailing.mailing</field>
+            <field name="arch" type="xml">
+               <search string="Mailings">
+                    <field name="name" string="Mailing" filter_domain="['|', ('name', 'ilike', self), ('subject', 'ilike', self)]"/>
+                    <field name="campaign_id" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign"/>
+                    <filter string="My Mailings" name="assigned_to_me"
+                            domain="[('user_id', '=', uid)]"
+                            help="Mailings that are assigned to me"/>
+                    <separator/>
+                    <filter name="filter_sent_date" date="sent_date"/>
+                    <separator/>
+                    <filter string="A/B Tests" name="filter_ab_test" domain="[('ab_testing_enabled', '=', True)]"/>
+                    <filter string="A/B Tests to review" name="filter_ab_test_to_review"
+                        domain="[('ab_testing_enabled', '=', True), ('ab_testing_winner_selection', '=', 'manual'), ('ab_testing_completed', '=', False)]"/>
+                    <separator/>
+                    <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+                    <group>
+                        <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                        <filter string="Sent By" name="sent_by" domain="[]" context="{'group_by': 'email_from'}"/>
+                        <filter string="Mailing List" name="group_by_contact_list_ids" domain="[]" context="{'group_by': 'contact_list_ids'}"/>
+                        <separator/>
+                        <filter string="Sent Period" name="sent_date" domain="[]" context="{'group_by': 'sent_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mass_mailing_tree">
+            <field name="name">mailing.mailing.list</field>
+            <field name="model">mailing.mailing</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <list string="Mailings" sample="1" class="o_mass_mailing_mailing_tree">
+                    <field name="calendar_date" string="Date" widget="datetime"/>
+                    <field name="subject" readonly="state in ('sending', 'done')"/>
+                    <field name="mailing_model_id" string="Recipients" optional="hide"/>
+                    <field name="user_id" widget="many2one_avatar_user"/>
+                    <field name="ab_testing_enabled" string="A/B Test" groups="mass_mailing.group_mass_mailing_campaign"/>
+                    <field name="campaign_id" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign" optional="hide"/>
+                    <field name="sent" sum="Total" />
+                    <field name="received_ratio" class="d-flex align-items-center ps-0 ps-lg-5" widget="progressbar" string="Delivered (%)" avg="Average"/>
+                    <field name="opened_ratio" class="d-flex align-items-center ps-0 ps-lg-5" widget="progressbar" string="Opened (%)" avg="Average"/>
+                    <field name="bounced_ratio" string="Bounced (%)" optional="hide" avg="Average"/>
+                    <field name="clicks_ratio" string="Clicked (%)" avg="Average"/>
+                    <field name="replied_ratio" string="Replied (%)" avg="Average"/>
+                    <field name="state" decoration-info="state in ['draft', 'in_queue']" decoration-success="state == 'sending' or state == 'done'" widget="badge"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Main form view for inheriting from -->
+        <record model="ir.ui.view" id="view_mail_mass_mailing_form">
+            <field name="name">mailing.mailing.form</field>
+            <field name="model">mailing.mailing</field>
+            <field name="arch" type="xml">
+                <form string="Mailing" class="o_mass_mailing_mailing_form">
+                    <header>
+                        <button name="action_launch" type="object" class="oe_highlight" string="Send"
+                            invisible="state in ('in_queue', 'sending', 'done')" data-hotkey="q"
+                            confirm="Once you send these emails, they'll be making a grand entrance in all the inboxes, creating quite the buzz!"
+                            confirm-title="Ready to unleash emails?" confirm-label="Send to all"
+                            />
+                        <button name="action_schedule" type="object" class="btn-secondary" string="Schedule"
+                            invisible="state in ('in_queue', 'sending', 'done')" data-hotkey="v"/>
+                        <button name="action_duplicate" type="object" class="btn-secondary" string="Duplicate"
+                            data-hotkey="d" invisible="state != 'done'"/>
+                        <button name="action_test" type="object" class="btn-secondary" string="Test" data-hotkey="k"/>
+                        <button name="action_cancel" type="object" invisible="state != 'in_queue'" class="btn-secondary" string="Cancel" data-hotkey="x"/>
+                        <button name="action_retry_failed" type="object" invisible="state != 'done' or failed == 0" class="oe_highlight" string="Retry" data-hotkey="y"/>
+                        <button type="object"
+                            name="action_set_favorite"
+                            class="btn-secondary"
+                            invisible="favorite"
+                            string="Add to Templates"/>
+                        <button type="object"
+                            name="action_remove_favorite"
+                            class="btn-secondary"
+                            invisible="not favorite"
+                            string="Remove from Templates"/>
+                        <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,in_queue,sending,done"/>
+                    </header>
+                    <div class="alert alert-info o_mass_mailing_alert_message" role="alert"
+                            invisible="state not in ['in_queue', 'done'] and sent == 0 and canceled == 0 and scheduled == 0 and failed == 0 and not warning_message">
+                        <div class="o_mails_canceled" invisible="canceled == 0">
+                            <button class="btn btn-link py-0"
+                                    name="action_view_traces_canceled"
+                                    type="object">
+                                <strong>
+                                    <field name="canceled" class="oe_inline me-2"/>
+                                    <span name="canceled_text">emails have been cancelled and will not be sent.</span>
+                                </strong>
+                            </button>
+                        </div>
+                        <div class="o_mails_scheduled" invisible="scheduled == 0">
+                            <button class="btn btn-link py-0"
+                                    name="action_view_traces_scheduled"
+                                    type="object">
+                                <strong>
+                                    <field name="scheduled" class="oe_inline me-2"/>
+                                    <span name="scheduled_text">emails are in queue and will be sent soon.</span>
+                                </strong>
+                            </button>
+                        </div>
+                        <div class="o_mails_process" invisible="process == 0">
+                            <button class="btn btn-link py-0"
+                                    name="action_view_traces_process"
+                                    type="object">
+                                <strong>
+                                    <field name="process" class="oe_inline me-2"/>
+                                    <span name="process_text">emails are being processed.</span>
+                                </strong>
+                            </button>
+                        </div>
+                        <div class="o_mails_sent" invisible="sent == 0 and state in ('draft', 'test', 'in_queue')">
+                            <button class="btn btn-link py-0"
+                                    name="action_view_traces_sent"
+                                    type="object">
+                                <strong>
+                                    <field name="sent" class="oe_inline me-2"/>
+                                    <span name="sent">emails have been sent.</span>
+                                </strong>
+                            </button>
+                            <strong class="d-block" invisible="mailing_type == 'mail' or not ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or canceled != 0">
+                                <span name="ab_test_text">There wasn't enough recipients given to this mailing. </span>
+                            </strong>
+                        </div>
+                        <div class="o_mails_failed" invisible="state != 'done' or failed == 0">
+                            <button class="btn btn-link py-0"
+                                    name="action_view_traces_failed"
+                                    type="object">
+                                <strong>
+                                    <field name="failed" class="oe_inline me-2"/>
+                                    <span name="failed_text">emails could not be sent.</span>
+                            </strong>
+                            </button>
+                        </div>
+
+                        <div class="o_mails_in_queue" invisible="state != 'in_queue'">
+                            <strong invisible="next_departure_is_past or schedule_type == 'now'">
+                                <span name="next_departure_text">This mailing is scheduled for </span>
+                                <field name="next_departure" class="oe_inline"/>.
+                            </strong>
+                            <strong invisible="not next_departure_is_past or schedule_type == 'now'" class="d-flex align-items-center">
+                                <field name="next_departure_is_past" invisible="1"/>
+                                <span name="refresh_text">This mailing will be sent as soon as possible.</span>
+                                <button name="action_reload" type="object" class="btn btn-link pe-0">
+                                    <u>Refresh <i class="fa fa-refresh ms-1"/></u>
+                                </button>
+                            </strong>
+                            <strong invisible="schedule_type != 'now'" class="d-flex align-items-center">
+                                <field name="next_departure_is_past" invisible="1"/>
+                                <field name="schedule_type" invisible="1"/>
+                                <span name="mailing_schedule_type_now_text">This mailing will be sent as soon as possible.</span>
+                                <button name="action_reload" type="object" class="btn btn-link pe-0">
+                                    <u>Refresh <i class="fa fa-refresh ms-1"/></u>
+                                </button>
+                            </strong>
+                        </div>
+                        <div invisible="not warning_message">
+                            <strong><field name="warning_message"/></strong>
+                        </div>
+                    </div>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_opened"
+                                type="object"
+                                context="{'search_default_filter_opened': True}"
+                                invisible="state in ('draft', 'test')"
+                                class="oe_stat_button">
+                                <field name="opened_ratio" string="Opened" widget="percentpie"/>
+                            </button>
+                            <button name="action_view_replied"
+                                type="object"
+                                context="{'search_default_filter_replied': True}"
+                                invisible="state in ('draft', 'test')"
+                                class="oe_stat_button">
+                                <field name="replied_ratio" string="Replied" widget="percentpie"/>
+                            </button>
+                            <button name="action_view_clicked"
+                                type="object"
+                                context="{'search_default_filter_clicked': True}"
+                                invisible="state in ('draft', 'test')"
+                                class="oe_stat_button">
+                                <field name="clicks_ratio" string="Clicked" widget="percentpie"/>
+                            </button>
+                            <button name="action_view_delivered"
+                                id="button_view_delivered"
+                                type="object"
+                                context="{'search_default_filter_delivered': True}"
+                                invisible="state in ('draft', 'test')"
+                                class="oe_stat_button">
+                                <field name="received_ratio" string="Received" widget="percentpie"/>
+                            </button>
+                            <button name="action_view_bounced"
+                                type="object"
+                                context="{'search_default_filter_bounced': True}"
+                                invisible="state in ('draft', 'test')"
+                                class="oe_stat_button">
+                                <field name="bounced_ratio" string="Bounced" widget="percentpie"/>
+                            </button>
+                            <button name="action_view_link_trackers"
+                                invisible="state != 'done'"
+                                type="object" class="oe_stat_button" icon="fa-link">
+                                <field name="link_trackers_count" widget="statinfo" string="Link Trackers"/>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <group class="o_mass_mailing_mailing_group">
+                            <field name="active" invisible="1"/>
+                            <field name="create_uid" invisible="1"/>
+                            <field name="mailing_type" widget="radio" options="{'horizontal': true}"
+                                invisible="1"
+                                readonly="state != 'draft'" force_save="1"/>
+                            <field class="text-break" name="subject"
+                                options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}"
+                                readonly="state in ('sending', 'done')"
+                                widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>
+                            <label for="mailing_model_id" string="Recipients"/>
+                            <div name="mailing_model_id_container">
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        <field name="mailing_model_id" options="{'no_open': True, 'no_create': True}"
+                                            readonly="state in ('sending', 'done')"/>
+                                    </div>
+                                    <div invisible="not mailing_on_mailing_list" class="o_mass_mailing_contact_list_ids col-md-auto pt-1">
+                                        <label for="contact_list_ids" string="Mailing Lists:" class="oe_edit_only pe-3"/>
+                                        <div class="d-inline-flex flex-row align-items-center">
+                                            <field name="contact_list_ids" widget="many2many_tags"
+                                                placeholder="Select recipients..." class="oe_inline mb-0"
+                                                context="{'form_view_ref': 'mass_mailing.mailing_list_view_form_simplified'}"
+                                                readonly="state in ('sending', 'done')"/>
+                                            <button icon="fa-user-plus" type="object" class="btn btn-secondary py-0 px-1 ms-1"
+                                                invisible="not contact_list_ids or not contact_list_ids or state in ('sending', 'done')"
+                                                name="action_view_mailing_contacts" title="Add Mailing Contacts"/>
+                                        </div>
+                                    </div>
+                                    <div invisible="mailing_on_mailing_list" class="col-md-auto o_mailing_filter_width">
+                                        <field name="mailing_filter_id" placeholder="Reload a favorite filter"
+                                               class="o_mailing_filter_readonly_width" widget="mailing_filter"
+                                               options="{'no_create': 1, 'no_open': 1, 'domain_field': 'mailing_domain', 'model_field': 'mailing_model_id'}"
+                                               readonly="state in ('sending', 'done')"/>
+                                    </div>
+                                    <field name="mailing_filter_count" invisible="1"/>
+                                </div>
+
+                                <field name="mailing_model_name" invisible="1"/>
+                                <field name="mailing_on_mailing_list" invisible="1"/>
+                                <field name="mailing_model_real" invisible="1"/>
+                                <field name="mailing_domain" widget="domain"
+                                    options="{'model': 'mailing_model_real', 'foldable': true}"
+                                    invisible="mailing_on_mailing_list"
+                                    readonly="state in ('sending', 'done')"/>
+                            </div>
+                        </group>
+                        <notebook>
+                            <page string="Mail Body" name="mail_body">
+                                <div class="position-relative">
+                                    <field name="body_arch" class="o_mail_body_mailing" widget="mass_mailing_html"
+                                        options="{
+                                            'inline_field': 'body_html',
+                                            'dynamic_placeholder': true,
+                                            'dynamic_placeholder_model_reference_field': 'mailing_model_real',
+                                        }" readonly="state in ('sending', 'done')"/>
+                                    <field name="is_body_empty" invisible="1"/>
+                                </div>
+                            </page>
+                            <page string="A/B Tests" name="ab_testing">
+                                <group>
+                                    <group>
+                                        <label for="ab_testing_enabled"/>
+                                        <span class="d-flex">
+                                            <field name="ab_testing_enabled" readonly="state != 'draft'" force_save="1"/>
+                                            <span class="d-flex" invisible="not ab_testing_enabled">
+                                                on <field name="ab_testing_pc" class="mx-1 text-center"
+                                                    readonly="state != 'draft'"/> %
+                                            </span>
+                                        </span>
+                                        <field name="ab_testing_winner_selection"
+                                            invisible="not ab_testing_enabled or mailing_type != 'mail'"
+                                            readonly="state != 'draft'"
+                                            required="ab_testing_enabled and mailing_type == 'mail'"/>
+                                        <field name="ab_testing_schedule_datetime"
+                                            invisible="not ab_testing_enabled or ab_testing_winner_selection == 'manual'"
+                                            readonly="not ab_testing_enabled or state != 'draft'"
+                                            required="ab_testing_enabled and ab_testing_winner_selection != 'manual'"/>
+                                        <field name="is_ab_test_sent" invisible="1"/>
+                                    </group>
+                                    <div>
+                                        <field name="ab_testing_mailings_count" invisible="1"/>
+                                        <field name="ab_testing_completed" invisible="1"/>
+                                        <field name="ab_testing_description" nolabel="1"/>
+                                        <div id="mailing_form_ab_buttons" invisible="ab_testing_mailings_count &lt; 2 or not ab_testing_enabled">
+                                            <button name="action_compare_versions" type="object" class="btn btn-link d-block">
+                                                <i class="fa fa-bar-chart"/> Compare Version
+                                            </button>
+                                            <button name="action_duplicate" type="object" class="btn btn-link d-block" invisible="ab_testing_completed">
+                                                <i class="fa fa-copy"/> Create an Alternative
+                                            </button>
+                                            <button name="action_send_winner_mailing" type="object" class="btn btn-link d-block" invisible="not is_ab_test_sent or ab_testing_completed or ab_testing_winner_selection == 'manual'">
+                                                <i class="fa fa-envelope"/><span name="ab_test_auto">
+                                                    Send Winner Now
+                                                </span>
+                                            </button>
+                                            <button name="action_select_as_winner" type="object" class="btn btn-link d-block"
+                                                invisible="ab_testing_completed or ab_testing_winner_selection != 'manual'">
+                                                <i class="fa fa-envelope"/> Send this as winner
+                                            </button>
+                                        </div>
+                                        <button name="action_duplicate" type="object" class="btn btn-primary"
+                                            invisible="ab_testing_mailings_count &gt;= 2 or not ab_testing_enabled">
+                                            Create an Alternative Version
+                                        </button>
+                                    </div>
+                                </group>
+                            </page>
+                            <page string="Settings" name="settings">
+                                <group>
+                                    <group string="Email Content" name="email_content" invisible="mailing_type != 'mail'">
+                                        <field class="o_text_overflow" name="preview" string="Preview Text"
+                                            options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}"
+                                            readonly="state in ('sending', 'done')"
+                                            widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
+                                        <field name="email_from" readonly="state in ('sending', 'done')"/>
+                                        <label for="reply_to"/>
+                                        <div name="reply_to_details">
+                                            <field name="reply_to_mode" widget="radio"
+                                                invisible="mailing_model_name in ['mailing.contact', 'res.partner', 'mailing.list']"
+                                                readonly="state in ('sending', 'done')"/>
+                                            <field name="reply_to"
+                                                invisible="reply_to_mode == 'update'"
+                                                readonly="state in ('sending', 'done')"
+                                                required="reply_to_mode == 'new'"/>
+                                            <div style="margin-top:-5px">
+                                                <small class="oe_edit_only text-muted mb-2"
+                                                    style="font-size:74%"
+                                                    invisible="reply_to_mode == 'update' or mailing_model_name in ['mailing.contact', 'res.partner', 'mailing.list']">
+                                                    To track replies, this address must belong to this database.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <label for="attachment_ids"/>
+                                        <div name="attachment_ids_details">
+                                            <field name="attachment_ids"  widget="many2many_binary" string="Attach a file"
+                                                readonly="state in ('sending', 'done')"/>
+                                        </div>
+                                    </group>
+                                    <group string="Tracking">
+                                        <field name="campaign_id"
+                                            string="Campaign"
+                                            groups="mass_mailing.group_mass_mailing_campaign"
+                                            options="{'create_name_field': 'title'}"
+                                            readonly="state in ('sending', 'done')"/>
+                                        <field name="medium_id"
+                                             string="Medium"
+                                             groups="base.group_no_one"
+                                             required="True"
+                                             readonly="state in ('sending', 'done')"/>
+                                        <field name="source_id"
+                                            string="Source"
+                                            class="o_text_overflow"
+                                            groups="base.group_no_one"
+                                            readonly="1"
+                                            required="False"/>
+                                        <field name="user_id" widget="many2one_avatar_user"
+                                            domain="[('share', '=', False)]"/>
+                                    </group>
+                                    <group string="Advanced" groups="base.group_no_one">
+                                        <field name="mail_server_available" invisible="1"/>
+                                        <field name="name" string="Name" required="False" readonly="state in ('sending', 'done')"/>
+                                        <field name="mail_server_id" invisible="not mail_server_available" readonly="state in ('sending', 'done')"/>
+                                        <field name="keep_archives" readonly="state in ('sending', 'done')"/>
+                                        <!-- Not using a dedicated server and being set means generic sending, won't allow disabling it. -->
+                                        <field name="use_exclusion_list" invisible="not mail_server_id and use_exclusion_list" readonly="state != 'draft'"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_mass_mailing_kanban">
+            <field name="name">mailing.mailing.kanban</field>
+            <field name="model">mailing.mailing</field>
+            <field name="arch" type="xml">
+                <kanban highlight_color="color" default_group_by="state" quick_create="false" sample="1">
+                    <field name='mailing_on_mailing_list'/>
+                    <field name='next_departure'/>
+                    <field name='active'/>
+                    <templates>
+                        <t t-name="menu" t-if="!selection_mode">
+                            <field name="color" widget="kanban_color_picker"/>
+                            <t t-if="widget.deletable">
+                                <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                            </t>
+                            <a role="menuitem" type="object" name="action_archive" class="dropdown-item o_kanban_mailing_active" t-if="record.active.raw_value">Archive</a>
+                            <a role="menuitem" type="object" name="action_unarchive" class="dropdown-item o_kanban_mailing_active" t-if="!record.active.raw_value">Restore</a>
+                        </t>
+                        <t t-name="card">
+                            <field name="subject" class="my-1 text-truncate fs-3 fw-bold"/>
+                            <field name="campaign_id" invisible="not sent_date" class="fw-bold fs-5" groups="mass_mailing.group_mass_mailing_campaign"/>
+                            <div>
+                                <i class="fa fa-bullseye me-2" role="img" aria-label="Lead/Opportunity"/>
+                                <field name='mailing_model_id' invisible="mailing_on_mailing_list"/>
+                                <span invisible="not mailing_on_mailing_list">Mailing Contact</span>
+                            </div>
+                            <footer class="pt-0">
+                                <div>
+                                    <span invisible="not sent_date" t-attf-title="Sent on #{record.sent_date.value}">
+                                        <span class="fa fa-paper-plane me-2 small my-auto" aria-label="Sent date"/>
+                                        <field name="sent_date"/>
+                                    </span>
+                                    <span invisible="not schedule_date" t-attf-title="Scheduled on #{record.schedule_date.value}">
+                                        <span class="fa fa-hourglass-half me-2 small my-auto" aria-label="Scheduled date"/>
+                                        <field name="schedule_date" readonly="state not in ['draft', 'in_queue']"/>
+                                    </span>
+                                    <span invisible="sent_date or schedule_date or state == 'in_queue'">
+                                        <field name='total' class="me-1 fw-bold"/>
+                                        <field name='mailing_model_id' invisible="mailing_on_mailing_list"/>
+                                        <span invisible="not mailing_on_mailing_list">Mailing Contact</span>
+                                    </span>
+                                    <span invisible="schedule_date or state != 'in_queue' or not next_departure"
+                                        t-attf-title="Scheduled on #{record.next_departure.value}" >
+                                        <span class="fa fa-hourglass-o me-2 small my-auto" aria-label="Scheduled date"/>
+                                        <span>Next Batch</span>
+                                    </span>
+                                </div>
+                                <field name="user_id" widget="many2one_avatar_user" class="ms-auto"/>
+                            </footer>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="mailing_mailing_view_calendar" model="ir.ui.view">
+            <field name="name">mailing.mailing.view.calendar</field>
+            <field name="model">mailing.mailing</field>
+            <field name="arch" type="xml">
+                <calendar date_start="calendar_date" string="Mailings" hide_time="true" mode="month" color="state" quick_create="0">
+                    <field name="mailing_model_id" string="Recipient" options="{'no_open': True}"/>
+                    <field name="user_id" filters="1" invisible="1"/>
+                    <field name="state" filters="1" invisible="1"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="mailing_mailing_action_mail" model="ir.actions.act_window">
+            <field name="name">Mailings</field>
+            <field name="path">email-marketing</field>
+            <field name="res_model">mailing.mailing</field>
+            <field name="view_mode">list,kanban,form,calendar</field>
+            <field name="domain">[('mailing_type', '=', 'mail')]</field>
+            <field name="context">{
+                    'search_default_assigned_to_me': 1,
+                    'default_user_id': uid,
+                    'default_mailing_type': 'mail',
+            }</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a Mailing
+              </p><p>
+                Design a striking email, define recipients and track its results.
+              </p>
+            </field>
+        </record>
+
+        <record id="mailing_mailing_action_mail_fullwidth_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">list</field>
+            <field name="act_window_id" ref="mass_mailing.mailing_mailing_action_mail"/>
+        </record>
+        <record id="mailing_mailing_action_mail_fullwidth_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="mass_mailing.mailing_mailing_action_mail"/>
+        </record>
+        <record id="mailing_mailing_action_mail_fullwidth_calendar" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">calendar</field>
+            <field name="act_window_id" ref="mass_mailing.mailing_mailing_action_mail"/>
+        </record>
+
+        <record id="action_view_mass_mailings_from_campaign" model="ir.actions.act_window">
+            <field name="name">Mailings</field>
+            <field name="res_model">mailing.mailing</field>
+            <field name="view_mode">kanban,list,form,calendar</field>
+            <field name="context">{
+                'search_default_assigned_to_me': 1,
+                'search_default_campaign_id': [active_id],
+                'default_campaign_id': active_id,
+                'default_user_id': uid,
+            }
+            </field>
+            <field name="domain">[('mailing_type', '=', 'mail')]</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new mailing
+              </p><p>
+                You don't need to import your mailing lists, you can easily
+                send emails<br/> to any contact saved in other Odoo apps.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_create_mass_mailings_from_campaign" model="ir.actions.act_window">
+            <field name="name">Mailings</field>
+            <field name="res_model">mailing.mailing</field>
+            <field name="view_mode">form,kanban,list</field>
+            <field name="context">{
+                'search_default_assigned_to_me': 1,
+                'search_default_campaign_id': [active_id],
+                'default_campaign_id': active_id,
+                'default_user_id': uid,
+            }
+            </field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new mailing
+              </p><p>
+                You don't need to import your mailing lists, you can easily
+                send emails<br/> to any contact saved in other Odoo apps.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_ab_testing_open_winner_mailing" model="ir.actions.act_window">
+            <field name="name">A/B Test Winner</field>
+            <field name="res_model">mailing.mailing</field>
+            <field name="view_mode">form</field>
+        </record>
+</odoo>

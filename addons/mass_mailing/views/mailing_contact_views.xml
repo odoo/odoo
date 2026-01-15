@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <record id="mailing_contact_view_search" model="ir.ui.view">
+        <field name="name">mailing.contact.view.search</field>
+        <field name="model">mailing.contact</field>
+        <field name="arch" type="xml">
+           <search string="Mailing List Contacts">
+                <field name="name"
+                    filter_domain="['|', '|', ('name','ilike',self), ('company_name','ilike',self), ('email_normalized','ilike',self)]"
+                    string="Name / Email"/>
+                <field name="tag_ids"/>
+                <field name="list_ids"/>
+                <field name="properties"/>
+                <separator/>
+                <filter string="Valid Email Recipients"
+                    name="filter_valid_email_recipient"
+                    domain="[('opt_out', '=', False), ('is_blacklisted', '=', False), ('email_normalized', '!=', False)]"
+                    invisible="not context.get('default_list_ids')"/>
+                <separator/>
+                <filter name="filter_bounce" string="Bounced" domain="[('message_bounce', '>', 0)]"/>
+                <filter name="filter_blacklisted" string="Blacklisted" domain="[('is_blacklisted','=',True)]" invisible="1"/>
+                <filter name="filter_opt_out" string="Opted-out" domain="[('opt_out', '=', True)]" invisible="1"/>
+                <separator/>
+                <filter string="Exclude Blacklisted Emails"
+                    name="filter_not_email_bl"
+                    domain="[('is_blacklisted', '=', False)]"/>
+                <separator/>
+                <filter string="Exclude Opt Out"
+                    name="filter_not_optout"
+                    domain="[('opt_out', '=', False)]"
+                    invisible="not context.get('default_list_ids')"/>
+                <group>
+                    <filter string="Creation Date" name="group_create_date"
+                        context="{'group_by': 'create_date'}"/>
+                    <filter string="Properties" name="group_properties"
+                        context="{'group_by': 'properties'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="mailing_contact_view_tree" model="ir.ui.view">
+        <field name="name">mailing.contact.view.list</field>
+        <field name="model">mailing.contact</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <list string="Mailing List Contacts" sample="1" multi_edit="1">
+                <header>
+                    <button name="action_import" string="Import" type="object" display="always"
+                        context="{'from_mailing_list_ids': context.get('active_ids') if context.get('active_model') == 'mailing.list' else False}"/>
+                    <button name="action_add_to_mailing_list" string="Add to List" type="object"/>
+                </header>
+                <field name="create_date" optional="show"/>
+                <field name="name" optional="show" readonly="1"/>
+                <field name="company_name"/>
+                <field name="email" readonly="1"/>
+                <field name="is_blacklisted" string="Email Blacklisted"/>
+                <field name="country_id" optional="hide"/>
+                <field name="message_bounce" sum="Total Bounces" readonly="1"/>
+                <field name="opt_out" readonly="1" column_invisible="'default_list_ids' not in context"/>
+                <field name="list_ids" widget="many2many_tags" optional="hide"/>
+                <field name="properties" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mailing_contact_view_kanban" model="ir.ui.view">
+        <field name="name">mailing.contact.view.kanban</field>
+        <field name="model">mailing.contact</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <header>
+                    <button name="action_import" string="Import" type="object" display="always"
+                        context="{'from_mailing_list_ids': context.get('active_ids') if context.get('active_model') == 'mailing.list' else False}"/>
+                </header>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex">
+                            <field name="name" class="fw-bolder fs-5"/>
+                            <div class="badge rounded-pill ms-auto" title="Number of bounced email.">
+                                <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> <field name="message_bounce"/>
+                            </div>
+                        </div>
+                        <field name="tag_ids"/>
+                        <field name="email" class="fw-bolder"/>
+                        <field name="company_name" class="ms-auto"/>
+                        <field name="properties" widget="properties"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="mailing_contact_view_form" model="ir.ui.view">
+        <field name="name">mailing.contact.view.form</field>
+        <field name="model">mailing.contact</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form string="Mailing List Contacts">
+                <field name="id" invisible="1"/>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Contact Name"/>
+                        <h1>
+                            <field class="text-break" name="name" placeholder="e.g. John Smith"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <label for="email" class="oe_inline"/>
+                            <div class="o_row o_row_readonly" name="email_details">
+                                 <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
+                                    title="This email is blacklisted for mass mailings. Click to unblacklist."
+                                    type="object" context="{'default_email': email}" groups="base.group_user"
+                                    invisible="not is_blacklisted"/>
+                                <field name="email" widget="email"/>
+                                <field name="is_blacklisted" invisible="1"/>
+                            </div>
+                            <field name="company_name"/>
+                            <field name="country_id" options="{'no_open': True, 'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="create_date" readonly="1" invisible="not id"/>
+                            <field name="message_bounce" readonly="1" invisible="not id"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                                   placeholder="e.g. &quot;VIP&quot;, &quot;Roadshow&quot;, ..." style="width: 100%"/>
+                        </group>
+                    </group>
+                    <div class="d-flex">
+                        <field name="properties" nolabel="1" columns="2"/>
+                    </div>
+                    <notebook>
+                        <page string="Subscriptions">
+                            <field name="subscription_ids">
+                                <list editable="bottom">
+                                    <field name="list_id"/>
+                                    <field name="opt_out_datetime" readonly="1"/>
+                                    <field name="opt_out"/>
+                                    <field name="opt_out_reason_id"/>
+                                    <field name="create_date" string="Subscription Date"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="mailing_contact_view_pivot" model="ir.ui.view">
+        <field name="name">mailing.contact.pivot</field>
+        <field name="model">mailing.contact</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <pivot string="Mailing List Contacts" stacked="1" sample="1">
+                <field name="create_date" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="mailing_contact_view_graph" model="ir.ui.view">
+        <field name="name">mailing.contact.view.graph</field>
+        <field name="model">mailing.contact</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <graph string="Mailing List Contacts" sample="1">
+                <field name="create_date"/>
+            </graph>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts">
+        <field name="name">Mailing List Contacts</field>
+        <field name="res_model">mailing.contact</field>
+        <field name="view_mode">list,kanban,form,graph,pivot</field>
+        <field name="context">{'search_default_filter_not_email_bl': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a mailing contact
+            </p><p>
+                Mailing contacts allow you to separate your marketing audience from your business contact directory.
+            </p>
+        </field>
+    </record>
+
+<data noupdate="1">
+    <!-- Activated dynamically when the option that splits name into first and last name is enabled. -->
+    <!-- We set them into a noupdate block to avoid the configuration to be reset after an update. -->
+    <record id="mailing_contact_view_tree_split_name" model="ir.ui.view">
+        <field name="name">mailing.contact.view.list.split.name</field>
+        <field name="model">mailing.contact</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_contact_view_tree"/>
+        <field name="active">False</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="first_name" optional="hide" readonly="1"/>
+                <field name="last_name" optional="hide" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_contact_view_form_split_name" model="ir.ui.view">
+        <field name="name">mailing.contact.view.form.split.name</field>
+        <field name="model">mailing.contact</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_contact_view_form"/>
+        <field name="active">False</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="invisible">not name</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <!-- simulate the placeholder on the readonly field -->
+                <span class="opacity-50" invisible="name">e.g. "John Smith"</span>
+            </xpath>
+            <xpath expr="//group/label[@for='email']" position="before">
+                <field name="first_name" placeholder="e.g. &quot;John&quot;"/>
+            </xpath>
+            <xpath expr="//group/field[@name='create_date']" position="before">
+                <field name="last_name" placeholder="e.g. &quot;Smith&quot;"/>
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

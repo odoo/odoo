@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_order_view_form_inherit_sale_loyalty" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit.sale.loyalty</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    name="action_view_gift_cards"
+                    class="oe_stat_button"
+                    type="object"
+                    icon="fa-gift"
+                    invisible="gift_card_count == 0"
+                >
+                    <field string="Gift Cards" name="gift_card_count" widget="statinfo"/>
+                </button>
+            </div>
+            <button name="action_open_discount_wizard" position="before">
+                <button
+                    string="Coupon Code"
+                    name="%(sale_loyalty.sale_loyalty_coupon_wizard_action)d"
+                    type="action"
+                    class="btn btn-secondary"
+                    invisible="locked or state == 'cancel'"
+                />
+                <button
+                    string="Coupon Code"
+                    name="%(sale_loyalty.sale_loyalty_coupon_wizard_action)d"
+                    type="action"
+                    class="btn btn-secondary"
+                    disabled="1"
+                    invisible="not (locked or state == 'cancel')"
+                />
+                <button
+                    string="Reward"
+                    name="action_open_reward_wizard"
+                    type="object"
+                    class="btn btn-secondary"
+                    help="Update current promotional lines and select new rewards if applicable."
+                    invisible="locked or state == 'cancel'"
+                />
+                <button
+                    string="Reward"
+                    name="action_open_reward_wizard"
+                    type="object"
+                    class="btn btn-secondary"
+                    help="Update current promotional lines and select new rewards if applicable."
+                    disabled="1"
+                    invisible="not (locked or state == 'cancel')"
+                />
+            </button>
+            <xpath expr="//list//field[@name='product_uom_qty']" position="before">
+                <field name="is_reward_line" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//list//field[@name='product_uom_qty']" position="attributes">
+                <attribute name="readonly" add="is_reward_line" separator=" or "/>
+            </xpath>
+            <xpath expr="//list//field[@name='price_unit']" position="attributes">
+                <attribute name="readonly" add="is_reward_line" separator=" or "/>
+            </xpath>
+            <xpath expr="//list//field[@name='tax_ids']" position="attributes">
+                <attribute name="readonly" add="is_reward_line" separator=" or "/>
+            </xpath>
+            <group name="note_group" position="after">
+                <group class="d-flex flex-row-reverse oe_subtotal_footer border-0">
+                    <field name="loyalty_data" widget="loyalty_data_field" nolabel="1" readonly="1"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

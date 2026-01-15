@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.project</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="50"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <app data-string="Project" string="Project" name="project" groups="project.group_project_manager">
+                        <block title="Tasks Management" id="tasks_management">
+                            <setting id="project_stages" help="Track the progress of your projects">
+                                <field name="group_project_stages"/>
+                                <div class="content-group" invisible="not group_project_stages">
+                                    <div class="mt8">
+                                        <button name="%(project.project_project_stage_configure)d" icon="oi-arrow-right" type="action" string="Configure Stages" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </setting>
+                        </block>
+                        <block title="Time Management" name="project_time">
+                            <setting id="log_time_tasks_setting" help="Track time spent on projects and tasks">
+                                <field name="module_hr_timesheet"/>
+                            </setting>
+                        </block>
+                    </app>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_config_settings_action" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'module' : 'project', 'bin_size': False}</field>
+        </record>
+</odoo>

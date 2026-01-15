@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="point_of_sale.PriceFormatter">
+        <t t-set="priceparts" t-value="priceParts"/>
+        <span t-if="!priceparts.isSuffix" class="me-1" style="font-size: 60%; opacity: 0.7;">
+            <t t-esc="priceparts.currencySymbol"/>
+        </span>
+        <t t-esc="priceparts.amountStr"/>
+        <span t-if="priceparts.decimal" style="font-size: 80%; opacity: 0.6;">
+            <t t-esc="priceparts.decimal"/>
+        </span>
+        <span t-if="priceparts.isSuffix" class="ms-1" style="font-size: 60%; opacity: 0.7;">
+            <t t-esc="priceparts.currencySymbol"/>
+        </span>
+    </t>
+</templates>

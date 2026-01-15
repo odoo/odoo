@@ -1,0 +1,74 @@
+.options-container:has(.o_wsale_products_list_page_options),
+.options-container:has(.o_wsale_product_page_options) {
+    > div:first-child { // Title
+        display: none !important;
+    }
+
+    > .we-bg-options-container {
+        margin-top: -4px; // Cancel margin
+        padding-top: 8px; // Avoid margin collapse, like bootstrap's pt-2
+    }
+    .o_wsale_panel_section_title {
+        color: white;
+    }
+}
+
+.options-container:has(.o_wsale_products_list_page_options) {
+    div[data-label="Style"].hb-row-sublevel-1 .hb-row-label::after {
+        height: $o-hb-row-min-height * 1.5;
+    }
+}
+
+.o_wsale_soptions_menu_sizes {
+    align-self: flex-start !important;
+
+    table {
+        margin: auto;
+
+        td {
+            margin: 0;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            border: 1px #dddddd solid;
+            cursor: pointer;
+
+            &.selected {
+                background-color: #b1d4f1;
+            }
+
+            .btn {
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                height: 100%;
+                min-height: unset;
+            }
+
+            .btn,
+            .btn-primary,
+            .btn.active {
+                background: transparent !important;
+            }
+        }
+
+        &.oe_hover td {
+            &.selected {
+                background-color: transparent;
+            }
+
+            &.select {
+                background-color: #b1d4f1;
+            }
+        }
+    }
+}
+
+.o_wsale_color_preview {
+    width: 1em;
+    height: 1em;
+    border: 1px solid white;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 50%;
+}

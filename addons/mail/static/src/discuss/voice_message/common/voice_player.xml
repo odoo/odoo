@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.VoicePlayer">
+        <div class="o-mail-VoicePlayer d-flex align-items-center my-1 position-relative">
+            <t t-set="playOrPause"><t t-if="state.repeat">Repeat</t><t t-elif="state.playing">Pause</t><t t-else="">Play</t></t>
+            <button class="border-0 btn shadow-none rounded-pill fa fa-fw ms-2 me-3 bg-200"
+                t-att-class="{
+                    'fa-stop text-danger btn-sm': state.playing,
+                    'btn-light btn-sm': !state.playing,
+                    'fa-play': !state.playing and !state.repeat,
+                    'fa-repeat': !state.playing and state.repeat,
+                }"
+                t-att-title="playOrPause" t-on-click.stop="() => this.onClickPlayPause()"/>
+            <div class="o-mail-VoicePlayer-wrapper">
+                <div t-ref="wrapper" class="h-100 position-relative">
+                    <div class="o-mail-VoicePlayer-drawer position-absolute top-0 bottom-0 overflow-hidden" t-ref="drawer">
+                        <canvas class="position-absolute" t-ref="progress"/>
+                    </div>
+                    <canvas class="position-absolute" t-ref="wave"/>
+                </div>
+            </div>
+            <div class="mx-2 text-muted" style="font-variant-numeric: tabular-nums;"><t t-esc="state.visualTime"/></div>
+        </div>
+    </t>
+
+</templates>

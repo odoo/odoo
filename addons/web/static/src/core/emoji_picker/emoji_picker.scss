@@ -1,0 +1,69 @@
+.popover .o-EmojiPicker {
+    width: 300px;
+    height: 365px;
+}
+
+.o-EmojiPicker-content {
+    padding-left: map-get($spacers, 1) * 3 / 2;
+    padding-right: map-get($spacers, 1) * 3 / 2;
+}
+
+.o-EmojiPicker {
+    --EmojiPicker-active: #{rgba($o-action, .15)};
+
+    .o-Emoji {
+        padding-left: map-get($spacers, 1);
+        padding-right: map-get($spacers, 1);
+        font-size: 0.8rem;
+        aspect-ratio: 1;
+        &:hover {
+            background-color: var(--EmojiPicker-active) !important;
+        }
+        &.o-active {
+            background-color: var(--EmojiPicker-active) !important;
+        }
+    }
+
+
+    .o-EmojiPicker-navbar {
+        --border-opacity: .5;
+        padding-top: map-get($spacers, 1) / 2;
+        padding-bottom: map-get($spacers, 1) / 2;
+
+        .o-Emoji {
+            > span {
+                filter: grayscale(1);
+            }
+            &:not(.o-active) > span {
+                opacity: 50%;
+            }
+        }
+    }
+
+    .o-EmojiPicker-sectionIcon {
+        filter: grayscale(1);
+    }
+
+    .o-EmojiPicker-empty {
+        font-size: 5rem !important;
+        filter: grayscale(0.25);
+    }
+}
+
+.o-EmojiPicker-category:before {
+    // invisible character so that category has constant height, regardless of text content.
+    content: "\200b"; /* unicode zero width space character */
+}
+
+.o-EmojiPicker-search {
+    input {
+        &::placeholder {
+            opacity: var(--EmojiPicker-placeholderOpacity, 50%);
+        }
+        &:not(:focus) {
+            & + .oi-search {
+                color: $text-muted;
+            }
+        }
+    }
+}

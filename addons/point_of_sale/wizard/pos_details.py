@@ -1,31 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from datetime import timedelta
+
+from odoo import api, fields, models
 
 
-class PosDetails(models.TransientModel):
+class PosDetailsWizard(models.TransientModel):
     _name = 'pos.details.wizard'
-    _description = 'Open Sales Details Report'
+    _description = 'Point of Sale Details Report'
 
     def _default_start_date(self):
         """ Find the earliest start_date of the latests sessions """
-        # restrict to configs available to the user
-        config_ids = self.env['pos.config'].search([]).ids
-        # exclude configs has not been opened for 2 days
-        self.env.cr.execute("""
-            SELECT
-            max(start_at) as start,
-            config_id
-            FROM pos_session
-            WHERE config_id = ANY(%s)
-            AND start_at > (NOW() - INTERVAL '2 DAYS')
-            GROUP BY config_id
-        """, (config_ids,))
-        latest_start_dates = [res['start'] for res in self.env.cr.dictfetchall()]
-        # earliest of the latest sessions
-        return latest_start_dates and min(latest_start_dates) or fields.Datetime.now()
+        values = self.env['pos.session']._read_group([
+            ('config_id', '!=', False),
+            ('start_at', '>', self.env.cr.now() - timedelta(days=2))
+        ], groupby=['config_id'], aggregates=['start_at:max'])
+        mapping = dict(values)
+        return (mapping and min(mapping.values())) or self.env.cr.now()
 
     start_date = fields.Datetime(required=True, default=_default_start_date)
     end_date = fields.Datetime(required=True, default=fields.Datetime.now)
@@ -39,15 +31,9 @@ class PosDetails(models.TransientModel):
 
     @api.onchange('end_date')
     def _onchange_end_date(self):
-        if self.end_date and self.end_date < self.start_date:
+        if self.end_date and self.start_date and self.end_date < self.start_date:
             self.start_date = self.end_date
 
-    @api.multi
     def generate_report(self):
-        if (not self.env.user.company_id.logo):
-            raise UserError(_("You have to set a logo or a layout for your company."))
-        elif (not self.env.user.company_id.external_report_layout):
-            raise UserError(_("You have to set your reports's header and footer layout."))
         data = {'date_start': self.start_date, 'date_stop': self.end_date, 'config_ids': self.pos_config_ids.ids}
-        return self.env['report'].get_action(
-            [], 'point_of_sale.report_saledetails', data=data)
+        return self.env.ref('point_of_sale.sale_details_report').report_action([], data=data)

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data auto_sequence="1">
+    <record id="mod_390_section_6" model="account.report">
+        <field name="name">Operaciones Específicas</field>
+        <field name="name@es">Operaciones Específicas</field>
+        <field name="filter_analytic" eval="False"/>
+        <field name="filter_date_range" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.es"/>
+        <field name="column_ids">
+            <record id="mod_390_column_sect6" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@es">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="mod_390_title_51" model="account.report.line">
+                <field name="name">Operaciones específicas</field>
+                <field name="name@es">Operaciones específicas</field>
+                <field name="code">aeat_mod_390_title_51</field>
+                <field name="children_ids">
+                    <record id="mod_390_title_52" model="account.report.line">
+                        <field name="name">Operaciones realizadas en el ejercicio</field>
+                        <field name="name@es">Operaciones realizadas en el ejercicio</field>
+                        <field name="code">aeat_mod_390_title_52</field>
+                        <field name="children_ids">
+                            <record id="mod_390_casilla_230" model="account.report.line">
+                                <field name="name">[230] Adquisiciones interiores exentas</field>
+                                <field name="name@es">[230] Adquisiciones interiores exentas</field>
+                                <field name="code">aeat_mod_390_230</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_230_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_109" model="account.report.line">
+                                <field name="name">[109] Adquisiciones intracomunitarias exentas</field>
+                                <field name="name@es">[109] Adquisiciones intracomunitarias exentas</field>
+                                <field name="code">aeat_mod_390_109</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_109_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_231" model="account.report.line">
+                                <field name="name">[231] Importaciones exentas</field>
+                                <field name="name@es">[231] Importaciones exentas</field>
+                                <field name="code">aeat_mod_390_231</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_231_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_232" model="account.report.line">
+                                <field name="name">[232] Bases imponibles del IVA soportado no deducible</field>
+                                <field name="name@es">[232] Bases imponibles del IVA soportado no deducible</field>
+                                <field name="code">aeat_mod_390_232</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_232_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_111" model="account.report.line">
+                                <field name="name">[111] Operaciones sujetas y no exentas que originan el derecho a la devolución mensual</field>
+                                <field name="name@es">[111] Operaciones sujetas y no exentas que originan el derecho a la devolución mensual</field>
+                                <field name="code">aeat_mod_390_111</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_111_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_113" model="account.report.line">
+                                <field name="name">[113] Entregas interiores de bienes devengadas por inversión del sujeto pasivo como consecuencia de operaciones triangulares</field>
+                                <field name="name@es">[113] Entregas interiores de bienes devengadas por inversión del sujeto pasivo como consecuencia de operaciones triangulares</field>
+                                <field name="code">aeat_mod_390_113</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_113_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_523" model="account.report.line">
+                                <field name="name">[523] Servicios localizados en el territorio de aplicación del impuesto por inversión del sujeto pasivo</field>
+                                <field name="name@es">[523] Servicios localizados en el territorio de aplicación del impuesto por inversión del sujeto pasivo</field>
+                                <field name="code">aeat_mod_390_523</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_523_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_53" model="account.report.line">
+                                <field name="name">Exclusivamente para aquellos sujetos pasivos acogidos al régimen especial del criterio de caja y para aquéllos que sean destinatarios de operaciones afectadas por el mismo</field>
+                                <field name="name@es">Exclusivamente para aquellos sujetos pasivos acogidos al régimen especial del criterio de caja y para aquéllos que sean destinatarios de operaciones afectadas por el mismo</field>
+                                <field name="code">aeat_mod_390_title_53</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_title_54" model="account.report.line">
+                                        <field name="name">Importes de las entregas de bienes y prestaciones de servicios a las que habiéndoles sido aplicado el régimen especial del criterio de caja hubieran resultado devengadas conforme a la regla general de devengo contenida en el art. 75 LIVA</field>
+                                        <field name="name@es">Importes de las entregas de bienes y prestaciones de servicios a las que habiéndoles sido aplicado el régimen especial del criterio de caja hubieran resultado devengadas conforme a la regla general de devengo contenida en el art. 75 LIVA</field>
+                                        <field name="code">aeat_mod_390_title_54</field>
+                                        <field name="children_ids">
+                                            <record id="mod_390_casilla_654" model="account.report.line">
+                                                <field name="name">[654] Base imponible</field>
+                                                <field name="name@es">[654] Base imponible</field>
+                                                <field name="code">aeat_mod_390_654</field>
+                                                <field name="expression_ids">
+                                                    <record id="mod_390_casilla_654_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">aggregation</field>
+                                                        <field name="formula">aeat_mod_303_62.balance</field>
+                                                        <field name="subformula">cross_report(l10n_es.mod_303)</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="mod_390_casilla_655" model="account.report.line">
+                                                <field name="name">[655] Cuota</field>
+                                                <field name="name@es">[655] Cuota</field>
+                                                <field name="code">aeat_mod_390_655</field>
+                                                <field name="expression_ids">
+                                                    <record id="mod_390_casilla_655_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">aggregation</field>
+                                                        <field name="formula">aeat_mod_303_63.balance</field>
+                                                        <field name="subformula">cross_report(l10n_es.mod_303)</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_title_55" model="account.report.line">
+                                        <field name="name">Importe de las adquisiciones de bienes y servicios a las que sea de aplicación o afecte el régimen especial del criterio de caja conforme a la regla general de devengo contenida en el art. 75 LIVA</field>
+                                        <field name="name@es">Importe de las adquisiciones de bienes y servicios a las que sea de aplicación o afecte el régimen especial del criterio de caja conforme a la regla general de devengo contenida en el art. 75 LIVA</field>
+                                        <field name="code">aeat_mod_390_title_55</field>
+                                        <field name="children_ids">
+                                            <record id="mod_390_casilla_656" model="account.report.line">
+                                                <field name="name">[656] Base imponible</field>
+                                                <field name="name@es">[656] Base imponible</field>
+                                                <field name="code">aeat_mod_390_656</field>
+                                                <field name="expression_ids">
+                                                    <record id="mod_390_casilla_656_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">aggregation</field>
+                                                        <field name="formula">aeat_mod_303_74.balance</field>
+                                                        <field name="subformula">cross_report(l10n_es.mod_303)</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="mod_390_casilla_657" model="account.report.line">
+                                                <field name="name">[657] Cuota soportada</field>
+                                                <field name="name@es">[657] Cuota soportada</field>
+                                                <field name="code">aeat_mod_390_657</field>
+                                                <field name="expression_ids">
+                                                    <record id="mod_390_casilla_657_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">aggregation</field>
+                                                        <field name="formula">aeat_mod_303_75.balance</field>
+                                                        <field name="subformula">cross_report(l10n_es.mod_303)</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</data>
+</odoo>

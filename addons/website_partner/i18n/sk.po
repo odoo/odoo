@@ -1,69 +1,117 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_partner
+# 	* website_partner
 #
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
-# Matus Krnac <matus.krnac@gmail.com>, 2016
+# Martin Trigaux, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-05-03 05:53+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"POT-Creation-Date: 2025-12-30 18:38+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
+"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
+">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: website_partner
 #: model:ir.model,name:website_partner.model_res_partner
-msgid "Partner"
-msgstr "Partner"
+msgid "Contact"
+msgstr "Kontakt"
 
 #. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_partner_self
-msgid "Self"
+#: model:ir.model,website_form_label:website_partner.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: website_partner
-#: model:ir.ui.view,arch_db:website_partner.partner_detail
-msgid "Short Description for List View"
-msgstr "Stručný popis pre zobrazenie zoznamu"
+#: model_terms:ir.ui.view,arch_db:website_partner.partner_page
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PARTNERS"
+msgstr ""
 
 #. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_partner_website_description
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__id
+msgid "ID"
+msgstr ""
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__is_published
+#: model:ir.model.fields,field_description:website_partner.field_res_users__is_published
+msgid "Is Published"
+msgstr ""
+
+#. module: website_partner
+#: model:mail.message.subtype,description:website_partner.mt_partner_published
+msgid "Partner Published"
+msgstr ""
+
+#. module: website_partner
+#: model:mail.message.subtype,description:website_partner.mt_partner_unpublished
+msgid "Partner Unpublished"
+msgstr ""
+
+#. module: website_partner
+#: model:mail.message.subtype,name:website_partner.mt_partner_published
+msgid "Partner published"
+msgstr ""
+
+#. module: website_partner
+#: model:mail.message.subtype,name:website_partner.mt_partner_unpublished
+msgid "Partner unpublished"
+msgstr ""
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__is_seo_optimized
+msgid "SEO optimized"
+msgstr "Optimalizované SEO"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__seo_name
+msgid "Seo name"
+msgstr "Seo meno"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_description
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_description
 msgid "Website Partner Full Description"
-msgstr "Plný popis partnera webstránky"
+msgstr "Plný popis webstránky"
 
 #. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_partner_website_short_description
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_short_description
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_short_description
 msgid "Website Partner Short Description"
-msgstr "Krátky popis partnera webstránky"
+msgstr "Krátky popis webstránky"
 
-#~ msgid "Private Profile"
-#~ msgstr "Súkromný profil"
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_description
+msgid "Website meta description"
+msgstr "Meta popis webstránky"
 
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr "Plné URL pre prístup do dokumentu cez webstránku."
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Meta kľúčové slová webstránky"
 
-#~ msgid "Visible in Website"
-#~ msgstr "Viditeľné na webstránke"
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_title
+msgid "Website meta title"
+msgstr "Meta nadpis webstránky"
 
-#~ msgid "Website URL"
-#~ msgstr "URL webstránky"
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_og_img
+msgid "Website opengraph image"
+msgstr "Obrázok otvorenej webstránky"
 
-#~ msgid "Website meta description"
-#~ msgstr "Website meta popis"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Website meta kľúčové slová"
-
-#~ msgid "Website meta title"
-#~ msgstr "Website meta názov"
-
-#~ msgid "unknown"
-#~ msgstr "neznámy"
+#~ msgid "Short Description for List View"
+#~ msgstr "Stručný popis pre zobrazenie zoznamu"

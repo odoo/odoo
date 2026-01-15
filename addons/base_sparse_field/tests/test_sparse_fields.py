@@ -27,7 +27,7 @@ class TestSparseFields(common.TransactionCase):
             self.assertEqual(record[key], val)
         self.assertEqual(record.partner, partner)
 
-        for n, (key, val) in enumerate(values):
+        for n, (key, _val) in enumerate(values):
             record.write({key: False})
             self.assertEqual(record.data, dict(values[n+1:]))
 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<!-- Owl Templates -->
+
+<div t-name="web.BurgerMenu" class="d-flex">
+    <button
+        class="o_mobile_menu_toggle o_nav_entry o-no-caret d-md-none border-0 pe-3"
+        title="Toggle menu" aria-label="Toggle menu"
+        t-on-click="_openBurger">
+        <img class="o_burger_menu_avatar o_image_24_cover rounded" t-att-src="'/web/image?model=res.users&amp;field=avatar_128&amp;id=' + user.userId" alt="Menu"/>
+    </button>
+
+    <t t-portal="'body'">
+      <Transition name="'o-burger-slide'" visible="state.isBurgerOpened" leaveDuration="200" t-slot-scope="transition">
+        <div class="o_burger_menu position-fixed top-0 bottom-0 start-100 d-flex flex-column flex-nowrap" t-att-class="transition.className" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd">
+          <div class="o_sidebar_topbar d-flex align-items-center justify-content-between flex-shrink-0 py-0 fs-4">
+              <small class="d-flex align-items-center justify-content-between ms-2">
+                  <img class="o_burger_menu_avatar o_image_24_cover rounded" t-att-src="'/web/image?model=res.users&amp;field=avatar_128&amp;id=' + user.userId" alt="Menu"/>
+                  <span class="o_burger_menu_username px-2"><t t-esc="user.name"/></span>
+              </small>
+              <button class="o_sidebar_close oi oi-close btn d-flex align-items-center h-100 bg-transparent border-0 fs-2 text-reset" aria-label="Close menu" title="Close menu" t-on-click.stop="_closeBurger"/>
+          </div>
+          <nav class="o_burger_menu_content flex-grow-1 flex-shrink-1 overflow-auto o_burger_menu_app">
+
+            <MobileSwitchCompanyMenu t-if="user.allowedCompanies.length > 1" />
+            <BurgerUserMenu onMenuClicked.bind="_closeBurger"/>
+          </nav>
+        </div>
+      </Transition>
+      <div t-if="state.isBurgerOpened" class="modal-backdrop show d-block d-md-none" t-on-click.stop="_closeBurger" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd" />
+    </t>
+</div>
+
+</templates>

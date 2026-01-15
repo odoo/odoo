@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.EmphasizeAnimatedText">
+    <label t-if="state.hasAnimatedText" for="emphasize_animated_text_checkbox" style="width: 100%">
+        <div class="o_panel_header d-flex justify-content-between">
+            <span>Highlight Animated Text</span>
+            <CheckBox className="'form-switch o-hb-checkbox'" value="state.animatedTextEmphasized" onChange.bind="toggleEmphasizeAnimatedText" id="'emphasize_animated_text_checkbox'"/>
+        </div>
+    </label>
+</t>
+
+</templates>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_stock" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.stock.stock</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="warning_info" position="after">
+                <setting help="When to start shipping">
+                    <field name="default_picking_policy" class="o_light_label w-auto" widget="selection"/>
+                </setting>
+            </setting>
+            <div id="sale_security_lead" position="replace">
+                <setting company_dependent="1" help="Schedule deliveries earlier to avoid delays" documentation="/applications/inventory_and_mrp/inventory/management/planning/scheduled_dates.html" title="Margin of error for dates promised to customers. Products will be scheduled for procurement and delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain.">
+                    <field name="use_security_lead"/>
+                    <div class="content-group">
+                        <div class="mt16" invisible="not use_security_lead">
+                            <span>Move forward expected delivery dates by <field name="security_lead" class="oe_inline"/> days</span>
+                        </div>
+                    </div>
+                </setting>
+            </div>
+        </field>
+    </record>
+
+</odoo>

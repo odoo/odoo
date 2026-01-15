@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussSidebarMailboxes">
+        <div class="d-flex flex-column flex-grow-0 o-gap-0_5 bg-inherit">
+            <Mailbox t-if="store.self.main_user_id?.notification_type === 'inbox'" mailbox="store.inbox"/>
+            <Mailbox mailbox="store.starred"/>
+            <Mailbox t-if="store.self.main_user_id?.notification_type === 'inbox'" mailbox="store.history"/>
+        </div>
+    </t>
+
+    <t t-name="mail.Mailbox">
+        <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-middle'" menuClass="'o-mail-DiscussSidebar-floatingMenu px-2 mx-2 my-2 min-w-0 ' + store.discussDropdownMenuClass(this)" manual="true">
+            <t t-call="mail.Mailbox.main"/>
+            <t t-set-slot="content">
+                <div class="overflow-hidden" t-ref="floating">
+                    <span class="text-muted user-select-none" t-esc="mailbox.display_name"/>
+                </div>
+            </t>
+        </Dropdown>
+        <t t-else="" t-call="mail.Mailbox.main"/>
+    </t>
+
+    <t t-name="mail.Mailbox.main">
+        <button
+            class="o-mail-DiscussSidebar-item o-mail-Mailbox btn d-flex align-items-baseline px-0 o-mx-2_5 border-0 rounded fw-normal text-reset"
+            t-att-class="{
+                'bg-inherit': mailbox.notEq(store.discuss.thread),
+                'o-active': mailbox.eq(store.discuss.thread),
+                'justify-content-center position-relative o-compact py-2': store.discuss.isSidebarCompact,
+                'o-py-0_5': !store.discuss.isSidebarCompact,
+                'o-unread': mailbox.counter,
+            }"
+            style="line-height: 1.65;"
+            t-att-data-mailbox-id="mailbox.id"
+            t-on-click="(ev) => this.openThread(ev)"
+            t-ref="root"
+        >
+            <ThreadIcon className="'bg-inherit opacity-75 ' + (store.discuss.isSidebarCompact ? '' : 'o-ms-1_5 me-2 pt-1')" thread="mailbox" size="store.discuss.isSidebarCompact ? 'large' : 'medium'"/>
+            <t t-if="!store.discuss.isSidebarCompact">
+                <div class="me-2 text-truncate small opacity-75 opacity-100-hover" t-esc="mailbox.display_name"/>
+                <div t-attf-class="flex-grow-1 {{ mailbox.counter === 0 ? 'me-3': '' }}"/>
+            </t>
+            <t t-if="mailbox.counter > 0" t-call="mail.discuss_badge">
+                <t t-set="counter" t-value="mailbox.counter"/>
+                <t t-set="badgeClass" t-value="'o-mail-DiscussSidebar-badge ' + (store.discuss.isSidebarCompact ? 'position-absolute o-compact' : 'mx-1')"/>
+                <t t-set="counterClass" t-value="(mailbox.id === 'starred' ? 'o-muted' : '')"/>
+                <t t-set="floating" t-value="store.discuss.isSidebarCompact"/>
+            </t>
+        </button>
+    </t>
+
+</templates>

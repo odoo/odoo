@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template
+        id="website_sale.s_mega_menu_menu_image_menu"
+        name="eCommerce: Menu - Image - Menu"
+        groups="base.group_user"
+    >
+        <section class="s_mega_menu_menu_image_menu py-4 o_colored_level o_cc o_cc1">
+            <div class="container">
+                <div class="row align-items-center">
+                    <t
+                        t-foreach="request.env['product.public.category'].search(
+                            [('parent_id', '=', False), ('has_published_products', '=', True)],
+                            limit=2,
+                        )"
+                        t-as="category"
+                    >
+                        <div class="col-12 col-lg-4 py-2 text-center">
+                            <h4>
+                                <a
+                                    t-att-href="'/shop/category/%s' % category.id"
+                                    class="nav-link p-0 text-black"
+                                    t-esc="category.name"
+                                />
+                            </h4>
+                            <nav class="nav flex-column">
+                                <t t-foreach="category.child_id.filtered('has_published_products')"
+                                   t-as="sub_category">
+                                    <a
+                                        t-att-href="'/shop/category/%s' % sub_category.id"
+                                        class="nav-link"
+                                        t-esc="sub_category.name"
+                                    />
+                                </t>
+                            </nav>
+                        </div>
+                        <div t-if="not category_last" class="col-12 col-lg-4 py-2 text-center">
+                            <img
+                                class="img-fluid"
+                                src="/web/image/website.s_mega_menu_menu_image_menu_default_image"
+                                alt="Mega menu default image"
+                            />
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </template>
+
+</odoo>

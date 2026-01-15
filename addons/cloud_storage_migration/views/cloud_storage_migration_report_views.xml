@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View -->
+    <record id="view_cloud_storage_migration_report_list" model="ir.ui.view">
+        <field name="name">cloud.storage.migration.report.list</field>
+        <field name="model">cloud.storage.migration.report</field>
+        <field name="arch" type="xml">
+            <list string="Cloud Storage Migration Report">
+                <field name="res_model_name" width="200px"/>
+                <field name="message_count"/>
+                <field name="message_sum_size"/>
+                <field name="message_max_size"/>
+                <field name="message_to_migrate"/>
+                <field name="all_count"/>
+                <field name="all_sum_size"/>
+                <field name="all_max_size"/>
+                <field name="all_to_migrate"/>
+                <field name="has_attachment_rel"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action to open migration report -->
+    <record id="action_cloud_storage_migration_report" model="ir.actions.act_window">
+        <field name="name">Cloud Storage Migration Report</field>
+        <field name="res_model">cloud.storage.migration.report</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No attachment data found
+            </p>
+            <p>
+                This report shows statistics about attachments that could be migrated to cloud storage.
+            </p>
+        </field>
+    </record>
+</odoo>

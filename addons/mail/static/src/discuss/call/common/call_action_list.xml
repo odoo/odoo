@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.CallActionList">
+        <div class="o-discuss-CallActionList d-flex flex-column justify-content-center" t-attf-class="{{ className }}" t-ref="root">
+            <div class="o-discuss-CallActionList-bar d-flex align-items-center justify-content-between" t-att-class="{ 'w-100 ps-2 pe-2': isSmall }">
+                <ActionList actions="actions" inline="true" hasBtnBg="true"/>
+            </div>
+            <div t-if="isMobileOS and store.settings.use_push_to_talk and isOfActiveCall" class="d-flex align-items-center flex-wrap justify-content-between p-2">
+                <button class="o-discuss-CallActionList-pushToTalk btn btn-primary d-flex w-100 border-0 shadow-none"
+                    aria-label="Push to talk"
+                    t-on-touchstart.stop="rtc.onPushToTalk"
+                    t-on-touchend.stop="rtc.setPttReleaseTimeout">
+                    <span class="w-100 fs-4 text-center">Push to talk</span>
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>

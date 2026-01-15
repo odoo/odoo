@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <div t-name='res_config_dev_tool'>
+        <div id="developer_tool">
+            <SettingsBlock title.translate="Developer Tools">
+                <Setting addLabel="false">
+                        <a t-if="!isDebug" class="d-block" t-on-click="() => this.activateDebug(1)" href="#">Activate the developer mode</a>
+                        <a t-if="!isAssets" class="d-block" t-on-click="() => this.activateDebug('assets')" href="#">Activate the developer mode (with assets)</a>
+                        <a t-if="!isTests" class="d-block" t-on-click="() => this.activateDebug('assets,tests')" href="#">Activate the developer mode (with tests assets)</a>
+                        <a t-if="isDebug" class="d-block" t-on-click="() => this.activateDebug(0)" href="#">Deactivate the developer mode</a>
+                        <a t-if="isDebug and !isDemoDataActive" t-on-click.prevent="onClickForceDemo" class="o_web_settings_force_demo" href="#">Load demo data</a>
+                </Setting>
+            </SettingsBlock>
+        </div>
+    </div>
+</template>

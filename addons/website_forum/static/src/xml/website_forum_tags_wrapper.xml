@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website_forum.WebsiteForumTagsWrapper">
+    <input name="post_tags" type="hidden" class="form-control" t-att-value="state.value"/>
+    <SelectMenu
+        togglerClass="'form-control'"
+        choices="state.choices"
+        value="state.value"
+        onInput.bind="loadChoices"
+        onSelect.bind="onSelect"
+        multiSelect="true"
+        placeholder.translate="Tags"
+        disabled="props.isReadOnly"
+        searchPlaceholder.translate="Please enter 2 or more characters">
+        <t t-set-slot="bottomArea" t-slot-scope="select">
+            <DropdownItem
+                t-if="this.showCreateOption(select.data.searchValue)"
+                onSelected="() => this.onCreateOption(select.data.searchValue)"
+                class="'o_select_menu_item p-2'"
+            >
+                Create option "<span class="fw-bold text-muted" t-out="select.data.searchValue"/>"
+            </DropdownItem>
+        </t>
+    </SelectMenu>
+</t>
+
+</templates>

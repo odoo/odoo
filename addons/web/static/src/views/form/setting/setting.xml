@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.Setting">
+        <div t-att-class="classNames" t-att-id="props.id">
+            <div class="o_setting_left_pane" t-att-data-tooltip="props.title" data-tooltip-delay="800">
+                <t t-if="props.fieldName and fieldType==='boolean'">
+                    <t t-slot="fieldSlot"/>
+                </t>
+            </div>
+            <div class="o_setting_right_pane" t-att-data-tooltip="props.title" data-tooltip-delay="800">
+                <FormLabel t-if="props.fieldName and props.addLabel" notMuttedLabel="notMuttedLabel" fieldName="props.fieldName" id="props.fieldId" string="labelString" record="props.record" fieldInfo="props.fieldInfo"/>
+                <t t-if="labelString and !props.fieldName and props.addLabel">
+                    <span class="o_form_label"><t t-esc="labelString"/></span>
+                </t>
+                <t t-if="labelString and props.info">
+                    <span class="fa fa-info-circle" t-att-title="props.info"/>
+                </t>
+                <t t-if="labelString and props.documentation">
+                    <DocumentationLink path="props.documentation" icon="'fa-question-circle'"/>
+                </t>
+                <t t-if="displayCompanyDependentIcon">
+                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                </t>
+                <t t-if="labelString and props.help">
+                    <div class="text-muted"><t t-esc="props.help"/></div>
+                </t>
+                <div class="mt16">
+                    <t t-if="props.fieldName and fieldType!=='boolean'">
+                        <t t-slot="fieldSlot"/>
+                    </t>
+                    <t t-slot="default"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

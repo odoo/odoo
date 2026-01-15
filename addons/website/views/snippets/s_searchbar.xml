@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_searchbar_input" name="Search">
+    <t t-call="website.website_search_box_input"
+        search_type.f="all"
+        action.f="/website/search"
+        limit.f="5"
+        display_image.f="true"
+        display_description.f="true"
+        display_extra_link.f="true"
+        display_detail.f="true"
+        default_style="True"/>
+</template>
+<template id="s_searchbar" name="Search">
+    <section class="s_searchbar o_colored_level o_cc o_cc2 pt48 pb48">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <h2>Search on our website</h2>
+                    <p>You will get results from blog posts, products, etc</p>
+                    <t t-snippet-call="website.s_searchbar_input" string="Search Input"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<asset id="website.s_searchbar_000_xml" name="Searchbar 000 XML">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_searchbar/000.xml</path>
+</asset>
+
+</odoo>

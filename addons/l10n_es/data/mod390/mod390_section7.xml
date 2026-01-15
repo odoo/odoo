@@ -1,0 +1,865 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data auto_sequence="1">
+    <record id="mod_390_section_7" model="account.report">
+        <field name="name">Actividades con Regímenes de Deducción Diferenciados</field>
+        <field name="name@es">Actividades con Regímenes de Deducción Diferenciados</field>
+        <field name="filter_analytic" eval="False"/>
+        <field name="filter_date_range" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.es"/>
+        <field name="column_ids">
+            <record id="mod_390_column_sect7" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@es">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="mod_390_title_56" model="account.report.line">
+                <field name="name">Actividades con regímenes de deducción diferenciados</field>
+                <field name="name@es">Actividades con regímenes de deducción diferenciados</field>
+                <field name="code">aeat_mod_390_title_56</field>
+                <field name="children_ids">
+                    <record id="mod_390_title_57" model="account.report.line">
+                        <field name="name">IVA deducible: Grupo 1</field>
+                        <field name="name@es">IVA deducible: Grupo 1</field>
+                        <field name="code">aeat_mod_390_title_57</field>
+                        <field name="children_ids">
+                            <record id="mod_390_title_58" model="account.report.line">
+                                <field name="name">IVA deducible en operaciones interiores</field>
+                                <field name="name@es">IVA deducible en operaciones interiores</field>
+                                <field name="code">aeat_mod_390_title_58</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_139" model="account.report.line">
+                                        <field name="name">[139] Bienes y servicios corrientes : base imponible</field>
+                                        <field name="name@es">[139] Bienes y servicios corrientes: base imponible</field>
+                                        <field name="code">aeat_mod_390_139</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_139_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_140" model="account.report.line">
+                                        <field name="name">[140] Bienes y servicios corrientes: cuota deducible</field>
+                                        <field name="name@es">[140] Bienes y servicios corrientes: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_140</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_140_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_141" model="account.report.line">
+                                        <field name="name">[141] Bienes de inversión : base imponible</field>
+                                        <field name="name@es">[141] Bienes de inversión: base imponible</field>
+                                        <field name="code">aeat_mod_390_141</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_141_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_142" model="account.report.line">
+                                        <field name="name">[142] Bienes de inversión: cuota deducible</field>
+                                        <field name="name@es">[142] Bienes de inversión: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_142</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_142_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_59" model="account.report.line">
+                                <field name="name">IVA deducible en importaciones</field>
+                                <field name="name@es">IVA deducible en importaciones</field>
+                                <field name="code">aeat_mod_390_title_59</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_143" model="account.report.line">
+                                        <field name="name">[143] Bienes corrientes : base imponible</field>
+                                        <field name="name@es">[143] Bienes corrientes: base imponible</field>
+                                        <field name="code">aeat_mod_390_143</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_143_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_144" model="account.report.line">
+                                        <field name="name">[144] Bienes corrientes: cuota deducible</field>
+                                        <field name="name@es">[144] Bienes corrientes: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_144</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_144_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_145" model="account.report.line">
+                                        <field name="name">[145] Bienes de inversión : base imponible</field>
+                                        <field name="name@es">[145] Bienes de inversión: base imponible</field>
+                                        <field name="code">aeat_mod_390_145</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_145_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_146" model="account.report.line">
+                                        <field name="name">[146] Bienes de inversión: cuota deducible</field>
+                                        <field name="name@es">[146] Bienes de inversión: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_146</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_146_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_60" model="account.report.line">
+                                <field name="name">IVA deducible en adquisiciones intracomunitarias</field>
+                                <field name="name@es">IVA deducible en adquisiciones intracomunitarias</field>
+                                <field name="code">aeat_mod_390_title_60</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_147" model="account.report.line">
+                                        <field name="name">[147] Bienes corrientes y servicios: base imponible</field>
+                                        <field name="name@es">[147] Bienes corrientes y servicios: base imponible</field>
+                                        <field name="code">aeat_mod_390_147</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_147_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_148" model="account.report.line">
+                                        <field name="name">[148] Bienes corrientes y servicios: cuota deducible</field>
+                                        <field name="name@es">[148] Bienes corrientes y servicios: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_148</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_148_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_149" model="account.report.line">
+                                        <field name="name">[149] Bienes de inversión : base imponible</field>
+                                        <field name="name@es">[149] Bienes de inversión: base imponible</field>
+                                        <field name="code">aeat_mod_390_149</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_149_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_150" model="account.report.line">
+                                        <field name="name">[150] Bienes de inversión: cuota deducible</field>
+                                        <field name="name@es">[150] Bienes de inversión: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_150</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_150_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_61" model="account.report.line">
+                                <field name="name">Compensaciones en régimen especial de la agricultura, ganadería y pesca</field>
+                                <field name="name@es">Compensaciones en régimen especial de la agricultura, ganadería y pesca</field>
+                                <field name="code">aeat_mod_390_title_61</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_151" model="account.report.line">
+                                        <field name="name">[151] Base imponible</field>
+                                        <field name="name@es">[151] Base imponible</field>
+                                        <field name="code">aeat_mod_390_151</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_151_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_152" model="account.report.line">
+                                        <field name="name">[152] Cuota deducible</field>
+                                        <field name="name@es">[152] Cuota deducible</field>
+                                        <field name="code">aeat_mod_390_152</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_152_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_62" model="account.report.line">
+                                <field name="name">Rectificación de deducciones</field>
+                                <field name="name@es">Rectificación de deducciones</field>
+                                <field name="code">aeat_mod_390_title_62</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_640" model="account.report.line">
+                                        <field name="name">[640] Base imponible</field>
+                                        <field name="name@es">[640] Base imponible</field>
+                                        <field name="code">aeat_mod_390_640</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_640_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_153" model="account.report.line">
+                                        <field name="name">[153] Cuota deducible</field>
+                                        <field name="name@es">[153] Cuota deducible</field>
+                                        <field name="code">aeat_mod_390_153</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_153_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_154" model="account.report.line">
+                                <field name="name">[154] Regularización de bienes de inversión : cuota deducible</field>
+                                <field name="name@es">[154] Regularización de bienes de inversión: cuota deducible</field>
+                                <field name="code">aeat_mod_390_154</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_154_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_155" model="account.report.line">
+                                <field name="name">[155] Suma de deducciones</field>
+                                <field name="name@es">[155] Suma de deducciones</field>
+                                <field name="code">aeat_mod_390_155</field>
+                                <field name="aggregation_formula">
+                                    aeat_mod_390_140.balance + aeat_mod_390_142.balance + aeat_mod_390_144.balance +
+                                    aeat_mod_390_146.balance + aeat_mod_390_148.balance +
+                                    aeat_mod_390_150.balance + aeat_mod_390_152.balance +
+                                    aeat_mod_390_153.balance + aeat_mod_390_154.balance
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_390_title_63" model="account.report.line">
+                        <field name="name">IVA deducible: Grupo 2</field>
+                        <field name="name@es">IVA deducible: Grupo 2</field>
+                        <field name="code">aeat_mod_390_title_63</field>
+                        <field name="children_ids">
+                            <record id="mod_390_title_64" model="account.report.line">
+                                <field name="name">IVA deducible en operaciones interiores</field>
+                                <field name="name@es">IVA deducible en operaciones interiores</field>
+                                <field name="code">aeat_mod_390_title_64</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_156" model="account.report.line">
+                                        <field name="name">[156] Bienes y servicios corrientes : base imponible</field>
+                                        <field name="name@es">[156] Bienes y servicios corrientes: base imponible</field>
+                                        <field name="code">aeat_mod_390_156</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_156_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_157" model="account.report.line">
+                                        <field name="name">[157] Bienes y servicios corrientes: cuota deducible</field>
+                                        <field name="name@es">[157] Bienes y servicios corrientes: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_157</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_157_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_158" model="account.report.line">
+                                        <field name="name">[158] Bienes de inversión : base imponible</field>
+                                        <field name="name@es">[158] Bienes de inversión: base imponible</field>
+                                        <field name="code">aeat_mod_390_158</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_158_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_159" model="account.report.line">
+                                        <field name="name">[159] Bienes de inversión: cuota deducible</field>
+                                        <field name="name@es">[159] Bienes de inversión: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_159</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_159_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_65" model="account.report.line">
+                                <field name="name">IVA deducible en importaciones</field>
+                                <field name="name@es">IVA deducible en importaciones</field>
+                                <field name="code">aeat_mod_390_title_65</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_160" model="account.report.line">
+                                        <field name="name">[160] Bienes corrientes : base imponible</field>
+                                        <field name="name@es">[160] Bienes corrientes: base imponible</field>
+                                        <field name="code">aeat_mod_390_160</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_160_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_161" model="account.report.line">
+                                        <field name="name">[161] Bienes corrientes: cuota deducible</field>
+                                        <field name="name@es">[161] Bienes corrientes: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_161</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_161_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_162" model="account.report.line">
+                                        <field name="name">[162] Bienes de inversión : base imponible</field>
+                                        <field name="name@es">[162] Bienes de inversión: base imponible</field>
+                                        <field name="code">aeat_mod_390_162</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_162_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_163" model="account.report.line">
+                                        <field name="name">[163] Bienes de inversión: cuota deducible</field>
+                                        <field name="name@es">[163] Bienes de inversión: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_163</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_163_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_66" model="account.report.line">
+                                <field name="name">IVA deducible en adquisiciones intracomunitarias</field>
+                                <field name="name@es">IVA deducible en adquisiciones intracomunitarias</field>
+                                <field name="code">aeat_mod_390_title_66</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_164" model="account.report.line">
+                                        <field name="name">[164] Bienes corrientes y servicios: base imponible</field>
+                                        <field name="name@es">[164] Bienes corrientes y servicios: base imponible</field>
+                                        <field name="code">aeat_mod_390_164</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_164_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_165" model="account.report.line">
+                                        <field name="name">[165] Bienes corrientes y servicios: cuota deducible</field>
+                                        <field name="name@es">[165] Bienes corrientes y servicios: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_165</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_165_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_166" model="account.report.line">
+                                        <field name="name">[166] Bienes de inversión : base imponible</field>
+                                        <field name="name@es">[166] Bienes de inversión: base imponible</field>
+                                        <field name="code">aeat_mod_390_166</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_166_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_167" model="account.report.line">
+                                        <field name="name">[167] Bienes de inversión: cuota deducible</field>
+                                        <field name="name@es">[167] Bienes de inversión: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_167</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_167_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_67" model="account.report.line">
+                                <field name="name">Compensaciones en régimen especial de la agricultura, ganadería y pesca</field>
+                                <field name="name@es">Compensaciones en régimen especial de la agricultura, ganadería y pesca</field>
+                                <field name="code">aeat_mod_390_title_67</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_168" model="account.report.line">
+                                        <field name="name">[168] Base imponible</field>
+                                        <field name="name@es">[168] Base imponible</field>
+                                        <field name="code">aeat_mod_390_168</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_168_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_169" model="account.report.line">
+                                        <field name="name">[169] Cuota deducible</field>
+                                        <field name="name@es">[169] Cuota deducible</field>
+                                        <field name="code">aeat_mod_390_169</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_169_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_68" model="account.report.line">
+                                <field name="name">Rectificación de deducciones</field>
+                                <field name="name@es">Rectificación de deducciones</field>
+                                <field name="code">aeat_mod_390_title_68</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_641" model="account.report.line">
+                                        <field name="name">[641] Base imponible</field>
+                                        <field name="name@es">[641] Base imponible</field>
+                                        <field name="code">aeat_mod_390_641</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_641_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_641" model="account.report.line">
+                                        <field name="name">[641] Base imponible</field>
+                                        <field name="name@es">[641] Base imponible</field>
+                                        <field name="code">aeat_mod_390_641</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_641_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_170" model="account.report.line">
+                                        <field name="name">[170] Cuota deducible</field>
+                                        <field name="name@es">[170] Cuota deducible</field>
+                                        <field name="code">aeat_mod_390_170</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_170_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_171" model="account.report.line">
+                                <field name="name">[171] Regularización de bienes de inversión : cuota deducible</field>
+                                <field name="name@es">[171] Regularización de bienes de inversión: cuota deducible</field>
+                                <field name="code">aeat_mod_390_171</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_171_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_172" model="account.report.line">
+                                <field name="name">[172] Suma de deducciones</field>
+                                <field name="name@es">[172] Suma de deducciones</field>
+                                <field name="code">aeat_mod_390_172</field>
+                                <field name="aggregation_formula">
+                                    aeat_mod_390_157.balance + aeat_mod_390_159.balance + aeat_mod_390_161.balance +
+                                    aeat_mod_390_163.balance + aeat_mod_390_165.balance +
+                                    aeat_mod_390_167.balance + aeat_mod_390_169.balance +
+                                    aeat_mod_390_170.balance + aeat_mod_390_171.balance
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_390_title_69" model="account.report.line">
+                        <field name="name">IVA deducible: Grupo 3</field>
+                        <field name="name@es">IVA deducible: Grupo 3</field>
+                        <field name="code">aeat_mod_390_title_69</field>
+                        <field name="children_ids">
+                            <record id="mod_390_title_70" model="account.report.line">
+                                <field name="name">IVA deducible en operaciones interiores</field>
+                                <field name="name@es">IVA deducible en operaciones interiores</field>
+                                <field name="code">aeat_mod_390_title_70</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_173" model="account.report.line">
+                                        <field name="name">[173] Bienes y servicios corrientes : base imponible</field>
+                                        <field name="name@es">[173] Bienes y servicios corrientes: base imponible</field>
+                                        <field name="code">aeat_mod_390_173</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_173_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_174" model="account.report.line">
+                                        <field name="name">[174] Bienes y servicios corrientes: cuota deducible</field>
+                                        <field name="name@es">[174] Bienes y servicios corrientes: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_174</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_174_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_175" model="account.report.line">
+                                        <field name="name">[175] Bienes de inversión : base imponible</field>
+                                        <field name="name@es">[175] Bienes de inversión: base imponible</field>
+                                        <field name="code">aeat_mod_390_175</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_175_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_176" model="account.report.line">
+                                        <field name="name">[176] Bienes de inversión: cuota deducible</field>
+                                        <field name="name@es">[176] Bienes de inversión: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_176</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_176_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_71" model="account.report.line">
+                                <field name="name">IVA deducible en importaciones</field>
+                                <field name="name@es">IVA deducible en importaciones</field>
+                                <field name="code">aeat_mod_390_title_71</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_177" model="account.report.line">
+                                        <field name="name">[177] Bienes corrientes : base imponible</field>
+                                        <field name="name@es">[177] Bienes corrientes: base imponible</field>
+                                        <field name="code">aeat_mod_390_177</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_177_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_178" model="account.report.line">
+                                        <field name="name">[178] Bienes corrientes: cuota deducible</field>
+                                        <field name="name@es">[178] Bienes corrientes: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_178</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_178_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_179" model="account.report.line">
+                                        <field name="name">[179] Bienes de inversión : base imponible</field>
+                                        <field name="name@es">[179] Bienes de inversión: base imponible</field>
+                                        <field name="code">aeat_mod_390_179</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_179_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_180" model="account.report.line">
+                                        <field name="name">[180] Bienes de inversión: cuota deducible</field>
+                                        <field name="name@es">[180] Bienes de inversión: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_180</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_180_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_72" model="account.report.line">
+                                <field name="name">IVA deducible en adquisiciones intracomunitarias</field>
+                                <field name="name@es">IVA deducible en adquisiciones intracomunitarias</field>
+                                <field name="code">aeat_mod_390_title_72</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_181" model="account.report.line">
+                                        <field name="name">[181] Bienes corrientes y servicios: base imponible</field>
+                                        <field name="name@es">[181] Bienes corrientes y servicios: base imponible</field>
+                                        <field name="code">aeat_mod_390_181</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_181_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_182" model="account.report.line">
+                                        <field name="name">[182] Bienes corrientes y servicios: cuota deducible</field>
+                                        <field name="name@es">[182] Bienes corrientes y servicios: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_182</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_182_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_183" model="account.report.line">
+                                        <field name="name">[183] Bienes de inversión : base imponible</field>
+                                        <field name="name@es">[183] Bienes de inversión: base imponible</field>
+                                        <field name="code">aeat_mod_390_183</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_183_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_184" model="account.report.line">
+                                        <field name="name">[184] Bienes de inversión: cuota deducible</field>
+                                        <field name="name@es">[184] Bienes de inversión: cuota deducible</field>
+                                        <field name="code">aeat_mod_390_184</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_184_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_73" model="account.report.line">
+                                <field name="name">Compensaciones en régimen especial de la agricultura, ganadería y pesca</field>
+                                <field name="name@es">Compensaciones en régimen especial de la agricultura, ganadería y pesca</field>
+                                <field name="code">aeat_mod_390_title_73</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_185" model="account.report.line">
+                                        <field name="name">[185] Base imponible</field>
+                                        <field name="name@es">[185] Base imponible</field>
+                                        <field name="code">aeat_mod_390_185</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_185_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_186" model="account.report.line">
+                                        <field name="name">[186] Cuota deducible</field>
+                                        <field name="name@es">[186] Cuota deducible</field>
+                                        <field name="code">aeat_mod_390_186</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_186_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_74" model="account.report.line">
+                                <field name="name">Rectificación de deducciones</field>
+                                <field name="name@es">Rectificación de deducciones</field>
+                                <field name="code">aeat_mod_390_title_74</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_642" model="account.report.line">
+                                        <field name="name">[642] Base imponible</field>
+                                        <field name="name@es">[642] Base imponible</field>
+                                        <field name="code">aeat_mod_390_642</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_642_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_187" model="account.report.line">
+                                        <field name="name">[187] Cuota deducible</field>
+                                        <field name="name@es">[187] Cuota deducible</field>
+                                        <field name="code">aeat_mod_390_187</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_187_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_188" model="account.report.line">
+                                <field name="name">[188] Regularización de bienes de inversión : cuota deducible</field>
+                                <field name="name@es">[188] Regularización de bienes de inversión: cuota deducible</field>
+                                <field name="code">aeat_mod_390_188</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_188_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_189" model="account.report.line">
+                                <field name="name">[189] Suma de deducciones</field>
+                                <field name="name@es">[189] Suma de deducciones</field>
+                                <field name="code">aeat_mod_390_189</field>
+                                <field name="aggregation_formula">
+                                    aeat_mod_390_174.balance + aeat_mod_390_176.balance + aeat_mod_390_178.balance +
+                                    aeat_mod_390_180.balance + aeat_mod_390_182.balance +
+                                    aeat_mod_390_184.balance + aeat_mod_390_186.balance +
+                                    aeat_mod_390_187.balance + aeat_mod_390_188.balance
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</data>
+</odoo>

@@ -1,168 +1,256 @@
-# -*- coding: utf-8 -*-
-
-from functools import wraps
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-from psycopg2 import IntegrityError, OperationalError, errorcodes
 import random
 import threading
 import time
+from collections.abc import Mapping, Sequence
+from functools import partial
 
-import odoo
-from odoo.exceptions import UserError, ValidationError, QWebException
-from odoo.models import check_method_name
-from odoo.tools import pycompat
-from odoo.tools.translate import translate
-from odoo.tools.translate import _
+from psycopg2 import IntegrityError, OperationalError, errorcodes, errors
 
-from . import security
+from odoo import api, http
+from odoo.exceptions import (
+    AccessDenied,
+    AccessError,
+    ConcurrencyError,
+    UserError,
+    ValidationError,
+)
+from odoo.models import BaseModel
+from odoo.modules.registry import Registry
+from odoo.tools import lazy
+
+from .server import thread_local
 
 _logger = logging.getLogger(__name__)
 
 PG_CONCURRENCY_ERRORS_TO_RETRY = (errorcodes.LOCK_NOT_AVAILABLE, errorcodes.SERIALIZATION_FAILURE, errorcodes.DEADLOCK_DETECTED)
+PG_CONCURRENCY_EXCEPTIONS_TO_RETRY = (errors.LockNotAvailable, errors.SerializationFailure, errors.DeadlockDetected)
 MAX_TRIES_ON_CONCURRENCY_FAILURE = 5
 
+
+class Params:
+    """Representation of parameters to a function call that can be stringified for display/logging"""
+    def __init__(self, args, kwargs):
+        self.args = args
+        self.kwargs = kwargs
+
+    def __str__(self):
+        params = [repr(arg) for arg in self.args]
+        params.extend(f"{key}={value!r}" for key, value in sorted(self.kwargs.items()))
+        return ', '.join(params)
+
+
+def get_public_method(model: BaseModel, name: str):
+    """ Get the public unbound method from a model.
+
+    When the method does not exist or is inaccessible, raise appropriate errors.
+    Accessible methods are public (in sense that python defined it:
+    not prefixed with "_") and are not decorated with `@api.private`.
+    """
+    assert isinstance(model, BaseModel)
+    e = f"Private methods (such as '{model._name}.{name}') cannot be called remotely."
+    if name.startswith('_'):
+        raise AccessError(e)
+
+    cls = type(model)
+    method = getattr(cls, name, None)
+    if not callable(method):
+        raise AttributeError(f"The method '{model._name}.{name}' does not exist")  # noqa: TRY004
+
+    for mro_cls in cls.mro():
+        if not (cla_method := getattr(mro_cls, name, None)):
+            continue
+        if getattr(cla_method, '_api_private', False):
+            raise AccessError(e)
+
+    return method
+
+
+def call_kw(model: BaseModel, name: str, args: list, kwargs: Mapping):
+    """ Invoke the given method ``name`` on the recordset ``model``.
+
+    Private methods cannot be called, only ones returned by `get_public_method`.
+    """
+    method = get_public_method(model, name)
+
+    # get the records and context
+    if getattr(method, '_api_model', False):
+        # @api.model -> no ids
+        recs = model
+    else:
+        ids, args = args[0], args[1:]
+        recs = model.browse(ids)
+
+    # altering kwargs is a cause of errors, for instance when retrying a request
+    # after a serialization error: the retry is done without context!
+    kwargs = dict(kwargs)
+    context = kwargs.pop('context', None) or {}
+    recs = recs.with_context(context)
+
+    # call
+    _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
+    result = method(recs, *args, **kwargs)
+
+    # adapt the result
+    if name == "create":
+        # special case for method 'create'
+        result = result.id if isinstance(args[0], Mapping) else result.ids
+    elif isinstance(result, BaseModel):
+        result = result.ids
+
+    return result
+
+
 def dispatch(method, params):
-    (db, uid, passwd ) = params[0:3]
+    db, uid, passwd, model, method_, *args = params
+    uid = int(uid)
+    if not passwd:
+        raise AccessDenied
+    # access checked once we open a cursor
 
-    # set uid tracker - cleaned up at the WSGI
-    # dispatching phase in odoo.service.wsgi_server.application
+    threading.current_thread().dbname = db
     threading.current_thread().uid = uid
-
-    params = params[3:]
-    if method == 'obj_list':
-        raise NameError("obj_list has been discontinued via RPC as of 6.0, please query ir.model directly!")
-    if method not in ['execute', 'execute_kw']:
-        raise NameError("Method not available %s" % method)
-    security.check(db,uid,passwd)
-    registry = odoo.registry(db).check_signaling()
-    fn = globals()[method]
-    with registry.manage_changes():
-        res = fn(db, uid, *params)
+    registry = Registry(db).check_signaling()
+    try:
+        if method == 'execute':
+            kw = {}
+        elif method == 'execute_kw':
+            # accept: (args, kw=None)
+            if len(args) == 1:
+                args += ({},)
+            args, kw = args
+            if kw is None:
+                kw = {}
+        else:
+            raise NameError(f"Method not available {method}")  # noqa: TRY301
+        with registry.cursor() as cr:
+            api.Environment(cr, api.SUPERUSER_ID, {})['res.users']._check_uid_passwd(uid, passwd)
+            res = execute_cr(cr, uid, model, method_, args, kw)
+        registry.signal_changes()
+    except Exception:
+        registry.reset_changes()
+        raise
     return res
 
-def check(f):
-    @wraps(f)
-    def wrapper(___dbname, *args, **kwargs):
-        """ Wraps around OSV functions and normalises a few exceptions
-        """
-        dbname = ___dbname      # NOTE: this forbid to use "___dbname" as arguments in http routes
 
-        def tr(src, ttype):
-            # We try to do the same as the _(), but without the frame
-            # inspection, since we aready are wrapping an osv function
-            # trans_obj = self.get('ir.translation') cannot work yet :(
-            ctx = {}
-            if not kwargs:
-                if args and isinstance(args[-1], dict):
-                    ctx = args[-1]
-            elif isinstance(kwargs, dict):
-                if 'context' in kwargs:
-                    ctx = kwargs['context']
-                elif 'kwargs' in kwargs and kwargs['kwargs'].get('context'):
-                    # http entry points such as call_kw()
-                    ctx = kwargs['kwargs'].get('context')
-                else:
-                    try:
-                        from odoo.http import request
-                        ctx = request.env.context
-                    except Exception:
-                        pass
-
-            uid = 1
-            if args and isinstance(args[0], pycompat.integer_types):
-                uid = args[0]
-
-            lang = ctx and ctx.get('lang')
-            if not (lang or hasattr(src, '__call__')):
-                return src
-
-            # We open a *new* cursor here, one reason is that failed SQL
-            # queries (as in IntegrityError) will invalidate the current one.
-            cr = False
-
-            try:
-                cr = odoo.sql_db.db_connect(dbname).cursor()
-                res = translate(cr, name=False, source_type=ttype,
-                                lang=lang, source=src)
-                if res:
-                    return res
-                else:
-                    return src
-            finally:
-                if cr: cr.close()
-
-        def _(src):
-            return tr(src, 'code')
-
-        tries = 0
-        while True:
-            try:
-                if odoo.registry(dbname)._init and not odoo.tools.config['test_enable']:
-                    raise odoo.exceptions.Warning('Currently, this database is not fully loaded and can not be used.')
-                return f(dbname, *args, **kwargs)
-            except (OperationalError, QWebException) as e:
-                if isinstance(e, QWebException):
-                    cause = e.qweb.get('cause')
-                    if isinstance(cause, OperationalError):
-                        e = cause
-                    else:
-                        raise
-                # Automatically retry the typical transaction serialization errors
-                if e.pgcode not in PG_CONCURRENCY_ERRORS_TO_RETRY:
-                    raise
-                if tries >= MAX_TRIES_ON_CONCURRENCY_FAILURE:
-                    _logger.info("%s, maximum number of tries reached" % errorcodes.lookup(e.pgcode))
-                    raise
-                wait_time = random.uniform(0.0, 2 ** tries)
-                tries += 1
-                _logger.info("%s, retry %d/%d in %.04f sec..." % (errorcodes.lookup(e.pgcode), tries, MAX_TRIES_ON_CONCURRENCY_FAILURE, wait_time))
-                time.sleep(wait_time)
-            except IntegrityError as inst:
-                registry = odoo.registry(dbname)
-                for key in registry._sql_error.keys():
-                    if key in inst[0]:
-                        raise ValidationError(tr(registry._sql_error[key], 'sql_constraint') or inst[0])
-                if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
-                    msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
-                    _logger.debug("IntegrityError", exc_info=True)
-                    try:
-                        errortxt = inst.pgerror.replace('«','"').replace('»','"')
-                        if '"public".' in errortxt:
-                            context = errortxt.split('"public".')[1]
-                            model_name = table = context.split('"')[1]
-                        else:
-                            last_quote_end = errortxt.rfind('"')
-                            last_quote_begin = errortxt.rfind('"', 0, last_quote_end)
-                            model_name = table = errortxt[last_quote_begin+1:last_quote_end].strip()
-                        model = table.replace("_",".")
-                        if model in registry:
-                            model_class = registry[model]
-                            model_name = model_class._description or model_class._name
-                        msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
-                    except Exception:
-                        pass
-                    raise ValidationError(msg)
-                else:
-                    raise ValidationError(inst[0])
-
-    return wrapper
-
-def execute_cr(cr, uid, obj, method, *args, **kw):
-    recs = odoo.api.Environment(cr, uid, {}).get(obj)
+def execute_cr(cr, uid, obj, method, args, kw):
+    # clean cache etc if we retry the same transaction
+    cr.reset()
+    env = api.Environment(cr, uid, {})
+    env.transaction.default_env = env  # ensure this is the default env for the call
+    recs = env.get(obj)
     if recs is None:
-        raise UserError(_("Object %s doesn't exist") % obj)
-    return odoo.api.call_kw(recs, method, args, kw)
+        raise UserError(f"Object {obj} doesn't exist")  # pylint: disable=missing-gettext
+    thread_local.rpc_model_method = f'{obj}.{method}'
+    result = retrying(partial(call_kw, recs, method, args, kw), env)
+    # force evaluation of lazy values before the cursor is closed, as it would
+    # error afterwards if the lazy isn't already evaluated (and cached)
+    for l in _traverse_containers(result, lazy):
+        _0 = l._value
+    if result is None:
+        _logger.info('The method %s of the object %s cannot return `None`!', method, obj)
+    return result
 
 
-def execute_kw(db, uid, obj, method, args, kw=None):
-    return execute(db, uid, obj, method, *args, **kw or {})
+def retrying(func, env):
+    """
+    Call ``func``in a loop until the SQL transaction commits with no
+    serialisation error. It rollbacks the transaction in between calls.
 
-@check
-def execute(db, uid, obj, method, *args, **kw):
-    threading.currentThread().dbname = db
-    with odoo.registry(db).cursor() as cr:
-        check_method_name(method)
-        res = execute_cr(cr, uid, obj, method, *args, **kw)
-        if res is None:
-            _logger.info('The method %s of the object %s can not return `None` !', method, obj)
-        return res
+    A serialisation error occurs when two independent transactions
+    attempt to commit incompatible changes such as writing different
+    values on a same record. The first transaction to commit works, the
+    second is canceled with a :class:`psycopg2.errors.SerializationFailure`.
+
+    This function intercepts those serialization errors, rollbacks the
+    transaction, reset things that might have been modified, waits a
+    random bit, and then calls the function again.
+
+    It calls the function up to ``MAX_TRIES_ON_CONCURRENCY_FAILURE`` (5)
+    times. The time it waits between calls is random with an exponential
+    backoff: ``random.uniform(0.0, 2 ** i)`` where ``i`` is the n° of
+    the current attempt and starts at 1.
+
+    :param callable func: The function to call, you can pass arguments
+        using :func:`functools.partial`.
+    :param odoo.api.Environment env: The environment where the registry
+        and the cursor are taken.
+    """
+    try:
+        for tryno in range(1, MAX_TRIES_ON_CONCURRENCY_FAILURE + 1):
+            tryleft = MAX_TRIES_ON_CONCURRENCY_FAILURE - tryno
+            try:
+                result = func()
+                if not env.cr._closed:
+                    env.cr.flush()  # submit the changes to the database
+                break
+            except (IntegrityError, OperationalError, ConcurrencyError) as exc:
+                if env.cr._closed:
+                    raise
+                env.cr.rollback()
+                env.transaction.reset()
+                env.registry.reset_changes()
+                request = http.request
+                if request:
+                    request.session = request._get_session_and_dbname()[0]
+                    # Rewind files in case of failure
+                    for filename, file in request.httprequest.files.items():
+                        if hasattr(file, "seekable") and file.seekable():
+                            file.seek(0)
+                        else:
+                            raise RuntimeError(f"Cannot retry request on input file {filename!r} after serialization failure") from exc
+                if isinstance(exc, IntegrityError):
+                    model = env['base']
+                    for rclass in env.registry.values():
+                        if exc.diag.table_name == rclass._table:
+                            model = env[rclass._name]
+                            break
+                    message = env._("The operation cannot be completed: %s", model._sql_error_to_message(exc))
+                    raise ValidationError(message) from exc
+
+                if isinstance(exc, PG_CONCURRENCY_EXCEPTIONS_TO_RETRY):
+                    error = errorcodes.lookup(exc.pgcode)
+                elif isinstance(exc, ConcurrencyError):
+                    error = repr(exc)
+                else:
+                    raise
+                if not tryleft:
+                    _logger.info("%s, maximum number of tries reached!", error)
+                    raise
+
+                wait_time = random.uniform(0.0, 2 ** tryno)
+                _logger.info("%s, %s tries left, try again in %.04f sec...", error, tryleft, wait_time)
+                time.sleep(wait_time)
+        else:
+            # handled in the "if not tryleft" case
+            raise RuntimeError("unreachable")
+
+    except Exception:
+        env.transaction.reset()
+        env.registry.reset_changes()
+        raise
+
+    if not env.cr.closed:
+        env.cr.commit()  # effectively commits and execute post-commits
+    env.registry.signal_changes()
+    return result
+
+
+def _traverse_containers(val, type_):
+    """ Yields atoms filtered by specified ``type_`` (or type tuple), traverses
+    through standard containers (non-string mappings or sequences) *unless*
+    they're selected by the type filter
+    """
+    from odoo.models import BaseModel
+    if isinstance(val, type_):
+        yield val
+    elif isinstance(val, (str, bytes, BaseModel)):
+        return
+    elif isinstance(val, Mapping):
+        for k, v in val.items():
+            yield from _traverse_containers(k, type_)
+            yield from _traverse_containers(v, type_)
+    elif isinstance(val, Sequence):
+        for v in val:
+            yield from _traverse_containers(v, type_)

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.AttachmentList" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-AttachmentCard-info')]" position="replace">
+            <t t-if="attachment.voice">
+                <VoicePlayer attachment="attachment"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="(//div[@t-if='!isMobileOS'])" position="attributes">
+            <attribute name="t-if">!isMobileOS and !attachment.voice</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o-Attachment-uploaded')]" position="attributes">
+            <attribute name="t-att-class">!isMobileOS and !attachment.voice ? 'end-0' : 'start-0'</attribute>
+        </xpath>
+    </t>
+</templates>

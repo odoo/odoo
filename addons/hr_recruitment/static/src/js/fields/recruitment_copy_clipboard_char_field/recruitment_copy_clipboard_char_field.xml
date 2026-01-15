@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_recruitment.RecruitmentCopyClipboardCharField">
+        <div class="d-flex">
+            <span t-esc="props.displayedValue"></span>
+            <GenerateContentAndCopyButton t-if="props.contentGenerationFunctionName" className="copyButtonClassName" disabled="props.record.isNew" contentGenerationFunction="contentGenerationFunction" icon="copyButtonIcon" successText="successText"/>
+            <GenerateContentAndCopyButton t-else="" className="copyButtonClassName" content="props.record.data[props.name]" icon="copyButtonIcon" successText="successText"/>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.TopMenuVisibilityOption">
+    <BuilderRow label.translate="Header Position" tooltip.translate="Change the Header Position on this page" t-if="!this.isActiveItem('header_sidebar_opt')">
+        <BuilderSelect action="'setWebsiteHeaderVisibility'">
+            <BuilderSelectItem actionValue="'overTheContent'" id="'overTheContent'" t-if="doesPageOptionExist('header_overlay')">Over The Content</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'regular'">Regular</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'hidden'">Hidden</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <t t-if="isActiveItem('overTheContent')">
+        <BuilderRow label.translate="Background" level="1" t-if="doesPageOptionExist('header_color')">
+            <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'background-color'" enabledTabs="['custom']"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Text Color" level="1" t-if="doesPageOptionExist('header_text_color')">
+            <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'color'" enabledTabs="['solid', 'custom']"/>
+        </BuilderRow>
+    </t>
+</t>
+
+<t t-name="website.HideFooterOption">
+    <BuilderRow label.translate="Page Visibility" tooltip.translate="Disable to hide the footer on this page">
+        <BuilderCheckbox action="'setWebsiteFooterVisible'"/>
+    </BuilderRow>
+</t>
+
+</templates>

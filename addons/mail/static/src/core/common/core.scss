@@ -1,0 +1,427 @@
+$o-discuss-talkingColor: lighten($success, 10%);
+
+.o-mail-discussSidebarBgColor {
+    background-color: $white !important;
+}
+
+.o-mail-brighter {
+    filter: brightness(1.2);
+}
+
+.o-mail-emoji {
+    font-size: 121%;
+    line-height: $display-line-height;
+}
+
+.o-bg-black {
+    background-color: rgba(0, 0, 0, var(--bg-opacity, 1));
+}
+
+.o-bg-body {
+    background-color: $body-bg !important;
+}
+
+.o-border-opacity-25 {
+    --border-opacity: 0.25;
+}
+
+.o-border-opacity-50 {
+    --border-opacity: 0.5;
+}
+
+.o-discuss-badge {
+    &, & .o-innerBadge {
+        --o-discuss-badge-bg: #{$o-success}; // sync with --o-navbar-badge-bg
+        color: white !important;
+        background-color: var(--o-discuss-badge-bg) !important;
+        align-items: center;
+        justify-content: center;
+        padding: 3px 4px;
+
+        &.o-muted {
+            --o-discuss-badge-bg: #{$gray-400};
+        }
+    }
+
+    & .o-innerBadge {
+        min-width: $o-badge-min-width; // same as .badge, without using .badge to keep semantics of a single .badge
+    }
+}
+
+@function o-rounded-bubble() {
+    @return calc((#{$border-radius} + #{$border-radius-lg}) * 3 / 4);
+}
+
+.o-discuss-dropdownMenu {
+    --Dropdown_menu-margin-y: 0;
+
+    &.o-simulateDarkTheme {
+        background-color: $gray-800;
+        border-color: $gray-700 !important;
+
+        * {
+            color: white;
+        }
+
+        select, .form-check-input {
+            border-color: $gray-600;
+        }
+
+        .form-select {
+            --#{$prefix}form-select-bg-img: #{escape-svg($form-select-indicator-dark)};
+        }
+
+        .form-switch .form-check-input {
+            &:not(:checked):not(:focus) {
+                --#{$prefix}form-switch-bg: #{escape-svg($form-switch-bg-image-dark)};
+            }
+        }
+
+        select option {
+            background-color: $gray-700;
+        }
+    }
+
+    .o_bottom_sheet_sheet:has(&) {
+        background-color: $gray-100;
+        box-shadow: unset !important;
+    }
+}
+
+.o-discuss-mobileContextMenu {
+    top: auto !important;
+}
+
+.o-discuss-separator {
+    opacity: $hr-opacity / 2;
+}
+
+.o-discuss-text-body {
+    color: $gray-700;
+}
+
+.o-discuss-badge, .o-discuss-badgeShape {
+    &, & .o-innerBadge {
+        display: flex;
+        transform: translate(0, 0) !important; // cancel systray style on badge
+        font-size: .78572 * $font-size-base !important; // roughly 11px, small but readable
+        user-select: none;
+    }
+}
+
+.o-fw-600 {
+    font-weight: 600;
+}
+
+.o-min-height-0 {
+    min-height: 0;
+}
+
+.o-min-width-0 {
+    min-width: 0;
+}
+
+.o-opacity-35 {
+    opacity: 35%;
+}
+
+.o-opacity-65 {
+    opacity: 65%;
+}
+
+.o-outline-secondary {
+    outline: 1px solid $o-gray-300;
+}
+
+.o-hover-text-underline:hover {
+    text-decoration: underline;
+}
+
+$o-mail-spacers-sizes: () !default;
+$o-mail-spacers-sizes: map-merge(
+    $o-mail-spacers-sizes,
+    (
+        "0_5": map-get($spacers, 1) / 2,
+        "1_5": (map-get($spacers, 1) + map-get($spacers, 2)) / 2,
+        "2_5": (map-get($spacers, 2) + map-get($spacers, 3)) / 2,
+        "3_5": (map-get($spacers, 3) + map-get($spacers, 4)) / 2,
+        "4_5": (map-get($spacers, 4) + map-get($spacers, 5)) / 2,
+    )
+);
+
+$o-mail-rounded-sizes: () !default;
+$o-mail-rounded-sizes: map-merge(
+    $o-mail-rounded-sizes,
+    (
+        "2_5": calc((#{$border-radius} + #{$border-radius-lg}) / 2),
+        "bubble": o-rounded-bubble(),
+    )
+);
+
+$o-mail-utilities: () !default;
+$o-mail-utilities: map-merge(
+    $o-mail-utilities,
+    (
+        "o-gap": (
+            property: gap,
+            class: o-gap,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-m": (
+            property: margin,
+            class: o-m,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-mx": (
+            property: margin-left margin-right,
+            class: o-mx,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-my": (
+            property: margin-top margin-bottom,
+            class: o-my,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-mt": (
+            property: margin-top,
+            class: o-mt,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-me": (
+            property: margin-right,
+            class: o-me,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-mb": (
+            property: margin-bottom,
+            class: o-mb,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-ms": (
+            property: margin-left,
+            class: o-ms,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-p": (
+            property: padding,
+            class: o-p,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-px": (
+            property: padding-left padding-right,
+            class: o-px,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-py": (
+            property: padding-top padding-bottom,
+            class: o-py,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-pt": (
+            property: padding-top,
+            class: o-pt,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-pe": (
+            property: padding-right,
+            class: o-pe,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-pb": (
+            property: padding-bottom,
+            class: o-pb,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-ps": (
+            property: padding-left,
+            class: o-ps,
+            values: $o-mail-spacers-sizes,
+        ),
+        "o-rounded": (
+            property: border-radius,
+            class: o-rounded,
+            values: $o-mail-rounded-sizes,
+        ),
+        "o-rounded-top": (
+            property: border-top-left-radius border-top-right-radius,
+            class: o-rounded-top,
+            values: $o-mail-rounded-sizes,
+        ),
+        "o-rounded-end": (
+            property: border-top-right-radius border-bottom-right-radius,
+            class: o-rounded-end,
+            values: $o-mail-rounded-sizes,
+        ),
+        "o-rounded-bottom": (
+            property: border-bottom-right-radius border-bottom-left-radius,
+            class: o-rounded-bottom,
+            values: $o-mail-rounded-sizes,
+        ),
+        "o-rounded-start": (
+            property: border-bottom-left-radius border-top-left-radius,
+            class: o-rounded-start,
+            values: $o-mail-rounded-sizes,
+        ),
+    ),
+);
+
+@each $key, $utility in $o-mail-utilities {
+    @include generate-utility($utility)
+}
+
+.o-fs-small {
+    font-size: $o-font-size-base-small !important;
+}
+
+.o-scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: $gray-400 transparent;
+}
+
+.o-text-white {
+    color: #FFF !important;
+}
+
+.o-xsmaller {
+    font-size: 0.65rem;
+}
+
+.o-xxsmaller {
+    font-size: 0.5rem;
+}
+
+.o-xxxs {
+    font-size: 0.35rem;
+}
+
+.o-yellow {
+    color: $yellow;
+}
+
+.o-info {
+    color: $o-info;
+}
+
+.o-secondary {
+    color: var(--o-secondary, mix($o-gray-200, $o-gray-300));
+}
+
+.o-warning {
+    color: $o-warning;
+}
+
+@mixin o-mail-call-bordered($opacity) {
+    border: 1px solid rgba($o-action, $opacity) !important;
+    background-color: mix(mix($white, $gray-100, 15%), $o-action, 97.5%) !important;
+}
+
+// see `@mixin button-variant`, this is the implementation without requiring `.btn` classname
+@mixin o-mention-variant(
+    $background,
+    $outline,
+    $color: color-contrast($background),
+    $hover-background: if($color == $color-contrast-light, shade-color($background, $btn-hover-bg-shade-amount), tint-color($background, $btn-hover-bg-tint-amount)),
+    $hover-outline: if($color == $color-contrast-light, shade-color($outline, $btn-hover-border-shade-amount), tint-color($outline, $btn-hover-border-tint-amount)),
+    $hover-color: color-contrast($hover-background),
+    $active-background: if($color == $color-contrast-light, shade-color($background, $btn-active-bg-shade-amount), tint-color($background, $btn-active-bg-tint-amount)),
+    $active-outline: if($color == $color-contrast-light, shade-color($outline, $btn-active-border-shade-amount), tint-color($outline, $btn-active-border-tint-amount)),
+    $active-color: color-contrast($active-background),
+    $disabled-background: $background,
+    $disabled-outline: $outline,
+    $disabled-color: color-contrast($disabled-background)
+) {
+    color: #{$color} !important;
+    background-color: #{$background};
+    outline-color: #{$outline};
+    &:hover {
+        color: #{$hover-color};
+        background-color: #{$hover-background};
+        outline-color: #{$hover-outline};
+    }
+    &:focus {
+        box-shadow: #{to-rgb(mix($color, $outline, 15%))};
+    }
+    &:active {
+        color: #{$active-color};
+        background-color: #{$active-background};
+        outline-color: #{$active-outline};
+    }
+    &:disabled {
+        color: #{$disabled-color};
+        background-color: #{$disabled-background};
+        outline-color: #{$disabled-outline};
+    }
+}
+
+a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention, a.o_message_redirect_transformed {
+    user-select: none;
+    border-radius: $btn-border-radius-sm;
+    padding: 0rem 0.1rem;
+    margin: 0rem 0.0875rem;
+    outline: 1px solid;
+    font-weight: $font-weight-bold;
+    display: inline-block;
+}
+
+a.o_mail_redirect, a.o_channel_redirect, a.o_message_redirect_transformed {
+    @include o-mention-variant(rgba($primary, .15), rgba($primary, .25), darken($primary, 10%), rgba($primary, .2), rgba($primary, .5), darken($primary, 15%));
+}
+
+a.o-discuss-mention {
+    @include o-mention-variant(rgba($primary, .15), rgba($primary, .25), darken($primary, 10%), rgba($primary, .15), rgba($primary, .25), darken($primary, 10%));
+    cursor: default !important;
+}
+
+.o-discuss-inCallIconColor {
+    color: $o-action;
+}
+
+.o-mail-DiscussSystray {
+    --border-color: #{$o-gray-300} !important; // cancel custom border color of dropdown
+}
+
+.o-mail-DiscussSystray-class {
+    margin-top: - $o-navbar-padding-v; // cancel navbar padding
+    margin-bottom: - $o-navbar-padding-v; // cancel navbar padding
+    display: flex;
+    align-items: center;
+}
+
+.o-mail-systrayFullscreenDropdownMenu {
+    top: $o-navbar-height !important;
+    height: calc(100% - #{$o-navbar-height}); // no bottom-0 otherwise performance issue
+    border-radius: 0 !important;
+}
+
+.o-pointer-events-none {
+    pointer-events: none;
+}
+
+.o-visible-short-delay {
+    animation: o-visible-short-delay-animation 0s ease-in 0.25s forwards;
+    display: none;
+}
+
+@keyframes o-visible-short-delay-animation {
+    to {
+        display: inline-flex;
+    }
+}
+
+// .o-opacity-hoberable class disable the opacity effect (see opacity-100-hover) on
+// device that dont support the hover effect (mainly touch device).
+@media (hover: none) {
+    .o-opacity-hoverable {
+        opacity: 100 !important;
+    }
+}
+
+.o-mail-Discuss-threadActionPopover {
+    width: Min(95vw, 400px);
+    max-height: Min(50vh, 530px);
+}
+
+.o-mail-starred {
+    color: $o-main-favorite-color;
+    filter: drop-shadow(1px 1px 0px #000000b0);
+}

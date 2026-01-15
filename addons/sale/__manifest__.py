@@ -1,73 +1,109 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Sales',
-    'version': '1.0',
-    'category': 'Sales',
-    'sequence': 15,
-    'summary': 'Quotations, Sales Orders, Invoicing',
+    'version': '1.2',
+    'category': 'Sales/Sales',
+    'summary': 'Sales internal machinery',
     'description': """
-Manage sales quotations and orders
-==================================
-
-This application allows you to manage your sales goals in an effective and efficient manner by keeping track of all sales orders and history.
-
-It handles the full sales workflow:
-
-* **Quotation** -> **Sales order** -> **Invoice**
-
-Preferences (only with Warehouse Management installed)
-------------------------------------------------------
-
-If you also installed the Warehouse Management, you can deal with the following preferences:
-
-* Shipping: Choice of delivery at once or partial delivery
-* Invoicing: choose how invoices will be paid
-* Incoterms: International Commercial terms
-
-You can choose flexible invoicing methods:
-
-* *On Demand*: Invoices are created manually from Sales Orders when needed
-* *On Delivery Order*: Invoices are generated from picking (delivery)
-* *Before Delivery*: A Draft invoice is created and must be paid before delivery
-
-With this module you can personnalize the sales order and invoice report with
-categories, subtotals or page-breaks.
-
-The Dashboard for the Sales Manager will include
-------------------------------------------------
-* My Quotations
-* Monthly Turnover (Graph)
+This module contains all the common features of Sales Management and eCommerce.
     """,
-    'website': 'https://www.odoo.com/page/crm',
-    'depends': ['sales_team', 'account', 'procurement', 'report', 'web_tour'],
+    'depends': [
+        'sales_team',
+        'account_payment',  # -> account, payment, portal
+        'utm',
+    ],
     'data': [
-        'data/ir_sequence_data.xml',
-        'data/sale_data.xml',
-        'data/sale_tour.xml',
-        'report/sale_report.xml',
-        'data/mail_template_data.xml',
-        'report/sale_report_views.xml',
-        'report/sale_report_templates.xml',
-        'report/invoice_report_templates.xml',
-        'security/sale_security.xml',
         'security/ir.model.access.csv',
+        'security/res_groups.xml',
+        'security/ir_rules.xml',
+
+        'report/account_invoice_report_views.xml',
+        'report/ir_actions_report_templates.xml',
+        'report/ir_actions_report.xml',
+        'report/sale_report_views.xml',
+
+        'data/ir_cron.xml',
+        'data/ir_sequence_data.xml',
+        'data/mail_message_subtype_data.xml',
+        'data/mail_template_data.xml',
+        'data/sale_tour.xml',
+        'data/ir_config_parameter.xml', # Needs mail_template_data
+
+        'wizard/account_accrued_orders_wizard_views.xml',
+        'wizard/mass_cancel_orders_views.xml',
+        'wizard/payment_link_wizard_views.xml',
+        'wizard/res_config_settings_views.xml',
         'wizard/sale_make_invoice_advance_views.xml',
-        'views/sale_views.xml',
-        'views/sales_team_views.xml',
+        'wizard/sale_order_discount_views.xml',
+
+        # Define sale order views before their references
+        'views/sale_order_views.xml',
+
+        'views/account_views.xml',
+        'views/crm_team_views.xml',
+        'views/mail_activity_views.xml',
+        'views/mail_activity_plan_views.xml',
+        'views/payment_views.xml',
+        'views/product_document_views.xml',
+        'views/product_pricelist_item_views.xml',
+        'views/product_template_views.xml',
+        'views/product_views.xml',
         'views/res_partner_views.xml',
-        'views/sale_templates.xml',
-        'views/sale_layout_category_view.xml',
-        'views/sale_config_settings_views.xml',
+        'views/sale_order_line_views.xml',
+        'views/sale_portal_templates.xml',
+        'views/utm_campaign_views.xml',
+
+        'views/sale_menus.xml',  # Last because referencing actions defined in previous files
     ],
     'demo': [
+        'data/product_demo.xml',
         'data/sale_demo.xml',
-        'data/product_product_demo.xml',
     ],
-    'uninstall_hook': "uninstall_hook",
-    'css': ['static/src/css/sale.css'],
     'installable': True,
-    'auto_install': False,
-    'application': True,
+    'assets': {
+        'web.assets_backend': [
+            'sale/static/src/scss/sale_onboarding.scss',
+            'sale/static/src/js/badge_extra_price/*',
+            'sale/static/src/js/sale_action_helper/*',
+            'sale/static/src/js/combo_configurator_dialog/*',
+            'sale/static/src/js/models/*',
+            'sale/static/src/js/product/*',
+            'sale/static/src/js/product_card/*',
+            'sale/static/src/js/product_configurator_dialog/*',
+            'sale/static/src/js/product_list/*',
+            'sale/static/src/js/product_template_attribute_line/*',
+            'sale/static/src/js/quantity_buttons/*',
+            'sale/static/src/js/sale_order_line_field/*',
+            'sale/static/src/js/sale_progressbar_field.js',
+            'sale/static/src/js/tours/sale.js',
+            'sale/static/src/js/upload_rfq_cog_menu/*',
+            'sale/static/src/js/sale_product_field.js',
+            'sale/static/src/js/sale_product_field.scss',
+            'sale/static/src/js/sale_utils.js',
+            'sale/static/src/xml/**/*',
+            'sale/static/src/views/**/*',
+        ],
+        'web.assets_frontend': [
+            'sale/static/src/interactions/**/*',
+            'sale/static/src/scss/sale_portal.scss',
+        ],
+        'web.assets_tests': [
+            'sale/static/tests/tours/**/*',
+            'sale/static/src/js/tours/combo_configurator_tour_utils.js',
+            'sale/static/src/js/tours/product_configurator_tour_utils.js',
+            'sale/static/src/js/tours/tour_utils.js',
+        ],
+        'web.assets_unit_tests': [
+            'sale/static/tests/mock_server/**/*',
+            'sale/static/tests/sale_test_helpers.js',
+            'sale/static/tests/**/*.test.js',
+        ],
+        'web.report_assets_common': [
+            'sale/static/src/scss/sale_report.scss',
+        ],
+    },
+    'post_init_hook': '_post_init_hook',
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
 }

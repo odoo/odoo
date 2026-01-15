@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.SubChannelList">
+        <ActionPanel title.translate="Threads" resizable="!!env.inMeetingView" initialWidth="400" icon="'fa fa-comments-o'">
+            <t t-set-slot="header">
+                <div class="d-flex align-items-center my-0">
+                    <div class="input-group ms-1 my-2">
+                        <div class="form-control d-flex align-items-center p-0 bg-view" role="search" aria-autocomplete="list">
+                            <div class="o_searchview d-flex flex-grow-1 flex-wrap gap-1 h-100 border-end-0">
+                                <input t-ref="search" t-model="state.searchTerm" type="text" class="o_searchview_input rounded flex-grow-1 w-auto border-0 px-2 bg-view" t-on-keydown="onKeydownSearch" placeholder="Search by name"/>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-secondary px-2 py-1" aria-label="Search button" t-on-click="search">
+                            <i t-if="!state.loading" class="o_searchview_icon oi oi-search" role="img" aria-label="Search Sub Channels" title="Search Sub Channels"/>
+                            <i t-else="" class="fa fa-circle-o-notch fa-spin" aria-label="Search in progress" title="Search in progress"/>
+                        </button>
+                        <button t-if="store.self.main_user_id?.share === false" class="btn btn-primary smaller" aria-label="Create Thread" t-on-click="onClickCreate">Create</button>
+                    </div>
+                </div>
+            </t>
+            <div class="o-mail-SubChannelList o-mail-Discuss-threadActionPopover mw-100 w-100 h-100" t-att-class="{ 'align-items-center justify-content-center': state.subChannels.length === 0 }">
+                <div t-if="state.subChannels.length === 0" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+                    <p class="my-1 text-center fst-italic text-500">
+                        <t t-if="state.searching" t-esc="NO_THREAD_FOUND"/>
+                        <t t-else="">This channel has no thread yet.</t>
+                    </p>
+                </div>
+                <div class="d-flex flex-column flex-grow-1 gap-2">
+                    <SubChannelPreview t-foreach="state.subChannels" t-as="thread" t-key="thread.localId" thread="thread" onClick="() => this.onClickSubThread(thread)"/>
+                    <span class="pt-1" t-ref="load-more"/>
+                </div>
+            </div>
+        </ActionPanel>
+    </t>
+</templates>

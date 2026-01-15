@@ -2,7 +2,7 @@
 {
     'name': 'test-inherits',
     'version': '0.1',
-    'category': 'Tests',
+    'category': 'Hidden/Tests',
     'description': """A module to verify the inheritance using _inherits.""",
     'author': 'Camptocamp',
     'website': 'http://www.camptocamp.com',
@@ -12,5 +12,5 @@
         'demo_data.xml',
     ],
     'installable': True,
-    'auto_install': False,
+    'license': 'LGPL-3',
 }

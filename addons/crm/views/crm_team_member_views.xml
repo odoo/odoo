@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="crm_team_member_view_tree" model="ir.ui.view">
+        <field name="name">crm.team.member.view.list</field>
+        <field name="model">crm.team.member</field>
+        <field name="inherit_id" ref="sales_team.crm_team_member_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="assignment_enabled" column_invisible="True"/>
+                <field name="assignment_optout"/>
+                <field name="assignment_max"/>
+                <field name="lead_month_count"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="crm_team_member_view_kanban" model="ir.ui.view">
+        <field name="name">crm.team.member.view.kanban.inherit.crm</field>
+        <field name="model">crm.team.member</field>
+        <field name="inherit_id" ref="sales_team.crm_team_member_view_kanban"/>
+        <field name="arch" type="xml">
+            <field name="active" position="after">
+                <field name="assignment_enabled"/>
+                <field name="assignment_optout"/>
+                <field name="assignment_max"/>
+            </field>
+            <xpath expr="//main" position="after">
+                <div class="o_member_assignment"
+                        invisible="assignment_optout">
+                    <field name="lead_month_count" widget="gauge"
+                        options="{'max_field': 'assignment_max'}"
+                        invisible="assignment_max == 0"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_team_member_view_form" model="ir.ui.view">
+        <field name="name">crm.team.member.view.form.inherit.crm</field>
+        <field name="model">crm.team.member</field>
+        <field name="inherit_id" ref="sales_team.crm_team_member_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook>
+                    <page string="Lead Assignment" name="lead_assign">
+                        <group>
+                            <label for="assignment_max" class="o_form_label text-900" string="Capacity" invisible="assignment_optout"/>
+                            <span invisible="assignment_optout">
+                                <field name="lead_month_count" class="oe_inline"/>
+                                <span> leads assigned the last 30 days out of a maximum of </span>
+                                <field name="assignment_max" class="oe_inline o_field_highlight o_input_6ch border-bottom border-dark"/>
+                            </span>
+                            <field name="assignment_optout"/>
+                            <field name="assignment_domain_preferred" string="Lead Priority Filter" widget="domain"
+                                options="{'model': 'crm.lead', 'foldable': True}"
+                                invisible="not assignment_enabled or assignment_max == 0 or assignment_optout"/>
+                            <field name="assignment_domain" string="Lead Assignment Filter" widget="domain"
+                                options="{'model': 'crm.lead', 'foldable': True}"
+                                invisible="not assignment_enabled or assignment_max == 0 or assignment_optout"/>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sales_team.crm_team_member_action" model="ir.actions.act_window">
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a Team Member
+            </p><p>
+                Team Members are salespersons assigned to specific teams.
+            </p>
+        </field>
+    </record>
+
+</data></odoo>

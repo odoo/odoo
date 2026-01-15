@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="pos_self_order.UnavailableProductsDialog">
+        <Dialog>
+            <t t-set-slot="header">
+                <h4 class="modal-title">Oops...</h4>
+            </t>
+            <div class="modal-body">
+                <p>
+                    It seems that 
+                    <strong class="text-danger">
+                        <t t-esc="props.productNames.join(', ')"/>
+                    </strong> 
+                    <t t-if="props.productNames.length > 1"> are</t>
+                    <t t-else=""> is</t>
+                    no longer available. Please go back and edit your order.
+                </p>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="onConfirm">OK</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

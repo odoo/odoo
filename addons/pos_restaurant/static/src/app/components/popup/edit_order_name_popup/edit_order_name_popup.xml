@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.EditOrderNamePopup" t-inherit="point_of_sale.TextInputPopup" t-inherit-mode="primary">
+        <xpath expr="//textarea" position="replace">
+            <div class="d-flex flex-column-reverse align-content-center">
+                <ListContainer
+                    t-if="items"
+                    items="items"
+                    t-slot-scope="scope"
+                    class="'mb-3 h-100'"
+                    forceSmall="false"
+                >
+                    <t t-set="order" t-value="scope.item" />
+                    <div class="position-relative">
+                        <button t-esc="order.getName()"
+                            class="btn btn-lg btn-secondary text-truncate me-1"
+                            style="min-width: 4rem;"
+                            t-on-click="() => this.transferOrder(order)"
+                        />
+                    </div>
+                </ListContainer>
+                <textarea t-att-rows="props.rows" class="h-100 flex-grow-1 form-control form-control-lg mx-auto" type="text" t-model="state.inputValue" t-ref="input" t-att-placeholder="props.placeholder" t-on-keydown="onKeydown" />
+            </div>
+        </xpath>
+        <xpath expr="//button[hasclass('btn-primary')]" position="attributes">
+            <attribute name="t-attf-class">{{state.inputValue ? '' : 'disabled'}}</attribute>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ThemeAdvancedOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Show Header" tooltip.translate="Show/Hide the header on all pages">
+            <BuilderCheckbox action="'websiteConfig'"
+                actionParam="{
+                    views: ['!website.option_layout_hide_header'],
+                }"
+            />
+        </BuilderRow>
+        <BuilderRow label.translate="Code Injection" tooltip.translate="Enter code that will be added into every page of your site">
+            <BuilderButton title.translate="&lt;Head&gt; and &lt;body&gt;" action="'editCustomCode'">&lt;head&gt; and &lt;/body&gt;</BuilderButton>
+        </BuilderRow>
+        <BuilderRow label.translate="Google Map">
+            <BuilderButton title.translate="Custom Key" action="'configureApiKey'">Custom Key</BuilderButton>
+        </BuilderRow>
+        <BuilderRow label.translate="Status Colors">
+            <BuilderColorPicker title.translate="Success"
+                enabledTabs="['solid', 'custom']"
+                action="'customizeWebsiteColor'"
+                actionParam="{colorType: 'theme', mainParam: 'success'}"
+                selectedTab="'custom'"
+            />
+            <BuilderColorPicker title.translate="Info"
+                enabledTabs="['solid', 'custom']"
+                action="'customizeWebsiteColor'"
+                actionParam="{colorType: 'theme', mainParam: 'info'}"
+                selectedTab="'custom'"
+            />
+            <BuilderColorPicker title.translate="Warning"
+                enabledTabs="['solid', 'custom']"
+                action="'customizeWebsiteColor'"
+                actionParam="{colorType: 'theme', mainParam: 'warning'}"
+                selectedTab="'custom'"
+            />
+            <BuilderColorPicker title.translate="Error"
+                enabledTabs="['solid', 'custom']"
+                action="'customizeWebsiteColor'"
+                actionParam="{colorType: 'theme', mainParam: 'danger'}"
+                selectedTab="'custom'"
+            />
+        </BuilderRow>
+        <BuilderRow label.translate="Grays" fullRowToggler="true">
+            <div class="o_we_gray_preview d-flex w-100">
+	            <t t-foreach="[0,1,2,3,4,5,6,7,8]" t-as="i" t-key="i">
+	                <t t-set="grayCode" t-value="(9 - i) * 100"/>
+	                <span t-att-title="getGrayTitle(grayCode)"
+	                      t-attf-variable="#{grayCode}"
+	                      t-attf-class="o_we_user_value_widget o_we_gray_preview bg-#{grayCode}"
+	                      t-attf-style="background-color: {{grays[grayCode]}} !important"
+	                />
+	            </t>
+            </div>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Hue" level="1">
+                    <div class="o_we_slider_tint">
+	                    <BuilderRange action="'customizeGray'" actionParam="'gray-hue'"
+	                        min="0" max="359.9" step="0.1"
+	                    />
+                    </div>
+                </BuilderRow>
+                <BuilderRow label.translate="Saturation" level="1">
+                    <BuilderRange action="'customizeGray'" actionParam="'gray-extra-saturation'"
+                        step="0.1"
+                    />
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>

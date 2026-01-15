@@ -1,44 +1,51 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Employee Directory',
+    'name': 'Employees',
     'version': '1.1',
-    'category': 'Human Resources',
-    'sequence': 75,
-    'summary': 'Jobs, Departments, Employees Details',
-    'description': """
-Human Resources Management
-==========================
-
-This application enables you to manage important aspects of your company's staff and other details such as their skills, contacts, working time...
-
-
-You can manage:
----------------
-* Employees and hierarchies : You can define your employee with User and display hierarchies
-* HR Departments
-* HR Jobs
-    """,
-    'website': 'https://www.odoo.com/page/employees',
+    'category': 'Human Resources/Employees',
+    'sequence': 95,
+    'summary': 'Centralize employee information',
+    'website': 'https://www.odoo.com/app/employees',
     'images': [
-        'images/hr_department.jpeg',
-        'images/hr_employee.jpeg',
-        'images/hr_job_position.jpeg',
         'static/src/img/default_image.png',
     ],
     'depends': [
         'base_setup',
-        'mail',
-        'resource',
+        'digest',
+        'phone_validation',
+        'resource_mail',
         'web',
     ],
     'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',
+        'data/digest_data.xml',
+        'data/report_paperformat.xml',
+        'wizard/hr_departure_wizard_views.xml',
+        'wizard/hr_contract_template_wizard.views.xml',
+        'wizard/mail_activity_schedule_views.xml',
+        'wizard/hr_bank_account_allocation_wizard.xml',
+        'wizard/hr_bank_account_allocation_wizard_line.xml',
+        'views/mail_activity_plan_views.xml',
+        'views/hr_version_views.xml',
+        'views/hr_contract_template_views.xml',
+        'views/hr_departure_reason_views.xml',
+        'views/hr_contract_type_views.xml',
+        'views/hr_job_views.xml',
+        'views/hr_employee_category_views.xml',
+        'views/hr_employee_public_views.xml',
+        'report/hr_employee_badge.xml',
+        'views/hr_employee_views.xml',
+        'views/hr_department_views.xml',
+        'views/hr_work_location_views.xml',
         'views/hr_views.xml',
+        'views/res_config_settings_views.xml',
+        'views/res_partner_views.xml',
+        'views/res_partner_bank_views.xml',
+        'views/discuss_channel_views.xml',
+        'views/res_users.xml',
         'views/hr_templates.xml',
-        'views/hr_config_settings_views.xml',
         'data/hr_data.xml',
     ],
     'demo': [
@@ -46,6 +53,29 @@ You can manage:
     ],
     'installable': True,
     'application': True,
-    'auto_install': False,
-    'qweb': [],
+    'assets': {
+        'web.assets_backend': [
+            'hr/static/src/**/*',
+        ],
+        'im_livechat.assets_embed_core': [
+            'hr/static/src/core/common/**/*',
+        ],
+        'mail.assets_public': [
+            'hr/static/src/core/common/**/*',
+        ],
+        'web.qunit_suite_tests': [
+            'hr/static/tests/legacy/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'hr/static/tests/**/*',
+            'hr/static/tests/mock_server/mock_server.js',
+            ('remove', 'hr/static/tests/tours/**/*'),
+            ('remove', 'hr/static/tests/legacy/**/*'),
+        ],
+        'web.assets_tests': [
+            'hr/static/tests/tours/**/*',
+        ],
+    },
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
 }

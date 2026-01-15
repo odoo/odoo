@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+    Given that data are loaded before update of warehouses through the post_init_hook,
+    we manually create the 'Repairs' Operation Type in warehouse0 here such that it's available
+    when the initialization of data triggers the default method of the required field 'picking_type_id'.
+    -->
+
+    <record id="picking_type_warehouse0_repair" model="stock.picking.type" forcecreate="0">
+        <field name="name">Repairs</field>
+        <field name="code">repair_operation</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="default_location_src_id" ref="stock.stock_location_stock"/>
+        <field name="default_location_dest_id" model="stock.location" search="[('usage', '=', 'production'), ('company_id', '=', obj().env.ref('base.main_company').id)]"/>
+        <field name="default_remove_location_dest_id" model="stock.location" search="[('usage', '=', 'inventory'), ('company_id', '=', obj().env.ref('base.main_company').id)]"/>
+        <field name="default_recycle_location_dest_id" ref="stock.stock_location_stock"/>
+        <field name="sequence_code">RO</field>
+        <field name="warehouse_id" ref="stock.warehouse0"/>
+    </record>
+
+    <record id='stock.warehouse0' model='stock.warehouse'>
+        <field name='repair_type_id' ref='repair.picking_type_warehouse0_repair'/>
+    </record>
+</odoo>

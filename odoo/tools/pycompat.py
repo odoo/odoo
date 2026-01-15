@@ -1,31 +1,45 @@
 # -*- coding: utf-8 -*-
-# to remove if we decide to add a dependency on six or future
-# very strongly inspired by https://github.com/pallets/werkzeug/blob/master/werkzeug/_compat.py
-import sys
+#pylint: disable=deprecated-module
+import csv
+import codecs
+import io
+import typing
+import warnings
 
-PY2 = sys.version_info[0] == 2
+_reader = codecs.getreader('utf-8')
+_writer = codecs.getwriter('utf-8')
 
-if PY2:
-    # pylint: disable=long-builtin,xrange-builtin
-    integer_types = (int, long)
 
-    range = xrange
+def csv_reader(stream, **params):
+    warnings.warn("Deprecated since Odoo 18.0: can just use `csv.reader` with a text stream or use `TextIOWriter` or `codec.getreader` to transcode.", DeprecationWarning, stacklevel=2)
+    assert not isinstance(stream, io.TextIOBase),\
+        "For cross-compatibility purposes, csv_reader takes a bytes stream"
+    return csv.reader(_reader(stream), **params)
 
-    # noinspection PyUnresolvedReferences
-    from itertools import imap, izip, ifilter
 
-    def implements_iterator(cls):
-        cls.next = cls.__next__
-        del cls.__next__
-        return cls
-else:
-    integer_types = (int,)
+def csv_writer(stream, **params):
+    warnings.warn("Deprecated since Odoo 18.0: can just use `csv.writer` with a text stream or use `TextIOWriter` or `codec.getwriter` to transcode.", DeprecationWarning, stacklevel=2)
+    assert not isinstance(stream, io.TextIOBase), \
+        "For cross-compatibility purposes, csv_writer takes a bytes stream"
+    return csv.writer(_writer(stream), **params)
 
-    range = range
 
-    imap = map
-    izip = zip
-    ifilter = filter
+def to_text(source: typing.Any) -> str:
+    """ Generates a text value from an arbitrary source.
 
-    def implements_iterator(cls):
-        return cls
+    * False and None are converted to empty strings
+    * text is passed through
+    * bytes are decoded as UTF-8
+    * rest is textified
+    """
+    warnings.warn("Deprecated since Odoo 18.0.", DeprecationWarning, stacklevel=2)
+    if source is None or source is False:
+        return ''
+
+    if isinstance(source, bytes):
+        return source.decode()
+
+    if isinstance(source, str):
+        return source
+
+    return str(source)

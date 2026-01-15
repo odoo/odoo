@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.PaymentScreenPaymentLines">
+            <div class="paymentlines d-flex flex-column overflow-y-auto gap-2 mb-3">
+                <t t-foreach="props.paymentLines" t-as="line" t-key="line.uuid">
+                    <t t-if="line.isSelected()">
+                        <div t-attf-class="paymentline selected d-flex align-items-center rounded-3"
+                            t-att-class="selectedLineClass(line)">
+                            <div class="payment-infos d-flex align-items-center justify-content-between flex-grow-1 px-3 py-3 text-truncate cursor-pointer fs-2" t-on-click="() => this.selectLine(line)">
+                                 <span class="payment-name"><t t-esc="line.payment_method_id.name"/></span>
+                                 <div class="payment-amount px-3">
+                                    <PriceFormatter price="env.utils.formatCurrency(line.getAmount())" />
+                                </div>
+                            </div>
+                            <t t-if="!line.payment_status or !['done', 'reversed', 'waitingCard', 'waitingCapture'].includes(line.payment_status)">
+                                <button class="delete-button btn btn-link mx-2 px-3"
+                                    t-on-click="() => this.props.deleteLine(line.uuid)"
+                                    aria-label="Delete" title="Delete">
+                                    <i class="oi oi-close text-danger" />
+                                </button>
+                            </t>
+                           <t t-elif="line.payment_status and ['waitingCard', 'waitingCapture'].includes(line.payment_status)">
+                                <div class="mx-2 px-3">
+                                    <i class="fa fa-circle-o-notch fa-spin" role="img" />
+                                </div>
+                            </t>
+                        </div>
+                        <t t-if="line and line.payment_status">
+                            <div class="paymentline electronic_payment">
+                                <t t-if="line.payment_status == 'pending'">
+                                    <div class="electronic_status">
+                                        Payment request pending
+                                    </div>
+                                    <div class="button send_payment_request highlight text-bg-primary" title="Send Payment Request" t-on-click="() => this.props.sendPaymentRequest(line)">
+                                        Send
+                                    </div>
+                                </t>
+                                <t t-elif="line.payment_status == 'retry'">
+                                    <div class="electronic_status">
+                                        Transaction cancelled
+                                    </div>
+                                    <div class="button send_payment_request highlight text-bg-primary" title="Send Payment Request" t-on-click="() => this.props.sendPaymentRequest(line)">
+                                        Retry
+                                    </div>
+                                </t>
+                                <t t-elif="line.payment_status == 'force_done'">
+                                    <div class="electronic_status">
+                                        Connection error
+                                    </div>
+                                    <div class="button send_force_done" title="Force Done" t-on-click="() => this.props.sendForceDone(line)">
+                                        Force done
+                                    </div>
+                                </t>
+                                <t t-elif="line.payment_status == 'waitingCard'">
+                                    <div class="electronic_status">
+                                        <t t-if="this.props.isRefundOrder">
+                                            Refund in process
+                                        </t>
+                                        <t t-else="">
+                                            Waiting for card
+                                        </t>
+                                    </div>
+                                    <div>
+                                        <div class="button send_force_done" title="Force Done" t-on-click="() => this.props.sendForceDone(line)">
+                                            Force done
+                                        </div>
+                                        <div t-if="!this.props.isRefundOrder" class="button send_payment_cancel" title="Cancel Payment Request" t-on-click="() => this.props.sendPaymentCancel(line)">
+                                            Cancel
+                                        </div>
+                                    </div>
+                                </t>
+                                <t t-elif="['waiting', 'waitingCancel', 'waitingCapture'].includes(line.payment_status)">
+                                    <div class="electronic_status">
+                                        Request sent
+                                    </div>
+                                    <div>
+                                        <i class="fa fa-circle-o-notch fa-spin" role="img" />
+                                        <div t-if="line.payment_status == 'waiting'" class="button send_force_done" title="Force Done" t-on-click="() => this.props.sendForceDone(line)">
+                                            Force done
+                                        </div>
+                                        <div t-if="line.payment_status == 'waitingCancel'" class="button send_force_done" title="Force Cancel" t-on-click="() => line.setPaymentStatus('retry')">
+                                            Force cancel
+                                        </div>
+                                    </div>
+                                </t>
+                                <t t-elif="line.payment_status == 'reversing'">
+                                    <div class="electronic_status">
+                                        Reversal request sent to terminal
+                                    </div>
+                                    <div>
+                                        <i class="fa fa-circle-o-notch fa-spin" role="img" />
+                                    </div>
+                                </t>
+                                <t t-elif="line.payment_status == 'done'">
+                                    <div class="electronic_status">
+                                        <t t-if="!this.props.isRefundOrder">
+                                            Payment Successful
+                                        </t>
+                                        <t t-else="">
+                                            Refund Successful
+                                        </t>
+                                    </div>
+                                    <t t-if="line.can_be_reversed">
+                                        <div class="button send_payment_reversal" title="Reverse Payment" t-on-click="() => this.props.sendPaymentReverse(line)">
+                                            Reverse
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <!-- Todo: remove in master -->
+                                        <div class="d-none"></div>
+                                    </t>
+                                </t>
+                                <t t-elif="line.payment_status == 'reversed'">
+                                    <div class="electronic_status">
+                                        Payment reversed
+                                    </div>
+                                    <div></div>
+                                </t>
+                            </div>
+                        </t>
+                        <t t-if="this.props.isRefundOrder and line.payment_method_id.use_payment_terminal and !line.payment_status">
+                            <div class="button send_refund_request highlight text-bg-primary p-4 text-center"
+                                title="Send Refund Request"
+                                t-on-click="() => this.props.sendPaymentRequest(line)">
+                                Refund
+                            </div>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <div class="paymentline d-flex align-items-center bg-view border rounded-3"
+                            t-att-class="unselectedLineClass(line)">
+                             <div class="payment-infos d-flex align-items-center justify-content-between flex-grow-1 px-3 py-3 text-truncate cursor-pointer fs-2" t-on-click="() => this.selectLine(line)">
+                                 <t t-esc="line.payment_method_id?.name" />
+                                 <div class="payment-amount px-3">
+                                    <PriceFormatter price="env.utils.formatCurrency(line.getAmount())" />
+                                </div>
+                             </div>
+                            <t t-if="!line.payment_status or !['done', 'reversed'].includes(line.payment_status)">
+                                <div class="delete-button delete-button btn btn-link mx-2 px-3"
+                                    t-on-click="() => this.props.deleteLine(line.uuid)"
+                                    aria-label="Delete" title="Delete">
+                                    <i class="oi oi-close text-danger" />
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+            </div>
+    </t>
+
+</templates>

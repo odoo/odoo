@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="slide_slide_partner_view_search" model="ir.ui.view">
+        <field name="name">slide.slide.partner.view.search.inherit.survey</field>
+        <field name="model">slide.slide.partner</field>
+        <field name="inherit_id" ref="website_slides.slide_slide_partner_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='filter_completed']" position="after">
+                <filter string="Certification Passed" name="filter_survey_scoring_success" domain="[('survey_scoring_success', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="slide_slide_partner_view_tree" model="ir.ui.view">
+        <field name="name">slide.slide.partner.view.list.inherit.survey</field>
+        <field name="model">slide.slide.partner</field>
+        <field name="inherit_id" ref="website_slides.slide_slide_partner_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='completed']" position="after">
+                <field name="survey_scoring_success" string="Certification Passed"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="slide_slide_partner_view_form" model="ir.ui.view">
+        <field name="name">slide.slide.partner.view.form.inherit.survey</field>
+        <field name="model">slide.slide.partner</field>
+        <field name="inherit_id" ref="website_slides.slide_slide_partner_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='completed']" position="after">
+                <field name="survey_scoring_success"
+                    readonly="1"
+                    invisible="slide_category != 'certification'"/>
+            </xpath>
+            <xpath expr="//group[@name='main_content']" position="after">
+                <field name="user_input_ids" mode="list"
+                    readonly="1"
+                    invisible="slide_category != 'certification'"/>
+            </xpath>
+        </field>
+    </record>
+
+</data></odoo>

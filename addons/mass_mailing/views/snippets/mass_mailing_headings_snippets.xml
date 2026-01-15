@@ -1,0 +1,71 @@
+<odoo>
+<template id="s_title" name="Title">
+    <section class="s_title o_mail_snippet_general pt16 pb16" data-vxml="001">
+        <div class="container s_allow_columns">
+            <h1 style="text-align:center">Your Title</h1>
+        </div>
+    </section>
+</template>
+
+<template id="s_subtitle" name="Subtitle">
+    <section class="s_subtitle o_mail_snippet_general pt16 pb16">
+        <div class="container s_allow_columns">
+            <h3 style="text-align:center">Your Subtitle</h3>
+        </div>
+    </section>
+</template>
+
+<template id="s_author" name="Author">
+    <section class="s_author o_mail_snippet_general">
+        <div class="container pt8 pb8">
+            <div class="row">
+                <h1 style="text-align:center">Your Title</h1>
+            </div>
+            <div class="row align-items-center">
+                <div class="offset-md-4 col-md-2 offset-2 col-3">
+                    <div class="o_not_editable">
+                        <img src="/html_editor/image_shape/mass_mailing.s_company_team_default_image_1/html_builder/geometric_round/geo_round_circle.svg"
+                            class="img img-fluid o_editable_media mx-auto" data-shape="html_builder/geometric_round/geo_round_circle" data-file-name="team_member_1-circle.svg" data-shape-colors=";;;;" data-format-mimetype="image/png"/>
+                    </div>
+                </div>
+                <div class="col-md-4 col-4">
+                    <p>By John Doe</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_hr_title" name="Separator Title">
+    <section class="s_hr_title o_mail_snippet_general pt16 pb16">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-4 col-12">
+                    <t t-call="mass_mailing.s_hr"/>
+                </div>
+                <div class="col-md-4 text-break col-12">
+                    <h1 style="text-align:center;"> Your Title </h1>
+                </div>
+                <div class="col-md-4 col-12">
+                    <t t-call="mass_mailing.s_hr"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_blog_title" name="Blog Title">
+    <section class="s_blog_title o_mail_snippet_general pt16 pb16">
+        <div class="container">
+            <div class="row">
+                <h3>Your Super Article Title</h3>
+            </div>
+            <div class="row">
+                <p class="mb-0">
+                    <a href="https://www.example.com">By John Doe</a>
+                </p>
+            </div>
+        </div>
+    </section>
+</template>
+</odoo>

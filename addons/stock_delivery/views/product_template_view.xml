@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record model="ir.ui.view" id="product_template_hs_code">
+    <field name="name">product.template.form.hs_code</field>
+    <field name="model">product.template</field>
+    <field name="inherit_id" ref="stock.view_template_property_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//group[@name='traceability']" position="attributes">
+            <attribute name="invisible">0</attribute>
+        </xpath>
+        <xpath expr="//label[@for='serial_prefix_format']" position="before">
+            <field name="hs_code" string="HS Code"/>
+            <field name="country_of_origin"/>
+        </xpath>
+    </field>
+</record>
+
+</odoo>

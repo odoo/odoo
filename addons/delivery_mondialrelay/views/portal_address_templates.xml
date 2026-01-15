@@ -1,0 +1,14 @@
+<odoo>
+    <template id="address_card" inherit_id="portal.address_card">
+        <t t-out="contact" position="before">
+            <t t-if="contact.is_mondialrelay">
+                <img
+                    title="Mondial Relay"
+                    class="float-end"
+                    height="20px"
+                    src="/delivery_mondialrelay/static/src/img/logo.png"
+                />
+            </t>
+        </t>
+    </template>
+</odoo>

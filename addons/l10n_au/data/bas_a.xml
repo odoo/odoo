@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_au_bas_a" model="account.report">
+        <field name="name">BAS A</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.au"/>
+        <field name="filter_multi_company">tax_units</field>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="default_opening_date_filter">previous_return_period</field>
+        <field name="only_tax_exigible" eval="True"/>
+        <field name="column_ids">
+            <record id="l10n_au_bas_a_balance" model="account.report.column">
+                <field name="name">Amount</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_au_bas_a_gst" model="account.report.line">
+                <field name="name">Goods and Services Tax</field>
+                <field name="code">GST</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="children_ids">
+                    <record id="l10n_au_bas_a_gst_owed" model="account.report.line">
+                        <field name="name">1. Sales amount</field>
+                        <field name="code">GST_OWED</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="children_ids">
+                            <record id="l10n_au_bas_a_g1" model="account.report.line">
+                                <field name="name">G1: Total Sales (including any GST)</field>
+                                <field name="code">G1</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_au_bas_a_g1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-G1</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_au_bas_a_g2" model="account.report.line">
+                                        <field name="name">G2: Export sales</field>
+                                        <field name="code">G2</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_au_bas_a_g2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-G2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_au_bas_a_g3" model="account.report.line">
+                                        <field name="name">G3: Other GST-free sales</field>
+                                        <field name="code">G3</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_au_bas_a_g3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-G3</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_au_bas_a_g4" model="account.report.line">
+                                        <field name="name">G4: Input taxed sales</field>
+                                        <field name="code">G4</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_au_bas_a_g4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-G4</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_au_bas_a_gst_paid" model="account.report.line">
+                        <field name="name">GST amounts the Tax Office owes you from purchases</field>
+                        <field name="code">GST_PAID</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="children_ids">
+                            <record id="l10n_au_bas_a_g10" model="account.report.line">
+                                <field name="name">G10: Capital purchases (including any GST)</field>
+                                <field name="code">G10</field>
+                                <field name="hierarchy_level">7</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_au_bas_a_g10_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">G10</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_au_bas_a_g11" model="account.report.line">
+                                <field name="name">G11: Non-capital purchases (including GST)</field>
+                                <field name="code">G11</field>
+                                <field name="hierarchy_level">7</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_au_bas_a_g11_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">G11</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_au_bas_a_gst_calc" model="account.report.line">
+                        <field name="name">GST Calculations</field>
+                        <field name="code">GST_CALC</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="children_ids">
+                            <record id="l10n_au_bas_a_gst_owed_calc" model="account.report.line">
+                                <field name="name">GST Collected Calculation</field>
+                                <field name="code">GST_OWED_CALC</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="children_ids">
+                                    <record id="l10n_au_bas_a_g5" model="account.report.line">
+                                        <field name="name">G5: G2 + G3 + G4</field>
+                                        <field name="code">G5</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_au_bas_a_g5_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">G2.balance+G3.balance+G4.balance</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_au_bas_a_g6" model="account.report.line">
+                                        <field name="name">G6: Total sales subject to GST (G1 minus G5)</field>
+                                        <field name="code">G6</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_au_bas_a_g6_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">G1.balance-G5.balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="l10n_au_bas_a_g7" model="account.report.line">
+                                                <field name="name">G7: Adjustments (if applicable)</field>
+                                                <field name="code">G7</field>
+                                                <field name="hierarchy_level">9</field>
+                                                <field name="foldable" eval="False"/>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_au_bas_a_g7_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">-G7</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_au_bas_a_g8" model="account.report.line">
+                                        <field name="name">G8: Total sales subject to GST after adjustments (G6 + G7)</field>
+                                        <field name="code">G8</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_au_bas_a_g8_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">G6.balance+G7.balance</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_au_bas_a_g9" model="account.report.line">
+                                        <field name="name">G9: GST on sales (G8 divided by eleven)</field>
+                                        <field name="code">G9</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_au_bas_a_g9_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">G8.balance/11</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_au_bas_a_gst_paid_calc" model="account.report.line">
+                                <field name="name">GST Paid Calculation</field>
+                                <field name="code">GST_PAID_CALC</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="children_ids">
+                                    <record id="l10n_au_bas_a_g12" model="account.report.line">
+                                        <field name="name">G12: G10 + G11</field>
+                                        <field name="code">G12</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_au_bas_a_g12_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">G10.balance+G11.balance</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_au_bas_a_g16" model="account.report.line">
+                                        <field name="name">G16: G13 + G14 + G15</field>
+                                        <field name="code">G16</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_au_bas_a_g16_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">G13.balance+G14.balance+G15.balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="l10n_au_bas_a_g13" model="account.report.line">
+                                                <field name="name">G13: Purchases for making input taxed sales</field>
+                                                <field name="code">G13</field>
+                                                <field name="hierarchy_level">9</field>
+                                                <field name="foldable" eval="False"/>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_au_bas_a_g13_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">G13</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="l10n_au_bas_a_g14" model="account.report.line">
+                                                <field name="name">G14: Purchases without GST in the price</field>
+                                                <field name="code">G14</field>
+                                                <field name="hierarchy_level">9</field>
+                                                <field name="foldable" eval="False"/>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_au_bas_a_g14_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">G14</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="l10n_au_bas_a_g15" model="account.report.line">
+                                                <field name="name">G15: Estimated purchases for private use or not income tax deductible</field>
+                                                <field name="code">G15</field>
+                                                <field name="hierarchy_level">9</field>
+                                                <field name="foldable" eval="False"/>
+                                                <field name="expression_ids">
+                                                    <record id="l10n_au_bas_a_g15_balance" model="account.report.expression">
+                                                        <field name="label">balance</field>
+                                                        <field name="engine">tax_tags</field>
+                                                        <field name="formula">G15</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_au_bas_a_g17" model="account.report.line">
+                                        <field name="name">G17: Total purchases subject to GST (G12 minus G16)</field>
+                                        <field name="code">G17</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_au_bas_a_g17_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">G12.balance-G16.balance</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_au_bas_a_g18" model="account.report.line">
+                                        <field name="name">G18: Adjustments (if applicable)</field>
+                                        <field name="code">G18</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_au_bas_a_g18_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">G18</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_au_bas_a_g19" model="account.report.line">
+                                        <field name="name">G19: Total purchases subject to GST after adjustments (G17 + G18)</field>
+                                        <field name="code">G19</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_au_bas_a_g19_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">G17.balance+G18.balance</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_au_bas_a_gp" model="account.report.line">
+                                        <field name="name">GST on purchases (G19 divided by eleven)</field>
+                                        <field name="code">GP</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_au_bas_a_gp_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">G19.balance/11</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_au_bas_a_only" model="account.report.line">
+                                        <field name="name">GST only purchases</field>
+                                        <field name="code">ONLY</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_au_bas_a_only_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">ONLY</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_au_bas_a_g20" model="account.report.line">
+                                        <field name="name">G20: GST on purchases</field>
+                                        <field name="code">G20</field>
+                                        <field name="hierarchy_level">7</field>
+                                        <field name="foldable" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_au_bas_a_g20_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">GP.balance+ONLY.balance</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_au_bas_a_paygw" model="account.report.line">
+                <field name="name">PAYG Tax Withheld</field>
+                <field name="code">PAYGW</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="children_ids">
+                    <record id="l10n_au_bas_a_w1" model="account.report.line">
+                        <field name="name">W1: Total salaries, wages and other payments</field>
+                        <field name="code">W1</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_au_bas_a_w1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">W1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_au_bas_a_w2" model="account.report.line">
+                        <field name="name">W2: Amounts withheld from W1</field>
+                        <field name="code">W2</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_au_bas_a_w2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-W2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_au_bas_a_w4" model="account.report.line">
+                        <field name="name">W4: Amounts withheld where no ABN is quoted</field>
+                        <field name="code">W4</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_au_bas_a_w4_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-W4</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_au_bas_a_w3" model="account.report.line">
+                        <field name="name">W3: Other amounts withheld (not shown at W2 or W4)</field>
+                        <field name="code">W3</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_au_bas_a_w3_sub_balance" model="account.report.expression">
+                                <field name="label">sub_balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">W3</field>
+                            </record>
+                            <record id="l10n_au_bas_a_w3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">-W3.sub_balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_au_bas_a_w5" model="account.report.line">
+                        <field name="name">W5: Total amounts withheld (W2 + W4 + W3)</field>
+                        <field name="code">W5</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_au_bas_a_w5_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">W2.balance+W3.balance+W4.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_au_bas_a_paygi" model="account.report.line">
+                <field name="name">PAYG Income Tax Instalment</field>
+                <field name="code">PAYGI</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="children_ids">
+                    <record id="l10n_au_bas_a_t7" model="account.report.line">
+                        <field name="name">T7: PAYG Income Instalment</field>
+                        <field name="code">T7</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_au_bas_a_t7_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_au_bas_a_t8" model="account.report.line">
+                        <field name="name">T8: Estimated tax for the year</field>
+                        <field name="code">T8</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_au_bas_a_t8_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_au_bas_a_t9" model="account.report.line">
+                        <field name="name">T9: Varied amount payable for the Quater</field>
+                        <field name="code">T9</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_au_bas_a_t9_quarter_perc" model="account.report.expression">
+                                <field name="label">quarter_perc</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_quarter_percentage</field>
+                                <field name="subformula">quarter</field>
+                            </record>
+                            <record id="l10n_au_bas_a_t9_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">T9.quarter_perc * T8.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_au_bas_a_t1" model="account.report.line">
+                        <field name="name">T1: PAYG Instalment Income</field>
+                        <field name="code">T1</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_au_bas_a_t1_sub_balance" model="account.report.expression">
+                                <field name="label">sub_balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula">[('account_id.account_type', '=', 'income')]</field>
+                                <field name="subformula">-sum</field>
+                            </record>
+                            <record id="l10n_au_bas_a_t1_sub_balance2" model="account.report.expression">
+                                <field name="label">sub_balance2</field>
+                                <field name="engine">domain</field>
+                                <field name="formula">[('account_id.account_type', '=', 'income_other')]</field>
+                                <field name="subformula">-sum</field>
+                            </record>
+                            <record id="l10n_au_bas_a_t1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">T1.sub_balance+T1.sub_balance2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_au_bas_a_t2" model="account.report.line">
+                        <field name="name">T2: Tax Rate</field>
+                        <field name="code">T2</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_au_bas_a_t2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_au_bas_a_t3" model="account.report.line">
+                        <field name="name">T3: New Varied Tax Rate</field>
+                        <field name="code">T3</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_au_bas_a_t3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_au_bas_a_t11" model="account.report.line">
+                        <field name="name">T11: PAYG Income tax Instalment</field>
+                        <field name="code">T11</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_au_bas_a_t11_account_balance" model="account.report.expression">
+                                <field name="label">account_balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-92</field>
+                            </record>
+                            <record id="l10n_au_bas_a_t11_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">(T1.balance * ((T2.balance + T3.balance)/100)) - T11.account_balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_au_bas_a_t4" model="account.report.line">
+                        <field name="name">T4: Reason Code for Variation</field>
+                        <field name="code">T4</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_au_bas_a_t4_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_au_bas_a_summary" model="account.report.line">
+                <field name="name">Summary</field>
+                <field name="code">SUMMARY</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="children_ids">
+                    <record id="l10n_au_bas_a_8a" model="account.report.line">
+                        <field name="name">8A: Amounts owed to ATO</field>
+                        <field name="code">8A</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_au_bas_a_8a_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">1A.balance+4.balance+5A.balance+7.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_au_bas_a_1a" model="account.report.line">
+                                <field name="name">1A: GST on sales</field>
+                                <field name="code">1A</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_au_bas_a_1a_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">G9.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_au_bas_a_4" model="account.report.line">
+                                <field name="name">4: PAYG Tax Withheld</field>
+                                <field name="code">4</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_au_bas_a_4_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">W5.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_au_bas_a_5a" model="account.report.line">
+                                <field name="name">5A: PAYG Income Tax Instalment</field>
+                                <field name="code">5A</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_au_bas_a_5a_sub_balance" model="account.report.expression">
+                                        <field name="label">sub_balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-T7</field>
+                                    </record>
+                                    <record id="l10n_au_bas_a_5a_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">5A.sub_balance</field>
+                                        <field name="subformula">if_above(AUD(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_au_bas_a_7" model="account.report.line">
+                                <field name="name">7: Deferred Instalment</field>
+                                <field name="code">7</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_au_bas_a_7_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">7</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_au_bas_a_8b" model="account.report.line">
+                        <field name="name">8B: Amounts owed by ATO</field>
+                        <field name="code">8B</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_au_bas_a_8b_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">1B.balance+5B.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_au_bas_a_1b" model="account.report.line">
+                                <field name="name">1B: GST on purchases</field>
+                                <field name="code">1B</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_au_bas_a_1b_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">G20.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_au_bas_a_5b" model="account.report.line">
+                                <field name="name">5B: Credit from PAYG income tax instalment variation</field>
+                                <field name="code">5B</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_au_bas_a_5b_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">-5A.sub_balance</field>
+                                        <field name="subformula">if_above(AUD(0))</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_au_bas_a_9" model="account.report.line">
+                        <field name="name">9: Liability to ATO</field>
+                        <field name="code">9</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_au_bas_a_9_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">8A.balance-8B.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

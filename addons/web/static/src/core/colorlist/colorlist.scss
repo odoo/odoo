@@ -1,0 +1,75 @@
+@mixin o-colorlist($-entry, $-child) {
+    width: var(--ColorListField-width, none);
+    padding: var(--ColorListField-padding, 0);
+    box-sizing: content-box;
+    margin-bottom: var(--ColorListField-marginBottom, 0);
+
+    .o_bottom_sheet_body & {
+        --ColorListField-padding: #{map-get($spacers, 3)} var(--BottomSheet-Entry-paddingX);
+        --fieldWidget-display: block;
+        --ColorListField-Entry-fontSize: 1.4em;
+
+        grid-template-columns: repeat(var(--ColorListField-columns, 6), 1fr);
+    }
+
+    #{$-entry} {
+        #{$-child} {
+            position: relative;
+            display: block;
+            min-width: var(--ColorListField-Entry-minWidth, o-to-rem(20px));
+            aspect-ratio: var(--ColorListField-Entry-aspectRatio, 1);
+            border-radius: var(--ColorListField-Entry-borderRadius, 100%);
+            font-size: var(--ColorListField-Entry-fontSize, smaller);
+            overflow: hidden;
+        }
+
+        &:first-child #{$-child}::after {
+            box-shadow: inset 0 0 0 $border-width var(--dropdown-color);
+            border-radius: inherit;
+            color: currentColor;
+        }
+
+        &.active {
+            #{$-child}::after {
+                @include o-position-absolute(0, 0, 0, 0);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: var(--color, #{$body-color});
+                font: normal normal normal 1em/1 FontAwesome;
+                content: "\f00c";
+            }
+        }
+
+        &:hover:not(.active) {
+            opacity: $o-opacity-muted;
+        }
+    }
+}
+
+.o_colorlist {
+    @include o-colorlist("button", "&" );
+    grid-template-columns: repeat(auto-fit, $o-bubble-color-size-xl);
+
+    :not(.o_field_widget) > & {
+        justify-content: center;
+    }
+
+    > button {
+        aspect-ratio: 1;
+
+        // No Color
+        &.o_colorlist_item_color_0 {
+            background: transparent;
+            box-shadow: inset 0 0 0 1px $gray-500;
+        }
+
+        // Set all the colors but the "no-color" one
+        @for $size from 2 through length($o-colors) {
+            &.o_colorlist_item_color_#{$size - 1} {
+                @include o-print-color(nth($o-colors, $size), background-color, bg-opacity);
+                @include o-print-color(color-contrast(nth($o-colors, $size)), color, text-opacity);
+            }
+        }
+    }
+}

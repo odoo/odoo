@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="sale.SaleProductField" t-inherit="account.ProductLabelSectionAndNoteField" t-inherit-mode="primary">
+        <xpath expr="//Many2One" position="after">
+            <!-- Show configuration button for custom lines/products -->
+            <button
+                t-if="!props.readonly and hasConfigurationButton"
+                type="button"
+                class="btn btn-secondary fa fa-pencil px-2"
+                tabindex="-1"
+                draggable="false"
+                t-att-aria-label="configurationButtonHelp"
+                t-att-data-tooltip="configurationButtonHelp"
+                t-on-click="onEditConfiguration"
+            />
+        </xpath>
+    </t>
+
+</templates>

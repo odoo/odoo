@@ -1,0 +1,33 @@
+.o-mail-MessageInReply-author {
+    opacity: 75%;
+}
+
+.o-mail-MessageInReply-avatar {
+    width: $o-mail-Avatar-size / 2;
+    aspect-ratio: 1;
+}
+
+.o-mail-MessageInReply-core {
+    --border-color: var(--o-message-bubble-border-color);
+    border-width: $border-width $border-width $border-width ($border-width * 3) !important;
+    border-left-color: var(--o-message-bubble-color-base) !important;;
+    background-color: rgba($o-view-background-color, .5) !important;
+
+    &:hover, &:focus-visible {
+        transform: translateY(#{$border-width * -2});
+        transition: $transition-base;
+    }
+}
+
+.o-mail-MessageInReply-content {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.o-mail-MessageInReply-message {
+    // Make the body single line when possible
+    p {
+        margin: 0;
+    }
+}

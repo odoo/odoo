@@ -1,52 +1,86 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, tools, _
+
+from typing import List, Tuple
+import random
+
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError, UserError
+
 
 class PosCategory(models.Model):
-    _name = "pos.category"
-    _description = "Public Category"
+    _name = 'pos.category'
+    _description = "Point of Sale Category"
+    _inherit = ['pos.load.mixin']
     _order = "sequence, name"
 
     @api.constrains('parent_id')
     def _check_category_recursion(self):
-        if not self._check_recursion():
-            raise ValueError(_('Error ! You cannot create recursive categories.'))
+        if self._has_cycle():
+            raise ValidationError(_('Error! You cannot create recursive categories.'))
 
-    name = fields.Char(required=True, translate=True)
+    def get_default_color(self):
+        return random.randint(0, 10)
+
+    name = fields.Char(string='Category Name', required=True, translate=True)
     parent_id = fields.Many2one('pos.category', string='Parent Category', index=True)
-    child_id = fields.One2many('pos.category', 'parent_id', string='Children Categories')
+    child_ids = fields.One2many('pos.category', 'parent_id', string='Children Categories')
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.")
-    # NOTE: there is no 'default image', because by default we don't show
-    # thumbnails for categories. However if we have a thumbnail for at least one
-    # category, then we display a default image on the other, so that the
-    # buttons have consistent styling.
-    image = fields.Binary(attachment=True,
-        help="This field holds the image used as image for the cateogry, limited to 1024x1024px.")
-    image_medium = fields.Binary(string="Medium-sized image", attachment=True,
-        help="Medium-sized image of the category. It is automatically "
-             "resized as a 128x128px image, with aspect ratio preserved. "
-             "Use this field in form views or some kanban views.")
-    image_small = fields.Binary(string="Small-sized image", attachment=True,
-        help="Small-sized image of the category. It is automatically "
-             "resized as a 64x64px image, with aspect ratio preserved. "
-             "Use this field anywhere a small image is required.")
+    image_512 = fields.Image("Image", max_width=512, max_height=512)
+    image_128 = fields.Image("Image 128", related="image_512", max_width=128, max_height=128, store=True)
+    color = fields.Integer('Color', required=False, default=get_default_color)
+    hour_until = fields.Float(string='Availability Until', default=24.0, help="The product will be available until this hour for online order and self order.")
+    hour_after = fields.Float(string='Availability After', default=0.0, help="The product will be available after this hour for online order and self order.")
+
+    # During loading of data, the image is not loaded so we expose a lighter
+    # field to determine whether a pos.category has an image or not.
+    has_image = fields.Boolean(compute='_compute_has_image')
 
     @api.model
-    def create(self, vals):
-        tools.image_resize_images(vals)
-        return super(PosCategory, self).create(vals)
+    def _load_pos_data_domain(self, data, config):
+        domain = []
+        if config.limit_categories:
+            domain += [('id', 'in', config.iface_available_categ_ids.ids)]
+        return domain
 
-    @api.multi
-    def write(self, vals):
-        tools.image_resize_images(vals)
-        return super(PosCategory, self).write(vals)
+    @api.model
+    def _load_pos_data_fields(self, config):
+        return ['id', 'name', 'parent_id', 'child_ids', 'write_date', 'has_image', 'color', 'sequence', 'hour_until', 'hour_after']
 
-    @api.multi
-    def name_get(self):
-        def get_names(cat):
-            res = []
-            while cat:
-                res.append(cat.name)
-                cat = cat.parent_id
-            return res
-        return [(cat.id, " / ".join(reversed(get_names(cat)))) for cat in self]
+    def _get_hierarchy(self) -> List[str]:
+        """ Returns a list representing the hierarchy of the categories. """
+        self.ensure_one()
+        return (self.parent_id._get_hierarchy() if self.parent_id else []) + [(self.name or '')]
+
+    @api.depends('parent_id')
+    def _compute_display_name(self):
+        for cat in self:
+            cat.display_name = " / ".join(cat._get_hierarchy())
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_session_open(self):
+        if self.search_count([('id', 'in', self.ids)]):
+            if self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
+                raise UserError(_('You cannot delete a point of sale category while a session is still opened.'))
+
+    @api.depends('has_image')
+    def _compute_has_image(self):
+        for category in self:
+            category.has_image = bool(category.image_128)
+
+    def _get_descendants(self):
+        available_categories = self
+        for child in self.child_ids:
+            available_categories |= child
+            available_categories |= child._get_descendants()
+        return available_categories
+
+    @api.constrains('hour_until', 'hour_after')
+    def _check_hour(self):
+        for category in self:
+            if category.hour_until and not (0.0 <= category.hour_until <= 24.0):
+                raise ValidationError(_('The Availability Until must be set between 00:00 and 24:00'))
+            if category.hour_after and not (0.0 <= category.hour_after <= 24.0):
+                raise ValidationError(_('The Availability After must be set between 00:00 and 24:00'))
+            if category.hour_until and category.hour_after and category.hour_until < category.hour_after:
+                raise ValidationError(_('The Availability Until must be greater than Availability After.'))

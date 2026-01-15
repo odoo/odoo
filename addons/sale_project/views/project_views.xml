@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_project_view_form_simplified_inherit" model="ir.ui.view">
+        <field name="name">project.project.view.form.simplified.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+        <field name="priority">25</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_settings_container')]" position="inside">
+                <field name="company_id" invisible="1"/>
+                <setting class="col-lg-12" help="Invoice your time and material to customers" invisible="context.get('hide_allow_billable', False)">
+                    <field name="allow_billable"/>
+                    <div invisible="not allow_billable" class="d-flex flex-column flex-sm-row align-items-baseline">
+                        <label for="partner_id"/>
+                        <field name="partner_id" class="ms-1" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer'}"
+                            options="{'no_create_edit': True, 'no_open': True}" placeholder="Select who to bill..."/>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_embedded_action_invoices" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">60</field>
+        <field name="name">Invoices</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="python_method">action_open_project_invoices</field>
+        <field name="context">{"from_embedded_action": true}</field>
+        <field name="groups_ids" eval="[(4, ref('account.group_account_invoice')), (4, ref('sales_team.group_sale_salesman'))]" />
+        <field name="domain">[('allow_billable', '=', True)]</field>
+    </record>
+
+    <record id="project_embedded_action_sales_orders" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">50</field>
+        <field name="name">Sales Orders</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="python_method">action_view_sos</field>
+        <field name="context">{"from_embedded_action": true}</field>
+        <field name="groups_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]" />
+        <field name="domain">[('allow_billable', '=', True)]</field>
+    </record>
+
+    <record id="project_embedded_action_invoices_dashboard" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">60</field>
+        <field name="name">Invoices</field>
+        <field name="parent_action_id" ref="project.project_update_all_action"/>
+        <field name="python_method">action_open_project_invoices</field>
+        <field name="context">{"from_embedded_action": true}</field>
+        <field name="groups_ids" eval="[(4, ref('account.group_account_invoice')), (4, ref('sales_team.group_sale_salesman'))]" />
+        <field name="domain">[('allow_billable', '=', True)]</field>
+    </record>
+
+    <record id="project_embedded_action_sales_orders_dashboard" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">50</field>
+        <field name="name">Sales Orders</field>
+        <field name="parent_action_id" ref="project.project_update_all_action"/>
+        <field name="python_method">action_view_sos</field>
+        <field name="context">{"from_embedded_action": true}</field>
+        <field name="groups_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]" />
+        <field name="domain">[('allow_billable', '=', True)]</field>
+    </record>
+
+    <record id="project_embedded_action_vendor_bills" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">75</field>
+        <field name="name">Vendor Bills</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="python_method">action_open_project_vendor_bills</field>
+        <field name="context">{"from_embedded_action": true}</field>
+        <field name="groups_ids" eval="[(4, ref('account.group_account_invoice')), (4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="domain">[('allow_billable', '=', True)]</field>
+    </record>
+
+    <record id="project_embedded_action_vendor_bills_dashboard" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">75</field>
+        <field name="name">Vendor Bills</field>
+        <field name="parent_action_id" ref="project.project_update_all_action"/>
+        <field name="python_method">action_open_project_vendor_bills</field>
+        <field name="context">{"from_embedded_action": true}</field>
+        <field name="groups_ids" eval="[(4, ref('account.group_account_invoice')), (4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="domain">[('allow_billable', '=', True)]</field>
+    </record>
+
+    <record id="project.open_view_project_all_config" model="ir.actions.act_window">
+        <field name="context">{'default_allow_billable': True, 'sale_show_partner_name': True, 'display_milestone_deadline': True}</field>
+    </record>
+    <record id="project.open_view_project_all_config_group_stage" model="ir.actions.act_window">
+        <field name="context">{
+            'default_allow_billable': True,
+            'sale_show_partner_name': True,
+            'display_milestone_deadline': True
+        }</field>
+    </record>
+    <record id="project.open_view_project_all" model="ir.actions.act_window">
+        <field name="context">{'default_allow_billable': True, 'sale_show_partner_name': True, 'display_milestone_deadline': True}</field>
+    </record>
+    <record id="project.open_view_project_all_group_stage" model="ir.actions.act_window">
+        <field name="context">{
+            'default_allow_billable': True,
+            'sale_show_partner_name': True,
+            'display_milestone_deadline': True
+        }</field>
+    </record>
+
+    <record id="project_templates_view_list" model="ir.ui.view">
+        <field name="name">project.project.template.list</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_templates_view_list"/>
+        <field name="arch" type="xml">
+            <field name="sale_line_id" position="replace"/>
+        </field>
+    </record>
+</odoo>

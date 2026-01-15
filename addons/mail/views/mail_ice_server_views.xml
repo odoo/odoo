@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="action_ice_servers" model="ir.actions.act_window">
+         <field name="name">ICE Servers</field>
+         <field name="res_model">mail.ice.server</field>
+         <field name="view_mode">list,form,kanban</field>
+         <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No ICE servers found. Let's create one!</p>
+            <p>Use your own servers for calls to manage heavy traffic and ensure reliability if Twilio is unavailable.</p>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_ice_server_tree">
+        <field name="name">mail.ice.server.list</field>
+        <field name="model">mail.ice.server</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" sample="1">
+                <field colspan="1" name="server_type"/>
+                <field name="uri"/>
+                <field name="username"/>
+                <field name="credential"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_ice_server_form">
+        <field name="name">mail.ice.server.form</field>
+        <field name="model">mail.ice.server</field>
+        <field name="arch" type="xml">
+            <form string="ICE Server Configuration">
+                <sheet>
+                    <group>
+                        <field name="server_type" class="oe_inline"/>
+                        <field name="uri" placeholder="stun:stun.google.com:19302 or turn:turn.example.com:3478"/>
+                    </group>
+                    <group string="Authentication">
+                        <field name="username"/>
+                        <field name="credential"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_ice_server_kanban">
+        <field name="name">mail.ice.server.kanban</field>
+        <field name="model">mail.ice.server</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_content p-2">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="fw-bold me-1">Type:</span>
+                                    <span class="fw-bold">
+                                        <field name="server_type"/>
+                                    </span>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="fw-bold me-1">URI:</span>
+                                    <span class="text-primary fw-bold">
+                                        <field name="uri"/>
+                                    </span>
+                                </div>
+                                <t t-if="record.username.raw_value">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="fw-bold me-1">Username:</span>
+                                        <field name="username"/>
+                                    </div>
+                                </t>
+                                <t t-if="record.credential.raw_value">
+                                    <div class="d-flex align-items-center">
+                                        <span class="fw-bold me-1">Credential:</span>
+                                        <field name="credential"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_ice_server_search" model="ir.ui.view" >
+        <field name="name">mail.ice.server.search</field>
+        <field name="model">mail.ice.server</field>
+        <field name="arch" type="xml">
+            <search string="Search ICE Servers">
+                <field name="uri"/>
+                <field name="username"/>
+                <field name="credential"/>
+                <filter string="STUN" name="stun" domain="[('server_type','=','stun')]"/>
+                <filter string="TURN" name="turn" domain="[('server_type','=','turn')]"/>
+                <group>
+                    <filter string="Server Type" name="group_by_server_type" context="{'group_by': 'server_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Discuss utility templates for notifications -->
+        <template id="message_user_assigned">
+    <span>Dear <t t-esc="object.user_id.sudo().name"/>,</span>
+    <br/><br/>
+    <span style="margin-top: 8px;">You have been assigned to the <t t-esc="model_description or 'document'"/> <t t-esc="object.display_name"/>.</span>
+    <br/>
+        </template>
+
+        <template id="message_activity_done">
+<div>
+    <p>
+        <span t-attf-class="fa #{activity.activity_type_id.icon} fa-fw"/><span t-field="activity.activity_type_id.name"/> done
+        <t t-if="display_assignee"> (originally assigned to <span t-field="activity.user_id.name"/>)</t>
+        <span t-if="activity.summary">: </span><span t-if="activity.summary" t-field="activity.summary"/>
+    </p>
+    <t t-if="activity.note and activity.note != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'"><!-- <p></br></p> -->
+        <div class="o_mail_note_title fw-bold">Original note:</div>
+        <div t-field="activity.note"/>
+    </t>
+    <div t-if="feedback">
+        <div class="fw-bold">Feedback:</div>
+        <t t-foreach="feedback.split('\n')" t-as="feedback_line">
+            <t t-esc="feedback_line"/>
+            <br t-if="not feedback_line_last"/>
+        </t>
+    </div>
+</div>
+        </template>
+
+        <template id="message_activity_assigned">
+<div style="margin: 0px; padding: 0px; font-size: 13px;">
+    Dear <span t-field="activity.user_id.name"/>,
+    <br/><br/>
+    <p>
+        <span t-field="activity.create_uid.name"/> has just assigned you the following activity:
+        <ul>
+            <li>Document: "<t t-esc="activity.res_name"/>"
+                <t t-if="model_description"> (<t t-esc="model_description"/>)</t>
+            </li>
+            <li t-if="activity.summary">Summary: <span t-field="activity.summary"/></li>
+            <li>Deadline: <span t-field="activity.date_deadline"/></li>
+        </ul>
+    </p>
+</div>
+        </template>
+
+        <template id="message_origin_link">
+            <p>
+                <t t-if="edit">This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been modified from:</t>
+                <t t-else="">This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been created from:</t>
+                <t t-foreach="origin" t-as="o">
+                    <a href="#" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id"> <t t-esc="o.display_name"/></a><span t-if="origin.ids[-1:] != o.ids">, </span>
+                </t>
+            </p>
+        </template>
+
+        <template id="discuss_channel_invitation_template">
+            <div style="padding: 16px; background-color: #F1F1F1; font-family: Verdana, Arial, sans-serif; color: #454748; width: 100%; display: flex; justify-content: center;">
+                <div style="max-width: 590px; width: 100%; background-color: #ffffff; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; align-items: center;">
+                    <div style="width: 100%; font-size: 14px; line-height: 1.5; text-align: left;">
+                        <t t-esc="mail_body"/>
+                        <p style="text-align: center; margin: 24px 0;">
+                            <a t-attf-href="{{base_url}}{{channel.invitation_url}}?email_token={{email_token}}"
+                               t-attf-style="background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; color: {{user.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; padding: 8px 12px; border-radius: 4px; display: inline-block; font-weight: bold;"
+                            >
+                                Join Channel
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

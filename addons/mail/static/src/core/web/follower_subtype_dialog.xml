@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="mail.FollowerSubtypeDialog">
+        <Dialog t-if="props.follower.partner_id" bodyClass="'d-flex flex-column'" contentClass="'o-mail-FollowerSubtypeDialog'" size="'sm'" title="title">
+            <t t-set-slot="default">
+                <div
+                    t-foreach="state.subtypes"
+                    t-as="subtype"
+                    t-key="subtype.id"
+                    class="o-mail-FollowerSubtypeDialog-subtype"
+                    t-att-data-follower-subtype-id="subtype.id"
+                >
+                    <label class="flex-grow-1 align-items-center d-flex mb-0 p-2 cursor-pointer">
+                        <input class="form-check-input me-2" type="checkbox" t-att-checked="subtype.in(this.props.follower.subtype_ids) ? 'checked': ''" t-on-change="(ev) => this.onChangeCheckbox(ev, subtype)"/>
+                        <t t-esc="subtype.name"/>
+                    </label>
+                </div>
+            </t>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="onClickApply">
+                    Apply
+                </button>
+                <button class="btn btn-secondary" t-on-click="props.close">
+                    Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

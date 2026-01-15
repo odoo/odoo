@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="(//address)[1]" position="after">
+            <div class="mb-0" t-if="o.l10n_fr_is_company_french and o.partner_id.commercial_partner_id.company_registry">
+                SIRET: <t t-esc="o.partner_id.commercial_partner_id.company_registry"/>
+            </div>
+        </xpath>
+        <xpath expr="(//address)[2]" position="after">
+            <div class="mb-0" t-if="o.l10n_fr_is_company_french and o.partner_id.commercial_partner_id.company_registry">
+                SIRET: <t t-esc="o.partner_id.commercial_partner_id.company_registry"/>
+            </div>
+        </xpath>
+        <xpath expr="(//address)[3]" position="after">
+            <div class="mb-0" t-if="o.l10n_fr_is_company_french and o.partner_id.commercial_partner_id.company_registry">
+                SIRET: <t t-esc="o.partner_id.commercial_partner_id.company_registry"/>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@id='informations']" position="inside">
+            <t t-if="o.l10n_fr_is_company_french and o.partner_id.commercial_partner_id != o.partner_id and o.move_type.startswith('out_')">
+                <t t-set="partner" t-value="o.partner_id.commercial_partner_id"/>
+                <div name="customer_address" class='col'>
+                    <strong>Customer Address</strong>
+                    <br/>
+                    <address t-field="partner.self" class="m-0" t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}"/>
+                </div>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[@id='informations']" position="inside">
+            <t t-if="o.l10n_fr_is_company_french and o.move_type.startswith('out_')">
+                <t t-set="tax_scopes" t-value="o.invoice_line_ids.mapped('tax_ids.tax_scope')"/>
+                <t t-set="has_service" t-value="'service' in tax_scopes"/>
+                <t t-set="has_consu" t-value="'consu' in tax_scopes"/>
+
+                <div t-if="has_service or has_consu" name="operation_type" class='col'>
+                    <strong>Operation Type</strong>
+                    <br/>
+                    <span t-if="has_service and has_consu">
+                        Mixed Operation
+                    </span>
+                    <span t-elif="has_service and not has_consu">
+                        Service Delivery
+                    </span>
+                    <span t-else="">
+                        Goods Delivery
+                    </span>
+                </div>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[@name='qr_code_placeholder']" position="before">
+            <div class="mb-3">
+                <p t-if="o.l10n_fr_is_company_french and o.move_type.startswith('out_') and 'on_invoice' in o.invoice_line_ids.mapped('tax_ids.tax_exigibility')">
+                    Option to pay tax on debits
+                </p>
+            </div>
+        </xpath>
+    </template>
+</odoo>

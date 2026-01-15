@@ -1,0 +1,153 @@
+.s_accordion {
+    .accordion {
+        --#{$prefix}accordion-btn-focus-box-shadow: inset 0 0 #{$focus-ring-blur} #{$focus-ring-width} #{$focus-ring-color};
+    }
+
+    .accordion-button {
+        &:not(:focus-visible) {
+            box-shadow: none;
+        }
+
+        // Replace the default chevron with our Odoo UI icon to
+        // have more control on its color depending on the
+        // preset applied
+        &:after {
+            margin: 0;
+            background: none;
+            font-family: 'odoo_ui_icons';
+            text-align: center;
+            content: '\e839';
+        }
+    }
+
+    .o_icons_side_to_bottom {
+        --accordion-btn-icon-transform: rotate(0deg);
+
+        > .accordion-item > .accordion-button.collapsed {
+            &.o_icons_position_reversed:after {
+                transform: rotate(-90deg);
+            }
+
+            &:after {
+                transform: rotate(90deg);
+            }
+        }
+    }
+
+    .o_custom_icons_wrap {
+        width: $accordion-icon-width;
+        height: $accordion-icon-width;
+    }
+
+    .o_icons_plus_to_minus {
+        > .accordion-item > .accordion-header > .o_custom_icons_wrap {
+            &:before, &:after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                height: 2px;
+                display: block;
+                margin: auto map-get($spacers, 1);
+                background: currentColor;
+                transition: $accordion-icon-transition;
+            }
+        }
+
+        > .accordion-item > .accordion-button.collapsed .o_custom_icons_wrap:after {
+            transform: rotate(90deg);
+        }
+    }
+
+    .o_custom_icons {
+        > .accordion-item > .accordion-button:after {
+            display: none;
+        }
+
+        &.o_transition > .accordion-item > .accordion-button > .o_custom_icons_wrap > span {
+            transition: opacity nth($transition-base, 2) nth($transition-base, 3), transform nth($transition-base, 2) nth($transition-base, 3);
+        }
+
+        > .accordion-item > .accordion-button {
+            &.collapsed .o_custom_icon_active, &:not(.collapsed) .o_custom_icon_inactive {
+                opacity: 0;
+            }
+        }
+
+        &.o_transition_scale > .accordion-item > .accordion-button {
+            &.collapsed .o_custom_icon_active, &:not(.collapsed) .o_custom_icon_inactive {
+                transform: scale(0);
+                opacity: 1;
+            }
+        }
+
+        &.o_transition_translate > .accordion-item > .accordion-button {
+            &.collapsed .o_custom_icon_active, &:not(.collapsed) .o_custom_icon_inactive {
+                opacity: 1;
+            }
+
+            &.collapsed .o_custom_icon_active {
+                transform: translateY(-100%);
+            }
+
+            &:not(.collapsed) .o_custom_icon_inactive {
+                transform: translateY(100%);
+            }
+        }
+    }
+
+    .s_accordion_highlight {
+        > .accordion-item {
+            border: 0;
+            border-radius: var(--#{$prefix}accordion-border-radius);
+            overflow: hidden;
+
+            // This removes the bg color when the item isn't displayed.
+            &:has(> .collapsed) {
+                background: transparent !important;
+                color: inherit;
+            }
+
+            // The purpose of this pseudo-element is to add a default
+            // "light" background to the active item, which can be
+            // replaced by a color preset or a custom color.
+            // This avoids color conflicts and preserves the colors
+            // selected by the user when changing the accordion template.
+            &:not(:has(> .collapsed))::before {
+                position: absolute;
+                inset: 0;
+                display: block;
+                background: rgba(0,0,0,0.4); // Fallback
+                background-color: fade-currentColor(4%);
+                content: '';
+                z-index: -1;
+            }
+        }
+    }
+
+    // Duplicated code from _accordion.scss
+    // This allows to have rounded corners for "Side border" accordion.
+    .accordion-flush .accordion-item {
+        &:first-of-type {
+            @include border-top-radius(var(--#{$prefix}accordion-border-radius));
+
+            >.accordion-header .accordion-button {
+                @include border-top-radius(var(--#{$prefix}accordion-inner-border-radius));
+            }
+        }
+
+        &:last-of-type {
+            @include border-bottom-radius(var(--#{$prefix}accordion-border-radius));
+
+            >.accordion-header .accordion-button {
+                &.collapsed {
+                    @include border-bottom-radius(var(--#{$prefix}accordion-inner-border-radius));
+                }
+            }
+
+            >.accordion-collapse {
+                @include border-bottom-radius(var(--#{$prefix}accordion-border-radius));
+            }
+        }
+    }
+}
+

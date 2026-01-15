@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.GroupConfigMenu">
+        <div class="o_group_config d-print-none d-flex">
+            <Dropdown menuClass="'o-dropdown--group-config-menu'" position="'bottom-end'">
+                <button class="btn px-2 py-0" tabindex="-1">
+                    <i class="fa fa-gear opacity-50 opacity-100-hover" role="img" aria-label="Settings" title="Settings"/>
+                </button>
+                <t t-set-slot="content">
+                    <t t-foreach="configItems" t-as="item" t-key="item.key">
+                        <DropdownItem t-if="item.isVisible" class="item.class" onSelected="() => item.method()">
+                            <i t-if="item.icon" class="fa pe-2" t-att-class="item.icon"/>
+                            <t t-esc="item.label"/>
+                        </DropdownItem>
+                    </t>
+                </t>
+            </Dropdown>
+        </div>
+    </t>
+</templates>

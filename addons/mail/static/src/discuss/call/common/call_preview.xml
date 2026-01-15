@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.CallPreview">
+        <div class="o-mail-CallPreview ratio ratio-16x9">
+            <div class="bg-dark">
+                <video class="object-fit-cover h-100 w-100" autoplay="" style="background-color: rgba(0, 0, 0, 0.5);" t-ref="video"/>
+                <div class="position-absolute bottom-0 mb-3 w-100 d-flex justify-content-center">
+                    <ActionList actions="actions" inline="true" hasBtnBg="true"/>
+                </div>
+            </div>
+            <audio autoplay="" t-ref="audio"/>
+        </div>
+    </t>
+</templates>

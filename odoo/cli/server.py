@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """
@@ -12,41 +11,35 @@ GNU Public Licence.
 """
 
 import atexit
-import csv
 import logging
 import os
-import signal
 import sys
-import threading
-import traceback
-import time
 
-from psycopg2 import ProgrammingError, errorcodes
+from psycopg2.errors import InsufficientPrivilege
 
-import odoo
+from odoo.release import author as __author__  # noqa: F401
+from odoo.release import version as __version__  # noqa: F401
+from odoo.service import server
+from odoo.tools import config
 
 from . import Command
-
-__author__ = odoo.release.author
-__version__ = odoo.release.version
 
 # Also use the `odoo` logger for the main script.
 _logger = logging.getLogger('odoo')
 
+
 def check_root_user():
     """Warn if the process's user is 'root' (on POSIX system)."""
-    if os.name == 'posix':
-        import pwd
-        if pwd.getpwuid(os.getuid())[0] == 'root':
-            sys.stderr.write("Running as user 'root' is a security risk.\n")
+    if os.name == 'posix' and os.getuid() == 0:
+        sys.stderr.write("Running as user 'root' is a security risk.\n")
+
 
 def check_postgres_user():
     """ Exit if the configured database user is 'postgres'.
 
     This function assumes the configuration has been initialized.
     """
-    config = odoo.tools.config
-    if config['db_user'] == 'postgres':
+    if (config['db_user'] or os.environ.get('PGUSER')) == 'postgres':
         sys.stderr.write("Using the database user 'postgres' is a security risk, aborting.")
         sys.exit(1)
 
@@ -55,18 +48,31 @@ def report_configuration():
 
     This function assumes the configuration has been initialized.
     """
-    config = odoo.tools.config
-    _logger.info("Odoo version %s", __version__)
-    if os.path.isfile(config.rcfile):
-        _logger.info("Using configuration file at " + config.rcfile)
-    _logger.info('addons paths: %s', odoo.modules.module.ad_paths)
+    import odoo.addons  # noqa: PLC0415
+    import odoo.release  # noqa: PLC0415
+    _logger.info("Odoo version %s", odoo.release.version)
+    if os.path.isfile(config['config']):
+        _logger.info("Using configuration file at %s", config['config'])
+    _logger.info('addons paths: %s', odoo.addons.__path__)
+    if config.get('upgrade_path'):
+        _logger.info('upgrade path: %s', config['upgrade_path'])
+    if config.get('pre_upgrade_scripts'):
+        _logger.info('extra upgrade scripts: %s', config['pre_upgrade_scripts'])
     host = config['db_host'] or os.environ.get('PGHOST', 'default')
     port = config['db_port'] or os.environ.get('PGPORT', 'default')
     user = config['db_user'] or os.environ.get('PGUSER', 'default')
     _logger.info('database: %s@%s:%s', user, host, port)
+    replica_host = config['db_replica_host']
+    replica_port = config['db_replica_port']
+    if replica_host or replica_port or 'replica' in config['dev_mode']:
+        _logger.info('replica database: %s@%s:%s', user, replica_host or 'default', replica_port or 'default')
+    if sys.version_info[:2] > odoo.release.MAX_PY_VERSION:
+        _logger.warning("Python %s is not officially supported, please use Python %s instead",
+            '.'.join(map(str, sys.version_info[:2])),
+            '.'.join(map(str, odoo.release.MAX_PY_VERSION))
+        )
 
 def rm_pid_file(main_pid):
-    config = odoo.tools.config
     if config['pidfile'] and main_pid == os.getpid():
         try:
             os.unlink(config['pidfile'])
@@ -78,98 +84,44 @@ def setup_pid_file():
 
     This function assumes the configuration has been initialized.
     """
-    config = odoo.tools.config
+    import odoo  # for evented  # noqa: PLC0415
     if not odoo.evented and config['pidfile']:
         pid = os.getpid()
         with open(config['pidfile'], 'w') as fd:
             fd.write(str(pid))
         atexit.register(rm_pid_file, pid)
 
-def export_translation():
-    config = odoo.tools.config
-    dbname = config['db_name']
-
-    if config["language"]:
-        msg = "language %s" % (config["language"],)
-    else:
-        msg = "new language"
-    _logger.info('writing translation file for %s to %s', msg,
-        config["translate_out"])
-
-    fileformat = os.path.splitext(config["translate_out"])[-1][1:].lower()
-
-    with open(config["translate_out"], "w") as buf:
-        registry = odoo.modules.registry.Registry.new(dbname)
-        with odoo.api.Environment.manage():
-            with registry.cursor() as cr:
-                odoo.tools.trans_export(config["language"],
-                    config["translate_modules"] or ["all"], buf, fileformat, cr)
-
-    _logger.info('translation file written successfully')
-
-def import_translation():
-    config = odoo.tools.config
-    context = {'overwrite': config["overwrite_existing_translations"]}
-    dbname = config['db_name']
-
-    registry = odoo.modules.registry.Registry.new(dbname)
-    with odoo.api.Environment.manage():
-        with registry.cursor() as cr:
-            odoo.tools.trans_load(
-                cr, config["translate_in"], config["language"], context=context,
-            )
 
 def main(args):
     check_root_user()
-    odoo.tools.config.parse_config(args)
+    config.parse_config(args, setup_logging=True)
     check_postgres_user()
     report_configuration()
 
-    config = odoo.tools.config
-
-    # the default limit for CSV fields in the module is 128KiB, which is not
-    # quite sufficient to import images to store in attachment. 500MiB is a
-    # bit overkill, but better safe than sorry I guess
-    csv.field_size_limit(500 * 1024 * 1024)
-
-    preload = []
-    if config['db_name']:
-        preload = config['db_name'].split(',')
-        for db_name in preload:
-            try:
-                odoo.service.db._create_empty_database(db_name)
-            except ProgrammingError as err:
-                if err.pgcode == errorcodes.INSUFFICIENT_PRIVILEGE:
-                    # We use an INFO loglevel on purpose in order to avoid
-                    # reporting unnecessary warnings on build environment
-                    # using restricted database access.
-                    _logger.info("Could not determine if database %s exists, "
-                                 "skipping auto-creation: %s", db_name, err)
-                else:
-                    raise err
-            except odoo.service.db.DatabaseExists:
-                pass
-
-    if config["translate_out"]:
-        export_translation()
-        sys.exit(0)
-
-    if config["translate_in"]:
-        import_translation()
-        sys.exit(0)
-
-    # This needs to be done now to ensure the use of the multiprocessing
-    # signaling mecanism for registries loaded with -d
-    if config['workers']:
-        odoo.multi_process = True
+    for db_name in config['db_name']:
+        from odoo.service import db  # noqa: PLC0415
+        try:
+            db._create_empty_database(db_name)
+            config['init']['base'] = True
+        except InsufficientPrivilege as err:
+            # We use an INFO loglevel on purpose in order to avoid
+            # reporting unnecessary warnings on build environment
+            # using restricted database access.
+            _logger.info("Could not determine if database %s exists, "
+                         "skipping auto-creation: %s", db_name, err)
+        except db.DatabaseExists:
+            pass
 
     stop = config["stop_after_init"]
 
     setup_pid_file()
-    rc = odoo.service.server.start(preload=preload, stop=stop)
+    rc = server.start(preload=config['db_name'], stop=stop)
     sys.exit(rc)
+
 
 class Server(Command):
     """Start the odoo server (default command)"""
+
     def run(self, args):
+        config.parser.prog = self.prog
         main(args)

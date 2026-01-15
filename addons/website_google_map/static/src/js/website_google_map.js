@@ -1,3 +1,4 @@
+/* global MarkerClusterer, google */
 function initialize_map() {
     'use strict';
 
@@ -5,10 +6,12 @@ function initialize_map() {
     var map = new google.maps.Map(document.getElementById('odoo-google-map'), {
         zoom: 1,
         center: {lat: 0.0, lng: 0.0},
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        gestureHandling: "greedy",
+
     });
 
-    // ENABLE ADRESS GEOCODING
+    // ENABLE ADDRESS GEOCODING
     var Geocoder = new google.maps.Geocoder();
 
     // INFO BUBBLES
@@ -40,7 +43,8 @@ function initialize_map() {
 
     // Create a bubble for a partner
     var set_marker = function(partner) {
-        // If no lat & long, geocode adress
+      return new Promise((resolve, reject) => {
+        // If no lat & long, geocode address
         // TODO: a server cronjob that will store these coordinates in database instead of resolving them on-the-fly
         if (!partner.latitude && !partner.longitude) {
             Geocoder.geocode({'address': partner.address}, function(results, status) {
@@ -56,8 +60,10 @@ function initialize_map() {
                     });
                     google.maps.event.addListener(marker, 'click', onMarkerClick);
                     markers.push(marker);
+                    resolve();
                 } else {
                     console.debug('Geocode was not successful for the following reason: ' + status);
+                    reject('Geocode failed: ' + status);
                 }
             });
         } else {
@@ -70,16 +76,37 @@ function initialize_map() {
             });
             google.maps.event.addListener(marker, 'click', onMarkerClick);
             markers.push(marker);
+            resolve();
         }
+      });
     };
 
-    // Create the markers and cluster them on the map
-    if (odoo_partner_data){ /* odoo_partner_data special variable should have been defined in google_map.xml */
-        for (var i = 0; i < odoo_partner_data.counter; i++) {
-            set_marker(odoo_partner_data.partners[i]);
+
+    /* eslint-disable no-undef */
+    async function initializeMarkers(odooPartnerData) {
+        // Create the markers and cluster them on the map
+        if (odooPartnerData) { /* odoo_partner_data special variable should have been defined in google_map.xml */
+            const markerPromises = [];
+            for (var i = 0; i < odoo_partner_data.counter; i++) {
+                const prom = set_marker(odoo_partner_data.partners[i])
+                    .catch(error => console.error(error));
+                markerPromises.push(prom);
+            }
+            await Promise.all(markerPromises);
+            new MarkerClusterer(map, markers, options);
+
+            // auto center map and auto zoom
+            const bounds = new google.maps.LatLngBounds();
+            markers.forEach(n => bounds.extend(n.position));
+            map.setCenter(bounds.getCenter());
+            map.fitBounds(bounds);
+            map.setZoom(map.getZoom() - 1);
         }
-        var markerCluster = new MarkerClusterer(map, markers, options);
     }
+
+    // Call the function to initialize markers
+    initializeMarkers(odoo_partner_data);
+    /* eslint-enable no-undef */
 }
 
 // Initialize map once the DOM has been loaded

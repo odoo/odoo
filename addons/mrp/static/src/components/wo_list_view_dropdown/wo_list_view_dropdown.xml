@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp.MOViewListDropdown" style="btn" t-if="this.props.record.data.state !== 'done' and !['draft', 'done', 'cancel'].includes(this.props.record.data.production_state)">
+        <Dropdown>
+            <button t-attf-class="btn btn-link d-flex p-0 pb-1 {{!this.props.record.resId ? 'invisible': ''}}">
+                <div class="d-flex align-items-center">
+                    <span t-attf-class="o_status {{statusColor}}"/>
+                </div>
+            </button>
+            <t t-set-slot="content">
+                <DropdownItem
+                    class="`d-flex align-items-center`"
+                    onSelected="() => this.setState('blocked')">
+                        <span t-attf-class="fa fa-lg fa-exclamation-circle text-warning me-2"/>
+                        <span>Blocked</span>
+                </DropdownItem>
+                <DropdownItem
+                    class="`d-flex align-items-center`"
+                    onSelected="() => this.setState('ready')">
+                        <span t-attf-class="fa fa-lg fa-circle text-muted me-2"/>
+                        <span>To Do</span>
+                </DropdownItem>
+                <DropdownItem
+                    class="`d-flex align-items-center`"
+                    onSelected="() => this.setState('progress')">
+                        <span t-attf-class="fa fa-lg fa-play-circle text-info me-2"/>
+                        <span>In Progress</span>
+                </DropdownItem>
+                <DropdownItem
+                    class="`d-flex align-items-center`"
+                    onSelected="() => this.setState('cancel')">
+                        <span t-attf-class="fa fa-lg fa-times-circle text-danger me-2"/>
+                        <span>Cancelled</span>
+                </DropdownItem>
+                <DropdownItem
+                    class="`d-flex align-items-center`"
+                    onSelected="() => this.setState('done')">
+                        <span t-attf-class="fa fa-lg fa-check-circle text-success me-2"/>
+                        <span>Done</span>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

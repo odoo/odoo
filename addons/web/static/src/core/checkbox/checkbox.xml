@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web.CheckBox">
+    <div class="o-checkbox form-check" t-attf-class="{{ props.slots ? 'form-check' : '' }}"  t-att-class="props.className" t-on-click="onClick" t-ref="root">
+        <input
+            t-att-id="props.id or id"
+            type="checkbox"
+            class="form-check-input"
+            t-att-disabled="props.disabled"
+            t-att-checked="props.value"
+            t-att-name="props.name"
+            t-att-indeterminate="props.indeterminate"
+            t-on-change="onChange"
+        />
+        <label t-att-for="props.id or id" class="form-check-label">
+            <t t-slot="default"/>
+        </label>
+    </div>
+</t>
+
+</templates>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="google_gmail_oauth_error">
+        <t t-call-assets="web.assets_frontend" t-js="false"/>
+        <div class="py-5">
+            <div class="alert alert-warning w-50 mx-auto" role="alert">
+                <t t-out="error"/>
+                <br/>
+                <a t-att-href="redirect_url">
+                    Go back
+                </a>
+            </div>
+        </div>
+    </template>
+</odoo>

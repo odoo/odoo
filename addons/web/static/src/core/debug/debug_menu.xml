@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DebugMenu">
+        <div class="o_debug_manager">
+            <Dropdown
+                beforeOpen.bind="loadGroupedItems"
+                position="'bottom-end'"
+            >
+                <button t-att-class="`o-dropdown--narrow ${env.inDialog?'btn btn-link':''}`">
+                    <i class="fa fa-bug" role="img" aria-label="Open developer tools"/>
+                </button>
+                <t t-set-slot="content">
+                    <t t-foreach="sectionEntries" t-as="entry" t-key="entry[0]">
+                        <div class="dropdown-menu_group dropdown-header">
+                            <t t-esc="getSectionLabel(entry[0])"/>
+                        </div>
+                        <t t-foreach="entry[1]" t-as="element" t-key="element_index">
+                            <DropdownItem
+                                t-if="element.type == 'item'"
+                                onSelected="element.callback"
+                                attrs="{ href: element.href }"
+                            >
+                                <span t-att-class="entry[0] and 'ps-3'" t-esc="element.description"/>
+                            </DropdownItem>
+                            <t t-if="element.type == 'component'" t-component="element.Component" t-props="element.props"/>
+                        </t>
+                    </t>
+                </t>
+            </Dropdown>
+        </div>
+    </t>
+
+</templates>

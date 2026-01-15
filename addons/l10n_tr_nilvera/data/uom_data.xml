@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="product_uom_pk" model="uom.uom">
+        <field name="name">Parcel</field>
+        <field name="relative_factor" eval="1.0"/>
+        <field name="relative_uom_id" ref="uom.product_uom_unit"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_pf" model="uom.uom">
+        <field name="name">Pallet</field>
+        <field name="relative_factor" eval="1.0"/>
+        <field name="relative_uom_id" ref="uom.product_uom_unit"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_cr" model="uom.uom">
+        <field name="name">Crate</field>
+        <field name="relative_factor" eval="1.0"/>
+        <field name="relative_uom_id" ref="uom.product_uom_unit"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_standard_cubic_meter" model="uom.uom">
+        <field name="name">Standard Cubic Meter</field>
+        <field name="relative_factor" eval="1.0"/>
+        <field name="relative_uom_id" ref="uom.product_uom_litre"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_sa" model="uom.uom">
+        <field name="name">Bags</field>
+        <field name="relative_factor" eval="1.0"/>
+        <field name="relative_uom_id" ref="uom.product_uom_unit"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_cmq" model="uom.uom">
+        <field name="name">Cubic Centimeter - cm³</field>
+        <field name="relative_factor" eval="0.001"/>
+        <field name="relative_uom_id" ref="uom.product_uom_litre"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_mlt" model="uom.uom">
+        <field name="name">Milliliter - ml</field>
+        <field name="relative_factor" eval="1.0"/>
+        <field name="relative_uom_id" ref="uom.product_uom_milliliter"/>
+    </record>
+    <record id="product_uom_mmq" model="uom.uom">
+        <field name="name">Cubic Millimeter - mm³</field>
+        <field name="relative_factor" eval="0.000001"/>
+        <field name="relative_uom_id" ref="uom.product_uom_milliliter"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_cmk" model="uom.uom">
+        <field name="name">Square Centimeter - cm²</field>
+        <field name="relative_factor" eval="1000"/>
+        <field name="relative_uom_id" ref="uom.product_uom_cm"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_bg" model="uom.uom">
+        <field name="name">Pack</field>
+        <field name="relative_factor" eval="1.0"/>
+        <field name="relative_uom_id" ref="uom.product_uom_unit"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_bx" model="uom.uom">
+        <field name="name">Box</field>
+        <field name="relative_factor" eval="1.0"/>
+        <field name="relative_uom_id" ref="uom.product_uom_unit"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_pr" model="uom.uom">
+        <field name="name">Pair</field>
+        <field name="relative_factor" eval="2.0"/>
+        <field name="relative_uom_id" ref="uom.product_uom_unit"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_mgm" model="uom.uom">
+        <field name="name">Milligram - mg</field>
+        <field name="relative_factor" eval="0.001"/>
+        <field name="relative_uom_id" ref="uom.product_uom_gram"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_mon" model="uom.uom">
+        <field name="name">Month</field>
+        <field name="relative_factor" eval="30.0"/>
+        <field name="relative_uom_id" ref="uom.product_uom_day"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_gt" model="uom.uom">
+        <field name="name">Gross Ton</field>
+        <field name="relative_factor" eval="1000.0"/>
+        <field name="relative_uom_id" ref="uom.product_uom_kgm"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_ann" model="uom.uom">
+        <field name="name">Year</field>
+        <field name="relative_factor" eval="365.0"/>
+        <field name="relative_uom_id" ref="uom.product_uom_day"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_d61" model="uom.uom">
+        <field name="name">Minute</field>
+        <field name="relative_factor" eval="0.0166667"/>
+        <field name="relative_uom_id" ref="uom.product_uom_hour"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_d62" model="uom.uom">
+        <field name="name">Second</field>
+        <field name="relative_factor" eval="0.0166667"/>
+        <field name="relative_uom_id" ref="l10n_tr_nilvera.product_uom_d61"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_pa" model="uom.uom">
+        <field name="name">Package</field>
+        <field name="relative_factor" eval="1.0"/>
+        <field name="relative_uom_id" ref="uom.product_uom_unit"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_kwt" model="uom.uom">
+        <field name="name">Kilowatt</field>
+        <field name="relative_factor" eval="1.0"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_mwh" model="uom.uom">
+        <field name="name">Megawatt Hour</field>
+        <field name="relative_factor" eval="1.0"/>
+        <field name="relative_uom_id" ref="uom.product_uom_unit"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_kwh" model="uom.uom">
+        <field name="name">Kilowatt Hour</field>
+        <field name="relative_factor" eval="1.0"/>
+        <field name="relative_uom_id" ref="uom.product_uom_unit"/>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_set" model="uom.uom">
+        <field name="name">Set</field>
+        <field name="relative_factor" eval="1.0"/>
+        <field name="relative_uom_id" ref="uom.product_uom_unit"/>
+        <field name="active">False</field>
+    </record>
+</odoo>

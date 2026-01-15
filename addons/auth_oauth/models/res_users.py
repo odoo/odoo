@@ -1,39 +1,63 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug.urls
-import urlparse
-import urllib2
 import json
 
+import requests
+from werkzeug import http, datastructures
+
+if hasattr(datastructures.WWWAuthenticate, "from_header"):
+    parse_auth = datastructures.WWWAuthenticate.from_header
+else:
+    parse_auth = http.parse_www_authenticate_header
+
 from odoo import api, fields, models
-from odoo.exceptions import AccessDenied
+from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.addons.auth_signup.models.res_users import SignupError
 
-from odoo.addons import base
-base.res.res_users.USER_PRIVATE_FIELDS.append('oauth_access_token')
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
     oauth_provider_id = fields.Many2one('auth.oauth.provider', string='OAuth Provider')
     oauth_uid = fields.Char(string='OAuth User ID', help="Oauth Provider user_id", copy=False)
-    oauth_access_token = fields.Char(string='OAuth Access Token', readonly=True, copy=False)
+    oauth_access_token = fields.Char(string='OAuth Access Token Store', readonly=True, copy=False, prefetch=False, groups=fields.NO_ACCESS)
+    has_oauth_access_token = fields.Boolean(string='Has OAuth Access Token', compute='_compute_has_oauth_access_token', groups='base.group_erp_manager')
 
-    _sql_constraints = [
-        ('uniq_users_oauth_provider_oauth_uid', 'unique(oauth_provider_id, oauth_uid)', 'OAuth UID must be unique per provider'),
-    ]
+    _uniq_users_oauth_provider_oauth_uid = models.Constraint(
+        'unique(oauth_provider_id, oauth_uid)',
+        'OAuth UID must be unique per provider',
+    )
 
-    @api.model
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS + ['has_oauth_access_token']
+
+    @api.depends('oauth_access_token')
+    def _compute_has_oauth_access_token(self):
+        for user in self:
+            user.has_oauth_access_token = bool(user.sudo().oauth_access_token)
+
+    def remove_oauth_access_token(self):
+        user = self.env.user
+        if not (user.has_group('base.group_erp_manager') or self == user):
+            raise AccessError(self.env._('You do not have permissions to remove the access token'))
+        self.sudo().oauth_access_token = False
+
     def _auth_oauth_rpc(self, endpoint, access_token):
-        params = werkzeug.url_encode({'access_token': access_token})
-        if urlparse.urlparse(endpoint)[4]:
-            url = endpoint + '&' + params
+        if self.env['ir.config_parameter'].sudo().get_param('auth_oauth.authorization_header'):
+            response = requests.get(endpoint, headers={'Authorization': 'Bearer %s' % access_token}, timeout=10)
         else:
-            url = endpoint + '?' + params
-        f = urllib2.urlopen(url)
-        response = f.read()
-        return json.loads(response)
+            response = requests.get(endpoint, params={'access_token': access_token}, timeout=10)
+
+        if response.ok: # nb: could be a successful failure
+            return response.json()
+
+        auth_challenge = parse_auth(response.headers.get("WWW-Authenticate"))
+        if auth_challenge and auth_challenge.type == 'bearer' and 'error' in auth_challenge:
+            return dict(auth_challenge)
+
+        return {'error': 'invalid_request'}
 
     @api.model
     def _auth_oauth_validate(self, provider, access_token):
@@ -45,6 +69,21 @@ class ResUsers(models.Model):
         if oauth_provider.data_endpoint:
             data = self._auth_oauth_rpc(oauth_provider.data_endpoint, access_token)
             validation.update(data)
+        # unify subject key, pop all possible and get most sensible. When this
+        # is reworked, BC should be dropped and only the `sub` key should be
+        # used (here, in _generate_signup_values, and in _auth_oauth_signin)
+        subject = next(filter(None, [
+            validation.pop(key, None)
+            for key in [
+                'sub', # standard
+                'id', # google v1 userinfo, facebook opengraph
+                'user_id', # google tokeninfo, odoo (tokeninfo)
+            ]
+        ]), None)
+        if not subject:
+            raise AccessDenied(self.env._('Missing subject identity'))
+        validation['user_id'] = subject
+
         return validation
 
     @api.model
@@ -88,9 +127,9 @@ class ResUsers(models.Model):
             token = state.get('t')
             values = self._generate_signup_values(provider, validation, params)
             try:
-                _, login, _ = self.signup(values, token)
+                login, _ = self.signup(values, token)
                 return login
-            except SignupError:
+            except (SignupError, UserError):
                 raise access_denied_exception
 
     @api.model
@@ -102,13 +141,6 @@ class ResUsers(models.Model):
         #   continue with the process
         access_token = params.get('access_token')
         validation = self._auth_oauth_validate(provider, access_token)
-        # required check
-        if not validation.get('user_id'):
-            # Workaround: facebook does not send 'user_id' in Open Graph Api
-            if validation.get('id'):
-                validation['user_id'] = validation['id']
-            else:
-                raise AccessDenied()
 
         # retrieve and sign in user
         login = self._auth_oauth_signin(provider, validation, params)
@@ -117,11 +149,22 @@ class ResUsers(models.Model):
         # return user credentials
         return (self.env.cr.dbname, login, access_token)
 
-    @api.model
-    def check_credentials(self, password):
+    def _check_credentials(self, credential, env):
         try:
-            return super(ResUsers, self).check_credentials(password)
+            return super()._check_credentials(credential, env)
         except AccessDenied:
-            res = self.sudo().search([('id', '=', self.env.uid), ('oauth_access_token', '=', password)])
-            if not res:
+            if not (credential['type'] == 'oauth_token' and credential['token']):
                 raise
+            passwd_allowed = env['interactive'] or not self.env.user._rpc_api_keys_only()
+            if passwd_allowed and self.env.user.active:
+                res = self.sudo().search([('id', '=', self.env.uid), ('oauth_access_token', '=', credential['token'])])
+                if res:
+                    return {
+                        'uid': self.env.user.id,
+                        'auth_method': 'oauth',
+                        'mfa': 'default',
+                    }
+            raise
+
+    def _get_session_token_fields(self):
+        return super()._get_session_token_fields() | {'oauth_access_token'}

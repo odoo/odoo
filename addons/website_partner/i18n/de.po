@@ -3,66 +3,118 @@
 # * website_partner
 #
 # Translators:
+# Martin Trigaux, 2022
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-12-11 18:43+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"POT-Creation-Date: 2025-12-30 18:38+0000\n"
+"PO-Revision-Date: 2025-10-31 13:03+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
+"website_partner/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: website_partner
 #: model:ir.model,name:website_partner.model_res_partner
-msgid "Partner"
-msgstr "Partner"
+msgid "Contact"
+msgstr "Kontakt"
 
 #. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_partner_self
-msgid "Self"
-msgstr ""
+#: model:ir.model,website_form_label:website_partner.model_res_partner
+msgid "Create a Customer"
+msgstr "Kunden erstellen"
 
 #. module: website_partner
-#: model:ir.ui.view,arch_db:website_partner.partner_detail
-msgid "Short Description for List View"
-msgstr "Kurzbeschreibung für Listenansicht"
+#: model_terms:ir.ui.view,arch_db:website_partner.partner_page
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PARTNERS"
+msgstr "BAUSTEINE HIER PLATZIEREN, DAMIT SIE FÜR ALLE PARTNER VERFÜGBAR SIND"
 
 #. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_partner_website_description
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__is_published
+#: model:ir.model.fields,field_description:website_partner.field_res_users__is_published
+msgid "Is Published"
+msgstr "Ist veröffentlicht"
+
+#. module: website_partner
+#: model:mail.message.subtype,description:website_partner.mt_partner_published
+msgid "Partner Published"
+msgstr "Partner veröffentlicht"
+
+#. module: website_partner
+#: model:mail.message.subtype,description:website_partner.mt_partner_unpublished
+msgid "Partner Unpublished"
+msgstr "Partner nicht veröffentlicht"
+
+#. module: website_partner
+#: model:mail.message.subtype,name:website_partner.mt_partner_published
+msgid "Partner published"
+msgstr "Partner veröffentlicht"
+
+#. module: website_partner
+#: model:mail.message.subtype,name:website_partner.mt_partner_unpublished
+msgid "Partner unpublished"
+msgstr "Partner nicht veröffentlicht"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__is_seo_optimized
+msgid "SEO optimized"
+msgstr "SEO-optimiert"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__seo_name
+msgid "Seo name"
+msgstr "Seo-Name"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_description
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_description
 msgid "Website Partner Full Description"
-msgstr "Webseite Partnerbeschreibung"
+msgstr "Website Partnerbeschreibung"
 
 #. module: website_partner
-#: model:ir.model.fields,field_description:website_partner.field_res_partner_website_short_description
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_short_description
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_short_description
 msgid "Website Partner Short Description"
-msgstr "Webseite Partnerkurzbeschreibung"
+msgstr "Website Partnerkurzbeschreibung"
 
-#~ msgid "Private Profile"
-#~ msgstr "Privates Profil"
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_description
+msgid "Website meta description"
+msgstr "Website-Meta-Beschreibung"
 
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr ""
-#~ "Die vollständige URL mit der das Dokument überall aufgerufen werden kann."
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Website-Meta-Schlagwörter"
 
-#~ msgid "Visible in Website"
-#~ msgstr "Sichtbar in Webseite"
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_title
+msgid "Website meta title"
+msgstr "Website-Meta-Titel"
 
-#~ msgid "Website URL"
-#~ msgstr "Webseite URL"
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_og_img
+msgid "Website opengraph image"
+msgstr "Opengraph-Bild der Website"
 
-#~ msgid "Website meta description"
-#~ msgstr "Webseite Meta Beschreibung"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Webseite Metasuchwörter"
-
-#~ msgid "Website meta title"
-#~ msgstr "Webseite Meta Titel"
-
-#~ msgid "unknown"
-#~ msgstr "unbekannt"
+#~ msgid "Short Description for List View"
+#~ msgstr "Kurzbeschreibung für Listenansicht"

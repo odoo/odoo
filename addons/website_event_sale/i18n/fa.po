@@ -1,61 +1,146 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_event_sale
+# 	* website_event_sale
 #
 # Translators:
+# Hamid Darabi, 2023
+# Hamed Mohammadi <hamed@dehongi.com>, 2023
+# Hanna Kheradroosta, 2023
+# Martin Trigaux, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2023
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-08 10:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Persian (http://www.transifex.com/odoo/odoo-9/language/fa/)\n"
+"POT-Creation-Date: 2025-12-30 18:37+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2023\n"
+"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Free</span>"
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "<b>End</b>"
 msgstr ""
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Unlimited</span>"
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "<b>Start</b>"
 msgstr ""
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>left</span>"
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "<i class=\"fa fa-check me-2\" role=\"img\"/>Registered"
 msgstr ""
 
 #. module: website_event_sale
-#: model:ir.model.fields,field_description:website_event_sale.field_product_product_intrastat_id
-msgid "Intrastat code"
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
+msgid ""
+"<span>Sign In</span>\n"
+"                <span class=\"fa fa-sign-in\"/>"
 msgstr ""
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.index
-msgid "Only"
+#. odoo-python
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
 msgstr ""
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "Order Now"
+#. odoo-python
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
+msgstr ""
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
+msgid "Confirm Registration"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_event_sale_report__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_product_pricelist_item__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_event_sale_report
+msgid "Event Sales Report"
+msgstr "رویداد گزارش فروش‌ها"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Event Subtitle"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
+msgid "Event Tickets"
+msgstr ""
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Event Title"
+msgstr ""
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
+msgid "Free"
+msgstr "رایگان"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
+msgid "From"
+msgstr "از"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
+msgid "Go to Payment"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_event_sale_report__id
+#: model:ir.model.fields,field_description:website_event_sale.field_product_pricelist_item__id
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__id
+#: model:ir.model.fields,field_description:website_event_sale.field_product_template__id
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order_line__id
+msgid "ID"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_pricelist_item
+msgid "Pricelist Rule"
+msgstr "قانون لیست قیمت"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_template
+msgid "Product"
 msgstr ""
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
-msgid "Product"
-msgstr "محصول"
+msgid "Product Variant"
+msgstr "گونه محصول"
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.index
-msgid "Remaining"
-msgstr "باقی مانده"
+#: model:ir.model.fields,field_description:website_event_sale.field_event_sale_report__is_published
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_sale_report_view_search
+msgid "Published Events"
+msgstr ""
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
@@ -63,38 +148,58 @@ msgid "Sales Order"
 msgstr "سفارش فروش"
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.index
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "Sold Out"
-msgstr ""
+#: model:ir.model,name:website_event_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "سطر سفارش‌فروش"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:71
-#, python-format
+#. odoo-python
+#: code:addons/website_event_sale/models/sale_order.py:0
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
-msgstr ""
+msgstr "متاسفیم، بلیط %(ticket)s برای رویداد %(event)s تمام شد."
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:77
-#, python-format
+#. odoo-python
+#: code:addons/website_event_sale/models/sale_order.py:0
 msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
-"ticket for the %(event)s event."
+"ticket for the %(event)s event%(slot)s."
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:65
-#, python-format
-msgid "Subscription"
+#. odoo-python
+#: code:addons/website_event_sale/models/sale_order.py:0
+msgid "The provided ticket doesn't exist"
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:36
-#, python-format
+#. odoo-python
+#: code:addons/website_event_sale/models/sale_order.py:0
+msgid "The provided ticket slot doesn't exist"
+msgstr ""
+
+#. module: website_event_sale
+#. odoo-python
+#: code:addons/website_event_sale/models/sale_order.py:0
 msgid "The ticket doesn't match with this product."
 msgstr ""
 
 #. module: website_event_sale
-#: model:ir.model,name:website_event_sale.model_website
-msgid "Website"
-msgstr "تارنما"
+#. odoo-python
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+msgid "Warning"
+msgstr "هشدار"
+
+#. module: website_event_sale
+#. odoo-python
+#: code:addons/website_event_sale/models/sale_order.py:0
+msgid "You cannot raise manually the event ticket quantity in your cart"
+msgstr ""
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
+msgid "to"
+msgstr "به"
+
+#~ msgid "Website"
+#~ msgstr "تارنما"

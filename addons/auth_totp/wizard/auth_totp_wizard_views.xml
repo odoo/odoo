@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_totp_wizard">
+        <field name="name">auth_totp wizard</field>
+        <field name="model">auth_totp.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="o_auth_totp_enable_2FA text-center ps-0">
+                        <div class="mb-3 w-100">
+
+                            <!-- Desktop version -->
+                            <h3 class="fw-bold d-none d-md-block">Scan this barcode in your Authenticator app</h3>
+                            <div class="d-none d-md-block">
+                                <field name="qrcode" readonly="True" widget="image" options="{'reload': false }"/>
+
+                                <h3 class="fw-bold"><a data-bs-toggle="collapse"
+                                   href="#collapseTotpSecret" role="button" aria-expanded="false"
+                                   aria-controls="collapseTotpSecret">Cannot scan it?</a></h3>
+                                <div class="collapse" id="collapseTotpSecret">
+                                  <field name="secret" widget="CopyClipboardChar" readonly="1" class="mb-3 ps-3"/>
+                                </div>
+                            </div>
+
+                            <!-- Mobile Version -->
+                            <h3 class="fw-bold d-block d-md-none">Add this key in your Authenticator app</h3>
+                            <div class="d-block d-md-none">
+                                <field name="secret" widget="CopyClipboardChar" readonly="1" class="mb-3 ps-3"/>
+                            </div>
+
+                            <h3 class="fw-bold">Write the code given by your app</h3>
+                            <field required="True" name="code" autocomplete="off" class="o_field_highlight w-50 w-sm-25" placeholder="Verification code"/>
+                        </div>
+                    </div>
+                </sheet>
+                <footer>
+                    <button type="object" name="enable" class="btn btn-primary" context="{'code': code}"
+                            string="Enable Two-Factor Authentication" data-hotkey="q"/>
+                    <button string="Discard" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

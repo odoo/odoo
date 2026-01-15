@@ -1,0 +1,59 @@
+.o-mail-DiscussSidebar {
+    max-width: $o-mail-Discuss-inspector;
+}
+
+.o-mail-DiscussSidebar-resizablePanelContainer {
+    max-width: $o-mail-Discuss-inspector;
+}
+
+.o-mail-DiscussSidebar-optionsBtn {
+    --border-opacity: 0.5;
+    padding: map-get($spacers, 1) / 2;
+}
+
+.o-mail-DiscussSidebar-badge {
+    padding: 3px 4px;
+
+    &.o-compact {
+        top: -4px;
+        right: -2px;
+    }
+
+    &.o-discuss-badge-circle {
+        aspect-ratio: 1;
+        &:not(.o-compact) {
+            line-height: 2;
+        }
+    }
+}
+
+.o-mail-DiscussSidebar-item {
+    outline: 1px solid transparent !important;
+    outline-offset: -1px;
+    padding-top: map-get($spacers, 1) / 2;
+    padding-bottom: map-get($spacers, 1) / 2;
+
+    .o-mail-DiscussSidebar.o-compact & {
+        opacity: 75%;
+
+        &.o-unread, &.o-active, &:hover {
+            opacity: 100%;
+        }
+    }
+
+    &:hover {
+        background-color: mix($gray-100, $gray-200) !important;
+        outline-color: mix($gray-100, $gray-200, 20%) !important;
+    }
+
+    &.o-active {
+        background-color: var(--mail-DiscussSidebar-itemActiveBgColor, mix($o-view-background-color, $o-action, 90%)) !important;
+        outline-color: var(--mail-DiscussSidebar-itemActiveOutlineColor, mix($o-view-background-color, $o-action, 50%)) !important;
+    }
+
+    &.o-active, &:hover {
+        .o-mail-DiscussSidebarChannel-itemName {
+            filter: brightness(1.1);
+        }
+    }
+}

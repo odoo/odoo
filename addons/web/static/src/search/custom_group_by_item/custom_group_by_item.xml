@@ -1,0 +1,14 @@
+<templates xml:space="preserve">
+
+    <t t-name="web.CustomGroupByItem">
+        <select class="o_add_custom_group_menu o_menu_item dropdown-item" t-on-change="(ev) => this.onSelected(ev)">
+            <option value="" disabled="true" selected="true" hidden="true">Custom Group</option>
+            <option t-foreach="props.fields" t-as="field" t-key="field.name"
+                t-if="field.type !== 'properties' and !field.isProperty"
+                t-att-value="field.name"
+                t-esc="field.string"
+            />
+        </select>
+    </t>
+
+</templates>

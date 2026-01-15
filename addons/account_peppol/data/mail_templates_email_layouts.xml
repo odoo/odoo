@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="mail_notification_layout_with_responsible_signature_and_peppol"
+                  name="Mail: mail notification layout with responsible signature (user_id of the record) and Peppol status"
+                  inherit_id="mail.mail_notification_layout_with_responsible_signature"
+                  primary="True">
+            <xpath expr="//t[hasclass('o_signature')]" position="after">
+                <div id="peppol_status" t-if="peppol_info" style="font-size: 13px;">
+                    <br/><br/>
+                    <t t-if="peppol_info['is_peppol_sent']">
+                        <i style="color: #777">
+                            This invoice has also been <b t-attf-style="color: {{company.email_secondary_color or '#875A7B'}}">sent via Peppol</b>.
+                        </i>
+                    </t>
+                    <t t-if="not peppol_info['is_peppol_sent'] and not peppol_info['partner_on_peppol']">
+                        <i style="color: #777">
+                            <t t-out="company.name"/> uses <a target="_blank" href="https://www.odoo.com/app/invoicing">Odoo</a> to send invoices, but this one <b t-attf-style="color: {{company.email_secondary_color or '#875A7B'}}">could not be sent via Peppol</b>.
+                            <t t-if="peppol_info['peppol_country'] == 'BE'">
+                                <br/>
+                                In Belgium, electronic invoicing is <u>mandatory as of January 2026</u> - don't wait to register.
+                            </t>
+                        </i>
+                    </t>
+                </div>
+            </xpath>
+        </template>
+
+        <record id="mail_template_peppol_registration" model="mail.template">
+            <field name="name">Peppol: Registration update</field>
+            <field name="subject">Welcome to Peppol</field>
+            <field name="email_from">{{ object.email_formatted }}</field>
+            <field name="email_to">{{ object.account_peppol_contact_email }}</field>
+            <field name="use_default_to" eval="False"/>
+            <field name="model_id" ref="account.model_res_company"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="description">Notification email for peppol registration state update</field>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0"
+       style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+    <tr>
+        <td align="center">
+            <table border="0" cellpadding="0" cellspacing="0" width="590"
+                   style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                <!-- HEADER -->
+                <tr>
+                    <td align="center" style="min-width: 590px;">
+                        <table width="590" cellpadding="0" cellspacing="0"
+                               style="padding: 0px 8px; background-color: white; border-collapse:separate;">
+                            <tr>
+                                <td valign="middle">
+                                    <span style="font-size: 10px;">Notification</span>
+                                    <br/>
+                                    <span style="font-size: 20px; font-weight: bold;">
+                                        Welcome to Peppol
+                                    </span>
+                                    <div style="margin-bottom: 5px; margin-top: 18px;">
+                                        <a t-attf-href="/odoo/accounting/" target="_blank"
+                                           t-attf-style="padding: 8px 12px; font-size: 12px; color: {{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !important; font-weight: 400; background-color: {{ object.email_secondary_color or '#875A7B' }}; border-radius:3px">
+                                            Send invoices
+                                        </a>
+                                    </div>
+                                </td>
+                                <td valign="middle" align="right">
+                                    <t t-if="not object.uses_default_logo">
+                                        <img t-att-src="'/logo.png?company=%s' % object.id"
+                                             style="height: auto; width: 80px; margin-right: 10px;"
+                                             t-att-alt="'%s' % object.name"/>
+                                    </t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:center;">
+                                    <hr style="background-color:#CCCCCC; border:none; height:1px; margin:16px 0;" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- BODY -->
+                <tr>
+                    <td align="center">
+                        <table width="590" cellpadding="0" cellspacing="0"
+                               style="padding: 0px 8px; background-color: white; border-collapse:separate;">
+                            <tr>
+                                <td style="font-size: 14px;">
+                                    <p>Dear <t t-out="object.name or ''">YourCompany</t>,</p>
+
+                                    <p>We have successfully added your company to the <strong>Peppol Network</strong>.</p>
+
+                                    <p>You can now <strong>send<t t-if="object.account_peppol_proxy_state == 'receiver'"> and receive</t></strong> electronic invoices via Odoo — completely free of charge.</p>
+
+                                    <p>Best regards,</p>
+
+                                    <p style="margin-bottom: 24px;">The Odoo Team</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+            </field>
+        </record>
+
+    </data>
+</odoo>

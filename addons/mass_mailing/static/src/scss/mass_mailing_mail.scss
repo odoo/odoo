@@ -1,0 +1,61 @@
+
+.o_layout * {
+    box-sizing: border-box !important;
+}
+.o_layout :not(.fa) {
+    font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+}
+/* Remove space around the email design. */
+html:has(.o_layout),
+body:has(.o_layout) {
+    margin: 0 auto !important;
+    padding: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+
+    /* Stop Outlook resizing small text. */
+    * {
+        -ms-text-size-adjust: 100%;
+    }
+
+    /* Stop Outlook from adding extra spacing to tables. */
+    table,
+    td {
+        mso-table-lspace: 0pt !important;
+        mso-table-rspace: 0pt !important;
+    }
+
+    /* Prevent Windows 10 Mail from underlining links. Styles for underlined links should be inline. */
+    a {
+        text-decoration: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .o_mail_snippet_general .container {
+        width: 100% !important;
+    }
+    .s_header_social table td, .s_header_text_social table td, .s_header_logo table td,
+    .o_mail_block_footer_social td,
+    .s_showcase td,
+    .s_mail_product_list td,
+    .s_references td {
+        text-align: center !important;
+    }
+}
+@media screen and (max-width: 1135px) {
+    .o_stacking_wrapper {
+        width: 100% !important;
+        height: unset !important;
+    }
+    td {
+        max-width: inherit !important;
+    }
+    img:only-child:not(.img-fluid) {
+        object-fit: cover;
+        min-width: 100% !important;
+    }
+    .o_desktop_h100 {
+        height: unset !important;
+    }
+}

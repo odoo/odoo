@@ -3,103 +3,218 @@
 # * website_event_sale
 #
 # Translators:
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2015
-#, fuzzy
+# Kim Asplund <kim.asplund@gmail.com>, 2022
+# Simon S, 2022
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
+# Martin Trigaux, 2022
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-08 10:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
+"POT-Creation-Date: 2025-12-30 18:37+0000\n"
+"PO-Revision-Date: 2025-09-16 21:20+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
+"website_event_sale/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  sv.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  sv.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Free</span>"
-msgstr "<span>Gratis</span>"
-
-#. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Unlimited</span>"
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "<b>End</b>"
 msgstr ""
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>left</span>"
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "<b>Start</b>"
 msgstr ""
 
 #. module: website_event_sale
-#: model:ir.model.fields,field_description:website_event_sale.field_product_product_intrastat_id
-msgid "Intrastat code"
-msgstr "Intrastatkod"
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "<i class=\"fa fa-check me-2\" role=\"img\"/>Registered"
+msgstr ""
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.index
-msgid "Only"
-msgstr "Endast"
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
+msgid ""
+"<span>Sign In</span>\n"
+"                <span class=\"fa fa-sign-in\"/>"
+msgstr ""
+"<span>Logga in</span>\n"
+"                <span class=\"fa fa-sign-in\"/>"
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "Order Now"
-msgstr "Beställ nu"
+#. odoo-python
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
+msgstr ""
+"En prislista med en positiv min. kvantitet kan inte tillämpas på denna "
+"evenemangsbiljett."
+
+#. module: website_event_sale
+#. odoo-python
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
+msgstr ""
+"En prislista med en positiv min. kvantitet kommer inte att tillämpas på "
+"evenemangsbiljettprodukterna."
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
+msgid "Confirm Registration"
+msgstr "Bekräfta anmälan"
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_event_sale_report__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_product_pricelist_item__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_event_sale_report
+msgid "Event Sales Report"
+msgstr "Försäljningsrapport för evenemang"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Event Subtitle"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
+msgid "Event Tickets"
+msgstr "Biljetter"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
+msgid "Event Title"
+msgstr ""
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
+msgid "Free"
+msgstr "Gratis"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
+msgid "From"
+msgstr "Från"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_attendee_details
+msgid "Go to Payment"
+msgstr "Gå till betalning"
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_event_sale_report__id
+#: model:ir.model.fields,field_description:website_event_sale.field_product_pricelist_item__id
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__id
+#: model:ir.model.fields,field_description:website_event_sale.field_product_template__id
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order_line__id
+msgid "ID"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_pricelist_item
+msgid "Pricelist Rule"
+msgstr "Prislistsregel"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_template
+msgid "Product"
+msgstr ""
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
-msgid "Product"
-msgstr "Produkt"
+msgid "Product Variant"
+msgstr "Produktvariant"
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.index
-msgid "Remaining"
-msgstr "Återstående"
+#: model:ir.model.fields,field_description:website_event_sale.field_event_sale_report__is_published
+#: model_terms:ir.ui.view,arch_db:website_event_sale.event_sale_report_view_search
+msgid "Published Events"
+msgstr "Publicerade evenemang"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
 msgid "Sales Order"
-msgstr "Kundorder"
+msgstr "Försäljningsorder"
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.index
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "Sold Out"
-msgstr "Utsåld"
+#: model:ir.model,name:website_event_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Försäljningsorderrad"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:71
-#, python-format
+#. odoo-python
+#: code:addons/website_event_sale/models/sale_order.py:0
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
-msgstr ""
+msgstr "Tyvärr, alla %(ticket)s biljetter för %(event)s eventet är slutsålda."
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:77
-#, python-format
+#. odoo-python
+#: code:addons/website_event_sale/models/sale_order.py:0
 msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
-"ticket for the %(event)s event."
+"ticket for the %(event)s event%(slot)s."
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:65
-#, python-format
-msgid "Subscription"
-msgstr "Prenumeration"
+#. odoo-python
+#: code:addons/website_event_sale/models/sale_order.py:0
+msgid "The provided ticket doesn't exist"
+msgstr "Den angivna biljetten finns inte"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:36
-#, python-format
+#. odoo-python
+#: code:addons/website_event_sale/models/sale_order.py:0
+msgid "The provided ticket slot doesn't exist"
+msgstr ""
+
+#. module: website_event_sale
+#. odoo-python
+#: code:addons/website_event_sale/models/sale_order.py:0
 msgid "The ticket doesn't match with this product."
 msgstr "Biljetten passar inte med denna produkt"
 
 #. module: website_event_sale
-#: model:ir.model,name:website_event_sale.model_website
-msgid "Website"
-msgstr "Webbplats"
+#. odoo-python
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+msgid "Warning"
+msgstr "Varning"
+
+#. module: website_event_sale
+#. odoo-python
+#: code:addons/website_event_sale/models/sale_order.py:0
+msgid "You cannot raise manually the event ticket quantity in your cart"
+msgstr "Du kan inte höja antalet evenemangsbiljetter manuellt i din varukorg"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.modal_ticket_registration
+msgid "to"
+msgstr "till"
+
+#~ msgid ""
+#~ "Sorry, only %(remaining_seats)d seats are still available for the %"
+#~ "(ticket)s ticket for the %(event)s event."
+#~ msgstr ""
+#~ "Tyvärr är endast %(remaining_seats)dplats tillgänglig för de %"
+#~ "(ticket)sbiljetterna till eventet %(event)s."
+
+#~ msgid "Website"
+#~ msgstr "Webbplats"

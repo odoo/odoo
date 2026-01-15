@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ir_default_form_view" model="ir.ui.view">
+        <field name="name">ir.default form view</field>
+        <field name="model">ir.default</field>
+        <field name="arch" type="xml">
+            <form string="User-defined Defaults">
+            <sheet>
+                <group>
+                    <group name="field_value">
+                        <field name="field_id" options="{'no_create': True}"/>
+                        <field name="json_value"/>
+                        <field name="condition"/>
+                    </group>
+                    <group name="user_company_details">
+                        <field name="user_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </group>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ir_default_tree_view" model="ir.ui.view">
+        <field name="name">ir.default list view</field>
+        <field name="model">ir.default</field>
+        <field name="arch" type="xml">
+            <list string="User-defined Defaults">
+                <field name="field_id"/>
+                <field name="json_value"/>
+                <field name="condition" optional="hide"/>
+                <field name="user_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ir_default_search_view" model="ir.ui.view">
+        <field name="name">ir.default search view</field>
+        <field name="model">ir.default</field>
+        <field name="arch" type="xml">
+            <search string="User-defined Defaults">
+                <field name="field_id"/>
+                <field name="user_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <group>
+                    <filter string="User" name="groupby_user" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Company" name="groupby_company" domain="[]" context="{'group_by':'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="ir_default_menu_action" model="ir.actions.act_window">
+        <field name="name">User-defined Defaults</field>
+        <field name="res_model">ir.default</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="ir_default_search_view"/>
+    </record>
+    <menuitem action="ir_default_menu_action" id="ir_default_menu" parent="next_id_6"/>
+
+</odoo>

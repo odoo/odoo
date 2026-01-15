@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.PivotView.Buttons">
+        <div class="o_pivot_buttons d-flex d-print-none gap-1 mt-2 mx-3 mb-3">
+            <div class="btn-group" role="toolbar" aria-label="Main actions">
+                <ReportViewMeasures
+                    measures="model.metaData.measures"
+                    activeMeasures="model.metaData.activeMeasures"
+                    onMeasureSelected.bind="this.onMeasureSelected"
+                />
+            </div>
+            <div class="btn-group" role="toolbar" aria-label="Pivot settings">
+                <t t-set="noDataDisplayed" t-value="!model.hasData() || !model.metaData.activeMeasures.length"/>
+                <button class="btn btn-secondary fa fa-exchange o_pivot_flip_button" t-on-click="onFlipButtonClicked" data-tooltip="Flip axis" aria-label="Flip axis" t-attf-disabled="{{noDataDisplayed ? 'disabled' : false}}"/>
+                <button class="btn btn-secondary fa fa-arrows o_pivot_expand_button" t-on-click="onExpandButtonClicked" data-tooltip="Expand all" aria-label="Expand all" t-attf-disabled="{{noDataDisplayed ? 'disabled' : false}}"/>
+                <button class="btn btn-secondary fa fa-download o_pivot_download" t-on-click="onDownloadButtonClicked" data-tooltip="Download xlsx" aria-label="Download xlsx" t-attf-disabled="{{noDataDisplayed ? 'disabled' : false}}"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.PivotView">
+        <div t-att-class="props.className" t-ref="root">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
+                <t t-set-slot="control-panel-additional-actions">
+                    <CogMenu/>
+                </t>
+                <t t-set-slot="layout-actions">
+                    <SearchBar toggler="searchBarToggler"/>
+                </t>
+                <t t-set-slot="control-panel-navigation-additional">
+                    <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                </t>
+				<t t-if="model.isReady and displayNoContent">
+    				<ActionHelper noContentHelp="props.info.noContentHelp" showRibbon="model.useSampleModel"/>
+                </t>
+                <t t-if="model.isReady" t-component="props.Renderer" model="model" buttonTemplate="props.buttonTemplate"/>
+            </Layout>
+        </div>
+    </t>
+
+</templates>

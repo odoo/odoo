@@ -1,172 +1,216 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * bus
-# 
+#
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2016\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2025-11-14 08:58+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/bus/nl/>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: bus
-#: sql_constraint:bus.presence:0
-msgid "A user can only have one IM status."
-msgstr "Een gebruiker kan maar één IM status hebben."
+#: model:ir.model,name:bus.model_res_groups
+msgid "Access Groups"
+msgstr "Toegangsgroepen"
 
 #. module: bus
-#: selection:bus.presence,status:0
-msgid "Away"
-msgstr "Afwezig"
+#: model:ir.model,name:bus.model_ir_attachment
+msgid "Attachment"
+msgstr "Bijlage"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_channel
+#: model:ir.model,name:bus.model_bus_listener_mixin
+msgid "Can send messages via bus.bus"
+msgstr "Kan berichten versturen via bus.bus"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__channel
 msgid "Channel"
 msgstr "Kanaal"
 
 #. module: bus
-#: model:ir.model.fields,help:bus.field_res_users_country_enforce_cities
-msgid ""
-"Check this box to ensure every address created in that country has a 'City' "
-"chosen in the list of the country's cities."
-msgstr ""
+#: model:ir.model,name:bus.model_bus_bus
+msgid "Communication Bus"
+msgstr "Communicatiebus"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_city_id
-msgid "Company"
-msgstr "Bedrijf"
+#: model:ir.model,name:bus.model_res_partner
+msgid "Contact"
+msgstr "Contact"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
-msgid "Create date"
-msgstr "Aanmaakdatum"
+#: model:ir.model,website_form_label:bus.model_res_partner
+msgid "Create a Customer"
+msgstr "Een klant aanmaken"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_create_uid
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_display_name
-#: model:ir.model.fields,field_description:bus.field_bus_presence_display_name
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
+#: model:ir.model.fields,field_description:bus.field_bus_listener_mixin__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_http__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_model__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_websocket__display_name
+#: model:ir.model.fields,field_description:bus.field_res_groups__display_name
+#: model:ir.model.fields,field_description:bus.field_res_partner__display_name
+#: model:ir.model.fields,field_description:bus.field_res_users__display_name
+#: model:ir.model.fields,field_description:bus.field_res_users_settings__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_street_number2
-msgid "Door Number"
-msgstr ""
+#. odoo-javascript
+#: code:addons/bus/static/src/debug/bus_logs_menu_item.xml:0
+msgid "Download logs"
+msgstr "Logboeken downloaden"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_country_enforce_cities
-msgid "Enforce Cities"
-msgstr ""
+#. odoo-javascript
+#: code:addons/bus/static/src/debug/bus_logs_menu_item.xml:0
+msgid "Enable Bus Logging"
+msgstr "Bus-loggen inschakelen"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
-msgid "Geo Latitude"
-msgstr "Geo breedtegraad"
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP routing"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_partner_longitude
-msgid "Geo Longitude"
-msgstr "Geo lengtegraad"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_date_localization
-msgid "Geolocation Date"
-msgstr "Datum geolocatie"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_street_number
-msgid "House Number"
-msgstr "Huisnummer"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_id
-#: model:ir.model.fields,field_description:bus.field_bus_presence_id
+#: model:ir.model.fields,field_description:bus.field_bus_bus__id
+#: model:ir.model.fields,field_description:bus.field_bus_listener_mixin__id
+#: model:ir.model.fields,field_description:bus.field_ir_attachment__id
+#: model:ir.model.fields,field_description:bus.field_ir_http__id
+#: model:ir.model.fields,field_description:bus.field_ir_model__id
+#: model:ir.model.fields,field_description:bus.field_ir_websocket__id
+#: model:ir.model.fields,field_description:bus.field_res_groups__id
+#: model:ir.model.fields,field_description:bus.field_res_partner__id
+#: model:ir.model.fields,field_description:bus.field_res_users__id
+#: model:ir.model.fields,field_description:bus.field_res_users_settings__id
 msgid "ID"
 msgstr "ID"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_status
-#: model:ir.model.fields,field_description:bus.field_res_partner_im_status
-#: model:ir.model.fields,field_description:bus.field_res_users_im_status
-msgid "IM Status"
-msgstr "IM Status"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus___last_update
-#: model:ir.model.fields,field_description:bus.field_bus_presence___last_update
-msgid "Last Modified on"
-msgstr "Laatst gewijzigd op"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_last_poll
-msgid "Last Poll"
-msgstr "Laatste pol"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_last_presence
-msgid "Last Presence"
-msgstr "Laatst aanwezig"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_write_uid
+#: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
 msgstr "Laatst bijgewerkt door"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_write_date
+#: model:ir.model.fields,field_description:bus.field_bus_bus__write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_message
+#: model:ir.model.fields,field_description:bus.field_bus_bus__message
 msgid "Message"
 msgstr "Bericht"
 
 #. module: bus
-#: selection:bus.presence,status:0
-msgid "Offline"
-msgstr "Offline"
+#: model:ir.model,name:bus.model_ir_model
+msgid "Models"
+msgstr "Modellen"
 
 #. module: bus
-#: selection:bus.presence,status:0
-msgid "Online"
-msgstr "Online"
+#. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid "Refresh"
+msgstr "Vernieuwen"
 
 #. module: bus
-#: model:ir.model,name:bus.model_res_partner
-msgid "Partner"
-msgstr "Relatie"
+#. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid ""
+"Save your work and refresh to get the latest updates and avoid potential "
+"issues."
+msgstr ""
+"Sla je werk op en vernieuw het om de laatste updates te krijgen en mogelijke "
+"problemen te voorkomen."
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_street_name
-msgid "Street Name"
-msgstr "Straatnaam"
+#. odoo-javascript
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+msgid "The page appears to be out of date."
+msgstr "De pagina lijkt verouderd."
 
 #. module: bus
-#: model:ir.model,name:bus.model_bus_presence
-msgid "User Presence"
-msgstr "Gebruiker aanwezig"
+#. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid "The page is out of date"
+msgstr "De pagina is verouderd"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
-#: model:ir.model.fields,field_description:bus.field_bus_presence_user_id
-msgid "Users"
-msgstr "Gebruikers"
+msgid "User"
+msgstr "Gebruiker"
 
 #. module: bus
-#: model:ir.model,name:bus.model_bus_bus
-msgid "bus.bus"
-msgstr "bus.bus"
+#: model:ir.model,name:bus.model_res_users_settings
+msgid "User Settings"
+msgstr "Gebruikersinstellingen"
+
+#. module: bus
+#. odoo-python
+#: code:addons/bus/controllers/home.py:0
+msgid ""
+"Your password is the default (admin)! If this system is exposed to untrusted "
+"users it is important to change it immediately for security reasons. I will "
+"keep nagging you about it!"
+msgstr ""
+"Je wachtwoord is het standaard (admin)! Als dit systeem wordt blootgesteld "
+"aan niet-vertrouwde gebruikers, is het belangrijk om het om "
+"veiligheidsredenen onmiddellijk te wijzigen. Ik zal er over blijven zeuren!"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_websocket
+msgid "websocket message handling"
+msgstr "websocket berichtafhandeling"
+
+#~ msgid "Away"
+#~ msgstr "Afwezig"
+
+#~ msgid "IM Status"
+#~ msgstr "IM Status"
+
+#~ msgid "Last Poll"
+#~ msgstr "Laatste pol"
+
+#~ msgid "Last Presence"
+#~ msgstr "Laatst aanwezig"
+
+#~ msgid "Offline"
+#~ msgstr "Offline"
+
+#~ msgid "Online"
+#~ msgstr "Online"
+
+#~ msgid "User Presence"
+#~ msgstr "Gebruiker aanwezig"
+
+#~ msgid "Users"
+#~ msgstr "Gebruikers"

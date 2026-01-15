@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_view_kanban_catalog_purchase_only" model="ir.ui.view">
+        <field name="name">product.view.kanban.catalog.purchase_stock</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="purchase.product_view_kanban_catalog_purchase_only"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="id" position="after">
+                <field name="type"/>
+                <field name="qty_available"/>
+                <field name="virtual_available"/>
+                <field name="monthly_demand"/>
+                <field name="suggested_qty"/>
+            </field>
+            <t name="qty_free" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </t>
+            <t name="qty_available" position="after">
+                <t name="qty_forecasted" t-if="record.qty_available.raw_value != record.virtual_available.raw_value">
+                    <span> / </span>
+                    <span class="fw-bold" t-att-class="record.virtual_available.raw_value &lt; 0 ? 'text-danger' : ''" t-out="record.virtual_available.raw_value"  name="o_kanban_forecasted_qty"/>
+                    <span class="text-muted small ms-1">Forecasted</span>
+                </t>
+            </t>
+            <div name="o_kanban_qty_available_and_on_hand" position="after">
+                <div t-if="record.type.raw_value === 'consu' and record.monthly_demand.raw_value != 0" name="kanban_monthly_demand">
+                    <span class="text-muted small me-1">Monthly Demand:</span>
+                    <span class="fw-bold ms-1" t-esc="Math.round(record.monthly_demand.raw_value *100)/100" name="kanban_monthly_demand_qty"/>
+                    <field name="uom_id" class="text-muted small ms-1" groups="uom.group_uom"/>
+                    <span class="text-muted small ms-1" groups="!uom.group_uom">Units</span>
+                </div>
+                <div name="kanban_purchase_suggest" t-if="record.suggested_qty.raw_value != 0">
+                    <span class="text-info fw-bold fs-5 me-1">Suggest</span>
+                    <span class="text-info fw-bold fs-5 me-1" t-out="record.suggested_qty.raw_value or 0" name="kanban_purchase_suggest_qty" />
+                    <field name="uom_id" class="text-info fw-bold fs-5 me-1" groups="uom.group_uom"/>
+                    <span class="text-info fw-bold fs-5 me-1" groups="!uom.group_uom">Units</span>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="product_view_search_catalog" model="ir.ui.view">
+        <field name="name">purchase.view.search.catalog.inherit.purchase_stock</field>
+        <field name="model">product.product</field>
+        <field name="mode">extension</field>
+        <field name="inherit_id" ref="purchase.product_view_search_catalog"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='products_in_purchase_order']" position="after">
+                <filter string="Suggested" name="suggested" domain="[('suggested_qty', '!=', 0)]"/>
+                <separator/>
+                <filter string="To Order" name="products_with_negative_forecast" domain="[('virtual_available', '&lt;', 0)]"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

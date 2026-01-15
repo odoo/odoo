@@ -1,0 +1,162 @@
+// Wkhtmltopdf doesn't support CSS custom properties (--name-stuff),
+// it also doesn't support CSS's rgba function. We re-define here the
+// .bg-[theme-colors] (and text) in order to define them as a css rgb function.
+@each $color-name, $color-value in $utilities-bg {
+    .bg-#{$color-name} {
+        background-color: RGB($color-value) if($enable-important-utilities, !important, null);
+    }
+}
+
+// Do a similar operation than before for grays.
+@each $color-name, $color-value in $grays {
+    .bg-#{$color-name} {
+        background-color: $color-value if($enable-important-utilities, !important, null);
+    }
+}
+
+// Add the extra theme colors to match backend text-x colors
+// Note: text-muted is using $o-gray-600 (bs_overidden_report) to avoid rgba.
+$report-text-colors: map-merge-multiple($theme-colors, $o-theme-text-colors, $grays,
+    (
+        "body": $body-color,
+        "muted": $text-muted,
+    )
+);
+
+// Generate 'text-x' utility classes.
+@each $color-name, $color-value in $report-text-colors {
+    .text-#{$color-name} {
+        color: $color-value if($enable-important-utilities, !important, null);
+    }
+}
+
+// Cleanup temporary map
+$report-text-colors: null;
+
+// To avoid broken snippets in report rendering
+.jumbotron, .panel, .carousel, section {
+    page-break-inside: avoid;
+}
+
+// Wkhtmltopdf doesn't support very well the media-print CSS (depends on the version)
+.d-print-none {
+    display: none;
+}
+
+// Wkhtmltopdf doesn't handle flexbox properly, both the content
+// of columns and columns themselves does not wrap over new lines
+// when needed: the font of the pdf will reduce to make the content
+// fit the page format.
+// A (weak) solution is to force the content on one line and
+// impose the width, so to have evenly size columns.
+// This should work fine in most cases, but will yield ugly results
+// when 6+ columns are rendered
+.col {
+    -webkit-box-flex: 1;
+    flex: 1 0 0%;
+}
+
+.report-wrapping-flexbox {
+    // overriding the `display` prop of `.row`
+    display: block !important;
+}
+
+.report-wrapping-flexbox > .col {
+    float: left;
+}
+
+// Report footer need to support bootstrap columns (2, 3 and 4 columns)
+// Even if the width is smaller than the media querry limit from bootstrap.
+// This need come from the footer being editable via the Odoo editor.
+.footer {
+    .row, .col-lg-3, .col-lg-4, .col-lg-6 {
+        -webkit-box-flex: 1 !important;
+    }
+
+    .col-lg-3, .col-lg-4, .col-lg-6 {
+        flex: 0 0 auto;
+    }
+
+    .col-lg-3 {
+        width: 25%;
+    }
+
+    .col-lg-4 {
+        width: 33.33333333%;
+    }
+
+    .col-lg-6 {
+        width: 50%;
+    }
+}
+
+// Boostrap 5 introduces variable paddings for container which wkhtmltopdf 12.6
+// doesn't process (custom properties and calc()), so we restore Boostrap 4's
+// paddings for PDFs
+.container {
+    padding-right: $container-padding-x;
+    padding-left: $container-padding-x;
+}
+
+.table > :not(caption) > * > * {
+    color: $table-color;
+    background-color: $table-bg;
+}
+
+// Removes borders within a table-borderless as its new definition in
+// Boostrap 5 still has its borders visible in PDFs
+.table-borderless {
+    tbody, thead, tfoot, tr, td, th {
+        border: 0 none;
+    }
+    > :not(:first-child) {
+        border-top-style: none;
+    }
+}
+
+// Fix flex utilites for compatibility with wkhtmltopdf 12.6
+.flex-column {
+    -webkit-box-orient: vertical;
+}
+
+.justify-content {
+    &-center {
+        -webkit-box-pack: center;
+    }
+    &-between {
+        -webkit-box-pack: justify;
+    }
+}
+
+.align-items {
+    &-start {
+        -webkit-box-align: start;
+    }
+    &-center {
+        -webkit-box-align: center;
+    }
+    &-between {
+        -webkit-box-align: justify;
+    }
+    &-end {
+        -webkit-box-align: end;
+    }
+}
+
+.flex-grow {
+    &-0{
+        -webkit-box-flex: 0;
+    }
+    &-1{
+        -webkit-box-flex: 1;
+    }
+}
+
+.flex-shrink {
+    &-0 {
+        -webkit-box-flex-group: 0;
+    }
+    &-1 {
+        -webkit-box-flex-group: 1;
+    }
+}

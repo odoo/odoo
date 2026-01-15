@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <record id="matrix_product_template_shirt" model="product.template">
+        <field name="name">My Company Tshirt (GRID)</field>
+        <field name="categ_id" ref="product.product_category_goods"/>
+        <field name="standard_price">7.0</field>
+        <field name="list_price">15.0</field>
+        <field name="type">consu</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="description_sale">Show your company love around you =).</field>
+        <field name="image_1920" type="base64" file="product_matrix/static/img/matrix_mycompany_tshirt.jpeg"/>
+    </record>
+
+    <record id="product_template_attribute_line_size" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="matrix_product_template_shirt"/>
+        <field name="attribute_id" ref="product.pa_size"/>
+        <field
+            name="value_ids"
+            eval="[Command.set([
+                ref('product.pav_size_xs'),
+                ref('product.pav_size_s'),
+                ref('product.pav_size_m'),
+                ref('product.pav_size_l'),
+                ref('product.pav_size_xl'),
+                ref('product.pav_size_2xl'),
+                ref('product.pav_size_3xl'),
+                ref('product.pav_size_4xl'),
+                ref('product.pav_size_5xl'),
+            ])]"
+        />
+    </record>
+    <record id="product_template_attribute_line_color" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="matrix_product_template_shirt"/>
+        <field name="attribute_id" ref="product.pa_color"/>
+        <field
+            name="value_ids"
+            eval="[Command.set([
+                ref('product.pav_color_blue'),
+                ref('product.pav_color_pink'),
+                ref('product.pav_color_yellow'),
+                ref('product.pav_color_gold'),
+            ])]"
+        />
+    </record>
+</odoo>

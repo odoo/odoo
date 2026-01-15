@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="product_product_consumable" model="product.product">
+            <field name="name">Discount</field>
+            <field name="available_in_pos">False</field>
+            <field name="standard_price">0.00</field>
+            <field name="list_price">0.00</field>
+            <field name="weight">0.00</field>
+            <field name="type">consu</field>
+            <field name="categ_id" eval="ref('product.product_category_services', raise_if_not_found=False)"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="default_code">DISC</field>
+            <field name="purchase_ok">False</field>
+        </record>
+
+    </data>
+</odoo>

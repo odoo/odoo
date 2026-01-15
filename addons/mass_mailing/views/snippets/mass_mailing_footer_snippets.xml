@@ -1,0 +1,91 @@
+<odoo>
+<template id="s_mail_block_footer_social">
+    <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-900 pt16" data-name="Footer Center" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md o_mail_footer_social col" style="text-align: center;">
+                    <t t-call="mass_mailing.social_links">
+                        <t t-set="optionalTextStyle" t-value="'color: white;'"/>
+                    </t>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md pb4 col">
+                    <p class="mb-0" style="text-align: center">
+                        <font style="color:white;">© <t t-out="datetime.datetime.now().year"/> <t t-out="company_id.name"/>, All Rights Reserved</font>
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md pb4 o_mail_footer_links col" style="text-align: center;">
+                    <p class="mb-0">
+                        <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mail_block_footer_social_left" name="Footer Left">
+    <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general pt16" data-name="Footer Left" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 o_mail_footer_description col-12">
+                    <p t-if="res_company">
+                        <strong><t t-esc="res_company.partner_id.name"/></strong>
+                    </p>
+                    <div class="o_mail_footer_links">
+                        <p class="mb-0">
+                            <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-12" align="right">
+                    <div class="o_mail_footer_social pb16"><t t-call="mass_mailing.social_links"/></div>
+                    <p class="o_mail_footer_copy">© <t t-esc="datetime.datetime.now().year"/> All Rights Reserved</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mail_block_footer_one_liner" name="One Liner">
+    <section class="s_footer_one_liner o_mail_block_footer o_mail_snippet_general pt-16" data-name="One Liner">
+        <t t-call="mass_mailing.s_hr"/>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2 o_mail_footer_links"><p class="mb-0"><a href="/unsubscribe_from_list">Unsubscribe</a></p></div>
+                <div class="col-md-2 o_mail_footer_links"><p class="mb-0"><a href="https://www.example.com">Contact</a></p></div>
+                <div class="col-md-8 d-inline-block">
+                    <p class="mb-0"><font style="color: rgb(99,102,105);"><t t-out="res_company.partner_id._display_address()"/></font></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="social_links">
+
+    <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
+
+    <p class="mb-0">
+        <a t-att-href="social_links.get('social_facebook')" t-attf-style="{{optionalTextStyle}}" aria-label="Facebook" title="Facebook">
+            <span class="fa fa-facebook"></span>
+        </a>&amp;nbsp;&amp;nbsp;
+        <a t-att-href="social_links.get('social_linkedin')" t-attf-style="margin-left:10px; {{optionalTextStyle or ''}}" aria-label="LinkedIn" title="LinkedIn">
+            <span class="fa fa-linkedin"></span>
+        </a>&amp;nbsp;&amp;nbsp;
+        <a t-att-href="social_links.get('social_twitter')" t-attf-style="margin-left:10px; {{optionalTextStyle or ''}}" aria-label="X" title="X">
+            <span class="fa fa-twitter"></span>
+        </a>&amp;nbsp;&amp;nbsp;
+        <a t-att-href="social_links.get('social_instagram')" t-attf-style="margin-left:10px; {{optionalTextStyle or ''}}" aria-label="Instagram" title="Instagram">
+            <span class="fa fa-instagram"></span>
+        </a>&amp;nbsp;&amp;nbsp;
+        <a t-att-href="social_links.get('social_tiktok')" t-attf-style="margin-left:10px; {{optionalTextStyle or ''}}" aria-label="TikTok" title="TikTok">
+            <span class="fa fa-tiktok"></span>
+        </a>
+    </p>
+
+</template>
+</odoo>

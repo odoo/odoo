@@ -1,0 +1,67 @@
+.o_event_barcode_bg {
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+
+    @include media-breakpoint-up(md) {
+        @include o-position-absolute(0, 0, 0, 0);
+    }
+}
+.o_event_barcode_main {
+    font-family: 'Lato', sans-serif;
+    width: 100%;
+    text-align: center;
+    padding: 2em;
+    img .o_event_barcode_image {
+        width: 115px;
+        height: 60px;
+    }
+    .o_event_barcode_company_image {
+        overflow: hidden;
+        margin: 1rem 0 2rem;
+        max-width: 200px;
+        max-height: 100px;
+    }
+    .o_barcode_mobile_container {
+        margin-top: 40px;
+        margin-bottom: -40px;
+        img {
+            height: 185px;
+            width: 275px;
+        }
+        // In order to have the o_mobile_barcode button on both the image and the label,
+        // We use negative margin at the bottom and 0 opacity (since not needed in the view)
+        .o_mobile_barcode {
+            opacity: 0;
+            height: 225px;
+            width: 275px;
+            bottom: -40px;
+        }
+        .o_barcode_laser {
+            height: 3px;
+            width: 125%;
+            left: -12.5%;
+        }
+    }
+    @include media-breakpoint-down(md) {
+        padding: 0 1em 1em .75em;
+    }
+    @include media-breakpoint-up(md) {
+        flex: 0 0 auto;
+        width: 550px;
+        border-radius: 10px;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
+        font-size: 1.2em;
+        padding: 0 1em 1em .75em;
+    }
+}
+.o_notification_manager {
+    .o_event_success {
+        color: white;
+        background-color: #5BC236;
+    }
+}

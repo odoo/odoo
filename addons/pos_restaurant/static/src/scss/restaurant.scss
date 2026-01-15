@@ -1,0 +1,68 @@
+// TODO this class is used also in other modules.
+// Is there a way to not duplicate it? ( ex: `pos_self_order` )
+.break-line {
+    box-sizing: border-box;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+
+.tip-screen .pos-receipt-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0;
+}
+
+@media print {
+    .tip-screen .pos-receipt-container {
+        display: block;
+    }
+    .tip-screen .pos-receipt-container * {
+        visibility: visible;
+    }
+}
+
+
+.pos-receipt .tip-form > div {
+    margin-top: 1rem;
+}
+
+.tip-cell {
+    height: 100%;
+    width: 100%;
+    text-align: left;
+    white-space: nowrap;
+
+    input {
+        width: 100%;
+        text-align: left;
+        font-size: medium;
+        color: #555555;
+        padding-bottom: 5px;
+        border: none;
+        outline: none;
+    }
+
+    input:focus {
+        border: none;
+        outline: none;
+        border-bottom: solid 1px #555555;
+    }
+}
+
+.multiprint-flex {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.multiprint-flex .product-quantity {
+    margin-right: 50px;
+}
+
+.submit-order, .set-table, .new-tab, .assign-button, .plan-button {
+    min-height: 70px;
+}

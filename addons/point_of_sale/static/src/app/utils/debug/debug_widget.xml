@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.DebugWidget">
+        <div t-if="!state.isOpen and !this.isDisabled"
+            class="o-debug-widget-btn open position-absolute align-items-center justify-content-center d-flex cursor-pointer shadow-sm bg-danger text-white"
+            t-on-click="toggleWidget"
+            data-tooltip="Open debug widget"
+            data-tooltip-delay="0">
+            <i class="fa fa-bug" aria-hidden="true" />
+        </div>
+        <div class="debug-widget position-absolute bottom-0 end-0 bg-100 shadow-lg p-2 d-flex flex-column gap-1 m-2"
+            t-attf-class="{{ state.isOpen ? '' : 'd-none' }}">
+            <div class="d-flex gap-1 mb-2">
+                <span class="badge o_colorlist_item_color_3 rounded">Device ID: <t t-esc="state.device_identifier" /></span>
+                <span class="badge o_colorlist_item_color_3 rounded">Next number: <t t-esc="state.next_number" /></span>
+                <span class="badge o_colorlist_item_color_3 rounded">Number stack: <t t-esc="state.unsynced_number_stack" /></span>
+            </div>
+            <div class="gap-1 d-flex align-items-center flex-wrap">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text">Barcode</span>
+                    <input type="text"
+                        class="form-control ean"
+                        t-model="state.barcodeInput"
+                        t-att-disabled="!barcodeReader"
+                        t-attf-placeholder="{{ !barcodeReader ? 'No nomenclature' : '' }}"/>
+                    <div class="d-flex align-items-center gap-1 ms-1">
+                        <button class="btn btn-secondary btn-sm text-nowrap" t-on-click="barcodeScan">
+                            <i class="fa fa-barcode" aria-hidden="true"/> Scan
+                        </button>
+                        <button class="btn btn-secondary btn-sm text-nowrap" t-on-click="barcodeScanEAN">
+                            <i class="fa fa-barcode" aria-hidden="true"/> EAN-13
+                        </button>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-1 w-100 flex-wrap">
+                    <div data-tooltip="Close debug widget" data-tooltip-delay="0">
+                        <button class="btn btn-secondary btn-sm text-nowrap" t-on-click="toggleWidget">
+                            <i class="fa fa-times" aria-hidden="true" /> Close
+                        </button>
+                    </div>
+                    <div data-tooltip="Disable debug mode" data-tooltip-delay="0">
+                        <button class="btn btn-secondary btn-sm text-nowrap" t-on-click="disableDebugMode">
+                            <i class="fa fa-sign-out" aria-hidden="true" /> Disable
+                        </button>
+                    </div>
+                    <div data-tooltip="Refresh customer display" data-tooltip-delay="0">
+                        <button class="btn btn-secondary btn-sm text-nowrap" t-on-click="refreshDisplay">
+                            <i class="fa fa-refresh" aria-hidden="true" /> Refresh
+                        </button>
+                    </div>
+                    <div data-tooltip="Export PoS data" data-tooltip-delay="0">
+                        <button class="btn btn-secondary btn-sm text-nowrap" t-on-click="() => this.exportData()">
+                            <i class="fa fa-download" aria-hidden="true" /> Export data
+                        </button>
+                    </div>
+                    <div data-tooltip="Import orders" data-tooltip-delay="0">
+                        <button t-ref="import-order-input" class="btn btn-danger btn-sm text-nowrap">
+                            <i class="fa fa-upload" aria-hidden="true" /> Import data
+                        </button>
+                        <input t-on-change="importData" type="file" class="d-none" id="import-order-input" />
+                    </div>
+                    <div data-tooltip="Delete paid orders" data-tooltip-delay="0">
+                        <button class="btn btn-danger btn-sm text-nowrap" t-on-click="() => this.deleteOrders({ paid: true })">
+                            <i class="fa fa-trash" aria-hidden="true" /> Paid
+                        </button>
+                    </div>
+                    <div data-tooltip="Delete unpaid orders" data-tooltip-delay="0">
+                        <button class="btn btn-danger btn-sm text-nowrap" t-on-click="() => this.deleteOrders({ paid: false })">
+                            <i class="fa fa-trash" aria-hidden="true" /> Unpaid
+                        </button>
+                    </div>
+                    <div data-tooltip="Delete all indexed DB" data-tooltip-delay="0">
+                        <button class="btn btn-danger btn-sm text-nowrap" t-on-click="deleteAllIndexedDB">
+                            <i class="fa fa-trash" aria-hidden="true" /> Delete all indexed DB
+                        </button>
+                    </div>
+                    <div data-tooltip="Download logs" data-tooltip-delay="0">
+                        <button class="btn btn-secondary btn-sm text-nowrap" t-on-click="downloadLogs">
+                            <i class="fa fa-download" aria-hidden="true" /> Download Logs
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

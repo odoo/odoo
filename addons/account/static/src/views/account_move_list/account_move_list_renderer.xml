@@ -1,0 +1,18 @@
+<templates>
+
+    <t t-name="account.AccountMoveListRenderer" t-inherit="account.FileUploadListRenderer" t-inherit-mode="primary">
+        <ActionHelper position="replace">
+            <t t-if="showNoContentHelper">
+                <t t-if="this.env.searchModel._context?.default_move_type == 'in_invoice'">
+                    <div class="o_view_nocontent">
+                        <div class="o_nocontent_help">
+                            <BillGuide/>
+                        </div>
+                    </div>
+                </t>
+				<t t-else="">$0</t>
+            </t>
+        </ActionHelper>
+    </t>
+
+</templates>

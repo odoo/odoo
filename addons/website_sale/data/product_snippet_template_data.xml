@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- Template for Dynamic Snippet -->
+
+        <template
+            id="dynamic_filter_template_product_product_products_item"
+            name="Generic Product Template (customizable)"
+        >
+            <t
+                t-foreach="records"
+                t-as="data"
+                data-number-of-elements="4"
+                data-number-of-elements-sm="2"
+            >
+
+                <t t-set="record" t-value="data['_record']"/>
+                <t t-set="product" t-value="record"/>
+                <t t-set="product_template_id" t-value="record.id if not record.is_product_variant else record.product_tmpl_id.id"/>
+                <t t-set="product_id" t-value="record.id if record.is_product_variant else record.product_variant_id.id"/>
+
+                <div
+                    class="oe_product_cart o_carousel_product_card d-flex"
+                    role="article"
+                    t-att-aria-label="product.display_name"
+                    t-att-data-add2cart-rerender="data.get('_add2cart_rerender')"
+                >
+                    <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
+
+                    <!-- Image -->
+                    <div t-attf-class="oe_product_image position-relative flex-grow-0 overflow-hidden">
+                        <a
+                            t-att-href="product.website_url"
+                            t-attf-class="oe_product_image_link position-relative"
+                            contenteditable="false"
+                            t-att-title="product.display_name"
+                            >
+                            <span
+                                role="img"
+                                t-attf-alt="{{product.display_name}} image"
+                                class="oe_product_image_img_wrapper d-flex h-100 justify-content-center align-items-center"
+                            >
+                                <span
+                                    class="oe_product_image_img h-100 w-100"
+                                    t-attf-style="background-image: url({{data['image_512']}});"
+                                />
+                            </span>
+                        </a>
+                        <div t-if="is_sample" class="o_ribbon_right small text-bg-primary">Sample</div>
+                    </div>
+                    <button t-if="data.get('_latest_viewed')"
+                        class="btn o_carousel_product_remove js_remove rounded-pill lh-1"
+                        t-att-data-product-id="product_id"
+                        t-att-data-product-selected="record.is_product_variant"
+                        t-att-data-product-template-id="product_template_id"
+                        title="Remove from recently viewed"
+                    >
+                        <i class="oi oi-close" role="presentation"/>
+                    </button>
+                    <div class="o_wsale_product_information flex-grow-1 flex-shrink-1">
+                        <div class="o_wsale_product_info_attributes_wrapper">
+                            <div class="o_wsale_product_information_text">
+                                <!-- Product Name -->
+                                <h2 class="o_wsale_products_item_title h6 text-break">
+                                    <a
+                                        class="text-decoration-none"
+                                        t-att-href="product.website_url"
+                                        t-att-content="data.get('display_name')"
+                                        t-att-title="data.get('display_name')"
+                                        t-out="data.get('display_name')"
+                                    />
+                                </h2>
+                                <!-- Description -->
+                                <div class="oe_subdescription_wrapper">
+                                    <div
+                                        class="oe_subdescription text-muted small"
+                                        contenteditable="false"
+                                    >
+                                        <div t-field="product.description_sale"/>
+                                    </div>
+                                </div>
+                                <!-- Rating -->
+                                <div
+                                    t-if="is_view_active('website_sale.product_comment')"
+                                    class="o_wsale_product_rating_wrapper"
+                                >
+                                    <t t-call="portal_rating.rating_widget_stars_static">
+                                        <t t-set="rating_avg" t-value="record.rating_avg"/>
+                                        <t t-set="rating_count" t-value="record.rating_count"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="o_wsale_product_sub justify-content-between gap-2">
+                            <!-- Price(s) -->
+                            <div class="product_price" aria-label="Price information">
+                                <t t-call="website_sale.price_dynamic_filter_template_product_product"></t>
+                            </div>
+                            <!-- Actions -->
+                            <div class="o_wsale_product_btn">
+                                <div class="o_wsale_product_action_row">
+                                    <t t-if="product._website_show_quick_add()">
+                                        <button
+                                            type="button"
+                                            class="o_wsale_product_btn_primary btn js_add_cart"
+                                            title="Add to Cart"
+                                            t-att-data-product-id="product.id if product.is_product_variant else product.product_variant_id.id"
+                                            t-att-data-product-selected="product.is_product_variant"
+                                            t-att-data-product-template-id="product.id if not product.is_product_variant else product.product_tmpl_id.id"
+                                            t-att-data-product-type="product.type"
+                                            t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                                        >
+                                            <!-- Avoid whitespaces undesired gaps -->
+                                            <i class="fa fa-shopping-cart fa-fw" role="presentation"/><span class="o_label small ms-1">Add to Cart</span>
+                                        </button>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="price_dynamic_filter_template_product_product" name="Dynamic Product Filter Price">
+            <t t-if="not data.get('prevent_zero_price_sale') and not data.get('is_sample')">
+                <span t-out="data['price']"
+                      class="mb-0 fw-bold"
+                      name="product_price"
+                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                <del
+                    t-if="data.get('has_discounted_price')"
+                    aria-label="Original price"
+                    t-attf-class="text-muted me-1 mb-0"
+                    style="white-space: nowrap;"
+                >
+                    <small
+                        t-out="data['list_price']"
+                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                    />
+                </del>
+            </t>
+        </template>
+
+        <!-- Assets -->
+        <asset id="website_sale.s_dynamic_snippet_products_000_scss" name="Dynamic snippet products 000 SCSS">
+            <bundle>web.assets_frontend</bundle>
+            <path>website_sale/static/src/snippets/s_dynamic_snippet_products/000.scss</path>
+        </asset>
+
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//div[@id='informations']" position="before">
+            <t t-set="forced_vat" t-value="o.company_id.vat"/>
+        </xpath>
+
+        <t name="invoice_title" position="replace">
+            <t name="invoice_title">Fiscal Tax Invoice</t>
+        </t>
+        <t name="draft_invoice_title" position="replace">
+            <t name="draft_invoice_title">Draft Tax Invoice</t>
+        </t>
+        <t name="cancelled_invoice_title" position="replace">
+            <t name="cancelled_invoice_title">Cancelled Tax Invoice</t>
+        </t>
+        <t name="proforma_invoice_title" position="replace">
+            <t name="proforma_invoice_title">Proforma Fiscal Tax Invoice</t>
+        </t>
+        <t name="draft_proforma_invoice_title" position="replace">
+            <t name="draft_proforma_invoice_title">Draft Proforma Tax Invoice</t>
+        </t>
+        <t name="cancelled_proforma_invoice_title" position="replace">
+            <t name="cancelled_proforma_invoice_title">Cancelled Proforma Tax Invoice</t>
+        </t>
+    </template>
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_zm_account.report_invoice_document'"
+               t-call="l10n_zm_account.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

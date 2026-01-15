@@ -10,12 +10,10 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="mail.res_partner_view_form_inherit_mail"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='container_row_2']" position="after">
-                <group name="container_row_stock" groups="base.group_no_one">
-                    <group string="Warehouse" name="warehouse">
-                        <field name="property_stock_customer" domain="[('usage','=','customer')]"/>
-                        <field name="property_stock_supplier" domain="[('usage','=','supplier')]"/>
-                    </group>
+            <xpath expr="//page[@name='sales_purchases']/group" position="inside">
+                <group string="Inventory" name="inventory" groups="base.group_no_one" priority="6">
+                    <field name="property_stock_customer" />
+                    <field name="property_stock_supplier" />
                 </group>
             </xpath>
         </field>
@@ -26,14 +24,24 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <page name="internal_notes" position="inside">
-                <group colspan="2" col="2" groups="stock.group_warning_stock">
-                    <separator string="Warning on the Picking" colspan="4"/>
-                    <field name="picking_warn" nolabel="1" />
-                    <field name="picking_warn_msg" colspan="3" nolabel="1" 
-                            attrs="{'required':[('picking_warn','!=','no-message')],'readonly':[('picking_warn','=','no-message')]}"/>
+            <group name="warnings" position="inside">
+                <group groups="stock.group_warning_stock" col="2">
+                    <separator string="Instructions on the Stock Operations" colspan="2"/>
+                    <field name="picking_warn_msg"
+                           placeholder="e.g. The delivery area is at the back of the building."
+                           nolabel="1" colspan="2"/>
                 </group>
-            </page>
+            </group>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button type="object"
+                    name="action_view_stock_serial"
+                    class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Lots/Serial Numbers</span>
+                    </div>
+                </button>
+            </xpath>
         </field>
     </record>
 

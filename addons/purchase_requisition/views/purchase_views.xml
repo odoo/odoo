@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="purchase_order_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="replace">
+                <field name="requisition_type" invisible="1"/>
+                <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" readonly="requisition_type == 'blanket_order' or state in ['purchase', 'cancel']" placeholder="Name, TIN, Email, or Reference" force_save="1"/>
+            </field>
+            <field name="partner_ref" position="after">
+                <field name="requisition_id" domain="[('state', '=', 'confirmed'), ('vendor_id', 'in', (partner_id, False)), ('company_id', '=', company_id)]"
+                options="{'no_create': True}"/>
+            </field>
+            <xpath expr="//page[@name='purchase_delivery_invoice']" position="after">
+                <page string="Alternatives" name="alternative_pos" groups="purchase_requisition.group_purchase_alternatives">
+                    <group>
+                        <div class="d-flex gap-5">
+                            <button name="action_create_alternative" type="object" class="btn-link d-block" help="Create a call for tender by adding alternative requests for quotation to different vendors.
+                                Make your choice by selecting the best combination of lead time, OTD and/or total amount.
+                                By comparing product lines you can also decide to order some products from one vendor and others from another vendor." string="Create Alternative" icon="fa-copy"/>
+                            <button name="action_compare_alternative_lines" type="object" class="btn-link d-block" string="Compare Product Lines" icon="fa-bar-chart" invisible="not alternative_po_ids"/>
+                        </div>
+                    </group>
+                    <field name="alternative_po_ids" readonly="not id" widget="many2many_alt_pos" context="{'quotation_only': True}">
+                        <list string="Alternative Purchase Order" decoration-muted="state in ['cancel', 'purchase']" default_order="amount_total_cc, date_planned, id">
+                            <control>
+                                <create string="Link to Existing RfQ"/>
+                            </control>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="partner_id" readonly="state in ['cancel', 'purchase']"/>
+                            <field name="name" string="Reference"/>
+                            <field name="date_planned"/>
+                            <field name="amount_total" widget="monetary"/>
+                            <field name="company_currency_id" column_invisible="1"/>
+                            <field name="amount_total_cc" widget="monetary" optional="hide"/>
+                            <field name="state"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_search_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.list.select.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="requisition_id"/>
+            </field>
+            <filter name="representative" position="after">
+                <filter string="Agreement" name="requisition" domain="[]" context="{'group_by': 'requisition_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="purchase_order_line_compare_tree" model="ir.ui.view">
+        <field name="name">purchase.order.line.compare.list</field>
+        <field name="model">purchase.order.line</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <list string="Purchase Order Lines"
+            decoration-muted="state in ['cancel', 'purchase']"
+                create="0" delete="0" edit="0" expand="1"
+                js_class="purchase_order_line_compare">
+                <header>
+                    <button name="action_clear_quantities" string="Clear Selected" type="object" class="o_clear_qty_buttons"/>
+                </header>
+                <field name="product_id" readonly="1"/>
+                <field name="partner_id" string="Vendor"/>
+                <field name="order_id" string="Reference" readonly="1"/>
+                <field name="state"/>
+                <field name="name" readonly="1"/>
+                <field name="date_planned" readonly="1"/>
+                <field name="product_qty"/>
+                <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
+                <field name="price_unit" widget="monetary"/>
+                <field name="price_subtotal" string="Total"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="price_total_cc" string="Company Total" widget="monetary"/>
+                <field name="company_currency_id" column_invisible="True"/>
+                <button name="action_choose" string="Choose" type="object" class="o_clear_qty_buttons" icon="fa-bullseye"
+                    invisible="product_qty &lt;= 0.0"/>
+                <button name="action_clear_quantities" string="Clear" type="object" class="o_clear_qty_buttons" icon="fa-times"
+                    invisible="product_qty &lt;= 0.0 or state in ['cancel', 'purchase']"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

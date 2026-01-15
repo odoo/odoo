@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.CartPage">
+        <div class="o_self_cart_page d-flex flex-column vh-100 overflow-hidden o_self_background o_self_fade" t-attf-style="background-image:#{selfOrder.kioskBackgroundImageUrl};background-size: cover; background-position: center;">
+            <div class="d-flex flex-column flex-grow-1 overflow-y-auto pb-0 pb-sm-3 pt-3 py-lg-4" t-ref="scrollContainer">
+                <div class="d-flex justify-content-end px-3">
+                    <button t-if="showCancelButton" t-on-click="() => this.cancelOrder()" class="btn btm-xs btn-secondary" type="button">
+                        <span>Cancel</span>
+                    </button>
+                </div>
+                <div class="container o_self_container mt-auto cart_container">
+                    <h1 class="ms-3 ms-sm-0 mb-3 ">Your Order</h1>
+                    <div class="order_box d-flex flex-column bg-white px-3 px-kiosk-p-4 rounded-4 border border-light shadow-sm">
+                        <t t-foreach="lines" t-as="line" t-key="line.uuid">
+                            <t t-set="display_change_quantity" t-value="Object.keys(selfOrder.currentOrder.changes).length &gt; 0"/>
+                            <div t-attf-class="product-cart-item d-flex align-items-center py-3 py-kiosk-p-4 {{!line_last ? 'border-bottom border-medium' : ''}}">
+                                <t t-set="product" t-value="line.product_id"/>
+                                <div class="product_img w-25 me-3 me-kiosk-p-4 ratio ratio-1x1 align-self-start">
+                                    <img class="object-fit-cover rounded-4" t-attf-src="/web/image/product.product/{{product.id}}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                </div>
+                                <div class="w-100" >
+                                    <div class="text-break fs-4 fw-bold "><span t-if="!display_change_quantity" class="fw-normal"><t t-esc="line.qty"/>x </span><t t-esc="product.name"/></div>
+                                    <t t-set="attribute_ids" t-value="getAttributes(line)"/>
+                                    <div t-if="attribute_ids.length > 0 || line.combo_line_ids.length > 0" class="border-start mt-2">
+                                        <t t-if="attribute_ids.length > 0" >
+                                            <div t-foreach="attribute_ids" t-as="attrVal" t-key="attrVal.id" class="ps-3 mt-1 text-muted">
+                                                <t t-esc="attrVal.attribute_id.name" />:
+                                                <t t-esc="attrVal.name" />
+                                                <t t-set="custom_value" t-value="getCustomValue(line, attrVal)"/>
+                                                <t t-if="custom_value">: <t t-esc="custom_value" /></t>
+                                            </div>
+                                        </t>
+                                        <div t-foreach="line.combo_line_ids" t-as="cline" t-key="cline.uuid" class="ps-3 mb-2">
+                                            <t t-set="c_qty" t-value="cline.qty / line.qty"/>
+                                            <span t-if="(c_qty &gt; 1)"><t t-esc="c_qty"/>x </span>
+                                            <t t-esc="cline.product_id.name"/>
+                                            <div t-foreach="cline.attribute_value_ids" t-as="attrVal" t-key="attrVal.id" class="ps-3 mt-1 text-muted">
+                                                <t t-esc="attrVal.attribute_id.name" />:
+                                                <t t-esc="attrVal.name" />
+                                                <t t-set="custom_value" t-value="getCustomValue(cline, attrVal)"/>
+                                                <t t-if="custom_value">: <t t-esc="custom_value" /></t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex w-100 justify-content-between align-items-center mt-3 mt-md-4">
+                                        <!-- Quantity -->
+                                        <div t-if="display_change_quantity" class="btn-group" >
+                                            <button
+                                                    t-if="canDeleteLine(line) &amp;&amp; getLineChangeQty(line) > 1"
+                                                    type="button"
+                                                    t-on-click= "() => this.changeQuantity(line, false)"
+                                                    class="btn btn-secondary py-1 px-2"><i class="oi oi-minus fa-fw"/></button>
+                                            <button
+                                                    t-else=""
+                                                    type="button"
+                                                    t-on-click= "(e) => this.removeLine(line,e)"
+                                                    class="btn btn-secondary py-1 px-2"><i class="fa fa-trash-o fa-fw"/></button>
+                                            <div class="o-so-tabular-nums fs-4 d-flex align-items-center m-0 px-4 py-2 text-bg-secondary fw-bolder" t-esc="getLineChangeQty(line)"/>
+                                            <button type="button"
+                                                    t-on-click = "() => this.changeQuantity(line, true)"
+                                                    class="btn btn-secondary py-1 px-2"><i class="oi oi-plus fa-fw"/></button>
+                                        </div>
+                                        <div t-else=""/>
+                                        <div class="fs-4 fw-bold line-price mb-0 o-so-tabular-nums fw-bold text-primary" t-esc="selfOrder.formatMonetary(getPrice(line))"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+            <div class="o_self_footer border-top border-bottom bg-white py-2 py-lg-3" t-att-class="{'o_self_shadow_bottom': scrollShadow.bottom}">
+                <div class="container o_self_container order-price d-flex flex-column gap-0 gap-lg-1 align-items-end px-md-4" >
+                    <div class="fs-3 fw-bold o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4">Total: <span class="text-primary"><t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.priceIncl)" /></span></div>
+                    <div class="fs-4 o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4 text-muted" t-if="displayTaxes">Taxes: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.amountTaxes)" /></div>
+                 </div>
+            </div>
+            <OrderWidget t-if="this.selfOrder.ordering" action.bind="pay" removeTopClasses="true"/>
+        </div>
+        <PopupTable t-if="this.state.selectTable" selectTable.bind="selectTable" />
+        <PresetInfoPopup t-if="this.state.fillInformations" callback.bind="proceedInfos" />
+    </t>
+</templates>

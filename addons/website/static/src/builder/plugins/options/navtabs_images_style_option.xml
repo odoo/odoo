@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.NavTabsImagesStyleOption" t-inherit="website.NavTabsStyleOption" primary="True">
+        <xpath expr="//BuilderSelectItem[@actionValue=&quot;'vertical'&quot;]" position="attributes">
+            <attribute name="classAction">'s_tabs_nav_vertical'</attribute>
+            <attribute name="id">'vertical_opt'</attribute>
+        </xpath>
+        <xpath expr="//BuilderRow[@label.translate=&quot;Style&quot;]" position="after">
+            <BuilderContext t-if="isActiveItem('pills_opt')" applyTo="'.s_tabs_pills_template .nav-pills'">
+                <BuilderRow label.translate="Background" level="1">
+                    <BuilderColorPicker enabledTabs="['solid', 'custom', 'gradient']" styleAction="'--nav-pills-link-active-bg'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Text" level="1">
+                    <BuilderColorPicker enabledTabs="['solid', 'custom']" styleAction="'--nav-pills-link-active-color'"/>
+                </BuilderRow>
+            </BuilderContext>
+        </xpath>
+        <xpath expr="//BuilderRow[@label.translate=&quot;Direction&quot;]" position="after">
+            <BuilderRow label.translate="Descriptions" t-if="isActiveItem('vertical_opt')">
+                <BuilderSelect>
+                    <BuilderSelectItem classAction="'s_tabs_nav_with_descriptions'">All items</BuilderSelectItem>
+                    <BuilderSelectItem classAction="'s_tabs_nav_with_descriptions_active'">Active only</BuilderSelectItem>
+                    <BuilderSelectItem classAction="''">Hidden</BuilderSelectItem>
+                </BuilderSelect>
+            </BuilderRow>
+        </xpath>
+    </t>
+</templates>

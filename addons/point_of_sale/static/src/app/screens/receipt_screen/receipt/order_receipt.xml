@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.OrderReceipt">
+        <div class="pos-receipt p-2">
+            <t t-set="showTaxGroupLabels" t-value="doesAnyOrderlineHaveTaxLabel()"/>
+            <ReceiptHeader order="order" />
+            <div class="pt-3"/>
+            <OrderDisplay order="order" t-slot-scope="scope" mode="'receipt'">
+                <t t-set="line" t-value="scope.line"/>
+                <Orderline line="line" showTaxGroup="showTaxGroupLabels" mode="'receipt'" basic_receipt="props.basic_receipt">
+                    <li t-if="line.customerNote" class="customer-note w-100 p-2 my-1 rounded text-break">
+                        <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
+                        <t t-esc="line.customerNote" />
+                    </li>
+                </Orderline>
+            </OrderDisplay>
+            <t t-if="!props.basic_receipt">
+                <t t-set="taxTotals" t-value="order.prices.taxDetails"/>
+                <div t-if="taxTotals and taxTotals.has_tax_groups" class="pos-receipt-taxes pt-3">
+                    <t t-foreach="taxTotals.subtotals" t-as="subtotal" t-key="subtotal.name">
+                        <div class="d-flex">
+                            <span class="text-nowrap mw-100">Subtotal</span>
+                            <span t-out="formatCurrency(order.priceExcl)" class="ms-auto font-monospace"/>
+                        </div>
+
+                        <div t-foreach="subtotal.tax_groups" t-as="tax_group" t-key="tax_group.id" class="d-flex">
+                            <span>
+                                <span t-esc="tax_group.group_name"/>
+                                <t t-if="showTaxGroupLabels">
+                                    (<span t-if="tax_group.group_label" t-out="tax_group.group_label"/>)
+                                </t>
+                                <t id="tax_base" t-if="!taxTotals.same_tax_base">
+                                    on
+                                    <span t-esc="formatCurrency(tax_group.base_amount_currency)"/>
+                                </t>
+                            </span>
+                            <span t-out="formatCurrency(tax_group.tax_amount_currency)" class="ms-auto font-monospace"/>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- Total -->
+                <div class="pos-receipt-amount receipt-total fw-bolder">
+                    <span class="label-total">Total</span>
+                    <span t-out="order.currencyDisplayPriceIncl" class="pos-receipt-right-align font-monospace"/>
+                </div>
+                <t t-if="order.appliedRounding">
+                    <div class="pos-receipt-amount receipt-rounding">
+                        <span class="label-rounding">Rounding</span>
+                        <span t-out='formatCurrency(order.appliedRounding)' class="pos-receipt-right-align font-monospace"/>
+                    </div>
+                    <div class="pos-receipt-amount receipt-to-pay">
+                        To Pay
+                        <span t-out='formatCurrency(order.totalDue)' class="pos-receipt-right-align font-monospace"/>
+                    </div>
+                </t>
+
+                <!-- Payment Lines -->
+                <div class="paymentlines text-start pt-1" t-foreach="paymentLines" t-as="line" t-key="line_index">
+                    <t t-esc="line.payment_method_id.name" />
+                    <span t-out="formatCurrency(line.getAmount())" class="pos-receipt-right-align font-monospace"/>
+                </div>
+
+                <div t-if="order.showChange" class="pos-receipt-amount receipt-change">
+                    <span class="label-change">Change</span>
+                    <span t-out="formatCurrency(order.change)" class="pos-receipt-right-align font-monospace"/>
+                </div>
+
+                <!-- Extra Payment Info -->
+                <t t-set="totalDiscount" t-value="order.getTotalDiscount()" />
+                <t t-if="totalDiscount">
+                    <div class="text-start">
+                        <span class="label-discount">Discounts</span>
+                        <span t-out="formatCurrency(totalDiscount)" class="pos-receipt-right-align font-monospace"/>
+                    </div>
+                </t>
+
+                <div t-if="order.company.point_of_sale_use_ticket_qr_code and order.finalized" class="gap-2 d-flex flex-row pt-3" style="font-size: 75%;">
+                    <div t-if="['qr_code', 'qr_code_and_url'].includes(header.company.point_of_sale_ticket_portal_url_display_mode)" class="pt-1">
+                        <img id="posqrcode" t-att-src="this.qrCode" class="m-0"/>
+                    </div>
+                    <div class="w-100 ms-1">
+                        <div class="fw-bolder">
+                            Need an invoice?
+                        </div>
+                        <div t-if="['url', 'qr_code_and_url'].includes(header.company.point_of_sale_ticket_portal_url_display_mode)" class="portal-url text-break">
+                            <t t-out="getPortalURL()"/>
+                        </div>
+                        <div class="unique-code">
+                            Code: <t t-out="order.ticket_code"/>
+                        </div>
+                    </div>
+                </div>
+                <!-- handle xpath using before-footer! -->
+                <div class="before-footer"/>
+            </t>
+
+            <!-- Footer -->
+            <div t-if="order.config.receipt_footer" class="pos-receipt-center-align pt-3 text-center" style="white-space:pre-line">
+                <t t-esc="order.config.receipt_footer" />
+            </div>
+
+            <div class="after-footer">
+                <t t-foreach="paymentLines" t-as="line" t-key="line_index">
+                    <t t-if="line.ticket">
+                        <div class="pos-payment-terminal-receipt pt-3">
+                            <pre t-esc="line.ticket" />
+                        </div>
+                    </t>
+                </t>
+            </div>
+
+            <t t-if="order.shipping_date">
+                <div class="pos-receipt-order-data d-flex gap-2 pt-3">
+                    Expected delivery:
+                    <div><t t-esc="order.formatDateOrTime('shipping_date', 'date')" /></div>
+                </div>
+            </t>
+
+            <t t-set="company" t-value="order.company" />
+            <div class="d-flex gap-2 pt-3">
+                <!-- Left: Company Address -->
+                <div class="w-50 text-break text-start" style="font-size: 75%;">
+                    <div class="pos-config-name" t-out="order.config.name"/>
+                    <div>
+                        <t t-if="company.street" t-out="company.street"/>
+                        <t t-if="company.city" t-out="', ' + company.city"/>
+                        <t t-if="company.state_id?.code" t-out="', ' + company.state_id.code"/>
+                        <t t-if="company.zip" t-out="', ' +  company.zip"/>
+                    </div>
+                </div>
+
+                <!-- Right: Contact Info -->
+                <div class="w-50 text-break text-end" style="font-size: 75%;">
+                    <div>
+                        <div t-if="company.vat" t-out="vatText"/>
+                        <div t-if="company.phone">
+                            Tel: <t t-out="company.phone"/>
+                        </div>
+                        <div t-if="company.email" t-out="company.email"/>
+                        <div t-if="company.website" t-out="company.website"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pos-receipt-order-data text-center pt-3">
+                <span>Powered by <b> Odoo </b></span>
+            </div>
+        </div>
+    </t>
+</templates>

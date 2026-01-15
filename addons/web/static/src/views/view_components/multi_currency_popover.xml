@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.MultiCurrencyPopover">
+        <div class="o_multi_currency_popover">
+            <div class="popover-body">
+                <t t-foreach="currencies" t-as="currency" t-key="currency.id">
+                    <div>
+                        <t t-out="formatedValue(currency.value, currency.id)"/> at <t t-out="formatedValue(currency.rate, defaultCurrency)"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

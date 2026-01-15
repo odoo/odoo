@@ -1,0 +1,13 @@
+.o_widget_mo_view_list_dropdown {
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+    .o_status {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+td.o_data_cell:has(> div.o_widget_mo_view_list_dropdown) {
+    overflow: visible !important;
+}

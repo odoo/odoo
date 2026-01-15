@@ -1,0 +1,36 @@
+.w-60 {
+    width: 60%;
+}
+
+.product-list {
+    grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+
+    @include media-breakpoint-down(xl) {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+
+    @include media-breakpoint-down(sm) {
+        grid-template-columns: repeat(auto-fill, 1fr);
+    }
+}
+
+.button-no-demo {
+    color: #017e84 !important;
+}
+
+.text-wrap-categ {
+    box-sizing: border-box;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.btn-switchpane, .pay-order-button {
+    min-height: 70px;
+}
+
+.internal-note-container .o_tag {
+    border-radius: 3px !important;
+    --background-color: #{$o-gray-200};
+}

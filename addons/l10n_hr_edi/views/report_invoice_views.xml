@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@name='reference']" position="after">
+                <div class="col" t-if="o.company_id.country_code == 'HR'" name="l10n_hr_invoicing_extra_data">
+                    <strong>Invoicing Time</strong> <br/>
+                    <span t-field="o.l10n_hr_invoice_sending_time"/> <br/>
+                    <strong>Place of Issue</strong> <br/>
+                    <span t-field="o.company_id.city"/>
+                </div>
+                <div class="col" t-if="o.company_id.country_code == 'HR'" name="l10n_hr_operator">
+                    <strong>Issuing Operator Label</strong> <br/>
+                    <span t-field="o.l10n_hr_operator_name"/> <br/>
+                    <strong>Issuing Operator OIB</strong> <br/>
+                    <span t-field="o.l10n_hr_operator_oib"/>
+                </div>
+            </xpath>
+            <xpath expr="//th[@name='th_description']" position="after">
+                <th name="th_description" class="text-end"><span>KPD Category</span></th>
+            </xpath>
+            <xpath expr="//td[@name='account_invoice_line_name']" position="after">
+                <td t-if="o.company_id.country_code == 'HR'" class="text-end" name="l10n_hr_kpd_category">
+                    <span t-field="line.l10n_hr_kpd_category_id.name" t-options="{'widget': 'text'}"/>
+                </td>
+            </xpath>
+            <xpath expr="//div[@id='payment_term']" position="inside">
+                <div class="mb-3" t-if="o.company_id.country_code == 'HR'">
+                    <span>Croatian Payment Method Type: </span>
+                    <span class="fw-bold" t-field="o.l10n_hr_payment_method_type"/>
+                </div>
+            </xpath>
+        </template>
+        <template id="document_tax_totals_company_currency_template_inherit" inherit_id="account.document_tax_totals_company_currency_template">
+            <xpath expr="//div[1]" position="inside">
+                <p t-if="o.company_id.country_code == 'HR'">
+                    <span>1 </span>
+                    <span t-field="o.company_currency_id"/>
+                    <span> = </span>
+                    <span t-field="o.invoice_currency_rate" />
+                    <span t-field="o.currency_id"/>
+                </p>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="hr_attendance_overtime_employee_schedule_rule" model="hr.attendance.overtime.rule">
+            <field name="name">Employee Schedule Rule</field>
+            <field name="base_off">quantity</field>
+            <field name="timing_type">schedule</field>
+            <field name="expected_hours_from_contract" eval="True"/>
+            <field name="paid" eval="True"/>
+            <field name="ruleset_id" ref="hr_attendance_default_ruleset"/>
+        </record>
+
+        <record id="hr_attendance_overtime_non_working_days_rule" model="hr.attendance.overtime.rule">
+            <field name="name">Non Working Days Rule</field>
+            <field name="base_off">timing</field>
+            <field name="timing_type">non_work_days</field>
+            <field name="paid" eval="True"/>
+            <field name="timing_start" eval="0.0"/>
+            <field name="timing_stop" eval="24.0"/>
+            <field name="ruleset_id" ref="hr_attendance_default_ruleset"/>
+        </record>
+    </data>
+</odoo>

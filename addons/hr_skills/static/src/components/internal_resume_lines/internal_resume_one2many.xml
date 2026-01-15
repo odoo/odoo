@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <div t-name="hr_skills.InternalResumeLineComponent" class="internalResume o_list_view o_field_x2many o_field_x2many_list">
+        <div class="o_list_renderer o_renderer table-responsive" tabindex="-1">
+            <table class="o_list_table table table-sm table-hover position-relative mb-0 o_list_table_ungrouped table-striped mb-3 overflow-hidden o_skill_table table-borderless">
+                <thead style="visibility: collapse;">
+                    <tr>
+                        <th style="width: 32px; min-width: 32px;"></th>
+                        <th class="w-100"></th>
+                        <th style="width: 32px; min-width: 32px;"></th>
+                    </tr>
+                </thead>
+                <tbody class="ui-sortable">
+                    <t t-if="internalResumeLines.length">
+                        <tr class="o_group_has_content o_group_header o_resume_group_header">
+                            <th tabindex="-1" class="o_group_name" colspan="2">
+                                <div class="d-flex align-items-center">
+                                    Experience - <t t-out="companyId"/>
+                                </div>
+                            </th>
+                        </tr>
+                    </t>
+                    <t t-foreach="internalResumeLines" t-as="record" t-key="record.id">
+                        <tr class="o_data_row">
+                            <td class="o_resume_timeline_cell position-relative pe-lg-2">
+                                <div class="rounded-circle bg-info position-relative"/>
+                            </td>
+                            <td class="o_data_cell pt-0">
+                                <div t-attf-class="o_resume_line" t-att-data-id="id">
+                                    <small class="o_resume_line_dates fw-bold">
+                                        <t t-out="formatDate(record.date_start)"/>
+                                        -
+                                        <t t-if="record.date_end" t-out="formatDate(record.date_end)"/>
+                                        <t t-else="">
+                                            Current
+                                        </t>
+                                    </small>
+                                    <h4 class="o_resume_line_title mt-2" t-esc="record.job_title"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+            <t t-if="!haveResumeLines">
+                <div name="no_resume_line" class="ms-4 mt-3 text-muted fst-italic oe_inline">
+                    <p>
+                        There are no resume lines on this employee.
+                    </p>
+                </div>
+            </t>
+        </div>
+    </div>
+</odoo>

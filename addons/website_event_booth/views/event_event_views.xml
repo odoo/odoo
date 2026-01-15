@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="event_event_view_form" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.website.event.booth</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="website_event.event_event_view_form"/>
+        <field name="arch" type="xml">
+            <field name="badge_format" position="before">
+                <field name="exhibition_map"/>
+            </field>
+            <field name="website_menu" position="after">
+                <label for="booth_menu" class="me-1"/>
+                <field name="booth_menu" class="me-3"/>
+            </field>
+        </field>
+    </record>
+
+</data></odoo>

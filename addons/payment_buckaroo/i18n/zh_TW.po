@@ -3,96 +3,64 @@
 # * payment_buckaroo
 #
 # Translators:
+# Wil Odoo, 2025
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-02-10 09:38+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
+"POT-Creation-Date: 2025-12-30 18:38+0000\n"
+"PO-Revision-Date: 2025-09-16 08:10+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/payment_buckaroo/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/buckaroo.py:150
-#, python-format
-msgid "; multiple order found"
-msgstr "; 發現多張訂單"
-
-#. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/buckaroo.py:148
-#, python-format
-msgid "; no order found"
-msgstr "; 未發現訂單"
-
-#. module: payment_buckaroo
-#: model:payment.acquirer,cancel_msg:payment_buckaroo.payment_acquirer_buckaroo
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>取消,</i> 您的付款已取消.</span>"
-
-#. module: payment_buckaroo
-#: model:payment.acquirer,done_msg:payment_buckaroo.payment_acquirer_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
 msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr "<span><i>完成,</i> 您的在線付款已成功進行. 感謝您的訂單.</span>"
+"An error occurred during processing of your payment (code %s). Please try "
+"again."
+msgstr "處理付款過程中，發生錯誤（代碼：%s）。請再試一次。"
 
 #. module: payment_buckaroo
-#: model:payment.acquirer,error_msg:payment_buckaroo.payment_acquirer_buckaroo
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-"<span><i>錯誤,</i> 交易時發生錯誤. 訂單成立但無法支付. 如對您的訂單狀態有疑問"
-"請聯繫我們.</span>"
-
-#. module: payment_buckaroo
-#: model:payment.acquirer,pending_msg:payment_buckaroo.payment_acquirer_buckaroo
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr "<span><i>暫停,</i> 您的在線付款已成功進行. 但您的訂單尚未驗證.</span>"
-
-#. module: payment_buckaroo
-#: model:payment.acquirer,name:payment_buckaroo.payment_acquirer_buckaroo
+#: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_provider__code__buckaroo
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/buckaroo.py:158
-#, python-format
-msgid "Buckaroo: invalid shasign, received %s, computed %s, for data %s"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__buckaroo_secret_key
+msgid "Buckaroo Secret Key"
+msgstr "Buckaroo 密鑰"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/buckaroo.py:146
-#, python-format
-msgid "Buckaroo: received data for reference %s"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__code
+msgid "Code"
+msgstr "代碼"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/buckaroo.py:140
-#, python-format
-msgid ""
-"Buckaroo: received data with missing reference (%s) or pay_id (%s) or "
-"shasign (%s)"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
 
 #. module: payment_buckaroo
-#: model:ir.ui.view,arch_db:payment_buckaroo.acquirer_form_buckaroo
-msgid "How to configure your Buckaroo account?"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_transaction__id
+msgid "ID"
+msgstr "識別號"
 
 #. module: payment_buckaroo
-#: model:ir.model,name:payment_buckaroo.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr "款項受讓方"
+#: model:ir.model,name:payment_buckaroo.model_payment_provider
+msgid "Payment Provider"
+msgstr "付款服務商"
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_transaction
@@ -100,18 +68,45 @@ msgid "Payment Transaction"
 msgstr "付款交易"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_secretkey
-msgid "SecretKey"
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+msgid "Received data with missing transaction keys"
+msgstr "收到的數據中缺漏交易密鑰"
+
+#. module: payment_buckaroo
+#: model_terms:ir.ui.view,arch_db:payment_buckaroo.payment_provider_form
+msgid "Secret Key"
+msgstr "密鑰"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_provider__buckaroo_website_key
+msgid "The key solely used to identify the website with Buckaroo"
+msgstr "只用於向 Buckaroo 識別該網站的密鑰"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,help:payment_buckaroo.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "此付款服務商的技術代碼。"
+
+#. module: payment_buckaroo
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+msgid "Unknown status code: %s."
 msgstr ""
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_websitekey
-msgid "WebsiteKey"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_provider__buckaroo_website_key
+msgid "Website Key"
+msgstr "網站密鑰"
 
 #. module: payment_buckaroo
-#: model:payment.acquirer,pre_msg:payment_buckaroo.payment_acquirer_buckaroo
-msgid ""
-"You will be redirected to the Buckaroo website after clicking on the payment "
-"button."
-msgstr ""
+#. odoo-python
+#: code:addons/payment_buckaroo/models/payment_transaction.py:0
+msgid "Your payment was refused (code %s). Please try again."
+msgstr "你的付款被拒絕（代碼：%s）。請再試一次。"
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "沒有找到匹配參考 %s 的交易。"
+
+#~ msgid "Unknown status code: %s"
+#~ msgstr "不明狀態代碼：%s"

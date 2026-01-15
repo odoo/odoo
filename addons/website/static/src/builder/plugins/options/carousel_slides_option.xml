@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CarouselSlidesOption">
+    <BuilderRow label.translate="Make it clickable" tooltip.translate="Enable to make the slide clickable">
+        <BuilderCheckbox id="'make_slide_clickable_opt'" action="'makeSlideClickable'" classAction="'clickable-slide'"/>
+    </BuilderRow>
+
+    <BuilderRow t-if="isActiveItem('make_slide_clickable_opt')" label.translate="Your URL" level="1">
+        <WebsiteUrlPicker title.translate="Your URL"
+            action="'setSlideAnchorUrl'"
+            placeholder.translate="e.g. /your-website-page"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Open in New Tab" tooltip.translate="Enable this to open the link in a new browser tab" level="1">
+        <BuilderCheckbox applyTo="'.slide-link'" attributeAction="'target'" attributeActionValue="'_blank'" preview="false"/>
+    </BuilderRow>
+</t>
+
+</templates>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ImStatus">
+        <div class="o-mail-ImStatus d-flex justify-content-center flex-shrink-0 align-items-center bg-white bg-opacity-100" t-attf-class="{{ props.className }}" t-att-style="props.style" t-att-class="{
+            'o-md': props.size === 'md' or props.size === 'medium',
+            'o-sm': props.size === 'sm' or props.size === 'small',
+            'rounded-circle': !props.member?.isTyping,
+            'rounded-pill': props.member?.isTyping,
+        }">
+            <span class="d-flex flex-column" t-att-class="{
+                'smaller': props.size === 'md' or props.size === 'medium',
+                'o-xsmaller': props.size === 'sm' or props.size === 'small',
+            }">
+                <t t-slot="pre_icon"/>
+                <t name="icon">
+                    <t t-if="(!props.member or !props.member.isTyping) and persona">
+                        <i t-if="persona.im_status === 'online'" class="fa fa-circle text-success" title="Online" role="img" aria-label="User is online"/>
+                        <i t-elif="persona.im_status === 'away'" class="fa fa-circle o-yellow" title="Idle" role="img" aria-label="User is idle"/>
+                        <i t-elif="persona.im_status === 'busy'" class="fa fa-minus-circle text-danger" title="Busy" role="img" aria-label="User is busy"/>
+                        <i t-elif="persona.im_status === 'offline'" class="fa fa-circle-o text-700 opacity-75" title="Offline" role="img" aria-label="User is offline"/>
+                        <i t-elif="persona.im_status === 'bot'" class="fa fa-heart text-success" title="Bot" role="img" aria-label="User is a bot"/>
+                        <i t-else="" class="fa fa-question-circle opacity-75" title="No IM status available"/>
+                    </t>
+                    <div t-if="props.member?.isTyping" class="rounded-pill" style="padding: 1px;" t-att-class="{ 'bg-300': env.inChatBubble, 'bg-inherit': !env.inChatBubble }">
+                        <div class="bg-success rounded-pill" style="padding: 3px;">
+                            <Typing member="props.member" channel="props.member.threadAsTyping" size="['sm', 'smaller'].includes(props.size) ? 'sm' : 'md'" displayText="false" />
+                        </div>
+                    </div>
+                </t>
+            </span>
+        </div>
+    </t>
+
+</templates>

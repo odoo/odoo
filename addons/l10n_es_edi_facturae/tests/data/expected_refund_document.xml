@@ -1,0 +1,251 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<fac:Facturae xmlns:fac="http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml">
+  <FileHeader>
+    <SchemaVersion>3.2.2</SchemaVersion>
+    <Modality>I</Modality>
+    <InvoiceIssuerType>EM</InvoiceIssuerType>
+    <Batch>
+      <BatchIdentifier>RINV/2023/00001</BatchIdentifier>
+      <InvoicesCount>1</InvoicesCount>
+      <TotalInvoicesAmount>
+        <TotalAmount>-242.00</TotalAmount>
+      </TotalInvoicesAmount>
+      <TotalOutstandingAmount>
+        <TotalAmount>-242.00</TotalAmount>
+      </TotalOutstandingAmount>
+      <TotalExecutableAmount>
+        <TotalAmount>-242.00</TotalAmount>
+      </TotalExecutableAmount>
+      <InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
+    </Batch>
+  </FileHeader>
+  <Parties>
+    <SellerParty>
+      <TaxIdentification>
+        <PersonTypeCode>J</PersonTypeCode>
+        <ResidenceTypeCode>R</ResidenceTypeCode>
+        <TaxIdentificationNumber>ES59962470K</TaxIdentificationNumber>
+      </TaxIdentification>
+      <LegalEntity>
+        <CorporateName>company_1_data</CorporateName>
+        <TradeName>company_1_data</TradeName>
+        <AddressInSpain>
+          <Address>C. de Embajadores, 68-116</Address>
+          <PostCode>12345</PostCode>
+          <Town>Madrid</Town>
+          <Province>Madrid</Province>
+          <CountryCode>ESP</CountryCode>
+        </AddressInSpain>
+      </LegalEntity>
+    </SellerParty>
+    <BuyerParty>
+      <TaxIdentification>
+        <PersonTypeCode>F</PersonTypeCode>
+        <ResidenceTypeCode>U</ResidenceTypeCode>
+        <TaxIdentificationNumber>BE0477472701</TaxIdentificationNumber>
+      </TaxIdentification>
+      <Individual>
+        <Name>UNKNOWN</Name>
+        <FirstSurname>UNKNOWN</FirstSurname>
+        <OverseasAddress>
+          <Address>Rue de Bruxelles, 15000</Address>
+          <PostCodeAndTown>5000 Namur</PostCodeAndTown>
+          <Province>Belgium</Province>
+          <CountryCode>BEL</CountryCode>
+        </OverseasAddress>
+      </Individual>
+    </BuyerParty>
+  </Parties>
+  <Invoices>
+    <Invoice>
+      <InvoiceHeader>
+        <InvoiceNumber>RINV/2023/00001</InvoiceNumber>
+        <InvoiceDocumentType>FC</InvoiceDocumentType>
+        <InvoiceClass>OR</InvoiceClass>
+        <Corrective>
+          <InvoiceNumber>INV/2023/00001</InvoiceNumber>
+          <ReasonCode>10</ReasonCode>
+          <ReasonDescription>Detalle Operación</ReasonDescription>
+          <TaxPeriod>
+            <StartDate>2023-01-01</StartDate>
+            <EndDate>2023-01-31</EndDate>
+          </TaxPeriod>
+          <CorrectionMethod>01</CorrectionMethod>
+          <CorrectionMethodDescription>Rectificación íntegra</CorrectionMethodDescription>
+        </Corrective>
+      </InvoiceHeader>
+      <InvoiceIssueData>
+        <IssueDate>2023-01-01</IssueDate>
+        <InvoiceCurrencyCode>EUR</InvoiceCurrencyCode>
+        <TaxCurrencyCode>EUR</TaxCurrencyCode>
+        <LanguageName>en</LanguageName>
+        <ReceiverTransactionReference>ABCD-2023-001</ReceiverTransactionReference>
+        <FileReference>ABCD-2023-001</FileReference>
+        <ReceiverContractReference>ABCD-2023-001</ReceiverContractReference>
+      </InvoiceIssueData>
+      <TaxesOutputs>
+        <Tax>
+          <TaxTypeCode>01</TaxTypeCode>
+          <TaxRate>21.000</TaxRate>
+          <TaxableBase>
+            <TotalAmount>-100.00</TotalAmount>
+          </TaxableBase>
+          <TaxAmount>
+            <TotalAmount>-21.00</TotalAmount>
+          </TaxAmount>
+        </Tax>
+        <Tax>
+          <TaxTypeCode>01</TaxTypeCode>
+          <TaxRate>21.000</TaxRate>
+          <TaxableBase>
+            <TotalAmount>-100.00</TotalAmount>
+          </TaxableBase>
+          <TaxAmount>
+            <TotalAmount>-21.00</TotalAmount>
+          </TaxAmount>
+        </Tax>
+      </TaxesOutputs>
+      <InvoiceTotals>
+        <TotalGrossAmount>-200.00</TotalGrossAmount>
+        <TotalGrossAmountBeforeTaxes>-200.00</TotalGrossAmountBeforeTaxes>
+        <TotalTaxOutputs>-42.00</TotalTaxOutputs>
+        <TotalTaxesWithheld>0.00</TotalTaxesWithheld>
+        <InvoiceTotal>-242.00</InvoiceTotal>
+        <TotalOutstandingAmount>-242.00</TotalOutstandingAmount>
+        <TotalExecutableAmount>-242.00</TotalExecutableAmount>
+      </InvoiceTotals>
+      <Items>
+        <InvoiceLine>
+          <ReceiverContractReference>ABCD-2023-001</ReceiverContractReference>
+          <ReceiverTransactionReference>ABCD-2023-001</ReceiverTransactionReference>
+          <FileReference>ABCD-2023-001</FileReference>
+          <FileDate>2023-01-01</FileDate>
+          <ItemDescription>product_a</ItemDescription>
+          <Quantity>1.0</Quantity>
+          <UnitOfMeasure>01</UnitOfMeasure>
+          <UnitPriceWithoutTax>-100.00000000</UnitPriceWithoutTax>
+          <TotalCost>-100.00000000</TotalCost>
+          <GrossAmount>-100.00000000</GrossAmount>
+          <TaxesOutputs>
+            <Tax>
+              <TaxTypeCode>01</TaxTypeCode>
+              <TaxRate>21.000</TaxRate>
+              <TaxableBase>
+                <TotalAmount>-100.00</TotalAmount>
+              </TaxableBase>
+              <TaxAmount>
+                <TotalAmount>-21.00</TotalAmount>
+              </TaxAmount>
+            </Tax>
+          </TaxesOutputs>
+        </InvoiceLine>
+        <InvoiceLine>
+          <ReceiverContractReference>ABCD-2023-001</ReceiverContractReference>
+          <ReceiverTransactionReference>ABCD-2023-001</ReceiverTransactionReference>
+          <FileReference>ABCD-2023-001</FileReference>
+          <FileDate>2023-01-01</FileDate>
+          <ItemDescription>product_a</ItemDescription>
+          <Quantity>1.0</Quantity>
+          <UnitOfMeasure>01</UnitOfMeasure>
+          <UnitPriceWithoutTax>-100.00000000</UnitPriceWithoutTax>
+          <TotalCost>-100.00000000</TotalCost>
+          <GrossAmount>-100.00000000</GrossAmount>
+          <TaxesOutputs>
+            <Tax>
+              <TaxTypeCode>01</TaxTypeCode>
+              <TaxRate>21.000</TaxRate>
+              <TaxableBase>
+                <TotalAmount>-100.00</TotalAmount>
+              </TaxableBase>
+              <TaxAmount>
+                <TotalAmount>-21.00</TotalAmount>
+              </TaxAmount>
+            </Tax>
+          </TaxesOutputs>
+        </InvoiceLine>
+      </Items>
+    </Invoice>
+  </Invoices>
+  <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="___ignore___">
+    <ds:SignedInfo>
+      <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+      <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+      <ds:Reference Type="http://www.w3.org/2000/09/xmldsig#Object" URI="___ignore___" Id="___ignore___">
+        <ds:Transforms>
+          <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+        </ds:Transforms>
+        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ds:DigestValue>___ignore___</ds:DigestValue>
+      </ds:Reference>
+      <ds:Reference Type="http://uri.etsi.org/01903#SignedProperties" URI="___ignore___">
+        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ds:DigestValue>___ignore___</ds:DigestValue>
+      </ds:Reference>
+      <ds:Reference URI="___ignore___">
+        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ds:DigestValue>___ignore___</ds:DigestValue>
+      </ds:Reference>
+    </ds:SignedInfo>
+    <ds:SignatureValue>___ignore___</ds:SignatureValue>
+    <ds:KeyInfo Id="___ignore___">
+      <ds:X509Data>
+        <ds:X509Certificate>___ignore___</ds:X509Certificate>
+      </ds:X509Data>
+      <ds:KeyValue>
+        <ds:RSAKeyValue>
+          <ds:Modulus>___ignore___</ds:Modulus>
+          <ds:Exponent>___ignore___</ds:Exponent>
+        </ds:RSAKeyValue>
+      </ds:KeyValue>
+    </ds:KeyInfo>
+    <ds:Object>
+      <xades:QualifyingProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" Target="___ignore___">
+        <xades:SignedProperties Id="___ignore___">
+          <xades:SignedSignatureProperties>
+            <xades:SigningTime>___ignore___</xades:SigningTime>
+            <xades:SigningCertificate>
+              <xades:Cert>
+                <xades:CertDigest>
+                  <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                  <ds:DigestValue>___ignore___</ds:DigestValue>
+                </xades:CertDigest>
+                <xades:IssuerSerial>
+                  <ds:X509IssuerName>___ignore___</ds:X509IssuerName>
+                  <ds:X509SerialNumber>___ignore___</ds:X509SerialNumber>
+                </xades:IssuerSerial>
+              </xades:Cert>
+            </xades:SigningCertificate>
+            <xades:SignaturePolicyIdentifier>
+              <xades:SignaturePolicyId>
+                <xades:SigPolicyId>
+                  <xades:Identifier>http://www.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf</xades:Identifier>
+                  <xades:Description>Política de firma electrónica para facturación electrónica con formato Facturae</xades:Description>
+                </xades:SigPolicyId>
+                <xades:SigPolicyHash>
+                  <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                  <ds:DigestValue>___ignore___</ds:DigestValue>
+                </xades:SigPolicyHash>
+                <xades:SigPolicyQualifiers>
+                  <xades:SigPolicyQualifier>
+                    <xades:SPURI>http://www.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf</xades:SPURI>
+                  </xades:SigPolicyQualifier>
+                </xades:SigPolicyQualifiers>
+              </xades:SignaturePolicyId>
+            </xades:SignaturePolicyIdentifier>
+          </xades:SignedSignatureProperties>
+          <xades:SignedDataObjectProperties>
+            <xades:DataObjectFormat ObjectReference="___ignore___">
+              <xades:Description/>
+              <xades:ObjectIdentifier>
+                <xades:Identifier Qualifier="OIDAsURN">urn:oid:1.2.840.10003.5.109.10</xades:Identifier>
+                <xades:Description/>
+              </xades:ObjectIdentifier>
+              <xades:MimeType>text/xml</xades:MimeType>
+              <xades:Encoding/>
+            </xades:DataObjectFormat>
+          </xades:SignedDataObjectProperties>
+        </xades:SignedProperties>
+      </xades:QualifyingProperties>
+    </ds:Object>
+  </ds:Signature>
+</fac:Facturae>

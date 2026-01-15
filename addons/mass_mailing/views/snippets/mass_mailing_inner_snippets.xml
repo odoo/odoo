@@ -1,0 +1,136 @@
+<odoo>
+<template id="s_text_highlight" name="Text Highlight">
+    <div class="s_text_highlight s_mail_text_highlight o_mail_snippet_general o_cc o_cc3 pt32 pb32 text-center mx-auto w-100" style="border-radius: 6px;" data-vxml="001">
+        <h3><font class="text-white">Text Highlight</font></h3>
+        <p><font class="text-white">Put the focus on what you have to say!</font></p>
+    </div>
+</template>
+
+
+<template id="s_rating" name="Rating">
+    <div class="s_rating o_mail_snippet_general pt16 pb16" style="padding: 0 15px;" data-vcss="001" data-vxml="001" data-icon="fa-star">
+        <h3 class="s_rating_title">Quality</h3>
+        <div class="s_rating_icons o_not_editable">
+            <span class="s_rating_active_icons">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+            </span>
+            <span class="s_rating_inactive_icons">
+                <i class="fa fa-star-o"></i>
+                <i class="fa fa-star-o"></i>
+            </span>
+        </div>
+    </div>
+</template>
+
+<template id="s_hr" name="Separator">
+    <div class="s_hr o_mail_snippet_general pt16 pb16 o_not_editable" data-vxml="001">
+        <hr class="w-100 mx-auto"/>
+    </div>
+</template>
+
+<template id="s_inline_text" name="Text">
+    <p class="o_snippet_drop_in_only">Text</p>
+</template>
+
+<template id="s_alert" name="Alert">
+    <div class="s_mail_alert o_mail_snippet_general pt16 pb16 mx-auto" data-name="Alert" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <div class="oe_unmovable s_alert s_alert_md s_alert_info w-100" style="background-color: rgb(209 236 241); border-width: 1px !important; border-color: rgb(190 229 235) !important;">
+                        <div class="o_not_editable">
+                            <span class="fa fa-lg fa-info-circle fa-stack o_editable_media d-flex align-items-center justify-content-center s_alert_icon rounded-1"/>
+                        </div>
+                        <div class="s_alert_content">
+                            <p class="mb-0">Explain the benefits you offer. <br/>Don't write about products or services here, write about solutions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="CTA Badge" id="s_cta_badge">
+    <div class="s_cta_badge badge o_mail_snippet_general border rounded py-2 px-3" data-name="CTA Badge" style="border-radius: 32px !important;">
+        <p class="mb-0">
+            <span class="fa fa-fw fa-info-circle" role="img"/>&#160;&#160;What do you want to promote&amp;nbsp;? &#160;&#160;&#160;&#160;<a href="#">See more <span class="fa fa-long-arrow-right" role="img"/></a>
+        </p>
+    </div>
+</template>
+
+<template id="s_button" name="Button">
+    <p class="o_snippet_drop_in_only">
+        <a class="btn btn-primary" href="https://www.example.com">Button</a>
+    </p>
+</template>
+
+<template id="s_video" name="Video">
+    <p class="o_snippet_drop_in_only">
+        <a href="https://www.youtube.com/embed/G8b4UZIcTfg?rel=0&amp;autoplay=0">
+            <img class="img img-fluid" data-original-src="https://img.youtube.com/vi/G8b4UZIcTfg/0.jpg" src="https://img.youtube.com/vi/G8b4UZIcTfg/0.jpg"/>
+        </a>
+    </p>
+</template>
+
+<template id="s_image" name="Image">
+    <p class="o_snippet_drop_in_only">
+        <span class="s_image o_mail_snippet_general rounded border d-inline-flex justify-content-center align-items-center bg-100 opacity-50 w-100 ratio ratio-16x9" style="max-width: 50vw">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12em" height="7em" viewBox="0 0 120 120" fill="none">
+                <rect width="120" height="120"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M33.2503 38.4816C33.2603 37.0472 34.4199 35.8864 35.8543 35.875H83.1463C84.5848 35.875 85.7503 37.0431 85.7503 38.4816V80.5184C85.7403 81.9528 84.5807 83.1136 83.1463 83.125H35.8543C34.4158 83.1236 33.2503 81.957 33.2503 80.5184V38.4816ZM80.5006 41.1251H38.5006V77.8751L62.8921 53.4783C63.9172 52.4536 65.5788 52.4536 66.6039 53.4783L80.5006 67.4013V41.1251ZM43.75 51.6249C43.75 54.5244 46.1005 56.8749 49 56.8749C51.8995 56.8749 54.25 54.5244 54.25 51.6249C54.25 48.7254 51.8995 46.3749 49 46.3749C46.1005 46.3749 43.75 48.7254 43.75 51.6249Z" opacity="0.4" fill="currentColor"/>
+            </svg>
+        </span>
+    </p>
+</template>
+
+<template name="Badge" id="s_badge">
+    <div class="s_badge badge text-bg-secondary o_mail_snippet_general" data-name="Badge" data-vxml="001">
+        <p class="mb-0">
+            <span class="fa fa-fw fa-folder"/>Category
+        </p>
+    </div>
+</template>
+
+
+<!-- Assets -->
+<record id="mass_mailing.s_alert_001_scss" model="ir.asset">
+    <field name="name">Alert 001 SCSS</field>
+    <field name="bundle">mass_mailing.assets_iframe_style</field>
+    <field name="path">mass_mailing/static/src/snippets/s_alert/000.scss</field>
+</record>
+
+<record id="mass_mailing.s_cta_badge_000_scss" model="ir.asset">
+    <field name="name">CTA Badge 000 SCSS</field>
+    <field name="bundle">mass_mailing.assets_iframe_style</field>
+    <field name="path">mass_mailing/static/src/snippets/s_cta_badge/000.scss</field>
+</record>
+
+<record id="mass_mailing.s_badge_000_scss" model="ir.asset">
+    <field name="name">Badge 000 SCSS</field>
+    <field name="bundle">mass_mailing.assets_iframe_style</field>
+    <field name="path">mass_mailing/static/src/snippets/s_badge/000.scss</field>
+</record>
+
+<record id="mass_mailing.s_hr_000_scss" model="ir.asset">
+    <field name="name">Hr 000 SCSS</field>
+    <field name="bundle">mass_mailing.assets_iframe_style</field>
+    <field name="path">mass_mailing/static/src/snippets/s_hr/000.scss</field>
+</record>
+
+<record id="mass_mailing.s_rating_000_scss" model="ir.asset">
+    <field name="name">Rating 000 SCSS</field>
+    <field name="bundle">mass_mailing.assets_iframe_style</field>
+    <field name="path">mass_mailing/static/src/snippets/s_rating/000.scss</field>
+    <field name="active" eval="False"/>
+</record>
+
+<record id="mass_mailing.s_rating_001_scss" model="ir.asset">
+    <field name="name">Rating 001 SCSS</field>
+    <field name="bundle">mass_mailing.assets_iframe_style</field>
+    <field name="path">mass_mailing/static/src/snippets/s_rating/001.scss</field>
+</record>
+
+</odoo>

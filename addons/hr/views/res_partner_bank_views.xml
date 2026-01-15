@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_bank_form_inherit_hr" model="ir.ui.view">
+        <field name="name">res.partner.bank.form.inherit.hr</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='allow_out_payment']" position="after">
+                <field name="employee_has_multiple_bank_accounts" invisible="1"/>
+                <label string="Salary Allocation" for="employee_salary_amount" 
+                    invisible="not employee_has_multiple_bank_accounts" groups="hr.group_hr_user"/>
+                <div class="d-flex" invisible="not employee_has_multiple_bank_accounts" groups="hr.group_hr_user">
+                    <span><field name="employee_salary_amount" style="max-width: 200px;"/></span>
+                    <span invisible="not employee_salary_amount_is_percentage">%</span>
+                    <field name="currency_id" invisible="employee_salary_amount_is_percentage" readonly="True"/>
+                </div>
+                <field name="employee_id" invisible="not employee_id" widget="many2many_avatar_employee"/>
+            </xpath>
+            <xpath expr="//page" position="before">
+                <page string="Bank Information" invisible="not bank_id">
+                    <group>
+                        <field name="bank_name" string="Bank Name"/>
+                        <field name="bank_bic"/>
+                    </group>
+                    <group>
+                        <group name="address_details">
+                            <label for="bank_street" string="Bank Address"/>
+                            <div class="o_address_format">
+                                <field name="bank_street" placeholder="Street..." class="o_address_street"/>
+                                <field name="bank_street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="bank_city" placeholder="City" class="o_address_city"/>
+                                <field name="bank_state" placeholder="State" class="o_address_state"
+                                    options='{"no_open": True}'
+                                />
+                                <field name="bank_zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="bank_country" placeholder="Country" class="o_address_country"
+                                    options='{"no_open": True, "no_create": True}' 
+                                />
+                            </div>
+                        </group>
+                        <group name="communication_details">
+                            <field name="bank_phone" class="o_force_ltr"/>
+                            <field name="bank_email" widget="email"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

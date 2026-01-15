@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_annual_report_vat_va" model="account.report">
+        <field name="name">VA VAT Report</field>
+        <field name="name@it">Rapporto IVA VA</field>
+        <field name="sequence">1</field>
+        <field name="country_id" ref="base.it"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_annual_report_vat_balance_va" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@it">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+            <record id="tax_annual_report_vat_tax_va" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="name@it">Imposta</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_annual_report_line_dag" model="account.report.line">
+                <field name="name">Business Information</field>
+                <field name="name@it">Informazioni commerciali</field>
+                <field name="code">VA</field>
+                <field name="children_ids">
+                    <record id="tax_annual_report_line_dag_section1" model="account.report.line">
+                        <field name="name">General analytical data</field>
+                        <field name="name@it">Dati analitici generali</field>
+                        <field name="code">VA_section1</field>
+                        <field name="children_ids">
+                            <record id="tax_annual_report_line_va1" model="account.report.line">
+                                <field name="name">VA1 - To be filled in by the entity of originator in cases of extraordinary transactions</field>
+                                <field name="name@it">VA1 - Da compilare a cura del soggetto dante causa nelle ipotesi di operazioni straordinarie</field>
+                                <field name="code">VA1</field>
+                                <field name="children_ids">
+                                    <record id="tax_annual_report_line_va1_4" model="account.report.line">
+                                        <field name="name">VAT/2023 declaration credit transferred</field>
+                                        <field name="name@it">Credito dichiarazione IVA/2023 ceduto</field>
+                                        <field name="code">VA1.4</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_annual_report_line_va1_4_extval" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_annual_report_line_va5" model="account.report.line">
+                                <field name="name">VA5 - Terminals for mobile telecommunication radio service with more than 50% deduction</field>
+                                <field name="name@it">VA5 - Terminali per il servizio radiomobile di telecomunicazione con detrazione superiore al 50%</field>
+                                <field name="code">VA5</field>
+                                <field name="children_ids">
+                                    <record id="tax_annual_report_line_va5_section_1" model="account.report.line">
+                                        <field name="name">Equipment purchases</field>
+                                        <field name="name@it">Acquisti apparecchiature</field>
+                                        <field name="code">VA5_AA</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_annual_report_line_va5_aa_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                            <record id="tax_annual_report_line_va5_aa_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">VA5_AA.balance * 0.5</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="tax_annual_report_line_va5_section_2" model="account.report.line">
+                                        <field name="name">Management services</field>
+                                        <field name="name@it">Servizi di gestione</field>
+                                        <field name="code">VA5_SDG</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_annual_report_line_va5_sdg_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                            <record id="tax_annual_report_line_va5_sdg_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">VA5_SDG.balance * 0.5</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_annual_report_line_dag_section2" model="account.report.line">
+                        <field name="name">Summary data for all activities</field>
+                        <field name="name@it">Dati riepilogativi relativi a tutte le attività</field>
+                        <field name="code">VA_section2</field>
+                        <field name="children_ids">
+                            <record id="tax_annual_report_line_va16" model="account.report.line">
+                                <field name="name">VA11 - Data on amounts suspended as a result of the health emergency by COVID-19</field>
+                                <field name="name@it">VA11 - Dati relativi agli importi sospesi a seguito dell'emergenza sanitaria da COVID-19</field>
+                                <field name="code">VA11</field>
+                                <field name="expression_ids">
+                                    <record id="tax_annual_report_line_va16_extval" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_annual_report_line_va12" model="account.report.line">
+                                <field name="name">VA12 - Reserved for indication of surplus credit of former parent companies to be guaranteed</field>
+                                <field name="name@it">VA12 - Riservato all’indicazione di eccedenze di credito di società ex controllanti da garantire</field>
+                                <field name="code">VA12</field>
+                                <field name="expression_ids">
+                                    <record id="tax_annual_report_line_va12_extval" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_annual_report_line_va13" model="account.report.line">
+                                <field name="name">VA13 - Transactions carried out with respect to condominiums</field>
+                                <field name="name@it">VA13 - Operazioni effettuate nei confronti dei condomìni</field>
+                                <field name="code">VA13</field>
+                                <field name="expression_ids">
+                                    <record id="tax_annual_report_line_va13_extval" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

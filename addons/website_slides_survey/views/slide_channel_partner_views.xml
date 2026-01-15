@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="slide_channel_partner_view_tree" model="ir.ui.view">
+            <field name="name">slide.channel.partner.view.list.inherit.survey</field>
+            <field name="model">slide.channel.partner</field>
+            <field name="inherit_id" ref="website_slides.slide_channel_partner_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='member_status']" position="after">
+                    <field name="nbr_certification" column_invisible="True"/>
+                    <field name="survey_certification_success" invisible="nbr_certification == 0" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="slide_channel_partner_view_search" model="ir.ui.view">
+            <field name="name">slide.channel.partner.view.search.inherit.survey</field>
+            <field name="model">slide.channel.partner</field>
+            <field name="inherit_id" ref="website_slides.slide_channel_partner_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='filter_completed']" position="after">
+                    <filter string="Certified" name="filter_certified" domain="[('survey_certification_success', '=', True)]"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

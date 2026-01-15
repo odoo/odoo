@@ -1,0 +1,221 @@
+:root {
+    --secondary-active-background: #{mix($o-action, $o-white, 10%)};
+    --secondary-active-border: #{$o-action};
+
+    --btn-group-gap: 0;
+    --border-light-color:#e7e9ed;
+
+    // Disable zoom
+    touch-action: pan-x pan-y;
+    height: 100%;
+
+    // Target 4K devices
+    @media #{screen and (min-width: 3839px), (min-height: 3839px)} {
+        --root-font-size: #{$o-so-font-size-4k};
+    }
+
+    .bg-secondary {
+        --background-color: #F4F4F4;
+    }
+
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes selfOrderModalScale {
+    from {
+        transform: scale(.8);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;  // disable swipe to go back
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+small {
+    font-size: .875em;
+}
+
+ul, ol {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style-type: none;
+}
+
+.touch-device * {
+    cursor: none !important;
+}
+
+.modal-content {
+    text-wrap: pretty;
+}
+
+.numpad-button:disabled {
+    background-color: $o-gray-100;
+}
+
+.form-control:focus {
+  border-color: var(--primary) !important;
+}
+
+@include media-breakpoint-down(sm) {
+   .o_self_footer {
+       .btn-lg, .btn-group-lg > .btn {
+           padding: $input-btn-padding-y $input-btn-padding-x !important;
+           font-size: 1.1rem;
+       }
+   }
+}
+
+.o-so-tabular-nums {
+    font-variant: tabular-nums;
+}
+
+.o_self_fade {
+    animation: fadeIn 300ms cubic-bezier(.4, 0, .2, 1);
+}
+
+.numpad-button.active, .numpad-button:active {
+    --btn-active-bg: #{$o-gray-300};
+}
+
+.o_so_product_details {
+    .o_so_product_details_image {
+        max-width: clamp(3rem, 25%, o-to-rem(170));
+    }
+
+    .o_so_product_details_description {
+        max-width: o-to-rem(750);
+    }
+}
+
+.o_self_shadow_top {
+    position: relative;
+    &::after {
+        content: "";
+        z-index: 10;
+        position: absolute;
+        bottom: -16px;
+        left: 0;
+        height: 16px;
+        width: 100%;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), transparent);
+    }
+}
+
+.o_self_shadow_bottom {
+    position: relative;
+    &::after {
+        content: "";
+        z-index: 10;
+        position: absolute;
+        top: -16px;
+        left: 0;
+        height: 16px;
+        width: 100%;
+        background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.1));
+    }
+}
+
+@include media-breakpoint-up(lg) {
+  .o_self_container {
+    max-width: 960px !important;
+  }
+}
+
+@include o-kiosk{
+    @include generate-kiosk-utilities(kiosk);
+}
+
+
+@include o-kiosk-portrait{
+    &:root {
+        --root-font-size: #{$o-so-font-size-kiosk};
+    }
+
+     .o_self_container {
+        width: 100% !important;
+        max-width: 1100px !important;
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+    }
+
+    .kiosk-p-btn-lg {
+      padding: $input-btn-padding-y-lg $input-btn-padding-x-lg !important;
+      font-size: 1.25rem;
+    }
+
+    @include generate-kiosk-utilities(kiosk-p);
+}
+
+@include o-kiosk-landscape{
+    @include generate-kiosk-utilities(kiosk-l);
+}
+
+$shadow-sizes: sm, md, lg, xl;
+
+@each $breakpoint, $value in $grid-breakpoints {
+  @include media-breakpoint-up($breakpoint) {
+    .shadow-#{$breakpoint}-none {
+      box-shadow: none !important;
+    }
+
+    @each $size in $shadow-sizes {
+      .shadow-#{$breakpoint}-#{$size} {
+        box-shadow: var(--box-shadow-#{$size}) !important;
+      }
+    }
+  }
+}
+
+.btn {
+   border-radius: $border-radius-xl;
+}
+
+.modal-content {
+   border-radius: $border-radius-xl;
+}
+
+@include media-breakpoint-down(sm) {
+   .btn {
+       border-radius: $border-radius-lg;
+   }
+  .modal-content {
+     border-radius: $border-radius-lg;
+  }
+}
+
+.modal-dialog {
+   transform: scale(0.8);
+   animation: selfOrderModalScale 120ms ease-out forwards;
+}
+
+.pos-receipt .info-list {
+    padding-left: 2rem;
+}
+
+.border-light{
+   border-color: var(--border-light-color) !important;
+}

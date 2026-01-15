@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo auto_sequence="1">
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="name@tr">Vergi Raporu</field>
+        <field name="name@gr">Φορολογική Έκθεση</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.cy"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@tr">Denge</field>
+                <field name="name@gr">Ισορροπία</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_line_1" model="account.report.line">
+                <field name="name">1. VAT due on sales and other outputs</field>
+                <field name="name@tr">1. Satışlardan ve diğer çıktılardan doğan KDV</field>
+                <field name="name@gr">1. Οφειλόμενος ΦΠΑ επί των πωλήσεων και άλλων εκροών</field>
+                <field name="code">cy_1</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_1_amount" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-1</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_2" model="account.report.line">
+                <field name="name">2. VAT due on acquisitions from other EU Member States</field>
+                <field name="name@tr">2. Diğer AB Üye Devletlerinden satın almalardan kaynaklanan KDV</field>
+                <field name="name@gr">2. ΦΠΑ που οφείλεται σε εξαγορές από άλλα κράτη μέλη της Ε.Ε</field>
+                <field name="code">cy_2</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_2_amount" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">2</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_3" model="account.report.line">
+                <field name="name">3. Total output VAT (sum of boxes 1 and 2)</field>
+                <field name="name@tr">3. Toplam çıkış KDV'si (1 ve 2 numaralı kutuların toplamı)</field>
+                <field name="name@gr">3. Συνολικός ΦΠΑ εκροών (άθροισμα θέσεων 1 και 2)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">cy_3</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_3_amount" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">cy_1.balance + cy_2.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_4" model="account.report.line">
+                <field name="name">4. Input VAT (including acquisitions from other EU Member States)</field>
+                <field name="name@tr">4. Girdi KDV'si (diğer AB Üye Devletlerinden satın almalar dahil)</field>
+                <field name="name@gr">4. ΦΠΑ εισροών (συμπεριλαμβανομένων αγορών από άλλα κράτη μέλη της ΕΕ)</field>
+                <field name="code">cy_4</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_4_amount" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">4</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_5" model="account.report.line">
+                <field name="name">5. VAT payable or refundable (difference between box 4 and 3)</field>
+                <field name="name@tr">5. Ödenecek veya iade edilecek KDV (4. ve 3. kutu arasındaki fark)</field>
+                <field name="name@gr">5. πληρωτέος ή επιστρεφόμενος ΦΠΑ (διαφορά μεταξύ των τετραγώνων 4 και 3)</field>
+                <field name="code">cy_5</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_5_amount" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">cy_4.balance - cy_3.balance</field>
+                        <field name="green_on_positive">False</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_6" model="account.report.line">
+                <field name="name">6. Value of total sales and other outputs (excluding VAT)(including box 10)</field>
+                <field name="name@tr">6. Toplam satışların ve diğer çıktıların değeri (KDV hariç)(kutu 10 dahil)</field>
+                <field name="name@gr">6. Αξία συνολικών πωλήσεων και άλλων εκροών (χωρίς ΦΠΑ) (συμπεριλαμβανομένου του τετραγώνου 10)</field>
+                <field name="code">cy_6</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_6_amount" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">cy_6.sale + cy_6.purchase + cy_10.balance</field>
+                    </record>
+                    <record id="tax_report_line_6_sub_amount" model="account.report.expression">
+                        <field name="label">sale</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-6</field>
+                    </record>
+                    <record id="tax_report_line_6rc_sub_amount" model="account.report.expression">
+                        <field name="label">purchase</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">6rc</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_7" model="account.report.line">
+                <field name="name">7. Value of total purchases and other inputs (excluding VAT)</field>
+                <field name="name@tr">7. Toplam alımların ve diğer girdilerin değeri (KDV hariç)</field>
+                <field name="name@gr">7. Αξία συνολικών αγορών και άλλων εισροών (χωρίς ΦΠΑ)</field>
+                <field name="code">cy_7</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_7_amount" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">7</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_8A" model="account.report.line">
+                <field name="name">8A. Total value of all supplies of goods (and directly related services) to other EU Member States</field>
+                <field name="name@tr">8A. Diğer AB Üye Devletlerine yapılan tüm mal tedariklerinin (ve doğrudan ilgili hizmetlerin) toplam değeri</field>
+                <field name="name@gr">8Α. Συνολική αξία όλων των παραδόσεων αγαθών (και άμεσα συναφών υπηρεσιών) σε άλλα κράτη μέλη της ΕΕ</field>
+                <field name="code">cy_8A</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_8A_amount" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-8A</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_8B" model="account.report.line">
+                <field name="name">8B. Total value of services provided to taxable persons in other EU Member States</field>
+                <field name="name@tr">8B. Diğer AB Üye Devletlerindeki vergi mükelleflerine sağlanan hizmetlerin toplam değeri</field>
+                <field name="name@gr">8Β. Συνολική αξία υπηρεσιών που παρέχονται σε υποκείμενους στο φόρο σε άλλα κράτη μέλη της ΕΕ</field>
+                <field name="code">cy_8B</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_8B_amount" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-8B</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_9" model="account.report.line">
+                <field name="name">9. Total value of sales taxed at the rate of 0% (other than those included in box 8A)</field>
+                <field name="name@tr">9. %0 oranında vergilendirilen satışların toplam değeri (8A kutusunda yer alanlar hariç)</field>
+                <field name="name@gr">9. Συνολική αξία πωλήσεων που φορολογείται με συντελεστή 0% (εκτός από αυτές που περιλαμβάνονται στο πλαίσιο 8Α)</field>
+                <field name="code">cy_9</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_9_amount" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-9</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_10" model="account.report.line">
+                <field name="name">10. Total value of sales which are outside the scope of Cyprus VAT</field>
+                <field name="name@tr">10. Kıbrıs KDV kapsamı dışında kalan satışların toplam değeri</field>
+                <field name="name@gr">10. Συνολική αξία πωλήσεων που είναι εκτός του πεδίου εφαρμογής του Κυπριακού ΦΠΑ</field>
+                <field name="code">cy_10</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_10_amount" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_11A" model="account.report.line">
+                <field name="name">11A. Total value of acquisitions of goods (and directly related services) from other EU Member States</field>
+                <field name="name@tr">11A. Diğer AB Üye Devletlerinden mal (ve doğrudan ilgili hizmetler) satın alımlarının toplam değeri</field>
+                <field name="name@gr">11Α. Συνολική αξία αποκτήσεων αγαθών (και άμεσα συναφών υπηρεσιών) από άλλα κράτη μέλη της Ε.Ε</field>
+                <field name="code">cy_11A</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_11A_amount" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">11A</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_11B" model="account.report.line">
+                <field name="name">11B. Total value of services received from taxable persons residence in other EU Member States</field>
+                <field name="name@tr">11B. Diğer AB Üye Devletlerinde ikamet eden vergiye tabi kişilerden alınan hizmetlerin toplam değeri</field>
+                <field name="name@gr">11Β. Συνολική αξία υπηρεσιών που ελήφθησαν από υποκείμενους στο φόρο που κατοικούν σε άλλα κράτη μέλη της ΕΕ</field>
+                <field name="code">cy_11B</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_11B_amount" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">11B</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

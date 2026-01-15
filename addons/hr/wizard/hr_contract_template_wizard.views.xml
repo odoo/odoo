@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_version_wizard_action" model="ir.actions.act_window">
+        <field name="name">Contract Template Load</field>
+        <field name="res_model">hr.version.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="hr_version_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.version.wizard.view.form</field>
+        <field name="model">hr.version.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="contract_template_id"
+                            options="{'no_create': True, 'no_create_edit': True}"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_load_template" string="Load" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,148 +1,165 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from collections import defaultdict
 
-from odoo.exceptions import ValidationError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.fields import Domain
+from odoo.tools import float_compare
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    timesheet_ids = fields.Many2many('account.analytic.line', compute='_compute_timesheet_ids', string='Timesheet activities associated to this sale')
-    timesheet_count = fields.Float(string='Timesheet activities', compute='_compute_timesheet_ids')
+    timesheet_count = fields.Float(string='Timesheet activities', compute='_compute_timesheet_count', groups="hr_timesheet.group_hr_timesheet_user", export_string_translation=False)
+    timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id', export_string_translation=False)
+    timesheet_total_duration = fields.Integer("Timesheet Total Duration", compute='_compute_timesheet_total_duration',
+        help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit", compute_sudo=True,
+        groups="hr_timesheet.group_hr_timesheet_user", export_string_translation=False)
+    show_hours_recorded_button = fields.Boolean(compute="_compute_show_hours_recorded_button", groups="hr_timesheet.group_hr_timesheet_user", export_string_translation=False)
 
-    tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', string='Tasks associated to this sale')
-    tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids')
 
-    project_project_id = fields.Many2one('project.project', compute='_compute_project_project_id', string='Project associated to this sale')
-
-    @api.multi
-    @api.depends('project_id.line_ids')
-    def _compute_timesheet_ids(self):
-        for order in self:
-            if order.project_id:
-                order.timesheet_ids = self.env['account.analytic.line'].search(
-                    [('so_line', 'in', order.order_line.ids),
-                        ('amount', '<=', 0.0),
-                        ('project_id', '!=', False)])
-            else:
-                order.timesheet_ids = []
-            order.timesheet_count = len(order.timesheet_ids)
-
-    @api.multi
-    @api.depends('order_line.product_id.project_id')
-    def _compute_tasks_ids(self):
-        for order in self:
-            order.tasks_ids = self.env['project.task'].search([('sale_line_id', 'in', order.order_line.ids)])
-            order.tasks_count = len(order.tasks_ids)
-
-    @api.multi
-    @api.depends('project_id.project_ids')
-    def _compute_project_project_id(self):
-        for order in self:
-            order.project_project_id = self.env['project.project'].search([('analytic_account_id', '=', order.project_id.id)])
-
-    @api.multi
-    @api.constrains('order_line')
-    def _check_multi_timesheet(self):
-        for order in self:
-            count = 0
-            for line in order.order_line:
-                if line.product_id.track_service == 'timesheet':
-                    count += 1
-                if count > 1:
-                    raise ValidationError(_("You can use only one product on timesheet within the same sales order. You should split your order to include only one contract based on time and material."))
-        return {}
-
-    @api.multi
-    def action_confirm(self):
-        result = super(SaleOrder, self).action_confirm()
-        for order in self:
-            if not order.project_project_id:
-                for line in order.order_line:
-                    if line.product_id.track_service == 'timesheet':
-                        if not order.project_id:
-                            order._create_analytic_account(prefix=line.product_id.default_code or None)
-                        order.project_id.project_create({'name': order.project_id.name, 'use_tasks': True})
-                        break
-        return result
-
-    @api.multi
-    def action_view_task(self):
-        self.ensure_one()
-        action = self.env.ref('project.action_view_task')
-        list_view_id = self.env.ref('project.view_task_tree2').id
-        form_view_id = self.env.ref('project.view_task_form2').id
-
-        result = {
-            'name': action.name,
-            'help': action.help,
-            'type': action.type,
-            'views': [[False, 'kanban'], [list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot'], [False, 'graph']],
-            'target': action.target,
-            'context': "{'group_by':'stage_id'}",
-            'res_model': action.res_model,
+    def _compute_timesheet_count(self):
+        timesheets_per_so = {
+            order.id: count
+            for order, count in self.env['account.analytic.line']._read_group(
+                [('order_id', 'in', self.ids), ('project_id', '!=', False)],
+                ['order_id'],
+                ['__count'],
+            )
         }
-        if len(self.tasks_ids) > 1:
-            result['domain'] = "[('id','in',%s)]" % self.tasks_ids.ids
-        elif len(self.tasks_ids) == 1:
-            result['views'] = [(form_view_id, 'form')]
-            result['res_id'] = self.tasks_ids.id
-        else:
-            result = {'type': 'ir.actions.act_window_close'}
-        return result
 
-    @api.multi
-    def action_view_project_project(self):
+        for order in self:
+            order.timesheet_count = timesheets_per_so.get(order.id, 0)
+
+    @api.depends('company_id.project_time_mode_id', 'company_id.timesheet_encode_uom_id', 'order_line.timesheet_ids')
+    def _compute_timesheet_total_duration(self):
+        group_data = self.env['account.analytic.line']._read_group([
+            ('order_id', 'in', self.ids), ('project_id', '!=', False)
+        ], ['order_id'], ['unit_amount:sum'])
+        timesheet_unit_amount_dict = defaultdict(float)
+        timesheet_unit_amount_dict.update({order.id: unit_amount for order, unit_amount in group_data})
+        for sale_order in self:
+            total_time = sale_order.company_id.project_time_mode_id._compute_quantity(
+                timesheet_unit_amount_dict[sale_order.id],
+                sale_order.timesheet_encode_uom_id,
+                rounding_method='HALF-UP',
+            )
+            sale_order.timesheet_total_duration = round(total_time)
+
+    def _compute_field_value(self, field):
+        if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip'):
+            return super()._compute_field_value(field)
+
+        # Get SOs which their state is not equal to upselling and if at least a SOL has warning prepaid service upsell set to True and the warning has not already been displayed
+        upsellable_orders = self.filtered(lambda so:
+            so.state == 'sale'
+            and so.invoice_status != 'upselling'
+            and so.id
+            and (so.user_id or so.partner_id.user_id)  # salesperson needed to assign upsell activity
+        )
+        super(SaleOrder, upsellable_orders.with_context(mail_activity_automation_skip=True))._compute_field_value(field)
+        for order in upsellable_orders:
+            upsellable_lines = order._get_prepaid_service_lines_to_upsell()
+            if upsellable_lines:
+                order._create_upsell_activity()
+                # We want to display only one time the warning for each SOL
+                upsellable_lines.write({'has_displayed_warning_upsell': True})
+        super(SaleOrder, self - upsellable_orders)._compute_field_value(field)
+
+    def _compute_show_hours_recorded_button(self):
+        show_button_ids = self._get_order_with_valid_service_product()
+        for order in self:
+            order.show_hours_recorded_button = order.timesheet_count or order.project_count and order.id in show_button_ids
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        created_records = super().create(vals_list)
+        if self.env.context.get('create_for_employee_mapping'):
+            if not next((sol for sol in created_records.order_line if sol.is_service), False):
+                raise UserError(_('The Sales Order must contain at least one service product.'))
+            created_records.with_context(disable_project_task_generation=True).action_confirm()
+        return created_records
+
+    def _get_order_with_valid_service_product(self):
+        SaleOrderLine = self.env['sale.order.line']
+        return SaleOrderLine._read_group(Domain.AND([
+            SaleOrderLine._domain_sale_line_service(),
+            [
+                ('order_id', 'in', self.ids),
+                '|', ('product_id.service_type', 'not in', ['milestones', 'manual']),
+                     ('product_id.invoice_policy', '!=', 'delivery'),
+            ]
+        ]), aggregates=['order_id:array_agg'])[0][0]
+
+    def _get_prepaid_service_lines_to_upsell(self):
+        """ Retrieve all sols which need to display an upsell activity warning in the SO
+
+            These SOLs should contain a product which has:
+                - type="service",
+                - service_policy="ordered_prepaid",
+        """
         self.ensure_one()
-        action = self.env.ref('project.open_view_project_all').read()[0]
-        form_view_id = self.env.ref('project.edit_project').id
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
+        return self.order_line.filtered(lambda sol:
+            sol.is_service
+            and sol.invoice_status != "invoiced"
+            and not sol.has_displayed_warning_upsell  # we don't want to display many times the warning each time we timesheet on the SOL
+            and sol.product_id.service_policy == 'ordered_prepaid'
+            and float_compare(
+                sol.qty_delivered,
+                sol.product_uom_qty * (sol.product_id.service_upsell_threshold or 1.0),
+                precision_digits=precision
+            ) > 0
+        )
 
-        action['views'] = [(form_view_id, 'form')]
-        action['res_id'] = self.project_project_id.id
-        action.pop('target', None)
+    def action_view_timesheet(self):
+        self.ensure_one()
+        if not self.order_line:
+            return {'type': 'ir.actions.act_window_close'}
+
+        action = self.env["ir.actions.actions"]._for_xml_id("sale_timesheet.timesheet_action_from_sales_order")
+        default_sale_line = next((sale_line for sale_line in self.order_line if sale_line.is_service and sale_line.product_id.service_policy in ['ordered_prepaid', 'delivered_timesheet']), self.env['sale.order.line'])
+        context = {
+            'search_default_billable_timesheet': True,
+            'default_is_so_line_edited': True,
+            'default_so_line': default_sale_line.id,
+        }  # erase default filters
+
+        tasks = self.order_line.task_id._filtered_access('write')
+        if tasks:
+            context['default_task_id'] = tasks[0].id
+        else:
+            projects = self.order_line.project_id._filtered_access('write')
+            if projects:
+                context['default_project_id'] = projects[0].id
+            elif self.project_ids:
+                context['default_project_id'] = self.project_ids[0].id
+        action.update({
+            'context': context,
+            'domain': [('so_line', 'in', self.order_line.ids), ('project_id', '!=', False)],
+            'help': _("""
+                <p class="o_view_nocontent_smiling_face">
+                    No activities found. Let's start a new one!
+                </p><p>
+                    Track your working hours by projects every day and invoice this time to your customers.
+                </p>
+            """)
+        })
 
         return action
 
-    @api.multi
-    def action_view_timesheet(self):
-        self.ensure_one()
-        action = self.env.ref('hr_timesheet.act_hr_timesheet_line')
-        list_view_id = self.env.ref('hr_timesheet.hr_timesheet_line_tree').id
-        form_view_id = self.env.ref('hr_timesheet.hr_timesheet_line_form').id
+    def _reset_has_displayed_warning_upsell_order_lines(self):
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
+        for line in self.order_line:
+            if line.has_displayed_warning_upsell and line.product_uom_id and float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 0:
+                line.has_displayed_warning_upsell = False
 
-        result = {
-            'name': action.name,
-            'help': action.help,
-            'type': action.type,
-            'views': [[list_view_id, 'tree'], [form_view_id, 'form']],
-            'target': action.target,
-            'context': action.context,
-            'res_model': action.res_model,
-        }
-        if self.timesheet_count > 0:
-            result['domain'] = "[('id','in',%s)]" % self.timesheet_ids.ids
-        else:
-            result = {'type': 'ir.actions.act_window_close'}
-        return result
-
-
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
-
-    @api.model
-    def create(self, values):
-        line = super(SaleOrderLine, self).create(values)
-        if line.state == 'sale' and not line.order_id.project_id and line.product_id.track_service in ['timesheet', 'task']:
-            line.order_id._create_analytic_account()
-        return line
-
-    @api.multi
-    def _compute_analytic(self, domain=None):
-        if not domain and self.ids:
-            # To filter on analyic lines linked to an expense
-            expense_type_id = self.env.ref('account.data_account_type_expenses', raise_if_not_found=False)
-            expense_type_id = expense_type_id and expense_type_id.id
-            domain = [('so_line', 'in', self.ids), '|', ('amount', '<=', 0.0), ('project_id', '!=', False)]
-        return super(SaleOrderLine, self)._compute_analytic(domain=domain)
+    def _create_invoices(self, grouped=False, final=False, date=None):
+        """Link timesheets to the created invoices. Date interval is injected in the
+        context in sale_make_invoice_advance_inv wizard.
+        """
+        moves = super()._create_invoices(grouped=grouped, final=final, date=date)
+        moves._link_timesheets_to_invoice(self.env.context.get("timesheet_start_date"), self.env.context.get("timesheet_end_date"))
+        self._reset_has_displayed_warning_upsell_order_lines()
+        return moves

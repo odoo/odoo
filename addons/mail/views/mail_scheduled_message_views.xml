@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="mail_scheduled_message_view_form" model="ir.ui.view">
+            <field name="name">mail.scheduled.message.view.form</field>
+            <field name="model">mail.scheduled.message</field>
+            <field name="arch" type="xml">
+                <form string="Scheduled Message">
+                    <sheet>
+                        <group>
+                            <field name="composition_comment_option" invisible="1"/>
+                            <label for="partner_ids" string="To" invisible="is_note"/>
+                            <div invisible="is_note" class="d-flex gap-3">
+                                <field name="partner_ids" widget="many2many_tags_email" class="w-auto flex-grow-1"
+                                    placeholder="Add contacts to notify..."
+                                    options="{'edit_tags': True}"
+                                    context="{'force_email': True, 'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
+                            </div>
+                            <field name="subject" required="True"/>
+                        </group>
+                        <group col="1">
+                            <field name="body" widget="html_composer_message"
+                                force_save="1" nolabel="1"
+                                placeholder="Write your message here..."/>
+                            <field name="attachment_ids" widget="mail_composer_attachment_list" nolabel="1"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Save" class="btn-primary" special="save" invisible="not scheduled_date" data-hotkey="S"/>
+                        <button string="Send Now" invisible="is_note" type="object" name="post_message" data-hotkey="q"/>
+                        <button string="Log Now" invisible="not is_note" type="object" name="post_message" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <field name="attachment_ids" widget="mail_composer_attachment_selector"/>
+                        <field name="scheduled_date" widget="datetime_scheduled_date"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

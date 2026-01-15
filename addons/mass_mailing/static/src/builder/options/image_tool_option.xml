@@ -1,0 +1,42 @@
+<templates>
+    <t t-name="mass_mailing.ImageAndFaOption">
+        <BuilderRow label.translate="Alignment">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="'float-start'">Left</BuilderSelectItem>
+                <BuilderSelectItem classAction="'mx-auto'">Center</BuilderSelectItem>
+                <BuilderSelectItem classAction="'float-end'">Right</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <t t-call="mass_mailing.BorderOption"/>
+        <t t-call="mass_mailing.HorizontalPaddingOption"/>
+        <t t-call="mass_mailing.VerticalPaddingOption"/>
+    </t>
+    <t t-name="mass_mailing.ImageToolOption" t-inherit="html_builder.ImageToolOption">
+        <xpath expr="//ImageShapeOption" position="attributes">
+            <attribute name="withAnimatedShapes">false</attribute>
+        </xpath>
+        <xpath expr="//ImageTransformOption" position="replace"/>
+        <xpath expr="//BuilderRow[@label.translate=&quot;Size&quot;]" position="attributes">
+            <attribute name="t-if">massMailingState.isImgFluid</attribute>
+        </xpath>
+    </t>
+    <t t-name="mass_mailing.FontAwesomeOption">
+        <BuilderRow label.translate="Color">
+            <BuilderColorPicker styleAction="'color'" enabledTabs="['custom', 'solid']"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Background Color">
+            <BuilderColorPicker styleAction="'background-color'" enabledTabs="['custom', 'solid']"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Size">
+            <BuilderButtonGroup>
+                <BuilderButton classAction="''" title.translate="Default">1X</BuilderButton>
+                <BuilderButton classAction="'fa-2x'" title.translate="2X Size">2X</BuilderButton>
+                <BuilderButton classAction="'fa-3x'" title.translate="3X Size">3X</BuilderButton>
+                <BuilderButton classAction="'fa-4x'" title.translate="4X Size">4X</BuilderButton>
+                <BuilderButton classAction="'fa-5x'" title.translate="5X Size">5X</BuilderButton>
+            </BuilderButtonGroup>
+        </BuilderRow>
+    </t>
+</templates>

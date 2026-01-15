@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <record id="view_pos_daily_sales_reports_wizard" model="ir.ui.view">
+        <field name="name">pos.daily.sales.reports.wizard.form.inherit</field>
+        <field name="model">pos.daily.sales.reports.wizard</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_daily_sales_reports_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='pos_session_group']" position="before">
+                <div class="alert alert-warning oe_button_box" role="alert" invisible="not pos_session_id or employee_ids">
+                    Cannot generate report per employee: only one employee logged in during this session.
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='pos_session_group']" position="after">
+                <div>
+                    <field name="add_report_per_employee" readonly="pos_session_id and not employee_ids"/>
+                    <label for="add_report_per_employee"/>
+                </div>
+                <field name="employee_ids" invisible="True"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

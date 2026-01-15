@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="hr_holidays.TimeOffCalendarSidePanel" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_calendar_filter')]" position="inside">
+            <div class="d-flex flex-column mt-4" t-if="leaveState.optionalHolidays.length">
+                <h5>Optional Holidays</h5>
+                <ul class="ps-0">
+                    <li t-foreach="leaveState.optionalHolidays" t-as="optionalHoliday" t-key="optionalHoliday.id"
+                        class="mt-2 list-unstyled">
+                        <strong t-out="getFormattedDateSpan(optionalHoliday.start, optionalHoliday.end)"/>
+                        : <t t-out="optionalHoliday.title"/>
+                    </li>
+                </ul>
+            </div>
+        </xpath>
+    </t>
+</templates>

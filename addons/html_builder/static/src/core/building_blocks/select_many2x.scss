@@ -1,0 +1,105 @@
+.o-hb-selectMany2X-wrapper {
+    --border-color: var(--o-hb-border-color);
+
+    // TODO: the following rules essentially overrides utility classes
+    // "inherited" from the backend and apply BuilderSelect rules on top.
+    // To be improved by removing the unwanted classes and share relevant
+    // rules across the BuilderSelect AND SelectMany2X components.
+
+    border: 0 !important; // Override backend's `border`class
+    width: 100% !important; // Override backend's `w-auto`class
+
+    div:has(> &) {
+        // TODO: Add a class to this unnamed parent div
+        flex: 1 0 auto;
+        min-width: 7ch; // Approx 4 characters + caret
+        max-width: 100%;
+        display: flex;
+    }
+
+    .o_select_menu_toggler {
+        &, &.btn-light.bg-light {
+            --border-color: #{$o-we-bg-light};
+            --btn-padding-x: #{map-get($spacers , 2)};
+
+            @include button-variant(
+                $background: $o-we-item-clickable-bg,
+                $border: $o-we-bg-light,
+                $color: $o-we-item-clickable-color,
+                $hover-background: $o-we-item-clickable-hover-bg,
+                $hover-border: $o-we-bg-light,
+                $hover-color: $o-we-item-clickable-color,
+                $active-background: var(--o-hb-btn-secondary-active-bg, RGBA(#{to-rgb($o-we-color-accent)}, 0.4)),
+                $active-border: $o-we-bg-light,
+                $active-color: $o-we-fg-lighter,
+                $disabled-background: transparent,
+                $disabled-border: transparent,
+                $disabled-color: $o-we-fg-darker,
+            );
+
+            // Handle native o_select_menu_toggler_caret icon inconsistencies
+            > span.o_select_menu_toggler_caret {
+                display: none;
+            }
+            &:after {
+                @include o-position-absolute(50%, map-get($spacers, 1));
+                transform: translate(-50%, -50%);
+                font-size: .5rem;
+                content: "\f0d7";
+                font-family: FontAwesome;
+            }
+
+            // Tweak `bg-light` to inherit btn values
+            --background-color: var(--btn-bg);
+
+            &:hover, &:focus-visible {
+                --background-color: var(--btn-hover-bg);
+            }
+            &:active, &.active {
+                --background-color: var(--btn-active-bg);
+            }
+            &[disabled], &.disabled {
+                --background-color: var(--btn-disabled-bg);
+            }
+
+            // Override backend's `.show` to inherit btn values
+            &.show {
+                --background-color: var(--btn-hover-bg);
+
+                color: var(--btn-active-color);
+                border-color: var(--o-hb-btn-active-color, $o-we-color-accent) !important;
+            }
+        }
+
+        .o_select_menu_caret {
+            visibility: hidden !important;
+        }
+    }
+}
+
+.o-hb-selectMany2X-dropdown {
+    .o_select_menu_searchbox {
+        background-color: $o-we-sidebar-content-field-input-bg;
+
+        &:hover, &:focus-within {
+            --o-hb-select-bg-hover: #{$o-we-sidebar-content-field-input-bg};
+        }
+        &:focus-within {
+            box-shadow: 0 0 $o-we-border-width $o-we-border-width inset var(--o-hb-input-active-border, $o-we-sidebar-content-field-input-border-color);
+        }
+
+        &::before {
+            color: var(--o-hb-select-color);
+        }
+
+        input {
+            border: 0;
+        }
+    }
+
+    .o_select_menu_item {
+        --dropdown-item-padding-y: 6px;
+
+        line-height: 1.7;
+    }
+}

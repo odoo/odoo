@@ -1,0 +1,167 @@
+<odoo>
+    <data>
+        <record id="view_product_hr_expense_form" model="ir.ui.view">
+            <field name="name">product.template.expense.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <span name="sale_option" position="after">
+                    <span class="d-inline-flex">
+                        <field name="can_be_expensed"/>
+                        <label for="can_be_expensed"/>
+                    </span>
+                </span>
+            </field>
+        </record>
+
+        <record id="product_template_search_view_inherit_hr_expense" model="ir.ui.view">
+            <field name="name">product.template.search.view.inherit.hr_expense</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <filter name="filter_to_sell" position="after">
+                    <filter string="Expenses" name="filter_to_expense" domain="[('can_be_expensed', '=', True)]"/>
+                </filter>
+            </field>
+        </record>
+
+        <record id="product_product_expense_form_view" model="ir.ui.view">
+            <field name="name">product.product.expense.form</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <form string="Expense Categories">
+                    <div class="alert alert-warning" role="alert" invisible="not standard_price_update_warning">
+                        <field name="standard_price_update_warning"/>
+                    </div>
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <field name='product_variant_count' invisible='1'/>
+                        <field name="id" invisible="1"/>
+                        <field name="image_1920" widget="image" class="oe_avatar" options="{'image_preview': 'image_128'}"/>
+                        <field name="type" invisible="1"/>
+                        <div class="oe_title px-3">
+                            <label for="name" string="Product Name"/>
+                            <h1><field name="name" placeholder="e.g. Lunch"/></h1>
+                        </div>
+                        <group name="product_details">
+                            <group>
+                                <field name="active" invisible="1"/>
+                                <field name="type" invisible="1"/>
+                                <field name="currency_id" invisible="1"/>
+                                <label for="standard_price"/>
+                                <div class="o_row" groups="base.group_user">
+                                    <field name="standard_price"
+                                        class="w-50"
+                                        widget="monetary"
+                                        options="{'currency_field': 'currency_id'}"
+                                        help="When the cost of an expense product is different than 0, then the user
+                                            using this product won't be able to change the amount of the expense,
+                                            only the quantity. Use a cost different than 0 for expense categories funded by
+                                            the company at fixed cost like allowances for mileage, per diem, accommodation
+                                            or meal."/>
+                                    <span class="d-flex w-50 ms-2" invisible="standard_price == 0">
+                                        per <field name="uom_id" widget="many2one_uom" class="ms-2" options="{'no_create': True}"/>
+                                    </span>
+                                </div>
+                                <field name="default_code" string="Reference" class="w-50"/>
+                                <field name="categ_id" string="Category" class="w-50"/>
+                                <field name="company_id" class="w-50" groups="base.group_multi_company"/>
+                                <field name="description" string="Guideline" placeholder="e.g. Restaurants: only week days, for lunch"/>
+                            </group>
+                            <group>
+                                <field name="property_account_expense_id" class="w-50" groups="account.group_account_readonly"/>
+                                <field name="supplier_taxes_id" class="w-50" widget="many2many_tax_tags"
+                                       context="{'default_type_tax_use':'purchase', 'default_price_include': 1}"
+                                       options="{'no_quick_create': True}" placeholder="no taxes"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_product_expense_kanban_view" model="ir.ui.view">
+            <field name="name">product.product.kanban.expense</field>
+            <field name="inherit_id" ref="product.product_kanban_view"/>
+            <field name="mode">primary</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <xpath expr="//main" position="inside">
+                    <span>
+                        Cost: <field name="standard_price"/>
+                    </span>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_product_expense_tree_view" model="ir.ui.view">
+            <field name="name">product.product.expense.list</field>
+            <field name="model">product.product</field>
+            <field eval="50" name="priority"/>
+            <field name="arch" type="xml">
+                <list string="Product Variants" default_order="is_favorite desc, default_code, name, id">
+                    <field name="default_code"/>
+                    <field name="name"/>
+                    <field name="product_template_attribute_value_ids" widget="many2many_tags"
+                           groups="product.group_product_variant"/>
+                    <field name="standard_price"/>
+                    <field name="uom_id" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
+                    <field name="barcode"/>
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_product_expense_categories_tree_view">
+            <field name="name">product.product.expense.categories.list.view</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <list class="o_expense_categories" default_order="is_favorite desc, default_code, name, id">
+                    <field name="name" readonly="1"/>
+                    <field name="currency_id" column_invisible="True"/>
+                    <field name="default_code" optional="show" string="Reference" readonly="1"/>
+                    <field name="description" string="Note" optional="show" readonly="1"/>
+                    <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" optional="show" string="Sales Price"/>
+                    <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" optional="show"/>
+                    <field name="supplier_taxes_id" widget="many2many_tax_tags" optional="show"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="hr_expense_product" model="ir.actions.act_window">
+            <field name="name">Expense Categories</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="context">{"default_can_be_expensed": 1, 'default_type': 'service'}</field>
+            <field name="domain">[('can_be_expensed', '=', True)]</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                No expense categories found. Let's create one!
+              </p><p>
+                Expense categories can be reinvoiced to your customers.
+              </p>
+            </field>
+        </record>
+
+        <record id="hr_expense_product_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="product_product_expense_categories_tree_view"/>
+            <field name="act_window_id" ref="hr_expense_product"/>
+        </record>
+
+        <record id="hr_expense_product_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="product_product_expense_kanban_view"/>
+            <field name="act_window_id" ref="hr_expense_product"/>
+        </record>
+
+        <record id="hr_expense_product_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="product_product_expense_form_view"/>
+            <field name="act_window_id" ref="hr_expense_product"/>
+        </record>
+    </data>
+</odoo>

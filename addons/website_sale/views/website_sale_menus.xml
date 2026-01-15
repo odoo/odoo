@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <menuitem id="menu_ecommerce"
+        name="eCommerce"
+        parent="website.menu_website_configuration"
+        groups="sales_team.group_sale_salesman"
+        sequence="20">
+
+        <menuitem id="menu_orders"
+            name="Orders"
+            sequence="2">
+
+            <menuitem id="menu_orders_orders"
+                name="Orders"
+                action="action_orders_ecommerce"
+                sequence="1"/>
+            <menuitem id="menu_orders_unpaid_orders"
+                name="Unpaid Orders"
+                action="action_view_unpaid_quotation_tree"
+                sequence="2"/>
+            <menuitem id="menu_orders_abandoned_orders"
+                name="Abandoned Carts"
+                action="action_view_abandoned_tree"
+                sequence="3"/>
+            <menuitem id="menu_orders_customers"
+                name="Customers"
+                action="base.action_partner_customer_form"
+                sequence="4"/>
+
+        </menuitem>
+
+        <menuitem id="menu_catalog"
+            name="Products"
+            sequence="3">
+
+            <menuitem id="menu_catalog_products"
+                name="Products"
+                action="product_template_action_website"
+                sequence="1"/>
+            <menuitem id="menu_catalog_pricelists"
+                name="Pricelists"
+                action="product.product_pricelist_action2"
+                groups="product.group_product_pricelist"
+                sequence="3"/>
+            <menuitem id="menu_catalog_categories"
+                action="product_public_category_action"
+                sequence="4"/>
+            <menuitem id="menu_product_attribute_action"
+                action="product.attribute_action"
+                groups="product.group_product_variant"
+                sequence="5"/>
+            <menuitem
+                id="menu_product_combos"
+                name="Combo Choices"
+                action="product.product_combo_action"
+                sequence="6"
+            />
+            <menuitem id="product_catalog_product_tags"
+                name="Product Tags"
+                action="product.product_tag_action"/>
+            <menuitem
+                id="product_catalog_product_ribbons"
+                name="Product Ribbons"
+                action="website_sale.product_ribbon_action"
+            />
+        </menuitem>
+    </menuitem>
+
+    <menuitem id="menu_ecommerce_settings"
+        name="eCommerce"
+        parent="website.menu_website_global_configuration"
+        sequence="50">
+
+        <menuitem id="menu_ecommerce_payment_providers"
+                  name="Payment Providers"
+                  action="payment.action_payment_provider"
+                  sequence="10"
+        />
+        <menuitem id="menu_ecommerce_payment_methods"
+                  action="payment.action_payment_method"
+                  name="Payment Methods"
+                  sequence="20"
+        />
+        <menuitem id="menu_ecommerce_payment_tokens"
+                  action="payment.action_payment_token"
+                  groups="base.group_no_one"
+                  sequence="30"
+        />
+        <menuitem id="menu_ecommerce_payment_transactions"
+                  action="payment.action_payment_transaction"
+                  groups="base.group_no_one"
+                  sequence="40"
+        />
+        <menuitem id="menu_ecommerce_delivery"
+                  action="delivery.action_delivery_carrier_form"
+                  sequence="90"
+        />
+        <menuitem id="menu_delivery_zip_prefix"
+                  action="delivery.action_delivery_zip_prefix_list"
+                  groups="base.group_no_one"
+                  sequence="100"
+        />
+        <menuitem id="menu_product_feeds"
+                  action="website_sale.action_product_feeds"
+                  groups="website_sale.group_product_feed"
+                  sequence="150"
+        />
+
+    </menuitem>
+
+    <!-- Reporting sub-menus -->
+    <menuitem id="menu_report_sales" name="Online Sales"
+        action="sale_report_action_dashboard"
+        parent="website.menu_reporting"
+        groups="sales_team.group_sale_manager"
+        sequence="30"/>
+
+    <menuitem id="menu_product_pages"
+        name="Products"
+        action="action_product_pages_list"
+        parent="website.menu_content"
+        sequence="30"/>
+
+</odoo>

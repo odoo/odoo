@@ -1,0 +1,31 @@
+.o_mail_composer_message {
+    .note-editable {
+        min-height: 300px !important;
+        padding-left: 0;
+    }
+}
+
+.o_dialog {
+    // WIDGET_CONTAINER_WIDTH in movenode_plugin.js should be enforced
+    // to ensure enough space for the drag&drop feature of the editor.
+    $movenode-horizontal-padding: 25px;
+    .modal-content:has(.o_mail_composer_form_view) {
+        .modal-header {
+            padding-left: $movenode-horizontal-padding;
+            padding-right: $movenode-horizontal-padding;
+        }
+    } 
+    .o_mail_composer_form_view {
+        .o_form_renderer.o_form_nosheet.o_form_editable {
+            padding-left: $movenode-horizontal-padding;
+            padding-right: $movenode-horizontal-padding;
+            padding-top: var(--#{$prefix}modal-padding);
+        }
+        .o_mail_composer_message {
+            .note-editable {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+    }
+}

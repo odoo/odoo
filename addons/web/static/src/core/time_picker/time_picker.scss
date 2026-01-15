@@ -1,0 +1,25 @@
+
+.o_time_picker_input {
+    transition: all .1s ease-in-out;
+    transition-property: color, background-color, border-bottom-color;
+    color: $btn-color;
+
+    &.o_invalid {
+        color: o-text-color('danger');
+        border-bottom-color: map-get($theme-colors, 'danger');
+        background-color: $o-input-invalid-bg;
+    }
+}
+
+.o_time_picker_dropdown.o-dropdown--menu {
+    --dropdown-min-width: unset;
+    max-height: 15rem;
+}
+
+.o_datetime_picker .o_time_picker {
+    width: 4rem;
+
+    input {
+        text-align: center;
+    }
+}

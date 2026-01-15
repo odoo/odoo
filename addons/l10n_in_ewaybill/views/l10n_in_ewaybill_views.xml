@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_in_ewaybill_form_view" model="ir.ui.view">
+        <field name="name">l10n.in.ewaybill.form.view</field>
+        <field name="model">l10n.in.ewaybill</field>
+        <field name="arch" type="xml">
+            <form string="Ewaybill" create="false">
+                <header>
+                    <button name="action_generate_ewaybill"
+                            string="Generate e-Waybill"
+                            class="oe_highlight"
+                            type="object"
+                            invisible="state != 'pending'"
+                            data-hotkey="g"/>
+                    <button name="action_cancel_ewaybill"
+                            string="Cancel e-Waybill"
+                            type="object"
+                            invisible="state != 'generated'"
+                            data-hotkey="c"/>
+                    <button name="action_reset_to_pending"
+                            string="Reset to Pending"
+                            type="object"
+                            invisible="state in ['pending', 'generated']"
+                            data-hotkey="r"
+                            confirm="Are you sure you want to re-send the e-Waybill?"/>
+                    <button name="action_print"
+                            string="Print"
+                            class="oe_highlight"
+                            type="object"
+                            invisible="state != 'generated'"
+                            data-hotkey="f"/>
+                    <button name="action_export_content_json"
+                            string="Download Content JSON"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="not error_message"
+                            groups="base.group_no_one"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,generated"/>
+                </header>
+                <div class="alert alert-danger"
+                     role="alert"
+                     style="margin-bottom:0px;"
+                     invisible="not error_message or blocking_level == 'warning'">
+                    <div class="o_row">
+                        <field name="error_message"/>
+                    </div>
+                </div>
+                <div class="alert alert-warning"
+                     role="alert"
+                     style="margin-bottom:0px;"
+                     invisible="not error_message or blocking_level == 'error'">
+                    <div class="o_row">
+                        <field name="error_message"/>
+                    </div>
+                </div>
+                <sheet>
+                    <div class="oe_title">
+                        <h1 invisible="not name">
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group name="document_details" string="Document Details">
+                        <group>
+                            <field name="type_id" 
+                                   widget="selection"
+                                   readonly="state != 'pending'"
+                                   domain="[('allowed_supply_type', 'in', (supply_type == 'I' and 'in' or 'out', 'both'))]"
+                                   required="True"/>
+                        </group>
+                        <group>
+                            <field name="ewaybill_date" invisible="not ewaybill_date"/>
+                            <field name="document_number"/>
+                            <field name="document_date" readonly="1"/>
+                        </group>
+                    </group>
+                    <group name="partners" string="Address Details">
+                    <field name="account_move_id" invisible="1"/> <!-- To compute the Billing and Shipping partners -->
+                        <group>
+                            <field name="partner_bill_from_id"
+                                   force_save="1"
+                                   readonly="state == 'pending' and not is_bill_from_editable or state != 'pending'"/>
+                            <field name="partner_bill_to_id"
+                                   force_save="1"
+                                   readonly="state == 'pending' and not is_bill_to_editable or state != 'pending'"/>
+                        </group>
+                        <group>
+                            <field name="partner_ship_from_id"
+                                   force_save="1"
+                                   readonly="state == 'pending' and not is_ship_from_editable or state != 'pending'"/>
+                            <field name="partner_ship_to_id"
+                                   force_save="1"
+                                   readonly="state == 'pending' and not is_ship_to_editable or state != 'pending'"/>
+                        </group>
+                    </group>
+                    <group name="transporter" string="Transporter Details">
+                        <group>
+                            <field name="transporter_id"
+                                   readonly="state != 'pending'"
+                                   required="not mode"/>
+                        </group>
+                        <group/>
+                    </group>
+                    <group name="part_b" string="Transportation Details (Part B)">
+                        <group>
+                            <field name="mode" readonly="state != 'pending'"/>
+                            <field name="vehicle_type"
+                                   invisible="mode not in ('1','4')"
+                                   required="mode == '1'"
+                                   readonly="state != 'pending'"/>
+                            <field name="vehicle_no"
+                                   invisible="mode not in ('1','4')"
+                                   required="mode == '1' and not transportation_doc_no"
+                                   readonly="state != 'pending'"/>
+                            <label for="distance" readonly="state != 'pending'"/>
+                            <div class="o_row" name="distance">
+                                <field name="distance" readonly="state != 'pending'"/>
+                                <span>km</span>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="transportation_doc_no"
+                                   invisible="mode != '1'"/>
+                            <label for="transportation_doc_no"
+                                   string="RR No"
+                                   invisible="mode != '2'"/>
+                            <label for="transportation_doc_no"
+                                   string="Airway Bill"
+                                   invisible="mode != '3'"/>
+                            <label for="transportation_doc_no"
+                                   invisible="mode != '4'"
+                                   string="Bill of lading No"/>
+                            <div class="o_row">
+                                <field name="transportation_doc_no"
+                                       readonly="state != 'pending'"
+                                       required="mode in ('2', '3', '4')"
+                                       invisible="not mode"/>
+                            </div>
+
+
+                            <label for="transportation_doc_date"
+                                   invisible="mode != '1'"/>
+                            <label for="transportation_doc_date"
+                                   string="RR Date"
+                                   invisible="mode != '2'"/>
+                            <label for="transportation_doc_date"
+                                   string="Airway Bill Date"
+                                   invisible="mode != '3'"/>
+                            <label for="transportation_doc_date"
+                                   string="Bill of lading Date"
+                                   invisible="mode != '4'"/>
+                            <div class="o_row">
+                                <field name="transportation_doc_date"
+                                       readonly="state != 'pending'"
+                                       required="mode in ('2', '3', '4')"
+                                       invisible="not mode"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group name="cancel_ewaybill"
+                           string="Cancel details"
+                           invisible="state != 'cancel'">
+                        <group>
+                            <field name="cancel_reason" readonly="state != 'generated'"/>
+                            <field name="cancel_remarks" readonly="state != 'generated'"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+                <!-- Chatter -->
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_in_ewaybill_form_action" model="ir.actions.act_window">
+        <field name="name">e-Waybill</field>
+        <field name="res_model">l10n.in.ewaybill</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="l10n_in_ewaybill_form_view"/>
+    </record>
+</odoo>

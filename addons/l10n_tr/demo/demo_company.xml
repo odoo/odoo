@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.partner_demo_company_tr" model="res.partner" context="{'no_vat_validation': True}" forcecreate="1">
+        <field name="name">TR Company</field>
+        <field name="vat">1234567801</field>
+        <field name="street">3281. Cadde</field>
+        <field name="street2">Mavişehir Sokak, 5. Kat</field>
+        <field name="city">İç Anadolu Bölgesi</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="state_id" ref="base.state_tr_81"/>
+        <field name="zip">06810</field>
+        <field name="phone">+90 501 234 56 78</field>
+        <field name="email">info@company.trexample.com</field>
+        <field name="website">www.trexample.com</field>
+        <field name="is_company" eval="True"/>
+        <field name="ref">Düzce Vergi Dairesi Müdürlüğü</field>
+    </record>
+
+    <record id="l10n_tr_res_partner_1" model="res.partner" context="{'no_vat_validation': True}">
+        <field name="name">Başhisar Elektronik ve Hizmetler A.Ş.</field>
+        <field name="is_company">1</field>
+        <field name="vat">1234567802</field>
+        <field name="street">Üçhisar Mahallesi</field>
+        <field name="street2">Kaya Sokak No: 15</field>
+        <field name="city">Ürgüp</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="state_id" ref="base.state_tr_50"/>
+        <field name="zip">50240</field>
+        <field name="phone">+90 509 987 12 34</field>
+        <field name="email">demo.elektronik@company.trexample.com</field>
+        <field name="website">http://www.demo-elektronik-example.com</field>
+        <field name="ref">Nevşehir Vergi Dairesi Müdürlüğü</field>
+    </record>
+
+    <record id="l10n_tr_res_partner_2" model="res.partner">
+        <field name="name">T.C. Sağlık Bakanlığı – Konak Belediyesi Başkanlığı</field>
+        <field name="vat">42451934800</field>
+        <field name="street">Atatürk Caddesi</field>
+        <field name="street2">Konak Sokak, No: 45</field>
+        <field name="city">Konak Belediyesi</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="state_id" ref="base.state_tr_35"/>
+        <field name="zip">35100</field>
+        <field name="phone">+90 500 987 56 00</field>
+        <field name="email">kamu@gmail.trexample.com</field>
+        <field name="website">http://www.kamu-example.com</field>
+        <field name="ref">İzmir Vergi Dairesi Başkanlığı</field>
+    </record>
+
+    <record id="l10n_tr_res_partner_3" model="res.partner" context="{'no_vat_validation': True}">
+        <field name="name">Ayşe Yılmaz</field>
+        <field name="vat">02098712345</field>
+        <field name="street">İstiklal Caddesi No: 50</field>
+        <field name="street2">Daire: 7, Kat: 3</field>
+        <field name="city">Beyoğlu</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="state_id" ref="base.state_tr_34"/>
+        <field name="zip">34000</field>
+        <field name="phone">+90 599 987 56 00</field>
+        <field name="email">ayseyilmaz@trexample.com</field>
+    </record>
+
+    <record id="base.demo_company_tr" model="res.company" forcecreate="1">
+        <field name="name">TR Company</field>
+        <field name="partner_id" ref="base.partner_demo_company_tr"/>
+    </record>
+
+    <record id="base.demo_bank_tr" model="res.partner.bank" forcecreate="1">
+        <field name="acc_number">TR440006279848365968382289</field>
+        <field name="partner_id" ref="base.partner_demo_company_tr"/>
+        <field name="company_id" ref="base.demo_company_tr"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('base.demo_company_tr')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('base.demo_company_tr'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>tr</value>
+        <value model="res.company" eval="obj().env.ref('base.demo_company_tr')"/>
+        <value name="install_demo" eval="True"/>
+    </function>
+</odoo>

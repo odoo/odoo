@@ -3,8 +3,8 @@
 
 {
     'name': 'VAT Number Validation',
-    'version': '1.0',
-    'category': 'Accounting',
+    'version': '2.0',
+    'category': 'Accounting/Accounting',
     'description': """
 VAT validation for Partner's VAT numbers.
 =========================================
@@ -35,10 +35,10 @@ such as Chile, Colombia, Mexico, Norway or Russia. For unsupported countries,
 only the country code will be validated.
     """,
     'depends': ['account'],
-    'website': 'https://www.odoo.com/page/accounting',
     'data': [
+        'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
-        'views/res_company_views.xml',
-        'views/res_config_view.xml',
     ],
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
 }

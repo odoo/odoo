@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="google_address_autocomplete.AddressAutoCompleteTemplate">
+        <AutoComplete
+            value="props.record.data[props.name] || ''"
+            sources="sources"
+            placeholder="props.placeholder"
+            searchOnInputClick="false"
+            inputDebounceDelay="350"
+            input="input"
+        >
+            <t t-set-slot="option" t-slot-scope="optionScope">
+                <strong t-esc="optionScope.label"/>
+            </t>
+        </AutoComplete>
+    </t>
+</templates>

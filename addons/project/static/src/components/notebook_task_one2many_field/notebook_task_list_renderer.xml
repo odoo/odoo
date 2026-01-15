@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="project.NotebookTaskListRenderer.Rows" t-inherit="web.ListRenderer.Rows" t-inherit-mode="primary">
+        <xpath expr="//t[@t-foreach='list.records']" position="replace">
+            <t t-foreach="list.records" t-as="record" t-key="record.id">
+                <t t-if="!['1_done','1_canceled'].includes(record.data.state) or !hideState.hide">
+                    <t t-call="{{ constructor.recordRowTemplate }}"/>
+                </t>
+            </t>
+        </xpath>
+
+        <xpath expr="//t[@t-foreach='controls']" position="after">
+            <a t-if="ShowX2MRecords" role="button" class="ml16 o_toggle_closed_task_button" href="#" t-on-click="() => this.toggleHideClosed()">
+                <t t-esc="toggleListHideLabel"/>
+            </a>
+        </xpath>
+    </t>
+</templates>
