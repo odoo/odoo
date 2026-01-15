@@ -356,6 +356,25 @@ class IrModel(models.Model):
             if model.state != 'manual':
                 raise UserError(_("Model “%s” contains module data and cannot be removed.", model.name))
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_related_attachments(self):
+        """ Delete attachment associated with the models being deleted. """
+        models = tuple(self.mapped('model'))
+
+        # Get files attached solely to the models being deleted (and none other)
+        fname_rows = self.env.execute_query(SQL(
+            "SELECT DISTINCT store_fname FROM ir_attachment WHERE res_model IN %s",
+            models,
+        ))
+
+        self.env.execute_query(SQL(
+            "DELETE FROM ir_attachment WHERE res_model IN %s",
+            models,
+        ))
+
+        for (fname,) in fname_rows:
+            self.env['ir.attachment']._file_delete(fname)
+
     def unlink(self):
         # prevent screwing up fields that depend on these models' fields
         manual_models = self.filtered(lambda model: model.state == 'manual')

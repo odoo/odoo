@@ -20,7 +20,7 @@ class IrModel(models.Model):
     )
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_mail_stuff(self):
+    def _unlink_related_mail_data(self):
         """ Delete mail data (followers, messages, activities) associated with
         the models being deleted.
         """
@@ -38,26 +38,6 @@ class IrModel(models.Model):
 
         query = "DELETE FROM mail_message WHERE model in %s"
         self.env.cr.execute(query, [models])
-
-        # Get files attached solely to the models being deleted (and none other)
-        models = tuple(self.mapped('model'))
-        query = """
-            SELECT DISTINCT store_fname
-            FROM ir_attachment
-            WHERE res_model IN %s
-            EXCEPT
-            SELECT store_fname
-            FROM ir_attachment
-            WHERE res_model not IN %s;
-        """
-        self.env.cr.execute(query, [models, models])
-        fnames = self.env.cr.fetchall()
-
-        query = """DELETE FROM ir_attachment WHERE res_model in %s"""
-        self.env.cr.execute(query, [models])
-
-        for (fname,) in fnames:
-            self.env['ir.attachment']._file_delete(fname)
 
     def write(self, vals):
         if self and ('is_mail_thread' in vals or 'is_mail_activity' in vals or 'is_mail_blacklist' in vals):
