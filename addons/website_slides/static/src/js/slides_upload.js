@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { uniqueId } from '@web/core/utils/functions';
-import { renderToElement } from "@web/core/utils/render";
+import { renderToElement, renderToFragment } from "@web/core/utils/render";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import Dialog from '@web/legacy/js/core/dialog';
 import publicWidget from '@web/legacy/js/public/public_widget';
@@ -514,7 +514,7 @@ var SlideUploadDialog = Dialog.extend({
             this.$modal.find('.modal-dialog').addClass('modal-lg');
         }
         this.$('.o_w_slide_upload_modal_container').empty();
-        this.$('.o_w_slide_upload_modal_container').append(renderToElement(tmpl, {widget: this}));
+        this.$('.o_w_slide_upload_modal_container').append(renderToFragment(tmpl, {widget: this}));
 
         this._resetModalButton();
 

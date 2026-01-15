@@ -9,7 +9,7 @@
         >
             <t t-slot="default"/>
             <t t-if="props.isReady">
-                <div class="o_crop_overlay"/>
+                <div class="o_crop_overlay" t-att-class="{'o_crop_overlay_ios': isIOS}"/>
                 <img class="o_crop_icon" src="/web/static/img/transform.svg" draggable="false"/>
             </t>
         </div>
