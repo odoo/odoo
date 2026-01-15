@@ -622,8 +622,12 @@ class DiscussChannel(models.Model):
         self.ensure_one()
         parts = []
         previous_message_author = None
-        # sudo - mail.message: getting empty messages to exclude them is allowed.
-        for message in (self.message_ids - self.message_ids.sudo()._filter_empty()).sorted("id"):
+        # sudo - mail.message: getting empty/notification messages to exclude them is allowed.
+        messages = (
+            self.message_ids.sudo().filtered(lambda m: m.message_type != "notification")
+            - self.message_ids.sudo()._filter_empty()
+        )
+        for message in messages.sorted("id"):
             # sudo - res.partner: accessing livechat username or name is allowed to visitor
             message_author = message.author_id.sudo() or message.author_guest_id
             if previous_message_author != message_author:
