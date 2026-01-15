@@ -31,7 +31,13 @@ def _alter_sequence(cr, seq_name, number_increment=None, number_next=None):
     """ Alter a PostreSQL sequence. """
     if number_increment == 0:
         raise UserError(_("Step must not be zero."))
-    cr.execute("SELECT relname FROM pg_class WHERE relkind=%s AND relname=%s", ('S', seq_name))
+    cr.execute(
+        "SELECT relname FROM pg_class"
+        "  JOIN pg_namespace n ON pg_class.relnamespace = n.oid"
+        " WHERE relkind = %s AND relname = %s"
+        "   AND n.nspname = current_schema",
+        ('S', seq_name)
+    )
     if not cr.fetchone():
         # sequence is not created yet, we're inside create() so ignore it, will be set later
         return
