@@ -1,0 +1,79 @@
+.s_dynamic_snippet_products {
+    // RTL chevron rotation
+    .o_rtl & {
+        --o-chevron-rtl-rotate: 180deg;
+    }
+
+    // Adjusts carousel arrows' aligments
+    @mixin o-aligns-controlers {
+
+        .carousel-control-next,
+        .carousel-control-prev {
+            aspect-ratio: var(--o-wsale-card-thumb-aspect-ratio, 1/1);
+            width: var(--o-wsale-dynamic-snippet-col-size) !important;
+            transform: scaleX(.2);
+            bottom: auto;
+            isolation: isolate;
+            padding-top: 1rem;
+
+            .oi {
+                transform: scaleX(5) rotate(var(--o-chevron-rtl-rotate, 0deg));
+            }
+        }
+
+        .carousel-control-next {
+            transform-origin: center right;
+        }
+
+        .carousel-control-prev {
+            transform-origin: center left;
+        }
+    }
+
+    // Adapts arrow container width
+    @mixin o-adapts-col-size {
+        .carousel {
+            --o-wsale-dynamic-snippet-col-size: var(--o-carousel-item-width-percentage);
+
+            &:where(:has(.col-6)) {
+                --o-wsale-dynamic-snippet-col-size: 50%;
+            }
+
+            &:where(:has(.col-3)) {
+                --o-wsale-dynamic-snippet-col-size: 25%;
+            }
+        }
+    }
+    .s_dynamic_snippet_row.row {
+        --gutter-x: var(--o-wsale-products-grid-gap, 16px);
+    }
+
+    .carousel-item {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    &.o_wsale_products_opt_design_grid .s_dynamic_snippet_row.row {
+        --gutter-x: 0;
+        --o-wsale-card-border-width: 1px 1px 1px 0;
+
+        > div:first-of-type {
+            --o-wsale-card-border-width: 1px;
+        }
+    }
+
+    // Applies arrows' alignment except when title is on the left + desktop
+    &:where(.o_wsale_products_opt_design_thumbs) {
+        &:not(:has(.s_dynamic_snippet_title_aside)) {
+            @include o-aligns-controlers;
+            @include o-adapts-col-size;
+        }
+
+        @include media-breakpoint-down(lg) {
+            &:has(.s_dynamic_snippet_title_aside) {
+                @include o-aligns-controlers;
+                @include o-adapts-col-size;
+            }
+        }
+    }
+}

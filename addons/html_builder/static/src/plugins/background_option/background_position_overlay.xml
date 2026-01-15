@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BackgroundPositionOverlay">
+    <div class="o_we_background_position_overlay position-fixed" t-ref="backgroundOverlay" t-on-wheel="onWheel">
+        <div class="o_we_overlay_mask" t-ref="overlayMask" />
+        <div class="o_we_overlay_content position-absolute" t-ref="overlayContent">
+            <div class="o_we_background_dragger" t-ref="bgDragger" title="Click and drag the background to adjust its position!"
+                t-on-mousedown.prevent.stop="onDragBackgroundStart" t-on-pointerdown.stop="" />
+            <div class="o_we_overlay_buttons position-absolute d-flex m-1" style="top: 0">
+                <button class="btn btn-primary me-1 o_btn_apply" t-on-click="apply" t-on-pointerdown.stop="">Apply</button>
+                <button class="btn btn-danger o_btn_discard" t-on-click="discard" t-on-pointerdown.stop="">Discard</button>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

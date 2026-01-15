@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_warehouse_orderpoint_tree_editable_inherited_purchase" model="ir.ui.view">
+        <field name="name">stock.warehouse.orderpoint.list.editable.inherit.purchase</field>
+        <field name="model">stock.warehouse.orderpoint</field>
+        <field name="inherit_id" ref="stock.view_warehouse_orderpoint_tree_editable"/>
+        <field name="arch" type="xml">
+            <field name="route_id" position="after">
+                <field name="show_bom" column_invisible="True"/>
+                <field name="bom_id_placeholder" column_invisible="True"/> <!-- Needed for the placeholder widget -->
+                <field name="bom_id" widget="stock.forced_placeholder" optional="hide" invisible="not show_bom" context="{'default_product_tmpl_id': product_tmpl_id, 'display_bom_uom_qty': True}" options="{'placeholder_field': 'bom_id_placeholder'}" decoration-muted="not bom_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>

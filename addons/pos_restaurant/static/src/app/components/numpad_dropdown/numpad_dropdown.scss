@@ -1,0 +1,18 @@
+.table-selector {
+    min-width: 300px;
+    height: clamp(200px, 50vh, 500px);
+
+    position: absolute;
+    right: map-get($spacers, 2);
+    top: $pos-navbar-height + map-get($spacers, 2);
+}
+
+.table-selector-small, .table-selector {
+    .input {
+        flex: 0 0 10%;
+    }
+
+    .jump-button {
+        flex: 0 0 15%;
+    }
+}

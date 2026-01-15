@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.ImageFilterOption">
+    <BuilderRow label.translate="Filter" level="this.props.level" t-if="state.showFilter" disabled="state.disableFilter" tooltip="state.tooltip">
+        <BuilderSelect disabled="state.disableFilter">
+            <BuilderSelectItem action="'glFilter'" actionParam="''">None</BuilderSelectItem>
+            <BuilderSelectItem action="'glFilter'" actionParam="'blur'">Blur</BuilderSelectItem>
+            <BuilderSelectItem action="'glFilter'" actionParam="'1977'">1977</BuilderSelectItem>
+            <BuilderSelectItem action="'glFilter'" actionParam="'aden'">Aden</BuilderSelectItem>
+            <BuilderSelectItem action="'glFilter'" actionParam="'brannan'">Brannan</BuilderSelectItem>
+            <BuilderSelectItem action="'glFilter'" actionParam="'earlybird'">EarlyBird</BuilderSelectItem>
+            <BuilderSelectItem action="'glFilter'" actionParam="'inkwell'">Inkwell</BuilderSelectItem>
+            <BuilderSelectItem action="'glFilter'" actionParam="'maven'">Maven</BuilderSelectItem>
+            <BuilderSelectItem action="'glFilter'" actionParam="'toaster'">Toaster</BuilderSelectItem>
+            <BuilderSelectItem action="'glFilter'" actionParam="'walden'">Walden</BuilderSelectItem>
+            <BuilderSelectItem action="'glFilter'" actionParam="'valencia'">Valencia</BuilderSelectItem>
+            <BuilderSelectItem action="'glFilter'" actionParam="'xpro'">Xpro</BuilderSelectItem>
+            <BuilderSelectItem action="'glFilter'" actionParam="'custom'" id="custom_glfilter_opt">Custom</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <t t-if="state.isCustomFilter">
+        <BuilderRow level="this.props.level + 1" label.translate="Color">
+            <BuilderSelect action="'setCustomFilter'" actionParam="'blend'">
+                <BuilderSelectItem actionValue="'normal'">Normal</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'overlay'">Overlay</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'screen'">Screen</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'multiply'">Multiply</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'lighter'">Add</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'exclusion'">Exclusion</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'darken'">Darken</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'lighten'">Lighten</BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderColorPicker action="'setCustomFilter'" actionParam="'filterColor'" enabledTabs="['custom']" />
+        </BuilderRow>
+        <BuilderRow level="this.props.level + 1" label.translate="Saturation">
+            <BuilderRange
+                action="'setCustomFilter'"
+                actionParam="'saturation'"
+                min="-100"
+                max="100"
+                step="10" />
+        </BuilderRow>
+        <BuilderRow level="this.props.level + 1" label.translate="Contrast">
+            <BuilderRange
+                action="'setCustomFilter'"
+                actionParam="'contrast'"
+                min="-100"
+                max="100"
+                step="10" />
+        </BuilderRow>
+        <BuilderRow level="this.props.level + 1" label.translate="Brightness">
+            <BuilderRange
+                action="'setCustomFilter'"
+                actionParam="'brightness'"
+                min="-100"
+                max="100"
+                step="10" />
+        </BuilderRow>
+        <BuilderRow level="this.props.level + 1" label.translate="Sepia">
+            <BuilderRange
+                action="'setCustomFilter'"
+                actionParam="'sepia'"
+                min="0"
+                max="100"
+                step="5" />
+        </BuilderRow>
+        <BuilderRow level="this.props.level + 1" label.translate="Blur">
+            <BuilderRange
+                action="'setCustomFilter'"
+                actionParam="'blur'"
+                min="0"
+                max="2000"
+                step="100" />
+        </BuilderRow>
+    </t>
+</t>
+
+</templates>

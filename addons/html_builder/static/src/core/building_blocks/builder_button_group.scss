@@ -1,0 +1,18 @@
+.o-hb-button-group.btn-group {
+    flex: 1 1 50%;
+    min-width: 0;
+    align-items: center;
+
+    > :not(.btn-check:first-child) + .btn,
+    .btn-group > .btn-group:not(:first-child) {
+        margin-left: calc(var(--border-width) * -1);
+    }
+
+    .o-hb-btn {
+        flex: 1 1 auto;
+
+        &.active {
+            z-index: 2;
+        }
+    }
+}

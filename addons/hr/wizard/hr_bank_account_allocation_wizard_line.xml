@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_bank_account_allocation_line_list" model="ir.ui.view">
+        <field name="name">hr.bank.account.allocation.wizard.line.list</field>
+        <field name="model">hr.bank.account.allocation.wizard.line</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" create='0' delete='0'>
+                <field name="sequence" widget="handle"/>
+                <field name="acc_number" readonly="1" string="Account Number"/>
+                <field name="amount" string="Amount" widget='monetary'/>
+                <field name="symbol" string="" width="50px"/>
+                <field name="amount_type" string="Type"/>
+                <field name="trusted" widget="boolean_toggle" string="Trusted"/>
+            </list>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebar">
+        <div class="o-mail-DiscussSidebar-resizablePanelContainer h-100 d-flex">
+            <ResizablePanel handleSide="'end'" initialWidth="store.discuss.isSidebarCompact ? store.discuss.COMPACT_SIDEBAR_WIDTH : store.discuss.INSPECTOR_WIDTH" minWidth="60" onResize.bind="onResize">
+                <div class="o-mail-DiscussSidebar d-flex d-print-none flex-column overflow-auto o-scrollbar-thin flex-shrink-0 h-100 border-end border-secondary z-1 o-mail-discussSidebarBgColor o-gap-0_5" t-att-class="{ 'o-compact': store.discuss.isSidebarCompact }">
+                    <DiscussSearch class="{
+                        'position-sticky top-0 z-2 o-mail-discussSidebarBgColor': true,
+                        'pt-2 o-pb-0_5 o-mb-0_5': !store.inPublicPage and store.discuss.isSidebarCompact,
+                        'py-2': !store.inPublicPage and !store.discuss.isSidebarCompact,
+                        'pt-2 o-px-2_5': store.inPublicPage,
+                        'flex-column': store.discuss.isSidebarCompact and !ui.isSmall,
+                        'o-px-2_5 mt-1': !store.discuss.isSidebarCompact or ui.isSmall,
+                    }"/>
+                    <t t-foreach="discussSidebarItems" t-as="item" t-key="item_index" t-component="item"/>
+                </div>
+            </ResizablePanel>
+        </div>
+    </t>
+</templates>

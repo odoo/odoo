@@ -1,0 +1,181 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+    <cbc:ID>RINV/2025/00001</cbc:ID>
+    <cbc:IssueDate>2025-01-01</cbc:IssueDate>
+    <cbc:IssueTime>00:00:00Z</cbc:IssueTime>
+    <cbc:InvoiceTypeCode listVersionID="1.1">04</cbc:InvoiceTypeCode>
+    <cbc:DocumentCurrencyCode>USD</cbc:DocumentCurrencyCode>
+    <cac:BillingReference>
+        <cac:InvoiceDocumentReference>
+            <cbc:ID>___ignore___</cbc:ID>
+            <cbc:UUID>___ignore___</cbc:UUID>
+        </cac:InvoiceDocumentReference>
+    </cac:BillingReference>
+    <cac:AccountingSupplierParty>
+        <cac:Party>
+            <cbc:IndustryClassificationCode name="Growing of maize">01111</cbc:IndustryClassificationCode>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="TIN">C2584563200</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="BRN">202001234567</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>MY Test Company</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:CityName>Kuala Lumpur</cbc:CityName>
+                <cbc:PostalZone>50300</cbc:PostalZone>
+                <cbc:CountrySubentity>Kuala Lumpur</cbc:CountrySubentity>
+                <cbc:CountrySubentityCode>14</cbc:CountrySubentityCode>
+                <cac:AddressLine>
+                    <cbc:Line>1 Wisma Dato Dagang</cbc:Line>
+                </cac:AddressLine>
+                <cac:AddressLine>
+                    <cbc:Line>Jln Raja Alang Kampung Bahru Mala</cbc:Line>
+                </cac:AddressLine>
+                <cac:Country>
+                    <cbc:IdentificationCode listID="ISO3166-1" listAgencyID="6">MYS</cbc:IdentificationCode>
+                    <cbc:Name>Malaysia</cbc:Name>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>MY Test Company</cbc:RegistrationName>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:ID>___ignore___</cbc:ID>
+                <cbc:Name>MY Test Company</cbc:Name>
+                <cbc:Telephone>+60123456789</cbc:Telephone>
+                <cbc:ElectronicMail>info@company.myexample.com</cbc:ElectronicMail>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingSupplierParty>
+    <cac:AccountingCustomerParty>
+        <cac:Party>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="TIN">EI00000000010</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="BRN">NA</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name>General Public</cbc:Name>
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <cbc:CityName>NA</cbc:CityName>
+                <cbc:CountrySubentity>Johor</cbc:CountrySubentity>
+                <cbc:CountrySubentityCode>17</cbc:CountrySubentityCode>
+                <cac:AddressLine>
+                    <cbc:Line>NA</cbc:Line>
+                </cac:AddressLine>
+                <cac:Country>
+                    <cbc:IdentificationCode listID="ISO3166-1" listAgencyID="6">MYS</cbc:IdentificationCode>
+                    <cbc:Name>Malaysia</cbc:Name>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>General Public</cbc:RegistrationName>
+            </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:ID>___ignore___</cbc:ID>
+                <cbc:Name>General Public</cbc:Name>
+                <cbc:Telephone>NA</cbc:Telephone>
+            </cac:Contact>
+        </cac:Party>
+    </cac:AccountingCustomerParty>
+    <cac:Delivery>
+        <cac:DeliveryParty>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="TIN">EI00000000010</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="BRN">NA</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PostalAddress>
+                <cbc:CityName>NA</cbc:CityName>
+                <cbc:CountrySubentity>Johor</cbc:CountrySubentity>
+                <cbc:CountrySubentityCode>17</cbc:CountrySubentityCode>
+                <cac:AddressLine>
+                    <cbc:Line>NA</cbc:Line>
+                </cac:AddressLine>
+                <cac:Country>
+                    <cbc:IdentificationCode listID="ISO3166-1" listAgencyID="6">MYS</cbc:IdentificationCode>
+                    <cbc:Name>Malaysia</cbc:Name>
+                </cac:Country>
+            </cac:PostalAddress>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName>General Public</cbc:RegistrationName>
+            </cac:PartyLegalEntity>
+        </cac:DeliveryParty>
+    </cac:Delivery>
+    <cac:PrepaidPayment>
+        <cbc:PaidAmount currencyID="USD">420.00</cbc:PaidAmount>
+    </cac:PrepaidPayment>
+    <cac:TaxExchangeRate>
+        <cbc:SourceCurrencyCode>USD</cbc:SourceCurrencyCode>
+        <cbc:TargetCurrencyCode>MYR</cbc:TargetCurrencyCode>
+        <cbc:CalculationRate>0.5</cbc:CalculationRate>
+    </cac:TaxExchangeRate>
+    <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="USD">20.00</cbc:TaxAmount>
+        <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="USD">400.00</cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="USD">20.00</cbc:TaxAmount>
+            <cbc:Percent>5.0</cbc:Percent>
+            <cac:TaxCategory>
+                <cbc:ID>01</cbc:ID>
+                <cbc:Percent>5.0</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">OTH</cbc:ID>
+                </cac:TaxScheme>
+            </cac:TaxCategory>
+        </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:LegalMonetaryTotal>
+        <cbc:LineExtensionAmount currencyID="USD">400.00</cbc:LineExtensionAmount>
+        <cbc:TaxExclusiveAmount currencyID="USD">400.00</cbc:TaxExclusiveAmount>
+        <cbc:TaxInclusiveAmount currencyID="USD">420.00</cbc:TaxInclusiveAmount>
+        <cbc:PrepaidAmount currencyID="USD">0.00</cbc:PrepaidAmount>
+        <cbc:PayableAmount currencyID="USD">0.00</cbc:PayableAmount>
+    </cac:LegalMonetaryTotal>
+    <cac:InvoiceLine>
+        <cbc:ID>1</cbc:ID>
+        <cbc:InvoicedQuantity unitCode="C62">2.0</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount currencyID="USD">400.00</cbc:LineExtensionAmount>
+        <cac:TaxTotal>
+            <cbc:TaxAmount currencyID="USD">20.00</cbc:TaxAmount>
+            <cac:TaxSubtotal>
+                <cbc:TaxableAmount currencyID="USD">400.00</cbc:TaxableAmount>
+                <cbc:TaxAmount currencyID="USD">20.00</cbc:TaxAmount>
+                <cbc:Percent>5.0</cbc:Percent>
+                <cac:TaxCategory>
+                    <cbc:ID>01</cbc:ID>
+                    <cbc:Percent>5.0</cbc:Percent>
+                    <cac:TaxScheme>
+                        <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">OTH</cbc:ID>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubtotal>
+        </cac:TaxTotal>
+        <cac:Item>
+            <cbc:Description>Product 1</cbc:Description>
+            <cbc:Name>Product 1</cbc:Name>
+            <cac:CommodityClassification>
+                <cbc:ItemClassificationCode listID="CLASS">004</cbc:ItemClassificationCode>
+            </cac:CommodityClassification>
+            <cac:ClassifiedTaxCategory>
+                <cbc:ID>01</cbc:ID>
+                <cbc:Percent>5.0</cbc:Percent>
+                <cac:TaxScheme>
+                    <cbc:ID schemeID="UN/ECE 5153" schemeAgencyID="6">OTH</cbc:ID>
+                </cac:TaxScheme>
+            </cac:ClassifiedTaxCategory>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="USD">200.0</cbc:PriceAmount>
+        </cac:Price>
+        <cac:ItemPriceExtension>
+            <cbc:Amount currencyID="USD">400.00</cbc:Amount>
+        </cac:ItemPriceExtension>
+    </cac:InvoiceLine>
+</Invoice>

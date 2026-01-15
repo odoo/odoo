@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.module.category" id="module_category_hidden">
+            <field name="name">Technical</field>
+            <field name="sequence">70</field>
+            <field name="visible" eval="0" />
+        </record>
+
+        <record model="ir.module.category" id="module_category_accounting">
+            <field name="name">Accounting</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_accounting_localizations">
+            <field name="name">Localization</field>
+            <field name="sequence">65</field>
+            <field name="visible" eval="0" />
+            <field name="parent_id" ref="module_category_accounting"/>
+        </record>
+
+        <record model="ir.module.category" id="module_category_payroll_localization">
+            <field name="name">Payroll Localization</field>
+            <field name="visible" eval="0" />
+        </record>
+
+        <record model="ir.module.category" id="module_category_accounting_localizations_account_charts">
+            <field name="parent_id" ref="module_category_accounting_localizations" />
+            <field name="name">Account Charts</field>
+            <field name="visible" eval="0" />
+        </record>
+
+        <record model="ir.module.category" id="module_category_accounting_accounting">
+            <field name="name">Invoicing</field>
+            <field name="sequence">4</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_sales">
+            <field name="name">Sales</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_human_resources">
+            <field name="name">Human Resources</field>
+            <field name="sequence">45</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_marketing">
+            <field name="name">Marketing</field>
+            <field name="sequence">40</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_supply_chain">
+            <field name="name">Supply Chain</field>
+            <field name="sequence">25</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_shipping_connectors">
+            <field name="name">Shipping Connectors</field>
+            <field name="sequence">50</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_website">
+            <field name="name">Website</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_theme">
+            <field name="name">Theme</field>
+            <field name="exclusive" eval="0"/>
+            <field name="sequence">50</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_administration">
+            <field name="name">Administration</field>
+            <field name="sequence">100</field>
+            <field name="parent_id" eval="False"/>
+        </record>
+
+        <record model="ir.module.category" id="base.module_category_human_resources_referrals">
+            <field name="name">Referrals</field>
+            <field name="description">Helps you manage referrals
+                User : Access to referral, share job, gain points, buy rewards
+                Administrator : edit rewards and more</field>
+            <field name="sequence">11</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_human_resources_appraisals">
+            <field name="name">Appraisals</field>
+            <field name="description">A user without any rights on Appraisals will be able to see the application, create and manage appraisals for himself and the people he's manager of.</field>
+            <field name="sequence">15</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_sales_sign">
+            <field name="name">Sign</field>
+            <field name="description">Helps you sign and complete your documents easily.</field>
+            <field name="sequence">25</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_services">
+            <field name="name">Services</field>
+            <field name="sequence">15</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_services_helpdesk">
+            <field name="name">Helpdesk</field>
+            <field name="description" />
+            <field name="sequence">14</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_services_appointment">
+            <field name="name">Appointment</field>
+            <field name="parent_id" ref="module_category_services"/>
+        </record>
+
+        <record model="ir.module.category" id="module_category_services_field_service">
+            <field name="name">Field Service</field>
+            <field name="parent_id" ref="module_category_services"/>
+        </record>
+
+        <record model="ir.module.category" id="module_category_productivity">
+            <field name="name">Productivity</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_esg">
+            <field name="name">ESG</field>
+            <field name="sequence">52</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_customizations">
+            <field name="name">Customizations</field>
+            <field name="sequence">55</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_internet_of_things_(iot)">
+            <field name="name">Internet of Things (IoT)</field>
+            <field name="sequence">60</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_administration_administration">
+            <field name="name">Administration</field>
+            <field name="parent_id" ref="module_category_administration"/>
+        </record>
+
+        <record model="ir.module.category" id="module_category_extra">
+            <field name="name">Other Extra Rights</field>
+            <field name="sequence">102</field>
+        </record>
+
+    </data>
+</odoo>

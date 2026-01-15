@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2026 Jbnegoc SPA - Todos los derechos reservados -->
+<odoo>
+
+    <!-- Menú en Configuración del POS para Justificaciones -->
+    <menuitem id="menu_pos_deletion_reason"
+              name="Justificaciones de Eliminaciones"
+              parent="point_of_sale.menu_point_config_product"
+              action="pos_deletion_reason_action"
+              sequence="50"
+              groups="point_of_sale.group_pos_manager"/>
+
+    <!-- Menú en Reportes del POS para Productos Eliminados -->
+    <menuitem id="menu_pos_audit_deleted"
+              name="Productos Eliminados"
+              parent="point_of_sale.menu_point_rep"
+              action="pos_audit_deleted_action"
+              sequence="20"
+              groups="point_of_sale.group_pos_manager,pos_audit_deleted_items.group_pos_audit_delete"/>
+
+</odoo>

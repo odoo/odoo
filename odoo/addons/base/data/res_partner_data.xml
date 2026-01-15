@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="True">
+        <record id="main_partner" model="res.partner" context="{'default_is_company': True}">
+            <field name="name">My Company</field>
+            <field name="company_id" eval="None"/>
+            <field name="is_company" eval="True"/>
+            <field name="street"></field>
+            <field name="city"></field>
+            <field name="zip"></field>
+            <field name="phone"></field>
+            <field name="image_1920" type="base64" file="base/static/img/res_company_logo.png"/>
+        </record>
+
+        <record model="res.partner" id="base.partner_root">
+            <field name="name">System</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="email">odoobot@example.com</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record model="res.partner" id="base.partner_admin">
+            <field name="name">Administrator</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+
+        <record id="public_partner" model="res.partner">
+            <field name="name">Public user</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="res_partner_industry_A" model="res.partner.industry">
+            <field name="name">Agriculture</field>
+            <field name="full_name">A - AGRICULTURE, FORESTRY AND FISHING</field>
+        </record>
+
+        <record id="res_partner_industry_B" model="res.partner.industry">
+            <field name="name">Mining</field>
+            <field name="full_name">B - MINING AND QUARRYING</field>
+        </record>
+
+        <record id="res_partner_industry_C" model="res.partner.industry">
+            <field name="name">Manufacturing</field>
+            <field name="full_name">C - MANUFACTURING</field>
+        </record>
+
+        <record id="res_partner_industry_D" model="res.partner.industry">
+            <field name="name">Energy supply</field>
+            <field name="full_name">D - ELECTRICITY, GAS, STEAM AND AIR CONDITIONING SUPPLY</field>
+        </record>
+
+        <record id="res_partner_industry_E" model="res.partner.industry">
+            <field name="name">Water supply</field>
+            <field name="full_name">E - WATER SUPPLY; SEWERAGE, WASTE MANAGEMENT AND REMEDIATION ACTIVITIES</field>
+        </record>
+
+        <record id="res_partner_industry_F" model="res.partner.industry">
+            <field name="name">Construction</field>
+            <field name="full_name">F - CONSTRUCTION</field>
+        </record>
+
+        <record id="res_partner_industry_G" model="res.partner.industry">
+            <field name="name">Wholesale/Retail</field>
+            <field name="full_name">G - WHOLESALE AND RETAIL TRADE; REPAIR OF MOTOR VEHICLES AND MOTORCYCLES</field>
+        </record>
+
+        <record id="res_partner_industry_H" model="res.partner.industry">
+            <field name="name">Transportation/Logistics</field>
+            <field name="full_name">H - TRANSPORTATION AND STORAGE</field>
+        </record>
+
+        <record id="res_partner_industry_I" model="res.partner.industry">
+            <field name="name">Food/Hospitality</field>
+            <field name="full_name">I - ACCOMMODATION AND FOOD SERVICE ACTIVITIES</field>
+        </record>
+
+        <record id="res_partner_industry_J" model="res.partner.industry">
+            <field name="name">IT/Communication</field>
+            <field name="full_name">J - INFORMATION AND COMMUNICATION</field>
+        </record>
+
+        <record id="res_partner_industry_K" model="res.partner.industry">
+            <field name="name">Finance/Insurance</field>
+            <field name="full_name">K - FINANCIAL AND INSURANCE ACTIVITIES</field>
+        </record>
+
+        <record id="res_partner_industry_L" model="res.partner.industry">
+            <field name="name">Real Estate</field>
+            <field name="full_name">L - REAL ESTATE ACTIVITIES</field>
+        </record>
+
+        <record id="res_partner_industry_M" model="res.partner.industry">
+            <field name="name">Scientific</field>
+            <field name="full_name">M - PROFESSIONAL, SCIENTIFIC AND TECHNICAL ACTIVITIES</field>
+        </record>
+
+        <record id="res_partner_industry_N" model="res.partner.industry">
+            <field name="name">Administrative/Utilities</field>
+            <field name="full_name">N - ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES</field>
+        </record>
+
+        <record id="res_partner_industry_O" model="res.partner.industry">
+            <field name="name">Public Administration</field>
+            <field name="full_name">O - PUBLIC ADMINISTRATION AND DEFENCE; COMPULSORY SOCIAL SECURITY</field>
+        </record>
+
+        <record id="res_partner_industry_P" model="res.partner.industry">
+            <field name="name">Education</field>
+            <field name="full_name">P - EDUCATION</field>
+        </record>
+
+        <record id="res_partner_industry_Q" model="res.partner.industry">
+            <field name="name">Health/Social</field>
+            <field name="full_name">Q - HUMAN HEALTH AND SOCIAL WORK ACTIVITIES</field>
+        </record>
+
+        <record id="res_partner_industry_R" model="res.partner.industry">
+            <field name="name">Entertainment</field>
+            <field name="full_name">R - ARTS, ENTERTAINMENT AND RECREATION</field>
+        </record>
+
+        <record id="res_partner_industry_S" model="res.partner.industry">
+            <field name="name">Other Services</field>
+            <field name="full_name">S - OTHER SERVICE ACTIVITIES</field>
+        </record>
+
+        <record id="res_partner_industry_T" model="res.partner.industry">
+            <field name="name">Households</field>
+            <field name="full_name">T - ACTIVITIES OF HOUSEHOLDS AS EMPLOYERS; UNDIFFERENTIATED GOODS- AND SERVICES-PRODUCING ACTIVITIES OF HOUSEHOLDS FOR OWN USE</field>
+        </record>
+
+        <record id="res_partner_industry_U" model="res.partner.industry">
+            <field name="name">Extraterritorial</field>
+            <field name="full_name">U - ACTIVITIES OF EXTRATERRITORIAL ORGANISATIONS AND BODIES</field>
+        </record>
+
+    </data>
+</odoo>

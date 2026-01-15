@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="mail.NotificationMessage">
+        <div class="o-mail-NotificationMessage text-break mx-auto px-3 text-center smaller position-relative" t-on-click="onClickNotificationMessage" t-ref="root">
+            <div class="o-mail-Message-jumpTarget position-absolute top-0 pe-none"/>
+            <i t-if="message.notificationIcon" t-attf-class="{{ message.notificationIcon }} me-1 text-muted"/>
+            <t t-if="message.notificationType === 'call'">
+                <span class="text-muted" t-esc="callInformation"/>
+            </t>
+            <t t-elif="['channel_rename', 'thread_deletion'].includes(message.notificationType)">
+                <span class="text-muted" t-out="message.inlineBody"/>
+            </t>
+            <t t-else="">
+                <span class="o-mail-NotificationMessage-author d-inline text-muted" t-if="message.authorName and !message.richBody.includes(escape(message.authorName))" t-esc="message.authorName"/> <span class="text-muted" t-out="message.richBody"/>
+            </t>
+            <span class="o-mail-Message-date o-xsmaller ms-1" t-esc="message.dateSimpleWithDay"/>
+        </div>
+    </t>
+</templates>

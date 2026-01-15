@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="nilvera_party_details"
+        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <cbc:WebsiteURI t-out="partner.website" />
+        <cac:PartyIdentification>
+            <t t-if="partner.country_id.code != 'TR'">
+                <cbc:ID schemeID="TCKN" t-out="default_tckn"/>
+                <t t-set="is_vkn" t-value="False"/>
+            </t>
+            <t t-else="">
+                <t t-set="is_vkn" t-value="len(partner.vat) == 10"/>
+                <cbc:ID t-att-schemeID="is_vkn and 'VKN' or 'TCKN'" t-out="partner.vat"/>
+            </t>
+        </cac:PartyIdentification>
+        <t t-if="is_vkn">
+            <cac:PartyName>
+                <cbc:Name t-out="partner.name"/>
+            </cac:PartyName>
+        </t>
+        <cac:PostalAddress>
+            <cbc:StreetName t-out="' '.join(s for s in [partner.street, partner.street2] if s)"/>
+            <cbc:CitySubdivisionName t-out="partner.city"/>
+            <cbc:CityName t-out="partner.state_id.name"/>
+            <cbc:PostalZone t-out="partner.country_id.code == 'TR' and partner.zip or partner.l10n_tr_nilvera_edispatch_customs_zip"/>
+            <t t-set="tr_country" t-value="partner.country_id.with_context(lang='tr_TR')"/>
+            <cac:Country>
+                <cbc:IdentificationCode t-out="tr_country.code"/>
+                <cbc:Name t-out="tr_country.name"/>
+            </cac:Country>
+        </cac:PostalAddress>
+        <cac:Contact>
+            <cbc:Telephone t-out="partner.phone"/>
+            <cbc:ElectronicMail t-out="partner.email"/>
+        </cac:Contact>
+        <t t-if="not is_vkn">
+            <t t-set="partner_name" t-value="partner.name.split(' ', 1)"/>
+            <cac:Person>
+                <cbc:FirstName t-out="partner_name[0]"/>
+                <cbc:FamilyName t-out="partner_name[1] if len(partner_name) > 1 else '\u200B'"/>
+            </cac:Person>
+        </t>
+    </template>
+
+    <template id="nilvera_party_template"
+        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+        <cac:Party>
+            <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_details"/>
+        </cac:Party>
+    </template>
+
+    <template id="nilvera_dispatch_line"
+        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <cac:DespatchLine>
+            <cbc:ID t-out="line_id"/>
+            <cbc:DeliveredQuantity t-att-unitCode="line.product_uom._get_unece_code()" t-out="line.quantity"/>
+            <cac:OrderLineReference>
+                <cbc:LineID t-out="line_id"/>
+            </cac:OrderLineReference>
+            <cac:Item>
+                <cbc:Name t-out="line.product_id.display_name"/>
+            </cac:Item>
+            <cac:Shipment>
+                <cbc:ID t-out="line_id"/>
+                <cac:GoodsItem>
+                    <cac:InvoiceLine>
+                        <cbc:ID t-out="line_id"/>
+                        <cbc:InvoicedQuantity t-out="line.quantity"/>
+                        <cbc:LineExtensionAmount currencyID="TRY">0</cbc:LineExtensionAmount>
+                        <cac:Item>
+                            <cbc:Name t-out="line.product_id.display_name"/>
+                        </cac:Item>
+                        <cac:Price>
+                            <cbc:PriceAmount currencyID="TRY">0</cbc:PriceAmount>
+                        </cac:Price>
+                    </cac:InvoiceLine>
+                </cac:GoodsItem>
+            </cac:Shipment>
+        </cac:DespatchLine>
+    </template>
+
+    <template id="l10n_tr_edispatch_format" name="Turkiye e-Dispatch XML">
+        <DespatchAdvice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+            xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+            xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"
+            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+            xmlns="urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2">
+            <cbc:UBLVersionID t-out="ubl_version_id"/>
+            <cbc:CustomizationID t-out="customization_id"/>
+            <cbc:ProfileID t-out="dispatch_scenario"/>
+            <cbc:ID t-out="picking.picking_type_id.sequence_code"/>
+            <cbc:CopyIndicator t-out="copy_indicator"/>
+            <cbc:UUID t-out="uuid"/>
+            <cbc:IssueDate t-out="issue_date"/>
+            <cbc:IssueTime t-out="issue_time"/>
+            <cbc:DespatchAdviceTypeCode t-out="picking.l10n_tr_nilvera_dispatch_type"/>
+            <cbc:Note t-if="picking.l10n_tr_nilvera_delivery_notes" t-out="picking.l10n_tr_nilvera_delivery_notes"/>
+            <cbc:LineCountNumeric t-out="line_count"/>
+            <cac:AdditionalDocumentReference t-if="picking.l10n_tr_nilvera_dispatch_type == 'MATBUDAN'">
+                <cbc:ID t-out="picking.l10n_tr_nilvera_delivery_printed_number"/>
+                <cbc:IssueDate t-out="picking.l10n_tr_nilvera_delivery_date"/>
+                <cbc:DocumentType>MATBU</cbc:DocumentType>
+            </cac:AdditionalDocumentReference>
+            <cac:DespatchSupplierParty>
+                <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
+                    <t t-set="partner" t-value="current_company"/>
+                </t>
+            </cac:DespatchSupplierParty>
+            <cac:DeliveryCustomerParty>
+                <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
+                    <t t-set="partner" t-value="picking.partner_id.commercial_partner_id"/>
+                </t>
+            </cac:DeliveryCustomerParty>
+            <cac:BuyerCustomerParty t-if="picking.l10n_tr_nilvera_buyer_id">
+                <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
+                    <t t-set="partner" t-value="picking.l10n_tr_nilvera_buyer_id"/>
+                </t>
+            </cac:BuyerCustomerParty>
+            <cac:SellerSupplierParty t-if="picking.l10n_tr_nilvera_seller_supplier_id">
+                <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
+                    <t t-set="partner" t-value="picking.l10n_tr_nilvera_seller_supplier_id"/>
+                </t>
+            </cac:SellerSupplierParty>
+            <cac:OriginatorCustomerParty t-if="picking.l10n_tr_nilvera_buyer_originator_id">
+                <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_template">
+                    <t t-set="partner" t-value="picking.l10n_tr_nilvera_buyer_originator_id"/>
+                </t>
+            </cac:OriginatorCustomerParty>
+            <cac:Shipment>
+                <cbc:ID t-out="picking.id"/>
+                <cac:GoodsItem>
+                    <cbc:ValueAmount currencyID="TRY">0</cbc:ValueAmount>
+                </cac:GoodsItem>
+                <cac:ShipmentStage>
+                    <cac:TransportMeans>
+                        <cac:RoadTransport>
+                            <cbc:LicensePlateID schemeID="PLAKA" t-out="picking.l10n_tr_vehicle_plate.name"/>
+                        </cac:RoadTransport>
+                    </cac:TransportMeans>
+                    <t t-foreach="drivers" t-as="driver">    
+                        <cac:DriverPerson>
+                            <cbc:FirstName t-out="driver['name']"/>
+                            <cbc:FamilyName t-out="driver['fname']"/>
+                            <cbc:Title>Şoför</cbc:Title>
+                            <cbc:NationalityID schemeID="TCKN" t-out="driver['tckn']"/>
+                        </cac:DriverPerson>
+                    </t>
+                </cac:ShipmentStage>
+                <cac:Delivery>
+                    <cac:DeliveryAddress>
+                        <cbc:StreetName t-out="picking.partner_id.street"/>
+                        <cbc:CitySubdivisionName t-out="picking.partner_id.city"/>
+                        <cbc:CityName t-out="picking.partner_id.state_id.name"/>
+                        <cbc:PostalZone
+                            t-out="picking.partner_id.country_id.code == 'TR' and picking.partner_id.zip or picking.partner_id.l10n_tr_nilvera_edispatch_customs_zip" />
+                        <t t-set="tr_country" t-value="picking.partner_id.country_id.with_context(lang='tr_TR')"/>
+                        <cac:Country>
+                            <cbc:IdentificationCode t-out="tr_country.code"/>
+                            <cbc:Name t-out="tr_country.name"/>
+                        </cac:Country>
+                    </cac:DeliveryAddress>
+                    <cac:CarrierParty t-if="picking.l10n_tr_nilvera_carrier_id">
+                        <t t-call="l10n_tr_nilvera_edispatch.nilvera_party_details">
+                            <t t-set="partner" t-value="picking.l10n_tr_nilvera_carrier_id"/>
+                        </t>
+                    </cac:CarrierParty>
+                    <cac:Despatch>
+                        <cbc:ActualDespatchDate t-out="actual_date"/>
+                        <cbc:ActualDespatchTime t-out="actual_time"/>
+                    </cac:Despatch>
+                </cac:Delivery>
+                <cac:TransportHandlingUnit>
+                    <t t-foreach="picking.l10n_tr_nilvera_trailer_plate_ids" t-as="trailer">
+                        <cac:TransportEquipment>
+                            <cbc:ID schemeID="DORSEPLAKA" t-out="trailer.name"/>
+                        </cac:TransportEquipment>
+                    </t>
+                </cac:TransportHandlingUnit>
+            </cac:Shipment>
+            <t t-set="line_id" t-value="1"/>
+            <t t-foreach="picking.move_ids" t-as="line">
+                <t t-call="l10n_tr_nilvera_edispatch.nilvera_dispatch_line"/>
+                <t t-set="line_id" t-value="line_id + 1"/>
+            </t>
+        </DespatchAdvice>
+    </template>
+
+</odoo>

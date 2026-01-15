@@ -1,0 +1,67 @@
+.o_syntax_highlighting {
+    position: relative;
+    padding: 0;
+    margin: 0 0 16px;
+    tab-size: 4;
+    font: 13px / 19.5px SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+    pre, textarea.o_prism_source {
+        margin: 0;
+        padding: 8px 16px;
+    }
+
+    pre {
+        font: inherit;
+        tab-size: inherit;
+        white-space: pre;
+    }
+
+    textarea.o_prism_source {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        caret-color: black;
+        color: transparent;
+        border: 0;
+        outline: none;
+        background: transparent;
+        resize: none;
+        white-space: pre;
+
+        &::placeholder {
+            opacity: 0;
+        }
+        &:focus::placeholder {
+            opacity: 1;
+        }
+    }
+
+    .o_code_toolbar {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 3px 4px;
+        z-index: 1;
+        align-items: center;
+        justify-content: flex-end;
+        display: none;
+
+        button {
+            display: inline-flex;
+            align-items: center;
+            height: 20px;
+            padding: 0 3px 0 0;
+            font-size: 12px;
+            --btn-hover-bg: #{$o-gray-200};
+        }
+    }
+
+    &:hover,
+    &:has(.dropdown-toggle.show),
+    &:focus-within {
+        .o_code_toolbar {
+            display: flex;
+        }
+    }
+}

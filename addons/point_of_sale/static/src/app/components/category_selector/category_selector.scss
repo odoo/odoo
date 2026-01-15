@@ -1,0 +1,18 @@
+.category-list {
+    grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+
+    overflow-y: auto;
+    flex-shrink: 0;
+    margin-bottom: map-get($spacers, 2);
+    max-height: 16.5rem;
+
+    @include media-breakpoint-down(md) {
+        max-height: 11rem;
+    }
+}
+
+.category-button {
+    --btn-border-color: #{$o-gray-200};
+    border-width: 2px;
+    height: 4rem;
+}

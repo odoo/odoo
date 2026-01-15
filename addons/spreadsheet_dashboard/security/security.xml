@@ -1,0 +1,44 @@
+<odoo>
+    <!-- duplicated for spreadsheetCellThreads in rule spreadsheet_dashboard_edition.ir_rule_spreadsheet_dashboard_threads
+        Please update aforemetioned the rule accordingly -->
+    <record id="ir_rule_spreadsheet_dashboard" model="ir.rule">
+        <field name="name">Spreadsheet dashboard: groups</field>
+        <field name="model_id" ref="model_spreadsheet_dashboard" />
+        <field name="groups" eval="[(4, ref('base.group_user'))]" />
+        <field name="domain_force">[('group_ids', 'in', user.all_group_ids.ids)]</field>
+    </record>
+
+    <record id="spreadsheet_dashboard_rule_company" model="ir.rule">
+        <field name="name">Dashboard multi-company</field>
+        <field name="model_id" ref="model_spreadsheet_dashboard"/>
+        <field name="domain_force">[('company_ids', 'in', company_ids + [False])]</field>
+    </record>
+
+    <record model="res.groups.privilege" id="res_groups_privilege_dashboard">
+        <field name="name">Dashboard</field>
+        <field name="sequence">30</field>
+        <field name="category_id" ref="base.module_category_productivity"/>
+    </record>
+
+    <record id="spreadsheet_dashboard.group_dashboard_manager" model="res.groups">
+        <field name="name">Admin</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_dashboard" />
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="spreadsheet_dashboard_rule_manager" model="ir.rule">
+        <field name="name">Spreadsheet dashboard: manager</field>
+        <field name="model_id" ref="model_spreadsheet_dashboard" />
+        <field name="groups" eval="[(4, ref('spreadsheet_dashboard.group_dashboard_manager'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="spreadsheet_dashboard_share_create_uid_rule" model="ir.rule">
+        <field name="name">spreadsheet.dashboard.share: create uid</field>
+        <field name="model_id" ref="model_spreadsheet_dashboard_share" />
+        <field name="groups" eval="[(4, ref('base.group_user'))]" />
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+    </record>
+</odoo>

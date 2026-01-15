@@ -1,0 +1,53 @@
+.o-spreadsheet .o-figure {
+    select {
+        // Firefox does not support custom select styles, it uses a native picker.
+        // reset a few things to un-break it with Firefox
+        appearance: none;
+        --form-select-bg-img: none;
+        border: none;
+        box-shadow: none;
+    }
+
+    select, ::picker(select) {
+        appearance: base-select;
+    }
+
+    select:hover, select:open {
+        color: $black;
+        opacity: 1 !important;
+    }
+
+    ::picker(select) {
+        right: anchor(100%);
+        border: 1px solid #d8dadd;
+        border-radius: $border-radius;
+    }
+
+    select:not(select:open) {
+        border-color: transparent;
+    }
+
+    option:hover {
+        background-color: $dropdown-link-hover-bg;
+    }
+
+    option::checkmark {
+        font: .7em/1em FontAwesome;
+        color: $link-color;
+        content: "\f00c";
+    }
+
+    option:checked {
+        font-weight: bold;
+    }
+
+    select::picker-icon {
+        content: $o-caret-down;
+        opacity: 0.6;
+        transform: translateY(-12%);
+    }
+
+    select:open::picker-icon {
+        transform: rotate(180deg);
+    }
+}

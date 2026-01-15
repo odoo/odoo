@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record model="ir.ui.view" id="view_res_partner_bank_inherit_l10n_mx_edi_bank">
+        <field name="name">view.res.partner.bank.inherit.l10n_mx_edi_bank</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="account.view_partner_bank_form_inherit_account"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='acc_number']" position="after">
+                <field name="l10n_mx_edi_clabe" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

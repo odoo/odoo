@@ -1,0 +1,2177 @@
+import { describe, expect, test } from "@odoo/hoot";
+import { setupEditor, testEditor } from "../_helpers/editor";
+import { unformat } from "../_helpers/format";
+import { bold, resetSize, setColor, insertText } from "../_helpers/user_actions";
+import { getContent, setSelection } from "../_helpers/selection";
+import { press, queryAll, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
+import { animationFrame, tick } from "@odoo/hoot-mock";
+import { nodeSize } from "@html_editor/utils/position";
+
+function expectContentToBe(el, html) {
+    expect(getContent(el)).toBe(unformat(html));
+}
+
+describe("custom selection", () => {
+    test("should indicate selected cells with blue background", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+            <table>
+                <tbody>
+                    <tr>
+                        <td>ab</td>
+                        <td>c[d</td>
+                        <td>e]f</td>
+                    </tr>
+                </tbody>
+            </table>`)
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="o_selected_table">
+                <tbody>
+                    <tr>
+                        <td>ab</td>
+                        <td class="o_selected_td">c[d</td>
+                        <td class="o_selected_td">e]f</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder=""><br></p>`)
+        );
+        const overlayColorTDs = queryAll("table td").map(
+            (td) => getComputedStyle(td)["box-shadow"]
+        );
+        // Unselected cells should have the default background color, without any overlay
+        expect(overlayColorTDs[0]).toBe("none");
+        // Selected cells should have a box-shadow color
+        expect(overlayColorTDs[1]).not.toBe("none");
+        expect(overlayColorTDs[2]).not.toBe("none");
+    });
+    test("should not deselect cells while resizing table", async () => {
+        const content = unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>[<br></p>
+                        </td>
+                        <td><p><br>]</p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+
+        const { el } = await setupEditor(content);
+        await tick();
+
+        const firstTd = el.querySelector("td");
+        expect(firstTd).toHaveClass("o_selected_td");
+        const initialCellWidth = firstTd.clientWidth;
+
+        const cellRect = firstTd.getBoundingClientRect();
+        const clientX = cellRect.right;
+        const clientY = cellRect.top + cellRect.height / 2;
+
+        // Simulate mousedown at the right border of first cell.
+        await manuallyDispatchProgrammaticEvent(firstTd, "mousedown", {
+            detail: 1,
+            clientX,
+            clientY,
+        });
+
+        // Simulate mousemove to resize cell.
+        manuallyDispatchProgrammaticEvent(firstTd, "mousemove", {
+            detail: 1,
+            clientX: clientX + 100,
+            clientY,
+        });
+        manuallyDispatchProgrammaticEvent(firstTd, "mouseup", {
+            detail: 1,
+            clientX: clientX + 100,
+            clientY,
+        });
+        await animationFrame();
+
+        expect(firstTd.clientWidth).not.toBe(initialCellWidth); // Resize worked
+        expect(firstTd).toHaveClass("o_selected_td");
+    });
+});
+
+describe("select a full table on cross over", () => {
+    describe("select", () => {
+        test("should select some characters and a table", async () => {
+            await testEditor({
+                contentBefore:
+                    "<p>a[bc</p><table><tbody><tr><td>a]b</td><td>cd</td><td>ef</td></tr></tbody></table>",
+                contentAfterEdit:
+                    "<p>a[bc</p>" +
+                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td">ab</td>' +
+                    '<td class="o_selected_td">cd</td>' +
+                    '<td class="o_selected_td">ef]</td>' +
+                    "</tr></tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
+            });
+        });
+
+        test("should select a table and some characters", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody><tr><td>ab</td><td>cd</td><td>e[f</td></tr></tbody></table><p>a]bc</p>",
+                contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
+                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td">ab</td>' +
+                    '<td class="o_selected_td">cd</td>' +
+                    '<td class="o_selected_td">e[f</td></tr></tbody></table><p>a]bc</p>',
+            });
+        });
+
+        test("should select some characters, a table and some more characters", async () => {
+            await testEditor({
+                contentBefore:
+                    "<p>a[bc</p><table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table><p>a]bc</p>",
+                contentAfterEdit:
+                    '<p>a[bc</p><table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td">ab</td>' +
+                    '<td class="o_selected_td">cd</td>' +
+                    '<td class="o_selected_td">ef</td></tr></tbody></table><p>a]bc</p>',
+            });
+        });
+
+        test("should select some characters, a table, some more characters and another table", async () => {
+            await testEditor({
+                contentBefore:
+                    "<p>a[bc</p><table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table><p>abc</p><table><tbody><tr><td>a]b</td><td>cd</td><td>ef</td></tr></tbody></table>",
+                contentAfterEdit:
+                    '<p>a[bc</p><table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td">ab</td>' +
+                    '<td class="o_selected_td">cd</td>' +
+                    '<td class="o_selected_td">ef</td></tr></tbody></table>' +
+                    '<p>abc</p><table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td">ab</td>' +
+                    '<td class="o_selected_td">cd</td>' +
+                    '<td class="o_selected_td">ef]</td></tr></tbody></table>' +
+                    '<p data-selection-placeholder=""><br></p>',
+            });
+        });
+
+        test("should select some characters, a table, some more characters, another table and some more characters", async () => {
+            await testEditor({
+                contentBefore:
+                    "<p>a[bc</p><table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table><p>abc</p><table><tbody><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table><p>a]bc</p>",
+                contentAfterEdit:
+                    '<p>a[bc</p><table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td">ab</td>' +
+                    '<td class="o_selected_td">cd</td>' +
+                    '<td class="o_selected_td">ef</td></tr></tbody></table>' +
+                    '<p>abc</p><table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td">ab</td>' +
+                    '<td class="o_selected_td">cd</td>' +
+                    '<td class="o_selected_td">ef</td></tr></tbody></table><p>a]bc</p>',
+            });
+        });
+    });
+
+    describe("toggleFormat", () => {
+        test("should apply bold to some characters and a table", async () => {
+            await testEditor({
+                contentBefore:
+                    "<p>a[bc</p><table><tbody><tr>" +
+                    "<td>a]b</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+                stepFunction: bold,
+                contentAfterEdit:
+                    "<p>a<strong>[bc</strong></p>" +
+                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td"><strong>ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>cd</strong></td>' +
+                    '<td class="o_selected_td"><strong>ef]</strong></td>' +
+                    "</tr></tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
+            });
+        });
+
+        test("should apply bold to a table and some characters", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody><tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>e[f</td>" +
+                    "</tr></tbody></table><p>a]bc</p>",
+                stepFunction: bold,
+                contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
+                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td"><strong>[ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>cd</strong></td>' +
+                    '<td class="o_selected_td"><strong>ef</strong></td>' +
+                    "</tr></tbody></table>" +
+                    "<p><strong>a]</strong>bc</p>",
+            });
+        });
+
+        test("should apply bold to some characters, a table and some more characters", async () => {
+            await testEditor({
+                contentBefore:
+                    "<p>a[bc</p>" +
+                    "<table><tbody><tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>" +
+                    "<p>a]bc</p>",
+                stepFunction: bold,
+                contentAfterEdit:
+                    "<p>a<strong>[bc</strong></p>" +
+                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td"><strong>ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>cd</strong></td>' +
+                    '<td class="o_selected_td"><strong>ef</strong></td>' +
+                    "</tr></tbody></table>" +
+                    "<p><strong>a]</strong>bc</p>",
+            });
+        });
+
+        test("should apply bold to some characters, a table, some more characters and another table", async () => {
+            await testEditor({
+                contentBefore:
+                    "<p>a[bc</p>" +
+                    "<table><tbody><tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>" +
+                    "<p>abc</p>" +
+                    "<table><tbody><tr>" +
+                    "<td>a]b</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+                stepFunction: bold,
+                contentAfterEdit:
+                    "<p>a<strong>[bc</strong></p>" +
+                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td"><strong>ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>cd</strong></td>' +
+                    '<td class="o_selected_td"><strong>ef</strong></td>' +
+                    "</tr></tbody></table>" +
+                    "<p><strong>abc</strong></p>" +
+                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td"><strong>ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>cd</strong></td>' +
+                    '<td class="o_selected_td"><strong>ef]</strong></td>' +
+                    "</tr></tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
+            });
+        });
+
+        test("should apply bold to some characters, a table, some more characters, another table and some more characters", async () => {
+            await testEditor({
+                contentBefore:
+                    "<p>a[bc</p>" +
+                    "<table><tbody><tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>" +
+                    "<p>abc</p>" +
+                    "<table><tbody><tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>" +
+                    "<p>a]bc</p>",
+                stepFunction: bold,
+                contentAfterEdit:
+                    "<p>a<strong>[bc</strong></p>" +
+                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td"><strong>ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>cd</strong></td>' +
+                    '<td class="o_selected_td"><strong>ef</strong></td>' +
+                    "</tr></tbody></table>" +
+                    "<p><strong>abc</strong></p>" +
+                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td"><strong>ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>cd</strong></td>' +
+                    '<td class="o_selected_td"><strong>ef</strong></td>' +
+                    "</tr></tbody></table>" +
+                    "<p><strong>a]</strong>bc</p>",
+            });
+        });
+    });
+
+    describe("color", () => {
+        test("should apply a color to some characters and a table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <p>a[bc</p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>a]b</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                        </tbody>
+                    </table>`),
+                stepFunction: async (editor) => {
+                    // Table selection happens on selectionchange
+                    // event which is fired in the next tick.
+                    await tick();
+                    setColor("aquamarine", "color")(editor);
+                },
+                contentAfterEdit: unformat(`
+                    <p>
+                        a<font style="color: aquamarine;">[bc</font>
+                    </p>
+                    <table class="o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td">
+                                    <font style="color: aquamarine;">ab</font>
+                                </td>
+                                <td class="o_selected_td">
+                                    <font style="color: aquamarine;">cd</font>
+                                </td>
+                                <td class="o_selected_td">
+                                    <font style="color: aquamarine;">ef]</font>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`),
+            });
+        });
+
+        test("should apply a color to a table and some characters", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody><tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>e[f</td>" +
+                    "</tr></tbody></table><p>a]bc</p>",
+                stepFunction: setColor("aquamarine", "color"),
+                contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
+                    <table class="o_selected_table">
+                        <tbody><tr>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ab</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">cd</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">e[f</font>
+                            </td>
+                        </tr></tbody>
+                    </table>
+                    <p>
+                        <font style="color: aquamarine;">a]</font>bc
+                    </p>`),
+            });
+        });
+
+        test("should apply a color to some characters, a table and some more characters", async () => {
+            await testEditor({
+                contentBefore:
+                    "<p>a[bc</p>" +
+                    "<table><tbody><tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>" +
+                    "<p>a]bc</p>",
+                stepFunction: setColor("aquamarine", "color"),
+                contentAfterEdit: unformat(`
+                    <p>
+                        a<font style="color: aquamarine;">[bc</font>
+                    </p>
+                    <table class="o_selected_table">
+                        <tbody><tr>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ab</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">cd</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ef</font>
+                            </td>
+                        </tr></tbody>
+                    </table>
+                    <p>
+                        <font style="color: aquamarine;">a]</font>bc
+                    </p>`),
+            });
+        });
+
+        test("should apply a color to some characters, a table, some more characters and another table", async () => {
+            await testEditor({
+                contentBefore:
+                    "<p>a[bc</p>" +
+                    "<table><tbody><tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>" +
+                    "<p>abc</p>" +
+                    "<table><tbody><tr>" +
+                    "<td>a]b</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+                stepFunction: async (editor) => {
+                    // Table selection happens on selectionchange
+                    // event which is fired in the next tick.
+                    await tick();
+                    setColor("aquamarine", "color")(editor);
+                },
+                contentAfterEdit: unformat(`
+                    <p>
+                        a<font style="color: aquamarine;">[bc</font>
+                    </p>
+                    <table class="o_selected_table">
+                        <tbody><tr>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ab</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">cd</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ef</font>
+                            </td>
+                        </tr></tbody>
+                    </table>
+                    <p>
+                        <font style="color: aquamarine;">abc</font>
+                    </p>
+                    <table class="o_selected_table">
+                        <tbody><tr>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ab</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">cd</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ef]</font>
+                            </td>
+                        </tr></tbody>
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`),
+            });
+        });
+
+        test("should apply a color to some characters, a table, some more characters, another table and some more characters", async () => {
+            await testEditor({
+                contentBefore:
+                    "<p>a[bc</p>" +
+                    "<table><tbody><tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>" +
+                    "<p>abc</p>" +
+                    "<table><tbody><tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>" +
+                    "<p>a]bc</p>",
+                stepFunction: setColor("aquamarine", "color"),
+                contentAfterEdit: unformat(`
+                    <p>
+                        a<font style="color: aquamarine;">[bc</font>
+                    </p>
+                    <table class="o_selected_table">
+                        <tbody><tr>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ab</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">cd</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ef</font>
+                            </td>
+                        </tr></tbody>
+                    </table>
+                    <p><font style="color: aquamarine;">abc</font></p>
+                    <table class="o_selected_table">
+                        <tbody><tr>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ab</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">cd</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ef</font>
+                            </td>
+                        </tr></tbody>
+                    </table>
+                    <p><font style="color: aquamarine;">a]</font>bc</p>`),
+            });
+        });
+    });
+});
+
+describe("select columns on cross over", () => {
+    describe("select", () => {
+        test("should select two columns", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody><tr><td>a[b</td><td>c]d</td><td>ef</td></tr></tbody></table>",
+                contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
+                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td">a[b</td>' +
+                    '<td class="o_selected_td">c]d</td>' +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
+            });
+        });
+
+        test("should select a whole row", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody><tr><td>a[b</td><td>cd</td><td>e]f</td></tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
+                contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
+                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td">a[b</td>' +
+                    '<td class="o_selected_td">cd</td>' +
+                    '<td class="o_selected_td">e]f</td>' +
+                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
+            });
+        });
+
+        test("should select a whole column", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody>" +
+                    "<tr><td>a[b</td><td>cd</td><td>ef</td></tr>" +
+                    "<tr><td>ab</td><td>cd</td><td>ef</td></tr>" +
+                    "<tr><td>a]b</td><td>cd</td><td>ef</td></tr>" +
+                    "</tbody></table>",
+                contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
+                    '<table class="o_selected_table"><tbody>' +
+                    "<tr>" +
+                    '<td class="o_selected_td">a[b</td>' +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    '<td class="o_selected_td">ab</td>' +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    '<td class="o_selected_td">a]b</td>' +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "</tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
+            });
+        });
+
+        test("should select from (0,0) to (1,1) in a 3x3 table", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody>" +
+                    "<tr><td>a[b</td><td>cd</td><td>ef</td></tr>" +
+                    "<tr><td>ab</td><td>c]d</td><td>ef</td></tr>" +
+                    "<tr><td>ab</td><td>cd</td><td>ef</td></tr>" +
+                    "</tbody></table>",
+                contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
+                    '<table class="o_selected_table"><tbody>' +
+                    "<tr>" +
+                    '<td class="o_selected_td">a[b</td>' +
+                    '<td class="o_selected_td">cd</td>' +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    '<td class="o_selected_td">ab</td>' +
+                    '<td class="o_selected_td">c]d</td>' +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "</tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
+            });
+        });
+
+        test("should select a whole table", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody>" +
+                    "<tr><td>a[b</td><td>cd</td><td>ef</td></tr>" +
+                    "<tr><td>ab</td><td>cd</td><td>ef</td></tr>" +
+                    "<tr><td>ab</td><td>cd</td><td>e]f</td></tr>" +
+                    "</tbody></table>",
+                contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
+                    '<table class="o_selected_table"><tbody>' +
+                    "<tr>" +
+                    '<td class="o_selected_td">a[b</td>' +
+                    '<td class="o_selected_td">cd</td>' +
+                    '<td class="o_selected_td">ef</td>' +
+                    "</tr>" +
+                    "<tr>" +
+                    '<td class="o_selected_td">ab</td>' +
+                    '<td class="o_selected_td">cd</td>' +
+                    '<td class="o_selected_td">ef</td>' +
+                    "</tr>" +
+                    "<tr>" +
+                    '<td class="o_selected_td">ab</td>' +
+                    '<td class="o_selected_td">cd</td>' +
+                    '<td class="o_selected_td">e]f</td>' +
+                    "</tr>" +
+                    "</tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
+            });
+        });
+    });
+
+    describe("toggleFormat", () => {
+        test("should apply bold to two columns", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody><tr>" +
+                    "<td>a[b</td>" +
+                    "<td>c]d</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+                stepFunction: bold,
+                contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
+                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td"><strong>[ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>cd]</strong></td>' +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
+            });
+        });
+
+        test("should apply bold to a whole row", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody><tr>" +
+                    "<td>a[b</td>" +
+                    "<td>cd</td>" +
+                    "<td>e]f</td>" +
+                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
+                stepFunction: bold,
+                contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
+                    '<table class="o_selected_table"><tbody><tr>' +
+                    '<td class="o_selected_td"><strong>[ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>cd</strong></td>' +
+                    '<td class="o_selected_td"><strong>ef]</strong></td>' +
+                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
+            });
+        });
+
+        test("should apply bold to a whole column", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody>" +
+                    "<tr>" +
+                    "<td>a[b</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>a]b</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+                stepFunction: bold,
+                contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
+                    '<table class="o_selected_table"><tbody>' +
+                    "<tr>" +
+                    '<td class="o_selected_td"><strong>[ab</strong></td>' +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    '<td class="o_selected_td"><strong>ab</strong></td>' +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    '<td class="o_selected_td"><strong>ab]</strong></td>' +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "</tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
+            });
+        });
+
+        test("should apply bold from (0,0) to (1,1) in a 3x3 table", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody>" +
+                    "<tr>" +
+                    "<td>a[b</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>ab</td>" +
+                    "<td>c]d</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+                stepFunction: bold,
+                contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
+                    '<table class="o_selected_table"><tbody>' +
+                    "<tr>" +
+                    '<td class="o_selected_td"><strong>[ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>cd</strong></td>' +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    '<td class="o_selected_td"><strong>ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>cd]</strong></td>' +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "</tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
+            });
+        });
+
+        test("should apply bold to a whole table", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody>" +
+                    "<tr>" +
+                    "<td>a[b</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>e]f</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+                stepFunction: bold,
+                contentAfterEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
+                    '<table class="o_selected_table"><tbody>' +
+                    "<tr>" +
+                    '<td class="o_selected_td"><strong>[ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>cd</strong></td>' +
+                    '<td class="o_selected_td"><strong>ef</strong></td>' +
+                    "</tr>" +
+                    "<tr>" +
+                    '<td class="o_selected_td"><strong>ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>cd</strong></td>' +
+                    '<td class="o_selected_td"><strong>ef</strong></td>' +
+                    "</tr>" +
+                    "<tr>" +
+                    '<td class="o_selected_td"><strong>ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>cd</strong></td>' +
+                    '<td class="o_selected_td"><strong>ef]</strong></td>' +
+                    "</tr>" +
+                    "</tbody></table>" +
+                    '<p data-selection-placeholder=""><br></p>',
+            });
+        });
+    });
+
+    describe("reset size", () => {
+        test("should remove any height or width of the table and bring it back to it original form", async () => {
+            await testEditor({
+                contentBefore: `<table class="table table-bordered o_table" style="height: 980.5px; width: 736px;"><tbody>
+                                    <tr style="height: 306.5px;">
+                                        <td style="width: 356px;"><p>[]<br></p></td>
+                                        <td style="width: 108.5px;"><p><br></p></td>
+                                        <td style="width: 232.25px;"><p><br></p></td>
+                                        <td style="width: 38.25px;"><p><br></p></td>
+                                    </tr>
+                                    <tr style="height: 252px;">
+                                        <td style="width: 232.25px;"><p><br></p></td>
+                                        <td style="width: 232.25px;"><p><br></p></td>
+                                        <td style="width: 232.25px;"><p><br></p></td>
+                                        <td style="width: 232.25px;"><p><br></p></td>
+                                    </tr>
+                                    <tr style="height: 57px;">
+                                        <td style="width: 232.25px;"><p><br></p></td>
+                                        <td style="width: 232.25px;"><p><br></p></td>
+                                        <td style="width: 232.25px;"><p><br></p></td>
+                                        <td style="width: 232.25px;"><p><br></p></td>
+                                    </tr>
+                                </tbody></table>`,
+                stepFunction: resetSize,
+                contentAfter: `<table class="table table-bordered o_table"><tbody>
+                                    <tr>
+                                        <td><p>[]<br></p></td>
+                                        <td><p><br></p></td>
+                                        <td><p><br></p></td>
+                                        <td><p><br></p></td>
+                                    </tr>
+                                    <tr>
+                                        <td><p><br></p></td>
+                                        <td><p><br></p></td>
+                                        <td><p><br></p></td>
+                                        <td><p><br></p></td>
+                                    </tr>
+                                    <tr>
+                                        <td><p><br></p></td>
+                                        <td><p><br></p></td>
+                                        <td><p><br></p></td>
+                                        <td><p><br></p></td>
+                                    </tr>
+                                </tbody></table>`,
+            });
+        });
+
+        test("should remove any height or width of the table without loosing the style of the element inside it.", async () => {
+            await testEditor({
+                contentBefore: `<table class="table table-bordered o_table" style="width: 472.182px; height: 465.403px;"><tbody>
+                                    <tr style="height: 104.872px;">
+                                        <td style="width: 191.273px;"><h1>[]TESTTEXT</h1></td>
+                                        <td style="width: 154.009px;"><p><br></p></td>
+                                        <td style="width: 126.003px;">
+                                            <ul>
+                                                <li>test</li>
+                                                <li>test</li>
+                                                <li>test</li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    <tr style="height: 254.75px;">
+                                        <td style="width: 229.673px;"><p><br></p></td>
+                                        <td style="width: 229.687px;">
+                                            <blockquote>TESTTEXT</blockquote>
+                                        </td>
+                                        <td style="width: 229.73px;"><p><br></p></td>
+                                    </tr>
+                                    <tr style="height: 104.872px;">
+                                        <td style="width: 229.673px;"><pre>codeTEST</pre></td>
+                                        <td style="width: 229.687px;"><p><br></p></td>
+                                        <td style="width: 229.73px;">
+                                            <ol>
+                                                <li>text</li>
+                                                <li>text</li>
+                                                <li>text</li>
+                                            </ol>
+                                            </td>
+                                    </tr></tbody></table>`,
+                stepFunction: resetSize,
+                contentAfter: `<table class="table table-bordered o_table"><tbody>
+                                    <tr>
+                                        <td><h1>[]TESTTEXT</h1></td>
+                                        <td><p><br></p></td>
+                                        <td>
+                                            <ul>
+                                                <li>test</li>
+                                                <li>test</li>
+                                                <li>test</li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><p><br></p></td>
+                                        <td>
+                                            <blockquote>TESTTEXT</blockquote>
+                                        </td>
+                                        <td><p><br></p></td>
+                                    </tr>
+                                    <tr>
+                                        <td><pre>codeTEST</pre></td>
+                                        <td><p><br></p></td>
+                                        <td>
+                                            <ol>
+                                                <li>text</li>
+                                                <li>text</li>
+                                                <li>text</li>
+                                            </ol>
+                                            </td>
+                                    </tr></tbody></table>`,
+            });
+        });
+
+        test("should remove any height or width of the table without removig the style of the table.", async () => {
+            await testEditor({
+                contentBefore: `<table class="table table-bordered o_table" style="height: 594.5px; width: 807px;"><tbody>
+                                    <tr style="height: 229.5px;">
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 500px;"><p>[]<br></p></td>
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 119.328px;"><p><br></p></td>
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 186.672px;"><p><br></p></td>
+                                    </tr>
+                                    <tr style="height: 260px;">
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 309.656px;"><p><br></p></td>
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 309.672px;"><p><br></p></td>
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 309.672px;"><p><br></p></td>
+                                    </tr>
+                                    <tr style="height: 104px;">
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 309.656px;"><p><br></p></td>
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 309.672px;"><p><br></p></td>
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255); width: 309.672px;"><p><br></p></td>
+                                    </tr>
+                                </tbody></table>`,
+                stepFunction: resetSize,
+                contentAfter: `<table class="table table-bordered o_table"><tbody>
+                                    <tr>
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p>[]<br></p></td>
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
+                                        <td style="background-color: rgb(206, 231, 247); color: rgb(0, 0, 255);"><p><br></p></td>
+                                    </tr>
+                                </tbody></table>`,
+            });
+        });
+    });
+
+    describe("color", () => {
+        test("should apply a color to two columns", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody><tr>" +
+                    "<td>a[b</td>" +
+                    "<td>c]d</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+                stepFunction: setColor("aquamarine", "color"),
+                contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
+                    <table class="o_selected_table">
+                        <tbody><tr>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">a[b</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">c]d</font>
+                            </td>
+                            <td>ef</td>
+                        </tr></tbody>
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`),
+            });
+        });
+
+        test("should apply a color to a whole row", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody><tr>" +
+                    "<td>a[b</td>" +
+                    "<td>cd</td>" +
+                    "<td>e]f</td>" +
+                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
+                stepFunction: setColor("aquamarine", "color"),
+                contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
+                    <table class="o_selected_table">
+                        <tbody><tr>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">a[b</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">cd</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">e]f</font>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ab</td>
+                            <td>cd</td>
+                            <td>ef</td>
+                        </tr></tbody>
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`),
+            });
+        });
+
+        test("should apply a color to a whole column", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody>" +
+                    "<tr>" +
+                    "<td>a[b</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>a]b</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+                stepFunction: setColor("aquamarine", "color"),
+                contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
+                    <table class="o_selected_table">
+                        <tbody><tr>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">a[b</font>
+                            </td>
+                            <td>cd</td>
+                            <td>ef</td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ab</font>
+                            </td>
+                            <td>cd</td>
+                            <td>ef</td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">a]b</font>
+                            </td>
+                            <td>cd</td>
+                            <td>ef</td>
+                        </tr></tbody>
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`),
+            });
+        });
+
+        test("should apply a color from (0,0) to (1,1) in a 3x3 table", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody>" +
+                    "<tr>" +
+                    "<td>a[b</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>ab</td>" +
+                    "<td>c]d</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+                stepFunction: setColor("aquamarine", "color"),
+                contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
+                    <table class="o_selected_table">
+                        <tbody><tr>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">a[b</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">cd</font>
+                            </td>
+                            <td>ef</td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ab</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">c]d</font>
+                            </td>
+                            <td>ef</td>
+                        </tr>
+                        <tr>
+                            <td>ab</td>
+                            <td>cd</td>
+                            <td>ef</td>
+                        </tr></tbody>
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`),
+            });
+        });
+
+        test("should apply a color to a whole table", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody>" +
+                    "<tr>" +
+                    "<td>a[b</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>e]f</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+                stepFunction: setColor("aquamarine", "color"),
+                contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
+                    <table class="o_selected_table">
+                        <tbody><tr>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">a[b</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">cd</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ef</font>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ab</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">cd</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ef</font>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">ab</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">cd</font>
+                            </td>
+                            <td class="o_selected_td">
+                                <font style="color: aquamarine;">e]f</font>
+                            </td>
+                        </tr></tbody>
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`),
+            });
+        });
+    });
+});
+
+describe("move cursor with arrow keys", () => {
+    describe("arrowup", () => {
+        test("should move cursor to the cell above", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("ArrowUp"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should move cursor to the end in the cell above (1)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>abc</td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("ArrowUp"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>abc[]</td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should move cursor to the end in the cell above (2)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <p>abc</p>
+                                    <p>def</p>
+                                </td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>abc[]</td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("ArrowUp"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <p>abc</p>
+                                    <p>def[]</p>
+                                </td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>abc</td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should move cursor to the previous sibling of table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <p>abcd</p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("ArrowUp"),
+                contentAfter: unformat(`
+                    <p>abcd[]</p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should move cursor between two tables", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => {
+                    await press("ArrowUp");
+                    await tick();
+                },
+                contentAfterEdit: unformat(
+                    `<p data-selection-placeholder=""><br></p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`
+                ),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    []
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+    });
+
+    describe("arrowdown", () => {
+        test("should move cursor to the cell below", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("ArrowDown"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should move cursor to the start of the cell below (1)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>abc</td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("ArrowDown"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>[]abc</td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should move cursor to the start of the cell below (2)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>abc[]</td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>abc</p>
+                                    <p>def</p>
+                                </td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("ArrowDown"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>abc</td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>[]abc</p>
+                                    <p>def</p>
+                                </td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should move cursor to the next sibling of table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>abcd</p>
+                `),
+                stepFunction: async () => press("ArrowDown"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>[]abcd</p>
+                `),
+            });
+        });
+        test("should move cursor between two tables", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td>[]<br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => {
+                    await press("ArrowDown");
+                    await tick();
+                },
+                contentAfterEdit: unformat(
+                    `<p data-selection-placeholder=""><br></p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`
+                ),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    []
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                            <tr>
+                                <td><br></td>
+                                <td><br></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+    });
+});
+
+describe("symmetrical selection", () => {
+    test("select cells symmetrically when pressing shift + arrow key", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>[]<br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        press(["Shift", "ArrowRight"]);
+        await animationFrame();
+
+        // Select single empty cell
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowRight"]);
+        await animationFrame();
+
+        // Select two cells consecutively
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowDown"]);
+        await animationFrame();
+
+        // Extend selection from two cells to four cells
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowLeft"]);
+        await animationFrame();
+
+        // Shrink selection from four cells to two cells
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td">]<br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowUp"]);
+        await animationFrame();
+
+        // Shrink selection from two cells to single cell
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+    });
+
+    test("select single cell containing text when pressing shift + arrow key", async () => {
+        const { el, editor } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>[]<br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+        insertText(editor, "ab");
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr><td>ab[]</td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+        const firstTd = el.querySelector("td");
+        setSelection({
+            anchorNode: firstTd,
+            anchorOffset: 0,
+            focusNode: firstTd,
+            focusOffset: nodeSize(firstTd),
+        }); // <td>[ab]</td>
+
+        press(["Shift", "ArrowRight"]);
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[ab]</td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+    });
+
+    test("select single cell containing text when pressing shift + arrow key backward", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><br></td><td>ab</td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        const secondTd = el.querySelectorAll("td")[1];
+        setSelection({
+            anchorNode: secondTd,
+            anchorOffset: nodeSize(secondTd),
+            focusNode: secondTd,
+            focusOffset: 0,
+        }); // <td>]ab[</td>
+
+        press(["Shift", "ArrowLeft"]);
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td><br></td><td class="o_selected_td">]ab[</td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowLeft"]);
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">]<br></td><td class="o_selected_td">ab[</td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+    });
+});
+
+describe("single cell selection", () => {
+    test("should select single empty cell on double click", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>[]<br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        const BORDER_SENSITIVITY = 5;
+        const firstTd = el.querySelector("td");
+        const offset = BORDER_SENSITIVITY + 2;
+
+        manuallyDispatchProgrammaticEvent(firstTd, "mousedown", {
+            detail: 2,
+            clientX: offset,
+            clientY: offset,
+        });
+        await animationFrame();
+
+        manuallyDispatchProgrammaticEvent(firstTd, "mouseup", {
+            detail: 2,
+            clientX: offset,
+            clientY: offset,
+        });
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+    });
+
+    test("should select single cell containing text on triple click", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>ab[]c<br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        const BORDER_SENSITIVITY = 5;
+        const firstTd = el.querySelector("td");
+        const offset = BORDER_SENSITIVITY + 2;
+
+        manuallyDispatchProgrammaticEvent(firstTd, "mousedown", {
+            detail: 3,
+            clientX: offset,
+            clientY: offset,
+        });
+        await animationFrame();
+
+        manuallyDispatchProgrammaticEvent(firstTd, "mouseup", {
+            detail: 3,
+            clientX: offset,
+            clientY: offset,
+        });
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[abc]<br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+    });
+
+    test("should not select single cell containing text on double click", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>ab[]c<br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        const firstTd = el.querySelector("td");
+        manuallyDispatchProgrammaticEvent(firstTd, "mousedown", { detail: 2 });
+        await animationFrame();
+
+        manuallyDispatchProgrammaticEvent(firstTd, "mouseup", { detail: 2 });
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr><td>ab[]c<br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+    });
+
+    test("should not select cell when double-click occurs on table border", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>[]<br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        const firstTd = el.querySelector("td");
+
+        manuallyDispatchProgrammaticEvent(firstTd, "mousedown", { detail: 2 });
+        await animationFrame();
+
+        manuallyDispatchProgrammaticEvent(firstTd, "mouseup", { detail: 2 });
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr><td>[]<br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+    });
+
+    test("should not select single cell via mouse movement if content is not fully selected", async () => {
+        const content = unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>abcd</p>
+                        </td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+
+        const { el } = await setupEditor(content);
+
+        const firstTd = el.querySelector("td");
+        const firstP = firstTd.firstElementChild;
+        const textNode = firstP.firstChild;
+
+        // Get bounding rect of selection range at the end of text.
+        const range = document.createRange();
+        range.setStart(textNode, nodeSize(textNode));
+        range.setEnd(textNode, nodeSize(textNode));
+        const rangeRect = range.getBoundingClientRect();
+
+        // Simulate mousedown at the end of text.
+        await manuallyDispatchProgrammaticEvent(firstP, "mousedown", {
+            detail: 1,
+            clientX: rangeRect.right,
+            clientY: rangeRect.top,
+        });
+
+        // Put cursor at the end of text.
+        setSelection({
+            anchorNode: textNode,
+            anchorOffset: nodeSize(textNode),
+        });
+        await animationFrame();
+
+        // Simulate attempt to select single cell.
+        manuallyDispatchProgrammaticEvent(firstP, "mousemove", {
+            detail: 1,
+            clientX: rangeRect.right,
+            clientY: rangeRect.top,
+        });
+        manuallyDispatchProgrammaticEvent(firstP, "mousemove", {
+            detail: 1,
+            clientX: rangeRect.right + 15,
+            clientY: rangeRect.top,
+        });
+        manuallyDispatchProgrammaticEvent(firstP, "mouseup", {
+            detail: 1,
+            clientX: rangeRect.right + 15,
+            clientY: rangeRect.top,
+        });
+
+        await animationFrame();
+        expect(firstTd).not.toHaveClass("o_selected_td");
+    });
+    test("shift + click should correctly extend selection inside a cell", async () => {
+        const content = unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>ab[]cde</p>
+                        </td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+
+        const { el, editor } = await setupEditor(content);
+        const firstTd = el.querySelector("td");
+        const firstP = firstTd.firstElementChild;
+        const textNode = firstP.firstChild;
+        const targetOffset = 4; // abcd[]e
+
+        // Dispatch mousedown between "d" and "e"
+        const range = document.createRange();
+        range.setStart(textNode, targetOffset);
+        range.setEnd(textNode, targetOffset);
+        const rangeRect = range.getBoundingClientRect();
+
+        await manuallyDispatchProgrammaticEvent(firstP, "mousedown", {
+            detail: 1,
+            clientX: rangeRect.right,
+            clientY: rangeRect.top,
+            shiftKey: true,
+        });
+
+        // Simulate shift + mousedown to extend selection.
+        const selection = editor.document.getSelection();
+        selection.extend(textNode, targetOffset);
+        await tick();
+
+        expect(getContent(firstTd)).toBe("<p>ab[cd]e</p>");
+    });
+});
+
+describe("deselecting table", () => {
+    test("deselect table using keyboard if it is fully selected", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<p>[abc</p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td>]<br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        expectContentToBe(
+            el,
+            `<p>[abc</p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
+                        <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowUp"]);
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<p>[abc]</p>
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+    });
+});

@@ -1,0 +1,117 @@
+.s_tabs_common {
+    --tabs-bg-color: #{$gray-100};
+    --tabs-link-color: #{$body-color};
+
+    .nav-link:focus-visible {
+        // Replace "focus-visible" shadow with an inner shadow so that it's visible with container
+        // that use "overflow: hidden".
+        box-shadow: inset 0 0 $focus-ring-blur $focus-ring-width $focus-ring-color;
+    }
+
+    .nav-underline {
+        --nav-underline-link-active-color: currentColor;
+    }
+
+    .s_tabs_content {
+        &.s_tabs_slide_up, &.s_tabs_slide_down, &.s_tabs_slide_left, &.s_tabs_slide_right {
+            > .tab-pane.fade {
+                transition: $transition-base;
+            }
+        }
+        &.s_tabs_slide_up > .tab-pane.fade:where(:not(.show)) {
+            transform: translateY(map-get($spacers, 3) * -1);
+        }
+        &.s_tabs_slide_down > .tab-pane.fade:where(:not(.show)) {
+            transform: translateY(map-get($spacers, 3));
+        }
+        &.s_tabs_slide_left > .tab-pane.fade:where(:not(.show)) {
+            transform: translateX(map-get($spacers, 3) * -1);
+        }
+        &.s_tabs_slide_right > .tab-pane.fade:where(:not(.show)) {
+            transform: translateX(map-get($spacers, 3));
+        }
+    }
+
+    .s_tabs_main {
+        .nav-tabs {
+            --nav-tabs-link-hover-border-color: transparent;
+        }
+
+        &.o_direction_horizontal .nav {
+            white-space: nowrap;
+        }
+
+        .nav {
+            @include media-breakpoint-down(md) {
+                white-space: nowrap;
+            }
+        }
+
+        .s_tabs_nav:has(.nav-tabs), .s_tabs_nav:has(.nav-buttons) {
+            background: var(--tabs-bg-color, $gray-100);
+
+            .nav .nav-item a.nav-link {
+                color: var(--tabs-link-color, $body-color);
+            }
+        }
+
+        .nav-tabs a.active {
+            color: $body-color;
+        }
+
+        .nav-underline {
+            border-bottom: $border-width solid $border-color;
+
+            .nav-link {
+                margin-bottom: $border-width * -1;
+
+                &:not(.active) {
+                    border: 0;
+                }
+            }
+        }
+
+        &.row .nav-underline {
+            @include media-breakpoint-up(sm) {
+                border-bottom: 0;
+                border-left: $border-width solid $border-color;
+
+                .nav-link {
+                    margin-left: $border-width * -1;
+                    padding: map-get($spacers, 1) map-get($spacers, 3);
+
+                    &.active {
+                        border-left: $border-width * 2 solid $link-color;
+                        border-bottom: 0;
+                    }
+                }
+            }
+        }
+
+        .s_tabs_nav:has(.nav-buttons.nav-justified),
+        .s_tabs_nav:has(.nav-buttons.nav-fill) {
+            &, .nav-buttons {
+                width: 100%;
+            }
+        }
+
+        .nav-buttons {
+            .active {
+                color: color-contrast($white);
+                background-color: $white;
+
+                &:where(:not(:focus-visible)) {
+                    box-shadow: $box-shadow-sm;
+                }
+            }
+        }
+
+        .nav-pills {
+            .active {
+                &:where(:focus-visible) {
+                    box-shadow: inset 0 0 $focus-ring-blur $focus-ring-width rgba($nav-pills-link-active-color, $focus-ring-opacity);
+                }
+            }
+        }
+    }
+}

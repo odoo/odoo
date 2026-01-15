@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.DynamicSnippetCarouselOption" t-inherit="website.DynamicSnippetOption">
+    <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="after">
+	    <BuilderRow label.translate="Slider Speed" t-if="numberOfRecords > 1">
+	        <BuilderNumberInput action="'setCarouselSliderSpeed'" default="1" unit="'s'" saveUnit="''" step="0.1" min="0" preview="false" id="'speed_opt'"/>
+	    </BuilderRow>
+        <BuilderRow label.translate="Scrolling Mode" t-if="numberOfRecords > 1">
+            <BuilderButtonGroup preview="false">
+                <BuilderButton classAction="''">All</BuilderButton>
+                <BuilderButton classAction="'o_carousel_multi_items'">Single</BuilderButton>
+            </BuilderButtonGroup>
+        </BuilderRow>
+    </xpath>
+</t>
+</templates>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record forcecreate="True" id="ir_cron_mail_scheduler_action" model="ir.cron">
+            <field name="name">Mail: Email Queue Manager</field>
+            <field name="model_id" ref="model_mail_mail"/>
+            <field name="state">code</field>
+            <field name="code">model.process_email_queue(batch_size=1000)</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="priority">6</field>
+        </record>
+
+        <record id="ir_cron_module_update_notification" model="ir.cron">
+            <field name="name">Publisher: Update Notification</field>
+            <field name="model_id" ref="model_publisher_warranty_contract"/>
+            <field name="state">code</field>
+            <field name="code">model.update_notification(None)</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')" />
+            <field name="priority">1000</field>
+        </record>
+
+        <record id="base.ir_cron_act" model="ir.actions.act_window">
+            <field name="domain" eval="[('id','!=', ref('mail.ir_cron_module_update_notification'))]"/>
+        </record>
+
+        <record id="ir_cron_delete_notification" model="ir.cron">
+            <field name="name">Notification: Delete Notifications older than 6 Months</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="model_id" ref="model_mail_notification"/>
+            <field name="code">model._gc_notifications(max_age_days=180)</field>
+            <field name="state">code</field>
+        </record>
+
+        <record id="ir_cron_mail_gateway_action" model="ir.cron">
+            <field name="name">Mail: Fetchmail Service</field>
+            <field name="model_id" ref="model_fetchmail_server"/>
+            <field name="state">code</field>
+            <field name="code">model._fetch_mails()</field>
+            <field name="interval_number">5</field>
+            <field name="interval_type">minutes</field>
+            <!-- Active flag is set on fetchmail_server.create/write -->
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ir_cron_post_scheduled_message" model="ir.cron">
+            <field name="name">Mail: Post scheduled messages</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="model_id" ref="model_mail_scheduled_message"/>
+            <field name="code">model._post_messages_cron()</field>
+            <field name="state">code</field>
+        </record>
+
+        <record id="ir_cron_send_scheduled_message" model="ir.cron">
+            <field name="name">Notification: Notify scheduled messages</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="model_id" ref="model_mail_message_schedule"/>
+            <field name="code">model._send_notifications_cron()</field>
+            <field name="state">code</field>
+        </record>
+
+        <record id="ir_cron_web_push_notification" model="ir.cron">
+            <field name="name">Mail: send web push notification</field>
+            <field name="model_id" ref="model_mail_push"/>
+            <field name="state">code</field>
+            <field name="code">model._push_notification_to_endpoint()</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+        <record id="ir_cron_discuss_channel_member_unmute" model="ir.cron">
+            <field name="name">Discuss: channel member unmute</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="model_id" ref="model_discuss_channel_member"/>
+            <field name="code">model._cleanup_expired_mutes()</field>
+            <field name="state">code</field>
+        </record>
+    </data>
+</odoo>

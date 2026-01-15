@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_tasks_list_inherit" inherit_id="project.portal_tasks_list">
+        <xpath expr="//th[@name='groupby_name_col']" position="inside">
+            <t t-if="groupby == 'sale_line_id'">
+                <span t-if="tasks[0].sudo().sale_line_id" class="text-truncate" t-field="tasks[0].sudo().sale_line_id"/>
+                <span t-else="">Not Billed</span>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.EditHeadBodyDialog">
+    <Dialog title.translate="Edit Head and Body Code">
+        <p class="h5">Do not copy/paste code you do not understand, this could put your data at risk.</p>
+        <div>Enter code that will be added into the &lt;head&gt; of every page of your site.</div>
+        <CodeEditor mode="'xml'" theme="'monokai'"
+            class="'my-2 rounded border o_website_code_editor_field'"
+            value="state.head"
+            onChange='v => state.head = v'/>
+
+        <div class="mt-2">Enter code that will be added before the &lt;/body&gt; of every page of your site.</div>
+        <CodeEditor mode="'xml'" theme="'monokai'"
+            class="'my-2 rounded border o_website_code_editor_field'"
+            value="state.body"
+            onChange="v => state.body = v"/>
+
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-on-click="onSave" data-hotkey="q">Save</button>
+            <button class="btn btn-secondary" t-on-click="props.close" data-hotkey="x">Discard</button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>

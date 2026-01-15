@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CountdownOption">
+    <BuilderContext action="'reloadCountdown'"> <!-- TODO AGAU: remove after merging generalized restart interactions -->
+    <BuilderRow label.translate="Due Date">
+        <BuilderDateTimePicker dataAttributeAction="'endTime'" acceptEmptyDate="false"/>
+    </BuilderRow>
+    <BuilderRow label.translate="At The End">
+        <BuilderSelect preview="false" action="'setEndAction'">
+            <BuilderSelectItem actionValue="'nothing'" id="'no_end_action_opt'">Nothing</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'redirect'" id="'redirect_end_action_opt'">Redirect</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'message_no_countdown'">Show Message and hide countdown</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'message'">Show Message and keep countdown</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderButton title.translate="The message will be visible once the countdown ends"
+                       t-if="!this.isActiveItem('no_end_action_opt') and !this.isActiveItem('redirect_end_action_opt')"
+                       action="'previewEndMessage'"
+                       preview="false"
+                       icon="'fa-eye'"/>
+    </BuilderRow>
+    <BuilderRow t-if="this.isActiveItem('redirect_end_action_opt')"
+                label.translate="URL">
+            <WebsiteUrlPicker placeholder.translate="e.g. /my-awesome-page" dataAttributeAction="'redirectUrl'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Size">
+        <BuilderSelect dataAttributeAction="'size'">
+            <BuilderSelectItem dataAttributeActionValue="'80'">Small</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'120'">Medium</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'175'">Large</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Display">
+        <BuilderSelect dataAttributeAction="'display'">
+            <BuilderSelectItem dataAttributeActionValue="'d'">D</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'dhm'">D - H - M</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'dhms'">D - H - M - S</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Text Color">
+        <BuilderColorPicker dataAttributeAction="'textColor'" enabledTabs="['solid', 'custom']"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Layout">
+        <BuilderSelect action="'setLayout'">
+            <BuilderSelectItem actionValue="'circle'" id="'circle_layout_opt'">Circle</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'boxes'" id="'boxes_layout_opt'">Boxes</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'clean'">Clean</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'text'">Text Inline</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <t t-if="this.isActiveItem('circle_layout_opt') or this.isActiveItem('boxes_layout_opt')">
+        <BuilderRow label.translate="Layout Background">
+            <BuilderSelect dataAttributeAction="'layoutBackground'">
+                <BuilderSelectItem dataAttributeActionValue="'inner'">Inner</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'plain'">Plain</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'none'" id="'no_background_layout_opt'">None</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Layout Background Color"
+                    t-if="!this.isActiveItem('no_background_layout_opt')">
+            <BuilderColorPicker dataAttributeAction="'layoutBackgroundColor'" enabledTabs="['solid', 'custom']"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Progress Bar Style">
+            <BuilderSelect dataAttributeAction="'progressBarStyle'">
+                <BuilderSelectItem dataAttributeActionValue="'surrounded'">Surrounded</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'disappear'">Disappearing</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'none'" id="'no_progressbar_style_opt'">None</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+
+        <t t-if="!this.isActiveItem('no_progressbar_style_opt')">
+            <BuilderRow label.translate="Progress Bar Weight">
+                <BuilderSelect dataAttributeAction="'progressBarWeight'">
+                    <BuilderSelectItem dataAttributeActionValue="'thin'">Thin</BuilderSelectItem>
+                    <BuilderSelectItem dataAttributeActionValue="'thick'">Thick</BuilderSelectItem>
+                </BuilderSelect>
+            </BuilderRow>
+            <BuilderRow label.translate="Progress Bar Color"
+                        t-if="!this.isActiveItem('no_progressbar_style_opt')">
+                <BuilderColorPicker dataAttributeAction="'progressBarColor'" enabledTabs="['solid', 'custom']"/>
+            </BuilderRow>
+        </t>
+    </t>
+    </BuilderContext>
+</t>
+
+<t t-name="website.s_countdown.end_message">
+    <div class="s_countdown_end_message d-none">
+        <div class="oe_structure">
+            <section class="s_picture pt64 pb64" data-snippet="s_picture">
+                <div class="container">
+                    <h2 style="text-align: center;">Happy Odoo Anniversary!</h2>
+                    <p style="text-align: center;">As promised, we will offer 4 free tickets to our next summit.<br/>Visit our Facebook page to know if you are one of the lucky winners.</p>
+                    <div class="row s_nb_column_fixed">
+                        <div class="col-lg-12" style="text-align: center;">
+                            <figure class="figure w-100">
+                                <img src="/web/image/website.library_image_18" class="figure-img img-fluid rounded" alt="Countdown is over - Firework"/>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</t>
+
+</templates>

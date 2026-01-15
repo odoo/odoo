@@ -1,0 +1,84 @@
+.o_event_full_page_ticket_footer {
+    .o_event_full_page_ticket_powered_by {
+        @include font-size(.8rem);
+        line-height: 1rem;
+    }
+}
+
+/* COMMON FOR FULL PAGE TICKET AND RESPONSIVE HTML VERSION */
+
+.o_event_full_page_ticket_container {
+    padding-top: 40px;
+
+    .o_event_full_page_ticket_font_faded {
+        color: #939393;
+    }
+
+    .o_event_full_page_ticket_details {
+        background-color: white;
+        border: solid 1px #939393;
+        margin: 0px 8px;
+        padding: 10px 3px;
+        box-shadow: -3px 3px 9px 0px rgba(0,0,0,0.51);
+    }
+
+    .o_event_full_page_ticket_barcode {
+        min-height: 344px;
+        &.o_event_full_page_ticket_qr_only {
+            min-height: 168px;
+        }
+    }
+
+    .o_event_full_page_ticket_answer {
+        font-size: .875rem;
+    }
+}
+
+/* FULL PAGE TICKET - PDF REPORT */
+
+.o_event_full_page_ticket {
+
+    .o_event_full_page_left_details {
+        width: 78%;
+        .o_event_full_page_left_details_top {
+            // Give at least height of qr code to allow bottom row to take 100%
+            // Without overlapping the qr code
+            min-height: 152px;
+        }
+        .o_event_full_page_left_details_bottom_qr_only {
+            // parent div only has 78% -> 128% of 78% is just below 100%
+            width: 128%;
+        }
+    }
+
+    .o_event_full_page_ticket_barcode {
+        width: 22%;
+    }
+    .o_event_full_page_ticket_column {
+        width: 50%;
+        // Prevent text overfow on the next column. While columns have the expected
+        // width, the text will overflow in address and date, most probably due to
+        // the fa-icons. This prevents this overflow and makes sure we see the full
+        // content of address and date.
+        padding-right: 45px;
+    }
+    .o_event_full_page_ticket_answer {
+        border-radius: 6px;
+    }
+    .o_event_full_page_extra_instructions {
+        width: 100%;
+        p {
+            margin: 0px;  // to match editor style (.o_field_html p)
+        }
+    }
+}
+
+.o_event_full_page_ticket_container .o_event_full_page_ticket_barcode {
+    .o_event_barcode {
+        // Barcode image has fixed size. These values are hard-coded to
+        // have it aligned correctly in the pdf report.
+        margin: 28px 0 0 -8px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+}

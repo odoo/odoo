@@ -3,19 +3,31 @@
 # * base_iban
 #
 # Translators:
+# Jiří Podhorecký, 2022
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-07 16:35+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2025-09-16 10:02+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/base_iban/"
+"cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: base_iban
+#. odoo-javascript
+#: code:addons/base_iban/static/src/components/iban_widget/iban_widget.xml:0
+msgid "Account isn't a valid IBAN"
+msgstr "Účet není platný IBAN"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -23,35 +35,54 @@ msgid "Bank Accounts"
 msgstr "Bankovní účty"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:57
-#, python-format
+#. odoo-python
+#: code:addons/base_iban/models/res_partner_bank.py:0
 msgid "Cannot compute the BBAN because the account number is not an IBAN."
-msgstr ""
+msgstr "BBAN nelze vypočítat, protože číslo účtu není IBAN."
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:26
-#, python-format
-msgid "No IBAN !"
-msgstr ""
+#: model:ir.model.fields,field_description:base_iban.field_res_partner_bank__display_name
+msgid "Display Name"
+msgstr "Zobrazovací název"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:34
-#, python-format
+#. odoo-python
+#: code:addons/base_iban/models/res_partner_bank.py:0
+msgid "IBAN"
+msgstr "IBAN"
+
+#. module: base_iban
+#: model:ir.model.fields,field_description:base_iban.field_res_partner_bank__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_iban
+#. odoo-python
+#: code:addons/base_iban/models/res_partner_bank.py:0
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like "
 "this %s\n"
 "Where B = National bank code, S = Branch code, C = Account No, k = Check "
 "digit"
 msgstr ""
+"Zdá se, že IBAN není správný. Měli jste zadat něco podobného %s\n"
+"Kde B = národní kód banky, S = kód pobočky, C = číslo účtu, k = kontrolní "
+"číslice"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:30
-#, python-format
+#. odoo-python
+#: code:addons/base_iban/models/res_partner_bank.py:0
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr "IBAN je neplatný, měl by začínat kódem země"
+msgstr "Číslo IBAN je neplatné, mělo by začínat kódem země"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:40
-#, python-format
+#. odoo-python
+#: code:addons/base_iban/models/res_partner_bank.py:0
+msgid "There is no IBAN code."
+msgstr "Neexistuje žádný kód IBAN."
+
+#. module: base_iban
+#. odoo-python
+#: code:addons/base_iban/models/res_partner_bank.py:0
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr ""
+msgstr "Tento IBAN neprojde ověřovací kontrolou, ověřte jej prosím."

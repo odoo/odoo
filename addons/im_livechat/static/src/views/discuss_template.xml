@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="im_livechat.LivechatDiscuss">
+        <t t-if="thread">
+            <Discuss hasSidebar="false" thread="thread"/>
+        </t>
+        <t t-else="">
+            <div class="d-flex h-100 flex-column justify-content-center align-items-center">
+                <span class="fs-1">No conversation found</span>
+                <button type="button" class="btn btn-primary" t-on-click="redirectToSessions">
+                    Go to Sessions
+                </button>
+            </div>
+        </t>
+    </t>
+</templates>

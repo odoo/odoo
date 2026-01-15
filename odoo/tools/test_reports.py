@@ -4,19 +4,17 @@
 """ Helper functions for reports testing.
 
     Please /do not/ import this file by default, but only explicitly call it
-    through the code of yaml tests.
+    through the code of python tests.
 """
 
-import odoo
-import odoo.report
-import odoo.tools as tools
 import logging
-
-from odoo.tools import pycompat
-from odoo.tools.safe_eval import safe_eval
-from subprocess import Popen, PIPE
 import os
 import tempfile
+from lxml import etree
+from subprocess import Popen, PIPE
+
+from .. import api
+from .safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -24,51 +22,38 @@ _test_logger = logging.getLogger('odoo.tests')
 
 def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, report_type=None):
     """ Try to render a report <rname> with contents of ids
-    
+
         This function should also check for common pitfalls of reports.
     """
-    if data is None:
-        data = {}
     if context is None:
         context = {}
-    if rname.startswith('report.'):
-        rname_s = rname[7:]
-    else:
-        rname_s = rname
     _test_logger.info("  - Trying %s.create(%r)", rname, ids)
 
-    res = odoo.report.render_report(cr, uid, ids, rname_s, data, context=context)
-    if not isinstance(res, tuple):
-        raise RuntimeError("Result of %s.create() should be a (data,format) tuple, now it is a %s" % \
-                                (rname, type(res)))
-    (res_data, res_format) = res
+    env = api.Environment(cr, uid, context)
+
+    res_data, res_format = env['ir.actions.report']._render(rname, ids, data=data)
 
     if not res_data:
         raise ValueError("Report %s produced an empty result!" % rname)
 
-    if tools.config['test_report_directory']:
-        open(os.path.join(tools.config['test_report_directory'], rname+ '.'+res_format), 'wb+').write(res_data)
-
     _logger.debug("Have a %s report for %s, will examine it", res_format, rname)
     if res_format == 'pdf':
-        if res_data[:5] != '%PDF-':
+        if res_data[:5] != b'%PDF-':
             raise ValueError("Report %s produced a non-pdf header, %r" % (rname, res_data[:10]))
-
-        res_text = False
+        res_text = None
         try:
             fd, rfname = tempfile.mkstemp(suffix=res_format)
             os.write(fd, res_data)
             os.close(fd)
 
-            proc = Popen(['pdftotext', '-enc', 'UTF-8', '-nopgbrk', rfname, '-'], shell=False, stdout=PIPE)
-            stdout, stderr = proc.communicate()
-            res_text = tools.ustr(stdout)
+            proc = Popen(['pdftotext', '-enc', 'UTF-8', '-nopgbrk', rfname, '-'], shell=False, stdout=PIPE, encoding="utf-8")
+            res_text, _stderr = proc.communicate()
             os.unlink(rfname)
         except Exception:
             _logger.debug("Unable to parse PDF report: install pdftotext to perform automated tests.")
 
-        if res_text is not False:
-            for line in res_text.split('\n'):
+        if res_text:
+            for line in res_text.splitlines():
                 if ('[[' in line) or ('[ [' in line):
                     _logger.error("Report %s may have bad expression near: \"%s\".", rname, line[80:])
             # TODO more checks, what else can be a sign of a faulty report?
@@ -84,11 +69,14 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, re
 def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                 wiz_data=None, wiz_buttons=None,
                 context=None, our_module=None):
-    """Take an ir.action.act_window and follow it until a report is produced
+    """Take an ir.actions.act_window and follow it until a report is produced
 
+        :param cr:
+        :param uid:
         :param action_id: the integer id of an action, or a reference to xml id
                 of the act_window (can search [our_module.]+xml_id
-        :param active_model, active_ids: call the action as if it had been launched
+        :param active_model:
+        :param active_ids: call the action as if it had been launched
                 from that model+ids (tree/form view action)
         :param wiz_data: a dictionary of values to use in the wizard, if needed.
                 They will override (or complete) the default values of the
@@ -96,16 +84,17 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         :param wiz_buttons: a list of button names, or button icon strings, which
                 should be preferred to press during the wizard.
                 Eg. 'OK' or 'fa-print'
+        :param context:
         :param our_module: the name of the calling module (string), like 'account'
     """
-    if not our_module and isinstance(action_id, basestring):
+    if not our_module and isinstance(action_id, str):
         if '.' in action_id:
             our_module = action_id.split('.', 1)[0]
 
     context = dict(context or {})
     # TODO context fill-up
 
-    env = odoo.api.Environment(cr, uid, context)
+    env = api.Environment(cr, uid, context)
 
     def log_test(msg, *args):
         _test_logger.info("  - " + msg, *args)
@@ -119,7 +108,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
     if not wiz_buttons:
         wiz_buttons = []
 
-    if isinstance(action_id, basestring):
+    if isinstance(action_id, str):
         if '.' in action_id:
             _, act_xmlid = action_id.split('.', 1)
         else:
@@ -130,8 +119,8 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         action = env.ref(action_id)
         act_model, act_id = action._name, action.id
     else:
-        assert isinstance(action_id, pycompat.integer_types)
-        act_model = 'ir.action.act_window'     # assume that
+        assert isinstance(action_id, int)
+        act_model = 'ir.actions.act_window'     # assume that
         act_id = action_id
         act_xmlid = '<%s>' % act_id
 
@@ -144,46 +133,56 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         if datas.get('id',False):
             context.update( {'active_id': datas.get('id',False), 'active_ids': datas.get('ids',[]), 'active_model': datas.get('model',False)})
         context1 = action.get('context', {})
-        if isinstance(context1, basestring):
+        if isinstance(context1, str):
             context1 = safe_eval(context1, dict(context))
         context.update(context1)
         env = env(context=context)
         if action['type'] in ['ir.actions.act_window', 'ir.actions.submenu']:
-            for key in ('res_id', 'res_model', 'view_type', 'view_mode',
-                        'limit', 'search_view', 'auto_search', 'search_view_id'):
+            for key in ('res_id', 'res_model', 'view_mode',
+                        'limit', 'search_view_id'):
                 datas[key] = action.get(key, datas.get(key, None))
 
             view_id = False
+            view_type = None
             if action.get('views', []):
                 if isinstance(action['views'],list):
-                    view_id = action['views'][0][0]
-                    datas['view_mode']= action['views'][0][1]
+                    view_id, view_type = action['views'][0]
+                    datas['view_mode']= view_type
                 else:
                     if action.get('view_id', False):
                         view_id = action['view_id'][0]
             elif action.get('view_id', False):
                 view_id = action['view_id'][0]
 
+            if view_type is None:
+                if view_id:
+                    view_type = env['ir.ui.view'].browse(view_id).type
+                else:
+                    view_type = action['view_mode'].split(',')[0]
+
             assert datas['res_model'], "Cannot use the view without a model"
             # Here, we have a view that we need to emulate
             log_test("will emulate a %s view: %s#%s",
-                        action['view_type'], datas['res_model'], view_id or '?')
+                        view_type, datas['res_model'], view_id or '?')
 
-            view_res = env[datas['res_model']].fields_view_get(view_id, action['view_type'])
+            model = env[datas['res_model']]
+            view_res = model.get_view(view_id, view_type)
             assert view_res and view_res.get('arch'), "Did not return any arch for the view"
             view_data = {}
-            if view_res.get('fields'):
-                view_data = env[datas['res_model']].default_get(list(view_res['fields']))
+            arch = etree.fromstring(view_res['arch'])
+            fields = [el.get('name') for el in arch.xpath('//field[not(ancestor::field)]')]
+            if fields:
+                view_data = model.default_get(fields)
             if datas.get('form'):
                 view_data.update(datas.get('form'))
             if wiz_data:
                 view_data.update(wiz_data)
             _logger.debug("View data is: %r", view_data)
 
-            for fk, field in view_res.get('fields',{}).items():
+            for fk in fields:
                 # Default fields returns list of int, while at create()
                 # we need to send a [(6,0,[int,..])]
-                if field['type'] in ('one2many', 'many2many') \
+                if model._fields[fk].type in ('one2many', 'many2many') \
                         and view_data.get(fk, False) \
                         and isinstance(view_data[fk], list) \
                         and not isinstance(view_data[fk][0], tuple) :
@@ -256,7 +255,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                         action_name, b['string'], b['type'])
             return res
 
-        elif action['type']=='ir.actions.report.xml':
+        elif action['type']=='ir.actions.report':
             if 'window' in datas:
                 del datas['window']
             if not datas:
@@ -267,7 +266,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
             ids = datas.get('ids')
             if 'ids' in datas:
                 del datas['ids']
-            res = try_report(cr, uid, 'report.'+action['report_name'], ids, datas, context, our_module=our_module)
+            res = try_report(cr, uid, action['report_name'], ids, datas, context, our_module=our_module)
             return res
         else:
             raise Exception("Cannot handle action of type %s" % act_model)

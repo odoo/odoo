@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="product_template_public" model="ir.rule">
+        <field name="name">Public product template</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="domain_force">[('website_published', '=', True), ('sale_ok', '=', True)]</field>
+        <field name="groups" eval="[
+            Command.link(ref('base.group_public')),
+            Command.link(ref('base.group_portal')),
+        ]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!--
+        Multi-company/Multi-website compliant:
+        We can't add a condition on domain_force without losing `product`
+        ir.rule domain_force. It is better to disabled them to be able to
+        reenable them on `website_sale` uninstall.
+        Don't override domain_force or we will need to hardcode the original
+        domain in `uninstall_hook` rather than just reenabling records.
+    -->
+    <record id="product.product_pricelist_comp_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="product.product_pricelist_item_comp_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="product_pricelist_comp_rule" model="ir.rule">
+        <field name="name">product pricelist company rule</field>
+        <field name="model_id" ref="product.model_product_pricelist"/>
+        <field name="domain_force">['|', ('company_id', 'in', [False, website.company_id.id]), ('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="product_pricelist_item_comp_rule" model="ir.rule">
+        <field name="name">product pricelist item company rule</field>
+        <field name="model_id" ref="product.model_product_pricelist_item"/>
+        <field name="domain_force">['|', ('company_id', 'in', [False, website.company_id.id]), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="empty_public_categories_rule" model="ir.rule">
+        <field name="name">Hide empty eCommerce categories to public/portal users</field>
+        <field name="model_id" ref="website_sale.model_product_public_category"/>
+        <field name="domain_force">[('has_published_products', '=', True)]</field>
+        <field name="groups" eval="[
+            Command.link(ref('base.group_public')),
+            Command.link(ref('base.group_portal')),
+        ]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+</odoo>

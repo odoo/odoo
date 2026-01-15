@@ -1,19 +1,14 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo import fields, models
+from odoo import models, api, _
+from odoo.exceptions import UserError
 
 
 class StockQuant(models.Model):
     _inherit = 'stock.quant'
 
-    consumed_quant_ids = fields.Many2many(
-        'stock.quant', 'stock_quant_consume_rel', 'produce_quant_id', 'consume_quant_id')
-    produced_quant_ids = fields.Many2many(
-        'stock.quant', 'stock_quant_consume_rel', 'consume_quant_id', 'produce_quant_id')
+    @api.constrains('product_id')
+    def _check_kits(self):
+        if self.sudo().product_id.filtered("is_kits"):
+            raise UserError(_('You should update the components quantity instead of directly updating the quantity of the kit product.'))
 
-    def _prepare_history(self):
-        vals = super(StockQuant, self)._prepare_history()
-        vals['consumed_quant_ids'] = [(4, quant.id) for quant in self.consumed_quant_ids]
-        vals['produced_quant_ids'] = [(4, quant.id) for quant in self.produced_quant_ids]
-        return vals
+    def _should_bypass_product(self, product=False, location=False, reserved_quantity=0, lot_id=False, package_id=False, owner_id=False):
+        return super()._should_bypass_product(product, location, reserved_quantity, lot_id, package_id, owner_id) or (product and product.is_kits)

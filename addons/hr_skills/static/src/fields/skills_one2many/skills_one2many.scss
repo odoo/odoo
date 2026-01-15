@@ -1,0 +1,58 @@
+.o_field_skills_one2many, .o_field_resume_one2many {
+    .o_progress {
+        background: $gray-300;
+        border: 0;
+        height: 5px;
+    }
+
+    .o_progressbar_value {
+        font-size: $font-size-sm;
+        font-weight: bold;
+    }
+}
+
+table.o_skill_table {
+    .o_hr_skills_dialog_form {
+        .o_progressbar {
+            display: flex;
+            align-items: center;
+
+            .o_progressbar_value input {
+                width: auto;
+            }
+        }
+    }
+
+    table-layout: fixed;
+}
+
+.skills_header {
+    padding-inline: var(--ListRenderer-table-padding-x);
+}
+
+.o_skill_table thead {
+    /* This is to remove the top row with the column names from most displays of the skill table */
+    visibility: collapse;
+}
+
+.o_skill_table:not(.o_group_resume .o_skill_table) > thead {
+    /* This is needed because the border is rendered on chrome by default but not firefox but we also */
+    /* don't want to render any extra borders for the resume display */
+    border-width: 1px;
+}
+
+.o_employee_skills .skills_header {
+    /* Margin and padding classes are added to .skills_header to work in both HR and Recruitment contexts. */
+    /* However, the combined spacing is too much for either scenario, so one is removed depending on context. */
+    padding-block: 0 !important;
+}
+
+.o_employee_skills .o_list_renderer {
+    margin-top: 0 !important;
+}
+.skills_helper {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    padding-inline: var(--ListRenderer-table-padding-x);
+}

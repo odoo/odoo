@@ -1,0 +1,13 @@
+.o-hb-border-preview {
+    display: inline-block;
+    width: 100%;
+    max-width: calc(100% - .5rem);
+    margin-bottom: 2px;
+    border-width: 4px;
+    border-bottom: none !important;
+
+    .o-overlay-item & {
+        margin: (map-get($spacers, 3) * .8) 0;
+        max-width: none;
+    }
+}

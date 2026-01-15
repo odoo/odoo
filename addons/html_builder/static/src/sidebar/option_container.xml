@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.OptionsContainer">
+    <div t-if="props.options.length"
+         class="options-container mb-1" t-ref="root" t-att-data-container-title="title"
+         t-on-pointerenter="onPointerEnter" t-on-pointerleave="onPointerLeave">
+        <div class="options-container-header d-flex align-items-center justify-content-between">
+            <t t-set="isActionable" t-value="Object.keys(props.snippetModel).length > 0"></t>
+            <span
+                class="options-container-label ps-2 py-2"
+                t-att-class="{
+                    'options-container-label-actionable cursor-pointer': isActionable,
+                }"
+                t-out="title"
+                t-att-role="isActionable ? 'button' : 'heading'"
+                t-on-click="selectElement"
+            />
+            <t t-if="props.optionTitleComponents" t-foreach="props.optionTitleComponents" t-as="optionTitleComponent" t-key="optionTitleComponent.id">
+                <t t-component="optionTitleComponent.Component" t-props="optionTitleComponent.props || {}"/>
+            </t>
+            <span class="flex-grow-1" />
+
+            <div class="d-flex align-items-center gap-1 p-2">
+                <div t-if="props.headerMiddleButtons">
+                    <t t-foreach="props.headerMiddleButtons" t-as="headerMiddleButton" t-key="headerMiddleButton.id">
+                        <BuilderContext applyTo="headerMiddleButton.applyTo">
+                            <t t-if="headerMiddleButton.Component"
+                                t-component="headerMiddleButton.Component"
+                                t-props="headerMiddleButton.props || {}"/>
+                            <t t-else="" t-call="{{headerMiddleButton.template}}"/>
+                        </BuilderContext>
+                    </t>
+                </div>
+                <t t-foreach="props.containerTopButtons" t-as="button" t-key="button_index">
+                    <button class="o-hb-btn" t-att-class="button.class"
+                            t-att-title="button.title" t-att-aria-label="button.title"
+                            t-on-click="() => button.handler(props.editingElement)"/>
+                </t>
+                <t t-if="props.isClonable || props.cloneDisabledReason">
+                    <!-- Disabled buttons do not display their title -->
+                    <span t-att-title="props.cloneDisabledReason" t-att-aria-label="props.cloneDisabledReason">
+	                    <button class="fa fa-fw fa-clone oe_snippet_clone o-hb-btn btn btn-success-color-hover"
+	                            title="Duplicate this block"
+	                            aria-label="Duplicate this block"
+                                t-att-disabled="!!props.cloneDisabledReason"
+	                            t-on-click="cloneElement"/>
+	                </span>
+                </t>
+                <t t-if="props.isRemovable || props.removeDisabledReason">
+                    <!-- Disabled buttons do not display their title -->
+                    <span t-att-title="props.removeDisabledReason" t-att-aria-label="props.removeDisabledReason">
+	                    <button class="fa fa-fw fa-trash oe_snippet_remove o-hb-btn btn btn-danger-color-hover"
+	                            title="Remove this block"
+	                            aria-label="Remove this block"
+	                            t-att-disabled="!!props.removeDisabledReason"
+	                            t-on-click="removeElement"/>
+	                </span>
+                </t>
+            </div>
+        </div>
+        <div class="we-bg-options-container pb-3" t-ref="content">
+            <t t-foreach="props.options" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template">
+                <t t-if="isLegacyOption(OptionClass)">
+                    <t t-set="option" t-value="OptionClass"/>
+                    <BuilderContext applyTo="option.applyTo" t-if="hasAccess(option.groups)">
+                        <t t-if="option.OptionComponent" t-component="option.OptionComponent" t-props="option.props || {}"></t>
+                        <t t-else="" t-call="{{option.template}}"/>
+                    </BuilderContext>
+                </t>
+                <t t-else="">
+                    <BuilderContext applyTo="OptionClass.applyTo" t-if="hasAccess(OptionClass.groups)">
+                        <t t-component="OptionClass"></t>
+                    </BuilderContext>
+                </t>
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>

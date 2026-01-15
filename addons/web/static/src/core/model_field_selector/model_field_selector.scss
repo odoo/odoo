@@ -1,0 +1,27 @@
+.o_model_field_selector {
+    position: relative;
+
+    &.o_edit_mode {
+        cursor: pointer;
+    }
+
+    > .o_model_field_selector_value {
+        // needed when there is no value in it and used standalone
+        min-width: 20px;
+        min-height: 20px;
+
+        max-width: 100%;
+        word-wrap: break-word;
+        &:active, &:focus, &:active:focus {
+            outline: none;
+        }
+        > .o_model_field_selector_chain_part {
+            cursor: inherit;
+            border: 1px solid darken($o-brand-lightsecondary, 10%);
+            background: $o-brand-lightsecondary;
+        }
+        > i {
+            font-size: 10px;
+        }
+    }
+}

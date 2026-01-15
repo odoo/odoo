@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="sale.ProductConfiguratorDialog" t-inherit-mode="extension">
+        <button name="sale_product_configurator_confirm_button" position="attributes">
+            <attribute name="t-if">!showShopButtons()</attribute>
+        </button>
+        <button name="sale_product_configurator_cancel_button" position="attributes">
+            <attribute name="class" remove="btn-secondary" add="btn-light" separator=" "/>
+            <attribute name="t-if">!showShopButtons()</attribute>
+        </button>
+        <h6 name="sale_product_configurator_list_total" position="attributes">
+            <attribute
+                name="class"
+                add="order-1 order-md-2 w-100 text-end d-sm-inline-block ms-md-3 mb-0"
+                remove="d-none mt-0"
+            />
+        </h6>
+        <button name="sale_product_configurator_cancel_button" position="after">
+            <div
+                t-if="showShopButtons()"
+                class="d-flex flex-column flex-md-row align-items-center gap-2 order-2 order-md-1 w-100 w-md-auto"
+            >
+                <button
+                    t-if="!this.props.options.isBuyNow"
+                    name="website_sale_product_configurator_continue_button"
+                    class="btn btn-primary w-100"
+                    t-on-click="() => this.onConfirm({goToCart: false})"
+                    t-att-disabled="!isPossibleConfiguration() || !canBeSold()"
+                >
+                    <i class="fa fa-shopping-cart"/>
+                    Add to cart
+                </button>
+                <button
+                    name="website_sale_product_configurator_checkout_button"
+                    class="btn btn-outline-primary text-nowrap w-100"
+                    t-on-click="() => this.onConfirm({goToCart: true})"
+                    t-att-disabled="!isPossibleConfiguration() || !canBeSold()"
+                >
+                    Go to Checkout
+                    <i class="fa fa-angle-right ms-2"/>
+                </button>
+            </div>
+        </button>
+    </t>
+</templates>

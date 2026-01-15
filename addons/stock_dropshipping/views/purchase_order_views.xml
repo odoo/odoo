@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_form_inherit_stock_dropshipping" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.stock.dropshipping</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]/button[@name='action_view_picking']" position="before">
+                <button type="object"
+                    name="action_view_dropship"
+                    class="oe_stat_button"
+                    icon="fa-truck"
+                    invisible="dropship_picking_count == 0" groups="stock.group_stock_user">
+                    <field name="dropship_picking_count" widget="statinfo" string="Dropship"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='picking_type_id']" position="attributes">
+                <attribute name="domain">
+                    [('code', 'in', ('incoming', 'dropship')), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

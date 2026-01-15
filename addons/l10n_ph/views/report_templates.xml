@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_ph.external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[hasclass('o_footer_content')]" position="before">
+            <t t-if="is_l10n_ph_disbursement_voucher">
+                <t t-call="l10n_ph.report_disbursement_voucher_document_footer"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="l10n_ph.external_layout_bold" inherit_id="web.external_layout_bold">
+        <xpath expr="//div[hasclass('o_footer_content')]" position="before">
+            <t t-if="is_l10n_ph_disbursement_voucher">
+                <t t-call="l10n_ph.report_disbursement_voucher_document_footer"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="l10n_ph.external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//div[hasclass('o_footer_content')]" position="before">
+            <t t-if="is_l10n_ph_disbursement_voucher">
+                <t t-call="l10n_ph.report_disbursement_voucher_document_footer"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="l10n_ph.external_layout_striped" inherit_id="web.external_layout_striped">
+        <xpath expr="//div[hasclass('o_footer_content')]" position="before">
+            <t t-if="is_l10n_ph_disbursement_voucher">
+                <t t-call="l10n_ph.report_disbursement_voucher_document_footer"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="l10n_ph.external_layout_bubble" inherit_id="web.external_layout_bubble">
+        <xpath expr="//div[hasclass('border-top')][@t-field='company.report_footer']" position="before">
+            <t t-if="is_l10n_ph_disbursement_voucher">
+                <t t-call="l10n_ph.report_disbursement_voucher_document_footer"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="l10n_ph.external_layout_wave" inherit_id="web.external_layout_wave">
+        <xpath expr="//div[@t-field='company.report_footer']" position="before">
+            <t t-if="is_l10n_ph_disbursement_voucher">
+                <t t-call="l10n_ph.report_disbursement_voucher_document_footer"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="l10n_ph.external_layout_folder" inherit_id="web.external_layout_folder">
+        <xpath expr="//div[hasclass('o_footer_content')]" position="before">
+            <t t-if="is_l10n_ph_disbursement_voucher">
+                <t t-call="l10n_ph.report_disbursement_voucher_document_footer"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

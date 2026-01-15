@@ -1,0 +1,26 @@
+<odoo>
+    <template id="report_picking_batch_inherit" inherit_id="stock_picking_batch.report_picking_batch">
+        <xpath expr="//div[hasclass('page')]/div[2]" position="after">
+            <div t-if="o.dock_id">
+                <strong>Dock:</strong>
+                <span t-field="o.dock_id"/>
+            </div>
+            <div t-if="o.vehicle_id">
+                <strong>Vehicle:</strong>
+                <span t-field="o.vehicle_id"/>
+            </div>
+            <div t-if="o.vehicle_category_id">
+                <strong>Vehicle Category:</strong>
+                <span t-field="o.vehicle_category_id"/>
+            </div><br/>
+        </xpath>
+        <xpath expr="//table[hasclass('table')]//thead//tr//th" position="before">
+            <th>Sequence</th>
+        </xpath>
+        <xpath expr="//table[hasclass('table')]//tbody//tr//td" position="before">
+            <td>
+                <span t-field="pick.batch_sequence"/>
+            </td>
+        </xpath>
+    </template>
+</odoo>

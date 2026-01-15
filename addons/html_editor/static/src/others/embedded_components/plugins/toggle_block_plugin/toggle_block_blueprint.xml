@@ -1,0 +1,13 @@
+<templates>
+    <t t-name="html_editor.EmbeddedToggleBlockBlueprint">
+        <div data-embedded="toggleBlock"
+            data-oe-protected="true" contenteditable="false" t-att-data-embedded-props="embeddedProps">
+            <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
+                <t t-tag="baseContainerNodeName" t-att="baseContainerAttributes"><br/></t>
+            </div>
+            <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
+                <t t-tag="baseContainerNodeName" t-att="baseContainerAttributes"><br/></t>
+            </div>
+        </div>
+    </t>
+</templates>

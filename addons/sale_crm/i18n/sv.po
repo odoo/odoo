@@ -3,223 +3,167 @@
 # * sale_crm
 #
 # Translators:
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2015
+# Kristoffer Grundström <lovaren@gmail.com>, 2022
+# Haojun Zou <apollo_zhj@msn.com>, 2022
+# Kim Asplund <kim.asplund@gmail.com>, 2022
+# Simon S, 2022
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2022
+# Robin Chatfield <robin.chatfield@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-05-23 09:51+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
+"POT-Creation-Date: 2025-12-30 18:37+0000\n"
+"PO-Revision-Date: 2025-09-16 21:38+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/sale_crm/"
+"sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
-msgid "# Issues"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_count
-msgid "# Tasks"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
-msgid "# of Sales Order"
-msgstr "# kundorder"
-
-#. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Orders</span>"
 msgstr "<span class=\"o_stat_text\"> Beställningar</span>"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
-msgid "<span class=\"o_stat_text\"> Quote(s) </span>"
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__lead_id
+msgid "Associated Lead"
+msgstr "Förknippat kundämne"
+
+#. module: sale_crm
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. module: sale_crm
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
+msgid "Confirm"
+msgstr "Bekräfta"
+
+#. module: sale_crm
+#: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__create
+msgid "Create a new customer"
+msgstr "Skapa en ny kund"
+
+#. module: sale_crm
+#: model:ir.model,website_form_label:sale_crm.model_crm_lead
+msgid "Create an Opportunity"
+msgstr "Skapa en möjlighet"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_quotation_partner
+msgid "Create new or use existing Customer on new Quotation"
+msgstr "Skapa ny eller använd befintlig kund på ny offert"
+
+#. module: sale_crm
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+msgid "Create new quotation"
+msgstr "Skapa ny offert"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__partner_id
+msgid "Customer"
+msgstr "Kund"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: sale_crm
+#: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__nothing
+msgid "Do not link to a customer"
+msgstr "Länka inte till en kund"
+
+#. module: sale_crm
+#. odoo-python
+#: code:addons/sale_crm/models/crm_lead.py:0
+msgid "Expected revenue has been updated based on the linked Sales Orders."
 msgstr ""
+"Förväntade intäkter har uppdaterats baserat på länkade försäljningsorder."
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
-msgid ""
-"A member with whom you want to associate your membership.It will consider "
-"the membership state of the associated member."
-msgstr ""
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__id
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__id
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
-#, fuzzy
-msgid "Activation"
-msgstr "Offert"
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
-msgid "Associate Member"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
-msgid "Cancel Membership Date"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_count
-msgid "Count Payment Method"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_state
-msgid "Current Membership Status"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_customer
-msgid "Customer Location"
-msgstr "Kundlagerställe"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_membership_start
-msgid "Date from which membership becomes active."
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_membership_cancel
-msgid "Date on which membership has been cancelled"
-msgstr "Datum då medlemskapet avbröts"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_membership_stop
-msgid "Date until which membership remains active."
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_free_member
-msgid "Free Member"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
-msgid ""
-"Gives the probability to assign a lead to this partner. (0 means no "
-"assignation.)"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
-msgid "Implementation References"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
-msgid "Implemented by"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice
-msgid "Invoice"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
-msgid "Invoiced in Sale Orders Target"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_membership_state
-msgid ""
-"It indicates the membership state.\n"
-"-Non Member: A partner who has not applied for any membership.\n"
-"-Cancelled Member: A member who has cancelled his membership.\n"
-"-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
-"-Invoiced Member: A member whose invoice has been created.\n"
-"-Paying member: A member who has paid the membership fee."
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
-msgid "Latest Partner Review"
-msgstr ""
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Kundämnen/affärsmöjligheter"
+msgid "Lead"
+msgstr "Ledning"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
-msgid "Level"
-msgstr ""
+#: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
+msgid "Link to an existing customer"
+msgstr "Länka till en befintlig kund"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
-msgid "Level Weight"
-msgstr ""
+#: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
+msgid "My Quotations"
+msgstr "Mina offerter"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Log in the chatter from which opportunity the order originates"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
-msgid "Membership"
-msgstr "Medlemskap"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_amount
-msgid "Membership Amount"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_stop
-msgid "Membership End Date"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_start
-msgid "Membership Start Date"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+#: model:ir.actions.act_window,name:sale_crm.crm_quotation_partner_action
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
 msgid "New Quotation"
-msgstr ""
+msgstr "Ny offert"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
-msgid "Next Partner Review"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__quotation_count
 msgid "Number of Quotations"
-msgstr ""
+msgstr "Antal offerter"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_opportunity_id
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_order_count
+msgid "Number of Sale Orders"
+msgstr "Antal order"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__opportunity_id
 msgid "Opportunity"
-msgstr "Tillfälle"
+msgstr "Möjlighet"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__order_ids
 msgid "Orders"
-msgstr "Ordrar"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
-msgid "Partnership Date"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
-msgid "Payment Methods"
-msgstr "Betalningsmetod"
+msgstr "Order"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
@@ -227,103 +171,66 @@ msgid "Quotation"
 msgstr "Offert"
 
 #. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.sale_action_quotations
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__action
+msgid "Quotation Customer"
+msgstr "Kundoffert"
+
+#. module: sale_crm
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "Quotations"
 msgstr "Offerter"
 
 #. module: sale_crm
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_lead_merge_summary_inherit_sale_crm
+msgid "Sale Orders"
+msgstr "Säljordrar"
+
+#. module: sale_crm
+#. odoo-python
+#: code:addons/sale_crm/models/crm_team.py:0
+msgid "Sales Analysis"
+msgstr "Försäljningsanalys"
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
 msgid "Sales Order"
-msgstr "Kundorder"
+msgstr "Försäljningsorder"
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_free_member
-msgid "Select if you want to give free membership."
-msgstr ""
+#: model:ir.model,name:sale_crm.model_crm_team
+msgid "Sales Team"
+msgstr "Säljlag"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_amount_total
 msgid "Sum of Orders"
-msgstr ""
+msgstr "Antal order"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
-msgid "Tags"
-msgstr "Etiketter"
+#: model:ir.model.fields,help:sale_crm.field_crm_lead__sale_amount_total
+msgid "Untaxed Total of Confirmed Orders"
+msgstr "Totalt ex moms av bekräftade order"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_ids
-msgid "Tasks"
-msgstr "Aktiviteter"
+#. odoo-python
+#: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
+msgid "You can only apply this action from a lead."
+msgstr "Du kan bara verkställa detta från ett kundämne."
 
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
-msgid "The price negotiated by the partner"
-msgstr ""
+#~ msgid "Invoiced in Sales Orders Target"
+#~ msgstr "Fakturerad i försäljningsmål"
 
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer
-msgid ""
-"This stock location will be used, instead of the default one, as the "
-"destination location for goods you send to this partner"
-msgstr ""
-"Detta lagerställe används i stället för standard som destination för gods "
-"som skickas till detta företag"
+#~ msgid "Last Modified on"
+#~ msgstr "Senast redigerad den"
 
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
-msgid ""
-"This stock location will be used, instead of the default one, as the source "
-"location for goods you receive from the current partner"
-msgstr ""
-"Detta lagerställe kommer användas i stället för standard, som källa för gods "
-"som tas emot från aktuellt företag"
+#~ msgid "Lead/Opportunity"
+#~ msgstr "Affärsmöjlighet/Möjlighet"
 
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "Users"
-msgstr "Användare"
+#~ msgid "Log in the chatter from which opportunity the order originates"
+#~ msgstr "Logga i chatten från vilken möjlighet ordern kommer"
 
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
-msgid "Vendor Location"
-msgstr ""
+#~ msgid "Sales: Untaxed Total"
+#~ msgstr "Försäljning: totalt ex moms"
 
-#~ msgid "# Claims"
-#~ msgstr "# reklamationer"
-
-#~ msgid "Campaign"
-#~ msgstr "Kampanj"
-
-#~ msgid "Geo Latitude"
-#~ msgstr "Geo-latitud"
-
-#~ msgid "Geo Localization Date"
-#~ msgstr "Geo platsdatum"
-
-#~ msgid "Geo Longitude"
-#~ msgstr "Geo-longitud"
-
-#~ msgid "Medium"
-#~ msgstr "Medel"
-
-#~ msgid "Source"
-#~ msgstr "Källa"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Det här är ett namn som hjälper dig hålla ordning på olika kampanjer. Ex. "
-#~ "Höst_körning, Jul_Special"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr "Det här är leverensmetoden. Ex. Vykort, Epost eller Banner"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr ""
-#~ "Det här är källan till länken. Ex: Sökmotor, en annan domän eller namn på "
-#~ "mailinglista"
+#~ msgid "User"
+#~ msgstr "Användare"

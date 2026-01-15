@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_invoice_form_inherit_l10n_vn" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n.vn</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@id='other_tab_entry']" position="after">
+                <page id="l10n_vn"
+                      string="Vietnamese Electronic Invoicing"
+                      invisible="move_type not in ['out_invoice', 'out_refund'] or country_code != 'VN'">
+                    <group>
+                        <group>
+                            <field name="l10n_vn_e_invoice_number"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

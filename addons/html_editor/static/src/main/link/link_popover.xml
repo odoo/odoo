@@ -1,0 +1,209 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="html_editor.linkPopover">
+        <div class="o-we-linkpopover d-flex bg-light overflow-auto shadow" t-on-keydown="onKeydown" role="dialog" aria-modal="true" aria-label="Link Popover">
+            <div t-if="state.editing" class="container-fluid d-flex vertical-center p-2" t-ref="editing-wrapper">
+                <div t-if="state.isImage" class="col p-2 o_link_popover_container">
+                    <div class="input-group mb-1">
+                        <input name="o_linkpopover_url_img" t-ref="url" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL"
+                            t-on-keydown="onKeydownEnter"/>
+                        <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'mx-1': state.type ===  ''}" t-on-click="onClickApply">Apply</button>
+                    </div>
+                </div>
+                <div t-else="" class="d-flex">
+                    <t t-if="state.showAdvancedOptions">
+                        <div class="o_advance_option_panel">
+                            <div class="o_advance_options_grid" style="width: 200px;">
+                                <button t-if="state.showAdvancedOptions" class="fa fa-angle-left btn btn-secondary border-10" t-on-click="toggleAdvancedOptions"/>
+                                    <t t-foreach="Object.values(state.relAttributeOptions)" t-as="opt" t-key="opt.label">
+                                        <t t-if="opt.label !== 'noopener'">
+                                            <div class="o_seo_option_row d-flex justify-content-between align-items-center py-1 gap-2">
+                                                <span t-att-title="opt.description"><t t-out="opt.label"/></span>
+                                                <CheckBox
+                                                    value="opt.isChecked"
+                                                    onChange="toggleRelAttr.bind(this, opt.label)"/>
+                                            </div>
+                                        </t>
+                                    </t>
+                                <div class="o_seo_option_row d-flex justify-content-between align-items-center py-1 gap-2">
+                                    <span>Open in new tab</span>
+                                    <CheckBox
+                                        value="state.linkTarget === '_blank'"
+                                        onChange="onClickNewWindow.bind(this)"
+                                        className="'target-blank-option'"/>
+                                </div>
+                                <t t-if="state.linkTarget === '_blank'">
+                                    <div class="o_seo_option_row o_seo_option_child d-flex justify-content-between align-items-center py-1 gap-2 ps-4">
+                                        <span>noopener</span>
+                                        <CheckBox
+                                            value="state.relAttributeOptions.noopener.isChecked"
+                                            onChange="toggleRelAttr.bind(this, 'noopener')"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                <t t-else="">
+                    <div class="col p-2 o_link_popover_container">
+                        <div class="input-group mb-2" t-att-class="{'d-none': !state.showLabel}">
+                            <input t-ref="label"
+                                class="o_we_label_link border-dark-subtle form-control form-control-sm"
+                                t-model="state.label"
+                                title="Label"
+                                placeholder="Add a label for your link"
+                                t-on-input="onChange"/>
+                        </div>
+                        <div class="input-group mb-2">
+                            <input t-ref="url"
+                                name="o_linkpopover_url"
+                                class="o_we_href_input_link border-dark-subtle form-control form-control-sm"
+                                t-model="state.url"
+                                title="URL"
+                                placeholder="e.g. https://www.odoo.com"
+                                t-on-keydown="onKeydownEnter"
+                                t-on-input="this.onChange"/>
+                            <span class="ms-1" t-if="props.canUpload and !state.url">
+                                or <button class="btn btn-light btn-sm" t-on-click="uploadFile"><i class="fa fa-upload"/></button>
+                            </span>
+
+                        </div>
+                        <div class="input-group">
+                            <select name="link_type" class="form-select form-select-sm border-dark-subtle w-100 mb-1" t-model="state.type" t-on-change="onChange">
+                                <t t-foreach="this.colorsData" t-as="colorData" t-key="colorData.type">
+                                    <t t-if="props.allowCustomStyle or colorData.type !== 'custom'">
+                                        <option t-att-value="colorData.type" t-att-selected="state.type === colorData.type" t-attf-class="o_btn_preview" t-out="colorData.label"/>
+                                    </t>
+                                </t>
+                            </select>
+                        </div>
+                        <div t-if="state.type" class="input-group">
+                            <select name="link_style_size" class="form-select form-select-sm border-dark-subtle mb-1" t-model="state.buttonSize" t-on-change="onChange" aria-label="Select button size">
+                                <option t-foreach="this.buttonSizesData" t-as="buttonSizesData" t-key="buttonSizesData.size" t-att-value="buttonSizesData.size" t-att-selected="state.buttonSize === buttonSizesData.size" t-out="buttonSizesData.label"/>
+                            </select>
+                            <select name="link_style_shape" class="form-select form-select-sm link-style border-dark-subtle mb-1" t-model="state.buttonShape" t-on-change="onChange" aria-label="Select button shape">
+                                <option t-foreach="this.buttonShapeData" t-as="buttonShapeData" t-key="buttonShapeData.shape" t-att-value="buttonShapeData.shape" t-att-selected="state.buttonShape === buttonShapeData.shape" t-out="buttonShapeData.label"/>
+                            </select>
+                        </div>
+
+                        <t t-if="state.type === 'custom'">
+                            <div class="d-flex mb-1 custom-text-color">
+                                <label>Text Color</label>
+                                <button class="o_we_color_preview custom-text-picker me-3" t-att-data-color="this.customTextColorState.selectedColor" t-ref="customTextColorButton"
+                                        t-attf-style="background-color: {{this.props.formatColor(this.customTextColorState.selectedColor)}}"/>
+                                <label>Fill Color</label>
+                                <button class="o_we_color_preview custom-fill-picker" t-att-data-color="this.customFillColorState.selectedColor" t-ref="customFillColorButton"
+                                        t-attf-style="{{this.customFillColorState.selectedColor?.includes('gradient') ? 'background-image' : 'background-color'}}: {{this.props.formatColor(this.customFillColorState.selectedColor)}}" />
+                            </div>
+                            <div class="d-flex mb-1 custom-border align-items-center">
+                                <label class="flex-shrink-0">Border</label>
+                                <div class="input-group me-1">
+                                    <input type="number" min="0"
+                                        class="form-control form-control-sm custom-border-size flex-grow-0" t-model="state.customBorderSize"
+                                        placeholder="Border Size" t-on-keydown="onKeydownEnter" t-on-input="onInput"/>
+                                    <span class="input-group-text">px</span>
+                                </div>
+                                <div class="d-flex align-items-center" t-if="state.customBorderSize > 0">
+                                    <select name="link_style_border" class="form-select form-select-sm custom-border-style me-1" t-model="state.customBorderStyle" t-on-change="onChange">
+                                        <t t-foreach="this.borderData" t-as="borderData" t-key="borderData.style">
+                                            <option t-att-value="borderData.style" t-att-selected="state.customBorderStyle === borderData.style">
+                                                <span t-esc="borderData.label"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                    <button class="o_we_color_preview custom-border-picker" t-att-data-color="this.customBorderColorState.selectedColor" t-ref="customBorderColorButton"
+                                        t-attf-style="background-color: {{this.props.formatColor(this.customBorderColorState.selectedColor)}}" />
+                                </div>
+                            </div>
+                        </t>
+                        <t t-if="props.allowTargetBlank">
+                            <t t-if="state.isDocument">
+                                <CheckBox
+                                    value="state.directDownload"
+                                    onChange="onClickDirectDownload.bind(this)"
+                                    className="'direct-download-option'">
+                                    Direct download
+                                </CheckBox>
+                            </t>
+                        </t>
+                        <t t-if="props.allowStripDomain and isAbsoluteURLInCurrentDomain()">
+                            <CheckBox
+                                value="state.stripDomain"
+                                onChange="onClickStripDomain.bind(this)"
+                                className="'strip-domain-option'">
+                                Autoconvert to relative link
+                            </CheckBox>
+                        </t>
+                        <div class="d-flex justify-content-between align-items-center mt-1">
+                            <div>
+                                <button class="o_we_apply_link btn btn-sm btn-primary" t-att-disabled="!state.url" t-on-click="onClickApply">Apply</button>
+                                <button class="o_we_discard_link btn btn-sm btn-secondary ms-1" t-on-click="props.onDiscard">Discard</button>
+                            </div>
+                            <div class="d-flex align-items-center gap-1">
+                                <a t-if="props.canRemove and state.url" href="#" class="o_we_remove_link text-dark d-flex me-1" t-on-click.prevent="onClickRemove" title="Remove Link">
+                                    <i class="fa fa-chain-broken"></i>
+                                </a>
+                                <button class="btn btn-sm btn-secondary" title="Advanced mode" t-att-disabled="!state.url" t-on-click="toggleAdvancedOptions">
+                                    <i class="fa fa-gear"/>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+            <div t-else="" style="width: 274px;" data-prevent-closing-overlay="true">
+                <div class="d-flex flex-column p-2">
+                    <div class="d-flex">
+                        <span class="o_we_preview_favicon" style="width: 16px; height: 32px">
+                            <img t-if="state.previewIcon.type === 'imgSrc'" t-att-src="state.previewIcon.value" class="align-content-center"/>
+                            <span t-elif="state.previewIcon.type === 'mimetype'" class="o_image" t-att-data-mimetype="state.previewIcon.value"/>
+                            <i t-else="" t-attf-class="fa fa-fw {{state.previewIcon.value}}"></i>
+                        </span>
+                        <div class="ms-1 w-100">
+                            <div class="d-flex">
+                                <a href="#" target="_blank" t-attf-href="{{state.url}}" class="o_we_url_link fw-bold flex-grow-1 text-truncate" style="max-width: 160px;" t-attf-title="{{state.urlTitle}}">
+                                    <t t-esc="state.urlTitle"/>
+                                </a>
+                                <div class="flex-grow-1 d-flex justify-content-end align-items-center gap-1">
+                                    <a href="#" class="mx-1 o_we_replace_title_btn text-dark"
+                                        t-if="!state.isImage and state.urlTitle and state.label === '' and !state.showReplaceTitleBanner"
+                                        t-on-click="onClickReplaceTitle"
+                                        title="Replace URL with its title"
+                                    >
+                                        <i class="fa fa-magic"></i>
+                                    </a>
+                                    <t t-if="props.canEdit">
+                                        <a href="#" class="o_we_edit_link btn btn-sm btn-secondary" t-on-click="onClickEdit" title="Edit Link">Edit</a>
+                                    </t>
+                                </div>
+                            </div>
+                            <div t-if="state.urlTitle and state.url and state.urlTitle !== state.url" class="text-truncate" style="max-width: 200px; font-size: 12px;">
+                                <span t-attf-class="o_we_full_url text-muted o_we_webkit_box" t-attf-title="{{state.url}}">
+                                    <t t-if="state.url" t-esc="state.url"/>
+                                    <t t-else="">No URL specified</t>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div t-if="state.imgSrc" class="o_extra_info_card" style="align-self: center; max-width: 235px">
+                            <a href="#" target="_blank" t-attf-href="{{state.url}}" title="Open in a new tab">
+                                <img t-att-src="state.imgSrc" class="img-fluid mb-1" style="max-width: 230; max-height: 100%;"/>
+                            </a>
+                    </div>
+                    <div t-if="state.urlDescription" class="d-flex">
+                        <i class="fa fa-align-right align-content-center"></i>
+                        <span class="ms-1 o_we_description_link_preview" style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-size: 12px;color: gray; overflow: hidden;" t-attf-title="{{state.urlDescription}}">
+                            <t t-esc="state.urlDescription"/>
+                        </span>
+                    </div>
+                </div>
+                <div t-if="!state.isImage and state.urlTitle and state.label === '' and state.showReplaceTitleBanner" class="d-flex align-items-baseline" style="background-color: var(--primary);">
+                    <i class="fa fa-magic fa-fw m-1" style="color: var(--o-cc1-btn-primary-text);"></i>
+                    <span class="me-2 flex-grow-1" style="color: var(--o-cc1-btn-primary-text);font-size: smaller;">Replace URL with its title?</span>
+                    <button class=" btn btn-sm btn-primary o_we_replace_title_btn" style="margin: 1px;font-size: smaller;" t-on-click="onClickReplaceTitle">Yes</button>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

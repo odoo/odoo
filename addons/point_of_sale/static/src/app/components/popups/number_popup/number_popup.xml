@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.NumberPopup">
+        <Dialog title="props.title" bodyClass="'d-flex flex-column justify-content-center'" size="'sm'">
+            <div t-if="props.subtitle" class="subtitle p-1 mx-auto" t-esc="props.subtitle"/>
+            <div class="input-symbol mb-3">
+                <div class="popup-input value active form-control form-control-lg text-center">
+                    <span t-if="this.state.buffer || !props.placeholder" class="input-value" t-esc="props.formatDisplayedValue(this.state.buffer || '')"/>
+                    <span t-else="" class="text-muted" t-esc="props.placeholder"/>
+                </div>
+            </div>
+            <div t-if="props.feedback(this.state.buffer)" class="p-2 mx-auto mt-n2 mb-2" t-esc="props.feedback(this.state.buffer)" />
+            <Numpad buttons="props.buttons"/>
+            <t t-set-slot="footer">
+                <div class="d-flex flex-grow-1 justify-content-center w-100">
+                    <button t-att-disabled="!props.isValid(state.buffer)"
+                        class="btn btn-primary btn-lg lh-lg o-default-button me-2 flex-fill"
+                        tabindex="1"
+                        t-on-click="confirm">
+                        <t t-esc="confirmButtonLabel"/>
+                    </button>
+                    <button class="btn btn-secondary btn-lg lh-lg o-default-button flex-fill"
+                        tabindex="1"
+                        t-on-click="cancel">
+                        Discard
+                    </button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+</templates>

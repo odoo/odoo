@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="project.ProjectTaskCalendarListToPlan">
+        <h5>Drag Tasks to Schedule</h5>
+        <div class="d-flex flex-column">
+            <div class="d-flex align-items-center cursor-pointer o_task_to_plan_draggable py-1" t-foreach="props.model.tasksToPlan.records" t-as="task" t-key="task.id" t-att-data-res-id="task.id" t-on-click="() => this.openRecord(task)">
+                <i class="text-muted oi oi-draggable"/>
+                <span class="ps-1 text-truncate" t-out="task.name" t-att-title="task.name"/>
+            </div>
+        </div>
+        <button t-if="displayLoadMoreButton" class="btn btn-link" t-on-click="loadMoreTasksToPlan">Load More</button>
+    </t>
+</templates>

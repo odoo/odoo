@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <div t-name="stock.leadDays">
+        <h2>Forecasted Date</h2>
+        <hr/>
+        <table t-if="jsonValue.lead_days_description" class="table table-borderless table-sm">
+            <tbody>
+                <tr class="table-secondary">
+                    <td>Today</td>
+                    <td class="text-end" t-out="jsonValue.today"/>
+                </tr>
+                <tr t-foreach="jsonValue.lead_days_description" t-key="descr" t-as="descr"
+                    t-attf-class="{{ descr[2] ? 'table-secondary' : '' }}">
+                    <td t-out="descr[0]"/>
+                    <td class="text-end" t-out="descr[1]"/>
+                </tr>
+                <tr class="table-info">
+                    <td>Forecasted Date</td>
+                    <td class="text-end text-nowrap">
+                        = <t t-out="jsonValue.lead_horizon_date"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div t-name="stock.replenishmentGraph" class="col-11">
+        <div class="o_replenishment_graph">
+            <canvas t-ref="canvas"/>
+        </div>
+        <div class="d-flex pt-3">
+            <h6 class="row text-muted">
+                <span>Daily Demand: <span t-out="dailyDemand"/> <span t-out="productUomName"/>/day</span>
+                <span class="pt-2">Average Stock: <span t-out="averageStock"/> <span t-out="productUomName"/></span>
+            </h6>
+            <h6 class="row text-muted">
+                <span t-if="!qtiesAreTheSame">Ordering Frequency: <span t-out="orderingPeriod"/> day(s)</span>
+                <span t-if="qtiesAreTheSame">Ordering Frequency: On demand</span>
+                <span class="pt-2">Lead Time: <span t-out="leadTime"/> day(s)</span>
+            </h6>
+        </div>
+    </div>
+</templates>

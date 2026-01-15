@@ -1,0 +1,217 @@
+.o_control_panel {
+    border-bottom: var(--ControlPanel-border-bottom, #{$o-control-panel-border-bottom});
+    background-color: $o-control-panel-background-color;
+    @include media-only(screen) {
+        .o_control_panel_breadcrumbs {
+            --#{$variable-prefix}breadcrumb-font-size: #{$small-font-size};
+
+            @include media-breakpoint-up(md) {
+                min-width: 200px;
+            }
+        }
+
+        @include media-breakpoint-down(md) {
+            &.o_mobile_sticky {
+                @include o-position-sticky();
+                z-index: 10;
+            }
+        }
+
+        @include media-breakpoint-up(lg) {
+            .o_control_panel_breadcrumbs, .o_control_panel_navigation {
+                flex: 1;
+            }
+
+            .o_control_panel_actions {
+                min-width: MIN(500px, 33%);
+            }
+        }
+
+        @include media-breakpoint-up(xl) {
+            .o_control_panel_actions {
+                min-width: MIN(600px, 33%);
+            }
+        }
+
+        .o_cp_switch_buttons {
+            .btn, .btn:focus, .btn.active {
+                // Boostrap plays around with the z-index of buttons, but this is not needed here
+                // It was causing issues with the hotkey overlay
+                z-index: 0;
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // Print
+    // ------------------------------------------------------------------
+    @include media-only(print) {
+        padding: 0 0 map-get($spacers, 2) !important; // The @page margin will be used instead.
+        margin-bottom: 1rem;
+
+        &, .o_facet_value {
+            font-weight: bold;
+        }
+
+        .o_control_panel_main {
+            align-items: center !important;
+        }
+
+        .o_searchview_facet_label > i {
+            font-size: $font-size-sm !important;
+        }
+
+        .o_facet_value {
+            padding-right: map-get($spacers, 2);
+        }
+
+        .o_breadcrumb {
+            flex-direction: row !important;
+            align-items: start;
+            font-family: $o-font-family-monospace;
+
+            a {
+                font-weight: bold !important;
+                color: inherit;
+            }
+
+            .btn.btn-light {
+                border: 0;
+                padding-right: 0 !important;
+                background: transparent;
+                color: inherit;
+            }
+        }
+
+        .o_back_button a, .o_last_breadcrumb_item {
+            font-weight: bold !important;
+            font-size: $font-size-base !important;
+            padding-left: $breadcrumb-item-padding-x;
+        }
+
+        .o_back_button a::after {
+            float: right;
+            padding-left: $breadcrumb-item-padding-x;
+            color: $text-muted;
+            content: var(--breadcrumb-divider, "/");
+        }
+
+        .o_pager_counter > span:nth-child(2) {
+            width: 1em;
+            display: inline-block;
+            text-align: center;
+        }
+    }
+}
+
+.o_x2m_control_panel {
+    display: flex;
+    flex-flow: row wrap;
+
+    .o_cp_buttons {
+        display: flex;
+        margin-right: auto;
+    }
+    .o_cp_pager {
+        display: flex;
+        margin-left: auto;
+    }
+}
+
+.o_dragged_embedded_action {
+    transition: transform 0.5s;
+    transform: rotate(2deg);
+    opacity: 0.8;
+}
+
+.o_embedded_actions {
+    max-height: 500px;
+    transition: opacity 0.5s, max-height 0.5s ease;
+
+    &.o-fade-leave, &.o-fade-enter {
+        opacity: 0;
+        max-height: 0;
+    }
+
+    &::before, &::after {
+        flex: 1 1 0;
+        height: 1px;
+        background-color: $border-color;
+        content: "";
+    }
+}
+
+.o_embedded_actions_dropdown_menu {
+    .o_icon_right {
+        transform: translate(-0.45em, 0);
+    }
+
+    .o_save_current_view {
+        &:before {
+            margin-inline-end: map-get($spacers, 1);
+            font-family: FontAwesome;
+            opacity: $o-opacity-muted;
+            content: "\f0c7";
+        }
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .o_rtl .o_control_panel .o_back_button:before {
+        transform: rotate(180deg);
+    }
+}
+
+/* Simple button place-holder */
+%-custom-button {
+    $-value: map-get($o-btns-bs-override, 'secondary');
+    @include button-variant(
+            o-safe-get($-value, background),
+            o-safe-get($-value, border),
+            o-safe-get($-value, color),
+            o-safe-get($-value, hover-background),
+            o-safe-get($-value, hover-border),
+            o-safe-get($-value, hover-color),
+            o-safe-get($-value, active-background),
+            o-safe-get($-value, active-border),
+            o-safe-get($-value, active-color),
+    );
+    --#{$prefix}btn-border-width: var(--border-width);
+    --#{$prefix}btn-border-radius: #{$btn-border-radius};
+
+    background-color: var(--#{$prefix}btn-bg);
+    border: var(--#{$prefix}btn-border-width) solid var(--#{$prefix}btn-border-color);
+    @include border-radius(var(--#{$prefix}btn-border-radius));
+
+    &.selected {
+        color: var(--#{$prefix}btn-active-color);
+        background-color: var(--#{$prefix}btn-active-bg);
+        border-color: var(--#{$prefix}btn-active-border-color);
+        box-shadow: var(--#{$prefix}btn-active-shadow);
+    }
+}
+
+.o_bottom_sheet .o_cp_switch_buttons {
+    display: grid;
+    gap: map-get($spacers, 2);
+    grid-template-columns: repeat(3, 1fr);
+
+    .o-dropdown-item {
+        @extend %-custom-button;
+
+        display: grid;
+        justify-items: center;
+        gap: map-get($spacers, 2);
+        padding: map-get($spacers, 3) map-get($spacers, 2);
+
+        &.selected::before {
+            content: none !important;
+        }
+
+        > span {
+            @include text-truncate();
+            max-width: 100%;
+            margin-left: 0 !important; // Counter BS rule ms-1
+        }
+    }
+}

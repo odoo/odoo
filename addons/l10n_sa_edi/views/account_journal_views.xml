@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_journal_form" model="ir.ui.view">
+            <field name="name">account.journal.form.l10n_sa_edi</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <field name="l10n_sa_csr" invisible="1"/>
+                    <field name="l10n_sa_compliance_csid_json" invisible="1"/>
+                    <field name="l10n_sa_production_csid_json" invisible="1"/>
+                    <field name="l10n_sa_compliance_checks_passed" invisible="1"/>
+                    <page name="zatca_einvoicing" string="ZATCA" invisible="country_code != 'SA' or type != 'sale'">
+                        <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert"
+                             invisible="l10n_sa_csr_errors or l10n_sa_compliance_csid_json" groups="base.group_system">
+                            <p class="mb-0">
+                                Onboard this Journal
+                            </p>
+                            <button name="%(l10n_sa_edi_otp_wizard_act_window)d" type="action" icon="fa-key"
+                                    class="btn-info ">
+                                Onboard
+                            </button>
+                        </div>
+                        <div class="alert alert-danger d-flex justify-content-between align-items-center" role="alert"
+                             groups="base.group_system"
+                             invisible="not l10n_sa_csr_errors or l10n_sa_compliance_csid_json or l10n_sa_production_csid_json">
+                            <div>
+                                <h4 role="alert" class="alert-heading">Error: Journal is not onboarded</h4>
+                                <field name="l10n_sa_csr_errors" nolabel="1" readonly="1"/>
+                            </div>
+                            <button name="%(l10n_sa_edi_otp_wizard_act_window)d" type="action" icon="fa-key"
+                                    class="btn-danger">
+                                Onboard
+                            </button>
+                        </div>
+                        <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert"
+                             groups="base.group_system"
+                             invisible="not l10n_sa_compliance_checks_passed or not l10n_sa_production_csid_json">
+                            <p class="mb-0">
+                                Success: Journal is onboarded and valid until
+                                <field name="l10n_sa_production_csid_validity" readonly="1" nolabel="1"
+                                       class="fw-bold"/>
+                            </p>
+                            <div>
+                                <button name="%(l10n_sa_edi_otp_wizard_act_window)d" type="action" icon="fa-refresh"
+                                        class="btn-info" context="{'default_l10n_sa_renewal': True}">
+                                    Renew
+                                </button>
+                                <button name="%(l10n_sa_edi_otp_wizard_act_window)d" type="action" icon="fa-refresh" class="btn-warning ms-2"
+                                    confirm="Do you really want to re-onboard this Journal with ZATCA?" confirm-title="Re-onboarding Confirmation" confirm-label="Yes">
+                                    Re-Onboard
+                                </button>
+                            </div>
+                        </div>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_retry_edi_documents_error']" position="attributes">
+                    <attribute name="invisible">l10n_sa_edi_chain_head_id</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_retry_edi_documents_error']" position="after">
+                    <!-- when invoice is stuck due to chain head, retry action does not make sense (there are no issues with the current invoice), and instead, we redirect them to the affected invoice -->
+                    <button name="action_show_chain_head" type="object" class="oe_link py-0 text-danger" string="Blocking Invoice" invisible="not l10n_sa_edi_chain_head_id"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

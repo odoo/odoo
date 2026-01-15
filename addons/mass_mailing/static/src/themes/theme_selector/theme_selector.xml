@@ -1,0 +1,28 @@
+<templates id="template">
+    <div t-name="mass_mailing.ThemeSelector" class="o_mail_theme_selector">
+        <div class="o_mailing_template_preview_wrapper d-inline-block w-100">
+            <div t-foreach="favoriteTemplates" t-as="template" t-key="template_index"
+                class="o_mail_template_preview d-inline-block dropdown-item"
+                t-if="template.modelId === this.props.config.mailingModelId"
+                t-on-click="() => this.onSelectFavorite(template.html)">
+                <div class="d-inline-flex flex-row align-items-center border px-2 py-2 w-100">
+                    <i class="fa fa-star me-2"/>
+                    <span class="text-truncate" t-out="template.subject"/>
+                    <div class="ms-auto">
+                        <i class="o_mail_template_remove_favorite fa fa-trash ps-2 me-1" t-att-data-id="template.id" title="Remove from Templates"
+                            t-on-click="() => this.onRemoveFavorite(template_index)"/>
+                        <img t-if="template.userId" t-attf-src="/web/image/res.users/#{template.userId}/avatar_128" t-att-title="template.userName"/>
+                    </div>
+                </div>
+            </div>
+            <div class="d-inline-block w-100">
+                <div t-foreach="themes.values()" t-as="theme" t-key="theme_index" role="menuitem" class="cursor-pointer dropdown-item px-4"
+                    t-on-click="() => this.onSelectTheme(theme)" t-att-data-name="theme.name">
+                    <div class="o_thumb small mb-2" t-attf-style="background-image: url(#{theme.imgPath}_small.png)"/>
+                    <div class="o_thumb large mb-2" t-attf-style="background-image: url(#{theme.imgPath}_large.png)"/>
+                    <h5 class="text-capitalize text-truncate" t-out="theme.title"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</templates>

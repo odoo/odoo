@@ -1,0 +1,39 @@
+.o_wvisitor_kanban .o_kanban_renderer {
+    &.o_kanban_ungrouped {
+        padding:0px;
+        .o_kanban_record {
+            width: 100%;
+            margin: 0px;
+        }
+    }
+    &.o_kanban_grouped {
+        .row > div {
+            flex: 1 1 100% !important;
+            max-width: 100% !important;
+            margin: 8px 0 !important;
+
+            &.col-6 {
+                flex: 1 1 50% !important;
+                max-width: 50% !important;
+            }
+            &.d-none {
+                display: none !important; //forcing the d-none to override the d-lg or d-sm classes for grouped view
+            }
+            &.text-lg-end {
+                text-align: left !important; //overrides the text-lg-end for grouped view.
+            }
+        }
+    }
+}
+
+.o_country_flag {
+    width:24px;
+    height: 16px;
+}
+
+.w_visitor_kanban_actions .btn {
+    margin: inherit;
+    &:not(:last-child){
+        margin-right: 0.25rem;
+    }
+}

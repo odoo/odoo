@@ -3,13 +3,12 @@
 
 {
     'name': 'Google Users',
-    'category': 'Extra Tools',
+    'category': 'Hidden/Tools',
     'description': """
 The module adds google user in res user.
 ========================================
 """,
     'depends': ['base_setup'],
-    'data': [
-        'data/google_account_data.xml',
-    ],
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
 }

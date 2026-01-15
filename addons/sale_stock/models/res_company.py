@@ -4,7 +4,7 @@
 from odoo import fields, models
 
 
-class company(models.Model):
+class ResCompany(models.Model):
     _inherit = 'res.company'
 
     security_lead = fields.Float(

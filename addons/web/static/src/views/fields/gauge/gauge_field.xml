@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.GaugeField">
+        <div class="oe_gauge position-relative">
+            <canvas t-ref="canvas"/>
+            <span class="o_gauge_value position-absolute start-0 end-0 bottom-0 text-center" t-esc="props.record.data[props.name]"/>
+        </div>
+    </t>
+
+</templates>

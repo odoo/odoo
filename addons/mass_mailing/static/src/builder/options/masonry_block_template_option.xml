@@ -1,0 +1,256 @@
+<templates>
+    <t t-name="mass_mailing.MasonryBlockTemplateOption">
+    <BuilderRow label.translate="Template">
+        <BuilderSelect id="'masonry_template_opt'" action="'changeMasonryTemplate'">
+            <BuilderSelectItem title.translate="Default" actionValue="'default_template'"><img src="/mass_mailing/static/src/img/snippets_options/masonry_template_default.svg"/></BuilderSelectItem>
+            <BuilderSelectItem title.translate="Default Reversed" actionValue="'reversed_template'"><img src="/mass_mailing/static/src/img/snippets_options/masonry_template_reversed.svg"/></BuilderSelectItem>
+            <BuilderSelectItem title.translate="Images" actionValue="'images_template'"><img src="/mass_mailing/static/src/img/snippets_options/masonry_template_images.svg"/></BuilderSelectItem>
+            <BuilderSelectItem title.translate="Image Text Image" actionValue="'image_texts_image_template'"><img src="/mass_mailing/static/src/img/snippets_options/masonry_template_image_texts_image.svg"/></BuilderSelectItem>
+            <BuilderSelectItem title.translate="Mosaic" actionValue="'mosaic_template'"><img src="/mass_mailing/static/src/img/snippets_options/masonry_template_mosaic.svg"/></BuilderSelectItem>
+            <BuilderSelectItem title.translate="Text Image Text" actionValue="'texts_image_texts_template'"><img src="/mass_mailing/static/src/img/snippets_options/masonry_template_texts_image_texts.svg"/></BuilderSelectItem>
+            <BuilderSelectItem title.translate="Alternate Text" actionValue="'alternation_text_template'"><img src="/mass_mailing/static/src/img/snippets_options/masonry_template_alternate_texts.svg"/></BuilderSelectItem>
+            <BuilderSelectItem title.translate="Alternate Text Image" actionValue="'alternation_text_image_template'"><img src="/mass_mailing/static/src/img/snippets_options/masonry_template_alternate_text_image.svg"/></BuilderSelectItem>
+            <BuilderSelectItem title.translate="Alternate Image Text" actionValue="'alternation_image_text_template'"><img src="/mass_mailing/static/src/img/snippets_options/masonry_template_alternate_image_text.svg"/></BuilderSelectItem>
+            <BuilderSelectItem title.translate="Alternate Text Image Text" actionValue="'alternation_text_image_text_template'"><img src="/mass_mailing/static/src/img/snippets_options/masonry_template_alternate_text_image_text.svg"/></BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    </t>
+    <t t-name="mass_mailing.s_masonry_block_default_template">
+        <div class="row">
+            <div class="col-md-6 col-12 oe_img_bg text-center pb224 pt224" data-name="Block" style="background-image: url(/web/image/mass_mailing.s_masonry_block_default_image_1);">
+                <p><br/></p>
+            </div>
+            <div class="col-md-6 col-12 s_col_no_resize o_masonry_grid_container">
+                <div class="row h-100">
+                    <div class="col-md-6 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                        <h3>A great title</h3>
+                        <p>And a great subtitle</p>
+                    </div>
+                    <div class="col-md-6 col-12 pt24 pb8 text-center o_cc o_cc3" data-name="Block">
+                        <h3><font style="color: white">A great title</font></h3>
+                        <p><font style="color: white">And a great subtitle</font></p>
+                    </div>
+                    <div class="col-md-6 col-12 pt24 pb8 text-center o_cc o_cc4" data-name="Block">
+                        <h3><font style="color: white">A great title</font></h3>
+                        <p><font style="color: white">And a great subtitle</font></p>
+                    </div>
+                    <div class="col-md-6 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                        <h3>A great title</h3>
+                        <p>And a great subtitle</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mass_mailing.s_masonry_block_reversed_template">
+        <div class="row">
+            <div class="col-md-6 col-12 s_col_no_resize o_masonry_grid_container">
+                <div class="row h-100">
+                    <div class="col-md-6 col-12 pt24 pb8 text-center o_cc o_cc3" data-name="Block">
+                        <h3><font style="color: white">A great title</font></h3>
+                        <p><font style="color: white">And a great subtitle</font></p>
+                    </div>
+                    <div class="col-md-6 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                        <h3>A great title</h3>
+                        <p>And a great subtitle</p>
+                    </div>
+                    <div class="col-md-6 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                        <h3>A great title</h3>
+                        <p>And a great subtitle</p>
+                    </div>
+                    <div class="col-md-6 col-12 pt24 pb8 text-center o_cc o_cc4" data-name="Block">
+                        <h3><font style="color: white">A great title</font></h3>
+                        <p><font style="color: white">And a great subtitle</font></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-12 oe_img_bg text-center pb224 pt224" data-name="Block" style="background-image: url(/web/image/mass_mailing.s_masonry_block_default_image_1);">
+                <p><br/></p>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mass_mailing.s_masonry_block_images_template" >
+        <div class="row">
+            <div class="col-md-6 col-12 oe_img_bg text-center pb224 pt224" data-name="Block" style="background-image: url(/web/image/mass_mailing.s_masonry_block_default_image_1);">
+                <p><br/></p>
+            </div>
+            <div class="col-md-6 col-12 oe_img_bg text-center pb224 pt224" data-name="Block" style="background-image: url(/web/image/mass_mailing.s_masonry_block_default_image_2);">
+                <p><br/></p>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mass_mailing.s_masonry_block_image_texts_image_template">
+        <div class="row">
+            <div class="col-md-3 col-12 oe_img_bg text-center pt224 pb224" data-name="Block" style="background-image: url(/web/image/mass_mailing.s_masonry_block_default_image_2);">
+                <p><br/></p>
+            </div>
+            <div class="col-md-3 col-12 s_col_no_resize o_masonry_grid_container">
+                <div class="row h-100">
+                    <div class="col-md-12 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                        <h3>A great title</h3>
+                        <p>And a great subtitle</p>
+                    </div>
+                    <div class="col-md-12 col-12 pt24 pb8 text-center o_cc o_cc4" data-name="Block">
+                        <h3><font style="color: white">A great title</font></h3>
+                        <p><font style="color: white">And a great subtitle</font></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-12 oe_img_bg text-center pt224 pb224" data-name="Block" style="background-image: url(/web/image/mass_mailing.s_masonry_block_default_image_1);">
+                <p><br/></p>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mass_mailing.s_masonry_block_mosaic_template">
+        <div class="row">
+            <div class="col-md-6 col-12 s_col_no_resize o_masonry_grid_container">
+                <div class="row">
+                    <div class="col-md-6 col-12 pt24 pb8 text-center o_cc o_cc3" data-name="Block">
+                        <h3><font style="color: white">A great title</font></h3>
+                        <p><font style="color: white">And a great subtitle</font></p>
+                    </div>
+                    <div class="col-md-6 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                        <h3>A great title</h3>
+                        <p>And a great subtitle</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-12 oe_img_bg text-center pt224 pb224" data-name="Block"
+                        style="background-image: url(/web/image/mass_mailing.s_masonry_block_default_image_1);">
+                        <p><br/></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-12 s_col_no_resize o_masonry_grid_container">
+                <div class="row">
+                    <div class="col-md-12 col-12 oe_img_bg text-center pt224 pb224" data-name="Block"
+                        style="background-image: url(/web/image/mass_mailing.s_masonry_block_default_image_2);">
+                        <p><br/></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                        <h3>A great title</h3>
+                        <p>And a great subtitle</p>
+                    </div>
+                    <div class="col-md-6 col-12 pt24 pb8 text-center o_cc o_cc4" data-name="Block">
+                        <h3><font style="color: white">A great title</font></h3>
+                        <p><font style="color: white">And a great subtitle</font></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mass_mailing.s_masonry_block_texts_image_texts_template">
+        <div class="row">
+            <div class="col-md-3 col-12 s_col_no_resize o_masonry_grid_container">
+                <div class="row h-100">
+                    <div class="col-md-12 col-12 pt24 pb8 text-center o_cc o_cc3" data-name="Block">
+                        <h3><font style="color: white">A great title</font></h3>
+                        <p><font style="color: white">And a great subtitle</font></p>
+                    </div>
+                    <div class="col-md-12 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                        <h3>A great title</h3>
+                        <p>And a great subtitle</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-12 oe_img_bg text-center pt224 pb224" data-name="Block"
+                style="background-image: url(/web/image/mass_mailing.s_masonry_block_default_image_1);">
+                <p><br/></p>
+            </div>
+            <div class="col-md-3 col-12 s_col_no_resize o_masonry_grid_container">
+                <div class="row h-100">
+                    <div class="col-md-12 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                        <h3>A great title</h3>
+                        <p>And a great subtitle</p>
+                    </div>
+                    <div class="col-md-12 col-12 pt24 pb8 text-center o_cc o_cc4" data-name="Block">
+                        <h3><font style="color: white">A great title</font></h3>
+                        <p><font style="color: white">And a great subtitle</font></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mass_mailing.s_masonry_block_alternation_text_template">
+        <div class="row">
+            <div class="col-md-3 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                <h3>A great title</h3>
+                <p>And a great subtitle</p>
+            </div>
+            <div class="col-md-3 col-12 pt24 pb8 text-center o_cc o_cc4" data-name="Block">
+                <h3><font style="color: white">A great title</font></h3>
+                <p><font style="color: white">And a great subtitle</font></p>
+            </div>
+            <div class="col-md-3 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                <h3>A great title</h3>
+                <p>And a great subtitle</p>
+            </div>
+            <div class="col-md-3 col-12 pt24 pb8 text-center o_cc o_cc3" data-name="Block">
+                <h3><font style="color: white">A great title</font></h3>
+                <p><font style="color: white">And a great subtitle</font></p>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mass_mailing.s_masonry_block_alternation_text_image_template">
+        <div class="row">
+            <div class="col-md-3 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                <h3>A great title</h3>
+                <p>And a great subtitle</p>
+            </div>
+            <div class="col-md-3 col-12 oe_img_bg text-center pt224 pb224" data-name="Block" style="background-image: url(/web/image/mass_mailing.s_masonry_block_default_image_1);">
+                <p><br/></p>
+            </div>
+            <div class="col-md-3 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                <h3>A great title</h3>
+                <p>And a great subtitle</p>
+            </div>
+            <div class="col-md-3 col-12 oe_img_bg text-center pt224 pb224" data-name="Block" style="background-image: url(/web/image/mass_mailing.s_masonry_block_default_image_2);">
+                <p><br/></p>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mass_mailing.s_masonry_block_alternation_image_text_template">
+        <div class="row">
+            <div class="col-md-3 col-12 oe_img_bg text-center pt224 pb224" data-name="Block" style="background-image: url(/web/image/mass_mailing.s_masonry_block_default_image_1);">
+                <p><br/></p>
+            </div>
+            <div class="col-md-3 col-12 pt24 pb8 text-center o_cc o_cc4" data-name="Block">
+                <h3><font style="color: white">A great title</font></h3>
+                <p><font style="color: white">And a great subtitle</font></p>
+            </div>
+            <div class="col-md-3 col-12 oe_img_bg text-center pt224 pb224" data-name="Block" style="background-image: url(/web/image/mass_mailing.s_masonry_block_default_image_2);">
+                <p><br/></p>
+            </div>
+            <div class="col-md-3 col-12 pt24 pb8 text-center o_cc o_cc3" data-name="Block">
+                <h3><font style="color: white">A great title</font></h3>
+                <p><font style="color: white">And a great subtitle</font></p>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mass_mailing.s_masonry_block_alternation_text_image_text_template">
+        <div class="row">
+            <div class="col-md-3 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                <h3>A great title</h3>
+                <p>And a great subtitle</p>
+            </div>
+            <div class="col-md-6 col-12 oe_img_bg text-center pt224 pb224" data-name="Block" style="background-image: url(/web/image/mass_mailing.s_masonry_block_default_image_1);">
+                <p><br/></p>
+            </div>
+            <div class="col-md-3 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                <h3>A great title</h3>
+                <p>And a great subtitle</p>
+            </div>
+        </div>
+    </t>
+</templates>

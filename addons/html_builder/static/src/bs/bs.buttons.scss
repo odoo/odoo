@@ -1,0 +1,83 @@
+.o-snippets-menu .btn {
+    --btn-font-weight: normal;
+    --btn-font-size: #{$o-we-font-size-sm};
+    --btn-box-shadow: 0 0;
+    --btn-focus-box-shadow: inset 0 0 0 #{$o-we-border-width} var(--o-hb-btn-active-color, #{$o-we-color-accent}), inset 0 0 0 #{$o-we-border-width * 2} #{$o-we-bg-light};
+
+    &:where(:not(.btn-lg)) {
+        --btn-padding-x: #{map-get($spacers , 1)};
+        --btn-padding-y: #{map-get($spacers , 1)};
+    }
+
+    @include button-variant(
+        $background: transparent,
+        $border: transparent,
+        $color: $o-we-fg-dark,
+        $hover-background: $o-we-bg-lighter,
+        $hover-border: transparent,
+        $hover-color: $o-we-fg-lighter,
+        $active-background: transparent,
+        $active-border: transparent,
+        $active-color: var(--o-hb-btn-active-color, #{$o-we-color-accent}),
+        $disabled-background: transparent,
+        $disabled-border: transparent,
+        $disabled-color: $o-we-fg-darker,
+    );
+
+    &.btn-secondary {
+        --btn-focus-box-shadow: inset 0 0 0 #{$o-we-border-width} var(--o-hb-btn-active-color, #{$o-we-color-accent});
+
+        @include button-variant(
+            $background: $o-we-item-clickable-bg,
+            $border: $o-we-bg-light,
+            $color: $o-we-item-clickable-color,
+            $hover-background: $o-we-item-clickable-hover-bg,
+            $hover-border: $o-we-bg-light,
+            $hover-color: $o-we-item-clickable-color,
+            $active-background: var(--o-hb-btn-secondary-active-bg, RGBA(#{to-rgb($o-we-color-accent)}, 0.4)),
+            $active-border: $o-we-bg-light,
+            $active-color: $o-we-fg-lighter,
+            $disabled-background: transparent,
+            $disabled-border: transparent,
+            $disabled-color: $o-we-fg-darker,
+        );
+    }
+
+    @each $-name, $-base in $o-we-colors {
+        &.btn-#{$-name} {
+            $-hover-base: scale-color($-base, $lightness: -10%);
+            $-active-base: scale-color($-base, $lightness: 10%);
+            $-disabled-base: mix($o-we-bg-dark, $-base);
+
+            @include button-variant(
+                $background: $-base,
+                $border: $o-we-bg-light,
+                $color: color-contrast($-base),
+                $hover-background: $-hover-base,
+                $hover-border: $o-we-bg-light,
+                $hover-color: color-contrast($-hover-base),
+                $active-background: $-active-base,
+                $active-border: $o-we-bg-light,
+                $active-color: color-contrast($-active-base),
+                $disabled-background: $-disabled-base,
+                $disabled-border: $-disabled-base,
+                $disabled-color: color-contrast($-disabled-base),
+            );
+        }
+    }
+
+    // Specific States color deviations
+    @each $-name, $-color in $o-we-colors {
+        &.btn-#{$-name}-color-hover {
+            --btn-hover-color: #{scale-color($-color, $lightness: 5%, $saturation: 100%)};
+        }
+    }
+
+    @each $-name, $-color in $o-we-colors {
+        &.btn-#{$-name}-color-active {
+            --btn-active-color: #{scale-color($-color, $lightness: 5%, $saturation: 100%)};
+            --btn-active-bg: #{$o-we-bg-light};
+            --btn-active-border-color: #{$o-we-bg-darker};
+        }
+    }
+}

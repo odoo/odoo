@@ -1,0 +1,26 @@
+.o-color-palette-dropdown {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: $o-we-sidebar-width - 30px;
+    padding-block: 0.3rem;
+
+    .o-hb-select-dropdown-item {
+        padding-block: 0.5em;
+        border-bottom: none;
+
+        &.focus {
+            background-color: inherit !important; // override
+        }
+
+        .o-color-palette-pill {
+            height: 30px;
+        }
+
+        &:is(.focus, .active) .o-color-palette-pill {
+            box-shadow:
+                0 0 0 #{$o-we-border-width} #{$o-we-bg-light},
+                0 0 0 #{$o-we-border-width * 2} var(--o-hb-select-item-active-color, #{$o-we-sidebar-content-field-toggle-active-bg});
+        }
+    }
+
+}

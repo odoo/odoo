@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.hr.recruitment</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="75"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <app data-string="Recruitment" string="Recruitment" name="hr_recruitment" groups="hr_recruitment.group_hr_recruitment_manager">
+                        <block title="Job Posting" name="online_posting_setting_container">
+                            <setting id="publish_available_jobs_setting" string="Online Posting" help="Publish job offers on your website">
+                                <field name="module_website_hr_recruitment"/>
+                            </setting>
+                        </block>
+                        <block title="Process" name="recruitment_process_div">
+                            <setting id="interview_forms_setting" string="Send Interview Survey" help="Send an Interview Survey to the applicant during the recruitment process" title="Use interview forms tailored to each job position during the recruitment process. Select the form to use in the job position detail form. This relies on the Survey app.">
+                                <field name="module_hr_recruitment_survey"/>
+                            </setting>
+                        </block>
+                        <block title="In-App Purchases" name="recruitment_in_app_purchases">
+                            <setting id="sms" string="Send SMS" documentation="/applications/marketing/sms_marketing/pricing/pricing_and_faq.html" help="Send texts to your contacts">
+                            </setting>
+                            <setting id="recruitment_extract_settings" string="Résumé Digitization (OCR)" company_dependent="1" help="Digitize your résumé to extract name and email automatically." title="Use OCR to fill data from a picture of the Résumr or the file itself">
+                                <field name="module_hr_recruitment_extract" widget="upgrade_boolean"/>
+                            </setting>
+                        </block>
+                    </app>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_hr_recruitment_configuration" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'module' : 'hr_recruitment', 'bin_size': False}</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="web.ReportAction">
+        <div class="o_action">
+            <Layout display="{ controlPanel: {} }">
+                <t t-set-slot="control-panel-create-button">
+                    <button t-on-click="print" type="button" class="btn btn-primary" title="Print">Print</button>
+                </t>
+                <iframe t-ref="iframe" t-on-load="onIframeLoaded" class="h-100 w-100 d-block" t-att-src="reportUrl" />
+            </Layout>
+        </div>
+    </t>
+
+</templates>

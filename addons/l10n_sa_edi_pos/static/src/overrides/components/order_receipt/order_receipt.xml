@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptHeader" t-name="l10n_sa_edi_pos.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//img[hasclass('pos-receipt-qrcode')]" position="after">
+            <div t-if="order.notLegal and order.isSACompany() and !order.isSettlement()" class="text-center mt-3">
+                <p>THIS IS NOT A LEGAL DOCUMENT</p>
+                <p t-if="order.config_id.l10n_gcc_dual_language_receipt">هذا المستند ليس مستنداً قانونياً</p>
+            </div>
+        </xpath>
+    </t>
+    <t t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[@name='custom_address_block']/t[@t-if='company.country_id']" position="before">
+            <t t-if="company.l10n_sa_edi_building_number" t-out="company.l10n_sa_edi_building_number"/>
+            <t t-if="company.l10n_sa_edi_plot_identification" t-out="', ' +  company.l10n_sa_edi_plot_identification"/>
+            <t t-if="company.l10n_sa_edi_building_number or company.l10n_sa_edi_plot_identification"><br/></t>
+        </xpath>
+        <xpath expr="//div[@t-out='vatText']" position="after">
+            <div t-if="company.l10n_sa_edi_additional_identification_number">
+                <t t-if="company.l10n_sa_edi_additional_identification_scheme" t-out="company.l10n_sa_edi_additional_identification_scheme + ': '"/>
+                <t t-out="company.l10n_sa_edi_additional_identification_number"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

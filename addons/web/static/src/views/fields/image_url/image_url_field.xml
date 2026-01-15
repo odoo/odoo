@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ImageUrlField">
+        <img
+            t-if="props.record.data[props.name]"
+            class="img img-fluid"
+            alt="Image"
+            t-att-src="state.src"
+            t-att-border="props.readonly ? 0 : 1"
+            t-att-name="props.name"
+            t-att-height="props.height"
+            t-att-width="props.width"
+            t-att-style="sizeStyle"
+            t-on-error="onLoadFailed"
+        />
+    </t>
+
+</templates>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="hr_work_entry.calendar.controlButtons" t-inherit="web.CalendarController.controlButtons" t-inherit-mode="primary">
+        <xpath expr="." position="inside">
+            <button class="btn btn-secondary" t-on-click="onRegenerateWorkEntries">
+                Reset
+            </button>
+        </xpath>
+    </t>
+</templates>

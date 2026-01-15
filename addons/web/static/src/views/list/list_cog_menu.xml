@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ListCogMenu" t-inherit="web.CogMenu">
+        <xpath expr="//t[@t-if='state.printItems.length']/Dropdown" position="before">
+            <div role="separator" class="dropdown-divider"/>
+        </xpath>
+    </t>
+
+</templates>

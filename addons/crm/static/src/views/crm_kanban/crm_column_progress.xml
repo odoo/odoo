@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="crm.ColumnProgress" t-inherit="mail.RottingColumnProgress" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_column_progress')]" position="attributes">
+            <attribute name="class" remove="w-75" add="w-50" separator=" "/>
+        </xpath>
+
+        <AnimatedNumber position="before">
+            <div class="ms-auto"/>
+        </AnimatedNumber>
+
+        <AnimatedNumber position="attributes">
+            <!--
+                If the value of the standard aggregate is 0, but the value of the monthly aggregate isn't 0, false or undefined,
+                we want to hide the 0 of the standard aggregate.
+            -->
+            <attribute name="t-if" add="!(props.aggregate.value === 0 and getRecurringRevenueGroupAggregate(props.group).value)" separator=" and "/>
+        </AnimatedNumber>
+
+        <AnimatedNumber position="after">
+            <t t-elif="props.aggregate.value === 0"><b/></t>
+
+            <t t-if="showRecurringRevenue">
+                <t t-set="rrmAggregate" t-value="getRecurringRevenueGroupAggregate(props.group)"/>
+                <AnimatedNumber
+                    t-if="rrmAggregate.value"
+                    value="rrmAggregate.value"
+                    title="rrmAggregate.title"
+                    duration="1000"
+                    currencies="[rrmAggregate.currency]"
+                    animationClass="'o_animated_grow_huge'"
+                >
+                    <t t-set-slot="prefix" t-if="props.aggregate.value != 0">
+                        <strong class="me-1">+</strong>
+                    </t>
+                </AnimatedNumber>
+                <b t-if="!props.aggregate.value" class="ps-1">MRR</b>
+            </t>
+        </AnimatedNumber>
+    </t>
+</templates>

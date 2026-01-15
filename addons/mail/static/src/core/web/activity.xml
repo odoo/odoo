@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.Activity">
+    <div class="o-mail-Activity d-flex py-1 mb-2" t-on-click="onClick">
+        <div class="o-mail-Activity-sidebar d-flex flex-shrink-0 position-relative align-items-start justify-content-center">
+            <div class="o-mail-Activity-avatarContainer position-relative d-flex align-items-center justify-content-center" t-att-role="props.activity.user_id ? 'button' : 'img'" t-on-click="onClickAvatar">
+                <img t-if="props.activity.user_id?.partner_id" class="w-100 h-100 rounded object-fit-cover" t-att-src="props.activity.user_id.partner_id.avatarUrl" />
+                <div
+                    class="o-mail-Activity-iconContainer rounded-circle d-flex align-items-center justify-content-center"
+                    t-att-class="{
+                        'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1 w-50 h-50': props.activity.user_id,
+                        'text-bg-success': props.activity.state === 'planned',
+                        'text-bg-warning': props.activity.state === 'today',
+                        'text-bg-danger': props.activity.state === 'overdue',
+                        }"
+                    t-attf-style="{{!props.activity.user_id ? 'height:80%; width:80%;' : ''}}"
+                >
+                    <i class="fa small" t-attf-class="{{ props.activity.icon }} {{props.activity.user_id ? 'small' : 'fs-2'}}"/>
+                </div>
+            </div>
+        </div>
+        <div class="flex-grow px-1">
+            <div class="o-mail-Activity-info lh-1">
+                <span class="fw-bolder text-success" t-if="delay === 1">Tomorrow:</span>
+                <span class="fw-bolder text-success" t-elif="delay gt 0">Due in <t t-esc="delay"/> days:</span>
+                <span class="fw-bolder text-danger" t-elif="delay === -1">Yesterday:</span>
+                <span class="fw-bolder text-danger" t-elif="delay lt 0"><t t-esc="-delay"/> days overdue:</span>
+                <span class="fw-bolder text-warning" t-else="">Today:</span>
+                <span class="fw-bolder px-2 text-break"><t t-esc="displayName"/></span>
+                <span class="o-mail-Activity-user px-1" t-if="props.activity.user_id?.partner_id" >for <t t-esc="props.activity.user_id.partner_id.displayName"/></span>
+                <button class="btn btn-link btn-primary p-0 lh-1 border-0">
+                    <i class="fa fa-info-circle" role="img" title="Info" aria-label="Info" t-on-click="toggleDetails"/>
+                </button>
+            </div>
+            <div t-if="state.showDetails">
+                <table class="o-mail-Activity-details table table-sm mt-2">
+                    <tbody>
+                        <tr><td class="text-end fw-bolder">Activity type</td><td><t t-esc="props.activity.activity_type_id?.name"/></td></tr>
+                        <tr><td class="text-end fw-bolder">Created</td><td><t t-esc="props.activity.dateCreateFormatted"/> by <t t-esc="props.activity.create_uid?.name"/></td></tr>
+                        <tr t-if="props.activity.user_id"><td class="text-end fw-bolder">Assigned to</td><td><t t-esc="props.activity.user_id.name"/></td></tr>
+                        <tr><td class="text-end fw-bolder">Due on</td><td><t t-esc="props.activity.dateDeadlineFormatted"/></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div t-if="props.activity.note" class="o-mail-Activity-note text-break" t-out="props.activity.note"/>
+            <div t-if="props.activity.mail_template_ids?.length > 0" class="o-mail-Activity-mailTemplates">
+                <ActivityMailTemplate activity="props.activity" onActivityChanged="props.onActivityChanged"/>
+            </div>
+            <div t-if="props.activity.can_write" class="lh-lg">
+                <t name="tools">
+                    <button class="o-mail-Activity-markDone btn btn-link btn-success p-0 me-3" t-on-click="onClickMarkAsDone">
+                        <i class="fa fa-check"/> Mark Done
+                    </button>
+                    <FileUploader t-if="props.activity.activity_category === 'upload_file'" onUploaded.bind="onFileUploaded">
+                        <t t-set-slot="toggler">
+                            <button class="btn btn-link text-action p-0 me-3">
+                                <i t-attf-class="fa {{ props.activity.icon }}"/> <t t-out="props.activity.display_name"/>
+                            </button>
+                        </t>
+                    </FileUploader>
+                    <button class="o-mail-Activity-edit btn btn-link text-action p-0 me-3" t-on-click="edit">
+                        <i class="fa fa-pencil"/> Edit
+                    </button>
+                    <button class="btn btn-link btn-danger p-0" t-on-click="unlink">
+                        <i class="fa fa-times"/> Cancel
+                    </button>
+                </t>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

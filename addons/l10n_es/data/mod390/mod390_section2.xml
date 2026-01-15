@@ -1,0 +1,1866 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data auto_sequence="1">
+    <record id="mod_390_section_2" model="account.report">
+        <field name="name">IVA Deducible</field>
+        <field name="name@es">IVA Deducible</field>
+        <field name="filter_analytic" eval="False"/>
+        <field name="filter_date_range" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.es"/>
+        <field name="column_ids">
+            <record id="mod_390_column_sect2" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@es">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="mod_390_title_19" model="account.report.line">
+                <field name="name">IVA deducible</field>
+                <field name="name@es">IVA deducible</field>
+                <field name="code">aeat_mod_390_title_19</field>
+                <field name="children_ids">
+                    <record id="mod_390_title_20" model="account.report.line">
+                        <field name="name">Operaciones interiores corrientes</field>
+                        <field name="name@es">Operaciones interiores corrientes</field>
+                        <field name="code">aeat_mod_390_title_20</field>
+                        <field name="children_ids">
+                            <record id="mod_390_title_21" model="account.report.line">
+                                <field name="name">IVA deducible en operaciones interiores de bienes y servicios corrientes</field>
+                                <field name="name@es">IVA deducible en operaciones interiores de bienes y servicios corrientes</field>
+                                <field name="code">aeat_mod_390_title_21</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_695" model="account.report.line">
+                                        <field name="name">[695] Base imponible 2%</field>
+                                        <field name="name@es">[695] Base imponible 2 %</field>
+                                        <field name="code">aeat_mod_390_695</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_695_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[695]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_696" model="account.report.line">
+                                        <field name="name">[696] Cuota deducible 2%</field>
+                                        <field name="name@es">[696] Cuota deducible 2 %</field>
+                                        <field name="code">aeat_mod_390_696</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_696_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[696]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_190" model="account.report.line">
+                                        <field name="name">[190] Base imponible 4%</field>
+                                        <field name="name@es">[190] Base imponible 4 %</field>
+                                        <field name="code">aeat_mod_390_190</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_190_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[190]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_191" model="account.report.line">
+                                        <field name="name">[191] Cuota deducible 4%</field>
+                                        <field name="name@es">[191] Cuota deducible 4 %</field>
+                                        <field name="code">aeat_mod_390_191</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_191_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[191]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_724" model="account.report.line">
+                                        <field name="name">[724] Base imponible 5%</field>
+                                        <field name="name@es">[724] Base imponible 5 %</field>
+                                        <field name="code">aeat_mod_390_724</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_724_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[724]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_725" model="account.report.line">
+                                        <field name="name">[725] Cuota 5%</field>
+                                        <field name="name@es">[725] Cuota deducible 5 %</field>
+                                        <field name="code">aeat_mod_390_725</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_725_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[725]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_697" model="account.report.line">
+                                        <field name="name">[697] Base imponible 7.5</field>
+                                        <field name="name@es">[697] Base imponible 7,5</field>
+                                        <field name="code">aeat_mod_390_697</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_697_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[697]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_698" model="account.report.line">
+                                        <field name="name">[698] Cuota 7.5</field>
+                                        <field name="name@es">[698] Cuota deducible 7,5</field>
+                                        <field name="code">aeat_mod_390_698</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_698_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[698]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_603" model="account.report.line">
+                                        <field name="name">[603] Base imponible 10%</field>
+                                        <field name="name@es">[603] Base imponible 10 %</field>
+                                        <field name="code">aeat_mod_390_603</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_603_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[603]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_604" model="account.report.line">
+                                        <field name="name">[604] Cuota deducible 10%</field>
+                                        <field name="name@es">[604] Cuota deducible 10 %</field>
+                                        <field name="code">aeat_mod_390_604</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_604_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[604]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_605" model="account.report.line">
+                                        <field name="name">[605] Base imponible 21%</field>
+                                        <field name="name@es">[605] Base imponible 21 %</field>
+                                        <field name="code">aeat_mod_390_605</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_605_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[605]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_606" model="account.report.line">
+                                        <field name="name">[606] Cuota deducible 21%</field>
+                                        <field name="name@es">[606] Cuota deducible 21 %</field>
+                                        <field name="code">aeat_mod_390_606</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_606_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[606]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_22" model="account.report.line">
+                                <field name="name">Total bases imponibles y cuotas deducibles en operaciones interiores de bienes y servicios corrientes</field>
+                                <field name="name@es">Total bases imponibles y cuotas deducibles en operaciones interiores de bienes y servicios corrientes</field>
+                                <field name="code">aeat_mod_390_title_22</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_48" model="account.report.line">
+                                        <field name="name">[48] Bases imponibles</field>
+                                        <field name="name@es">[48] Base imponible</field>
+                                        <field name="code">aeat_mod_390_48</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_695.balance + aeat_mod_390_190.balance +
+                                            aeat_mod_390_724.balance + aeat_mod_390_697.balance +
+                                            aeat_mod_390_603.balance + aeat_mod_390_605.balance
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_49" model="account.report.line">
+                                        <field name="name">[49] Cuotas deducibles</field>
+                                        <field name="name@es">[49] Cuota deducible</field>
+                                        <field name="code">aeat_mod_390_49</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_696.balance + aeat_mod_390_191.balance +
+                                            aeat_mod_390_725.balance + aeat_mod_390_698.balance +
+                                            aeat_mod_390_604.balance + aeat_mod_390_606.balance
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_23" model="account.report.line">
+                                <field name="name">IVA deducible en operaciones intragrupo de bienes y servicios corrientes</field>
+                                <field name="name@es">IVA deducible en operaciones intragrupo de bienes y servicios corrientes</field>
+                                <field name="code">aeat_mod_390_title_23</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_745" model="account.report.line">
+                                        <field name="name">[745] Base imponible 2%</field>
+                                        <field name="name@es">[745] Base imponible 2 %</field>
+                                        <field name="code">aeat_mod_390_745</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_745_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_746" model="account.report.line">
+                                        <field name="name">[746] Cuota 2%</field>
+                                        <field name="name@es">[746] Cuota deducible 2 %</field>
+                                        <field name="code">aeat_mod_390_746</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_746_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_506" model="account.report.line">
+                                        <field name="name">[506] Base imponible 4%</field>
+                                        <field name="name@es">[506] Base imponible 4 %</field>
+                                        <field name="code">aeat_mod_390_506</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_506_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_507" model="account.report.line">
+                                        <field name="name">[507] Cuota 4%</field>
+                                        <field name="name@es">[507] Cuota deducible 4 %</field>
+                                        <field name="code">aeat_mod_390_507</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_507_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_726" model="account.report.line">
+                                        <field name="name">[726] Base imponible 5%</field>
+                                        <field name="name@es">[726] Base imponible 5 %</field>
+                                        <field name="code">aeat_mod_390_726</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_726_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_727" model="account.report.line">
+                                        <field name="name">[727] Cuota 5%</field>
+                                        <field name="name@es">[727] Cuota deducible 5 %</field>
+                                        <field name="code">aeat_mod_390_727</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_727_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_747" model="account.report.line">
+                                        <field name="name">[747] Base imponible 7.5%</field>
+                                        <field name="name@es">[747] Base imponible 7,5 %</field>
+                                        <field name="code">aeat_mod_390_747</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_747_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_748" model="account.report.line">
+                                        <field name="name">[748] Cuota 7.5%</field>
+                                        <field name="name@es">[748] Cuota deducible 7,5 %</field>
+                                        <field name="code">aeat_mod_390_748</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_748_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_607" model="account.report.line">
+                                        <field name="name">[607] Base imponible 10%</field>
+                                        <field name="name@es">[607] Base imponible 10 %</field>
+                                        <field name="code">aeat_mod_390_607</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_607_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_608" model="account.report.line">
+                                        <field name="name">[608] Cuota 10%</field>
+                                        <field name="name@es">[608] Cuota deducible 10 %</field>
+                                        <field name="code">aeat_mod_390_608</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_608_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_609" model="account.report.line">
+                                        <field name="name">[609] Base imponible 21%</field>
+                                        <field name="name@es">[609] Base imponible 21 %</field>
+                                        <field name="code">aeat_mod_390_609</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_609_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_610" model="account.report.line">
+                                        <field name="name">[610] Cuota 21%</field>
+                                        <field name="name@es">[610] Cuota deducible 21 %</field>
+                                        <field name="code">aeat_mod_390_610</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_610_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_24" model="account.report.line">
+                                <field name="name">Total bases imponibles y cuotas deducibles en operaciones intragrupo de bienes y servicios corrientes</field>
+                                <field name="name@es">Total bases imponibles y cuotas deducibles en operaciones intragrupo de bienes y servicios corrientes</field>
+                                <field name="code">aeat_mod_390_title_24</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_512" model="account.report.line">
+                                        <field name="name">[512] Base imponible</field>
+                                        <field name="name@es">[512] Base imponible</field>
+                                        <field name="code">aeat_mod_390_512</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_745.balance + aeat_mod_390_506.balance +
+                                            aeat_mod_390_726.balance + aeat_mod_390_747.balance +
+                                            aeat_mod_390_607.balance + aeat_mod_390_609.balance
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_513" model="account.report.line">
+                                        <field name="name">[513] Cuotas deducibles</field>
+                                        <field name="name@es">[513] Cuota deducible</field>
+                                        <field name="code">aeat_mod_390_513</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_746.balance + aeat_mod_390_507.balance +
+                                            aeat_mod_390_727.balance + aeat_mod_390_748.balance +
+                                            aeat_mod_390_608.balance + aeat_mod_390_610.balance
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_390_title_25" model="account.report.line">
+                        <field name="name">Operaciones interiores de bienes de inversión</field>
+                        <field name="name@es">Operaciones interiores de bienes de inversión</field>
+                        <field name="code">aeat_mod_390_title_25</field>
+                        <field name="children_ids">
+                            <record id="mod_390_title_26" model="account.report.line">
+                                <field name="name">IVA deducible en operaciones interiores de bienes de inversión</field>
+                                <field name="name@es">IVA deducible en operaciones interiores de bienes de inversión</field>
+                                <field name="code">aeat_mod_390_title_26</field>
+                                <field name="children_ids">
+                                     <record id="mod_390_casilla_749" model="account.report.line">
+                                        <field name="name">[749] Base imponible 2%</field>
+                                        <field name="name@es">[749] Base imponible 2 %</field>
+                                        <field name="code">aeat_mod_390_749</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_749_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[749]</field>
+                                            </record>
+                                         </field>
+                                    </record>
+                                     <record id="mod_390_casilla_750" model="account.report.line">
+                                        <field name="name">[750] Cuota deducible 2%</field>
+                                        <field name="name@es">[750] Cuota deducible 2 %</field>
+                                        <field name="code">aeat_mod_390_750</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_750_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[197]</field>
+                                            </record>
+                                         </field>
+                                    </record>
+                                     <record id="mod_390_casilla_196" model="account.report.line">
+                                        <field name="name">[196] Base imponible 4%</field>
+                                        <field name="name@es">[196] Base imponible 4 %</field>
+                                        <field name="code">aeat_mod_390_196</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_196_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[196]</field>
+                                            </record>
+                                         </field>
+                                    </record>
+                                     <record id="mod_390_casilla_197" model="account.report.line">
+                                        <field name="name">[197] Cuota deducible 4%</field>
+                                        <field name="name@es">[197] Cuota deducible 4 %</field>
+                                        <field name="code">aeat_mod_390_197</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_197_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[197]</field>
+                                            </record>
+                                         </field>
+                                    </record>
+                                    <record id="mod_390_casilla_728" model="account.report.line">
+                                        <field name="name">[728] Base imponible 5%</field>
+                                        <field name="name@es">[728] Base imponible 5 %</field>
+                                        <field name="code">aeat_mod_390_728</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_728_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[728]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_729" model="account.report.line">
+                                        <field name="name">[729] Cuota 5%</field>
+                                        <field name="name@es">[729] Cuota deducible 5 %</field>
+                                        <field name="code">aeat_mod_390_729</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_729_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[729]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_751" model="account.report.line">
+                                        <field name="name">[751] Base imponible 7.5%</field>
+                                        <field name="name@es">[751] Base imponible 7,5 %</field>
+                                        <field name="code">aeat_mod_390_751</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_751_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[751]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_752" model="account.report.line">
+                                        <field name="name">[752] Cuota 7.5%</field>
+                                        <field name="name@es">[752] Cuota deducible 7,5 %</field>
+                                        <field name="code">aeat_mod_390_752</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_752_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[752]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_611" model="account.report.line">
+                                        <field name="name">[611] Base imponible 10%</field>
+                                        <field name="name@es">[611] Base imponible 10 %</field>
+                                        <field name="code">aeat_mod_390_611</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_611_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[611]</field>
+                                            </record>
+                                         </field>
+                                    </record>
+                                     <record id="mod_390_casilla_612" model="account.report.line">
+                                        <field name="name">[612] Cuota deducible 10%</field>
+                                        <field name="name@es">[612] Cuota deducible 10 %</field>
+                                        <field name="code">aeat_mod_390_612</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_612_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[612]</field>
+                                            </record>
+                                         </field>
+                                    </record>
+                                     <record id="mod_390_casilla_613" model="account.report.line">
+                                        <field name="name">[613] Base imponible 21%</field>
+                                        <field name="name@es">[613] Base imponible 21 %</field>
+                                        <field name="code">aeat_mod_390_613</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_613_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[613]</field>
+                                            </record>
+                                         </field>
+                                    </record>
+                                     <record id="mod_390_casilla_614" model="account.report.line">
+                                        <field name="name">[614] Cuota deducible 21%</field>
+                                        <field name="name@es">[614] Cuota deducible 21 %</field>
+                                        <field name="code">aeat_mod_390_614</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_614_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[614]</field>
+                                            </record>
+                                         </field>
+                                    </record>
+                                </field>
+                             </record>
+                            <record id="mod_390_title_27" model="account.report.line">
+                                <field name="name">Total bases imponibles y cuotas deducibles en operaciones interiores de bienes de inversión</field>
+                                <field name="name@es">Total bases imponibles y cuotas deducibles en operaciones interiores de bienes de inversión</field>
+                                <field name="code">aeat_mod_390_title_27</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_50" model="account.report.line">
+                                        <field name="name">[50] Base imponible</field>
+                                        <field name="name@es">[50] Base imponible</field>
+                                        <field name="code">aeat_mod_390_50</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_749.balance + aeat_mod_390_196.balance +
+                                            aeat_mod_390_728.balance + aeat_mod_390_751.balance +
+                                            aeat_mod_390_611.balance + aeat_mod_390_613.balance
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_51" model="account.report.line">
+                                        <field name="name">[51] Cuotas deducibles</field>
+                                        <field name="name@es">[51] Cuota deducible</field>
+                                        <field name="code">aeat_mod_390_51</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_750.balance + aeat_mod_390_197.balance +
+                                            aeat_mod_390_728.balance + aeat_mod_390_752.balance +
+                                            aeat_mod_390_612.balance + aeat_mod_390_614.balance
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_28" model="account.report.line">
+                                <field name="name">IVA deducible en operaciones intragrupo de bienes de inversión</field>
+                                <field name="name@es">IVA deducible en operaciones intragrupo de bienes de inversión</field>
+                                <field name="code">aeat_mod_390_title_28</field>
+                                <field name="children_ids">
+                                     <record id="mod_390_casilla_753" model="account.report.line">
+                                        <field name="name">[753] Base imponible 2%</field>
+                                        <field name="name@es">[753] Base imponible 2 %</field>
+                                        <field name="code">aeat_mod_390_753</field>
+                                         <field name="expression_ids">
+                                             <record id="mod_390_casilla_753_balance" model="account.report.expression">
+                                                 <field name="label">balance</field>
+                                                 <field name="engine">external</field>
+                                                 <field name="formula">sum</field>
+                                                 <field name="subformula">editable;rounding=2</field>
+                                             </record>
+                                         </field>
+                                     </record>
+                                     <record id="mod_390_casilla_754" model="account.report.line">
+                                        <field name="name">[754] Cuota deducible 2%</field>
+                                        <field name="name@es">[754] Cuota deducible 2 %</field>
+                                        <field name="code">aeat_mod_390_754</field>
+                                         <field name="expression_ids">
+                                             <record id="mod_390_casilla_754_balance" model="account.report.expression">
+                                                 <field name="label">balance</field>
+                                                 <field name="engine">external</field>
+                                                 <field name="formula">sum</field>
+                                                 <field name="subformula">editable;rounding=2</field>
+                                             </record>
+                                         </field>
+                                    </record>
+                                     <record id="mod_390_casilla_514" model="account.report.line">
+                                        <field name="name">[514] Base imponible 4%</field>
+                                        <field name="name@es">[514] Base imponible 4 %</field>
+                                        <field name="code">aeat_mod_390_514</field>
+                                         <field name="expression_ids">
+                                             <record id="mod_390_casilla_514_balance" model="account.report.expression">
+                                                 <field name="label">balance</field>
+                                                 <field name="engine">external</field>
+                                                 <field name="formula">sum</field>
+                                                 <field name="subformula">editable;rounding=2</field>
+                                             </record>
+                                         </field>
+                                     </record>
+                                     <record id="mod_390_casilla_515" model="account.report.line">
+                                        <field name="name">[515] Cuota deducible 4%</field>
+                                        <field name="name@es">[515] Cuota deducible 4 %</field>
+                                        <field name="code">aeat_mod_390_515</field>
+                                         <field name="expression_ids">
+                                             <record id="mod_390_casilla_515_balance" model="account.report.expression">
+                                                 <field name="label">balance</field>
+                                                 <field name="engine">external</field>
+                                                 <field name="formula">sum</field>
+                                                 <field name="subformula">editable;rounding=2</field>
+                                             </record>
+                                         </field>
+                                    </record>
+                                    <record id="mod_390_casilla_755" model="account.report.line">
+                                        <field name="name">[755] Base imponible 7.5%</field>
+                                        <field name="name@es">[755] Base imponible 7,5 %</field>
+                                        <field name="code">aeat_mod_390_755</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_755_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_756" model="account.report.line">
+                                        <field name="name">[756] Cuota 7.5%</field>
+                                        <field name="name@es">[756] Cuota deducible 7,5 %</field>
+                                        <field name="code">aeat_mod_390_756</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_756_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_730" model="account.report.line">
+                                        <field name="name">[730] Base imponible 5%</field>
+                                        <field name="name@es">[730] Base imponible 5 %</field>
+                                        <field name="code">aeat_mod_390_730</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_730_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_731" model="account.report.line">
+                                        <field name="name">[731] Cuota 5%</field>
+                                        <field name="name@es">[731] Cuota deducible 5 %</field>
+                                        <field name="code">aeat_mod_390_731</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_731_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_615" model="account.report.line">
+                                        <field name="name">[615] Base imponible 10%</field>
+                                        <field name="name@es">[615] Base imponible 10 %</field>
+                                        <field name="code">aeat_mod_390_615</field>
+                                        <field name="expression_ids">
+                                             <record id="mod_390_casilla_615_balance" model="account.report.expression">
+                                                 <field name="label">balance</field>
+                                                 <field name="engine">external</field>
+                                                 <field name="formula">sum</field>
+                                                 <field name="subformula">editable;rounding=2</field>
+                                             </record>
+                                         </field>
+                                    </record>
+                                     <record id="mod_390_casilla_616" model="account.report.line">
+                                        <field name="name">[616] Cuota deducible 10%</field>
+                                        <field name="name@es">[616] Cuota deducible 10 %</field>
+                                        <field name="code">aeat_mod_390_616</field>
+                                        <field name="expression_ids">
+                                             <record id="mod_390_casilla_616_balance" model="account.report.expression">
+                                                 <field name="label">balance</field>
+                                                 <field name="engine">external</field>
+                                                 <field name="formula">sum</field>
+                                                 <field name="subformula">editable;rounding=2</field>
+                                             </record>
+                                         </field>
+                                    </record>
+                                     <record id="mod_390_casilla_617" model="account.report.line">
+                                        <field name="name">[617] Base imponible 21%</field>
+                                        <field name="name@es">[617] Base imponible 21 %</field>
+                                        <field name="code">aeat_mod_390_617</field>
+                                         <field name="expression_ids">
+                                             <record id="mod_390_casilla_617_balance" model="account.report.expression">
+                                                 <field name="label">balance</field>
+                                                 <field name="engine">external</field>
+                                                 <field name="formula">sum</field>
+                                                 <field name="subformula">editable;rounding=2</field>
+                                             </record>
+                                         </field>
+                                     </record>
+                                     <record id="mod_390_casilla_618" model="account.report.line">
+                                        <field name="name">[618] Cuota deducible 21%</field>
+                                        <field name="name@es">[618] Cuota deducible 21 %</field>
+                                        <field name="code">aeat_mod_390_618</field>
+                                         <field name="expression_ids">
+                                             <record id="mod_390_casilla_618_balance" model="account.report.expression">
+                                                 <field name="label">balance</field>
+                                                 <field name="engine">external</field>
+                                                 <field name="formula">sum</field>
+                                                 <field name="subformula">editable;rounding=2</field>
+                                             </record>
+                                         </field>
+                                     </record>
+                                </field>
+                             </record>
+                            <record id="mod_390_title_29" model="account.report.line">
+                                <field name="name">Total bases imponibles y cuotas deducibles en operaciones intragrupo de bienes de inversión</field>
+                                <field name="name@es">Total bases imponibles y cuotas deducibles en operaciones intragrupo de bienes de inversión</field>
+                                <field name="code">aeat_mod_390_title_29</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_520" model="account.report.line">
+                                        <field name="name">[520] Base imponible</field>
+                                        <field name="name@es">[520] Base imponible</field>
+                                        <field name="code">aeat_mod_390_520</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_753.balance + aeat_mod_390_514.balance +
+                                            aeat_mod_390_730.balance + aeat_mod_390_755.balance +
+                                            aeat_mod_390_615.balance + aeat_mod_390_617.balance
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_521" model="account.report.line">
+                                        <field name="name">[521] Cuotas deducibles</field>
+                                        <field name="name@es">[521] Cuota deducible</field>
+                                        <field name="code">aeat_mod_390_521</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_754.balance + aeat_mod_390_515.balance +
+                                            aeat_mod_390_730.balance + aeat_mod_390_756.balance +
+                                            aeat_mod_390_616.balance + aeat_mod_390_618.balance
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_390_title_30" model="account.report.line">
+                        <field name="name">Importaciones y adquisiciones intracomunitarias de bienes y servicios</field>
+                        <field name="name@es">Importaciones y adquisiciones intracomunitarias de bienes y servicios</field>
+                        <field name="code">aeat_mod_390_title_30</field>
+                        <field name="children_ids">
+                            <record id="mod_390_title_31" model="account.report.line">
+                                <field name="name">IVA deducible en importaciones de bienes corrientes</field>
+                                <field name="name@es">IVA deducible en importaciones de bienes corrientes</field>
+                                <field name="code">aeat_mod_390_title_31</field>
+                                <field name="children_ids">
+                                     <record id="mod_390_casilla_757" model="account.report.line">
+                                        <field name="name">[757] Base imponible 2%</field>
+                                        <field name="name@es">[757] Base imponible 2 %</field>
+                                        <field name="code">aeat_mod_390_757</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_757_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[757]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_758" model="account.report.line">
+                                        <field name="name">[758] Cuota deducible 2%</field>
+                                        <field name="name@es">[758] Cuota deducible 2 %</field>
+                                        <field name="code">aeat_mod_390_758</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_758_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[758]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_202" model="account.report.line">
+                                        <field name="name">[202] Base imponible 4%</field>
+                                        <field name="name@es">[202] Base imponible 4 %</field>
+                                        <field name="code">aeat_mod_390_202</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_202_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[202]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_203" model="account.report.line">
+                                        <field name="name">[203] Cuota deducible 4%</field>
+                                        <field name="name@es">[203] Cuota deducible 4 %</field>
+                                        <field name="code">aeat_mod_390_203</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_203_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[203]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_732" model="account.report.line">
+                                        <field name="name">[732] Base imponible 5%</field>
+                                        <field name="name@es">[732] Base imponible 5 %</field>
+                                        <field name="code">aeat_mod_390_732</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_732_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[732]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_733" model="account.report.line">
+                                        <field name="name">[733] Cuota 5%</field>
+                                        <field name="name@es">[733] Cuota deducible 5 %</field>
+                                        <field name="code">aeat_mod_390_733</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_733_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[733]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_759" model="account.report.line">
+                                        <field name="name">[759] Base imponible 7.5%</field>
+                                        <field name="name@es">[759] Base imponible 7,5 %</field>
+                                        <field name="code">aeat_mod_390_759</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_759_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[759]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_760" model="account.report.line">
+                                        <field name="name">[760] Cuota 7.5%</field>
+                                        <field name="name@es">[760] Cuota deducible 7,5 %</field>
+                                        <field name="code">aeat_mod_390_760</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_760_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[760]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_619" model="account.report.line">
+                                        <field name="name">[619] Base imponible 10%</field>
+                                        <field name="name@es">[619] Base imponible 10 %</field>
+                                        <field name="code">aeat_mod_390_619</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_619_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[619]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_620" model="account.report.line">
+                                        <field name="name">[620] Cuota deducible 10%</field>
+                                        <field name="name@es">[620] Cuota deducible 10 %</field>
+                                        <field name="code">aeat_mod_390_620</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_620_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[620]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_621" model="account.report.line">
+                                        <field name="name">[621] Base imponible 21%</field>
+                                        <field name="name@es">[621] Base imponible 21 %</field>
+                                        <field name="code">aeat_mod_390_621</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_621_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[621]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_622" model="account.report.line">
+                                        <field name="name">[622] Cuota deducible 21%</field>
+                                        <field name="name@es">[622] Cuota deducible 21 %</field>
+                                        <field name="code">aeat_mod_390_622</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_622_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[622]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_32" model="account.report.line">
+                                <field name="name">Total bases imponibles y cuotas deducibles en importaciones de bienes corrientes</field>
+                                <field name="name@es">Total bases imponibles y cuotas deducibles en importaciones de bienes corrientes</field>
+                                <field name="code">aeat_mod_390_title_32</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_52" model="account.report.line">
+                                        <field name="name">[52] Base imponible</field>
+                                        <field name="name@es">[52] Base imponible</field>
+                                        <field name="code">aeat_mod_390_52</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_757.balance + aeat_mod_390_202.balance +
+                                            aeat_mod_390_732.balance + aeat_mod_390_759.balance +
+                                            aeat_mod_390_619.balance + aeat_mod_390_621.balance
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_53" model="account.report.line">
+                                        <field name="name">[53] Cuotas deducibles</field>
+                                        <field name="name@es">[53] Cuota deducible</field>
+                                        <field name="code">aeat_mod_390_53</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_758.balance + aeat_mod_390_203.balance +
+                                            aeat_mod_390_733.balance + aeat_mod_390_760.balance +
+                                            aeat_mod_390_620.balance + aeat_mod_390_622.balance
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_33" model="account.report.line">
+                                <field name="name">IVA deducible en importaciones de bienes de inversión</field>
+                                <field name="name@es">IVA deducible en importaciones de bienes de inversión</field>
+                                <field name="code">aeat_mod_390_title_33</field>
+                                <field name="children_ids">
+                                     <record id="mod_390_casilla_761" model="account.report.line">
+                                        <field name="name">[761] Base imponible 2%</field>
+                                        <field name="name@es">[761] Base imponible 2 %</field>
+                                        <field name="code">aeat_mod_390_761</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_761_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[761]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_762" model="account.report.line">
+                                        <field name="name">[762] Cuota deducible 2%</field>
+                                        <field name="name@es">[762] Cuota deducible 2 %</field>
+                                        <field name="code">aeat_mod_390_762</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_762_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[762]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_208" model="account.report.line">
+                                        <field name="name">[208] Base imponible 4%</field>
+                                        <field name="name@es">[208] Base imponible 4 %</field>
+                                        <field name="code">aeat_mod_390_208</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_208_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[208]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_209" model="account.report.line">
+                                        <field name="name">[209] Cuota deducible 4%</field>
+                                        <field name="name@es">[209] Cuota deducible 4 %</field>
+                                        <field name="code">aeat_mod_390_209</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_209_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[209]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_734" model="account.report.line">
+                                        <field name="name">[734] Base imponible 5%</field>
+                                        <field name="name@es">[734] Base imponible 5 %</field>
+                                        <field name="code">aeat_mod_390_734</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_734_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[734]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_735" model="account.report.line">
+                                        <field name="name">[735] Cuota 5%</field>
+                                        <field name="name@es">[735] Cuota deducible 5 %</field>
+                                        <field name="code">aeat_mod_390_735</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_735_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[735]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_763" model="account.report.line">
+                                        <field name="name">[763] Base imponible 7.5%</field>
+                                        <field name="name@es">[763] Base imponible 7,5 %</field>
+                                        <field name="code">aeat_mod_390_763</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_763_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[763]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_764" model="account.report.line">
+                                        <field name="name">[764] Cuota 7.5%</field>
+                                        <field name="name@es">[764] Cuota deducible 7,5 %</field>
+                                        <field name="code">aeat_mod_390_764</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_764_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[764]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_623" model="account.report.line">
+                                        <field name="name">[623] Base imponible 10%</field>
+                                        <field name="name@es">[623] Base imponible 10 %</field>
+                                        <field name="code">aeat_mod_390_623</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_623_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[623]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_624" model="account.report.line">
+                                        <field name="name">[624] Cuota deducible 10%</field>
+                                        <field name="name@es">[624] Cuota deducible 10 %</field>
+                                        <field name="code">aeat_mod_390_624</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_624_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[624]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_625" model="account.report.line">
+                                        <field name="name">[625] Base imponible 21%</field>
+                                        <field name="name@es">[625] Base imponible 21 %</field>
+                                        <field name="code">aeat_mod_390_625</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_625_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[625]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_626" model="account.report.line">
+                                        <field name="name">[626] Cuota deducible 21%</field>
+                                        <field name="name@es">[626] Cuota deducible 21 %</field>
+                                        <field name="code">aeat_mod_390_626</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_626_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[626]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_34" model="account.report.line">
+                                <field name="name">Total bases imponibles y cuotas deducibles en importaciones de bienes de inversión</field>
+                                <field name="name@es">Total bases imponibles y cuotas deducibles en importaciones de bienes de inversión</field>
+                                <field name="code">aeat_mod_390_title_34</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_54" model="account.report.line">
+                                        <field name="name">[54] Base imponible</field>
+                                        <field name="name@es">[54] Base imponible</field>
+                                        <field name="code">aeat_mod_390_54</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_761.balance + aeat_mod_390_208.balance +
+                                            aeat_mod_390_734.balance + aeat_mod_390_763.balance +
+                                            aeat_mod_390_623.balance + aeat_mod_390_625.balance
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_55" model="account.report.line">
+                                        <field name="name">[55] Cuotas deducibles</field>
+                                        <field name="name@es">[55] Cuota deducible</field>
+                                        <field name="code">aeat_mod_390_55</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_762.balance + aeat_mod_390_209.balance +
+                                            aeat_mod_390_735.balance + aeat_mod_390_764.balance +
+                                            aeat_mod_390_624.balance + aeat_mod_390_626.balance
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_35" model="account.report.line">
+                                <field name="name">IVA deducible en adquisiciones intracomunitarias de bienes corrientes</field>
+                                <field name="name@es">IVA deducible en adquisiciones intracomunitarias de bienes corrientes</field>
+                                <field name="code">aeat_mod_390_title_35</field>
+                                <field name="children_ids">
+                                     <record id="mod_390_casilla_765" model="account.report.line">
+                                        <field name="name">[765] Base imponible 2%</field>
+                                        <field name="name@es">[765] Base imponible 2 %</field>
+                                        <field name="code">aeat_mod_390_765</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_765_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[765]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_766" model="account.report.line">
+                                        <field name="name">[766] Cuota deducible 2%</field>
+                                        <field name="name@es">[766] Cuota deducible 2 %</field>
+                                        <field name="code">aeat_mod_390_766</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_766_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[766]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_214" model="account.report.line">
+                                        <field name="name">[214] Base imponible 4%</field>
+                                        <field name="name@es">[214] Base imponible 4 %</field>
+                                        <field name="code">aeat_mod_390_214</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_214_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[214]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_215" model="account.report.line">
+                                        <field name="name">[215] Cuota deducible 4%</field>
+                                        <field name="name@es">[215] Cuota deducible 4 %</field>
+                                        <field name="code">aeat_mod_390_215</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_215_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[215]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_736" model="account.report.line">
+                                        <field name="name">[736] Base imponible 5%</field>
+                                        <field name="name@es">[736] Base imponible 5 %</field>
+                                        <field name="code">aeat_mod_390_736</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_736_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[736]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_737" model="account.report.line">
+                                        <field name="name">[737] Cuota 5%</field>
+                                        <field name="name@es">[737] Cuota deducible 5 %</field>
+                                        <field name="code">aeat_mod_390_737</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_737_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[737]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_767" model="account.report.line">
+                                        <field name="name">[767] Base imponible 7.5%</field>
+                                        <field name="name@es">[767] Base imponible 7,5 %</field>
+                                        <field name="code">aeat_mod_390_767</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_767_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-mod390[767]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_768" model="account.report.line">
+                                        <field name="name">[768] Cuota 7.5%</field>
+                                        <field name="name@es">[768] Cuota deducible 7,5 %</field>
+                                        <field name="code">aeat_mod_390_768</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_768_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[768]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_627" model="account.report.line">
+                                        <field name="name">[627] Base imponible 10%</field>
+                                        <field name="name@es">[627] Base imponible 10 %</field>
+                                        <field name="code">aeat_mod_390_627</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_627_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[627]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_628" model="account.report.line">
+                                        <field name="name">[628] Cuota deducible 10%</field>
+                                        <field name="name@es">[628] Cuota deducible 10 %</field>
+                                        <field name="code">aeat_mod_390_628</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_628_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[628]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_629" model="account.report.line">
+                                        <field name="name">[629] Base imponible 21%</field>
+                                        <field name="name@es">[629] Base imponible 21 %</field>
+                                        <field name="code">aeat_mod_390_629</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_629_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[629]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_630" model="account.report.line">
+                                        <field name="name">[630] Cuota deducible 21%</field>
+                                        <field name="name@es">[630] Cuota deducible 21 %</field>
+                                        <field name="code">aeat_mod_390_630</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_630_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[630]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_36" model="account.report.line">
+                                <field name="name">Total bases imponibles y cuotas deducibles en adquisiciones intracomunitarias de bienes corrientes</field>
+                                <field name="name@es">Total bases imponibles y cuotas deducibles en adquisiciones intracomunitarias de bienes corrientes</field>
+                                <field name="code">aeat_mod_390_title_36</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_56" model="account.report.line">
+                                        <field name="name">[56] Base imponible</field>
+                                        <field name="name@es">[56] Base imponible</field>
+                                        <field name="code">aeat_mod_390_56</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_765.balance + aeat_mod_390_214.balance +
+                                            aeat_mod_390_736.balance + aeat_mod_390_767.balance +
+                                            aeat_mod_390_627.balance + aeat_mod_390_629.balance
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_57" model="account.report.line">
+                                        <field name="name">[57] Cuotas deducibles</field>
+                                        <field name="name@es">[57] Cuota deducible</field>
+                                        <field name="code">aeat_mod_390_57</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_766.balance + aeat_mod_390_215.balance +
+                                            aeat_mod_390_737.balance + aeat_mod_390_768.balance +
+                                            aeat_mod_390_628.balance + aeat_mod_390_630.balance
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_37" model="account.report.line">
+                                <field name="name">IVA deducible en adquisiciones intracomunitarias de bienes de inversión</field>
+                                <field name="name@es">IVA deducible en adquisiciones intracomunitarias de bienes de inversión</field>
+                                <field name="code">aeat_mod_390_title_37</field>
+                                <field name="children_ids">
+                                     <record id="mod_390_casilla_769" model="account.report.line">
+                                        <field name="name">[769] Base imponible 2%</field>
+                                        <field name="name@es">[769] Base imponible 2 %</field>
+                                        <field name="code">aeat_mod_390_769</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_769_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[769]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_770" model="account.report.line">
+                                        <field name="name">[770] Cuota deducible 2%</field>
+                                        <field name="name@es">[770] Cuota deducible 2 %</field>
+                                        <field name="code">aeat_mod_390_770</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_770_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[770]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_220" model="account.report.line">
+                                        <field name="name">[220] Base imponible 4%</field>
+                                        <field name="name@es">[220] Base imponible 4 %</field>
+                                        <field name="code">aeat_mod_390_220</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_220_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[220]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_221" model="account.report.line">
+                                        <field name="name">[221] Cuota deducible 4%</field>
+                                        <field name="name@es">[221] Cuota deducible 4 %</field>
+                                        <field name="code">aeat_mod_390_221</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_221_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[221]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_738" model="account.report.line">
+                                        <field name="name">[738] Base imponible 5%</field>
+                                        <field name="name@es">[738] Base imponible 5 %</field>
+                                        <field name="code">aeat_mod_390_738</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_738_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[738]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_739" model="account.report.line">
+                                        <field name="name">[739] Cuota 5%</field>
+                                        <field name="name@es">[739] Cuota deducible 5 %</field>
+                                        <field name="code">aeat_mod_390_739</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_739_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[739]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_771" model="account.report.line">
+                                        <field name="name">[771] Base imponible 7.5%</field>
+                                        <field name="name@es">[771] Base imponible 7,5 %</field>
+                                        <field name="code">aeat_mod_390_771</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_771_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[771]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_772" model="account.report.line">
+                                        <field name="name">[772] Cuota deducible 7.5%</field>
+                                        <field name="name@es">[772] Cuota deducible 7,5 %</field>
+                                        <field name="code">aeat_mod_390_772</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_772_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[772]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_631" model="account.report.line">
+                                        <field name="name">[631] Base imponible 10%</field>
+                                        <field name="name@es">[631] Base imponible 10 %</field>
+                                        <field name="code">aeat_mod_390_631</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_631_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[631]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_632" model="account.report.line">
+                                        <field name="name">[632] Cuota deducible 10%</field>
+                                        <field name="name@es">[632] Cuota deducible 10 %</field>
+                                        <field name="code">aeat_mod_390_632</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_632_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[632]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_633" model="account.report.line">
+                                        <field name="name">[633] Base imponible 21%</field>
+                                        <field name="name@es">[633] Base imponible 21 %</field>
+                                        <field name="code">aeat_mod_390_633</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_633_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[633]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_634" model="account.report.line">
+                                        <field name="name">[634] Cuota deducible 21%</field>
+                                        <field name="name@es">[634] Cuota deducible 21 %</field>
+                                        <field name="code">aeat_mod_390_634</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_634_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[634]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_38" model="account.report.line">
+                                <field name="name">Total bases imponibles y cuotas deducibles en adquisiciones intracomunitarias de bienes de inversión</field>
+                                <field name="name@es">Total bases imponibles y cuotas deducibles en adquisiciones intracomunitarias de bienes de inversión</field>
+                                <field name="code">aeat_mod_390_title_38</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_58" model="account.report.line">
+                                        <field name="name">[58] Base imponible</field>
+                                        <field name="name@es">[58] Base imponible</field>
+                                        <field name="code">aeat_mod_390_58</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_769.balance + aeat_mod_390_220.balance +
+                                            aeat_mod_390_738.balance + aeat_mod_390_771.balance +
+                                            aeat_mod_390_631.balance + aeat_mod_390_633.balance
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_59" model="account.report.line">
+                                        <field name="name">[59] Cuotas deducibles</field>
+                                        <field name="name@es">[59] Cuota deducible</field>
+                                        <field name="code">aeat_mod_390_59</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_770.balance + aeat_mod_390_221.balance +
+                                            aeat_mod_390_738.balance + aeat_mod_390_772.balance +
+                                            aeat_mod_390_632.balance + aeat_mod_390_634.balance
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_39" model="account.report.line">
+                                <field name="name">IVA deducible en adquisiciones intracomunitarias de servicios</field>
+                                <field name="name@es">IVA deducible en adquisiciones intracomunitarias de servicios</field>
+                                <field name="code">aeat_mod_390_title_39</field>
+                                <field name="children_ids">
+                                     <record id="mod_390_casilla_773" model="account.report.line">
+                                        <field name="name">[773] Base imponible 2%</field>
+                                        <field name="name@es">[773] Base imponible 2 %</field>
+                                        <field name="code">aeat_mod_390_773</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_773_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[773]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_774" model="account.report.line">
+                                        <field name="name">[774] Cuota deducible 2%</field>
+                                        <field name="name@es">[774] Cuota deducible 2 %</field>
+                                        <field name="code">aeat_mod_390_774</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_774_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[774]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_587" model="account.report.line">
+                                        <field name="name">[587] Base imponible 4%</field>
+                                        <field name="name@es">[587] Base imponible 4 %</field>
+                                        <field name="code">aeat_mod_390_587</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_587_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[587]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_588" model="account.report.line">
+                                        <field name="name">[588] Cuota deducible 4%</field>
+                                        <field name="name@es">[588] Cuota deducible 4 %</field>
+                                        <field name="code">aeat_mod_390_588</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_588_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[588]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_740" model="account.report.line">
+                                        <field name="name">[740] Base imponible 5%</field>
+                                        <field name="name@es">[740] Base imponible 5 %</field>
+                                        <field name="code">aeat_mod_390_740</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_740_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[740]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_741" model="account.report.line">
+                                        <field name="name">[741] Cuota 5%</field>
+                                        <field name="name@es">[741] Cuota deducible 5 %</field>
+                                        <field name="code">aeat_mod_390_741</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_741_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[741]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_775" model="account.report.line">
+                                        <field name="name">[775] Base imponible 7.5%</field>
+                                        <field name="name@es">[775] Base imponible 7,5 %</field>
+                                        <field name="code">aeat_mod_390_775</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_775_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[775]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_776" model="account.report.line">
+                                        <field name="name">[776] Cuota 7.5%</field>
+                                        <field name="name@es">[776] Cuota deducible 7,5 %</field>
+                                        <field name="code">aeat_mod_390_776</field>
+                                        <field name="expression_ids">
+                                            <record id="mod_390_casilla_776_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[776]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_635" model="account.report.line">
+                                        <field name="name">[635] Base imponible 10%</field>
+                                        <field name="name@es">[635] Base imponible 10 %</field>
+                                        <field name="code">aeat_mod_390_635</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_635_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-mod390[635]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_636" model="account.report.line">
+                                        <field name="name">[636] Cuota deducible 10%</field>
+                                        <field name="name@es">[636] Cuota deducible 10 %</field>
+                                        <field name="code">aeat_mod_390_636</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_636_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[636]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_637" model="account.report.line">
+                                        <field name="name">[637] Base imponible 21%</field>
+                                        <field name="name@es">[637] Base imponible 21 %</field>
+                                        <field name="code">aeat_mod_390_637</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_637_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[637]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                     <record id="mod_390_casilla_638" model="account.report.line">
+                                        <field name="name">[638] Cuota deducible 21%</field>
+                                        <field name="name@es">[638] Cuota deducible 21 %</field>
+                                        <field name="code">aeat_mod_390_638</field>
+                                         <field name="expression_ids">
+                                            <record id="mod_390_casilla_638_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">mod390[638]</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_title_40" model="account.report.line">
+                                <field name="name">Total bases imponibles y cuotas deducibles en adquisiciones intracomunitarias de servicios</field>
+                                <field name="name@es">Total bases imponibles y cuotas deducibles en adquisiciones intracomunitarias de servicios</field>
+                                <field name="code">aeat_mod_390_title_40</field>
+                                <field name="children_ids">
+                                    <record id="mod_390_casilla_597" model="account.report.line">
+                                        <field name="name">[597] Base imponible</field>
+                                        <field name="name@es">[597] Base imponible</field>
+                                        <field name="code">aeat_mod_390_597</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_773.balance + aeat_mod_390_587.balance +
+                                            aeat_mod_390_740.balance + aeat_mod_390_775.balance +
+                                            aeat_mod_390_635.balance + aeat_mod_390_637.balance
+                                        </field>
+                                    </record>
+                                    <record id="mod_390_casilla_598" model="account.report.line">
+                                        <field name="name">[598] Cuotas deducibles</field>
+                                        <field name="name@es">[598] Cuota deducible</field>
+                                        <field name="code">aeat_mod_390_598</field>
+                                        <field name="aggregation_formula">
+                                            aeat_mod_390_774.balance + aeat_mod_390_588.balance +
+                                            aeat_mod_390_741.balance + aeat_mod_390_776.balance +
+                                            aeat_mod_390_636.balance + aeat_mod_390_638.balance
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_390_title_41" model="account.report.line">
+                        <field name="name">Compensación en régimen especial de la agricultura, ganaderia y pesca</field>
+                        <field name="name@es">Compensación en régimen especial de la agricultura, ganadería y pesca</field>
+                        <field name="code">aeat_mod_390_title_41</field>
+                        <field name="children_ids">
+                            <record id="mod_390_casilla_60" model="account.report.line">
+                                <field name="name">[60] Base imponible</field>
+                                <field name="name@es">[60] Base imponible</field>
+                                <field name="code">aeat_mod_390_60</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_60_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">mod390[60]</field>
+                                    </record>
+                                 </field>
+                            </record>
+                            <record id="mod_390_casilla_61" model="account.report.line">
+                                <field name="name">[61] Cuota deducible</field>
+                                <field name="name@es">[61] Cuota deducible</field>
+                                <field name="code">aeat_mod_390_61</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_61_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">mod390[61]</field>
+                                    </record>
+                                 </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_390_title_42" model="account.report.line">
+                        <field name="name">Cuotas deducibles en virtud de resolución administrativa o sentencia firmes con tipos no vigentes</field>
+                        <field name="name@es">Cuotas deducibles en virtud de resolución administrativa o sentencia firmes con tipos no vigentes</field>
+                        <field name="code">aeat_mod_390_title_42</field>
+                        <field name="children_ids">
+                            <record id="mod_390_casilla_660" model="account.report.line">
+                                <field name="name">[660] Base imponible</field>
+                                <field name="name@es">[660] Base imponible</field>
+                                <field name="code">aeat_mod_390_660</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_660_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_661" model="account.report.line">
+                                <field name="name">[661] Cuota deducible</field>
+                                <field name="name@es">[661] Cuota deducible</field>
+                                <field name="code">aeat_mod_390_661</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_661_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_390_title_43" model="account.report.line">
+                        <field name="name">Rectificación de deducciones</field>
+                        <field name="name@es">Rectificación de deducciones</field>
+                        <field name="code">aeat_mod_390_title_43</field>
+                        <field name="children_ids">
+                            <record id="mod_390_casilla_639" model="account.report.line">
+                                <field name="name">[639] Base imponible</field>
+                                <field name="name@es">[639] Base imponible</field>
+                                <field name="code">aeat_mod_390_639</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_639_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_62" model="account.report.line">
+                                <field name="name">[62] Cuota deducible</field>
+                                <field name="name@es">[62] Cuota deducible</field>
+                                <field name="code">aeat_mod_390_62</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_62_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_390_title_44" model="account.report.line">
+                        <field name="name">Rectificación de deducciones por operaciones intragrupo</field>
+                        <field name="name@es">Rectificación de deducciones por operaciones intragrupo</field>
+                        <field name="code">aeat_mod_390_title_44</field>
+                        <field name="children_ids">
+                            <record id="mod_390_casilla_651" model="account.report.line">
+                                <field name="name">[651] Base imponible</field>
+                                <field name="name@es">[651] Base imponible</field>
+                                <field name="code">aeat_mod_390_651</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_651_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_652" model="account.report.line">
+                                <field name="name">[652] Cuota deducible</field>
+                                <field name="name@es">[652] Cuota deducible</field>
+                                <field name="code">aeat_mod_390_652</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_652_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_390_casilla_63" model="account.report.line">
+                        <field name="name">[63] Regularización de bienes de inversión: cuota deducible</field>
+                        <field name="name@es">[63] Regularización de bienes de inversión: cuota deducible</field>
+                        <field name="code">aeat_mod_390_63</field>
+                        <field name="expression_ids">
+                            <record id="mod_390_casilla_63_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">aeat_mod_303_43.balance</field>
+                                <field name="subformula">cross_report(l10n_es.mod_303)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_390_casilla_522" model="account.report.line">
+                        <field name="name">[522] Regularización por aplicación porcentaje definitivo de prorrata: cuota deducible</field>
+                        <field name="name@es">[522] Regularización por aplicación porcentaje definitivo de prorrata: cuota deducible</field>
+                        <field name="code">aeat_mod_390_522</field>
+                        <field name="expression_ids">
+                            <record id="mod_390_casilla_522_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">aeat_mod_303_44.balance</field>
+                                <field name="subformula">cross_report(l10n_es.mod_303)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_390_casilla_64" model="account.report.line">
+                        <field name="name">[64] Suma de deducciones: Cuotas deducibles</field>
+                        <field name="name@es">[64] Suma de deducciones: Cuota deducible</field>
+                        <field name="code">aeat_mod_390_64</field>
+                        <field name="aggregation_formula">
+                            aeat_mod_390_49.balance + aeat_mod_390_513.balance +
+                            aeat_mod_390_51.balance + aeat_mod_390_521.balance +
+                            aeat_mod_390_53.balance + aeat_mod_390_55.balance +
+                            aeat_mod_390_57.balance + aeat_mod_390_59.balance +
+                            aeat_mod_390_598.balance + aeat_mod_390_61.balance +
+                            aeat_mod_390_652.balance + aeat_mod_390_63.balance +
+                            aeat_mod_390_522.balance + aeat_mod_390_661.balance +
+                            aeat_mod_390_62.balance
+                        </field>
+                    </record>
+                    <record id="mod_390_casilla_65" model="account.report.line">
+                        <field name="name">[65] Resultado régimen general</field>
+                        <field name="name@es">[65] Resultado régimen general</field>
+                        <field name="code">aeat_mod_390_65</field>
+                        <field name="expression_ids">
+                            <record id="mod_390_casilla_65_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">aeat_mod_390_65.result_cross_aeat_mod_390_47 - aeat_mod_390_64.balance</field>
+                            </record>
+                            <record id="mod_390_casilla_65_result_cross_aeat_mod_390_47" model="account.report.expression">
+                                <field name="label">result_cross_aeat_mod_390_47</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">aeat_mod_390_47.balance</field>
+                                <field name="subformula">cross_report(l10n_es.mod_390_section_1)</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</data>
+</odoo>

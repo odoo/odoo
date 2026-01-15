@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_preset_form" model="ir.ui.view">
+        <field name="name">pos.preset.form</field>
+        <field name="model">pos.preset</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_preset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='resource']" position="after">
+                <page string="Self Ordering" name="self_ordering">
+                    <group>
+                        <group>
+                            <field name="available_in_self" />
+                            <field name="service_at" invisible="not available_in_self" />
+                        </group>
+                        <group>
+                            <field name="mail_template_id" invisible="not available_in_self" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

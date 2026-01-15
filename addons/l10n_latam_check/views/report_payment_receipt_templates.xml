@@ -1,0 +1,41 @@
+<odoo>
+    <template inherit_id="account.report_payment_receipt_document" id="report_payment_receipt_document">
+        <xpath expr="//table[@name='invoices']" position="before">
+            <t t-set="checks" t-value="o._get_latam_checks()"/>
+            <t t-if="checks">
+                <table id="l10n_latam_check"  class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th><span>Check Number</span></th>
+                            <th t-if="o.payment_method_code != 'own_checks'"><span>Bank</span></th>
+                            <th t-if="o.payment_method_code != 'own_checks'"><span>Issuer VAT</span></th>
+                            <th><span>Payment date</span></th>
+                            <th class="text-end"><span>Amount</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="checks" t-as="check">
+                            <tr>
+                                <td>
+                                    <span t-field='check.name'/>
+                                </td>
+                                <td t-if="o.payment_method_code != 'own_checks'">
+                                    <span t-field='check.bank_id.display_name'/>
+                                </td>
+                                <td t-if="o.payment_method_code != 'own_checks'">
+                                    <span t-field='check.issuer_vat'/>
+                                </td>
+                                <td>
+                                    <span t-field='check.payment_date'/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-out="check.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
+        </xpath>
+    </template>
+</odoo>

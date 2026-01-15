@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_sa_report_invoice_document" inherit_id="l10n_gcc_invoice.l10n_gcc_report_invoice_document" primary="True">
+        <!-- Header & Footer -->
+         <t name="l10n_gcc_settings" position="inside">
+            <t t-set="additional_footer_text" t-value="o.get_l10n_sa_confirmation_datetime_sa_tz()"/>
+            <t t-if="o.company_id.country_id.code == 'SA' and o.is_sale_document() and not o._l10n_sa_is_legal() " t-set="custom_header_sa">
+                <div class="fw-bold text-center mt-2">
+                    <h5>THIS IS NOT A LEGAL DOCUMENT</h5>
+                    <h5 t-if="display_in_en" t-translation="off">THIS IS NOT A LEGAL DOCUMENT</h5>
+                    <h5 t-if="display_in_ar" t-translation="off">هذا المستند ليس مستنداً قانونياً</h5>
+                </div>
+                <!-- To help with centering the previous div in flex justify between-->
+                <div t-if="is_html_empty(o.company_id.report_header)" class="col-1"/>
+            </t>
+         </t>
+        <!-- End Header & Footer -->
+        <!-- ZATCA QR -->
+        <div id="qrcode" position="after">
+            <div id="l10n_sa_qr_code" class="row avoid-page-break-inside">
+                <p class="col-6 position-relative m-0">
+                    <img t-if="o._l10n_sa_is_legal() and o.l10n_sa_qr_code_str"
+                        class="d-block"
+                        t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', quote_plus(o.l10n_sa_qr_code_str), 200, 200)"/>
+                </p>
+            </div>
+        </div>
+        <!-- End ZATCA QR -->
+        <!-- Debit note title -->
+        <xpath expr="//t[@name='invoice_title']/.." position="attributes">
+            <attribute name="t-if">o.move_type == 'out_invoice' and o.state == 'posted' and not o.debit_origin_id</attribute>
+        </xpath>
+        <xpath expr="//t[@name='draft_invoice_title']/.." position="attributes">
+            <attribute name="t-elif">o.move_type == 'out_invoice' and o.state == 'draft' and not o.debit_origin_id</attribute>
+        </xpath>
+        <xpath expr="//t[@name='invoice_title_ar']/.." position="attributes">
+            <attribute name="t-if">o.move_type == 'out_invoice' and o.state == 'posted' and not o.debit_origin_id</attribute>
+        </xpath>
+        <xpath expr="//t[@name='draft_invoice_title_ar']/.." position="attributes">
+            <attribute name="t-elif">o.move_type == 'out_invoice' and o.state == 'posted' and not o.debit_origin_id</attribute>
+        </xpath>
+        <xpath expr="//t[@name='invoice_title_en']/.." position="attributes">
+            <attribute name="t-if">o.move_type == 'out_invoice' and o.state == 'posted' and not o.debit_origin_id</attribute>
+        </xpath>
+        <xpath expr="//t[@name='draft_invoice_title_en']/.." position="attributes">
+            <attribute name="t-elif">o.move_type == 'out_invoice' and o.state == 'posted' and not o.debit_origin_id</attribute>
+        </xpath>
+        <xpath expr="//t[@name='invoice_title']/.." position="after">
+            <span t-elif="o.move_type == 'out_invoice' and o.debit_origin_id">
+                <t name="debit_note_title">Debit Note</t>
+            </span>
+        </xpath>
+        <xpath expr="//t[@name='invoice_title_ar']/.." position="after">
+            <span t-elif="o.move_type == 'out_invoice' and o.debit_origin_id">
+                <t name="debit_note_title_ar">إشعار المدين</t>
+            </span>
+        </xpath>
+        <xpath expr="//t[@name='invoice_title_en']/.." position="after">
+            <span t-elif="o.move_type == 'out_invoice' and o.debit_origin_id">
+                <t name="debit_note_title_en">Debit Note</t>
+            </span>
+        </xpath>
+        <!-- End Debit note title -->
+        <!-- Information div -->
+        <xpath expr="//div[@name='delivery_date']/strong[3]" position="replace">
+            <strong>Supply Date</strong>
+        </xpath>
+        <strong name="delivery_date_ar" position="replace">
+            <strong name="delivery_date_ar" t-if="display_in_ar" t-translation="off">تاريخ التوريد<br/></strong>
+        </strong>
+        <strong name="delivery_date_en" position="replace">
+            <strong name="delivery_date_en" t-if="display_in_en" t-translation="off">Supply Date<br/></strong>
+        </strong>
+        <xpath expr="//div[@name='reference']/strong[3]" position="attributes">
+            <attribute name="t-if">lang != 'ar_001'</attribute>
+        </xpath>
+        <xpath expr="//div[@name='reference']/strong[3]" position="after">
+            <strong t-if="lang == 'ar_001'" t-translation="off">المرجع</strong>
+        </xpath>
+        <strong name="reference_ar" position="replace">
+            <strong name="reference_ar" t-if="display_in_ar" t-translation="off">المرجع<br/></strong>
+        </strong>
+        <strong name="reference_en" position="replace">
+            <strong name="reference_en" t-if="display_in_en" t-translation="off">Reference<br/></strong>
+        </strong>
+        <!-- End Information div -->
+        <!-- Invoice Date -->
+        <xpath expr="//t[@name='out_invoice_date_ar']/strong" position="replace">
+            <strong>تاريخ الفاتورة</strong>
+        </xpath>
+        <!-- End Invoice Date -->
+        <!-- Invoice lines table -->
+        <span name="th_taxes_ar" position="replace">
+            <span name="th_taxes_ar" t-if="display_in_ar" t-translation="off">معدل ضريبة القيمة المضافة<br/></span>
+        </span>
+        <xpath expr="//th[@name='th_description']/span[3]" position="attributes">
+            <attribute name="t-if">lang != 'ar_001'</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_description']/span[3]" position="after">
+            <span t-if="lang == 'ar_001'" t-translation="off">وصف السلعة او الخدمة</span>
+        </xpath>
+        <span name="th_description_ar" position="replace">
+            <span name="th_description_ar" t-if="display_in_ar" t-translation="off">وصف السلعة او الخدمة<br/></span>
+        </span>
+        <th name="th_subtotal" position="attributes">
+            <attribute name="class" add="d-none" separator=" "/>
+        </th>
+        <xpath expr="//table[@name='invoice_line_table']/thead/tr" position="inside">
+            <th name="th_vat_amount" class="text-end">
+                <span name="th_vat_amount_ar" t-if="display_in_ar" t-translation="off" dir="rtl" class="text-nowrap">مبلغ ضريبة القيمة المضافة<br/></span>
+                <span name="th_vat_amount_en" t-if="display_in_en" t-translation="off">VAT Amount<br/></span>
+                <span name="th_vat_amount_span">VAT Amount</span>
+            </th>
+            <th name="th_vat_excl" class="text-end">
+                <span name="th_vat_excl_ar" t-if="display_in_ar" t-translation="off" dir="rtl" class="text-nowrap">إجمالي المبلغ
+                    <br/>
+                    (غير شامل القيمة المضافة)<br/>
+                </span>
+                <span name="th_vat_excl_en" t-if="display_in_en" t-translation="off" class="text-nowrap">Subtotal<br/>(Exclusive of VAT)<br/>
+                </span>
+                <span name="th_vat_excl_span">Subtotal<br/>(Exclusive of VAT)</span>
+            </th>
+            <th name="th_vat_incl" class="text-end text-nowrap">
+                <span name="th_vat_incl_ar" t-if="display_in_ar" t-translation="off" dir="rtl">إجمالي المبلغ
+                    <br/>
+                    (شامل القيمة المضافة)<br/>
+                </span>
+                <span name="th_vat_incl_en" t-if="display_in_en" t-translation="off">Subtotal<br/>(Inclusive of VAT)<br/>
+                </span>
+                <span name="th_vat_incl_span">Subtotal<br/>(Inclusive of VAT)</span>
+            </th>
+        </xpath>
+        <td name="td_subtotal" position="attributes">
+            <attribute name="class" add="d-none" separator=" "/>
+        </td>
+        <t name="account_invoice_line_accountable" position="inside">
+            <td name="td_vat_amount" class="text-end">
+                <span class="text-nowrap" t-field="line.l10n_gcc_invoice_tax_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}">4.05</span>
+            </td>
+            <td name="td_vat_excl" class="text-end o_price_total">
+                <span class="text-nowrap" t-field="line.price_subtotal">27.00</span>
+            </td>
+            <td name="td_vat_incl" class="text-end o_price_total">
+                <span class="text-nowrap" t-field="line.price_total">31.05</span>
+            </td>
+        </t>
+        <xpath expr="//td[@name='td_price_unit']/span" position="attributes">
+            <attribute name="t-options">{'widget': 'monetary', 'display_currency': o.currency_id}</attribute>
+        </xpath>
+        <td name="td_subtotal_grouped" position="before">
+            <td name="td_vat_amount_grouped" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details)" t-out="grouped_line['l10n_gcc_invoice_tax_amount']"  t-options='{"widget": "monetary", "display_currency": o.currency_id}' class="text-nowrap">4.05</span>
+            </td>
+        </td>
+        <td name="td_subtotal_grouped" position="attributes">
+            <attribute name="class" separator=" " add="d-none"/>
+        </td>
+        <td name="td_subtotal_grouped" position="after">
+            <td name="td_vat_incl_grouped" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details)" class="text-nowrap" t-out="grouped_line['price_total']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>27.00</span>
+            </td>
+        </td>
+        <td name="td_subtotal_grouped" position="after">
+            <td name="td_vat_excl_grouped" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details)" class="text-nowrap" t-out="grouped_line['price_subtotal']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>27.00</span>
+            </td>
+        </td>
+        <xpath expr="//span[@t-out='section_subtotal']/.." position="attributes">
+            <attribute name="colspan">2</attribute>
+        </xpath>
+        <xpath expr="//span[@t-out='section_subtotal']/.." position="after">
+            <td colspan="1" class="text-end o_price_total">
+                <span t-out="line._l10n_gcc_get_section_total()" class="text-nowrap" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+            </td>
+        </xpath>
+        <!-- End Invoice lines table -->
+        <!-- Credit/Debit notes reasons -->
+        <div id="qrcode" position="after">
+            <div name="debit_credit_reasons" t-if="o.l10n_sa_show_reason and o.l10n_sa_reason" class="avoid-page-break-inside col-6">
+                <span t-if="display_in_ar" t-translation="off">:سبب إصدار الإشعار من الأسباب التالية<br/></span>
+                <span t-if="display_in_en" t-translation="off">Reason:<br/></span>
+                <span>Reason:</span><br/>
+                <span t-field="o.l10n_sa_reason"/>
+            </div>
+        </div>
+        <!-- End Credit/Debit notes reasons -->
+        <!-- Call custom tax totals templates -->
+         <div id="right-elements" position="attributes">
+            <attribute name="t-attf-class">#{'col-6 mt-5' if report_type == 'pdf' else 'col-12 col-md-5'} ms-5 d-inline-block float-end</attribute>
+         </div>
+        <t t-call="l10n_gcc_invoice.l10n_gcc_document_tax_totals" position="attributes">
+            <attribute name="t-call">l10n_sa.l10n_sa_document_tax_totals</attribute>
+        </t>
+        <t t-call="l10n_gcc_invoice.l10n_gcc_document_tax_totals_company_currency_template" position="attributes">
+            <attribute name="t-call">l10n_sa.l10n_sa_document_tax_totals_company_currency_template</attribute>
+        </t>
+        <!-- End Call custom tax totals templates -->
+        <!-- Dates in Saudi Format -->
+        <div t-field="o.invoice_date" position="attributes">
+            <attribute name="t-options">{'format': 'YYYY-MM-dd'}</attribute>
+        </div>
+        <div t-field="o.invoice_date_due" position="attributes">
+            <attribute name="t-options">{'format': 'YYYY-MM-dd'}</attribute>
+        </div>
+        <div t-field="o.delivery_date" position="attributes">
+            <attribute name="t-options">{'format': 'YYYY-MM-dd'}</attribute>
+        </div>
+        <t t-out="payment_vals['date']" position="attributes">
+            <attribute name="t-options">{'widget': 'date', 'format': 'YYYY-MM-dd'}</attribute>
+        </t>
+        <!-- End Dates in Saudi Format -->
+    </template>
+
+    <template id="l10n_sa_document_tax_totals" inherit_id="l10n_gcc_invoice.l10n_gcc_document_tax_totals" primary="True">
+        <span t-out="subtotal['name']" position="replace">
+            <span class="text-nowrap">Invoice Taxable Amount <span t-if="display_in_lang_sec"> /</span></span>
+        </span>
+        <span name="untaxed_amount_ar" position="replace">
+            <span name="untaxed_amount_ar" t-if="display_in_ar" t-translation="off" dir="rtl" class="text-nowrap">المبلغ الخاضع للضريبة
+                <br/>
+                (غير شامل ضريبة القيمة المضافة)
+            </span>
+        </span>
+        <span name="untaxed_amount_en" position="replace">
+            <span name="untaxed_amount_en" t-if="display_in_en" t-translation="off" class="text-nowrap">Invoice Taxable Amount</span>
+        </span>
+        <span t-out="tax_group['group_name']" position="after">
+            <t t-if="display_in_lang_sec and tax_group_sec['group_name'] != tax_group['group_name']" class="text-nowrap">
+                / <span t-out="tax_group_sec['group_name']"/>
+            </t>
+        </span>
+        <xpath expr="//tr[hasclass('o_taxes')]/t[@t-else='']//span" position="after">
+            <t t-if="display_in_lang_sec and tax_group_sec['group_name'] != tax_group['group_name']" class="text-nowrap">
+                / <span t-out="tax_group_sec['group_name']"/>
+            </t>
+        </xpath>
+        <xpath expr="//tr[hasclass('o_total')]/td/strong" position="replace">
+            <strong class="text-nowrap">Invoice Gross Total (Inclusive of VAT) <span t-if="display_in_lang_sec"> /</span></strong>
+        </xpath>
+        <strong name="total_ar" position="replace">
+            <strong name="total_ar" t-if="display_in_ar" t-translation="off" dir="rtl" class="text-nowrap">إحمالي قيمة الفاتورة
+                <br/>
+                (شامل ضريبة القيمة المضافة)
+            </strong>
+        </strong>
+        <strong name="total_en" position="replace">
+            <strong name="total_en" t-if="display_in_en" t-translation="off" class="text-nowrap" dir="ltr">Invoice Gross Total (Inclusive of VAT)</strong>
+        </strong>
+    </template>
+
+    <template id="l10n_sa_document_tax_totals_company_currency_template" inherit_id="l10n_gcc_invoice.l10n_gcc_document_tax_totals_company_currency_template" primary="True">
+        <span t-out="subtotal['name']" position="replace">
+            <span class="text-nowrap">Invoice Taxable Amount <span t-if="display_in_lang_sec"> /</span></span>
+        </span>
+        <span name="untaxed_amount_ar" position="replace">
+            <span name="untaxed_amount_ar" t-if="display_in_ar" t-translation="off" dir="rtl" class="text-nowrap">المبلغ الخاضع للضريبة
+                <br/>
+                (غير شامل ضريبة القيمة المضافة)
+            </span>
+        </span>
+        <span name="untaxed_amount_en" position="replace">
+            <span name="untaxed_amount_en" t-if="display_in_en" t-translation="off" class="text-nowrap">Invoice Taxable Amount</span>
+        </span>
+        <span t-out="tax_group['group_name']" position="after">
+            <t t-if="display_in_lang_sec and tax_group_sec['group_name'] != tax_group['group_name']" class="text-nowrap">
+                / <span t-out="tax_group_sec['group_name']"/>
+            </t>
+        </span>
+        <xpath expr="//tr[hasclass('o_taxes')]/t[@t-else='']//span" position="after">
+            <t t-if="display_in_lang_sec and tax_group_sec['group_name'] != tax_group['group_name']" class="text-nowrap">
+                / <span t-out="tax_group_sec['group_name']"/>
+            </t>
+        </xpath>
+        <xpath expr="//tr[hasclass('o_total')]/td/strong" position="replace">
+            <strong class="text-nowrap">Invoice Gross Total (Inclusive of VAT) <span t-if="display_in_lang_sec"> /</span></strong>
+        </xpath>
+        <strong name="total_ar" position="replace">
+            <strong name="total_ar" t-if="display_in_ar" t-translation="off" dir="rtl" class="text-nowrap">إحمالي قيمة الفاتورة
+                <br/>
+                (شامل ضريبة القيمة المضافة)
+            </strong>
+        </strong>
+        <strong name="total_en" position="replace">
+            <strong name="total_en" t-if="display_in_en" t-translation="off" class="text-nowrap" dir="ltr">Invoice Gross Total (Inclusive of VAT)</strong>
+        </strong>
+    </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_sa.l10n_sa_report_invoice_document'"
+               t-call="l10n_sa.l10n_sa_report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

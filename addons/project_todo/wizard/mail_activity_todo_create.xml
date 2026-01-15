@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="mail_activity_todo_create_popup" model="ir.ui.view">
+        <field name="name">mail.activity.todo.create.popup</field>
+        <field name="model">mail.activity.todo.create</field>
+        <field name="arch" type="xml">
+            <form js_class="todo_activity_wizard">
+                <group>
+                    <field name="summary" placeholder="Reminder to..." required="1"/>
+                    <field name="date_deadline"/>
+                    <field name="user_id" widget="many2one_avatar_user" options="{'no_open': 1}"/>
+                </group>
+                <field name="note" class="oe-bordered-editor" placeholder="Add details about your to-do..."/>
+                <footer>
+                    <button class="btn btn-primary" type="object" name="create_todo_activity" close="1">Add To-Do</button>
+                    <button class="btn btn-secondary" special="cancel" close="1">Discard</button>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

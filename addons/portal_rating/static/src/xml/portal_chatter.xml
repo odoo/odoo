@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <!--
+        Inherited templates from portal to custom chatter with rating
+    -->
+    <t t-inherit="portal.Composer" t-inherit-mode="extension">
+        <xpath expr="//textarea" position="inside"><t t-esc="widget.options['default_message'] ? widget.options['default_message'].trim() : ''"/></xpath><!-- need to be one line to avoid \t in textarea -->
+        <xpath expr="//button[hasclass('o_portal_chatter_composer_btn')]" position="attributes">
+            <attribute name="t-attf-data-action">#{widget.options['force_submit_url'] || '/mail/message/post'}</attribute>
+        </xpath>
+        <xpath expr="//*[hasclass('o_portal_chatter_composer_input')]/div[hasclass('o_portal_chatter_composer_body')]" position="before">
+            <t t-call="portal_rating.rating_star_input">
+                <t t-set="default_rating" t-value="widget.options['default_rating_value']"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

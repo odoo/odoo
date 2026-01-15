@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="product_wishlist" inherit_id="website_sale_wishlist.product_wishlist">
+        <xpath expr="//div[hasclass('o_wsale_product_action_row')]" position="inside">
+            <t t-if="is_view_active('website_sale_comparison.add_to_compare')">
+                <t t-set="categories" t-value="wish.product_id.product_tmpl_id.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
+                <t t-set="product_variant_id" t-value="wish.product_id.product_tmpl_id._get_first_possible_variant_id()"/>
+
+                <button
+                    t-if="product_variant_id and categories"
+                    type="button"
+                    class="btn btn-light o_add_to_compare d-inline-flex"
+                    t-att-data-product-id='wish.product_id.id'
+                    aria-label="Add to compare"
+                >
+                    <i class="fa fa-fw fa-exchange" role="presentation"/>
+                </button>
+
+                <!-- Render placeholder when product is not comparable to ensure alignment -->
+                <div t-else="" class="o_add_to_compare_placeholder btn btn-light pe-none opacity-0">
+                    <i class="fa fa-exchange fa-fw" aria-hidden="true"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

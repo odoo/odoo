@@ -1,0 +1,355 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_timeout
+#
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2025-11-06 08:43+0000\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
+"auth_timeout/sv/>\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: auth_timeout
+#: model:ir.model,name:auth_timeout.model_res_groups
+msgid "Access Groups"
+msgstr "Åtkomstgrupper"
+
+#. module: auth_timeout
+#: model:ir.model,name:auth_timeout.model_auth_totp_device
+msgid "Authentication Device"
+msgstr "Autentiseringsenhet"
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "Authentication code"
+msgstr "Autentiseringskod"
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "Authentication code via email"
+msgstr "Autentiseringskod via e-post"
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "Confirm"
+msgstr "Bekräfta"
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+#: model_terms:ir.ui.view,arch_db:auth_timeout.check_identity
+msgid "Confirm access"
+msgstr "Bekräfta åtkomst"
+
+#. module: auth_timeout
+#: model:ir.model.fields,field_description:auth_timeout.field_auth_totp_device__display_name
+#: model:ir.model.fields,field_description:auth_timeout.field_ir_http__display_name
+#: model:ir.model.fields,field_description:auth_timeout.field_ir_websocket__display_name
+#: model:ir.model.fields,field_description:auth_timeout.field_res_groups__display_name
+#: model:ir.model.fields,field_description:auth_timeout.field_res_users__display_name
+msgid "Display Name"
+msgstr "Visa namn"
+
+#. module: auth_timeout
+#: model:ir.model.fields,help:auth_timeout.field_res_groups__lock_timeout_inactivity_mfa
+msgid ""
+"Enable two-factor authentication when the inactivity timeout is reached."
+msgstr ""
+"Aktivera tvåfaktorsautentisering när tidsgränsen för inaktivitet har "
+"uppnåtts."
+
+#. module: auth_timeout
+#: model:ir.model.fields,help:auth_timeout.field_res_groups__lock_timeout_mfa
+msgid "Enable two-factor authentication when the session timeout is reached."
+msgstr ""
+"Aktivera tvåfaktorsautentisering när tidsgränsen för sessionen har uppnåtts."
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "Enter below the six-digit authentication code just sent to your email"
+msgstr ""
+"Ange nedan den sexsiffriga autentiseringskoden som just skickats till din e-"
+"post"
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "Forgot password?"
+msgstr "Har du glömt lösenordet?"
+
+#. module: auth_timeout
+#: model:ir.model,name:auth_timeout.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP-routning"
+
+#. module: auth_timeout
+#: model:ir.model.fields,field_description:auth_timeout.field_res_groups__has_lock_timeout
+msgid "Has Lock Timeout"
+msgstr "Har tidsgräns för låsning"
+
+#. module: auth_timeout
+#: model:ir.model.fields,field_description:auth_timeout.field_res_groups__has_lock_timeout_inactivity
+msgid "Has Lock Timeout Inactivity"
+msgstr "Har Lås Timeout Inaktivitet"
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "Having problems ?"
+msgstr "Har du problem?"
+
+#. module: auth_timeout
+#: model:ir.model.fields,field_description:auth_timeout.field_auth_totp_device__id
+#: model:ir.model.fields,field_description:auth_timeout.field_ir_http__id
+#: model:ir.model.fields,field_description:auth_timeout.field_ir_websocket__id
+#: model:ir.model.fields,field_description:auth_timeout.field_res_groups__id
+#: model:ir.model.fields,field_description:auth_timeout.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_timeout
+#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
+msgid "Inactivity"
+msgstr "Inaktivitet"
+
+#. module: auth_timeout
+#: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_inactivity
+msgid "Inactivity timeout"
+msgstr "Timeout för inaktivitet"
+
+#. module: auth_timeout
+#: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_2fa_selection
+msgid "Lock Timeout 2Fa Selection"
+msgstr "Timeout för låsning 2Fa Val"
+
+#. module: auth_timeout
+#: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_delay_in_unit
+msgid "Lock Timeout Delay In Unit"
+msgstr "Lås Timeout Fördröjning I Enhet"
+
+#. module: auth_timeout
+#: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_delay_unit
+msgid "Lock Timeout Delay Unit"
+msgstr "Lås Timeout Fördröjning Enhet"
+
+#. module: auth_timeout
+#: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_inactivity_2fa_selection
+msgid "Lock Timeout Inactivity 2Fa Selection"
+msgstr "Lås Timeout Inaktivitet 2Fa Val"
+
+#. module: auth_timeout
+#: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_inactivity_delay_in_unit
+msgid "Lock Timeout Inactivity Delay In Unit"
+msgstr "Lås Timeout Inaktivitetsfördröjning I enhet"
+
+#. module: auth_timeout
+#: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_inactivity_delay_unit
+msgid "Lock Timeout Inactivity Delay Unit"
+msgstr "Timeout för låsning Fördröjning inaktivitet Enhet"
+
+#. module: auth_timeout
+#: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_2fa_selection__without_2fa
+msgid "Logout"
+msgstr "Logga ut"
+
+#. module: auth_timeout
+#: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_2fa_selection__with_2fa
+msgid "Logout with two-factor authentication"
+msgstr "Logga ut med tvåfaktorsautentisering"
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid ""
+"Open your two-factor authenticator (TOTP) app or browser extension to view "
+"your authentication code."
+msgstr ""
+"Öppna din tvåfaktorsautentiseringsapp (TOTP) eller webbläsartillägg för att "
+"visa din autentiseringskod."
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "Passkey"
+msgstr "Passkey"
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "Password"
+msgstr "Lösenord"
+
+#. module: auth_timeout
+#: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_inactivity_mfa
+msgid "Require MFA on inactivity timeout"
+msgstr "Kräv MFA vid timeout för inaktivitet"
+
+#. module: auth_timeout
+#: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_mfa
+msgid "Require MFA on session timeout"
+msgstr "Kräv MFA vid timeout för session"
+
+#. module: auth_timeout
+#: model:ir.model.fields,help:auth_timeout.field_res_groups__has_lock_timeout_inactivity
+msgid "Requires re-authentication after a period of user inactivity"
+msgstr ""
+"Kräver ny autentisering efter en period av inaktivitet från användarens sida"
+
+#. module: auth_timeout
+#: model:ir.model.fields,help:auth_timeout.field_res_groups__has_lock_timeout
+msgid "Requires re-authentication after the user's last connection"
+msgstr "Kräver ny autentisering efter användarens senaste anslutning"
+
+#. module: auth_timeout
+#: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_inactivity_2fa_selection__without_2fa
+msgid "Screen lock"
+msgstr "Skärmlås"
+
+#. module: auth_timeout
+#: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_inactivity_2fa_selection__with_2fa
+msgid "Screen lock with two-factor authentication"
+msgstr "Skärmlås med tvåfaktorsautentisering"
+
+#. module: auth_timeout
+#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
+msgid "Session"
+msgstr "Session"
+
+#. module: auth_timeout
+#: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout
+msgid "Session timeout"
+msgstr "Timeout för session"
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "Signed in as"
+msgstr "Inloggad som"
+
+#. module: auth_timeout
+#: model:ir.model.fields,help:auth_timeout.field_res_groups__lock_timeout_inactivity
+msgid ""
+"Time (in minutes) of user inactivity after which re-authentication is "
+"required."
+msgstr ""
+"Tid (i minuter) för inaktivitet hos användaren efter vilken ny autentisering "
+"krävs."
+
+#. module: auth_timeout
+#: model:ir.model.fields,help:auth_timeout.field_res_groups__lock_timeout
+msgid ""
+"Time interval (in minutes) after which re-authentication is required, "
+"regardless of inactivity."
+msgstr ""
+"Tidsintervall (i minuter) efter vilket ny autentisering krävs, oavsett "
+"inaktivitet."
+
+#. module: auth_timeout
+#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
+msgid "Timeouts"
+msgstr "Tidsfrister"
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "Use an authentication code sent by email"
+msgstr "Använd en autentiseringskod som skickas via e-post"
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "Use passkey"
+msgstr "Använd lösenkod"
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "Use your authenticator app"
+msgstr "Använd din autentiseringsapp"
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "Use your passkey"
+msgstr "Använd din passerkod"
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "Use your password"
+msgstr "Använd ditt lösenord"
+
+#. module: auth_timeout
+#: model:ir.model,name:auth_timeout.model_res_users
+msgid "User"
+msgstr "Användare"
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "Verify"
+msgstr "Verifiera"
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "When you are ready, authenticate using the button below."
+msgstr "När du är klar, autentisera dig med hjälp av knappen nedan."
+
+#. module: auth_timeout
+#. odoo-javascript
+#: code:addons/auth_timeout/static/src/services/check_identity/check_identity.xml:0
+msgid "XXXXXX"
+msgstr "XXXXXX"
+
+#. module: auth_timeout
+#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
+msgid "after"
+msgstr "efter"
+
+#. module: auth_timeout
+#: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_delay_unit__days
+#: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_inactivity_delay_unit__days
+msgid "days"
+msgstr "dagar"
+
+#. module: auth_timeout
+#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
+msgid "every"
+msgstr "varje"
+
+#. module: auth_timeout
+#: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_delay_unit__hours
+#: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_inactivity_delay_unit__hours
+msgid "hours"
+msgstr "timmar"
+
+#. module: auth_timeout
+#: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_delay_unit__minutes
+#: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_inactivity_delay_unit__minutes
+msgid "minutes"
+msgstr "minuter"
+
+#. module: auth_timeout
+#: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
+msgid "of inactivity"
+msgstr "av inaktivitet"
+
+#. module: auth_timeout
+#: model:ir.model,name:auth_timeout.model_ir_websocket
+msgid "websocket message handling"
+msgstr "hantering av websocket-meddelanden"

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_address_autocomplete" model="ir.ui.view">
+        <field name="name">view.partner.form.inherit.address.autocomplete</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='street']" position="attributes">
+                <attribute name="widget">google_address_autocomplete</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_address_form_inherit_address_autocomplete" model="ir.ui.view">
+        <field name="name">view.partner.address.form.inherit.address.autocomplete</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_address_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='street']" position="attributes">
+                <attribute name="widget">google_address_autocomplete</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

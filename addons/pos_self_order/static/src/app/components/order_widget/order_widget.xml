@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.OrderWidget">
+        <div
+            class="page-buttons bg-view z-1"
+            t-att-class="{
+                'border-top' : !props.removeTopClasses
+
+            }">
+            <div class="o_self_footer container o_self_container px-kiosk-p-4 d-flex flex-nowrap py-3">
+                <button t-attf-class="btn btn-secondary btn-lg h-auto w-auto opacity-75 py-2 px-3 d-sm-none" t-att-class="leftButton.icon" t-on-click="onClickleftButton" />
+                <button t-attf-class="btn btn-secondary btn-lg d-none d-sm-inline text-nowrap btn-back btn-cancel" t-on-click="onClickleftButton" t-esc="leftButton.name" />
+                <div class="d-flex flex-nowrap ms-2 ms-sm-4 w-100 justify-content-end">
+                    <div class="d-flex align-items-center flex-shrink-0 me-2 me-sm-4" >
+                        <div class="to-order d-flex flex-column align-items-start justify-content-center h-100 rounded-4" t-if="this.selfOrder.router.activeSlot === 'product_list'" t-on-click="props.action">
+                            <h4 class="d-none d-sm-block text-muted opacity-75">Total</h4>
+                            <div class="d-flex align-items-center">
+                                <div class="fs-4 fw-bold o-so-tabular-nums rounded-pill py-1 px-3 px-md-4 text-bg-secondary" t-esc="lineNotSend.count"/>
+                                <div class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary" t-esc="selfOrder.formatMonetary(lineNotSend.price)" />
+                            </div>
+                        </div>
+                    </div>
+                    <button t-attf-class="cart btn btn-primary btn-lg text-truncate {{ buttonToShow.disabled ? 'disabled' : '' }}" t-on-click="props.action" t-esc="buttonToShow.label"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

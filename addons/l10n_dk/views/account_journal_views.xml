@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="l10n_dk_view_account_journal_form_inherited" model="ir.ui.view">
+        <field name="name">l10n.dk.account.journal.form.inherited</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form" />
+        <field name="arch" type="xml">
+            <field name="profit_account_id" position="attributes">
+                <attribute name="invisible">type not in ('cash', 'bank') or country_code == 'DK'</attribute>
+            </field>
+            <field name="loss_account_id" position="attributes">
+                <attribute name="invisible">type not in ('cash', 'bank') or country_code == 'DK'</attribute>
+            </field>
+
+            <field name="profit_account_id" position="after">
+                <field name="profit_account_id"
+                       invisible="type not in ('cash', 'bank') or country_code != 'DK'"
+                       groups="account.group_account_readonly"
+                />
+            </field>
+            <field name="loss_account_id" position="after">
+                <field name="loss_account_id"
+                       invisible="type not in ('cash', 'bank') or country_code != 'DK'"
+                       groups="account.group_account_readonly"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>

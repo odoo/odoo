@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.Follower">
+        <DropdownItem class="'o-mail-Follower d-flex justify-content-between p-0'">
+            <a class="o-mail-Follower-details d-flex align-items-center flex-grow-1 px-3 o-min-width-0" t-att-class="{ 'o-inactive opacity-75 text-reset text-decoration-line-through': !props.follower.is_active }" href="#" role="menuitem" t-on-click.prevent="(ev) => this.onClickDetails(ev)">
+                <img class="o-mail-Follower-avatar o_avatar me-2 rounded" t-att-src="props.follower.partner_id.avatarUrl" alt=""/>
+                <span class="flex-shrink text-truncate" t-esc="props.follower.displayName"/>
+            </a>
+            <div t-if="props.follower.isEditable" class="d-flex align-items-center me-2">
+                <span class="o-mail-Follower-action btn btn-icon p-0 opacity-50 opacity-100-hover" title="Edit subscription" aria-label="Edit subscription" t-on-click="(ev) => this.onClickEdit(ev)">
+                    <i class="fa fa-fw fa-pencil"/>
+                </span>
+                <span class="o-mail-Follower-action btn btn-icon p-0 opacity-50 opacity-100-hover" title="Remove this follower" aria-label="Remove this follower" t-on-click.stop="(ev) => this.onClickRemove(ev)">
+                    <i class="oi fa-fw oi-close"/>
+                </span>
+            </div>
+        </DropdownItem>
+    </t>
+
+</templates>

@@ -1,0 +1,36 @@
+html[lang] > body.editor_enable [data-oe-translation-state] {
+    &, .o_translation_select_option, &[data-oe-field="mega_menu_content"] * {
+        background-color: rgba($o-we-content-to-translate-color, 0.5) !important;
+    }
+
+    &[data-oe-translation-state="translated"] {
+        &, .o_translation_select_option, &[data-oe-field="mega_menu_content"] * {
+            background-color: rgba($o-we-translated-content-color, 0.5) !important;
+        }
+    }
+
+    &.o_dirty, &.oe_translated, .oe_translated {
+        background-color: rgba($o-we-translated-content-color, 0.25) !important;
+
+        &[data-oe-field="mega_menu_content"] * {
+            background-color: rgba($o-we-translated-content-color, 0.25) !important;
+        }
+    }
+}
+
+.s_website_form, .s_searchbar_input, .js_subscribe, .s_group, .s_donation_form {
+    input:not(.o_translatable_attribute) {
+        pointer-events: none;
+    }
+}
+.s_website_form {
+    textarea:not(.o_translatable_attribute):not(.o_translatable_text) {
+        pointer-events: none;
+    }
+}
+
+html[data-edit_translations="1"] {
+    .o_translate_mode_hidden {
+        display: none !important;
+    }
+}

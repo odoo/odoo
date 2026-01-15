@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.PaymentScreenPaymentLines" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('electronic_payment')]" position="after">
+            <div t-if="line.payment_method_id.payment_method_type === 'glory_cash'" class="d-flex flex-column gap-3">
+                <t t-set="glory" t-value="line.payment_method_id.payment_terminal"/>
+
+                <div t-if="line.payment_status === 'waiting'" class="d-flex gap-2 mt-3 fs-2">
+                    <strong>Cash inserted:</strong>
+                    <t t-out="env.utils.formatCurrency(glory.state.amountInserted)"/>
+                </div>
+
+                <div class="d-flex gap-2 mt-3 fs-4">
+                    <strong>Cash machine status:</strong>
+                    <t t-out="glory.status"/>
+                </div>
+
+                <div t-if="line.payment_status === 'pending' and glory.state.status !== 'RESETTING' and glory.state.status !== 'DISCONNECTED'" class="d-flex gap-2 fs-2 mb-3">
+                    <button class="btn btn-secondary" t-on-click="() => glory.reset()">Reset cash machine</button>
+                    <button class="btn btn-secondary" t-on-click="() => glory.downloadLogs()">Download logs</button>
+                </div>
+
+                <t t-set="emptyDenominations" t-value="glory.getDenominationsWithStatus('EMPTY')"/>
+                <t t-set="fullDenominations" t-value="glory.getDenominationsWithStatus('FULL')"/>
+                <t t-set="nearEmptyDenominations" t-value="glory.getDenominationsWithStatus('NEAR_EMPTY')"/>
+                <t t-set="nearFullDenominations" t-value="glory.getDenominationsWithStatus('NEAR_FULL')"/>
+
+                <div t-if="emptyDenominations.length > 0" class="alert alert-danger">
+                    The cash machine has run out of the following coins/bills:
+                    <ul class="my-1 ps-4">
+                        <li style="list-style-type: disc;" t-foreach="emptyDenominations" t-as="denomination" t-key="denomination.value">
+                            <t t-out="env.utils.formatCurrency(denomination.value)"/>
+                        </li>
+                    </ul>
+                </div>
+
+                <div t-if="fullDenominations.length > 0" class="alert alert-danger">
+                    The cash machine must be emptied, the following coins/bills are full:
+                    <ul class="my-1 ps-4">
+                        <li style="list-style-type: disc;" t-foreach="fullDenominations" t-as="denomination" t-key="denomination.value">
+                            <t t-out="env.utils.formatCurrency(denomination.value)"/> <t t-if="pos.getCashier()._role === 'manager'" t-out="'(' + denomination.amount + ')'"/>
+                        </li>
+                    </ul>
+                </div>
+
+                <div t-if="nearEmptyDenominations.length > 0" class="alert alert-warning">
+                    The cash machine is running low on the following coins/bills:
+                    <ul class="my-1 ps-4">
+                        <li style="list-style-type: disc;" t-foreach="nearEmptyDenominations" t-as="denomination" t-key="denomination.value">
+                            <t t-out="env.utils.formatCurrency(denomination.value)"/> <t t-if="pos.getCashier()._role === 'manager'" t-out="'(' + denomination.amount + ')'"/>
+                        </li>
+                    </ul>
+                </div>
+
+                <div t-if="nearFullDenominations.length > 0" class="alert alert-warning">
+                    Consider emptying the cash machine, the following coins/bills are nearly full:
+                    <ul class="my-1 ps-4">
+                        <li style="list-style-type: disc;" t-foreach="nearFullDenominations" t-as="denomination" t-key="denomination.value">
+                            <t t-out="env.utils.formatCurrency(denomination.value)"/> <t t-if="pos.getCashier()._role === 'manager'" t-out="'(' + denomination.amount + ')'"/>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="unavailable_products_warning">
+        <div
+            name="unavailable_products_warning"
+            t-attf-class="alert alert-warning mt-3 mb-2 {{'' if is_selected else 'd-none'}}"
+        >
+            <div class="ms-1">
+                Some of the products are not available at <strong><t t-out="wh_name"/></strong>.
+            </div>
+            <div
+                t-foreach="insufficient_stock_data.items()"
+                t-as="item"
+                t-attf-class="d-flex gap-3 mt-3 position-relative"
+            >
+                <t t-set="order_line" t-value="item[0]"/>
+                <t t-set="available_qty" t-value="int(item[1])"/>
+                <div class="d-flex align-items-top gap-2">
+                    <a t-att-href="order_line.product_id.website_url">
+                        <span
+                            t-field="order_line.product_id.image_128"
+                            t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max rounded border border-warning-subtle'}"
+                        />
+                    </a>
+                </div>
+                <div>
+                    <t
+                        t-set="attrib_names"
+                        t-value="order_line.product_id.product_template_attribute_value_ids._get_combination_name()"
+                    />
+                    <div class="fw-bold">
+                        <t t-out="order_line.product_id.name"/>
+                        <t t-if="attrib_names" t-out="' - ' + attrib_names"/>
+                        <t
+                            t-if="order_line.product_id.product_tmpl_id._has_multiple_uoms()"
+                            t-out="' (' + order_line.product_uom_id.name + ')'"
+                        />
+                    </div>
+                    <div t-out="order_line._get_shop_warning()"/>
+                    <div name="o_wsale_unavailable_line_button_container" class="mt-2 mt-md-1">
+                        <a href='#' class="alert-link me-2 small">
+                            <i
+                                t-attf-class="fa fa-fw {{'fa-refresh' if available_qty else 'fa-trash-o'}}"
+                                role="presentation"
+                                aria-label="Update cart quantities"
+                            />
+                            <t t-set="update_cart_button_label">Update cart with available stock</t>
+                            <t t-set="remove_from_cart_button_label">Remove</t>
+                            <span
+                                class="js_wsc_update_product_qty"
+                                t-att-data-line-id="order_line.id"
+                                t-att-data-product-id="order_line.product_id.id"
+                                t-att-data-available-qty="available_qty"
+                                t-out="update_cart_button_label if available_qty else remove_from_cart_button_label"
+                            />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="in_store_delivery_method" inherit_id="website_sale.delivery_method">
+        <xpath expr="//t[@t-set='is_pickup_needed']" position="attributes">
+            <attribute name="t-value" add="dm.delivery_type=='in_store'" separator=" or "/>
+        </xpath>
+        <t t-set="pickup_location_data" position="after">
+            <t t-if="not pickup_location_data and default_pickup_locations.get(dm.id)">
+                <t
+                    t-set="pickup_location_data"
+                    t-value="default_pickup_locations[dm.id].get('pickup_location_data', {})"
+                />
+                <t
+                    t-set="insufficient_stock_data"
+                    t-value="default_pickup_locations[dm.id].get('insufficient_stock_data', {})"
+                />
+            </t>
+        </t>
+        <span name="o_delivery_method_name" position="before">
+            <i
+                t-if="request.website.sudo().in_store_dm_id"
+                t-attf-class="fa fa-fw {{'fa-map-marker' if dm.delivery_type == 'in_store' else 'fa-truck'}} me-1"
+                role="presentation"
+                aria-label="Delivery method"
+            />
+        </span>
+        <div name="o_pickup_location" position="after">
+            <t t-if="dm.delivery_type=='in_store' and pickup_location_data">
+                <t
+                    t-if="insufficient_stock_data"
+                    t-call="website_sale_collect.unavailable_products_warning"
+                >
+                    <t t-set="wh_name" t-value="pickup_location_data.get('name')"/>
+                </t>
+            </t>
+        </div>
+    </template>
+
+</odoo>

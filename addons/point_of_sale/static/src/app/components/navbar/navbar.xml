@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.Navbar">
+        <div class="pos-topheader position-relative d-flex align-items-center justify-content-between gap-1 p-2 m-0 bg-view border-bottom">
+            <div class="pos-leftheader d-flex align-items-center flex-grow-1 overflow-auto" t-att-class="{'d-none': ui.isSmall and state.searchBarOpen, 'mw-100': this.pos.getOrder()}">
+                <div class="d-flex flex-shrink-0 align-items-center gap-1 position-relative pe-2" t-att-class="{ 'w-100': !ui.isSmall }">
+                    <div class="navbar-menu d-flex">
+                        <button class="register-label btn btn-lg btn-light lh-lg" t-att-class="{'active': mainButton === 'register'}" t-on-click="() => this.onClickRegister()">
+                            <span t-if="!ui.isSmall">Register</span>
+                            <i t-else="" class="fa fa-fw fa-pencil" t-att-class="{'fa-lg' : !ui.isSmall}"/>
+                        </button>
+                        <button class="orders-button btn btn-lg btn-light lh-lg" t-att-class="{'active': mainButton === 'order'}" t-on-click="() => this.pos.navigate('TicketScreen')">
+                            <t t-if="!ui.isSmall">
+                                <span>Orders</span>
+                            </t>
+                            <i t-else="" class="fa fa-fw fa-book" t-att-class="{'fa-lg' : !ui.isSmall}"/>
+                        </button>
+                    </div>
+                    <div t-if="!ui.isSmall" class="navbar-separator"/>
+                    <OrderTabs orders="getOrderTabs()" class="'h-50'"/>
+                    <button class="btn btn-secondary d-flex align-items-center gap-1 h-100 ms-2 p-2 preset-time-btn" t-on-click="openPresetTiming" t-if="shouldDisplayPresetTime">
+                        <i class="fa fa-clock-o" aria-hidden="true"/>
+                        <span class="fw-bolder lh-1" t-esc="this.pos.getOrder()?.presetTime || '--:--'" />
+                    </button>
+                </div>
+            </div>
+            <div t-if="!this.pos.getOrder()" class="pos-centerheader d-none d-xl-flex justify-content-center overflow-hidden">
+                <div class="pos-logo mw-100" />
+            </div>
+            <div class="pos-rightheader flex-grow-1">
+                <div class="status-buttons d-flex flex-grow-1 align-items-center justify-content-end gap-1">
+                    <div t-if="this.pos.data.network.offline or this.pos.data.network.loading" class="oe_status btn btn-light btn-lg lh-lg h-100 pe-none">
+                        <span t-if="this.pos.data.network.unsyncData.length > 0" t-esc="this.pos.data.network.unsyncData.length" />
+                        <div t-if="this.pos.data.network.offline" class="fa fa-fw fa-chain-broken text-danger"/>
+                        <div t-else="" class="fa fa-fw fa-spin fa-circle-o-notch text-warning"/>
+                    </div>
+                    <Input tModel="[pos, 'searchProductWord']"
+                    class="ui.isSmall ? 'p-0' : 'w-100 w-xl-50 me-0 me-lg-2'"
+                    isSmall="ui.isSmall"
+                    placeholder.translate="Search products..."
+                    icon="{type: 'fa', value: 'fa-search fa-lg fa-fw'}"
+                    debounceMillis="500"
+                    getRef="(ref) => this.inputRef = ref"
+                    t-if="pos.showSearchButton()"
+                    isOpenCallback="(isOpen) => state.searchBarOpen = isOpen" />
+                    <button class="btn btn-light btn-lg lh-lg" t-if="isBarcodeScannerSupported() and ['ProductScreen', 'TicketScreen'].includes(this.pos.router.state.current) and !pos.config.module_pos_restaurant" t-on-click="onClickScan">
+                        <i class="fa fa-fw fa-lg fa-barcode" /><span t-if="this.pos.scanning" class="ms-1">Stop</span>
+                    </button>
+                    <!-- No need to show the cashier name on small screens -->
+                    <CashierName t-if="!ui.isSmall"/>
+                    <Dropdown>
+                        <button class="btn btn-light btn-lg lh-lg">
+                            <i class="fa fa-fw fa-bars"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <div class="d-flex gap-2 p-2 border-bottom">
+                                <ProxyStatus t-if="pos.config.useProxy" />
+                                <span t-on-click="openCustomerDisplay" t-attf-class="{{pos.config.useProxy ? 'd-flex align-items-center justify-content-center' : ''}} btn btn-secondary btn-lg w-100 text-center" title="Customer Display">
+                                    <i class="fa fa-fw fa-desktop"/>
+                                </span>
+                            </div>
+                            <div class="p-2 pos-burger-menu-items">
+                                <DropdownItem t-if="!isDisplayStandalone and this.pos.cashier._role != 'minimal'" onSelected="() => window.open(this.appUrl)">
+                                    Install App
+                                </DropdownItem>
+                                <DropdownItem t-if="showCashMoveButton and this.pos.cashier._role != 'minimal'" onSelected="() => this.pos.cashMove()">
+                                    Cash In/Out
+                                </DropdownItem>
+                                <DropdownItem t-if="!this.pos.data.network.offline" onSelected="() => this.reloadProducts()">
+                                    Reload Data
+                                </DropdownItem>
+                                <DropdownItem t-if="showCreateProductButton" onSelected="() => this.pos.editProduct()">
+                                    Create Product
+                                </DropdownItem>
+                                <DropdownItem t-if="isBarcodeScannerSupported() and this.pos.router.state.current == 'ProductScreen' and ui.isSmall and !pos.config.module_pos_restaurant" onSelected="() => this.onClickScan()">
+                                    <span t-if="this.pos.scanning">Stop Barcode Scanner</span>
+                                    <span t-else="">Barcode Scanner</span>
+                                </DropdownItem>
+                                <DropdownItem t-if="hardwareProxy.printer" onSelected="() => this.showSaleDetails()">
+                                    Print Report
+                                </DropdownItem>
+                                <DropdownItem onSelected="() => pos.closePos()">
+                                    Backend
+                                </DropdownItem>
+                                <DropdownItem onSelected="() => this.pos.closeSession()">
+                                    Close Register
+                                </DropdownItem>
+                            </div>
+                        </t>
+                    </Dropdown>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

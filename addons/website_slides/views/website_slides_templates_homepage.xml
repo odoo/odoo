@@ -1,0 +1,543 @@
+<?xml version="1.0" ?>
+<odoo><data>
+
+<template id="courses_home_side_bar">
+    <div class="container o_wslides_home_main">
+        <div class="row">
+            <t t-set="has_side_column" t-value="not is_public_user"/>
+            <!-- To do: remove in Master since it’s no longer shown. -->
+            <t t-if="is_public_user">
+                <div t-if="has_side_column">
+                    <div class="row">
+                        <div class="col-12 col-md-5 col-lg-12">
+                            <div class="ps-md-5 ps-lg-0">
+                                <t t-call="website_slides.slides_home_users_small"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <div t-else="">
+                <t t-set="has_side_column" t-value="True"/>
+                <div class="o_wslides_home_aside_loggedin card p-3 p-lg-0 mb-4">
+                    <div id="o_wslides_home_aside_content" class="d-none d-lg-block">
+                        <div class="row g-0 mb-5 mt-3 mt-lg-0">
+                            <div class="col-12 col-sm-6 col-lg-12">
+                                <t t-call="website_slides.slides_home_user_profile_small"/>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-12 ps-md-5 ps-lg-0 mt-lg-4">
+                                <t t-call="website_slides.slides_home_user_achievements_small"/>
+                            </div>
+                            <div class="col-12 col-md-7 col-lg-12 ps-md-5 ps-lg-0 mt-lg-4 mb-3">
+                                <t t-call="website_slides.slides_home_achievements_small"/>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-12 ps-md-5 ps-lg-0 mt-lg-4">
+                                <t t-call="website_slides.slides_home_users_small"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="courses_my">
+    <div t-if="channels_my" class="container">
+        <div class="o_wslides_home_content_section mb-5">
+            <div class="d-flex justify-content-between">
+                <h2 class="h5 mb-3">My courses</h2>
+                <a t-if="channels_my[5:]" href="/slides?my=1">View all</a>
+            </div>
+            <div t-foreach="channels_my[:5]" t-as="channel">
+                <div class="row">
+                    <div class="col-5 d-flex align-items-center my-2">
+                        <a t-attf-href="/slides/#{slug(channel)}" t-out="channel.name"/>
+                        <span t-if="not channel.is_published" class="badge text-bg-danger ms-1">Unpublished</span>
+                    </div>
+                    <div class="col-5 d-flex justify-content-between align-items-center">
+                        <div t-if="channel.completed" class="badge rounded-pill text-bg-success pull-right">
+                            <i class="fa fa-check"/> Completed
+                        </div>
+                        <t t-elif="not channel.completion">
+                            <small class="text-muted d-none d-md-inline"><i class="fa fa-check me-1" role="img"/>You are enrolled</small>
+                            <div class="d-md-none">0 %</div>
+                        </t>
+                        <t t-else="">
+                            <div class="d-none d-md-block flex-grow-1">
+                                <div class="progress me-3" style="height: 6px">
+                                    <div class="progress-bar" role="progressbar" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{channel.completion}%;" aria-label="Progress bar"/>
+                                </div>
+                            </div>
+                            <div class="text-start" style="width: 6ch;"><t t-out="channel.completion"/> %</div>
+                        </t>
+                        <div class="text-muted d-flex">
+                            <div t-out="'{:.1f}'.format(channel.total_time or 0).removesuffix('.0') if channel.total_time &lt; 1 else round(channel.total_time)" class="text-end pe-1" style="width: 3ch;"/>
+                            hours
+                        </div>
+                    </div>
+                    <div t-if="not channel.completed" class="col-2 d-flex flex-row-reverse align-items-center">
+                        <a t-if="not channel.completion" role="button" class="btn btn-sm btn-primary" t-attf-href="/slides/#{slug(channel)}">
+                            <span class="d-none d-md-inline me-2 me-md-0">Start now</span><i class="oi oi-arrow-right d-md-none" aria-hidden="true"/>
+                        </a>
+                        <a t-else="" role="button" class="align-items-center" t-attf-href="/slides/#{slug(channel)}">
+                            <span class="me-2 d-none d-md-inline">Continue</span><i class="oi oi-arrow-right" aria-hidden="true"/>
+                        </a>
+                    </div>
+                    <div t-else="" class="col-2">&amp;nbsp;</div>
+                </div>
+                <div t-if="not channel_last" class="row mx-1 my-1">
+                    <hr class="m-0"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Channels home template -->
+<template id='courses_home' name="Odoo Courses Homepage">
+    <t t-set="body_classname" t-value="'o_wslides_body'"/>
+    <t t-set="has_side_column" t-value="not is_public_user"/>
+    <t t-call="website.layout">
+        <div id="wrap" class="wrap o_wslides_wrap">
+            <div class="oe_structure oe_empty"/>
+            <div class="container">
+                <t t-call="website_slides.courses_search_bar"/>
+                <div class="row">
+                    <div t-attf-class="#{'col-12 col-lg-8 col-xl-9 pe-lg-5' if has_side_column else 'col-12'}">
+                        <div t-if="invite_error_msg" role="alert" class="o_not_editable alert alert-danger text-center" t-out="invite_error_msg"/>
+                        <div class="o_wslides_home_nav">
+                            <div class="o_wprofile_email_validation_container">
+                                <t t-call="website_profile.email_validation_banner">
+                                    <t t-set="redirect_url" t-value="'/slides'"/>
+                                    <t t-set="send_alert_classes" t-value="'alert alert-danger alert-dismissable mt-4 mb-0'"/>
+                                    <t t-set="done_alert_classes" t-value="'alert alert-success alert-dismissable mt-4 mb-0'"/>
+                                    <t t-set="additional_validation_email_message"> and join this Community</t>
+                                    <t t-set="additional_validated_email_message"> You may now participate in our eLearning.</t>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="container o_wslides_home_content_section mb-3 d-none"
+                            t-if="not len(channels)">
+                            <p class="h2">No Course created yet.</p>
+                            <p groups="website_slides.group_website_slides_officer">Click on "New" in the top-right corner to write your first course.</p>
+                        </div>
+                        <t t-call="website_slides.courses_my"/>
+                        <t t-call="website_slides.courses_search_results"/>
+                    </div>
+                    <div t-if="has_side_column" class="d-none d-lg-block col-lg-4 col-xl-3">
+                        <t t-call="website_slides.courses_home_side_bar"/>
+                    </div>
+                </div>
+            </div>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="o_wslides_overview_offcanvas" aria-labelledby="o_wslides_overview_offcanvas_header">
+                <div class="offcanvas-header">
+                    <h2 class="h5 offcanvas-title" id="o_wslides_overview_offcanvas_header">Overview</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
+                </div>
+                <div class="offcanvas-body o_wslides_home_aside_loggedin d-flex flex-column gap-4">
+                    <t t-if="is_public_user">
+                        <t t-call="website_slides.slides_home_users_small"/>
+                    </t>
+                    <t t-else="">
+                        <t t-call="website_slides.slides_home_user_profile_small"/>
+                        <t t-call="website_slides.slides_home_user_achievements_small"/>
+                        <t t-call="website_slides.slides_home_achievements_small"/>
+                        <t t-call="website_slides.slides_home_users_small"/>
+                    </t>
+                </div>
+            </div>
+            <t t-call="website_slides.courses_footer"></t>
+            <!-- Off canvas filters on mobile -->
+            <div id="o_wslides_index_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title">Filters</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
+                </div>
+                <div class="offcanvas-body p-0">
+                    <div class="accordion accordion-flush">
+                        <!-- Tag Groups Filters -->
+                        <div class="accordion-item" t-foreach="tag_groups" t-as="tag_group">
+                            <t t-set="group_frontend_tags" t-value="tag_group.tag_ids.filtered('color')"/>
+                            <t t-if="group_frontend_tags">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        t-attf-aria-controls="o_wslides_offcanvas_cat_#{tag_group.id}"
+                                        t-att-data-bs-target="'.o_wslides_offcanvas_cat_%s' % tag_group.id"
+                                        aria-expanded="false"
+                                    >
+                                        <t t-out="tag_group.name"/>
+                                    </button>
+                                </h2>
+                                <div t-attf-id="o_wslides_offcanvas_cat_#{tag_group.id}" t-attf-class="o_wslides_offcanvas_cat_#{tag_group.id} accordion-collapse collapse">
+                                    <div class="accordion-body pt-0">
+                                        <ul class="list-group list-group-flush">
+                                            <li t-foreach="group_frontend_tags" t-as="tag" class="list-group-item border-0 px-0">
+                                                <div t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
+                                                    class="post_link text-reset cursor-pointer" t-att-title="tag.name">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input pe-none" type="checkbox" t-attf-name="#{tag.color}" t-att-checked="tag in search_tags"/>
+                                                        <label class="form-check-label" t-attf-for="#{tag.color}" t-out="tag.name"/>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <div class="offcanvas-body flex-grow-0 border-top overflow-hidden">
+                    <a href="/slides" class="btn btn-light">Clear Filters</a>
+                </div>
+            </div>
+            <!-- Search Modal for Mobile -->
+            <div
+                id="o_wslides_search_modal"
+                class="modal fade css_editable_mode_hidden"
+                aria-hidden="true"
+                tabindex="-1"
+            >
+                <div class="modal-dialog modal-lg pt-5">
+                    <div class="modal-content mt-5 bg-transparent border-0">
+                        <div class="o_container_small">
+                            <t t-call="website.website_search_box_input">
+                                <t t-set="default_style" t-valuef="true"/>
+                                <t t-set="search_type" t-valuef="slides"/>
+                                <t t-set="_classes" t-valuef="input-group rounded o_cc o_cc1 mb-1"/>
+                                <t t-set="_input_classes" t-valuef="border-0 p-3"/>
+                                <t t-set="_submit_classes" t-valuef="px-4"/>
+                                <t t-set="placeholder">Search courses</t>
+                                <t t-set="search" t-value="original_search or search_term"/>
+                                <input type="hidden" name="my" t-attf-value="#{1 if search_my else 0}"/>
+                                <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
+                                <input type="hidden" name="prevent_redirect" value="True"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="courses_search_bar">
+    <!-- Navbar dynamically composed using displayed channel tag groups. -->
+    <div class="d-flex flex-wrap align-items-md-center gap-2 mt-4 mb-3">
+        <h1 class="h4 mb-0 me-auto">Courses</h1>
+        <div class="d-flex gap-2 flex-grow-1 flex-md-grow-0 align-items-start">
+            <!-- Desktop tag groups -->
+            <div id="navbarTagGroups" class="d-none d-lg-block">
+                <t t-set="search_tag_groups" t-value="search_tags.mapped('group_id')"/>
+                <ul class="list-unstyled d-flex flex-wrap gap-2 mb-0">
+                    <t t-foreach="tag_groups" t-as="tag_group">
+                        <t t-set="group_frontend_tags" t-value="tag_group.tag_ids.filtered(lambda tag: tag.color)"/>
+                        <li class="dropdown" t-if="group_frontend_tags">
+                            <a t-att-class="'btn btn-light dropdown-toggle %s' % ('active' if tag_group in search_tag_groups else '')"
+                                href="/slides"
+                                t-att-data-bs-target="'#navToogleTagGroup%s' % tag_group.id"
+                                role="button" data-bs-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false"
+                                t-out="tag_group.name"/>
+                            <div class="dropdown-menu" t-att-id="'navToogleTagGroup%s' % tag_group.id">
+                                <t t-foreach="group_frontend_tags" t-as="tag">
+                                    <span t-att-class="'post_link cursor-pointer dropdown-item %s' % ('active' if tag in search_tags else '')"
+                                        t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
+                                        t-out="tag.name"/>
+                                </t>
+                            </div>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <div class="d-flex gap-2 align-items-center ms-auto">
+                <t t-call="website.website_search_box_input">
+                    <t t-set="_classes" t-valuef="d-none d-md-flex"/>
+                    <t t-set="search_type" t-valuef="slides"/>
+                    <!-- No action: remain on same URL -->
+                    <t t-set="display_description" t-valuef="true"/>
+                    <t t-set="display_detail" t-valuef="false"/>
+                    <t t-set="placeholder">Search courses</t>
+                    <t t-set="search" t-value="original_search or search_term"/>
+                    <input type="hidden" name="my" t-attf-value="#{1 if search_my else 0}"/>
+                    <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
+                    <input type="hidden" name="prevent_redirect" value="True"/>
+                </t>
+                <!-- Mobile Search button -->
+                <a
+                    class="btn o_not_editable d-md-none btn-light"
+                    data-bs-target="#o_wslides_search_modal"
+                    data-bs-toggle="modal"
+                    role="button"
+                    title="Search Courses"
+                    href="#"
+                >
+                    <i class="oi oi-search" role="img"/>
+                </a>
+                <!-- Mobile Filter button -->
+                <button class="o_not_editable btn btn-light position-relative d-lg-none"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#o_wslides_index_offcanvas">
+                    <i class="fa fa-sliders"/>
+                    <span t-if="search_tags or search_my"
+                        class="position-absolute top-0 start-100 translate-middle border border-light rounded-circle bg-danger p-1"
+                    />
+                </button>
+                <a t-if="not request.env.user._is_public()" class="btn d-block d-lg-none p-0" data-bs-toggle="offcanvas" href="#o_wslides_overview_offcanvas" role="button" aria-controls="o_wslides_overview_offcanvas">
+                    <t t-call="website_slides.slides_misc_user_image">
+                        <t t-set="img_class" t-value="'o_wslides_user_avatar rounded-circle'"/>
+                    </t>
+                </a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="courses_search_tags">
+    <t t-if="search_my">
+          <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
+          <i class="fa fa-tag me-2 text-muted"/>
+          My Courses
+          <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids), search=search_term, prevent_redirect=True)"
+             class="post_link cursor-pointer btn border-0 py-1">&#215;</span>
+        </span>
+    </t>
+    <t t-if="search_term">
+          <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
+          <i class="fa fa-tag me-2 text-muted"/>
+          <t t-out="search_term"/>
+          <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids), my=search_my, slide_category=search_slide_category, prevent_redirect=True)"
+                         class="post_link cursor-pointer btn border-0 py-1">&#215;</span>
+        </span>
+    </t>
+    <t t-foreach="search_tags" t-as="tag">
+        <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
+            <i class="fa fa-tag me-2 text-muted"/>
+            <t t-out="tag.display_name"/>
+            <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
+                         class="post_link cursor-pointer btn border-0 py-1">&#215;</span>
+        </span>
+    </t>
+</template>
+
+<template id="courses_search_results">
+    <div class="o_wslides_home_main pb-5">
+        <h2 t-if="not search_term and not search_slide_category and not search_my and not search_tags and channels" class="h5 mb-3">All Courses</h2>
+        <t t-call="website_slides.courses_search_tags"/>
+        <div t-if="not channels and not search_term and not search_slide_category and not search_my and not search_tags" class="text-center">
+            <p class="h2 h3">No Course created yet.</p>
+            <p groups="website_slides.group_website_slides_officer">Click on "New" in the top-right corner to write your first course.</p>
+        </div>
+        <div t-elif="search_term and not channels" class="alert alert-info mb-5">
+            No course was found matching your search <code><t t-out="search_term"/></code>.
+        </div>
+        <div t-elif="not channels" class="alert alert-info mb-5">
+            No course was found matching your search.
+        </div>
+        <t t-else="">
+            <div t-if="original_search" class="alert alert-warning mb-5">
+                No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="search_term"/>'.
+            </div>
+            <div t-attf-class="row g-4 g-lg-3 g-xxl-4 #{'row-cols-1 row-cols-sm-2 row-cols-xl-4' if (is_public_user and not has_side_column) else 'row-cols-1 row-cols-sm-2 row-cols-xl-3'}">
+                <t t-foreach="channels" t-as="channel">
+                    <div class="d-flex">
+                        <t t-call="website_slides.course_card"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+        <div class="d-flex justify-content-center" t-if="pager">
+            <t t-call="website.pager"/>
+        </div>
+    </div>
+</template>
+
+<template id='courses_footer'>
+    <section class="s_banner">
+        <div class="oe_structure oe_empty" id="oe_structure_website_slides_course_footer_1"/>
+    </section>
+</template>
+
+<template id='course_card' name="Course Card">
+    <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name" t-attf-class="card o_wslides_course_card w-100 h-100 text-decoration-none #{'o_wslides_course_unpublished' if not channel.is_published else ''}">
+        <t t-set="channel_frontend_tags" t-value="channel.tag_ids.filtered(lambda tag: tag.color)"/>
+        <div>
+            <div t-field="channel.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}" class="o_wslides_background_image ratio ratio-16x9"/>
+            <t t-if="channel.partner_has_new_content" t-call="website_slides.course_card_information"/>
+        </div>
+        <div class="card-body">
+            <h3 class="o_line_clamp card-title h6" t-field="channel.name"/>
+            <span t-if="not channel.is_published" class="badge text-bg-danger">Unpublished</span>
+            <div class="card-text d-flex flex-column flex-grow-1 mt-1">
+                <div class="o_line_clamp small" t-field="channel.description_short"/>
+                <div t-if="channel_frontend_tags" class="small o_wslides_desc_truncate_2_badges">
+                    <t t-foreach="channel_frontend_tags" t-as="tag">
+                        <t t-if="search_tags">
+                            <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
+                                t-attf-class="post_link cursor-pointer badge o_badge_clickable #{'o_color_'+str(tag.color) if tag in search_tags else 'o_wslides_channel_tag o_color_0'}" t-out="tag.name"/>
+                        </t>
+                        <t t-else="">
+                            <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
+                                t-attf-class="post_link cursor-pointer badge o_badge_clickable o_wslides_channel_tag #{'o_color_'+str(tag.color)}" t-out="tag.name"/>
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </div>
+        <div t-attf-class="card-footer d-flex align-items-center #{'justify-content-between' if channel.total_time else 'justify-content-end'}">
+            <t t-if="channel.completion and not channel.completed">
+                <div class="d-flex align-items-center gap-2 flex-basis-50">
+                    <div class="progress flex-grow-1" style="height: 6px">
+                        <div class="progress-bar" role="progressbar" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{channel.completion}%;" aria-label="Progress bar"/>
+                    </div>
+                    <small><t t-out="channel.completion"/>%</small>
+                </div>
+                <button class="btn btn-sm btn-primary">Continue</button>
+            </t>
+            <t t-elif="channel.is_member and not channel.completion">
+                <small t-if="channel.total_time" t-out="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute', 'format': 'narrow'}"/>
+                <button class="btn btn-sm btn-primary">Start now</button>
+            </t>
+            <span t-elif="channel.is_member and channel.completed" class="badge text-bg-success"><i class="fa fa-check" aria-hidden="true"/> Completed</span>
+            <t t-else="">
+                <small t-if="channel.total_time" t-out="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute', 'format': 'narrow'}"/>
+                <small><t t-out="channel.total_slides"/> steps</small>
+            </t>
+        </div>
+    </a>
+</template>
+
+<template id="course_card_information" name='Course Information'>
+    <t id="course_card_information_content">
+    </t>
+</template>
+
+<template id="course_card_information_badge" inherit_id="website_slides.course_card_information"
+    active="True" name='New Content Badge'>
+    <xpath expr="//t[@id='course_card_information_content']" position="inside">
+        <span class="position-absolute top-0 badge bg-secondary mt-2 ms-2">New Content</span>
+    </xpath>
+</template>
+
+<template id='slides_home_achievements_small' name="Users">
+    <div class="o_wslides_home_aside">
+    </div>
+</template>
+
+<template id="toggle_latest_achievements" inherit_id="website_slides.slides_home_achievements_small" active="True" name='Display Achievements'>
+    <xpath expr="//div[hasclass('o_wslides_home_aside')]" position="inside">
+        <div t-if="achievements">
+            <h2 class="h6 mb-3">Latest achievements</h2>
+            <div class="d-flex flex-column gap-3">
+                <t t-foreach="achievements" t-as="achievement">
+                    <t t-call="website_slides.achievement_card"/>
+                </t>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<template id='achievement_card' name="Achivement Card">
+    <div class="d-flex gap-2">
+        <t t-call="website_slides.slides_misc_user_image">
+            <t t-set="user" t-value="achievement.user_id"/>
+        </t>
+        <div>
+            <div class="lh-1" t-out="achievement.user_id.name"/>
+            <small class="text-muted" t-out="achievement.badge_id.name"/>
+        </div>
+    </div>
+</template>
+
+<template id='slides_home_users_small' name="Users">
+    <div class="o_wslides_home_aside">
+    </div>
+</template>
+
+<template id="toggle_leaderboard" inherit_id="website_slides.slides_home_users_small" active="True" name='Display Leaderboard'>
+    <xpath expr="//div[hasclass('o_wslides_home_aside')]" position="inside">
+        <div t-if="not is_public_user" class="d-flex justify-content-between">
+            <h2 class="h6 mb-3">Leaderboard</h2>
+            <a t-if="users" href="/profile/users">View all</a>
+        </div>
+        <t t-if="users">
+            <div class="d-flex flex-column gap-3">
+                <t t-foreach="users" t-as="user">
+                    <t t-call="website_slides.user_quickkarma_card"/>
+                </t>
+            </div>
+        </t>
+        <t t-else=""><p class="text-muted">No leaderboard currently :(</p></t>
+    </xpath>
+</template>
+
+<template id='user_quickkarma_card' name="User QuickKarma Card">
+    <div class="d-flex align-items-start gap-2">
+        <t t-call="website_slides.slides_misc_user_image"/>
+        <div class="flex-grow-1">
+            <div class="lh-1" t-out="user.name"/>
+            <div class="d-flex align-items-center">
+                <small class="text-muted" t-out="user.rank_id.name"/>
+            </div>
+        </div>
+        <div class="small">
+            <span class="badge bg-light"><t t-out="user.karma"/> xp</span>
+        </div>
+    </div>
+</template>
+
+<template id='slides_home_user_profile_small' name="User Profile">
+    <div class="position-relative d-flex justify-content-between gap-3 mb-4">
+        <div class="d-flex gap-2">
+            <t t-call="website_slides.slides_misc_user_image">
+                <t t-set="img_class" t-value="'o_wslides_user_avatar rounded-circle'"/>
+            </t>
+            <div class="lh-1">
+                <h6 t-out="user.name" class="mb-0"/>
+                <span class="text-muted"><t t-out="user.karma"/>XP</span>
+            </div>
+        </div>
+        <a class="stretched-link" t-att-href="'/profile/user/%s' % user.id">View</a>
+    </div>
+    <div class="o_wslides_home_aside">
+        <t t-set="next_rank_id" t-value="user._get_next_rank()"/>
+        <div t-if="next_rank_id">
+            <t t-call="website_profile.profile_next_rank_card"/>
+            <div t-field="next_rank_id.description_motivational" class="mt-3 rounded p-3 bg-100"/>
+        </div>
+        <div t-else="" class="mt-3">Congratulations, you have reached the last rank!</div>
+    </div>
+</template>
+
+<template id='slides_home_user_achievements_small' name="User Achievements">
+    <div class="o_wslides_home_aside flex-grow-1">
+        <div class="d-flex justify-content-between">
+            <h2 class="h6 mb-3">Badges</h2>
+            <a href="/profile/ranks_badges?badge_category=slides">View all</a>
+        </div>
+        <t t-foreach="challenges" t-as="challenge">
+            <t t-set="challenge_done" t-value="challenge in challenges_done if challenges_done else False"/>
+            <div t-attf-class="d-flex #{'opacity-50' if challenge_done else ''}">
+                <div t-if="challenge.reward_id.image_1920" class="flex-shrink-0" t-field="challenge.reward_id.image_1920"
+                    t-options="{'widget': 'image', 'preview_image': 'image_128', 'class': 'me-2', 'style': 'max-height: 36px'}"/>
+                <img t-else="" t-attf-src="'/website_profile/static/src/img/badge_%s.svg' % (challenge.reward_id.level)" t-att-alt="challenge.reward_id.name" style="max-height: 36px" class="flex-shrink-0 me-2"/>
+                <div class="flex-grow-1">
+                    <div class="lh-1" t-out="challenge.reward_id.name"/>
+                    <small class="text-muted" t-out="challenge.reward_id.description"/>
+                </div>
+                <i t-if="challenge_done" class="fa fa-check text-success" aria-label="Done" title="Done" role="img"/>
+            </div>
+        </t>
+    </div>
+</template>
+
+<template id='slides_misc_user_image' name="User Avatar">
+    <img t-attf-class="o_avatar {{img_class or 'rounded-circle'}}"
+        t-att-style="img_style if img_style else ''"
+        t-att-src="'/profile/avatar/%s?field=avatar_128' % user.id"
+        t-att-alt="user.name"/>
+</template>
+</data></odoo>

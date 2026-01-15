@@ -1,22 +1,24 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 
 
 class HrExpenseRefuseWizard(models.TransientModel):
+    """ Wizard to specify reason on expense refusal """
 
-    _name = "hr.expense.refuse.wizard"
-    _description = "Hr Expense refuse Reason wizard"
+    _name = 'hr.expense.refuse.wizard'
+    _description = "Expense Refuse Reason Wizard"
 
-    description = fields.Char(string='Reason', required=True)
+    reason = fields.Char(string='Reason', required=True)
+    expense_ids = fields.Many2many(comodel_name='hr.expense')
 
-    @api.multi
-    def expense_refuse_reason(self):
-        self.ensure_one()
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if 'expense_ids' in fields:
+            res['expense_ids'] = self.env.context.get('active_ids', [])
+        return res
 
-        context = dict(self._context or {})
-        active_ids = context.get('active_ids', [])
-        expense_sheet = self.env['hr.expense.sheet'].browse(active_ids)
-        expense_sheet.refuse_expenses(self.description)
+    def action_refuse(self):
+        self.expense_ids._do_refuse(self.reason)
         return {'type': 'ir.actions.act_window_close'}

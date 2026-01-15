@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_sale.ProductsRibbonOptionPlugin" name="Product ribbon options">
+        <BuilderRow label.translate="Ribbon">
+            <BuilderSelect
+                action="'setRibbon'"
+                t-key="this.count.value"
+                className="'o_wsale_ribbon_select'"
+                t-on-click="() => state.ribbonEditMode = false"
+            >
+                <BuilderSelectItem actionValue="''" id="'no_ribbon_opt'">
+                    None
+                </BuilderSelectItem>
+                <t t-foreach="this.state.ribbons" t-as="ribbon" t-key="ribbon.id">
+                    <BuilderSelectItem actionValue="ribbon.id" label="ribbon.name">
+                        <div>
+                            <t t-out="ribbon.name" />
+                            <span t-attf-class="fa fa-arrow-#{ribbon.position} ms-1"/>
+                            <span
+                                t-attf-class="o_wsale_color_preview ms-1"
+                                t-attf-style="background-color: #{ribbon.bg_color}; border: {{(ribbon.bg_color == '#FFFFFF' || ribbon.bg_color == '') ? '2px solid #CCCCCC' : ''}};"
+                            />
+                            <span
+                                t-attf-class="o_wsale_color_preview ms-1"
+                                t-attf-style="background-color: #{ribbon.text_color} !important; border: {{ribbon.text_color == '#FFFFFF' ? '2px solid #CCCCCC' : ''}};"
+                            />
+                        </div>
+                    </BuilderSelectItem>
+                </t>
+            </BuilderSelect>
+            <BuilderButton
+                t-if="!this.isActiveItem('no_ribbon_opt')"
+                t-on-click="() => state.ribbonEditMode = !state.ribbonEditMode"
+                title.translate="Edit"
+                className="'fa fa-edit'"
+            />
+            <BuilderButton
+                t-if="!state.ribbonEditMode"
+                title.translate="Create"
+                action="'createRibbon'"
+                className="'fa fa-plus text-success border-0'"
+                style="'background-color: transparent !important;'"
+                preview="false"
+                t-on-click="() => state.ribbonEditMode = true"
+            />
+        </BuilderRow>
+
+        <t t-if="state.ribbonEditMode">
+            <BuilderContext action="'modifyRibbon'">
+                <BuilderRow label.translate="Name" level="1">
+                    <BuilderTextInput actionParam="'name'" />
+                </BuilderRow>
+                <BuilderRow label.translate="Style" level="1">
+                    <BuilderButtonGroup actionParam="'style'">
+                        <BuilderButton actionValue="'ribbon'">Ribbon</BuilderButton>
+                        <BuilderButton actionValue="'tag'">Badge</BuilderButton>
+                    </BuilderButtonGroup>
+               </BuilderRow>
+
+                <BuilderRow label.translate="Background" level="1">
+                    <BuilderColorPicker
+                        actionParam="'bg_color'"
+                        enabledTabs="['solid', 'custom']"
+                    />
+                </BuilderRow>
+                <BuilderRow label.translate="Text" level="1">
+                    <BuilderColorPicker
+                        actionParam="'text_color'"
+                        enabledTabs="['solid', 'custom']"
+                    />
+                </BuilderRow>
+                <BuilderRow label.translate="Position" level="1">
+                    <BuilderSelect actionParam="'position'">
+                        <BuilderSelectItem actionValue="'left'">Left</BuilderSelectItem>
+                        <BuilderSelectItem actionValue="'right'">Right</BuilderSelectItem>
+                    </BuilderSelect>
+                </BuilderRow>
+            </BuilderContext>
+            <BuilderRow label.translate=" ">
+                <BuilderButton
+                    action="'deleteRibbon'"
+                    preview="false"
+                    className="'o_we_bg_danger'"
+                    t-on-click="() => state.ribbonEditMode = false"
+                >
+                    Delete Ribbon
+                </BuilderButton>
+            </BuilderRow>
+        </t>
+    </t>
+</templates>

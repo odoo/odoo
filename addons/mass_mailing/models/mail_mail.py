@@ -2,112 +2,121 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-import urlparse
 import werkzeug.urls
 
-from odoo import api, fields, models, tools
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
-from openerp.addons.link_tracker.models.link_tracker import URL_REGEX
+from odoo import api, fields, models, tools
 
 
 class MailMail(models.Model):
     """Add the mass mailing campaign data to mail"""
-    _inherit = ['mail.mail']
+    _inherit = 'mail.mail'
 
-    mailing_id = fields.Many2one('mail.mass_mailing', string='Mass Mailing')
-    statistics_ids = fields.One2many('mail.mail.statistics', 'mail_mail_id', string='Statistics')
+    mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing')
+    mailing_trace_ids = fields.One2many('mailing.trace', 'mail_mail_id', string='Statistics')
+
+    def _get_tracking_url(self):
+        token = self._generate_mail_recipient_token(self.id)
+        return tools.urls.urljoin(
+            self.get_base_url(),
+            f'mail/track/{self.id}/{token}/blank.gif'
+        )
 
     @api.model
-    def create(self, values):
-        """ Override mail_mail creation to create an entry in mail.mail.statistics """
-        # TDE note: should be after 'all values computed', to have values (FIXME after merging other branch holding create refactoring)
-        mail = super(MailMail, self).create(values)
-        if values.get('statistics_ids'):
-            mail_sudo = mail.sudo()
-            mail_sudo.statistics_ids.write({'message_id': mail_sudo.message_id, 'state': 'outgoing'})
-        return mail
+    def _generate_mail_recipient_token(self, mail_id):
+        return tools.hmac(self.env(su=True), 'mass_mailing-mail_mail-open', mail_id)
 
-    def _get_tracking_url(self, partner=None):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        track_url = urlparse.urljoin(
-            base_url, 'mail/track/%(mail_id)s/blank.gif?%(params)s' % {
-                'mail_id': self.id,
-                'params': werkzeug.url_encode({'db': self.env.cr.dbname})
-            }
-        )
-        return '<img src="%s" alt=""/>' % track_url
-
-    def _get_unsubscribe_url(self, email_to):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        url = urlparse.urljoin(
-            base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
-                'mailing_id': self.mailing_id.id,
-                'params': werkzeug.url_encode({
-                    'db': self.env.cr.dbname,
-                    'res_id': self.res_id,
-                    'email': email_to,
-                    'token': self.mailing_id._unsubscribe_token(
-                        self.res_id, email_to),
-                }),
-            }
-        )
-        return url
-
-    @api.multi
-    def send_get_mail_body(self, partner=None):
-        """ Override to add the tracking URL to the body and to add
-        Statistic_id in shorted urls """
-        # TDE: temporary addition (mail was parameter) due to semi-new-API
+    def _prepare_outgoing_body(self):
+        """ Override to add the tracking URL to the body and to add trace ID in
+        shortened urls """
         self.ensure_one()
-        body = super(MailMail, self).send_get_mail_body(partner=partner)
+        # super() already cleans pseudo-void content from editor
+        body = super()._prepare_outgoing_body()
 
-        if self.mailing_id and body and self.statistics_ids:
-            for match in re.findall(URL_REGEX, self.body_html):
+        if body and self.mailing_id and self.mailing_trace_ids:
+            Wrapper = body.__class__
+            for match in set(re.findall(tools.mail.URL_REGEX, body)):
                 href = match[0]
                 url = match[1]
 
-                parsed = urlparse.urlparse(url, scheme='http')
+                parsed = werkzeug.urls.url_parse(url, scheme='http')
 
                 if parsed.scheme.startswith('http') and parsed.path.startswith('/r/'):
-                    new_href = href.replace(url, url + '/m/' + str(self.statistics_ids[0].id))
-                    body = body.replace(href, new_href)
+                    new_href = href.replace(url, f"{url}/m/{self.mailing_trace_ids[0].id}")
+                    body = body.replace(Wrapper(href), Wrapper(new_href))
 
-        # prepend <base> tag for images using absolute urls
-        domain = self.env["ir.config_parameter"].sudo().get_param("web.base.url")
-        base = "<base href='%s'>" % domain
-        body = tools.append_content_to_html(base, body, plaintext=False, container_tag='div')
-        # resolve relative image url to absolute for outlook.com
-        def _sub_relative2absolute(match):
-            return match.group(1) + urlparse.urljoin(domain, match.group(2))
-        body = re.sub('(<img(?=\s)[^>]*\ssrc=")(/[^/][^"]+)', _sub_relative2absolute, body)
-        body = re.sub(r'(<[^>]+\bstyle="[^"]+\burl\(\'?)(/[^/\'][^\'")]+)', _sub_relative2absolute, body)
-
-        # generate tracking URL
-        if self.statistics_ids:
-            tracking_url = self._get_tracking_url(partner)
-            if tracking_url:
-                body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
+            # generate tracking URL
+            tracking_url = self._get_tracking_url()
+            body = tools.mail.append_content_to_html(
+                body,
+                f'<img src="{tracking_url}"/>',
+                plaintext=False,
+            )
         return body
 
-    @api.multi
-    def send_get_email_dict(self, partner=None):
-        # TDE: temporary addition (mail was parameter) due to semi-new-API
-        res = super(MailMail, self).send_get_email_dict(partner)
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        if self.mailing_id and res.get('body') and res.get('email_to'):
-            emails = tools.email_split(res.get('email_to')[0])
-            email_to = emails and emails[0] or False
-            unsubscribe_url = self._get_unsubscribe_url(email_to)
-            link_to_replace = base_url + '/unsubscribe_from_list'
-            if link_to_replace in res['body']:
-                res['body'] = res['body'].replace(link_to_replace, unsubscribe_url if unsubscribe_url else '#')
-        return res
+    def _prepare_outgoing_list(self, mail_server=False, doc_to_followers=None):
+        """ Update mailing specific links to replace generic unsubscribe and
+        view links by email-specific links. Also add headers to allow
+        unsubscribe from email managers. """
+        email_list = super()._prepare_outgoing_list(mail_server=mail_server, doc_to_followers=doc_to_followers)
+        if not self.res_id or not self.mailing_id:
+            return email_list
 
-    @api.multi
-    def _postprocess_sent_message(self, mail_sent=True):
-        for mail in self:
-            if mail_sent is True and mail.statistics_ids:
-                mail.statistics_ids.write({'sent': fields.Datetime.now(), 'exception': False})
-            elif mail_sent is False and mail.statistics_ids:
-                mail.statistics_ids.write({'exception': fields.Datetime.now()})
-        return super(MailMail, self)._postprocess_sent_message(mail_sent=mail_sent)
+        base_url = self.mailing_id.get_base_url()
+        for email_values in email_list:
+            if not email_values['email_to']:
+                continue
+
+            # prepare links with normalize email
+            email_normalized = tools.email_normalize(email_values['email_to'][0], strict=False)
+            email_to = email_normalized or email_values['email_to'][0]
+
+            unsubscribe_url = self.mailing_id._get_unsubscribe_url(email_to, self.res_id)
+            unsubscribe_oneclick_url = self.mailing_id._get_unsubscribe_oneclick_url(email_to, self.res_id)
+            view_url = self.mailing_id._get_view_url(email_to, self.res_id)
+
+            # replace links in body
+            if not tools.is_html_empty(email_values['body']):
+                # replace generic link by recipient-specific one, except if we know
+                # by advance it won't work (i.e. testing mailing scenario)
+                if f'{base_url}/unsubscribe_from_list' in email_values['body'] and not self.env.context.get('mailing_test_mail'):
+                    email_values['body'] = email_values['body'].replace(
+                        f'{base_url}/unsubscribe_from_list',
+                        unsubscribe_url,
+                    )
+                if f'{base_url}/view' in email_values['body']:
+                    email_values['body'] = email_values['body'].replace(
+                        f'{base_url}/view',
+                        view_url,
+                    )
+
+            # add headers
+            email_values['headers'].update({
+                'List-Unsubscribe': f'<{unsubscribe_oneclick_url}>',
+                'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+                'Precedence': 'list',
+                'X-Auto-Response-Suppress': 'OOF',  # avoid out-of-office replies from MS Exchange
+            })
+        return email_list
+
+    def _postprocess_sent_message(self, success_pids, success_emails, failure_reason=False, failure_type=None):
+        if failure_type:  # we consider that a recipient error is a failure with mass mailing and show them as failed
+            self.filtered('mailing_id').mailing_trace_ids.set_failed(failure_type=failure_type)
+        else:
+            self.filtered('mailing_id').mailing_trace_ids.set_sent()
+        return super()._postprocess_sent_message(success_pids, success_emails, failure_reason=failure_reason, failure_type=failure_type)
+
+    @api.autovacuum
+    def _gc_canceled_mail_mail(self):
+        """Garbage collects old canceled mail.mail records as we consider
+        nobody is going to look at them anymore, becoming noise."""
+        # The 10000 limit is arbitrary, chosen a big limit so that the cleaning can be shorter and not too big so that we don't block the server
+        months_limit = self.env['ir.config_parameter'].sudo().get_param("mass_mailing.cancelled_mails_months_limit", 6)
+        if months_limit <= 0:
+            return
+        history_deadline = datetime.utcnow() - relativedelta(months=months_limit)  # 6 months history will be kept
+        canceled_mails = self.with_context(active_test=False).search([('state', '=', 'cancel'), ('write_date', '<=', history_deadline)], order="id asc", limit=10000)
+
+        canceled_mails.with_context(prefetch_fields=False).mail_message_id.unlink()

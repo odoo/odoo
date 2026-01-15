@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="res_config_settings_view_form_inherit_autocomplete_googleplaces" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.autocomplete.googleplaces</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='autocomplete_googleplaces_setting']" position="inside">
+                <div>
+                    <div class="content-group row mt16">
+                        <label class="col-4" for="website_google_places_api_key" string="API Key"/>
+                        <field class="col-6" name="website_google_places_api_key"/>
+                    </div>
+                    <div class="mt8">
+                        <a target="_blank" href="https://console.cloud.google.com/getting-started">
+                            <i class="oi oi-arrow-right"/>
+                            Create a Google Project and get a key
+                        </a>
+                        <br/>
+                        <a target="_blank" href="https://console.cloud.google.com/billing">
+                            <i class="oi oi-arrow-right"/>
+                            Enable billing on your Google Project
+                        </a>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

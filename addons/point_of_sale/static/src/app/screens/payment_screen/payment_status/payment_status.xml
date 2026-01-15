@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.PaymentScreenStatus">
+        <div t-if="props.order.payment_ids.length == 0" class="text-bg-light border text-center py-4 fs-4">
+    Please select a payment method
+        </div>
+        <section t-else="" t-attf-class="paymentlines-container border-top pt-3 {{ !isComplete ? 'text-danger' : 'text-success'}}">
+            <div class="payment-status-container d-flex flex-column-reverse flex-lg-row justify-content-between fs-2">
+                <div class="payment-status-amount d-flex justify-content-between flex-grow-1" t-attf-class=" {{ isIncompleteAndPositive ? 'text-danger' : 'text-success' }}">
+                    <span class="label pe-2" t-out="statusText"/>
+                    <span class="amount align-self-end me-5 pe-5 highlight fw-bolder" t-att-amount="amountText">
+                        <PriceFormatter price="amountText" />
+                    </span>
+                </div>
+            </div>
+        </section>
+    </t>
+</templates>

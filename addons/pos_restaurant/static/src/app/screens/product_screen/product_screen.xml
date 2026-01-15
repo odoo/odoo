@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.ProductScreen" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension">
+        <!-- add a showOrderButton here (using the computeOrderChange method) -->
+        <xpath expr="//button[hasclass('pay-button')]" position="replace">
+            <t t-if="!pos.scanning">
+                <t t-if="this.swapButton">
+                    <button
+                        t-if="!this.currentOrder.isDirectSale and nbrOfChanges"
+                        class="btn-switchpane order-button btn btn-lg flex-grow-1 position-relative lh-sm overflow-hidden"
+                        t-on-click="() => doSubmitOrder.call()"
+                        t-att-disabled="doSubmitOrder.status === 'loading'"
+                        t-attf-class="{{ primaryOrderButton ? 'btn-primary' : 'btn-light' }}">
+                        <!-- Replace the payment button by the order button -->
+                        <span class="d-block">Send</span>
+                        <t t-if="displayCategoryCount.length">
+                            <t t-foreach="displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine_index">
+                                <div class="d-flex align-items-center justify-content-center mt-1 small" t-att-class="{ 'gap-2' : !(displayCategoryCount.length > 2) }">
+                                    <label class="text-truncate"><t t-esc="categoryCountLine.name"/></label>
+                                    <label class="rounded px-2 py-0" style="background-color:rgba(0, 0, 0, 0.3);"><t t-esc="categoryCountLine.count"/></label>
+                                </div>
+                            </t>
+                        </t>
+                    </button>
+                    <button
+                            class="h-100 button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
+                            t-on-click="() => doSubmitOrder.call()"
+                            t-elif="this.pos.unwatched.printers.length and this.currentOrder.uiState.lastPrints.length"
+                            t-att-disabled="doSubmitOrder.status === 'loading'">
+                        <i class="fa fa-cutlery" aria-hidden="true"></i>
+                    </button>
+                    <button
+                        class="btn-switchpane new-button btn btn-lg flex-grow-1 lh-sm btn-secondary"
+                        t-on-click="() => this.pos.showDefault()"
+                        t-if="!this.currentOrder.isDirectSale and !nbrOfChanges and !this.currentOrder.isEmpty()"
+                    >
+                        <span>New</span>
+                    </button>
+                </t>
+                <t t-else="">
+                    <button
+                        class="btn-switchpane pay-button pay-small btn btn-lg flex-grow-1 lh-sm"
+                        t-attf-class="{{ currentOrder.isEmpty() ? 'btn-light' : 'btn-primary' }}"
+                        t-on-click="() => this.pos.pay()"
+                        t-att-disabled="currentOrder.isEmpty()">
+                        <span class="d-block">Pay</span>
+                        <small><t t-esc="total" /></small>
+                    </button>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//button[hasclass('review-button')]" position="replace">
+            <button class="btn-switchpane btn btn-lg flex-grow-1 review-button lh-sm" t-attf-class="{{ primaryReviewButton ? 'btn-primary' : 'btn-secondary' }}" t-on-click="switchPane">
+                <span class="d-block">Cart</span>
+                <small t-if="this.swapButton"><t t-esc="total" /></small>
+                <small t-else=""><t t-esc="items"/> items</small>
+            </button>
+        </xpath>
+        <xpath expr="//ActionpadWidget" position="attributes">
+            <attribute name="setTable">() => this.setTable()</attribute>
+            <attribute name="assignOrder">() => this.assignOrder()</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('control-buttons')]" position="attributes">
+            <attribute name="t-if">this.pos.numpadMode != 'table'</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('control-buttons')]" position="after">
+            <div t-if="this.pos.numpadMode == 'table'" class="input">
+                <div class="d-flex justify-content-center p-3">
+                    <span t-if="this.state.tableBuffer" t-esc="this.state.tableBuffer" class="input-value fs-2 fw-bolder" t-att-class="{'text-danger opacity-75': !this.state.isValidBuffer}"/>
+                    <span t-else="" class="text-muted fs-2">Enter a table number</span>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//Numpad" position="attributes">
+            <attribute name="t-if" add="this.pos.numpadMode=='table'" separator=" or "></attribute>
+        </xpath>
+    </t>
+</templates>

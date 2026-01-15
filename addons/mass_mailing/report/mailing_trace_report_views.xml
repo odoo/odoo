@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="mailing_trace_report_view_tree" model="ir.ui.view">
+            <field name="name">mailing.trace.report.view.list</field>
+            <field name="model">mailing.trace.report</field>
+            <field name="arch" type="xml">
+                <list string="Mass Mailing Statistics" sample="1">
+                    <field name="name"/>
+                    <field name="campaign" groups="mass_mailing.group_mass_mailing_campaign"/>
+                    <field name="mailing_type" column_invisible="True"/>
+                    <field name="scheduled_date" string="Scheduled On"/>
+                    <field name="state"/>
+                    <field name="scheduled"/>
+                    <field name="sent"/>
+                    <field name="processing" optional="hide"/>
+                    <field name="pending" optional="hide"/>
+                    <field name="delivered"/>
+                    <field name="opened"/>
+                    <field name="replied"/>
+                    <field name="clicked"/>
+                    <field name="canceled" optional="hide"/>
+                    <field name="error" optional="hide"/>
+                    <field name="bounced" optional="hide"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="mailing_trace_report_view_pivot" model="ir.ui.view">
+            <field name="name">mailing.trace.report.view.pivot</field>
+            <field name="model">mailing.trace.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Mass Mailing Statistics" disable_linking="1" sample="1">
+                    <field name="name" type="row"/>
+                    <field name="sent" type="measure"/>
+                    <field name="scheduled" type="measure"/>
+                    <field name="delivered" type="measure"/>
+                    <field name="opened" type="measure"/>
+                    <field name="replied" type="measure"/>
+                    <field name="clicked" type="measure"/>
+                    <field name="canceled"/>
+                    <field name="error"/>
+                    <field name="bounced"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="mailing_trace_report_view_graph" model="ir.ui.view">
+            <field name="name">mailing.trace.report.view.graph</field>
+            <field name="model">mailing.trace.report</field>
+            <field name="arch" type="xml">
+                <graph string="Mass Mailing Statistics" disable_linking="1" sample="1">
+                    <field name="name"/>
+                    <field name="sent" type="measure"/>
+                    <field name="replied"/>
+                    <field name="clicked"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="mailing_trace_report_view_search" model="ir.ui.view">
+            <field name="name">mailing.trace.report.view.search</field>
+            <field name="model">mailing.trace.report</field>
+            <field name="arch" type="xml">
+                <search string="Mass Mailing Statistics">
+                    <field name="name" string="Mailing"/>
+                    <field name="campaign" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign"/>
+                    <filter name="filter_scheduled_date" date="scheduled_date"/>
+                    <group>
+                        <field name="scheduled_date"/>
+                    </group>
+                    <group>
+                        <filter string="Mass Mailing Campaign" domain="[]" name="mass_mailing_campaign"
+                            context="{'group_by':'campaign'}" groups="mass_mailing.group_mass_mailing_campaign"/>
+                        <filter string="State" domain="[]" name="state"
+                            context="{'group_by':'state'}"/>
+                        <filter string="Sent By" domain="[]" name="sent_by"
+                            context="{'group_by':'email_from'}"/>
+                        <separator/>
+                        <filter string="Scheduled Period" name="scheduled_date"
+                            domain="[]" context="{'group_by':'scheduled_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Actions and Menuitems -->
+       <record id="mailing_trace_report_action_mail" model="ir.actions.act_window">
+           <field name="name">Mass Mailing Analysis</field>
+           <field name="res_model">mailing.trace.report</field>
+           <field name="domain">[('mailing_type', '=', 'mail')]</field>
+           <field name="view_mode">graph,pivot,list</field>
+           <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Mailing Data yet!
+                </p>
+                <p>
+                    Use this menu to keep track of the results of your mailings.<br/>
+                    From here, you'll be able to overview the rate of replies, clicks, bounces...
+                </p>
+            </field>
+       </record>
+</odoo>

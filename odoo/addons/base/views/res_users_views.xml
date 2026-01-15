@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="change_password_own_form" model="ir.ui.view">
+            <field name="name">Change Own Password</field>
+            <field name="model">change.password.own</field>
+            <field name="arch" type="xml">
+                <form string="Change Password">
+                    <group>
+                        <field name="new_password" password="True" required="1"/>
+                        <field name="confirm_password" password="True" required="1"/>
+                    </group>
+                    <footer>
+                        <button string="Change Password" name="change_password" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- change password wizard -->
+        <record id="change_password_wizard_view" model="ir.ui.view">
+            <field name="name">Change Password</field>
+            <field name="model">change.password.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Change Password">
+                    <field mode="list" name="user_ids"/>
+                    <footer>
+                        <button string="Change Password" name="change_password_button" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="change_password_wizard_user_tree_view" model="ir.ui.view">
+            <field name="name">Change Password Users</field>
+            <field name="model">change.password.user</field>
+            <field name="arch" type="xml">
+                <!-- the user list is editable, but one cannot add or delete rows -->
+                <list string="Users" editable="bottom" create="false" delete="false">
+                    <field name="user_id" column_invisible="True"/> <!-- required field, needed when updating the password -->
+                    <field name="user_login" force_save="1"/>
+                    <field name="new_passwd" password="True"/>
+                </list>
+            </field>
+        </record>
+        <record id="change_password_wizard_action" model="ir.actions.act_window">
+            <field name="name">Change Password</field>
+            <field name="res_model">change.password.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="base.model_res_users"/>
+        </record>
+
+        <!-- res.users -->
+        <record id="view_users_simple_form" model="ir.ui.view">
+            <field name="name">res.users.simplified.form</field>
+            <field name="model">res.users</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Users">
+                    <sheet>
+                        <div class="d-flex gap-3">
+                            <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128', 'zoom': true, 'size': [130,130], 'img_class': 'rounded-4'}"/>
+                            <field name="avatar_128" invisible="1"/> <!-- Needed in contact_image widget -->
+                            <div class="d-flex flex-column flex-grow-1 justify-content-center">
+                                <h1 class="mb-0 w-100">
+                                    <field name="name" placeholder="e.g. John Doe" required="1"/>
+                                </h1>
+                                <div class="d-flex align-items-baseline w-100">
+                                    <field name="email" invisible="1"/> <!-- needed to update partner's email from on_change_login() -->
+                                    <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
+                                    <field name="email_domain_placeholder" invisible="1" /> <!-- needed to compute the placeholder whenever the dialog opens -->
+                                    <field name="login" class="w-100" options="{'placeholder_field': 'email_domain_placeholder'}"/>
+                                </div>
+                                <div class="d-flex align-items-baseline w-100">
+                                    <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
+                                    <field name="phone" class="w-100" widget="phone" placeholder="Phone"/>
+                                </div>
+                                <div class="d-flex align-items-baseline w-100" groups="base.group_multi_company">
+                                    <i class="fa fa-fw me-1 fa-building text-primary" title="Company"/>
+                                    <field name="company_id" class="w-100" context="{'user_preference': 0}" placeholder="Company"/>
+                                </div>
+                            </div>
+                        </div>
+                        <group name="access_groups" invisible="id &gt; 0">
+                            <label for="group_ids" string="Access Rights"  groups="base.group_no_one"/>
+                            <div groups="base.group_no_one">
+                                <field name="group_ids" readonly="1" widget="many2many_tags" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
+                            </div>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_users_form" model="ir.ui.view">
+            <field name="name">res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <form string="Users" class="o_res_users_form_view_full">
+                    <header>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_show_groups" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-users" help="Groups that apply to the current user">
+                                <field string="Groups" name="groups_count" widget="statinfo"/>
+                            </button>
+                            <button name="action_show_accesses" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-lock">
+                                <field string="Access Rights" name="accesses_count" widget="statinfo"/>
+                            </button>
+                            <button name="action_show_rules" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-lock">
+                                <field string="Record Rules" name="rules_count" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="External user" bg_color="text-bg-warning" invisible="not share"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <div class="alert alert-info text-center o_form_header"
+                            invisible="active and active_partner or not active and not active_partner or active and not active_partner"
+                            role="alert">
+                          <a class="close" data-bs-dismiss="alert" href="#">x</a>
+                          <div>
+                            <strong>The contact linked to this user is still active</strong>
+                          </div>
+                          <div>You can archive the contact
+                            <field name="partner_id" required="0" readonly="1"/>
+                          </div>
+                        </div>
+                        <div class="d-flex gap-3">
+                            <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128', 'img_class': 'rounded-4'}"/>
+                            <field name="avatar_128" invisible="1"/> <!-- Needed in contact_image widget -->
+                            <div class="oe_title d-flex flex-column flex-grow-1">
+                                <h1 class="mb-0 w-sm-75">
+                                    <field name="name" placeholder="e.g. John Doe" required="1"/>
+                                </h1>
+                                <h5 name="h5_email" class="d-flex flex-wrap align-items-baseline mb-0">
+                                    <div class="w-100">
+                                        <i class="fa fa-fw fa-envelope me-1 text-primary" title="Login / Email" invisible="login != email"/>
+                                        <i class="fa fa-fw fa-key me-1 text-primary" title="Login" invisible="login == email"/>
+                                        <field name="login" placeholder="Login" class="w-75"/>
+                                    </div>
+
+                                    <i class="fa fa-fw fa-envelope me-1 text-primary" title="Email" invisible="login == email"/>
+                                    <field name="email" placeholder="Email" class="w-75"  invisible="login == email"/>
+                                </h5>
+                                <h5 name="h5_phone" class="d-flex align-items-baseline mb-0">
+                                    <i class="fa fa-fw fa-phone me-1 text-primary" title="Phone"/>
+                                    <field name="phone" placeholder="Phone" class="w-75"/>
+                                </h5>
+                            </div>
+                        </div>
+                        <group>
+                            <field name="partner_id" groups="base.group_no_one"
+                                readonly="1"
+                                required="0"
+                                invisible="not id"/>
+                        </group>
+                        <notebook colspan="4">
+                            <page name="access_rights" string="Access Rights">
+                                <group string="Roles" invisible="share and companies_count &lt;= 1">
+                                    <field name="role" invisible="share" widget="radio" options="{'horizontal': true}"/>
+                                    <field string="Companies" name="company_ids" invisible="companies_count &lt;= 1" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
+                                    <field string="Default Company" name="company_id" invisible="companies_count &lt;= 1" context="{'user_preference': 0}"/>
+                                </group>
+                                <field name="group_ids" widget="res_user_group_ids" nolabel="1" colspan="2" groups="base.group_no_one"/>
+                                <field name="group_ids" widget="res_user_group_ids" nolabel="1" colspan="2" groups="!base.group_no_one" invisible="share"/>
+                            </page>
+                            <page string="Preferences" name="preferences">
+                                <group>
+                                    <group>
+                                        <label for="lang" />
+                                        <div class="o_row">
+                                            <field name="lang" required="1"/>
+                                            <button
+                                                type="action"
+                                                name="%(base.action_view_base_language_install)d"
+                                                class="oe_edit_only btn-sm btn-link mb4 fa fa-globe"
+                                                groups="base.group_system"
+                                                aria-label="Add a language"
+                                                title="Add a language"/>
+                                        </div>
+                                        <field name="signature" options="{'codeview': true, 'height': 112, 'resizable': true}" class="border border-secondary"/>
+                                    </group>
+                                    <!-- This group is meant to be used in overrides -->
+                                    <group name="other_preferences"/>
+                                </group>
+                            </page>
+                            <page name="calendar" string="Calendar">
+                                <group>
+                                    <group name="calendar_preferences">
+                                        <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0" invisible="share"/>
+                                        <field name="tz_offset" invisible="1"/> <!-- needed for the timezone_mismatch widget -->
+                                    </group>
+                                    <!-- This group is meant to be used in overrides -->
+                                    <group name="other_calendar_preferences"/>
+                                </group>
+                            </page>
+                            <page string="Security" name="page_security" invisible="not id">
+                                <div name="auth" class="d-flex">
+                                    <div class="col-7 col-sm-6 col-lg-3 d-flex flex-column">
+                                        <span class="o_form_label">
+                                            Change Password
+                                        </span>
+                                        <span class="text-muted">
+                                            Update if compromised.
+                                        </span>
+                                    </div>
+                                    <button invisible="id != uid" name="preference_change_password" type="object"
+                                        string="Change password" class="btn btn-secondary h-100 my-auto"/>
+                                    <button invisible="id == uid" name="action_change_password_wizard" type="object"
+                                        string="Change password" class="btn btn-secondary h-100 my-auto"/>
+                                </div>
+                                <div name="api_keys" invisible="id != uid" class="d-md-flex mt-3">
+                                    <div class="col-md-6 col-lg-3 d-flex flex-column">
+                                        <label for="api_key_wizard" string="API Keys" class="o_form_label"/>
+                                        <span class="text-muted">
+                                            Connect external services.
+                                        </span>
+                                    </div>
+                                    <div class="w-md-50 w-lg-75 d-flex flex-column my-auto">
+                                        <field name="api_key_ids" mode="kanban" invisible="not api_key_ids" class="w-sm-75 w-md-100 w-lg-75 w-xl-50 o_base_api_keys_kanban_view"/>
+                                        <div>
+                                            <button name="api_key_wizard" string="Add API Key" type="object" class="btn btn-secondary h-100"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div invisible="id != uid" class="d-md-flex mt-3">
+                                    <div class="w-md-50 w-lg-25  d-flex flex-column">
+                                        <label for="action_revoke_all_devices" string="Devices" class="o_form_label"/>
+                                        <span class="text-muted">
+                                            Check if they are yours.
+                                        </span>
+                                    </div>
+                                    <div class="w-md-50 w-lg-75 d-flex flex-column my-auto">
+                                        <field name="device_ids" mode="kanban" class="w-sm-75 w-md-100 w-lg-75 w-xl-50 o_base_devices_kanban_view"/>
+                                        <div>
+                                            <button name="action_revoke_all_devices" type="object" string="Log out from all devices" class="btn btn-secondary h-100"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_users_tree" model="ir.ui.view">
+            <field name="name">res.users.list</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <list string="Users" multi_edit="1">
+                    <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'o_avatar rounded'}" width="30" nolabel="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="login" readonly="1" optional="show"/>
+                    <field name="lang" optional="hide"/>
+                    <field name="login_date" readonly="1" optional="hide"/>
+                    <field name="role" widget="badge"/>
+                </list>
+            </field>
+        </record>
+        <record id="view_res_users_kanban" model="ir.ui.view">
+            <field name="name">res.users.kanban</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="active"/>
+                    <field name="login_date"/>
+                    <templates>
+                        <t t-name="card" class="flex-row">
+                            <aside class="w-25 p-1">
+                                <field name="avatar_128" widget="image" alt="Avatar"/>
+                            </aside>
+                            <main class="w-100 ps-2 pt-1">
+                                <div>
+                                    <div t-if="record.active.raw_value" class="text-success float-end mb4">
+                                        <i class="fa fa-circle" role="img" aria-label="Ok" title="Ok"></i>
+                                    </div>
+                                    <div t-else="" class="text-danger float-end mb4">
+                                        <i class="fa fa-circle" role="img" aria-label="Invalid" title="Invalid"></i>
+                                    </div>
+                                    <field class="fw-bold" name="name"/>
+                                </div>
+                                <div>
+                                    <span class="mb4 text-truncate" title="Login">
+                                        <i class="fa fa-envelope me-1" role="img" aria-label="Login"></i>
+                                        <field name="login"/>
+                                    </span>
+                                    <field class="badge rounded-pill float-end" name="lang"/>
+                                </div>
+                            </main>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="view_users_search" model="ir.ui.view">
+            <field name="name">res.users.search</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <search string="Users">
+                    <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('login','ilike',self), ('email','ilike',self)]" string="User"/>
+                    <field name="company_ids" string="Company" groups="base.group_multi_company"/>
+                    <field name="share"/>
+                    <filter name="filter_no_share" string="Internal Users" domain="[('share', '=', False)]"/>
+                    <filter name="filter_share" string="Portal Users" domain="[('share', '=', True)]"/>
+                    <separator/>
+                    <filter name="Inactive" string="Inactive Users" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- dummy update on group, to force the view above to be update -->
+        <record id="action_res_users" model="ir.actions.act_window">
+            <field name="name">Users</field>
+            <field name="res_model">res.users</field>
+            <field name="path">users</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="view_id" ref="view_users_tree"/>
+            <field name="search_view_id" ref="view_users_search"/>
+            <field name="context">{'search_default_filter_no_share': 1, 'is_action_res_users': True}</field>
+            <field name="help">Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system.</field>
+        </record>
+        <record id="action_res_users_view1" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="view_users_tree"/>
+            <field name="act_window_id" ref="action_res_users"/>
+        </record>
+        <record id="action_res_users_view2" model="ir.actions.act_window.view">
+            <field eval="20" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_users_form"/>
+            <field name="act_window_id" ref="action_res_users"/>
+        </record>
+        <menuitem action="action_res_users" id="menu_action_res_users" parent="base.menu_users" sequence="0"/>
+
+        <record id="action_res_users_keys_description" model="ir.actions.act_window">
+            <field name="name">API Key: description input wizard</field>
+            <field name="res_model">res.users.apikeys.description</field>
+            <field name="target">new</field>
+            <field name="view_mode">form</field>
+        </record>
+        <record id="form_res_users_key_description" model="ir.ui.view">
+            <field name="name">API Key: description input form</field>
+            <field name="model">res.users.apikeys.description</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                    <h3 class="fw-bold">
+                        Name your key
+                    </h3>
+                    <p>Enter a description of and purpose for the key.</p>
+                    <field name="name" placeholder="What's this key for?"/>
+                    <p>
+                        It is very important that this description be clear
+                        and complete, <strong>it will be the only way to
+                        identify the key once created</strong>.
+                    </p>
+                    <h3 class="fw-bold">
+                        Give a duration for the key's validity
+                    </h3>
+                    <field name="duration"/>
+                    <field name="expiration_date" invisible="duration != '-1'"/>
+                    <p>
+                        The key will be deleted once this period has elapsed.
+                    </p>
+                    <footer>
+                        <button name="make_key" type="object" string="Generate key" class="btn-primary" data-hotkey="q"/>
+                        <button special="cancel" data-hotkey="x" string="Cancel" class="btn-secondary"/>
+                    </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="form_res_users_key_show" model="ir.ui.view">
+            <field name="name">API Key: show</field>
+            <field name="model">res.users.apikeys.show</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <h3 class="fw-bold">
+                            Write down your key
+                        </h3>
+                        <p>
+                            Here is your new API key, use it instead of a password for RPC access.
+                            Your login is still necessary for interactive usage.
+                        </p>
+                        <p><code><field name="key" readonly="True"/></code></p>
+                        <p class="alert alert-warning" role="alert">
+                            <strong>Important:</strong>
+                            The key cannot be retrieved later and provides <b>full access</b>
+                            to your user account, it is very important to store it securely.
+                        </p>
+                        <footer>
+                            <button special="cancel" data-hotkey="x" string="Done!"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_users_form_simple_modif" model="ir.ui.view">
+            <field name="name">res.users.preferences.form</field>
+            <field name="model">res.users</field>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Users" edit="1">
+                    <sheet>
+                        <widget name="notification_alert"/>
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128'}"/>
+                                <field name="avatar_128" invisible="1"/> <!-- Needed in contact_image widget -->
+                            </div>
+                            <div class="oe_title flex-fill ms-2">
+                                <h1 class="d-flex align-items-center">
+                                    <field name="name"/>
+                                </h1>
+                                <h5 name="h5_email" class="d-flex align-items-baseline mb-0">
+                                    <i class="fa fa-fw fa-envelope text-primary" title="Email"/>
+                                    <field name="email" placeholder="Email" class="w-75"/>
+                                </h5>
+                                <h5 name="h5_phone" class="d-flex align-items-baseline mb-0">
+                                    <i class="fa fa-fw fa-phone text-primary" title="Phone"/>
+                                    <field name="phone" placeholder="Phone" class="w-75"/>
+                                </h5>
+                            </div>
+                        </div>
+                        <notebook>
+                            <page string="Preferences" name="preferences_page">
+                                <group>
+                                    <group>
+                                        <label for="lang"/>
+                                        <div class="o_row">
+                                            <field name="lang" required="1" readonly="0"/>
+                                            <button
+                                                type="action"
+                                                name="%(base.action_view_base_language_install)d"
+                                                class="oe_edit_only btn-sm btn-link mb4 fa fa-globe"
+                                                aria-label="Add a language"
+                                                groups="base.group_system"
+                                                title="Add a language"
+                                            />
+                                        </div>
+                                        <field name="signature" readonly="0" options="{'codeview': true, 'height': 112, 'resizable': true}" class="border border-secondary" />
+                                    </group>
+                                    <!-- This group is meant to be used in overrides -->
+                                    <group name="other_preferences"/>
+                                </group>
+                            </page>
+                            <page name="calendar" string="Calendar">
+                                <group>
+                                    <group name="calendar_preferences">
+                                        <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
+                                        <field name="tz_offset" invisible="1"/> <!-- needed for the timezone_mismatch widget -->
+                                    </group>
+                                    <!-- This group is meant to be used in overrides -->
+                                    <group name="other_calendar_preferences"/>
+                                </group>
+                            </page>
+                            <page string="Security" name="page_security">
+                                <div name="auth" class="d-flex">
+                                    <div class="col-7 col-sm-6 col-lg-3 d-flex flex-column">
+                                        <span class="o_form_label">
+                                            Change Password
+                                        </span>
+                                        <span class="text-muted">
+                                            Update if compromised.
+                                        </span>
+                                    </div>
+                                    <button name="preference_change_password" type="object" string="Change password"
+                                        class="btn btn-secondary h-100 my-auto"/>
+                                </div>
+                                <div name="api_keys" class="d-lg-flex mt-3">
+                                    <div class="col-lg-3 d-flex flex-column">
+                                        <label for="api_key_wizard" string="API Keys" class="o_form_label"/>
+                                        <span class="text-muted">
+                                            Connect external services.
+                                        </span>
+                                    </div>
+                                    <div class="w-lg-75 d-flex flex-column my-auto">
+                                        <field name="api_key_ids" mode="kanban" invisible="not api_key_ids" class="w-lg-75 o_base_api_keys_kanban_view"/>
+                                        <div>
+                                            <button name="api_key_wizard" string="Add API Key" type="object" class="btn btn-secondary h-100"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-lg-flex mt-3">
+                                    <div class="col-lg-3 d-flex flex-column">
+                                        <label for="action_revoke_all_devices" string="Devices" class="o_form_label"/>
+                                        <span class="text-muted">
+                                            Check if they are yours.
+                                        </span>
+                                    </div>
+                                    <div class="w-lg-75 d-flex flex-column my-auto">
+                                        <field name="device_ids" mode="kanban" class="w-lg-75 o_base_devices_kanban_view"/>
+                                        <div>
+                                            <button name="action_revoke_all_devices" type="object" string="Log out from all devices" class="btn btn-secondary h-100"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
+                        </notebook>
+                        <footer>
+                            <button name="preference_save" type="object" string="Update Preferences" class="btn-primary" data-hotkey="q"/>
+                            <button name="preference_cancel" string="Discard" special="cancel" data-hotkey="x" class="btn-secondary"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="action_res_users_my" model="ir.actions.act_window">
+            <field name="name">Change My Preferences</field>
+            <field name="res_model">res.users</field>
+            <field name="target">new</field>
+            <field name="view_mode">form</field>
+        </record>
+        <record id="action_res_users_my_view2" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_users_form_simple_modif"/>
+            <field name="act_window_id" ref="action_res_users_my"/>
+        </record>
+
+        <record model="ir.ui.view" id="view_apikeys">
+            <field name="name">API Keys Listing</field>
+            <field name="model">res.users.apikeys</field>
+            <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="arch" type="xml">
+                <list create="false" edit="false" delete="false" editable="bottom">
+                    <field name="user_id"/>
+                    <field name="name"/>
+                    <field name="scope"/>
+                    <field name="create_date"/>
+                    <button type="object" name="remove" title="Delete API key." icon="fa-trash"/>
+                </list>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_apikeys_admin">
+            <field name="name">API Keys Listing</field>
+            <field name="res_model">res.users.apikeys</field>
+            <field name="view_mode">list</field>
+            <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="view_id" ref="base.view_apikeys"/>
+        </record>
+
+    </data>
+</odoo>

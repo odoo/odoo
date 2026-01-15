@@ -3,141 +3,215 @@
 # * bus
 #
 # Translators:
-# fishfurbanter <fishfurbanter@gmail.com>, 2016
+# NoaFarkash, 2022
+# Fishfur A Banter <fishfurbanter@gmail.com>, 2022
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# Yihya Hugirat <hugirat@gmail.com>, 2022
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Ha Ketem <haketem@gmail.com>, 2022
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# or balmas <or@laylinetech.com>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-23 18:22+0000\n"
-"Last-Translator: fishfurbanter <fishfurbanter@gmail.com>\n"
-"Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2025-12-20 09:33+0000\n"
+"Last-Translator: or balmas <or@laylinetech.com>\n"
+"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/bus/he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: bus
-#: sql_constraint:bus.presence:0
-msgid "A user can only have one IM status."
-msgstr "למשתמש יכול להיות רק סטאטוס IM אחד "
+#: model:ir.model,name:bus.model_res_groups
+msgid "Access Groups"
+msgstr "קבוצות הרשאה"
 
 #. module: bus
-#: selection:bus.presence,status:0
-msgid "Away"
+#: model:ir.model,name:bus.model_ir_attachment
+msgid "Attachment"
+msgstr "קובץ מצורף"
+
+#. module: bus
+#: model:ir.model,name:bus.model_bus_listener_mixin
+msgid "Can send messages via bus.bus"
 msgstr ""
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_channel
+#: model:ir.model.fields,field_description:bus.field_bus_bus__channel
 msgid "Channel"
 msgstr "ערוץ"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
-msgid "Create date"
-msgstr "צור תאריך"
+#: model:ir.model,name:bus.model_bus_bus
+msgid "Communication Bus"
+msgstr "אפיק תקשורת"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_create_uid
+#: model:ir.model,name:bus.model_res_partner
+msgid "Contact"
+msgstr "איש קשר"
+
+#. module: bus
+#: model:ir.model,website_form_label:bus.model_res_partner
+msgid "Create a Customer"
+msgstr "יצירת לקוח"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
-msgstr "נוצר על ידי"
+msgstr "נוצר על-ידי"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_display_name
-#: model:ir.model.fields,field_description:bus.field_bus_presence_display_name
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
+msgid "Created on"
+msgstr "נוצר ב-"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
+#: model:ir.model.fields,field_description:bus.field_bus_listener_mixin__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_http__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_model__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_websocket__display_name
+#: model:ir.model.fields,field_description:bus.field_res_groups__display_name
+#: model:ir.model.fields,field_description:bus.field_res_partner__display_name
+#: model:ir.model.fields,field_description:bus.field_res_users__display_name
+#: model:ir.model.fields,field_description:bus.field_res_users_settings__display_name
 msgid "Display Name"
-msgstr "השם המוצג"
+msgstr "שם לתצוגה"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
-msgid "Geo Latitude"
+#. odoo-javascript
+#: code:addons/bus/static/src/debug/bus_logs_menu_item.xml:0
+msgid "Download logs"
+msgstr "הורדת יומנים"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/debug/bus_logs_menu_item.xml:0
+msgid "Enable Bus Logging"
 msgstr ""
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_partner_longitude
-msgid "Geo Longitude"
-msgstr ""
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr "ניתוב HTTP"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_date_localization
-msgid "Geolocation Date"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_id
-#: model:ir.model.fields,field_description:bus.field_bus_presence_id
+#: model:ir.model.fields,field_description:bus.field_bus_bus__id
+#: model:ir.model.fields,field_description:bus.field_bus_listener_mixin__id
+#: model:ir.model.fields,field_description:bus.field_ir_attachment__id
+#: model:ir.model.fields,field_description:bus.field_ir_http__id
+#: model:ir.model.fields,field_description:bus.field_ir_model__id
+#: model:ir.model.fields,field_description:bus.field_ir_websocket__id
+#: model:ir.model.fields,field_description:bus.field_res_groups__id
+#: model:ir.model.fields,field_description:bus.field_res_partner__id
+#: model:ir.model.fields,field_description:bus.field_res_users__id
+#: model:ir.model.fields,field_description:bus.field_res_users_settings__id
 msgid "ID"
 msgstr "מזהה"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_status
-#: model:ir.model.fields,field_description:bus.field_res_partner_im_status
-#: model:ir.model.fields,field_description:bus.field_res_users_im_status
-msgid "IM Status"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus___last_update
-#: model:ir.model.fields,field_description:bus.field_bus_presence___last_update
-msgid "Last Modified on"
-msgstr "תאריך שינוי אחרון"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_last_poll
-msgid "Last Poll"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_last_presence
-msgid "Last Presence"
-msgstr "נוכחות אחרונה"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_write_uid
+#: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
-msgstr "עודכן לאחרונה על ידי"
+msgstr "עודכן לאחרונה על-ידי"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_write_date
+#: model:ir.model.fields,field_description:bus.field_bus_bus__write_date
 msgid "Last Updated on"
-msgstr "עודכן לאחרונה על"
+msgstr "עדכון אחרון ב"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_message
+#: model:ir.model.fields,field_description:bus.field_bus_bus__message
 msgid "Message"
 msgstr "הודעה"
 
 #. module: bus
-#: selection:bus.presence,status:0
-msgid "Offline"
-msgstr "לא מחובר"
+#: model:ir.model,name:bus.model_ir_model
+msgid "Models"
+msgstr "דגמים"
 
 #. module: bus
-#: selection:bus.presence,status:0
-msgid "Online"
-msgstr "מחובר"
+#. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid "Refresh"
+msgstr "רענן"
 
 #. module: bus
-#: model:ir.model,name:bus.model_res_partner
-msgid "Partner"
-msgstr "שותף"
+#. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid ""
+"Save your work and refresh to get the latest updates and avoid potential "
+"issues."
+msgstr ""
 
 #. module: bus
-#: model:ir.model,name:bus.model_bus_presence
-msgid "User Presence"
-msgstr "נוכחות משתמש"
+#. odoo-javascript
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+msgid "The page appears to be out of date."
+msgstr "נראה שהדף הינו מיושן."
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid "The page is out of date"
+msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
-#: model:ir.model.fields,field_description:bus.field_bus_presence_user_id
-msgid "Users"
-msgstr "משתמשים"
+msgid "User"
+msgstr "משתמש"
 
 #. module: bus
-#: model:ir.model,name:bus.model_bus_bus
-msgid "bus.bus"
+#: model:ir.model,name:bus.model_res_users_settings
+msgid "User Settings"
+msgstr "הגדרות משתמש"
+
+#. module: bus
+#. odoo-python
+#: code:addons/bus/controllers/home.py:0
+msgid ""
+"Your password is the default (admin)! If this system is exposed to untrusted "
+"users it is important to change it immediately for security reasons. I will "
+"keep nagging you about it!"
 msgstr ""
 
-#~ msgid "Created on"
-#~ msgstr "נוצר ב-"
+#. module: bus
+#: model:ir.model,name:bus.model_ir_websocket
+msgid "websocket message handling"
+msgstr ""
+
+#~ msgid "Away"
+#~ msgstr "רחוק"
+
+#~ msgid "IM Status"
+#~ msgstr "סטטוס IM"
+
+#~ msgid "Last Poll"
+#~ msgstr "סקר אחרון"
+
+#~ msgid "Last Presence"
+#~ msgstr "נוכחות אחרונה"
+
+#~ msgid "Offline"
+#~ msgstr "לא מקוון"
+
+#~ msgid "Online"
+#~ msgstr "מקוון"
+
+#~ msgid "User Presence"
+#~ msgstr "נוכחות משתמש"
+
+#~ msgid "Users"
+#~ msgstr "משתמשים"

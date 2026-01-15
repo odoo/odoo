@@ -1,0 +1,134 @@
+.o_report_stock_rule {
+    .table > :not(:first-child) {
+        border-top: $border-width * 2 solid currentColor;
+    }
+
+    .table {
+        --table-border-color: #{$o-gray-300};
+    }
+
+    .o_report_stock_rule_rule {
+        display: flex;
+        flex-flow: row nowrap;
+    }
+    .o_report_stock_rule_legend {
+        display: flex;
+        flex-flow: row wrap;
+        max-width: 1000px;
+    }
+
+    .o_report_stock_rule_legend_line {
+        flex: 0 1 auto;
+        display: flex;
+        flex-flow: row nowrap;
+        width: 29%;
+        margin-right: 20px;
+        margin-left: 20px;
+        margin-top: 15px;
+        min-width: 200px;
+        >.o_report_stock_rule_legend_label {
+            flex: 1 1 auto;
+            width: 30%;
+            min-width: 100px;
+        }
+        >.o_report_stock_rule_legend_symbol {
+            flex: 1 1 auto;
+            width: 70%;
+        }
+    }
+
+
+    .o_report_stock_rule_putaway {
+        >p {
+            text-align: center;
+            color: black;
+            font-weight: normal;
+            font-size: 12px
+        }
+    }
+
+    .o_report_stock_rule_line {
+        flex: 1 1 auto;
+        height: 20px;
+        >line {
+            stroke: black;
+            stroke-width: 1;
+        }
+    }
+
+    .o_report_stock_rule_arrow {
+        flex: 0 0 auto;
+        height: 20px;
+        width: 20px;
+        >svg {
+            >line {
+                stroke: black;
+                stroke-width: 1;
+            }
+            >polygon {
+                fill: black;
+                fill-opacity: 0.5;
+                stroke: black;
+                stroke-width: 1;
+            }
+        }
+    }
+
+    .o_report_stock_rule_vertical_bar {
+        flex: 0 0 auto;
+        height: 20px;
+        width: 2px;
+        >svg {
+            >line {
+                stroke: black;
+                stroke-width: 2;
+            }
+        }
+    }
+
+    .o_report_stock_rule_rule_name {
+        text-align: center;
+    }
+
+    .o_report_stock_rule_symbol_cell {
+        border: none !important;
+        >div {
+            max-width: 200px;
+            height: 20px;
+        }
+    }
+
+    .o_report_stock_rule_rule_main {
+        height: 100%;
+        padding-top: 2px;
+    }
+    .o_report_stock_rule_location_header {
+        text-align: center;
+        >a {
+            display: block;
+            &:hover {
+                text-decoration: none;
+                cursor: pointer;
+                background-color: #efefef;
+            }
+            >div {
+                color: black;
+            }
+        }
+    }
+    .o_report_stock_rule_rule_cell {
+        padding:0 !important;
+        >a {
+            display: block;
+            &:hover {
+                text-decoration: none;
+                cursor: pointer;
+                background-color: #efefef;
+            }
+        }
+    }
+
+    .o_report_stock_rule_rtl {
+        transform: scaleX(-1);
+    }
+}

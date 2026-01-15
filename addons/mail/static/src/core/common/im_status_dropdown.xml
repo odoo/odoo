@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ImStatusDropdown">
+        <Dropdown menuClass="'o-mail-ImStatusDropdown'">
+            <a href="#" t-att-class="{ 'd-block text-body py-3 fs-4 d-flex flex-row gap-2': env.isSmall }"><ImStatus persona='store.self'/> <span t-esc="readableImStatus"/> <i t-if="env.isSmall" class="oi oi-chevron-right ms-auto mt-1"/></a>
+            <t t-set-slot="content">
+                <DropdownItem class="{ 'active': this.store.self.im_status.includes('online') }" onSelected="() => this.setManualImStatus('online')"><i class="fa fa-circle text-success me-1" title="Online" role="img"/> Online</DropdownItem>
+                <hr class="my-1"/>
+                <DropdownItem class="{ 'active': this.store.self.im_status.includes('away') }" onSelected="() => this.setManualImStatus('away')"><i class="fa fa-circle o-yellow me-1" title="Away" role="img"/> Away</DropdownItem>
+                <DropdownItem class="{ 'active': this.store.self.im_status.includes('busy') }" onSelected="() => this.setManualImStatus('busy')">
+                    <i class="fa fa-minus-circle text-danger me-1" title="Busy" role="img"/> Do Not Disturb
+                    <div class="small text-muted">You will not receive any notifications</div>
+                </DropdownItem>
+                <DropdownItem class="{ 'active': this.store.self.im_status.includes('offline') }" onSelected="() => this.setManualImStatus('offline')"><i class="fa fa-circle-o text-700 opacity-75 me-1" title="Offline" role="img"/> Offline</DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

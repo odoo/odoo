@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.MultiSelectionButtons">
+        <div t-if="this.props.reactive.visible and this.state.isReady" class="o_multi_selection_buttons position-absolute d-flex gap-1" t-ref="root">
+            <div class="o_selection_box list-group flex-row w-auto" role="alert">
+                <span class="list-group-item active d-flex align-items-center pe-0 py-0 rounded-1 gap-1 flex-grow-1">
+                    <b t-esc="this.props.reactive.nbSelected"/> selected
+                    <button data-tooltip="Unselect All" class="o_unselect_all btn btn-link ms-auto border-0" t-on-click="() => this.props.reactive.onCancel()">
+                        <i class="oi oi-close"/>
+                    </button>
+                </span>
+            </div>
+            <button class="btn btn-secondary" data-tooltip="Add" t-on-click="() => this.onAdd()" t-ref="addButton">
+                Add
+            </button>
+            <button t-if="this.props.reactive.nbSelected > 0" class="btn btn-secondary" data-tooltip="Delete" t-on-click="() => this.onDelete()">
+                <i class="fa fa-trash text-danger"/>
+            </button>
+        </div>
+    </t>
+
+</templates>

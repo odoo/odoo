@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.FeedbackScreen">
+        <div t-ref="feedback-screen" class="feedback-screen bg-100 fixed-top w-100 h-100 d-flex flex-column align-items-center justify-content-center" t-on-click="onClick">
+            <div class="amount-paid fw-bolder">Amount Paid</div>
+            <div t-ref="amount" class="amount lh-sm"><PriceFormatter price="this.env.utils.formatCurrency(this.currentOrder.amount_total, false)"/></div>
+            <div class="loading position-absolute w-100 align-items-center justify-content-center">
+                <div class="fs-3 text-center">
+                    <t t-if="state.loading">
+                        Some process are still running in background, please wait...
+                    </t>
+                    <t t-else="">
+                        Everything is ready to go!
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

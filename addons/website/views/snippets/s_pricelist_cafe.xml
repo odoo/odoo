@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_pricelist_cafe" name="Pricelist Cafe">
+    <section class="s_pricelist_cafe" data-oe-shape-data="{'shape':'html_builder/Bold/16','flip':[]}">
+        <div class="o_we_shape o_html_builder_Bold_16"/>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5 pt64 o_cc o_cc5">
+                    <h2 class="h3-fs">Discover our drinks</h2>
+                    <p class="lead">Explore our curated selection of coffee, tea, and more. Delight in every sip!</p>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="s_pricelist_cafe_col col-lg-4 py-5 o_cc o_cc5 s_col_no_resize">
+                    <h3>Coffees</h3>
+                    <ul class="list-unstyled my-3">
+                        <t t-call="website.s_pricelist_cafe_item">
+                            <t t-set="name">Coffee Latte</t>
+                            <t t-set="price">$4.50</t>
+                            <t t-set="description">Sleek, minimalist space offering meticulously brewed coffee and espresso drinks using freshly roasted beans.</t>
+                        </t>
+                        <t t-call="website.s_pricelist_cafe_item">
+                            <t t-set="name">Cappuccino</t>
+                            <t t-set="price">$4.25</t>
+                            <t t-set="description">A vibrant spot known for its expertly crafted coffee, sourced directly from farmers and roasted to perfection.</t>
+                        </t>
+                        <t t-call="website.s_pricelist_cafe_item">
+                            <t t-set="name">Espresso</t>
+                            <t t-set="price">$4.10</t>
+                            <t t-set="description">Artisanal espresso with a focus on direct trade and exceptional quality in a chic, comfortable setting.</t>
+                        </t>
+                    </ul>
+                </div>
+                <div class="s_pricelist_cafe_col col-lg-4 d-lg-block d-none o_snippet_mobile_invisible s_col_no_resize">
+                    <img class="img img-fluid d-block mx-auto rounded-circle shadow" src="/web/image/website.s_pricelist_cafe_default_image" alt=""/>
+                </div>
+                <div class="s_pricelist_cafe_col col-lg-4 py-5 o_cc o_cc1 s_col_no_resize">
+                    <h3>Teas</h3>
+                    <ul class="list-unstyled my-3">
+                        <t t-call="website.s_pricelist_cafe_item">
+                            <t t-set="name">Earl Grey</t>
+                            <t t-set="price">$3.50</t>
+                            <t t-set="description">A classic black tea blend infused with the aromatic essence of bergamot, offering a fragrant, citrusy flavor.</t>
+                        </t>
+                        <t t-call="website.s_pricelist_cafe_item">
+                            <t t-set="name">Jasmine Green Tea</t>
+                            <t t-set="price">$3.00</t>
+                            <t t-set="description">Delicate green tea scented with jasmine blossoms, providing a soothing and floral experience.</t>
+                        </t>
+                        <t t-call="website.s_pricelist_cafe_item">
+                            <t t-set="name">Chamomile Tea</t>
+                            <t t-set="price">$4.00</t>
+                            <t t-set="description">Herbal tea made from dried chamomile flowers, known for its calming properties and gentle, apple-like flavor.</t>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_pricelist_cafe_item">
+    <li class="s_pricelist_cafe_item mb-4" data-name="Product">
+        <p class="s_pricelist_cafe_item_title d-flex align-items-baseline fw-bold">
+            <span class="d-flex flex-grow-1 align-items-center">
+                <span t-out="name" class="s_pricelist_cafe_item_name"/>
+                <span class="s_pricelist_cafe_item_line flex-grow-1 ms-2 border-top"/>
+            </span>
+            <span t-out="price" class="s_pricelist_cafe_item_price ms-auto ps-3"/>
+        </p>
+        <p t-if="description" t-out="description" class="s_pricelist_cafe_item_description d-block mt-2 pe-5 text-muted o_small"/>
+    </li>
+</template>
+
+<!-- Assets -->
+<asset id="website.s_pricelist_cafe_000_scss" name="Pricelist Cafe 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_pricelist_cafe/000.scss</path>
+</asset>
+
+</odoo>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_profile.ProfileDialog">
+        <Dialog size="'xl'" title="title" modalRef="modalRef">
+            <div class="row">
+                <div class="col-12 col-sm-3 mb-3">
+                    <div class="card o_card_people">
+                        <div class="card-body">
+                            <img class="o_wforum_avatar_img w-100 mb-3" t-ref="profileImg" t-attf-src="/web/image/res.users/#{user.id}/avatar_128"/>
+                            <div class="d-flex justify-content-center gap-1">
+                                <FileUploader onUploaded.bind="onUploadProfileImg" acceptedFileExtensions="'image/*'">
+                                    <t t-set-slot="toggler">
+                                        <button href="#" title="Edit" aria-label="Edit" class="btn btn-primary">
+                                            <i class="fa fa-pencil fa-1g float-sm-none float-md-start"/>
+                                        </button>
+                                    </t>
+                                    <t t-slot="default"/>
+                                </FileUploader>
+                                <button href="#" title="Clear" aria-label="Clear" class="btn border-primary" t-on-click="onClearProfileImg">
+                                    <i class="fa fa-trash-o float-sm-none float-md-end"></i>
+                                </button>
+                            </div>
+                            <div class="my-3 mb-0 pt-2 border-top" t-if="isEditingMyProfile">
+                                <label class="text-primary fw-bold" for="website_profile_profile_dialog_user_website_published">Public Profile</label>
+                                <input type="checkbox" class="float-end mt8" name="website_published" id="website_profile_profile_dialog_user_website_published" t-model="user.website_published"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-9">
+                    <div class="row">
+                        <div class="mb-3 col-12">
+                            <label class="text-primary mb-1 d-block fw-bold" for="website_profile_profile_dialog_user_name">Name</label>
+                            <input type="text" t-attf-class="form-control #{state.nameHasError ? 'is-invalid': ''}" name="name" id="website_profile_profile_dialog_user_name" required="True"
+                                t-model="user.name" t-ref="name"/>
+                        </div>
+
+                        <div class="mb-3 col-6">
+                            <label class="mb-1 text-primary fw-bold" for="website_profile_profile_dialog_user_website">Website</label>
+                            <input type="text" class="form-control" name="website" id="website_profile_profile_dialog_user_website" t-model="user.website"/>
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label class="mb-1 text-primary fw-bold" for="website_profile_profile_dialog_user_email">Email</label>
+                            <input type="email" t-attf-class="form-control #{state.emailHasError ? 'is-invalid': ''}" name="email" id="website_profile_profile_dialog_user_email" required="True" t-model="user.email"/>
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label class="mb-1 text-primary fw-bold" for="website_profile_profile_dialog_user_city">City</label>
+                            <input type="text" class="form-control" name="city" id="website_profile_profile_dialog_user_city" t-model="user.city"/>
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label class="mb-1 text-primary fw-bold" for="website_profile_profile_dialog_user_country">Country</label>
+                            <div>
+                                <select name="country" class="form-control" id="website_profile_profile_dialog_user_country" t-model="user.country_id">
+                                    <option>Country...</option>
+                                    <option t-foreach="countries" t-as="country"
+                                        t-key="country.id" t-att-value="country.id" t-out="country.name"/>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3 col-12">
+                            <label class="mb-1 text-primary fw-bold">Biography</label>
+                            <Wysiwyg config="descriptionWysiwygConfig" t-key="description"
+                                onLoad.bind="onWebsiteDescriptionEditorLoad"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="onConfirm" data-hotkey="q"
+                    t-att-disabled="state.isProcessing or state.hasError">Update</button>
+                <button class="btn btn-secondary" t-on-click="props.close" data-hotkey="x"
+                    t-att-disabled="state.isProcessing">Discard</button>
+              </t>
+        </Dialog>
+    </t>
+
+</templates>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//t[@name='bodyAsNotification']" position="replace">
+            <t t-if="message.message_type === 'notification' or message.is_transient or message.trackingValues.length > 0" name="hasTrackingValue">
+                <div>
+                    <t t-if="message.subtype_id?.description">
+                        <p class="mb-0">
+                            <t t-out="props.messageSearch?.highlight(message.subtype_id.description) ?? message.subtype_id.description"/>
+                        </p>
+                    </t>
+                    <t t-if="message.trackingValues.length">
+                        <ul class="mb-0 list-unstyled d-flex flex-column gap-1">
+                            <t name="trackingValues" t-foreach="message.trackingValues" t-as="trackingValue" t-key="trackingValue.id">
+                                <li class="o-mail-Message-tracking" role="group">
+                                    <span class="o-mail-Message-trackingOld text-muted fw-bold" t-out="formatTrackingOrNone(trackingValue.fieldInfo, trackingValue.oldValue)"/>
+                                    <t t-if="!trackingValue.fieldInfo.isPropertyField">
+                                        <i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-2 text-600"/>
+                                        <span class="o-mail-Message-trackingNew me-1 fw-bold text-info" t-out="formatTrackingOrNone(trackingValue.fieldInfo, trackingValue.newValue)"/>
+                                    </t>
+                                    <span class="o-mail-Message-trackingField ms-1 fst-italic text-muted">(<t t-out="props.messageSearch?.highlight(trackingValue.fieldInfo.changedField) ?? trackingValue.fieldInfo.changedField"/>)</span>
+                                </li>
+                            </t>
+                        </ul>
+                    </t>
+                    <div t-if="!message.isEmpty and message.richBody" t-call="mail.Message.bodyAsNotification" t-ref="body"/>
+                </div>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-Message-avatarContainer')]" position="attributes">
+            <attribute name="t-att-aria-label">getAuthorText()</attribute>
+            <attribute name="t-on-click">ev => this.onClickAuthor(ev)</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('o-mail-Message-author')]" position="attributes">
+            <attribute name="t-att-aria-label">getAuthorText()</attribute>
+            <attribute name="t-on-click">ev => this.onClickAuthor(ev)</attribute>
+        </xpath>
+    </t>
+    <t t-name="mail.Message.bodyInForward">
+        <div><br/></div>
+        <div>
+            <span>---------- Forwarded message ----------</span><br/>
+            <span>Date: <t t-esc="date"/></span><br/>
+            <span>From: <t t-esc="name"/> <a t-att-href="'mailto:' + email" target="_blank">&lt;<t t-esc="email"/>&gt;</a></span><br/>
+            <span>Subject: <t t-esc="message.subject || message.default_subject"/></span>
+        </div>
+        <t t-out="body"/>
+    </t>
+
+    <t t-name="mail.Message.bodyInReply">
+        <div><br/></div>
+        <div class="o_mail_reply_container">
+            <div class="o_mail_reply_content">
+                <div>
+                    <span>On <t t-esc="date"/> <t t-esc="name"/> <a t-att-href="'mailto:' + email" target="_blank">&lt;<t t-esc="email"/>&gt;</a>wrote</span>
+                </div>
+                <blockquote t-out="body"/>
+            </div>
+        </div>
+    </t>
+</templates>

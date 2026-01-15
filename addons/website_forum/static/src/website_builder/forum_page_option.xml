@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_forum.forumPageOption">
+    <BuilderContext action="'websiteConfig'">
+        <BuilderRow label.translate="Layout">
+            <BuilderSelect>
+                <BuilderSelectItem actionParam="{views: []}">Grid</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: ['website_forum.opt_list_view']}">List</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Post Count" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_forum.opt_post_count']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Last Post" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_forum.opt_last_post']}"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>

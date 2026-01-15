@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.WebsiteBuilderClientAction">
+    <t t-set="show_404_page_message" t-value="this.state.is404 and !state.isEditing"/>
+    <div class="d-flex h-100 w-100" t-att-class="{'flex-column': show_404_page_message}" t-ref="container">
+        <CreatePageMessage t-if="show_404_page_message" createPage="() => this.onNewPage(true)"/>
+        <div class="o_website_preview flex-grow-1" t-att-class="state.isEditing ? '' : 'border-top'" t-ref="website_preview">
+            <div class="o_iframe_container">
+                <iframe t-if="!testMode" t-att-src="iframeFallbackUrl"
+                    class="o_ignore_in_tour"
+                    t-ref="iframefallback"/>
+                <iframe t-att-src="initialUrl" t-ref="iframe" t-on-load="onIframeLoad" />
+                <div t-if="this.websiteContext.isMobile" class="o_mobile_preview_layout">
+                    <img alt="phone" src="/html_builder/static/img/phone.svg"/>
+                </div>
+            </div>
+        </div>
+        <ResizablePanel t-if="this.websiteContext.showResourceEditor" handleSide="'start'" class="'o_resource_editor_wrapper'" onResize.bind="onResourceEditorResize" initialWidth="aceEditorWidth">
+            <ResourceEditor close="() => this.websiteContext.showResourceEditor = false"/>
+        </ResizablePanel>
+        <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
+        <div t-att-class="{'o_builder_sidebar_open': state.isEditing and state.showSidebar, 'o_is_microsoft_edge': isMicrosoftEdge}"
+            class="o-website-builder_sidebar border-start border-dark">
+            <LazyComponent  t-if="state.isEditing" Component="'website.WebsiteBuilder'" props="() => this.websiteBuilderProps" bundle="'website.website_builder_assets'" t-key="state.key"/>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.homepage_editor_welcome_message">
+    <div class="container o_homepage_editor_welcome_message text-center pt128 pb128 h-100">
+        <h2 class="mt0">Welcome to your <b>Homepage</b>!</h2>
+        <p class="lead d-none d-md-block">Click on <b>Edit</b> in the top right corner to start designing.</p>
+    </div>
+</t>
+</templates>

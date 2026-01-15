@@ -1,167 +1,66 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import OrderedDict
-
-from odoo import http, _
 from odoo.http import request
 
-from odoo.addons.website_portal.controllers.main import website_account, get_records_pager
-from odoo.osv.expression import OR
+from odoo import _
+from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
+from odoo.addons.website.controllers import form
+from odoo.tools import html2plaintext
 
 
-class WebsiteAccount(website_account):
+class WebsiteForm(form.WebsiteForm):
+    def insert_record(self, request, model_sudo, values, custom, meta=None):
+        model_name = model_sudo.model
+        if model_name == 'project.task':
+            visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
+            visitor_partner = visitor_sudo.partner_id
+            if visitor_partner:
+                values['partner_id'] = visitor_partner.id
+            # When a task is created from the web editor, if the key 'user_ids' is not present, the user_ids is filled with the odoo bot. We set it to False to ensure it is not.
+            values.setdefault('user_ids', False)
 
-    def _prepare_portal_layout_values(self):
-        values = super(WebsiteAccount, self)._prepare_portal_layout_values()
-        values.update({
-            'project_count': request.env['project.project'].search_count([('privacy_visibility', '=', 'portal')]),
-            'task_count': request.env['project.task'].search_count([('project_id.privacy_visibility', '=', 'portal')])
-        })
-        return values
+        res = super().insert_record(request, model_sudo, values, custom, meta=meta)
+        if model_name != 'project.task':
+            return res
+        task = request.env['project.task'].sudo().browse(res)
+        custom = custom.replace('email_from', _('Email'))
+        custom_label = nl2br_enclose(_("Other Information"), 'h4')  # Title for custom fields
+        default_field = model_sudo.website_form_default_field_id
+        default_field_data = values.get(default_field.name, '')
+        default_field_content = nl2br_enclose(default_field.name.capitalize(), 'h4') + nl2br_enclose(html2plaintext(default_field_data), 'p')
+        custom_content = (default_field_content if default_field_data else '') \
+                        + (custom_label + custom if custom else '') \
+                        + (self._meta_label + meta if meta else '')
 
-    @http.route(['/my/projects', '/my/projects/page/<int:page>'], type='http', auth="user", website=True)
-    def my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
-        values = self._prepare_portal_layout_values()
-        Project = request.env['project.project']
-        domain = [('privacy_visibility', '=', 'portal')]
+        if default_field.name:
+            if default_field.ttype == 'html':
+                custom_content = nl2br(custom_content)
+            task[default_field.name] = custom_content
+            task._message_log(
+                body=custom_content,
+                message_type='comment',
+            )
+        return res
 
-        searchbar_sortings = {
-            'date': {'label': _('Newest'), 'order': 'create_date desc'},
-            'name': {'label': _('Name'), 'order': 'name'},
-        }
-        if not sortby:
-            sortby = 'date'
-        order = searchbar_sortings[sortby]['order']
-
-        # archive groups - Default Group By 'create_date'
-        archive_groups = self._get_archive_groups('project.project', domain)
-        if date_begin and date_end:
-            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
-        # projects count
-        project_count = Project.search_count(domain)
-        # pager
-        pager = request.website.pager(
-            url="/my/projects",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
-            total=project_count,
-            page=page,
-            step=self._items_per_page
-        )
-
-        # content according to pager and archive selected
-        projects = Project.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
-        request.session['my_projects_history'] = projects.ids[:100]
-
-        values.update({
-            'date': date_begin,
-            'date_end': date_end,
-            'projects': projects,
-            'page_name': 'project',
-            'archive_groups': archive_groups,
-            'default_url': '/my/projects',
-            'pager': pager,
-            'searchbar_sortings': searchbar_sortings,
-            'sortby': sortby
-        })
-        return request.render("website_project.my_projects", values)
-
-    @http.route(['/my/project/<model("project.project"):project>'], type='http', auth="user", website=True)
-    def my_project(self, project=None, **kw):
-        vals = {'project': project, }
-        history = request.session.get('my_projects_history', [])
-        vals.update(get_records_pager(history, project))
-        return request.render("website_project.my_project", vals)
-
-    @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
-    def my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', **kw):
-        values = self._prepare_portal_layout_values()
-        domain = [('project_id.privacy_visibility', '=', 'portal')]
-
-        searchbar_sortings = {
-            'date': {'label': _('Newest'), 'order': 'create_date desc'},
-            'name': {'label': _('Title'), 'order': 'name'},
-            'stage': {'label': _('Stage'), 'order': 'stage_id'},
-            'update': {'label': _('Last Stage Update'), 'order': 'date_last_stage_update desc'},
-        }
-        searchbar_filters = {
-            'all': {'label': _('All'), 'domain': []},
-        }
-        searchbar_inputs = {
-            'content': {'input': 'content', 'label': _('Search <span class="nolabel"> (in Content)</span>')},
-            'message': {'input': 'message', 'label': _('Search in Messages')},
-            'customer': {'input': 'customer', 'label': _('Search in Customer')},
-            'stage': {'input': 'stage', 'label': _('Search in Stages')},
-            'all': {'input': 'all', 'label': _('Search in All')},
-        }
-        # extends filterby criteria with project (criteria name is the project id)
-        projects = request.env['project.project'].search([('privacy_visibility', '=', 'portal')])
-        for proj in projects:
-            searchbar_filters.update({
-                str(proj.id): {'label': proj.name, 'domain': [('project_id', '=', proj.id)]}
-            })
-
-        # default sort by value
-        if not sortby:
-            sortby = 'date'
-        order = searchbar_sortings[sortby]['order']
-        # default filter by value
-        if not filterby:
-            filterby = 'all'
-        domain += searchbar_filters[filterby]['domain']
-
-        # archive groups - Default Group By 'create_date'
-        archive_groups = self._get_archive_groups('project.task', domain)
-        if date_begin and date_end:
-            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
-
-        # search
-        if search and search_in:
-            search_domain = []
-            if search_in in ('content', 'all'):
-                search_domain = OR([search_domain, ['|', ('name', 'ilike', search), ('description', 'ilike', search)]])
-            if search_in in ('customer', 'all'):
-                search_domain = OR([search_domain, [('partner_id', 'ilike', search)]])
-            if search_in in ('message', 'all'):
-                search_domain = OR([search_domain, [('message_ids.body', 'ilike', search)]])
-            if search_in in ('stage', 'all'):
-                search_domain = OR([search_domain, [('stage_id', 'ilike', search)]])
-            domain += search_domain
-
-        # task count
-        task_count = request.env['project.task'].search_count(domain)
-        # pager
-        pager = request.website.pager(
-            url="/my/tasks",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby},
-            total=task_count,
-            page=page,
-            step=self._items_per_page
-        )
-        # content according to pager and archive selected
-        tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
-        request.session['my_tasks_history'] = tasks.ids[:100]
-
-        values.update({
-            'date': date_begin,
-            'date_end': date_end,
-            'projects': projects,
-            'tasks': tasks,
-            'page_name': 'task',
-            'archive_groups': archive_groups,
-            'default_url': '/my/tasks',
-            'pager': pager,
-            'searchbar_sortings': searchbar_sortings,
-            'searchbar_inputs': searchbar_inputs,
-            'sortby': sortby,
-            'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
-            'filterby': filterby,
-        })
-        return request.render("website_project.my_tasks", values)
-
-    @http.route(['/my/task/<model("project.task"):task>'], type='http', auth="user", website=True)
-    def my_task(self, task=None, **kw):
-        vals = {'task': task, 'user': request.env.user}
-        history = request.session.get('my_tasks_history', [])
-        vals.update(get_records_pager(history, task))
-        return request.render("website_project.my_task", vals)
+    def extract_data(self, model_sudo, values):
+        data = super().extract_data(model_sudo, values)
+        if model_sudo.model == 'project.task' and values.get('email_from'):
+            partner = request.env['mail.thread'].sudo()._partner_find_from_emails_single([values['email_from']], no_create=True)
+            data['record']['partner_id'] = partner.id
+            data['record']['email_from'] = values['email_from']
+            if partner:
+                if not partner.phone and values.get('partner_phone'):
+                    data['record']['partner_phone'] = values['partner_phone']
+                if not partner.name:
+                    data['record']['partner_name'] = values['partner_name']
+                if not partner.company_name and values.get('partner_company_name'):
+                    data['record']['partner_company_name'] = values['partner_company_name']
+            else:
+                data['record']['email_cc'] = values['email_from']
+                if values.get('partner_phone'):
+                    data['record']['partner_phone'] = values['partner_phone']
+                if values.get('partner_name'):
+                    data['record']['partner_name'] = values['partner_name']
+                if values.get('partner_company_name'):
+                    data['record']['partner_company_name'] = values['partner_company_name']
+        return data

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="stock_location_14" model="stock.location">
+            <field name="name">Shelf 2</field>
+            <field name="barcode">SHELF2</field>
+            <field name="location_id" model="stock.location"
+                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+        <record id="stock_location_components" model="stock.location">
+            <field name="name">Shelf 1</field>
+            <field name="barcode">SHELF1</field>
+            <field name="location_id" model="stock.location"
+                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+        <record id="location_order" model="stock.location">
+            <field name="name">Order Processing</field>
+            <field name="usage">internal</field>
+            <field name="location_id" ref="stock.stock_location_company"/>
+        </record>
+        <record id="location_dispatch_zone" model="stock.location">
+            <field name="name">Dispatch Zone</field>
+            <field name="usage">internal</field>
+            <field name="location_id" ref="stock.location_order"/>
+        </record>
+        <record id="location_gate_a" model="stock.location">
+            <field name="name">Gate A</field>
+            <field name="usage">internal</field>
+            <field name="location_id" ref="stock.location_dispatch_zone"/>
+        </record>
+        <record id="location_gate_b" model="stock.location">
+            <field name="name">Gate B</field>
+            <field name="usage">internal</field>
+            <field name="location_id" ref="stock.location_dispatch_zone"/>
+        </record>
+
+        <record id="product.product_product_3" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_product_4" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_product_5" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_product_6" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_product_7" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_product_8" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_product_9" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_product_10" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_product_11" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_product_12" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_product_13" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_product_16" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_product_20" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_product_22" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_product_24" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_product_25" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_product_27" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_delivery_02" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_delivery_01" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.consu_delivery_03" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.consu_delivery_02" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.consu_delivery_01" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.product_order_01" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.desk_organizer" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.desk_pad" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+
+        <record id="product.monitor_stand" model="product.product">
+            <field name="is_storable" eval="True"/>
+        </record>
+    </data>
+</odoo>

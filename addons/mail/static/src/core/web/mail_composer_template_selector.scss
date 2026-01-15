@@ -1,0 +1,17 @@
+@include media-breakpoint-up(xl) {
+    .mail-composer-template-dropdown {
+        max-height: 50vh;
+    }
+}
+
+.mail-composer-template-dropdown {
+    max-width: 250px !important;
+
+    @include media-breakpoint-up(sm) {
+        max-width: 400px !important;
+    }
+
+    @include media-breakpoint-up(md) {
+        max-width: 500px !important;
+    }
+}

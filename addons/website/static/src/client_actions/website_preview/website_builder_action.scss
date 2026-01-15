@@ -1,0 +1,110 @@
+.o-website-builder_sidebar {
+    width: 0px;
+    background-color: $o-we-sidebar-bg;
+    transition: width ease 400ms, border 400ms;
+
+    &.o_builder_sidebar_open {
+        width: $o-we-sidebar-width;
+        transition-delay: 200ms;
+        box-sizing: content-box;
+
+        .o_website_fullscreen & {
+            width: 0;
+            border: none !important;
+        }
+
+        // Fix for Edge with 150% zoom: when entering edit mode, the page
+        // switches to mobile view because Edge adds extra border around the
+        // window, causing the width to fall below the mobile breakpoint. To
+        // prevent this, we reduce the sidebar width by 5px to keep the page in
+        // desktop view.
+        // TODO: In the next sidebar redesign, adjust the sidebar width properly
+        // to avoid this workaround.
+        &.o_is_microsoft_edge {
+            @media (min-resolution: 1.5dppx) and (max-resolution: 1.51dppx) {
+                $o-we-sidebar-width-for-edge: $o-we-sidebar-width - 5px;
+                width: $o-we-sidebar-width-for-edge;
+
+                .o-snippets-menu {
+                    width: $o-we-sidebar-width-for-edge;
+                }
+            }
+        }
+    }
+
+    .o_builder_open & {
+        transition-delay: 0ms;
+    }
+
+    &:not(.o_builder_sidebar_open) {
+        // Keep it in CSS for better transition.
+        border: none !important;
+    }
+}
+
+.o_main_navbar {
+    transition: margin-top ease 400ms;
+
+    .o_website_fullscreen &,
+    .o_builder_open & {
+        margin-top: -$o-navbar-height;
+    }
+}
+
+.o_website_preview {
+    position: relative;
+    isolation: isolate;
+    height: 100%;
+    transition: margin-right ease 400ms;
+    background-color: var(--websitePreview-bg-color, #efefef);
+
+    .o_iframe_container {
+        position: relative;
+        height: 100%;
+        width: 100%;
+
+        iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+
+            &.o_ignore_in_tour {
+                pointer-events: none;
+            }
+        }
+    }
+
+    &.o_is_mobile {
+        .o_iframe_container {
+            @include media-breakpoint-up(md) {
+                @include o-mobile-phone;
+
+                .o_mobile_preview_layout {
+                    height: 100%;
+
+                    img {
+                        height: 100%;
+                        width: auto;
+                    }
+                }
+            }
+        }
+    }
+}
+
+body:has(.o_builder_sidebar_open) .o_notification_manager {
+    @include o-position-absolute($top: map-get($spacers, 2), $right: calc(#{$o-we-sidebar-width} + 0.5rem));
+}
+
+body:has(.o_website_preview) {
+    .o-mail-ChatHub-bubbles {
+        transition: transform 400ms ease 0s;
+    }
+}
+
+body:has(.o-website-builder_sidebar.o_builder_sidebar_open) {
+    .o-mail-ChatHub-bubbles {
+        transform: translateX(-$o-we-sidebar-width);
+        transition-delay: 200ms;
+    }
+}

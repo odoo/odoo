@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="sale.Product">
+        <td class="o_sale_product_configurator_img py-3 px-0">
+            <img
+                class="w-75 w-lg-100 border rounded"
+                t-att-src="imageUrl"
+                alt="Product Image"
+            />
+        </td>
+        <td class="p-0 p-md-3 product_name_description">
+            <div
+                name="o_sale_product_configurator_name"
+                class="mb-1 mb-lg-3 text-break text-truncate"
+            >
+                <span class="h5" t-out="this.props.display_name"/>
+                <div
+                    t-if="this.props.description_sale"
+                    t-out="this.props.description_sale"
+                    class="text-muted small text-truncate"
+                />
+                <div t-if="this.props.selectedComboItems" class="text-muted small">
+                    <div
+                        t-foreach="this.props.selectedComboItems"
+                        t-as="comboItem"
+                        t-key="comboItem_index"
+                        t-out="comboItem.name"
+                    />
+                </div>
+            </div>
+            <t t-foreach="this.props.attribute_lines" t-as="ptal" t-key="ptal.id">
+                <PTAL
+                    t-if="shouldShowPtal(ptal)"
+                    t-props="ptal"
+                    productTmplId="this.props.product_tmpl_id"
+                />
+            </t>
+            <div t-if="!this.env.isPossibleCombination(this.props)" class="alert alert-warning impossible_combination_alert mt-3">
+                <span>This option or combination of options is not available</span>
+            </div>
+            <t t-if="this.props.available_uoms" t-call="sale.uom_selector"/>
+        </td>
+        <t t-if="!this.props.optional">
+            <td
+                class="o_sale_product_configurator_qty w-25 py-3 px-0 text-end"
+            >
+                <div
+                    t-if="env.showPrice"
+                    class="d-md-flex gap-2 align-items-baseline justify-content-end"
+                >
+                    <t t-call="sale.product_price" name="sale_product_configurator_price"/>
+                </div>
+                <t t-set="isComboProduct" t-value="isMainProduct &amp;&amp; this.props.selectedComboItems.length"/>
+                <t t-if="env.showQuantity &amp;&amp; !isComboProduct">
+                    <QuantityButtons
+                        quantity="this.props.quantity"
+                        setQuantity="quantity => this.env.setQuantity(this.props.product_tmpl_id, quantity)"
+                        isMinusButtonDisabled="this.props.quantity === 1 &amp;&amp; isMainProduct"
+                    />
+                </t>
+                <span
+                    t-elif="env.showQuantity &amp;&amp; isComboProduct"
+                    t-out="this.props.quantity"
+                    class="h5"
+                />
+                <a
+                    class="d-block mt-2 text-end"
+                    role="button"
+                    t-if="!isMainProduct"
+                    t-on-click="() => this.env.removeProduct(this.props.product_tmpl_id)"
+                >
+                    Remove
+                </a>
+            </td>
+        </t>
+        <t t-else="">
+            <td
+                name="price"
+                class="o_sale_product_configurator_price py-3 px-0 text-end"
+            >
+                <div
+                    t-if="env.showPrice"
+                    class="d-md-flex gap-2 align-items-baseline justify-content-end"
+                >
+                    <t t-call="sale.product_price" name="sale_product_configurator_optional_price"/>
+                </div>
+                <button
+                    name="sale_product_configurator_add_button"
+                    class="btn btn-secondary"
+                    t-att-class="{'disabled': !this.env.isPossibleCombination(this.props)}"
+                    t-on-click="() => this.env.addProduct(this.props.product_tmpl_id)"
+                >
+                    <i class="oi oi-plus" role="img"/>
+                    <span name="add_button" class="ms-2 d-none d-md-inline">Add</span>
+                </button>
+            </td>
+        </t>
+    </t>
+
+    <t t-name="sale.product_price">
+        <span
+            name="sale_product_configurator_formatted_price"
+            class="h5 text-nowrap fw-bold text-end h6 mb-2 d-block"
+            t-out="getFormattedPrice()"
+        />
+        <div t-if="this.props.price_info" t-out="this.props.price_info" class="text-muted"/>
+    </t>
+
+    <t t-name="sale.uom_selector">
+        <div class="d-flex gap-2 flex-column align-items-start justify-content-start mb-2 small">
+            <label t-out="UoMTitle" class="fw-bold me-3"/>
+            <ul class="list-unstyled d-flex flex-column flex-lg-row gap-2 flex-grow-1 mb-0">
+                <li
+                    t-foreach="this.props.available_uoms"
+                    t-as="uom"
+                    t-key="`${this.props.product_tmpl_id}-${uom.id}`"
+                    t-att-class="{'active': uom.id == props.uom.id}"
+                    class="o_sale_product_configurator_uom_choice"
+                >
+                    <label
+                        class="btn btn-outline-secondary"
+                        t-attf-for="{{this.props.product_tmpl_id}}-{{uom.id}}-input"
+                        t-out="uom.display_name"
+                    />
+                    <input
+                        class="btn-check"
+                        type="radio"
+                        t-attf-id="{{this.props.product_tmpl_id}}-{{uom.id}}-input"
+                        t-att-value="uom.id"
+                        t-attf-name="uom-{{this.props.product_tmpl_id}}"
+                        t-att-checked="uom.id == props.uom.id"
+                        t-on-change="selectUoM"
+                    />
+                </li>
+            </ul>
+        </div>
+    </t>
+</templates>

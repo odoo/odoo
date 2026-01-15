@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="track_list_item" inherit_id="website_event_track.track_list_item">
+    <!-- TRACK LIST: ADD REPLAY TAG FOR FINISHED TRACKS -->
+    <xpath expr="//div[hasclass('col-12')]//span[@t-elif='not track.is_track_done and not track.is_track_soon']" position="after">
+        <span t-elif="track.youtube_video_url and (track.is_published or is_event_user)"
+            class="badge text-bg-danger">Replay
+        </span>
+    </xpath>
+    <!-- ADD YOUTUBE ICON -->
+    <xpath expr="//div[hasclass('col-12')]//span[@t-field='track.name']" position="before">
+        <i t-if="track.date and track.youtube_video_url and (track.is_track_soon or track.is_track_live or track.is_youtube_replay)"
+            class="fa fa-youtube-play text-danger me-1"/>
+    </xpath>
+</template>
+
+</odoo>

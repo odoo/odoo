@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_holidays.KanbanRenderer">
+        <div class="d-flex flex-column h-100 overflow-hidden">
+            <div class="o_timeoff_calendar">
+                <TimeOffDashboard t-if="showDashboard" employeeId="employeeId"/>
+            </div>
+            <t t-call="web.KanbanRenderer"/>
+        </div>
+    </t>
+</templates>

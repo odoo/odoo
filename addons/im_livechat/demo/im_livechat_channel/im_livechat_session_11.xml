@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="livechat_channel_session_11" model="discuss.channel">
+            <field name="name">Visitor, Mitchell Admin</field>
+            <field name="livechat_lang_id" ref="base.lang_en"/>
+            <field name="livechat_operator_id" ref="base.partner_admin"/>
+            <field name="livechat_status">need_help</field>
+            <field name="description">Customer needs more information on the Discuss application</field>
+            <field name="livechat_channel_id" ref="im_livechat.im_livechat_channel_data"/>
+            <field name="livechat_failure">no_failure</field>
+            <field name="create_date" eval="datetime.now()"/>
+            <field name="channel_type">livechat</field>
+            <field name="country_id" ref="base.us"/>
+        </record>
+        <record id="im_livechat.livechat_channel_session_11_history_member_admin" model="im_livechat.channel.member.history">
+            <field name="channel_id" ref="livechat_channel_session_11"/>
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="livechat_member_type">agent</field>
+            <field name="response_time_hour" eval="15/3600"/>
+            <field name="message_count">1</field>
+        </record>
+        <record id="im_livechat.livechat_channel_session_11_member_admin" model="discuss.channel.member">
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="channel_id" ref="im_livechat.livechat_channel_session_11"/>
+            <field name="livechat_member_history_ids" eval="[(4, ref('im_livechat.livechat_channel_session_11_history_member_admin'))]"/>
+        </record>
+        <record id="im_livechat.livechat_channel_session_11_guest" model="mail.guest">
+            <field name="name">Visitor</field>
+        </record>
+        <record id="im_livechat.livechat_channel_session_11_history_member_guest" model="im_livechat.channel.member.history">
+            <field name="channel_id" ref="livechat_channel_session_11"/>
+            <field name="guest_id" ref="im_livechat.livechat_channel_session_11_guest"/>
+            <field name="livechat_member_type">visitor</field>
+        </record>
+        <record id="im_livechat.livechat_channel_session_11_member_guest" model="discuss.channel.member">
+            <field name="guest_id" ref="im_livechat.livechat_channel_session_11_guest"/>
+            <field name="channel_id" ref="im_livechat.livechat_channel_session_11"/>
+            <field name="livechat_member_history_ids" eval="[(4, ref('im_livechat.livechat_channel_session_11_history_member_guest'))]"/>
+        </record>
+
+        <record id="livechat_channel_session_11_message_1" model="mail.message">
+            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_11_guest"/>
+            <field name="author_id"/>
+            <field name="date" eval="datetime.now()"/>
+            <field name="create_date" eval="datetime.now()"/>
+            <field name="write_date" eval="datetime.now()"/>
+            <field name="body">Hi</field>
+            <field name="email_from">Visitor</field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="res_id" ref="im_livechat.livechat_channel_session_11"/>
+            <field name="model">discuss.channel</field>
+        </record>
+        <record id="livechat_channel_session_11_message_2" model="mail.message">
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="date" eval="datetime.now() - timedelta(seconds=-15)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(seconds=-15)"/>
+            <field name="write_date" eval="datetime.now() - timedelta(seconds=-15)"/>
+            <field name="body">Hello, how may I help you?</field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="res_id" ref="im_livechat.livechat_channel_session_11"/>
+            <field name="model">discuss.channel</field>
+        </record>
+        <record id="livechat_channel_session_11_message_3" model="mail.message">
+            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_11_guest"/>
+            <field name="author_id"/>
+            <field name="date" eval="datetime.now() - timedelta(seconds=-25)"/>
+            <field name="create_date" eval="datetime.now() - timedelta(seconds=-25)"/>
+            <field name="write_date" eval="datetime.now() - timedelta(seconds=-25)"/>
+            <field name="email_from">Visitor</field>
+            <field name="body">I would like to know more about the Discuss application</field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="res_id" ref="im_livechat.livechat_channel_session_11"/>
+            <field name="model">discuss.channel</field>
+        </record>
+    </data>
+</odoo>

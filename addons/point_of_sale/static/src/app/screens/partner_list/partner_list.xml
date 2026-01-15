@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.PartnerList">
+        <Dialog bodyClass="'partner-list p-0'" modalRef="modalRef" contentClass="'h-100'">
+            <t t-set-slot="header">
+                <button t-if="!ui.isSmall and this.pos.cashier._role !== 'minimal'" class="btn btn-primary btn-lg lh-lg me-2" role="img" aria-label="Add a customer"
+                        t-on-click="() => this.editPartner()"
+                        title="Add a customer">
+                Create 
+                </button>
+                <span class="modal-title fs-4">Choose customer</span>
+                <Input tModel="[state, 'query']"
+                    class="'ms-auto'"
+                    isSmall="ui.isSmall"
+                    placeholder.translate="Search Customers..."
+                    icon="{type: 'fa', value: 'fa-search'}"
+                    t-on-enter="() => this.searchPartner()"
+                    autofocus="true"
+                    debounceMillis="100" />
+            </t>
+            <div class="h-100">
+                <t t-set="initialPartners" t-value="getPartners(this.state.initialPartners)"/>
+                <t t-set="loadedPartners" t-value="getPartners(this.state.loadedPartners)"/>
+                <t t-set="nbrPartners" t-value="initialPartners.length + loadedPartners.length"/>
+                <table class="table table-hover">
+                    <tbody class="h-100" t-att-class="{'d-none': !nbrPartners}">
+                        <t t-foreach="initialPartners" t-as="partner" t-key="partner.id">
+                            <PartnerLine
+                                close="props.close"
+                                partner="partner"
+                                isSelected="props.partner?.id === partner.id"
+                                isBalanceDisplayed="isBalanceDisplayed"
+                                onClickEdit.bind="(p) => this.editPartner(p)"
+                                onClickUnselect.bind="() => this.clickPartner()"
+                                onClickOrders.bind="(p) => this.goToOrders(p)"
+                                onClickPartner.bind="clickPartner"/>
+                        </t>
+                        <t t-foreach="loadedPartners" t-as="partner" t-key="partner.id">
+                            <PartnerLine
+                                close="props.close"
+                                partner="partner"
+                                isSelected="props.partner?.id === partner.id"
+                                isBalanceDisplayed="isBalanceDisplayed"
+                                onClickEdit.bind="(p) => this.editPartner(p)"
+                                onClickUnselect.bind="() => this.clickPartner()"
+                                onClickOrders.bind="(p) => this.goToOrders(p)"
+                                onClickPartner.bind="clickPartner"/>
+                        </t>
+                    </tbody>
+                </table>
+                <div class="text-center" t-if="!nbrPartners">
+                    <div class="text-muted mt-5">
+                        <i class="fa fa-users fa-3x"></i>
+                        <p class="mt-3">No customers found, press enter to load more.</p>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <div class="d-flex flex-row gap-2 w-100">
+                    <button t-if="ui.isSmall and this.pos.cashier._role !== 'minimal'" class="btn btn-primary btn-lg lh-lg flex-fill" role="img" aria-label="Add a customer"
+                        t-on-click="() => this.editPartner()"
+                        title="Add a customer">
+                    New 
+                    </button>
+                    <button class="btn btn-secondary btn-lg lh-lg flex-fill" t-on-click="() => this.clickPartner(this.props.partner)">Discard</button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

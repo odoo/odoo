@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="label_transfer_template_view_zpl">
+            <t t-set="uom_unit" t-value="env.ref('uom.product_uom_unit')"/>
+            <t t-foreach="docs" t-as="picking">
+
+                <t t-set="picking_quantity" t-value="any(picking.move_ids.move_line_ids.mapped('quantity'))"/>
+                <t t-foreach="picking.move_ids" t-as="move">
+                    <t t-foreach="move.move_line_ids" t-as="move_line">
+                        <t t-if="move_line.product_id.uom_id._has_common_reference(uom_unit)">
+                            <t t-if="picking_quantity">
+                                <t t-set="qty" t-value="int(move_line.quantity)"/>
+                            </t>
+                            <t t-else="">
+                                <t t-set="qty" t-value="int(move_line.reserved_uom_qty)"/>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <t t-set="qty" t-value="1"/>
+                        </t>
+                        <t t-foreach="range(qty)" t-as="item">
+                            <t t-translation="off">
+^XA
+^FO100,50
+^A0N,44,33^FD<t t-esc="move_line.product_id.display_name"/>^FS
+^FO100,100
+<t t-if="move_line.product_id.tracking != 'none' and (move_line.lot_id or move_line.lot_name)">
+^A0N,44,33^FDLN/SN: <t t-esc="move_line.lot_id.name or move_line.lot_name"/>^FS
+^FO100,150^BY3
+^BCN,100,Y,N,N
+^FD<t t-esc="move_line.lot_id.name or move_line.lot_name"/>^FS
+</t>
+<t t-if="move_line.product_id.tracking == 'none' and move_line.product_id.barcode">
+^BCN,100,Y,N,N
+^FD<t t-esc="move_line.product_id.barcode"/>^FS
+</t>
+^XZ
+                            </t>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="label_transfer_template_view_pdf">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <t t-set="uom_unit" t-value="env.ref('uom.product_uom_unit')"/>
+                    <t t-foreach="docs" t-as="picking">
+                        <t t-set="picking_quantity" t-value="any(picking.move_ids.move_line_ids.mapped('quantity'))"/>
+                        <t t-foreach="picking.move_ids" t-as="move">
+                            <t t-foreach="move.move_line_ids" t-as="move_line">
+                                <t t-if="move_line.product_id.uom_id._has_common_reference(uom_unit)">
+                                    <t t-if="picking_quantity">
+                                        <t t-set="qty" t-value="int(move_line.quantity)"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="qty" t-value="int(move_line.reserved_uom_qty)"/>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="qty" t-value="1"/>
+                                </t>
+                                <t t-foreach="range(qty)" t-as="item">
+                                    <t t-translation="off">
+                                        <div style="display: inline-table; height: 10rem; width: 32%;">
+                                            <table class="table table-bordered" style="border: 2px solid black;" t-if="picking.move_ids">
+                                                <tr>
+                                                    <th class="table-active text-start" style="height:4rem;">
+                                                        <span t-esc="move.product_id.display_name"/>
+                                                    </th>
+                                                </tr>
+                                                <t t-if="move_line.product_id.tracking != 'none'">
+                                                    <tr>
+                                                        <td class="text-center align-middle">
+                                                            <t t-if="move_line.lot_name or move_line.lot_id">
+                                                                <div t-field="move_line.lot_name" t-options="{'widget': 'barcode', 'width': 600, 'height': 150, 'img_style': 'width:100%;height:4rem'}"/>
+                                                                <span t-esc="move_line.lot_name or move_line.lot_id.name"/>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <span class="text-muted">No barcode available</span>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-if="move_line.product_id.tracking == 'none'">
+                                                    <tr>
+                                                        <td class="text-center align-middle" style="height: 6rem;">
+                                                            <t t-if="move_line.product_id.barcode">
+                                                                <div t-field="move_line.product_id.barcode" t-options="{'widget': 'barcode', 'width': 600, 'height': 150, 'img_style': 'width:100%;height:4rem'}"/>
+                                                                <span t-esc="move_line.product_id.barcode"/>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <span class="text-muted">No barcode available</span>
+                                                            </t>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </table>
+                                        </div>
+                                    </t>
+                                </t>
+                            </t>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </template>
+
+        <template id="label_picking_type_view">
+            <t t-foreach="docs" t-as="operation">
+                <t t-translation="off">
+^XA
+^FO100,50
+^A0N,44,33^FD<t t-esc="operation.name"/>^FS
+<t t-if="operation.barcode">
+^FO100,100
+^BCN,100,Y,N,N
+^FD<t t-esc="operation.barcode"/>^FS
+</t>
+^XZ
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

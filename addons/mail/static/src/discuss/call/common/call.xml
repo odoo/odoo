@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.Call">
+        <PttAdBanner/>
+        <div class="o-discuss-Call user-select-none d-flex position-relative shadow-sm" t-att-class="{
+            'o-fullSize': isFullSize,
+            'o-compact': props.compact and !isMobileOs,
+            'o-minimized': minimized,
+            'position-relative o-mx-0_5 o-mt-0_5 p-1': !rtc.state.isFullscreen and !props.isPip,
+            'rounded-2': !rtc.state.isFullscreen and !props.isPip and isActiveCall,
+            'o-hasVideo': channel.videoCount > 0,
+            'o-selfInCall': isActiveCall,
+            'border-bottom': !isActiveCall,
+        }" t-ref="root">
+            <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto o-scrollbar-thin" t-on-mouseleave="onMouseleaveMain">
+                <BlurPerformanceWarning t-if="store.settings.blurPerformanceWarning"/>
+                <div
+                    class="o-discuss-Call-mainCards d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
+                    t-att-class="{'mt-1': minimized}"
+                    t-attf-style="--height:{{state.tileHeight}}px; --width:{{state.tileWidth}}px;"
+                    t-on-click="() => this.showOverlay()"
+                    t-on-mousemove="onMousemoveMain"
+                    t-ref="grid"
+                >
+                    <CallParticipantCard t-foreach="visibleMainCards.slice(0,6)" t-as="cardData" t-key="cardData.key"
+                        cardData="cardData"
+                        className="'o-discuss-Call-mainCardStyle'"
+                        minimized="minimized"
+                        compact="props.compact"
+                        thread="channel"
+                    />
+                    <span t-if="env.inChatWindow and visibleMainCards.length > 6" class="oi oi-ellipsis-h ps-1 pe-1"/>
+                    <CallParticipantCard t-if="!env.inChatWindow" t-foreach="visibleMainCards.slice(6)" t-as="cardData" t-key="cardData.key"
+                        cardData="cardData"
+                        className="'o-discuss-Call-mainCardStyle p-1'"
+                        minimized="minimized"
+                        compact="props.compact"
+                        thread="channel"
+                    />
+                </div>
+
+                <!-- Buttons -->
+                <t t-if="hasSidebarButton">
+                    <i t-if="state.sidebar" class="o-discuss-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi oi-arrow-right" title="Hide sidebar" t-on-click="() => this.state.sidebar = false"/>
+                    <i t-else="" class="o-discuss-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi oi-arrow-left" title="Show sidebar" t-on-click="() => this.state.sidebar = true"/>
+                </t>
+                <div t-if="props.hasOverlay and (state.overlay or !isControllerFloating)" class="o-discuss-Call-overlay d-flex justify-content-center w-100 pb-1" t-att-class="{ 'o-isFloating position-absolute z-2 bottom-0 pb-2': isControllerFloating }">
+                    <div t-on-mousemove="onMousemoveOverlay">
+                        <CallActionList thread="channel" compact="props.compact or props.isPip"/>
+                    </div>
+                </div>
+                <div t-if="hasCallNotifications" class="position-absolute d-flex flex-column-reverse start-0 bottom-0" t-att-class="{ 'ps-5 pb-5': rtc.state.isFullscreen, 'ps-2 pb-2': !rtc.state.isFullscreen }">
+                    <span class="o-discuss-Call-notification text-bg-800 shadow-lg rounded-1 m-1" t-att-class="{ 'p-4 fs-4': rtc.state.isFullscreen, 'p-2': !rtc.state.isFullscreen }" t-foreach="rtc.notifications.values()" t-as="notification" t-key="notification.id" t-esc="notification.text"/>
+                </div>
+                <div class="o-discuss-Call-layoutActions position-absolute z-2 bottom-0 end-0">
+                    <ActionList actions="layoutActions" inline="true"/>
+                </div>
+            </div>
+            <div t-if="state.sidebar and channel.activeRtcSession" class="o-discuss-Call-sidebar d-flex align-items-center h-100 flex-column">
+                <CallParticipantCard t-foreach="channel.visibleCards" t-as="cardData" t-key="cardData.key"
+                    cardData="cardData"
+                    className="'o-discuss-Call-sidebarCard w-100 p-1'"
+                    thread="channel"
+                    isSidebarItem="true"
+                />
+            </div>
+            <CallParticipantCard
+                t-if="channel.videoCount > 0 and state.insetCard"
+                cardData="state.insetCard"
+                className="'o-discuss-Call-mainCardStyle o-bg-black'"
+                thread="channel"
+                inset.bind="setInset"
+            />
+        </div>
+    </t>
+
+</templates>

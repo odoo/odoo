@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mailing_contact_view_search" model="ir.ui.view">
+        <field name="name">mailing.contact.view.search.inherit.sms</field>
+        <field name="model">mailing.contact</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_contact_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="mobile"/>
+                <field name="phone_sanitized" invisible="1"/>
+            </xpath>
+            <xpath expr="//filter[@name='filter_blacklisted']" position="attributes">
+                <attribute name="domain">['|', ('is_blacklisted','=',True), ('phone_sanitized_blacklisted','=',True)]</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='filter_valid_email_recipient']" position="after">
+                <separator/>
+                <filter string="Valid SMS Recipients"
+                    name="filter_valid_sms_recipient"
+                    domain="[('opt_out', '=', False), ('phone_sanitized_blacklisted', '=', False), ('phone_sanitized', '!=', False)]"
+                    invisible="not context.get('default_list_ids')"/>
+            </xpath>
+            <xpath expr="//filter[@name='filter_not_email_bl']" position="after">
+                <separator/>
+                <filter string="Exclude Blacklisted Phone"
+                    name="filter_not_phone_bl"
+                    domain="[('phone_sanitized_blacklisted', '=', False)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_contact_view_tree" model="ir.ui.view">
+        <field name="name">mailing.contact.view.list.inherit.sms</field>
+        <field name="model">mailing.contact</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_contact_view_tree"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="mobile" class="o_force_ltr" readonly="1"/>
+                <field name="phone_sanitized" column_invisible="True"/>
+                <field name="phone_sanitized_blacklisted"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_contact_view_form" model="ir.ui.view">
+        <field name="name">mailing.contact.view.form.inherit.sms</field>
+        <field name="model">mailing.contact</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_contact_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='email_details']" position="after">
+                <label for="mobile" class="oe_inline"/>
+                <div class="o_row o_row_readonly" name="phone_details">
+                    <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
+                        title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+                        type="object" context="{'default_phone': mobile}" groups="base.group_user"
+                        invisible="not phone_blacklisted"/>
+                    <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
+                    <field name="phone_sanitized" invisible="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_contact_view_kanban" model="ir.ui.view">
+        <field name="name">mailing.contact.view.kanban.inherit.sms</field>
+        <field name="model">mailing.contact</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_contact_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="mobile" class="fw-bolder"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mailing_contact_action_sms" model="ir.actions.act_window">
+        <field name="name">Mailing List Contacts</field>
+        <field name="res_model">mailing.contact</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'mailing_sms': True, 'search_default_filter_not_phone_bl': 1, }</field>
+        <field name="view_id" ref="mailing_contact_view_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a mailing contact
+            </p><p>
+                Mailing contacts allow you to separate your marketing audience from your contact directory.
+            </p>
+        </field>
+    </record>
+</odoo>

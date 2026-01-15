@@ -1,0 +1,178 @@
+<templates xml:space="preserve">
+
+<t t-name="mass_mailing.DesignTab">
+    <div class="o_design_tab h-100">
+        <div t-ref="content" class="d-flex flex-column h-100">
+            <t t-foreach="optionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
+                <!-- TODO EGGMAIL (check theme_tab.xml todo) Define a more basic kind of options container -->
+                <OptionsContainer
+                    snippetModel="optionsContainer.snippetModel"
+                    editingElement="optionsContainer.element"
+                    options="optionsContainer.options"
+                    containerTitle="optionsContainer.containerTitle"
+                    headerMiddleButtons="optionsContainer.headerMiddleButtons"
+                    isRemovable="optionsContainer.isRemovable"
+                    isClonable="optionsContainer.isClonable"
+                    containerTopButtons="optionsContainer.optionsContainerTopButtons"/>
+            </t>
+        </div>
+    </div>
+</t>
+
+<t t-name="mass_mailing.DesignBodyOption">
+    <BuilderRow label.translate="Body Width">
+        <BuilderButtonGroup>
+            <BuilderButton classAction="'o_mail_small'" applyTo="'.o_mail_wrapper'">
+                <Img src="'/mass_mailing/static/src/img/snippets_options/content_width_small.svg'" />
+            </BuilderButton>
+            <BuilderButton classAction="'o_mail_regular'" applyTo="'.o_mail_wrapper'">
+                <Img src="'/mass_mailing/static/src/img/snippets_options/content_width_normal.svg'" />
+            </BuilderButton>
+            <BuilderButton classAction="''" applyTo="'.o_mail_wrapper'">
+                <Img src="'/mass_mailing/static/src/img/snippets_options/content_width_full.svg'" />
+            </BuilderButton>
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow label.translate="Mailing Background" extraLabelClass="'pe-2'">
+        <BuilderColorPicker noTransparency="true"
+            enabledTabs="['solid', 'custom']"
+            styleAction="'background-color'"
+            applyTo="'.o_layout'"
+        />
+    </BuilderRow>
+    <BuilderRow label.translate="Content Background" extraLabelClass="'pe-2'">
+        <BuilderColorPicker noTransparency="true"
+            enabledTabs="['solid', 'custom']"
+            action="'mass_mailing.CustomizeMailingVariable'"
+            actionParam="{ variable: '--wrapper-background-color' }"
+        />
+    </BuilderRow>
+</t>
+
+<t t-name="mass_mailing.DesignHeadingsOption">
+    <t t-call="mass_mailing.DesignTextOption">
+        <t t-set="label">Heading 1</t>
+        <t t-set="prefix" t-value="`--h1-`"/>
+        <t t-set="marginPrefix" t-value="prefix"/>
+    </t>
+    <t t-call="mass_mailing.DesignTextOption">
+        <t t-set="label">Heading 2</t>
+        <t t-set="prefix" t-value="`--h2-`"/>
+        <t t-set="marginPrefix" t-value="prefix"/>
+    </t>
+    <t t-call="mass_mailing.DesignTextOption">
+        <t t-set="label">Heading 3</t>
+        <t t-set="prefix" t-value="`--h3-`"/>
+        <t t-set="marginPrefix" t-value="prefix"/>
+    </t>
+</t>
+
+<t t-name="mass_mailing.DesignParagraphOption">
+    <t t-call="mass_mailing.DesignTextOption">
+        <t t-set="label">Text</t>
+        <t t-set="prefix" t-value="`--text-`"/>
+        <t t-set="marginPrefix" t-value="`--text-container-`"/>
+    </t>
+</t>
+
+<t t-name="mass_mailing.DesignLinkOption">
+    <t t-call="mass_mailing.DesignTextOption">
+        <t t-set="label">Links</t>
+        <t t-set="prefix" t-value="`--link-`"/>
+    </t>
+</t>
+
+<t t-name="mass_mailing.DesignTextOption">
+    <BuilderContext action="'mass_mailing.CustomizeMailingVariable'">
+        <BuilderRow label="label" extraLabelClass="'fw-bolder'">
+            <BuilderNumberInput actionParam="{ variable: `${prefix}font-size` }" unit="'px'" saveUnit="'px'" default="0"/>
+            <BuilderColorPicker noTransparency="true" title.translate="Text Color" enabledTabs="['solid', 'custom']"
+                actionParam="{ variable: `${prefix}color` }"/>
+        </BuilderRow>
+        <BuilderRow t-if="marginPrefix" label.translate="Margin" level="1">
+            <BuilderNumberInput title.translate="Bottom" unit="'px'" saveUnit="'px'" actionParam="{ variable: `${marginPrefix}margin-bottom` }" default="0"/>
+        </BuilderRow>
+        <BuilderRow>
+            <FontFamilyPicker extraClass="'ps-2'" action="'mass_mailing.CustomizeMailingVariable'" actionParam="{variable: `${prefix}font-family`}"/>
+            <BuilderButton icon="'fa-fw fa-bold'" actionParam="{ variable: `${prefix}font-weight` }" actionValue="'bolder'"/>
+            <BuilderButton icon="'fa-fw fa-italic'" actionParam="{ variable: `${prefix}font-style` }" actionValue="'italic'"/>
+            <BuilderButton icon="'fa-fw fa-underline'" actionParam="{ variable: `${prefix}text-decoration-line`}" actionValue="'underline'"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+<t t-name="mass_mailing.DesignGenericButtonOption">
+    <BuilderContext action="'mass_mailing.CustomizeMailingVariable'">
+        <BuilderRow label="label" extraLabelClass="'fw-bolder'">
+            <BuilderNumberInput actionParam="{ variable: `${prefix}font-size` }" unit="'px'" saveUnit="'px'" default="0"/>
+            <BuilderColorPicker noTransparency="true" title.translate="Text Color" enabledTabs="['solid', 'custom']"
+                actionParam="{ variable: `${prefix}color` }"/>
+            <BuilderColorPicker noTransparency="true" title.translate="Background Color" enabledTabs="['solid', 'custom']"
+                actionParam="{ variable: `${prefix}background-color` }"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Padding" level="1">
+            <BuilderNumberInput title.translate="Y" unit="'px'" saveUnit="'px'" actionParam="{ variable: `${prefix}padding-y` }" default="0"/>
+            <BuilderNumberInput title.translate="X" unit="'px'" saveUnit="'px'" actionParam="{ variable: `${prefix}padding-x` }" default="0"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Font Family" level="1">
+            <FontFamilyPicker action="'mass_mailing.CustomizeMailingVariable'" actionParam="{ variable: `${prefix}font-family`}"/>
+            <BuilderButton icon="'fa-fw fa-bold'" actionParam="{ variable: `${prefix}font-weight` }" actionValue="'bolder'"/>
+            <BuilderButton icon="'fa-fw fa-italic'" actionParam="{ variable: `${prefix}font-style` }" actionValue="'italic'"/>
+            <BuilderButton icon="'fa-fw fa-underline'" actionParam="{ variable: `${prefix}text-decoration-line`}" actionValue="'underline'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Border" level="1">
+            <BuilderNumberInput actionParam="{ variable: `${prefix}border-width` }" unit="'px'" saveUnit="'px'" min="0"
+                default="0" composable="true"/>
+            <BuilderSelect actionParam="{ variable: `${prefix}border-style` }">
+                <BuilderSelectItem title.translate="Solid" actionValue="'solid'"><div class="o-hb-border-preview" style="border-style: solid;"/></BuilderSelectItem>
+                <BuilderSelectItem title.translate="Dashed" actionValue="'dashed'"><div class="o-hb-border-preview" style="border-style: dashed;"/></BuilderSelectItem>
+                <BuilderSelectItem title.translate="Dotted" actionValue="'dotted'"><div class="o-hb-border-preview" style="border-style: dotted;"/></BuilderSelectItem>
+                <BuilderSelectItem title.translate="Double" actionValue="'double'"><div class="o-hb-border-preview" style="border-style: double;"/></BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderColorPicker actionParam="{ variable: `${prefix}border-color` }"
+                noTransparency="true"
+                enabledTabs="['solid', 'custom']"
+            />
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+<t t-name="mass_mailing.DesignButtonOption">
+    <t t-call="mass_mailing.DesignGenericButtonOption">
+        <t t-set="prefix" t-value="`--btn-primary-`"/>
+        <t t-set="label">Primary Button</t>
+    </t>
+    <t t-call="mass_mailing.DesignGenericButtonOption">
+        <t t-set="prefix" t-value="`--btn-secondary-`"/>
+        <t t-set="label">Secondary Button</t>
+    </t>
+</t>
+
+<t t-name="mass_mailing.DesignSeparatorOption">
+    <t t-set="prefix" t-value="`--separator-`"/>
+    <BuilderContext action="'mass_mailing.CustomizeMailingVariable'">
+        <BuilderRow label.translate="Separators" extraLabelClass="'fw-bolder'">
+            <BuilderNumberInput actionParam="{ variable: `${prefix}border-top-width` }" unit="'px'" saveUnit="'px'" min="0"
+                default="0" composable="true"/>
+            <BuilderSelect actionParam="{ variable: `${prefix}border-style` }">
+                <BuilderSelectItem title.translate="Solid" actionValue="'solid'"><div class="o-hb-border-preview" style="border-style: solid;"/></BuilderSelectItem>
+                <BuilderSelectItem title.translate="Dashed" actionValue="'dashed'"><div class="o-hb-border-preview" style="border-style: dashed;"/></BuilderSelectItem>
+                <BuilderSelectItem title.translate="Dotted" actionValue="'dotted'"><div class="o-hb-border-preview" style="border-style: dotted;"/></BuilderSelectItem>
+                <BuilderSelectItem title.translate="Double" actionValue="'double'"><div class="o-hb-border-preview" style="border-style: double;"/></BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderColorPicker actionParam="{ variable: `${prefix}border-color` }"
+                noTransparency="true"
+                enabledTabs="['solid', 'custom']"
+            />
+        </BuilderRow>
+        <BuilderRow label.translate="Width" level="1">
+            <BuilderButtonGroup actionParam="{ variable: `${prefix}width` }">
+                <BuilderButton actionValue="'25%'" title.translate="Resize Quarter">25%</BuilderButton>
+                <BuilderButton actionValue="'50%'" title.translate="Resize Half">50%</BuilderButton>
+                <BuilderButton actionValue="'75%'" title.translate="Resize Three Quarters">75%</BuilderButton>
+                <BuilderButton actionValue="'100%'" title.translate="Resize Full">100%</BuilderButton>
+            </BuilderButtonGroup>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+</templates>

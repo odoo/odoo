@@ -3,7 +3,7 @@
 
 {
     'name': 'Mass mailing on track speakers',
-    'category': 'Hidden',
+    'category': 'Marketing/Email Marketing',
     'version': '1.0',
     'description':
         """
@@ -17,4 +17,6 @@ Bridge module adding UX requirements to ease mass mailing of event track speaker
         'views/event_views.xml'
     ],
     'auto_install': True,
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
 }

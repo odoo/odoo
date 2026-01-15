@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="hr_attendance.Many2One">
+        <AutoComplete
+            value="props.value"
+            placeholder="props.placeholder || 'Select an employee'"
+            sources="sources"
+            onInput="props.update"
+            dropdown="true"
+            autofocus="true">
+            <t t-set-slot="option" t-slot-scope="optionScope">
+                <div class="d-flex align-items-center">
+                    <img t-attf-src="/web/image/hr.employee.public/{{optionScope.data.id}}/avatar_128"
+                            loading="lazy"
+                            class="rounded-circle me-2"
+                            width="24" height="24"/>
+                    <t t-out="optionScope.label"/>
+                </div>
+            </t>
+        </AutoComplete>
+        <i class="fa fa-caret-down dropdown-caret-icon"></i>
+    </t>
+</templates>

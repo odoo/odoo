@@ -1,45 +1,67 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 AVAILABLE_PRIORITIES = [
-    ('0', 'Normal'),
-    ('1', 'Low'),
+    ('0', 'Low'),
+    ('1', 'Medium'),
     ('2', 'High'),
     ('3', 'Very High'),
 ]
 
 
-class Stage(models.Model):
+class CrmStage(models.Model):
     """ Model for case stages. This models the main stages of a document
         management flow. Main CRM objects (leads, opportunities, project
         issues, ...) will now use only stages, instead of state and stages.
         Stages are for example used to display the kanban view of records.
     """
-    _name = "crm.stage"
-    _description = "Stage of case"
+    _name = 'crm.stage'
+    _description = "CRM Stages"
     _rec_name = 'name'
     _order = "sequence, name, id"
 
-    @api.model
-    def default_get(self, fields):
-        """ Hack :  when going from the pipeline, creating a stage with a sales team in
-            context should not create a stage for the current sales channel only
-        """
-        ctx = dict(self.env.context)
-        if ctx.get('default_team_id') and not ctx.get('crm_team_mono'):
-            ctx.pop('default_team_id')
-        return super(Stage, self.with_context(ctx)).default_get(fields)
-
     name = fields.Char('Stage Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help="Used to order stages. Lower is better.")
-    probability = fields.Float('Probability (%)', required=True, default=10.0, help="This percentage depicts the default/average probability of the Case for this stage to be a success")
-    on_change = fields.Boolean('Change Probability Automatically', help="Setting this stage will change the probability automatically on the opportunity.")
+    is_won = fields.Boolean('Is Won Stage?')
+    rotting_threshold_days = fields.Integer('Days to rot', default=0, help='Highlight opportunities that haven\'t been updated for this many days. \
+        Set to 0 to disable. Changing this parameter will not affect the rotting status/date of resources last updated before this change.')
     requirements = fields.Text('Requirements', help="Enter here the internal requirements for this stage (ex: Offer sent to customer). It will appear as a tooltip over the stage's name.")
-    team_id = fields.Many2one('crm.team', string='Team', ondelete='set null',
-        help='Specific team that uses this stage. Other teams will not be able to see or use this stage.')
-    legend_priority = fields.Text('Priority Management Explanation', translate=True,
-        help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.')
+    team_ids = fields.Many2many('crm.team', string='Sales Teams', ondelete='restrict')
     fold = fields.Boolean('Folded in Pipeline',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
+    # This field for interface only
+    team_count = fields.Integer('team_count', compute='_compute_team_count')
+    color = fields.Integer(string='Color', export_string_translation=False)
+
+    @api.depends('team_ids')
+    def _compute_team_count(self):
+        self.team_count = self.env['crm.team'].search_count([])
+
+    @api.onchange('is_won')
+    def _onchange_is_won(self):
+        return {
+            'warning': {
+                'title': _("Do you really want to update this stage?"),
+                'message': _("Changing the value of 'Is Won Stage' may induce a large number of operations, "
+                            "as the probabilities of opportunities in this stage will be recomputed on saving."),
+            }
+        }
+
+    def write(self, vals):
+        """ Since leads that are in a won stage must have their
+        probability = 100%, this override ensures that setting a stage as won
+        will set all the leads in that stage to probability = 100%.
+        Inversely, if a won stage is not marked as won anymore, the lead
+        probability should be recomputed based on automated probability.
+        Note: If a user sets a stage as won and changes his mind right after,
+        the manual probability will be lost in the process."""
+        res = super().write(vals)
+        if 'is_won' in vals:
+            won_leads = self.env['crm.lead'].search([('stage_id', 'in', self.ids)])
+            if won_leads and vals.get('is_won'):
+                won_leads.write({'probability': 100, 'automated_probability': 100})
+            elif won_leads and not vals.get('is_won'):
+                won_leads._compute_probabilities()
+        return res

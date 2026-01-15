@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="mail.guest" id="mail.guest_alex_demo">
+            <field name="name">Alex</field>
+        </record>
+        <record model="discuss.channel" id="mail.channel_public_community_demo">
+            <field name="name">Public Community</field>
+            <field name="description">A space for engaging discussions among employees, partners, and the public.</field>
+            <field name="group_public_id" eval="False"/>
+        </record>
+        <record model="mail.message" id="mail.channel_public_community_message_0_demo">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="mail.channel_public_community_demo"/>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="body">
+                We're excited to announce our product launch this September! 🎉
+                We'll be hosting a live video conference on this channel to showcase all the details.
+                If you're interested, feel free to share the link with your customers so they can tune
+                in and watch it live!
+            </field>
+        </record>
+        <record model="mail.message" id="mail.channel_public_community_message_1_demo">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="mail.channel_public_community_demo"/>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id"/>
+            <field name="author_guest_id" ref="mail.guest_alex_demo"/>
+            <field name="parent_id" ref="mail.channel_public_community_message_0_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=20)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="body">
+                That sounds amazing! Can't wait to see what's new.
+                Will there be a QA session during the conference?
+            </field>
+        </record>
+        <record model="mail.message" id="mail.channel_public_community_message_2_demo">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="mail.channel_public_community_demo"/>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="parent_id" ref="mail.channel_public_community_message_1_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=10)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="body">
+                Thanks, Alex! 😊 Yes, there will be a live QA session at
+                the end of the conference where attendees can ask questions and get insights
+                directly from our team. Stay tuned for more details!
+            </field>
+        </record>
+        <record model="mail.message.reaction" id="mail.channel_public_community_message_1_reaction_0_demo">
+            <field name="content">❤️</field>
+            <field name="message_id" ref="mail.channel_public_community_message_1_demo"/>
+            <field name="partner_id" ref="base.partner_demo"/>
+        </record>
+        <record model="mail.message.reaction" id="mail.channel_public_community_message_2_reaction_1_demo">
+            <field name="content">👍</field>
+            <field name="message_id" ref="mail.channel_public_community_message_2_demo"/>
+            <field name="guest_id" ref="mail.guest_alex_demo"/>
+        </record>
+        <record model="discuss.channel.member" id="mail.channel_public_community_member_partner_admin_demo">
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="channel_id" ref="mail.channel_public_community_demo"/>
+            <field name="fetched_message_id" ref="mail.channel_public_community_message_0_demo"/>
+            <field name="seen_message_id" ref="mail.channel_public_community_message_0_demo"/>
+            <field name="new_message_separator" eval="ref('mail.channel_public_community_message_0_demo') + 1"/>
+        </record>
+        <record model="discuss.channel.member" id="mail.channel_public_community_member_partner_demo_demo">
+            <field name="partner_id" ref="base.partner_demo"/>
+            <field name="channel_id" ref="mail.channel_public_community_demo"/>
+            <field name="fetched_message_id" ref="mail.channel_public_community_message_2_demo"/>
+            <field name="seen_message_id" ref="mail.channel_public_community_message_2_demo"/>
+            <field name="new_message_separator" eval="ref('mail.channel_public_community_message_2_demo') + 1"/>
+        </record>
+        <record model="discuss.channel.member" id="mail.channel_public_community_member_guest_alex_demo">
+            <field name="guest_id" ref="mail.guest_alex_demo"/>
+            <field name="channel_id" ref="mail.channel_public_community_demo"/>
+            <field name="fetched_message_id" ref="mail.channel_public_community_message_1_demo"/>
+            <field name="seen_message_id" ref="mail.channel_public_community_message_1_demo"/>
+            <field name="new_message_separator" eval="ref('mail.channel_public_community_message_1_demo') + 1"/>
+        </record>
+    </data>
+</odoo>

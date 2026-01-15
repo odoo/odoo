@@ -9,3 +9,4 @@ declaration.
 Signed,
 
 Kiril Vangelovski kiril@hacbee.com https://github.com/kirca
+Kiril Vangelovski kiril@lambda-is.com https://github.com/kirca

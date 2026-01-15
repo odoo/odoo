@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_users_view_form" model="ir.ui.view">
+            <field name="name">res.users.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="hr.res_users_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='other_calendar_preferences']" position="inside">
+                    <field name="monday_location_id"  placeholder="Unspecified" invisible="not employee_id or share"/>
+                    <field name="tuesday_location_id"  placeholder="Unspecified" invisible="not employee_id or share"/>
+                    <field name="wednesday_location_id" placeholder="Unspecified" invisible="not employee_id or share"/>
+                    <field name="thursday_location_id"  placeholder="Unspecified" invisible="not employee_id or share"/>
+                    <field name="friday_location_id"  placeholder="Unspecified" invisible="not employee_id or share"/>
+                    <field name="saturday_location_id"  placeholder="Unspecified" invisible="not employee_id or share"/>
+                    <field name="sunday_location_id"  placeholder="Unspecified" invisible="not employee_id or share"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_useurs_view_form_profile" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="hr.res_users_view_form_preferences"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='other_calendar_preferences']" position="inside">
+                    <field name="monday_location_id"  placeholder="Unspecified"/>
+                    <field name="tuesday_location_id"  placeholder="Unspecified"/>
+                    <field name="wednesday_location_id" placeholder="Unspecified"/>
+                    <field name="thursday_location_id"  placeholder="Unspecified"/>
+                    <field name="friday_location_id"  placeholder="Unspecified"/>
+                    <field name="saturday_location_id"  placeholder="Unspecified"/>
+                    <field name="sunday_location_id"  placeholder="Unspecified"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

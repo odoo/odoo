@@ -2,20 +2,49 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Website Mass Mailing Campaigns',
+    'name': 'Newsletter Subscribe Button',
+    'summary': 'Attract visitors to subscribe to mailing lists',
     'description': """
-Add a snippet in the website builder to subscribe a mass_mailing list
+This module brings a new building block with a mailing list widget to drop on any page of your website.
+On a simple click, your visitors can subscribe to mailing lists managed in the Email Marketing app.
     """,
     'version': '1.0',
-    'category': 'Marketing',
-    'depends': ['website', 'mass_mailing'],
+    'category': 'Website/Website',
+    'depends': ['website', 'mass_mailing', 'google_recaptcha'],
     'data': [
-        'security/mass_mailing_security.xml',
-        'views/website_mass_mailing_templates.xml',
-        'views/unsubscribe_templates.xml',
+        'security/ir.model.access.csv',
+        'data/ir_model_data.xml',
         'views/snippets_templates.xml',
-        'views/mass_mailing_view.xml',
-        'views/res_config_view.xml',
+        'views/snippets/s_newsletter_benefits_popup.xml',
     ],
-    'auto_install': True,
+    'auto_install': ['website', 'mass_mailing'],
+    'assets': {
+        'web.assets_frontend': [
+            'website_mass_mailing/static/src/scss/website_mass_mailing.scss',
+            'website_mass_mailing/static/src/interactions/**/*',
+            'website_mass_mailing/static/src/scss/website_mass_mailing_popup.scss',
+            'website_mass_mailing/static/src/interactions/fix_newsletter_list_class.edit.js',
+            'website_mass_mailing/static/src/xml/*.xml',
+        ],
+        'website.website_builder_assets': [
+            'website_mass_mailing/static/src/js/mass_mailing_form_editor.js',
+            'website_mass_mailing/static/src/plugins/form_option_plugin.js',
+            'website_mass_mailing/static/src/website_builder/**/*',
+            ('remove', 'website_mass_mailing/static/src/website_builder/**/*.edit.*'),
+        ],
+        'website.assets_inside_builder_iframe': [
+            'website_mass_mailing/static/src/website_builder/mailing_list_subscribe_option.edit.*',
+        ],
+        'web.assets_tests': [
+            'website_mass_mailing/static/tests/tours/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'website_mass_mailing/static/tests/interactions/**/*',
+        ],
+        'web.assets_unit_tests_setup': [
+            'website_mass_mailing/static/src/interactions/**/*',
+        ],
+    },
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
 }

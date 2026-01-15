@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_mer_get_new_documents" model="ir.cron">
+        <field name="name">MojEracun: retrieve new documents</field>
+        <field name="interval_number">4</field>
+        <field name="interval_type">hours</field>
+        <field name="model_id" ref="model_res_company"/>
+        <field name="code">model._cron_mer_get_new_documents()</field>
+        <field name="state">code</field>
+    </record>
+
+    <record id="ir_cron_mer_update_document_status" model="ir.cron">
+        <field name="name">MojEracun: update statuses of documents</field>
+        <field name="interval_number">4</field>
+        <field name="interval_type">hours</field>
+        <field name="model_id" ref="model_res_company"/>
+        <field name="code">model._cron_mer_update_document_status()</field>
+        <field name="state">code</field>
+    </record>
+
+    <record id="ir_cron_mer_archive_signed_xmls" model="ir.cron">
+        <field name="name">MojEracun: archived signed XMLs</field>
+        <field name="interval_number">4</field>
+        <field name="interval_type">hours</field>
+        <field name="model_id" ref="model_res_company"/>
+        <field name="code">model._cron_mer_archive_signed_xmls()</field>
+        <field name="state">code</field>
+    </record>
+</odoo>

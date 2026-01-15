@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet.vehicle_1" model="fleet.vehicle">
+        <field name="driver_employee_id" ref="hr.employee_qdp"/>
+    </record>
+    <function model="fleet.vehicle.assignation.log" name="write">
+        <value model="fleet.vehicle.assignation.log" eval="obj().search([('vehicle_id', '=', obj().env.ref('fleet.vehicle_1').id)], limit=1).id"/>
+        <value eval="{'date_start': DateTime.today() - relativedelta(days=336)}"/>
+    </function>
+    
+    <function model="fleet.vehicle.assignation.log" name="unlink">
+        <value model="fleet.vehicle.assignation.log" eval="obj().search([('vehicle_id', 'in', [
+            obj().env.ref('fleet.vehicle_2').id,
+            obj().env.ref('fleet.vehicle_3').id,
+            obj().env.ref('fleet.vehicle_4').id,
+            obj().env.ref('fleet.vehicle_5').id,
+        ])]).ids"/>
+    </function>
+
+    <record id="fleet.vehicle_2" model="fleet.vehicle">
+        <field name="driver_employee_id" ref="hr.employee_hne"/>
+    </record>
+    <function model="fleet.vehicle.assignation.log" name="write">
+        <value model="fleet.vehicle.assignation.log" eval="obj().search([('vehicle_id', '=', obj().env.ref('fleet.vehicle_2').id)], limit=1).id"/>
+        <value eval="{'date_start': DateTime.today() - relativedelta(days=233)}"/>
+    </function>
+
+    <record id="fleet.vehicle_3" model="fleet.vehicle">
+        <field name="driver_employee_id" ref="hr.employee_fpi"/>
+    </record>
+    <function model="fleet.vehicle.assignation.log" name="write">
+        <value model="fleet.vehicle.assignation.log" eval="obj().search([('vehicle_id', '=', obj().env.ref('fleet.vehicle_3').id)], limit=1).id"/>
+        <value eval="{'date_start': DateTime.today() - relativedelta(days=138)}"/>
+    </function>
+    <record id="hr_fleet_vehicle_3_assignation_log_1" model="fleet.vehicle.assignation.log">
+        <field name="vehicle_id" ref="fleet.vehicle_3"/>
+        <field name="driver_id" ref="hr.work_contact_jog"/>
+        <field name="date_start" eval="DateTime.today() - relativedelta(days=481)"/>
+        <field name="date_end" eval="DateTime.today() - relativedelta(days=138)"/>
+    </record>
+
+    <record id="fleet.vehicle_4" model="fleet.vehicle">
+        <field name="driver_employee_id" ref="hr.employee_jog"/>
+    </record>
+    <function model="fleet.vehicle.assignation.log" name="write">
+        <value model="fleet.vehicle.assignation.log" eval="obj().search([('vehicle_id', '=', obj().env.ref('fleet.vehicle_4').id)], limit=1).id"/>
+        <value eval="{'date_start': DateTime.today() - relativedelta(days=138)}"/>
+    </function>
+
+    <record id="fleet.vehicle_5" model="fleet.vehicle">
+        <field name="driver_employee_id" ref="hr.employee_jep"/>
+    </record>
+
+    <!-- recompute driver_employee_id as we assigned a proper work_contact_id to some employees -->
+    <function model="fleet.vehicle.assignation.log" name="_compute_driver_employee_id">
+        <value model="fleet.vehicle.assignation.log" eval="obj().search([('driver_employee_id', '=', False), ('driver_id', '!=', False)]).ids"/>
+    </function>
+
+    <record id="onboarding_fleet_training" model="mail.activity.plan.template">
+        <field name="summary">Fleet Training</field>
+        <field name="responsible_type">fleet_manager</field>
+        <field name="plan_id" ref="hr.onboarding_plan"/>
+    </record>
+
+</odoo>

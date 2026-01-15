@@ -1,0 +1,245 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * crm_livechat
+#
+# Translators:
+# Jiří Podhorecký, 2022
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
+# Marek Záda, 2022
+# Martin Trigaux, 2022
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Jaroslav Janos <jaroslav.janos.jr@technodat.eu>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~15.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2025-12-05 10:58+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/"
+"crm_livechat/cs/>\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/chatbot_script_step.py:0
+msgid "%s's New Lead"
+msgstr "Nové prospekty od %s"
+
+#. module: crm_livechat
+#: model_terms:ir.ui.view,arch_db:crm_livechat.crm_lead_view_form
+msgid "<span class=\"o_stat_text\">View chat</span>"
+msgstr "<span class=\"o_stat_text\">Zobrazit chat</span>"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_chatbot_script
+msgid "Chatbot Script"
+msgstr "Skript chatbota"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_chatbot_script_step
+msgid "Chatbot Script Step"
+msgstr "Krok skriptu chatbota"
+
+#. module: crm_livechat
+#. odoo-javascript
+#: code:addons/crm_livechat/static/src/core/thread_actions.js:0
+#: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead
+msgid "Create Lead"
+msgstr "Vytvořit lead"
+
+#. module: crm_livechat
+#: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead_and_forward
+msgid "Create Lead & Forward"
+msgstr "Vytvořit prospekt a předat"
+
+#. module: crm_livechat
+#. odoo-javascript
+#: code:addons/crm_livechat/static/src/core/channel_commands.js:0
+msgid "Create a new lead (/lead lead title)"
+msgstr "Vytvořit nový lead (/lead titul leadu)"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/discuss_channel.py:0
+msgid ""
+"Create a new lead with: %(pre_start)s%(lead_command)s %(i_start)slead title%"
+"(i_end)s%(pre_end)s"
+msgstr ""
+"Vytvořte nový prospekt pomocí: %(pre_start)s%(lead_command)s %(i_start)s "
+"titul prospektu%(i_end)s%(pre_end)s"
+
+#. module: crm_livechat
+#: model:ir.model,website_form_label:crm_livechat.model_crm_lead
+msgid "Create an Opportunity"
+msgstr "Vytvořit příležitost"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/chatbot_script_step.py:0
+#: code:addons/crm_livechat/models/discuss_channel.py:0
+msgid "Created a new lead: %s"
+msgstr "Vytvořeno nový prospekt: %s"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_discuss_channel
+msgid "Discussion Channel"
+msgstr "Diskusní kanál"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_im_livechat_report_channel__display_name
+#: model:ir.model.fields,field_description:crm_livechat.field_res_users__display_name
+msgid "Display Name"
+msgstr "Zobrazovací název"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__lead_count
+msgid "Generated Lead Count"
+msgstr "Počet generovaných prospektů"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__has_crm_lead
+msgid "Has Crm Lead"
+msgstr "Má prospekt CRM"
+
+#. module: crm_livechat
+#: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_welcome
+msgid "Hi there, what brings you to our website today? 👋"
+msgstr "Hezký den, co vás dnes přivádí na naše webové stránky? 👋"
+
+#. module: crm_livechat
+#: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_noone_available
+msgid "Hu-ho, it looks like none of our operators are available 🙁"
+msgstr "Jejda, vypadá to, že žádný z našich operátorů není k dispozici 🙁"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__id
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__id
+#: model:ir.model.fields,field_description:crm_livechat.field_crm_lead__id
+#: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__id
+#: model:ir.model.fields,field_description:crm_livechat.field_im_livechat_report_channel__id
+#: model:ir.model.fields,field_description:crm_livechat.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_crm_lead
+msgid "Lead"
+msgstr "Prospekt"
+
+#. module: crm_livechat
+#: model:chatbot.script,title:crm_livechat.chatbot_script_lead_generation_bot
+msgid "Lead Generation Bot"
+msgstr "Bot pro generování prospektů"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__lead_ids
+#: model_terms:ir.ui.view,arch_db:crm_livechat.chatbot_script_view_form
+msgid "Leads"
+msgstr "Prospekty"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_im_livechat_report_channel__leads_created
+msgid "Leads created"
+msgstr "Vytvořené prospekty"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_crm_lead__origin_channel_id
+msgid "Live chat from which the lead was created"
+msgstr "Živý chat, ze kterého byl vytvořen prospekt"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_im_livechat_report_channel
+msgid "Livechat Support Channel Report"
+msgstr "Výkaz kanálu živého chatu"
+
+#. module: crm_livechat
+#. odoo-javascript
+#: code:addons/crm_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
+msgid "Open leads"
+msgstr "Otevřené prospekty"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__crm_team_id
+msgid "Sales Team"
+msgstr "Prodejní tým"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__step_type
+msgid "Step Type"
+msgstr "Typ kroku"
+
+#. module: crm_livechat
+#: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_just_looking
+msgid "Thank you, you should hear back from us very soon!"
+msgstr "Děkujeme, brzy se vám ozveme!"
+
+#. module: crm_livechat
+#: model:ir.model.fields,help:crm_livechat.field_discuss_channel__lead_ids
+msgid "The channel becomes accessible to sales users when leads are set."
+msgstr ""
+"Kanál se stane přístupným pro uživatele prodeje, jakmile jsou nastaveny "
+"potenciální zákazníci."
+
+#. module: crm_livechat
+#: model:ir.model.fields,help:crm_livechat.field_chatbot_script_step__crm_team_id
+msgid ""
+"Used in combination with 'create_lead' step type in order to automatically "
+"assign the created lead/opportunity to the defined team"
+msgstr ""
+"Používá se v kombinaci s typem kroku „create_lead“ za účelem automatického "
+"přiřazení vytvořeného prospektu/příležitosti k definovanému týmu."
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_res_users
+msgid "User"
+msgstr "Uživatel"
+
+#. module: crm_livechat
+#: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_pricing_email
+msgid ""
+"Would you mind leaving your email address so that we can reach you back?"
+msgstr ""
+"Mohl byste nám zanechat svou e-mailovou adresu, abychom vás mohli "
+"kontaktovat?"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/crm_lead.py:0
+msgid "You cannot create leads linked to channels you don't have access to."
+msgstr ""
+"Nelze vytvářet potenciální zákazníky propojené s kanály, ke kterým nemáte "
+"přístup."
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/crm_lead.py:0
+msgid ""
+"You cannot update a lead and link it to a channel you don't have access to."
+msgstr ""
+"Nelze aktualizovat potenciálního zákazníka a propojit ho s kanálem, ke "
+"kterému nemáte přístup."
+
+#. module: crm_livechat
+#. odoo-javascript
+#: code:addons/crm_livechat/static/src/core/thread_actions.js:0
+msgid "e.g. Product pricing"
+msgstr "např. Cena produktu"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/chatbot_script_step.py:0
+msgid "livechat discussion"
+msgstr "diskuse na živém chatu"

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="l10n_in_ewaybill_stock_inherit_report" inherit_id="l10n_in_ewaybill.report_ewaybill">
+        <xpath expr="//h4[@id='ewaybill_header']" position="replace">
+            <h4 t-if="doc.state not in ewaybill_states and doc.picking_id">
+                Delivery Challan
+            </h4>
+            <h4 t-else="">e-Way Bill</h4>
+        </xpath>
+        <xpath expr="//t[@t-out='doc.type_id.sub_type']" position="after">
+            <t t-if="doc.type_description">
+                - <t t-out="doc.type_description"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

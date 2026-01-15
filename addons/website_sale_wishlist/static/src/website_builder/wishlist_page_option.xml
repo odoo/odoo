@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale_wishlist.WishlistPageOption">
+    <ProductsDesignPanel
+        recordName="'wishlist_opt_products_design_classes'"
+        label.translate="Products Design"
+    />
+
+    <BuilderRow t-if="this.isActiveItem('grid_view_opt')" label.translate="Desktop" level="1">
+        <BuilderSelect action="'wishlistGridColumns'" id="'o_wsale_wishlist_grid_columns'">
+            <BuilderSelectItem actionValue="2">2 Columns</BuilderSelectItem>
+            <BuilderSelectItem actionValue="3">3 Columns</BuilderSelectItem>
+            <BuilderSelectItem actionValue="4">4 Columns</BuilderSelectItem>
+            <BuilderSelectItem actionValue="5">5 Columns</BuilderSelectItem>
+            <BuilderSelectItem actionValue="6">6 Columns</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow t-if="this.isActiveItem('grid_view_opt')" label.translate="Mobile" level="1">
+        <BuilderSelect action="'wishlistMobileColumns'" id="'o_wsale_wishlist_mobile_columns'">
+            <BuilderSelectItem actionValue="1">1 Column</BuilderSelectItem>
+            <BuilderSelectItem actionValue="2">2 Columns</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <div class="d-none">
+        <BuilderRow label.translate="Layout">
+            <BuilderButtonGroup>
+                <BuilderButton id="'grid_view_opt'" classAction="'o_wsale_products_opt_layout_catalog'"/>
+                <BuilderButton classAction="'o_wsale_products_opt_layout_list'"/>
+            </BuilderButtonGroup>
+        </BuilderRow>
+    </div>
+</t>
+
+</templates>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Inherit the preference view to remove title, image and footer -->
+        <!-- This view is meant to be included in the employee preferences view -->
+        <!-- It ensures that if the 'normal' Preferences view is changed, it's
+            also reflected in the employee's preferences -->
+        <record id="res_users_view_form_simple_modif" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.simplified.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form position="attributes">
+                    <attribute name="string">Preferences</attribute>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_users_form_simple_modif_resource" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.resource</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+            <field name="arch" type="xml">
+                <field name="tz" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
+                <field name="tz" position="after">
+                    <field name="is_system" invisible="1"/>
+                </field>
+                <xpath expr="//button[@name='%(base.action_view_base_language_install)d']" position="attributes">
+                    <attribute name="invisible">not is_system</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_users_view_form_preferences" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="res_users_view_form_simple_modif"/>
+            <field name="arch" type="xml">
+                <form position="attributes">
+                    <attribute name="create">false</attribute>
+                    <attribute name="delete">false</attribute>
+                    <attribute name="js_class">hr_user_preferences_form</attribute>
+                </form>
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="placeholder">Employee's Name</attribute>
+                    <attribute name="required">1</attribute>
+                </xpath>
+                <!-- Must be replaced by work_email when the user has an employee_id. -->
+                <xpath expr="//h5[@name='h5_email']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <!-- Must be replaced by work_phone when the user has an employee_id. -->
+                <xpath expr="//h5[@name='h5_phone']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//div[hasclass('oe_title')]" position="inside">
+                    <h5 class="d-flex align-items-baseline mb-0">
+                        <i class="fa fa-envelope fa-fw me-1 text-primary" title="Work Email"/>
+                        <field name="work_email" widget="email" placeholder="Work Email" string="Work Email" class="w-75"/>
+                    </h5>
+                    <h5 class="d-flex align-items-baseline mb-0">
+                        <i class="fa fa-phone fa-fw me-1 text-primary" title="Work Phone"/>
+                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone" class="w-75"/>
+                    </h5>
+                    <h5 class="d-flex align-items-baseline mb-0">
+                        <i class="fa fa-mobile fa-fw me-1 text-primary" title="Work Mobile"/>
+                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile" class="w-75"/>
+                    </h5>
+                </xpath>
+                <xpath expr="//group[@name='other_preferences']" position="inside">
+                    <field name="pin" string="Attendance PIN"/>
+                </xpath>
+                <xpath expr="//group[@name='other_calendar_preferences']" position="inside">
+                    <field name="work_location_id" string="Main Work Location" options="{'no_create': True}"/>
+                </xpath>
+                <xpath expr="//page[@name='calendar']" position="after">
+                    <page name="private_information" string="Private">
+                        <group>
+                            <group string="Private Information">
+                                <field name="employee_ids" invisible="1"/>
+                                <label for="private_street" string="Private Address"/>
+                                <div class="o_address_format">
+                                    <field name="private_street" placeholder="Street..." class="o_address_street"/>
+                                    <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
+                                    <field name="private_city" placeholder="City" class="o_address_city"/>
+                                    <field name="private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_create': True}" context="{'default_country_id': private_country_id}"/>
+                                    <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
+                                    <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                </div>
+                                <field name="private_email" string="Private Email"/>
+                                <field name="private_phone" string="Private Phone" class="o_force_ltr"/>
+                            </group>
+                            <group string="Emergency Contact">
+                                <field name="emergency_contact" string="Contact Name" placeholder="e.g. John Doe"/>
+                                <field name="emergency_phone" string="Contact Phone" widget="phone"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_users_simple_form_inherit_hr" model="ir.ui.view">
+            <field name="name">view.users.simple.form.inherit.hr</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_simple_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_employees"
+                            class="oe_stat_button"
+                            icon="fa-users"
+                            invisible="employee_count == 0"
+                            context="{'active_test': False}"
+                            type="object">
+                            <field name="employee_count" widget="statinfo" string="Employee"/>
+                        </button>
+                    </div>
+                </xpath>
+                <xpath expr="//group[@name='access_groups']" position="inside">
+                    <field name="create_employee_id" force_save="1" invisible="1"/>
+                    <field name="create_employee" force_save="1" string="Create Employee" invisible="1" groups="hr.group_hr_user"/>
+                    <!-- It is required to stay create_employee field defined here to make it true because store value is false -->
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_users_simple_form" model="ir.ui.view">
+            <field name="name">view.users.simple.form.hr</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_simple_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <sheet position="after">
+                    <footer>
+                        <button string="Save" special="save" class="btn btn-primary"/>
+                        <button string="Cancel" special="cancel" class="btn btn-secondary"/>
+                    </footer>
+                </sheet>
+            </field>
+        </record>
+
+        <record id="res_users_action_my" model="ir.actions.act_window">
+            <field name="name">Change my Preferences</field>
+            <field name="res_model">res.users</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="hr.res_users_view_form_preferences"/>
+        </record>
+
+        <record id="res_users_view_form" model="ir.ui.view">
+            <field name="name">res.users.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//header" position="inside">
+                    <field name="share" invisible="1"/>
+                    <field name="employee_ids" invisible="1"/>
+                    <field name="employee_id" invisible="1"/>
+                    <button string="Create employee"
+                            type="object" name="action_create_employee"
+                            invisible="not id or share or employee_id"
+                            groups="hr.group_hr_user"/>
+                            <!-- share is not correctly recomputed because it depends on fields of reified view => invisible before saving (id=False) -->
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_open_employees"
+                        class="oe_stat_button"
+                        icon="fa-users"
+                        invisible="employee_count == 0"
+                        context="{'active_test': False}"
+                        type="object">
+                        <field name="employee_count" widget="statinfo" string="Employee"/>
+                    </button>
+                    <button name="action_related_contact"
+                        class="oe_stat_button"
+                        icon="fa-address-card-o"
+                        type="object"
+                        help="Related Contact">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Contact</span>
+                        </div>
+                    </button>
+                </xpath>
+                <!--increase image size to accommodate the additional login field-->
+                <field name="image_1920" widget="contact_image" position="attributes">
+                    <attribute name="invisible">employee_id and work_email != login</attribute>
+                </field>
+                <field name="image_1920" widget="contact_image" position="after">
+                    <field name="image_1920" class="o_contact_image_large" invisible="not employee_id or work_email == login"
+                        widget="contact_image" options="{'preview_image': 'avatar_128', 'img_class': 'rounded-4'}"/>
+                </field>
+                <!-- Must be replaced by work_email when the user has an employee_id. -->
+                <xpath expr="//h5[@name='h5_email']" position="attributes">
+                    <attribute name="invisible">employee_id</attribute>
+                </xpath>
+                <!-- Must be replaced by work_phone when the user has an employee_id. -->
+                <xpath expr="//h5[@name='h5_phone']" position="attributes">
+                    <attribute name="invisible">employee_id</attribute>
+                </xpath>
+                <xpath expr="//div[hasclass('oe_title')]" position="inside">
+                    <h5 class="d-flex flex-wrap align-items-baseline mb-0" invisible="not employee_id">
+                        <div class="w-100">
+                            <i class="fa fa-fw fa-envelope me-1 text-primary" title="Login / Email" invisible="login != work_email"/>
+                            <i class="fa fa-fw fa-key me-1 text-primary" title="Login" invisible="login == work_email"/>
+                            <field name="login" placeholder="Login" class="w-75"/><br/>
+                        </div>
+                    
+                        <i class="fa fa-envelope fa-fw me-1 text-primary" title="Work Email" invisible="login == work_email"/>
+                        <field name="email_domain_placeholder" invisible="1" />
+                        <field name="work_email" widget="email" string="Work Email" class="w-75" options="{'placeholder_field': 'email_domain_placeholder'}" invisible="login == work_email"/>
+                    </h5>
+                    <h5 class="d-flex align-items-baseline mb-0" invisible="not employee_id">
+                        <i class="fa fa-phone fa-fw me-1 text-primary" title="Work Phone"/>
+                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone" class="w-75"/>
+                    </h5>
+                    <h5 class="d-flex align-items-baseline mb-0" invisible="not employee_id">
+                        <i class="fa fa-mobile fa-fw me-1 text-primary" title="Work Mobile"/>
+                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile" class="w-75"/>
+                    </h5>
+                </xpath>
+                <xpath expr="//group[@name='other_preferences']" position="inside">
+                    <field name="pin" string="Attendance PIN" invisible="not employee_id"/>
+                </xpath>
+                <xpath expr="//group[@name='other_calendar_preferences']" position="inside">
+                    <field name="work_location_id" string="Main Work Location" invisible="not employee_id or share"/>
+                </xpath>
+                <xpath expr="//page[@name='calendar']" position="attributes">
+                    <attribute name="groups">hr.group_hr_user</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

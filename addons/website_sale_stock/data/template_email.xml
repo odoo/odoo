@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<odoo>
+    <template id="availability_email_body">
+        <div id="body">
+            <p>Dear Customer,</p>
+            <p>The following product is now available.</p>
+            <div style="display: flex; justify-content: center; width: 100%;">
+                <a t-attf-href="#{product.website_url}">
+                    <img t-attf-src="/web/image/product.product/#{product.id}/image_1920"/>
+                </a>
+            </div>
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; width: 100%;">
+                <p t-out="product.name"/>
+                <p t-if="product.product_template_attribute_value_ids"
+                   style="margin-left: 0.5em;">
+                    (<t
+                    t-out="', '.join(product.product_template_attribute_value_ids.mapped('name'))"
+                    />)
+                </p>
+            </div>
+            <p t-out="product.description_sale"/>
+            <div style="display: flex; justify-content: center; width: 100%;">
+                <a t-attf-href="#{product.website_url}" t-attf-style="background-color: {{product.website_id.get_current_website().company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{product.website_id.get_current_website().company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;">
+                    Order Now
+                </a>
+            </div>
+            <p>Regards,</p>
+        </div>
+    </template>
+</odoo>

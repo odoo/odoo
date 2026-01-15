@@ -1,0 +1,23 @@
+
+@keyframes fade {
+    0%,100% { opacity: 0 }
+    30%,70% { opacity: 1 }
+}
+.o-chatgpt-content {
+    position: absolute;
+    background: rgba(1, 186, 210, 0.5);
+    opacity: 0;
+    animation: fade 1.5s ease-in-out;
+    z-index: 1;
+    outline: 2px dashed #01bad2;
+    outline-offset: -2px;
+}
+
+.o-chatgpt-translated > *:last-child {
+    margin-bottom: 0;
+}
+.o-message-error {
+    color: #d44c59;
+    font-weight: bold;
+    --bg-opacity: 0.25;
+}

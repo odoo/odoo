@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data auto_sequence="1">
+    <record id="mod_390_section_4" model="account.report">
+        <field name="name">Resultado de las Liquidaciones</field>
+        <field name="name@es">Resultado de las Liquidaciones</field>
+        <field name="filter_analytic" eval="False"/>
+        <field name="filter_date_range" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.es"/>
+        <field name="column_ids">
+            <record id="mod_390_column_sect4" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@es">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="mod_390_title_46" model="account.report.line">
+                <field name="name">Resultado de las liquidaciones</field>
+                <field name="name@es">Resultado de las liquidaciones</field>
+                <field name="code">aeat_mod_390_title_46</field>
+                <field name="children_ids">
+                    <record id="mod_390_title_47" model="account.report.line">
+                        <field name="name">Períodos que no tributan en Régimen especial del grupo de entidades</field>
+                        <field name="name@es">Periodos que no tributan en Régimen especial del grupo de entidades</field>
+                        <field name="code">aeat_mod_390_title_47</field>
+                        <field name="children_ids">
+                            <record id="mod_390_casilla_95" model="account.report.line">
+                                <field name="name">[95] Total resultados a ingresar en las autoliquidaciones de IVA del ejercicio</field>
+                                <field name="name@es">[95] Total resultados a ingresar en las autoliquidaciones de IVA del ejercicio</field>
+                                <field name="code">aeat_mod_390_95</field>
+                                <field name="expression_ids">
+                                     <record id="mod_390_casilla_95_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">aeat_mod_390_86.balance</field>
+                                         <field name="subformula">cross_report(l10n_es.mod_390_section_3)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_96" model="account.report.line">
+                                <field name="name">[96] Total devoluciones mensuales de IVA solicitadas por sujetos pasivos inscritos en el Registro de devolución mensual</field>
+                                <field name="name@es">[96] Total devoluciones mensuales de IVA solicitadas por sujetos pasivos inscritos en el Registro de devolución mensual</field>
+                                <field name="code">aeat_mod_390_96</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_96_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_524" model="account.report.line">
+                                <field name="name">[524] Total devoluciones solicitadas por cuotas soportadas en la adquisición de elementos de transporte (Art. 30 bis RIVA)</field>
+                                <field name="name@es">[524] Total devoluciones solicitadas por cuotas soportadas en la adquisición de elementos de transporte (Art. 30 bis RIVA)</field>
+                                <field name="code">aeat_mod_390_524</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_524_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_97" model="account.report.line">
+                                <field name="name">[97] Si el resultado de la autoliquidación del último periodo es a compensar o a devolver consigne su importe: a compensar</field>
+                                <field name="name@es">[97] Si el resultado de la autoliquidación del último periodo es a compensar o a devolver consigne su importe: a compensar</field>
+                                <field name="code">aeat_mod_390_97</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_97_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_98" model="account.report.line">
+                                <field name="name">[98] Si el resultado de la autoliquidación del último periodo es a compensar o a devolver consigne su importe: a devolver</field>
+                                <field name="name@es">[98] Si el resultado de la autoliquidación del último periodo es a compensar o a devolver consigne su importe: a devolver</field>
+                                <field name="code">aeat_mod_390_98</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_98_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_662" model="account.report.line">
+                                <field name="name">[662] Cuotas pendientes de compensación al término del ejercicio</field>
+                                <field name="name@es">[662] Cuotas pendientes de compensación generadas en el ejercicio y distintas de las incluidas en la casilla 97</field>
+                                <field name="code">aeat_mod_390_662</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_662_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="mod_390_title_48" model="account.report.line">
+                        <field name="name">Períodos que tributan en Régimen especial del grupo de entidades</field>
+                        <field name="name@es">Periodos que tributan en Régimen especial del grupo de entidades</field>
+                        <field name="code">aeat_mod_390_title_48</field>
+                        <field name="children_ids">
+                            <record id="mod_390_casilla_525" model="account.report.line">
+                                <field name="name">[525] Total resultados positivos autoliquidaciones del ejercicio (modelo 322)</field>
+                                <field name="name@es">[525] Total resultados positivos autoliquidaciones del ejercicio (modelo 322)</field>
+                                <field name="code">aeat_mod_390_525</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_525_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="mod_390_casilla_526" model="account.report.line">
+                                <field name="name">[526] Total resultados negativos autoliquidaciones del ejercicio (modelo 322)</field>
+                                <field name="name@es">[526] Total resultados negativos autoliquidaciones del ejercicio (modelo 322)</field>
+                                <field name="code">aeat_mod_390_526</field>
+                                <field name="expression_ids">
+                                    <record id="mod_390_casilla_526_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</data>
+</odoo>

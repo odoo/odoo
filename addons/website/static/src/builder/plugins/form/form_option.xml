@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.s_website_form_form_option">
+    <BuilderRow t-if="!modelCantChange and this.state.models"
+            label.translate="Action" preview="false">
+        <BuilderSelect>
+            <t t-foreach="this.state.models" t-as="model" t-key="model.id">
+                <BuilderSelectItem t-out="model.website_form_label" action="'selectAction'" actionValue="model.id.toString()"/>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <FormActionFieldsOption activeForm="state.activeForm"/>
+    <BuilderRow label.translate="Marked Fields">
+        <BuilderSelect id="'field_mark_select'" action="'updateLabelsMark'">
+            <BuilderSelectItem classAction="''">None</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_mark_required'" id="'form_required_opt'">Required</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_mark_optional'" id="'form_optional_opt'">Optional</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Mark Text">
+        <BuilderTextInput action="'setMark'" default="''" t-if="isActiveItem('form_required_opt') || isActiveItem('form_optional_opt')"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Labels Width">
+        <BuilderNumberInput
+            styleAction="'width'"
+            unit="'px'" applyTo="'.s_website_form_label'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="On Success">
+        <BuilderSelect preview="false" action="'onSuccess'">
+            <BuilderSelectItem actionValue="'nothing'">Nothing</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'redirect'" id="'show_redirect_opt'">Redirect</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'message'" id="'show_message_opt'">Show Message</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderButton t-if="isActiveItem('show_message_opt')"
+                       title.translate="Edit Message"
+                       icon="'fa-eye'"
+                       preview="false"
+                       action="'toggleEndMessage'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="URL">
+        <WebsiteUrlPicker dataAttributeAction="'successPage'" default="'/contactus-thank-you'" id="'url_opt'" t-if="isActiveItem('show_redirect_opt')"/>
+    </BuilderRow>
+    <BuilderRow t-if="hasRecaptchaKey" label.translate="Show reCaptcha Policy">
+        <BuilderCheckbox action="'formToggleRecaptchaLegal'" preview="false"/>
+    </BuilderRow>
+</t>
+
+<t t-name="website.s_website_form_form_action_fields_option">
+    <t t-if="state.formInfo.fields">
+        <t t-foreach="state.formInfo.fields" t-as="field" t-key="field.name">
+            <BuilderRow t-if="field.type === 'many2one'" label="field.string" preview="false">
+                <BuilderSelect actionParam="{ isSelect: true, fieldName: field.name }">
+                    <BuilderSelectItem t-if="!field.required" action="'addActionField'" actionValue="'0'">
+                        None
+                    </BuilderSelectItem>
+                    <BuilderSelectItem t-foreach="field.records" t-as="record" t-key="record.id"
+                        action="'addActionField'" actionValue="record.id.toString()"
+                    >
+                        <t t-out="record.display_name"/>
+                    </BuilderSelectItem>
+                </BuilderSelect>
+                <BuilderButton t-if="field.createAction" className="'fa fa-fw fa-plus'"
+                    title.translate="Create New"
+                    action="'promptSaveRedirect'" actionParam="field.createAction"
+                />
+            </BuilderRow>
+            <!-- TODO className="'o_we_large'" -->
+            <BuilderRow t-if="field.type === 'char'" label="field.string">
+                <BuilderTextInput actionParam="{ fieldName: field.name }" action="'addActionField'" default="''"/>
+            </BuilderRow>
+        </t>
+    </t>
+</t>
+
+<t t-name="website.s_website_form_form_option_add_field_button">
+    <button type="button" class="btn btn-success pe-2"
+        t-att-title="props.tooltip"
+        t-on-click="() => this.addField()"
+    >
+        + Field
+    </button>
+</t>
+
+<t t-name="website.s_website_form_field_option_redraw">
+    <FormFieldOption redrawSequence="domState.redrawSequence" t-props="props"/>
+</t>
+
+<t t-name="website.s_website_form_field_option">
+    <t t-if="domState.elClassList.includes('s_website_form_model_required')">
+        <FormModelRequiredFieldAlert fieldName="domState.fieldName" modelName="domState.modelName" />
+    </t>
+    <BuilderRow label.translate="Type">
+        <BuilderSelect t-if="!domState.elClassList.includes('s_website_form_model_required')"
+            id="'type_opt'" preview="false"
+        >
+            <div class="o-hb-select-dropdown-category py-2 ps-2 fst-italic">Custom Field</div>
+            <BuilderContext action="'customField'">
+                <BuilderSelectItem actionValue="'char'">Text</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'text'">Long Text</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'email'">Email</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'tel'">Telephone</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'url'">Url</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'integer'">Number</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'float'">Decimal Number</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'boolean'">Checkbox</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'one2many'">Multiple Checkboxes</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'selection'">Radio Buttons</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'many2one'">Selection</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'date'">Date</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'datetime'">Date &amp; Time</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'binary'">File Upload</BuilderSelectItem>
+            </BuilderContext>
+            <t t-if="state.availableFields.length">
+                <div class="o-hb-select-dropdown-category py-2 ps-2 fst-italic">Existing fields</div>
+                <t t-foreach="state.availableFields" t-as="field" t-key="field.name">
+                    <BuilderSelectItem action="'existingField'" actionValue="field.name" t-out="field.string"/>
+                </t>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Input Type">
+        <BuilderSelect t-if="!domState.elClassList.includes('s_website_form_custom') and ['char', 'email', 'tel', 'url'].includes(domState.elDataset.type) and !domState.elClassList.includes('s_website_form_model_required')"
+            id="'char_input_type_opt'" preview="false" action="'selectType'"
+        >
+            <BuilderSelectItem actionValue="'char'">Text</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'email'">Email</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'tel'">Telephone</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'url'">Url</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Selection type">
+        <BuilderSelect t-if="isExistingFieldSelectType and state.valueList"
+            id="'existing_field_select_type_opt'" preview="false" action="'existingFieldSelectType'"
+        >
+            <BuilderSelectItem actionValue="'many2one'">Dropdown List</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'selection'">Radio</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Display" level="1">
+        <BuilderSelect t-if="isMultipleInputs"
+            id="'multi_check_display_opt'" preview="false"
+        >
+            <BuilderSelectItem action="'multiCheckboxDisplay'" actionValue="'horizontal'">Horizontal</BuilderSelectItem>
+            <BuilderSelectItem action="'multiCheckboxDisplay'" actionValue="'vertical'">Vertical</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Height" level="1" applyTo="'textarea'">
+        <BuilderNumberInput unit.translate="rows" saveUnit="''" step="1" attributeAction="'rows'" default="3"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Label">
+        <BuilderTextInput action="'setLabelText'" default="domState.fieldTranslatedName"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Position" level="1">
+        <BuilderButtonGroup action="'selectLabelPosition'">
+            <BuilderButton title.translate="Hide" actionValue="'none'">
+                <i class="fa fa-eye-slash"/>
+            </BuilderButton>
+            <BuilderButton title.translate="Top" actionValue="'top'" iconImg="'/website/static/src/img/snippets_options/pos_top.svg'"/>
+            <BuilderButton title.translate="Left" actionValue="'left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+            <BuilderButton title.translate="Right" actionValue="'right'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow label.translate="Description">
+        <BuilderCheckbox action="'toggleDescription'" preview="false"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Placeholder">
+        <BuilderTextInput attributeAction="'placeholder'"
+            applyTo="`input[type='text'], input[type='email'], input[type='number'], input[type='tel'], input[type='url'], textarea`"
+        />
+    </BuilderRow>
+    <BuilderRow label.translate="Default Value">
+        <BuilderTextInput action="'selectTextareaValue'" applyTo="'textarea'"/>
+        <BuilderCheckbox attributeAction="'checked'" attributeActionValue="'checked'"
+            applyTo="`.col-sm > * > input[type='checkbox']`" preview="false"
+        />
+        <BuilderTextInput attributeAction="'value'" action="'property'" actionParam="{ property: 'value' }"
+            applyTo="`input[type='text']:not(.datetimepicker-input), input[type='email'], input[type='tel'], input[type='url']`"
+        />
+        <BuilderNumberInput attributeAction="'value'" step="1" action="'property'" actionParam="{ property: 'value' }"
+            applyTo="`input[type='number']`"
+        />
+        <BuilderDateTimePicker type="'datetime'" attributeAction="'value'" action="'property'" actionParam="{ property: 'value', format: format.datetime }"
+            applyTo="'.s_website_form_datetime input'"
+        />
+        <BuilderDateTimePicker type="'date'" attributeAction="'value'" action="'property'" actionParam="{ property: 'value', format: format.date }"
+            applyTo="'.s_website_form_date input'"
+        />
+    </BuilderRow>
+    <BuilderRow label.translate="Required">
+        <BuilderCheckbox t-if="!domState.elClassList.includes('s_website_form_model_required')"
+            id="'required_opt'" preview="false"
+            action="'toggleRequired'" actionParam="'s_website_form_required'"
+        />
+    </BuilderRow>
+    <BuilderRow label.translate="Max # of Files">
+        <BuilderNumberInput id="'max_files_number_opt'" t-if="isMaxFilesVisible"
+            title.translate="The maximum number of files that can be uploaded."
+            dataAttributeAction="'maxFilesNumber'"
+            action="'setMultipleFiles'"
+            default="1"
+            applyTo="`input[type='file']`"
+            step="1"
+            min="1"
+        />
+    </BuilderRow>
+    <BuilderRow label.translate="Max File Size">
+        <BuilderNumberInput
+            title.translate="The maximum size (in MB) an uploaded file can have."
+            dataAttributeAction="'maxFileSize'"
+            applyTo="`input[type='file']`"
+            default="1"
+            unit="'MB'"
+            applyWithUnit="false"
+        />
+    </BuilderRow>
+    <BuilderRow t-if="state.valueList">
+        <div class="d-flex flex-column w-100">
+            <p class="hb-row-label mb-0 flex-grow-0 flex-shrink-0 flex-basis-auto">
+                <t t-out="state.valueList.title" />
+            </p>
+            <BuilderList
+                action="'setFormCustomFieldValueList'"
+                addItemTitle="state.valueList.addItemTitle"
+                itemShape="{ display_name: 'text', selected: state.valueList.checkType }"
+                default="{ display_name: state.valueList.defaultItemName, selected: false }"
+                defaultNewValue="{ id: state.valueList.defaultItemName }"
+                forbidLastItemRemoval="true"
+                records="state.valueList.availableRecords" />
+        </div>
+    </BuilderRow>
+    <BuilderRow label.translate="Requirement"
+            t-if="domStateCurrentFieldInput.hasDateTimePicker or domStateCurrentFieldInput.isTextArea or canHaveTextValidationCondition.includes(domStateCurrentFieldInput.type)">
+        <BuilderSelect id="'require_condition_text_opt'"
+                t-if="!domStateCurrentFieldInput.hasDateTimePicker and (domStateCurrentFieldInput.isTextArea || ['text', 'email', 'tel', 'url', 'search', 'password'].includes(domStateCurrentFieldInput.type))"
+                preview="false"
+                dataAttributeAction="'requirementComparator'"
+                action="'setRequirementComparator'">
+            <BuilderSelectItem id="'no_requirement_opt'" dataAttributeActionValue="''">None</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'substring'">Contains</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'!substring'">Doesn't contain</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderSelect id="'require_condition_num_opt'"
+                t-elif="domStateCurrentFieldInput.type === 'number'"
+                preview="false"
+                dataAttributeAction="'requirementComparator'"
+                action="'setRequirementComparator'">
+            <BuilderSelectItem id="'no_requirement_opt'" dataAttributeActionValue="''">None</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'greater'">Is number greater than</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'less'">Is number less than</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'greater or equal'">Is number greater than or equal to</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'less or equal'">Is number less than or equal to</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderSelect id="'require_condition_time_comparators_opt'"
+                t-elif="domStateCurrentFieldInput.hasDateTimePicker"
+                preview="false"
+                dataAttributeAction="'requirementComparator'"
+                action="'setRequirementComparator'">
+            <BuilderSelectItem id="'no_requirement_opt'" dataAttributeActionValue="''">None</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'after'">Is date after</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'before'">Is date before</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'equal or after'">Is date after or equal to</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'equal or before'">Is date before or equal to</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'between'">Is date between (included)</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'!between'">Is date not between (excluded)</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderButton id="'error_message_opt'"
+            t-if="!isActiveItem('no_requirement_opt')"
+            title.translate="Add predefined error message"
+            className="'fa ' + (isActiveItem('error_message_opt') ? 'fa-eye' : 'fa-eye-slash')"
+            preview="false"
+            action="'setCustomErrorMessage'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Conditions" level="1" t-if="isTextConditionForRequirementOptionVisible">
+        <BuilderTextInput id="'require_condition_additional_text'"
+            placeholder.translate="Enter requirement conditions"
+            dataAttributeAction="'requirementCondition'"
+            action="'setDefaultErrorMessage'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Conditions" level="1" t-elif="domStateCurrentFieldInput.isFormDateTime and domState.elDataset.requirementComparator">
+        <BuilderDateTimePicker id="'require_condition_additional_datetime_1'"
+            placeholder.translate="Enter requirement conditions"
+            dataAttributeAction="'requirementCondition'"
+            action="'setDefaultErrorMessage'"
+            type="'datetime'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Conditions" level="1" t-elif="domStateCurrentFieldInput.isFormDate and domState.elDataset.requirementComparator">
+        <BuilderDateTimePicker id="'require_condition_additional_date'"
+            placeholder.translate="Enter requirement conditions"
+            dataAttributeAction="'requirementCondition'"
+            action="'setDefaultErrorMessage'"
+            type="'date'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Conditions" level="1" t-if="domStateCurrentFieldInput.isFormDateTime and ['between', '!between'].includes(domState.elDataset.requirementComparator)">
+        <BuilderDateTimePicker id="'require_condition_additional_datetime_2'"
+            placeholder.translate="Enter requirement conditions"
+            dataAttributeAction="'requirementBetween'"
+            action="'setDefaultErrorMessage'"
+            type="'datetime'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Conditions" level="1" t-elif="domStateCurrentFieldInput.isFormDate and ['between', '!between'].includes(domState.elDataset.requirementComparator)">
+        <BuilderDateTimePicker id="'require_condition_additional_date_end'"
+            placeholder.translate="Enter requirement conditions"
+            dataAttributeAction="'requirementBetween'"
+            action="'setDefaultErrorMessage'"
+            type="'date'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Error Message" level="1" t-if="isActiveItem('error_message_opt')">
+        <BuilderTextInput placeholder.translate="Write custom error message" id="'error_message_input_opt'" dataAttributeAction="'errorMessage'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Visibility">
+        <BuilderSelect preview="false" action="'setVisibility'">
+            <BuilderSelectItem actionValue="'visible'" classAction="''">Always Visible</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'hidden'" classAction="'s_website_form_field_hidden'">Hidden</BuilderSelectItem>
+            <BuilderSelectItem id="'hidden_if_opt'" actionValue="'conditional'" classAction="'s_website_form_field_hidden_if d-none'">Visible only if</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <t t-if="isActiveItem('hidden_if_opt')">
+        <div class="d-flex position-relative p-1 px-2 ps-3 hb-row">
+            <BuilderSelect id="'hidden_condition_opt'" preview="false">
+                <!-- Load every existing form input -->
+                <BuilderSelectItem t-foreach="state.conditionInputs" t-as="input" t-key="input.name"
+                    action="'setVisibilityDependency'" actionValue="input.name"
+                    t-out="input.textContent"
+                />
+            </BuilderSelect>
+            <BuilderSelect t-if="domStateDependency.type === 'checkbox' || domStateDependency.type === 'radio' || domStateDependency.nodeName === 'SELECT'"
+                id="'hidden_condition_no_text_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
+            >
+                <BuilderSelectItem dataAttributeActionValue="'selected'">Is equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!selected'">Is not equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'contains'">Contains</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!contains'">Doesn't contain</BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderSelect t-if="isTextConditionOperatorVisible"
+                id="'hidden_condition_text_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
+            >
+                <!-- string comparator possibilities -->
+                <BuilderSelectItem dataAttributeActionValue="'contains'">Contains</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!contains'">Doesn't contain</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'equal'">Is equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!equal'">Is not equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'set'">Is set</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!set'">Is not set</BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderSelect t-if="domStateDependency.type === 'number'"
+                id="'hidden_condition_num_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
+            >
+                <!-- number comparator possibilities -->
+                <BuilderSelectItem dataAttributeActionValue="'equal'">Is equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!equal'">Is not equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'greater'">Is greater than</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'less'">Is less than</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'greater or equal'">Is greater than or equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'less or equal'">Is less than or equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'set'">Is set</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!set'">Is not set</BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderSelect t-if="domStateDependency.hasDateTimePicker"
+                id="'hidden_condition_time_comparators_opt'" preview="false"
+                dataAttributeAction="'visibilityComparator'"
+            >
+                <!-- date & datetime comparator possibilities -->
+                <BuilderSelectItem dataAttributeActionValue="'dateEqual'">Is equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'date!equal'">Is not equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'after'">Is after</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'before'">Is before</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'equal or after'">Is after or equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'equal or before'">Is before or equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'set'">Is set</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!set'">Is not set</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'between'">Is between (included)</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!between'">Is not between (excluded)</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'lessyears'">Is within the last X years</BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderSelect t-if="domStateDependency.type === 'file'"
+                id="'hidden_condition_file_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
+            >
+                <!-- file comparator possibilities -->
+                <BuilderSelectItem dataAttributeActionValue="'fileSet'">Is set</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!fileSet'">Is not set</BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderSelect t-if="domStateDependency.isRecordField"
+                id="'hidden_condition_record_opt'" dataAttributeAction="'visibilityComparator'" preview="false"
+            >
+                <BuilderSelectItem dataAttributeActionValue="'selected'">Is equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!selected'">Is not equal to</BuilderSelectItem>
+            </BuilderSelect>
+        </div>
+        <div class="d-flex position-relative p-1 px-2 ps-3 hb-row" data-name="hidden_condition_additional_text">
+            <BuilderSelect t-if="state.conditionValueList and (domStateDependency.type === 'checkbox' || domStateDependency.type === 'radio' || domStateDependency.nodeName === 'SELECT')"
+                id="'hidden_condition_no_text_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
+            >
+                <!-- checkbox, select, radio possible values -->
+                <BuilderSelectItem t-foreach="state.conditionValueList" t-as="record" t-key="record.value"
+                    dataAttributeActionValue="record.value"
+                    t-out="record.textContent"
+                />
+            </BuilderSelect>
+            <BuilderSelect t-if="state.conditionValueList and domStateDependency.isRecordField"
+                id="'hidden_condition_record_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
+            >
+                <!-- checkbox, select, radio possible values -->
+                <BuilderSelectItem t-foreach="state.conditionValueList" t-as="record" t-key="record.value"
+                    dataAttributeActionValue="record.value"
+                    t-out="record.textContent"
+                />
+            </BuilderSelect>
+            <BuilderTextInput t-if="isTextConditionValueVisible"
+                id="'hidden_condition_additional_text'" dataAttributeAction="'visibilityCondition'"
+            />
+            <BuilderDateTimePicker t-if="domStateDependency.isFormDateTime and !['set', '!set', 'lessyears'].includes(domState.elDataset.visibilityComparator)"
+                id="'hidden_condition_additional_datetime'" dataAttributeAction="'visibilityCondition'" type="'datetime'"
+            />
+            <BuilderDateTimePicker t-if="domStateDependency.isFormDate and !['set', '!set', 'lessyears'].includes(domState.elDataset.visibilityComparator)"
+                id="'hidden_condition_additional_date'" dataAttributeAction="'visibilityCondition'" type="'date'"
+            />
+            <BuilderDateTimePicker t-if="domStateDependency.isFormDateTime and ['between', '!between'].includes(domState.elDataset.visibilityComparator)"
+                id="'hidden_condition_datetime_between'" dataAttributeAction="'visibilityBetween'" type="'datetime'"
+            />
+            <BuilderDateTimePicker t-if="domStateDependency.isFormDate and ['between', '!between'].includes(domState.elDataset.visibilityComparator)"
+                id="'hidden_condition_date_between'" dataAttributeAction="'visibilityBetween'" type="'date'"
+            />
+        </div>
+    </t>
+</t>
+
+<t t-name="website.s_website_form_submit_option">
+    <BuilderRow label.translate="Button Position">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'text-start s_website_form_no_submit_label'">Left</BuilderSelectItem>
+            <BuilderSelectItem classAction="'text-center s_website_form_no_submit_label'">Center</BuilderSelectItem>
+            <BuilderSelectItem classAction="'text-end s_website_form_no_submit_label'">Right</BuilderSelectItem>
+            <BuilderSelectItem classAction="''">Input Aligned</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+<t t-name="website.s_website_form_model_required_field_alert">
+    <div class="alert alert-info">
+        <span t-out="state.message"/>
+    </div>
+</t>
+
+</templates>

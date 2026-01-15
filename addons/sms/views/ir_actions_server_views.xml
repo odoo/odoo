@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="ir_actions_server_view_form"  model="ir.ui.view">
+        <field name="name">ir.actions.server.view.form.inherit.sms</field>
+        <field name="model">ir.actions.server</field>
+        <field name="inherit_id" ref="base.view_server_action_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@name='action_content']" position="inside">
+                <group invisible="state != 'sms'">
+                    <group>
+                        <field name="sms_template_id"
+                            placeholder="Choose a template..."
+                            context="{'default_model': model_name}"
+                            required="state == 'sms'"/>
+                        <label for="sms_method"/>
+                        <div class="d-flex flex-column">
+                            <field name="sms_method" required="state == 'sms'"/>
+                            <div class="text-muted">
+                                <span invisible="sms_method != 'sms'">
+                                    The message will be sent as an SMS to the recipients of the template
+                                    and will not appear in the messaging history.
+                                </span>
+                                <span invisible="sms_method != 'note'">
+                                    The SMS will not be sent, it will only be posted as an
+                                    internal note in the messaging history.
+                                </span>
+                                <span invisible="sms_method != 'comment'">
+                                    The SMS will be sent as an SMS to the recipients of the
+                                    template and it will also be posted as an internal note
+                                    in the messaging history.
+                                </span>
+                            </div>
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</data></odoo>

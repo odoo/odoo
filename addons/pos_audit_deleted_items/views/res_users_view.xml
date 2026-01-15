@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2026 Jbnegoc SPA - Todos los derechos reservados -->
+<odoo>
+
+    <!-- Extensión de la vista de formulario de usuarios -->
+    <record id="res_users_form_view_inherit_pos_audit" model="ir.ui.view">
+        <field name="name">res.users.form.inherit.pos.audit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Agregar campos en la pestaña "Permisos / Accesos" -->
+            <xpath expr="//page[@name='access_rights']//group[@name='application_accesses']" position="inside">
+
+                <!-- Grupo para los campos de auditoría POS -->
+                <group string="Auditoría POS" name="pos_audit_group">
+                    <field name="pos_audit_enabled"
+                           widget="boolean_toggle"
+                           attrs="{'invisible': [('sel_groups_1_9_10', '=', False)]}"/>
+                    <field name="pos_audit_can_delete"
+                           widget="boolean_toggle"
+                           attrs="{'invisible': [('sel_groups_1_9_10', '=', False)]}"/>
+                </group>
+
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Vista de lista de usuarios (opcional, para mostrar en columnas) -->
+    <record id="res_users_tree_view_inherit_pos_audit" model="ir.ui.view">
+        <field name="name">res.users.tree.inherit.pos.audit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='login']" position="after">
+                <field name="pos_audit_enabled" optional="hide"/>
+                <field name="pos_audit_can_delete" optional="hide"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

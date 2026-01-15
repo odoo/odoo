@@ -1,0 +1,254 @@
+.css_attribute_color {
+    --o-wsale-css-attribute-color__size: 1.6rem;
+
+    @include media-breakpoint-down(sm) {
+        --o-wsale-css-attribute-color__size: 2rem;
+    }
+
+    position: relative;
+    display: inline-block;
+    height: var(--o-wsale-css-attribute-color__size);
+    width: var(--o-wsale-css-attribute-color__size);
+    border: $border-width solid var(--o-wsale-attribute-color-border-color, #{$border-color});
+    border-radius: 50%;
+    transition: $transition-base;
+
+    input {
+        opacity: 0;
+    }
+
+    &:hover, &.active, &.active:hover {
+        box-shadow: inset 0 0 0 ($border-width * 2) $body-bg;
+    }
+
+    &:hover {
+        // Let borders color adapt according to body and CCs. Also, set a fallback
+        // value for browsers that don't support the color-mix function (used by
+        // 'fade-currentColor').
+        --o-wsale-attribute-color-border-color: #{o-color('600')};
+        --o-wsale-attribute-color-border-color: #{fade-currentColor(60%)};
+    }
+
+    &.active, &.active:hover {
+        --o-wsale-attribute-color-border-color: #{$primary};
+    }
+
+    &:has(input:focus-visible)::before {
+        @include o-position-absolute($top: 50%, $left: 50%);
+
+        content:" ";
+        width: 140%;
+        height: 140%;
+        border-radius: 100%;
+        z-index: -1;
+        background-color: $focus-ring-color;
+        transform: translate(-50%, -50%);
+    }
+
+    &.custom_value {
+        background-image: linear-gradient(to bottom right, #FF0000, #FFF200, #1E9600);
+    }
+
+    &.transparent {
+        background-image: url(/web/static/img/transparent.png);
+    }
+}
+
+.css_attribute_image {
+    --o-wsale-css-attribute-image__height: 4rem;
+    --o-wsale-css-attribute-image__outline-width: #{$border-width * 2};
+
+    height: calc(var(--o-wsale-css-attribute-image__height) - var(--o-wsale-css-attribute-image__outline-width));
+    aspect-ratio: 1;
+    border: $border-width * 5 solid $body-bg;
+    outline: var(--o-wsale-css-attribute-image__outline-width) solid $border-color;
+    transition: $input-transition;
+
+    &:hover, &.active {
+        outline-color: map-get($theme-colors, 'primary');
+    }
+
+
+    &.custom_value {
+        background-image: linear-gradient(to bottom right, #FF0000, #FFF200, #1E9600);
+    }
+
+    &.transparent {
+        background-image: url(/web/static/img/transparent.png);
+    }
+
+    &.size_small {
+        --o-wsale-css-attribute-image__height: 3rem;
+        --o-wsale-css-attribute-image__outline-width: #{$border-width};
+    }
+}
+
+.css_not_available_msg {
+    display: none;
+}
+
+.css_not_available.js_product {
+    .css_quantity {
+        display: none !important;
+    }
+
+    .css_not_available_msg {
+        display: block;
+    }
+
+    .availability_messages {
+        display: none;
+    }
+
+    .oe_price,
+    .oe_default_price {
+        display: none;
+    }
+}
+
+.css_quantity {
+    width: initial; // We don't want the quantity form to be full-width
+    border-radius: $btn-border-radius;
+
+    input {
+        // Needs !important because themes customize btns' padding direclty
+        // rather than change '$input-btn-padding-X' (shared with inputs).
+        height: auto !important;
+        max-width: 4ch;
+    }
+
+    &.input-group-lg {
+        &:not(.css_quantity_50) {
+            @include media-breakpoint-up(lg) {
+                width: 100%;
+            }
+
+            @include media-breakpoint-up(xl) {
+                width: auto;
+            }
+
+            input {
+                @include media-breakpoint-up(lg)  {
+                    max-width: 100%;
+                }
+
+                @include media-breakpoint-up(xl)  {
+                    max-width: 4ch;
+                }
+            }
+        }
+
+        .btn {
+            padding-top: $btn-padding-y-lg;
+            padding-bottom: $btn-padding-y-lg;
+        }
+    }
+}
+
+$-arrow-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='175' height='100' fill='#000'><polygon points='0,0 100,0 50,50'/></svg>");
+
+select.form-select.css_attribute_select {
+    max-width: 26rem;
+
+    &:not([multiple]):where(:not([size]), [size="1"]) {
+        background-image: str-replace($-arrow-url, "#000", str-replace(#{$input-color}, "#", "%23"));
+        background-size: 20px;
+        background-position: 100% 65%;
+        background-repeat: no-repeat;
+
+        &:disabled {
+            background-image: str-replace($-arrow-url, "#000", str-replace(#{$form-select-disabled-color}, "#", "%23"));
+        }
+    }
+}
+// In the case of a modal, we cannot rely on '$input-color' to define the color
+// of the select arrow because '$input-color' is set based on the background
+// color of the body. In modals, the input color is adjusted based on the
+// modal's background color (see 'bootstrap_review_frontend.scss').
+@if ($modal-content-color == null) and ($form-select-bg == $body-bg) {
+    .modal-content {
+        select.form-select.css_attribute_select {
+            background-image: str-replace($-arrow-url, "#000", str-replace(#{color-contrast($modal-content-bg)}, "#", "%23"));
+        }
+    }
+}
+
+.variant_attribute {
+    .o_variant_pills {
+        border: $border-width solid $border-color;
+
+        &:has(input:focus-visible) {
+            box-shadow: $btn-focus-box-shadow;
+        }
+    }
+
+    label, .o_variant_pills {
+        &.css_not_available {
+            opacity: 0.6;
+        }
+    }
+}
+
+label.css_attribute_color.css_not_available {
+    &:after {
+        content: "";
+        @include o-position-absolute($top: 50%, $left: 50%);
+        width: 2px;
+        height: 110%;
+        background-color: var(--body-bg);
+        rotate: 45deg;
+        transform: translate(-50%, -50%);
+        transform-origin: top;
+    }
+}
+
+.js_product {
+
+    .td-product_name {
+        word-wrap: break-word;
+    }
+
+    .td-product_name {
+        min-width: 140px;
+    }
+
+    .td-img {
+        width: 100px;
+    }
+
+    .td-qty {
+        width: 200px;
+        a.input-group-addon {
+            background-color: transparent;
+            border: 0px;
+        }
+
+        .input-group {
+            display: inline-flex;
+        }
+    }
+
+    .td-price {
+        width: 120px;
+    }
+
+    @include media-breakpoint-down(md) {
+        .td-img {
+            display: none;
+        }
+
+        .td-qty {
+            width: 60px;
+        }
+
+        .td-price {
+            width: 80px;
+        }
+    }
+
+    @media (max-width: 476px) {
+        .td-qty {
+            width: 60px;
+        }
+    }
+}

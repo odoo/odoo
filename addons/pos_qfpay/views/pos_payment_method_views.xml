@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.pos_qfpay</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='use_payment_terminal']" position="after">
+                <field name="qfpay_terminal_ip_address"
+                    invisible="use_payment_terminal != 'qfpay'"
+                    required="use_payment_terminal == 'qfpay'"/>
+                <field name="qfpay_pos_key"
+                    invisible="use_payment_terminal != 'qfpay'"
+                    required="use_payment_terminal == 'qfpay'"/>
+                <field name="qfpay_payment_type"
+                    invisible="use_payment_terminal != 'qfpay'"
+                    required="use_payment_terminal == 'qfpay'"/>
+                <field name="qfpay_notification_key"
+                    invisible="use_payment_terminal != 'qfpay'"
+                    required="use_payment_terminal == 'qfpay'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

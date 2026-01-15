@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
+        <xpath expr="//*[@name='thread content']" position="replace">
+            <t>$0</t>
+            <t t-if="props.chatWindow.livechatStep === CW_LIVECHAT_STEP.CONFIRM_CLOSE">
+                <CloseConfirmation onCloseConfirmationDialog.bind="onCloseConfirmationDialog" onClickLeaveConversation.bind="close"/>
+            </t>
+        </xpath>
+        <xpath expr="//Composer" position="replace">
+            <div t-if="thread?.composerDisabled" class="bg-200 py-1 text-center d-flex fst-italic fw-bold text-muted" t-ref="composerDisabledContainer">
+                <span t-if="!showGiveFeedbackBtn" class="flex-grow-1"/>
+                <span t-esc="thread.composerDisabledText"/>
+                <span class="flex-grow-1"/>
+            </div>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

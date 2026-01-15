@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <record id="product_product_4_product_template_document" model="product.document">
+        <field name="name">Customizable Desk Document</field>
+        <field name="datas" type="base64" file="product/static/demo/customizable_desk_document.pdf"/>
+        <field name="mimetype">application/pdf</field>
+        <field name="res_model">product.template</field>
+        <field name="res_id" ref="product.product_product_4_product_template"/>
+    </record>
+
+    <record id="product_product_25_document" model="product.document">
+        <field name="name">Acoustic Bloc Screens Document</field>
+        <field name="datas" type="base64" file="product/static/demo/acoustic_bloc_screen_document.pdf"/>
+        <field name="mimetype">application/pdf</field>
+        <field name="res_model">product.product</field>
+        <field name="res_id" ref="product.product_product_25"/>
+    </record>
+</odoo>

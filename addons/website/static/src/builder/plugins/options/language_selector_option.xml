@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.LanguageSelectorOption">
+    <BuilderRow label.translate="Style" expand="true">
+        <BuilderSelect preview="false" action="'websiteConfig'">
+                <BuilderSelectItem
+                    actionParam="{
+                        views: ['website.header_language_selector']
+                    }">
+                    Dropdown
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    actionParam="{
+                        views: ['website.header_language_selector', 'website.header_language_selector_inline']
+                    }">
+                    Inline
+                </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Label">
+        <BuilderSelect preview="false" action="'websiteConfig'">
+            <BuilderSelectItem
+                actionParam="{
+                    views: []
+                }">
+                Text
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{
+                    views: ['website.header_language_selector_flag', 'website.header_language_selector_no_text']
+                }">
+                Flag
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{
+                    views: ['website.header_language_selector_flag']
+                }">
+                Flag and Text
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{
+                    views: ['website.header_language_selector_code', 'website.header_language_selector_no_text']
+                }">
+                Code
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{
+                    views: ['website.header_language_selector_flag', 'website.header_language_selector_code', 'website.header_language_selector_no_text']
+                }">
+                Flag and Code
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+</templates>

@@ -1,0 +1,303 @@
+$o-so-font-size-base: 1rem !default;
+$o-so-4k-multiplier: 3.3 !default;
+$o-so-kiosk-multiplier: 1.25 !default;
+
+$o-so-font-size-4k: $o-so-font-size-base * $o-so-4k-multiplier !default;
+$o-so-font-size-kiosk: $o-so-font-size-base * $o-so-kiosk-multiplier !default;
+
+// Mirror enterprise grayscale
+$o-white: #FFF !default;
+$o-black: #000 !default;
+
+$o-gray-100: #F9FAFB !default;
+$o-gray-200: #eeeeee !default;
+$o-gray-300: #d8dadd !default;
+$o-gray-400: #9a9ca5 !default;
+$o-gray-500: #7c7f89 !default;
+$o-gray-600: #5f636f !default;
+$o-gray-700: #374151 !default;
+$o-gray-800: #1F2937 !default;
+$o-gray-900: #111827 !default;
+
+$o-kiosk-color: #714B67 !default;
+$o-brand-primary: $o-kiosk-color !default;
+
+// Buttons
+// Map of customized values for each button. If a button's design is defined
+// here, the relative values will take priority over default BS ones.
+// Notice: each map's entry is passed directly to the Bootstrap mixin, meaning
+// that all states must be defined, there can't be omissions.
+$o-btns-bs-override: () !default;
+$o-btns-bs-override: map-merge((
+    "primary": (
+        background: $o-brand-primary,
+        border: $o-brand-primary,
+        color: $o-white,
+
+        hover-background: $o-brand-primary,
+        hover-border: $o-brand-primary,
+        hover-color: $o-white,
+
+        active-background: darken($o-brand-primary, 15%),
+        active-border: darken($o-brand-primary, 20%),
+        active-color: $o-white,
+    ),
+    "light": (
+        background: $o-white,
+        border: $o-gray-300,
+        color: $o-gray-700,
+
+        hover-background: $o-white,
+        hover-border: var(--companyColor),
+        hover-color: $o-gray-900,
+
+        active-background:  $o-white,
+        active-border: var(--companyColor),
+        active-color: $o-gray-900,
+    ),
+    "secondary": (
+        background: $o-gray-200,
+        border: $o-gray-200,
+        color: $o-gray-700,
+
+        hover-background: $o-gray-200,
+        hover-border: $o-gray-200,
+        hover-color: $o-gray-800,
+
+        active-background: $o-gray-300,
+        active-border: $o-gray-300,
+        active-color: $o-gray-800,
+    ),
+), $o-btns-bs-override);
+
+
+
+// Mixins
+@mixin o-so-landscape() {
+    @media (orientation: landscape) {
+        @content;
+    }
+}
+
+@mixin o-so-portrait() {
+    @media (orientation: portrait) {
+        @content;
+    }
+}
+
+@mixin o-kiosk() {
+    @include media-breakpoint-up(lg) {
+         .kiosk {
+             @content;
+         }
+    }
+}
+
+@mixin o-kiosk-portrait() {
+    @include o-kiosk() {
+        @media (orientation: portrait) and (min-height: 1500px) {
+            @content;
+        }
+    }
+}
+
+@mixin o-kiosk-landscape() {
+    @include o-kiosk() {
+        @media (orientation: landscape) {
+            @content;
+        }
+    }
+}
+
+
+
+
+
+/* This mixin generates utility classes scoped to a specific media context, such as kiosk-specific layouts.
+
+ - Spacing utilities (`margin`, `padding`, `gap`, and directional variants)
+ - Display utilities (`block`, `flex`, `none`, etc.)
+ - ...
+ */
+
+@mixin generate-kiosk-utilities($context) {
+
+    .container-#{$context}-fluid {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+
+    @each $key, $value in  $spacers {
+        // Gap
+        .gap-#{$context}-#{$key} {
+            gap: $value !important;
+        }
+        .row-gap-#{$context}-#{$key} {
+            row-gap: $value !important;
+        }
+        .column-gap-#{$context}-#{$key} {
+            column-gap: $value !important;
+        }
+
+        // Margin
+        .m-#{$context}-#{$key} {
+            margin: $value !important;
+        }
+        .mt-#{$context}-#{$key} {
+            margin-top: $value !important;
+        }
+        .mb-#{$context}-#{$key} {
+            margin-bottom: $value !important;
+        }
+        .ms-#{$context}-#{$key} {
+            margin-left: $value !important;
+        }
+        .me-#{$context}-#{$key} {
+            margin-right: $value !important;
+        }
+        .mx-#{$context}-#{$key} {
+            margin-left: $value !important;
+            margin-right: $value !important;
+        }
+        .my-#{$context}-#{$key} {
+            margin-top: $value !important;
+            margin-bottom: $value !important;
+        }
+
+        // Padding
+        .p-#{$context}-#{$key} {
+            padding: $value !important;
+        }
+        .pt-#{$context}-#{$key} {
+            padding-top: $value !important;
+        }
+        .pb-#{$context}-#{$key} {
+            padding-bottom: $value !important;
+        }
+        .ps-#{$context}-#{$key} {
+            padding-left: $value !important;
+        }
+        .pe-#{$context}-#{$key} {
+            padding-right: $value !important;
+        }
+        .px-#{$context}-#{$key} {
+            padding-left: $value !important;
+            padding-right: $value !important;
+        }
+        .py-#{$context}-#{$key} {
+            padding-top: $value !important;
+            padding-bottom: $value !important;
+        }
+    }
+
+    .mx-#{$context}-auto {
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    .my-#{$context}-auto {
+        margin-top: auto !important;
+        margin-bottom: auto !important;
+    }
+
+    // Display
+    .d-#{$context}-none {
+        display: none !important;
+    }
+    .d-#{$context}-block {
+        display: block !important;
+    }
+    .d-#{$context}-inline {
+        display: inline !important;
+    }
+    .d-#{$context}-inline-block {
+        display: inline-block !important;
+    }
+    .d-#{$context}-flex {
+        display: flex !important;
+    }
+    .d-#{$context}-inline-flex {
+        display: inline-flex !important;
+    }
+    .d-#{$context}-grid {
+        display: grid !important;
+    }
+
+    // Flexbox helpers
+    .flex-#{$context}-row {
+        flex-direction: row !important;
+    }
+    .flex-#{$context}-column {
+        flex-direction: column !important;
+    }
+    .justify-#{$context}-start {
+        justify-content: flex-start !important;
+    }
+    .justify-#{$context}-center {
+        justify-content: center !important;
+    }
+    .justify-#{$context}-end {
+        justify-content: flex-end !important;
+    }
+    .justify-#{$context}-between {
+        justify-content: space-between !important;
+    }
+    .justify-#{$context}-around {
+        justify-content: space-around !important;
+    }
+    .align-#{$context}-start {
+        align-items: flex-start !important;
+    }
+    .align-#{$context}-center {
+        align-items: center !important;
+    }
+    .align-#{$context}-end {
+        align-items: flex-end !important;
+    }
+    .align-#{$context}-stretch {
+        align-items: stretch !important;
+    }
+
+    //Grid
+    @for $i from 1 through 12 {
+      .g-col-#{$context}-#{$i} {
+        grid-column: auto / span #{$i} !important;
+      }
+
+      .col-#{$context}-#{$i} {
+        flex: 0 0 auto;
+        width: (100% / 12) * $i !important;
+      }
+    }
+
+    .text-#{$context}-center {
+        text-align: center !important;
+    }
+
+    .text-#{$context}-start {
+        text-align: left !important;
+    }
+
+    .text-#{$context}-end {
+        text-align: right !important;
+    }
+
+    $width-utilities: 25, 50, 75, 100;
+
+    @each $w in $width-utilities {
+      .w-#{$context}-#{$w} {
+        width: #{$w}% !important;
+      }
+    }
+
+    // Add the auto width utility separately
+    .w-#{$context}-auto {
+      width: auto !important;
+    }
+}
+
+
+
+
+
+

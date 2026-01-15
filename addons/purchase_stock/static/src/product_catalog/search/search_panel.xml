@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="purchase_stock.ProductCatalogSearchPanel" t-inherit="account.ProductCatalogSearchPanel" t-inherit-mode="primary">
+        <xpath expr="//t[@t-call='account.ProductCatalogSearchPanelContent']" position="attributes">
+            <attribute name="t-call">purchase_stock.ProductCatalogSearchPanelContent</attribute>
+        </xpath>
+    </t>
+    <t t-name="purchase_stock.ProductCatalogSearchPanelContent" t-inherit="account.ProductCatalogSearchPanelContent" t-inherit-mode="primary">
+        <xpath expr="//section[hasclass('o_search_panel_sections')]" position="attributes">
+            <t t-if="suggest.suggestToggle.isOn">
+                <attribute name="class">o_search_panel_sections mt-4</attribute>
+            </t>
+        </xpath>
+        <xpath expr="//section[hasclass('o_search_panel_sections')]" position="before">
+            <t t-if="displaySuggest">
+                <t t-call="PurchaseSuggest.SearchPanel.Header"/>
+                <t t-if="suggest.suggestToggle.isOn">
+                    <div class="o_suggest_feature">
+                        <t t-call="PurchaseSuggest.SearchPanel.DaysInput"/>
+                        <t t-call="PurchaseSuggest.SearchPanel.BasedOn"/>
+                        <t t-call="PurchaseSuggest.SearchPanel.Footer"/>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+    </t>
+    <!-- ───────────────── Header ───────────────── -->
+    <t t-name="PurchaseSuggest.SearchPanel.Header">
+        <div name="search_panel_suggestion" class="d-flex pt-4 mt-3">
+            <header class=" text-uppercase cursor-default" t-att-title="tooltipTitle">
+                <i class="fa fa-lg fa-lightbulb-o text-primary me-2"/>
+                <b class="me-2">Suggest</b>
+            </header>
+            <div class="d-flex align-items-center ms-auto">
+                <div name="search-suggest-toggle" class="form-check form-switch mb-0">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        t-att-checked="suggest.suggestToggle.isOn? true : false"
+                        t-on-click="toggleSuggest"
+                    />
+                </div>
+            </div>
+        </div>
+    </t>
+    <!-- ───────────────── “Replenish for X day(s)” ───────────────── -->
+    <t t-name="PurchaseSuggest.SearchPanel.DaysInput">
+        <div class="d-flex align-items-center ms-2 pt-2">
+            <span class="me-2 fw-bold">Replenish for</span>
+            <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"
+                t-att-value="suggest.numberOfDays"
+                t-on-input="onDaysInput"
+                t-on-mousedown="selectAllOnClick"/>
+            <span class="ms-2">day(s)</span>
+        </div>
+    </t>
+    <!-- ───────────────── “Based on … × %” ───────────────── -->
+    <t t-name="PurchaseSuggest.SearchPanel.BasedOn">
+        <div class="d-inline-flex align-items-center ms-2 mt-2 fw-bold">Based on</div>
+        <div class="d-inline-flex align-items-center ms-1 me-2">
+            <div class="o_TimePeriodSelectionField">
+                <TimePeriodSelectionField t-props="timePeriodProps"/>
+            </div>
+            <span class="m-1">x</span>
+            <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"
+                t-att-value="suggest.percentFactor"
+                t-on-input="onPercentFactorInput"
+                t-on-mousedown="selectAllOnClick"/>
+            <span>%</span>
+        </div>
+    </t>
+    <!-- ───────────────── Footer ───────────────── -->
+    <t t-name="PurchaseSuggest.SearchPanel.Footer">
+        <div class="d-flex align-items-center mt-3 ms-2">
+            <div class="text-info fw-bold">
+                <span name="suggest_total"><t t-out="estimatedSuggestPrice"/></span>
+            </div>
+            <button name="suggest_add_all" class="btn btn-sm btn-primary ms-2" t-on-click="addAllProducts">
+                Add All
+            </button>
+        </div>
+    </t>
+</templates>

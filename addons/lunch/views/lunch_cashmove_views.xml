@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lunch_cashmove_view_search" model="ir.ui.view">
+        <field name='name'>lunch.cashmove.search</field>
+        <field name='model'>lunch.cashmove</field>
+        <field name='arch' type='xml'>
+            <search string="lunch employee payment">
+                <field name="description"/>
+                <field name="user_id"/>
+                <filter name='is_mine_group' string="My Account grouped" domain="[('user_id','=',uid)]" context="{'group_by':'user_id'}"/>
+                <filter name="group_by_user" string="By User" context="{'group_by':'user_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="lunch_cashmove_view_tree" model="ir.ui.view">
+        <field name="name">lunch.cashmove.list</field>
+        <field name="model">lunch.cashmove</field>
+        <field name="arch" type="xml">
+            <list string="cashmove list">
+                <field name="currency_id" column_invisible="True"/>
+                <field name="date"/>
+                <field name="user_id"/>
+                <field name="description"/>
+                <field name="amount" sum="Total" widget="monetary"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="lunch_cashmove_view_form" model="ir.ui.view">
+        <field name="name">lunch.cashmove.form</field>
+        <field name="model">lunch.cashmove</field>
+        <field name="arch" type="xml">
+            <form string="cashmove form">
+                <sheet>
+                    <group>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="user_id" required="1"/>
+                        <field name="date"/>
+                        <field name="amount" widget="monetary"/>
+                    </group>
+                    <label for='description'/>
+                    <field name="description"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_lunch_cashmove_kanban" model="ir.ui.view">
+        <field name="name">lunch.cashmove.kanban</field>
+        <field name="model">lunch.cashmove</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="row mb4">
+                            <div class="col-8 fw-bold fs-5">
+                                <field name="description" />
+                            </div>
+                            <div class="col-4 text-end badge rounded-pill fw-bolder pe-3 pt-1">
+                                <i class="fa fa-money" role="img" aria-label="Amount" title="Amount"/> <field name="amount" widget="monetary"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <field name="date" />
+                            </div>
+                            <div class="col-6">
+                                <field name="user_id" widget="many2one_avatar_user" class="float-end"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="lunch_cashmove_action_payment" model="ir.actions.act_window">
+        <field name="name">Cash Moves</field>
+        <field name="res_model">lunch.cashmove</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="lunch_cashmove_view_search"/>
+        <field name="view_id" ref="lunch_cashmove_view_tree"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Register a payment
+          </p><p>
+            Payments are used to register liquidity movements. You can process those payments by your own means or by using installed facilities.
+          </p>
+        </field>
+    </record>
+</odoo>

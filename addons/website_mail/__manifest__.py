@@ -3,18 +3,27 @@
 
 {
     'name': 'Website Mail',
-    'category': 'Hidden',
+    'category': 'Website/Website',
     'summary': 'Website Module for Mail',
     'version': '0.1',
-    'description': """Glue module holding mail improvements for website.""",
+    'description': """
+Module holding mail improvements for website. It holds the follow widget.
+""",
     'depends': ['website', 'mail'],
     'data': [
         'views/website_mail_templates.xml',
-        'data/mail_channel_data.xml',
-    ],
-    'qweb': [
-        'static/src/xml/chatter_message.xml'
     ],
     'installable': True,
     'auto_install': True,
+    'assets': {
+        'web.assets_frontend': [
+            'website_mail/static/src/interactions/follow.js',
+            'website_mail/static/src/css/website_mail.scss',
+        ],
+        'web.assets_inside_builder_iframe': [
+            'website/static/src/interactions/follow.edit.js',
+        ],
+    },
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_fr_tag_salaires" model="account.account.tag">
+        <field name="name">Salaries</field>
+        <field name="name@fr">Salaires</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+      <record id="account_fr_tag_charges_sociales" model="account.account.tag">
+        <field name="name">Social charges</field>
+        <field name="name@fr">Charges sociales</field>
+        <field name="applicability">accounts</field>
+    </record>
+
+    <menuitem id="account_reports_fr_statements_menu" name="France" parent="account.menu_finance_reports" sequence="6" groups="account.group_account_readonly"/>
+
+    </odoo>

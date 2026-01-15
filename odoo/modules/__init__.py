@@ -1,23 +1,25 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+# ruff: noqa: F401
 
 """ Modules (also called addons) management.
 
 """
+import odoo.init  # import first for core setup
 
-from . import db, graph, loading, migration, module, registry
+from . import db  # used directly during some migration scripts
 
-from odoo.modules.loading import load_modules, reset_modules_state
-
-from odoo.modules.module import (
+from . import module
+from .module import (
+    Manifest,
     adapt_version,
     get_module_path,
-    get_module_resource,
     get_modules,
     get_modules_with_version,
     get_resource_from_path,
-    get_resource_path,
     initialize_sys_path,
-    load_information_from_description_file,
+    get_manifest,
     load_openerp_module,
+    load_script
 )
+
+from . import registry

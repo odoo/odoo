@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.FloorScreen">
+        <div class="floor-screen screen h-100 position-relative d-flex flex-column flex-nowrap m-0 bg-300 text-start overflow-hidden">
+            <t t-set="editButtonClass" t-value="'btn btn-lg'" />
+            <t t-set="hasSelectedTable" t-value="selectedTables.length > 0" />
+            <t t-set="firstSelectedTable" t-value="selectedTables.length ? selectedTables[0] : null" />
+            <div t-attf-class="d-flex flex-row {{pos.isEditMode ? 'flex-wrap' : ''}} justify-content-between px-2 gap-1 border-bottom bg-view">
+                <button t-if="!pos.isEditMode" class="new-order btn btn-lg lh-lg my-2" t-attf-class="{{ this.pos.getOrder()?.isDirectSale ? 'btn-secondary' : 'btn-primary'}}" 
+                    t-on-click="() => this.clickNewOrder()">
+                    <t t-if="this.pos.getOrder()?.isDirectSale">
+                        <i class="fa fa-angle-double-left fa-fw" role="img" aria-label="Back" title="Back"/>
+                        <span t-if="!ui.isSmall" class="ms-1">Back</span>
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-plus fa-fw" role="img" aria-label="New Order" title="New Order"/>
+                        <span t-if="!ui.isSmall" class="ms-1">New Order</span>
+                    </t>
+                </button>
+                <!-- Center Side Div -->
+                <div class="floor-selector d-flex gap-1 py-2 overflow-auto">
+                    <t t-foreach="pos.models['restaurant.floor'].getAll()" t-as="floor" t-key="floor.id">
+                        <button class="button button-floor btn btn-outline-secondary btn-lg px-3 lh-lg text-nowrap text-body" t-attf-class="{{ floor.id === state.selectedFloorId ? 'active' : '' }}" t-on-click="() => this.selectFloor(floor)">
+                            <t t-esc="floor.name" />
+                            <t t-set="changeCount" t-value="this.getFloorChangeCount(floor)"/>
+                            <span t-if="changeCount > 0" class="badge rounded-pill text-bg-danger ms-2 py-1 smaller fw-bolder" t-esc="changeCount"/>
+                        </button>
+                    </t>
+                    <button t-attf-class="{{editButtonClass}} btn-secondary lh-lg" t-if="pos.isEditMode or pos.config.floor_ids?.length === 0" t-on-click="addFloor" title="Add Floor" >
+                        <i class="fa fa-plus fa-fw" role="img" aria-label="Add Floor" />
+                    </button>
+                </div>
+                <!-- Right Side Div -->
+                <div t-if="pos.isEditMode" class="edit-buttons d-flex flex-grow-1 justify-content-center justify-content-md-end gap-2 m-2 px-1 px-sm-0 overflow-x-auto">
+                    <div class="d-flex gap-1 p-1 rounded-3 bg-200">
+                        <t t-if="hasSelectedTable">
+                            <span t-if="!ui.isSmall" class="mx-2 align-self-center text-uppercase smaller fw-bolder">Table <t t-esc="firstSelectedTable.table_number" /></span>
+                            <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="changeSeatsNum" t-att-disabled="!hasSelectedTable" title="Seats">
+                                <i class="fa fa-user fa-fw" role="img" aria-label="Seats" />
+                            </button>
+                            <t t-if="selectedTables.some((t) => t.shape === 'square')">
+                                <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.changeShape('round')" t-att-disabled="!hasSelectedTable" title="Round Shape">
+                                    <i class="fa fa-circle-o fa-fw" role="img" aria-label="Make Round" />
+                                </button>
+                            </t>
+                            <t t-else="">
+                                <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.changeShape('square')" t-att-disabled="!hasSelectedTable" title="Square Shape">
+                                    <i class="fa fa-square-o fa-fw" role="img" aria-label="Make Square" />
+                                </button>
+                            </t>
+                        </t>
+                        <Dropdown menuClass="'pos-dropdown-menu px-1'">
+                            <button t-attf-class="{{editButtonClass}} btn-light" title="Change Floor Background">
+                                <i class="fa fa-paint-brush fa-fw" role="img" aria-label="Change Floor Background"/>
+                            </button>
+                            <t t-set-slot="content">
+                                <div class="d-grid gap-1 py-2 px-1" style="grid-template-columns: repeat(3, 1fr);">
+                                    <t t-foreach="Object.entries(getColors())" t-as="color" t-key="color[0]">
+                                        <t t-set="adaptColor" t-value="!hasSelectedTable ? this.getLighterShade(color[0]) : color[0]" />
+                                        <t t-set="key" t-value="color[0]"/>
+                                        <DropdownItem closingMode="'none'" onSelected="() => this.setColor(hasSelectedTable, adaptColor, key)">
+                                            <button
+                                                class="p-4 border-1 rounded"
+                                                t-attf-style="background-color: {{adaptColor}}"
+                                            />
+                                        </DropdownItem>
+                                    </t>
+                                    <DropdownItem closingMode="'none'">
+                                        <button class="floor-picture border-1 rounded position-relative text-center overflow-hidden d-flex flex-column align-items-center justify-content-center">
+                                            <i class="fa fa-camera" role="img" aria-label="Picture" title="Picture"></i>
+                                            File
+                                            <input type="file" class="image-uploader" t-on-change="uploadImage" />
+                                        </button>
+                                    </DropdownItem>
+                                </div>
+                            </t>
+                        </Dropdown>
+                        <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.rename(hasSelectedTable)" title="Rename">
+                            <i class="fa fa-pencil-square-o fa-fw" role="img" aria-label="Rename"/>
+                        </button>
+                        <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.duplicate(hasSelectedTable)" title="Clone">
+                            <i class="fa fa-copy fa-fw" role="img" aria-label="Clone"/>
+                        </button>
+                        <button t-attf-class="{{editButtonClass}} btn-light" t-on-click.stop="() => this.delete(hasSelectedTable)" title="Delete">
+                            <i class="fa fa-trash fa-fw" role="img" aria-label="Delete"/>
+                        </button>
+                    </div>
+                    <button t-attf-class="btn btn-outline-secondary btn-lg d-flex align-items-center justify-content-center gap-2 lh-lg" t-on-click.stop="doCreateTable.call" t-att-disabled="doCreateTable.status === 'loading'">
+                        <t t-if="doCreateTable.status === 'loading'">
+                            <i class="fa fa-circle-o-notch fa-spin icon-button" role="img" aria-label="Loading" title="Loading"></i>
+                        </t>
+                        <t t-else="">
+                            <i class="fa fa-plus-circle" role="img" aria-label="Add Table" title="Add Table"/>
+                            <t t-if="!ui.isSmall">Table</t>
+                        </t>
+                    </button>
+                    <button t-attf-class="btn btn-primary btn-lg" t-on-click.stop="closeEditMode">
+                        <t t-if="!ui.isSmall">Save</t>
+                        <i t-else="" class="fa fa-floppy-o" role="img" aria-label="Save" title="Save"/>
+                    </button>
+                </div>
+                <div t-else="" class="right-buttons d-flex gap-1 p-2 pe-0">
+                    <NumpadDropdown/>
+                </div>
+            </div>
+            <t t-set="isKanban" t-value="pos.floorPlanStyle == 'kanban'"/>
+            <div
+                t-ref="floor-map-scroll" 
+                class="overflow-auto flex-grow-1 flex-shrink-1 flex-basis-0 w-auto" 
+                t-att-class="{
+                    'floor-grid': pos.isEditMode, 
+                    'bg-view': !activeFloor?.background_color
+                }"
+                t-attf-style="background-color: rgba({{this._getColors()[activeFloor?.background_color]}},.75)">
+                <div t-on-click="onClickFloorMap" t-on-touchstart="_onPinchStart" t-on-touchmove="_onPinchMove" t-on-touchend="_onPinchEnd"
+                    t-attf-class="floor-map position-relative w-100 h-100"
+                    t-ref="floor-map-ref"
+                    t-attf-style="
+                        -webkit-touch-callout: none;
+                        height: {{state.floorHeight}} !important;
+                        width: {{state.floorWidth}} !important;
+                        {{ activeFloor?.floor_background_image and !isKanban ?
+                            'background-image: url(' + floorBackround + '); background-size: auto; background-repeat: no-repeat; background-attachment: local;' :
+                            ''
+                        }}">
+                    <t t-if="pos.config.floor_ids?.length > 0">
+                        <div t-if="!activeTables?.length" class="empty-floor d-flex align-items-center justify-content-center h-100 fs-3 text-center text-muted" t-ref="map">
+                            <span>Oops! No tables available.<br/>Add a new table to get started.</span>
+                        </div>
+                        <div t-else="" t-ref="map" t-att-class="{'floor-kanban d-grid gap-1 p-2': isKanban, 'h-100': !isKanban, 'h-50 h-sm-auto overflow-y-auto': isKanban and this.pos.tableSelectorState}">
+                           <t t-foreach="activeTables.sort((a,b)=>a.id-b.id)" t-as="table" t-key="table.id" >
+                                <t t-set="isOccupied" t-value="pos.tableHasOrders(table)"/>
+                                <t t-set="isIntersecting" t-value="state.potentialLink?.child?.id === table.id"/>
+                                <t t-set="isIntersected" t-value="state.potentialLink?.parent?.id === table.id"/>
+                                <div
+                                    t-on-click="(ev) => this.onClickTable(table, ev)"
+                                    class="floor-table table o_draggable d-flex flex-column align-items-center justify-content-between cursor-pointer"
+                                    t-att-class="{
+                                        'position-relative m-0': isKanban,
+                                        'position-absolute': pos.floorPlanStyle !== 'kanban',
+                                        'selected': state.selectedTableIds.includes(table.id),
+                                        'occupied': isOccupied,
+                                    }"
+                                    t-attf-class="tableId-{{table.id}}"
+                                    t-attf-style="
+                                                border: 3px solid {{table.color || 'var(--tableOccupied-bg-color, #35d374)'}};
+                                                border-radius: {{table.shape === 'round' ? 1000 : 6}}px;
+                                                background: {{isOccupied ? table.color || 'var(--tableOccupied-bg-color, #35d374)' : 'var(--table-bg-color, #ffffff65)'}};
+                                                color: {{isOccupied ? 'var(--tableOccupied-color, #000000)' : 'var(--table-color, #FFFFFF)'}};
+                                                opacity: {{state.potentialLink ? (isIntersecting or isIntersected ? 1 : 0.25) : 1}};
+                                                {{isKanban ?
+                                                    `
+                                                        width: 100%;
+                                                        min-height: 120px;
+                                                    ` :
+                                                    `
+                                                        width: ${table.width}px;
+                                                        height: ${table.height}px;
+                                                        top: ${table.getY() +  state.floorMapOffset.y}px;
+                                                        left: ${table.getX() + state.floorMapOffset.x}px;
+                                                    `
+                                                }}
+                                            "
+                                    >
+                                    <t t-set="offset" t-value="getTableHandleOffset(table)"/>
+                                    <div
+                                        class="info position-relative w-100 h-100 overflow-hidden"
+                                        t-att-class="{'opacity-25': table.parent_id}"
+                                        t-attf-style="border-radius: {{table.shape === 'round' ? 1000 : 3}}px;"
+                                    >
+                                        <div t-esc="table.table_number" class="label fw-bolder fs-4 position-absolute top-50 start-50 translate-middle" />
+                                    </div>
+                                    <t t-set="data" t-value="getChangeCount(table)"/>
+                                    <div
+                                        t-if="data.changes > 0"
+                                        t-esc="this.env.utils.formatProductQty(data.changes, false)"
+                                        t-att-class="{
+                                            'text-bg-danger': data.changes
+                                        }"
+                                        class="order-count d-flex align-items-center justify-content-center position-absolute top-0 end-0 rounded-3 smaller fw-bolder z-2 badge"
+                                    />
+                                    <t t-if="state.selectedTableIds.includes(table.id)">
+                                        <span t-attf-class="tableId-{{table.id}}" class="table-handle position-absolute top left" t-attf-style="top: {{offset}}px; left: {{offset}}px"/>
+                                        <span t-attf-class="tableId-{{table.id}}" class="table-handle position-absolute top right" t-attf-style="top: {{offset}}px; right: {{offset}}px"/>
+                                        <span t-attf-class="tableId-{{table.id}}" class="table-handle position-absolute bottom right" t-attf-style="bottom: {{offset}}px; right: {{offset}}px"/>
+                                        <span t-attf-class="tableId-{{table.id}}" class="table-handle position-absolute bottom left" t-attf-style="bottom: {{offset}}px; left: {{offset}}px"/>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                    <div t-else="" class="empty-floor d-flex align-items-center justify-content-center h-100 fs-3 text-center text-muted" t-ref="map">
+                        <span>Oops! No floors available.<br/>Add a new floor to get started.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

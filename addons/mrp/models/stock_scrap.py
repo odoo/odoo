@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class StockScrap(models.Model):
@@ -9,34 +9,36 @@ class StockScrap(models.Model):
 
     production_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',
-        states={'done': [('readonly', True)]})
+        index='btree_not_null',
+        check_company=True)
     workorder_id = fields.Many2one(
         'mrp.workorder', 'Work Order',
-        states={'done': [('readonly', True)]},
-        help='Not to restrict or prefer quants, but informative.')
+        index='btree_not_null',
+        check_company=True) # Not to restrict or prefer quants, but informative
+    product_is_kit = fields.Boolean(related='product_id.is_kits')
+    product_template = fields.Many2one(related='product_id.product_tmpl_id')
+    bom_id = fields.Many2one(
+        'mrp.bom', 'Kit',
+        domain="[('type', '=', 'phantom'), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_template)]",
+        check_company=True)
 
-    @api.onchange('workorder_id')
-    def _onchange_workorder_id(self):
-        if self.workorder_id:
-            self.location_id = self.workorder_id.production_id.location_src_id.id
+    @api.depends('workorder_id', 'production_id')
+    def _compute_location_id(self):
+        remaining_scrap = self.browse()
 
-    @api.onchange('production_id')
-    def _onchange_production_id(self):
-        if self.production_id:
-            self.location_id = self.production_id.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) and self.production_id.location_src_id.id or self.production_id.location_dest_id.id,
+        for scrap in self:
+            if scrap.production_id:
+                if scrap.production_id.state != 'done':
+                    scrap.location_id = scrap.production_id.location_src_id.id
+                else:
+                    scrap.location_id = scrap.production_id.location_dest_id.id
+            elif scrap.workorder_id:
+                scrap.location_id = scrap.workorder_id.production_id.location_src_id.id
+            else:
+                remaining_scrap |= scrap
 
-    def _get_preferred_domain(self):
-        if self.production_id:
-            if self.product_id in self.production_id.move_raw_ids.mapped('product_id'):
-                preferred_domain = [('reservation_id', 'in', self.production_id.move_raw_ids.ids)]
-                preferred_domain2 = [('reservation_id', '=', False)]
-                preferred_domain3 = ['&', ('reservation_id', 'not in', self.production_id.move_raw_ids.ids), ('reservation_id', '!=', False)]
-                return [preferred_domain, preferred_domain2, preferred_domain3]
-            elif self.product_id in self.production_id.move_finished_ids.mapped('product_id'):
-                preferred_domain = [('history_ids', 'in', self.production_id.move_finished_ids.ids)]
-                preferred_domain2 = [('history_ids', 'not in', self.production_id.move_finished_ids.ids)]
-                return [preferred_domain, preferred_domain2]
-        return super(StockScrap, self)._get_preferred_domain()
+        res = super(StockScrap, remaining_scrap)._compute_location_id()
+        return res
 
     def _prepare_move_values(self):
         vals = super(StockScrap, self)._prepare_move_values()
@@ -48,5 +50,50 @@ class StockScrap(models.Model):
                 vals.update({'raw_material_production_id': self.production_id.id})
         return vals
 
-    def _get_origin_moves(self):
-        return super(StockScrap, self)._get_origin_moves() or self.production_id and self.production_id.move_raw_ids.filtered(lambda x: x.product_id == self.product_id)
+    @api.onchange('lot_id')
+    def _onchange_serial_number(self):
+        if self.product_id.tracking == 'serial' and self.lot_id:
+            if self.production_id:
+                message, recommended_location = self.env['stock.quant'].sudo()._check_serial_number(self.product_id,
+                                                                                                    self.lot_id,
+                                                                                                    self.company_id,
+                                                                                                    self.location_id,
+                                                                                                    self.production_id.location_dest_id)
+                if message:
+                    if recommended_location:
+                        self.location_id = recommended_location
+                    return {'warning': {'title': _('Warning'), 'message': message}}
+            else:
+                return super()._onchange_serial_number()
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_is_kit:
+            self.bom_id = self.env['mrp.bom']._bom_find(self.product_id, company_id=self.company_id.id, bom_type='phantom')[self.product_id]
+        else:
+            self.bom_id = False
+
+    @api.depends('move_ids', 'move_ids.move_line_ids.quantity', 'product_id')
+    def _compute_scrap_qty(self):
+        self.scrap_qty = 1
+        for scrap in self:
+            if not scrap.bom_id:
+                return super(StockScrap, scrap)._compute_scrap_qty()
+            if scrap.move_ids:
+                filters = {
+                    'incoming_moves': lambda m: True,
+                    'outgoing_moves': lambda m: False
+                }
+                scrap.scrap_qty = scrap.move_ids._compute_kit_quantities(scrap.product_id, scrap.scrap_qty, scrap.bom_id, filters)
+
+    def _should_check_available_qty(self):
+        return super()._should_check_available_qty() or self.product_is_kit
+
+    def do_replenish(self, values=False):
+        self.ensure_one()
+        values = values or {}
+        if self.production_id and self.production_id.production_group_id:
+            values.update({
+                'production_group_id': self.production_id.production_group_id.id,
+            })
+        super().do_replenish(values)

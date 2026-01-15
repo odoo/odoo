@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Email template for new internal users -->
+        <record id="set_password_email" model="mail.template">
+            <field name="name">Settings: New User Invite</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="subject">{{ object.create_uid.name }} from {{ object.company_id.name }} invites you to connect to Odoo</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="True"/>
+            <field name="description">Sent to new user after you invited them</field>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <span style="font-size: 10px;">Welcome to Odoo</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;">
+                        <t t-out="object.name or ''">Marc Demo</t>
+                    </span>
+                </td><td valign="middle" align="right" t-if="not object.company_id.uses_default_logo">
+                    <img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="object.company_id.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 13px;">
+                    <div>
+                        Dear <t t-out="object.name or ''">Marc Demo</t>,<br /><br />
+                        You have been invited by <t t-out="object.create_uid.name or ''">OdooBot</t> of <t t-out="object.company_id.name or ''">YourCompany</t> to connect on Odoo.
+                        <div style="margin: 16px 0px 16px 0px;">
+                            <a t-att-href="object.partner_id._get_signup_url()"
+                                t-attf-style="background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;">
+                                Accept invitation
+                            </a>
+                        </div>
+                        <b>  This link will remain valid during <t t-out="int(int(object.env['ir.config_parameter'].sudo().get_param('auth_signup.signup.validity.hours',144))/24)"></t> days </b> <br/>
+                        <t t-set="website_url" t-value="object.get_base_url()"></t>
+                        Your Odoo domain is: <b><a t-att-href='website_url' t-out="website_url or ''">http://yourcompany.odoo.com</a></b><br />
+                        Your sign in email is: <b><a t-attf-href="/web/login?login={{ object.email }}" target="_blank" t-out="object.email or ''">mark.brown23@example.com</a></b><br /><br />
+                        Never heard of Odoo? It’s an all-in-one business software loved by 12+ million users. It will considerably improve your experience at work and increase your productivity.
+                        <br /><br />
+                        Have a look at the <a href="https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth" t-attf-style="color: {{object.company_id.email_secondary_color or '#875A7B'}};">Odoo Tour</a> to discover the tool.
+                        <br /><br />
+                        Enjoy Odoo!<br />
+                        --<br/>The <t t-out="object.company_id.name or ''">YourCompany</t> Team
+                    </div>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    <t t-out="object.company_id.name or ''">YourCompany</t>
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    <t t-out="object.company_id.phone or ''">+1 650-123-4567</t>
+                    <t t-if="object.company_id.email">
+                        | <a t-att-href="'mailto:%s' % object.company_id.email" style="text-decoration:none; color: #454748;" t-out="object.company_id.email or ''">info@yourcompany.com</a>
+                    </t>
+                    <t t-if="object.company_id.website">
+                        | <a t-att-href="'%s' % object.company_id.website" style="text-decoration:none; color: #454748;" t-out="object.company_id.website or ''">http://www.example.com</a>
+                    </t>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+      <tr><td style="text-align: center; font-size: 13px;">
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" t-attf-style="color: {{object.company_id.email_secondary_color or '#875A7B'}};">Odoo</a>
+      </td></tr>
+    </table>
+</td></tr>
+</table></field>
+            <field name="lang">{{ object.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Email template for reminder of unregistered users -->
+        <record id="mail_template_data_unregistered_users" model="mail.template">
+            <field name="name">Settings: Unregistered User Reminder</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="subject">Reminder for unregistered users</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="True"/>
+            <field name="description">Sent automatically to admin if new user haven't responded to the invitation</field>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <t t-set="invited_users" t-value="ctx.get('invited_users', [])" />
+                <td style="text-align : left">
+                    <span style="font-size: 20px; font-weight: bold;">
+                        Pending Invitations
+                    </span><br/><br/>
+                </td>
+                <tr><td valign="top" style="font-size: 13px;">
+                    <div>
+                        Dear <t t-out="object.name or ''">Mitchell Admin</t>,<br/> <br/>
+                        You added the following user(s) to your database but they haven't registered yet:
+                        <ul>
+                            <t t-foreach="invited_users" t-as="invited_user">
+                                <li t-out="invited_user or ''">demo@example.com</li>
+                            </t>
+                        </ul>
+                        Follow up with them so they can access your database and start working with you.
+                        <br /><br/>
+                        Have a nice day!<br />
+                        --<br/>The <t t-out="object.company_id.name or ''">YourCompany</t> Team
+                    </div>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+</table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Email template for new users that used a signup token -->
+        <record id="mail_template_user_signup_account_created" model="mail.template">
+            <field name="name">Settings: New Portal Sign Up</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="subject">Welcome to {{ object.company_id.name }}!</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="True"/>
+            <field name="description">Sent to portal user who registered themselves</field>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <span style="font-size: 10px;">Your Account</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;">
+                        <t t-out="object.name or ''">Marc Demo</t>
+                    </span>
+                </td><td valign="middle" align="right" t-if="not object.company_id.uses_default_logo">
+                    <img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="object.company_id.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 13px;">
+                    <div>
+                        Dear <t t-out="object.name or ''">Marc Demo</t>,<br/><br/>
+                        Your account has been successfully created!<br/>
+                        Your login is <strong><t t-out="object.email or ''">mark.brown23@example.com</t></strong><br/>
+                        To gain access to your account, you can use the following link:
+                        <div style="margin: 16px 0px 16px 0px;">
+                            <a t-attf-href="/web/login?auth_login={{object.email}}"
+                                t-attf-style="background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;">
+                                Go to My Account
+                            </a>
+                        </div>
+                        Thanks,<br/>
+                        <t t-if="user.signature">
+                            <br/>
+                            <div>--<br/><t t-out="user.signature or ''">Mitchell Admin</t></div>
+                        </t>
+                    </div>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    <t t-out="object.company_id.name or ''">YourCompany</t>
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    <t t-out="object.company_id.phone or ''">+1 650-123-4567</t>
+                    <t t-if="object.company_id.email">
+                        | <a t-attf-href="mailto:{{object.company_id.email}}" style="text-decoration:none; color: #454748;" t-out="object.company_id.email or ''">info@yourcompany.com</a>
+                    </t>
+                    <t t-if="object.company_id.website">
+                        | <a t-att-href="object.company_id.website" style="text-decoration:none; color: #454748;" t-out="object.company_id.website or ''">http://www.example.com</a>
+                    </t>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+      <tr><td style="text-align: center; font-size: 13px;">
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" t-attf-style="color: {{object.company_id.email_secondary_color or '#875A7B'}};">Odoo</a>
+      </td></tr>
+    </table>
+</td></tr>
+</table></field>
+            <field name="lang">{{ object.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Email template for new portal users -->
+        <record id="portal_set_password_email" model="mail.template">
+            <field name="name">Settings: New Portal User Invite</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="subject">Your account at {{ object.company_id.name }}</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ object.email_formatted }}</field>
+            <field name="description">Sent to new portal user after you invited them</field>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0"
+    style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+    <tr><td align="center">
+        <table border="0" cellpadding="0" cellspacing="0" width="590"
+            style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+            <tbody>
+                <!-- HEADER -->
+                <tr>
+                    <td align="center" style="min-width: 590px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="590"
+                            style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                            <tr>
+                                <td valign="middle">
+                                    <span style="font-size: 10px;">Your Account</span><br/>
+                                    <span style="font-size: 20px; font-weight: bold;" t-out="object.name or ''">Marc Demo</span>
+                                </td>
+                                <td valign="middle" align="right" t-if="not object.company_id.uses_default_logo">
+                                    <img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;"
+                                        t-att-alt="object.company_id.name"/>
+                                </td>
+                            </tr>
+                            <tr><td colspan="2" style="text-align:center;">
+                                <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                            </td></tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- CONTENT -->
+                <tr>
+                    <td align="center" style="min-width: 590px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="590"
+                            style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                            <tr><td valign="top" style="font-size: 13px;">
+                                <div>
+                                    Dear <t t-out="object.name or ''">Marc Demo</t>,<br/> <br/>
+                                    Welcome to <t t-out="object.company_id.name">YourCompany</t>'s Portal!<br/><br/>
+                                    An account has been created for you with the following login: <t t-out="object.login">demo</t><br/><br/>
+                                    Click on the button below to pick a password and activate your account.
+                                    <div style="margin: 16px 0px 16px 0px; text-align: center;">
+                                        <a t-att-href="object.partner_id._get_signup_url()"
+                                        t-attf-style="display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;">
+                                            <strong>Activate Account</strong>
+                                        </a>
+                                    </div>
+                                    <t t-out="ctx.get('welcome_message') or ''">Welcome to our company's portal.</t>
+                                </div>
+                            </td></tr>
+                            <tr><td style="text-align:center;">
+                                <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                            </td></tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- FOOTER -->
+                <tr>
+                    <td align="center" style="min-width: 590px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="590"
+                            style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                            <tr><td valign="middle" align="left">
+                                <t t-out="object.company_id.name or ''">YourCompany</t>
+                            </td></tr>
+                            <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                                <t t-out="object.company_id.phone or ''">+1 650-123-4567</t>
+                                <t t-if="object.company_id.email">
+                                    | <a t-attf-href="mailto:{{ object.company_id.email }}" style="text-decoration: none; color: #454748;" t-out="object.company_id.email or ''">info@yourcompany.com</a>
+                                </t>
+                                <t t-if="object.company_id.website">
+                                    | <a t-att-href="object.company_id.website" style="text-decoration: none; color: #454748;" t-out="object.company_id.website or ''">http://www.example.com</a>
+                                </t>
+                            </td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </td></tr>
+    <!-- POWERED BY -->
+    <tr><td align="center" style="min-width: 590px;">
+        <table border="0" cellpadding="0" cellspacing="0" width="590"
+            style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+            <tr><td style="text-align: center; font-size: 13px;">
+                Powered by <a target="_blank" t-attf-href="https://www.odoo.com?utm_source=db&amp;utm_medium={{ ctx.get('medium', 'auth') }}" t-attf-style="color: {{object.company_id.email_secondary_color or '#875A7B'}};">Odoo</a>
+            </td></tr>
+        </table>
+    </td></tr>
+</table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

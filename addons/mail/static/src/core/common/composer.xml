@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.Composer">
+    <t t-set="isChatterComposer" t-value="extended and !props.composer.message"/>
+    <t t-set="partitionedActions" t-value="composerActions.partition"/>
+    <t t-set="compact" t-value="props.mode === 'compact'"/>
+    <t t-set="normal" t-value="props.mode === 'normal'"/>
+    <t t-set="extended" t-value="props.mode === 'extended'"/>
+    <t t-set="actionsContainerClass" t-value="'o-mail-Composer-actions d-flex o-rounded-bubble'"/>
+    <div t-ref="root">
+        <div class="o-mail-Composer d-grid flex-shrink-0 pt-0 position-relative"
+                t-att-class="{
+                    'pb-2': extended and !props.composer.message,
+                    'o-extended': extended,
+                    'o-isUiSmall': ui.isSmall,
+                    'ps-2 pe-4 pb-2': normal and !env.inDiscussApp and !env.inMeetingView,
+                    'ps-0 pe-3 pb-2': normal and env.inMeetingView,
+                    'o-hasSelfAvatar': showComposerAvatar,
+                    'o-focused': props.composer.isFocused,
+                    'o-editing': props.composer.message,
+                    'o-chatWindow mx-2 my-1': env.inChatWindow,
+                    'mb-2': env.inChatWindow and !props.composer.message,
+                    'o-discussApp pt-1 ps-2 pe-4 o-pb-2_5': env.inDiscussApp,
+                }" t-attf-class="{{ props.className }}">
+            <FileUploader t-if="allowUpload" multiUpload="isMultiUpload" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">
+                <t t-set-slot="toggler">
+                    <button t-att-disabled="!state.active or areAllActionsDisabled" class="d-none" title="Attach files" aria-label="Attach files" t-ref="file-uploader"><i class="fa fa-fw fa-paperclip"/></button>
+                </t>
+            </FileUploader>
+            <div t-if="showComposerAvatar" class="o-mail-Composer-sidebarMain flex-shrink-0 d-flex">
+                <img class="o-mail-Composer-avatar mx-auto o_avatar rounded-3" t-att-src="(thread?.effectiveSelf or message.effectiveSelf).avatarUrl" alt="Avatar of user"/>
+            </div>
+            <div class="o-mail-Composer-coreHeader">
+                <div t-if="props.composer.replyToMessage" class="text-truncate small p-2">
+                    <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.composer.replyToMessage, props.composer.thread)">
+                        Replying to <b t-esc="props.composer.replyToMessage.authorName"/>
+                    </span>
+                    <span t-if="props.composer.replyToMessage.thread?.notEq(props.composer.thread)">
+                        on: <b><t t-esc="props.composer.replyToMessage.thread.displayName"/></b>
+                    </span>
+                    <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => (props.composer.replyToMessage = undefined)"/>
+                </div>
+                <span t-if="props.composer.message and ui.isSmall" class="px-1" t-on-click="onClickCancelOrSaveEditText">
+                    <button class="btn btn-sm btn-secondary rounded-pill border border-secondary ps-1 pe-2 py-0 mb-1" t-att-data-type="EDIT_CLICK_TYPE.CANCEL">
+                        <i class="oi oi-close pe-2" t-att-data-type="EDIT_CLICK_TYPE.CANCEL"></i>
+                        Discard editing
+                    </button>
+                </span>
+            </div>
+            <div class="o-mail-Composer-coreMain d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : extended or props.composer.message }">
+                <div class="o-mail-Composer-inputContainer o-mail-Composer-bg d-flex flex-grow-1 border o-rounded-bubble"
+                    t-att-class="{
+                        'o-iosPwa': isIosPwa,
+                        'align-self-stretch' : extended,
+                        'w-100': props.composer.message,
+                    }"
+                    t-ref="input-container"
+                >
+                    <div t-if="!extended" t-attf-class="{{ actionsContainerClass }}">
+                        <Dropdown t-if="partitionedActions.other.length > 0" position="'top-start'" menuClass="store.discussDropdownMenuClass(this)">
+                            <t t-call="mail.Composer.moreActions"/>
+                            <t t-set-slot="content">
+                                <ActionList actions="partitionedActions.other" dropdown="true"/>
+                            </t>
+                        </Dropdown>
+                    </div>
+                    <div class="position-relative flex-grow-1">
+                        <t t-set="inputClasses" t-value="{
+                            'o-mail-Composer-inputStyle form-control border-0 o-rounded-bubble': true,
+                            'o-mobile': isMobileOS,
+                            'ps-2': partitionedActions.other.length === 0,
+                        }"/>
+                        <Wysiwyg t-if="composerService.htmlEnabled" class="'w-100 text-break overflow-auto'" config="this.wysiwygConfig" onLoad.bind="onLoadWysiwyg"/>
+                        <t t-else="">
+                                <textarea class="o-mail-Composer-input o-mail-Composer-bg shadow-none overflow-auto o-scrollbar-thin o-discuss-text-body user-select-auto"
+                                t-att-class="inputClasses"
+                                t-ref="textarea"
+                                t-on-keydown="onKeydown"
+                                t-on-focusin="onFocusin"
+                                t-on-focusout="onFocusout"
+                                t-on-click="(ev) => markEventHandled(ev, 'composer.onClickTextarea')"
+                                t-on-paste="onPaste"
+                                t-model="props.composer.composerText"
+                                t-on-input="(ev) => this.onInput(ev)"
+                                t-att-placeholder="placeholder"
+                                t-att-readOnly="!state.active"
+                                tabindex="0"
+                            />
+                            <!--
+                                This is an invisible textarea used to compute the composer
+                                height based on the text content. We need it to downsize
+                                the textarea properly without flicker.
+                            -->
+                            <textarea
+                                class="o-mail-Composer-fake position-absolute overflow-hidden"
+                                t-att-class="inputClasses"
+                                t-att-value="props.composer.composerText"
+                                t-ref="fakeTextarea"
+                                disabled="1"
+                            />
+                        </t>
+                    </div>
+                    <t t-call="mail.Composer.quickActions"/>
+                </div>
+            </div>
+            <div class="o-mail-Composer-footer overflow-auto o-scrollbar-thin">
+                <AttachmentList
+                    t-if="props.composer.attachments.length > 0"
+                    attachments="props.composer.attachments"
+                    unlinkAttachment.bind="(...args) => attachmentUploader.unlink(...args)"/>
+                <div t-if="!extended and !props.composer.message" class="o-mail-Composer-pickerContainer" t-att-class="{ 'o-active': composerActions.activePicker and ui.isSmall }" t-ref="picker-container">
+                    <div t-if="partitionedActions.pickers.length > 1 and composerActions.activePicker and ui.isSmall" class="o-mail-Composer-pickerSelection btn-group w-100">
+                        <button t-foreach="partitionedActions.pickers" t-as="pickerAction" t-key="'PICKER_' + pickerAction.id" class="btn btn-secondary" t-esc="pickerAction.pickerName" t-on-click="(ev) => pickerAction.onSelected(ev)" t-att-class="{
+                            'active': pickerAction.picker.isOpen
+                        }"/>
+                    </div>
+                    <div t-ref="picker-target"/>
+                </div>
+                <div t-else="" class="d-flex align-items-center gap-1 w-100 pe-2">
+                    <div class="pt-1" t-att-class="{ 'mt-2': !props.composer.message }">
+                        <span t-if="props.composer.message and !ui.isSmall" class="text-muted px-1 small" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText" />
+                        <t t-elif="!props.composer.message">
+                            <t t-call="mail.Composer.sendButton"/>
+                            <span t-if="!isSendButtonDisabled and !isMobileOS" class="text-muted small ms-1" t-out="OR_PRESS_SEND_KEYBIND"/>
+                        </t>
+                    </div>
+                    <span class="flex-grow-1"/>
+                    <t t-if="!props.composer.message" t-call="mail.Composer.extraActions"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <NavigableList t-if="suggestion" class="'o-mail-Composer-suggestionList'" t-props="navigableListProps"/>
+</t>
+
+<t t-name="mail.Composer.sendButton">
+    <button class="o-mail-Composer-send btn"
+        t-att-class="{
+            'btn-primary btn-sm': extended,
+            'btn-link rounded-circle p-0': !extended,
+            'me-2': env.inDiscussApp,
+            'border-start-0': env.inDiscussApp and !props.composer.message,
+            'border-0': props.composer.message,
+        }"
+        t-on-click="sendMessage"
+        t-att-disabled="isSendButtonDisabled"
+        t-att-aria-label="SEND_TEXT"
+    >
+        <t t-if="thread and thread.model !== 'discuss.channel'" t-out="SEND_TEXT"/>
+        <t t-else=""><i class="fa fa-fw fa-lg fa-paper-plane-o"/></t>
+    </button>
+</t>
+
+<t t-name="mail.Composer.quickActions">
+    <div class="o-mail-Composer-quickActions o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}" t-ref="quick-actions">
+        <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
+            <ActionList actions="partitionedActions.quick" inline="true"/>
+        </div>
+    </div>
+</t>
+
+<t t-name="mail.Composer.moreActions">
+    <div class="o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}" t-ref="more-actions">
+        <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
+            <t t-set="moreName">More Actions</t>
+            <ActionList inline="true" actions="[{
+                'disabledCondition': areAllActionsDisabled,
+                'icon': 'fa fa-plus-circle',
+                'id': 'more-actions',
+                'name': moreName,
+                'tags': [],
+            }]"/> 
+        </div>
+    </div>
+</t>
+
+<t t-name="mail.Composer.extraActions">
+    <div class="me-2 o-mail-Composer-extraActions" t-attf-class="{{ actionsContainerClass }}" t-ref="extra-actions">
+        <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
+            <ActionList actions="partitionedActions.other" inline="true"/>
+        </div>
+    </div>
+</t>
+
+    <t t-name="mail.Composer.suggestionSpecial">
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
+            <t t-esc="option.displayName"/>
+        </strong>
+        <em class="text-600 text-truncate align-self-center">
+            <t t-esc="option.description"/>
+        </em>
+    </t>
+
+    <t t-name="mail.Composer.suggestionPartner">
+        <t t-set="partner" t-value="option.partner"/>
+        <ImStatus t-if="partner" persona="partner"/>
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
+            <t t-esc="partner.name"/>
+            <t t-if="option.thread and partner.name !== option.thread.getPersonaName(partner)">
+                "<t t-esc="option.thread.getPersonaName(partner)"/>"
+            </t>
+        </strong>
+        <span t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email"/>)</span>
+    </t>
+
+    <t t-name="mail.Composer.suggestionRole">
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate" t-esc="option.label"/>
+        <em class="text-600 text-truncate align-self-center">
+            <t t-if="option.thread?.channel_type === 'channel'">Notify users with this role who have permission to view this channel</t>
+            <t t-else="">Notify users with this role</t>
+        </em>
+    </t>
+
+    <t t-name="mail.Composer.suggestionThread">
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
+            <i t-attf-class="fa #{option.thread.parent_channel_id ? 'fa-comments-o' : 'fa-hashtag'} me-2"/>
+            <t t-if="option.thread.parent_channel_id">
+                <t t-esc="option.thread.parent_channel_id.displayName"/>
+                <i class="oi oi-chevron-right o-xsmaller mx-1"/>
+            </t>
+            <t t-esc="option.thread.displayName"/>
+        </strong>
+    </t>
+
+    <t t-name="mail.Composer.suggestionChannelCommand">
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
+            <t t-esc="option.label"/>
+        </strong>
+        <span class="text-600 text-truncate align-self-center">
+            <t t-esc="option.help"/>
+        </span>
+    </t>
+
+    <t t-name="mail.Composer.suggestionCannedResponse">
+        <strong class="px-2 py-1 align-self-center flex-shrink-1 text-truncate">
+            <t t-esc="option.source"/>
+        </strong>
+        <span class="text-600 text-truncate align-self-center" style="flex-basis: 20%;">
+            <t t-esc="option.label"/>
+        </span>
+    </t>
+    <t t-name="mail.Composer.suggestionEmoji">
+        <strong class="px-2 align-self-center flex-shrink-1 fs-3">
+            <t t-esc="option.emoji.codepoints"/>
+        </strong>
+        <em class="text-600 text-truncate align-self-center">
+            <t t-esc="option.emoji.shortcodes.join(' ')"/>
+        </em>
+    </t>
+</templates>

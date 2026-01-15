@@ -1,0 +1,16 @@
+<templates>
+
+<t t-name="mass_mailing.MassMailingBuilder">
+    <Builder t-props="this.builderProps">
+        <t t-set-slot="extraActions">
+            <button t-if="props.toggleCodeView" t-on-click="props.toggleCodeView"
+                class="o-hb-btn btn d-flex align-items-center o_codeview_btn" title="Code View" accesskey="d"><i class="fa fa-code"/></button>
+            <button t-on-click="props.toggleFullScreen"
+                class="o-hb-btn btn d-flex align-items-center" title="Fullscreen" accesskey="f">
+                <span t-attf-class="fa fa-expand"/>
+            </button>
+        </t>
+    </Builder>
+</t>
+
+</templates>

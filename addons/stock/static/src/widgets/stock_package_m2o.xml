@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="stock.StockPackageMany2One">
+        <t t-if="!isEditing" t-out="displayValue.display_name"/>
+        <Many2One t-else="" t-props="m2oProps"/>
+    </t>
+
+</templates>

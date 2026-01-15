@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2026 Jbnegoc SPA - Todos los derechos reservados -->
+<odoo>
+
+    <!-- Vista de árbol/lista para justificaciones de eliminación -->
+    <record id="pos_deletion_reason_tree_view" model="ir.ui.view">
+        <field name="name">pos.deletion.reason.tree</field>
+        <field name="model">pos.deletion.reason</field>
+        <field name="arch" type="xml">
+            <tree string="Justificaciones de Eliminación" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="description" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista de formulario para justificaciones de eliminación -->
+    <record id="pos_deletion_reason_form_view" model="ir.ui.view">
+        <field name="name">pos.deletion.reason.form</field>
+        <field name="model">pos.deletion.reason</field>
+        <field name="arch" type="xml">
+            <form string="Justificación de Eliminación">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <widget name="web_ribbon" title="Archivado" bg_color="bg-danger"
+                                attrs="{'invisible': [('active', '=', True)]}"/>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="name" placeholder="Ej: Cliente cambió de opinión"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <field name="description" placeholder="Descripción interna de cuándo usar esta justificación..."/>
+                    </group>
+
+                    <notebook>
+                        <page string="Notas" name="notes">
+                            <group>
+                                <p class="text-muted">
+                                    Esta justificación aparecerá en el popup del POS cuando los usuarios
+                                    eliminen productos de una orden. El orden de aparición se controla
+                                    con el campo "Secuencia" (menor número = mayor prioridad).
+                                </p>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de búsqueda para justificaciones -->
+    <record id="pos_deletion_reason_search_view" model="ir.ui.view">
+        <field name="name">pos.deletion.reason.search</field>
+        <field name="model">pos.deletion.reason</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Justificaciones">
+                <field name="name" string="Justificación"/>
+                <field name="description"/>
+
+                <filter string="Activas" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactivas" name="inactive" domain="[('active', '=', False)]"/>
+
+                <group expand="0" string="Agrupar por">
+                    <filter string="Estado" name="group_active" context="{'group_by': 'active'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción de ventana para justificaciones -->
+    <record id="pos_deletion_reason_action" model="ir.actions.act_window">
+        <field name="name">Justificaciones de Eliminaciones</field>
+        <field name="res_model">pos.deletion.reason</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crear una nueva justificación de eliminación
+            </p>
+            <p>
+                Las justificaciones predeterminadas aparecerán en el POS para
+                que los usuarios puedan seleccionarlas rápidamente al eliminar
+                productos de una orden.
+            </p>
+            <p>
+                <strong>Ejemplos de justificaciones:</strong><br/>
+                • Cliente cambió de opinión<br/>
+                • Error al ingresar el pedido<br/>
+                • Producto no disponible en cocina<br/>
+                • Producto defectuoso<br/>
+                • Cliente canceló el pedido
+            </p>
+        </field>
+    </record>
+
+</odoo>

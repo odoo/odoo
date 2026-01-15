@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.KanbanRottingField">
+        <div class="badge rounded-pill o_mail_resource_rotting_bg d-flex align-items-center" t-if="props.record.data.is_rotting"
+            t-att-title="title">
+            <t t-out="dayCount"/>
+        </div>
+    </t>
+
+    <t t-name="mail.Many2OneFieldRotting">
+        <div class="d-inline-flex">
+            <Many2One t-props="m2oProps"/>
+            <span class="badge rounded-pill o_mail_resource_rotting_bg ms-2" t-if="props.record.data.is_rotting">
+                <t t-out="dayCount"/>
+            </span>
+
+        </div>
+    </t>
+</templates>

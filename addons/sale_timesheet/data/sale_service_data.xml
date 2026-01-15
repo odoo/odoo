@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="time_product" model="product.product">
+            <field name="name">Service on Timesheets</field>
+            <field name="type">service</field>
+            <field name="list_price">40</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="categ_id" eval="ref('product.product_category_services', raise_if_not_found=False)"/>
+            <field name="service_policy">delivered_timesheet</field>
+            <field name="image_1920" type="base64" file="sale_timesheet/static/img/product_product_time_product.png"/>
+        </record>
+    </data>
+    <data>
+        <record model="res.groups" id="base.group_user">
+            <field name="implied_ids" eval="[(4, ref('uom.group_uom'))]"/>
+        </record>
+
+        <!-- Timesheets export template -->
+        <record id="account_analytic_line_export_template_line_so_line" model="ir.exports.line">
+            <field name="export_id" ref="hr_timesheet.account_analytic_line_export_template"/>
+            <field name="name">so_line</field>
+        </record>
+
+        <!-- Timesheets export template 2 -->
+        <record id="aal_costs_revenues_export_template" model="ir.exports">
+            <field name="name">Project Costs &amp; Revenues</field>
+            <field name="resource">account.analytic.line</field>
+        </record>
+
+        <record id="aal_costs_revenues_export_template_line_date" model="ir.exports.line">
+            <field name="export_id" ref="aal_costs_revenues_export_template"/>
+            <field name="name">date</field>
+        </record>
+
+        <record id="aal_costs_revenues_export_template_line_name" model="ir.exports.line">
+            <field name="export_id" ref="aal_costs_revenues_export_template"/>
+            <field name="name">name</field>
+        </record>
+
+        <record id="aal_costs_revenues_export_template_line_project_id" model="ir.exports.line">
+            <field name="export_id" ref="aal_costs_revenues_export_template"/>
+            <field name="name">project_id</field>
+        </record>
+
+        <record id="aal_costs_revenues_export_template_line_product_id" model="ir.exports.line">
+            <field name="export_id" ref="aal_costs_revenues_export_template"/>
+            <field name="name">product_id</field>
+        </record>
+
+        <record id="aal_costs_revenues_export_template_line_unit_amount" model="ir.exports.line">
+            <field name="export_id" ref="aal_costs_revenues_export_template"/>
+            <field name="name">unit_amount</field>
+        </record>
+
+        <record id="aal_costs_revenues_export_template_line_partner_id" model="ir.exports.line">
+            <field name="export_id" ref="aal_costs_revenues_export_template"/>
+            <field name="name">partner_id</field>
+        </record>
+
+        <record id="aal_costs_revenues_export_template_line_amount" model="ir.exports.line">
+            <field name="export_id" ref="aal_costs_revenues_export_template"/>
+            <field name="name">amount</field>
+        </record>
+    </data>
+</odoo>

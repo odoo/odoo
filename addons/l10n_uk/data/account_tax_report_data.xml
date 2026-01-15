@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.uk"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_tax_report_line_vat_cal" model="account.report.line">
+                <field name="name">VAT Calculations</field>
+                <field name="aggregation_formula">UKTAX_1.balance + UKTAX_2.balance - UKTAX_4.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_vat_box1" model="account.report.line">
+                        <field name="name">[BOX 1] VAT due on sales and other outputs</field>
+                        <field name="code">UKTAX_1</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_vat_box1_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_vat_box2" model="account.report.line">
+                        <field name="name">[BOX 2] VAT due on acquisitions of goods made in Northern Ireland from EU member states</field>
+                        <field name="code">UKTAX_2</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_vat_box2_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_vat_box3" model="account.report.line">
+                        <field name="name">[BOX 3] Total VAT due</field>
+                        <field name="aggregation_formula">UKTAX_1.balance + UKTAX_2.balance</field>
+                    </record>
+                    <record id="account_tax_report_line_vat_box4" model="account.report.line">
+                        <field name="name">[BOX 4] VAT reclaimed on purchases and other inputs (including acquisitions from the EU)</field>
+                        <field name="code">UKTAX_4</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_vat_box4_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">4</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_vat_box5" model="account.report.line">
+                        <field name="name">[BOX 5] VAT to pay/reclaim</field>
+                        <field name="aggregation_formula">UKTAX_1.balance + UKTAX_2.balance - UKTAX_4.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_exd_vat" model="account.report.line">
+                <field name="name">Sales and Purchases Excluding VAT</field>
+                <field name="aggregation_formula">UKTAX_6.balance + UKTAX_7.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_exd_vat_box6" model="account.report.line">
+                        <field name="name">[BOX 6] Total value of sales and all other outputs excluding any VAT</field>
+                        <field name="code">UKTAX_6</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_exd_vat_box6_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UKTAX_6.sale + UKTAX_6.purchase</field>
+                            </record>
+                            <record id="account_tax_report_line_exd_vat_box6_tag_sale" model="account.report.expression">
+                                <field name="label">sale</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-6</field>
+                            </record>
+                            <record id="account_tax_report_line_exd_vat_box6_tag_purchase" model="account.report.expression">
+                                <field name="label">purchase</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">6rc</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_exd_vat_box7" model="account.report.line">
+                        <field name="name">[BOX 7] Total value of purchases and all other inputs excluding VAT</field>
+                        <field name="code">UKTAX_7</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_exd_vat_box7_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">7</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ec_exd_vat" model="account.report.line">
+                <field name="name">EU Sales and Purchases Excluding VAT</field>
+                <field name="aggregation_formula">UKTAX_8.balance + UKTAX_9.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_exd_vat_box8" model="account.report.line">
+                        <field name="name">[BOX 8] Total value of all supplies of goods and related costs, excluding any VAT, to EU member states</field>
+                        <field name="code">UKTAX_8</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_exd_vat_box8_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-8</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_exd_vat_box9" model="account.report.line">
+                        <field name="name">[BOX 9] Total value of all acquisitions of goods and related costs, excluding any VAT, from EU member states</field>
+                        <field name="code">UKTAX_9</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_exd_vat_box9_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">9</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

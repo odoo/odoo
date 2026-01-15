@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.NavigableList">
+        <div class="o-mail-NavigableList bg-view m-0 p-0 shadow-sm" t-ref="root" t-att-class="props.class">
+            <div t-if="show" class="o-open d-flex flex-column bg-inherit" t-on-mousedown.prevent="">
+                <div t-if="state.showLoading" t-att-class="{ 'position-absolute bg-inherit smaller o-mail-NavigableList-floatingLoading': props.options.length, 'bg-300': props.options.length and state.activeIndex === 0, 'o-mail-NavigableList-item': !props.options.length }">
+                    <t t-call="mail.NavigableList.spinner"/>
+                </div>
+                <div
+                    t-foreach="sortedOptions" t-as="option" t-key="option_index"
+                    class="o-mail-NavigableList-item"
+                    t-att-class="option.classList"
+                    t-on-mouseenter="() => this.onOptionMouseEnter(option_index)"
+                    t-on-click="(ev) => this.selectOption(ev, option_index)"
+                >
+                    <hr class="my-2" t-if="option.group != lastGroup and option_index != 0"/>
+                    <a role="button" class="d-flex align-items-center w-100 px-3 py-1 small" t-att-class="{ 'o-mail-NavigableList-active': state.activeIndex === option_index }" t-attf-class="{{ option.buttonClass }}">
+                        <t t-if="option.optionTemplate" t-call="{{ option.optionTemplate }}"/>
+                        <t t-elif="props.optionTemplate" t-call="{{ props.optionTemplate }}"/>
+                        <t t-else="" t-esc="option.label"/>
+                    </a>
+                    <t t-set="lastGroup" t-value="option.group"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mail.NavigableList.spinner">
+        <span class="d-flex align-items-center w-100 py-2 gap-1 text-muted opacity-75" t-att-class="{ 'px-1': props.options.length, 'px-4': !props.options.length }">
+            <i class="fa fa-spin fa-circle-o-notch"/>
+            Loading…
+        </span>
+    </t>
+</templates>

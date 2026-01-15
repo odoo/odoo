@@ -1,0 +1,1832 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_self_order
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-30 18:37+0000\n"
+"PO-Revision-Date: 2025-11-27 09:05+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
+"pos_self_order/nl/>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: pos_self_order
+#: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
+msgid "\"QR codes\""
+msgstr "\"QR codes\""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+msgid "(require Odoo Enterprise)"
+msgstr "(vereist Odoo Enterprise)"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid ""
+"<br/>\n"
+"                    URL:"
+msgstr "<br/>URL:"
+
+#. module: pos_self_order
+#: model:mail.template,body_html:pos_self_order.delivery_email_template
+msgid ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
+"                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
+"                    <t t-set=\"state\" t-value=\"client.state_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
+"                    <t t-set=\"country\" t-value=\"client.country_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Hello <t t-"
+"out=\"client_name\">Client name</t>,</t>\n"
+"                        <t t-else=\"\">Hello,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Your order <t t-out=\"object.tracking_number\">...</"
+"t> amounting in <t t-out=\"object.amount_total\">$xx.xx</t> has been "
+"confirmed. <span t-if=\"object.preset_time or client.street\">It will be "
+"ready</span> <span t-if=\"object.preset_time\">at <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span> <span t-if=\"client.street\">at <t t-"
+"out=\"street\">street</t>, <t t-out=\"state\">state</t>, <t t-"
+"out=\"client.zip or ''\">zip</t>, <t t-out=\"city\">city</t>, <t t-"
+"out=\"country\">country</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>Thank you,</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>Attached, you will find your receipt</div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">Store name</t>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
+"                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
+"                    <t t-set=\"state\" t-value=\"client.state_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
+"                    <t t-set=\"country\" t-value=\"client.country_id.name or "
+"''\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Hallo <t t-"
+"out=\"client_name\">naam van de klant</t>,</t>\n"
+"                        <t t-else=\"\">Hallo,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Je bestelling <t t-"
+"out=\"object.tracking_number\">...</t> ter waarde van <t t-"
+"out=\"object.amount_total\">€ xx,xx</t> is bevestigd. <span t-"
+"if=\"object.preset_time or client.street\">Ze zal klaarstaan</span> <span t-"
+"if=\"object.preset_time\">om <t t-out=\"format_time(time=object.preset_time, "
+"tz=tz, time_format='short', lang_code=lg)\">12:00 uur</t></span> <span t-"
+"if=\"client.street\">op het volgende adres <t t-out=\"street\">straat</t>, "
+"<t t-out=\"state\">provincie</t>, <t t-out=\"client.zip or ''\">postcode</"
+"t>, <t t-out=\"city\">stad</t>, <t t-out=\"country\">land</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>Bedankt,</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>In de bijlage vind je je aankoopbewijs.</div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">Winkelnaam</t>\n"
+"                </div>\n"
+"            "
+
+#. module: pos_self_order
+#: model:mail.template,body_html:pos_self_order.takeout_email_template
+msgid ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Hello <t t-"
+"out=\"client_name\">Client name</t>,</t>\n"
+"                        <t t-else=\"\">Hello,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Your order <t t-out=\"object.tracking_number\">...</"
+"t> amounting in <t t-out=\"object.amount_total\">$xx.xx</t> has been "
+"confirmed. <span t-if=\"object.preset_time\">It will be ready at <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>Thank you,</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>Attached, you will find your receipt</div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">Store name</t>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Beste <t t-"
+"out=\"client_name\">naam van de klant</t>,</t>\n"
+"                        <t t-else=\"\">Hallo,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Je bestelling <t t-"
+"out=\"object.tracking_number\">...</t> ter waarde van <t t-"
+"out=\"object.amount_total\">€ xx,xx</t> is bevestigd. <span t-"
+"if=\"object.preset_time\">Ze zal klaarstaan om <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 uur</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>Bedankt,</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>In de bijlage vind je jouw aankoopbewijs.</"
+"div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">Naam van de winkel</t>\n"
+"                </div>\n"
+"            "
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_default_user_id
+msgid ""
+"Access rights of this user will be used when visiting self order website "
+"when no session is open."
+msgstr ""
+"De toegangsrechten van deze gebruiker worden gebruikt bij het bezoeken van "
+"de zelfbestellingswebsite wanneer er geen sessie geopend is."
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__active
+msgid "Active"
+msgstr "Actief"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "Add"
+msgstr "Toevoegen"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Add Languages"
+msgstr "Talen toevoegen"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_home_ids
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
+msgid "Add images"
+msgstr "Afbeeldingen toevoegen"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
+msgid "Add to cart"
+msgstr "Toevoegen aan winkelmandje"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
+msgid "All"
+msgstr "Alle"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+msgid "An error has occurred"
+msgstr "Er is een fout opgetreden"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
+msgid "Are you sure you want to cancel this order?"
+msgstr "Ben je zeker dat je deze order wilt annuleren?"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Available"
+msgstr "Beschikbaar"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_available_language_ids
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_available_language_ids
+msgid "Available Languages"
+msgstr "Beschik&shy;bare Talen"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
+msgid "Available in Self"
+msgstr "Beschikbaar in zelfbediening"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_available
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_available
+msgid "Available in Self Order"
+msgstr "Beschikbaar in zelfbestelling"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__available_in_self
+msgid "Available in self"
+msgstr "Beschikbaar in zelfbediening"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Available interface languages"
+msgstr "Beschikbare interfacetalen"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
+msgid "Back"
+msgstr "Terug"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Background"
+msgstr "Achtergrond"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
+msgid "Cancel Order"
+msgstr "Annuleer order"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
+msgid "Cancel order"
+msgstr "Annuleer order"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
+msgid "Cancelled"
+msgstr "Geannuleerd"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/category_list_popup/category_list_popup.xml:0
+msgid "Categories"
+msgstr "Categorieën"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+msgid "Checkout"
+msgstr "Afrekenen"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_service_mode
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
+msgid "Choose the kiosk mode"
+msgstr "Kies de kioskmodus"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_mode
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_mode
+msgid "Choose the self ordering mode"
+msgstr "Kies de zelfbestellingsmodus"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_pay_after
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
+msgid "Choose when the customer will pay"
+msgstr "Kies wanneer de klant betaalt"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "Choose your"
+msgstr "Kies je"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Choose your time"
+msgstr "Kies je tijd"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "City"
+msgstr "Plaats"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/category_list_popup/category_list_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/components/product_info_popup/product_info_propup.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+msgid "Close"
+msgstr "Afsluiten"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
+msgid "Close Session"
+msgstr "Sessie sluiten"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+msgid "Combo"
+msgstr "Combinatie"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_id
+msgid "Combo reference"
+msgstr "Combinatiereferentie"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie-instellingen"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
+msgid "Connection restored"
+msgstr "Verbinding hersteld"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_res_partner
+msgid "Contact"
+msgstr "Contact"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
+msgid "Continue"
+msgstr "Doorgaan"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+msgid "Continue with table"
+msgstr "Ga verder met tafel"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+msgid "Could you please confirm your table number?"
+msgstr "Kun je je tafelnummer bevestigen?"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_res_country
+msgid "Country"
+msgstr "Land"
+
+#. module: pos_self_order
+#: model:ir.model,website_form_label:pos_self_order.model_res_partner
+msgid "Create a Customer"
+msgstr "Een klant aanmaken"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__create_uid
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__create_date
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.js:0
+msgid "Current"
+msgstr "Huidig"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
+msgid "Custom Links"
+msgstr "Aangepaste links"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_self_order_custom_link
+msgid ""
+"Custom links that the restaurant can configure to be displayed on the self "
+"order screen"
+msgstr ""
+"Aangepaste links dat het restaurant kan configureren om weer te geven op het "
+"self-orderscherm"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__danger
+msgid "Danger"
+msgstr "Gevaar"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__dark
+msgid "Dark"
+msgstr "Somber"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Default"
+msgstr "Standaard"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_default_language_id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_default_language_id
+msgid "Default Language"
+msgstr "Standaard taal"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_default_user_id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_default_user_id
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Default User"
+msgstr "Standaard gebruiker"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_language_id
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_default_language_id
+msgid "Default language for the kiosk mode"
+msgstr "Standaardtaal voor de kioskmodus"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__service_at__delivery
+msgid "Delivery"
+msgstr "Levering"
+
+#. module: pos_self_order
+#: model:mail.template,name:pos_self_order.delivery_email_template
+msgid "Delivery: Confirmation order for self"
+msgstr "Bezorging: Bevestiging bestelling voor zelf"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__nothing
+msgid "Disable"
+msgstr "Uitschakelen"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/language_popup/language_popup.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
+msgid "Discard"
+msgstr "Negeren"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_ir_http__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_mail_template__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_category__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_load_mixin__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_payment_method__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_product_tag__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_res_country__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_res_partner__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_floor__display_name
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_table__display_name
+msgid "Display Name"
+msgstr "Weergavenaam"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
+msgid "Do not refresh the page."
+msgstr "Pagina niet vernieuwen."
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Download QR Codes"
+msgstr "QR-codes downloaden"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+msgid "Download your receipt here"
+msgstr "Download je bon hier"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+msgid "Each Order"
+msgstr "Elke order"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid ""
+"Each table in your floor plan is assigned a unique QR code based on your "
+"configuration. For security reasons,\n"
+"                    both the point of sale and table names are encrypted in "
+"the generated URL, as shown in the example below:."
+msgstr ""
+"Elke tafel in je plattegrond krijgt een unieke QR-code toegewezen op basis "
+"van je configuratie. Om veiligheidsredenen is\n"
+"                    zowel de kassa- als de tafelnamen worden gecodeerd in de "
+"gegenereerde URL, zoals weergegeven in het onderstaande voorbeeld:."
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_preset
+msgid "Easily load a set of configuration options"
+msgstr "Laad moeiteloos een reeks configuratieopties"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Email"
+msgstr "E-mail"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__mail_template_id
+msgid "Email Confirmation"
+msgstr "E-mail configuratie"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_mail_template
+msgid "Email Templates"
+msgstr "E-mailsjablonen"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/backend/qr_order_button/qr_order_button.js:0
+msgid ""
+"Enable QR menu in the Restaurant settings to get QR codes for free on tables."
+msgstr ""
+"Schakel het QR-menu in bij de restaurantinstellingen om gratis QR-codes op "
+"de tafels te krijgen."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
+msgid "Enter your custom value"
+msgstr "Voer je aangepaste waarde in"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
+msgid "Enter your tracker number"
+msgstr "Voer je tracenummer in"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid ""
+"Feel free to use and print this QR code as many times as needed according to "
+"your requirements."
+msgstr ""
+"Je kunt deze QR-code zo vaak gebruiken en afdrukken als nodig is, "
+"afhankelijk van je vereisten."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
+msgid "Follow instructions on the terminal"
+msgstr "Volg de instructies op de terminal"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Free Metal / Wood Stands"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+msgid "Generic"
+msgstr "Generiek"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/navbar/navbar.xml:0
+#: code:addons/pos_self_order/static/src/overrides/screens/floor_screen/floor_screen.xml:0
+msgid "Get QR Codes"
+msgstr "QR-codes genereren"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/backend/qr_order_button/qr_order_button.js:0
+msgid "Get QR codes"
+msgstr "QR-codes genereren"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP routing"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__has_paper
+msgid "Has paper"
+msgstr "Heeft papier"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_index.xml:0
+msgid ""
+"Hey, looks like you forgot to create products or add them to pos_config. "
+"Please add them before using the Self Order"
+msgstr ""
+"Hé, het lijkt erop dat je bent vergeten producten aan te maken of toe te "
+"voegen aan pos_config. Voeg ze toe voordat je de Zelfbestelling gebruikt"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Home buttons"
+msgstr "Home-knoppen"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+msgid "Hope you enjoyed your meal!"
+msgstr "Ik hoop dat je genoten hebt van je maaltijd!"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid "How to customize"
+msgstr "Hoe aan te passen"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid "How to use"
+msgstr "Hoe te gebruiken"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_ir_http__id
+#: model:ir.model.fields,field_description:pos_self_order.field_mail_template__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_category__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_load_mixin__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__id
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__id
+#: model:ir.model.fields,field_description:pos_self_order.field_product_tag__id
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_country__id
+#: model:ir.model.fields,field_description:pos_self_order.field_res_partner__id
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_floor__id
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_table__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_product_product__self_order_available
+#: model:ir.model.fields,help:pos_self_order.field_product_template__self_order_available
+msgid "If this product is available in the Self Order screens"
+msgstr "Als dit product beschikbaar is in de zelfbestelling-schermen"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid ""
+"If you need customized QR codes, start by scanning the relevant QR code to "
+"acquire the URL. Then, make\n"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
+msgstr ""
+"Als je aangepaste QR-codes nodig heeft, scan dan eerst de relevante QR-code "
+"om de URL te verkrijgen. Maak dan\n"
+"                gebruik van een QR-codegenerator zoals https://www.qrcode-"
+"monkey.com of https://www.qr-code-generator.com"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_background_ids
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_background_ids
+msgid "Image to be displayed in the background"
+msgstr "Afbeelding die als achtergrond wordt weergegeven"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_home_ids
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
+msgid "Image to display on the self order screen"
+msgstr "Afbeelding die wordt weergegeven op het zelfbedieningsscherm"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+msgid ""
+"In Self-Order mode, you must have at least one table to generate QR codes"
+msgstr ""
+"In de zelfbedieningsmodus moet je ten minste één tafel hebben om QR-codes te "
+"kunnen genereren"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__inactive
+msgid "Inactive"
+msgstr "Inactief"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__info
+msgid "Info"
+msgstr "Info"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
+msgid "Internet Connection Lost"
+msgstr "Internetverbinding verbroken"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
+msgid "Invoiced"
+msgstr "Gefactureerd"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+msgid "It seems that"
+msgstr "Het lijkt erop dat"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
+msgid "It seems that the network connection was lost."
+msgstr "Het lijkt erop dat de netwerkverbinding verbroken is."
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#: model:ir.actions.act_window,name:pos_self_order.action_pos_self_order_search_view
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__kiosk
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_search_view
+msgid "Kiosk"
+msgstr "Kiosk"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "Kiosk T"
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
+msgid "Label"
+msgstr "Label"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Language"
+msgstr "Taal"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_available_language_ids
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_available_language_ids
+msgid "Languages available for the kiosk mode"
+msgstr "Beschikbare talen voor de kioskmodus"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Let your customers order using their mobile or a kiosk."
+msgstr "Laat je klanten bestellen via hun mobiel of een kiosk."
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__light
+msgid "Light"
+msgstr "Licht"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_category__pos_config_ids
+msgid "Linked PoS Configurations"
+msgstr "Gekoppelde kassaconfiguraties"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+msgid "Loading..."
+msgstr "Laden..."
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid ""
+"Make it easy for your customers to explore your menu\n"
+"                online or order with the QR codes on your tables"
+msgstr ""
+"Maak het je klanten gemakkelijk om je menu te verkennen\n"
+"                online of bestel met de QR-codes op je tafels"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid ""
+"Make it easy for your customers to explore your menu\n"
+"                online with the QR codes on your tables"
+msgstr ""
+"Maak het je klanten gemakkelijk om je menu te verkennen\n"
+"                online met de QR-codes op je tafels"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/missing_required_details/missing_required_details.xml:0
+msgid ""
+"Make sure you choose all your options for this item. You're alomost there."
+msgstr ""
+"Controleer of je al je opties voor dit item hebt gekozen. Je bent bijna "
+"klaar."
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+msgid "Meal"
+msgstr "Maaltijd"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
+msgid "Mobile Menu"
+msgstr "Mobiel menu"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Mobile self-order & Kiosk"
+msgstr "Mobiele zelfbediening en kiosk"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/landing_page/landing_page.xml:0
+msgid "My Order"
+msgstr "Mijn order"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/landing_page/landing_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+msgid "My Orders"
+msgstr "Mijn orders"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "NEW"
+msgstr "NIEUW"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "NOTE"
+msgstr "NOTITIE"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Name"
+msgstr "Naam"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
+#: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
+msgid "Name of the image to display on the self order screen"
+msgstr ""
+"Naam van de afbeelding die moet worden weergegeven op het "
+"zelfbedieningsscherm"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "Next"
+msgstr "Volgende"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid "No"
+msgstr "Nee"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+msgid "No order found"
+msgstr "Geen order gevonden"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "No, thanks"
+msgstr "Nee, bedankt"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+msgid "Not available"
+msgstr "Niet beschikbaar"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
+msgid "Not available in Self"
+msgstr "Niet beschikbaar in Zelf"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+msgid "OK"
+msgstr "OK"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+msgid "Ok"
+msgstr "Ok"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
+msgid "Ongoing"
+msgstr "Lopend"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
+msgid "Online"
+msgstr "Online"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+msgid "Only pay after each is available with kiosk mode."
+msgstr "Alleen achteraf betalen is mogelijk in de kioskmodus."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+msgid "Oops..."
+msgstr "Oeps ..."
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
+msgid "Open Kiosk"
+msgstr "Kiosk openen"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.js:0
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "Order"
+msgstr "Order"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+msgid "Order Now"
+msgstr "Bestel nu"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+msgid "Orders not found on server"
+msgstr "Orders niet gevonden op de server"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__source
+msgid "Origin"
+msgstr "Bron"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
+msgid "Out of stock"
+msgstr "Niet op voorraad"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
+msgid "Paid"
+msgstr "Betaald"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.js:0
+msgid "Pay"
+msgstr "Betaal"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_pay_after
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
+msgid "Pay After:"
+msgstr "Betalen na:"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Pay after"
+msgstr "Betalen na"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Personalize the Kiosk background"
+msgstr "Personaliseer de achtergrond van de kiosk"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid ""
+"Personalize your splash screen by adding one or multiple images to create a "
+"slideshow"
+msgstr ""
+"Personaliseer je startscherm door een of meerdere afbeeldingen toe te voegen "
+"om een diavoorstelling te maken"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Phone"
+msgstr "Telefoon"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
+msgid "Pickup At Counter"
+msgstr "Ophalen bij balie"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__counter
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__service_at__counter
+msgid "Pickup zone"
+msgstr "Ophaalzone"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_load_mixin
+msgid "PoS data loading mixin"
+msgstr "Mixin voor het laden van kassagegevens"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_category
+msgid "Point of Sale Category"
+msgstr "Kassacategorie"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Kassa-instellingen"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr "Kassaorderregels"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Kassaorders"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Kassa betaalmethodes"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Kassa sessie"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid "Point of sale:"
+msgstr "Kassa:"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
+msgid "Points of Sale"
+msgstr "Kassa's"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__link_html
+msgid "Preview"
+msgstr "Voorbeeld"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Preview Web interface"
+msgstr "Voorbeeld webinterface"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__primary
+msgid "Primary"
+msgstr "Primair"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Print QR Codes"
+msgstr "QR-codes afdrukken"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/printing_failure_popup/printing_failure_popup.js:0
+msgid "Printing failed"
+msgstr "Afdrukken mislukt"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_product_template
+msgid "Product"
+msgstr "Product"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_product_tag
+msgid "Product Tag"
+msgstr "Productlabel"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_product_product
+msgid "Product Variant"
+msgstr "Productvariant"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+msgid "Product is not available"
+msgstr "Het product is niet beschikbaar"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+msgid "Product not found"
+msgstr "Product niet gevonden"
+
+#. module: pos_self_order
+#: model:ir.actions.report,name:pos_self_order.report_self_order_qr_codes_page
+msgid "QR Codes"
+msgstr "QR codes"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+msgid "QR codes can only be generated in mobile or consultation mode."
+msgstr ""
+"QR-codes kunnen alleen worden gegenereerd in de mobiele of consultatiemodus."
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__consultation
+msgid "QR menu"
+msgstr "QR-menu"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "QR menu & Kiosk activation"
+msgstr "QR-menu en kioskactivering"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__mobile
+msgid "QR menu + Ordering"
+msgstr "QR-menu + Bestellen"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/quantity_widget/quantity_widget.xml:0
+msgid "Quantity select"
+msgstr "Aantal selecteren"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
+msgid "Required"
+msgstr "Verplicht"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Reset QR Codes"
+msgstr "QR-codes opnieuw instellen"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_restaurant_floor
+msgid "Restaurant Floor"
+msgstr "Restaurantzaal"
+
+#. module: pos_self_order
+#: model:ir.model,name:pos_self_order.model_restaurant_table
+msgid "Restaurant Table"
+msgstr "Restauranttafel"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
+msgid "Retry"
+msgstr "Opnieuw proberen"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.js:0
+msgid "Retrying in %s second..."
+msgstr "Opnieuw proberen over %s second(en)..."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.js:0
+msgid "Retrying in %s seconds..."
+msgstr "Opnieuw proberen over %s second(en)..."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
+msgid "Retrying..."
+msgstr "Opnieuw proberen..."
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__secondary
+msgid "Secondary"
+msgstr "Secundair"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_restaurant_table__identifier
+msgid "Security Token"
+msgstr "Veiligheidstoken"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/missing_required_details/missing_required_details.xml:0
+msgid "See what you missed"
+msgstr "Kijk wat je hebt gemist"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Select"
+msgstr "Selecteren"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Select a country"
+msgstr "Selecteer een land"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "Select a hour"
+msgstr "Selecteer een uur"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Select a state"
+msgstr "Selecteer een staat"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+msgid "Select a table"
+msgstr "Selecteer een tafel"
+
+#. module: pos_self_order
+#: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
+msgid ""
+"Select for which points of sale you want to display this link. Leave empty "
+"to display it for all points of sale. You have to select among the points of "
+"sale that have the 'QR Code Menu' feature enabled."
+msgstr ""
+"Kies voor welke kassasystemen je deze link wil weergeven. Laat leeg om deze "
+"weer te geven voor alle kassasystemen. Je moet een keuze maken uit de "
+"kassasystemen waarvoor de 'Menu QR code' functie ingeschakeld is."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Select your address"
+msgstr "Selecteer je adres"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
+msgid "Selection"
+msgstr "Selectie"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+msgid "Self Order"
+msgstr "Zelfbediening"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
+msgid "Self Order Kiosk Image Brand"
+msgstr "Zelfbestelling kiosk-afbeeldingsmerk"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand_name
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
+msgid "Self Order Kiosk Image Brand Name"
+msgstr "Merknaam van zelfbestellende kioskafbeelding"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_visible
+#: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_visible
+msgid "Self Order Visible"
+msgstr "Zelfbediening zichtbaar"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid "Self Order:"
+msgstr "Zelf bestellen:"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+#: model_terms:ir.ui.view,arch_db:pos_self_order.view_pos_preset_form
+msgid "Self Ordering"
+msgstr "Zelfbestelling"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_mode
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_mode
+msgid "Self Ordering Mode"
+msgstr "Zelfbestellingsmodus"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_service_mode
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
+msgid "Self Ordering Service Mode"
+msgstr "Dienstmodus Zelfbestelling"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_url
+msgid "Self Ordering Url"
+msgstr "Zelfbestellende URL"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_order__source__kiosk
+msgid "Self-Order Kiosk"
+msgstr ""
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_order__source__mobile
+msgid "Self-Order Mobile"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "Self-Order T"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
+msgid "Self-Order T %s"
+msgstr "Zelfbediening T %s"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+msgid "Self-ordering:"
+msgstr "Zelfbediening:"
+
+#. module: pos_self_order
+#: model:mail.template,description:pos_self_order.delivery_email_template
+#: model:mail.template,description:pos_self_order.takeout_email_template
+msgid "Sent to customers with the receipt in attachment"
+msgstr "Verzonden naar klanten met het ticket in bijlage"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__sequence
+msgid "Sequence"
+msgstr "Reeks"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__service_at
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Service at"
+msgstr "Dienst bij"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
+msgid "Service at Table"
+msgstr "Dienst aan tafel"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
+msgid "Session Inactive"
+msgstr "Sessie inactief"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_background_ids
+#: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_background_ids
+msgid "Set background image"
+msgstr "Stel achtergrondafbeelding in"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "Splash screens"
+msgstr "Splash-schermen"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
+msgid "Start Kiosk"
+msgstr "Kiosk starten"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_config__status
+msgid "Status"
+msgstr "Status"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Street and Number"
+msgstr "Straat en nummer"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__style
+msgid "Style"
+msgstr "Stijl"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__success
+msgid "Success"
+msgstr "Succes"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__table
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__service_at__table
+msgid "Table"
+msgstr "Tafel"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__table_stand_number
+msgid "Table Stand Number"
+msgstr "Tafelnummer"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
+msgid "Table Tracker:"
+msgstr "Tafeltracker:"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_order__self_ordering_table_id
+msgid "Table reference"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+msgid "Table selection"
+msgstr "Tafelselectie"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid "Table:"
+msgstr "Tafel:"
+
+#. module: pos_self_order
+#: model:mail.template,name:pos_self_order.takeout_email_template
+msgid "Takeout: Confirmation order for self"
+msgstr "Afhalen: Bevestiging bestelling voor zelf"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+msgid "Tax:"
+msgstr "Belasting:"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+msgid "Taxes:"
+msgstr "Btw:"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "Thanks a lot!"
+msgstr "Hartelijk bedankt!"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+msgid "The Self-Order default user must be a POS user"
+msgstr "De standaardgebruiker voor zelfbediening moet een kassa-gebruiker zijn"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "The mail template with xmlid %s has been deleted."
+msgstr "De e-mailsjabloon met xmlid %s is verwijderd."
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+msgid "The user must be a POS user"
+msgstr "De gebruiker moet een Kassa-gebruiker zijn"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
+msgid "This combination does not exist."
+msgstr "Deze combinatie bestaat niet."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.xml:0
+msgid "Total"
+msgstr "Totaal"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
+msgid "Total:"
+msgstr "Totaal:"
+
+#. module: pos_self_order
+#: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__url
+msgid "URL"
+msgstr "URL"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid "URL:"
+msgstr "URL:"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
+msgid "Unavailable"
+msgstr "Onbeschikbaar"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+msgid "Uncategorised"
+msgstr "Niet gecategoriseerd"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "Validate your selection"
+msgstr "Bevestig je keuze"
+
+#. module: pos_self_order
+#: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__warning
+msgid "Warning"
+msgstr "Waarschuwing"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/printing_failure_popup/printing_failure_popup.xml:0
+msgid ""
+"We invite you to get the receipt at the counter. Please remember your order "
+"number:"
+msgstr "Haal je kassabon bij de kassa. Onthoud je ordernummer:"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "We need more info"
+msgstr "We hebben meer informatie nodig"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "We'll do everything to be on time!"
+msgstr "We doen ons uiterste best om op tijd te zijn!"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+msgid "We're currently closed"
+msgstr "We zijn momenteel gesloten"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_index.xml:0
+msgid "We're currently closed."
+msgstr "We zijn momenteel gesloten."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+msgid "We're preparing your order!"
+msgstr "Wij zijn je order aan het voorbereiden!"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "When would you like to receive your orders ?"
+msgstr "Wanneer wil je je bestelling ontvangen?"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
+msgid "Where do you want to eat?"
+msgstr "Waar wil je eten?"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
+msgid "Would you like to continue?"
+msgstr "Wil je doorgaan?"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
+msgid "Yes"
+msgstr "Ja"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
+msgid "You are back online. You can complete your order now."
+msgstr "Je bent weer online. Je kan je bestelling nu afronden."
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+msgid "You are not authorized to remove this order"
+msgstr "Je bent niet bevoegd om deze bestelling te verwijderen"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+#: code:addons/pos_self_order/models/res_config_settings.py:0
+msgid "You cannot add cash payment methods in kiosk mode."
+msgstr ""
+"Je kunt geen betaalmethoden met contant geld toevoegen in de kioskmodus."
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+msgid "You're not authorized to perform this action"
+msgstr "Je mag deze actie niet uitvoeren"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+msgid "Your Order"
+msgstr "Je order"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+msgid "Your order does not exist or has been removed"
+msgstr "Je bestelling bestaat niet of is verwijderd"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
+msgid "Your order has been paid"
+msgstr "Je order is betaald"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+msgid "Your order number"
+msgstr "Je ordernummer"
+
+#. module: pos_self_order
+#: model:mail.template,subject:pos_self_order.delivery_email_template
+#: model:mail.template,subject:pos_self_order.takeout_email_template
+msgid "Your {{ object.config_id.name }} receipt"
+msgstr "Je {{ object.config_id.name }} ticket"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Zip"
+msgstr "Postcode"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+msgid "are"
+msgstr "niet langer beschikbaar zijn"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+msgid "at the counter"
+msgstr "aan de toog"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "close"
+msgstr "sluiten"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_config.py:0
+msgid "each"
+msgstr "per stuk"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
+msgid "empty = all points of sale"
+msgstr "leeg = alle kassasystemen"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
+msgid "https://odoo.com"
+msgstr "https://odoo.com"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "included"
+msgstr "inbegrepen"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+msgid "is"
+msgstr "niet langer beschikbaar is"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
+msgid "no longer available. Please go back and edit your order."
+msgstr ". Ga terug en pas je bestelling aan."
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
+msgid "odoo"
+msgstr "odoo"
+
+#~ msgid "/ Tracker number:"
+#~ msgstr "/ Trackernummer:"
+
+#~ msgid "Connection lost, please try again later"
+#~ msgstr "Verbinding verloren, probeer het laten opnieuw"
+
+#~ msgid "Fiscal Position"
+#~ msgstr "Fiscale positie"
+
+#~ msgid "Self Ordering Enabled"
+#~ msgstr "Zelfbestelling ingeschakeld"
+
+#~ msgid "Your order has been cancelled"
+#~ msgstr "Je order werd geannuleerd"
+
+#~ msgid "Your order status has been changed"
+#~ msgstr "De status van je order is gewijzigd"

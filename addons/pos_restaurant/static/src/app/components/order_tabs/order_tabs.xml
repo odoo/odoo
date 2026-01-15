@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.OrderTabs" t-inherit="point_of_sale.OrderTabs" t-inherit-mode="extension">
+       <xpath expr="//div[hasclass('floating-order-container')]" position="before">
+            <t t-set="changes" t-value="this.pos.getOrderChanges(order)" />
+        </xpath>
+        <xpath expr="//div[hasclass('floating-order-container')]" position="inside">
+            <div t-if="changes.nbrOfChanges and this.pos.config.module_pos_restaurant"
+                class="position-absolute rounded-circle d-flex align-items-center justify-content-center"
+                style="top: -7px; right: -6px; width: 1.5rem; height: 1.5rem"
+                t-att-class="{'text-bg-danger bg-danger': changes.nbrOfChanges}">
+                <span t-esc="changes.nbrOfChanges" />
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('floating-order-container')]" position="attributes">
+            <attribute name="t-att-class">{'me-2': changes.nbrOfChanges and this.pos.config.module_pos_restaurant}</attribute>
+        </xpath>
+    </t>
+</templates>

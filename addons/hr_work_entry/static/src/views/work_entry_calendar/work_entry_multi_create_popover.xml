@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_work_entry.WorkEntryMultiCreatePopover" t-inherit="web.MultiCreatePopover" t-inherit-mode="primary">
+        <button t-on-click="() => this.onAdd()" position="after">
+            <button class="btn btn-sm btn-secondary" t-on-click="() => this.onReplace()">Replace</button>
+        </button>
+    </t>
+</templates>

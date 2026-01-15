@@ -1,237 +1,477 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from dateutil.relativedelta import relativedelta
+from datetime import datetime
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.fields import Domain
+from odoo.addons.fleet.models.fleet_vehicle_model import FUEL_TYPES
+
+
+#Some fields don't have the exact same name
+MODEL_FIELDS_TO_VEHICLE = {
+    'transmission': 'transmission', 'model_year': 'model_year', 'electric_assistance': 'electric_assistance',
+    'color': 'color', 'seats': 'seats', 'doors': 'doors', 'trailer_hook': 'trailer_hook', 'default_co2': 'co2',
+    'co2_standard': 'co2_standard', 'default_fuel_type': 'fuel_type', 'power': 'power', 'horsepower': 'horsepower',
+    'horsepower_tax': 'horsepower_tax', 'category_id': 'category_id', 'vehicle_range': 'vehicle_range',
+    'power_unit': 'power_unit', 'range_unit': 'range_unit',
+}
 
 
 class FleetVehicle(models.Model):
-    _inherit = 'mail.thread'
     _name = 'fleet.vehicle'
-    _description = 'Information on a vehicle'
-    _order = 'license_plate asc'
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'avatar.mixin']
+    _description = 'Vehicle'
+    _order = 'license_plate asc, acquisition_date asc'
+    _rec_names_search = ['name', 'driver_id.name']
 
     def _get_default_state(self):
-        state = self.env.ref('fleet.vehicle_state_active', raise_if_not_found=False)
-        return state and state.id or False
+        state = self.env.ref('fleet.fleet_vehicle_state_new_request', raise_if_not_found=False)
+        return state if state and state.id else False
+
+    def _get_year_selection(self):
+        current_year = datetime.now().year
+        return [(str(i), i) for i in range(1970, current_year + 1)]
 
     name = fields.Char(compute="_compute_vehicle_name", store=True)
-    active = fields.Boolean(default=True)
-    company_id = fields.Many2one('res.company', 'Company')
-    license_plate = fields.Char(required=True, help='License plate number of the vehicle (i = plate number for a car)')
-    vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
-    driver_id = fields.Many2one('res.partner', 'Driver', help='Driver of the vehicle', copy=False)
-    model_id = fields.Many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle')
-    log_fuel = fields.One2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs')
+    description = fields.Html("Vehicle Description")
+    active = fields.Boolean('Active', default=True, tracking=True)
+    manager_id = fields.Many2one(
+        'res.users', 'Fleet Manager',
+        domain=lambda self: f"[('share', '=', False), ('company_id', '=', company_id), ('all_group_ids', 'in', {self.env.ref('fleet.fleet_group_user').id})]",
+    )
+    company_id = fields.Many2one(
+        'res.company', 'Company',
+        default=lambda self: self.env.company,
+    )
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
+    country_id = fields.Many2one('res.country', related='company_id.country_id')
+    country_code = fields.Char(related='country_id.code', depends=['country_id'])
+    license_plate = fields.Char(tracking=True,
+        help='License plate number of the vehicle (i = plate number for a car)')
+    vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', tracking=True, copy=False)
+    trailer_hook = fields.Boolean(default=False, string='Trailer Hitch',
+        compute='_compute_trailer_hook', store=True, readonly=False,
+        help="A trailer hitch is a device attached to a vehicle's chassis for towing purposes, \
+            such as pulling trailers, boats, or other vehicles.")
+    driver_id = fields.Many2one('res.partner', 'Driver', tracking=True, help='Driver address of the vehicle', copy=False)
+    future_driver_id = fields.Many2one('res.partner', 'Future Driver', tracking=True, help='Next Driver Address of the vehicle', copy=False, check_company=True)
+    model_id = fields.Many2one('fleet.vehicle.model', 'Model',
+        tracking=True, required=True)
+    brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Brand', related="model_id.brand_id", store=True, readonly=False)
+    log_drivers = fields.One2many('fleet.vehicle.assignation.log', 'vehicle_id', string='Assignment Logs')
     log_services = fields.One2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs')
     log_contracts = fields.One2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts')
-    cost_count = fields.Integer(compute="_compute_count_all", string="Costs")
-    contract_count = fields.Integer(compute="_compute_count_all", string='Contracts')
+    contract_count = fields.Integer(compute="_compute_count_all", string='Contract Count')
     service_count = fields.Integer(compute="_compute_count_all", string='Services')
-    fuel_logs_count = fields.Integer(compute="_compute_count_all", string='Fuel Logs')
     odometer_count = fields.Integer(compute="_compute_count_all", string='Odometer')
-    acquisition_date = fields.Date('Immatriculation Date', required=False, help='Date when the vehicle has been immatriculated')
-    color = fields.Char(help='Color of the vehicle')
-    state_id = fields.Many2one('fleet.vehicle.state', 'State', default=_get_default_state, help='Current state of the vehicle', ondelete="set null")
+    history_count = fields.Integer(compute="_compute_count_all", string="Drivers History Count")
+    next_assignation_date = fields.Date('Assignment Date', help='This is the date at which the car will be available, if not set it means available instantly')
+    order_date = fields.Date('Order Date')
+    acquisition_date = fields.Date('Registration Date', required=False,
+        tracking=True, help='Date of vehicle registration')
+    write_off_date = fields.Date('Cancellation Date', tracking=True, help="Date when the vehicle's license plate has been cancelled/removed.")
+    contract_date_start = fields.Date(string="First Contract Date", default=fields.Date.today, tracking=True)
+    color = fields.Char(help='Color of the vehicle', compute='_compute_color', store=True, readonly=False)
+    state_id = fields.Many2one('fleet.vehicle.state', 'State',
+        default=_get_default_state, group_expand='_read_group_expand_full',
+        tracking=True,
+        help='Current state of the vehicle', ondelete="set null")
     location = fields.Char(help='Location of the vehicle (garage, ...)')
-    seats = fields.Integer('Seats Number', help='Number of seats of the vehicle')
-    doors = fields.Integer('Doors Number', help='Number of doors of the vehicle', default=5)
+    seats = fields.Integer('Seating Capacity', help='Number of seats of the vehicle',
+        compute='_compute_seats', store=True, readonly=False)
+    model_year = fields.Selection(selection='_get_year_selection', string='Model Year',
+        help='Year of the model', compute='_compute_model_year', store=True, readonly=False)
+    doors = fields.Integer('Number of Doors', help='Number of doors of the vehicle',
+        compute='_compute_doors', store=True, readonly=False)
     tag_ids = fields.Many2many('fleet.vehicle.tag', 'fleet_vehicle_vehicle_tag_rel', 'vehicle_tag_id', 'tag_id', 'Tags', copy=False)
     odometer = fields.Float(compute='_get_odometer', inverse='_set_odometer', string='Last Odometer',
         help='Odometer measure of the vehicle at the moment of this log')
     odometer_unit = fields.Selection([
-        ('kilometers', 'Kilometers'),
-        ('miles', 'Miles')
-        ], 'Odometer Unit', default='kilometers', help='Unit of the odometer ', required=True)
-    transmission = fields.Selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', help='Transmission Used by the vehicle')
-    fuel_type = fields.Selection([
-        ('gasoline', 'Gasoline'),
-        ('diesel', 'Diesel'),
-        ('electric', 'Electric'),
-        ('hybrid', 'Hybrid')
-        ], 'Fuel Type', help='Fuel Used by the vehicle')
-    horsepower = fields.Integer()
-    horsepower_tax = fields.Float('Horsepower Taxation')
-    power = fields.Integer('Power', help='Power in kW of the vehicle')
-    co2 = fields.Float('CO2 Emissions', help='CO2 emissions of the vehicle')
-    image = fields.Binary(related='model_id.image', string="Logo")
-    image_medium = fields.Binary(related='model_id.image_medium', string="Logo (medium)")
-    image_small = fields.Binary(related='model_id.image_small', string="Logo (small)")
+        ('kilometers', 'km'),
+        ('miles', 'mi')
+        ], 'Odometer Unit', default='kilometers', required=True)
+    transmission = fields.Selection(
+        [('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission',
+        compute='_compute_transmission', store=True, readonly=False)
+    fuel_type = fields.Selection(FUEL_TYPES, 'Fuel Type', compute='_compute_fuel_type', store=True, readonly=False)
+    power_unit = fields.Selection([
+        ('power', 'kW'),
+        ('horsepower', 'Horsepower')
+        ], 'Power Unit', default='power', required=True)
+    horsepower = fields.Float(compute='_compute_horsepower', store=True, readonly=False)
+    horsepower_tax = fields.Float('Horsepower Taxation', compute='_compute_horsepower_tax', store=True, readonly=False)
+    power = fields.Float('Power', help='Power in kW of the vehicle',
+        compute='_compute_power', store=True, readonly=False)
+    co2 = fields.Float('CO₂ Emissions', help='CO2 emissions of the vehicle', compute='_compute_co2',
+        store=True, readonly=False, tracking=True, aggregator=None)
+    co2_emission_unit = fields.Selection([('g/km', 'g/km'), ('g/mi', 'g/mi')], compute='_compute_co2_emission_unit',
+        store=True, default="g/km", required=True)
+    co2_standard = fields.Char('Emission Standard', compute='_compute_co2_standard', store=True, readonly=False,
+        help="Emission Standard specifies the regulatory test procedure \
+            or guideline under which a vehicle's emissions are measured.")
+    category_id = fields.Many2one('fleet.vehicle.model.category', 'Category', compute='_compute_category', store=True, readonly=False)
+    image_128 = fields.Image(related='model_id.image_128', readonly=True)
     contract_renewal_due_soon = fields.Boolean(compute='_compute_contract_reminder', search='_search_contract_renewal_due_soon',
-        string='Has Contracts to renew', multi='contract_info')
+        string='Has Contracts to renew')
     contract_renewal_overdue = fields.Boolean(compute='_compute_contract_reminder', search='_search_get_overdue_contract_reminder',
-        string='Has Contracts Overdue', multi='contract_info')
-    contract_renewal_name = fields.Text(compute='_compute_contract_reminder', string='Name of contract to renew soon', multi='contract_info')
-    contract_renewal_total = fields.Text(compute='_compute_contract_reminder', string='Total of contracts due or overdue minus one',
-        multi='contract_info')
-    car_value = fields.Float(string="Catalog Value (VAT Incl.)", help='Value of the bought vehicle')
+        string='Has Contracts Overdue')
+    contract_state = fields.Selection(
+        [('futur', 'Incoming'),
+         ('open', 'In Progress'),
+         ('expired', 'Expired'),
+         ('closed', 'Closed')
+        ], string='Last Contract State', compute='_compute_contract_reminder', required=False)
+    car_value = fields.Float(string="Catalog Value (VAT Incl.)", tracking=True)
+    net_car_value = fields.Float(string="Purchase Value")
     residual_value = fields.Float()
+    plan_to_change_car = fields.Boolean(tracking=True)
+    plan_to_change_bike = fields.Boolean(tracking=True)
+    vehicle_type = fields.Selection(related='model_id.vehicle_type')
+    frame_type = fields.Selection([('diamant', 'Diamant'), ('trapez', 'Trapez'), ('wave', 'Wave')], string="Bike Frame Type")
+    electric_assistance = fields.Boolean(compute='_compute_electric_assistance', store=True, readonly=False)
+    frame_size = fields.Float()
+    service_activity = fields.Selection([
+        ('none', 'None'),
+        ('overdue', 'Overdue'),
+        ('today', 'Today'),
+    ], compute='_compute_service_activity')
+    vehicle_properties = fields.Properties('Properties', definition='model_id.vehicle_properties_definition', copy=True)
+    vehicle_range = fields.Integer(string="Range")
+    range_unit = fields.Selection([('km', 'km'), ('mi', 'mi')],
+        compute='_compute_range_unit', store=True, readonly=False, default="km", required=True)
 
-    _sql_constraints = [
-        ('driver_id_unique', 'UNIQUE(driver_id)', 'Only one car can be assigned to the same employee!')
-    ]
+    @api.depends('log_services')
+    def _compute_service_activity(self):
+        for vehicle in self:
+            activities_state = set(state for state in vehicle.log_services.mapped('activity_state') if state and state != 'planned')
+            vehicle.service_activity = sorted(activities_state)[0] if activities_state else 'none'
 
-    @api.depends('model_id', 'license_plate')
+    def _load_fields_from_model(self, fields_to_load):
+        '''
+        Copies the desired fields from the models to the vehicles
+        '''
+        model_values = dict()
+        for vehicle in self.filtered('model_id'):
+            if vehicle.model_id.id in model_values:
+                write_vals = model_values[vehicle.model_id.id]
+            else:
+                # Update only the desired fields from the model, only when the model has a truthy value.
+                write_vals = \
+                    {
+                        vehicle_field: vehicle.model_id[model_field] for model_field, vehicle_field in MODEL_FIELDS_TO_VEHICLE.items()
+                        if vehicle_field in fields_to_load and vehicle.model_id[model_field]
+                    }
+                model_values[vehicle.model_id.id] = write_vals
+            vehicle.update(write_vals)
+
+    @api.depends('model_id')
+    def _compute_category(self):
+        self._load_fields_from_model(['category_id'])
+
+    @api.depends('model_id')
+    def _compute_range_unit(self):
+        self._load_fields_from_model(['range_unit'])
+
+    @api.depends('model_id')
+    def _compute_trailer_hook(self):
+        self._load_fields_from_model(['trailer_hook'])
+
+    @api.depends('model_id')
+    def _compute_vehicle_range(self):
+        self._load_fields_from_model(['vehicle_range'])
+
+    @api.depends('model_id')
+    def _compute_electric_assistance(self):
+        self._load_fields_from_model(['electric_assistance'])
+
+    @api.depends('model_id')
+    def _compute_co2_standard(self):
+        self._load_fields_from_model(['co2_standard'])
+
+    @api.depends('model_id')
+    def _compute_co2(self):
+        self._load_fields_from_model(['co2'])
+
+    @api.depends('model_id')
+    def _compute_power(self):
+        self._load_fields_from_model(['power'])
+
+    @api.depends('model_id')
+    def _compute_horsepower(self):
+        self._load_fields_from_model(['horsepower'])
+
+    @api.depends('model_id')
+    def _compute_horsepower_tax(self):
+        self._load_fields_from_model(['horsepower_tax'])
+
+    @api.depends('model_id')
+    def _compute_fuel_type(self):
+        self._load_fields_from_model(['fuel_type'])
+
+    @api.depends('model_id')
+    def _compute_transmission(self):
+        self._load_fields_from_model(['transmission'])
+
+    @api.depends('model_id')
+    def _compute_doors(self):
+        self._load_fields_from_model(['doors'])
+
+    @api.depends('model_id')
+    def _compute_model_year(self):
+        self._load_fields_from_model(['model_year'])
+
+    @api.depends('model_id')
+    def _compute_seats(self):
+        self._load_fields_from_model(['seats'])
+
+    @api.depends('model_id')
+    def _compute_color(self):
+        self._load_fields_from_model(['color'])
+
+    @api.depends('model_id.brand_id.name', 'model_id.name', 'license_plate')
     def _compute_vehicle_name(self):
         for record in self:
-            record.name = record.model_id.brand_id.name + '/' + record.model_id.name + '/' + record.license_plate
+            record.name = (record.model_id.brand_id.name or '') + '/' + (record.model_id.name or '') + '/' + (record.license_plate or _('No Plate'))
+
+    @api.depends('range_unit')
+    def _compute_co2_emission_unit(self):
+        for record in self:
+            if record.range_unit == 'km':
+                record.co2_emission_unit = 'g/km'
+            else:
+                record.co2_emission_unit = 'g/mi'
 
     def _get_odometer(self):
         FleetVehicalOdometer = self.env['fleet.vehicle.odometer']
         for record in self:
-            vehicle_odometer = FleetVehicalOdometer.search([('vehicle_id', '=', record.id)], limit=1, order='value desc')
+            vehicle_odometer = FleetVehicalOdometer.search([('vehicle_id', 'in', record.ids)], limit=1, order='value desc')
             if vehicle_odometer:
                 record.odometer = vehicle_odometer.value
             else:
                 record.odometer = 0
 
     def _set_odometer(self):
-        for record in self:
-            if record.odometer:
-                date = fields.Date.context_today(record)
-                data = {'value': record.odometer, 'date': date, 'vehicle_id': record.id}
-                self.env['fleet.vehicle.odometer'].create(data)
+        self.env['fleet.vehicle.odometer'].create([
+            {
+                'value': vehicle.odometer,
+                'date': fields.Date.context_today(vehicle),
+                'vehicle_id': vehicle.id,
+                'driver_id': vehicle.driver_id.id
+            } for vehicle in self if vehicle.odometer
+        ])
 
     def _compute_count_all(self):
         Odometer = self.env['fleet.vehicle.odometer']
-        LogFuel = self.env['fleet.vehicle.log.fuel']
-        LogService = self.env['fleet.vehicle.log.services']
-        LogContract = self.env['fleet.vehicle.log.contract']
-        Cost = self.env['fleet.vehicle.cost']
-        for record in self:
-            record.odometer_count = Odometer.search_count([('vehicle_id', '=', record.id)])
-            record.fuel_logs_count = LogFuel.search_count([('vehicle_id', '=', record.id)])
-            record.service_count = LogService.search_count([('vehicle_id', '=', record.id)])
-            record.contract_count = LogContract.search_count([('vehicle_id', '=', record.id), ('state', '=', 'open')])
-            record.cost_count = Cost.search_count([('vehicle_id', '=', record.id), ('parent_id', '=', False)])
+        LogService = self.env['fleet.vehicle.log.services'].with_context(active_test=False)
+        LogContract = self.env['fleet.vehicle.log.contract'].with_context(active_test=False)
+        History = self.env['fleet.vehicle.assignation.log']
+        odometers_data = Odometer._read_group([('vehicle_id', 'in', self.ids)], ['vehicle_id'], ['__count'])
+        services_data = LogService._read_group([('vehicle_id', 'in', self.ids)], ['vehicle_id', 'active'], ['__count'])
+        logs_data = LogContract._read_group([('vehicle_id', 'in', self.ids), ('state', '!=', 'closed')], ['vehicle_id', 'active'], ['__count'])
+        histories_data = History._read_group([('vehicle_id', 'in', self.ids)], ['vehicle_id'], ['__count'])
+
+        mapped_odometer_data = defaultdict(lambda: 0)
+        mapped_service_data = defaultdict(lambda: defaultdict(lambda: 0))
+        mapped_log_data = defaultdict(lambda: defaultdict(lambda: 0))
+        mapped_history_data = defaultdict(lambda: 0)
+
+        for vehicle, count in odometers_data:
+            mapped_odometer_data[vehicle.id] = count
+        for vehicle, active, count in services_data:
+            mapped_service_data[vehicle.id][active] = count
+        for vehicle, active, count in logs_data:
+            mapped_log_data[vehicle.id][active] = count
+        for vehicle, count in histories_data:
+            mapped_history_data[vehicle.id] = count
+
+        for vehicle in self:
+            vehicle.odometer_count = mapped_odometer_data[vehicle.id]
+            vehicle.service_count = mapped_service_data[vehicle.id][vehicle.active]
+            vehicle.contract_count = mapped_log_data[vehicle.id][vehicle.active]
+            vehicle.history_count = mapped_history_data[vehicle.id]
 
     @api.depends('log_contracts')
     def _compute_contract_reminder(self):
-        for record in self:
-            overdue = False
-            due_soon = False
-            total = 0
-            name = ''
-            for element in record.log_contracts:
-                if element.state in ('open', 'toclose') and element.expiration_date:
-                    current_date_str = fields.Date.context_today(record)
-                    due_time_str = element.expiration_date
-                    current_date = fields.Date.from_string(current_date_str)
-                    due_time = fields.Date.from_string(due_time_str)
-                    diff_time = (due_time - current_date).days
-                    if diff_time < 0:
-                        overdue = True
-                        total += 1
-                    if diff_time < 15 and diff_time >= 0:
-                            due_soon = True
-                            total += 1
-                    if overdue or due_soon:
-                        log_contract = self.env['fleet.vehicle.log.contract'].search([
-                            ('vehicle_id', '=', record.id),
-                            ('state', 'in', ('open', 'toclose'))
-                            ], limit=1, order='expiration_date asc')
-                        if log_contract:
-                            # we display only the name of the oldest overdue/due soon contract
-                            name = log_contract.cost_subtype_id.name
+        params = self.env['ir.config_parameter'].sudo()
+        delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
+        current_date = fields.Date.context_today(self)
+        data = self.env['fleet.vehicle.log.contract']._read_group(
+            domain=[('expiration_date', '!=', False), ('vehicle_id', 'in', self.ids), ('state', '!=', 'closed')],
+            groupby=['vehicle_id', 'state'],
+            aggregates=['expiration_date:max'])
 
-            record.contract_renewal_overdue = overdue
-            record.contract_renewal_due_soon = due_soon
-            record.contract_renewal_total = total - 1  # we remove 1 from the real total for display purposes
-            record.contract_renewal_name = name
+        prepared_data = {}
+        for vehicle_id, state, expiration_date in data:
+            if prepared_data.get(vehicle_id.id):
+                if prepared_data[vehicle_id.id]['expiration_date'] < expiration_date:
+                    prepared_data[vehicle_id.id]['expiration_date'] = expiration_date
+                    prepared_data[vehicle_id.id]['state'] = state
+            else:
+                prepared_data[vehicle_id.id] = {
+                    'state': state,
+                    'expiration_date': expiration_date,
+                }
+
+        for record in self:
+            vehicle_data = prepared_data.get(record.id)
+            if vehicle_data:
+                diff_time = (vehicle_data['expiration_date'] - current_date).days
+                record.contract_renewal_overdue = diff_time < 0
+                record.contract_renewal_due_soon = not record.contract_renewal_overdue and (diff_time < delay_alert_contract)
+                record.contract_state = vehicle_data['state']
+            else:
+                record.contract_renewal_overdue = False
+                record.contract_renewal_due_soon = False
+                record.contract_state = ""
+
+    def _get_analytic_name(self):
+        # This function is used in fleet_account and is overrided in l10n_be_hr_payroll_fleet
+        return self.license_plate or _('No plate')
 
     def _search_contract_renewal_due_soon(self, operator, value):
-        res = []
-        assert operator in ('=', '!=', '<>') and value in (True, False), 'Operation not supported'
-        if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
-            search_operator = 'in'
-        else:
-            search_operator = 'not in'
+        if operator != 'in':
+            return NotImplemented
+        params = self.env['ir.config_parameter'].sudo()
+        delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
         today = fields.Date.context_today(self)
         datetime_today = fields.Datetime.from_string(today)
-        limit_date = fields.Datetime.to_string(datetime_today + relativedelta(days=+15))
-        self.env.cr.execute("""SELECT cost.vehicle_id,
-                        count(contract.id) AS contract_number
-                        FROM fleet_vehicle_cost cost
-                        LEFT JOIN fleet_vehicle_log_contract contract ON contract.cost_id = cost.id
-                        WHERE contract.expiration_date IS NOT NULL
-                          AND contract.expiration_date > %s
-                          AND contract.expiration_date < %s
-                          AND contract.state IN ('open', 'toclose')
-                        GROUP BY cost.vehicle_id""", (today, limit_date))
-        res_ids = [x[0] for x in self.env.cr.fetchall()]
-        res.append(('id', search_operator, res_ids))
-        return res
+        limit_date = fields.Datetime.to_string(datetime_today + relativedelta(days=+delay_alert_contract))
+        return [('log_contracts', 'any', [
+            ('expiration_date', '>', today),
+            ('expiration_date', '<', limit_date),
+            ('state', 'in', ['open', 'expired']),
+        ])]
 
     def _search_get_overdue_contract_reminder(self, operator, value):
-        res = []
-        assert operator in ('=', '!=', '<>') and value in (True, False), 'Operation not supported'
-        if (operator == '=' and value is True) or (operator in ('<>', '!=') and value is False):
-            search_operator = 'in'
-        else:
-            search_operator = 'not in'
+        if operator != 'in':
+            return NotImplemented
         today = fields.Date.context_today(self)
-        self.env.cr.execute('''SELECT cost.vehicle_id,
-                        count(contract.id) AS contract_number
-                        FROM fleet_vehicle_cost cost
-                        LEFT JOIN fleet_vehicle_log_contract contract ON contract.cost_id = cost.id
-                        WHERE contract.expiration_date IS NOT NULL
-                          AND contract.expiration_date < %s
-                          AND contract.state IN ('open', 'toclose')
-                        GROUP BY cost.vehicle_id ''', (today,))
-        res_ids = [x[0] for x in self.env.cr.fetchall()]
-        res.append(('id', search_operator, res_ids))
+        # get the id of vehicles that have overdue contracts
+        # but exclude those for which a new contract has already been created for them
+        return [
+            ("log_contracts", "any", [
+                ('expiration_date', '!=', False),
+                ('expiration_date', '<', today),
+                ('state', 'in', ['open', 'expired'])
+            ]),
+            "!",
+                ("log_contracts", "any", [
+                    ('expiration_date', '!=', False),
+                    ('expiration_date', '>=', today),
+                    ('state', 'in', ['open', 'futur'])
+                ]),
+        ]
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        to_update_drivers_cars = set()
+        to_update_drivers_bikes = set()
+        state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
+        for vals in vals_list:
+            if vals.get('future_driver_id'):
+                state_id = vals.get('state_id')
+                if not state_waiting_list or state_waiting_list.id != state_id:
+                    future_driver = vals['future_driver_id']
+                    if vals.get('vehicle_type') == 'bike':
+                        to_update_drivers_bikes.add(future_driver)
+                    elif vals.get('vehicle_type') == 'car':
+                        to_update_drivers_cars.add(future_driver)
+        if to_update_drivers_cars:
+            self.search([
+                ('driver_id', 'in', to_update_drivers_cars),
+                ('vehicle_type', '=', 'car'),
+            ]).plan_to_change_car = True
+        if to_update_drivers_bikes:
+            self.search([
+                ('driver_id', 'in', to_update_drivers_bikes),
+                ('vehicle_type', '=', 'bike'),
+            ]).plan_to_change_bike = True
+
+        vehicles = super().create(vals_list)
+
+        for vehicle, vals in zip(vehicles, vals_list):
+            if vals.get('driver_id'):
+                vehicle.create_driver_history(vals)
+        return vehicles
+
+    def write(self, vals):
+        if 'odometer' in vals and any(vehicle.odometer > vals['odometer'] for vehicle in self):
+            raise UserError(_('The odometer value cannot be lower than the previous one.'))
+
+        if 'driver_id' in vals and vals['driver_id']:
+            driver_id = vals['driver_id']
+            for vehicle in self.filtered(lambda v: v.driver_id.id != driver_id):
+                vehicle.create_driver_history(vals)
+                if vehicle.driver_id:
+                    vehicle.activity_schedule(
+                        'mail.mail_activity_data_todo',
+                        user_id=vehicle.manager_id.id or self.env.user.id,
+                        note=_('Specify the End date of %s', vehicle.driver_id.name))
+
+        if 'future_driver_id' in vals and vals['future_driver_id']:
+            future_driver = vals['future_driver_id']
+            state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
+            state_new_request = self.env.ref('fleet.fleet_vehicle_state_new_request', raise_if_not_found=False)
+            vehicle_types = set(self.filtered(lambda vehicle: not state_waiting_list or\
+                                vals.get('state_id', vehicle.state_id.id) not in [state_waiting_list.id, state_new_request.id]).mapped('vehicle_type'))
+            if vehicle_types:
+                vehicle_read_group = dict(self.env['fleet.vehicle']._read_group(
+                    domain=[('driver_id', '=', future_driver), ('vehicle_type', 'in', vehicle_types), ('id', 'not in', self.ids)],
+                    groupby=['vehicle_type'],
+                    aggregates=['id:recordset'])
+                )
+                if 'bike' in vehicle_read_group:
+                    vehicle_read_group['bike'].write({'plan_to_change_bike': True})
+                if 'car' in vehicle_read_group:
+                    vehicle_read_group['car'].write({'plan_to_change_car': True})
+
+        if 'active' in vals and not vals['active']:
+            self.env['fleet.vehicle.log.contract'].search([('vehicle_id', 'in', self.ids)]).active = False
+            self.env['fleet.vehicle.log.services'].search([('vehicle_id', 'in', self.ids)]).active = False
+
+        res = super(FleetVehicle, self).write(vals)
         return res
 
-    @api.onchange('model_id')
-    def _onchange_model(self):
-        if self.model_id:
-            self.image_medium = self.model_id.image
-        else:
-            self.image_medium = False
+    def _get_driver_history_data(self, vals):
+        self.ensure_one()
+        return {
+            'vehicle_id': self.id,
+            'driver_id': vals['driver_id'],
+            'date_start': fields.Date.today(),
+        }
 
-    @api.model
-    def create(self, data):
-        vehicle = super(FleetVehicle, self.with_context(mail_create_nolog=True)).create(data)
-        vehicle.message_post(body=_('%s %s has been added to the fleet!') % (vehicle.model_id.name, vehicle.license_plate))
-        return vehicle
-
-    @api.multi
-    def write(self, vals):
-        """
-        This function write an entry in the openchatter whenever we change important information
-        on the vehicle like the model, the drive, the state of the vehicle or its license plate
-        """
+    def create_driver_history(self, vals):
         for vehicle in self:
-            changes = []
-            if 'model_id' in vals and vehicle.model_id.id != vals['model_id']:
-                value = self.env['fleet.vehicle.model'].browse(vals['model_id']).name
-                oldmodel = vehicle.model_id.name or _('None')
-                changes.append(_("Model: from '%s' to '%s'") % (oldmodel, value))
-            if 'driver_id' in vals and vehicle.driver_id.id != vals['driver_id']:
-                value = self.env['res.partner'].browse(vals['driver_id']).name
-                olddriver = (vehicle.driver_id.name) or _('None')
-                changes.append(_("Driver: from '%s' to '%s'") % (olddriver, value))
-            if 'state_id' in vals and vehicle.state_id.id != vals['state_id']:
-                value = self.env['fleet.vehicle.state'].browse(vals['state_id']).name
-                oldstate = vehicle.state_id.name or _('None')
-                changes.append(_("State: from '%s' to '%s'") % (oldstate, value))
-            if 'license_plate' in vals and vehicle.license_plate != vals['license_plate']:
-                old_license_plate = vehicle.license_plate or _('None')
-                changes.append(_("License Plate: from '%s' to '%s'") % (old_license_plate, vals['license_plate']))
+            self.env['fleet.vehicle.assignation.log'].create(
+                vehicle._get_driver_history_data(vals),
+            )
 
-            if len(changes) > 0:
-                self.message_post(body=", ".join(changes))
+    def action_accept_driver_change(self):
+        # Find all the vehicles of the same type for which the driver is the future_driver_id
+        # remove their driver_id and close their history using current date
+        vehicles = self.search([('driver_id', 'in', self.mapped('future_driver_id').ids), ('vehicle_type', '=', self.vehicle_type)])
+        vehicles.write({
+            'driver_id': False,
+            'plan_to_change_car': False,
+            'plan_to_change_bike': False,
+        })
+        
+        for vehicle in self:
+            vehicle.plan_to_change_bike = False
+            vehicle.plan_to_change_car = False
+            vehicle.driver_id = vehicle.future_driver_id
+            vehicle.future_driver_id = False
 
-            return super(FleetVehicle, self).write(vals)
-
-    @api.multi
     def return_action_to_open(self):
         """ This opens the xml view specified in xml_id for the current vehicle """
         self.ensure_one()
         xml_id = self.env.context.get('xml_id')
         if xml_id:
-            res = self.env['ir.actions.act_window'].for_xml_id('fleet', xml_id)
+
+            res = self.env['ir.actions.act_window']._for_xml_id('fleet.%s' % xml_id)
             res.update(
                 context=dict(self.env.context, default_vehicle_id=self.id, group_by=False),
                 domain=[('vehicle_id', '=', self.id)]
@@ -239,74 +479,54 @@ class FleetVehicle(models.Model):
             return res
         return False
 
-    @api.multi
     def act_show_log_cost(self):
         """ This opens log view to view and add new log for this vehicle, groupby default to only show effective costs
             @return: the costs log view
         """
         self.ensure_one()
-        res = self.env['ir.actions.act_window'].for_xml_id('fleet', 'fleet_vehicle_costs_action')
+        copy_context = dict(self.env.context)
+        copy_context.pop('group_by', None)
+        res = self.env['ir.actions.act_window']._for_xml_id('fleet.fleet_vehicle_costs_action')
         res.update(
-            context=dict(self.env.context, default_vehicle_id=self.id, search_default_parent_false=True),
+            context=dict(copy_context, default_vehicle_id=self.id, search_default_parent_false=True),
             domain=[('vehicle_id', '=', self.id)]
         )
         return res
 
+    def _track_subtype(self, init_values):
+        self.ensure_one()
+        if 'driver_id' in init_values or 'future_driver_id' in init_values:
+            return self.env.ref('fleet.mt_fleet_driver_updated')
+        return super(FleetVehicle, self)._track_subtype(init_values)
 
-class FleetVehicleOdometer(models.Model):
-    _name = 'fleet.vehicle.odometer'
-    _description = 'Odometer log for a vehicle'
-    _order = 'date desc'
+    def open_assignation_logs(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Assignment Logs',
+            'view_mode': 'list',
+            'res_model': 'fleet.vehicle.assignation.log',
+            'domain': [('vehicle_id', '=', self.id)],
+            'context': {'default_driver_id': self.driver_id.id, 'default_vehicle_id': self.id}
+        }
 
-    name = fields.Char(compute='_compute_vehicle_log_name', store=True)
-    date = fields.Date(default=fields.Date.context_today)
-    value = fields.Float('Odometer Value', group_operator="max")
-    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True)
-    unit = fields.Selection(related='vehicle_id.odometer_unit', string="Unit", readonly=True)
-    driver_id = fields.Many2one(related="vehicle_id.driver_id", string="Driver")
+    def action_send_email(self):
+        return {
+            'name': _('Send Email'),
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'view_mode': 'form',
+            'res_model': 'fleet.vehicle.send.mail',
+            'context': {
+                'default_vehicle_ids': self.ids,
+            }
+        }
 
-    @api.depends('vehicle_id', 'date')
-    def _compute_vehicle_log_name(self):
-        for record in self:
-            name = record.vehicle_id.name
-            if not name:
-                name = record.date
-            elif record.date:
-                name += ' / ' + record.date
-            self.name = name
-
-    @api.onchange('vehicle_id')
-    def _onchange_vehicle(self):
-        if self.vehicle_id:
-            self.unit = self.vehicle_id.odometer_unit
-
-
-class FleetVehicleState(models.Model):
-    _name = 'fleet.vehicle.state'
-    _order = 'sequence asc'
-
-    name = fields.Char(required=True)
-    sequence = fields.Integer(help="Used to order the note stages")
-
-    _sql_constraints = [('fleet_state_name_unique', 'unique(name)', 'State name already exists')]
-
-
-class FleetVehicleTag(models.Model):
-    _name = 'fleet.vehicle.tag'
-
-    name = fields.Char(required=True, translate=True)
-    color = fields.Integer('Color Index', default=10)
-
-    _sql_constraints = [('name_uniq', 'unique (name)', "Tag name already exists !")]
-
-
-class FleetServiceType(models.Model):
-    _name = 'fleet.service.type'
-    _description = 'Type of services available on a vehicle'
-
-    name = fields.Char(required=True, translate=True)
-    category = fields.Selection([
-        ('contract', 'Contract'),
-        ('service', 'Service'),
-        ('both', 'Both')
-        ], 'Category', required=True, help='Choose wheter the service refer to contracts, vehicle services or both')
+    def action_open_odometer_report(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id('fleet.fleet_vehicle_odometer_reporting_action')
+        action.update({
+            'domain': [('vehicle_id', '=', self.id)],
+            'context': {'search_default_groupby_date': True},
+        })
+        return action

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarCallParticipants">
+        <t t-if="sessions.length gt 0">
+            <Dropdown t-if="compact" state="floating" position="'right-start'" manual="true" menuClass="'o-mail-DiscussSidebar-floatingMenu ' + store.discussDropdownMenuClass(this)">
+                <t t-call="mail.DiscussSidebarCallParticipants.main"/>
+                <t t-set-slot="content">
+                    <div class="p-2" t-ref="floating">
+                        <t t-call="mail.DiscussSidebarCallParticipants.list">
+                            <t t-set="isCompact" t-value="false"/>
+                        </t>
+                    </div>
+                </t>
+            </Dropdown>
+            <t t-else="" t-call="mail.DiscussSidebarCallParticipants.main"/>
+        </t>
+    </t>
+
+    <t t-name="mail.DiscussSidebarCallParticipants.main">
+        <div class="o-mail-DiscussSidebarCallParticipants d-flex pb-1 bg-inherit" t-ref="root" t-att-class="{
+            'justify-content-center': compact,
+            'ps-3 pe-2': props.compact === undefined and !compact,
+            'px-2': props.compact === false,
+            'rounded-3': props.compact === undefined,
+            'opacity-75': props.thread.notEq(rtc.channel) and compact,
+        }" style="margin: 1px;">
+            <button class="o-mail-DiscussSidebarCallParticipants-expandBtn btn btn-link p-1 my-n1 ms-n1 me-0 align-self-start d-flex rounded-circle" t-if="!compact" t-on-click="() => state.expanded = !state.expanded">
+                <i class="oi o-xxsmaller text-muted text-dark" t-att-class="{'oi-chevron-right': !state.expanded, 'oi-chevron-down': state.expanded}" t-att-title="title"/>
+            </button>
+            <AvatarStack
+                t-if="!state.expanded"
+                direction="compact ? 'v' : 'h'"
+                containerClass="compact ? '' : 'cursor-pointer'"
+                avatarClass="(p) => this.avatarClass(p)"
+                max="compact ? 1 : 7"
+                size="26"
+                onClick.bind="onClickAvatarStack"
+                personas="sessions.map((s) => s.channel_member_id?.persona).filter(p => p)"
+            >
+                <t t-if="compact" t-set-slot="avatarExtraInfo" t-slot-scope="scope">
+                    <div class="o-mail-DiscussSidebarCallParticipants-status small" t-att-class="{
+                        'position-absolute bg-inherit p-0 rounded-circle o-compact d-flex o-xsmaller text-start': compact,
+                        'ms-1 d-flex align-items-center justify-content-center': !compact,
+                    }">
+                        <t t-call="mail.DiscussSidebarCallParticipants.participantShortStatus">
+                            <t t-set="session" t-value="scope.persona.currentRtcSession"/>
+                        </t>
+                    </div>
+                </t>
+            </AvatarStack>
+            <t t-else="" t-call="mail.DiscussSidebarCallParticipants.list">
+                <t t-set="isCompact" t-value="compact"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="mail.DiscussSidebarCallParticipants.list">
+        <div class="d-flex flex-column gap-1 flex-grow-1 overflow-hidden" style="padding: 1.5px;">
+            <t t-foreach="sessions" t-as="session" t-key="session.localId">
+                <t t-call="mail.DiscussSidebarCallParticipants.participant">
+                    <t t-set="session" t-value="session"/>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="mail.DiscussSidebarCallParticipants.participant">
+        <div class="o-mail-DiscussSidebarCallParticipants-participant d-flex text-reset overflow-hidden align-items-center" t-att-class="attClass" t-on-click="(ev) => this.onClickParticipant(ev, session)">
+            <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:26px;height:26px;margin:1px;">
+                <img class="o-mail-DiscussSidebarCallParticipants-avatar w-100 h-100 rounded-circle object-fit-cover" t-att-src="session.channel_member_id.avatarUrl" t-att-class="{'o-isTalking': !session.isMute and session.isTalking}" alt="Participant avatar" t-att-title="session.channel_member_id.name"/>
+            </div>
+            <span t-if="!isCompact" class="o-mail-DiscussSidebarCallParticipants-name mx-1 text-truncate fw-bold smaller user-select-none" t-att-title="session.channel_member_id.name" t-att-class="{ 'o-isTalking': !session.isMute and session.isTalking }">
+                <t t-esc="session.channel_member_id.name"/>
+            </span>
+            <div t-if="!isCompact" class="flex-grow-1"/>
+            <div class="o-mail-DiscussSidebarCallParticipants-status small opacity-75" t-att-class="{ 'position-absolute bottom-0 end-0 bg-inherit p-0 rounded-circle o-compact d-flex o-xsmaller text-start': isCompact, 'ms-1 d-flex align-items-center justify-content-center': !isCompact }">
+                <t t-if="isCompact" t-call="mail.DiscussSidebarCallParticipants.participantShortStatus">
+                    <t t-set="session" t-value="session"/>
+                </t>
+                <t t-else="">
+                    <span t-if="session.is_deaf" class="p-1 fa opacity-75" t-att-class="CALL_ICON_DEAFEN"/>
+                    <span t-elif="session.is_muted" class="p-1 fa opacity-75" t-att-class="CALL_ICON_MUTED"/>
+                    <span t-if="session.is_screen_sharing_on" class="o-live bg-danger o-text-white rounded">LIVE</span>
+                </t>
+            </div>
+        </div>
+    </t>
+
+
+    <t t-name="mail.DiscussSidebarCallParticipants.participantShortStatus">
+        <span t-if="session?.shortStatus" t-att-class="{
+            [`${CALL_ICON_MUTED} opacity-75`]: session.shortStatus === 'mute',
+            [`${CALL_ICON_DEAFEN} opacity-75`]: session.shortStatus === 'deafen',
+            'o-live bg-danger o-text-white rounded': session.shortStatus === 'live',
+        }"><t t-if="session.shortStatus === 'live'">LIVE</t></span>
+    </t>
+
+</templates>

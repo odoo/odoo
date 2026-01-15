@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_self_view_pos_config_tree" model="ir.ui.view">
+        <field name="name">pos.self.pos.config.list.view</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="status" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

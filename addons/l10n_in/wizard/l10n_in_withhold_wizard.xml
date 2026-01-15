@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_in_withholding_entry_form_action" model="ir.actions.act_window">
+        <field name="name">Create TDS Entry</field>
+        <field name="res_model">l10n_in.withhold.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="tds_entry_view_form" model="ir.ui.view">
+        <field name="name">l10n_in.withhold.wizard.view.form</field>
+        <field name="model">l10n_in.withhold.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-warning mt-1 mb-1" role="alert" invisible="not l10n_in_withholding_warning">
+                    <div>
+                        <field name="l10n_in_withholding_warning" widget="actionable_errors"/>
+                    </div>
+                </div>
+                <sheet>
+                    <group>
+                        <group id="header_left_group">
+                            <field name="date" string="Entry Date"/>
+                            <label for="tax_id" string="TDS Section"/>
+                            <div>
+                                <field name="tax_id" class="oe_inline" domain="[('l10n_in_tax_type', '=', l10n_in_tds_tax_type)]" required="True"
+                                options="{'no_create': True, 'no_open': True}"/>
+                                <field name="tds_deduction" class="oe_inline"
+                                       decoration-success="tds_deduction == 'lower'"
+                                       decoration-danger="tds_deduction == 'higher'"
+                                       decoration-warning="tds_deduction == 'no'"
+                                       invisible="tds_deduction == 'normal'"
+                                />
+                            </div>
+                            <field name="base" widget="monetary" options="{'currency_field': 'currency_id'}" required="True"/>
+                            <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id" invisible="1"/> <!-- used to display the currency symbol -->
+                            <field name="related_move_id" invisible="1"/> <!-- used to compute the l10n_in_tds_tax_type -->
+                            <field name="related_payment_id" invisible="1"/> <!-- used to compute the l10n_in_tds_tax_type -->
+                        </group>
+                        <group id="header_right_group">
+                            <field name="journal_id" domain="[('type', '=', 'general')]"/>
+                            <field name="reference"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Apply TDS" type="object" name="action_create_and_post_withhold" class="btn-primary"/>
+                    <button string="Discard" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

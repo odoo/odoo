@@ -3,141 +3,213 @@
 # * bus
 #
 # Translators:
-# Morten Schou <ms@msteknik.dk>, 2016
+# Martin Trigaux, 2022
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-04-06 06:35+0000\n"
-"Last-Translator: Morten Schou <ms@msteknik.dk>\n"
-"Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2025-11-16 15:06+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/bus/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: bus
-#: sql_constraint:bus.presence:0
-msgid "A user can only have one IM status."
-msgstr "En bruger kan kun have en IM status."
+#: model:ir.model,name:bus.model_res_groups
+msgid "Access Groups"
+msgstr "Adgangsgrupper"
 
 #. module: bus
-#: selection:bus.presence,status:0
-msgid "Away"
-msgstr "Væk"
+#: model:ir.model,name:bus.model_ir_attachment
+msgid "Attachment"
+msgstr "Vedhæftning"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_channel
+#: model:ir.model,name:bus.model_bus_listener_mixin
+msgid "Can send messages via bus.bus"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__channel
 msgid "Channel"
 msgstr "Kanal"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
-msgid "Create date"
-msgstr "Oprettelses dato"
+#: model:ir.model,name:bus.model_bus_bus
+msgid "Communication Bus"
+msgstr "Kommunikations Bus"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_create_uid
+#: model:ir.model,name:bus.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: bus
+#: model:ir.model,website_form_label:bus.model_res_partner
+msgid "Create a Customer"
+msgstr "Opret en kunde"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
 msgstr "Oprettet af"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_display_name
-#: model:ir.model.fields,field_description:bus.field_bus_presence_display_name
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
+msgid "Created on"
+msgstr "Oprettet den"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
+#: model:ir.model.fields,field_description:bus.field_bus_listener_mixin__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_http__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_model__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_websocket__display_name
+#: model:ir.model.fields,field_description:bus.field_res_groups__display_name
+#: model:ir.model.fields,field_description:bus.field_res_partner__display_name
+#: model:ir.model.fields,field_description:bus.field_res_users__display_name
+#: model:ir.model.fields,field_description:bus.field_res_users_settings__display_name
 msgid "Display Name"
-msgstr "Vist navn"
+msgstr "Vis navn"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
-msgid "Geo Latitude"
+#. odoo-javascript
+#: code:addons/bus/static/src/debug/bus_logs_menu_item.xml:0
+msgid "Download logs"
 msgstr ""
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_partner_longitude
-msgid "Geo Longitude"
+#. odoo-javascript
+#: code:addons/bus/static/src/debug/bus_logs_menu_item.xml:0
+msgid "Enable Bus Logging"
 msgstr ""
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_date_localization
-msgid "Geolocation Date"
-msgstr ""
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP Routing"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_id
-#: model:ir.model.fields,field_description:bus.field_bus_presence_id
+#: model:ir.model.fields,field_description:bus.field_bus_bus__id
+#: model:ir.model.fields,field_description:bus.field_bus_listener_mixin__id
+#: model:ir.model.fields,field_description:bus.field_ir_attachment__id
+#: model:ir.model.fields,field_description:bus.field_ir_http__id
+#: model:ir.model.fields,field_description:bus.field_ir_model__id
+#: model:ir.model.fields,field_description:bus.field_ir_websocket__id
+#: model:ir.model.fields,field_description:bus.field_res_groups__id
+#: model:ir.model.fields,field_description:bus.field_res_partner__id
+#: model:ir.model.fields,field_description:bus.field_res_users__id
+#: model:ir.model.fields,field_description:bus.field_res_users_settings__id
 msgid "ID"
-msgstr "Id"
+msgstr "ID"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_status
-#: model:ir.model.fields,field_description:bus.field_res_partner_im_status
-#: model:ir.model.fields,field_description:bus.field_res_users_im_status
-msgid "IM Status"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus___last_update
-#: model:ir.model.fields,field_description:bus.field_bus_presence___last_update
-msgid "Last Modified on"
-msgstr "Sidst ændret den"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_last_poll
-msgid "Last Poll"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_last_presence
-msgid "Last Presence"
-msgstr "Sidste Tilstedeværelse"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_write_uid
+#: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
 msgstr "Sidst opdateret af"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_write_date
+#: model:ir.model.fields,field_description:bus.field_bus_bus__write_date
 msgid "Last Updated on"
 msgstr "Sidst opdateret den"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_message
+#: model:ir.model.fields,field_description:bus.field_bus_bus__message
 msgid "Message"
 msgstr "Besked"
 
 #. module: bus
-#: selection:bus.presence,status:0
-msgid "Offline"
-msgstr "Offline"
+#: model:ir.model,name:bus.model_ir_model
+msgid "Models"
+msgstr "Modeller"
 
 #. module: bus
-#: selection:bus.presence,status:0
-msgid "Online"
-msgstr "Online"
+#. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid "Refresh"
+msgstr "Genopfrisk"
 
 #. module: bus
-#: model:ir.model,name:bus.model_res_partner
-msgid "Partner"
-msgstr "Kontakt"
+#. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid ""
+"Save your work and refresh to get the latest updates and avoid potential "
+"issues."
+msgstr ""
 
 #. module: bus
-#: model:ir.model,name:bus.model_bus_presence
-msgid "User Presence"
+#. odoo-javascript
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+msgid "The page appears to be out of date."
+msgstr "Siden ser ud til at være forældet."
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/outdated_page_watcher_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
+msgid "The page is out of date"
 msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
-#: model:ir.model.fields,field_description:bus.field_bus_presence_user_id
-msgid "Users"
-msgstr "Brugere"
+msgid "User"
+msgstr "Bruger"
 
 #. module: bus
-#: model:ir.model,name:bus.model_bus_bus
-msgid "bus.bus"
-msgstr "bus.bus"
+#: model:ir.model,name:bus.model_res_users_settings
+msgid "User Settings"
+msgstr "Bruger indstillinger"
 
-#~ msgid "Created on"
-#~ msgstr "Oprettet den"
+#. module: bus
+#. odoo-python
+#: code:addons/bus/controllers/home.py:0
+msgid ""
+"Your password is the default (admin)! If this system is exposed to untrusted "
+"users it is important to change it immediately for security reasons. I will "
+"keep nagging you about it!"
+msgstr ""
+"Dit kodeord er sat til standard (admin)! Det er vigtigt, at du ændre det med "
+"det samme, af sikkerhedsmæssige årsager, hvis dette system skulle udsættes "
+"for tvivlsomme brugere. Jeg bliver ved med at irritere dig om det!"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_websocket
+msgid "websocket message handling"
+msgstr "Behandling af WebSocket-beskeder"
+
+#~ msgid "Away"
+#~ msgstr "Væk"
+
+#~ msgid "IM Status"
+#~ msgstr "IM status"
+
+#~ msgid "Last Poll"
+#~ msgstr "Seneste meningsmåling"
+
+#~ msgid "Last Presence"
+#~ msgstr "Sidste tilstedeværelse"
+
+#~ msgid "Offline"
+#~ msgstr "Offline"
+
+#~ msgid "Online"
+#~ msgstr "Online"
+
+#~ msgid "User Presence"
+#~ msgstr "Bruger tilstedeværelse"
+
+#~ msgid "Users"
+#~ msgstr "Brugere"

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_fr_pos_cert.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('before-footer')]" position="inside">
+            <t t-if="order.l10n_fr_hash !== false">
+                <div class="text-break pt-3"><t t-out="order.l10n_fr_hash"/></div>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="l10n_fr_pos_cert.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//Orderline" position="inside">
+            <t t-if="line.order_id.l10n_fr_hash !== false and line.price_type === 'manual' and !props.basic_receipt">
+                <div class="pos-receipt-right-padding">
+                    Old unit price:
+                    <span class="oldPrice">
+                        <s>
+                            <t t-out="line.product_id.displayPriceUnit" /> / Units
+                        </s>
+                    </span>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

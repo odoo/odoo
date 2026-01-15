@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_tax_form" model="ir.ui.view">
+        <field name="name">account.tax.view.form.inherit.l10n_ph</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form" />
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page name="l10n_ph" string="Philippines" invisible="country_code != 'PH'">
+                    <group>
+                        <group>
+                            <field name="l10n_ph_atc" />
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

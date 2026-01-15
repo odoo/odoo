@@ -1,25 +1,33 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Copyright (C) 2012 Thinkopen Solutions, Lda. All Rights Reserved
-# http://www.thinkopensolutions.com.
-
 {
     'name': 'Portugal - Accounting',
-    'version': '0.011',
-    'author': 'ThinkOpen Solutions',
-    'website': 'http://www.thinkopensolutions.com/',
-    'category': 'Localization',
-    'description': 'Plano de contas SNC para Portugal',
-    'depends': ['base',
-                'base_vat',
-                'account',
-                ],
+    'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['pt'],
+    'version': '1.0',
+    'author': 'Odoo',
+    'category': 'Accounting/Localizations/Account Charts',
+    'description': 'Portugal - Accounting',
+    'depends': [
+        'base',
+        'account',
+        'base_vat',
+        'account_edi_ubl_cii',
+    ],
+    'auto_install': ['account'],
     'data': [
-           'data/l10n_pt_chart_data.xml',
-           'data/account_chart_template_data.xml',
-           'data/account_fiscal_position_template_data.xml',
-           'data/account_tax_data.xml',
-           'data/account_chart_template_data.yml',
-           ],
+        'data/account_tax_report.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_pt/static/src/helpers/*.js',
+        ],
+        'web.assets_frontend': [
+            'l10n_pt/static/src/helpers/*.js',
+        ],
+    },
+    'license': 'LGPL-3',
 }

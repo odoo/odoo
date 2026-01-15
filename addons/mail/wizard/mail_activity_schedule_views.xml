@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mail_activity_schedule_view_form" model="ir.ui.view">
+            <field name="name">Activity schedule</field>
+            <field name="model">mail.activity.schedule</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="activity_category" invisible="1"/>
+                    <field name="chaining_type" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="has_error" invisible="1"/>
+                    <field name="has_warning" invisible="1"/>
+                    <field name="plan_has_user_on_demand" invisible="1"/>
+                    <field name="res_ids" invisible="1"/>
+                    <field name="plan_available_ids" invisible="1"/>
+                    <sheet class="o_mail_activity_schedule_wizard">
+                        <field name="plan_id"
+                            options="{'no_open': True, 'no_create': True}"
+                            widget="selection_badge"
+                            invisible="not plan_available_ids"
+                            nolabel="1"/>
+                        <br/>
+                        <field name="activity_type_id"
+                            required="not plan_id"
+                            widget="selection_badge_icons"
+                            iconField="icon"
+                            nolabel="1"/>
+                        <group invisible="not plan_id">
+                            <group>
+                                <field name="plan_date" placeholder="Default deadline for the activities..." string="Due Date"/>
+                                <field name="plan_on_demand_user_id" widget="many2one_avatar_user"
+                                       invisible="not plan_has_user_on_demand" string="Responsible"/>
+                            </group>
+                            <group>
+                                <label for="plan_schedule_line_ids" string="Plan Summary" class="o_form_label mb-n2" colspan="2"/>
+                                <field name="plan_schedule_line_ids" nolabel="1" class="text-muted mt-n2 small" colspan="2">
+                                    <list edit="0" no_open="1" class="o_mail_activity_schedule_summary">
+                                        <field name="responsible_user_id" nolabel="1" widget="many2one_avatar_user" width="22px"/>
+                                        <field name="line_description" nolabel="1"/>
+                                        <field name="line_date_deadline" nolabel="1"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </group>
+                        <group invisible="not activity_type_id">
+                            <group name="summary_group" colspan="2">
+                                <label for="summary" class="o_form_label fs-3"/>
+                                <field string="Summary" name="summary" placeholder="e.g. Discuss Proposal" class="fs-3 w-100" nolabel="1"/>
+                            </group>
+                            <group>
+                                <field name="date_deadline" string="Due Date"/>
+                                <field name="activity_user_id" widget="many2one_avatar_user" placeholder="Unassigned"/>
+                                <field name="res_model" widget="activity_model_selector" string="Link to"
+                                    invisible="id or context.get('active_model')" required="activity_user_id != context.get('uid')"/>
+                            </group>
+                            <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..." widget="html_mail" />
+                        </group>
+                        <div role="alert" class="alert alert-danger mb8" invisible="not has_error">
+                            <field name="error"/>
+                        </div>
+                        <div role="alert" class="alert alert-warning mb8" invisible="not has_warning">
+                            <field name="warning"/>
+                        </div>
+                    </sheet>
+                    <footer invisible="plan_id">
+                        <button name="action_schedule_activities" string="Save" type="object" class="btn-primary"
+                                invisible="has_error" data-hotkey="q"/>
+                        <button name="action_schedule_activities_done" string="Mark Done" type="object"
+                            invisible="has_error or chaining_type == 'trigger'"
+                            class="btn-secondary"  data-hotkey="w"
+                            context="{'mail_activity_quick_update': True}"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                    <footer invisible="not plan_id">
+                        <button name="action_schedule_plan" string="Schedule" type="object" class="btn-primary"
+                                invisible="has_error" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

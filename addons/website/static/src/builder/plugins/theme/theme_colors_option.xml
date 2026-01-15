@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.ThemeColorsOption">
+        <BuilderContext preview="false">
+            <!-- TODO
+            <we-alert class="o_old_color_system_warning d-none mt-2">
+                It appears your website is still using the old color system of
+                Odoo 13.0 in some places. We made sure it is still working but
+                we recommend you to try to use the new color system, which is
+                still customizable.
+            </we-alert>-->
+            <BuilderRow>
+                <div class="d-flex flex-row gap-3 w-100 justify-content-between ps-2" style="height: 50px">
+                    <div class="d-flex flex-column h-100 justify-content-between">
+                        <span class="fst-italic">Main</span>
+                        <div class="d-flex flex-row gap-1">
+                            <BuilderColorPicker
+                                title="Primary"
+                                action="'customizeWebsiteColor'"
+                                actionParam="'o-color-1'"
+                                enabledTabs="['solid', 'custom']"
+                                selectedTab="'custom'"/>
+                            <BuilderColorPicker
+                                title="Secondary"
+                                action="'customizeWebsiteColor'"
+                                actionParam="'o-color-2'"
+                                enabledTabs="['solid', 'custom']"
+                                selectedTab="'custom'"/>
+                            <BuilderColorPicker
+                                action="'customizeWebsiteColor'"
+                                actionParam="'o-color-3'"
+                                enabledTabs="['solid', 'custom']"
+                                selectedTab="'custom'"/>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column h-100 justify-content-between">
+                        <span class="fst-italic">Light &amp; Dark</span>
+                        <div class="d-flex flex-row gap-1">
+                            <BuilderColorPicker
+                                action="'customizeWebsiteColor'"
+                                actionParam="'o-color-4'"
+                                enabledTabs="['solid', 'custom']"
+                                selectedTab="'custom'"/>
+                            <BuilderColorPicker
+                                action="'customizeWebsiteColor'"
+                                actionParam="'o-color-5'"
+                                enabledTabs="['solid', 'custom']"
+                                selectedTab="'custom'"/>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column h-100">
+                        <div class="d-flex flex-column h-100 justify-content-center">
+                            <BuilderSelect action="'changeColorPalette'" actionParam="'color-palettes-name'" dropdownContainerClass="'o-color-palette-dropdown'">
+                                <t t-set-slot="fixedButton">
+                                    <Img class="'h-100'" src="'/website/static/src/img/snippets_options/palette.svg'"/>
+                                </t>
+                                <t t-foreach="palettes" t-as="palette" t-key="palette.name">
+                                    <BuilderSelectItem actionValue="`'${palette.name}'`">
+                                        <div class="o-color-palette-pill d-flex flex-row border rounded-pill overflow-hidden">
+                                            <t t-foreach="palette.colors" t-as="color" t-key="color">
+                                                <span class="w-100" t-attf-style="background-color: {{color}};"></span>
+                                            </t>
+                                        </div>
+                                    </BuilderSelectItem>
+                                </t>
+                            </BuilderSelect>
+                        </div>
+                    </div>
+                </div>
+            </BuilderRow>
+            <BuilderRow label.translate="Color Presets" expand="!!colorPresetToShow">
+                <div></div>     <!-- This is required, without it the row is not displayed at all -->
+                <t t-set-slot="collapse">
+                    <t t-foreach="state.presets" t-as="preset" t-key="preset.id">
+                        <BuilderRow t-slot-scope="row" initialExpandAnim="colorPresetToShow === preset.id">
+                            <div class="o_cc_preview_wrapper w-100" t-on-click="row.toggleCollapseContent">
+                                <div inert="" t-att-class="`o_cc${preset.id}`"
+                                     class="p-2 d-flex justify-content-between align-items-center ms-3">
+                                    <h3 class="m-0">
+                                        Title
+                                    </h3>
+                                    <p class="my-0 ms-3 me-auto">
+                                        Text
+                                    </p>
+                                    <button class="btn btn-primary btn-sm me-2">
+                                        Button
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm">
+                                        Button
+                                    </button>
+                                </div>
+                            </div>
+                            <t t-set-slot="collapse">
+                                <BuilderRow label.translate="Background">
+                                    <BuilderColorPicker
+                                        enabledTabs="['solid', 'custom', 'gradient']"
+                                        action="'customizeWebsiteColor'"
+                                        actionParam="{ mainParam: `o-cc${preset.id}-bg`, gradientColor: `o-cc${preset.id}-bg-gradient` }"
+                                    />
+                                </BuilderRow>
+                                <BuilderRow label.translate="Text">
+                                    <BuilderColorPicker
+                                        action="'customizeWebsiteColor'"
+                                        actionParam="`o-cc${preset.id}-text`"
+                                        enabledTabs="['solid', 'custom']"/>
+                                </BuilderRow>
+                                <BuilderRow label.translate="Headings">
+                                    <BuilderColorPicker
+                                        action="'customizeWebsiteColor'"
+                                        actionParam="`o-cc${preset.id}-headings`"
+                                        enabledTabs="['solid', 'custom']"/>
+                                    <t t-set-slot="collapse">
+                                        <t t-foreach="[2, 3, 4, 5, 6]" t-as="j" t-key="j">
+                                            <BuilderRow label="`Headings ${j}`">
+                                                <BuilderColorPicker
+                                                    action="'customizeWebsiteColor'"
+                                                    actionParam="`o-cc${preset.id}-h${j}`"
+                                                    enabledTabs="['solid', 'custom']"/>
+                                            </BuilderRow>
+                                        </t>
+                                    </t>
+                                </BuilderRow>
+                                <BuilderRow label.translate="Links">
+                                    <BuilderColorPicker
+                                        action="'customizeWebsiteColor'"
+                                        actionParam="`o-cc${preset.id}-link`"
+                                        enabledTabs="['solid', 'custom']"/>
+                                </BuilderRow>
+                                <BuilderRow label.translate="Primary Buttons">
+                                    <BuilderColorPicker
+                                        action="'customizeWebsiteColor'"
+                                        actionParam="`o-cc${preset.id}-btn-primary`"
+                                        enabledTabs="['solid', 'custom']"/>
+                                    <BuilderColorPicker
+                                        action="'customizeWebsiteColor'"
+                                        actionParam="`o-cc${preset.id}-btn-primary-border`"
+                                        enabledTabs="['solid', 'custom']"/>
+                                </BuilderRow>
+                                <BuilderRow label.translate="Secondary Buttons">
+                                    <BuilderColorPicker
+                                        action="'customizeWebsiteColor'"
+                                        actionParam="`o-cc${preset.id}-btn-secondary`"
+                                        enabledTabs="['solid', 'custom']"/>
+                                    <BuilderColorPicker
+                                        action="'customizeWebsiteColor'"
+                                        actionParam="`o-cc${preset.id}-btn-secondary-border`"
+                                        enabledTabs="['solid', 'custom']"/>
+                                </BuilderRow>
+                            </t>
+                        </BuilderRow>
+                    </t>
+                </t>
+            </BuilderRow>
+        </BuilderContext>
+    </t>
+</templates>

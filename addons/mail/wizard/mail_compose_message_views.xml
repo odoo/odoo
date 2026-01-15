@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="email_compose_message_wizard_form">
+            <field name="name">mail.compose.message.form</field>
+            <field name="model">mail.compose.message</field>
+            <field name="group_ids" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="arch" type="xml">
+                <form string="Compose Email" class="pt-0 pb-0 o_mail_composer_form" js_class="mail_composer_form" disable_autofocus="1">
+                    <group>
+                        <!-- truly invisible fields for control and options -->
+                        <field name="author_id" invisible="1"/>
+                        <field name="auto_delete" invisible="1"/>
+                        <field name="auto_delete_keep_log" invisible="1"/>
+                        <field name="composition_batch" invisible="1"/>
+                        <field name="composition_comment_option" invisible="1"/>
+                        <field name="composition_mode" invisible="1"/>
+                        <field name="email_layout_xmlid" invisible="1"/>
+                        <field name="force_send" invisible="1"/>
+                        <field name="lang" invisible="1"/>
+                        <field name="mail_server_id" invisible="1"/>
+                        <field name="model" invisible="1"/>
+                        <field name="model_is_thread" invisible="1"/>
+                        <field name="notified_bcc_contains_share" invisible="1"/>
+                        <field name="notify_author" invisible="1"/>
+                        <field name="notify_author_mention" invisible="1"/>
+                        <field name="notify_skip_followers" invisible="1"/>
+                        <field name="parent_id" invisible="1"/>
+                        <field name="partner_ids_all_have_email" invisible="1"/>
+                        <field name="record_alias_domain_id" invisible="1"/>
+                        <field name="record_company_id" invisible="1"/>
+                        <field name="render_model" invisible="1"/>
+                        <field name="res_domain" invisible="1"/>
+                        <field name="res_domain_user_id" invisible="1"/>
+                        <field name="res_ids" invisible="1"/>
+                        <field name="scheduled_date" invisible="1"/>
+                        <field name="subtype_id" invisible="1"/>
+                        <field name="subtype_is_log" invisible="1"/>
+                        <field name="use_exclusion_list" invisible="1"/>
+                        <!-- visible wizard -->
+                        <field name="email_from"
+                            invisible="composition_mode != 'mass_mail'"/>
+                        <label for="partner_ids" string="To" invisible="composition_mode != 'comment' or subtype_is_log"/>
+                        <div groups="base.group_user" invisible="composition_mode != 'comment' or subtype_is_log" class="d-flex gap-3">
+                            <field name="partner_ids" widget="many2many_tags_email" placeholder="Followers only" class="w-auto flex-grow-1"
+                                invisible="composition_comment_option == 'forward' or (composition_comment_option != 'reply_all' and not context.get('clicked_on_full_composer', False))"
+                                context="{'form_view_ref': 'base.view_partner_simple_form'}"
+                                options="{'edit_tags': True}"/>
+                            <field name="partner_ids" widget="many2many_tags_email" placeholder="Add recipients..." class="w-auto flex-grow-1"
+                                required="composition_comment_option == 'forward' or (composition_comment_option != 'reply_all' and not context.get('clicked_on_full_composer', False) and composition_mode == 'comment' and not notified_bcc_contains_share)"
+                                invisible="composition_comment_option != 'forward' and (context.get('clicked_on_full_composer', False) or composition_comment_option == 'reply_all' )"
+                                options="{'edit_tags': True}"
+                                context="{'force_email': True, 'show_email': True, 'form_view_ref': 'base.view_partner_simple_form', 'forward_mode': True}"/>
+                        </div>
+                        <field name="subject" placeholder="e.g. Welcome to MyCompany!" required="True"/>
+                        <field name="reply_to" placeholder="e.g. info@company.com"
+                            invisible="reply_to_mode == 'update'"
+                            required="reply_to_mode != 'update'"/>
+                    </group>
+                    <field name="can_edit_body" invisible="1"/>
+                    <div invisible="composition_mode == 'mass_mail'">
+                        <field name="body" widget="html_composer_message" class="oe-bordered-editor"
+                            placeholder="Write your message here..." readonly="not can_edit_body" force_save="1"
+                            options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'render_model'}"/>
+                        <field name="attachment_ids" widget="mail_composer_attachment_list"/>
+                    </div>
+                    <notebook invisible="composition_mode != 'mass_mail'">
+                        <page string="Content" name="page_content">
+                            <div>
+                                <field name="body" widget="html_composer_message" class="oe-bordered-editor"
+                                    placeholder="Write your message here..." readonly="not can_edit_body" force_save="1"
+                                    options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'render_model'}"/>
+                                <field name="attachment_ids" widget="mail_composer_attachment_list"/>
+                            </div>
+                        </page>
+                        <page string="Settings" name="page_settings">
+                            <!-- mass mailing -->
+                            <field name="reply_to_force_new" invisible="1"/>
+                            <field name="reply_to_mode" invisible="composition_mode != 'mass_mail'" widget="radio"/>
+                            <field name="use_exclusion_list" invisible="1"/>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button string="Send" name="action_send_mail"
+                                type="object" class="btn-primary o_mail_send" data-hotkey="q"
+                                invisible="(subtype_is_log or composition_mode == 'comment' and not composition_batch and scheduled_date) or not partner_ids_all_have_email"/>
+                        <button string="Log" name="action_send_mail"
+                                type="object" class="btn-primary" data-hotkey="q"
+                                invisible="(not subtype_is_log or composition_mode == 'comment' and not composition_batch and scheduled_date) or not partner_ids_all_have_email"/>
+                        <button string="Schedule" name="action_schedule_message" type="object" class="btn-primary" data-hotkey="q"
+                                invisible="(composition_mode != 'comment' or composition_batch or not scheduled_date) or not partner_ids_all_have_email"/>
+                        <button string="Send" name="action_send_mail" disabled="1"
+                                type="object" class="btn-primary o_mail_send" data-hotkey="q"
+                                invisible="(subtype_is_log or composition_mode == 'comment' and not composition_batch and scheduled_date) or partner_ids_all_have_email"/>
+                        <button string="Log" name="action_send_mail" disabled="1"
+                                type="object" class="btn-primary" data-hotkey="q"
+                                invisible="(not subtype_is_log or composition_mode == 'comment' and not composition_batch and scheduled_date) or partner_ids_all_have_email"/>
+                        <button string="Schedule" name="action_schedule_message" type="object" class="btn-primary" data-hotkey="q" disabled="1"
+                                invisible="(composition_mode != 'comment' or composition_batch or not scheduled_date) or partner_ids_all_have_email"/>
+                        <button string="Discard" class="btn-secondary w-auto" special="cancel" data-hotkey="x" />
+                        <field name="attachment_ids" widget="mail_composer_attachment_selector" invisible="not can_edit_body"/>
+                        <field name="template_id" widget="mail_composer_template_selector"/>
+                        <field name="scheduled_date" widget="text_scheduled_date" invisible="composition_batch or composition_mode != 'comment'"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mail_compose_message_view_form_template_save" model="ir.ui.view">
+            <field name="name">mail.compose.message.view.form.template.save</field>
+            <field name="model">mail.compose.message</field>
+            <field name="arch" type="xml">
+                <form js_class="mail_composer_save_template_form" string="Templates">
+                    <group>
+                        <field name="template_name" placeholder="e.g: Send order confirmation" required="1"/>
+                        <field name="model" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button name="create_mail_template" type="object" class="btn btn-primary" string="Save Template"/>
+                        <button class="btn btn-secondary" string="Discard" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_email_compose_message_wizard" model="ir.actions.act_window">
+            <field name="name">Compose Email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="binding_model_id" ref="mail.model_mail_compose_message"/>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

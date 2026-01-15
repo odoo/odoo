@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.sg"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_tax_report_line_supplies" model="account.report.line">
+                <field name="name">Supplies</field>
+                <field name="aggregation_formula">BOX1.balance + BOX2.balance + BOX3.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_std_rated_supplies" model="account.report.line">
+                        <field name="name">Box 1 - Total value of standard-rated supplies</field>
+                        <field name="code">BOX1</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_std_rated_supplies_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-Box 1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_zero_rated_supplies" model="account.report.line">
+                        <field name="name">Box 2 - Total value of zero-rated supplies</field>
+                        <field name="code">BOX2</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_zero_rated_supplies_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-Box 2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_exempt_supplies" model="account.report.line">
+                        <field name="name">Box 3 - Total value of exempt supplies</field>
+                        <field name="code">BOX3</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_exempt_supplies_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-Box 3</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_total_supplies" model="account.report.line">
+                        <field name="name">Box 4 - Total value of (1) + (2) + (3)</field>
+                        <field name="aggregation_formula">BOX1.balance + BOX2.balance + BOX3.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_purchases" model="account.report.line">
+                <field name="name">Taxable Purchases and Imports</field>
+                <field name="aggregation_formula">BOX_5.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_total_taxable_purchases" model="account.report.line">
+                        <field name="name">Box 5 - Total value of taxable purchases</field>
+                        <field name="code">BOX_5</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_total_taxable_purchases_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Box 5</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_taxes" model="account.report.line">
+                <field name="name">Taxes</field>
+                <field name="aggregation_formula">BOX6.balance + BOX7.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_output_tax_due" model="account.report.line">
+                        <field name="name">Box 6 - Output tax due</field>
+                        <field name="code">BOX6</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_output_tax_due_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-Box 6</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_inp_tax_refund_claim" model="account.report.line">
+                        <field name="name">Box 7 - Less : Input tax and refunds claimed</field>
+                        <field name="code">BOX7</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_inp_tax_refund_claim_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Box 7</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_total_gst_paid_iras" model="account.report.line">
+                        <field name="name">Box 8 - Equals : Net GST to be paid to IRAS</field>
+                        <field name="code">BOX_8</field>
+                        <field name="aggregation_formula">BOX6.balance - BOX7.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_applicable" model="account.report.line">
+                <field name="name">Applicable to Taxable Persons under Major Exported Scheme / Approved 3rd Party Logistics Company / Other Approved Schemes Only</field>
+                <field name="aggregation_formula">BOX_9.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_applicable_goods_imported_value" model="account.report.line">
+                        <field name="name">Box 9 - Total value of goods imported under this scheme</field>
+                        <field name="code">BOX_9</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_applicable_goods_imported_value_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Box 9</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_claims" model="account.report.line">
+                <field name="name">Did you make the following claims in Box 7?</field>
+                <field name="aggregation_formula">BOX_10.balance + BOX_11.balance + BOX_12.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_claim_refunded_to_tourist" model="account.report.line">
+                        <field name="name">Box 10 - Did you claim for GST you had refunded to tourist?</field>
+                        <field name="code">BOX_10</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_claim_refunded_to_tourist_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Box 10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_claim_reverse_charge" model="account.report.line">
+                        <field name="name">Box 11 - Did you make any bad debt relief claims and/or refund claims for reverse charge transactions?</field>
+                        <field name="code">BOX_11</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_claim_reverse_charge_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Box 11</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_claim_pre_registration" model="account.report.line">
+                        <field name="name">Box 12 - Did you make any pre-registration input tax claims?</field>
+                        <field name="code">BOX_12</field>
+                        <field name="code">BOX_12</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_claim_pre_registration_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Box 12</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_revenues" model="account.report.line">
+                <field name="name">Revenue</field>
+                <field name="aggregation_formula">BOX_13.balance + BOX_14.balance + BOX_15.balance + BOX_16.balance + BOX_17.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_revenues_accounting_period" model="account.report.line">
+                        <field name="name">Box 13 - Revenue for the accounting period</field>
+                        <field name="code">BOX_13</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_revenues_accounting_period_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">REV.balance</field>
+                                <field name="subformula">cross_report(account_reports.profit_and_loss)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_revenues_reverse_charge" model="account.report.line">
+                        <field name="name">Box 14 - Did you import services and/or low-value goods subject to GST under Reverse Charge?</field>
+                        <field name="code">BOX_14</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_revenues_reverse_charge_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-Box 14</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_revenues_electronic_marketplace" model="account.report.line">
+                        <field name="name">Box 15 - Did you operate an electronic marketplace to supply remote services subject to GST on behalf on third-party suppliers?</field>
+                        <field name="code">BOX_15</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_revenues_electronic_marketplace_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-Box 15</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_revenues_electronic_marketplace_redeliver" model="account.report.line">
+                        <field name="name">Box 16 - Did you operate as a redeliverer, or an electronic marketplace to supply imported low-value goods subject to GST on behalf of third-party suppliers?</field>
+                        <field name="code">BOX_16</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_revenues_electronic_marketplace_redeliver_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-Box 16</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_revenues_low_value_good_supply" model="account.report.line">
+                        <field name="name">Box 17 - Did you make your own supply of imported low-value goods that is subject to GST?</field>
+                        <field name="code">BOX_17</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_revenues_low_value_good_supply_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-Box 17</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_deferment" model="account.report.line">
+                <field name="name">Import GST Deferment Scheme</field>
+                <field name="aggregation_formula">BOX_20.balance + BOX_21.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_deferment_net_gst" model="account.report.line">
+                        <field name="name">Box 18 - Net GST per box 8 above</field>
+                        <field name="code">BOX_18</field>
+                        <field name="aggregation_formula">BOX_8.balance</field>
+                    </record>
+                    <record id="account_tax_report_line_deferment_import_gst" model="account.report.line">
+                        <field name="name">Box 19 - Add: Deferred Import GST payable</field>
+                        <field name="code">BOX_19</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_deferment_import_gst_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Box 19</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_deferment_total_18_19" model="account.report.line">
+                        <field name="name">Box 20 - Total Value of (18) + (19)</field>
+                        <field name="code">BOX_20</field>
+                        <field name="aggregation_formula">BOX_18.balance + BOX_19.balance</field>
+                    </record>
+                    <record id="account_tax_report_line_deferment_total_good_imported" model="account.report.line">
+                        <field name="name">Box 21 - Total value of goods imported under this scheme</field>
+                        <field name="code">BOX_21</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_deferment_total_good_imported_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Box 21</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

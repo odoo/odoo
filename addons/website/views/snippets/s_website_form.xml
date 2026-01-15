@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_website_form" name="Form">
+    <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form">
+        <div class="container-fluid">
+            <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+                <div class="s_website_form_rows row s_col_no_bgcolor">
+                    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_dnone">
+                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px">
+                                <span class="s_website_form_label_content"></span>
+                            </label>
+                            <div class="col-sm">
+                                <input type="hidden" class="form-control s_website_form_input" name="email_to" value="info@yourcompany.example.com"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char">
+                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="obij2aulqyau">
+                                <span class="s_website_form_label_content">Your Name</span>
+                                <span class="s_website_form_mark"> *</span>
+                            </label>
+                            <div class="col-sm">
+                                <input class="form-control s_website_form_input" type="text" name="name" required="1" data-fill-with="name" id="obij2aulqyau"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="tel">
+                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ozp7022vqhe">
+                                <span class="s_website_form_label_content">Phone Number</span>
+                            </label>
+                            <div class="col-sm">
+                                <input class="form-control s_website_form_input" type="tel" name="phone" data-fill-with="phone" id="ozp7022vqhe"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email">
+                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oub62hlfgjwf">
+                                <span class="s_website_form_label_content">Your Email</span>
+                                <span class="s_website_form_mark"> *</span>
+                            </label>
+                            <div class="col-sm">
+                                <input class="form-control s_website_form_input" type="email" name="email_from" required="" data-fill-with="email" id="oub62hlfgjwf"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
+                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="o291di1too2s">
+                                <span class="s_website_form_label_content">Your Company</span>
+                            </label>
+                            <div class="col-sm">
+                                <input class="form-control s_website_form_input" type="text" name="company" data-fill-with="commercial_company_name" id="o291di1too2s"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="char">
+                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oqsf4m51acj">
+                                <span class="s_website_form_label_content">Subject</span>
+                                <span class="s_website_form_mark"> *</span>
+                            </label>
+                            <div class="col-sm">
+                                <input class="form-control s_website_form_input" type="text" name="subject" required="" id="oqsf4m51acj"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="text">
+                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oyeqnysxh10b">
+                                <span class="s_website_form_label_content">Your Question</span>
+                                <span class="s_website_form_mark"> *</span>
+                            </label>
+                            <div class="col-sm">
+                                <textarea class="form-control s_website_form_input" name="description" required="1" id="oyeqnysxh10b" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                        <div style="width: 200px;" class="s_website_form_label"/>
+                        <span id="s_website_form_result"/>
+                        <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</template>
+
+<asset id="website.s_website_form_000_scss" name="Website form 000 SCSS" active="False">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_website_form/000.scss</path>
+</asset>
+
+<asset id="website.s_website_form_001_scss" name="Website form 001 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_website_form/001.scss</path>
+</asset>
+
+<asset id="website.s_website_form_xml" name="Website form XML">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/xml/website_form.xml</path>
+</asset>
+
+</odoo>

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale.ProductsListPageOption">
+    <!-- Dummy element to allow styling this specific option container with .o_wsale_products_list_page_options -->
+    <div class="d-none o_wsale_products_list_page_options"/>
+
+    <BuilderRow label.translate="Content Width">
+        <BuilderButtonGroup action="'setShopContainer'">
+            <BuilderButton
+                    title.translate="Regular"
+                    actionParam="{ previewClass: 'container'}"
+                    actionValue="'regular'"
+                    iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
+            />
+            <BuilderButton
+                    title.translate="Full"
+                    actionParam="{ previewClass: 'container-fluid o_wsale_page_fluid'}"
+                    actionValue="'fluid'"
+                    iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
+            />
+        </BuilderButtonGroup>
+    </BuilderRow>
+
+
+    <BuilderContext applyTo="'#o_wsale_products_grid'">
+        <ProductsDesignPanel
+            recordName="'shop_opt_products_design_classes'"
+            label.translate="Products Design"
+            showSecondaryImage="true"
+        />
+        <div class="d-none">
+            <!--
+                Dummy controller to detect in this context which layout class is applied to the DOM.
+                The actual layout classes toggling phase is managed by the ProductsDesignPanel
+                component.
+            -->
+            <BuilderRow label.translate="Layout">
+                <BuilderButtonGroup>
+                    <BuilderButton
+                        id="'grid_view_opt'"
+                        classAction="'o_wsale_products_opt_layout_catalog'"
+                    />
+                    <BuilderButton classAction="'o_wsale_products_opt_layout_list'"/>
+                </BuilderButtonGroup>
+            </BuilderRow>
+        </div>
+    </BuilderContext>
+
+    <BuilderRow label.translate="Size" level="1">
+        <BuilderNumberInput action="'setPpg'" step="1"/>
+        <t t-if="this.isActiveItem('grid_view_opt')">
+            <span class="mx-2">by</span>
+            <BuilderSelect action="'setPpr'">
+                <BuilderSelectItem actionValue="2">2</BuilderSelectItem>
+                <BuilderSelectItem actionValue="3">3</BuilderSelectItem>
+                <BuilderSelectItem actionValue="4">4</BuilderSelectItem>
+                <BuilderSelectItem actionValue="5">5</BuilderSelectItem>
+            </BuilderSelect>
+        </t>
+    </BuilderRow>
+
+    <BuilderRow t-if="isActiveItem('grid_view_opt')" label.translate="Mobile" level="1">
+        <BuilderSelect action="'websiteConfig'">
+            <BuilderSelectItem actionParam="{views: ['website_sale.products_mobile_cols_single']}">1 Column</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{views: []}">2 Columns</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Categories" action="'templatePreviewableWebsiteConfig'">
+        <BuilderButton
+                title.translate="Show into Sidebar"
+                id="'categories_opt'"
+                actionParam="{
+                    views: ['website_sale.products_categories'],
+                    previewClass: 'o_wsale_previewing_sidebar o_wsale_has_sidebar',
+                    templateId: 'website_sale.editor_preview.sidebar',
+                    placeBefore: '#products_grid',
+                    placeExcludeRootClosest: '#o_wsale_container.o_wsale_has_sidebar',
+                    }"
+        >Sidebar</BuilderButton>
+
+        <BuilderButton
+                title.translate="Show a filmstrip navigation at the Top"
+                id="'categories_opt_top'"
+                actionParam="{
+                    views: ['website_sale.products_categories_top'],
+                    previewClass: 'o_wsale_previewing_filmstrip',
+                    templateId: 'website_sale.editor_preview.filmstrip',
+                    placeAfter: '#o_wsale_products_header h1',
+                    placeExcludeRootClosest: '#o_wsale_container.o_wsale_has_filmstrip',
+                }"
+        >Top</BuilderButton>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Style" level="1">
+        <BuilderSelect action="'websiteConfig'" t-if="this.isActiveItem('categories_opt_top')">
+            <BuilderSelectItem actionParam="{views: []}" title.translate="Default">
+                <Img
+                    src="'/website_sale/static/src/img/filmstrips/default.svg'"
+                    style="'width:120px;'"
+                />
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{views: ['website_sale.filmstrip_categories_bordered']}"
+                title.translate="Bordered"
+            >
+                <Img
+                    src="'/website_sale/static/src/img/filmstrips/bordered.svg'"
+                    style="'width:120px;'"
+                />
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{views: ['website_sale.filmstrip_categories_tabs']}"
+                title.translate="Tabs"
+            >
+                <Img
+                    src="'/website_sale/static/src/img/filmstrips/tabs.svg'"
+                    style="'width:120px;'"
+                />
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{views: ['website_sale.filmstrip_categories_pills']}"
+                title.translate="Pills"
+            >
+                <Img
+                    src="'/website_sale/static/src/img/filmstrips/pills.svg'"
+                    style="'width:120px;'"
+                />
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{views: ['website_sale.filmstrip_categories_images']}"
+                title.translate="Images"
+            >
+                <Img
+                    src="'/website_sale/static/src/img/filmstrips/images.svg'"
+                    style="'width:120px;'"
+                />
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{views: ['website_sale.filmstrip_categories_grid']}"
+                title.translate="Grid"
+            >
+                <Img
+                    src="'/website_sale/static/src/img/filmstrips/grid.svg'"
+                    style="'width:120px;'"
+                />
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                actionParam="{views: ['website_sale.filmstrip_categories_large_images']}"
+                title.translate="Large Images"
+            >
+                <Img
+                    src="'/website_sale/static/src/img/filmstrips/large_images.svg'"
+                    style="'width:120px;'"
+                />
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow t-if="this.isActiveItem('categories_opt')" label.translate="Collapse Category Recursive" level="1">
+        <BuilderCheckbox
+                id="'collapse_category_recursive'"
+                action="'websiteConfig'"
+                actionParam="{views: ['website_sale.option_collapse_products_categories']}"
+        />
+    </BuilderRow>
+
+    <BuilderRow label.translate="Filters">
+        <BuilderSelect action="'templatePreviewableWebsiteConfig'">
+            <BuilderSelectItem
+                    title.translate="Hide all filters"
+                    id="'attributes_hide_opt'"
+                    actionParam="{views: []}"
+            >Hide</BuilderSelectItem>
+            <BuilderSelectItem
+                    title.translate="Show filters into Sidebar"
+                    id="'attributes_opt'"
+                    actionParam="{
+                        views: ['website_sale.products_attributes'],
+                        previewClass: 'o_wsale_previewing_sidebar o_wsale_has_sidebar',
+                        templateId: 'website_sale.editor_preview.sidebar',
+                        placeBefore: '#products_grid',
+                        placeExcludeRootClosest: '#o_wsale_container.o_wsale_has_sidebar',
+                    }"
+            >Sidebar</BuilderSelectItem>
+            <BuilderSelectItem
+                    title.translate="Render a button to show the Off-screen Menu"
+                    id="'attributes_opt_top'"
+                    actionParam="{
+                        views: ['website_sale.products_attributes_top'],
+                        previewClass: 'o_wsale_previewing_offcanvas',
+                    }"
+            >Off-screen Menu</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderContext
+            t-if="isActiveItem('attributes_opt') or isActiveItem('attributes_opt_top')"
+            action="'websiteConfig'"
+    >
+        <BuilderRow label.translate="Price" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_sale.filter_products_price']}"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Tags" level="1">
+            <BuilderCheckbox id="'o_wsale_tags_filter_opt'" actionParam="{views: ['website_sale.filter_products_tags']}"/>
+        </BuilderRow>
+    </BuilderContext>
+
+    <t t-set="CollapsibleSidebarViews" t-value="['website_sale.products_categories_list_collapsible', 'website_sale.products_attributes_collapsible']"/>
+    <BuilderRow
+            t-if="isActiveItem('attributes_opt') or isActiveItem('categories_opt')"
+            label.translate="Collapse sidebar sections"
+    >
+        <BuilderCheckbox
+                id="'collapsible_sidebar'"
+                action="'websiteConfig'"
+                actionParam="{views: CollapsibleSidebarViews}"
+        />
+    </BuilderRow>
+
+    <BuilderRow label.translate="Toolbar" action="'websiteConfig'">
+        <BuilderButton id="'sort_top_opt'" actionParam="{views: ['website_sale.sort']}">Sort by</BuilderButton>
+        <BuilderButton id="'search_top_opt'" actionParam="{views: ['website_sale.search']}">Search</BuilderButton>
+    </BuilderRow>
+
+    <BuilderRow
+            t-if="isActiveItem('attributes_opt_top') or isActiveItem('search_top_opt') or isActiveItem('sort_top_opt')"
+            label.translate="Floating"
+            tooltip.translate="Floating sticky Toolbar"
+            level="1"
+    >
+        <BuilderCheckbox
+                action="'templatePreviewableWebsiteConfig'"
+                actionParam="{
+                    views: ['website_sale.floating_bar'],
+                    previewClass: 'o_wsale_previewing_floating_bar',
+                    templateId: 'website_sale.editor_preview.floating_bar',
+                    placeExcludeRootClosest: '#o_wsale_container.o_wsale_has_floating_bar',
+                    placeAfter: '.o_wsale_products_main_row',
+                }"
+        />
+    </BuilderRow>
+
+    <BuilderRow label.translate="Default Sort" level="1">
+        <BuilderSelect action="'setDefaultSort'">
+            <t t-foreach="products_sort_mapping" t-as="queryAndLabel" t-key="queryAndLabel_index">
+                <BuilderSelectItem actionValue="queryAndLabel.query" t-out="queryAndLabel.label"/>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+</templates>

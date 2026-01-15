@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Map" id="s_map">
+    <section class="s_map pb56 pt56" data-map-type="m" data-map-zoom="12" t-att-data-map-address="' '.join(filter(None, (user_id.company_id.street, user_id.company_id.city, user_id.company_id.state_id.display_name, user_id.company_id.country_id.display_name)))">
+        <div class="map_container o_not_editable">
+            <div class="css_non_editable_mode_hidden">
+                <div class="missing_option_warning alert alert-info rounded-0 fade show d-none d-print-none">
+                    An address must be specified for a map to be embedded
+                </div>
+            </div>
+            <iframe t-if="not test_mode_enabled" class="s_map_embedded o_not_editable" src="https://maps.google.com/maps?q=250%20Executive%20Park%20Blvd%2C%20Suite%203400%20San%20Francisco%20California%20(US)%20United%20States&amp;t=m&amp;z=12&amp;ie=UTF8&amp;iwloc=&amp;output=embed" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" aria-label="Map"/>
+            <div class="s_map_color_filter"/>
+        </div>
+    </section>
+</template>
+
+<asset id="website.s_map_000_scss" name="Map 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_map/000.scss</path>
+</asset>
+
+</odoo>

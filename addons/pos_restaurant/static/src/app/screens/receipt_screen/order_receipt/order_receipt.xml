@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//ReceiptHeader" position="after">
+            <div t-if="!order.finalized" class="fs-2 mb-1">Pro forma receipt</div>
+        </xpath>
+        <xpath expr="//div[hasclass('before-footer')]" position="after">
+            <t t-if="order.config.set_tip_after_payment">
+                <div class="tip-form py-3">
+                    <div class="title text-center mt-3">For convenience, we are providing the following gratuity calculations:</div>
+                    <div class="percentage-options percentage-options d-flex flex-nowrap mt-3">
+                        <t t-set="totalAmount" t-value="order.priceIncl"/>
+                        <div class="option d-flex flex-column flex-nowrap align-items-center justify-content-center flex-grow-1">
+                            <div>15%</div>
+                            <div class="amount">
+                                <t t-esc="formatCurrency(totalAmount * 0.15)"></t>
+                            </div>
+                        </div>
+                        <div class="option d-flex flex-column flex-nowrap align-items-center justify-content-center flex-grow-1">
+                            <div>20%</div>
+                            <div class="amount">
+                                <t t-esc="formatCurrency(totalAmount * 0.20)"></t>
+                            </div>
+                        </div>
+                        <div class="option d-flex flex-column flex-nowrap align-items-center justify-content-center flex-grow-1">
+                            <div>25%</div>
+                            <div class="amount">
+                                <t t-esc="formatCurrency(totalAmount * 0.25)"></t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </t>
+    <t t-name="pos_restaurant.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('cashier')]" position="after">
+            <t t-if="order.table_id or order.self_ordering_table_id" t-esc="tableName"/>
+        </xpath>
+    </t>
+
+</templates>

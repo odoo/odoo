@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_form_l10n_dk_nemhandel" model="ir.ui.view">
+        <field name="name">res.partner.form.l10n.dk.nemhandel</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account_edi_ubl_cii.view_partner_property_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//group[@id='invoice_send_settings']" position="inside">
+                    <label for="nemhandel_identifier_type" string="Nemhandel Address" invisible="not is_using_nemhandel"/>
+                    <div id="nemhandel_address" invisible="not is_using_nemhandel" class="row">
+                        <field name="nemhandel_identifier_type" class="w-25"/>
+                        <field name="nemhandel_identifier_value" placeholder="Endpoint" class="w-75"/>
+                    </div>
+                    <label for="nemhandel_verification_state"
+                           groups="base.group_no_one"
+                           invisible="not is_using_nemhandel or not nemhandel_identifier_value"
+                    />
+                    <div class="row"
+                         groups="base.group_no_one"
+                         invisible="not is_using_nemhandel or not nemhandel_identifier_value">
+                        <div class="col-4">
+                            <field name="nemhandel_verification_state" readonly="True"/>
+                        </div>
+                        <div class="col-8 pt-0">
+                            <button name="button_nemhandel_check_partner_endpoint"
+                                    class="btn btn-secondary"
+                                    type="object"
+                                    string="Verify"
+                                    help="Verify partner's Nemhandel endpoint"/>
+                        </div>
+                    </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="partner_action_verify_l10n_dk_nemhandel" model="ir.actions.server">
+        <field name="name">Verify Nemhandel</field>
+        <field name="model_id" ref="l10n_dk_nemhandel.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            for record in records:
+                record.button_nemhandel_check_partner_endpoint()
+        </field>
+    </record>
+</odoo>

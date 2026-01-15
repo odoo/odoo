@@ -1,0 +1,23 @@
+.o_crm_team_kanban .o_kanban_record {
+    .o_dropdown_kanban {
+        visibility: visible;
+    }
+    .o_field_widget.o_field_many2one_avatar_user .o_quick_assign {
+        visibility: visible;
+    }
+}
+
+.o_crm_team_kanban .o_kanban_renderer {
+    --KanbanRecord-width: 350px;
+}
+
+.o_crm_team_member_kanban .o_kanban_renderer {
+    --KanbanRecord-width: 350px;
+
+    .o_kanban_group:not(.o_column_folded) {
+        min-height: 100px;
+    }
+    .ribbon {
+        --Ribbon-wrapper-width: 6rem;
+    }
+}

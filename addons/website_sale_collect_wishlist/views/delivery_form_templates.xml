@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template
+        id="unavailable_products_warning"
+        inherit_id="website_sale_collect.unavailable_products_warning"
+    >
+        <div name="o_wsale_unavailable_line_button_container" position="inside">
+            <t t-if="not available_qty">
+                <t t-set="in_wishlist" t-value="order_line.product_id._is_in_wishlist()"/>
+                <a
+                    t-if="not in_wishlist"
+                    title="Add to Wishlist"
+                    href="#"
+                    class="o_add_wishlist_dyn alert-link border-start ps-2 small"
+                    t-att-data-product-template-id="order_line.product_id.product_tmpl_id.id"
+                    t-att-data-product-product-id="order_line.product_id.id"
+                    data-action="o_wishlist"
+                >
+                    <span
+                        class="js_wsc_update_product_qty"
+                        t-att-data-line-id="order_line.id"
+                        t-att-data-product-id="order_line.product_id.id"
+                    >
+                        <i class="fa fa-fw fa-heart-o" role="presentation" aria-label="Add to Wishlist"/>
+                        Wishlist
+                    </span>
+                </a>
+                <span
+                    t-else=""
+                    class="alert-link border-start ps-2 small"
+                >
+                    <i class="fa fa-fw fa-heart"/> In wishlist
+                </span>
+            </t>
+        </div>
+    </template>
+</odoo>

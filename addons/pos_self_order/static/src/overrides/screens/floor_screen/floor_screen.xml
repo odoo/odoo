@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+
+    <t t-name="pos_self_order.FloorScreen" t-inherit="pos_restaurant.FloorScreen" t-inherit-mode="extension">
+        <xpath expr="//NumpadDropdown" position="before">
+            <button t-if="!ui.isSmall" class="qr-order-button btn btn-secondary btn-lg" t-on-click="() => this.pos.redirectToQrForm()">
+                Get QR Codes
+            </button>
+        </xpath>
+    </t>
+
+</templates>

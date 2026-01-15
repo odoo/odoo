@@ -1,0 +1,18 @@
+.o-mail-DiscussContent-headerActions button {
+    @media (hover: none) {
+        .fa-phone, .fa-video-camera {
+            color: $success !important;
+        }
+    }
+    @media (hover: hover) {
+        &:hover {
+            &:has(.fa-phone), &:has(.fa-video-camera) {
+                background-color: $gray-100 !important;
+                outline: 1px solid rgba($success, .25);
+                i {
+                    color: lighten($success, 5%) !important;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="account_tax_form_view" model="ir.ui.view">
+        <field name="name">account.tax.form</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='type_tax_use']" position="after">
+                <field name="l10n_ec_code_base" invisible="country_code != 'EC'"
+                       groups="base.group_no_one"/>
+                <field name="l10n_ec_code_applied" invisible="country_code != 'EC'"
+                       groups="base.group_no_one"/>
+                <field name="l10n_ec_code_ats" invisible="country_code != 'EC'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp.BomOverviewControlPanel">
+        <ControlPanel display="controlPanelDisplay">
+            <t t-set-slot="control-panel-create-button">
+                <button t-if="props.showOptions.mode == 'forecast'" t-on-click="manufactureFromBoM" type="button" class="btn btn-primary">Manufacture</button>
+            </t>
+            <t t-set-slot="control-panel-always-buttons">
+                <button t-on-click="() => this.props.print()" type="button" class="btn btn-secondary">Print</button>
+                <!-- <t t-if="props.showVariants"> commented, waiting for ui update
+                    <button t-on-click="() => this.props.print(true)" type="button" class="btn btn-secondary text-nowrap">Print All Variants</button>
+                </t>
+                </t> -->
+                <button t-if="props.foldable" t-on-click="clickTogglefold" type="button" class="btn btn-secondary" t-esc="foldButtonText"/>
+            </t>
+            <t t-set-slot="layout-actions">
+                <div t-if="props.showVariants" class="input-group align-items-center">
+                    <div class="col-4 col-md-auto pe-2 fw-bold">Variant</div>
+                    <div class="col">
+                        <Many2XAutocomplete
+                            value="props.data.name"
+                            getDomain.bind="getDomain"
+                            resModel="'product.product'"
+                            fieldString="props.data.name"
+                            activeActions="{}"
+                            update.bind="(ev) => this.props.changeVariant(ev[0]?.id)"
+                        />
+                    </div>
+                </div>
+                <div class="d-flex gap-1">
+                    <t t-if="props.showOptions.mode == 'forecast'">
+                        <div>
+                            <form class="d-flex flex-grow-1 gap-3 flex-column flex-md-row">
+                                <label class="visually-hidden" for="bom_quantity"/>
+                                <div t-attf-class="input-group align-items-center">
+                                    <div class="col-4 col-md-auto px-2 fw-bold">Quantity</div>
+                                    <input id="bom_quantity" type="number" step="any" t-on-change="ev => this.updateQuantity(ev)" t-on-keypress="ev => this.onKeyPress(ev)" t-att-value="props.bomQuantity" min="1" size="7" class="o_input form-control rounded-0" t-ref="quantity"/>
+                                    <div t-if="props.showOptions.uom" t-out="props.uomName" class="d-flex align-items-center text-muted small lh-sm"/>
+                                </div>
+                            </form>
+                        </div>
+                    </t>
+                </div>
+            </t>
+            <t t-set-slot="control-panel-navigation-additional">
+                <t t-if="props.showOptions.mode == 'forecast'">
+                    <t t-if="props.warehouses.length > 1" class="btn-group flex-grow-1 flex-md-grow-0">
+                        <Dropdown items="warehousesItems">
+                            <button class="btn btn-secondary o-dropdown-caret">
+                                <span class="fa fa-home"/> Warehouse: <t t-out="props.currentWarehouse.name"/>
+                            </button>
+                        </Dropdown>
+                    </t>
+                </t>
+                <t t-if="props.showOptions.mode == 'overview'">
+                    <div class="o_row" t-on-click="() => this.props.changeMode('forecast')" >
+                        <i class="btn fa fa-toggle-off fa-lg pe-1"/>
+                        <span>Forecast</span>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="o_row" t-on-click="() => this.props.changeMode('overview')" >
+                        <i class="btn fa fa-toggle-on fa-lg pe-1"/>
+                        <span>Forecast</span>
+                    </div>
+                </t>
+            </t>
+        </ControlPanel>
+    </t>
+
+</templates>

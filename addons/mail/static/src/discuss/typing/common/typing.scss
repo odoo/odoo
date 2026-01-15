@@ -1,0 +1,44 @@
+.o-discuss-Typing-dot {
+    animation: o_mail_Typing_animation 1.5s linear infinite;
+    background-color: $gray-500;
+
+    .o-mail-ImStatus &, .o-mail-ThreadIcon & {
+        background-color: #fff;
+    }
+
+    &.o-sizeMedium {
+        width: 5px;
+        height: 5px;
+    }
+
+    &.o-sizeSmall {
+        width: 4px;
+        height: 4px;
+    }
+
+    &.o-discuss-Typing-dot2 {
+        animation-delay: -1.35s;
+    }
+
+    &.o-discuss-Typing-dot3 {
+        animation-delay: -1.2s;
+    }
+}
+
+.o-discuss-Typing-icon {
+    gap: 1px;
+}
+
+@keyframes o_mail_Typing_animation {
+    0%, 40%, 100% {
+        opacity: initial;
+    }
+    20% {
+        opacity: 25%;
+    }
+}
+
+.o-mail-DiscussContent .o-discuss-Typing {
+    transform: translateY(-85%);
+    padding-left: calc(#{$o-mail-Message-sidebarWidth} + #{map-get($spacers, 2)});
+}

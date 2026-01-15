@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="stock_move_view_list">
+        <field name="name">stock.move.view.list.inherit.stock.account</field>
+        <field name="inherit_id" ref="stock.view_move_tree"/>
+        <field name="model">stock.move</field>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="value" optional="hide"/>
+                <field name="remaining_qty" optional="hide"/>
+                <field name="remaining_value" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_move_search">
+        <field name="name">stock.move.search.inherit.stock.account</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_search"/>
+        <field name="arch" type="xml">
+            <filter name="inventory" position="after">
+                <separator/>
+                <filter name="remaining" string="Remaining" domain="[('remaining_qty', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="stock_move_view_list_valuation">
+        <field name="name">stock.move.view.list.valuation</field>
+        <field name="model">stock.move</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <list default_order="date desc, id desc">
+                <field name="company_currency_id" column_invisible="1"/>
+                <field name="reference" width="300px"/>
+                <field name="date"/>
+                <field name="quantity"/>
+                <field name="product_uom" groups="uom.group_uom"/>
+                <field name="lot_ids" widget="many2many_tags" column_invisible="context.get('tracking') == 'none'"/>
+                <field name="value" widget="monetary" options="{'currency_field': 'company_currency_id'}" column_invisible="context.get('cost_method') != 'fifo'"/>
+                <field name="standard_price" widget="monetary" options="{'currency_field': 'company_currency_id'}" string="Unit Cost" column_invisible="context.get('cost_method') == 'fifo'"/>
+                <field name="remaining_qty" sum="Total Remaining Qty" width="200px"/>
+                <field name="remaining_value" widget="monetary" options="{'currency_field': 'company_currency_id'}" sum="Total Remaining Value" width="200px"/>
+                <field name="value_justification" column_invisible="context.get('cost_method') != 'fifo'" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="stock_move_valuation_action">
+        <field name="name">Valuation</field>
+        <field name="res_model">stock.move</field>
+        <field name="view_mode">list</field>
+        <field name="domain">['|', ('is_in', '=', True), ('is_out', '=', True)]</field>
+        <field name="view_id" ref="stock_move_view_list_valuation"/>
+    </record>
+
+    <record model="ir.actions.server" id="stock_move_action_adjust_valuation">
+        <field name="name">Adjust Valuation</field>
+        <field name="model_id" ref="model_stock_move"/>
+        <field name="binding_model_id" ref="model_stock_move"/>
+        <field name="state">code</field>
+        <field name="code">
+action = records.action_adjust_valuation()
+        </field>
+    </record>
+</odoo>

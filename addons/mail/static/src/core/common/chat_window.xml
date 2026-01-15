@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.ChatWindow">
+    <t t-set="partitionedActions" t-value="threadActions.partition"/>
+    <div class="o-mail-ChatWindow fixed-bottom overflow-hidden d-flex flex-column shadow bg-100"
+        t-att-style="style"
+        t-att-class="attClass"
+        t-on-keydown="onKeydown"
+        tabindex="1"
+    >
+        <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100 z-1 border-bottom border-secondary" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall and !props.chatWindow.actionsDisabled }">
+            <t t-if="hasActionsMenu">
+                <div class="d-flex text-truncate bg-inherit">
+                    <Dropdown position="ui.isSmall ? 'bottom-end' : 'left-start'" onStateChanged="isOpen => this.onActionsMenuStateChanged(isOpen)" menuClass="store.discussDropdownMenuClass(this)">
+                        <button
+                            class="o-mail-ChatWindow-moreActions btn rounded-0 d-flex align-items-center o-ps-1_5 pe-0 py-1 my-0 w-100 rounded-end-0 bg-inherit"
+                            t-att-class="{ 'rounded-top-3': !ui.isSmall, 'o-active': state.actionsMenuOpened, 'o-hover': actionsMenuButtonHover.isHover and !parentChannelHover.isHover }"
+                            t-att-disabled="state.editingName or props.chatWindow.actionsDisabled"
+                            t-att-title="actionsMenuTitleText"
+                            t-ref="actionsMenuButton"
+                        >
+                            <t t-call="mail.ChatWindow.headerContent"/>
+                            <i t-if="!state.editingName" class="fa fa-fw fa-caret-down"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <t t-set="quickActionsInDropdown" t-value="partitionedActions.quick.slice(ui.isSmall ? 2 : 4)"/>
+                            <ActionList actions="[quickActionsInDropdown, partitionedActions.other, ...partitionedActions.group]" dropdown="true" thread="thread"/>
+                        </t>
+                    </Dropdown>
+                </div>
+                <AutoresizeInput
+                    t-if="state.editingName"
+                    className="'text-truncate fw-bold flex-shrink-1 me-1 py-0 ' + (ui.isSmall ? 'fs-4' : 'fs-5')"
+                    enabled="true"
+                    autofocus="true"
+                    onValidate.bind="renameThread"
+                    value="props.chatWindow.displayName"
+                />
+                <i t-if="state.editingName" class="fa fa-fw fa-caret-down opacity-50"/>
+            </t>
+            <t t-else="">
+                <t t-call="mail.ChatWindow.headerContent"/>
+            </t>
+            <div t-if="thread and thread.importantCounter > 0" class="o-mail-ChatWindow-counter mx-1 badge rounded-pill fw-bold o-discuss-badge shadow-sm" t-ref="needactionCounter">
+                <t t-out="thread.importantCounter"/>
+            </div>
+            <div class="ms-1 flex-grow-1"/>
+            <div class="d-flex flex-shrink-0 me-1">
+                <ActionList actions="partitionedActions.quick.slice(0, ui.isSmall ? 2 : 4).reverse()" inline="true" thread="thread"/>
+            </div>
+            <t t-if="this.store.inPublicPage and !this.store.self_partner">
+                <button class="btn ps-1" t-if="!state.editingGuestName">
+                    <img class="o-mail-DiscussContent-selfAvatar rounded-circle object-fit-cover flex-shrink-0" alt="Avatar" t-att-src="store.self.avatarUrl" t-on-click="() => state.editingGuestName = true"/>
+                </button>
+                <AutoresizeInput
+                    t-if="state.editingGuestName"
+                    className="'py-1 me-2'"
+                    autofocus="true"
+                    onValidate.bind="renameGuest"
+                    value="store.self.name"
+                />
+            </t>
+        </div>
+        <div t-if="!props.chatWindow.folded or ui.isSmall" class="d-flex flex-column h-100 overflow-auto o-scrollbar-thin position-relative bg-inherit" t-att-class="{ 'opacity-50': state.editingName }" t-ref="content">
+            <t name="thread content">
+                <div t-if="threadActions.activeAction?.actionPanelComponentCondition" class="h-100" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}">
+                    <t t-component="threadActions.activeAction.actionPanelComponent" t-props="{ ...threadActions.activeAction.actionPanelComponentProps, thread }"/>
+                </div>
+                <t t-elif="thread">
+                    <Thread autofocus="isMobileOS ? props.chatWindow.autofocus : undefined" isInChatWindow="true" thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" jumpToNewMessage="props.chatWindow.jumpToNewMessage"/>
+                    <t t-call="mail.ChatWindow.memberTyping"/>
+                    <Composer composer="thread.composer" autofocus="isMobileOS ? undefined : props.chatWindow.autofocus" mode="'compact'" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType"/>
+                </t>
+            </t>
+        </div>
+    </div>
+</t>
+
+<t t-name="mail.ChatWindow.headerContent">
+    <div class="o-mail-ChatWindow-threadAvatar position-relative bg-inherit my-0 me-1" t-att-class="{
+        'py-1': !thread or threadActions.actions.length gt 3,
+        'py-2': thread and threadActions.actions.length lte 3,
+        'ms-1': thread,
+        'ms-3': !thread,
+        'ps-2': !hasActionsMenu,
+    }" name="threadAvatar">
+        <img t-if="thread" class="rounded-3 object-fit-cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
+        <ImStatus t-if="showImStatus" className="'o-mail-ChatWindow-imStatus position-absolute'" member="thread.correspondent" size="'sm'"/>
+    </div>
+    <t t-if="thread?.parent_channel_id">
+        <span class="fw-bold small o-mx-0_5 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded fs-6" t-esc="thread.parent_channel_id.displayName" title="Open Channel" t-ref="parentChannel" t-on-click.stop="() => this.thread.parent_channel_id.open({ focus: true })"/>
+        <i class="fa fa-chevron-right o-xsmaller ms-1 mt-1 text-muted opacity-75"/>
+    </t>
+    <CountryFlag t-if="thread?.showCorrespondentCountry" country="thread.correspondentCountry" class="'o-mail-ChatWindow-country border shadow-sm'"/>
+    <div t-if="!state.editingName" class="text-truncate fw-bold border border-transparent o-mx-0_5 my-0 py-1" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{ 'fs-4': ui.isSmall, 'fs-5': !ui.isSmall }"/>
+</t>
+
+<t t-name="mail.ChatWindow.memberTyping">
+    <div t-if="thread.hasOtherMembersTyping" class="d-flex bg-inherit position-relative">
+        <div class="o-mail-ChatWindow-typing d-flex px-3 position-absolute bottom-0 start-0 w-100 bg-inherit align-items-center">
+            <Typing channel="thread" size="'medium'"/>
+        </div>
+    </div>
+</t>
+
+</templates>

@@ -1,0 +1,68 @@
+// ======= Options
+
+// By default, hide `o_add_wishlist` buttons when inside a product
+// entry. Show them when `o_wsale_products_opt_has_wishlist` is applied.
+:where(.oe_product_cart) .o_add_wishlist {
+    display: var(--o-wsale-wishlist-btn-display, none);
+}
+
+.o_wsale_products_opt_has_wishlist {
+    --o-wsale-wishlist-btn-display: inline-flex;
+
+    .o_add_wishlist {
+        &:hover .fa-heart-o:before, &[disabled] .fa:before {
+            content: "\f004";
+            color: var(--addWishlist-color-active);
+        }
+
+        &[disabled] .fa {
+            animation: bounceIn 1s;
+        }
+    }
+}
+
+.o_wsale_products_opt_wishlist_fixed.o_wsale_products_opt_wishlist_fixed_onhover {
+    .oe_product_cart:where(:not(:hover):not(:focus-visible):not(:focus-within)) {
+        .o_add_wishlist:where(:not([disabled])) {
+            opacity: 0;
+        }
+    }
+}
+
+.o_wsale_products_opt_actions_subtle, .o_wsale_products_opt_actions_promote {
+    .o_wsale_product_btn .o_add_wishlist {
+        // Hardcoded because cause `$danger` may differ from the desired "red"
+        $_wish_red: #ff3d3a;
+        --addWishlist-color-active: #{$_wish_red};
+    }
+}
+
+.o_wsale_products_opt_wishlist_fixed {
+    &:where(:not(.o_wsale_products_opt_design_showcase)) {
+        --o-wsale-card-info-position: none;
+    }
+
+    &:where(.o_wsale_products_opt_has_wishlist) {
+        --o-wsale-wishlist-btn-display: flex;
+    }
+
+    .o_wsale_product_btn .o_add_wishlist {
+        --btn-bg: transparent;
+        --btn-border-width: 0;
+        --btn-hover-bg: transparent;
+        --btn-active-bg: transparent;
+        --btn-disabled-opacity: 1;
+        --btn-disabled-bg: transparent;
+
+        --o-wsale-card-btn-subtle-blur: 0px;
+
+        --o-wsale-wishlist-btn-offset-top-default: calc(var(--o-wsale-card-border-radius, 0px) * 0.1);
+        --o-wsale-wishlist-btn-offset-end-default: calc(var(--o-wsale-card-border-radius, 0px) * 0.2);
+
+        @include o-position-absolute(
+            var(--o-wsale-card-offset-top, var(--o-wsale-wishlist-btn-offset-top-default)),
+            var(--o-wsale-card-offset-x, var(--o-wsale-wishlist-btn-offset-end-default))
+        );
+    }
+}
+

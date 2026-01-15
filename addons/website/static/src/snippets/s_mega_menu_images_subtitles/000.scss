@@ -1,0 +1,19 @@
+
+.s_mega_menu_images_subtitles:not([data-vcss]) {
+    .d-flex img {
+        max-width: 64px;
+        align-self: start;
+    }
+
+    .nav-link {
+        &:hover, &:focus {
+            background: rgba(0, 0, 0, .05);
+        }
+    }
+
+    .row > div.col-lg {
+        @include media-breakpoint-down(lg) {
+            min-width: fit-content;
+        }
+    }
+}

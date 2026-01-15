@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_nilvera_view_move_form" model="ir.ui.view">
+        <field name="name">account.nilvera.view.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <div class="alert alert-info" role="alert" invisible="state != 'draft' or l10n_tr_nilvera_send_status != 'error' or not l10n_tr_nilvera_uuid">
+                    To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue.
+                </div>
+            </xpath>
+            <xpath expr="//button[@name='action_post'][2]" position="attributes">
+                <attribute name="invisible" separator=" or " add="l10n_tr_nilvera_send_status == 'error' and l10n_tr_nilvera_uuid"/>
+            </xpath>
+            <xpath expr="//div[@name='journal_div']" position="after">
+                <label for="l10n_tr_nilvera_send_status" invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'in_invoice']"/>
+                <div name="nilvera_div"
+                     class="d-flex"
+                     invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'in_invoice']">
+                    <field name="l10n_tr_nilvera_send_status" class="oe_inline"/>
+                </div>
+            </xpath>
+            <xpath expr="//header/field[@name='state']" position="before">
+                <button name="l10n_tr_nilvera_get_pdf"
+                        string="Fetch Nilvera PDF"
+                        type="object"
+                        invisible="move_type != 'out_invoice' or l10n_tr_nilvera_send_status != 'succeed'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_nilvera_view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.nilvera.invoice.select</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='accounting_date']" position="after">
+                <filter string="Nilvera Status" name="nilvera_status" context="{'group_by': 'l10n_tr_nilvera_send_status'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_nilvera_view_invoice_tree" model="ir.ui.view">
+        <field name="name">account.nilvera.invoice.list</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <button name="action_force_register_payment" position="after">
+                <button name="l10n_tr_nilvera_get_pdf" type="object" string="Fetch Nilvera PDF"/>
+            </button>
+            <xpath expr="//field[@name='abnormal_date_warning']" position="after">
+                <field name="l10n_tr_nilvera_send_status"
+                    string="Nilvera Status"
+                    widget="badge"
+                    decoration-danger="l10n_tr_nilvera_send_status == 'error'"
+                    decoration-warning="l10n_tr_nilvera_send_status in ('sent', 'waiting')"
+                    decoration-success="l10n_tr_nilvera_send_status == 'succeed'"
+                    optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

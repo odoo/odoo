@@ -1,0 +1,92 @@
+.o_datetime_picker {
+    --DateTimePicker__Template-rows: 3;
+    --DateTimePicker__Template-columns: 4;
+    --DateTimePicker__Day-template-rows: 6;
+
+    width: $o-datetime-picker-width;
+
+    // Day
+    .o_selected {
+        color: $o-component-active-color;
+        background: $o-component-active-bg;
+    }
+
+    .o_select_start,
+    .o_select_end {
+        --selected-day-color: #{mix(lighten($o-component-active-border, 10%), $o-component-active-bg, 15%)};
+        --percent: calc(100% / sqrt(2));
+        background:
+            #{$o-component-active-bg}
+            radial-gradient(
+                circle,
+                var(--selected-day-color) 0% var(--percent),
+                transparent var(--percent) 100%
+            )
+        ;
+    }
+
+    .o_select_start{
+        border-top-left-radius: 50%;
+        border-bottom-left-radius: 50%;
+    }
+
+    .o_select_end {
+        border-top-right-radius: 50%;
+        border-bottom-right-radius: 50%;
+    }
+
+    .o_today > div {
+        aspect-ratio: 1;
+        background-color: $o-calendar-today-background-color;
+        color: $o-calendar-today-color;
+    }
+
+    // Grids
+
+    .o_date_picker {
+        grid-template-rows: repeat(var(--DateTimePicker__Day-template-rows), 1fr);
+        grid-template-columns: repeat(var(--DateTimePicker__Day-template-columns), 1fr);
+    }
+
+    .o_date_item_picker {
+        grid-template-rows: repeat(var(--DateTimePicker__Template-rows), 1fr);
+        grid-template-columns: repeat(var(--DateTimePicker__Template-columns), 1fr);
+    }
+
+    // Utilities
+
+    .o_date_item_picker .o_datetime_button {
+        &.o_selected:not(.o_select_start, .o_select_end) {
+            background: $o-component-active-bg;
+            color: $o-component-active-color;
+        }
+    }
+
+    .o_center {
+        display: grid;
+        place-items: center;
+    }
+
+    .o_date_item_cell {
+        aspect-ratio: 1;
+        position: relative;
+
+        &:hover, &:focus {
+            --DateTimePicker__date-cell-border-color-hover: #{$o-component-active-border};
+        }
+
+        &:not([disabled])::before {
+            @include o-position-absolute(0,0,0,0);
+
+            content: '';
+            aspect-ratio: 1;
+            border: $border-width solid var(--DateTimePicker__date-cell-border-color-hover);
+            border-radius: $border-radius-pill;
+            pointer-events: none;
+        }
+    }
+
+    .o_week_number_cell {
+        font-variant: tabular-nums;
+    }
+}

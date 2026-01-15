@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template priority="32" id="auth_passkey_login" inherit_id="web.login">
+        <xpath expr="//input[@name='redirect']" position="before">
+            <input type="hidden" name="webauthn_response"/>
+        </xpath>
+    </template>
+
+    <template id="auth_passkey_login_oauth" inherit_id="web.login_oauth" name="Passkey Login OAuth">
+        <xpath expr="//t[@t-set='auth_btns']" position="after">
+            <!-- passkey_body set in plain HTML for translations -->
+            <t t-set="passkey_body">Use a Passkey</t>
+            <t t-set="passkey_btn" t-value="[{'css_class': 'fa fa-qrcode', 'body': passkey_body, 'list_item_class': 'passkey_login_link'}]"/>
+            <t t-set="auth_btns" t-value="auth_btns + passkey_btn"/>
+        </xpath>
+    </template>
+</odoo>

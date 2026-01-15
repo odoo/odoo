@@ -1,0 +1,66 @@
+.s_timeline:not([data-vcss]) {
+    --spacing: #{$grid-gutter-width * .5};
+
+    .s_timeline_line {
+        position: relative;
+        border-color: map-get($grays, '800'); // For inheritance, not actual border
+
+        &:before {
+            content: '';
+            display: block !important; // override portal '#wrap .container' value
+            position: absolute;
+            width: 1px;
+            top: 0px;
+            bottom: 0px;
+            left: 50%;
+            border-left: 1px solid;
+            border-color: inherit;
+        }
+    }
+    .s_timeline_row {
+        align-items: center;
+
+        .s_timeline_content {
+            align-items: center;
+            justify-content: flex-end;
+            width: 100%;
+
+            ~ .s_timeline_content {
+                justify-content: flex-start;
+            }
+        }
+        &.flex-row-reverse .s_timeline_content {
+            flex-direction: row-reverse;
+        }
+        @include media-breakpoint-up(md) {
+            &.flex-row-reverse .s_timeline_content {
+                flex-direction: row-reverse;
+
+                &:not(:last-child) {
+                    margin-left: 10%;
+                }
+            }
+            &:not(.flex-row-reverse) .s_timeline_content:last-child {
+                margin-left: 10%;
+            }
+        }
+    }
+    .s_timeline_date {
+        position: relative;
+        margin: var(--spacing) 0;
+        padding: map-get($spacers, 1);
+        background-color: var(--o-cc-bg, #{$body-bg});
+        text-align: center;
+
+        @include media-breakpoint-up(md) {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+    .s_timeline_icon {
+        z-index: 1;
+        flex: 0 0 auto;
+        margin: var(--spacing);
+    }
+}

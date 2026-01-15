@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="sale.SaleListRenderer" t-inherit="account.FileUploadListRenderer" t-inherit-mode="primary">
+        <ActionHelper position="replace">
+            <t t-if="showNoContentHelper">
+                <SaleActionHelper noContentHelp="props.noContentHelp"/>
+            </t>
+        </ActionHelper>
+    </t>
+</templates>
