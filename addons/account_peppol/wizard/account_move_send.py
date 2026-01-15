@@ -241,10 +241,17 @@ class AccountMoveSend(models.TransientModel):
                         for attachment in attachments_linked
                     ] + base_attachments
 
-                    invoice.with_context(no_new_invoice=True).message_post(
+                    new_message = invoice.with_context(no_new_invoice=True).message_post(
                         body=attachments_linked_message,
                         attachments=attachments_embedded,
                     )
+
+                    if new_message.attachment_ids.ids:
+                        self.env.cr.execute("UPDATE ir_attachment SET res_id = NULL WHERE id IN %s", [tuple(new_message.attachment_ids.ids)])
+                    new_message.attachment_ids.write({
+                        'res_model': new_message._name,
+                        'res_id': new_message.id,
+                    })
 
         if self._can_commit():
             self._cr.commit()
