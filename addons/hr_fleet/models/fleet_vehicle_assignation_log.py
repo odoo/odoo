@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 
 
 class FleetVehicleAssignationLog(models.Model):
@@ -38,3 +40,56 @@ class FleetVehicleAssignationLog(models.Model):
         res['domain'] = [('res_model', '=', 'fleet.vehicle.assignation.log'), ('res_id', 'in', self.ids)]
         res['context'] = {'default_res_model': 'fleet.vehicle.assignation.log', 'default_res_id': self.id}
         return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        if self.env.context.get("skip_driver_history"):
+            return True  # To avoid recursion calls for this method when setting the driver_id
+        records = super().create(vals_list)
+        today = fields.Date.today()
+        for rec in records:
+            vehicle = rec.vehicle_id
+            if (
+                vehicle.driver_id
+                or (rec.date_start and rec.date_start > today)
+                or (rec.date_end and rec.date_end < today)
+            ):
+                continue
+            vehicle.with_context(skip_driver_history=True).write({
+                "driver_id": records.driver_id.id,
+                "plan_to_change_vehicle": False,
+            })
+
+        return records
+
+    @api.constrains('vehicle_id', 'date_start', 'date_end')
+    def _check_date_overlap(self):
+        for rec in self:
+            base_domain = [('vehicle_id', '=', rec.vehicle_id.id), ('id', '!=', rec.id)]
+            if rec.date_end:
+                overlap_domain = Domain.OR([
+                    Domain.AND([
+                        Domain('date_start', '<', rec.date_end),
+                        Domain.OR([
+                            Domain('date_end', '>', rec.date_start),
+                            Domain('date_end', '=', False),
+                        ]),
+                    ]),
+                ])
+            else:
+                overlap_domain = Domain.OR([
+                    Domain('date_end', '=', False),
+                    Domain('date_end', '>', rec.date_start),
+                ])
+            domain = Domain.AND([base_domain, overlap_domain])
+
+            overlapping = self.search(domain, limit=1)
+            if overlapping:
+                raise ValidationError(
+                    self.env._(
+                        "This assignment overlaps with an existing assignment for %(vehicle)s "
+                        "(Driver: %(driver)s, Period: %(start)s to %(end)s)",
+                        vehicle=rec.vehicle_id.name,
+                        driver=overlapping.driver_id.name,
+                        start=overlapping.date_start,
+                        end=overlapping.date_end or self.env._('Ongoing')))

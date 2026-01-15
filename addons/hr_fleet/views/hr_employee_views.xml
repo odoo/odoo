@@ -9,8 +9,7 @@
         <field name="arch" type="xml">
             <button name="action_open_versions" position="before">
                 <button name="action_open_employee_cars" type="object"
-                        class="oe_stat_button" icon="fa-car" groups="fleet.fleet_group_manager"
-                        invisible="employee_cars_count == 0">
+                        class="oe_stat_button" icon="fa-car" groups="fleet.fleet_group_manager" invisible="employee_cars_count == 0">
                     <field name="employee_cars_count" widget="statinfo" string="Cars History" />
                 </button>
             </button>

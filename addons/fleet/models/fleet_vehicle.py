@@ -400,6 +400,13 @@ class FleetVehicle(models.Model):
         if 'driver_id' in vals and vals['driver_id']:
             driver_id = vals['driver_id']
             for vehicle in self.filtered(lambda v: v.driver_id.id != driver_id):
+                # We need to set an end date for the vehicle assignation log
+                driver_assignation = self.env["fleet.vehicle.assignation.log"].search([
+                    ("vehicle_id", "=", vehicle.id),
+                    ("driver_id", "=", vehicle.driver_id.id),
+                ])
+                if not driver_assignation.date_end:
+                    driver_assignation.date_end = datetime.today().date()
                 vehicle.create_driver_history(vals)
 
         if 'future_driver_id' in vals and vals['future_driver_id']:
@@ -459,7 +466,7 @@ class FleetVehicle(models.Model):
             'driver_id': False,
             'plan_to_change_vehicle': False,
         })
-        
+
         for vehicle in self:
             vehicle.plan_to_change_vehicle = False
             vehicle.driver_id = vehicle.future_driver_id

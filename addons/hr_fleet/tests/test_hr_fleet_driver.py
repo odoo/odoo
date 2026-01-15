@@ -1,5 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+from odoo import fields
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged, common
 
 
@@ -86,3 +89,120 @@ class TestHrFleetDriver(common.TransactionCase):
         ])
         self.assertEqual(len(assignation_log), 1)
         self.assertEqual(assignation_log.driver_employee_id, test_employee2)
+
+    def test_assignation_log_create_sets_vehicle_driver(self):
+        """
+        Creating a fleet.vehicle.assignation.log should assign vehicle.driver_id
+        only if vehicle has no driver and today is within assignation period.
+        """
+
+        today = fields.Date.today()
+        yesterday = today - timedelta(days=1)
+        tomorrow = today + timedelta(days=1)
+
+        # vehicle with no driver yet
+        vehicle = self.car2
+        vehicle.write({"plan_to_change_vehicle": True})
+        self.assertFalse(vehicle.driver_id, "Precondition: vehicle2 has no driver")
+
+        # Create assignation log with valid today-included date range
+        self.env["fleet.vehicle.assignation.log"].create({
+            "vehicle_id": vehicle.id,
+            "driver_id": self.test_employee.work_contact_id.id,
+            "date_start": yesterday,
+            "date_end": tomorrow,
+        })
+        self.assertEqual(
+            vehicle.driver_id,
+            self.test_employee.work_contact_id,
+            "Vehicle driver should be set when date includes today and no driver assigned",
+        )
+        self.assertFalse(vehicle.plan_to_change_vehicle, "Plan to change car should be set to False")
+        # Create another assignation for same vehicle, driver should NOT be changed because vehicle has driver
+        self.env["fleet.vehicle.assignation.log"].create({
+            "vehicle_id": vehicle.id,
+            "driver_id": self.test_user.partner_id.id,
+            "date_start": tomorrow + timedelta(days=1),
+            "date_end": tomorrow + timedelta(days=3),
+        })
+        # driver stays unchanged
+        self.assertEqual(
+            vehicle.driver_id,
+            self.test_employee.work_contact_id,
+            "Vehicle driver should not change if already assigned",
+        )
+
+        # Create assignation where date range excludes today, driver should NOT be assigned
+        vehicle3 = self.car
+        vehicle3.driver_id = False  # reset driver for test
+        self.env["fleet.vehicle.assignation.log"].create({
+            "vehicle_id": vehicle3.id,
+            "driver_id": self.test_user.partner_id.id,
+            "date_start": today + timedelta(days=2),
+            "date_end": today + timedelta(days=3),
+        })
+        self.assertFalse(vehicle3.driver_id, "Vehicle driver should not be set if today not in assignation period")
+
+    def test_assignation_overlap_validation(self):
+        """Overlapping assignation logs for the same vehicle should raise a ValidationError."""
+
+        today = fields.Date.today()
+        vehicle = self.car
+
+        # Base assignation: yesterday → tomorrow
+        self.env['fleet.vehicle.assignation.log'].create({
+            'vehicle_id': vehicle.id,
+            'driver_id': self.test_employee.work_contact_id.id,
+            'date_start': today - timedelta(days=1),
+            'date_end': today + timedelta(days=1),
+        })
+
+        # No overlap (ends before the first starts)
+        self.env['fleet.vehicle.assignation.log'].create({
+            'vehicle_id': vehicle.id,
+            'driver_id': self.test_user.partner_id.id,
+            'date_start': today - timedelta(days=5),
+            'date_end': today - timedelta(days=3),
+        })
+
+        # Overlaps at the start
+        with self.assertRaises(ValidationError, msg="Overlap at the start should raise ValidationError"):
+            self.env['fleet.vehicle.assignation.log'].create({
+                'vehicle_id': vehicle.id,
+                'driver_id': self.test_user.partner_id.id,
+                'date_start': today - timedelta(days=2),
+                'date_end': today,
+            })
+
+        # Overlaps at the end
+        with self.assertRaises(ValidationError, msg="Overlap at the end should raise ValidationError"):
+            self.env['fleet.vehicle.assignation.log'].create({
+                'vehicle_id': vehicle.id,
+                'driver_id': self.test_user.partner_id.id,
+                'date_start': today,
+                'date_end': today + timedelta(days=2),
+            })
+
+        # Fully enclosed inside first assignation
+        with self.assertRaises(ValidationError, msg="Enclosed overlap should raise ValidationError"):
+            self.env['fleet.vehicle.assignation.log'].create({
+                'vehicle_id': vehicle.id,
+                'driver_id': self.test_user.partner_id.id,
+                'date_start': today,
+                'date_end': today,
+            })
+
+        # Overlaps open-ended assignation (no date_end)
+        self.env['fleet.vehicle.assignation.log'].create({
+            'vehicle_id': vehicle.id,
+            'driver_id': self.test_employee.work_contact_id.id,
+            'date_start': today + timedelta(days=5),
+            'date_end': False,
+        })
+        with self.assertRaises(ValidationError, msg="Open-ended overlap should raise ValidationError"):
+            self.env['fleet.vehicle.assignation.log'].create({
+                'vehicle_id': vehicle.id,
+                'driver_id': self.test_user.partner_id.id,
+                'date_start': today + timedelta(days=6),
+                'date_end': today + timedelta(days=10),
+            })
