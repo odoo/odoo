@@ -247,3 +247,78 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
     ],
 });
+
+registry.category("web_tour.tours").add("course_review_modification_by_admin", {
+    url: "/slides",
+    steps: () => [
+        {
+            trigger: "a:text(Basics of Gardening - Test)",
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
+            trigger: "a[id=review-tab]:text(Reviews (1))",
+            run: "click",
+        },
+        {
+            trigger: ".o_rating_popup_composer span:text(Add Review)",
+        },
+        {
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message:contains(Non admin user review) .o_website_rating_static[title='3 stars on 5']",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Edit']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
+            run: "edit Admin edited this review.",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message button:text(save)",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-body:contains(Admin edited this review.)",
+        },
+        // If it fails here, it means that the default values have changed after the admin edited someone else's review.
+        {
+            trigger: ".o_rating_popup_composer span:text(Add Review)",
+            run: "click",
+        },
+        {
+            trigger: "div.o_portal_chatter_composer textarea",
+            run: "edit New comment from admin",
+        },
+        {
+            trigger:
+                ".modal.modal_shown.show button.o_portal_chatter_composer_btn:text(Post review)",
+            run: "click",
+        },
+        {
+            trigger: "a[id=review-tab]:text(Reviews (2))",
+            run: "click",
+        },
+        {
+            trigger: ".o_rating_popup_composer span:text(Edit Review)",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-body:contains(Admin edited this review.)",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message:contains(Admin edited this review.) [title='Expand']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-dropdown-item:has(:text(Delete))",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow button:text(Delete)",
+            run: "click",
+        },
+        {
+            trigger: "a[id=review-tab]:text(Reviews (1))",
+            run: "click",
+        },
+        // If it fails here, it means that the default values have changed after the admin deleted someone else's review.
+        {
+            trigger: ".o_rating_popup_composer span:text(Edit Review)",
+        },
+    ],
+});
