@@ -75,7 +75,7 @@ export class HeaderScrollEffectOption extends BaseOptionComponent {
     static editableOnly = false;
 }
 
-class HeaderOptionPlugin extends Plugin {
+export class HeaderOptionPlugin extends Plugin {
     static id = "headerOption";
     static dependencies = ["customizeWebsite"];
 
@@ -95,6 +95,11 @@ class HeaderOptionPlugin extends Plugin {
             SetShadowModeHeaderAction,
             SetShadowHeaderAction,
         },
+        // we consider the container of Contact Us allows inline element at root
+        // to avoid wrapping the button in a <p> or <div>, which would remove
+        // this button if it's empty
+        are_inlines_allowed_at_root_predicates: (node) =>
+            node.matches("#o_main_nav .oe_structure_solo .oe_unremovable [contenteditable='true']"),
     };
 }
 
