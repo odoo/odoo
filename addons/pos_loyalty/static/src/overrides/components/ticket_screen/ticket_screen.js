@@ -51,4 +51,10 @@ patch(TicketScreen.prototype, {
         }
         return false;
     },
+    async _setOrder() {
+        await super._setOrder(...arguments);
+        if (this.pos.isOpenOrderShareable()) {
+            this.pos.updateRewards();
+        }
+    },
 });
