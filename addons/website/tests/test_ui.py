@@ -741,3 +741,9 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_mega_footer(self):
         self.start_tour('/', 'mega_footer', login='admin')
+
+    def test_discard_rollback(self):
+        call_to_action_view = self.env['ir.ui.view'].search([('key', '=', 'website.header_call_to_action')], limit=1)
+        call_to_action_view.write({'arch_db': call_to_action_view.arch_db.replace('Contact Us', 'Test Rollback Button')})
+
+        self.start_tour("/", "discard_rollback", login="admin")

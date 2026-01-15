@@ -36,7 +36,13 @@ export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
-    static dependencies = ["builderActions", "history", "savePlugin", "edit_interaction"];
+    static dependencies = [
+        "builderActions",
+        "history",
+        "savePlugin",
+        "edit_interaction",
+        "discard",
+    ];
     static shared = [
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
@@ -211,9 +217,16 @@ export class CustomizeWebsitePlugin extends Plugin {
         await this.makeSCSSCusto(url, colors, nullValue);
     }, 0);
     async makeSCSSCusto(url, values, defaultValue = "null") {
-        Object.keys(values).forEach((key) => {
-            values[key] = values[key] || defaultValue;
-        });
+        const htmlStyle = getComputedStyle(this.document.documentElement);
+
+        const originalData = this.dependencies.discard.getRollback("scss", {});
+        originalData[url] ??= {};
+        for (const key in values) {
+            originalData[url][key] ??= getCSSVariableValue(key, htmlStyle) || defaultValue;
+            values[key] ||= defaultValue;
+        }
+        this.dependencies.discard.setRollback("scss", originalData);
+
         await this.services.orm.call("website.assets", "make_scss_customization", [url, values]);
     }
     reloadBundles = debounce(this._reloadBundles.bind(this), 0);
@@ -551,7 +564,7 @@ export class CustomizeBodyBgTypeAction extends BuilderAction {
 
 export class WebsiteConfigAction extends BuilderAction {
     static id = "websiteConfig";
-    static dependencies = ["builderActions", "customizeWebsite"];
+    static dependencies = ["builderActions", "customizeWebsite", "discard", "websiteSavePlugin"];
     setup() {
         this.reload = {};
         this.preview = false;
@@ -689,10 +702,11 @@ export class WebsiteConfigAction extends BuilderAction {
             toDisable,
             def,
         });
-        setTimeout(() => {
+        setTimeout(async () => {
             let aggregatedToEnable = new Set();
             let aggregatedToDisable = new Set();
             const defs = [];
+            const otherRequests = [];
             for (const req of this.dependencies.customizeWebsite.getPendingThemeRequests()) {
                 if (req.isViewData === isViewData && req.shouldReset === shouldReset) {
                     // Synchronize with the last request: if a view was enabled
@@ -704,30 +718,79 @@ export class WebsiteConfigAction extends BuilderAction {
                     aggregatedToEnable = aggregatedToEnable.union(req.toEnable);
                     aggregatedToDisable = aggregatedToDisable.union(req.toDisable);
                     defs.push(req.def);
+                } else {
+                    otherRequests.push(req);
                 }
             }
-            this.dependencies.customizeWebsite.setPendingThemeRequests(
-                this.dependencies.customizeWebsite
-                    .getPendingThemeRequests()
-                    .filter(
-                        (req) => req.isViewData !== isViewData || req.shouldReset !== shouldReset
-                    )
-            );
-            if (!aggregatedToEnable.size && !aggregatedToDisable.size) {
-                defs.map((def) => def.resolve());
+            this.dependencies.customizeWebsite.setPendingThemeRequests(otherRequests);
+
+            const modifiedRecords = aggregatedToEnable.union(aggregatedToDisable);
+            if (!modifiedRecords.size) {
+                defs.forEach((def) => def.resolve());
                 return;
-            } else {
-                rpc("/website/theme_customize_data", {
+            }
+
+            try {
+                const customizeDataResult = await rpc("/website/theme_customize_data", {
                     is_view_data: isViewData,
                     enable: [...aggregatedToEnable],
                     disable: [...aggregatedToDisable],
                     reset_view_arch: shouldReset,
-                })
-                    .then(() => Promise.all(defs.map((def) => def.resolve())))
-                    .catch(() => Promise.all(defs.map((def) => def.reject())));
+                });
+
+                const originalResetViewIds = customizeDataResult?.original_view_ids ?? [];
+                this.setRollback(isViewData, originalResetViewIds, modifiedRecords);
+
+                defs.forEach((def) => def.resolve());
+            } catch (error) {
+                defs.forEach((def) => def.reject(error));
             }
         }, 0);
         return def.promise;
+    }
+
+    /**
+     * Collapses all the rollback steps into a single one
+     * Example:
+     * - A is enabled
+     * - To enable B, A needs to be disabled and B enabled
+     * - To then enable C, B needs to be disabled and C enabled
+     * - And to enable D, C needs to be disabled and D enabled
+     * - To rollback, we only need to disable D and enable A, skipping all the intermediate steps
+     * - If A -> B and B -> C, then A -> C
+     * @param {*} data
+     */
+    setRollback(isViewData, originalResetViewIds, modifiedRecords) {
+        const currentlyEnabled = new Set(
+            [...modifiedRecords].filter((view) =>
+                this.dependencies.customizeWebsite.getConfigKey(view)
+            )
+        );
+        const currentlyDisabled = modifiedRecords.difference(currentlyEnabled);
+        const viewsOrAssets = isViewData ? "views" : "assets";
+
+        const rollbackData = this.dependencies.discard.getRollback("theme", {});
+        rollbackData[viewsOrAssets] ??= {};
+
+        const originallyEnabled = new Set(rollbackData[viewsOrAssets].enable);
+        const originallyDisabled = new Set(rollbackData[viewsOrAssets].disable);
+
+        rollbackData[viewsOrAssets].enable = [
+            ...originallyEnabled.union(currentlyEnabled.difference(originallyDisabled)),
+        ];
+        rollbackData[viewsOrAssets].disable = [
+            ...originallyDisabled.union(currentlyDisabled.difference(originallyEnabled)),
+        ];
+        this.dependencies.discard.setRollback("theme", rollbackData);
+
+        for (const viewId of originalResetViewIds) {
+            const el = this.editable.querySelector(
+                `[data-oe-model="ir.ui.view"][data-oe-field="arch"][data-oe-id="${viewId}"]`
+            );
+            if (el) {
+                this.dependencies.websiteSavePlugin.setViewRollback(el);
+            }
+        }
     }
 }
 

@@ -53,7 +53,13 @@ export class WebsiteBuilder extends Component {
 
     async discard() {
         await revertPreview(this.editor);
-        if (this.editor.shared.history.canUndo()) {
+
+        const rollbackAndCloseEditor = async () => {
+            await this.editor.shared.discard.rollback();
+            this.props.builderProps.closeEditor();
+        };
+
+        if (!this.editor.shared.discard.isSafe()) {
             this.dialog.add(ConfirmationDialog, {
                 title: _t("Discard all changes?"),
                 body: _t(
@@ -61,11 +67,11 @@ export class WebsiteBuilder extends Component {
                 ),
                 confirmLabel: _t("Discard changes"),
                 cancelLabel: _t("Keep editing"),
-                confirm: () => this.props.builderProps.closeEditor(),
+                confirm: rollbackAndCloseEditor,
                 cancel: () => {},
             });
         } else {
-            this.props.builderProps.closeEditor();
+            await rollbackAndCloseEditor();
         }
     }
 
@@ -73,7 +79,7 @@ export class WebsiteBuilder extends Component {
         if (!this.editor) {
             return;
         }
-        if (this.editor.shared.history.canUndo()) {
+        if (!this.editor.shared.discard.isSafe()) {
             event.preventDefault();
             event.returnValue = "Unsaved changes";
         }
@@ -83,7 +89,7 @@ export class WebsiteBuilder extends Component {
         if (!this.editor) {
             return true;
         }
-        if (this.editor.shared.history.canUndo()) {
+        if (!this.editor.shared.discard.isSafe()) {
             let continueProcess = true;
             await new Promise((resolve) => {
                 this.dialog.add(ConfirmationDialog, {

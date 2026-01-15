@@ -103,9 +103,9 @@ export class SavePlugin extends Plugin {
                 }
             }
         });
+        await Promise.all(saveProms);
         // used to track dirty out of the editable scope, like header, footer or wrapwrap
-        const willSaves = this.getResource("save_handlers").map((c) => c());
-        await Promise.all(saveProms.concat(willSaves));
+        await Promise.all(this.getResource("save_handlers").map((c) => c()));
         this.dependencies.history.reset();
     }
 

@@ -5,16 +5,22 @@ import { registry } from "@web/core/registry";
 /**
  * @typedef { Object } WebsiteSaveShared
  * @property { WebsiteSavePlugin['saveView'] } saveView
+ * @property { WebsiteSavePlugin['setViewRollback'] } setViewRollback
  */
 
 export class WebsiteSavePlugin extends Plugin {
     static id = "websiteSavePlugin";
-    static shared = ["saveView"];
+    static dependencies = ["discard"];
+    static shared = ["saveView", "setViewRollback"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         save_element_handlers: this.saveView.bind(this),
     };
+
+    setup() {
+        this.originalEditable = this.editable.cloneNode(true);
+    }
 
     /**
      * Saves one (dirty) element of the page.
@@ -22,8 +28,7 @@ export class WebsiteSavePlugin extends Plugin {
      * @param {HTMLElement} el - the element to save.
      */
     saveView(el, delayTranslations = true) {
-        const viewID = Number(el.dataset["oeId"]);
-        if (!viewID) {
+        if (!el.dataset.oeId) {
             return;
         }
 
@@ -37,13 +42,32 @@ export class WebsiteSavePlugin extends Plugin {
             };
         }
 
+        this.setViewRollback(el);
+
         escapeTextNodes(el);
-        return this.services.orm.call(
-            "ir.ui.view",
-            "save",
-            [viewID, el.outerHTML, (!el.dataset["oeExpression"] && el.dataset["oeXpath"]) || null],
-            { context }
+        return this.services.orm.call("ir.ui.view", "save", this.saveArgs(el), { context });
+    }
+
+    setViewRollback(el) {
+        const rollbacks = this.dependencies.discard.getRollback("views", []);
+        const originalEl = this.originalEditable.querySelector(
+            `[data-oe-id="${el.dataset.oeId}"][data-oe-xpath="${el.dataset.oeXpath}"]`
         );
+        if (!originalEl) {
+            return;
+        }
+        escapeTextNodes(originalEl);
+        // Ensure the earliest versions are rollbacked last
+        rollbacks.unshift(this.saveArgs(originalEl));
+        this.dependencies.discard.setRollback("views", rollbacks);
+    }
+
+    saveArgs(el) {
+        return [
+            Number(el.dataset.oeId),
+            el.outerHTML,
+            (!el.dataset.oeExpression && el.dataset.oeXpath) || null,
+        ];
     }
 }
 
