@@ -1180,9 +1180,14 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         # Change consumption by removing the second line
         action = receipt.move_ids.action_show_details()
         mo = self.env['mrp.production'].browse(action['res_id'])
+        subcontract_location = self.subcontractor_partner1.property_stock_subcontractor
+        reserved_before = sum(self.env['stock.quant']._gather(self.comp2, subcontract_location, strict=True).mapped('reserved_quantity'))
+        self.assertEqual(reserved_before, 1)
         line_to_remove = mo.move_line_raw_ids[1]
         with Form(mo.with_context(action['context']), view=action['view_id']) as mo_form:
             mo_form.move_line_raw_ids.remove(1)
+        reserved_after = sum(self.env['stock.quant']._gather(self.comp2, subcontract_location, strict=True).mapped('reserved_quantity'))
+        self.assertEqual(reserved_after, 0)
         mo.subcontracting_record_component()
         self.assertFalse(line_to_remove.exists())
 
