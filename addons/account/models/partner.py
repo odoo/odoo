@@ -169,7 +169,7 @@ class AccountFiscalPosition(models.Model):
         if not self:
             return taxes
         self.ensure_one()
-        if not self.tax_ids:  # empty fiscal positions (like those created by tax units) remove all taxes
+        if not self.tax_ids and taxes.fiscal_position_ids:  # empty fiscal positions (like those created by tax units) remove all taxes
             return self.env['account.tax']
         tax_map = self.tax_map or {}
         return self.env['account.tax'].browse(unique(
