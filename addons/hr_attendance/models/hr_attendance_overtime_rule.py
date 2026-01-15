@@ -397,7 +397,7 @@ class HrAttendanceOvertimeRule(models.Model):
         overtime_by_employee_by_attendance = defaultdict(lambda: defaultdict(list))
         undertime_by_employee_by_attendance = defaultdict(lambda: defaultdict(list))
         for employee, duration_and_amount_by_periods in attendances_by_periods_by_employee.items():
-            schedule = schedule_by_employee['schedule'][employee]
+            schedule = schedule_by_employee['schedule'][employee] - schedule_by_employee['leave'][employee]
             fully_flex_schedule = schedule_by_employee['fully_flexible'][employee]
             for day, attendance_interval in duration_and_amount_by_periods.items():
                 for rule in self:
@@ -407,7 +407,7 @@ class HrAttendanceOvertimeRule(models.Model):
                     stop = datetime.combine(day, datetime.max.time())
                     if not (Intervals([(start, stop, self.env['resource.calendar'])]) - fully_flex_schedule):  # employee is fully flexible
                         continue
-                    rule_overtime_list_by_attendance, rule_undertime_list_by_attendance = rule._get_daterange_overtime_undertime_intervals_for_quantity_rule(start, stop, attendance_interval, schedule)
+                    rule_overtime_list_by_attendance, rule_undertime_list_by_attendance = rule._get_daterange_overtime_undertime_intervals_for_quantity_rule(start, stop, attendance_interval, schedule & Intervals([(start, stop, self.env['resource.calendar'])]))
                     _merge_overtime_dict(overtime_by_employee_by_attendance[employee], rule_overtime_list_by_attendance)
                     _merge_overtime_dict(undertime_by_employee_by_attendance[employee], rule_undertime_list_by_attendance)
         return overtime_by_employee_by_attendance, undertime_by_employee_by_attendance
