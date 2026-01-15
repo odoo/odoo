@@ -1,22 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     
-    <!-- Inherit Sale Order Form View - Add number_of_panels field -->
+    <!-- Inherit Sale Order Form View - Add Volume and number_of_panels fields -->
     <record id="view_order_form_inherit_panels" model="ir.ui.view">
         <field name="name">sale.order.form.inherit.panels</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <!-- Add field in Form View before product_uom_qty label -->
+            <!-- Add Volume and number_of_panels fields in Form View before product_uom_qty label -->
             <xpath expr="//label[@for='product_uom_qty']" position="before">
+                <!-- Volume field (first) -->
+                <label for="product_volume" string="Volume" invisible="display_type"/>
+                <div name="product_volume" invisible="display_type">
+                    <field name="product_id" invisible="1" force_save="1"/>
+                    <field name="product_volume" readonly="1" class="oe_inline"/>
+                </div>
+                <!-- number_of_panels field (second) -->
                 <label for="number_of_panels" string="عدد الألواح" invisible="display_type"/>
                 <div name="panels_qty" invisible="display_type">
                     <field name="number_of_panels" class="oe_inline"/>
                 </div>
             </xpath>
             
-            <!-- Add field in List View before product_uom_qty field -->
+            <!-- Add Volume and number_of_panels fields in List View before product_uom_qty field -->
             <xpath expr="//field[@name='order_line']//list//field[@name='product_uom_qty']" position="before">
+                <!-- Volume field (first) -->
+                <field 
+                    name="product_volume" 
+                    string="Volume"
+                    optional="show"
+                    invisible="display_type"
+                    readonly="1"/>
+                <!-- number_of_panels field (second) -->
                 <field 
                     name="number_of_panels" 
                     string="عدد الألواح"

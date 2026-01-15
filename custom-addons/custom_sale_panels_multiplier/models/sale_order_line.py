@@ -8,6 +8,15 @@ class SaleOrderLine(models.Model):
 
     # ========== Fields ==========
     
+    product_volume = fields.Float(
+        string="Volume",
+        related='product_id.volume',
+        readonly=True,
+        store=False,
+        digits='Volume',
+        help="Product volume from product template"
+    )
+    
     number_of_panels = fields.Float(
         string="عدد الألواح",
         digits='Product Unit',
