@@ -5550,7 +5550,7 @@ class TestTourMrpOrder(HttpCase):
         the catalog.
         '''
         # Enable storage locations
-        self.env['res.config.settings'].create({'group_stock_multi_locations': True}).execute()
+        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
         # Set WH manufacture to 2-step
         warehouse = self.env.ref('stock.warehouse0')
         warehouse.manufacture_steps = 'pbm'
