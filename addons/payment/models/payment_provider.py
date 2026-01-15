@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import uuid
 from pprint import pformat
 
 import requests
@@ -968,32 +967,6 @@ class PaymentProvider(models.Model):
         :rtype: str
         """
         return response.text
-
-    def _prepare_json_rpc_payload(self, data):
-        """Prepare a JSON-RPC 2.0 formatted payload for proxy requests.
-
-        :param dict data: The data to include in the JSON-RPC request.
-        :return: The JSON-RPC 2.0 formatted proxy payload.
-        :rtype: dict
-        """
-        return {"jsonrpc": "2.0", "id": uuid.uuid4().hex, "method": "call", "params": data}
-
-    def _parse_proxy_response(self, response):
-        """Retrieve JSON-RPC 2.0 formatted response content of a proxy request.
-
-        Note: Proxies always respond with HTTP 200 as they implement JSON-RPC 2.0.
-
-        :param requests.Response response: The JSON-RPC 2.0 formatted proxy response.
-        :return: The response content.
-        :rtype: dict
-        """
-        response_content = response.json()
-        if response_content.get("error"):  # An exception was raised on the proxy.
-            error_data = response_content["error"]["data"]
-            raise ValidationError(
-                _("The payment provider rejected the request.\n%s", pformat(error_data["message"]))
-            )
-        return response_content["result"]
 
     # === SETUP METHODS === #
 

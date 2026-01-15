@@ -48,12 +48,10 @@ class RazorpayController(Controller):
             return request.redirect(redirect_url)
 
         # Fetch an access token using the authorization token.
-        proxy_payload = self.env["payment.provider"]._prepare_json_rpc_payload({
-            "authorization_code": authorization_code
-        })
+        proxy_payload = {"authorization_code": authorization_code}
         try:
             response_content = provider_sudo._send_api_request(
-                "POST", "/get_access_token", json=proxy_payload, is_proxy_request=True
+                "POST", "2/get_access_token", json=proxy_payload, is_proxy_request=True
             )
         except ValidationError as e:
             return request.render(

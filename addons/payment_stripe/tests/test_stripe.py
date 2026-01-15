@@ -261,6 +261,6 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         ) as mock:
             self.stripe._stripe_create_account_link("dummy", "dummy")
             mock.assert_called_once()
-            call_args = mock.call_args.kwargs["json"]["params"]["payload"].keys()
+            call_args = mock.call_args.kwargs["json"]["payload"].keys()
             for payload_param in ("account", "return_url", "refresh_url", "type"):
                 self.assertIn(payload_param, call_args)

@@ -73,7 +73,7 @@ class PaymentProvider(models.Model):
 
     @api.constrains("available_currency_ids")
     def _check_currency_is_supported(self):
-        for provider in self.filtered(lambda p: p.code == 'mercado_pago'):
+        for provider in self.filtered(lambda p: p.code == "mercado_pago"):
             account_country = provider.mercado_pago_account_country_id
             account_currency = const.CURRENCY_MAPPING.get(account_country.code)
             if not account_country:
@@ -160,7 +160,7 @@ class PaymentProvider(models.Model):
             "return_url": f"{return_url}?{urlencode(return_url_params)}",
             "account_country_code": self.mercado_pago_account_country_id.code.lower(),
         }
-        proxy_url = self._build_request_url("/authorize", is_proxy_request=True)
+        proxy_url = self._build_request_url("1/authorize", is_proxy_request=True)
         return {
             "type": "ir.actions.act_url",
             "url": f"{proxy_url}?{urlencode(proxy_url_params)}",
@@ -224,7 +224,7 @@ class PaymentProvider(models.Model):
             return super()._build_request_url(endpoint, is_proxy_request=is_proxy_request, **kwargs)
 
         if is_proxy_request:
-            return urljoin(f"{const.PROXY_URL}/1", endpoint)
+            return urljoin(const.PROXY_URL, endpoint)
 
         return urljoin("https://api.mercadopago.com", endpoint)
 
@@ -272,13 +272,13 @@ class PaymentProvider(models.Model):
         ):
             return self.mercado_pago_access_token
 
-        proxy_payload = self._prepare_json_rpc_payload({
+        proxy_payload = {
             "refresh_token": self.mercado_pago_refresh_token,
             "account_country_code": self.mercado_pago_account_country_id.code.lower(),
-        })
+        }
         response_content = self._send_api_request(
             "POST",
-            "/refresh_access_token",
+            "2/refresh_access_token",
             json=proxy_payload,
             is_proxy_request=True,
             is_refresh_token_request=True,
@@ -294,14 +294,6 @@ class PaymentProvider(models.Model):
             "mercado_pago_refresh_token": response_content["refresh_token"],
         })
         return self.mercado_pago_access_token
-
-    def _parse_response_content(self, response, *, is_proxy_request=False, **kwargs):
-        """Override of `payment` to parse the response content."""
-        if self.code != "mercado_pago" or not is_proxy_request:
-            return super()._parse_response_content(
-                response, is_proxy_request=is_proxy_request, **kwargs
-            )
-        return self._parse_proxy_response(response)
 
     def _parse_response_error(self, response):
         """Override of `payment` to parse the error message."""

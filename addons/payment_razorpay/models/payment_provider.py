@@ -151,7 +151,7 @@ class PaymentProvider(models.Model):
             "provider_id": self.id,
             "csrf_token": request.csrf_token(),
         }
-        authorization_url = f"{const.OAUTH_URL}/authorize?{urlencode(params)}"
+        authorization_url = f"{const.OAUTH_URL}1/authorize?{urlencode(params)}"
         return {"type": "ir.actions.act_url", "url": authorization_url, "target": "self"}
 
     def _get_reset_values(self):
@@ -248,12 +248,10 @@ class PaymentProvider(models.Model):
         :return: dict
         """
         self.ensure_one()
-        proxy_payload = self._prepare_json_rpc_payload({
-            "refresh_token": self.razorpay_refresh_token
-        })
+        proxy_payload = {"refresh_token": self.razorpay_refresh_token}
 
         response_content = self._send_api_request(
-            "POST", "/refresh_access_token", json=proxy_payload, is_proxy_request=True
+            "POST", "2/refresh_access_token", json=proxy_payload, is_proxy_request=True
         )
         if response_content.get("access_token"):
             expiry = fields.Datetime.now() + timedelta(seconds=int(response_content["expires_in"]))
@@ -302,10 +300,3 @@ class PaymentProvider(models.Model):
         if self.code != "razorpay":
             return super()._parse_response_error(response)
         return response.json().get("error", {}).get("description", "")
-
-    def _parse_response_content(self, response, *, is_proxy_request=False, **kwargs):
-        if self.code != "razorpay" or not is_proxy_request:
-            return super()._parse_response_content(
-                response, is_proxy_request=is_proxy_request, **kwargs
-            )
-        return self._parse_proxy_response(response)
