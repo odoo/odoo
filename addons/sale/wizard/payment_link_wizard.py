@@ -29,6 +29,13 @@ class PaymentLinkWizard(models.TransientModel):
                         amount=format_amount(wizard.env, remaining_amount, wizard.currency_id),
                     )
 
+    def _compute_warning_message(self):
+        super()._compute_warning_message()
+        for wizard in self.filtered(lambda w: w.res_model == 'sale.order'):
+            sale_order = self.env['sale.order'].browse(self.res_id)
+            if sale_order.is_expired:
+                wizard.warning_message = _("The sale order has expired.")
+
     def _prepare_query_params(self, *args):
         """ Override of `payment` to add `sale_order_id` to the query params. """
         res = super()._prepare_query_params(*args)
