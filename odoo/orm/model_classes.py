@@ -560,7 +560,9 @@ def _add_manual_models(env: Environment):
                 """ SELECT a.attname
                     FROM pg_attribute a
                     JOIN pg_class t ON a.attrelid = t.oid AND t.relname = %s
-                    WHERE a.attnum > 0 -- skip system columns """,
+                    JOIN pg_namespace n ON t.relnamespace = n.oid
+                    WHERE a.attnum > 0 -- skip system columns
+                      AND n.nspname = current_schema """,
                 [table_name]
             )
             columns = {colinfo[0] for colinfo in env.cr.fetchall()}
