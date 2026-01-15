@@ -11,8 +11,9 @@ patch(AttendeeCalendarModel.prototype, {
     setup(params) {
         super.setup(...arguments);
         this.isAlive = params.isAlive;
-        this.microsoftPendingSync = false;
+        this.microsoftSyncTimedOut = false;
         this.state = useState({
+            microsoftPendingSync: false,
             microsoftIsSync: true,
             microsoftIsPaused: false,
         })
@@ -22,20 +23,21 @@ patch(AttendeeCalendarModel.prototype, {
      * @override
      */
     async updateData() {
-        if (this.microsoftPendingSync) {
+        this.microsoftSyncTimedOut = false;
+        if (this.state.microsoftPendingSync) {
             return super.updateData(...arguments);
         }
         try {
-            await Promise.race([
-                new Promise(resolve => setTimeout(resolve, 1000)),
-                this.syncMicrosoftCalendar(true)
+            this.microsoftSyncTimedOut = await Promise.race([
+                new Promise(resolve => setTimeout(resolve, 1000)).then(() => true),
+                this.syncMicrosoftCalendar(true).then(() => false),
             ]);
         } catch (error) {
             if (error.event) {
                 error.event.preventDefault();
             }
             console.error("Could not synchronize microsoft events now.", error);
-            this.microsoftPendingSync = false;
+            this.state.microsoftPendingSync = false;
         }
         if (this.isAlive()) {
             return super.updateData(...arguments);
@@ -43,12 +45,13 @@ patch(AttendeeCalendarModel.prototype, {
         return new Promise(() => {});
     },
 
-    async syncMicrosoftCalendar(silent = false) {
-        this.microsoftPendingSync = true;
+    async syncMicrosoftCalendar(silent = false, force_auth = false) {
+        this.state.microsoftPendingSync = true;
         const result = await rpc(
             "/microsoft_calendar/sync_data",
             {
                 model: this.resModel,
+                force_auth: force_auth,
                 fromurl: window.location.href
             },
             {
@@ -60,8 +63,14 @@ patch(AttendeeCalendarModel.prototype, {
         } else if (result.status === "no_new_event_from_microsoft" || result.status === "need_refresh") {
             this.state.microsoftIsSync = true;
         }
-        this.state.microsoftIsPaused = result.status == "sync_paused";
-        this.microsoftPendingSync = false;
+        this.state.microsoftIsPaused = result.status === "sync_paused";
+        this.state.microsoftPendingSync = false;
+        if (this.microsoftSyncTimedOut && result.status === "need_refresh") {
+            const data = { ...this.data };
+            await this.keepLast.add(super.updateData(data));
+            this.data = data;
+            this.notify();
+        }
         return result;
     },
 

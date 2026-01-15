@@ -16,6 +16,7 @@ _logger = logging.getLogger(__name__)
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
+    google_calendar_email = fields.Char(related='res_users_settings_id.google_calendar_email', groups="base.group_system")
     google_calendar_rtoken = fields.Char(related='res_users_settings_id.google_calendar_rtoken', groups="base.group_system")
     google_calendar_token = fields.Char(related='res_users_settings_id.google_calendar_token', groups="base.group_system")
     google_calendar_token_validity = fields.Datetime(related='res_users_settings_id.google_calendar_token_validity', groups="base.group_system")
@@ -155,12 +156,14 @@ class ResUsers(models.Model):
     def stop_google_synchronization(self):
         self.ensure_one()
         self.sudo().google_synchronization_stopped = True
+        self.sudo().res_users_settings_id._set_google_calendar_email(False)
 
-    def restart_google_synchronization(self):
+    def restart_google_synchronization(self, reset_records=True):
         self.ensure_one()
         self.sudo().google_synchronization_stopped = False
-        self.env['calendar.recurrence']._restart_google_sync()
-        self.env['calendar.event']._restart_google_sync()
+        if reset_records:
+            self.env['calendar.recurrence']._restart_google_sync()
+            self.env['calendar.event']._restart_google_sync()
 
     def unpause_google_synchronization(self):
         self.env['ir.config_parameter'].sudo().set_bool("google_calendar_sync_paused", False)
@@ -181,6 +184,12 @@ class ResUsers(models.Model):
         res = super().check_calendar_credentials()
         res['google_calendar'] = self._has_setup_credentials()
         return res
+
+    def get_calendar_email(self):
+        if self.res_users_settings_id.sudo().google_calendar_email:
+            return self.res_users_settings_id.sudo().google_calendar_email
+        else:
+            return super().get_calendar_email()
 
     def check_synchronization_status(self):
         res = super().check_synchronization_status()

@@ -11,11 +11,11 @@
                 </xpath>
                 <group name="calendar_accounts" position="inside">
                     <group string="Outlook Calendar" invisible="share">
-                        <field name="microsoft_calendar_rtoken" string="Refresh Token" readonly="1"/>
-                        <field name="microsoft_calendar_token" string="User Token" readonly="1"/>
-                        <field name="microsoft_calendar_token_validity" string="Token Validity" readonly="1"/>
-                        <field name="microsoft_calendar_sync_token" string="Next Sync Token" readonly="1"/>
-                        <field name="microsoft_last_sync_date" string="Last Sync Time" readonly="0"/>
+                        <field name="microsoft_calendar_rtoken" string="Refresh Token" readonly="1" groups="base.group_no_one"/>
+                        <field name="microsoft_calendar_token" string="User Token" readonly="1" groups="base.group_no_one"/>
+                        <field name="microsoft_calendar_token_validity" string="Token Validity" readonly="1" groups="base.group_no_one"/>
+                        <field name="microsoft_calendar_sync_token" string="Next Sync Token" readonly="1" groups="base.group_no_one"/>
+                        <field name="microsoft_last_sync_date" string="Last Sync Time" readonly="0" groups="base.group_no_one"/>
                         <button
                             string="Reset Account" colspan="2" class="btn btn-secondary mt-3"
                             type="action" name="%(microsoft_calendar_reset_account_action)d"

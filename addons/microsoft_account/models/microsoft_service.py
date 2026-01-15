@@ -46,7 +46,7 @@ class MicrosoftService(models.AbstractModel):
         return ICP.get_str('microsoft_%s_client_id' % service)
 
     def _get_calendar_scope(self):
-        return 'offline_access openid Calendars.ReadWrite'
+        return 'offline_access openid profile email User.Read Calendars.ReadWrite'
 
     @api.model
     def _get_auth_endpoint(self):

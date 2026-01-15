@@ -5,14 +5,13 @@
         <field name="model">microsoft.calendar.account.reset</field>
         <field name="arch" type="xml">
             <form>
-                <h1>Reset Outlook Calendar Account</h1>
+                <p>What should happen to previously synced events?</p>
                 <group>
                     <field name="delete_policy" widget="radio"/>
-                    <field name="sync_policy" widget="radio"/>
                 </group>
 
                 <footer>
-                    <button name="reset_account" string="Confirm" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button name="reset_account" string="Continue" type="object" class="btn-primary" data-hotkey="q"/>
                     <button class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
@@ -20,7 +19,7 @@
     </record>
 
     <record id="microsoft_calendar_reset_account_action" model="ir.actions.act_window">
-        <field name="name"></field>
+        <field name="name">Disconnect Google Calendar</field>
         <field name="res_model">microsoft.calendar.account.reset</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
