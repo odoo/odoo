@@ -3,6 +3,9 @@ import { registerThreadAction } from "@mail/core/common/thread_actions";
 
 import { _t } from "@web/core/l10n/translation";
 
+export const expandDiscussSequenceGroup = 5;
+export const expandDiscussSequenceQuick = 0;
+
 export const joinChannelAction = {
     condition: ({ channel }) =>
         channel && !channel.self_member_id && !["chat", "group"].includes(channel.channel_type),
@@ -38,7 +41,8 @@ registerThreadAction("expand-discuss", {
         );
     },
     sequence: 10,
-    sequenceGroup: 5,
+    sequenceGroup: expandDiscussSequenceGroup,
+    sequenceQuick: expandDiscussSequenceQuick,
 });
 registerThreadAction("advanced-settings", {
     condition: ({ channel, owner }) => channel && owner.isDiscussSidebarChannelActions,
