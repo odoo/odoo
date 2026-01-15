@@ -18,6 +18,7 @@ import { unmockedOrm } from "@web/../tests/_framework/module_set.hoot";
 import { MassMailingIframe } from "../src/iframe/mass_mailing_iframe";
 import { MassMailingHtmlField } from "../src/fields/html_field/mass_mailing_html_field";
 import { ThemeSelector } from "../src/themes/theme_selector/theme_selector";
+import { ThemeSelectorIframe } from "../src/themes/theme_selector/theme_selector_iframe";
 import { user } from "@web/core/user";
 
 class Mailing extends models.Model {
@@ -137,9 +138,21 @@ class Mailing extends models.Model {
     ];
 }
 
+const publicAssetsCache = new Map();
 class IrUiView extends models.Model {
     async render_public_asset(template, values) {
-        return unmockedOrm("ir.ui.view", "render_public_asset", [template, values], {});
+        const args = ["ir.ui.view", "render_public_asset", [template, values], {}];
+        if (
+            ["mass_mailing.email_designer_snippets", "mass_mailing.email_designer_themes"].includes(
+                template
+            )
+        ) {
+            if (!publicAssetsCache.has(template)) {
+                publicAssetsCache.set(template, unmockedOrm(...args));
+            }
+            return publicAssetsCache.get(template);
+        }
+        return unmockedOrm(...args);
     }
 }
 
@@ -231,14 +244,20 @@ async function waitForThemeSelector() {
 
 describe("field HTML", () => {
     beforeEach(() => {
+        // Css assets are not needed for these tests.
         patchWithCleanup(MassMailingIframe.prototype, {
-            // Css assets are not needed for these tests.
             loadIframeAssets() {
                 return {
                     "mass_mailing.assets_inside_builder_iframe": {
                         toggle: () => {},
                     },
                 };
+            },
+        });
+        patchWithCleanup(ThemeSelectorIframe.prototype, {
+            loadIframeAssets() {},
+            getStyleSheets() {
+                return Promise.resolve([]);
             },
         });
     });
@@ -364,13 +383,6 @@ describe("field HTML", () => {
     });
     test(`Switching mailing records in the Form view properly switches between basic Editor, HtmlBuilder and readonly`, async () => {
         const fixture = getFixture();
-        let htmlField;
-        patchWithCleanup(MassMailingHtmlField.prototype, {
-            setup() {
-                super.setup();
-                htmlField = this;
-            },
-        });
         await mountView({
             resModel: "mailing.mailing",
             type: "form",
