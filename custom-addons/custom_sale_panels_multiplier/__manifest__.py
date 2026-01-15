@@ -3,35 +3,35 @@
     'name': 'Custom Sale Panels Multiplier',
     'version': '19.0.1.0.0',
     'category': 'Sales',
-    'summary': 'إضافة حقل عدد الألواح في Sales Orders مع تأثير على الحسابات المالية',
+    'summary': 'Add Number of Panels field in Sales Orders with impact on financial calculations',
     'description': """
         Custom Sale Panels Multiplier
         =============================
         
-        هذا الموديول يضيف حقل "عدد الألواح" في Sales Order Lines.
+        This module adds "Number of Panels" field in Sales Order Lines.
         
-        المميزات:
+        Features:
         ----------
-        * إضافة حقل "عدد الألواح" قبل حقل الكمية
-        * ضرب عدد الألواح × الكمية في جميع الحسابات المالية
-        * تأثير على السعر، الضرائب، والإجمالي
-        * تأثير على الفواتير والـ Deliveries
-        * آمن 100% - لا يؤثر على البيانات القديمة
+        * Add "Number of Panels" field before quantity field
+        * Multiply number of panels × quantity in all financial calculations
+        * Impact on price, taxes, and total
+        * Impact on invoices and deliveries
+        * 100% safe - does not affect old data
         
-        الاستخدام:
+        Usage:
         ----------
-        1. افتح Quotation جديد
-        2. أضف منتج
-        3. أدخل الكمية (مثلاً: 10)
-        4. أدخل عدد الألواح (مثلاً: 2)
-        5. الكمية الفعلية = 2 × 10 = 20
-        6. السعر الإجمالي = السعر × 20
+        1. Open a new Quotation
+        2. Add a product
+        3. Enter quantity (e.g.: 10)
+        4. Enter number of panels (e.g.: 2)
+        5. Effective quantity = 2 × 10 = 20
+        6. Total price = Price × 20
         
-        ملاحظات:
+        Notes:
         --------
-        * إذا كان عدد الألواح = 0 أو فارغ، لن يؤثر على الحسابات
-        * البيانات القديمة لن تتأثر
-        * يمكن إلغاء تثبيت الموديول بدون مشاكل
+        * If number of panels = 0 or empty, it will not affect calculations
+        * Old data will not be affected
+        * Module can be uninstalled without issues
     """,
     'author': 'Odoo Developer',
     'website': 'https://www.odoo.com',

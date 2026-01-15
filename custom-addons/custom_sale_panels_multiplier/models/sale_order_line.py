@@ -18,10 +18,10 @@ class SaleOrderLine(models.Model):
     )
     
     number_of_panels = fields.Float(
-        string="عدد الألواح",
+        string="Number of Panels",
         digits='Product Unit',
         default=0.0,
-        help="عدد الألواح - سيتم ضرب هذه القيمة في الكمية. إذا كان 0 أو فارغ، لن يؤثر على الحسابات."
+        help="Number of panels - this value will be multiplied by quantity. If 0 or empty, it will not affect calculations."
     )
     
     effective_quantity = fields.Float(
@@ -29,7 +29,7 @@ class SaleOrderLine(models.Model):
         compute='_compute_effective_quantity',
         store=True,
         digits='Product Unit',
-        help="الكمية الفعلية = عدد الألواح × الكمية. إذا كان عدد الألواح = 0، يستخدم الكمية العادية."
+        help="Effective quantity = number of panels × quantity. If number of panels = 0, uses normal quantity."
     )
 
     # ========== Compute Methods ==========
@@ -37,8 +37,8 @@ class SaleOrderLine(models.Model):
     @api.depends('number_of_panels', 'product_uom_qty')
     def _compute_effective_quantity(self):
         """
-        حساب الكمية الفعلية بناءً على عدد الألواح × الكمية
-        إذا كان number_of_panels = 0 أو فارغ، يستخدم product_uom_qty العادي
+        Calculate effective quantity based on number of panels × quantity
+        If number_of_panels = 0 or empty, uses normal product_uom_qty
         """
         for line in self:
             if line.number_of_panels and line.number_of_panels > 0:
@@ -50,33 +50,33 @@ class SaleOrderLine(models.Model):
 
     def _prepare_base_line_for_taxes_computation(self, **kwargs):
         """
-        Override آمن: يستخدم effective_quantity في الحسابات المالية فقط
-        إذا كان number_of_panels = 0 أو فارغ، يستخدم product_uom_qty العادي (لا تأثير)
+        Safe override: uses effective_quantity in financial calculations only
+        If number_of_panels = 0 or empty, uses normal product_uom_qty (no impact)
         """
         base_values = super()._prepare_base_line_for_taxes_computation(**kwargs)
-        # استخدام effective_quantity فقط إذا كان number_of_panels > 0
+        # Use effective_quantity only if number_of_panels > 0
         if self.number_of_panels and self.number_of_panels > 0:
             base_values['quantity'] = self.effective_quantity
-        # إذا كان number_of_panels = 0 أو فارغ، يستخدم product_uom_qty العادي (لا تأثير)
+        # If number_of_panels = 0 or empty, uses normal product_uom_qty (no impact)
         return base_values
 
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_ids', 'number_of_panels', 'effective_quantity')
     def _compute_amount(self):
         """
-        Override آمن: يستخدم effective_quantity في الحسابات فقط
-        إذا كان number_of_panels = 0 أو فارغ، يستخدم product_uom_qty العادي
+        Safe override: uses effective_quantity in calculations only
+        If number_of_panels = 0 or empty, uses normal product_uom_qty
         """
-        # استدعاء super أولاً للحصول على الحسابات الأساسية
+        # Call super first to get basic calculations
         super()._compute_amount()
         
-        # تعديل الحسابات فقط إذا كان number_of_panels > 0
+        # Modify calculations only if number_of_panels > 0
         lines_to_recompute = self.filtered(lambda l: l.number_of_panels and l.number_of_panels > 0)
         if not lines_to_recompute:
             return
         
         AccountTax = self.env['account.tax']
         for line in lines_to_recompute:
-            # إعادة حساب price_subtotal و price_total باستخدام effective_quantity
+            # Recalculate price_subtotal and price_total using effective_quantity
             company = line.company_id or self.env.company
             base_line = line._prepare_base_line_for_taxes_computation()
             AccountTax._add_tax_details_in_base_line(base_line, company)
@@ -87,14 +87,14 @@ class SaleOrderLine(models.Model):
 
     def _prepare_invoice_line(self, **optional_values):
         """
-        Override آمن: يستخدم effective_quantity في Invoice Line
-        إذا كان number_of_panels = 0 أو فارغ، يستخدم product_uom_qty العادي
+        Safe override: uses effective_quantity in Invoice Line
+        If number_of_panels = 0 or empty, uses normal product_uom_qty
         """
         res = super()._prepare_invoice_line(**optional_values)
-        # استخدام effective_quantity فقط إذا كان number_of_panels > 0
+        # Use effective_quantity only if number_of_panels > 0
         if self.number_of_panels and self.number_of_panels > 0:
             res['quantity'] = self.effective_quantity
-            # إضافة معلومات number_of_panels في الوصف (اختياري)
+            # Add number_of_panels information in description (optional)
             if res.get('name'):
-                res['name'] = f"{res['name']}\nعدد الألواح: {self.number_of_panels}"
+                res['name'] = f"{res['name']}\nNumber of Panels: {self.number_of_panels}"
         return res
