@@ -21,14 +21,14 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
         self.empty_cart.transaction_ids = self._create_transaction(flow='redirect', state='pending')
         with MockRequest(website.env, website=website, sale_order_id=self.empty_cart.id) as request, self.assertRaises(UserError):
             request.cart = self.empty_cart
-            self.Controller.shop_set_delivery_method(dm_id='1')
+            self.Controller.shop_set_delivery_method(dm_id=self.free_delivery.id)
 
     # test that changing the delivery method while there is a draft transaction doesn't raise an error
     def test_controller_change_carrier_when_draft_transaction(self):
         website = self.website.with_env(self.env)
         self.empty_cart.transaction_ids = self._create_transaction(flow='redirect', state='draft')
         with MockRequest(website.env, website=website, sale_order_id=self.empty_cart.id):
-            self.Controller.shop_set_delivery_method(dm_id='1')
+            self.Controller.shop_set_delivery_method(dm_id=self.free_delivery.id)
 
     def test_available_methods(self):
         self.env['delivery.carrier'].search([]).action_archive()
