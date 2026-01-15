@@ -326,3 +326,23 @@ test("Rouding sale HALF-UP 0.05 with two payment method", async () => {
     expect(order.appliedRounding).toBe(0);
     expect(order.change).toBe(0);
 });
+
+test("Rouding change nearest assymetric", async () => {
+    const store = await setupPosEnv();
+    const cashPm = prepareRoundingVals(store, 1, "HALF-UP", false);
+    const order = store.addNewOrder();
+    const product = store.models["product.template"].get(1);
+    store.models["product.product"].get(1).lst_price = 16.5;
+    order.pricelist_id = false;
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: product,
+            qty: 1,
+        },
+        order
+    );
+    expect(order.displayPrice).toBe(16.5);
+    const paymentLine = order.addPaymentline(cashPm);
+    paymentLine.data.setAmount(20);
+    expect(order.change).toBe(-3);
+});
