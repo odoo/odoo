@@ -109,7 +109,7 @@ class StockLot(models.Model):
         if any(not lot.company_id for lot in self):
             # We need to check across other companies to not have duplicates between 'no-company' and a company.
             self = self.sudo()
-        records = self._read_group(domain, groupby, ['__count'], order='company_id DESC')
+        records = self.with_context(skip_preprocess_gs1=True)._read_group(domain, groupby, ['__count'], order='company_id DESC')
         error_message_lines = set()
         cross_lots = {}
         for company, product, name, count in records:
