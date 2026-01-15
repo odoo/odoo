@@ -216,10 +216,17 @@ class AccountInvoiceSend(models.TransientModel):
                             )
 
                         if attachments_linked:
-                            invoice.with_context(no_new_invoice=True).message_post(
+                            new_message = invoice.with_context(no_new_invoice=True).message_post(
                                 body=attachments_linked_message,
                                 attachments=[(attachment.name, attachment.raw) for attachment in attachments_linked],
                             )
+
+                            if new_message.attachment_ids.ids:
+                                self.env.cr.execute("UPDATE ir_attachment SET res_id = NULL WHERE id IN %s", [tuple(new_message.attachment_ids.ids)])
+                            new_message.attachment_ids.write({
+                                'res_model': new_message._name,
+                                'res_id': new_message.id,
+                            })
 
         if not tools.config['test_enable'] and not modules.module.current_test:
             self._cr.commit()
