@@ -349,12 +349,37 @@ class Message(models.Model):
 
     @api.model
     def _find_allowed_doc_ids(self, model_ids):
+        """ Filter out message user cannot read due to missing document access.
+
+        :param dict model_ids: dictionary like {
+            'document_model_name': {
+                'document_id_1': set(message IDs),
+                'document_id_2': set(message IDs),
+            },
+            [...]
+        }
+
+        :return: set of allowed message IDs to read, based on document check
+        :rtype: set
+        """
         IrModelAccess = self.env['ir.model.access']
         allowed_ids = set()
         for doc_model, doc_dict in model_ids.items():
             if not IrModelAccess.check(doc_model, 'read', False):
                 continue
-            allowed_ids |= self._find_allowed_model_wise(doc_model, doc_dict)
+            allowed_documents = self.env[doc_model]
+
+            # filter for each operation
+            records_all = self.env[doc_model].with_context(active_test=False).search([('id', 'in', list(doc_dict))])
+            for record in records_all:
+                record_operation = record._get_mail_message_access([record.id], 'read')
+                if record_operation == "read":  # already implied by 'search'
+                    allowed_documents += record
+                else:
+                    allowed_documents += record._filtered_access(record_operation)
+            allowed_ids |= {
+                msg_id for document_id in allowed_documents.ids for msg_id in doc_dict[document_id]
+            }
         return allowed_ids
 
     def _check_access(self, operation: str) -> tuple | None:
@@ -498,12 +523,17 @@ class Message(models.Model):
 
         for model, docid_msgids in model_docid_msgids.items():
             documents = self.env[model].browse(docid_msgids)
-            if hasattr(documents, '_get_mail_message_access'):
-                doc_operation = documents._get_mail_message_access(docid_msgids, operation)  # why not giving model here?
-            else:
-                doc_operation = self.env['mail.thread']._get_mail_message_access(docid_msgids, operation, model_name=model)
-            doc_result = documents._check_access(doc_operation)
-            forbidden_doc_ids = set(doc_result[0]._ids) if doc_result else set()
+            doc_per_operation = defaultdict(self.env[model].browse)
+            for doc in documents:
+                if hasattr(documents, '_get_mail_message_access'):
+                    doc_operation = documents._get_mail_message_access(docid_msgids, operation)  # why not giving model here?
+                else:
+                    doc_operation = self.env['mail.thread']._get_mail_message_access(docid_msgids, operation, model_name=model)
+                doc_per_operation[doc_operation] |= doc
+            forbidden_doc_ids = set()
+            for record_operation, records in doc_per_operation.items():
+                result = records._check_access(record_operation)
+                forbidden_doc_ids |= set(result[0].ids) if result else set()
             for doc_id, msg_ids in docid_msgids.items():
                 if doc_id not in forbidden_doc_ids:
                     for mid in msg_ids:
