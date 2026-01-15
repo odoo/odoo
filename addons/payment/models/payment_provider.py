@@ -939,23 +939,6 @@ class PaymentProvider(models.Model):
             'params': data,
         }
 
-    def _parse_proxy_response(self, response):
-        """Retrieve JSON-RPC 2.0 formatted response content of a proxy request.
-
-        Note: Proxies always respond with HTTP 200 as they implement JSON-RPC 2.0.
-
-        :param requests.Response response: The JSON-RPC 2.0 formatted proxy response.
-        :return: The response content.
-        :rtype: dict
-        """
-        response_content = response.json()
-        if response_content.get('error'):  # An exception was raised on the proxy.
-            error_data = response_content['error']['data']
-            raise ValidationError(_(
-                "The payment provider rejected the request.\n%s", pformat(error_data['message'])
-            ))
-        return response_content['result']
-
     # === SETUP METHODS === #
 
     @api.model

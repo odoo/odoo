@@ -2,6 +2,7 @@
 
 from unittest.mock import patch
 
+import requests
 from werkzeug.urls import url_encode
 
 from odoo.tests import tagged
@@ -248,6 +249,26 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         ) as mock:
             self.stripe._stripe_create_account_link('dummy', 'dummy')
             mock.assert_called_once()
-            call_args = mock.call_args.kwargs['json']['params']['payload'].keys()
+            call_args = mock.call_args.kwargs['json'].keys()
             for payload_param in ('account', 'return_url', 'refresh_url', 'type'):
                 self.assertIn(payload_param, call_args)
+
+    def test_stripe_proxy_payload_is_not_json_rpc_wrapped(self):
+        """Ensure that Stripe proxy requests no longer use JSON-RPC-style payloads."""
+        with patch.object(self.env.registry['payment.provider'], '_send_api_request') as mock:
+            self.stripe._stripe_create_account_link('dummy', 'dummy')
+
+            payload = mock.call_args.kwargs['json']
+            self.assertNotIn('params', payload)
+            self.assertIn('account', payload)
+
+    def test_stripe_proxy_response_is_plain_json(self):
+        """Ensure that proxy responses are parsed as plain JSON objects."""
+        response = requests.Response()
+        response._content = b'{"access_token": "abc"}'
+        response.status_code = 200
+
+        result = self.provider._parse_response_content(
+            response, is_proxy_request=True
+        )
+        self.assertEqual(result['access_token'], 'abc')

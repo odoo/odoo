@@ -363,9 +363,7 @@ class PaymentProvider(models.Model):
         :return: The connected account
         :rtype: dict
         """
-        proxy_payload = self._prepare_json_rpc_payload(
-            self._stripe_prepare_connect_account_payload()
-        )
+        proxy_payload = self._stripe_prepare_connect_account_payload()
         return self._send_api_request('POST', 'accounts', json=proxy_payload, is_proxy_request=True)
 
     def _stripe_prepare_connect_account_payload(self):
@@ -422,22 +420,12 @@ class PaymentProvider(models.Model):
             'refresh_url': f'{url_join(base_url, refresh_url)}?{url_encode(refresh_params)}',
             'type': 'account_onboarding',
         }
-        proxy_payload = self._prepare_json_rpc_payload(payload)
+        proxy_payload = payload
 
         account_link = self._send_api_request(
             'POST', 'account_links', json=proxy_payload, is_proxy_request=True
         )
         return account_link['url']
-
-    def _prepare_json_rpc_payload(self, data):
-        res = super()._prepare_json_rpc_payload(data)
-        if self.code != 'stripe':
-            return res
-        res['params'] = {
-            'payload': data,  # Stripe data.
-            'proxy_data': self._stripe_prepare_proxy_data(stripe_payload=data),
-        }
-        return res
 
     def _stripe_prepare_proxy_data(self, stripe_payload=None):
         """ Prepare the contextual data passed to the proxy when making a request.
@@ -455,7 +443,7 @@ class PaymentProvider(models.Model):
 
     # === REQUEST HELPERS === #
 
-    def _build_request_url(self, endpoint, *, is_proxy_request=False, version=1, **kwargs):
+    def _build_request_url(self, endpoint, *, is_proxy_request=False, version=2, **kwargs):
         if self.code != 'stripe':
             return super()._build_request_url(
                 endpoint, is_proxy_request=is_proxy_request, version=version, **kwargs
@@ -492,13 +480,6 @@ class PaymentProvider(models.Model):
         if self.code != 'stripe':
             return super()._parse_response_error(response)
         return response.json().get('error', {}).get('message', '')
-
-    def _parse_response_content(self, response, *, is_proxy_request=False, **kwargs):
-        if self.code != 'stripe' or not is_proxy_request:
-            return super()._parse_response_content(
-                response, is_proxy_request=is_proxy_request, **kwargs
-            )
-        return self._parse_proxy_response(response)
 
     def _get_stripe_extra_request_headers(self):
         """ Return the extra headers for the Stripe API request.

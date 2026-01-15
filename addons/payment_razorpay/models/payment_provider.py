@@ -144,7 +144,7 @@ class PaymentProvider(models.Model):
             'provider_id': self.id,
             'csrf_token': request.csrf_token(),
         }
-        authorization_url = f'{const.OAUTH_URL}/authorize?{urlencode(params)}'
+        authorization_url = f"{self._build_request_url('/authorize', is_proxy_request=True)}?{urlencode(params)}"
         return {
             'type': 'ir.actions.act_url',
             'url': authorization_url,
@@ -247,9 +247,7 @@ class PaymentProvider(models.Model):
         :return: dict
         """
         self.ensure_one()
-        proxy_payload = self._prepare_json_rpc_payload(
-            {'refresh_token': self.razorpay_refresh_token}
-        )
+        proxy_payload = {'refresh_token': self.razorpay_refresh_token}
 
         response_content = self._send_api_request(
             'POST',
@@ -274,7 +272,12 @@ class PaymentProvider(models.Model):
                 endpoint, api_version=api_version, is_proxy_request=is_proxy_request, **kwargs
             )
         if is_proxy_request:
-            return f'{const.OAUTH_URL}{endpoint}'
+            ACCESS_TOKEN_ENDPOINTS = {'/get_access_token', '/refresh_access_token'}
+            return (
+                    f'{const.OAUTH_URL}/2{endpoint}'
+                    if endpoint in ACCESS_TOKEN_ENDPOINTS
+                    else f'{const.OAUTH_URL}/1{endpoint}'
+                )
         return f'https://api.razorpay.com/{api_version}/{endpoint}'
 
     def _build_request_headers(self, *args, is_proxy_request=False, **kwargs):
@@ -304,10 +307,3 @@ class PaymentProvider(models.Model):
         if self.code != 'razorpay':
             return super()._parse_response_error(response)
         return response.json().get('error', {}).get('description', '')
-
-    def _parse_response_content(self, response, *, is_proxy_request=False, **kwargs):
-        if self.code != 'razorpay' or not is_proxy_request:
-            return super()._parse_response_content(
-                response, is_proxy_request=is_proxy_request, **kwargs
-            )
-        return self._parse_proxy_response(response)
