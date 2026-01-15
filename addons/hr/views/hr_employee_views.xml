@@ -106,8 +106,6 @@
                             groups="hr.group_hr_user" invisible="not id or departure_id or not active"/>
                         <button name="action_cancel_departure" string="Cancel Departure" type="object"
                             invisible="not id or not departure_id or departure_apply_date"/>
-                        <button name="action_reopen" string="Reopen employee" type="object"
-                            groups="hr.group_hr_user" invisible="not id or not departure_id or not departure_apply_date"/>
                         <field name="version_id" widget="versions_timeline" invisible="not id" options="{'clickable': True}" readonly="False"/>
                     </header>
                     <sheet>
@@ -1020,17 +1018,6 @@ if employees:
             }</field>
             <field name="binding_model_id" ref="hr.model_hr_employee"/>
             <field name="binding_view_types">list,kanban</field>
-        </record>
-
-        <record id="action_hr_employee_reopen" model="ir.actions.server">
-            <field name="name">Reopen employees</field>
-            <field name="model_id" ref="model_hr_employee"/>
-            <field name="binding_model_id" ref="model_hr_employee"/>
-            <field name="binding_view_types">kanban,list</field>
-            <field name="state">code</field>
-            <field name="code">
-                action = records.action_reopen()
-            </field>
         </record>
     </data>
 </odoo>
