@@ -134,7 +134,7 @@ class PosOrder(models.Model):
         report_per_program = {}
         coupon_per_report = defaultdict(list)
         # Important to include the updated gift cards so that it can be printed. Check coupon_report.
-        for coupon in new_coupons | updated_gift_cards:
+        for coupon in new_coupons:
             if coupon.program_id not in report_per_program:
                 report_per_program[coupon.program_id] = coupon.program_id.communication_plan_ids.\
                     filtered(lambda c: c.trigger == 'create').pos_report_print_id
