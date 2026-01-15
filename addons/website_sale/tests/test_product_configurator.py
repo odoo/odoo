@@ -440,3 +440,57 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             main_product.website_url,
             'website_sale.product_configurator_strikethrough_price',
         )
+
+    def test_get_product_combination_multi_attribute_with_archived_variant_and_inactive_ptav(self):
+        """
+        This test covers a case where a product has multiple attributes and one
+        of the attribute values corresponds to an archived variant, with its
+        ptav_active set to False.
+
+        In this scenario, a valid combination should still be possible, and the
+        resulting combination product must not be the archived variant.
+        """
+        attribute_single = self.env['product.attribute'].create({
+            'name': "attribute single",
+            'value_ids': [
+                Command.create({
+                    'name': "single",
+                }),
+            ],
+        })
+        attribute_multi = self.env['product.attribute'].create({
+            'name': "attribute multi",
+            'value_ids': [
+                Command.create({'name': "first"}),
+                Command.create({'name': "second"}),
+                Command.create({'name': "third"}),
+            ],
+        })
+        main_product = self.env['product.template'].create({
+            'name': "Main product",
+            'website_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute_single.id,
+                    'value_ids': [Command.set(attribute_single.value_ids.ids)],
+                }),
+                Command.create({
+                    'attribute_id': attribute_multi.id,
+                    'value_ids': [Command.set(attribute_multi.value_ids.ids)],
+                }),
+            ],
+        })
+        main_product.product_variant_ids.filtered(
+            lambda product: product.product_template_attribute_value_ids[1].name == 'first',
+        ).action_archive()
+        main_product.attribute_line_ids[1].product_template_value_ids[0].ptav_active = False
+        with MockRequest(self.env, website=self.website):
+            product_values = self.pc_controller._prepare_product_values(
+                main_product,
+                self.env['product.public.category'],
+                attribute_values=str(attribute_single.value_ids.id),
+            )
+        is_combination_possible = product_values['combination_info']['is_combination_possible']
+        combination_product_id = product_values['combination_info']['product_id']
+        self.assertTrue(is_combination_possible)
+        self.assertTrue(self.env['product.product'].browse(combination_product_id).active)
