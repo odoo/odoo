@@ -3113,3 +3113,24 @@ class TestStockValuation(TestStockValuationCommon):
         })
         self.assertEqual(self.product_avco.total_value, 2000)
         self.assertEqual(self.product_avco.standard_price, 20)
+
+    def test_avco_report_multiple_page(self):
+        # New prod to have clean avco report
+        prod_avco = self.env['product.product'].create({
+            "standard_price": 10.0,
+            "list_price": 20.0,
+            "uom_id": self.uom.id,
+            "is_storable": True,
+            'name': 'Avco Product',
+            'categ_id': self.category_avco.id,
+        })
+        recs = self.env['stock.avco.report'].search([('product_id', '=', prod_avco.id)]).sorted('date, id')
+        self.assertEqual(len(recs), 1)
+        self._make_in_move(prod_avco, 1, 10)
+        self._make_in_move(prod_avco, 1, 10)
+        self._make_in_move(prod_avco, 1, 10)
+        recs = self.env['stock.avco.report'].search([('product_id', '=', prod_avco.id)]).sorted('date, id')
+        self.assertEqual(len(recs), 4)
+        recs[-2:]._compute_cumulative_fields()
+        self.assertEqual(recs[-1].total_quantity, 3)
+        self.assertEqual(recs[-1].total_value, 30)
