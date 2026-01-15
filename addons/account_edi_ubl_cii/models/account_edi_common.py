@@ -58,7 +58,7 @@ EAS_MAPPING = {
     'CH': {'9927': 'vat', '0183': None},
     'CY': {'9928': 'vat'},
     'CZ': {'9929': 'vat'},
-    'DE': {'9930': 'vat'},
+    'DE': {'9930': 'vat', '0246': 'l10n_de_widnr'},
     'DK': {'0184': 'vat', '0198': 'vat'},
     'EE': {'9931': 'vat'},
     'ES': {'9920': 'vat'},
@@ -84,6 +84,7 @@ EAS_MAPPING = {
     'MY': {'0230': None},
     # Do not add the vat for NL, since: "[NL-R-003] For suppliers in the Netherlands, the legal entity identifier
     # MUST be either a KVK or OIN number (schemeID 0106 or 0190)" in the Bis 3 rules (in PartyLegalEntity/CompanyID).
+    'NG': {'0244': 'vat'},
     'NL': {'0106': None, '0190': None},
     'NO': {'0192': 'l10n_no_bronnoysund_number'},
     'NZ': {'0088': 'company_registry'},
@@ -93,7 +94,7 @@ EAS_MAPPING = {
     'RS': {'9948': 'vat'},
     'SE': {'0007': 'company_registry', '9955': 'vat'},
     'SI': {'9949': 'vat'},
-    'SK': {'9950': 'vat'},
+    'SK': {'9950': 'vat', '0245': 'company_registry'},
     'SM': {'9951': 'vat'},
     'TR': {'9952': 'vat'},
     'VA': {'9953': 'vat'},
