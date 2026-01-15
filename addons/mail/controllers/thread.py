@@ -156,6 +156,7 @@ class ThreadController(http.Controller):
         if not request.env.user._is_internal():
             partners = partners & self._filter_message_post_partners(thread, partners)
         post_data["partner_ids"] = partners.ids
+        post_data.setdefault("message_type", "comment")
         return post_data
 
     def _filter_message_post_partners(self, thread, partners):
@@ -192,8 +193,8 @@ class ThreadController(http.Controller):
                 'last_used': datetime.now(),
                 'ids': canned_response_ids,
             })
-        # TDE todo: should rely on '_get_mail_message_access'
-        thread = self._get_thread_with_access(thread_model, thread_id, mode=request.env[thread_model]._mail_post_access, **kwargs)
+        post_access = request.env[thread_model].sudo()._get_mail_message_access(thread_id, "create")
+        thread = self._get_thread_with_access(thread_model, thread_id, mode=post_access, **kwargs)
         if not thread:
             raise NotFound()
         if not self._get_thread_with_access(thread_model, thread_id, mode="write"):
