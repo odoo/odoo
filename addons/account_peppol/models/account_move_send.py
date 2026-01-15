@@ -243,10 +243,19 @@ class AccountMoveSend(models.AbstractModel):
                         for attachment in attachments_linked
                     ] + base_attachments
 
-                    invoice.message_post(
+                    new_message = invoice.message_post(
                         body=attachments_linked_message,
                         attachments=attachments_embedded
                     )
+
+                    if new_message.attachment_ids.ids:
+                        if invoice.message_main_attachment_id in new_message.attachment_ids:
+                            invoice.message_main_attachment_id = None
+                        self.env.cr.execute("UPDATE ir_attachment SET res_id = NULL WHERE id IN %s", [tuple(new_message.attachment_ids.ids)])
+                        new_message.attachment_ids.write({
+                            'res_model': new_message._name,
+                            'res_id': new_message.id,
+                        })
                 self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=5))
 
         if self._can_commit():
