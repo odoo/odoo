@@ -19,6 +19,7 @@ class TestUBLTR(TestUBLTRCommon):
         cls.tax_20_withholding = cls.env['account.chart.template'].ref('tr_s_vat_wh_20_OGH')
         # Registered for Export Reason
         cls.reason_701 = cls.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_701')
+        cls.reason_702 = cls.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_702')
 
         # Tax Exemption Reason
         cls.reason_212 = cls.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_212')
@@ -95,6 +96,23 @@ class TestUBLTR(TestUBLTRCommon):
             generated_xml = self._generate_invoice_xml(self.earchive_partner, l10n_tr_is_export_invoice=True, l10n_tr_exemption_code_id=self.reason_301.id, l10n_tr_shipping_type="1", invoice_incoterm_id=self.incoterm.id)
 
         with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_export_earchive.xml', 'rb') as expected_xml_file:
+            expected_xml = expected_xml_file.read()
+
+        self.assertXmlTreeEqual(self.get_xml_tree_from_string(generated_xml), self.get_xml_tree_from_string(expected_xml))
+
+    def test_xml_invoice_export_ipac_einvoice(self):
+        with freeze_time('2026-01-20'):
+            generated_xml = self._generate_invoice_xml(
+                self.einvoice_partner,
+                l10n_tr_exemption_code_id=self.reason_702.id,
+                l10n_tr_gib_invoice_type="IHRACKAYITLI",
+                invoice_line_data={
+                    'l10n_tr_ctsp_number': '129392930912',
+                    'l10n_tr_customer_line_code': '11223345690',
+                },
+            )
+
+        with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_export_ipac_einvoice.xml', 'rb') as expected_xml_file:
             expected_xml = expected_xml_file.read()
 
         self.assertXmlTreeEqual(self.get_xml_tree_from_string(generated_xml), self.get_xml_tree_from_string(expected_xml))

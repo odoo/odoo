@@ -52,6 +52,8 @@ class AccountMoveSend(models.AbstractModel):
 
         # Filter for moves that have 'tr_nilvera' in their EDI data
         tr_nilvera_moves = moves.filtered(lambda m: 'tr_nilvera' in moves_data[m]['extra_edis'])
+        if not tr_nilvera_moves:
+            return alerts
 
         if tr_companies_missing_required_codes := tr_nilvera_moves.company_id.filtered(lambda c: c.country_code == 'TR' and not (c.partner_id.category_id.parent_id and self.env["res.partner.category"]._get_l10n_tr_official_mandatory_categories())):
             alerts["tr_companies_missing_required_codes"] = {
@@ -135,8 +137,11 @@ class AccountMoveSend(models.AbstractModel):
                 'action': moves_with_invalid_name._get_records_action(name=_("Check name on Invoice(s)")),
             }
 
+        exemption_702 = self.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_702')
         # Warning alert if product is missing CTSP Number
-        tr_export_moves = tr_nilvera_moves.filtered(lambda m: m.l10n_tr_is_export_invoice)
+        tr_export_moves = tr_nilvera_moves.filtered(
+            lambda m: m.l10n_tr_is_export_invoice or m.l10n_tr_exemption_code_id == exemption_702,
+        )
         if non_eligible_tr_products := tr_export_moves.invoice_line_ids.product_id.filtered(
             lambda p: not p.l10n_tr_ctsp_number and 'TR' in p.fiscal_country_codes,
         ):
@@ -149,6 +154,21 @@ class AccountMoveSend(models.AbstractModel):
                 'action_text': self.env._("View Product(s)"),
                 'action': non_eligible_tr_products._get_records_action(
                     name=self.env._("Check Products"),
+                ),
+            }
+
+        if moves_with_missing_line_codes := tr_nilvera_moves.invoice_line_ids.filtered(
+            lambda ml: ml.move_id.l10n_tr_exemption_code_id == exemption_702 and not ml.l10n_tr_customer_line_code,
+        ):
+            alerts['l10n_tr_moves_with_missing_line_codes'] = {
+                'message': _(
+                    "For Registered for Export type invoices with a 702 reason code, the Customer "
+                    "Line Code must be filled in per product in the invoice lines.",
+                ),
+                'level': 'danger',
+                'action_text': _("View Invoice(s)"),
+                'action': moves_with_missing_line_codes.move_id._get_records_action(
+                    name=_("Check Invoice(s)"),
                 ),
             }
 

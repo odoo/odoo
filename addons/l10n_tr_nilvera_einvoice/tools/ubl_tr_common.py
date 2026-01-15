@@ -228,10 +228,24 @@ ShipmentStage = {
     'cbc:TransportModeCode': {},
 }
 
+TransportHandlingUnit = {
+    'cac:CustomsDeclaration': {
+        'cbc:ID': {},
+        'cac:IssuerParty': {
+            'cac:PartyIdentification': {
+                'cbc:ID': {},
+            },
+            'cac:PartyName': {},
+            'cac:PostalAddress': Address,
+        },
+    },
+}
+
 Shippment = {
     'cbc:ID': {},
     'cac:GoodsItem': GoodsItem,
     'cac:ShipmentStage': ShipmentStage,
+    'cac:TransportHandlingUnit': TransportHandlingUnit,
 }
 
 Delivery = {
