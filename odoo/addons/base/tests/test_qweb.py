@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import itertools
 import markupsafe
 
 from lxml import etree
+from unittest.mock import patch
 
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
@@ -2574,3 +2576,105 @@ class TestQwebPerformance(TransactionCaseWithUserDemo):
         # like 'test-cold-0'
         self.env.registry.clear_cache('templates')
         check(view.id, 'test-cold-id-3', FIRST_SEARCH_FETCH + OTHER_SEARCH_FETCH + ARCH_COMBINE - 1)  # 7
+
+    def test_render_query_count_after_write(self):
+        View = self.env['ir.ui.view']
+        first_view = View.create({
+            'name': 'Test View 1',
+            'type': 'qweb',
+            'arch': '<div>Hello World</div>',
+            'key': 'base.test_first_view',
+        })
+        second_view = View.create({
+            'name': 'Test View 2',
+            'type': 'qweb',
+            'arch': '<div><t t-call="base.test_first_view"/></div>',
+            'key': 'base.test_second_view',
+        })
+        extend_view_1 = View.create({
+            'name': 'Test View h1',
+            'type': 'qweb',
+            'mode': 'extension',
+            'arch': '<xpath expr="//div" position="inside"><h1/></xpath>',
+            'key': 'base.test_extend_view_1',
+            'inherit_id': second_view.id
+        })
+        extend_view_2 = View.create({
+            'name': 'Test View section',
+            'type': 'qweb',
+            'mode': 'extension',
+            'arch': '<xpath expr="//div" position="inside"><section/></xpath>',
+            'key': 'base.test_extend_view_2',
+            'inherit_id': second_view.id
+        })
+
+        env = self.env(user=self.user_demo)
+
+        counter = itertools.count()
+        o_generate_code_uncached = self.env['ir.qweb']._generate_code_uncached
+
+        def generate_code_uncached(template):
+            next(counter)
+            return o_generate_code_uncached(template)
+
+        def check(template, expected, queries, cachemiss=0):
+            init = env.cr.sql_log_count
+            counter_init = next(counter) + 1
+
+            with patch('odoo.addons.base.models.ir_qweb.IrQweb._generate_code_uncached', side_effect=generate_code_uncached):
+                value = env['ir.qweb']._render(template)
+
+            self.assertEqual(str(value), expected)
+            self.assertEqual(next(counter) - counter_init, cachemiss, 'The template compilation function has been called too many times.')
+            self.assertEqual(env.cr.sql_log_count - init, queries, f'Maximum queries: {queries}')
+
+        View.env.registry.clear_cache('templates')
+        View.invalidate_model()
+
+        # do not count those fetching queries
+        env.user.fetch(['name'])
+
+        # warmup
+        env['ir.qweb']._render('base.test_extend_view_2')
+
+        check('base.test_extend_view_2', "<div><div>Hello World</div><h1></h1><section></section></div>", queries=0)
+        check(extend_view_2.id, "<div><div>Hello World</div><h1></h1><section></section></div>", queries=0)
+        check(first_view.id, "<div>Hello World</div>", queries=0)
+
+        first_view.arch_db = '<div>Hello 2</div>'
+
+        check(first_view.id, "<div>Hello 2</div>", queries=1, cachemiss=1)
+        check(extend_view_2.id, "<div><div>Hello 2</div><h1></h1><section></section></div>", queries=1, cachemiss=0)
+
+        first_view.arch_db = '<div>Hello</div>'
+
+        check(extend_view_2.id, "<div><div>Hello</div><h1></h1><section></section></div>", queries=3, cachemiss=1)
+        check(first_view.id, "<div>Hello</div>", queries=0)
+
+        first_view.arch_db = '<div>Hello1</div>'
+
+        check(first_view.id, "<div>Hello1</div>", queries=1, cachemiss=1)
+        check(extend_view_2.id, "<div><div>Hello1</div><h1></h1><section></section></div>", queries=1)
+
+        first_view.arch_db = '<div>Hello2</div>'
+        self.env.invalidate_all()
+
+        # 1 more query on ir_mode_data from _is_studio_view() in apply_inheritance_specs
+        # TODO: use key (actually empty for some view) instead of xml_id field
+        addons = tuple(self.env.registry._init_modules) + (self.env.context.get('install_module'),)
+        with_sudio = 'web_studio' in addons
+
+        check(extend_view_2.id, "<div><div>Hello2</div><h1></h1><section></section></div>", queries=6 if with_sudio else 5, cachemiss=1)
+        check(first_view.id, "<div>Hello2</div>", queries=0)
+
+        first_view.arch_db = '<div>Hello3</div>'
+        self.env.invalidate_all()
+
+        check(first_view.id, "<div>Hello3</div>", queries=2, cachemiss=1)
+
+        check(extend_view_2.id, "<div><div>Hello3</div><h1></h1><section></section></div>", queries=4 if with_sudio else 3)
+
+        extend_view_1.arch_db = '<xpath expr="//div" position="inside"><article/></xpath>'
+        self.env.invalidate_all()
+
+        check(extend_view_2.id, "<div><div>Hello3</div><article></article><section></section></div>", queries=6 if with_sudio else 5, cachemiss=1)

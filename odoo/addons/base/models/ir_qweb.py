@@ -946,7 +946,7 @@ class IrQweb(models.AbstractModel):
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
-        return ['lang', 'inherit_branding', 'inherit_branding_auto', 'edit_translations', 'profile']
+        return ['lang', 'inherit_branding', 'inherit_branding_auto', 'edit_translations', 'profile', 'preserve_comments']
 
     def _get_template_info(self, template):
         return self.env['ir.ui.view']._get_cached_template_info(template)
@@ -995,6 +995,23 @@ class IrQweb(models.AbstractModel):
         tools.ormcache('ref', 'tuple(self.env.context.get(k) or False for k in self._get_template_cache_keys())', cache='templates'),
     )
     def _generate_code_cached(self, ref: int):
+        # The method preloads templates to put information into the transaction
+        # cache in addition to browse records. It also loads in batch the
+        # template from directives (like: t-call and t-snippet).
+        try:
+            document = self._get_template(ref)[1]
+        except Exception:  # noqa: BLE001
+            return self._generate_code_uncached(ref)
+
+        view_hash = hash(document)
+        cache_key = tuple(self.env.context.get(k) or False for k in self._get_template_cache_keys())
+        return self._generate_code_cached_memo(ref, memo_key=(view_hash, cache_key))
+
+    @tools.conditional(
+        'xml' not in tools.config['dev_mode'],
+        tools.ormcache('ref', 'memo_key', cache='template_code'),
+    )
+    def _generate_code_cached_memo(self, ref: int, memo_key):
         return self._generate_code_uncached(ref)
 
     def _generate_code_uncached(self, template: int | str | etree._Element):
