@@ -9,7 +9,7 @@ from datetime import date, datetime, timedelta
 from dateutil.relativedelta import MO, relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.tools import is_html_empty
 from odoo.tools.misc import clean_context, get_lang, groupby
 from odoo.addons.mail.tools.discuss import Store
@@ -242,7 +242,13 @@ class MailActivity(models.Model):
             doc_operation = getattr(
                 documents, '_mail_post_access', 'read' if operation == 'read' else 'write'
             )
-            if doc_result := documents._check_access(doc_operation):
+            try:
+                doc_result = documents._check_access(doc_operation)
+            except MissingError:
+                existing = documents.exists()
+                forbidden_ids.extend((documents - existing).ids)
+                doc_result = existing._check_access(doc_operation)
+            if doc_result:
                 for document in doc_result[0]:
                     forbidden_ids.extend(docid_actids[document.id])
 
@@ -413,7 +419,15 @@ class MailActivity(models.Model):
     # ------------------------------------------------------
 
     def action_notify(self):
+        classified = self._classify_by_model()
+        for model, activity_data in classified.items():
+            records_sudo = self.env[model].sudo().browse(activity_data['record_ids'])
+            activity_data['record_ids'] = records_sudo.exists().ids  # in case record was cascade-deleted in DB, skipping unlink override
+
         for activity in self.filtered('res_model'):
+            if activity.res_id not in classified[activity.res_model]['record_ids']:
+                continue
+
             if activity.user_id.lang:
                 # Send the notification in the assigned user's language
                 activity = activity.with_context(lang=activity.user_id.lang)
@@ -530,11 +544,14 @@ class MailActivity(models.Model):
         for attachment in attachments:
             activity_id = attachment['res_id']
             activity_attachments[activity_id].append(attachment['id'])
+        attachments_to_remove = self.env['ir.attachment']
+        activities_to_remove = self.browse()
 
         for model, activity_data in self.filtered('res_model')._classify_by_model().items():
             # Allow user without access to the record to "mark as done" activities assigned to them. At the end of the
             # method, the activity is archived which ensure the user has enough right on the activities.
             records_sudo = self.env[model].sudo().browse(activity_data['record_ids'])
+            existing = records_sudo.exists()  # in case record was cascade-deleted in DB, skipping unlink override
             for record_sudo, activity in zip(records_sudo, activity_data['activities']):
                 # extract value to generate next activities
                 if activity.chaining_type == 'trigger':
@@ -542,18 +559,23 @@ class MailActivity(models.Model):
                     next_activities_values.append(vals)
 
                 # post message on activity, before deleting it
-                activity_message = record_sudo.message_post_with_source(
-                    'mail.message_activity_done',
-                    attachment_ids=attachment_ids,
-                    author_id=self.env.user.partner_id.id,
-                    render_values={
-                        'activity': activity,
-                        'feedback': feedback,
-                        'display_assignee': activity.user_id != self.env.user
-                    },
-                    mail_activity_type_id=activity.activity_type_id.id,
-                    subtype_xmlid='mail.mt_activities',
-                )
+                if record_sudo in existing:
+                    activity_message = record_sudo.message_post_with_source(
+                        'mail.message_activity_done',
+                        attachment_ids=attachment_ids,
+                        author_id=self.env.user.partner_id.id,
+                        render_values={
+                            'activity': activity,
+                            'feedback': feedback,
+                            'display_assignee': activity.user_id != self.env.user
+                        },
+                        mail_activity_type_id=activity.activity_type_id.id,
+                        subtype_xmlid='mail.mt_activities',
+                    )
+                else:
+                    activity_message = self.env['mail.message']
+                    activities_to_remove += activity
+
                 attachment_ids = (attachment_ids or []) + activity_attachments.get(activity.id, [])
                 if attachment_ids:
                     activity.attachment_ids = attachment_ids
@@ -561,7 +583,7 @@ class MailActivity(models.Model):
                 # Moving the attachments in the message
                 # TODO: Fix void res_id on attachment when you create an activity with an image
                 # directly, see route /web_editor/attachment/add
-                if activity_attachments[activity.id]:
+                if activity_attachments[activity.id] and activity_message:
                     message_attachments = self.env['ir.attachment'].browse(activity_attachments[activity.id])
                     if message_attachments:
                         message_attachments.write({
@@ -569,14 +591,23 @@ class MailActivity(models.Model):
                             'res_model': activity_message._name,
                         })
                         activity_message.attachment_ids = message_attachments
+                # removing attachments linked to activity if record is missing
+                elif activity_attachments[activity.id]:
+                    attachments_to_remove += self.env['ir.attachment'].browse(activity_attachments[activity.id])
                 messages += activity_message
 
         next_activities = self.env['mail.activity']
         if next_activities_values:
             next_activities = self.env['mail.activity'].create(next_activities_values)
 
+        # remove lost activities and attachments, not actionnable anyway anymore
+        if attachments_to_remove:
+            attachments_to_remove.unlink()
+        if activities_to_remove:
+            activities_to_remove.unlink()
+
         # once done, archive to keep history without keeping them alive
-        self.action_archive()
+        (self - activities_to_remove).action_archive()
         return messages, next_activities
 
     @api.readonly
