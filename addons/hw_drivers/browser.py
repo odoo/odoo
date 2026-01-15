@@ -68,7 +68,7 @@ class Browser:
         # Reopen to take new url or additional args into account
         self.close_browser()
 
-        browser_args = list(CHROMIUM_ARGS) if self.browser == 'chromium-browser' else []
+        browser_args = list(CHROMIUM_ARGS) if self.browser == 'chromium' else []
 
         if state == BrowserState.KIOSK:
             browser_args.extend(["--kiosk", "--touch-events"])
