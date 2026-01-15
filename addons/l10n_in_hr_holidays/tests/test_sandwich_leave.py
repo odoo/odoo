@@ -508,3 +508,52 @@ class TestSandwichLeave(TransactionCase):
         # Refuse the linked Monday leave -> Friday should drop back to 1 day
         before_leave.action_refuse()
         self.assertEqual(after_leave.number_of_days, 1)
+
+    @freeze_time('2025-01-15')
+    def test_sandwich_leave_reapprove_and_reset(self):
+        self.env['resource.calendar.leaves'].create({
+            'name': "Public Holiday",
+            'date_from': "2025-01-21",
+            'date_to': "2025-01-21",
+            'resource_id': False,
+            'company_id': self.indian_company.id,
+        })
+
+        fri_mon_leave = self.env['hr.leave'].create({
+            'name': "Fri-Mon Leave",
+            'employee_id': self.rahul_emp.id,
+            'holiday_status_id': self.leave_type_day.id,
+            'request_date_from': "2025-01-17",  # Friday
+            'request_date_to': "2025-01-20",    # Monday
+            'state': 'confirm',
+        })
+        wed_leave = self.env['hr.leave'].create({
+            'name': "Wednesday Leave",
+            'employee_id': self.rahul_emp.id,
+            'holiday_status_id': self.leave_type_day.id,
+            'request_date_from': "2025-01-22",  # Wednesday
+            'request_date_to': "2025-01-22",
+            'state': 'confirm',
+        })
+        self.assertEqual(fri_mon_leave.number_of_days, 4)
+        self.assertEqual(wed_leave.number_of_days, 2)
+
+        # Refuse Fri-Mon: Wed shrinks to 1 day
+        fri_mon_leave.action_refuse()
+        self.assertEqual(wed_leave.number_of_days, 1)
+
+        # Approve: Fri-Mon = 5 days, Wed = 1 days → total 6
+        fri_mon_leave.action_reset_confirm()
+        fri_mon_leave.action_approve()
+        self.assertEqual(fri_mon_leave.number_of_days, 5)
+        self.assertEqual(wed_leave.number_of_days, 1)
+
+        # Refuse Wed: Fri-Mon shrinks to 4 day
+        wed_leave.action_refuse()
+        self.assertEqual(fri_mon_leave.number_of_days, 4)
+
+        # Approve: wed = 2 days, Fri-Mon = 4 days → total 6
+        wed_leave.action_reset_confirm()
+        wed_leave.action_approve()
+        self.assertEqual(fri_mon_leave.number_of_days, 4)
+        self.assertEqual(wed_leave.number_of_days, 2)
