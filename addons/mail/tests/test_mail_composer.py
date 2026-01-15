@@ -161,6 +161,49 @@ class TestMailComposerForm(TestMailComposer):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     @users('employee')
+    def test_composer_template_change_recipients_update(self):
+        """Check that recipients only change when coming or going to a template with specific recipients."""
+        self.mail_template.write({
+            'email_to': self.partner_private.email_formatted,
+            'partner_to': False,
+            'use_default_to': False,
+        })
+        specific_recipient_template = self.mail_template
+        specific_recipient_template_copy = specific_recipient_template.copy(default={
+            'email_to': False,
+            'partner_to': f'{self.partner_private_2.id}',
+        })
+        default_recipient_template = specific_recipient_template.copy(default={
+            'email_to': False, 'partner_to': False, 'use_default_to': True,
+        })
+        default_recipient_template_copy = default_recipient_template.copy()
+        test_record = self.test_record.with_env(self.env)
+        default_recipient = test_record
+        self.assertTrue(default_recipient, self.env.registry['res.partner'])
+
+        cases = [
+            (self.partner_classic, False, specific_recipient_template, self.partner_private, 'No template -> Specific recipients'),
+            (self.partner_classic, specific_recipient_template, specific_recipient_template_copy, self.partner_private_2, 'Specific recipients -> Specific recipients'),
+            (self.partner_classic, specific_recipient_template_copy, default_recipient_template, self.partner_classic, 'Specific recipients -> Default recipients'),
+            (None, default_recipient_template, default_recipient_template_copy, default_recipient, 'Default recipients -> Default recipients'),
+            (self.partner_classic, default_recipient_template, default_recipient_template_copy, self.partner_classic, 'Default recipients -> Default recipients'),
+            (self.partner_classic, default_recipient_template_copy, specific_recipient_template, self.partner_private, 'Default recipients -> Specific recipients'),
+            (None, specific_recipient_template, False, False, 'Specific recipients -> No template'),
+            (None, default_recipient_template, False, False, 'Default recipients -> No template'),
+        ]
+        for previous_partners, previous_template, new_template, expected_partners, case_name in cases:
+            with self.subTest(case=case_name):
+                composer_form = Form(self.env['mail.compose.message'].with_context({
+                    'default_model': test_record._name,
+                    'default_res_ids': test_record.ids,
+                    'default_template_id': previous_template and previous_template.id,
+                } | ({'default_partner_ids': previous_partners.ids} if previous_partners is not None else {})
+                ))
+                composer_form.template_id = new_template or self.env['mail.template']
+                self.assertEqual(sorted(composer_form.partner_ids.ids), sorted(expected_partners.ids if expected_partners else []))
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    @users('employee')
     def test_composer_template_recipients_private(self):
         """ Test usage of a private partner in composer, coming from template
         value """
