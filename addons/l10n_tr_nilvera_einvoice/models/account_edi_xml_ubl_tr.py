@@ -28,7 +28,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         # We'll replace the empty value by a dummy one so that the node doesn't get cleaned up and remove its content after the file generation.
         xml, errors = super()._export_invoice(invoice)
         xml_root = etree.fromstring(xml)
-        shipment_id_elements = xml_root.findall('.//cac:Shipment/cbc:ID', namespaces=xml_root.nsmap)
+        shipment_id_elements = xml_root.findall('.//cac:Shipment//cbc:ID', namespaces=xml_root.nsmap)
         for element in shipment_id_elements:
             if element.text == 'NO_ID':
                 element.text = ''
@@ -221,6 +221,21 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             return self._add_withholding_document_line_tax_total_nodes(line_node, vals)
         return super()._add_document_line_tax_total_nodes(line_node, vals)
 
+    def _l10n_tr_get_issuer_party_line_codes(self, move_line):
+        return {
+            'cac:PartyIdentification': [
+                {'cbc:ID': {'_text': move_line.l10n_tr_customer_line_code, 'schemeID': 'ALICIDIBSATIRKOD'}},
+                {'cbc:ID': {'_text': move_line.l10n_tr_seller_line_code, 'schemeID': 'SATICIDIBSATIRKOD'}},
+            ],
+            'cac:PostalAddress': {
+                'cbc:CitySubdivisionName': {'_text': move_line.move_id.partner_id.city},
+                'cbc:CityName': {'_text': move_line.move_id.partner_id.state_id.with_context(lang='tr_TR').name},
+                'cac:Country': {
+                    'cbc:Name': {'_text': move_line.move_id.partner_id.country_id.with_context(lang='tr_TR').name},
+                },
+            },
+        }
+
     def _add_invoice_line_delivery_nodes(self, line_node, vals):
         """Add delivery information to an invoice line node for export invoices.
 
@@ -248,6 +263,24 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                     'cbc:ID': {'_text': 'NO_ID'},
                     'cac:GoodsItem': {'cbc:RequiredCustomsID': {'_text': move_line.l10n_tr_ctsp_number or move_line.product_id.l10n_tr_ctsp_number}},
                     'cac:ShipmentStage': {'cbc:TransportModeCode': {'_text': move_line.move_id.l10n_tr_shipping_type}},
+                },
+            }
+
+        if move_line.move_id.l10n_tr_exemption_code_id.code == 702:
+            line_node['cac:Delivery'] = {
+                'cac:Shipment': {
+                    'cbc:ID': {'_text': 'NO_ID'},
+                    'cac:GoodsItem': {
+                        'cbc:RequiredCustomsID': {
+                            '_text': move_line.l10n_tr_ctsp_number or move_line.product_id.l10n_tr_ctsp_number,
+                        },
+                    },
+                    'cac:TransportHandlingUnit': {
+                        'cac:CustomsDeclaration': {
+                            'cbc:ID': {'_text': 'NO_ID'},
+                            'cac:IssuerParty': self._l10n_tr_get_issuer_party_line_codes(move_line),
+                        },
+                    },
                 },
             }
 

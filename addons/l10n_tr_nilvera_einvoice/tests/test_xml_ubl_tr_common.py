@@ -88,6 +88,7 @@ class TestUBLTRCommon(AccountTestInvoicingCommon):
                     'quantity': 3,
                     'discount': 12,
                     'tax_ids': [Command.set(invoice_tax)],
+                    **kwargs.pop('invoice_line_data', {}),
                 }),
             ],
             **kwargs,
