@@ -130,7 +130,18 @@ export class TablePlugin extends Plugin {
         },
         normalize_processors: this.distributeTableColorsToAllCells.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
+<<<<<<< 8539da0ef1344fabd551a23f8c5678f2569b9cdb
         targeted_nodes_processors: this.adjustTargetedNodes.bind(this),
+||||||| c06231519cc567b0cb7fd1d8be80d222bddfe1df
+        clean_for_save_handlers: ({ root }) => this.deselectTable(root),
+        before_line_break_handlers: this.resetTableSelection.bind(this),
+        before_split_block_handlers: this.resetTableSelection.bind(this),
+=======
+        clean_for_save_handlers: ({ root }) => this.deselectTable(root),
+        before_line_break_handlers: this.resetTableSelection.bind(this),
+        before_split_block_handlers: this.resetTableSelection.bind(this),
+        before_insert_processors: this.handleTableInsert.bind(this),
+>>>>>>> 2ad5456e3a28a1467195c5f986e2e79afa4863fc
 
         /** Overrides */
         tab_overrides: withSequence(20, this.handleTab.bind(this)),
