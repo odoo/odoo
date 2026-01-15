@@ -1,9 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import pytz
 from datetime import datetime
-from freezegun import freeze_time
 
-from odoo import Command
 from odoo.tests.common import TransactionCase
 
 
@@ -80,30 +78,29 @@ class TestResourceCalendar(TransactionCase):
         self.assertTrue(start_dt <= result_per_resource_id[0]._items[0][0], "First attendance interval should not start before start_dt")
         self.assertTrue(end_dt >= result_per_resource_id[0]._items[4][1], "Last attendance interval should not end after end_dt")
 
-    @freeze_time("2019-5-28 08:00:00")
-    def test_working_time_holiday_multicompany(self):
-        """
-        This test checks that there is no issue computing the "working time to assign" even if a holiday has been set
-        for this moment, but on another company.
-        """
-        company_0, company_1 = self.env['res.company'].create([{
-            "name": "Test company 0",
-        },
-            {
-                "name": "Test company 1",
-            }])
-
+    def test_public_holiday_calendar_no_company(self):
         self.env['resource.calendar.leaves'].create([{
-            'name': "Public Holiday for company 0",
-            'calendar_id': company_1.resource_calendar_ids.id,
-            'company_id': company_1.id,
-            'date_from': datetime(2019, 5, 27, 0, 0, 0),
-            'date_to': datetime(2019, 5, 29, 23, 0, 0),
+            'name': "Public Holiday for company",
+            'company_id': self.env.company.id,
+            'date_from': datetime(2019, 5, 29, 0, 0, 0),
+            'date_to': datetime(2019, 5, 30, 0, 0, 0),
             'resource_id': False,
             'time_type': "leave",
         }])
-        company_1.resource_calendar_ids.write({"leave_ids": [Command.clear()]})
-        duration = company_0.resource_calendar_ids.get_work_duration_data(datetime(2019, 5, 27, 11, 0, 0),
-                                                                          datetime(2019, 5, 28, 11, 0, 0),
-                                                                          compute_leaves=True)
-        self.assertEqual(duration, {'days': 1.0, 'hours': 8.0})
+        calendar = self.env['resource.calendar'].create({
+            'name': '40 hours/week',
+            'hours_per_day': 8,
+            'full_time_required_hours': 40,
+        })
+        calendar.company_id = False
+        date_from = datetime(2019, 5, 27, 0, 0, 0).astimezone(pytz.UTC)
+        date_to = datetime(2019, 5, 31, 23, 59, 59).astimezone(pytz.UTC)
+        days = calendar._get_unusual_days(date_from, date_to, self.env.company)
+        expected_res = {
+            '2019-05-27': False,
+            '2019-05-28': False,
+            '2019-05-29': True,
+            '2019-05-30': False,
+            '2019-05-31': False,
+        }
+        self.assertEqual(days, expected_res)
