@@ -61,11 +61,6 @@ class HrVersion(models.Model):
     # Personal Information
     country_id = fields.Many2one(
         'res.country', 'Nationality (Country)', groups="hr.group_hr_user", tracking=1)
-    identification_id = fields.Char(
-        string='Identification No',
-        help="Enter the employee's National Identification Number issued by the government (e.g., Aadhaar, SIN, NIN). This is used for official records and statutory compliance.",
-        groups="hr.group_hr_user",
-        tracking=1)
     ssnid = fields.Char('Social Security No', groups="hr.group_hr_user", tracking=1)
     passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=1)
     passport_expiration_date = fields.Date('Passport Expiration Date', groups="hr.group_hr_user", tracking=1)
