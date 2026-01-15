@@ -61,11 +61,29 @@ registry.category("web_tour.tours").add('test_mrp_multi_step_product_catalog_com
             run: 'press Enter',
         },
         {
+            content: "Wait for filtering",
+            trigger: '.o_kanban_renderer:not(:has(.o_kanban_record:contains("Table")))',
+        },
+        {
             trigger: '.o_kanban_record:contains(Wooden Leg)',
             run: "click",
         },
         {
-            trigger: '.o_kanban_record:contains(Wooden Leg)',
+            trigger: '.o_kanban_record:contains(Wooden Leg) .o_product_catalog_quantity .o_input',
+            run: 'edit 2',
+        },
+        {
+            trigger: '.o_kanban_record:contains(Wooden Leg) .o_product_catalog_quantity .o_input',
+            run: () => {
+                const productQuantity = document.querySelector('.o_kanban_record .o_product_catalog_quantity .o_input').value;
+                if (productQuantity !== "2") {
+                    throw new Error(`Product quantity not correctly set to 2.`);
+                }
+            },
+        },
+        {
+            content: "Force POL quantity update",
+            trigger: 'button.o_facet_remove',
             run: "click",
         },
         {
@@ -75,4 +93,7 @@ registry.category("web_tour.tours").add('test_mrp_multi_step_product_catalog_com
         {
             trigger: 'div.o_field_widget:contains("WH/MO/")',
         },
+        {
+            trigger: '.o_data_row .o_field_mrp_should_consume:contains(2)',
+        }
 ]});
