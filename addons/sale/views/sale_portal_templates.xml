@@ -187,21 +187,13 @@
                         </div>
 
                         <t t-if="not sale_order.is_expired and sale_order.state in ['draft', 'sent']">
-                            <div t-if="sale_order.amount_undiscounted - sale_order.amount_untaxed &gt; 0.01" class="list-group-item flex-grow-1" name="sale_order_advantage">
+                            <div t-if="sale_order.advantage_total &lt; 0.00" class="list-group-item flex-grow-1" name="sale_order_advantage">
                                 <small><b class="text-muted">Your advantage</b></small>
-                                <small>
-                                    <b t-field="sale_order.amount_undiscounted"
-                                        t-options='{"widget": "monetary", "display_currency": sale_order.currency_id}'
-                                        style="text-decoration: line-through"
-                                        class="d-block mt-1"
-                                        data-id="amount_undiscounted" />
-                                </small>
-                                <t t-if="sale_order.amount_untaxed == sale_order.amount_total">
-                                    <h4 t-field="sale_order.amount_total" class="text-success" data-id="total_amount"/>
+                                <t t-if="sale_order.advantage_total &lt; 0.00">
+                                    <h4 t-field="sale_order.advantage_total" class="text-success mb-0" data-id="total_advantage"/>
                                 </t>
-                                <t t-else="">
-                                    <h4 t-field="sale_order.amount_untaxed" class="text-success mb-0" data-id="total_untaxed"/>
-                                    <small>(<span t-field="sale_order.amount_total" data-id="total_amount"/> Incl. tax)</small>
+                                <t t-if="sale_order.advantage_subtotal &lt; 0.0">
+                                    <small>(<span t-field="sale_order.advantage_subtotal" data-id="subtotal_advantage"/> Exc. Tax)</small>
                                 </t>
                             </div>
                         </t>
@@ -214,51 +206,12 @@
                                 _contactLink="True"/>
                         </div>
 
-                        <div t-if="sale_order._get_edi_builders()">
-                            <button id="portal_connect_software_modal_btn" type="button" class="btn btn-primary"
-                                data-bs-toggle="modal" data-bs-target="#sale_portal_connect_software_modal">
-                                    Connect with your software!
-                            </button>
-                        </div>
                     </div>
                 </t>
                 <t t-call="portal.portal_record_sidebar"
                     classes.f="col-lg-4 col-xxl-3 d-print-none"
                     title="title"
                     entries="entries"/>
-
-                <div class="modal fade" id="sale_portal_connect_software_modal" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                            <div class="modal-body">
-                                <div>
-                                    <h5>Want to import this document in Odoo?</h5>
-                                    <p>Drag and drop the request for quotation PDF file into your list of quotations in Odoo. Enjoy the automation!</p>
-                                </div>
-                                <div>
-                                    <h5>Not using Odoo?</h5>
-                                    <div class="input-group mb-3 w-50">
-                                        <t t-set="base_address" t-value="sale_order.env['ir.config_parameter'].sudo().get_str('web.base.url')"/>
-                                        <t t-set="doc_url" t-value="base_address + '/my/orders/' + str(sale_order.id) + '/download_edi?' + str(keep_query())"/>
-                                        <input type="text" class="form-control" aria-describedby="copy-button" readonly="readonly" t-att-value="doc_url"/>
-                                        <button class="btn btn-outline-secondary" type="button" id="copy-button"
-                                        t-attf-onclick="navigator.clipboard.writeText('#{doc_url}')">Copy</button>
-                                    </div>
-                                    <p>Use the above REST URL to get structured data of the purchase order in UBL format.
-                                        <a href="https://www.odoo.com/documentation/">Read the documentation </a>to learn all the ways to connect your software with <a href="https://www.odoo.com">Odoo</a>.
-                                    </p>
-                                </div>
-                                <div>
-                                    <h5>You don't use a good CRM software?</h5>
-                                    <p><a href="https://www.odoo.com/app/sales">Start on Odoo</a>, it's 100% free! You'll save time creating beautiful quotations and track sales.</p>
-                                </div>
-                            </div>
-                            <div class="modal-footer justify-content-between">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Page content -->
                 <div id="quote_content" class="col-12 col-lg-8 col-xxl-9 mt-5 mt-lg-0">

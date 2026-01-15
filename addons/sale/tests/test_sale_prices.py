@@ -563,7 +563,7 @@ class TestSalePrices(SaleCommon):
         sale_order._recompute_prices()
 
         self.assertTrue(all(line.discount == 5 for line in sale_order.order_line))
-        self.assertEqual(sale_order.amount_undiscounted, so_amount)
+        self.assertEqual(sale_order.advantage_subtotal, sale_order.amount_untaxed - so_amount)
         self.assertEqual(sale_order.amount_total, 0.95*so_amount)
 
         pricelist.item_ids = [
@@ -575,15 +575,16 @@ class TestSalePrices(SaleCommon):
         sale_order._recompute_prices()
 
         self.assertTrue(all(line.discount == 0 for line in sale_order.order_line))
-        self.assertEqual(sale_order.amount_undiscounted, so_amount)
+        self.assertEqual(sale_order.advantage_subtotal, sale_order.amount_untaxed - so_amount)
         self.assertEqual(sale_order.amount_total, 0.95*so_amount)
 
         # Test taking off the pricelist
         sale_order.pricelist_id = False
         sale_order._recompute_prices()
+        sale_order.invalidate_recordset(['advantage_subtotal'])
 
         self.assertTrue(all(line.discount == 0 for line in sale_order.order_line))
-        self.assertEqual(sale_order.amount_undiscounted, so_amount)
+        self.assertEqual(sale_order.advantage_subtotal, sale_order.amount_untaxed - so_amount)
         self.assertEqual(
             sale_order.amount_total, start_so_amount,
             "The SO amount without pricelist should be the same than with an empty pricelist"
@@ -1052,9 +1053,9 @@ class TestSalePrices(SaleCommon):
         self.assertEqual(line.price_subtotal, 17527.41)
         self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)
 
-    def test_discount_and_amount_undiscounted(self):
-        """When adding a discount on a SO line, this test ensures that amount undiscounted is
-        consistent with the used tax"""
+    def test_discount_and_advantages(self):
+        """When adding a discount on a SO line, this test ensures that advantages are consistent
+         with the used tax"""
         order = self.empty_order
 
         order.order_line = [Command.create({
@@ -1067,7 +1068,7 @@ class TestSalePrices(SaleCommon):
         order_line = order.order_line
 
         # test discount and qty 1
-        self.assertEqual(order.amount_undiscounted, 100.0)
+        self.assertEqual(order.advantage_subtotal, -1.0)
         self.assertEqual(order_line.price_subtotal, 99.0)
 
         # more quantity 1 -> 3
@@ -1076,15 +1077,16 @@ class TestSalePrices(SaleCommon):
             'price_unit': 100.0,
             'discount': 1.0,
         })
-        order.invalidate_recordset(['amount_undiscounted'])
+        order.invalidate_recordset(['advantage_subtotal'])
 
-        self.assertEqual(order.amount_undiscounted, 300.0)
+        self.assertEqual(order.advantage_subtotal, -3.0)
         self.assertEqual(order_line.price_subtotal, 297.0)
 
         # undiscounted
         order_line.discount = 0.0
+        order.invalidate_recordset(['advantage_subtotal'])
         self.assertEqual(order_line.price_subtotal, 300.0)
-        self.assertEqual(order.amount_undiscounted, 300.0)
+        self.assertEqual(order.advantage_subtotal, 0.0)
 
         # Same with an included-in-price tax
         order = order.copy()
@@ -1100,7 +1102,7 @@ class TestSalePrices(SaleCommon):
 
         # 300 with 10% incl tax -> 272.72 total tax excluded without discount
         # 136.36 price tax excluded with discount applied
-        self.assertEqual(order.amount_undiscounted, 272.72)
+        self.assertEqual(order.advantage_subtotal, -136.36)
         self.assertEqual(line.price_subtotal, 136.36)
 
     def test_product_quantity_rounding(self):
@@ -1242,10 +1244,8 @@ class TestSalePrices(SaleCommon):
             [self.discount, self.discount],
             "Discount should apply to combo item lines",
         )
-        self.assertAlmostEqual(
-            order.amount_untaxed,
-            order.amount_undiscounted * (100 - self.discount) / 100,
-            msg="Pricelist discount should be applied to quotation",
+        self.assertEqual(
+            order.advantage_subtotal, -1.0, msg="Pricelist discount should be applied to quotation"
         )
 
     def test_so_included_tax_mapping(self):
