@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from base64 import b64decode
+import threading
 from escpos.escpos import EscposIO
 import escpos.printer
 import escpos.exceptions
@@ -37,6 +38,10 @@ def _read_escpos_with_retry(self):
 escpos.printer.Usb._read = _read_escpos_with_retry
 
 
+class EscposNotAvailableError(RuntimeError):
+    pass
+
+
 class PrinterDriverBase(Driver, ABC):
     connection_type = 'printer'
     job_timeout_seconds = 30
@@ -63,6 +68,7 @@ class PrinterDriverBase(Driver, ABC):
         self.job_ids = []
         self.job_action_ids = {}
         self.escpos_device = None
+        self.escpos_lock = threading.Lock()
 
         self._actions.update({
             'cashbox': self.open_cashbox,
@@ -228,26 +234,29 @@ class PrinterDriverBase(Driver, ABC):
         for drawer in commands['drawers']:
             self.print_raw(drawer, action_unique_id=data.get("action_unique_id"))
 
-    def check_printer_status(self, action_unique_id=None):
+    def print_raw_escpos(self, data, action_unique_id=None):
         if not self.escpos_device:
-            return True
+            raise EscposNotAvailableError
         try:
-            with EscposIO(self.escpos_device, autocut=False) as esc:
+            with self.escpos_lock, EscposIO(self.escpos_device, autocut=False) as esc:
                 esc.printer.open()
                 if not esc.printer.is_online():
+                    _logger.warning("Printer %s is not ready, aborting raw print", self.device_name)
                     self.send_status(status='error', message='ERROR_OFFLINE', action_unique_id=action_unique_id)
                     return False
                 paper_status = esc.printer.paper_status()
                 if paper_status == 0:
+                    _logger.warning("Printer %s has no paper, aborting raw print", self.device_name)
                     self.send_status(status='error', message='ERROR_NO_PAPER', action_unique_id=action_unique_id)
                     return False
                 elif paper_status == 1:
                     self.send_status(status='warning', message='WARNING_LOW_PAPER')
+                esc.printer._raw(data)
+            self.send_status(status='success')
+            return True
         except (escpos.exceptions.Error, OSError, AssertionError, TypeError):
             self.escpos_device = None
-            _logger.warning("Failed to query ESC/POS status")
-
-        return True
+            raise EscposNotAvailableError
 
     def run(self):
         while True:
