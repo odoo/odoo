@@ -246,7 +246,8 @@ class HrLeave(models.Model):
         indian_leaves, leaves_dates_by_employee, public_holidays_dates_by_company = self._l10n_in_prepare_sandwich_context()
         if not indian_leaves:
             return
-        self.l10n_in_contains_sandwich_leaves = False
+        if all(state in ['refuse', 'cancel'] for state in self.mapped('state')):
+            self.l10n_in_contains_sandwich_leaves = False
 
         linked_before, linked_after = indian_leaves._l10n_in_get_linked_leaves(
             leaves_dates_by_employee, public_holidays_dates_by_company
@@ -255,6 +256,8 @@ class HrLeave(models.Model):
         if not neighbors:
             return
 
+        if any(state in ['validate', 'validate1'] for state in self.mapped('state')):
+            neighbors |= self
         # Recompute neighbor durations with the baseline (non-sandwich) logic.
         base_map = super(HrLeave, neighbors)._get_durations(
             check_leave_type=True,
@@ -296,6 +299,11 @@ class HrLeave(models.Model):
 
     def action_refuse(self):
         res = super().action_refuse()
+        self._l10n_in_update_neighbors_duration_after_change()
+        return res
+
+    def action_approve(self, check_state=True):
+        res = super().action_approve(check_state)
         self._l10n_in_update_neighbors_duration_after_change()
         return res
 
