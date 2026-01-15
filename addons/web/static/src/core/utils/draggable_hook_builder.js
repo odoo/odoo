@@ -67,6 +67,14 @@ import { hasTouch, isBrowserFirefox, isIOS } from "../browser/feature_detection"
  * @property {number} [speed=10]
  * @property {number} [threshold=20]
  * @property {"horizontal"|"vertical"} [direction]
+ * @property {HTMLElement} [scrollingElement]
+ * @property {EdgeScrollingOffsets} [offsets]
+ *
+ * @typedef EdgeScrollingOffsets
+ * @property {number} [offsetLeft=0]
+ * @property {number} [offsetRight=0]
+ * @property {number} [offsetTop=0]
+ * @property {number} [offsetBottom=0]
  *
  * @typedef Position
  * @property {number} x
@@ -505,16 +513,18 @@ export function makeDraggableHook(hookParams) {
                 state.willDrag = false;
 
                 // Compute scrollable parent
+                const scrollingElement =
+                    ctx.edgeScrolling.scrollingElement || ctx.current.container;
                 const isDocumentScrollingElement =
-                    ctx.current.container === ctx.current.container.ownerDocument.scrollingElement;
+                    scrollingElement === scrollingElement.ownerDocument.scrollingElement;
                 // If the container is the "ownerDocument.scrollingElement",
                 // there is no need to get the scroll parent as it is the
                 // scrollable element itself.
                 // TODO: investigate if "getScrollParents" should not consider
                 // the "ownerDocument.scrollingElement" directly.
                 [ctx.current.scrollParentX, ctx.current.scrollParentY] = isDocumentScrollingElement
-                    ? [ctx.current.container, ctx.current.container]
-                    : getScrollParents(ctx.current.container);
+                    ? [scrollingElement, scrollingElement]
+                    : getScrollParents(scrollingElement);
 
                 updateRects();
                 const { x, y, width, height } = ctx.current.elementRect;
@@ -611,28 +621,34 @@ export function makeDraggableHook(hookParams) {
                     yRect.y += scrollParentYEl.scrollTop;
                 }
 
-                const { direction, speed, threshold } = ctx.edgeScrolling;
+                const { direction, speed, threshold, offsets } = ctx.edgeScrolling;
+                const {
+                    offsetLeft = 0,
+                    offsetRight = 0,
+                    offsetTop = 0,
+                    offsetBottom = 0,
+                } = offsets || {};
                 const correctedSpeed = (speed / 16) * deltaTime;
 
                 const diff = {};
                 ctx.current.scrollingEdge = null;
                 if (xRect) {
                     const maxWidth = xRect.x + xRect.width;
-                    if (pointerX - xRect.x < threshold) {
-                        diff.x = [pointerX - xRect.x, -1];
+                    if (pointerX - xRect.x < threshold + offsetLeft) {
+                        diff.x = [pointerX - xRect.x - offsetLeft, -1];
                         ctx.current.scrollingEdge = "left";
-                    } else if (maxWidth - pointerX < threshold) {
-                        diff.x = [maxWidth - pointerX, 1];
+                    } else if (maxWidth - pointerX < threshold + offsetRight) {
+                        diff.x = [maxWidth - pointerX - offsetRight, 1];
                         ctx.current.scrollingEdge = "right";
                     }
                 }
                 if (yRect) {
                     const maxHeight = yRect.y + yRect.height;
-                    if (pointerY - yRect.y < threshold) {
-                        diff.y = [pointerY - yRect.y, -1];
+                    if (pointerY - yRect.y < threshold + offsetTop) {
+                        diff.y = [pointerY - yRect.y - offsetTop, -1];
                         ctx.current.scrollingEdge = "top";
-                    } else if (maxHeight - pointerY < threshold) {
-                        diff.y = [maxHeight - pointerY, 1];
+                    } else if (maxHeight - pointerY < threshold + offsetBottom) {
+                        diff.y = [maxHeight - pointerY - offsetBottom, 1];
                         ctx.current.scrollingEdge = "bottom";
                     }
                 }
