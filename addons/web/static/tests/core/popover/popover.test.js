@@ -1,9 +1,8 @@
-import { expect, getFixture, test } from "@odoo/hoot";
+import { beforeEach, expect, getFixture, runAllTimers, test } from "@odoo/hoot";
 import { queryOne, resize, scroll, waitFor } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-
+import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Popover } from "@web/core/popover/popover";
 import { usePosition } from "@web/core/position/position_hook";
 
@@ -11,6 +10,13 @@ class Content extends Component {
     static props = ["*"];
     static template = xml`<div id="popover">Popover Content</div>`;
 }
+
+beforeEach(() => {
+    patchWithCleanup(Popover.defaultProps, {
+        animation: false,
+        arrow: false,
+    });
+});
 
 test("popover can have custom class", async () => {
     await mountWithCleanup(Popover, {
@@ -231,6 +237,7 @@ test("reposition popover should properly change classNames", async () => {
         props: {
             target: queryOne(".popover-target"),
             component: Content,
+            arrow: true,
         },
     });
 
@@ -277,7 +284,7 @@ test("within iframe", async () => {
         props: {
             target: popoverTarget,
             component: Content,
-            animation: false,
+            arrow: true,
         },
     });
 
@@ -374,4 +381,29 @@ test("popover fixed position", async () => {
     await animationFrame();
 
     expect.verifySteps([]);
+});
+
+test("popover can animate", async () => {
+    patchWithCleanup(window.Element.prototype, {
+        animate() {
+            expect(this).toHaveClass("o_popover");
+            expect.step("animated");
+            return super.animate(...arguments);
+        },
+    });
+
+    await mountWithCleanup(Popover, {
+        props: {
+            target: getFixture(),
+            animation: true,
+            component: Content,
+        },
+    });
+
+    expect(".o_popover").toHaveCount(1);
+
+    await animationFrame();
+    await runAllTimers();
+
+    expect.verifySteps(["animated"]);
 });
