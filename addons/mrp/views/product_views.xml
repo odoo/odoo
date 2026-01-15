@@ -161,5 +161,9 @@
                 </xpath>
             </field>
         </record>
+
+        <record model="ir.actions.act_window" id="stock.action_product_stock_view">
+            <field name="domain">[('is_storable', '=', True), ('is_kits','=', False)]</field>
+        </record>
     </data>
 </odoo>

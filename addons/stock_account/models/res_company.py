@@ -157,9 +157,12 @@ class ResCompany(models.Model):
         for company in companies:
             company.action_close_stock_valuation(auto_post=True)
 
+    def _get_valuation_product_domain(self):
+        return [('is_storable', '=', True)]
+
     def _get_accounts_by_product(self, products=None):
         if not products:
-            products = self.env['product.product'].with_company(self).search([('is_storable', '=', True)])
+            products = self.env['product.product'].with_company(self).search(self._get_valuation_product_domain())
 
         accounts_by_product = {}
         for product in products:

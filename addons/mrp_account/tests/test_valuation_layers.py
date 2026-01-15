@@ -347,3 +347,15 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         comp_move = mo.unbuild_ids.produce_line_ids.filtered(lambda move: move.product_id.id == self.glass.id)
         with Form(comp_move.move_line_ids[0]) as form:
             form.quantity = 0
+
+    def test_kit_product_valuation(self):
+        """
+        Verify that kit products are excluded from inventory valuation
+        and have no effect on valuation upon price change.
+        """
+        self.assertRecordValues(self.table_head, [{'standard_price': 300, 'total_value': 300}])
+        self.assertTrue(self.table_head not in self.env.company._get_accounts_by_product())
+        old_stock_value = sum(self.env.company.stock_value().values())
+        self.table_head.action_bom_cost()
+        self.assertRecordValues(self.table_head, [{'standard_price': 468.75, 'total_value': 468.75}])
+        self.assertEqual(old_stock_value, sum(self.env.company.stock_value().values()))
