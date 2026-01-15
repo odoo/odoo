@@ -49,7 +49,7 @@ defineSpreadsheetActions();
 test("List export", async () => {
     const { model } = await createSpreadsheetWithList();
     const total = 4 + 10 * 4; // 4 Headers + 10 lines
-    expect(Object.values(getCells(model)).length).toBe(total);
+    expect(getCells(model).length).toBe(total);
     expect(getCellFormula(model, "A1")).toBe(`=ODOO.LIST.HEADER(1,"foo")`);
     expect(getCellFormula(model, "B1")).toBe(`=ODOO.LIST.HEADER(1,"bar")`);
     expect(getCellFormula(model, "C1")).toBe(`=ODOO.LIST.HEADER(1,"date")`);

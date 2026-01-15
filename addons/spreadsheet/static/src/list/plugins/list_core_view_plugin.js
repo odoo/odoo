@@ -193,8 +193,8 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         }
         const unusedLists = new Set(this.getters.getListIds());
         for (const sheetId of this.getters.getSheetIds()) {
-            for (const cellId in this.getters.getCells(sheetId)) {
-                const position = this.getters.getCellPosition(cellId);
+            for (const cell of this.getters.getCells(sheetId)) {
+                const position = this.getters.getCellPosition(cell.id);
                 const listId = this.getListIdFromPosition(position);
                 if (listId) {
                     unusedLists.delete(listId);

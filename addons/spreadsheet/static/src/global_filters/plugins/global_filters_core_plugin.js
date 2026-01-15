@@ -299,7 +299,7 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
         const sheetIds = this.getters.getSheetIds();
         currentLabel = escapeRegExp(currentLabel);
         for (const sheetId of sheetIds) {
-            for (const cell of Object.values(this.getters.getCells(sheetId))) {
+            for (const cell of this.getters.getCells(sheetId)) {
                 if (cell.isFormula) {
                     const newContent = cell.content.replace(
                         new RegExp(`FILTER\\.VALUE\\(\\s*"${currentLabel}"\\s*\\)`, "g"),
