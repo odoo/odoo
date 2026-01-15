@@ -37,7 +37,16 @@ export class Attachment extends FileModelMixin(Record) {
             if (
                 this.isPdf &&
                 !this.has_thumbnail &&
+<<<<<<< c2f2e0f2009e6db56c8c21c0e6faf01667b0e109
                 (this.store.self_user?.share === false || this.ownership_token)
+||||||| 000976a75a2c9c7311b04a7fd8e4b0d091885561
+                (this.store.self.main_user_id?.share === false || this.ownership_token)
+=======
+                (this.ownership_token ||
+                    // If related to a record, must have write access to it
+                    ((!this.thread || this.thread.hasWriteAccess) &&
+                        this.store.self.main_user_id?.share === false))
+>>>>>>> db95fd8c4a721dfebc6cef1a534d9a0510f010b8
             ) {
                 this.setPdfThumbnail();
             }
