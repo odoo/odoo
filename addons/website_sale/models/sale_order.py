@@ -900,9 +900,13 @@ class SaleOrder(models.Model):
             raise ValidationError(_(
                 "Your cart is not ready to be paid, please verify previous steps."
             ))
-
-        if not self.only_services and not self.carrier_id:
-            raise ValidationError(_("No delivery method is selected."))
+        if not self.only_services:
+            if not self.carrier_id:
+                raise ValidationError(_("No delivery method is selected."))
+            if self.carrier_id not in self._get_delivery_methods():
+                raise ValidationError(
+                    _("The delivery method is not compatible with your delivery address.")
+                )
 
     def _recompute_cart(self):
         """Recompute taxes and prices for the current cart."""
