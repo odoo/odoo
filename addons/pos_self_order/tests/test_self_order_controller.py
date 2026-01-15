@@ -191,5 +191,6 @@ class TestSelfOrderController(SelfOrderCommonTest):
                     'tax_ids': [(6, 0, product.taxes_id.ids)],
                     'price_subtotal_incl': price_subtotal_incl or 0,
                 }]],
-            }
+            },
+            'order_uuid': None,
         }

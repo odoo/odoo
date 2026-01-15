@@ -96,6 +96,10 @@ class PosConfig(models.Model):
         string="Self Order Kiosk Image Brand Name",
         help="Name of the image to display on the self order screen",
     )
+    self_ordering_qr_ticket_footer = fields.Html(
+        string="Custom QR Ticket Footer",
+        help="Customize the ticket footer displayed after a successful order from the self-ordering interface",
+    )
     has_paper = fields.Boolean("Has paper", default=True)
     self_ordering_primary_color = fields.Char(string="Color", default=lambda self: self.env.company.email_secondary_color)
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+        <xpath
+            expr="//t[@t-if='props.showRemainingButtons']/div/button[hasclass('o_pricelist_button')]"
+            position="before">
+            <button t-if="this.showPrintOrderQrTicketButton"
+                t-att-class="buttonClass"
+                t-att-disabled="!this.currentOrder.table_id"
+                t-on-click.stop="clickPrintQrMenu">
+                <i class="fa fa-qrcode me-1" /> QR Menu
+            </button>
+        </xpath>
+    </t>
+</templates>

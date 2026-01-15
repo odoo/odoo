@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderSummary">
-		<OrderDisplay order="currentOrder" t-slot-scope="scope">
+		<OrderDisplay order="currentOrder" t-if="currentOrder" t-slot-scope="scope">
 			<t t-set="line" t-value="scope.line" />
 			<Orderline line="line"
 				onClick="(ev, duration) => this.clickLine(ev, line)"
