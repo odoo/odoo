@@ -621,6 +621,7 @@ pivotRegistry.add("ODOO", {
         field.name !== "id" &&
         field.store,
     isGroupable: (field) => field.groupable,
+    isGridDependent: false,
 });
 
 supportedPivotPositionalFormulaRegistry.add("ODOO", true);
