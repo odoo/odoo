@@ -101,7 +101,7 @@ const threadPatch = {
     },
     /** @returns {import("models").ChannelMember} */
     computeCorrespondent() {
-        if (this.channel?.channel_type === "channel") {
+        if (["channel", "group"].includes(this.channel?.channel_type)) {
             return undefined;
         }
         const correspondents = this.correspondents;
