@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { END } from "@html_builder/utils/option_sequence";
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { ReferencesCarouselHeaderMiddleButtons } from "./references_carousel_header_buttons";
 
 export class ReferencesCarouselOption extends BaseOptionComponent {
     static template = "website.ReferencesCarouselOption";
@@ -11,13 +12,47 @@ export class ReferencesCarouselOption extends BaseOptionComponent {
 
 export class ReferencesCarouselOptionPlugin extends Plugin {
     static id = "referencesCarouselOption";
+    static dependencies = ["builderOptions"];
+
     resources = {
         builder_options: [withSequence(END, ReferencesCarouselOption)],
+        builder_header_middle_buttons: {
+            Component: ReferencesCarouselHeaderMiddleButtons,
+            selector: ".s_references_carousel_slider",
+            props: {
+                addItem: this.addItem.bind(this),
+                removeItem: this.removeItem.bind(this),
+            },
+        },
         on_cloned_handlers: this.onCloned.bind(this),
         on_removed_handlers: this.onRemove.bind(this),
         change_current_options_containers_listeners: this.onSelectionChange.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
     };
+
+    /**
+     * Adds a new item to the carousel.
+     * @param {HTMLElement} sliderEl - The slider element.
+     */
+    addItem(sliderEl) {
+        const lastItemEl = sliderEl.querySelector(".s_references_carousel_item:last-of-type");
+        const newItemEl = lastItemEl.cloneNode(true);
+        lastItemEl.after(newItemEl);
+        this.updateCarouselState(sliderEl);
+        this.dependencies.builderOptions.setNextTarget(newItemEl);
+    }
+
+    /**
+     * Removes the last item from the carousel.
+     * @param {HTMLElement} sliderEl - The slider element.
+     */
+    removeItem(sliderEl) {
+        const lastItemEl = sliderEl.querySelector(".s_references_carousel_item:last-of-type");
+        const previousItemEl = lastItemEl.previousElementSibling;
+        lastItemEl.remove();
+        this.updateCarouselState(sliderEl);
+        this.dependencies.builderOptions.setNextTarget(previousItemEl);
+    }
 
     /**
      * Updates the positions and quantity of carousel items.
