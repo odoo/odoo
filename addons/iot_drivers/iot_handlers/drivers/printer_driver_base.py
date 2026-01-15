@@ -30,6 +30,7 @@ def _read_escpos_with_retry(self):
 
         time.sleep(0.05)
         _logger.debug("Read attempt %s failed", attempt)
+    return b""
 
 
 # Monkeypatch the USB printer read method with our retrying version
