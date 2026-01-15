@@ -29,6 +29,9 @@ class PaymentLinkWizard(models.TransientModel):
             if sale_order.state in ('draft', 'sent') and wizard.amount < wizard.prepayment_amount:
                 wizard.warning_message = _("The amount must be greater than the prepayment amount.")
                 sale_wizards |= wizard  # Prevent the super call from clearing the warning message.
+            if sale_order.is_expired:
+                wizard.warning_message = _("The sale order has expired.")
+                sale_wizards |= wizard
         super(PaymentLinkWizard, self - sale_wizards)._compute_warning_message()
 
     def _prepare_url(self, base_url, related_document):

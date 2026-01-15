@@ -234,6 +234,9 @@ class CustomerPortal(payment_portal.PaymentPortal):
         partner_sudo = request.env.user.partner_id if logged_in else order_sudo.partner_id
         currency = order_sudo.currency_id
 
+        if order_sudo.is_expired:
+            raise ValidationError(_("The sale order has expired."))
+
         if is_down_payment:
             if payment_amount and payment_amount < order_sudo.amount_total:
                 amount = payment_amount
