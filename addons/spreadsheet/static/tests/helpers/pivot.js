@@ -125,7 +125,7 @@ export async function createSpreadsheetWithPivot(params = {}) {
 export function getZoneOfInsertedDataSource(model, dataSourceType, id) {
     const sheetId = model.getters.getActiveSheetId();
     const cells = model.getters.getCells(sheetId);
-    const positions = Object.keys(cells).map(model.getters.getCellPosition);
+    const positions = cells.map((cell) => model.getters.getCellPosition(cell.id));
 
     let top = 0;
     let left = 0;
