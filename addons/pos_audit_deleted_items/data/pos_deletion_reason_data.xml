@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2026 Jbnegoc SPA - Todos los derechos reservados -->
+<odoo>
+    <data noupdate="1">
+
+        <!-- Justificaciones predeterminadas iniciales -->
+
+        <record id="deletion_reason_1" model="pos.deletion.reason">
+            <field name="name">Cliente cambió de opinión</field>
+            <field name="sequence">10</field>
+            <field name="description">El cliente decidió no querer el producto después de ordenarlo</field>
+        </record>
+
+        <record id="deletion_reason_2" model="pos.deletion.reason">
+            <field name="name">Error al ingresar el pedido</field>
+            <field name="sequence">20</field>
+            <field name="description">Se ingresó el producto equivocado o cantidad incorrecta por error del mesero/cajero</field>
+        </record>
+
+        <record id="deletion_reason_3" model="pos.deletion.reason">
+            <field name="name">Producto no disponible en cocina</field>
+            <field name="sequence">30</field>
+            <field name="description">El producto se agotó o no está disponible temporalmente</field>
+        </record>
+
+        <record id="deletion_reason_4" model="pos.deletion.reason">
+            <field name="name">Producto defectuoso o en mal estado</field>
+            <field name="sequence">40</field>
+            <field name="description">El producto tiene algún defecto o no cumple con estándares de calidad</field>
+        </record>
+
+        <record id="deletion_reason_5" model="pos.deletion.reason">
+            <field name="name">Cliente canceló el pedido completo</field>
+            <field name="sequence">50</field>
+            <field name="description">El cliente decidió cancelar toda la orden antes de consumir</field>
+        </record>
+
+        <record id="deletion_reason_6" model="pos.deletion.reason">
+            <field name="name">Tiempo de espera excesivo</field>
+            <field name="sequence">60</field>
+            <field name="description">El cliente ya no quiere el producto por demora en la preparación</field>
+        </record>
+
+        <record id="deletion_reason_7" model="pos.deletion.reason">
+            <field name="name">Modificación de la orden por alergias</field>
+            <field name="sequence">70</field>
+            <field name="description">El cliente tiene alergia o restricción alimentaria</field>
+        </record>
+
+        <record id="deletion_reason_8" model="pos.deletion.reason">
+            <field name="name">Duplicado por error</field>
+            <field name="sequence">80</field>
+            <field name="description">Se ingresó el mismo producto dos veces por error</field>
+        </record>
+
+        <record id="deletion_reason_9" model="pos.deletion.reason">
+            <field name="name">Precio incorrecto - ajuste necesario</field>
+            <field name="sequence">90</field>
+            <field name="description">Necesita eliminarse para corregir el precio del producto</field>
+        </record>
+
+        <record id="deletion_reason_10" model="pos.deletion.reason">
+            <field name="name">Cortesía de la casa</field>
+            <field name="sequence">100</field>
+            <field name="description">Se elimina porque se ofrece como cortesía o compensación al cliente</field>
+        </record>
+
+    </data>
+</odoo>

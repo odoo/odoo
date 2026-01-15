@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- © 2026 Jbnegoc SPA - Todos los derechos reservados -->
+
+<templates id="template" xml:space="preserve">
+
+    <!-- Popup para solicitar justificación de eliminación -->
+    <t t-name="DeletionReasonPopup">
+        <div class="modal-dialog">
+            <div class="popup popup-deletion-reason">
+                <div class="modal-content">
+
+                    <!-- Encabezado del popup -->
+                    <header class="modal-header">
+                        <h3 class="modal-title">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            Justificación de Eliminación
+                        </h3>
+                    </header>
+
+                    <!-- Cuerpo del popup -->
+                    <main class="modal-body">
+                        <!-- Información del producto y cantidad eliminada -->
+                        <div class="deletion-info">
+                            <p>
+                                <strong>Producto:</strong>
+                                <span t-esc="widget.get_product_name()"/>
+                            </p>
+                            <p>
+                                <strong>Cantidad eliminada:</strong>
+                                <span t-esc="widget.get_qty_deleted_str()"/>
+                            </p>
+                        </div>
+
+                        <!-- Separador -->
+                        <hr/>
+
+                        <!-- Botones de justificaciones predeterminadas -->
+                        <div class="deletion-reasons-container">
+                            <p class="text-muted">
+                                <strong>Justificaciones rápidas:</strong>
+                                (clic para seleccionar)
+                            </p>
+                            <div class="deletion-reasons-buttons">
+                                <t t-foreach="widget.deletion_reasons" t-as="reason">
+                                    <button class="button reason-button"
+                                            t-att-data-reason="reason.name"
+                                            type="button">
+                                        <t t-esc="reason.name"/>
+                                    </button>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- Separador -->
+                        <hr/>
+
+                        <!-- Textarea para justificación personalizada -->
+                        <div class="deletion-reason-input">
+                            <p>
+                                <strong>Justificación completa:</strong>
+                            </p>
+                            <textarea name="deletion_reason"
+                                      class="form-control"
+                                      rows="4"
+                                      placeholder="Escriba aquí la razón por la que elimina este producto...
+
+Mínimo 5 caracteres. Puede seleccionar una justificación rápida arriba o escribir una personalizada."
+                                      style="width: 100%; margin-bottom: 10px;"></textarea>
+                        </div>
+
+                        <!-- Advertencia -->
+                        <div class="alert alert-warning" style="margin-top: 10px;">
+                            <i class="fa fa-info-circle"></i>
+                            <strong>Importante:</strong> Esta eliminación quedará registrada en el sistema
+                            con su nombre de usuario, fecha/hora y justificación para fines de auditoría.
+                        </div>
+                    </main>
+
+                    <!-- Pie del popup con botones de acción -->
+                    <footer class="modal-footer">
+                        <div class="button-group">
+                            <button class="button cancel">
+                                <i class="fa fa-times"></i>
+                                Cancelar
+                            </button>
+                            <button class="button confirm highlight">
+                                <i class="fa fa-check"></i>
+                                Confirmar Eliminación
+                            </button>
+                        </div>
+                    </footer>
+
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- CSS personalizado para el popup -->
+    <t t-name="pos_audit_deleted_items.popup_styles">
+        <style>
+            .popup-deletion-reason {
+                width: 600px;
+                max-width: 90%;
+            }
+
+            .popup-deletion-reason .deletion-info {
+                background-color: #f8f9fa;
+                padding: 15px;
+                border-radius: 5px;
+                margin-bottom: 15px;
+            }
+
+            .popup-deletion-reason .deletion-info p {
+                margin: 5px 0;
+                font-size: 14px;
+            }
+
+            .popup-deletion-reason .deletion-reasons-container {
+                margin: 15px 0;
+            }
+
+            .popup-deletion-reason .deletion-reasons-buttons {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-top: 10px;
+            }
+
+            .popup-deletion-reason .reason-button {
+                flex: 1 1 calc(50% - 8px);
+                min-width: 150px;
+                padding: 10px 15px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 13px;
+                text-align: center;
+                transition: background-color 0.2s;
+            }
+
+            .popup-deletion-reason .reason-button:hover {
+                background-color: #0056b3;
+            }
+
+            .popup-deletion-reason .reason-button:active {
+                background-color: #004085;
+            }
+
+            .popup-deletion-reason .deletion-reason-input textarea {
+                font-size: 14px;
+                border: 2px solid #ced4da;
+                border-radius: 4px;
+                padding: 10px;
+            }
+
+            .popup-deletion-reason .deletion-reason-input textarea:focus {
+                border-color: #007bff;
+                outline: none;
+                box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+            }
+
+            .popup-deletion-reason .alert {
+                padding: 10px;
+                border-radius: 4px;
+                font-size: 13px;
+            }
+
+            .popup-deletion-reason .button-group {
+                display: flex;
+                gap: 10px;
+                justify-content: flex-end;
+            }
+
+            .popup-deletion-reason .button {
+                padding: 12px 24px;
+                font-size: 14px;
+                border-radius: 4px;
+                cursor: pointer;
+                border: none;
+                transition: all 0.2s;
+            }
+
+            .popup-deletion-reason .button.cancel {
+                background-color: #6c757d;
+                color: white;
+            }
+
+            .popup-deletion-reason .button.cancel:hover {
+                background-color: #5a6268;
+            }
+
+            .popup-deletion-reason .button.confirm {
+                background-color: #28a745;
+                color: white;
+            }
+
+            .popup-deletion-reason .button.confirm:hover {
+                background-color: #218838;
+            }
+
+            .popup-deletion-reason .button i {
+                margin-right: 5px;
+            }
+        </style>
+    </t>
+
+</templates>

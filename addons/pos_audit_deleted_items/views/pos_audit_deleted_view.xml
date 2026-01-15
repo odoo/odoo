@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2026 Jbnegoc SPA - Todos los derechos reservados -->
+<odoo>
+
+    <!-- Vista de árbol/lista para productos eliminados (VISTA PRINCIPAL) -->
+    <record id="pos_audit_deleted_tree_view" model="ir.ui.view">
+        <field name="name">pos.audit.deleted.tree</field>
+        <field name="model">pos.audit.deleted</field>
+        <field name="arch" type="xml">
+            <tree string="Productos Eliminados"
+                  decoration-danger="qty_deleted &gt; 5"
+                  decoration-warning="qty_deleted &gt; 2"
+                  delete="true"
+                  create="false">
+
+                <field name="deletion_datetime" string="Fecha/Hora"/>
+                <field name="pos_order_name" string="Pedido"/>
+                <field name="product_name" string="Producto"/>
+                <field name="product_code" optional="show"/>
+                <field name="qty_deleted" string="Cantidad"/>
+                <field name="price_unit" string="Precio Unit." optional="hide"/>
+                <field name="price_subtotal" string="Subtotal" sum="Total" widget="monetary" optional="show"/>
+                <field name="user_name" string="Usuario"/>
+                <field name="deletion_reason_summary" string="Justificación"/>
+                <field name="pos_config_id" string="Punto de Venta" optional="hide"/>
+                <field name="table_id" string="Mesa" optional="hide"/>
+                <field name="company_id" invisible="1"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista de formulario para productos eliminados -->
+    <record id="pos_audit_deleted_form_view" model="ir.ui.view">
+        <field name="name">pos.audit.deleted.form</field>
+        <field name="model">pos.audit.deleted</field>
+        <field name="arch" type="xml">
+            <form string="Detalle de Producto Eliminado" create="false">
+                <header>
+                    <button name="action_view_order"
+                            string="Ver Pedido"
+                            type="object"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('pos_order_id', '=', False)]}"/>
+                    <button name="action_view_product"
+                            string="Ver Producto"
+                            type="object"
+                            class="oe_highlight"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Información del Pedido">
+                            <field name="pos_order_name"/>
+                            <field name="pos_order_id" readonly="1"/>
+                            <field name="pos_session_id" readonly="1"/>
+                            <field name="pos_config_id" readonly="1"/>
+                            <field name="table_id" readonly="1"
+                                   attrs="{'invisible': [('table_id', '=', False)]}"/>
+                        </group>
+
+                        <group string="Información de la Eliminación">
+                            <field name="deletion_datetime"/>
+                            <field name="user_id" readonly="1"/>
+                            <field name="user_name" readonly="1"/>
+                            <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Producto Eliminado">
+                            <field name="product_id" readonly="1"/>
+                            <field name="product_name" readonly="1"/>
+                            <field name="product_code" readonly="1"
+                                   attrs="{'invisible': [('product_code', '=', False)]}"/>
+                        </group>
+
+                        <group string="Cantidad y Precio">
+                            <field name="qty_deleted"/>
+                            <field name="price_unit" widget="monetary"/>
+                            <field name="price_subtotal" widget="monetary"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Justificación Completa" name="justification">
+                            <group>
+                                <field name="deletion_reason" nolabel="1" widget="text" readonly="1"
+                                       placeholder="Sin justificación"/>
+                            </group>
+                        </page>
+
+                        <page string="Información Técnica" name="technical" groups="base.group_no_one">
+                            <group>
+                                <field name="id" readonly="1"/>
+                                <field name="create_uid" readonly="1"/>
+                                <field name="create_date" readonly="1"/>
+                                <field name="write_uid" readonly="1"/>
+                                <field name="write_date" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de búsqueda para productos eliminados -->
+    <record id="pos_audit_deleted_search_view" model="ir.ui.view">
+        <field name="name">pos.audit.deleted.search</field>
+        <field name="model">pos.audit.deleted</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Productos Eliminados">
+                <field name="pos_order_name" string="Pedido"/>
+                <field name="product_name" string="Producto"/>
+                <field name="user_name" string="Usuario"/>
+                <field name="deletion_reason" string="Justificación"/>
+                <field name="pos_config_id" string="Punto de Venta"/>
+
+                <filter string="Hoy" name="today"
+                        domain="[('deletion_datetime', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                <filter string="Esta Semana" name="this_week"
+                        domain="[('deletion_datetime', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Este Mes" name="this_month"
+                        domain="[('deletion_datetime', '&gt;=', (context_today().replace(day=1)).strftime('%Y-%m-%d'))]"/>
+
+                <separator/>
+                <filter string="Cantidad &gt; 5" name="high_qty"
+                        domain="[('qty_deleted', '&gt;', 5)]"/>
+                <filter string="Con Mesa" name="with_table"
+                        domain="[('table_id', '!=', False)]"/>
+
+                <group expand="0" string="Agrupar por">
+                    <filter string="Usuario" name="group_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Producto" name="group_product" context="{'group_by': 'product_id'}"/>
+                    <filter string="Punto de Venta" name="group_pos_config" context="{'group_by': 'pos_config_id'}"/>
+                    <filter string="Fecha" name="group_date" context="{'group_by': 'deletion_datetime:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vista de gráfico pivot -->
+    <record id="pos_audit_deleted_pivot_view" model="ir.ui.view">
+        <field name="name">pos.audit.deleted.pivot</field>
+        <field name="model">pos.audit.deleted</field>
+        <field name="arch" type="xml">
+            <pivot string="Análisis de Productos Eliminados">
+                <field name="user_id" type="row"/>
+                <field name="deletion_datetime" interval="day" type="col"/>
+                <field name="qty_deleted" type="measure"/>
+                <field name="price_subtotal" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Vista de gráfico -->
+    <record id="pos_audit_deleted_graph_view" model="ir.ui.view">
+        <field name="name">pos.audit.deleted.graph</field>
+        <field name="model">pos.audit.deleted</field>
+        <field name="arch" type="xml">
+            <graph string="Análisis de Productos Eliminados" type="bar">
+                <field name="user_id" type="row"/>
+                <field name="qty_deleted" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Acción de ventana para productos eliminados -->
+    <record id="pos_audit_deleted_action" model="ir.actions.act_window">
+        <field name="name">Productos Eliminados</field>
+        <field name="res_model">pos.audit.deleted</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{'search_default_this_month': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No hay productos eliminados registrados
+            </p>
+            <p>
+                Los productos eliminados aparecerán aquí cuando los usuarios
+                con auditoría habilitada eliminen cantidades o líneas de
+                productos en el POS.
+            </p>
+            <p>
+                <strong>Información registrada:</strong><br/>
+                • Número de pedido<br/>
+                • Producto y cantidad eliminada<br/>
+                • Usuario que eliminó<br/>
+                • Fecha y hora exacta<br/>
+                • Justificación de la eliminación
+            </p>
+        </field>
+    </record>
+
+    <!-- Extensión de la vista de formulario de pos.order -->
+    <record id="pos_order_form_view_inherit_audit" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit.audit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Agregar botón inteligente para ver productos eliminados -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_deleted_items"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-trash"
+                        attrs="{'invisible': [('deleted_items_count', '=', 0)]}">
+                    <field name="deleted_items_count" widget="statinfo" string="Eliminados"/>
+                </button>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
