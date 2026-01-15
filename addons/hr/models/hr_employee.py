@@ -2168,27 +2168,6 @@ class HrEmployee(models.Model):
             },
         }
 
-    def action_reopen(self):
-        if any(not emp.departure_id for emp in self):
-            raise ValidationError(self.env._("You can't reopen employees that are still employed"))
-        today = fields.Date.context_today(self)
-        employees_to_edit = self.env['hr.employee']
-        for employee in self:
-            current_version = employee._get_version(today)
-            if current_version.date_version == today:
-                employees_to_edit += employee
-            else:
-                contract_end = current_version.contract_date_end
-                new_version_date = max(today, contract_end + relativedelta(days=1)) if contract_end else today
-                employee.create_version({
-                    'date_version': new_version_date,
-                    'departure_id': False,
-                    'contract_date_start': False,
-                    'contract_date_end': False,
-                })
-        employees_to_edit.write({'departure_id': False})
-        self.action_unarchive()
-
     def action_cancel_departure(self):
         self.ensure_one()
         self.departure_id.unlink()
