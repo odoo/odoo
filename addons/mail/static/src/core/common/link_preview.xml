@@ -75,7 +75,7 @@
         <div class="o-mail-LinkPreviewVideo card position-relative w-100 mb-2 rounded bg-view shadow-sm overflow-hidden" t-att-data-provider="linkPreview.videoProvider" t-att-class="{ 'me-2': env.inChatter, 'o-mail-LinkPreviewVideo-embed': linkPreview.videoURL, 'o-mail-LinkPreviewVideo-started': state.startVideo }" t-attf-class="{{ className }}">
             <div class="row g-0 flex-row-reverse">
                 <div class="col min-w-0" t-att-class="{ 'd-flex align-items-center': !linkPreview.og_description }">
-                    <div class="d-flex flex-column gap-1 px-3 py-2 bg-view">
+                    <div class="d-flex flex-column gap-1 px-3 py-1 bg-view">
                         <p t-if="linkPreview.og_site_name" class="mb-0 card-text text-muted smaller overflow-hidden" t-out="linkPreview.og_site_name"></p>
                         <h6 class="o-mail-LinkPreviewVideo-title card-title mb-0 me-2" t-attf-class="{{ linkPreview.og_description ? 'text-truncate' : 'o-mail-LinkPreviewVideo-hasDescription overflow-hidden' }}">
                             <a t-att-href="linkPreview.source_url" target="_blank" t-esc="linkPreview.og_title"/>
@@ -87,9 +87,9 @@
                     <a t-att-href="linkPreview.source_url" target="_blank"><t t-call="mail.LinkPreviewVideo.preview"/></a>
                 </div>
             </div>
-            <div t-if="linkPreview.videoURL" class="o-mail-LinkPreviewVideo-container">
+            <div t-if="linkPreview.videoURL" class="o-mail-LinkPreviewVideo-container mx-3 mb-2">
                 <div t-if="!state.videoLoaded" class="o-mail-LinkPreviewVideo-videoWrap h-100 w-100" t-on-click="() => state.startVideo = true"><t t-call="mail.LinkPreviewVideo.preview"/></div>
-                <iframe t-if="state.startVideo" t-att-src="linkPreview.videoURL" class="h-100 w-100" t-att-class="{'d-none': !state.videoLoaded}" allow="autoplay" frameborder="0" allowFullScreen="true" t-ref="video"/>
+                <iframe t-if="state.startVideo" t-att-src="linkPreview.videoURL" class="h-100 w-100 rounded" t-att-class="{'d-none': !state.videoLoaded}" allow="autoplay" frameborder="0" allowFullScreen="true" t-ref="video"/>
             </div>
             <t t-call="mail.LinkPreview.aside">
                 <t t-set="className" t-value="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
@@ -106,8 +106,8 @@
     </t>
 
     <t t-name="mail.LinkPreviewVideo.preview">
-        <div  class="o-mail-LinkPreviewVideo-overlay position-relative h-100 rounded-bottom" t-att-class="{'bg-dark': !linkPreview.og_image}">
-            <img t-if="linkPreview.og_image" class="img-fluid h-100 object-fit-cover" t-att-src="linkPreview.og_image" t-att-alt="linkPreview.og_title" t-on-load="onImageLoaded"/>
+        <div class="o-mail-LinkPreviewVideo-overlay position-relative h-100 rounded-bottom" t-att-class="{'bg-dark': !linkPreview.og_image}">
+            <img t-if="linkPreview.og_image" class="img-fluid h-100 w-100 object-fit-cover rounded" t-att-src="linkPreview.og_image" t-att-alt="linkPreview.og_title" t-on-load="onImageLoaded"/>
             <i t-elif="linkPreview.videoURL" class="fa fa-television fa-8x position-absolute top-50 start-50 translate-middle"/>
             <span t-else="" class="d-flex align-items-center justify-content-center w-100 h-100 bg-100 text-300">
                 <i class="fa fa-camera fa-2x"/>
