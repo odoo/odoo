@@ -111,7 +111,9 @@ export class CloneItemAction extends BuilderAction {
     static dependencies = ["clone", "history"];
     async apply({ editingElement, params: { mainParam: itemSelector }, value: position }) {
         const itemEl = editingElement.querySelector(itemSelector);
-        await this.dependencies.clone.cloneElement(itemEl, { position, scrollToClone: true });
-        this.dependencies.history.addStep();
+        if (itemEl) {
+            await this.dependencies.clone.cloneElement(itemEl, { position, scrollToClone: true });
+            this.dependencies.history.addStep();
+        }
     }
 }
