@@ -12,7 +12,7 @@ import time
 from odoo import http
 from odoo.addons.iot_drivers.connection_manager import connection_manager
 from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
-from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
+from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import EscposNotAvailableError, PrinterDriverBase
 from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_L import conn, cups_lock
 from odoo.addons.iot_drivers.main import iot_devices
 from odoo.addons.iot_drivers.tools import helpers, route, system, wifi
@@ -78,10 +78,11 @@ class PrinterDriver(PrinterDriverBase):
         :param data: The data to print
         :param action_unique_id: The unique identifier of the action triggering the print
         """
-        if not self.check_printer_status(action_unique_id):
-            _logger.warning("Printer %s is not ready, aborting raw print", self.device_name)
-            # raise error caught in driver.py -> don't register action_unique_id
-            raise Exception("Printer not ready")
+        if self.escpos_device:
+            try:
+                return self.print_raw_escpos(data, action_unique_id)
+            except EscposNotAvailableError:
+                _logger.warning("Failed to print via python-escpos, falling back to CUPS")
 
         try:
             with cups_lock:
@@ -155,10 +156,10 @@ class PrinterDriver(PrinterDriverBase):
             body = b"Test print for " + data['printer_name'].encode()
         commands = self.RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
         if self.escpos_device:
-            if not self.check_printer_status():
-                return
             try:
                 with EscposIO(self.escpos_device) as dev:
+                    if not self._check_status_escpos(dev.printer, action_unique_id=None):
+                        return
                     dev.printer.set(align='center', double_height=True, double_width=True)
                     dev.printer.textln(title.decode())
                     dev.printer.set_with_default(align='center', double_height=False, double_width=False)
