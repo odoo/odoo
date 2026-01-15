@@ -55,6 +55,7 @@ _REGISTRY_CACHES = {
     'assets': 512,
     'stable': 1024,
     'templates': 1024,
+    'template_code': 1024,
     'routing': 1024,  # 2 entries per website
     'routing.rewrites': 8192,  # url_rewrite entries
     'templates.cached_values': 2048, # arbitrary
