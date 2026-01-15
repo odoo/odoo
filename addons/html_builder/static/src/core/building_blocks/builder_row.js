@@ -1,4 +1,5 @@
 import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
+import { localization } from "@web/core/l10n/localization";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
@@ -36,6 +37,7 @@ export class BuilderRow extends Component {
             expanded: this.props.expand,
         });
         this.hasTooltip = this.props.tooltip ? true : undefined;
+        this.isBackendRTL = localization.direction === "rtl";
 
         if (this.props.slots.collapse) {
             useVisibilityObserver("collapse-content", useApplyVisibility("collapse"));
