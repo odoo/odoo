@@ -9,7 +9,7 @@ import json
 from odoo import _, api, fields, models, Command, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools.mail import is_html_empty, email_normalize, email_split_and_format
+from odoo.tools.mail import is_html_empty, email_normalize, email_split_and_format, html_remove_xpath
 from odoo.tools.misc import clean_context
 from odoo.addons.mail.tools.parser import parse_res_ids
 
@@ -906,9 +906,12 @@ class MailComposeMessage(models.TransientModel):
         if not self.model or not self.model in self.env:
             raise UserError(_('Template creation from composer requires a valid model.'))
         model_id = self.env['ir.model']._get_id(self.model)
+        template_body = self.body
+        if template_body:
+            template_body = html_remove_xpath(template_body, "//*[hasclass('o_mail_reply_container')]")
         values = {
             'name': self.template_name,
-            'body_html': self.body,
+            'body_html': template_body,
             'model_id': model_id,
             'use_default_to': True,
             'user_id': self.env.uid,
@@ -922,8 +925,8 @@ class MailComposeMessage(models.TransientModel):
                 attachments.write({'res_model': template._name, 'res_id': template.id})
                 template.attachment_ids = self.attachment_ids
 
-        # generate the saved template
-        self.write({'template_id': template.id})
+        # save the new cleaned template, keep the original body
+        self.write({'template_id': template.id, 'body': self.body})
         return _reopen(self, self.id, self.model, context={**self.env.context, 'dialog_size': 'large'})
 
     def cancel_save_template(self):

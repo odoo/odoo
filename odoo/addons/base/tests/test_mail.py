@@ -11,6 +11,7 @@ from odoo.tests import tagged
 from odoo.tests.common import BaseCase
 from odoo.tools import misc
 from odoo.tools.mail import (
+    html_remove_xpath,
     is_html_empty, html2plaintext, html_to_inner_content, html_sanitize, append_content_to_html, plaintext2html,
     email_domain_normalize, email_normalize, email_re,
     email_split, email_split_and_format, email_split_and_format_normalize, email_split_tuples,
@@ -407,6 +408,53 @@ class TestSanitizer(BaseCase):
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHtmlTools(BaseCase):
     """ Test some of our generic utility functions about html """
+
+    def test_html_remove_xpath(self):
+        cases = [
+            (   # base case with one element to remove
+                '<div>This is a <b>very</b> big deal.</div>',
+                '//b',
+                '<div>This is a \nbig deal.</div>',
+            ),
+            (   # preserve markup
+                Markup('<div>This is a <b>very</b> big deal.</div>'),
+                '//b',
+                Markup('<div>This is a \nbig deal.</div>'),
+            ),
+            (   # missing root
+                'This is a <b>very</b> big deal.',
+                '//b',
+                '<div>This is a \nbig deal.</div>'
+            ),
+            (   # indented removal with complex xpath
+                'This is a <b>very <i>big</i>, important</b><span class="fa fa-money-bag delete"> and lucrative</span> deal.',
+                '//b | //i | //*[hasclass("delete")]',
+                '<div>This is a \ndeal.</div>'
+            ),
+            (   # removing the root
+                '<span>Remove root</span>',
+                '//span',
+                '<div></div>',
+            ),
+            (   # removing the root that is automatically added
+                'Remove root',
+                '//div',
+                '<div>Remove root</div>',
+            ),
+            (   # concatenation injection of nodes (should be safely escaped)
+                Markup('<div><<span/>script<span/>><<span/>/script</span>></div>'),
+                '//span',
+                Markup('<div>&lt;\nscript\n&gt;&lt;\n/script&gt;</div>'),
+            ),
+            (   # concatenation injection of strings
+                '<a>htt<span/>ps://www.example.com</a>',
+                '//span',
+                '<a>htt\nps://www.example.com</a>',
+            ),
+        ]
+        for input_str, xpath, output_str in cases:
+            with self.subTest(input=input_str):
+                self.assertEqual(html_remove_xpath(input_str, xpath), output_str)
 
     def test_plaintext2html(self):
         cases = [
