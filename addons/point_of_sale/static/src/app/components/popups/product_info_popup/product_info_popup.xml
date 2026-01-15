@@ -8,7 +8,7 @@
                         t-att-style="props.productTemplate.is_favorite ? 'color: #f3cc00;' : ''"
                         role="img"/>
                 </button>
-                <h3 class="section-title" t-out="props.productTemplate.display_name + ' | ' + env.utils.formatCurrency(props.info.productInfo.all_prices.price_with_tax)"/>
+                <h3 class="section-title" t-out="props.productTemplate.displayName + ' | ' + env.utils.formatCurrency(props.info.productInfo.all_prices.price_with_tax)"/>
                 <button type="button" class="btn-close mb-2" aria-label="Close" tabindex="-1" t-on-click="props.close"/>
             </t>
             <div class="section-public-description mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.productTemplate.productDescriptionMarkup">
