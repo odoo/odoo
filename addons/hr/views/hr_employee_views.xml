@@ -1010,17 +1010,6 @@ if employees:
             </field>
         </record>
 
-        <record id="action_hr_employee_departure_multi" model="ir.actions.server">
-            <field name="name">End Collaboration</field>
-            <field name="model_id" ref="model_hr_employee"/>
-            <field name="binding_model_id" ref="model_hr_employee"/>
-            <field name="binding_view_types">kanban,list</field>
-            <field name="state">code</field>
-            <field name="code">
-                action = records.action_departure_multi()
-            </field>
-        </record>
-
         <record id="action_partner_mass_mail" model="ir.actions.act_window">
             <field name="name">Send Email</field>
             <field name="res_model">mail.compose.message</field>

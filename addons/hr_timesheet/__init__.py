@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import controllers
 from . import models
 from . import report
-from . import wizard
 
 from odoo import fields
 
@@ -31,6 +29,7 @@ def create_internal_project(env):
     } for task in project_ids.task_ids.filtered(lambda t: t.company_id in admin.employee_ids.company_id)])
 
     _check_exists_collaborators_for_project_sharing(env)
+
 
 def _uninstall_hook(env):
 
