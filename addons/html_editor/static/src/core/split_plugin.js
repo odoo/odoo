@@ -18,6 +18,7 @@ import {
     lastLeaf,
     ancestors,
     createDOMPathGenerator,
+    findUpTo,
 } from "../utils/dom_traversal";
 import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
 import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
@@ -158,8 +159,12 @@ export class SplitPlugin extends Plugin {
      * @returns {[HTMLElement|undefined, HTMLElement|undefined]}
      */
     splitElementBlock({ targetNode, targetOffset, blockToSplit }) {
-        // If the block is unsplittable, insert a line break instead.
-        if (this.isUnsplittable(blockToSplit)) {
+        // If the block is unsplittable or the targetNode is within an
+        // unsplittable element, insert a line break instead.
+        if (
+            this.isUnsplittable(blockToSplit) ||
+            findUpTo(targetNode, blockToSplit, (el) => this.isUnsplittable(el))
+        ) {
             // @todo: t-if, t-else etc are not blocks, but they are
             // unsplittable.  The check must be done from the targetNode up to
             // the block for unsplittables. There are apparently no tests for
@@ -333,17 +338,17 @@ export class SplitPlugin extends Plugin {
         const selection =
             direction === DIRECTIONS.RIGHT
                 ? {
-                    anchorNode: startContainer,
-                    anchorOffset: startOffset,
-                    focusNode: endContainer,
-                    focusOffset: endOffset,
-                }
+                      anchorNode: startContainer,
+                      anchorOffset: startOffset,
+                      focusNode: endContainer,
+                      focusOffset: endOffset,
+                  }
                 : {
-                    anchorNode: endContainer,
-                    anchorOffset: endOffset,
-                    focusNode: startContainer,
-                    focusOffset: startOffset,
-                };
+                      anchorNode: endContainer,
+                      anchorOffset: endOffset,
+                      focusNode: startContainer,
+                      focusOffset: startOffset,
+                  };
         return this.dependencies.selection.setSelection(selection, { normalize: false });
     }
 
