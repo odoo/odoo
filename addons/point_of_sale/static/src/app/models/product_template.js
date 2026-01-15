@@ -139,5 +139,11 @@ export class ProductTemplate extends ProductTemplateAccounting {
             .filter(Boolean)
             .join(" ");
     }
+
+    get displayName() {
+        return this.default_code
+            ? `[${this.default_code}] ${this.display_name}`
+            : this.display_name;
+    }
 }
 registry.category("pos_available_models").add(ProductTemplate.pythonModel, ProductTemplate);
