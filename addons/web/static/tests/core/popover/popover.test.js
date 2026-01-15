@@ -1,21 +1,27 @@
-import { expect, getFixture, test } from "@odoo/hoot";
+import { beforeEach, expect, getFixture, test } from "@odoo/hoot";
 import { queryOne, queryRect, resize, scroll, waitFor } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useRef, useState, xml } from "@odoo/owl";
 import {
     contains,
     defineStyle,
     mountWithCleanup,
-    waitForSteps,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { Popover } from "@web/core/popover/popover";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { patch } from "@web/core/utils/patch";
 
 class Content extends Component {
     static props = ["*"];
     static template = xml`<div id="popover">Popover Content</div>`;
 }
+
+beforeEach(() => {
+    patchWithCleanup(Popover.defaultProps, {
+        animation: false,
+        arrow: false,
+    });
+});
 
 test("popover can have custom class", async () => {
     await mountWithCleanup(Popover, {
@@ -243,7 +249,7 @@ test("within iframe", async () => {
             close: () => {},
             target: popoverTarget,
             component: Content,
-            animation: false,
+            arrow: true,
             onPositioned: (_, { direction }) => {
                 expect.step(direction);
             },
@@ -267,7 +273,7 @@ test("within iframe", async () => {
 
     await scroll(popoverTarget.ownerDocument.documentElement, { y: 100 }, { scrollable: false });
     await animationFrame();
-    expect.verifySteps(["bottom"]);
+    expect.verifySteps(["bottom", "bottom"]);
     popoverBox = comp.popoverRef.el.getBoundingClientRect();
     expectedTop -= 100;
     expect(Math.floor(popoverBox.top)).toBe(Math.floor(expectedTop));
@@ -364,7 +370,12 @@ test("popover with arrow and onPositioned", async () => {
         },
     });
 
-    expect.verifySteps(["onPositioned (from override)", "onPositioned (from props)"]);
+    expect.verifySteps([
+        "onPositioned (from override)",
+        "onPositioned (from props)", // On mounted
+        "onPositioned (from override)",
+        "onPositioned (from props)", // arrow repositionning -> triggers resize observer
+    ]);
     expect(".o_popover").toHaveClass("o_popover popover mw-100 bs-popover-auto");
     expect(".o_popover").toHaveAttribute("data-popper-placement", "bottom");
     expect(".o_popover > .popover-arrow").toHaveClass("position-absolute z-n1");
@@ -386,11 +397,15 @@ test("popover position is updated when the content dimensions change", async () 
     </div>`;
     }
 
+    await mountWithCleanup(/* xml */ `
+        <div class="popover-target" style="width: 50px; height: 50px;" />
+    `);
+
     await mountWithCleanup(Popover, {
         props: {
             close: () => {},
-            target: getFixture(),
-            position: "top-fit",
+            target: queryOne(".popover-target"),
+            position: "bottom-start",
             component: DynamicContent,
             onPositioned() {
                 expect.step("onPositioned");
@@ -399,16 +414,17 @@ test("popover position is updated when the content dimensions change", async () 
     });
 
     expect(".o_popover").toHaveCount(1);
-    expect.verifySteps(["onPositioned"]);
+    await runAllTimers();
+    expect.verifySteps(["onPositioned", "onPositioned"]);
     await contains("#popover button").click();
     expect("#popover span").toHaveCount(1);
-    await waitForSteps(["onPositioned"]);
+    await expect.waitForSteps(["onPositioned"]);
 });
 
 test("arrow follows target and can get sucked", async () => {
     let container;
-    patch(Popover, { animationTime: 0 });
-    patch(Popover.prototype, {
+    patchWithCleanup(Popover.defaultProps, { arrow: true });
+    patchWithCleanup(Popover.prototype, {
         get positioningOptions() {
             return {
                 ...super.positioningOptions,
@@ -487,4 +503,30 @@ test("arrow follows target and can get sucked", async () => {
     expect(arrowRect.left).toBeWithin(popoverRect.left, popoverRect.right - arrowRect.width);
     expect(".popover-arrow").toHaveClass("sucked");
     expect(".popover-arrow").not.toBeVisible();
+});
+
+test("popover can animate", async () => {
+    patchWithCleanup(window.Element.prototype, {
+        animate() {
+            expect(this).toHaveClass("o_popover");
+            expect.step("animated");
+            return super.animate(...arguments);
+        },
+    });
+
+    await mountWithCleanup(Popover, {
+        props: {
+            close: () => {},
+            target: getFixture(),
+            animation: true,
+            component: Content,
+        },
+    });
+
+    expect(".o_popover").toHaveCount(1);
+
+    await animationFrame();
+    await runAllTimers();
+
+    expect.verifySteps(["animated"]);
 });
