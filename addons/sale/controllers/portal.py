@@ -154,6 +154,8 @@ class CustomerPortal(payment_portal.PaymentPortal):
         if payment_amount and payment_amount < prepayment_amount and order_sudo.state != "sale":
             raise MissingError(_("The amount is lower than the prepayment amount."))
 
+        advantage_tax_excl, advantage_tax_incl = order_sudo._get_advantages()
+
         if report_type in ("html", "pdf", "text"):
             return self._show_report(
                 model=order_sudo,
@@ -198,6 +200,8 @@ class CustomerPortal(payment_portal.PaymentPortal):
             "backend_url": backend_url,
             "res_company": order_sudo.company_id,  # Used to display correct company logo
             "payment_amount": payment_amount,
+            "advantage_tax_excl": advantage_tax_excl,
+            "advantage_tax_incl": advantage_tax_incl,
         }
 
         # Payment values

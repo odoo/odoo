@@ -539,14 +539,18 @@ class TestSalePrices(SaleCommon):
         sale_order._recompute_prices()
 
         self.assertTrue(all(line.discount == 5 for line in sale_order.order_line))
-        self.assertEqual(sale_order.amount_undiscounted, so_amount)
+        advantage_tax_excl, _ = sale_order._get_advantages()
+        # advantage_tax_ecl = amount_untaxed (with discounts) - amount untaxed (without discounts)
+        self.assertEqual(advantage_tax_excl, sale_order.amount_untaxed - so_amount)
         self.assertEqual(sale_order.amount_total, 0.95 * so_amount)
 
         pricelist.item_ids = [Command.create({"price_discount": 5, "compute_price": "formula"})]
         sale_order._recompute_prices()
 
         self.assertTrue(all(line.discount == 0 for line in sale_order.order_line))
-        self.assertEqual(sale_order.amount_undiscounted, so_amount)
+        advantage_tax_excl, _ = sale_order._get_advantages()
+        # No advantage as no discounts were applied, the pricelist only lowered the price_unit
+        self.assertEqual(advantage_tax_excl, False)
         self.assertEqual(sale_order.amount_total, 0.95 * so_amount)
 
         # Test taking off the pricelist
@@ -554,7 +558,8 @@ class TestSalePrices(SaleCommon):
         sale_order._recompute_prices()
 
         self.assertTrue(all(line.discount == 0 for line in sale_order.order_line))
-        self.assertEqual(sale_order.amount_undiscounted, so_amount)
+        advantage_tax_excl, _ = sale_order._get_advantages()
+        self.assertEqual(advantage_tax_excl, False)
         self.assertEqual(
             sale_order.amount_total,
             start_so_amount,
@@ -1007,8 +1012,8 @@ class TestSalePrices(SaleCommon):
         self.assertEqual(line.price_subtotal, 17527.41)
         self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)
 
-    def test_amount_undiscounted_with_incl_excl_taxes(self):
-        """When adding a discount on a SO line, this test ensures that amount_undiscounted is
+    def test_discount_and_advantages(self):
+        """When adding a discount on a SO line, this test ensures that advantages are
         consistent with the used tax."""
         order = self._create_so(
             order_line=[
@@ -1024,20 +1029,21 @@ class TestSalePrices(SaleCommon):
         order_line = order.order_line
 
         # test discount and qty 1
-        self.assertEqual(order.amount_undiscounted, 100.0)
+        advantage_tax_excl, _ = order._get_advantages()
+        self.assertEqual(advantage_tax_excl, -1.0)
         self.assertEqual(order_line.price_subtotal, 99.0)
 
         # more quantity 1 -> 3
         order_line.write({"product_uom_qty": 3.0, "price_unit": 100.0, "discount": 1.0})
-        order.invalidate_recordset(["amount_undiscounted"])
-
-        self.assertEqual(order.amount_undiscounted, 300.0)
+        advantage_tax_excl, _ = order._get_advantages()
+        self.assertEqual(advantage_tax_excl, -3.0)
         self.assertEqual(order_line.price_subtotal, 297.0)
 
         # undiscounted
         order_line.discount = 0.0
         self.assertEqual(order_line.price_subtotal, 300.0)
-        self.assertEqual(order.amount_undiscounted, 300.0)
+        advantage_tax_excl, _ = order._get_advantages()
+        self.assertEqual(advantage_tax_excl, False)
 
         # Same with an included-in-price tax
         order = order.copy()
@@ -1053,13 +1059,13 @@ class TestSalePrices(SaleCommon):
         line.discount = 50.0
         order.action_confirm()
 
-        # 300 with 10% incl tax -> 272.727272... total tax excluded without discount
-        # 136.36 price tax excluded with discount applied
-        self.assertAlmostEqual(order.amount_undiscounted, 272.73, places=2)
+        # 300 with 10% incl tax -> 272.73 total tax excluded without a discount
+        advantage_tax_excl, _ = order._get_advantages()
+        self.assertAlmostEqual(advantage_tax_excl, -136.37, places=2)
         self.assertEqual(line.price_subtotal, 136.36)
 
-    def test_amount_undiscounted_with_global_discounts(self):
-        """This test ensures amount_undiscounted remains intact with global discounts."""
+    def test_advantages_with_global_discounts(self):
+        """This test ensures advantages remain intact with global discounts."""
         order = self._create_so(
             order_line=[
                 Command.create({
@@ -1076,10 +1082,11 @@ class TestSalePrices(SaleCommon):
         })
         wizard.action_apply_discount()
         self.assertEqual(order.amount_untaxed, 90)  # global discount applied
-        self.assertEqual(order.amount_undiscounted, 100)
+        advantage_tax_excl, _ = order._get_advantages()
+        self.assertEqual(advantage_tax_excl, -10)
 
-    def test_amount_undiscounted_with_decimal_numbers(self):
-        """This test ensures amount_undiscounted remains intact with decimal numbers."""
+    def test_advantages_with_decimal_numbers(self):
+        """This test ensures advantages remain intact with decimal numbers."""
         order = self._create_so(
             order_line=[
                 Command.create({
@@ -1091,7 +1098,8 @@ class TestSalePrices(SaleCommon):
             ]
         )
         self.assertEqual(order.order_line.price_subtotal, 50.06)  # sol discount applied
-        self.assertEqual(order.amount_undiscounted, 100.11)
+        advantage_tax_excl, _ = order._get_advantages()
+        self.assertEqual(advantage_tax_excl, -50.05)
 
     def test_product_quantity_rounding(self):
         """When adding a sale order line, product quantity should be rounded
@@ -1229,10 +1237,9 @@ class TestSalePrices(SaleCommon):
             [self.discount, self.discount],
             "Discount should apply to combo item lines",
         )
-        self.assertAlmostEqual(
-            order.amount_untaxed,
-            order.amount_undiscounted * (100 - self.discount) / 100,
-            msg="Pricelist discount should be applied to quotation",
+        advantage_tax_excl, _ = order._get_advantages()
+        self.assertEqual(
+            advantage_tax_excl, -1.0, msg="Pricelist discount should be applied to quotation"
         )
 
     def test_so_included_tax_mapping(self):

@@ -49,6 +49,10 @@ class SaleOrderLine(models.Model):
             )
             line.tax_ids = fpos.map_tax(taxes)
 
+    def _is_line_excluded_from_totals(self):
+        """Override of sale to exclude coupons for advantages computation."""
+        return super()._is_line_excluded_from_totals() or self.coupon_id
+
     def _get_display_price(self):
         # A product created from a promotion does not have a list_price.
         # The price_unit of a reward order line is computed by the promotion, so it can be used
