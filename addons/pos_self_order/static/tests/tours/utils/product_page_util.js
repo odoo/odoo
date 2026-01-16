@@ -203,3 +203,10 @@ export function isProductDisplayed(productName) {
         trigger: `.o_self_product_box span:contains("${productName}")`,
     };
 }
+
+export function checkNthProduct(n, name) {
+    return {
+        content: `Product ${n} should be ${name}`,
+        trigger: `.product_list .o_self_product_box:nth-child(${n}) span:contains('${name}')`,
+    };
+}

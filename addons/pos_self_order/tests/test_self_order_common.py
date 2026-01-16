@@ -104,3 +104,25 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
             'self_ordering_mode': 'mobile',
         })
         self.start_tour(self.pos_config._get_self_order_route(floor.table_ids[0].id), "test_self_order_product_availability")
+
+    def test_self_order_products_sorting_order(self):
+        """Test self order products sorting order should follow: favorite, pos_sequence, name"""
+
+        products_data = [
+            # product, is_favorite, pos_sequence
+            (self.cola, False, 20),
+            (self.desk_organizer, True, 20),
+            (self.ketchup, False, 5),
+            (self.fanta, False, 10),
+            (self.free, True, 10),
+        ]
+
+        for product, is_favorite, pos_sequence in products_data:
+            product.write({
+                'is_favorite': is_favorite,
+                'pos_sequence': pos_sequence
+            })
+
+        for mode in ('mobile', 'kiosk', 'consultation'):
+            self.pos_config.write({'self_ordering_mode': mode})
+            self.start_tour(self.pos_config._get_self_order_route(), 'test_self_order_products_sorting_order')
