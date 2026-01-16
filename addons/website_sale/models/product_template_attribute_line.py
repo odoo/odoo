@@ -18,8 +18,25 @@ class ProductTemplateAttributeLine(models.Model):
         The returned attributes are ordered as they appear in `self`, so based
         on the order of the attribute lines.
         """
+        single_value_lines = self.filtered(lambda ptal: (
+            len(ptal.value_ids) == 1
+            and ptal.attribute_id.display_type != 'multi'
+            and not ptal.value_ids.is_custom
+        ))
+        single_value_attributes = OrderedDict([(pa, self.env['product.template.attribute.line']) for pa in single_value_lines.attribute_id])
+        for ptal in single_value_lines:
+            single_value_attributes[ptal.attribute_id] |= ptal
+        return single_value_attributes
+
+    def _prepare_single_value_including_multi_type_for_display(self):
+        """On the product page group together the attribute lines that concern
+        the same attribute and that have only one value each.
+
+        Unlike `_prepare_single_value_for_display`, this method also includes
+        the attribute lines with a display type 'multi'
+        """
         single_value_lines = self.filtered(
-            lambda ptal: len(ptal.value_ids) == 1 and ptal.attribute_id.display_type != 'multi'
+            lambda ptal: len(ptal.value_ids) == 1 and not ptal.value_ids.is_custom
         )
         single_value_attributes = OrderedDict([(pa, self.env['product.template.attribute.line']) for pa in single_value_lines.attribute_id])
         for ptal in single_value_lines:
@@ -44,3 +61,20 @@ class ProductTemplateAttributeLine(models.Model):
         for ptal in self:
             categories[ptal.attribute_id.category_id] |= ptal
         return categories
+
+    def _prepare_categories_for_display_in_specs_table(self):
+        """
+         Prepare attribute categories for display in a specs table.
+
+        Filters out attribute lines that have a single value and whose value is
+        marked as custom, then call _prepare_categories_for_display to group
+        the remaining attribute lines by category.
+
+        :return: OrderedDict [{
+        product.attribute.category: [product.template.attribute.line]
+        }]
+        """
+        filtered_self = self - self.filtered(
+            lambda ptal: len(ptal.value_ids) == 1 and ptal.value_ids.is_custom
+        )
+        return filtered_self._prepare_categories_for_display()
