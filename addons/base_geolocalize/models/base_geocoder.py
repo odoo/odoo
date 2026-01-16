@@ -87,7 +87,10 @@ class GeoCoder(models.AbstractModel):
             return None
         url = 'https://nominatim.openstreetmap.org/search'
         try:
-            headers = {'User-Agent': 'Odoo (http://www.odoo.com/contactus)'}
+            headers = {
+                'User-Agent': 'Odoo/1.0 (http://www.odoo.com/contactus)',
+                'Accept': 'image/png,image/svg+xml,*/*'
+            }
             response = requests.get(url, headers=headers, params={'format': 'json', 'q': addr})
             _logger.info('openstreetmap nominatim service called')
             if response.status_code != 200:
