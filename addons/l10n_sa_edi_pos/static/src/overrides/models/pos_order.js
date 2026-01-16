@@ -19,6 +19,11 @@ patch(PosOrder.prototype, {
     isInvoiceMandatoryForSA() {
         // Zatca enforces invoice, but for settlement due, invoices are not needed
         // Only applicable if enterprise:pos_settle_due module is installed
+        const settleDueLines = this.lines.filter((line) => line.isSettleDueLine());
+        // is_settling_account here represents account deposit
+        if (settleDueLines.length || this.is_settling_account) {
+            return false;
+        }
         return this.isSACompany() && !this.is_settling_account;
     },
 
