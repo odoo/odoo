@@ -161,7 +161,7 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.record_admin, {}, True, 'No access on record (and not notified on first message)'),
             (record_admin_fol, {
                 'reply_to': 'avoid.catchall@my.test.com',  # otherwise crashes
-            }, False, 'Followers > no access on record'),
+            }, True, 'No access on record > followers'),
             # parent based
             (self.record_admin, {  # note: force reply_to normally computed by message_post avoiding ACLs issues
                 'parent_id': admin_msg.id,
@@ -283,7 +283,7 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.record_internal, {}, True, 'No R/W Access on record'),
             (record_admin_fol, {
                 'reply_to': 'avoid.catchall@my.test.com',  # otherwise crashes
-            }, False, 'Followers > no access on record'),
+            }, True, 'No access on record > followers'),
             # parent based
             (self.record_admin, {
                 'parent_id': admin_msg.id,
