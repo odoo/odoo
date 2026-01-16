@@ -100,15 +100,18 @@ class StockLocation(models.Model):
     )
 
     @api.depends('name', 'location_id.complete_name', 'usage')
-    @api.depends_context('formatted_display_name')
+    @api.depends_context('formatted_display_name', 'show_empty')
     def _compute_display_name(self):
         super()._compute_display_name()
+        formatted_display_name = self.env.context.get('formatted_display_name')
         for location in self:
             has_parent = location.location_id and location.usage != 'view'
-            if location.env.context.get('formatted_display_name') and has_parent:
+            if formatted_display_name and has_parent:
                 location.display_name = f"--{location.location_id.complete_name}/--{location.name}"
             elif has_parent:
                 location.display_name = f"{location.location_id.complete_name}/{location.name}"
+            if formatted_display_name and self.env.context.get('show_empty') and location.is_empty:
+                location.display_name += self.env._("\t--Empty--")
 
     @api.depends('outgoing_move_line_ids.quantity_product_uom', 'incoming_move_line_ids.quantity_product_uom',
                  'outgoing_move_line_ids.state', 'incoming_move_line_ids.state',
