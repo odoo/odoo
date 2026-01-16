@@ -562,10 +562,7 @@ class AccountMoveLine(models.Model):
                     index = term_lines._ids.index(line.id) if line in term_lines else len(term_lines)
 
                     name = _('%(name)s installment #%(number)s', name=name if name else '', number=index + 1).lstrip()
-                if n_terms > 1 or not line.name or line._origin.name == line._origin.move_id.payment_reference or (
-                    line._origin.move_id.payment_reference and line._origin.move_id.ref
-                    and line._origin.name == f'{line._origin.move_id.ref} - {line._origin.move_id.payment_reference}'
-                ):
+                if name:
                     line.name = name
             if not line.product_id or line.display_type in ('line_section', 'line_subsection', 'line_note'):
                 continue
@@ -1094,11 +1091,15 @@ class AccountMoveLine(models.Model):
                 if line.tax_repartition_line_id:
                     is_refund = line.tax_repartition_line_id.document_type == 'refund'
                 else:
-                    tax_type = line.tax_ids[:1].type_tax_use
-                    if tax_type == 'sale' and line.credit == 0:
-                        is_refund = True
-                    elif tax_type == 'purchase' and line.debit == 0:
-                        is_refund = True
+                    # If we have both purchase and sale taxes on a line (which can happen in bank rec).
+                    # We choose invoice by default
+                    tax_type = line.tax_ids.mapped('type_tax_use')
+                    if 'sale' in tax_type and 'purchase' in tax_type:
+                        is_refund = line.credit == 0
+                    else:
+                        tax_type = line.tax_ids[:1].type_tax_use
+                        if (tax_type == 'sale' and line.credit == 0) or (tax_type == 'purchase' and line.debit == 0):
+                            is_refund = True
 
                     if line.tax_ids and line.move_id.reversed_entry_id:
                         is_refund = not is_refund
@@ -1170,24 +1171,30 @@ class AccountMoveLine(models.Model):
             line.reconciled_lines_excluding_exchange_diff_ids = all_lines - excluded_ids
 
     def _compute_parent_id(self):
+        parent_id_vals_to_lines = defaultdict(list)
         for move, lines in self.grouped('move_id').items():
             if not move:
-                lines.parent_id = False
+                parent_id_vals_to_lines[False].extend(lines._ids)
                 continue
             last_section = False
             last_sub = False
             for line in move.line_ids.sorted('sequence'):
+                value = False
                 if line.display_type == 'line_section':
                     last_section = line
-                    line.parent_id = False
+                    value = False
                     last_sub = False
                 elif line.display_type == 'line_subsection':
-                    line.parent_id = last_section
+                    value = last_section
                     last_sub = line
                 elif line.display_type in {'line_note', 'product'}:
-                    line.parent_id = last_sub or last_section
+                    value = last_sub or last_section
                 else:
-                    line.parent_id = False
+                    value = False
+                parent_id_vals_to_lines[value].append(line.id)
+
+        for val, record_ids in parent_id_vals_to_lines.items():
+            self.browse(record_ids).parent_id = val
 
     @api.depends('move_id.move_type')
     def _compute_no_followup(self):
@@ -1246,9 +1253,7 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
 
     def _search_journal_group_id(self, operator, value):
-        field = 'name' if 'like' in operator else 'id'
-        journal_groups = self.env['account.journal.group'].search([(field, operator, value)])
-        return [('journal_id', 'not in', journal_groups.excluded_journal_ids.ids)]
+        return self.env['account.move']._search_journal_group_id(operator, value)
 
     # -------------------------------------------------------------------------
     # INVERSE METHODS
@@ -3181,7 +3186,7 @@ class AccountMoveLine(models.Model):
 
         payment_date = payment_date or fields.Date.context_today(self)
 
-        term_lines = self.sorted(key=lambda line: (line.date_maturity, line.date))
+        term_lines = self.sorted(key=lambda line: (line.date_maturity or date.max, line.date))
         sign = move.direction_sign
         installments = []
         first_installment_mode = False
@@ -3382,7 +3387,7 @@ class AccountMoveLine(models.Model):
         return res
 
     def _get_journal_items_full_name(self, name, display_name):
-        return name if not display_name or display_name in name else f"{display_name} {name}"
+        return name if not display_name or display_name in name else f"{display_name}\n{name}"
 
     def _check_edi_line_tax_required(self):
         return self.product_id.type != 'combo'
@@ -3398,7 +3403,7 @@ class AccountMoveLine(models.Model):
             'reconcile_model_id': self.reconcile_model_id.id,
             'analytic_distribution': self.analytic_distribution,
             'tax_repartition_line_id': self.tax_repartition_line_id.id,
-            'tax_ids': [Command.set(self.tax_ids.ids)],
+            'tax_ids': [Command.set(self.tax_ids.ids)] + kwargs.pop('tax_ids', []),
             'tax_tag_ids': [Command.set(self.tax_tag_ids.ids)],
             'group_tax_id': self.group_tax_id.id,
             'partner_id': self.partner_id.id,

@@ -30,17 +30,6 @@ class AccountAccount(models.Model):
             if account.account_type in ('asset_receivable', 'liability_payable') and not account.reconcile:
                 raise ValidationError(_('You cannot have a receivable/payable account that is not reconcilable. (account code: %s)', account.code))
 
-    @api.constrains('account_type')
-    def _check_account_type_unique_current_year_earning(self):
-        result = self.with_context(active_test=False)._read_group(
-            domain=[('account_type', '=', 'equity_unaffected')],
-            groupby=['company_ids'],
-            aggregates=['id:recordset'],
-            having=[('__count', '>', 1)],
-        )
-        for _company, account_unaffected_earnings in result:
-            raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
-
     name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True, translate=True)
     description = fields.Text(translate=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True,
@@ -584,8 +573,7 @@ class AccountAccount(models.Model):
         balances = {
             account.id: balance
             for account, balance in self.env['account.move.line']._read_group(
-                domain=[('account_id', 'in', self.ids), ('parent_state', '=', 'posted'), ('company_id', '=', self.env.company.id)],
-                groupby=['account_id'],
+                domain=[('account_id', 'in', self.ids), ('parent_state', '=', 'posted'), ('company_id', 'child_of', self.env.company.id)], groupby=['account_id'],
                 aggregates=['balance:sum'],
             )
         }
@@ -675,12 +663,12 @@ class AccountAccount(models.Model):
     @api.depends('account_type')
     def _compute_include_initial_balance(self):
         for account in self:
-            account.include_initial_balance = account.internal_group not in ['income', 'expense']
+            account.include_initial_balance = account.internal_group not in ['income', 'expense'] and account.account_type != 'equity_unaffected'
 
     def _search_include_initial_balance(self, operator, value):
         if operator != 'in':
             return NotImplemented
-        return [('internal_group', 'not in', ['income', 'expense'])]
+        return [('internal_group', 'not in', ['income', 'expense']), ('account_type', '!=', 'equity_unaffected')]
 
     def _get_internal_group(self, account_type):
         return account_type.split('_', maxsplit=1)[0]

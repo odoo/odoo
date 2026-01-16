@@ -80,6 +80,7 @@ class WkhtmlInfo(typing.NamedTuple):
     dpi_zoom_ratio: bool
     bin: str
     version: str
+    is_patched_qt: bool
     wkhtmltoimage_bin: str
     wkhtmltoimage_version: tuple[str, ...] | None
 
@@ -89,6 +90,7 @@ def _wkhtml() -> WkhtmlInfo:
     state = 'install'
     bin_path = 'wkhtmltopdf'
     version = ''
+    is_patched_qt = False
     dpi_zoom_ratio = False
     try:
         bin_path = find_in_path('wkhtmltopdf')
@@ -101,6 +103,8 @@ def _wkhtml() -> WkhtmlInfo:
         _logger.info('Will use the Wkhtmltopdf binary at %s', bin_path)
         out, _err = process.communicate()
         version = out.decode('ascii')
+        if '(with patched qt)' in version:
+            is_patched_qt = True
         match = re.search(r'([0-9.]+)', version)
         if match:
             version = match.group(0)
@@ -144,6 +148,7 @@ def _wkhtml() -> WkhtmlInfo:
         dpi_zoom_ratio=dpi_zoom_ratio,
         bin=bin_path,
         version=version,
+        is_patched_qt=is_patched_qt,
         wkhtmltoimage_bin=image_bin_path,
         wkhtmltoimage_version=wkhtmltoimage_version,
     )
@@ -327,7 +332,7 @@ class IrActionsReport(models.Model):
                 command_args.extend(['--page-width', str(paperformat_id.page_width) + 'mm'])
                 command_args.extend(['--page-height', str(paperformat_id.page_height) + 'mm'])
 
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-top'):
+            if specific_paperformat_args and 'data-report-margin-top' in specific_paperformat_args:
                 command_args.extend(['--margin-top', str(specific_paperformat_args['data-report-margin-top'])])
             else:
                 command_args.extend(['--margin-top', str(paperformat_id.margin_top)])
@@ -346,14 +351,14 @@ class IrActionsReport(models.Model):
                 if _wkhtml().dpi_zoom_ratio:
                     command_args.extend(['--zoom', str(96.0 / dpi)])
 
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-header-spacing'):
+            if specific_paperformat_args and 'data-report-header-spacing' in specific_paperformat_args:
                 command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
             elif paperformat_id.header_spacing:
                 command_args.extend(['--header-spacing', str(paperformat_id.header_spacing)])
 
             command_args.extend(['--margin-left', str(paperformat_id.margin_left)])
 
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-bottom'):
+            if specific_paperformat_args and 'data-report-margin-bottom' in specific_paperformat_args:
                 command_args.extend(['--margin-bottom', str(specific_paperformat_args['data-report-margin-bottom'])])
             else:
                 command_args.extend(['--margin-bottom', str(paperformat_id.margin_bottom)])
@@ -457,13 +462,13 @@ class IrActionsReport(models.Model):
 
         return bodies, res_ids, header, footer, specific_paperformat_args
 
-    def _run_wkhtmltoimage(self, bodies, width, height, image_format="jpg"):
+    def _run_wkhtmltoimage(self, bodies, width, height, image_format="jpg") -> list[bytes | None]:
         """
-        :bodies str: valid html documents as strings
-        :param width int: width in pixels
-        :param height int: height in pixels
-        :param image_format union['jpg', 'png']: format of the image
-        :return list[bytes|None]:
+        :param str bodies: valid html documents as strings
+        :param int width: width in pixels
+        :param int height: height in pixels
+        :param image_format: format of the image
+        :type image_format: typing.Literal['jpg', 'png']
         """
         if modules.module.current_test:
             return [None] * len(bodies)
@@ -617,8 +622,7 @@ class IrActionsReport(models.Model):
                     pass
                 case 1:
                     if body_idx:
-                        wk_version = _wkhtml().version
-                        if '(with patched qt)' not in wk_version:
+                        if not _wkhtml().is_patched_qt:
                             if modules.module.current_test:
                                 raise unittest.SkipTest("Unable to convert multiple documents via wkhtmltopdf using unpatched QT")
                             raise UserError(_("Tried to convert multiple documents in wkhtmltopdf using unpatched QT"))

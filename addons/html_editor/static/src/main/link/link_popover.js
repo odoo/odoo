@@ -256,7 +256,7 @@ export class LinkPopover extends Component {
         useExternalListener(this.props.document, "pointerdown", onPointerDown);
         if (this.props.document !== document) {
             // Listen to pointerdown outside the iframe
-            useExternalListener(document, "pointerdown", onPointerDown);
+            useExternalListener(document, "pointerdown", onPointerDown, { capture: true });
         }
     }
 
@@ -534,7 +534,12 @@ export class LinkPopover extends Component {
                 value: `https://www.google.com/s2/favicons?sz=16&domain=${encodeURIComponent(url)}`,
             };
 
-            const externalMetadata = await this.props.getExternalMetaData(this.state.url);
+            const externalMetadata = await this.props
+                .getExternalMetaData(this.state.url)
+                .catch((error) => {
+                    console.warn(`Error fetching external metadata for ${url.href}:`, error);
+                    return {};
+                });
 
             this.state.urlTitle = externalMetadata?.og_title || this.state.url;
             this.state.urlDescription = externalMetadata?.og_description || "";

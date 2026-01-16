@@ -12,14 +12,15 @@ class TestWebsiteSaleCartNotification(HttpCase, ProductVariantsCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.website = cls.env.company.website_id
         cls.size_attribute.create_variant = 'no_variant'
-        cls.env['product.template'].create({
+        cls.product_tmpl_1 = cls.env['product.template'].create({
             'name': 'website_sale_cart_notification_product_1',
             'type': 'consu',
             'website_published': True,
             'list_price': 1000,
         })
-        cls.env['product.template'].create({
+        cls.product_tmpl_2 = cls.env['product.template'].create({
             'name': 'website_sale_cart_notification_product_2',
             'type': 'consu',
             'website_published': True,
@@ -34,9 +35,15 @@ class TestWebsiteSaleCartNotification(HttpCase, ProductVariantsCommon):
             })],
         })
 
-    def test_website_sale_cart_notification(self):
+    def test_website_sale_cart_notification_tax_included(self):
         self.env.ref('website_sale.product_search').active = True
-        self.start_tour("/", 'website_sale_cart_notification')
+        self.website.show_line_subtotals_tax_selection = 'tax_included'
+        self.start_tour("/", 'website_sale_cart_notification_tax_included')
+
+    def test_website_sale_cart_notification_tax_excluded(self):
+        self.env.ref('website_sale.product_search').active = True
+        self.website.show_line_subtotals_tax_selection = 'tax_excluded'
+        self.start_tour("/", 'website_sale_cart_notification_tax_excluded')
 
     def test_website_sale_cart_notification_qty_and_total(self):
         """ Check that adding product into cart which is already in the cart only display newly

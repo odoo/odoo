@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
+from freezegun import freeze_time
 
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
+from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 from odoo import fields, Command
 
@@ -245,3 +248,126 @@ class TestAccountMove(TestStockValuationCommon):
                 {'account_id': self.account_inventory.id, 'product_id': product_b.id},
             ]
         )
+
+    @freeze_time("2020-01-22")
+    def test_backdate_picking_with_lock_date(self):
+        """
+        Check that pickings can not be backdate or validated prior to the
+        fiscal and hard lock date.
+        """
+        self.env['account.lock_exception'].search([]).sudo().unlink()
+        lock_date = fields.Date.from_string('2011-01-01')
+        prior_to_lock_date = fields.Datetime.add(lock_date, days=-1)
+        post_to_lock_date = fields.Datetime.add(lock_date, days=+1)
+        self.env['stock.quant']._update_available_quantity(self.product_standard, self.stock_location, 10)
+        receipts = receipt, receipt_done = self.env['stock.picking'].create([
+            {
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'picking_type_id': self.picking_type_in.id,
+                'owner_id': self.env.company.partner_id.id,
+                'move_ids': [Command.create({
+                    'product_id': self.product_standard.id,
+                    'location_id': self.supplier_location.id,
+                    'location_dest_id': self.stock_location.id,
+                    'product_uom_qty': 1.0,
+                })]
+            } for _ in range(2)
+        ])
+        receipts.action_confirm()
+        receipt_done.button_validate()
+        # Check that the purchase, sale and tax lock dates do not impose any restrictions
+        self.env.company.write({
+            'sale_lock_date': lock_date,
+            'purchase_lock_date': lock_date,
+            'tax_lock_date': lock_date,
+        })
+        # Receipts can be backdated
+        receipt.scheduled_date = prior_to_lock_date
+        receipt_done.date_done = prior_to_lock_date
+
+        # Check that the fiscal year lock date imposes restrictions
+        self.env.company.write({
+            'sale_lock_date': False,
+            'purchase_lock_date': False,
+            'tax_lock_date': False,
+            'fiscalyear_lock_date': lock_date,
+        })
+        # Receipts can not be backdated prior to lock date
+        receipt.scheduled_date = post_to_lock_date
+        receipt_done.date_done = post_to_lock_date
+        with self.assertRaises(UserError):
+            receipt.scheduled_date = prior_to_lock_date
+        with self.assertRaises(UserError):
+            receipt_done.date_done = prior_to_lock_date
+
+        # Check that the hard lock date imposes restrictions
+        self.env.company.write({
+            'fiscalyear_lock_date': False,
+            'hard_lock_date': lock_date,
+        })
+        # Receipts can not be backdated prior to lock date
+        receipt.scheduled_date = post_to_lock_date
+        receipt_done.date_done = post_to_lock_date
+        with self.assertRaises(UserError):
+            receipt.scheduled_date = prior_to_lock_date
+        with self.assertRaises(UserError):
+            receipt_done.date_done = prior_to_lock_date
+
+    def test_closing_same_day(self):
+        product = self.product_avco
+        product.standard_price = 10.0
+        self._use_inventory_location_accounting()
+        with freeze_time(fields.Datetime.now() - timedelta(seconds=10)):
+            self._make_in_move(product, 10, location_id=self.inventory_location.id)
+            mail_context = {
+                'tracking_disable': False,
+                'mail_create_nolog': False,
+                'mail_create_nosubscribe': False,
+                'mail_notrack': False,
+            }
+            action = self.company.with_context(mail_context).action_close_stock_valuation()
+            closing = self.env['account.move'].with_context(mail_context).browse(action['res_id'])
+            # First flush to clean precommit data
+            self.env.cr.flush()
+            closing._post()
+            # Second flush to post the tracking values
+            self.env.cr.flush()
+            # Update the tracking value create_date since it used the cursor one and not the frozen time
+            am_state_field = self.env['ir.model.fields'].search(
+                [('model', '=', 'account.move'), ('name', '=', 'state')], limit=1)
+            state_tracking = closing.message_ids.tracking_value_ids.filtered(
+                lambda t: t.field_id == am_state_field)
+            state_tracking.create_date = fields.Datetime.now()
+            self.assertRecordValues(closing.line_ids, [
+                {'account_id': self.account_inventory.id, 'debit': 0.0, 'credit': 100.0},
+                {'account_id': self.account_stock_valuation.id, 'debit': 100.0, 'credit': 0.0},
+            ])
+
+        self._make_in_move(product, 10, location_id=self.inventory_location.id)
+        closing = self._close()
+        self.assertRecordValues(closing.line_ids, [
+            {'account_id': self.account_inventory.id, 'debit': 0.0, 'credit': 100.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 100.0, 'credit': 0.0},
+        ])
+
+    def test_invoice_with_journal_item_without_label(self):
+        """Test posting an invoice whose invoice lines have no label.
+        The 'name' field is optional on account.move.line and should be
+        handled safely when generating accounting entries.
+        """
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_standard.id,
+                    'name': False,
+                }),
+            ],
+        })
+        move.action_post()
+        # name should remain falsy on the invoice line
+        self.assertFalse(move.invoice_line_ids.name)
+        # ensure the invoice is posted successfully
+        self.assertEqual(move.state, 'posted')

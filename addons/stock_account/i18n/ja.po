@@ -7,14 +7,14 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-24 12:08+0000\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-05 04:33+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "stock_account/ja/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock_account
 #. odoo-python
@@ -42,8 +42,8 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
-msgid "%(quantity)s %(uom)s at product's standard price %(price)s"
-msgstr "%(quantity)s %(uom)s プロダクトの標準価格： %(price)s"
+msgid "%(quantity)s %(uom)s at product's cost"
+msgstr "%(quantity)s %(uom)s プロダクトの原価で"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -435,7 +435,8 @@ msgstr "費用勘定"
 msgid ""
 "Expense account used to re-qualify products removed from stock and sent to "
 "this location"
-msgstr "在庫から除外され、このロケーションへ送られたプロダクトを再分類する際に使用さ"
+msgstr ""
+"在庫から除外され、このロケーションへ送られたプロダクトを再分類する際に使用さ"
 "れる経費勘定"
 
 #. module: stock_account
@@ -536,7 +537,7 @@ msgstr "在庫ロケーション"
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Inventory Loss"
-msgstr "在庫ロス"
+msgstr "在庫損失"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__inventory_period
@@ -588,7 +589,8 @@ msgstr "社外評価対象"
 msgid ""
 "It exists closing entries after the selected date. Cancel them before "
 "generate an entry prior to them"
-msgstr "選択された日付以降の期末処理が存在します。それ以前の仕訳を生成する前に、それ"
+msgstr ""
+"選択された日付以降の期末処理が存在します。それ以前の仕訳を生成する前に、それ"
 "らをキャンセルしてください"
 
 #. module: stock_account
@@ -606,6 +608,11 @@ msgstr "仕訳明細"
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Journal Items"
 msgstr "仕訳明細"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__justification
+msgid "Justification"
+msgstr "理由"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -663,13 +670,26 @@ msgid "Move"
 msgstr "仕訳"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
+msgid "New Value"
+msgstr "新しい値"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Only is set (= True) is supported in search for remaining_qty."
+msgstr "remaining_qty の検索では、only=True が設定されている場合のみサポートされてい"
+"ます。"
+
+#. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
 "Only the value 'periodic' and 'real_time' are accepted to search on "
 "valuation field."
-msgstr "評価フィールドの検索には、'periodic' (定期)または 'real_time' "
-"(リアルタイム)の値のみが使用できます。"
+msgstr ""
+"評価フィールドの検索には、'periodic' (定期)または 'real_time' (リアルタイム)"
+"の値のみが使用できます。"
 
 #. module: stock_account
 #. odoo-javascript
@@ -694,9 +714,8 @@ msgid ""
 "        "
 msgstr ""
 "定期評価方式：在庫評価レポート上で、会計仕訳を手動で提案します。\n"
-"        "
-"永続評価方式：プロダクトが請求または請求書発行された際に、在庫を評価する会計"
-"仕訳が自動的に作成されます。\n"
+"        永続評価方式：プロダクトが請求または請求書発行された際に、在庫を評価"
+"する会計仕訳が自動的に作成されます。\n"
 "        "
 
 #. module: stock_account
@@ -801,6 +820,11 @@ msgstr "保管ロット"
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
 msgid "Reference"
 msgstr "参照"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_search
+msgid "Remaining"
+msgstr "残り"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_qty
@@ -1127,13 +1151,23 @@ msgstr ""
 msgid ""
 "With perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
-msgstr "永続評価方式の場合、この勘定には標準価格と請求価格の差額が計上されます。"
+msgstr ""
+"永続評価方式の場合、この勘定には標準価格と請求価格の差額が計上されます。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "You can only adjust valuation for one move at a time."
 msgstr "評価の調整は、一度に1つの移動に対してのみ行うことができます。"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"You can only get the standard price at a given date for products with "
+"'Standard Price' as cost method."
+msgstr "特定の日付時点の標準原価を取得できるのは、原価計算方法が「標準原価」に設定さ"
+"れているプロダクトのみです。"
 
 #. module: stock_account
 #. odoo-python
@@ -1147,7 +1181,8 @@ msgstr "評価フィールドの検索には '=' 演算子しか使えません�
 msgid ""
 "You cannot modify the scheduled date of this operation because it falls "
 "within a locked fiscal period."
-msgstr "このオペレーションの予定日は、ロックされた会計期間内であるため、変更できませ"
+msgstr ""
+"このオペレーションの予定日は、ロックされた会計期間内であるため、変更できませ"
 "ん。"
 
 #. module: stock_account
@@ -1159,6 +1194,9 @@ msgstr "stock_move_id"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "単位"
+
+#~ msgid "%(quantity)s %(uom)s at product's standard price %(price)s"
+#~ msgstr "%(quantity)s %(uom)s プロダクトの標準価格： %(price)s"
 
 #~ msgid "AVCO Justification"
 #~ msgstr "AVCO(平均原価法)に関する根拠"

@@ -14,15 +14,15 @@
                     <div name="peppol_registration">
                         <p class="text-muted" invisible="not use_parent_connection">
                             This branch company will use the active Peppol connection found on
-                            <field name="active_parent_company_name" class="oe_inline o_form_label" readonly="1"/>
+                            <field name="parent_company_name" class="oe_inline o_form_label" readonly="1"/>
                             and send invoices via Peppol on their behalf.
                         </p>
                         <p class="text-muted" invisible="use_parent_connection">
                             Send electronic invoices, and receive bills automatically via Peppol.
                         </p>
 
-                        <div class="mb-3" invisible="not is_branch_company">
-                            <field name="use_parent_connection_selection" widget="radio" readonly="not can_use_parent_connection"/>
+                        <div class="mb-3" invisible="not display_use_parent_connection_selection">
+                            <field name="use_parent_connection_selection" widget="radio"/>
                         </div>
 
                         <group col="1">
@@ -31,9 +31,11 @@
                                        placeholder="Peppol ID"
                                        nolabel="1"
                                        readonly="use_parent_connection"
+                                       widget="peppol_non_focusable_selection"
                                        class="o_field_peppol_eas_selection"/>
                                 <field name="peppol_endpoint"
                                        nolabel="1"
+                                       default_focus="1"
                                        readonly="use_parent_connection"/>
                                 <field name="contact_email"
                                        readonly="use_parent_connection"

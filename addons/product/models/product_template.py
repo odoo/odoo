@@ -9,6 +9,7 @@ from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.image import is_image_size_above
+from odoo.tools.sql import SQL
 
 _logger = logging.getLogger(__name__)
 PRICE_CONTEXT_KEYS = ['pricelist', 'quantity', 'uom', 'date']
@@ -565,27 +566,34 @@ class ProductTemplate(models.Model):
         return res
 
     @api.depends('name', 'default_code')
-    @api.depends_context('formatted_display_name')
+    @api.depends_context('formatted_display_name', 'display_default_code')
     def _compute_display_name(self):
+        display_default_code = self.env.context.get('display_default_code', True)
         for template in self:
             if not template.name:
                 template.display_name = False
+            elif not (display_default_code and template.default_code):
+                template.display_name = template.name
             elif self.env.context.get('formatted_display_name'):
-                code_prefix = f'\t--{template.default_code}--' if template.default_code else ''
+                code_prefix = f'\t--{template.default_code}--'
                 template.display_name = f'{template.name}{code_prefix}'
             else:
-                code_prefix = f'[{template.default_code}] ' if template.default_code else ''
+                code_prefix = f'[{template.default_code}] '
                 template.display_name = f'{code_prefix}{template.name}'
 
     @api.model
     def _search_display_name(self, operator, value):
         domain = super()._search_display_name(operator, value)
         if self.env.context.get('search_product_product', bool(value)):
-            variant_domain = Domain('product_variant_ids', operator, value)
             if operator in Domain.NEGATIVE_OPERATORS:
-                domain &= variant_domain
+                domain = Domain.AND([domain, [('product_variant_ids', operator, value)]])
             else:
-                domain |= variant_domain
+                query = SQL(
+                    """((%s) UNION ALL (%s))""",
+                    self._search(domain).select(),
+                    self._search([("product_variant_ids", operator, value)]).select(),
+                )
+                domain = [('id', 'in', query)]
         return domain
 
     @api.model

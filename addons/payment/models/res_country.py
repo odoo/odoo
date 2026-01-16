@@ -3,8 +3,12 @@
 from odoo import api, fields, models
 
 # Import the payment provider modules with aliases to avoid circular import errors.
-import odoo.addons.payment_mercado_pago as mercado_pago
-import odoo.addons.payment_stripe as stripe
+try:
+    import odoo.addons.payment_mercado_pago as mercado_pago
+    import odoo.addons.payment_stripe as stripe
+except ModuleNotFoundError:
+    mercado_pago = None
+    stripe = None
 
 
 class ResCountry(models.Model):
@@ -16,9 +20,13 @@ class ResCountry(models.Model):
     @api.depends('code')
     def _compute_provider_support(self):
         for country in self:
-            country.is_stripe_supported_country = stripe.const.COUNTRY_MAPPING.get(
-                country.code, country.code
-            ) in stripe.const.SUPPORTED_COUNTRIES
+            country.is_stripe_supported_country = (
+                stripe is not None
+                and stripe.const.COUNTRY_MAPPING.get(
+                    country.code, country.code
+                ) in stripe.const.SUPPORTED_COUNTRIES
+            )
             country.is_mercado_pago_supported_country = (
-                country.code in mercado_pago.const.SUPPORTED_COUNTRIES
+                mercado_pago
+                and country.code in mercado_pago.const.SUPPORTED_COUNTRIES
             )

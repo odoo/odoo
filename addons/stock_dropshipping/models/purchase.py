@@ -30,3 +30,14 @@ class PurchaseOrder(models.Model):
         if len(sale_orders) == 1:
             res['sale_ids'] = [Command.link(sale_orders.id)]
         return res
+
+    def _is_dropshipped(self):
+        self.ensure_one()
+        return self.picking_type_id and self.picking_type_id.code == 'dropship'
+
+
+class PurchaseOrderLine(models.Model):
+    _inherit = 'purchase.order.line'
+
+    def _is_dropshipped(self):
+        return self.order_id._is_dropshipped()

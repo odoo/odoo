@@ -694,7 +694,9 @@ class AccountMove(models.Model):
     invoice_incoterm_id = fields.Many2one(
         comodel_name='account.incoterms',
         string='Incoterm',
-        default=lambda self: self.env.company.incoterm_id,
+        compute='_compute_incoterm',
+        readonly=False,
+        store=True,
         help='International Commercial Terms are a series of predefined commercial '
              'terms used in international transactions.',
     )
@@ -771,6 +773,7 @@ class AccountMove(models.Model):
 
     display_send_button = fields.Boolean(compute='_compute_display_send_button')
     highlight_send_button = fields.Boolean(compute='_compute_highlight_send_button')
+    is_sale_installed = fields.Boolean(compute='_compute_is_sale_installed')
 
     _checked_idx = models.Index("(journal_id) WHERE (checked IS NOT TRUE)")
     _payment_idx = models.Index("(journal_id, state, payment_state, move_type, date)")
@@ -1052,14 +1055,10 @@ class AccountMove(models.Model):
             return (currency_priority, not bank.allow_out_payment)
 
         for move in self:
-            if (
+            if move.is_inbound() and (
                 payment_method := (
                     move.preferred_payment_method_line_id
-                    or (
-                        move.bank_partner_id.property_inbound_payment_method_line_id
-                        if move.is_inbound()
-                        else move.bank_partner_id.property_outbound_payment_method_line_id
-                    )
+                    or move.bank_partner_id.property_inbound_payment_method_line_id
                 )
             ) and payment_method.journal_id:
                 move.partner_bank_id = payment_method.journal_id.bank_account_id
@@ -1123,16 +1122,20 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.invoice_date or fields.Date.context_today(self)
 
+    def _get_expected_currency_rate_at(self, date):
+        self.ensure_one()
+        return self.env['res.currency']._get_conversion_rate(
+            from_currency=self.company_currency_id,
+            to_currency=self.currency_id,
+            company=self.company_id,
+            date=date,
+        )
+
     @api.depends('currency_id', 'company_currency_id', 'company_id', 'invoice_date', 'taxable_supply_date')
     def _compute_expected_currency_rate(self):
         for move in self:
             if move.currency_id:
-                move.expected_currency_rate = move.env['res.currency']._get_conversion_rate(
-                    from_currency=move.company_currency_id,
-                    to_currency=move.currency_id,
-                    company=move.company_id,
-                    date=move._get_invoice_currency_rate_date(),
-                )
+                move.expected_currency_rate = move._get_expected_currency_rate_at(move._get_invoice_currency_rate_date())
             else:
                 move.expected_currency_rate = 1
 
@@ -1585,6 +1588,7 @@ class AccountMove(models.Model):
             rate=rate,
             sign=sign,
             special_mode=False if is_invoice else 'total_excluded',
+            name=product_line.name,
         )
 
     def _prepare_epd_base_line_for_taxes_computation(self, epd_line):
@@ -2165,6 +2169,12 @@ class AccountMove(models.Model):
         for move in self:
             move.amount_total_words = move.currency_id.amount_to_text(move.amount_total).replace(',', '')
 
+    @api.depends('company_id', 'move_type')
+    def _compute_incoterm(self):
+        for move in self:
+            if move.move_type.startswith('out_'):
+                move.invoice_incoterm_id = move.company_id.incoterm_id
+
     def _compute_linked_attachment_id(self, attachment_field, binary_field):
         """Helper to retreive Attachment from Binary fields
         This is needed because fields.Many2one('ir.attachment') makes all
@@ -2322,6 +2332,9 @@ class AccountMove(models.Model):
         for move in self:
             move.highlight_send_button = not move.is_being_sent and not move.invoice_pdf_report_id
 
+    def _compute_is_sale_installed(self):
+        self.is_sale_installed = 'sale_management' in self.env['ir.module.module']._installed()
+
     @api.depends('line_ids.matched_debit_ids', 'line_ids.matched_credit_ids', 'matched_payment_ids', 'matched_payment_ids.state')
     def _compute_reconciled_payment_ids(self):
         ''' Retrieve the payments reconciled to the invoices through the reconciliation (account.partial.reconcile) '''
@@ -2462,7 +2475,11 @@ class AccountMove(models.Model):
     def _search_journal_group_id(self, operator, value):
         field = 'name' if 'like' in operator else 'id'
         journal_groups = self.env['account.journal.group'].search([(field, operator, value)])
-        return [('journal_id', 'not in', journal_groups.excluded_journal_ids.ids)]
+        return Domain.OR([
+            Domain('journal_id', 'not in', group.excluded_journal_ids.ids)
+            & Domain('journal_id.company_id', '=?', group.company_id.id)
+            for group in journal_groups
+        ])
 
     def _search_reconciled_payment_ids(self, operator, value):
         if operator not in ('in', '='):
@@ -4005,6 +4022,18 @@ class AccountMove(models.Model):
         elif 'invoice_line_ids' in field_names:
             values = {key: val for key, val in values.items() if key != 'line_ids'}
             fields_spec = {key: val for key, val in fields_spec.items() if key != 'line_ids'}
+            # When product_id and price_unit are in values, values is reordered to make sure
+            # that product_id is before price_unit because product_id is triggering an onchange
+            # of price_unit that could override the one defined here if the product_id is set
+            # after price_unit
+            invoice_line_ids = values.get('invoice_line_ids')
+            for invoice_line_idx, invoice_line in enumerate(invoice_line_ids):
+                if (len(invoice_line) == 3 and invoice_line[0] == 1 and isinstance(invoice_line[2], dict) and
+                    'product_id' in invoice_line[2] and 'price_unit' in invoice_line[2]
+                ):
+                    if isinstance(invoice_line, tuple):
+                        invoice_line_ids[invoice_line_idx] = invoice_line = list(invoice_line)
+                    invoice_line[2] = dict(sorted(invoice_line[2].items(), key=lambda item: item[0] != 'product_id'))
         return super().onchange(values, field_names, fields_spec)
 
     # -------------------------------------------------------------------------
@@ -4746,6 +4775,24 @@ class AccountMove(models.Model):
             if not existing_lines:
                 self.with_context(default_move_type=self.move_type)._link_bill_origin_to_purchase_orders(timeout=4)
 
+        if new and res:
+            try:
+                attachments = self._from_files_data(files_data + self._unwrap_attachments(files_data))
+                self.journal_id._notify_invoice_subscribers(
+                    invoice=self,
+                    mail_params={
+                        'attachment_ids': [
+                            Command.create({
+                                'name': f"MAIL_{attachment['name']}",
+                                'mimetype': attachment['mimetype'],
+                                'raw': attachment['raw'],
+                            }) for attachment in attachments
+                        ]
+                    },
+                )
+            except Exception:
+                _logger.exception("Failed to notify invoice subscribers after EDI import.")
+
         return res
 
     @contextmanager
@@ -5457,8 +5504,7 @@ class AccountMove(models.Model):
             # lines are recomputed accordingly (if the user didnt' change the rate manually)
             if not invoice.invoice_date:
                 if invoice.is_sale_document(include_receipts=True):
-                    is_manual_rate = invoice.invoice_currency_rate != invoice.expected_currency_rate
-                    # keep the rate set by the user
+                    is_manual_rate = invoice.invoice_currency_rate != invoice._get_expected_currency_rate_at(invoice.create_date.date())
                     with self.env.protecting([self._fields['invoice_currency_rate']], invoice) if is_manual_rate else nullcontext():
                         invoice.invoice_date = fields.Date.context_today(self)
                 elif invoice.is_purchase_document(include_receipts=True):
@@ -5721,7 +5767,22 @@ class AccountMove(models.Model):
         }
 
     def action_update_fpos_values(self):
-        self.invoice_line_ids._compute_price_unit()
+        lines_to_recompute = self.env['account.move.line']
+        for line in self.invoice_line_ids:
+            if line.display_type in ('line_section', 'line_note'):
+                continue
+            if not line.price_unit:
+                lines_to_recompute |= line
+                continue
+            new_taxes = line._get_computed_taxes()
+            if line.tax_ids.filtered('price_include') != new_taxes.filtered('price_include'):
+                line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
+                    line.price_unit,
+                    line.tax_ids,
+                    fiscal_position=line.move_id.fiscal_position_id,
+                    product_taxes_after_fp=new_taxes,
+                )
+        lines_to_recompute._compute_price_unit()
         self.invoice_line_ids._compute_tax_ids()
         self.line_ids._compute_account_id()
 
@@ -6792,8 +6853,6 @@ class AccountMove(models.Model):
         move = super(AccountMove, move_ctx).message_new(msg_dict, custom_values=values)
         move._compute_name()  # because the name is given, we need to recompute in case it is the first invoice of the journal
 
-        move.journal_id._notify_einvoices_received(move)
-
         return move
 
     def _message_post_after_hook(self, new_message, message_values):
@@ -7044,15 +7103,31 @@ class AccountMove(models.Model):
     def get_extra_print_items(self):
         """ Helper to dynamically add items in the 'Print' menu of list and form of account.move.
         """
-        if posted_moves := self.filtered(lambda m: m.state == 'posted' and m.is_move_sent):
+        if moves_to_export := self.filtered(lambda m: m._get_move_zip_export_docs()):
             return [
                 {
                     'key': 'download_all',
                     'description': _("Export ZIP"),
-                    **posted_moves.action_move_download_all(),
+                    **moves_to_export.action_move_download_all(),
                 },
             ]
         return []
+
+    def _get_move_zip_export_docs(self):
+        self.ensure_one()
+
+        if self.state != 'posted':
+            return []
+
+        if self.is_purchase_document(include_receipts=True):
+            attachment = self.message_main_attachment_id
+            return [{
+                'filename': attachment.name,
+                'filetype': attachment.mimetype,
+                'content': attachment.raw,
+            }] if attachment else []
+
+        return self._get_invoice_legal_documents_all()
 
     def _get_move_lines_to_report(self):
         def show_line(line):

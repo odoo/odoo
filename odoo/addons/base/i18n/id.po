@@ -10,15 +10,15 @@
 # Ryanto The <ry.the77@gmail.com>, 2023
 # Abe Manyo, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-11-16 15:11+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-01-06 06:53+0000\n"
+"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/base/"
 "id/>\n"
 "Language: id\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -1233,6 +1233,10 @@ msgid ""
 "===========================\n"
 "A helper model for managing transfers between accounts.\n"
 msgstr ""
+"\n"
+"Transfer Akun\n"
+"===========================\n"
+"Model helper untuk mengelola transfer antara akun.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_accountant
@@ -1559,6 +1563,8 @@ msgid ""
 "\n"
 "Accounting Expense Bridge\n"
 msgstr ""
+"\n"
+"Penghubung Pengeluaran Akuntansi\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_accountant_fleet
@@ -1566,6 +1572,8 @@ msgid ""
 "\n"
 "Accounting Fleet Bridge\n"
 msgstr ""
+"\n"
+"Penghubung Akuntansi Armada\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_base_import
@@ -2731,6 +2739,72 @@ msgid ""
 "validate VAT numbers for each country that have or not have the possibility "
 "to manage multiple identification types.\n"
 msgstr ""
+"\n"
+"Tambahkan model baru bernama \"Tipe Identifikasi\" yang memperluas "
+"fungsionalitas field PPN dan memungkinkan user untuk mengidentifikasi "
+"(dan ujung-ujungnya memfaktur) ke kontak tidak hanya dengan ID pajak fiskal "
+"(PPN) mereka tapi tipe-tipe lain identifikasi seperti dokumen nasional, "
+"paspor, ID asing, dsb. Dengan menginstal modul ini Anda dapat melihat di "
+"tampilan form partner dua field:\n"
+"\n"
+"* Tipe identifikasi\n"
+"* Nomor identifikasi\n"
+"\n"
+"Perilaku ini adalah persyaratan umum untuk beberapa negara latam seperti "
+"Argentina dan Chili. Bila lokalisasi Anda memiliki persyaratan ini Anda "
+"harus menggunakan modul ini dan mendefinisikan di modul lokalisasi Anda tipe "
+"identifikasi yang digunakan di negara Anda. Biasanya tipe-tipe identifikasi "
+"ini didefinisikan oleh lembaga pemerintahan yang meregulasi operasi fiskal. "
+"Sebagai contoh:\n"
+"\n"
+"* ARCA di Argentina mendefinisikan DNI, CUIT (PPN untuk entitas hukum), CUIL "
+"(PPN untuk orang), dan 80 tipe identifikasi valid lainnya.\n"
+"\n"
+"Setiap identifikasi memiliki informasi ini:\n"
+"\n"
+"* nama: nama singkat identifikasi\n"
+"* keterangan: dapat sama dengan nama singkata atau nama panjang\n"
+"* country_id: negara asal identifikasi\n"
+"* is_vat: identifikasi rekaman ini sebagai PPN yang sesuai untuk negara "
+"tertentu.\n"
+"* sequence: memungkinkan kami menyortir tipe identifikasi tergantung pada "
+"yang paling sering digunakan.\n"
+"* active: kami dapat mengaktifkan/menonaktifkan identifikasi untuk membuat "
+"semuanya lebih mudah untuk pelanggan kami\n"
+"\n"
+"Untuk dapat membuat modul ini lebih kopmatibel dalam environment multi-"
+"company di mana perusahaan yang tidak membutuhkan/mendukung persyaratan ini, "
+"kami telah menambahkan tipe identifikasi dan peraturan umum untuk mengelola "
+"informasi kontak dan membuatnya transparan untuk user hanya saat PPN yang "
+"sebelumnya digunakan.\n"
+"\n"
+"Identifikasi umum:\n"
+"\n"
+"* VAT: Identifikasi Pajak Fiskal atau nomor PPN secara default dipilih "
+"sebagai tipe identifikasi sehingga user hanya memerlukan nomor PPN terkait.\n"
+"* Passport\n"
+"* Foreign ID (Dokumen Nasional Negara Asing)\n"
+"\n"
+"Peraturan saat membuat partner baru: Kami hanya akan melihat tipe-tipe "
+"identifikasi yang berguna, memperhitungkan peraturan-peraturan berikut:\n"
+"\n"
+"* Bila partner tidak memiliki alamat negara: Akan menunjukkan tipe "
+"identifikasi umum di tambah yang didefinisikan di negara perusahaan partner "
+"terkait (bila partner tidak menentukan perusahaan maka akan menunjukkan tipe "
+"identifikasi terkait ke perusahaan user saat ini)\n"
+"\n"
+"* Bila partner memiliki alamat negara: akan menunjukkan tipe identifikasi "
+"umum ditambah yang didefinisikan untuk negara partner.\n"
+"\n"
+"Saat membuat perusahaan baru, akan selalu memberikan tipe identifikasi "
+"is_vat negara yang sesuai ke partner terkait.\n"
+"\n"
+"Semua tipe identifikasi yang didefinisikan dapat ditinjau dan diaktifkan/"
+"dinonaktifkan di menu \"Kontak / Konfigurasi / Tipe Identifikasi\".\n"
+"\n"
+"Modul ini kompatibel dengan modul base_vat agar dapat memvalidasi nomor PPN "
+"untuk setiap negara yang memiliki atau tidak memiliki kemampuan untuk "
+"mengelola lebih dari satu tipe identifikasi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_website_sale
@@ -3816,6 +3890,12 @@ msgid ""
 "well.\n"
 "It should be renamed later to ai_documents_automation.\n"
 msgstr ""
+"\n"
+"Otomatis sortir dokumen Anda.\n"
+"Modul ini hanya digunakan untuk menyortir dokumen secara otomatis dan tidak "
+"dapat digunakan untuk fitur terkait dokumen ai karena menggunakan "
+"base_automation juga.\n"
+"Harus dinamakan ulang nanti menjadi ai_documents_automation.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fsm
@@ -6442,6 +6522,96 @@ msgid ""
 "WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 msgstr ""
+"\n"
+"Functional\n"
+"----------\n"
+"\n"
+"Be able to create journals in Odoo to create electronic customer invoices "
+"and report then to ARCA (via webservices).\n"
+"The options available are:\n"
+"\n"
+"    * Electronic Invoice - Web Service\n"
+"    * Export Voucher - Web Service\n"
+"    * Electronic Fiscal Bond - Web Service\n"
+"\n"
+"In the electronic journals if you validate an invoice this one will be "
+"validated in both Odoo and ARCA. This validation is\n"
+"made at the instant and we recieve and \"approved/approved with observation/"
+"rejected\" state from ARCA. If the invoice has\n"
+"been rejected by ARCA will not be post in the system and a pop up message "
+"will be shown with both the error detail (reject reasons)\n"
+"we recieve and a HINT about what the problem could be.\n"
+"\n"
+"For auditing and troubleshooting purposes we also add a menu \"Consulit "
+"Invoice in ARCA\" that let us to consult invoices previously\n"
+"sent to ARCA and last number used as support for any possible issues on the "
+"sequences synchronization between Odoo and ARCA.\n"
+"\n"
+"    NOTE: From the Journal's form view we are able to force a sync between "
+"the odoo sequences to each of the document types in\n"
+"    with the last numbers registered in ARCA.\n"
+"\n"
+"From vendor bills, we have added a functionality that can be configured in "
+"the accounting settings to be able to verify\n"
+"vendor bills in ARCA to check if the vendor bills are real (more information "
+"please review the setting description).\n"
+"\n"
+"Configuration:\n"
+"\n"
+"1. Go to the Accounting Settings > Argentinean Localization section\n"
+"\n"
+"    1.1. Configure the ARCA Web Services mode:\n"
+"\n"
+"    * Testing environment in order to use demo certificates that will be use "
+"to test the instance and to make NOT\n"
+"      real invoices to ARCA. is just for testing. For demo instaces is "
+"already pre-defined you will not need to configure\n"
+"      it (commonly named in ARCA as Homologation environment).\n"
+"    * Production environment in order to generate real certificates and "
+"legal invoices to ARCA,\n"
+"\n"
+"    1.2. Configure your ARCA Certificate: If you are in a demo instance this "
+"one will be have been set by default. If you\n"
+"         are in production instance just need to go to upload your ARCA "
+"Certificate\n"
+"\n"
+"    1.3. Optionally you can define if you like to be eable to verify vendor "
+"bills in ARCA.\n"
+"\n"
+"2. Create Sales journals that will represent each one of your ARCA POS "
+"(Available in ARCA Portal) you want to use in Odoo.\n"
+"\n"
+"    2.1. Use Documents field is set by default please dont change\n"
+"    2.2. Set ARCA POS System for one of the electronic ones.\n"
+"\n"
+"        * Electronic Invoice - Web Service'\n"
+"        * Electronic Fiscal Bond - Web Service'\n"
+"        * Export Voucher - Web Service'\n"
+"\n"
+"    2.3. Set the ARCA POS Number and ARCA POS Address taking into account "
+"what you have configured in your ARCA Portal.\n"
+"\n"
+"    NOTE: You can use the \"Check Available ARCA POS\" button in Journal's "
+"form to corroborate the to use to create the journals.\n"
+"\n"
+"For more information about Argentinean Electronic invoicing please go to "
+"http://www.afip.gob.ar/fe/ayuda.asp\n"
+"\n"
+"Technical\n"
+"---------\n"
+"\n"
+"The web services that are implemented are the ones that are the most "
+"common:\n"
+"\n"
+"* wsfev1 - \"Factura Electrónica\" (Electronic Invoice)\n"
+"* wsbfev1 - \"Bono Fiscal Electrónico\" (Electronic Fiscal Bond)\n"
+"* wsfexv1 - \"Factura de Exportación Electrónica\" (Electronic Exportation "
+"Invoice - same as Export Voucher)\n"
+"* wscdc - \"Constatación de Comprobantes\" (Invoices Verification)\n"
+"\n"
+"For Development information go to http://www.afip.gob.ar/fe/documentos/"
+"WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_invoice_document
@@ -9159,6 +9329,15 @@ msgid ""
 "models and their fields and methods. It also provides a playground to run\n"
 "the methods over HTTP, with examples in various programming languages.\n"
 msgstr ""
+"\n"
+"Odoo Dynamic API Documentation\n"
+"==============================\n"
+"\n"
+"Modul ini menyediakan halaman dokumentasi dinamis untuk developer di URL\n"
+"/doc. Dokumentasi dibuat menggunakan database untuk menunjukkan\n"
+"model dan field serta metode mereka. Ini juga menyediakan templat untuk "
+"menjalankan\n"
+"metode di atas HTTP, dengan contoh di beragam bahasa programming.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_enterprise
@@ -13776,6 +13955,13 @@ msgid ""
 "This is designed as a separate, optional module to keep core functionality\n"
 "clean and allow for flexible use cases.\n"
 msgstr ""
+"\n"
+"Modul ini memperkenalkan beberapa field advanced terkait Peppol ke model\n"
+"faktur Odoo (`account.move`) dan membuatnya tersedia di tab 'Informasi\n"
+"Tambahan' dalam bagian 'Info Lain' di tampilan formulir faktur.\n"
+"Ini dirancang sebagai modul terpisah, opsional untuk menjaga fungsionalitas "
+"inti\n"
+"tetap bersih dan mengizinkan untuk penggunaan kasus fleksibel.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_crm_full
@@ -13797,6 +13983,10 @@ msgid ""
 "It checks if the pgvector extension is available in the server and\n"
 "only then the AI module is auto-installed.\n"
 msgstr ""
+"\n"
+"Modul ini dibutuhkan untuk secara kondisional menginstal otomatis modul AI.\n"
+"Ini memeriksa bila ekstensi pgvector tersedia di server dan\n"
+"hanya bila tersedia modul AI akan diinstal otomatis.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal_skills
@@ -14828,7 +15018,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__time_format__%i:%m:%s_%p
 msgid " 1:00:00 PM"
-msgstr ""
+msgstr " 1:00:00 PM"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_mondialrelay
@@ -15163,7 +15353,7 @@ msgstr "1099 Melapor"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__time_format__%h:%m:%s
 msgid "13:00:00"
-msgstr ""
+msgstr "13:00:00"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_totp_mail
@@ -16215,7 +16405,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_ai_documents_account
 #: model:ir.module.module,summary:base.module_ai_documents_account
 msgid "AI Documents Account"
-msgstr ""
+msgstr "Akun Dokumen AI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_documents_source
@@ -16280,7 +16470,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_ai
 msgid "AI-related features are accessible with limited configurability."
-msgstr ""
+msgstr "Fitur-fitur terkait AI dapat diakses dengan konfigurasi terbatas."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_api_doc
@@ -16464,7 +16654,7 @@ msgstr "Ekstrak Akun"
 #: model:ir.module.module,shortdesc:base.module_account_fiscal_categories
 #: model:ir.module.module,summary:base.module_account_fiscal_categories
 msgid "Account Fiscal Report"
-msgstr ""
+msgstr "Laporan Fiskal Akun"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__partner_id
@@ -20474,13 +20664,13 @@ msgstr "Vacuum Otomatis"
 #: model:ir.module.module,description:base.module_ai_crm_livechat
 #: model:ir.module.module,summary:base.module_ai_crm_livechat
 msgid "Automatically create leads from livechat."
-msgstr ""
+msgstr "Otomatis membuat lead dari livechat."
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_crm
 #: model:ir.module.module,summary:base.module_ai_crm
 msgid "Automatically create leads."
-msgstr ""
+msgstr "Otomatis buat lead."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_contract_salary_holidays
@@ -22820,7 +23010,7 @@ msgstr "Kode"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_server_action_history_wizard__code_diff
 msgid "Code Diff"
-msgstr ""
+msgstr "Perbedaan Kode"
 
 #. module: base
 #. odoo-python
@@ -26223,7 +26413,7 @@ msgstr "Email"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__email_domain_placeholder
 msgid "Email Domain Placeholder"
-msgstr ""
+msgstr "Placeholder Domain Email"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_email_marketing
@@ -26340,7 +26530,7 @@ msgstr "Aktifkan konfigurasi field AI di studio"
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_google_reserve
 msgid "Enable a link between your appointment type and the google API"
-msgstr ""
+msgstr "Aktifkan link antara tipe appointment Anda dan google API"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment_sale
@@ -29843,7 +30033,7 @@ msgstr "Hongkong"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hospitaility
 msgid "Hospitaility"
-msgstr ""
+msgstr "Hospitality"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hospitality
@@ -30815,7 +31005,7 @@ msgstr "Indian - Stock Report(GST)"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__grouping__[3,2,0]
 msgid "Indian Grouping"
-msgstr ""
+msgstr "Indian Grouping"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -31231,7 +31421,7 @@ msgstr "Catatan internal..."
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__grouping__[3,0]
 msgid "International Grouping"
-msgstr ""
+msgstr "International Grouping"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iot
@@ -31290,6 +31480,17 @@ msgstr "Format JSON tidak valid di field Default Value."
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__invalid_locators
 msgid "Invalid Locators"
 msgstr "Locator Tidak Valid"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value in Default Value field. Expected type '%(field_type)s' for "
+"'%(model_name)s.%(field_name)s'."
+msgstr ""
+"Value tidak valid di field Value Default. Tipe yang diharapkan '%(field_type)"
+"s' untuk '%(model_name)s.%(field_name)s'."
 
 #. module: base
 #. odoo-python
@@ -32537,7 +32738,7 @@ msgstr "Update terakhir:"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login_date
 msgid "Latest Login"
-msgstr ""
+msgstr "Login Terkini"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__installed_version
@@ -38087,7 +38288,7 @@ msgstr "Hanya satu nilai tukar mata uang per hari yang diizinkan!"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_properties_base_definition_unique_properties_field_id
 msgid "Only one definition per properties field"
-msgstr ""
+msgstr "Hanya satu definisi per field properti"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_decimal_precision_name_uniq
@@ -38149,7 +38350,7 @@ msgstr "Buka satu Jendela"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__config_url
 msgid "Open profiles config"
-msgstr ""
+msgstr "Buka konfigurasi profil"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_5
@@ -40993,22 +41194,22 @@ msgstr "Properti"
 #: model:ir.model.fields,field_description:base.field_res_partner__properties_base_definition_id
 #: model:ir.model.fields,field_description:base.field_res_users__properties_base_definition_id
 msgid "Properties Base Definition"
-msgstr ""
+msgstr "Definisi Dasar Properti"
 
 #. module: base
 #: model:ir.model,name:base.model_properties_base_definition_mixin
 msgid "Properties Base Definition Mixin"
-msgstr ""
+msgstr "Mixin Definisi Dasar Properti"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_properties_base_definition__properties_definition
 msgid "Properties Definition"
-msgstr ""
+msgstr "Definisi Properti"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_properties_base_definition__properties_field_id
 msgid "Properties Field"
-msgstr ""
+msgstr "Field Properti"
 
 #. module: base
 #. odoo-python
@@ -43375,6 +43576,10 @@ msgid ""
 "developer.dhl.com/. It is no longercompatible with the older DHL SOAP APIs "
 "(which have their own credentials)."
 msgstr ""
+"Kirim pengiriman Anda melalui DHL dan lacak mereka online. Versi connector "
+"DHL ini kompatibel dengan DHL REST API yang tersedia di https://"
+"developer.dhl.com/. Versi ini tidak lagi kompatibel dengan DHL SOAP API yang "
+"lebih tua (yang memiliki kredensial mereka sendiri)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex_rest
@@ -43564,12 +43769,12 @@ msgstr "Tindakan Server"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server_history
 msgid "Server Action History"
-msgstr ""
+msgstr "Riwayat Tindakan Server"
 
 #. module: base
 #: model:ir.model,name:base.model_server_action_history_wizard
 msgid "Server Action History Wizard"
-msgstr ""
+msgstr "Wizard Riwayat Tindakan Server"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
@@ -43802,7 +44007,7 @@ msgstr "Tunjukkan Semua"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__show_code_history
 #: model:ir.model.fields,field_description:base.field_ir_cron__show_code_history
 msgid "Show Code History"
-msgstr ""
+msgstr "Tunjukkan Riwayat Kode"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_view_currency_rates
@@ -45802,6 +46007,9 @@ msgid ""
 "The International Grouping will represent 123456789 to be 123,456,789.00; "
 "The Indian Grouping will represent 123456789 to be 12,34,56,789.00"
 msgstr ""
+"The International Grouping akan mewakili 123456789 untuk menjadi "
+"123,456,789.00; The Indian Grouping akan mewakili 123456789 untuk menjadi "
+"12,34,56,789.00"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_10
@@ -47733,17 +47941,17 @@ msgstr "Terjemahkan"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__translate__html_translate
 msgid "Translate HTML terms"
-msgstr ""
+msgstr "Terjemahkan istilah HTML"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__translate__xml_translate
 msgid "Translate XML terms"
-msgstr ""
+msgstr "Terjemahkan istilah XML"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__translate__standard
 msgid "Translate as a whole"
-msgstr ""
+msgstr "Terjemahkan secara menyeluruh"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation
@@ -51063,7 +51271,7 @@ msgstr "one2many"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__others
 msgid "others"
-msgstr ""
+msgstr "lainnya"
 
 #. module: base
 #. odoo-python

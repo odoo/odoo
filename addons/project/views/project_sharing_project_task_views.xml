@@ -339,7 +339,7 @@
         <field name="path">project_sharing</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="project.project_sharing_project_task_view_search"/>
-        <field name="domain">[('project_id', '=', active_id)]</field>
+        <field name="domain">[('project_id', '=', active_id), ('has_template_ancestor', '=', False)]</field>
         <field name="context">{
             'default_project_id': active_id,
             'active_id_chatter': active_id,

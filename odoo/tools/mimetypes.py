@@ -16,6 +16,7 @@ __all__ = ['guess_mimetype']
 
 _logger = logging.getLogger(__name__)
 _logger_guess_mimetype = _logger.getChild('guess_mimetype')
+MIMETYPE_HEAD_SIZE = 2048
 
 # We define our own guess_mimetype implementation and if magic is available we
 # use it instead.
@@ -150,11 +151,13 @@ _mime_mappings = (
     # zip, but will include jar, odt, ods, odp, docx, xlsx, pptx, apk
     _Entry('application/zip', [b'PK\x03\x04'], [_check_ooxml, _check_open_container_format]),
 )
-def _odoo_guess_mimetype(bin_data, default='application/octet-stream'):
+
+
+def _odoo_guess_mimetype(bin_data: bytes, default='application/octet-stream'):
     """ Attempts to guess the mime type of the provided binary data, similar
     to but significantly more limited than libmagic
 
-    :param str bin_data: binary data to try and guess a mime type for
+    :param bin_data: binary data to try and guess a mime type for
     :returns: matched mimetype or ``application/octet-stream`` if none matched
     """
     # by default, guess the type using the magic number of file hex signature (like magic, but more limited)
@@ -188,8 +191,10 @@ try:
     import magic
     def guess_mimetype(bin_data, default=None):
         if isinstance(bin_data, bytearray):
-            bin_data = bytes(bin_data[:1024])
-        mimetype = magic.from_buffer(bin_data[:1024], mime=True)
+            bin_data = bytes(bin_data[:MIMETYPE_HEAD_SIZE])
+        elif not isinstance(bin_data, bytes):
+            raise TypeError('`bin_data` must be bytes or bytearray')
+        mimetype = magic.from_buffer(bin_data[:MIMETYPE_HEAD_SIZE], mime=True)
         if mimetype in ('application/CDFV2', 'application/x-ole-storage'):
             # Those are the generic file format that Microsoft Office
             # was using before 2006, use our own check to further

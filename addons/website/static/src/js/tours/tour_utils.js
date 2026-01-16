@@ -161,29 +161,31 @@ export function changeOption(
  * @param {string} optionName - The name of the option (e.g., "Visibility").
  * @param {string} elementName - The name of the element to be clicked inside
  *                               the popover (e.g., "Conditionally").
- * @param {Boolean} searchNeeded - If the widget is a m2o widget and a search is needed.
  *
  * Example:
  *      ...changeOptionInPopover("Text - Image", "Visibility", "Conditionally")
  */
-export function changeOptionInPopover(blockName, optionName, elementName, searchNeeded = false) {
-    const steps = [changeOption(blockName, `[data-label='${optionName}'] .dropdown-toggle`)];
-
-    if (searchNeeded) {
-        steps.push({
-            content: `Inputing ${elementName} in toogle option search`,
-            trigger: `.o_popover input`,
-            run: `edit ${elementName}`,
-        });
-    }
-
-    steps.push(
-        clickOnElement(
-            `${elementName} in the ${optionName} option`,
-            `.o_popover div.o-dropdown-item:contains("${elementName}"), .o_popover span.o-dropdown-item:contains("${elementName}"), .o_popover ${elementName}`
-        )
-    );
-    return steps;
+export function changeOptionInPopover(blockName, optionName, elementName) {
+    const itemSelector = [
+        `.o_popover div.o-dropdown-item:contains("${elementName}")`,
+        `.o_popover span.o-dropdown-item:contains("${elementName}")`,
+        `.o_popover div.o-dropdown-item[title="${elementName}"]`,
+        `.o_popover span.o-dropdown-item[title="${elementName}"]`,
+        `.o_popover ${elementName}`,
+    ].join(", ");
+    return [
+        changeOption(blockName, `[data-label='${optionName}'] .dropdown-toggle`),
+        {
+            content: `Check if "${elementName}" option is shown. If not, search for it.`,
+            trigger: ".o_popover .o-dropdown-item",
+            async run(helpers) {
+                if (!helpers.queryFirst(itemSelector)) {
+                    await helpers.edit(elementName, ".o_popover input");
+                }
+            },
+        },
+        clickOnElement(`${elementName} in the ${optionName} option`, itemSelector),
+    ];
 }
 
 export function selectNested(
@@ -745,7 +747,7 @@ export function clickToolbarButton(elementName, selector, button, expand = false
         selectFullText(`${elementName}`, selector),
         {
             content: `Click on the ${button} from toolbar`,
-            trigger: `.o-we-toolbar button[title="${button}"]`,
+            trigger: `.o-we-toolbar button[title="${button}"], .o-we-toolbar button[name="${button}"]`,
             run: "click",
         },
     ];

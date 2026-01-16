@@ -58,8 +58,12 @@ export class Composer extends Record {
                 mentionedChannels: this.mentionedChannels,
                 mentionedPartners: this.mentionedPartners,
                 mentionedRoles: this.mentionedRoles,
+                thread: this.targetThread,
             });
-            const prettifiedHtml = prettifyMessageText(this.composerText, { validMentions });
+            const prettifiedHtml = prettifyMessageText(this.composerText, {
+                validMentions,
+                thread: this.targetThread,
+            });
             if (this.composerHtml.toString() !== prettifiedHtml.toString()) {
                 this.updateFrom = "text";
                 this.composerHtml = prettifiedHtml;
@@ -121,7 +125,7 @@ export class Composer extends Record {
     }
 
     get targetThread() {
-        return this.replyToMessage?.thread ?? this.thread ?? null;
+        return this.replyToMessage?.thread ?? this.thread ?? this.message?.thread ?? null;
     }
 }
 

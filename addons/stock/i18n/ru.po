@@ -4,14 +4,14 @@
 #
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-12 06:11+0000\n"
+"POT-Creation-Date: 2026-01-09 18:36+0000\n"
+"PO-Revision-Date: 2026-01-06 15:21+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/stock/ru/"
 ">\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -59,6 +59,23 @@ msgid ""
 "    - Minute: %(min)s\n"
 "    - Second: %(sec)s\n"
 msgstr ""
+"\n"
+"    Если несколько товаров используют один и тот же префикс, у них будет "
+"единая нумерация. В противном случае нумерация будет индивидуальной для "
+"данного товара.\n"
+"\n"
+"    * Легенда (для префикса):\n"
+"    - Текущий год с веком: %(year)s\n"
+"    - Текущий год без века: %(y)s\n"
+"    - Месяц: %(month)s\n"
+"    - День: %(day)s\n"
+"    - День в году: %(doy)s\n"
+"    - Неделя в году: %(woy)s\n"
+"    - День недели (0:Понедельник): %(weekday)s\n"
+"    - Час 00->24: %(h24)s\n"
+"    - Час 00->12: %(h12)s\n"
+"    - Минута: %(min)s\n"
+"    - Секунда: %(sec)s\n"
 
 #. module: stock
 #. odoo-python
@@ -79,6 +96,11 @@ msgid ""
 "precision defined on the system.\n"
 "Please change the quantity done or the rounding precision in your settings."
 msgstr ""
+"\n"
+"Выполненное количество для товара %(product)s не соответствует точности "
+"округления, установленной в системе.\n"
+"Пожалуйста, измените выполненное количество или настройки точности "
+"округления."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -367,6 +389,13 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* Новое: перемещение запасов создано, но не подтверждено.\n"
+"* Ожидание другого перемещения: перед этим перемещением должно быть "
+"выполнено связанное перемещение запасов.\n"
+"* Ожидание: перемещение запасов подтверждено, но товар не может быть "
+"зарезервирован.\n"
+"* Доступно: товар перемещения запасов зарезервирован.\n"
+"* Выполнено: товар перемещен, и перемещение подтверждено."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -390,6 +419,22 @@ msgid ""
 "* Transit: Counterpart location that should be used for inter-company or "
 "inter-warehouses operations"
 msgstr ""
+"* Поставщик: виртуальная локация, представляющая исходную локацию для "
+"товаров, поступающих от ваших поставщиков\n"
+"* Виртуальная: виртуальная локация, используемая для создания иерархической "
+"структуры вашего склада путем объединения его дочерних локаций. Не может "
+"напрямую содержать товары\n"
+"* Внутренняя: физическая локация внутри ваших складов\n"
+"* Клиент: виртуальная локация, представляющая локацию назначения для "
+"товаров, отправляемых вашим клиентам\n"
+"* Потеря запасов: виртуальная локация, служащая в качестве аналога операций "
+"с запасами, выполняемых для корректировки уровня запасов (физические "
+"запасы)\n"
+"* Производство: виртуальная локация-аналог для производственных операций. То "
+"есть на этой локации потребляется компоненты и производится готовая "
+"продукция\n"
+"* Транзит: локация-аналог, которая должна использоваться для операций между "
+"компаниями или между складами"
 
 #. module: stock
 #. odoo-python
@@ -610,6 +655,47 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Здравствуйте, <t t-out=\"object.partner_id.name or ''\">Брэндон "
+"Фримен</t>!<br/><br/>\n"
+"        Мы рады сообщить вам, что ваш заказ отправлен.\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
+"            Номер для отслеживания:\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
+"out=\"line[0] or ''\"/>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Подробности заказа на доставку приложены.<br/><br/>\n"
+"        Спасибо,\n"
+"        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Митчелл Админ</t></"
+"div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -843,8 +929,8 @@ msgstr "<strong>Контакт</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
-msgstr "<strong>Адрес клиента</strong>"
+msgid "<strong>Customer</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -854,6 +940,11 @@ msgstr "<strong>Доставлено</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
 msgstr ""
 
 #. module: stock
@@ -1472,6 +1563,10 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
+"Так как для этого товара уже использовались другие единицы измерения "
+"(например: %(problem_uom)s), отличные от %(uom)s, изменить их невозможно. "
+"Если вы хотите использовать новую единицу измерения, пожалуйста, архивируйте "
+"текущий товар и создайте новый."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -1652,6 +1747,13 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Доступное количество (рассчитывается как: количество в наличии минус "
+"зарезервированное количество и количество к списанию).  \n"
+"Если выбрана одна локация, учитываются товары в ней и во всех ее дочерних "
+"локациях.\n"
+"Если выбран один склад, учитываются товары в основной локации этого склада и "
+"во всех ее дочерних локациях.\n"
+"В остальных случаях учитываются товары во всех локациях с типом «Внутренняя»."
 
 #. module: stock
 #. odoo-javascript
@@ -2221,6 +2323,12 @@ msgid ""
 "delays, or trigger it just-in-time\n"
 "                                ('0 days') to avoid overstocking."
 msgstr ""
+"Настройте горизонт планирования, чтобы правила пополнения срабатывали "
+"заранее. Это позволит\n"
+"                                вовремя начать поставку и избежать задержек. "
+"Либо установите значение\n"
+"                                «0 дней», чтобы запускать пополнение «точно "
+"в срок» и не допускать избытка товаров на складе."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2229,6 +2337,10 @@ msgid ""
 "start on replenishment and avoid delays, or trigger it just-in-time ('0 "
 "days') to avoid overstocking."
 msgstr ""
+"Настройте горизонт планирования, чтобы правила пополнения срабатывали "
+"заранее. Это позволит вовремя начать поставку и избежать задержек. Либо "
+"установите значение «0 дней», чтобы запускать пополнение «точно в срок» и не "
+"допускать избытка товаров на складе."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.lot_label_layout_form_picking
@@ -2769,6 +2881,11 @@ msgid ""
 "future arrival is expected after the minimum quantity is reached (potential "
 "stockout). Check the Forecast Report."
 msgstr ""
+"Дата, до которой необходимо сделать заказ, чтобы не допустить снижения "
+"запасов ниже минимального уровня. Если у вас нет заказов на дату, указанную "
+"в сроке, это может означать, что ожидается поступление товара после "
+"достижения минимального уровня запасов (возможный дефицит). Проверьте отчет "
+"о прогнозе."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__next_inventory_date
@@ -2981,6 +3098,13 @@ msgid ""
 "\n"
 "Try changing the “done” quantity to 0 instead."
 msgstr ""
+"Удалить перемещения товаров после завершения трансфера?\n"
+"\n"
+"Это все равно что пытаться отмотать время назад и отменить все связанные "
+"операции, которые уже запустило это перемещение. Последствия для учета могут "
+"быть непредсказуемыми, поэтому лучше так не делать.\n"
+"\n"
+"Вместо удаления просто измените выполненное количество на 0."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__ship_only
@@ -3814,6 +3938,14 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Прогнозируемое количество (рассчитывается как Количество в наличии – "
+"Исходящее + Входящее – Количество к удалению)\n"
+"В контексте с одной складской локацией, это включает товары, хранящиеся в "
+"этой локации или в любой из дочерних.\n"
+"В контексте с одним складом это включает товары, хранящиеся в локации для "
+"хранения этого склада или в любой из ее дочерних локаций.\n"
+"В противном случае это включает товары, хранящиеся в любой локации для "
+"хранения типа «внутренняя»."
 
 #. module: stock
 #. odoo-javascript
@@ -7255,6 +7387,7 @@ msgstr "Категории товаров"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_category_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_category_name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
@@ -9967,6 +10100,11 @@ msgid ""
 "manufacturing orders, etc. are triggered based on what way to replenish is "
 "set on the product (Buy or Manufacture route)."
 msgstr ""
+"Этот параметр добавляет маршрут «Пополнение под заказ» для товаров. Он "
+"позволяет создавать пополнение по запросу, привязанное к вашим заказам на "
+"продажу (например), как только они будут подтверждены. Заказы на закупку, "
+"производство и т. д. создаются автоматически в зависимости от установленного "
+"для товара способа пополнения (маршрут «Купить» или «Произвести»)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -12091,6 +12229,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Заказ на доставку (Ссылка {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "<strong>Customer Address</strong>"
+#~ msgstr "<strong>Адрес клиента</strong>"
 
 #~ msgid "If ticked, you will be able to select entire packages to move"
 #~ msgstr "Если отмечено, вы сможете выбрать все упаковки для перемещения"

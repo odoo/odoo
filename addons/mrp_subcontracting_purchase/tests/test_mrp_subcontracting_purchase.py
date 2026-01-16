@@ -1,29 +1,26 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-
 from datetime import datetime, timedelta
-from freezegun import freeze_time
 from json import loads
-from unittest import skip
+
+from freezegun import freeze_time
 
 from odoo import Command
-from odoo.exceptions import UserError
 from odoo.fields import Date
-from odoo.tests import Form, tagged, loaded_demo_data
+from odoo.tests import Form, tagged
 
-from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
+from odoo.addons.mrp_subcontracting_account.tests.test_subcontracting_account import TestAccountSubcontractingFlows
 
 _logger = logging.getLogger(__name__)
 
 
 @tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
-class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
+class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
 
         self.finished2, self.comp3 = self.env['product.product'].create([{
             'name': 'SuperProduct',
@@ -34,7 +31,6 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         }])
         self.vendor = self.env['res.partner'].create({
             'name': 'Vendor',
-            'company_id': self.env.ref('base.main_company').id,
         })
 
         self.bom_finished2 = self.env['mrp.bom'].create({
@@ -245,62 +241,56 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertEqual(self.finished2.qty_available, 7.0)
         self.assertEqual(po.order_line.qty_received, 10.0)
 
-    def test_purchase_and_return03(self):
-        """
-        With 2 steps receipt and an input location child of Physical Location (instead of WH)
-        The user buys 10 x a subcontracted product P. He receives the 10
-        products and then does a return with 3 x P. The test ensures that the
-        final received quantity is correctly computed
-        """
-        # Set 2 steps receipt
-        self.warehouse.write({"reception_steps": "two_steps"})
-        # Set 'Input' parent location to 'Physical locations'
-        input_location = self.warehouse.wh_input_stock_loc_id
-
-        # Create Purchase
-        po = self.env['purchase.order'].create({
-            'partner_id': self.subcontractor_partner1.id,
-            'order_line': [(0, 0, {
-                'name': self.finished2.name,
-                'product_id': self.finished2.id,
-                'product_uom_qty': 10,
-                'product_uom_id': self.finished2.uom_id.id,
-                'price_unit': 1,
-            })],
-        })
+    def test_subcontracting_purchase_bill(self):
+        (self.comp1 | self.comp2 | self.finished).categ_id = self.category_fifo_auto
+        self.finished.purchase_method = 'purchase'
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.subcontractor_partner1
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.finished
+            po_line.product_qty = 2
+            po_line.price_unit = 50   # should be 70
+        po = po_form.save()
         po.button_confirm()
+        # create bill
+        po.action_create_invoice()
+        aml = self.env['account.move.line'].search([('purchase_line_id', '=', po.order_line.id)])
+        # add 50 per unit ( 50 x 1 ) = 50 extra valuation
+        aml.price_unit = 60
+        aml.move_id.invoice_date = Date.today()
+        aml.move_id.action_post()
+        amls = self.env['account.move.line'].search([
+            ('product_id', 'in', (self.comp1 | self.comp2 | self.finished).ids)
+        ])
+        self.assertRecordValues(amls, [
+            {'account_id': self.account_stock_valuation.id, 'debit': 120, 'product_id': self.finished.id},
+        ])
 
-        # Receive Products
+        # receive subcontracted product (MO will be done)
         receipt = po.picking_ids
-        receipt.move_ids.quantity = 10
         receipt.move_ids.picked = True
         receipt.button_validate()
-
-        self.assertEqual(po.order_line.qty_received, 10.0)
-
-        # Return Products
-        return_form = Form(self.env['stock.return.picking'].with_context(active_id=receipt.id, active_model='stock.picking'))
-        return_wizard = return_form.save()
-        return_wizard.product_return_moves.quantity = 3
-        return_wizard.product_return_moves.to_refund = True
-        return_picking = return_wizard._create_return()
-        return_picking.move_ids.quantity = 3
-        return_picking.move_ids.picked = True
-        return_picking.button_validate()
-
-        self.assertEqual(po.order_line.qty_received, 7.0)
+        # Total value of subcontracted product = 60 new price + components (20 + 40)
+        self.assertEqual(self.finished.total_value, 180)
+        self.assertEqual(self.finished.standard_price, 90)
+        amls = self.env['account.move.line'].search([
+            ('product_id', 'in', (self.comp1 | self.comp2 | self.finished).ids)
+        ])
+        self.assertRecordValues(amls, [
+            {'account_id': self.account_production.id, 'debit': 0, 'credit': 60, 'product_id': self.finished.id},
+            {'account_id': self.account_stock_valuation.id, 'debit': 60, 'credit': 0, 'product_id': self.finished.id},
+            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 20, 'product_id': self.comp1.id},
+            {'account_id': self.account_production.id, 'debit': 20, 'credit': 0, 'product_id': self.comp1.id},
+            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 40, 'product_id': self.comp2.id},
+            {'account_id': self.account_production.id, 'debit': 40, 'credit': 0, 'product_id': self.comp2.id},
+            {'account_id': self.account_stock_valuation.id, 'debit': 120, 'credit': 0, 'product_id': self.finished.id},
+        ])
 
     def test_subcontracting_resupply_price_diff(self):
         """Test that the price difference is correctly computed when a subcontracted
         product is resupplied.
         """
-        self.env.company.anglo_saxon_accounting = True
-        resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
-        (self.comp1 + self.comp2).write({'route_ids': [(6, None, [resupply_sub_on_order_route.id])]})
-        product_category_all = self.product_category
-        product_category_all.property_cost_method = 'standard'
-        product_category_all.property_valuation = 'real_time'
-        self._setup_category_stock_journals()
+        (self.comp1 | self.comp2 | self.finished).categ_id = self.category_standard_auto
 
         stock_price_diff_acc_id = self.env['account.account'].create({
             'name': 'default_account_stock_price_diff',
@@ -308,7 +298,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             'reconcile': True,
             'account_type': 'asset_current',
         })
-        product_category_all.property_account_creditor_price_difference_categ = stock_price_diff_acc_id
+        self.finished.categ_id.property_price_difference_account_id = stock_price_diff_acc_id
 
         self.comp1.standard_price = 10.0
         self.comp2.standard_price = 20.0
@@ -320,7 +310,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         with po_form.order_line.new() as po_line:
             po_line.product_id = self.finished
             po_line.product_qty = 2
-            po_line.price_unit = 50   # should be 70
+            po_line.price_unit = 50
         po = po_form.save()
         po.button_confirm()
 
@@ -342,9 +332,75 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         invoice.invoice_line_ids.quantity = 1
         invoice.action_post()
 
-        # price diff line should be 100 - 50 - 10 - 20
+        # price diff line should be 50 - 100 + 10 + 20
         price_diff_line = invoice.line_ids.filtered(lambda m: m.account_id == stock_price_diff_acc_id)
         self.assertEqual(price_diff_line.credit, 20)
+
+    def test_subcontracting_multi_currency_price_diff(self):
+        """ Ensure the price difference lines are computed correctly when the company
+            currency and invoice currency differ
+        """
+        currency_grp = self.env.ref('base.group_multi_currency')
+        self.env.user.write({'group_ids': [(4, currency_grp.id)]})
+
+        self.env.company.anglo_saxon_accounting = True
+        product_category_all = self.product_category
+        product_category_all.property_cost_method = 'standard'
+        product_category_all.property_valuation = 'real_time'
+        self._setup_category_stock_journals()
+
+        stock_price_diff_acc_id = self.env['account.account'].create({
+            'name': 'default_account_stock_price_diff',
+            'code': 'STOCKDIFF',
+            'reconcile': True,
+            'account_type': 'asset_current',
+        })
+        product_category_all.property_price_difference_account_id = stock_price_diff_acc_id
+
+        self.comp1.standard_price = 10.0
+        self.comp2.standard_price = 20.0
+        self.finished.standard_price = 100
+
+        mock_currency = self.env['res.currency'].create({
+            'name': 'MOCK',
+            'symbol': 'MC',
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2023-01-01',
+            'company_rate': 2.0,
+            'currency_id': mock_currency.id,
+            'company_id': self.env.company.id,
+        })
+
+        # Create a PO for 1 finished product.
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.subcontractor_partner1
+        po_form.currency_id = mock_currency
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.finished
+            po_line.product_qty = 1
+            # Ideally, 100 - 10 - 20 = 70 USD
+            # We will create a price diff of 10 USD
+            # 60 USD * 2 = 120 MC
+            po_line.price_unit = 120
+        po = po_form.save()
+        po.button_confirm()
+
+        action = po.action_view_picking()
+        final_picking = self.env[action['res_model']].browse(action['res_id'])
+        final_picking.move_ids.quantity = 1
+        final_picking.move_ids.picked = True
+        final_picking.button_validate()
+
+        action = po.action_create_invoice()
+        invoice = self.env['account.move'].browse(action['res_id'])
+        invoice.invoice_date = Date.today()
+        invoice.invoice_line_ids.quantity = 1
+        invoice.action_post()
+
+        # price diff line should be 100 - 60 - 10 - 20
+        price_diff_line = invoice.line_ids.filtered(lambda m: m.account_id == stock_price_diff_acc_id)
+        self.assertEqual(price_diff_line.credit, 10)
 
     def test_subcontract_product_price_change(self):
         """ Create a PO for subcontracted product, receive the product (finish MO),
@@ -352,61 +408,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             An extra SVL should be created to correct the valuation of the product
             Also check account move data for real time inventory
         """
-        product_category_all = self.product_category
-        product_category_all.property_cost_method = 'fifo'
-        product_category_all.property_valuation = 'real_time'
-        in_account = self.env['account.account'].create({
-            'name': 'IN Account',
-            'code': '000001',
-            'account_type': 'asset_current',
-        })
-        out_account = self.env['account.account'].create({
-            'name': 'OUT Account',
-            'code': '000002',
-            'account_type': 'asset_current',
-        })
-        valu_account = self.env['account.account'].create({
-            'name': 'VALU Account',
-            'code': '000003',
-            'account_type': 'asset_current',
-        })
-        production_cost_account = self.env['account.account'].create({
-            'name': 'PROD COST Account',
-            'code': '000004',
-            'account_type': 'asset_current',
-        })
-        product_category_all.property_stock_account_input_categ_id = in_account
-        product_category_all.property_stock_account_output_categ_id = out_account
-        product_category_all.property_stock_account_production_cost_id = production_cost_account
-        product_category_all.property_stock_valuation_account_id = valu_account
-        stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
-
-        resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
-        (self.comp1 + self.comp2).write({'route_ids': [Command.link(resupply_sub_on_order_route.id)]})
-        purchase_comps = self.env['purchase.order'].create({
-            'partner_id': self.subcontractor_partner1.id,  # can be any partner
-            'order_line': [
-                Command.create({
-                    'name': self.comp1.name,
-                    'product_id': self.comp1.id,
-                    'product_uom_qty': 1,
-                    'product_uom_id': self.finished.uom_id.id,
-                    'price_unit': 10,
-                }),
-                Command.create({
-                    'name': self.comp2.name,
-                    'product_id': self.comp2.id,
-                    'product_uom_qty': 1,
-                    'product_uom_id': self.finished.uom_id.id,
-                    'price_unit': 10,
-                })
-            ],
-        })
-        # recieving comp products will set their invetory valuation (creates SVLs)
-        purchase_comps.button_confirm()
-        purchase_comps.picking_ids.move_ids.picked = True
-        purchase_comps.picking_ids.button_validate()
-
+        (self.comp1 | self.comp2 | self.finished).categ_id = self.category_fifo_auto
         purchase = self.env['purchase.order'].create({
             'partner_id': self.subcontractor_partner1.id,
             'order_line': [Command.create({
@@ -417,15 +419,12 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
                 'price_unit': 100,
             })],
         })
-        # validate subcontractor resupply
         purchase.button_confirm()
-        resupply_picks = purchase._get_subcontracting_resupplies()
-        resupply_picks.move_ids.picked = True
-        resupply_picks.button_validate()
         # receive subcontracted product (MO will be done)
         receipt = purchase.picking_ids
         receipt.move_ids.picked = True
         receipt.button_validate()
+        self.assertEqual(self.finished.total_value, 130)
         # create bill
         purchase.action_create_invoice()
         aml = self.env['account.move.line'].search([('purchase_line_id', '=', purchase.order_line.id)])
@@ -433,16 +432,9 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         aml.price_unit = 150
         aml.move_id.invoice_date = Date.today()
         aml.move_id.action_post()
-        svl = aml.stock_valuation_layer_ids
-        self.assertEqual(len(svl), 1)
-        self.assertEqual(svl.value, 50)
-        # check for the automated inventory valuation
-        account_move_credit_line = svl.account_move_id.line_ids.filtered(lambda l: l.credit > 0)
-        self.assertEqual(account_move_credit_line.account_id.id, stock_in_acc_id)
-        self.assertEqual(account_move_credit_line.credit, 50)
-        # Total value of subcontracted product = 150 new price + components (10 + 10)
-        self.assertEqual(self.finished.total_value, 170)
-        self.assertEqual(self.finished.standard_price, 170)
+        # Total value of subcontracted product should be updated by the invoice
+        self.assertEqual(self.finished.total_value, 180)
+        self.assertEqual(self.finished.standard_price, 180)
 
     def test_return_and_decrease_pol_qty(self):
         """
@@ -475,39 +467,42 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         pol = po.order_line
         pol.product_qty = 9.0
 
-        stock_location_id = self.warehouse.lot_stock_id
-        subco_location_id = self.env.company.subcontracting_location_id
         self.assertEqual(pol.qty_received, 9.0)
         self.assertEqual(pol.product_qty, 9.0)
         self.assertEqual(len(po.picking_ids), 2)
+        warehouse = po.picking_ids.move_ids.warehouse_id
         self.assertRecordValues(po.picking_ids.move_ids, [
-            {'location_dest_id': stock_location_id.id, 'quantity': 10.0, 'state': 'done'},
-            {'location_dest_id': subco_location_id.id, 'quantity': 1.0, 'state': 'done'},
+            {'location_dest_id': warehouse.lot_stock_id.id, 'quantity': 10.0, 'state': 'done'},
+            {'location_dest_id': self.company.subcontracting_location_id.id, 'quantity': 1.0, 'state': 'done'},
         ])
 
     def test_subcontracting_lead_days(self):
         """ Test the lead days computation for subcontracting. Subcontracting delay =
             max(Vendor lead time, Manufacturing lead time + DTPMO) + Days to Purchase
         """
-        rule = self.env['stock.rule'].search([('action', '=', 'buy')], limit=1)
+        rule = self.env['stock.rule'].search([
+            ('action', '=', 'buy'),
+            ('company_id', '=', self.company.id),
+        ], limit=1)
 
-        self.env.company.days_to_purchase = 2
+        self.company.days_to_purchase = 2
         # Case 1 Vendor lead time >= Manufacturing lead time + DTPMO
         seller = self.env['product.supplierinfo'].create({
             'product_tmpl_id': self.finished.product_tmpl_id.id,
             'partner_id': self.subcontractor_partner1.id,
             'price': 12.0,
-            'delay': 10
+            'delay': 10,
         })
+
         self.bom.produce_delay = 3
         self.bom.days_to_prepare_mo = 4
         delays, _ = rule._get_lead_days(self.finished, supplierinfo=seller)
-        self.assertEqual(delays['total_delay'], seller.delay + self.env.company.days_to_purchase)
+        self.assertEqual(delays['total_delay'], seller.delay + self.company.days_to_purchase)
         # Case 2 Vendor lead time < Manufacturing lead time + DTPMO
         self.bom.produce_delay = 5
         self.bom.days_to_prepare_mo = 6
         delays, _ = rule._get_lead_days(self.finished, supplierinfo=seller)
-        self.assertEqual(delays['total_delay'], self.bom.produce_delay + self.bom.days_to_prepare_mo + self.env.company.days_to_purchase)
+        self.assertEqual(delays['total_delay'], self.bom.produce_delay + self.bom.days_to_prepare_mo + self.company.days_to_purchase)
 
     def test_subcontracting_lead_days_on_overview(self):
         """Test on the BOM overview, the lead days and resupply availability are
@@ -515,11 +510,9 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         while the resupply availability should be based on the calculated dtpmo.
         """
         # should be added in all cases
-        self.env.company.days_to_purchase = 5
+        self.company.days_to_purchase = 5
+        self.comp2.bom_ids.unlink()
 
-        buy_route_id = self.ref('purchase_stock.route_warehouse0_buy')
-        (self.finished | self.comp1 | self.comp2).route_ids = [(6, None, [buy_route_id])]
-        self.comp2_bom.active = False
         self.env['product.supplierinfo'].create({
             'product_tmpl_id': self.finished.product_tmpl_id.id,
             'partner_id': self.subcontractor_partner1.id,
@@ -578,8 +571,8 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.bom.produce_delay = 10
 
         # Update stock for components, calculate DTPMO should be 0
-        self.env['stock.quant']._update_available_quantity(self.comp1, self.env.company.subcontracting_location_id, 100)
-        self.env['stock.quant']._update_available_quantity(self.comp2, self.env.company.subcontracting_location_id, 100)
+        self.env['stock.quant']._update_available_quantity(self.comp1, self.company.subcontracting_location_id, 100)
+        self.env['stock.quant']._update_available_quantity(self.comp2, self.company.subcontracting_location_id, 100)
         self.env.invalidate_all()   # invalidate cache to get updated qty_available
         # Case 1: Vendor lead time >= Manufacturing lead time + DTPMO on BOM
         self.bom.days_to_prepare_mo = 2
@@ -603,15 +596,15 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         mto_route.active = True
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
-        (self.comp1 + self.comp2).write({
+        self.comp2.bom_ids.unlink()
+        (self.comp1 | self.comp2).write({
              'route_ids': [
                 Command.link(resupply_sub_on_order_route.id),
-                Command.link(self.env.ref('purchase_stock.route_warehouse0_buy').id),
                 Command.link(mto_route.id)],
              'seller_ids': [Command.create({
                  'partner_id': self.vendor.id,
              })],
-        })
+            })
 
         po = self.env['purchase.order'].create({
             'partner_id': self.subcontractor_partner1.id,
@@ -624,8 +617,9 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             )],
         })
 
+        po.picking_type_id.warehouse_id.route_ids = [Command.link(self.env.ref('mrp_subcontracting.route_resupply_subcontractor_mto').id)]
         po.button_confirm()
-        ressuply_pick = self.env['stock.picking'].search([('location_dest_id', '=', self.env.company.subcontracting_location_id.id)])
+        ressuply_pick = self.env['stock.picking'].search([('location_dest_id', '=', self.company.subcontracting_location_id.id)])
         self.assertEqual(len(ressuply_pick.move_ids), 2)
         self.assertEqual(ressuply_pick.move_ids.mapped('product_id'), self.comp1 | self.comp2)
 
@@ -650,9 +644,9 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         Test That we can update the quantity of a purchase order line with a subcontracted product
         """
         mto_route = self.env.ref('stock.route_warehouse0_mto')
-        buy_route = self.env['stock.route'].search([('name', '=', 'Buy')])
         mto_route.active = True
-        self.finished.route_ids = mto_route.ids + buy_route.ids
+        self.comp2.bom_ids.unlink()
+        self.finished.route_ids = mto_route.ids
         self.env['product.supplierinfo'].create({
             'product_id': self.finished.id,
             'partner_id': self.vendor.id,
@@ -813,7 +807,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         production_loc = self.finished.property_stock_production
         final_loc = self.env['stock.location'].create({
             'name': 'Final location',
-            'location_id': self.env.ref('stock.warehouse0').lot_stock_id.id,
+            'location_id': self.warehouse.lot_stock_id.id,
         })
         # buy 2 subcontracted products
         po = self.env['purchase.order'].create({
@@ -890,7 +884,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         """ Don't count global horizon days more than once, make sure a PO generated from
         replenishment/orderpoint has a sensible planned reception date.
         """
-        wh = self.env.user._get_default_warehouse_id()
+        wh = self.warehouse
         self.finished2.seller_ids = [Command.create({
             'partner_id': self.subcontractor_partner1.id,
             'delay': 0,
@@ -898,14 +892,14 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         final_product = self.finished2
         orderpoint = self.env['stock.warehouse.orderpoint'].create({'product_id': final_product.id})
         out_picking = self.env['stock.picking'].create({
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'picking_type_id': wh.out_type_id.id,
             'location_id': wh.lot_stock_id.id,
-            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'location_dest_id': self.customer_location.id,
             'move_ids': [Command.create({
                 'product_id': final_product.id,
                 'product_uom_qty': 2,
                 'location_id': wh.lot_stock_id.id,
-                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+                'location_dest_id': self.customer_location.id,
             })],
         })
         out_picking.with_context(global_horizon_days=365).action_assign()

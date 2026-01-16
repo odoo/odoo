@@ -30,8 +30,8 @@ class HrAttendanceOvertimeLine(models.Model):
         store=True, readonly=False,
     )
 
-    time_start = fields.Datetime(string='Start')
-    time_stop = fields.Datetime(string='Stop')
+    time_start = fields.Datetime(string='Start')  # time_start will be equal to attendance.check_in
+    time_stop = fields.Datetime(string='Stop')  # time_stop will be equal to attendance.check_out
     amount_rate = fields.Float("Overtime pay rate", required=True, default=1.0)
 
     is_manager = fields.Boolean(compute="_compute_is_manager")

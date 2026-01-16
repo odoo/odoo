@@ -5252,6 +5252,77 @@ class TestMrpOrder(TestMrpCommon):
         # Check that the serial numbers follow the sequence
         self.assertEqual(mo2.lot_producing_ids.mapped('name'), ['customMRPSerial0000001', 'customMRPSerial0000002', 'customMRPSerial0000003'])
 
+    def test_mark_done_multi_mo_with_different_uom(self):
+        """Test marking multiple productions as done with different product UoMs."""
+        mo1, mo2 = self.env['mrp.production'].create([
+            {'product_id': self.product_1.id},
+            {'product_id': self.product_3.id},
+        ])
+        wo1, wo2 = self.env['mrp.workorder'].create([
+            {
+                'name': 'Test order1',
+                'workcenter_id': self.workcenter_1.id,
+                'product_uom_id': self.product_1.uom_id.id,
+                'production_id': mo1.id,
+            },
+            {
+                'name': 'Test order2',
+                'workcenter_id': self.workcenter_1.id,
+                'product_uom_id': self.product_3.uom_id.id,
+                'production_id': mo2.id,
+            }
+        ])
+
+        mos = mo1 | mo2
+        mos.action_confirm()
+        mos.button_mark_done()
+
+        self.assertEqual(mo1.state, 'done')
+        self.assertEqual(mo2.state, 'done')
+        self.assertNotEqual(mo1.workorder_ids.product_uom_id, mo2.workorder_ids.product_uom_id)
+        self.assertEqual(mo1.product_qty, mo2.product_qty)
+        self.assertEqual(wo1.qty_produced, wo2.qty_produced)
+
+    def test_update_component_qty_consumption(self):
+        """Ensure that when updating the component's quantity to consume,
+        the move is not marked as picked allowing the new quantity to be
+        correctly reserved."""
+        group_unlock_mo = self.env.ref('mrp.group_unlocked_by_default')
+        self.env.user.group_ids += group_unlock_mo
+        self.bom_1.bom_line_ids.product_id.is_storable = True
+        self.env['stock.quant']._update_available_quantity(self.bom_1.bom_line_ids[0].product_id, self.stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(self.bom_1.bom_line_ids[1].product_id, self.stock_location, 10)
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_1.id,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [2.0, 4.0])
+        self.assertEqual(mo.move_raw_ids.mapped('quantity'), [2.0, 4.0])
+        self.assertEqual(mo.move_raw_ids.mapped('picked'), [False, False])
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.edit(1) as move:
+            move.product_uom_qty = 5
+        mo = mo_form.save()
+        self.assertEqual(mo.move_raw_ids.mapped('quantity'), [2.0, 5.0])
+        self.assertEqual(mo.move_raw_ids.mapped('picked'), [False, False])
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+
+    def test_change_bom_and_quantity_together(self):
+        """Ensure that changing the BoM and the production quantity together before saving
+        does not create duplicate work orders for the same operation.
+        """
+        mo = self.env['mrp.production'].create({
+            'product_id': self.bom_2.product_id.id
+        })
+        self.assertFalse(mo.workorder_ids)
+        self.assertEqual(len(self.bom_2.operation_ids), 1)
+        mo_form = Form(mo)
+        mo_form.bom_id = self.bom_2
+        mo_form.product_qty = 10
+        mo = mo_form.save()
+        self.assertEqual(len(mo.workorder_ids), 1)
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
@@ -5328,3 +5399,35 @@ class TestTourMrpOrder(HttpCase):
         self.assertEqual(mo.move_raw_ids.move_line_ids.quantity, 7)
         self.assertEqual(mo.move_byproduct_ids.quantity, 7)
         self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 1)
+
+    def test_mrp_multi_step_product_catalog_component_transfer(self):
+        '''
+        Ensure a transfer to pre-prod is created for components added through
+        the catalog.
+        '''
+        # Enable storage locations
+        self.env['res.config.settings'].create({'group_stock_multi_locations': True}).execute()
+        # Set WH manufacture to 2-step
+        warehouse = self.env.ref('stock.warehouse0')
+        warehouse.manufacture_steps = 'pbm'
+        component, final_product = self.env['product.product'].create([{
+            'name': name,
+            'is_storable': True,
+        } for name in ['Wooden Leg', 'Table']])
+        mo = self.env['mrp.production'].create({
+            'product_id': final_product.id,
+            'product_uom_qty': 1.0,
+            'warehouse_id': warehouse.id,
+        })
+        self.assertEqual(len(mo.move_raw_ids), 0)
+
+        url = f'/odoo/action-mrp.mrp_production_action/{mo.id}'
+        self.start_tour(url, 'test_mrp_multi_step_product_catalog_component_transfer', login='admin')
+        self.assertEqual(len(mo.move_raw_ids), 1)
+
+        mo.action_confirm()
+        component_transfer = self.env['stock.move'].search([
+            ('product_id', '=', component.id),
+            ('location_dest_id', '=', warehouse.pbm_loc_id.id)
+        ])
+        self.assertEqual(component_transfer.product_uom_qty, 2)

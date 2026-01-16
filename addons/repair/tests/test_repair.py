@@ -649,16 +649,20 @@ class TestRepair(TestRepairCommon):
         repair_order._action_repair_confirm()
         move = repair_order.move_ids[0]
         self.assertEqual(repair_order.name, "PT1/00001")
+        self.assertEqual(move.reference, "PT1/00001")
         self.assertEqual(move.location_id, stock_location_1)
         self.assertEqual(move.quantity, 0.0)
         repair_order.picking_type_id = picking_type_2
         self.assertEqual(repair_order.name, "PT2/00001")
+        self.assertEqual(move.reference, "PT2/00001")
         self.assertEqual(move.location_id, stock_location_2)
         self.assertEqual(move.quantity, 1.0)
         repair_order.picking_type_id = picking_type_1
         self.assertEqual(repair_order.name, "PT1/00002")
+        self.assertEqual(move.reference, "PT1/00002")
         repair_order.picking_type_id = picking_type_1
         self.assertEqual(repair_order.name, "PT1/00002")
+        self.assertEqual(move.reference, "PT1/00002")
 
     def test_repair_components_lots_show_in_invoice(self):
         """
@@ -924,6 +928,19 @@ class TestRepair(TestRepairCommon):
         repair_order.action_validate()
         repairs = self.env['repair.order'].search([('search_date_category', 'in', ['yesterday', 'today'])])
         self.assertEqual(len(repairs), 1)
+
+    def test_sale_order_line_discount_on_repair_order(self):
+        """
+        Test that the discount on the sale order line created from a repair order is correctly set.
+        """
+        repair_order = self.repair0
+        repair_order.action_create_sale_order()
+        sale_line = repair_order.move_ids.sale_line_id
+        sale_line.discount = 15
+        repair_order.action_validate()
+        repair_order.action_repair_start()
+        repair_order.action_repair_end()
+        self.assertEqual(sale_line.discount, 15)
 
 
 @tagged('post_install', '-at_install')

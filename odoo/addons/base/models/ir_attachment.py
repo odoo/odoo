@@ -7,22 +7,35 @@ import hashlib
 import logging
 import mimetypes
 import os
-import psycopg2
 import re
 import uuid
 import warnings
-import werkzeug
-
 from collections import defaultdict
 from collections.abc import Collection
 
-from odoo import api, fields, models, _
-from odoo.exceptions import AccessError, MissingError, ValidationError, UserError
+import psycopg2
+import werkzeug
+
+from odoo import _, api, fields, models
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.http import Stream, root, request
-from odoo.tools import config, consteq, human_size, image, split_every, str2bool, OrderedSet
+from odoo.http import Stream, request, root
+from odoo.tools import (
+    OrderedSet,
+    config,
+    consteq,
+    human_size,
+    image,
+    split_every,
+    str2bool,
+)
 from odoo.tools.constants import PREFETCH_MAX
-from odoo.tools.mimetypes import guess_mimetype, fix_filename_extension, _olecf_mimetypes
+from odoo.tools.mimetypes import (
+    MIMETYPE_HEAD_SIZE,
+    _olecf_mimetypes,
+    fix_filename_extension,
+    guess_mimetype,
+)
 from odoo.tools.misc import limited_field_access_token
 
 _logger = logging.getLogger(__name__)
@@ -410,19 +423,15 @@ class IrAttachment(models.Model):
         return values
 
     @api.model
-    def _index(self, bin_data, file_type, checksum=None):
+    def _index(self, bin_data: bytes, file_type: str, checksum=None) -> str | None:
         """ compute the index content of the given binary data.
-            This is a python implementation of the unix command 'strings'.
-            :param bin_data : datas in binary form
-            :return index_content : string containing all the printable character of the binary data
+        This is a python implementation of the unix command 'strings'.
         """
-        index_content = False
-        if file_type:
-            index_content = file_type.split('/')[0]
-            if index_content == 'text': # compute index_content only for text type
-                words = re.findall(b"[\x20-\x7E]{4,}", bin_data)
-                index_content = b"\n".join(words).decode('ascii')
-        return index_content
+        # compute index_content only for text type
+        if file_type and file_type.startswith('text/'):
+            words = re.findall(rb"[\x20-\x7E]{4,}", bin_data)
+            return b"\n".join(words).decode('ascii')
+        return None
 
     @api.model
     def get_serving_groups(self):
@@ -738,17 +747,20 @@ class IrAttachment(models.Model):
         checksum_raw_map = {}
 
         for values in vals_list:
-            values = self._check_contents(values)
-            raw, datas = values.pop('raw', None), values.pop('datas', None)
-            if raw or datas:
+            # needs to be popped in all cases to bypass `_inverse_datas`
+            datas = values.pop('datas', None)
+            if raw := values.get('raw'):
                 if isinstance(raw, str):
-                    # b64decode handles str input but raw needs explicit encoding
-                    raw = raw.encode()
-                elif not raw:
-                    raw = base64.b64decode(datas or b'')
+                    values['raw'] = raw.encode()
+            elif datas:
+                values['raw'] = base64.b64decode(datas)
+            else:
+                values['raw'] = b''
+
+            values = self._check_contents(values)
+            if raw := values.pop('raw'):
                 values.update(self._get_datas_related_values(raw, values['mimetype']))
-                if raw:
-                    checksum_raw_map[values['checksum']] = raw
+                checksum_raw_map[values['checksum']] = raw
 
             # 'check()' only uses res_model and res_id from values, and make an exists.
             # We can group the values by model, res_id to make only one query when
@@ -862,7 +874,7 @@ class IrAttachment(models.Model):
             mimetype = file.content_type
             filename = file.filename
         elif mimetype == 'GUESS':
-            head = file.read(1024)
+            head = file.read(MIMETYPE_HEAD_SIZE)
             file.seek(-len(head), 1)  # rewind
             mimetype = guess_mimetype(head)
             filename = fix_filename_extension(file.filename, mimetype)

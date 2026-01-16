@@ -7,7 +7,6 @@ import {
     makeContentsInline,
     removeClass,
     removeStyle,
-    splitTextNode,
     unwrapContents,
     wrapInlinesInBlocks,
 } from "../utils/dom";
@@ -39,7 +38,7 @@ import {
     lastLeaf,
 } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
-import { DIRECTIONS, childNodeIndex, nodeSize, rightPos } from "../utils/position";
+import { childNodeIndex, nodeSize, rightPos } from "../utils/position";
 import { normalizeCursorPosition } from "@html_editor/utils/selection";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
@@ -74,7 +73,7 @@ function getConnectedParents(nodes) {
  * @typedef {((insertedNodes: Node[]) => void)[]} after_insert_handlers
  * @typedef {((el: HTMLElement) => void)[]} before_set_tag_handlers
  *
- * @typedef {((insertedNode: Node) => insertedNode)[]} before_insert_processors
+ * @typedef {((container: Element, block: Element) => container)[]} before_insert_processors
  * @typedef {((arg: { nodeToInsert: Node, container: HTMLElement }) => nodeToInsert)[]} node_to_insert_processors
  *
  * @typedef {string[]} system_attributes
@@ -161,13 +160,21 @@ export class DomPlugin extends Plugin {
         for (const cb of this.getResource("before_insert_processors")) {
             container = cb(container, block);
         }
+        if (!container.hasChildNodes()) {
+            return [];
+        }
         selection = this.dependencies.selection.getEditableSelection();
 
         let startNode;
         let insertBefore = false;
         if (selection.startContainer.nodeType === Node.TEXT_NODE) {
             insertBefore = !selection.startOffset;
-            splitTextNode(selection.startContainer, selection.startOffset, DIRECTIONS.LEFT);
+            if (
+                selection.startOffset !== 0 &&
+                selection.startOffset !== selection.startContainer.length
+            ) {
+                selection.startContainer.splitText(selection.startOffset);
+            }
             startNode = selection.startContainer;
         }
 
@@ -196,6 +203,7 @@ export class DomPlugin extends Plugin {
             (isParagraphRelatedElement(node) || isListItemElement(node)) &&
             !isEmptyBlock(block) &&
             !isEmptyBlock(node) &&
+            isContentEditable(block) &&
             (isContentEditable(node) ||
                 (!node.isConnected && !closestElement(node, "[contenteditable]"))) &&
             !this.dependencies.split.isUnsplittable(node) &&
@@ -209,12 +217,19 @@ export class DomPlugin extends Plugin {
             !this.isEditionBoundary(selection.anchorNode);
 
         // Empty block must contain a br element to allow cursor placement.
+        const firstLeafNode = firstLeaf(container);
         if (
-            container.lastElementChild &&
-            isBlock(container.lastElementChild) &&
-            !container.lastElementChild.hasChildNodes()
+            isBlock(firstLeafNode) &&
+            !(closestElement(firstLeafNode, "[contenteditable]")?.contentEditable === "false")
         ) {
-            fillEmpty(container.lastElementChild);
+            fillEmpty(firstLeafNode);
+        }
+        const lastLeafNode = lastLeaf(container);
+        if (
+            isBlock(lastLeafNode) &&
+            !(closestElement(lastLeafNode, "[contenteditable]")?.contentEditable === "false")
+        ) {
+            fillEmpty(lastLeafNode);
         }
 
         // In case the html inserted is all contained in a single root <p> or <li>
@@ -327,7 +342,7 @@ export class DomPlugin extends Plugin {
                 // Split blocks at the edges if inserting new blocks (preventing
                 // <p><p>text</p></p> or <li><li>text</li></li> scenarios).
                 while (
-                    !this.isEditionBoundary(currentNode.parentElement) &&
+                    !this.isEditionBoundary(currentNode) &&
                     (!allowsParagraphRelatedElements(currentNode.parentElement) ||
                         (isListItemElement(currentNode.parentElement) &&
                             !this.dependencies.split.isUnsplittable(nodeToInsert)))
@@ -336,6 +351,9 @@ export class DomPlugin extends Plugin {
                         // If we have to insert an unsplittable element, we cannot afford to
                         // unwrap it we need to search for a more suitable spot to put it
                         if (this.dependencies.split.isUnsplittable(nodeToInsert)) {
+                            if (this.isEditionBoundary(currentNode.parentElement)) {
+                                break;
+                            }
                             currentNode = currentNode.parentElement;
                             doesCurrentNodeAllowsP = allowsParagraphRelatedElements(currentNode);
                             continue;
@@ -437,18 +455,16 @@ export class DomPlugin extends Plugin {
                 candidateForRemoval.remove();
             }
         }
-        for (const insertedNode of allInsertedNodes.reverse()) {
-            if (insertedNode.isConnected) {
-                currentNode = insertedNode;
-                break;
-            }
+        const lastInsertedNode = allInsertedNodes.findLast((node) => node.isConnected);
+        if (!lastInsertedNode) {
+            return;
         }
         let lastPosition =
-            isParagraphRelatedElement(currentNode) ||
-            isListItemElement(currentNode) ||
-            isListElement(currentNode)
-                ? rightPos(lastLeaf(currentNode))
-                : rightPos(currentNode);
+            isParagraphRelatedElement(lastInsertedNode) ||
+            isListItemElement(lastInsertedNode) ||
+            isListElement(lastInsertedNode)
+                ? rightPos(lastLeaf(lastInsertedNode))
+                : rightPos(lastInsertedNode);
         lastPosition = normalizeCursorPosition(lastPosition[0], lastPosition[1], "right");
 
         if (!this.config.allowInlineAtRoot && this.isEditionBoundary(lastPosition[0])) {

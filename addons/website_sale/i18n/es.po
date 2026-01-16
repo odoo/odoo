@@ -11,15 +11,15 @@
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
 # Martin Trigaux, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-21 14:14+0000\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-08 11:38+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "website_sale/es/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
 " ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -60,6 +60,10 @@ msgid ""
 "baseline\">Company name</span>\n"
 "                 -"
 msgstr ""
+"&amp;copy;\n"
+"                <span class=\"o_footer_copyright_name align-"
+"baseline\">Nombre de la empresa</span>\n"
+"                 -"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -122,6 +126,48 @@ msgid ""
 "                    }\n"
 "                }"
 msgstr ""
+".heartBeat {\n"
+"                    animation: heartBeat 1.3s ease-in-out forwards;\n"
+"                    animation-delay: 0.75s;\n"
+"                    transform-origin: 80.5px 28.5px;\n"
+"                }\n"
+"                .tilt {\n"
+"                    animation: tilt 1s ease forwards;\n"
+"                    animation-delay: 0.75s;\n"
+"                    transform-origin: bottom left;\n"
+"                }\n"
+"                @keyframes heartBeat {\n"
+"                    0% {\n"
+"                    transform: scale(1);\n"
+"                    }\n"
+"\n"
+"                    14% {\n"
+"                        transform: scale(1.2);\n"
+"                    }\n"
+"\n"
+"                    28% {\n"
+"                        transform: scale(1);\n"
+"                    }\n"
+"\n"
+"                    42% {\n"
+"                        transform: scale(1.2);\n"
+"                    }\n"
+"\n"
+"                    70% {\n"
+"                        transform: scale(1);\n"
+"                    }\n"
+"                }\n"
+"                @keyframes tilt {\n"
+"                    0% {\n"
+"                        transform: rotate(0deg);\n"
+"                    }\n"
+"                    50% {\n"
+"                        transform: rotate(-7deg);\n"
+"                    }\n"
+"                    100% {\n"
+"                        transform: rotate(0deg);\n"
+"                    }\n"
+"                }"
 
 #. module: website_sale
 #. odoo-javascript
@@ -143,7 +189,7 @@ msgstr "2 columnas"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__33_pc
 msgid "33 %"
-msgstr ""
+msgstr "33 %"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__50_pc
@@ -164,10 +210,10 @@ msgid ""
 "                    <span class=\"align-middle\">to follow your order.</span>"
 msgstr ""
 "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" class=\""
-"btn btn-primary o_translate_inline\">Regístrese</a>\n"
-"                    <span class=\"align-middle\">para seguir su "
-"pedido.</span>"
+"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+"class=\"btn btn-primary o_translate_inline\">Regístrese</a>\n"
+"                    <span class=\"align-middle\">para seguir su pedido.</"
+"span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -205,8 +251,8 @@ msgid ""
 "to cart</span>"
 msgstr ""
 "<i class=\"d-md-none fa fa-shopping-cart\" role=\"presentation\"/>\n"
-"                                    <span class=\"d-none d-md-inline\""
-">Añadir al carrito</span>"
+"                                    <span class=\"d-none d-md-"
+"inline\">Añadir al carrito</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
@@ -238,10 +284,10 @@ msgid ""
 ">\n"
 "                    <span class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/>"
-"\n"
-"                    <span class=\"o_label small ms-1\">Añadir al "
-"carrito</span>"
+"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/"
+">\n"
+"                    <span class=\"o_label small ms-1\">Añadir al carrito</"
+"span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
@@ -251,7 +297,7 @@ msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "<i class=\"fa fa-long-arrow-right\"/> All Products"
-msgstr ""
+msgstr "<i class=\"fa fa-long-arrow-right\"/> Todos los productos"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
@@ -288,8 +334,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
 "class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
-"<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span class="
-"\"o_label small ms-1\">Añadir al carrito</span>"
+"<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
+"class=\"o_label small ms-1\">Añadir al carrito</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
@@ -306,8 +352,8 @@ msgid ""
 "<i class=\"oi oi-chevron-left oe_unmovable border bg-white text-900\" "
 "role=\"img\" aria-label=\"Previous\" title=\"Previous\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-left oe_unmovable border bg-white text-900\" role="
-"\"img\" aria-label=\"Anterior\" title=\"Anterior\"/>"
+"<i class=\"oi oi-chevron-left oe_unmovable border bg-white text-900\" "
+"role=\"img\" aria-label=\"Anterior\" title=\"Anterior\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -315,14 +361,14 @@ msgid ""
 "<i class=\"oi oi-chevron-right oe_unmovable border bg-white text-900\" "
 "role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-right oe_unmovable border bg-white text-900\" role="
-"\"img\" aria-label=\"Siguiente\" title=\"Siguiente\"/>"
+"<i class=\"oi oi-chevron-right oe_unmovable border bg-white text-900\" "
+"role=\"img\" aria-label=\"Siguiente\" title=\"Siguiente\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
 msgid "<i class=\"oi oi-plus me-2\"/>Add Address"
-msgstr ""
+msgstr "<i class=\"oi oi-plus me-2\"/>Añadir dirección"
 
 #. module: website_sale
 #. odoo-python
@@ -352,8 +398,8 @@ msgid ""
 "role=\"presentation\"/>"
 msgstr ""
 "<small class=\"mx-auto\"><b>Borrar filtros</b></small>\n"
-"                                        <i class=\"oi oi-close\" role="
-"\"presentation\"/>"
+"                                        <i class=\"oi oi-close\" "
+"role=\"presentation\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_terms_and_conditions
@@ -366,8 +412,8 @@ msgid ""
 "        </small>"
 msgstr ""
 "<small class=\"text-muted mb-0\">\n"
-"            <a href=\"/terms\" class=\"o_translate_inline text-muted\""
-"><u>Términos y condiciones</u></a><br/>\n"
+"            <a href=\"/terms\" class=\"o_translate_inline text-"
+"muted\"><u>Términos y condiciones</u></a><br/>\n"
 "            Grantía de devolución de 30 días<br/>\n"
 "            Envío: 2-3 días laborables\n"
 "        </small>"
@@ -388,8 +434,8 @@ msgid ""
 msgstr ""
 "<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
 "data-oe-expression=\"data['price']\">\n"
-"                                                <span class="
-"\"oe_currency_value\">1500,00</span>\n"
+"                                                <span "
+"class=\"oe_currency_value\">1500,00</span>\n"
 "                                            </span>"
 
 #. module: website_sale
@@ -403,8 +449,8 @@ msgid ""
 msgstr ""
 "<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
 "data-oe-expression=\"data['price']\">\n"
-"                                                <span class="
-"\"oe_currency_value\">140,00</span>\n"
+"                                                <span "
+"class=\"oe_currency_value\">140,00</span>\n"
 "                                            </span>"
 
 #. module: website_sale
@@ -418,8 +464,8 @@ msgid ""
 msgstr ""
 "<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
 "data-oe-expression=\"data['price']\">\n"
-"                                                <span class="
-"\"oe_currency_value\">33,00</span>\n"
+"                                                <span "
+"class=\"oe_currency_value\">33,00</span>\n"
 "                                            </span>"
 
 #. module: website_sale
@@ -433,8 +479,8 @@ msgid ""
 msgstr ""
 "<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
 "data-oe-expression=\"data['price']\">\n"
-"                                                <span class="
-"\"oe_currency_value\">750,00</span>\n"
+"                                                <span "
+"class=\"oe_currency_value\">750,00</span>\n"
 "                                            </span>"
 
 #. module: website_sale
@@ -446,6 +492,11 @@ msgid ""
 "small>\n"
 "            </span>"
 msgstr ""
+"<span class=\"o_wsale_delivery_price_badge text-muted fw-bold text-end\" "
+"name=\"price\">\n"
+"                <small class=\"fw-normal\">Selecciona para calcular la "
+"tarifa de envío</small>\n"
+"            </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
@@ -472,6 +523,22 @@ msgid ""
 "animable\"/> Fast Shipping\n"
 "                                </span>"
 msgstr ""
+"<span class=\"s_badge badge text-bg-primary o_animable\" data-"
+"name=\"Badge\">\n"
+"                                    <i class=\"fa fa-dollar fa-fw o_not-"
+"animable\"/> Precios bajos\n"
+"                                </span>\n"
+"                                <span class=\"s_badge badge text-bg-primary "
+"o_animable\" data-name=\"Badge\">\n"
+"                                    <i class=\"fa fa-shopping-basket fa-fw "
+"o_not-animable\"/>\n"
+"                                    Devoluciones fáciles\n"
+"                                </span>\n"
+"                                <span class=\"s_badge badge text-bg-primary "
+"o_animable\" data-name=\"Badge\">\n"
+"                                    <i class=\"fa fa-truck fa-fw o_not-"
+"animable\"/> Envío rápido\n"
+"                                </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -525,6 +592,8 @@ msgid ""
 "<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-"
 "muted\">Price</span>"
 msgstr ""
+"<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-"
+"muted\">Precio</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
@@ -533,18 +602,21 @@ msgid ""
 "                        Same as delivery address\n"
 "                    </span>"
 msgstr ""
+"<span name=\"use_delivery_as_billing_text\">\n"
+"                        La misma que la dirección de entrega\n"
+"                   </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.all_products_link_name
 msgid "<span placeholder=\"All products\">All products</span>"
-msgstr ""
+msgstr "<span placeholder=\"All products\">Todos los productos</span>"
 
 #. module: website_sale
 #: model_terms:web_tour.tour,rainbow_man_message:website_sale.test_01_admin_shop_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
-"<span><b>¡Buen trabajo!</b> Pasó por todos los pasos de este "
-"recorrido.</span>"
+"<span><b>¡Buen trabajo!</b> Pasó por todos los pasos de este recorrido.</"
+"span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -577,12 +649,12 @@ msgstr "<span>Vista previa en vídeo</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "<span>days after publication.</span>"
-msgstr ""
+msgstr "<span>días después de la publicación.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "<span>for</span>"
-msgstr ""
+msgstr "<span>para</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -595,9 +667,9 @@ msgid ""
 "cart into current cart."
 msgstr ""
 "<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-href="
-"\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method="
-"merge\">Haga clic aquí</a>\n"
+"                                <a class=\"o_translate_inline\" t-attf-"
+"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+"&amp;revive_method=merge\">Haga clic aquí</a>\n"
 "                            </strong> si desea fusionar su cesta anterior "
 "con la cesta actual."
 
@@ -612,16 +684,16 @@ msgid ""
 "cart. Your current cart will be replaced with your previous cart."
 msgstr ""
 "<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-href="
-"\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method="
-"squash\">Haga clic aquí</a>\n"
+"                                <a class=\"o_translate_inline\" t-attf-"
+"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+"&amp;revive_method=squash\">Haga clic aquí</a>\n"
 "                            </strong> si desea restaurar su cesta anterior. "
 "Su cesta actual será reemplazado por su cesta anterior."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "<strong>Documents</strong>"
-msgstr ""
+msgstr "<strong>Documentos</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
@@ -708,43 +780,41 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
-"\"padding: 0px; background-color: white; color: #454748; border-"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 0px; background-color: white; color: #454748; border-"
 "collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- CONTENIDO -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px "
-"0px 0px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <h1 style=\"color:#A9A9A9;\">HAY ALGUNOS ARTÍCULOS EN SU "
 "CESTA</h1>\n"
 "                    ¿Quiere completar su compra?<br/><br/>\n"
 "                    <t t-if=\"object.order_line\">\n"
-"                        <t t-foreach=\"object.website_order_line\" t-as="
-"\"line\">\n"
+"                        <t t-foreach=\"object.website_order_line\" t-"
+"as=\"line\">\n"
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; width:150px;\""
-">\n"
-"                                        <img t-attf-src="
-"\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style="
-"\"width: 100px; height: 100px; object-fit: contain;\" alt="
-"\"Imagen del producto\"/>\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
+"                                        <img t-attf-src=\"/web/image/"
+"product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
+"height: 100px; object-fit: contain;\" alt=\"Imagen del producto\"/>\n"
 "                                    </td>\n"
 "                                    <td>\n"
-"                                        <strong t-out="
-"\"line.product_id.display_name or ''\">[FURN_7800] Combinación de "
+"                                        <strong t-"
+"out=\"line.product_id.display_name or ''\">[FURN_7800] Combinación de "
 "escritorio</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Combinación "
 "de escritorio, negro-marrón: silla + escritorio + cajón.</t>\n"
 "                                    </td>\n"
 "                                    <td width=\"100px\" align=\"right\">\n"
-"                                        <t t-out="
-"\"int(line.product_uom_qty) or ''\">10 000</t> <t t-out="
-"\"line.product_uom_id.name or ''\">unidades</t>\n"
+"                                        <t t-out=\"int(line.product_uom_qty) "
+"or ''\">10 000</t> <t t-out=\"line.product_uom_id.name or ''\">unidades</t>\n"
 "                                    </td>\n"
 "                                </tr>\n"
 "                            </table>\n"
@@ -754,20 +824,20 @@ msgstr ""
 "                    <div style=\"text-align: center; padding: 16px 0px 16px "
 "0px; font-size: 14px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/"
-"cart?id={{ object.id }}&amp;access_token={{ object.access_token }}"
-"\" target=\"_blank\" t-attf-style=\"background-color: {{"
-"object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: 8px "
-"16px 8px 16px; text-decoration: none; color: {{"
-"object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-radius: "
-"5px; font-size:13px;\">\n"
+"cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
+"target=\"_blank\" t-attf-style=\"background-color: "
+"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"radius: 5px; font-size:13px;\">\n"
 "                            Reanudar pedido\n"
 "                        </a>\n"
 "                    </div>\n"
-"                    <t t-set=\"company\" t-value="
-"\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
-"                    <div style=\"text-align: center;"
-"\"><strong>Gracias por comprar con <t t-out=\"company.name or ''\">Mi "
-"Compañía (San Francisco)</t>.</strong></div>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or "
+"object.user_id.company_id or user.company_id\"/>\n"
+"                    <div style=\"text-align: center;\"><strong>Gracias por "
+"comprar con <t t-out=\"company.name or ''\">Mi Compañía (San Francisco)</t>."
+"</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -824,6 +894,8 @@ msgid ""
 "A single feed cannot contain more than %(limit)s products. Please separate "
 "products with Categories."
 msgstr ""
+"Una solo feed no puede contener más de %(limit)s productos. Por favor, "
+"separa los productos por categorías."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -931,7 +1003,7 @@ msgstr "Añadir medios"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Add More"
-msgstr ""
+msgstr "Añadir más"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__add_to_cart_action
@@ -966,7 +1038,7 @@ msgstr "Añada un precio tachado, como comparación"
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
 msgid "Add an address"
-msgstr ""
+msgstr "Añadir una dirección"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
@@ -1176,22 +1248,22 @@ msgstr "Calificación promedio"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__back_button_label
 msgid "Back Button Label"
-msgstr "Etiqueta del botón para regresar"
+msgstr "Etiqueta del botón «Atrás»"
 
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_delivery
 msgid "Back to address"
-msgstr "Regresar a la dirección"
+msgstr "Volver a la dirección"
 
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_cart
 msgid "Back to cart"
-msgstr "Regresar a la cesta"
+msgstr "Volver a la cesta"
 
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_extra
 msgid "Back to extra info"
-msgstr "Regresar a la información adicional"
+msgstr "Volver a la información adicional"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1550,7 +1622,7 @@ msgstr "Cambiar la ubicación"
 #. module: website_sale
 #: model:website.checkout.step,main_button_label:website_sale.checkout_step_delivery
 msgid "Checkout"
-msgstr "Salida"
+msgstr "Finalizar compra"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2098,6 +2170,11 @@ msgid ""
 "- New: Applied based on the New period you will define.\n"
 "- Out Of Stock: Applied when the product is out of stock."
 msgstr ""
+"Define cómo se asigna esta etiqueta a los productos:\n"
+"- Manualmente: la etiqueta se asigna manualmente a los productos.\n"
+"- En oferta: se aplica cuando el producto está visiblemente en oferta.\n"
+"- Nuevo: se aplica en función del período de «Nuevo» que se defina.\n"
+"- Agotado: se aplica cuando el producto está agotado."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_ribbon__style
@@ -2832,7 +2909,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/website_sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 msgid "Go to Checkout"
-msgstr ""
+msgstr "Proceder al pago"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4278,7 +4355,7 @@ msgstr "Documento del producto"
 #: model:res.groups,name:website_sale.group_product_feed
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_form
 msgid "Product Feed"
-msgstr ""
+msgstr "Feed de productos"
 
 #. module: website_sale
 #. odoo-python
@@ -4478,7 +4555,7 @@ msgstr "Productos"
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Products Design"
-msgstr ""
+msgstr "Diseño de productos"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4711,7 +4788,7 @@ msgstr "Eliminar"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Remove All"
-msgstr ""
+msgstr "Eliminar todo"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -4859,7 +4936,7 @@ msgstr "Análisis de venta"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
 msgid "Sale price"
-msgstr ""
+msgstr "Precio de venta"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_carts
@@ -6270,8 +6347,8 @@ msgstr ""
 "                            al mismo tiempo.<br/>\n"
 "                            Si quiere modificar su dirección de facturación, "
 "cree una\n"
-"                             <a class=\"o_translate_inline\" href="
-"\"/shop/address?address_type=billing\">nueva dirección</a>."
+"                             <a class=\"o_translate_inline\" href=\"/shop/"
+"address?address_type=billing\">nueva dirección</a>."
 
 #. module: website_sale
 #. odoo-python

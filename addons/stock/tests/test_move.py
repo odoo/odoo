@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.exceptions import UserError
@@ -6388,6 +6389,7 @@ class TestStockMove(TestStockCommon):
         line2.quant_id = quant
         self.assertEqual(move.move_line_ids[1].quantity, 1.0)
 
+    @freeze_time("2025-10-10")
     def test_free_reservation(self):
         """ Checks that the free_reservation uses the latest move line when the picking or date are equal.
         """
@@ -6628,3 +6630,99 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(picking.move_line_ids.lot_id, lot2)
         picking.button_validate()
         self.assertEqual(picking.move_ids.lot_ids, lot2)
+
+    def test_delivery_slip_aggregated_lines_with_canceled_move_and_packaging(self):
+        """
+        Ensure that the delivery slip report correctly aggregates product quantities
+        when a picking contains both a completed move and a canceled move that uses
+        packaging units.
+        - two products are ordered in packaging (e.g., 1 pack of 6)
+        - the picking is split, causing one move to be fulfilled and the other canceled
+        - the canceled move still contributes packaging information (ordered quantity)
+        The report must not crash and must return consistent aggregated values.
+        """
+        pack_of_6 = self.env.ref('uom.product_uom_pack_6')
+        # upodate the quantity of product A
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 6)
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 1,
+                    'product_uom': pack_of_6.id,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                }),
+                Command.create({
+                    'product_id': self.productB.id,
+                    'product_uom_qty': 1,
+                    'product_uom': pack_of_6.id,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                }),
+            ],
+        })
+        picking.action_confirm()
+        self.assertEqual(picking.move_ids.mapped('quantity'), [1.0, 0])
+        picking.action_split_transfer()
+        backorder = picking.backorder_ids
+        backorder.action_cancel()
+        picking.button_validate()
+        self.assertEqual(backorder.state, 'cancel')
+        self.assertEqual(picking.state, 'done')
+        aggregate_values = picking.move_line_ids._get_aggregated_product_quantities()
+        self.assertEqual(len(aggregate_values), 2)
+        aggregate_val_1 = aggregate_values[f'{self.productA.id}_{self.productA.name}__{pack_of_6.id}_{pack_of_6.id}']
+        aggregate_val_2 = aggregate_values[f'{self.productB.id}_{self.productB.name}__{pack_of_6.id}_{pack_of_6.id}']
+        self.assertEqual(aggregate_val_1['qty_ordered'], 1.0)
+        self.assertEqual(aggregate_val_1['quantity'], 1.0)
+        self.assertEqual(aggregate_val_1['packaging_qty_ordered'], 1.0)
+        self.assertEqual(aggregate_val_2['qty_ordered'], 1.0)
+        self.assertEqual(aggregate_val_2['quantity'], 0)
+        self.assertEqual(aggregate_val_2['packaging_qty_ordered'], 0.0)
+
+    def test_newly_added_move_line_is_picked_if_move_is_picked(self):
+        """
+        After a new move line is added in the "Details" popup of a move,
+        it should be automatically marked as picked if the stock move was
+        earlier marked as picked.
+        """
+        lot_1, lot_2 = self.env['stock.lot'].create([{
+            'name': 'lot_1', 'product_id': self.product_lot.id,
+        }, {
+            'name': 'lot_2', 'product_id': self.product_lot.id,
+        }])
+        for lot_id in [lot_1, lot_2]:
+            self.env['stock.quant']._update_available_quantity(
+                self.product_lot, self.stock_location, 3, lot_id=lot_id
+            )
+        # Create a delivery with one move of 3 products
+        with Form(self.env['stock.picking']) as delivery_form:
+            delivery_form.picking_type_id = self.picking_type_out
+            with delivery_form.move_ids.new() as move:
+                move.product_id = self.product_lot
+                move.product_uom_qty = 3
+            delivery = delivery_form.save()
+        delivery.action_confirm()
+        # Verify that the stock move line uses lot_1
+        self.assertEqual(delivery.move_ids.move_line_ids.lot_id, lot_1)
+        # Mark the move as picked, which will also mark the move line as picked
+        delivery.move_ids.picked = True
+        self.assertTrue(delivery.move_ids.move_line_ids.picked)
+        # Split the move lines: 2 from lot_1, 1 from lot_2
+        action = delivery.move_ids.action_show_details()
+        with Form(delivery.move_ids.with_context(action['context']), view=action['view_id']) as form:
+            with form.move_line_ids.edit(0) as existing_move_line:
+                existing_move_line.quantity = 2
+            with form.move_line_ids.new() as new_move_line:
+                new_move_line.lot_id = lot_2
+                new_move_line.quantity = 1
+
+        # The move should still be picked
+        self.assertTrue(delivery.move_ids.picked)
+        # All the move lines are also picked
+        for move_line in delivery.move_ids.move_line_ids:
+            self.assertTrue(move_line.picked)

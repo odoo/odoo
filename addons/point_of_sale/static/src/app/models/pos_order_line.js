@@ -24,6 +24,7 @@ export class PosOrderline extends PosOrderlineAccounting {
         this.uiState = {
             hasChange: true,
             savedQuantity: 0,
+            oldQty: this.qty,
         };
     }
 
@@ -230,6 +231,7 @@ export class PosOrderline extends PosOrderlineAccounting {
     // product's unity of measure properties. Quantities greater than zero will not get
     // rounded to zero
     setQuantity(quantity, keep_price) {
+        this.uiState.oldQty = this.qty;
         if (this.order_id.preset_id?.is_return) {
             quantity = -Math.abs(quantity);
         }
@@ -300,6 +302,10 @@ export class PosOrderline extends PosOrderlineAccounting {
                 );
             }
         }
+        for (const comboLine of this.combo_line_ids) {
+            // If each combo contains 2 qty of a product, we wanna keep this ratio after setting the new quantity on the parent product.
+            comboLine.setQuantity((comboLine.qty / this.uiState.oldQty || 1) * quantity, true);
+        }
         return true;
     }
 
@@ -327,14 +333,13 @@ export class PosOrderline extends PosOrderlineAccounting {
         );
         const price = ProductPrice.round(this.price_unit || 0);
         const product = orderline.getProduct();
-        let order_line_price = product.getPrice(
+        const order_line_price = product.getPrice(
             orderline.order_id.pricelist_id,
             this.getQuantity(),
             0,
             false,
             product
         );
-        order_line_price = this.currency.round(order_line_price);
 
         const isSameCustomerNote =
             (Boolean(orderline.getCustomerNote()) === false &&
@@ -346,9 +351,13 @@ export class PosOrderline extends PosOrderlineAccounting {
             orderline.getNote() === this.getNote() &&
             this.getProduct().id === orderline.getProduct().id &&
             this.isPosGroupable() &&
-            // don't merge discounted orderlines
-            this.getDiscount() === 0 &&
-            this.currency.isZero(price - order_line_price - orderline.getPriceExtra()) &&
+            this.getDiscount() === orderline.getDiscount() &&
+            this.price_type === orderline.price_type &&
+            this.currency.isZero(
+                this.currency.round(price) -
+                    this.currency.round(order_line_price) -
+                    orderline.getPriceExtra()
+            ) &&
             !this.isLotTracked() &&
             this.full_product_name === orderline.full_product_name &&
             isSameCustomerNote &&

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
+"POT-Creation-Date: 2026-01-09 18:38+0000\n"
 "PO-Revision-Date: 2025-09-14 21:12+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
@@ -31,11 +31,11 @@ msgstr "Compañías"
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_lot__display_name
-#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_replenish_mixin__display_name
@@ -67,11 +67,11 @@ msgstr "Dropshippings"
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_product_product__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_res_company__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_lot__id
-#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_move__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_stock_replenish_mixin__id
@@ -110,6 +110,11 @@ msgid "Purchase Order"
 msgstr "Pedido de compra"
 
 #. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Línea de pedido de compra"
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_sale_order
 msgid "Sales Order"
 msgstr "Pedido de venta"
@@ -118,11 +123,6 @@ msgstr "Pedido de venta"
 #: model:ir.model,name:stock_dropshipping.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Línea de pedido de venta"
-
-#. module: stock_dropshipping
-#: model:ir.model,name:stock_dropshipping.model_stock_move
-msgid "Stock Move"
-msgstr "Movimiento de stock"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_stock_rule
@@ -144,8 +144,8 @@ msgstr "Traslado"
 msgid "Type of Operation"
 msgstr "Tipo de operación"
 
+#~ msgid "Stock Move"
+#~ msgstr "Movimiento de stock"
+
 #~ msgid "Procurement Group"
 #~ msgstr "Grupo de abastecimiento"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Línea de pedido de compra"

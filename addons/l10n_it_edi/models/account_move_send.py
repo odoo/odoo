@@ -102,7 +102,7 @@ class AccountMoveSend(models.AbstractModel):
         # Prepare attachment data
         for move, move_data in moves_data.items():
             if attachment := move.l10n_it_edi_attachment_file:
-                attachments_vals[move] = {'name': move.l10n_it_edi_attachment_name, 'raw': attachment}
+                attachments_vals[move] = {'name': move.l10n_it_edi_attachment_name, 'raw': base64.b64decode(attachment)}
                 moves |= move
             elif edi_values := move_data.get('l10n_it_edi_values'):
                 attachments_vals[move] = edi_values

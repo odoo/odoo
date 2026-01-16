@@ -48,6 +48,58 @@ describe("custom selection", () => {
         expect(overlayColorTDs[1]).not.toBe("none");
         expect(overlayColorTDs[2]).not.toBe("none");
     });
+    test("should not deselect cells while resizing table", async () => {
+        const content = unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>[<br></p>
+                        </td>
+                        <td><p><br>]</p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+
+        const { el } = await setupEditor(content);
+        await tick();
+
+        const firstTd = el.querySelector("td");
+        expect(firstTd).toHaveClass("o_selected_td");
+        const initialCellWidth = firstTd.clientWidth;
+
+        const cellRect = firstTd.getBoundingClientRect();
+        const clientX = cellRect.right;
+        const clientY = cellRect.top + cellRect.height / 2;
+
+        // Simulate mousedown at the right border of first cell.
+        await manuallyDispatchProgrammaticEvent(firstTd, "mousedown", {
+            detail: 1,
+            clientX,
+            clientY,
+        });
+
+        // Simulate mousemove to resize cell.
+        manuallyDispatchProgrammaticEvent(firstTd, "mousemove", {
+            detail: 1,
+            clientX: clientX + 100,
+            clientY,
+        });
+        manuallyDispatchProgrammaticEvent(firstTd, "mouseup", {
+            detail: 1,
+            clientX: clientX + 100,
+            clientY,
+        });
+        await animationFrame();
+
+        expect(firstTd.clientWidth).not.toBe(initialCellWidth); // Resize worked
+        expect(firstTd).toHaveClass("o_selected_td");
+    });
 });
 
 describe("select a full table on cross over", () => {
@@ -1191,7 +1243,7 @@ describe("move cursor with arrow keys", () => {
                 `),
             });
         });
-        test("should move cursor to the end in the cell above", async () => {
+        test("should move cursor to the end in the cell above (1)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <table>
@@ -1223,6 +1275,8 @@ describe("move cursor with arrow keys", () => {
                     </table>
                 `),
             });
+        });
+        test("should move cursor to the end in the cell above (2)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <table>
@@ -1422,7 +1476,7 @@ describe("move cursor with arrow keys", () => {
                 `),
             });
         });
-        test("should move cursor to the start of the cell below", async () => {
+        test("should move cursor to the start of the cell below (1)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <table>
@@ -1454,6 +1508,8 @@ describe("move cursor with arrow keys", () => {
                     </table>
                 `),
             });
+        });
+        test("should move cursor to the start of the cell below (2)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <table>
@@ -1762,6 +1818,57 @@ describe("symmetrical selection", () => {
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
+
+    test("select single cell containing text when pressing shift + arrow key backward", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><br></td><td>ab</td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        const secondTd = el.querySelectorAll("td")[1];
+        setSelection({
+            anchorNode: secondTd,
+            anchorOffset: nodeSize(secondTd),
+            focusNode: secondTd,
+            focusOffset: 0,
+        }); // <td>]ab[</td>
+
+        press(["Shift", "ArrowLeft"]);
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td><br></td><td class="o_selected_td">]ab[</td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowLeft"]);
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">]<br></td><td class="o_selected_td">ab[</td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+    });
 });
 
 describe("single cell selection", () => {
@@ -1979,6 +2086,50 @@ describe("single cell selection", () => {
 
         await animationFrame();
         expect(firstTd).not.toHaveClass("o_selected_td");
+    });
+    test("shift + click should correctly extend selection inside a cell", async () => {
+        const content = unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>ab[]cde</p>
+                        </td>
+                        <td><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+
+        const { el, editor } = await setupEditor(content);
+        const firstTd = el.querySelector("td");
+        const firstP = firstTd.firstElementChild;
+        const textNode = firstP.firstChild;
+        const targetOffset = 4; // abcd[]e
+
+        // Dispatch mousedown between "d" and "e"
+        const range = document.createRange();
+        range.setStart(textNode, targetOffset);
+        range.setEnd(textNode, targetOffset);
+        const rangeRect = range.getBoundingClientRect();
+
+        await manuallyDispatchProgrammaticEvent(firstP, "mousedown", {
+            detail: 1,
+            clientX: rangeRect.right,
+            clientY: rangeRect.top,
+            shiftKey: true,
+        });
+
+        // Simulate shift + mousedown to extend selection.
+        const selection = editor.document.getSelection();
+        selection.extend(textNode, targetOffset);
+        await tick();
+
+        expect(getContent(firstTd)).toBe("<p>ab[cd]e</p>");
     });
 });
 

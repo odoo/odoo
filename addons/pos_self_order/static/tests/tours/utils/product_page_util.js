@@ -4,7 +4,7 @@ import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 export function clickProduct(productName) {
     return {
         content: `Click on product '${productName}'`,
-        trigger: `.o_self_product_box span:contains('${productName}')`,
+        trigger: `.product_list .o_self_product_box span:contains('${productName}')`,
         run: "click",
     };
 }
@@ -88,6 +88,20 @@ export function setupAttribute(attributes, addToCart = true) {
     }
 
     return steps;
+}
+
+export function attributeHasColorDot(attribute) {
+    return {
+        content: `The ${attribute} has a color dot`,
+        trigger: `div:has(span:contains("${attribute}")) ~ div.rounded-5`,
+    };
+}
+
+export function attributeHasImage(attribute) {
+    return {
+        content: `The ${attribute} has an image`,
+        trigger: `div:has(span:contains("${attribute}")) ~ img.rounded-4`,
+    };
 }
 
 export function verifyIsCheckedAttribute(attribute, values = []) {

@@ -83,7 +83,7 @@ describe("onClickSaleOrder", () => {
         await waitFor(".modal-title:contains('Down Payment')");
         await click(".modal-body .numpad .numpad-button[value='+50']");
         await new Promise((resolve) => setTimeout(resolve, 50));
-        await click(".modal-footer .btn:contains('Confirm')");
+        await click(".modal-footer .btn:contains('Apply')");
         await promiseResult;
 
         const currentOrder = store.getOrder();
@@ -137,7 +137,7 @@ describe("onClickSaleOrder", () => {
         await waitFor(".modal-title:contains('Down Payment')");
         await click(".modal-body .numpad .numpad-button[value='+50']");
         await new Promise((resolve) => setTimeout(resolve, 50));
-        await click(".modal-footer .btn:contains('Confirm')");
+        await click(".modal-footer .btn:contains('Apply')");
         await promiseResult;
 
         const currentOrder = store.getOrder();

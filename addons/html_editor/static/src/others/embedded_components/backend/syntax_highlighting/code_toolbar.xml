@@ -19,6 +19,11 @@
                     </t>
                 </Dropdown>
                 <CopyButton content="props.getContent" copyText.translate="Copy" successText.translate="Code copied to the clipboard."/>
+                <button class="text-nowrap btn"
+                    t-on-click="this.props.convertToParagraph"
+                >
+                    <span class="mx-1 fa fa-paragraph" title="Convert to paragraph"></span>
+                </button>
             </div>
         </div>
     </t>

@@ -10,13 +10,14 @@
 # Martin Trigaux, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:35+0000\n"
-"PO-Revision-Date: 2025-11-15 11:29+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-05 11:11+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/ar/>\n"
 "Language: ar\n"
@@ -25,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1396,6 +1397,12 @@ msgid "Bank"
 msgstr "البنك"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "Bank App (QR Code)"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_payment_ids
 msgid "Bank Payments"
 msgstr "المدفوعات البنكية"
@@ -2321,7 +2328,7 @@ msgstr "تهيئة نقطة بيع واحدة على الأقل."
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Confirm"
@@ -3254,9 +3261,21 @@ msgstr "تنزيل"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download Logs"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Download a report with all the sales of the current PoS Session"
 msgstr "قم بتنزيل تقرير يحتوي على كافة مبيعات جلسة نقطة البيع الحالية"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download logs"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3517,6 +3536,8 @@ msgid ""
 "Failed to reach the printer. Check the configured url. Make sure that the "
 "printer is online and you are on the same network."
 msgstr ""
+"فشل الاتصال بالطابعة. تحقق من عنوان URL الذي تمت تهيئته وتأكد من أن الطابعة "
+"متصلة بالإنترنت وأنك متصل بنفس الشبكة."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4711,6 +4732,8 @@ msgid ""
 "Local IP address of an Epson receipt printer, or its serial number if the "
 "'Automatic Certificate Update' option is enabled in the printer settings."
 msgstr ""
+"عنوان IP المحلي لطابعة إيصالات Epson، أو رقمها التسلسلي إذا تم تمكين خيار ”"
+"التحديث التلقائي للشهادة“ في إعدادات الطابعة."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4720,6 +4743,8 @@ msgid ""
 "Chromium-based. Please use a Chromium-based browser to benefit from this "
 "feature."
 msgstr ""
+"تم تمكين إعدادات الوصول إلى الشبكة المحلية، ولكن متصفحك لا يعتمد على "
+"Chromium. يرجى استخدام متصفح يعتمد على Chromium للاستفادة من هذه الميزة."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4728,6 +4753,8 @@ msgid ""
 "Local Network Access is enabled for this POS, but your browser version does "
 "not support it. Please update your browser to the latest version."
 msgstr ""
+"تم تمكين الوصول إلى الشبكة المحلية لنقطة البيع هذه، ولكن إصدار متصفحك لا "
+"يدعمها. يرجى تحديث متصفحك إلى أحدث إصدار."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4736,6 +4763,8 @@ msgid ""
 "Local Network Access permission is denied. Some hardware devices might not "
 "work properly. Please allow Local Network Access in your browser settings."
 msgstr ""
+"تم رفض إذن الوصول إلى الشبكة المحلية. قد لا تعمل بعض الأجهزة بشكل صحيح. يرجى "
+"السماح بالوصول إلى الشبكة المحلية في إعدادات المتصفح."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5312,6 +5341,12 @@ msgid "Nomenclature"
 msgstr "تسمية"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "None required"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Not Cancelled"
 msgstr "غير ملغي"
@@ -5455,12 +5490,6 @@ msgid "Offline Orders"
 msgstr "أوامر مقدمة دون الاتصال بالإنترنت"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
-msgid "Ok"
-msgstr "موافق"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "One-click Payment"
 msgstr ""
@@ -5483,6 +5512,8 @@ msgid ""
 "Online payment, delivery payment, terminal payment, and methods that require "
 "customer identification are not supported for fast payment validation."
 msgstr ""
+"لا يتم دعم طرق الدفع عبر الإنترنت والدفع عند التسليم والدفع عبر أجهزة الدفع "
+"والطرق التي تتطلب تحديد هوية العميل لإجراء التحقق السريع من صحة الدفع."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8624,6 +8655,12 @@ msgid "Tel:"
 msgstr "هاتف:"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "Terminal"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos_button.xml:0
 msgid "Test"
@@ -8731,6 +8768,9 @@ msgid ""
 "The rounding precision is %(rounding)s so you should set %(expectedAmount)s "
 "as payment amount instead of %(paidAmount)s."
 msgstr ""
+"يجب تقريب مبلغ بنود الدفع الخاصة بك حتى تتمكن من تصديق المعاملة.\n"
+"دقة التقريب هي %(rounding)s ، لذا يجب عليك تعيين %(expectedAmount)s كمبلغ "
+"الدفع بدلاً من %(paidAmount)s."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_brand
@@ -8822,6 +8862,9 @@ msgid ""
 "To find more details on the error reason, please search online for: Epson "
 "Server Direct Print %s "
 msgstr ""
+"أصدرت الطابعة رمز الخطأ التالي: %s \n"
+"للحصول على مزيد من التفاصيل حول سبب الخطأ، يرجى البحث عبر الإنترنت عن: Epson "
+"Server Direct Print %s "
 
 #. module: point_of_sale
 #. odoo-python
@@ -10248,6 +10291,8 @@ msgid ""
 "You can't reset this invoice to draft because the POS session is still open. "
 "Please close the ongoing session first, then try again."
 msgstr ""
+"لا يمكنك إعادة تعيين هذه الفاتورة إلى مسودة لأن جلسة نقطة البيع لا تزال "
+"مفتوحة. يرجى إغلاق الجلسة الجارية أولاً، ثم حاول مرة أخرى."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10723,6 +10768,12 @@ msgid "return"
 msgstr "إرجاع"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "terminal"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "to activate the buttons."
@@ -10732,6 +10783,9 @@ msgstr "لتفعيل الأزرار."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "باستخدام"
+
+#~ msgid "Ok"
+#~ msgstr "موافق"
 
 #~ msgid "Confirm?"
 #~ msgstr "تأكيد؟"

@@ -7,23 +7,23 @@
 # JH CHOI <hwangtog@gmail.com>, 2022
 # Sarah Park, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-24 12:08+0000\n"
+"POT-Creation-Date: 2026-01-09 18:36+0000\n"
+"PO-Revision-Date: 2026-01-02 10:06+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/stock/ko/>"
-"\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/stock/ko/"
+">\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -408,6 +408,17 @@ msgid ""
 "* Transit: Counterpart location that should be used for inter-company or "
 "inter-warehouses operations"
 msgstr ""
+"* 공급업체: 가상 위치이며 공급업체에서 입고되는 품목의 출발지를 나타내는 위"
+"치\n"
+"* 가상: 가상 위치이며 하위 위치를 모아 창고를 계층적으로 구조화하여 표현하는 "
+"데 사용되는 위치. 실제 품목을 직접 보관할 수는 없음\n"
+"* 내부: 물리적인 위치로 창고 내부에 있음\n"
+"* 고객: 가상 위치로 고객에게 발송되는 품목의 목적지 위치\n"
+"* 재고 손실: 가상 위치로 재고 수준을 조정하기 위해 재고 관리(물리적 재고 실"
+"사)에 대한 대응 위치 역할\n"
+"* 생산: 가상의 대응 위치로 생산 작업에서 사용. 즉, 이 위치에서 원자재를 소비"
+"하고 완제품을 생산\n"
+"* 이동: 대응 위치로 회사 간 또는 창고 간 작업에 사용"
 
 #. module: stock
 #. odoo-python
@@ -715,7 +726,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<span class=\"mt0 float-start\">No assigned package</span>"
-msgstr ""
+msgstr "<span class=\"mt0 float-start\">지정된 패키지가 없습니다</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -844,7 +855,7 @@ msgstr "<span class=\"text-muted small\"> 보유 중</span>"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span groups=\"!uom.group_uom\">On Hand</span>"
-msgstr ""
+msgstr "<span groups=\"!uom.group_uom\">보유 재고</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -905,8 +916,8 @@ msgstr "<strong>연락처</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
-msgstr "<strong>고객 주소</strong>"
+msgid "<strong>Customer</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -917,6 +928,11 @@ msgstr "<strong>배송 완료</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
 msgstr "<strong>배송 주소:</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -3588,7 +3604,7 @@ msgstr "Dymo 라벨"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Earliest Possible Arrival"
-msgstr ""
+msgstr "가장 빠른 입고 시기"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
@@ -4884,7 +4900,7 @@ msgstr "날짜별 재고"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_date_editable
 msgid "Is Date Editable"
-msgstr ""
+msgstr "날짜 수정 가능 여부"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
@@ -4918,7 +4934,7 @@ msgstr "부분 포장입니다."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_date_editable
 msgid "Is Scheduled Date Editable"
-msgstr ""
+msgstr "예정일 편집 가능 여부"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_signed
@@ -5272,7 +5288,7 @@ msgstr "리드타임"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Lead Time Information"
-msgstr ""
+msgstr "리드타임 정보"
 
 #. module: stock
 #. odoo-javascript
@@ -6478,7 +6494,7 @@ msgstr "주문 빈도:"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Ordering Frequency: On demand"
-msgstr ""
+msgstr "주문 빈도: 주문 시"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__orderpoint_ids
@@ -6756,7 +6772,7 @@ msgstr "패키지 이름"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__dest_complete_name
 msgid "Package Name At Destination"
-msgstr ""
+msgstr "목적지 패키지 이름"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__name
@@ -6793,8 +6809,9 @@ msgstr "데모용 패지키 유형"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_package_type.py:0
+#, fuzzy
 msgid "Package Type Sequence %(code)s"
-msgstr ""
+msgstr "패키지 유형 시퀀스 %(code)s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -7279,6 +7296,7 @@ msgstr "품목 카테고리"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_category_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_category_name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
@@ -7526,7 +7544,7 @@ msgstr "푸시 방식"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_put_in_pack
 msgid "Put In Pack Wizard"
-msgstr ""
+msgstr "패키지 구성 마법사"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_put_in_pack_wizard
@@ -7984,7 +8002,7 @@ msgstr "참조 순서"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_reference
 msgid "Reference between stock documents"
-msgstr ""
+msgstr "재고 문서 간 참조"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_picking_name_uniq
@@ -8160,7 +8178,7 @@ msgstr "재보충 보고서 검색"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id_placeholder
 msgid "Replenishment Uom Id Placeholder"
-msgstr ""
+msgstr "보충 단위 ID 자리값"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__replenish_location
@@ -8684,7 +8702,7 @@ msgstr "값이 없으면 검색이 지원되지 않습니다."
 #: code:addons/stock/static/src/views/list/stock_add_package_list_view.js:0
 #: code:addons/stock/static/src/views/picking_form/stock_move_one2many.js:0
 msgid "Select Packages to Move"
-msgstr ""
+msgstr "이동할 패키지 선택"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
@@ -8694,7 +8712,7 @@ msgstr "경로 선택"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_put_in_pack_form
 msgid "Select a Package Type"
-msgstr ""
+msgstr "패키지 유형 선택"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -9386,7 +9404,7 @@ msgstr "재고 텍스트 확정"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_confirmation_type
 msgid "Stock Text Validation type"
-msgstr ""
+msgstr "재고 텍스트 승인 유형"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_text_confirmation
@@ -9397,7 +9415,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Stock To Reserve:"
-msgstr ""
+msgstr "보관하려는 재고:"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_max_qty
@@ -10131,7 +10149,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list_model.js:0
 msgid "This record already exists"
-msgstr ""
+msgstr "이미 존재하는 레코드입니다"
 
 #. module: stock
 #. odoo-python
@@ -10196,7 +10214,7 @@ msgstr "투자 기간"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Time to replenish:"
-msgstr ""
+msgstr "보충 시간:"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_1
@@ -12040,6 +12058,9 @@ msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} 배송 주문서 (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "<strong>Customer Address</strong>"
+#~ msgstr "<strong>고객 주소</strong>"
 
 #~ msgid "If ticked, you will be able to select entire packages to move"
 #~ msgstr "체크 시 이동시킬 전체 패키지 품목을 선택할 수 있습니다."

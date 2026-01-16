@@ -1,11 +1,20 @@
 
 import odoo.tests
 from odoo import Command
-from odoo.addons.pos_online_payment.tests.online_payment_common import OnlinePaymentCommon
+
+from odoo.addons.pos_online_payment.tests.online_payment_common import (
+    OnlinePaymentCommon,
+)
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
+
 
 @odoo.tests.tagged("post_install", "-at_install")
 class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
+
+    def _fake_online_payment(self, pos_order_id, access_token, expected_payment_provider_id, exit_route=None, confirmation_page=True):
+        res = super()._fake_online_payment(pos_order_id, access_token, expected_payment_provider_id, exit_route=exit_route, confirmation_page=confirmation_page)
+        self.env.ref('payment.cron_post_process_payment_tx').method_direct_trigger()  # Cron triggered in _handle_notification_data()
+        return res
 
     @classmethod
     def setUpClass(cls):
@@ -41,13 +50,24 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
             'self_ordering_service_mode': 'table',
             'self_order_online_payment_method_id': self.online_payment_method.id,
         })
+        floor = self.env["restaurant.floor"].create({
+            "name": 'Main Floor',
+            "background_color": 'rgb(249,250,251)',
+            "table_ids": [(0, 0, {
+                "table_number": 1,
+            })],
+        })
         self.pos_config.write({
             'self_ordering_pay_after': 'meal',
+            'self_ordering_mode': 'mobile',
+            'floor_ids': [(6, 0, [floor.id])],
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "self_mobile_online_payment_meal_table")
+        self.start_tour(self_route, "self_mobile_online_payment_meal")
+        self_route_table = self.pos_config._get_self_order_route(floor.table_ids[0].id)
+        self.start_tour(self_route_table, "self_mobile_online_payment_meal_table")
 
     def test_online_payment_kiosk_qr_code(self):
         """

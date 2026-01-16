@@ -260,7 +260,11 @@ class ProductTemplate(models.Model):
     def write(self, vals):
         # Clear empty ecommerce description content to avoid side-effects on product pages
         # when there is no content to display anyway.
-        if vals.get('description_ecommerce') and is_html_empty(vals['description_ecommerce']):
+        if (
+            (description_ecommerce := vals.get('description_ecommerce'))
+            and is_html_empty(description_ecommerce)
+            and not ('media_iframe_video' in description_ecommerce or 'data-embedded' in description_ecommerce)  # don't remove "empty" video div
+        ):
             vals['description_ecommerce'] = ''
         return super().write(vals)
 
@@ -707,24 +711,25 @@ class ProductTemplate(models.Model):
         Note AWA: Known "exploit" issues with this method:
 
         - This method could be used by an unauthenticated user to generate a
-            lot of useless variants. Unfortunately, after discussing the
-            matter with ODO, there's no easy and user-friendly way to block
-            that behavior.
-
-            We would have to use captcha/server actions to clean/... that
-            are all not user-friendly/overkill mechanisms.
+          lot of useless variants. Unfortunately, after discussing the
+          matter with ODO, there's no easy and user-friendly way to block
+          that behavior.
+          We would have to use captcha/server actions to clean/... that
+          are all not user-friendly/overkill mechanisms.
 
         - This method could be used to try to guess what product variant ids
-            are created in the system and what product template ids are
-            configured as "dynamic", but that does not seem like a big deal.
+          are created in the system and what product template ids are
+          configured as "dynamic", but that does not seem like a big deal.
 
         The error messages are identical on purpose to avoid giving too much
         information to a potential attacker:
-            - returning 0 when failing
-            - returning the variant id whether it already existed or not
+
+        - returning 0 when failing
+        - returning the variant id whether it already existed or not
 
         :param product_template_attribute_value_ids: the combination for which
             to get or create variant
+
         :type product_template_attribute_value_ids: list of id
             of `product.template.attribute.value`
 
@@ -1028,6 +1033,13 @@ class ProductTemplate(models.Model):
         if self.product_variant_count == 1:
             return self.product_variant_id._to_markup_data(website)
 
+        # perf: temporal solution to avoid slowness when product have many variants and pricelist rules
+        limit = self.env['ir.config_parameter'].sudo().get_param('website_sale.markup_data_limit_variants', False)
+        if limit:
+            product_variant_ids = self.product_variant_ids[:int(limit)]
+        else:
+            product_variant_ids = self.product_variant_ids
+
         base_url = website.get_base_url()
         markup_data = {
             '@context': 'https://schema.org/',
@@ -1035,7 +1047,7 @@ class ProductTemplate(models.Model):
             'name': self.name,
             'image': f'{base_url}{website.image_url(self, "image_1920")}',
             'url': f'{base_url}{self.website_url}',
-            'hasVariant': [product._to_markup_data(website) for product in self.product_variant_ids]
+            'hasVariant': [product._to_markup_data(website) for product in product_variant_ids]
         }
         if self.description_ecommerce:
             markup_data['description'] = text_from_html(self.description_ecommerce)

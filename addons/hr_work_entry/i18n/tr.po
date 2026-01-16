@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
 "PO-Revision-Date: 2025-11-21 14:45+0000\n"
 "Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -113,6 +113,7 @@ msgstr "<span>Saatler</span>"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__active
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__active
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__active
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Active"
 msgstr "Etkin"
 
@@ -355,6 +356,12 @@ msgstr "Taslak"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__duration
 msgid "Duration"
 msgstr "Süre"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "Duration must be positive and cannot exceed 24 hours."
+msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
@@ -1017,6 +1024,11 @@ msgid "Set"
 msgstr "Set"
 
 #. module: hr_work_entry
+#: model:ir.actions.server,name:hr_work_entry.action_hr_work_entry_set_to_draft
+msgid "Set to Draft"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_100
 msgid "Sick Leave (100% Paid)"
 msgstr "Hastalık İzni (100% Pyardım)"
@@ -1160,6 +1172,11 @@ msgstr ""
 "Hızlı arama için bu alanı kullanabilirsiniz."
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "The amount of work on the day should not exceed 24 hours."
+msgstr ""
+
+#. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/wizard/hr_work_entry_regeneration_wizard.py:0
 msgid ""
@@ -1168,8 +1185,8 @@ msgid ""
 "entries time interval."
 msgstr ""
 "Oluşturulan iş girişlerinin zaman aralığına karşılık gelecek şekilde, "
-"başlangıç tarihi; >= '%(earliest_available_date)s' bitiş tarihi <= "
-"'%(latest_available_date)s' olmalıdır."
+"başlangıç tarihi; >= '%(earliest_available_date)s' bitiş tarihi <= '%"
+"(latest_available_date)s' olmalıdır."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1182,7 +1199,8 @@ msgstr "Aynı kod birden fazla iş girişi türüyle ilişkilendirilemez (%s)"
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__display_code
 msgid ""
 "This code can be changed, it is only for a display purpose (3 letters max)"
-msgstr "Bu kod değiştirilebilir, sadece görüntüleme amaçlıdır (en fazla 3 harf)"
+msgstr ""
+"Bu kod değiştirilebilir, sadece görüntüleme amaçlıdır (en fazla 3 harf)"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form

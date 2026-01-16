@@ -9,15 +9,15 @@
 # Martin Trigaux, 2022
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-08 19:12+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-01-09 18:36+0000\n"
+"PO-Revision-Date: 2026-01-05 11:11+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/stock/ar/"
 ">\n"
 "Language: ar\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -918,8 +918,8 @@ msgstr "<strong>جهة الاتصال</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
-msgstr "<strong>عنوان العميل</strong>"
+msgid "<strong>Customer</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -930,6 +930,11 @@ msgstr "<strong>الكمية التي قد تم توصيلها</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
 msgstr "<strong>عنوان التوصيل:</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -2838,6 +2843,10 @@ msgid ""
 "future arrival is expected after the minimum quantity is reached (potential "
 "stockout). Check the Forecast Report."
 msgstr ""
+"التاريخ الذي يجب أن تقوم بالطلب قبله لتجنب النزول عن الحد الأدنى. إذا لم يكن "
+"لديك ما تطلبه عند تحديد الموعد النهائي، فقد يكون ذلك بسبب توقع وصول شحنة "
+"مستقبلية بعد الوصول إلى الحد الأدنى للكمية (احتمال نفاد المخزون). تحقق من "
+"تقرير التوقعات."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__next_inventory_date
@@ -4546,6 +4555,8 @@ msgid ""
 "If ticked, you will be able to select which package or package type to use "
 "in a put in pack"
 msgstr ""
+"إذا تم تحديد هذا الخيار، فستتمكن من تحديد التغليف أو نوع العبوة التي تريد "
+"استخدامها في التعبئة"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
@@ -7322,6 +7333,7 @@ msgstr "فئات المنتجات"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_category_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_category_name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
@@ -12101,6 +12113,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} أمر توصيل (المرجع {{ object.name or 'غير "
 "متاح' }})"
+
+#~ msgid "<strong>Customer Address</strong>"
+#~ msgstr "<strong>عنوان العميل</strong>"
 
 #~ msgid "If ticked, you will be able to select entire packages to move"
 #~ msgstr "إذا كان محددًا، ستتمكن من اختيار حزم كاملة لنقلها"

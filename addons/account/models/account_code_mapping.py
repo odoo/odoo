@@ -1,5 +1,6 @@
-from odoo import fields, models, api
+from odoo import fields, models, api, _
 from odoo.fields import Domain
+from odoo.exceptions import UserError
 from odoo.tools import Query
 
 COMPANY_OFFSET = 10000
@@ -56,7 +57,10 @@ class AccountCodeMapping(models.Model):
 
         remaining_domain = Domain(domain).map_conditions(get_accounts)
         if not account_ids:
-            raise NotImplementedError
+            raise UserError(_(
+                "Account Code Mapping cannot be accessed directly. "
+                "It is designed to be used only through the Chart of Accounts."
+            ))
         return self.browse([
             account_id * COMPANY_OFFSET + company.id
             for account_id in account_ids

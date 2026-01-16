@@ -8,15 +8,15 @@
 # Martin Trigaux, 2023
 # Sarah Park, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:35+0000\n"
-"PO-Revision-Date: 2025-11-18 13:49+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-05 04:33+0000\n"
+"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/website/"
 "ko/>\n"
 "Language: ko\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
@@ -251,7 +251,7 @@ msgstr "# 방문수"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/ecomm_categories_showcase_option.xml:0
 msgid "# of Blocks"
-msgstr ""
+msgstr "개 블록"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_charts
@@ -349,12 +349,6 @@ msgstr "$5.00"
 #: code:addons/website/models/ir_ui_view.py:0
 msgid "%(error)s (website: %(website_id)s)"
 msgstr "%(error)s (웹사이트: %(website_id)s)"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
-msgid "%s List"
-msgstr "%s 목록"
 
 #. module: website
 #. odoo-javascript
@@ -464,6 +458,35 @@ msgid ""
 "                    }\n"
 "                }"
 msgstr ""
+".headShake {\n"
+"                    animation: headShake 1.3s ease-in-out forwards;\n"
+"                    animation-delay: 0.75s;\n"
+"                }\n"
+"                @keyframes headShake {\n"
+"                    0% {\n"
+"                        transform: translateX(0)\n"
+"                    }\n"
+"\n"
+"                    6.5% {\n"
+"                        transform: translateX(-6px) rotateY(-9deg)\n"
+"                    }\n"
+"\n"
+"                    18.5% {\n"
+"                        transform: translateX(5px) rotateY(7deg)\n"
+"                    }\n"
+"\n"
+"                    31.5% {\n"
+"                        transform: translateX(-3px) rotateY(-5deg)\n"
+"                    }\n"
+"\n"
+"                    43.5% {\n"
+"                        transform: translateX(2px) rotateY(3deg)\n"
+"                    }\n"
+"\n"
+"                    50% {\n"
+"                        transform: translateX(0)\n"
+"                    }\n"
+"                }"
 
 #. module: website
 #: model:website,contact_us_button_url:website.default_website
@@ -739,7 +762,6 @@ msgstr "45%"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/font_awesome_option.xml:0
-#, fuzzy
 msgid "4x"
 msgstr "4x"
 
@@ -1208,7 +1230,6 @@ msgstr "<br/>Alexander Rivera"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_references_social
-#, fuzzy
 msgid "<br/>Amsterdam"
 msgstr "<br/>암스테르담"
 
@@ -3338,7 +3359,6 @@ msgstr "빌딩 블록 적용"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 #: code:addons/website/static/src/builder/plugins/options/card_image_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
@@ -3442,6 +3462,12 @@ msgstr "신규 추가"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
+msgid "Add New Option"
+msgstr "새 옵션 추가"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/social_media_links.xml:0
 msgid "Add New Social Network"
 msgstr "소셜 네트워크 추가"
@@ -3511,7 +3537,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/new_content_systray_item.js:0
 msgid "Add a livechat widget"
-msgstr ""
+msgstr "실시간 채팅 위젯 추가"
 
 #. module: website
 #. odoo-javascript
@@ -3574,7 +3600,7 @@ msgstr "페이지 서식 추가"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Add predefined error message"
-msgstr ""
+msgstr "오류 메시지 사전 지정 후 추가"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__is_new_page_template
@@ -4064,9 +4090,21 @@ msgstr "적용"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
+msgid "Apply a background color"
+msgstr "배경 색상 적용"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/header/header_font_option.xml:0
 msgid "Apply a light contrast on dropdown buttons"
 msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
+msgid "Apply an icon color"
+msgstr "아이콘 색상 적용"
 
 #. module: website
 #. odoo-javascript
@@ -4629,6 +4667,7 @@ msgstr "테두리 반경 작음"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/card_image_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_headings_option.xml:0
@@ -5114,7 +5153,7 @@ msgstr "아이콘 변경"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/dynamic_svg_option.js:0
 msgid "Change accent color"
-msgstr ""
+msgstr "강조 색상 변경"
 
 #. module: website
 #. odoo-javascript
@@ -5126,13 +5165,13 @@ msgstr "색상 변경"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/dynamic_svg_option.js:0
 msgid "Change primary color"
-msgstr ""
+msgstr "기본 색상 변경"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/dynamic_svg_option.js:0
 msgid "Change secondary color"
-msgstr ""
+msgstr "보조 색상 변경"
 
 #. module: website
 #. odoo-javascript
@@ -5220,9 +5259,14 @@ msgstr "인터넷 연결 상태를 확인하고 다시 시도해주십시오."
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
-#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid "Checkbox"
 msgstr "체크박스"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
+msgid "Checkbox List"
+msgstr "체크박스 목록"
 
 #. module: website
 #. odoo-javascript
@@ -5915,6 +5959,7 @@ msgstr "컨트롤러 페이지"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/interactions/cookies/cookies_bar.js:0
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Cookie Policy"
@@ -6130,7 +6175,7 @@ msgstr "구글 프로젝트 만들기 및 키 얻기"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/new_content_systray_item.xml:0
 msgid "Create a new page"
-msgstr ""
+msgstr "신규 페이지 생성"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -6671,12 +6716,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 msgid "Designed <br/>for Companies"
-msgstr ""
+msgstr "기업용 <br/>디자인"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
 msgid "Designed for companies"
-msgstr ""
+msgstr "기업용 디자인"
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_page_pricing
@@ -6793,7 +6838,7 @@ msgstr "취소"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/website_builder.js:0
 msgid "Discard all changes?"
-msgstr ""
+msgstr "모든 변경 사항을 취소할까요?"
 
 #. module: website
 #. odoo-javascript
@@ -6875,7 +6920,7 @@ msgstr "경영진 소개"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_banner
 msgid "Discover our latest collection"
-msgstr ""
+msgstr "최신 컬렉션을 확인해 보세요"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_images_mosaic
@@ -7723,7 +7768,7 @@ msgstr "이메일 입력"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Enter requirement conditions"
-msgstr ""
+msgstr "필수 조건 입력"
 
 #. module: website
 #. odoo-javascript
@@ -8000,7 +8045,7 @@ msgstr "탐색"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner_categories
 msgid "Explore Our New Collection"
-msgstr ""
+msgstr "새로운 컬렉션을 확인해 보세요"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_showcase
@@ -8048,7 +8093,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_banner_product
 #: model_terms:ir.ui.view,arch_db:website.s_bento_block
 msgid "Explore our new collection"
-msgstr ""
+msgstr "새로운 컬렉션을 확인해 보세요"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_showcase
@@ -8236,6 +8281,12 @@ msgid "Fetched Elements"
 msgstr "가져온 요소"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/utils.js:0
+msgid "Field"
+msgstr "필드"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__field_names
 msgid "Field Names"
 msgstr "필드명"
@@ -8314,7 +8365,7 @@ msgstr "채우기 및 맞춤 설정"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 msgid "Fill with AI"
-msgstr ""
+msgstr "AI로 입력하기"
 
 #. module: website
 #. odoo-javascript
@@ -8408,7 +8459,7 @@ msgstr "처음 사용 시에만"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/ecomm_categories_showcase_option.xml:0
 msgid "First block larger"
-msgstr ""
+msgstr "첫 번째 블록 더 큼"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_ui_view__first_page_id
@@ -8695,7 +8746,7 @@ msgstr "무료 배송"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_columns
 msgid "Free shipping over $50"
-msgstr ""
+msgstr "50달러 이상 무료 배송"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website__auth_signup_uninvited__b2c
@@ -9995,7 +10046,7 @@ msgstr "이미지 월"
 #. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 msgid "Import Template for Redirects"
-msgstr ""
+msgstr "리디렉션용 템플릿 가져오기"
 
 #. module: website
 #. odoo-javascript
@@ -10565,7 +10616,7 @@ msgstr "연결되었습니까?"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Is date after"
-msgstr ""
+msgstr "다음 날짜 이후:"
 
 #. module: website
 #. odoo-javascript
@@ -10577,7 +10628,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Is date before"
-msgstr ""
+msgstr "다음 날짜 이전:"
 
 #. module: website
 #. odoo-javascript
@@ -10589,7 +10640,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Is date between (included)"
-msgstr ""
+msgstr "날짜가 다음 기간 사이에 있음(해당일 포함):"
 
 #. module: website
 #. odoo-javascript
@@ -10649,7 +10700,7 @@ msgstr "설정되지 않음"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Is number greater than"
-msgstr ""
+msgstr "다음보다 큰 숫자인지 여부:"
 
 #. module: website
 #. odoo-javascript
@@ -10661,7 +10712,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Is number less than"
-msgstr ""
+msgstr "다음보다 작은 숫자인지 여부:"
 
 #. module: website
 #. odoo-javascript
@@ -11480,7 +11531,7 @@ msgstr "주 메뉴"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/carousel_slides_option.xml:0
 msgid "Make it clickable"
-msgstr ""
+msgstr "클릭 가능하게 설정"
 
 #. module: website
 #. odoo-javascript
@@ -11732,7 +11783,7 @@ msgstr "메가 메뉴 기본 이미지"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.js:0
 msgid "Mega menu item"
-msgstr ""
+msgstr "메가 메뉴 항목"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -11817,7 +11868,7 @@ msgstr "내 사본을 이용한 메뉴"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/header/header_template_option.xml:0
 msgid "Menu with Search Bar"
-msgstr ""
+msgstr "검색창 외 메뉴"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_menu_list
@@ -12278,7 +12329,7 @@ msgstr "네비게이션"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 msgid "Need help to optimize?"
-msgstr ""
+msgstr "최적화 작업에 도움이 필요하신가요?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_list
@@ -12897,7 +12948,7 @@ msgstr "새 탭에서 열기"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/header/header_top_option.xml:0
 msgid "Open menu editor"
-msgstr ""
+msgstr "메뉴 편집창 열기"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -12924,12 +12975,6 @@ msgstr "SEO 최적화"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
-msgid "Option"
-msgstr "선택 사항"
-
-#. module: website
-#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/utils.js:0
 msgid "Option 1"
 msgstr "선택 사항 1"
@@ -12945,6 +12990,12 @@ msgstr "선택 사항 2"
 #: code:addons/website/static/src/builder/plugins/form/utils.js:0
 msgid "Option 3"
 msgstr "선택 사항 3"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
+msgid "Option List"
+msgstr "옵션 목록"
 
 #. module: website
 #. odoo-javascript
@@ -13478,7 +13529,7 @@ msgstr "페이지 설명을 설정하지 않았습니다."
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 msgid "Page not found"
-msgstr ""
+msgstr "페이지를 찾을 수 없습니다"
 
 #. module: website
 #. odoo-javascript
@@ -14247,9 +14298,14 @@ msgstr "방사형"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
-#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid "Radio"
 msgstr "라디오 버튼"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
+msgid "Radio Button List"
+msgstr "선택 버튼 목록"
 
 #. module: website
 #. odoo-javascript
@@ -14543,7 +14599,7 @@ msgstr "테마 제거"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/background_video_option.xml:0
 msgid "Remove video"
-msgstr ""
+msgstr "동영상 제거"
 
 #. module: website
 #. odoo-python
@@ -14682,7 +14738,7 @@ msgstr "반품"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_cards
 msgid "Returns &amp; Exchanges"
-msgstr ""
+msgstr "반품 및 교환"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_grid
@@ -14807,7 +14863,7 @@ msgstr "둥글게"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/header/header_template_option.xml:0
 msgid "Rounded Box Menu"
-msgstr ""
+msgstr "원형 상자 메뉴"
 
 #. module: website
 #. odoo-javascript
@@ -14867,7 +14923,7 @@ msgstr "예제 아이콘"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_cards
 msgid "San Francisco CA 94134"
-msgstr ""
+msgstr "San Francisco CA 94134"
 
 #. module: website
 #. odoo-javascript
@@ -14879,7 +14935,7 @@ msgstr "위성"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_columns
 msgid "Satisfied or refunded"
-msgstr ""
+msgstr "불만족 시 환불"
 
 #. module: website
 #. odoo-javascript
@@ -15024,7 +15080,7 @@ msgstr "검색창"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 msgid "Search Engine Optimization"
-msgstr ""
+msgstr "검색 엔진 최적화"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_2_s_text_block_h2
@@ -15568,6 +15624,12 @@ msgid "Show/Hide Elements"
 msgstr "요소 보이기/숨기기"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_advanced_option.xml:0
+msgid "Show/Hide the header on all pages"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Showcase"
 msgstr "쇼케이스"
@@ -15734,7 +15796,7 @@ msgstr "슬라이드 띄우기"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/footer_option.xml:0
 msgid "Slide Hover + Shadow"
-msgstr ""
+msgstr "슬라이드 호버 + 그림자"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -16157,7 +16219,7 @@ msgstr "스타일"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/header/header_navigation_option.xml:0
 msgid "Style of menu items"
-msgstr ""
+msgstr "메뉴 항목 스타일"
 
 #. module: website
 #. odoo-javascript
@@ -17325,7 +17387,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "To what purpose?"
-msgstr ""
+msgstr "어떤 목적인가요?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -17454,7 +17516,7 @@ msgstr "추적 됨"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Tracking & SEO"
-msgstr ""
+msgstr "추적 및 SEO"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_pricelist_boxed
@@ -17881,7 +17943,7 @@ msgstr "배열을 사용하여 단일 선택 항목에 사용할 이미지를 �
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_server_action_form_website
 msgid "Use in website"
-msgstr ""
+msgstr "웹사이트에서 사용"
 
 #. module: website
 #. odoo-javascript
@@ -18813,7 +18875,7 @@ msgstr "웹사이트 페이지 설정"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_technical_page__website_url
 msgid "Website Page URL"
-msgstr ""
+msgstr "웹사이트 페이지 URL"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_pages_list
@@ -18855,7 +18917,7 @@ msgstr "웹사이트 스니펫 필터"
 #. module: website
 #: model:ir.model,name:website.model_website_technical_page
 msgid "Website Technical Page"
-msgstr ""
+msgstr "웹사이트 기술 페이지"
 
 #. module: website
 #: model:ir.model,name:website.model_theme_website_menu
@@ -19046,7 +19108,7 @@ msgstr "고객들이 평가한 내용을 직접 확인해 보세요."
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "What type of website?"
-msgstr ""
+msgstr "어떤 유형의 웹사이트인가요?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_wavy_grid
@@ -19160,13 +19222,13 @@ msgstr "여성"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/new_content_systray_item.js:0
 msgid "Write a new article"
-msgstr ""
+msgstr "새 기사를 작성하세요"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Write custom error message"
-msgstr ""
+msgstr "사용자 지정 오류 메시지를 작성하세요"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
@@ -19231,7 +19293,7 @@ msgstr "내용 입력..."
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/announcement_scroll_option.xml:0
 msgid "Write your text"
-msgstr ""
+msgstr "텍스트를 작성하세요"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__social_twitter
@@ -19442,7 +19504,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/instagram_option.xml:0
 msgid "Your Instagram account"
-msgstr ""
+msgstr "인스타그램 계정"
 
 #. module: website
 #. odoo-javascript
@@ -19546,7 +19608,7 @@ msgstr "검색 '"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_title
 msgid "Your section title"
-msgstr ""
+msgstr "섹션 제목"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__social_youtube
@@ -20961,6 +21023,12 @@ msgstr "✽  피자"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  제공하는 서비스"
+
+#~ msgid "%s List"
+#~ msgstr "%s 목록"
+
+#~ msgid "Option"
+#~ msgstr "선택 사항"
 
 #~ msgid "Type your URL"
 #~ msgstr "URL 입력"

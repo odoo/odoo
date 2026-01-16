@@ -39,13 +39,13 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Saara Hakanen <sahak@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-27 14:13+0000\n"
+"POT-Creation-Date: 2026-01-02 18:35+0000\n"
+"PO-Revision-Date: 2026-01-07 15:35+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/mail/fi/>"
 "\n"
@@ -156,7 +156,7 @@ msgstr "%(author)s aloitti puhelun."
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "%(author_name)s has invited you to a channel"
-msgstr ""
+msgstr "%(author_name)s on kutsunut sinut kanavalle"
 
 #. module: mail
 #. odoo-javascript
@@ -282,7 +282,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "%(numberOfDays)sd"
-msgstr ""
+msgstr "%(numberOfDays)s päivää"
 
 #. module: mail
 #. odoo-javascript
@@ -324,7 +324,7 @@ msgstr "%(partner_name)s <%(partner_email)s>"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(user)s changed the channel name to %(name)s"
-msgstr ""
+msgstr "%(user)s muutti kanavan nimeksi %(name)s"
 
 #. module: mail
 #. odoo-javascript
@@ -1246,7 +1246,7 @@ msgstr "Lisää GIF-tiedosto"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Add Star"
-msgstr ""
+msgstr "Lisää tähti"
 
 #. module: mail
 #. odoo-javascript
@@ -1481,13 +1481,13 @@ msgstr "Aliaksen kontaktien tietoturva"
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Alias Domain"
-msgstr "Alias Domain"
+msgstr "Alias-domain"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_domain
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_optional__alias_domain
 msgid "Alias Domain Name"
-msgstr "Alias Verkkotunnus"
+msgstr "Alias-domainin nimi"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_alias_domain_action
@@ -1495,7 +1495,7 @@ msgstr "Alias Verkkotunnus"
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_tree
 msgid "Alias Domains"
-msgstr "Alias-verkkotunnukset"
+msgstr "Alias-domainit"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_full_name
@@ -1517,7 +1517,7 @@ msgstr "Alias Status"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
 msgid "Alias domain name"
-msgstr "Alias-verkkotunnus"
+msgstr "Alias-domainin nimi"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_status
@@ -2125,9 +2125,8 @@ msgid ""
 "Bounce alias %(bounce)s is already used for another domain with same name. "
 "Use another bounce or simply use the other alias domain."
 msgstr ""
-"Bounce alias %(bounce)s on jo käytössä toiselle samannimiselle "
-"verkkotunnukselle. Käytä toista bouncea tai yksinkertaisesti toista alias-"
-"verkkotunnusta."
+"Bounce-alias %(bounce)s on jo käytössä toiselle samannimiselle domainille. "
+"Käytä toista bouncea tai toista alias-domainia."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_bounce_email_uniques
@@ -2197,8 +2196,8 @@ msgstr "Selain"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/device_select.xml:0
-msgid "Browser default"
-msgstr "Selaimen oletusarvo"
+msgid "Browser Default"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__endpoint
@@ -2495,9 +2494,8 @@ msgid ""
 "Catchall alias %(catchall)s is already used for another domain with same "
 "name. Use another catchall or simply use the other alias domain."
 msgstr ""
-"Catchall-aliasta %(catchall)s käytetään jo toisen samannimisen "
-"verkkotunnuksen yhteydessä. Käytä toista catchall-tunnusta tai "
-"yksinkertaisesti toista alias-verkkotunnusta."
+"Catchall-aliasta %(catchall)s käytetään jo toisen samannimisen domainin "
+"yhteydessä. Käytä toista catchallia tai toista alias-domainia."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
@@ -3946,12 +3944,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Document"
-msgstr "Dokumentti"
+msgstr "Asiakirja"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
 msgid "Document Followers"
-msgstr "Dokumentin seuraajat"
+msgstr "Asiakirjan seuraajat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__res_ids
@@ -3963,22 +3961,22 @@ msgstr "Asiakirjan tunnukset"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_search
 msgid "Document Model"
-msgstr "Dokumentin malli"
+msgstr "Asiakirjan malli"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_name
 msgid "Document Name"
-msgstr "Dokumentin nimi"
+msgstr "Asiakirjan nimi"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "Document: \""
-msgstr "Dokumentti: \""
+msgstr "Asiakirja: \""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "Domain"
-msgstr "Verkkotunnus"
+msgstr "Domain"
 
 #. module: mail
 #. odoo-javascript
@@ -8846,6 +8844,12 @@ msgid "Permanently delete this thread?"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/device_select.xml:0
+msgid "Permission Needed"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
 #: model:ir.model.fields,field_description:mail.field_res_users__phone
 msgid "Phone"
@@ -9957,7 +9961,7 @@ msgstr "Aikataulurivit"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 msgid "Schedule activities to help you get things done."
-msgstr "Aikatauluta toimenpide ja aikaansaa asioita."
+msgstr "Aikatauluta toimenpiteitä työsi tehostamiseksi"
 
 #. module: mail
 #. odoo-javascript
@@ -10266,6 +10270,12 @@ msgstr "Valitse kieli"
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 msgid "Select a user..."
 msgstr "Valitse käyttäjä..."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
@@ -12306,6 +12316,8 @@ msgstr "Keskustelun mykistyksen poistaminen"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/follower_model.js:0
+#: code:addons/mail/static/src/core/common/message_model.js:0
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 #: code:addons/mail/static/src/core/web/recipients_popover.js:0
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
@@ -12532,7 +12544,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use different domains for your mail aliases"
-msgstr "Käytä eri verkkotunnuksia sähköpostialiaksille"
+msgstr "Käytä eri domaineja sähköpostialiaksillesi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__is_batch_mode
@@ -13000,7 +13012,7 @@ msgid ""
 "(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
-"Emme voineet luoda aliasta %(alias_name)s, koska verkkotunnus %"
+"Emme voineet luoda aliasta %(alias_name)s, koska domain %"
 "(alias_domain_name)s kuuluu yritykselle %(alias_company_names)s, kun taas "
 "omistaja-asiakirja kuuluu yritykselle %(company_name)s."
 
@@ -13012,7 +13024,7 @@ msgid ""
 "(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "target document belongs to company %(company_name)s."
 msgstr ""
-"Emme voineet luoda aliasta %(alias_name)s, koska verkkotunnus %"
+"Emme voineet luoda aliasta %(alias_name)s, koska domain %"
 "(alias_domain_name)s kuuluu yritykselle %(alias_company_names)s, kun taas "
 "kohdeasiakirja kuuluu yritykselle %(company_name)s."
 
@@ -13460,6 +13472,8 @@ msgid ""
 "Your email address is used by an alias domain, and so you can not create a "
 "mail server for it."
 msgstr ""
+"Sähköpostiosoitteesi on alias-domainin käytössä, joten et voi luoda sille "
+"sähköpostipalvelinta."
 
 #. module: mail
 #. odoo-javascript
@@ -13599,7 +13613,7 @@ msgstr "päivää myöhässä:"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "days:"
-msgstr "päivää:"
+msgstr "päivässä:"
 
 #. module: mail
 #. odoo-javascript
@@ -14123,6 +14137,9 @@ msgstr "aliaksesi"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "\"%(member_name)s\" kohdassa \"%(channel_name)s\""
+
+#~ msgid "Browser default"
+#~ msgstr "Selaimen oletusarvo"
 
 #~ msgid "Disconnected from the RTC call by the server"
 #~ msgstr "RTC-yhteys katkennut palvelimelta"

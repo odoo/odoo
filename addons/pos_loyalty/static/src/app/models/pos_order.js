@@ -282,7 +282,7 @@ patch(PosOrder.prototype, {
                 }
             }
         });
-
+        let changed = false;
         for (const claimedReward of allRewardsMerged) {
             // For existing coupons check that they are still claimed, they can exist in either `couponPointChanges` or `codeActivatedCoupons`
             if (
@@ -312,7 +312,17 @@ patch(PosOrder.prototype, {
                 delete claimedReward.args["quantity"];
             }
             this._applyReward(claimedReward.reward, claimedReward.coupon_id, claimedReward.args);
+
+            const newRewardLines = this._get_reward_lines();
+            const number_of_line_changed = newRewardLines.length !== rewardLines.length;
+            const reward_amount_changed =
+                newRewardLines.reduce((sum, line) => sum + line.qty * line.price_unit, 0) !==
+                rewardLines.reduce((sum, line) => sum + line.qty * line.price_unit, 0);
+            if (number_of_line_changed || reward_amount_changed) {
+                changed = true;
+            }
         }
+        return changed;
     },
     /**
      * @typedef {{ won: number, spend: number, total: number, balance: number, name: string}} LoyaltyPoints
@@ -956,7 +966,7 @@ patch(PosOrder.prototype, {
             if (!discountablePerTax[taxKey]) {
                 discountablePerTax[taxKey] = 0;
             }
-            discountablePerTax[taxKey] += line.prices.total_excluded;
+            discountablePerTax[taxKey] += line.basePrice;
         }
         return { discountable, discountablePerTax };
     },
@@ -1101,8 +1111,7 @@ patch(PosOrder.prototype, {
                 discountablePerTax[taxKey] = 0;
             }
             discountablePerTax[taxKey] +=
-                line.prices.total_excluded *
-                (remainingAmountPerLine[line.uuid] / line.prices.total_included);
+                line.basePrice * (remainingAmountPerLine[line.uuid] / line.prices.total_included);
         }
         return { discountable, discountablePerTax };
     },

@@ -13,11 +13,10 @@ _logger = logging.getLogger(__name__)
 class Driver(Thread):
     """Hook to register the driver into the drivers list"""
     connection_type = ''
-    daemon = True
     priority = 0
 
     def __init__(self, identifier, device):
-        super().__init__()
+        super().__init__(daemon=True)
         self.dev = device
         self.device_identifier = identifier
         self.device_name = ''
@@ -49,32 +48,27 @@ class Driver(Thread):
         :param dict data: the action method name and the parameters to be passed to it
         :return: the result of the action method
         """
-        if self._check_if_action_is_duplicate(data.get('action_unique_id')):
+        action = data.get('action', '')
+        action_unique_id = data.get('action_unique_id')
+        if action_unique_id and action_unique_id in self._recent_action_ids:
+            _logger.warning("Duplicate action %s id %s received, ignoring", action, action_unique_id)
             return
 
-        action = data.get('action', '')
-        session_id = data.get('session_id')
-        if session_id:
-            self.data["owner"] = session_id
+        self.data["owner"] = data.get('session_id')
+
+        base_response = {'action_args': {**data}, 'session_id': data.get('session_id')}
         try:
-            response = {'status': 'success', 'result': self._actions[action](data), 'action_args': {**data}}
+            response = {'status': 'success', 'result': self._actions[action](data), **base_response}
+            if action_unique_id:
+                self._recent_action_ids[action_unique_id] = action_unique_id
         except Exception as e:
             _logger.exception("Error while executing action %s with params %s", action, data)
-            response = {'status': 'error', 'result': str(e), 'action_args': {**data}}
+            response = {'status': 'error', 'result': str(e), **base_response}
 
         # Make response available to /event route or websocket
         # printers and payment terminals handle their own events (low on paper, waiting for card, etc.)
         if self.device_type not in ["printer", "payment"]:
             event_manager.device_changed(self, response)
-
-    def _check_if_action_is_duplicate(self, action_unique_id):
-        if not action_unique_id:
-            return False
-        if action_unique_id in self._recent_action_ids:
-            _logger.warning("Duplicate action %s received, ignoring", action_unique_id)
-            return True
-        self._recent_action_ids[action_unique_id] = action_unique_id
-        return False
 
     def disconnect(self):
         self._stopped.set()

@@ -10,11 +10,13 @@ import {
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
+class PackageFormDialog extends FormViewDialog {}
+
 class Many2XStockPackageAutocomplete extends Many2XAutocomplete {
     get createDialog() {
-        const PackageFormDialog = FormViewDialog;
-        PackageFormDialog.defaultProps = {
-            ...PackageFormDialog.defaultProps,
+        const packageFormDialog = PackageFormDialog;
+        packageFormDialog.defaultProps = {
+            ...packageFormDialog.defaultProps,
             onRecordSave: async (record) => {
                 // We need to reload to get the name computed from the backend.
                 const saved = await record.save({ reload: true });
@@ -25,7 +27,7 @@ class Many2XStockPackageAutocomplete extends Many2XAutocomplete {
                 return saved;
             },
         };
-        return PackageFormDialog;
+        return packageFormDialog;
     }
 }
 

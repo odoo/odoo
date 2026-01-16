@@ -372,6 +372,7 @@
     </template>
 
     <template id="product_variant_preview">
+        <!-- If gap-1 is changed make sure to update the margin in product_variant_preview.js -->
         <div
             t-attf-class="o_wsale_attribute_previewer d-flex align-items-center gap-1 flex-nowrap overflow-hidden {{
                 'show_on_hover' if product_ptavs[0]['ptav'].attribute_id.preview_variants == 'hover' and layout_mode != 'list' else ''

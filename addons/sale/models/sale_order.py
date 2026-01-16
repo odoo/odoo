@@ -505,11 +505,14 @@ class SaleOrder(models.Model):
     def _default_team_id(self):
         return self.env.context.get('default_team_id', False) or self.team_id.id
 
+    def _get_priced_lines(self):
+        return self.order_line.filtered(lambda x: not x.display_type)
+
     @api.depends('order_line.price_subtotal', 'currency_id', 'company_id', 'payment_term_id')
     def _compute_amounts(self):
         AccountTax = self.env['account.tax']
         for order in self:
-            order_lines = order.order_line.filtered(lambda x: not x.display_type)
+            order_lines = order._get_priced_lines()
             base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
             base_lines += order._add_base_lines_for_early_payment_discount()
             AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
@@ -539,7 +542,7 @@ class SaleOrder(models.Model):
         ):
             percentage = self.payment_term_id.discount_percentage
             currency = self.currency_id or self.company_id.currency_id
-            for line in self.order_line.filtered(lambda x: not x.display_type):
+            for line in self._get_priced_lines():
                 line_amount_after_discount = (line.price_subtotal / 100) * percentage
                 epd_lines.append(self.env['account.tax']._prepare_base_line_for_taxes_computation(
                     record=self,
@@ -789,7 +792,7 @@ class SaleOrder(models.Model):
     def _compute_tax_totals(self):
         AccountTax = self.env['account.tax']
         for order in self:
-            order_lines = order.order_line.filtered(lambda x: not x.display_type)
+            order_lines = order._get_priced_lines()
             base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
             base_lines += order._add_base_lines_for_early_payment_discount()
             AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
@@ -911,7 +914,7 @@ class SaleOrder(models.Model):
 
     @api.onchange('pricelist_id')
     def _onchange_pricelist_id_show_update_prices(self):
-        self.show_update_pricelist = bool(self.order_line)
+        self.show_update_pricelist = bool(self.order_line and self._origin.pricelist_id != self.pricelist_id)
 
     @api.onchange('prepayment_percent')
     def _onchange_prepayment_percent(self):
@@ -1457,7 +1460,6 @@ class SaleOrder(models.Model):
                 'default_partner_id': self.partner_id.id,
                 'default_partner_shipping_id': self.partner_shipping_id.id,
                 'default_invoice_payment_term_id': self.payment_term_id.id or self.partner_id.property_payment_term_id.id or self.env['account.move'].default_get(['invoice_payment_term_id']).get('invoice_payment_term_id'),
-                'default_invoice_origin': self.name,
             })
         action['context'] = context
         return action

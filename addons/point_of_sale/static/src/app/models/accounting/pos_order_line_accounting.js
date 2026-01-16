@@ -33,6 +33,9 @@ export class PosOrderlineAccounting extends Base {
     get currencyDisplayPriceUnit() {
         return formatCurrency(this.displayPriceUnit, this.currency.id);
     }
+    get currencyDisplayPriceUnitExcl() {
+        return formatCurrency(this.displayPriceUnitExcl, this.currency.id);
+    }
 
     /**
      * Display price depending on the tax configuration (included or excluded).
@@ -62,7 +65,17 @@ export class PosOrderlineAccounting extends Base {
               }, 0);
     }
     get displayPriceUnit() {
+        return this.config.iface_tax_included === "total"
+            ? this.unitPrices.total_included
+            : this.unitPrices.total_excluded;
+    }
+    get displayPriceUnitExcl() {
         return this.unitPrices.total_excluded;
+    }
+    get displayPriceUnitNoDiscount() {
+        return this.config.iface_tax_included === "total"
+            ? this.unitPrices.no_discount_total_included
+            : this.unitPrices.no_discount_total_excluded;
     }
 
     get priceIncl() {
@@ -116,7 +129,7 @@ export class PosOrderlineAccounting extends Base {
 
     get comboTotalPriceWithoutTax() {
         const allLines = this.getAllLinesInCombo();
-        return allLines.reduce((total, line) => total + line.displayPriceUnit, 0);
+        return allLines.reduce((total, line) => total + line.displayPriceUnitExcl, 0);
     }
 
     get taxGroupLabels() {
@@ -133,6 +146,10 @@ export class PosOrderlineAccounting extends Base {
         return result;
     }
 
+    get basePrice() {
+        return this.qty * this.price_unit * (1 - this.getDiscount() / 100);
+    }
+
     /**
      * Prepare extra values for the base line used in taxes computation.
      */
@@ -141,6 +158,7 @@ export class PosOrderlineAccounting extends Base {
         const currency = this.config.currency_id;
         const extraValues = { currency_id: currency };
         const product = this.getProduct();
+        const productUom = this.getUnit();
         const priceUnit = this.price_unit || 0;
         const discount = this.getDiscount();
         const values = {
@@ -150,15 +168,14 @@ export class PosOrderlineAccounting extends Base {
             discount: discount,
             tax_ids: this.tax_ids,
             product_id: product,
+            product_uom_id: productUom,
             rate: 1.0,
             is_refund: this.qty * priceUnit < 0,
             ...customValues,
         };
-        if (order?.fiscal_position_id) {
+        if (order?.fiscal_position_id && product !== this.config.discount_product_id) {
             // Recompute taxes based on product and fiscal position.
-            values.tax_ids = order.fiscal_position_id.getTaxesAfterFiscalPosition(
-                values.product_id.taxes_id
-            );
+            values.tax_ids = order.fiscal_position_id.getTaxesAfterFiscalPosition(values.tax_ids);
         }
         return values;
     }
@@ -170,7 +187,7 @@ export class PosOrderlineAccounting extends Base {
         return accountTaxHelpers.prepare_base_line_for_taxes_computation(
             this,
             this.prepareBaseLineForTaxesComputationExtraValues({
-                price_unit: this.productProductPrice,
+                price_unit: this.price_unit,
                 quantity: this.getQuantity(),
                 tax_ids: this.tax_ids,
                 ...opts,

@@ -29,27 +29,29 @@ class HrVersion(models.Model):
         all_new_leave_vals = []
         leaves_state = {}
         created_versions = self.env['hr.version']
-        try:
-            for vals in vals_list:
-                if not 'employee_id' in vals or not 'resource_calendar_id' in vals:
-                    created_versions |= super().create(vals)
-                    continue
-                leaves = self._get_leaves_from_vals(vals)
-                is_created = False
-                for leave in leaves:
-                    leaves_state = self._refuse_leave(leave, leaves_state)
-                    if not is_created:
-                        created_versions |= super().create([vals])
-                        is_created = True
-                    overlapping_contracts = self._check_overlapping_contract(leave)
-                    if not overlapping_contracts:
-                        continue
-                    all_new_leave_origin, all_new_leave_vals = self._populate_all_new_leave_vals_from_split_leave(
-                        all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state)
-                # TODO FIXME
-                # to keep creation order, not ideal but ok for now.
+        for vals in vals_list:
+            if not 'employee_id' in vals or not 'resource_calendar_id' in vals:
+                created_versions |= super().create(vals)
+                continue
+            leaves = self._get_leaves_from_vals(vals)
+            is_created = False
+            for leave in leaves:
+                leaves_state = self._refuse_leave(leave, leaves_state) if leave.request_date_from < vals['contract_date_start'] else self._set_leave_draft(leave, leaves_state)
                 if not is_created:
                     created_versions |= super().create([vals])
+                    is_created = True
+                overlapping_contracts = self._check_overlapping_contract(leave)
+                if not overlapping_contracts:
+                    # When the leave is set to draft
+                    leave._compute_date_from_to()
+                    continue
+                all_new_leave_origin, all_new_leave_vals = self._populate_all_new_leave_vals_from_split_leave(
+                    all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state)
+            # TODO FIXME
+            # to keep creation order, not ideal but ok for now.
+            if not is_created:
+                created_versions |= super().create([vals])
+        try:
             if all_new_leave_vals:
                 self._create_all_new_leave(all_new_leave_origin, all_new_leave_vals)
         except ValidationError:
@@ -76,11 +78,11 @@ class HrVersion(models.Model):
                         extra_domain=extra_domain
                     )
                     for leave in leaves:
+                        super(HrVersion, contract).write(vals)
                         overlapping_contracts = self._check_overlapping_contract(leave)
                         if not overlapping_contracts:
                             continue
                         leaves_state = self._refuse_leave(leave, leaves_state)
-                        super(HrVersion, contract).write(vals)
                         specific_contracts += contract
                         all_new_leave_origin, all_new_leave_vals = self._populate_all_new_leave_vals_from_split_leave(
                             all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state)
@@ -126,24 +128,36 @@ class HrVersion(models.Model):
                 first_overlapping_contract = next(iter(overlapping_contracts), overlapping_contracts)
                 if leave.resource_calendar_id != first_overlapping_contract.resource_calendar_id:
                     leave.resource_calendar_id = first_overlapping_contract.resource_calendar_id
+                    if not leave.request_unit_hours:
+                        leave.with_context(leave_skip_date_check=True, leave_skip_state_check=True)._compute_date_from_to()
+                        if leave.state == 'validate':
+                            leave._validate_leave_request()
             return False
         return overlapping_contracts
 
     def _refuse_leave(self, leave, leaves_state):
         if leave.id not in leaves_state:
             leaves_state[leave.id] = leave.state
-        if leave.state != 'refuse':
+        if leave.state not in ['refuse', 'confirm']:
             leave.action_refuse()
         return leaves_state
 
+    def _set_leave_draft(self, leave, leaves_state):
+        if leave.id not in leaves_state:
+            leaves_state[leave.id] = leave.state
+        if leave.state not in ['refuse', 'confirm']:
+            leave.action_back_to_approval()
+        return leaves_state
+
     def _populate_all_new_leave_vals_from_split_leave(self, all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state):
+        last_version = overlapping_contracts[-1]
         for overlapping_contract in overlapping_contracts:
             new_request_date_from = max(leave.request_date_from, overlapping_contract.contract_date_start)
             new_request_date_to = min(leave.request_date_to, overlapping_contract.contract_date_end or date.max)
             new_leave_vals = leave.copy_data({
                 'request_date_from': new_request_date_from,
                 'request_date_to': new_request_date_to,
-                'state': leaves_state[leave.id],
+                'state': leaves_state[leave.id] if overlapping_contract.id != last_version.id else 'confirm',
             })[0]
             new_leave = self.env['hr.leave'].new(new_leave_vals)
             new_leave._compute_date_from_to()

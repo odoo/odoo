@@ -14,11 +14,14 @@ import copy
 import logging
 import re
 
+import difflib
+import pprint
+import requests
 from contextlib import contextmanager
 from functools import wraps
 from itertools import count
 from lxml import etree
-from unittest import SkipTest
+from unittest import SkipTest, TestCase
 from unittest.mock import patch, ANY
 
 _logger = logging.getLogger(__name__)
@@ -28,7 +31,7 @@ class AccountTestInvoicingCommon(ProductCommon):
     # to override by the helper methods setup_country and setup_chart_template to adapt to a localization
     chart_template = False
     country_code = False
-    extra_tags = ('-standard', 'external') if 'EXTERNAL_MODE' in (config['test_tags'] or {}) else ()
+    extra_tags = ['SAVE_XML', *(['-standard', 'external'] if 'EXTERNAL_MODE' in (config['test_tags'] or {}) else [])]
 
     @classmethod
     def safe_copy(cls, record):
@@ -402,8 +405,8 @@ class AccountTestInvoicingCommon(ProductCommon):
     def group_of_taxes(self, taxes, **kwargs):
         self.tax_number += 1
         return self.env['account.tax'].create({
-            **kwargs,
             'name': f"group_({self.tax_number})",
+            **kwargs,
             'amount_type': 'group',
             'children_tax_ids': [Command.set(taxes.ids)],
         })
@@ -411,8 +414,8 @@ class AccountTestInvoicingCommon(ProductCommon):
     def percent_tax(self, amount, **kwargs):
         self.tax_number += 1
         return self.env['account.tax'].create({
-            **kwargs,
             'name': f"percent_{amount}_({self.tax_number})",
+            **kwargs,
             'amount_type': 'percent',
             'amount': amount,
         })
@@ -420,8 +423,8 @@ class AccountTestInvoicingCommon(ProductCommon):
     def division_tax(self, amount, **kwargs):
         self.tax_number += 1
         return self.env['account.tax'].create({
-            **kwargs,
             'name': f"division_{amount}_({self.tax_number})",
+            **kwargs,
             'amount_type': 'division',
             'amount': amount,
         })
@@ -429,8 +432,8 @@ class AccountTestInvoicingCommon(ProductCommon):
     def fixed_tax(self, amount, **kwargs):
         self.tax_number += 1
         return self.env['account.tax'].create({
-            **kwargs,
             'name': f"fixed_{amount}_({self.tax_number})",
+            **kwargs,
             'amount_type': 'fixed',
             'amount': amount,
         })
@@ -439,8 +442,8 @@ class AccountTestInvoicingCommon(ProductCommon):
         self.ensure_installed('account_tax_python')
         self.tax_number += 1
         return self.env['account.tax'].create({
-            **kwargs,
             'name': f"code_({self.tax_number})",
+            **kwargs,
             'amount_type': 'code',
             'amount': 0.0,
             'formula': formula,
@@ -731,6 +734,18 @@ class AccountTestInvoicingCommon(ProductCommon):
         )
 
     @classmethod
+    def _create_account_move_send_wizard_single(cls, move, **kwargs):
+        return cls.env['account.move.send.wizard']\
+            .with_context(active_model='account.move', active_ids=move.ids)\
+            .create(kwargs)
+
+    @classmethod
+    def _create_account_move_send_wizard_multi(cls, moves, **kwargs):
+        return cls.env['account.move.send.batch.wizard']\
+            .with_context(active_model='account.move', active_ids=moves.ids)\
+            .create(kwargs)
+
+    @classmethod
     def _reverse_invoice(cls, invoice, post=False, **reversal_args):
         reverse_action_values = (
             cls.env['account.move.reversal']
@@ -763,9 +778,41 @@ class AccountTestInvoicingCommon(ProductCommon):
             ._create_payments()
         )
 
+    @contextmanager
+    def mocked_get_payment_method_information(self, code='none'):
+        self.ensure_installed('account_payment')
+
+        Method_get_payment_method_information = self.env['account.payment.method']._get_payment_method_information
+
+        def _get_payment_method_information(*args, **kwargs):
+            res = Method_get_payment_method_information()
+            res[code] = {'mode': 'electronic', 'type': ('bank',)}
+            return res
+
+        with patch.object(self.env.registry['account.payment.method'], '_get_payment_method_information', _get_payment_method_information):
+            yield
+
+    @classmethod
+    def _create_dummy_payment_method_for_provider(cls, provider, journal, **kwargs):
+        cls.ensure_installed('account_payment')
+
+        code = kwargs.get('code', 'none')
+
+        with cls.mocked_get_payment_method_information(cls, code):
+            payment_method = cls.env['account.payment.method'].sudo().create({
+                'name': 'Dummy method',
+                'code': code,
+                'payment_type': 'inbound',
+                **kwargs,
+            })
+            provider.journal_id = journal
+            return payment_method
+
     @classmethod
     def _create_sale_order(cls, confirm=True, **values):
         cls.ensure_installed('sale')
+
+        cls._prepare_record_kwargs('sale.order', values)
 
         sale_order = cls.env['sale.order'].create([{
             'partner_id': cls.partner_a.id,
@@ -1480,8 +1527,11 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             return {}
         return taxes._eval_taxes_computation_turn_to_product_values(product=product)
 
-    def _jsonify_product_uom(self, uom):
+    def _jsonify_product_uom(self, uom, taxes):
+        if not uom:
+            return {}
         return {
+            **taxes._eval_taxes_computation_turn_to_product_uom_values(product_uom=uom),
             'id': uom.id,
             'name': uom.name,
         }
@@ -1539,7 +1589,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             'currency_id': self._jsonify_currency(line.get('currency_id') or document['currency']),
             'rate': line['rate'] if 'rate' in line else document['rate'],
             'product_id': self._jsonify_product(line['product_id'], line['tax_ids']),
-            'product_uom_id': self._jsonify_product_uom(line['product_uom_id']),
+            'product_uom_id': self._jsonify_product_uom(line['product_uom_id'], line['tax_ids']),
             'tax_ids': [self._jsonify_tax(tax) for tax in line['tax_ids']],
             'price_unit': line['price_unit'],
             'quantity': line['quantity'],
@@ -1718,9 +1768,10 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
                     float_round(results['price_unit'], precision_rounding=rounding),
                 )
 
-    def _create_py_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, precision_rounding, rounding_method, excluded_tax_ids):
+    def _create_py_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, product_uom, precision_rounding, rounding_method, excluded_tax_ids):
         kwargs = {
             'product': product,
+            'product_uom': product_uom,
             'precision_rounding': precision_rounding,
             'rounding_method': rounding_method,
             'filter_tax_function': (lambda tax: tax.id not in excluded_tax_ids) if excluded_tax_ids else None,
@@ -1741,13 +1792,14 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             )
         return results
 
-    def _create_js_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, precision_rounding, rounding_method, excluded_tax_ids):
+    def _create_js_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, product_uom, precision_rounding, rounding_method, excluded_tax_ids):
         return {
             'test': 'taxes_computation',
             'taxes': [self._jsonify_tax(tax) for tax in taxes],
             'price_unit': price_unit,
             'quantity': quantity,
             'product': self._jsonify_product(product, taxes),
+            'product_uom': self._jsonify_product_uom(product_uom, taxes),
             'precision_rounding': precision_rounding,
             'rounding_method': rounding_method,
             'excluded_tax_ids': excluded_tax_ids,
@@ -1760,6 +1812,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         expected_values,
         quantity=1,
         product=None,
+        product_uom=None,
         precision_rounding=0.01,
         rounding_method='round_per_line',
         excluded_special_modes=None,
@@ -1780,6 +1833,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             price_unit,
             quantity,
             product,
+            product_uom,
             precision_rounding,
             rounding_method,
             excluded_tax_ids,
@@ -1793,19 +1847,20 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
     def _assert_sub_test_adapt_price_unit_to_another_taxes(self, results, expected_price_unit):
         self.assertEqual(results['price_unit'], expected_price_unit)
 
-    def _create_py_sub_test_adapt_price_unit_to_another_taxes(self, price_unit, original_taxes, new_taxes, product):
-        return {'price_unit': self.env['account.tax']._adapt_price_unit_to_another_taxes(price_unit, product, original_taxes, new_taxes)}
+    def _create_py_sub_test_adapt_price_unit_to_another_taxes(self, price_unit, original_taxes, new_taxes, product, product_uom):
+        return {'price_unit': self.env['account.tax']._adapt_price_unit_to_another_taxes(price_unit, product, original_taxes, new_taxes, product_uom=product_uom)}
 
-    def _create_js_sub_test_adapt_price_unit_to_another_taxes(self, price_unit, original_taxes, new_taxes, product):
+    def _create_js_sub_test_adapt_price_unit_to_another_taxes(self, price_unit, original_taxes, new_taxes, product, product_uom):
         return {
             'test': 'adapt_price_unit_to_another_taxes',
             'price_unit': price_unit,
             'product': self._jsonify_product(product, original_taxes + new_taxes),
+            'product_uom': self._jsonify_product_uom(product_uom, original_taxes + new_taxes),
             'original_taxes': [self._jsonify_tax(tax) for tax in original_taxes],
             'new_taxes': [self._jsonify_tax(tax) for tax in new_taxes],
         }
 
-    def assert_adapt_price_unit_to_another_taxes(self, price_unit, original_taxes, new_taxes, expected_price_unit, product=None):
+    def assert_adapt_price_unit_to_another_taxes(self, price_unit, original_taxes, new_taxes, expected_price_unit, product=None, product_uom=None):
         self._create_assert_test(
             expected_price_unit,
             self._create_py_sub_test_adapt_price_unit_to_another_taxes,
@@ -1815,11 +1870,38 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             original_taxes,
             new_taxes,
             product,
+            product_uom,
         )
 
     # -------------------------------------------------------------------------
     # base_lines_tax_details
     # -------------------------------------------------------------------------
+
+    def _extract_base_lines_details(self, document):
+        return [
+            {
+                'total_excluded_currency': base_line['tax_details']['total_excluded_currency'],
+                'total_excluded': base_line['tax_details']['total_excluded'],
+                'total_included_currency': base_line['tax_details']['total_included_currency'],
+                'total_included': base_line['tax_details']['total_included'],
+                'delta_total_excluded_currency': base_line['tax_details']['delta_total_excluded_currency'],
+                'delta_total_excluded': base_line['tax_details']['delta_total_excluded'],
+                'manual_total_excluded': base_line['manual_total_excluded'],
+                'manual_total_excluded_currency': base_line['manual_total_excluded_currency'],
+                'manual_tax_amounts': base_line['manual_tax_amounts'],
+                'taxes_data': [
+                    {
+                        'tax_id': tax_data['tax'].id,
+                        'tax_amount_currency': tax_data['tax_amount_currency'],
+                        'tax_amount': tax_data['tax_amount'],
+                        'base_amount_currency': tax_data['base_amount_currency'],
+                        'base_amount': tax_data['base_amount'],
+                    }
+                    for tax_data in base_line['tax_details']['taxes_data']
+                ],
+            }
+            for base_line in document['lines']
+        ]
 
     def _assert_sub_test_base_lines_tax_details(self, results, expected_values):
         self.assertEqual(len(results['base_lines_tax_details']), len(expected_values['base_lines_tax_details']))
@@ -1827,29 +1909,8 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             self.assertDictEqual(result, expected)
 
     def _create_py_sub_test_base_lines_tax_details(self, document):
-        base_lines = document['lines']
         return {
-            'base_lines_tax_details': [
-                {
-                    'total_excluded_currency': base_line['tax_details']['total_excluded_currency'],
-                    'total_excluded': base_line['tax_details']['total_excluded'],
-                    'total_included_currency': base_line['tax_details']['total_included_currency'],
-                    'total_included': base_line['tax_details']['total_included'],
-                    'delta_total_excluded_currency': base_line['tax_details']['delta_total_excluded_currency'],
-                    'delta_total_excluded': base_line['tax_details']['delta_total_excluded'],
-                    'taxes_data': [
-                        {
-                            'tax_id': tax_data['tax'].id,
-                            'tax_amount_currency': tax_data['tax_amount_currency'],
-                            'tax_amount': tax_data['tax_amount'],
-                            'base_amount_currency': tax_data['base_amount_currency'],
-                            'base_amount': tax_data['base_amount'],
-                        }
-                        for tax_data in base_line['tax_details']['taxes_data']
-                    ],
-                }
-                for base_line in base_lines
-            ]
+            'base_lines_tax_details': self._extract_base_lines_details(document),
         }
 
     def _create_js_sub_test_base_lines_tax_details(self, document):
@@ -1967,9 +2028,11 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
     def _assert_sub_test_down_payment(self, results, expected_results):
         self._assert_tax_totals_summary(
             results['tax_totals'],
-            expected_results,
+            expected_results['tax_totals'],
             soft_checking=results['soft_checking'],
         )
+        if 'base_lines_tax_details' in expected_results:
+            self._assert_sub_test_base_lines_tax_details(results, expected_results)
 
     def _create_py_sub_test_down_payment(self, document, amount_type, amount, soft_checking):
         AccountTax = self.env['account.tax']
@@ -1990,7 +2053,11 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             company=self.env.company,
             cash_rounding=new_document['cash_rounding'],
         )
-        return {'tax_totals': tax_totals, 'soft_checking': soft_checking}
+        return {
+            'tax_totals': tax_totals,
+            'soft_checking': soft_checking,
+            'base_lines_tax_details': self._extract_base_lines_details(new_document),
+        }
 
     def _create_js_sub_test_down_payment(self, document, amount_type, amount, soft_checking):
         return {
@@ -2117,3 +2184,158 @@ class TestAccountMergeCommon(AccountTestInvoicingCommon):
             partner: 'property_account_receivable_id',
             attachment: 'res_id',
         }
+
+
+class PatchRequestsMixin(TestCase):
+    """ Mock external HTTP requests made through the `requests` library.
+    Assert expected requests and provide mocked responses in a record/replay fashion.
+    """
+
+    external_mode = False
+
+    @contextmanager
+    def assertRequests(self, expected_requests_and_responses: list[tuple[dict, requests.Response]]):
+        """ Assert expected requests and provide mocked responses in a record/replay fashion.
+
+        Patches `requests.Session.request`, which is the main method internally used by the
+        `requests` library to perform HTTP requests, asserts the request contents and serves
+        the provided mocked responses.
+
+        To transform the mocked test into a live test, set the `external_mode` attribute to:
+        - True to let the requests through;
+        - 'warn' to let the requests through but issue a warning if the requests / responses
+          differ from the expected requests / mocked responses.
+
+        :param expected_requests_and_responses: A list of tuples, each containing
+                                                an expected request and a mocked response.
+                                                The expected request is a dictionary of arguments
+                                                passed to `requests.Session.request`,
+                                                and the mocked response is an object that supports
+                                                the `requests.Response` interface.
+
+        Example usage:
+        ```
+        mocked_response = requests.Response()
+        mocked_response.status_code = 200
+        mocked_response._content = json.dumps({'message': 'Success'})
+
+        with self.assertRequestsMade([
+            (
+                {'method': 'POST', 'url': 'https://example.com/send', 'json': {'message': 'Hello World!'}},
+                mocked_response,
+            ),
+        ]):
+            response = requests.post('https://example.com/send', json={'message': 'Hello World!'})
+        ```
+        """
+        if self.external_mode is True:
+            yield  # Full external mode: don't patch `requests.Session.request` at all
+        elif self.external_mode == 'warn':
+            # External mode with warnings
+            yield from self.patch_requests_warn(expected_requests_and_responses)
+        else:
+            # Mocked mode
+            yield from self.assertMockRequests(expected_requests_and_responses)
+
+    def assertMockRequests(self, expected_requests_and_responses):
+        """ Mock requests, assert that the requests are as expected and serve a mocked response. """
+        expected_requests_and_responses_iter = iter(expected_requests_and_responses)
+
+        def mock_request(session, method, url, **kwargs):
+            actual_request = {
+                'method': method,
+                'url': url,
+                **kwargs,
+            }
+
+            try:
+                expected_request, mocked_response = next(expected_requests_and_responses_iter)
+            except StopIteration:
+                self.fail("Unexpected request: %s" % actual_request)
+
+            self.assertRequestsEqual(actual_request, expected_request)
+            return mocked_response
+
+        with patch.object(requests.Session, 'request', new=mock_request):
+            yield
+
+        next_expected_request, _ = next(expected_requests_and_responses_iter, (None, None))
+        if next_expected_request is not None:
+            self.fail("Expected request not made: %s" % next_expected_request)
+
+    def patch_requests_warn(self, expected_requests_and_responses):
+        """ Let requests pass through but warn if the request or the response differ from
+        what is expected.
+        """
+        expected_requests_and_responses_iter = iter(expected_requests_and_responses)
+        original_request_method = requests.Session.request
+
+        def request_and_warn(session, method, url, **kwargs):
+            actual_request = {
+                'method': method,
+                'url': url,
+                **kwargs,
+            }
+
+            try:
+                expected_request, expected_response = next(expected_requests_and_responses_iter)
+            except StopIteration:
+                _logger.warning("Unexpected request: %s", actual_request)
+                return original_request_method(session, method, url, **kwargs)
+
+            try:
+                self.assertRequestsEqual(actual_request, expected_request)
+            except AssertionError as e:
+                _logger.warning("Request differs from expected request: \n%s", e.args[0])
+
+            actual_response = original_request_method(session, method, url, **kwargs)
+
+            if diff_msg := self.difference_between_responses(actual_response, expected_response):
+                _logger.warning('Response differs from expected response:\n%s', diff_msg)
+
+            return actual_response
+
+        with patch.object(requests.Session, 'request', request_and_warn):
+            yield
+
+        for expected_request, _ in expected_requests_and_responses_iter:
+            _logger.warning("Expected request not made: %s", expected_request)
+
+    def assertRequestsEqual(self, actual_request, expected_request):
+        """ Method used to validate that the actual request is identical to the expected one.
+            Can be overridden to customize the validation. """
+        return self.assertEqual(actual_request, expected_request)
+
+    def difference_between_responses(self, actual_response, expected_response):
+        """ Method used by the `patch_requests_warn` method to know whether
+            the actual response is identical to the mocked response when live-testing.
+            Can be overridden to customize this behaviour. """
+
+        def generate_diff(d1, d2):
+            return '\n'.join(difflib.ndiff(
+                pprint.pformat(d1).splitlines(),
+                pprint.pformat(d2).splitlines())
+            )
+
+        if (
+            actual_response.status_code == expected_response.status_code
+            and actual_response.content == expected_response.content
+        ):
+            return None
+
+        diff_msg = ""
+        if actual_response.status_code != expected_response.status_code:
+            diff_msg += 'Status code: %s != %s\n' % (actual_response.status_code, expected_response.status_code)
+
+        if actual_response.content != expected_response.content:
+            try:
+                diff = generate_diff(actual_response.json(), expected_response.json())
+                diff_msg += 'Content: \n%s' % diff
+            except (TypeError, requests.exceptions.InvalidJSONError):
+                try:
+                    diff = generate_diff(actual_response.text, expected_response.text)
+                    diff_msg += 'Content: \n%s' % diff
+                except (TypeError, requests.exceptions.InvalidJSONError):
+                    diff_msg += 'Content: \n%s\n != \n%s' % (actual_response.content, expected_response.content)
+
+        return diff_msg

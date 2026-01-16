@@ -11,15 +11,19 @@ patch(RatingPopupComposer.prototype, {
     },
 
     reloadRatingPopupComposer() {
-        super.reloadRatingPopupComposer(...arguments);
         if (this.options.res_model !== "slide.channel") {
-            return;
+            return super.reloadRatingPopupComposer(...arguments);
         }
         const reviewEl = document.querySelector("#review-tab");
         if (reviewEl) {
             reviewEl.textContent = this.rating_count
                 ? _t("Reviews (%s)", this.rating_count)
                 : _t("Reviews");
+        }
+        const editedMessage = this.options["mail.message"]?.[0];
+        // Only update the modal when editing the logged user message
+        if (!editedMessage || this.options.partner_id === editedMessage.author_id) {
+            return super.reloadRatingPopupComposer(...arguments);
         }
     },
 });

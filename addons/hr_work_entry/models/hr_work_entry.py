@@ -11,6 +11,7 @@ from psycopg2 import OperationalError
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.tools import float_compare
 from odoo.tools.intervals import Intervals
 
 
@@ -50,6 +51,12 @@ class HrWorkEntry(models.Model):
 
     # FROM 7s by query to 2ms (with 2.6 millions entries)
     _contract_date_start_stop_idx = models.Index("(version_id, date) WHERE state IN ('draft', 'validated')")
+
+    @api.constrains('duration')
+    def _check_duration(self):
+        for work_entry in self:
+            if float_compare(work_entry.duration, 0, 3) <= 0 or float_compare(work_entry.duration, 24, 3) > 0:
+                raise ValidationError(self.env._("Duration must be positive and cannot exceed 24 hours."))
 
     @api.depends('display_code', 'duration')
     def _compute_display_name(self):
@@ -143,7 +150,8 @@ class HrWorkEntry(models.Model):
         undefined_type.write({'state': 'conflict'})
         conflict = self._mark_conflicting_work_entries(min(self.mapped('date')), max(self.mapped('date')))
         outside_calendar = self._mark_leaves_outside_schedule()
-        return undefined_type or conflict or outside_calendar
+        already_validated_days = self._mark_already_validated_days()
+        return undefined_type or conflict or outside_calendar or already_validated_days
 
     def _mark_conflicting_work_entries(self, start, stop):
         """
@@ -158,9 +166,9 @@ class HrWorkEntry(models.Model):
                 FROM hr_work_entry
                 WHERE active = TRUE
                   AND date BETWEEN %(start)s AND %(stop)s
-                  {ids_filter}
+                  AND employee_id IN %(employee_ids)s
                 GROUP BY employee_id, date
-                HAVING SUM(duration) > 1000
+                HAVING 0 >= SUM(duration) OR SUM(duration) > 24
             )
             SELECT we.id
             FROM hr_work_entry we
@@ -168,13 +176,11 @@ class HrWorkEntry(models.Model):
               ON we.employee_id = ed.employee_id
              AND we.date = ed.date
             WHERE we.active = TRUE
-        """.format(
-            ids_filter="AND id IN %(ids)s" if self.ids else ""
-        )
+        """
         self.env.cr.execute(query, {
             "start": start,
             "stop": stop,
-            "ids": tuple(self.ids) if self.ids else (),
+            'employee_ids': tuple(self.employee_id.ids),
         })
         conflict_ids = [row[0] for row in self.env.cr.fetchall()]
         self.browse(conflict_ids).write({'state': 'conflict'})
@@ -212,6 +218,24 @@ class HrWorkEntry(models.Model):
         outside_entries.write({'state': 'conflict'})
         return bool(outside_entries)
 
+    def _mark_already_validated_days(self):
+        invalid_entries = self.env['hr.work.entry']
+        validated_work_entries = self.env["hr.work.entry"].search([
+            ('state', '=', 'validated'),
+            ('date', '<=', max(self.mapped('date'))),
+            ('date', '>=', min(self.mapped('date'))),
+            ('company_id', '=', self.env.company.id)
+        ])
+        validated_entries_by_employee_date = defaultdict(lambda: self.env['hr.work.entry'])
+        for entry in validated_work_entries:
+            validated_entries_by_employee_date[entry.employee_id, entry.date] += entry
+
+        for entry in self:
+            if validated_entries_by_employee_date[entry.employee_id, entry.date]:
+                invalid_entries += entry
+        invalid_entries.write({'state': 'conflict'})
+        return bool(invalid_entries)
+
     def _to_intervals(self):
         return Intervals(
             ((datetime.combine(w.date, time.min).replace(tzinfo=pytz.utc), datetime.combine(w.date, time.max).replace(tzinfo=pytz.utc), w) for w in self),
@@ -243,7 +267,7 @@ class HrWorkEntry(models.Model):
         return work_entries
 
     def write(self, vals):
-        skip_check = not bool({'date_start', 'date_stop', 'employee_id', 'work_entry_type_id', 'active'} & vals.keys())
+        skip_check = not bool({'date', 'duration', 'employee_id', 'work_entry_type_id', 'active'} & vals.keys())
         if 'state' in vals:
             if vals['state'] == 'draft':
                 vals['active'] = True

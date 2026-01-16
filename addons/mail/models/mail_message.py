@@ -669,6 +669,10 @@ class MailMessage(models.Model):
     def create(self, vals_list):
         tracking_values_list = []
         for values in vals_list:
+            if not (self.env.su or self.env.user.has_group('base.group_user')):
+                values.pop('author_id', None)
+                values.pop('email_from', None)
+                self = self.with_context({k: v for k, v in self.env.context.items() if k not in ['default_author_id', 'default_email_from']})  # noqa: PLW0642
             if 'email_from' not in values:  # needed to compute reply_to
                 _author_id, email_from = self.env['mail.thread']._message_compute_author(values.get('author_id'), email_from=None)
                 values['email_from'] = email_from
@@ -779,6 +783,9 @@ class MailMessage(models.Model):
         return super().fetch(field_names)
 
     def write(self, vals):
+        if not (self.env.su or self.env.user.has_group('base.group_user')):
+            vals.pop('author_id', None)
+            vals.pop('email_from', None)
         record_changed = 'model' in vals or 'res_id' in vals
         if record_changed and not self.env.is_system():
             raise AccessError(_("Only administrators can modify 'model' and 'res_id' fields."))
@@ -887,7 +894,8 @@ class MailMessage(models.Model):
     def unstar_all(self):
         """ Unstar messages for the current partner. """
         starred_messages = self.search([("starred_partner_ids", "in", self.env.user.partner_id.id)])
-        starred_messages.starred_partner_ids = [Command.unlink(self.env.user.partner_id.id)]
+        # sudo: mail.message - a user can unstar messages they can read
+        starred_messages.sudo().starred_partner_ids = [Command.unlink(self.env.user.partner_id.id)]
         self.env.user._bus_send(
             "mail.message/toggle_star", {"message_ids": starred_messages.ids, "starred": False}
         )
@@ -897,13 +905,14 @@ class MailMessage(models.Model):
             to uid are set to (un)starred.
         """
         self.ensure_one()
-        # a user should always be able to star a message they can read
         self.check_access('read')
         starred = not self.starred
         if starred:
-            self.starred_partner_ids = [Command.link(self.env.user.partner_id.id)]
+            # sudo: mail.message - a user can star a message they can read
+            self.sudo().starred_partner_ids = [Command.link(self.env.user.partner_id.id)]
         else:
-            self.starred_partner_ids = [Command.unlink(self.env.user.partner_id.id)]
+            # sudo: mail.message - a user can unstar a message they can read
+            self.sudo().starred_partner_ids = [Command.unlink(self.env.user.partner_id.id)]
         self.env.user._bus_send(
             "mail.message/toggle_star", {"message_ids": [self.id], "starred": starred}
         )
@@ -1092,7 +1101,13 @@ class MailMessage(models.Model):
             "message_type",
             "model",  # keep for iOS app
             # sudo: res.partner: reading limited data of recipients is acceptable
-            Store.Many("partner_ids", ["avatar_128", "name"], sort="id", sudo=True),
+            Store.Many(
+                "partner_ids",
+                "avatar_128",
+                dynamic_fields=lambda m: m._get_store_partner_name_fields(),
+                sort="id",
+                sudo=True,
+            ),
             "pinned_at",
             # sudo: mail.message - reading reactions on accessible message is allowed
             Store.Attr("reactions", value=lambda m: Store.Many(m.sudo().reaction_ids)),

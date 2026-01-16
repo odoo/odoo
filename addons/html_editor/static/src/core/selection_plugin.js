@@ -51,6 +51,7 @@ import { weakMemoize } from "@html_editor/utils/functions";
  * @property { boolean } documentSelectionIsInEditable
  * @property { boolean } documentSelectionIsProtected
  * @property { boolean } documentSelectionIsProtecting
+ * @property { boolean } currentSelectionIsInEditable
  */
 
 /**

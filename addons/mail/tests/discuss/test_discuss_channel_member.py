@@ -157,6 +157,13 @@ class TestDiscussChannelMember(MailCommon):
         with self.assertRaises(AccessError):
             channel_members.with_user(self.user_portal).unlink()
 
+    def test_group_subchannel_join(self):
+        """Test join subchannel."""
+        self.group.add_members((self.user_1 | self.user_2).partner_id.ids)
+        group_subchannel = self.group.with_user(self.user_1)._create_sub_channel()
+        group_subchannel.with_user(self.user_2).add_members(self.user_2.partner_id.id)
+        self.assertEqual(group_subchannel.channel_member_ids.partner_id, (self.user_1 | self.user_2).partner_id)
+
     # ------------------------------------------------------------
     # GROUP BASED CHANNELS
     # ------------------------------------------------------------

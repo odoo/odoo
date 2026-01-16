@@ -90,13 +90,21 @@
         <field name="context">{'default_allow_billable': True, 'sale_show_partner_name': True, 'display_milestone_deadline': True}</field>
     </record>
     <record id="project.open_view_project_all_config_group_stage" model="ir.actions.act_window">
-        <field name="context">{'default_allow_billable': True, 'sale_show_partner_name': True}</field>
+        <field name="context">{
+            'default_allow_billable': True,
+            'sale_show_partner_name': True,
+            'display_milestone_deadline': True
+        }</field>
     </record>
     <record id="project.open_view_project_all" model="ir.actions.act_window">
         <field name="context">{'default_allow_billable': True, 'sale_show_partner_name': True, 'display_milestone_deadline': True}</field>
     </record>
     <record id="project.open_view_project_all_group_stage" model="ir.actions.act_window">
-        <field name="context">{'default_allow_billable': True, 'sale_show_partner_name': True}</field>
+        <field name="context">{
+            'default_allow_billable': True,
+            'sale_show_partner_name': True,
+            'display_milestone_deadline': True
+        }</field>
     </record>
 
     <record id="project_templates_view_list" model="ir.ui.view">

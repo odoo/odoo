@@ -799,6 +799,10 @@ class CrmLead(models.Model):
                 vals['website'] = self.env['res.partner']._clean_website(vals['website'])
         leads = super().create(vals_list)
 
+        # handling a date_closed value if the lead is directly created in the won stage
+        won_to_set = leads.filtered(lambda l: not l.date_closed and l.stage_id.is_won)
+        won_to_set.write({'date_closed': fields.Datetime.now()})
+
         if self.default_get(['partner_id']).get('partner_id') is None:
             commercial_partner_ids = [vals['commercial_partner_id'] for vals in vals_list if vals.get('commercial_partner_id')]
             CommercialPartners = self.env['res.partner'].with_prefetch(commercial_partner_ids)
@@ -1191,16 +1195,16 @@ class CrmLead(models.Model):
         tz_midnight_in_utc = tz_midnight.astimezone(pytz.UTC).replace(tzinfo=None)
         query = f"""
         SELECT
-            MAX(CASE WHEN team_id = %(team_id)s AND date_closed >= %(tz_midnight)s - INTERVAL '31 days' AND id <> %(lead_id)s THEN expected_revenue ELSE 0 END) AS max_team_31,
-            MAX(CASE WHEN team_id = %(team_id)s AND date_closed >= %(tz_midnight)s - INTERVAL '7 days'  AND id <> %(lead_id)s THEN expected_revenue ELSE 0 END) AS max_team_7,
-            MAX(CASE WHEN user_id = %(user_id)s AND date_closed >= %(tz_midnight)s - INTERVAL '31 days' AND id <> %(lead_id)s THEN expected_revenue ELSE 0 END) AS max_user_31,
-            MAX(CASE WHEN user_id = %(user_id)s AND date_closed >= %(tz_midnight)s - INTERVAL '7 days'  AND id <> %(lead_id)s THEN expected_revenue ELSE 0 END) AS max_user_7,
-            MIN(CASE WHEN date_closed >= %(tz_midnight)s - INTERVAL '31 days' THEN day_close ELSE 31 END) AS min_day_close_31,
+            MAX(CASE WHEN team_id = %(team_id)s AND COALESCE(date_closed, create_date) >= %(tz_midnight)s - INTERVAL '31 days' AND id <> %(lead_id)s THEN expected_revenue ELSE 0 END) AS max_team_31,
+            MAX(CASE WHEN team_id = %(team_id)s AND COALESCE(date_closed, create_date) >= %(tz_midnight)s - INTERVAL '7 days'  AND id <> %(lead_id)s THEN expected_revenue ELSE 0 END) AS max_team_7,
+            MAX(CASE WHEN user_id = %(user_id)s AND COALESCE(date_closed, create_date) >= %(tz_midnight)s - INTERVAL '31 days' AND id <> %(lead_id)s THEN expected_revenue ELSE 0 END) AS max_user_31,
+            MAX(CASE WHEN user_id = %(user_id)s AND COALESCE(date_closed, create_date) >= %(tz_midnight)s - INTERVAL '7 days'  AND id <> %(lead_id)s THEN expected_revenue ELSE 0 END) AS max_user_7,
+            MIN(CASE WHEN COALESCE(date_closed, create_date) >= %(tz_midnight)s - INTERVAL '31 days' THEN day_close ELSE 31 END) AS min_day_close_31,
             COUNT(CASE WHEN user_id = %(user_id)s THEN 1 ELSE NULL END) AS count_user_closed_year,
-            COUNT(CASE WHEN user_id = %(user_id)s AND date_closed >= %(tz_midnight)s - INTERVAL '3 days' AND date_closed < %(tz_midnight)s - INTERVAL '2 days' THEN 1 ELSE NULL END) AS count_user_closed_minus3day,
-            COUNT(CASE WHEN user_id = %(user_id)s AND date_closed >= %(tz_midnight)s - INTERVAL '2 days' AND date_closed < %(tz_midnight)s - INTERVAL '1 days' THEN 1 ELSE NULL END) AS count_user_closed_minus2day,
-            COUNT(CASE WHEN user_id = %(user_id)s AND date_closed >= %(tz_midnight)s - INTERVAL '1 days' AND date_closed < %(tz_midnight)s THEN 1 ELSE NULL END) AS count_user_closed_yesterday,
-            COUNT(CASE WHEN user_id = %(user_id)s AND date_closed >= %(tz_midnight)s THEN 1 ELSE NULL END) AS count_user_closed_today,
+            COUNT(CASE WHEN user_id = %(user_id)s AND COALESCE(date_closed, create_date) >= %(tz_midnight)s - INTERVAL '3 days' AND COALESCE(date_closed, create_date) < %(tz_midnight)s - INTERVAL '2 days' THEN 1 ELSE NULL END) AS count_user_closed_minus3day,
+            COUNT(CASE WHEN user_id = %(user_id)s AND COALESCE(date_closed, create_date) >= %(tz_midnight)s - INTERVAL '2 days' AND COALESCE(date_closed, create_date) < %(tz_midnight)s - INTERVAL '1 days' THEN 1 ELSE NULL END) AS count_user_closed_minus2day,
+            COUNT(CASE WHEN user_id = %(user_id)s AND COALESCE(date_closed, create_date) >= %(tz_midnight)s - INTERVAL '1 days' AND COALESCE(date_closed, create_date) < %(tz_midnight)s THEN 1 ELSE NULL END) AS count_user_closed_yesterday,
+            COUNT(CASE WHEN user_id = %(user_id)s AND COALESCE(date_closed, create_date) >= %(tz_midnight)s THEN 1 ELSE NULL END) AS count_user_closed_today,
             COUNT(CASE WHEN {source_case} THEN 1 ELSE NULL END) AS count_source_closed_year,
             COUNT(CASE WHEN {country_case} THEN 1 ELSE NULL END) AS count_country_closed_year
             FROM crm_lead
@@ -1211,7 +1215,7 @@ class CrmLead(models.Model):
             AND
                 probability = 100
             AND
-                DATE_TRUNC('year', date_closed) = DATE_TRUNC('year', %(tz_midnight)s)
+                DATE_TRUNC('year', COALESCE(date_closed, create_date)) = DATE_TRUNC('year', %(tz_midnight)s)
             AND
                 (user_id = %(user_id)s OR team_id = %(team_id)s)
         """
@@ -1239,7 +1243,7 @@ class CrmLead(models.Model):
             return _('You\'re on a winning streak. 3 deals in 3 days, congrats!')
         # check that at least one minute has elapsed since record creation to only account for 'real' leads
         elif query_result['min_day_close_31'] == self.day_close and self.day_close < 31 \
-            and (self.date_closed - self.create_date).total_seconds() > 60:
+            and self.date_closed and (self.date_closed - self.create_date).total_seconds() > 60:
             return _('Wow, that was fast. That deal didn’t stand a chance!')
         # use duration tracking field to determine if the task jumped from first to last stage
         # only takes into accounts stages on which the lead has spent at least a minute,
@@ -1515,16 +1519,18 @@ class CrmLead(models.Model):
         return data
 
     def merge_opportunity(self, user_id=False, team_id=False, auto_unlink=True):
-        """ Merge opportunities in one. Different cases of merge:
-                - merge leads together = 1 new lead
-                - merge at least 1 opp with anything else (lead or opp) = 1 new opp
-            The resulting lead/opportunity will be the most important one (based on its confidence level)
-            updated with values from other opportunities to merge.
+        """
+        Merge opportunities in one. Different cases of merge:
 
-        :param user_id : the id of the saleperson. If not given, will be determined by `_merge_data`.
-        :param team : the id of the Sales Team. If not given, will be determined by `_merge_data`.
+        - merge leads together = 1 new lead
+        - merge at least 1 opp with anything else (lead or opp) = 1 new opp
 
-        :return crm.lead record resulting of th merge
+        The resulting lead/opportunity will be the most important one (based on its confidence level)
+        updated with values from other opportunities to merge.
+
+        :param user_id: the id of the saleperson. If not given, will be determined by :meth:`_merge_data`.
+        :param team_id: the id of the Sales Team. If not given, will be determined by :meth:`_merge_data`.
+        :returns: crm.lead record resulting of th merge
         """
         return self._merge_opportunity(user_id=user_id, team_id=team_id, auto_unlink=auto_unlink)
 
@@ -2802,20 +2808,24 @@ class CrmLead(models.Model):
     # PLS Backend Tooltip
     # -------------------
     def prepare_pls_tooltip_data(self):
-        '''
-            Compute and return all necessary information to render CrmPlsTooltip, displayed when
-            pressing the small AI button, located next to the label of probability when automated,
-            in the crm.lead form view. This method first replaces ids with display names of relational
-            fields before returning data, then also recomputes probabilities and writes them on self.
+        """
+        Compute and return all necessary information to render CrmPlsTooltip, displayed when
+        pressing the small AI button, located next to the label of probability when automated,
+        in the crm.lead form view. This method first replaces ids with display names of relational
+        fields before returning data, then also recomputes probabilities and writes them on self.
 
-            :returns: {
-                low_3_data: list of field-value couples for lowest 3 criterions, lowest first
-                probability: numerical value, used for display on tooltip
-                team_name: string, name of lead team if any
-                top_3_data: list of field-value couples for top 3 criterions, highest first
-              }
-            :rtype: dict
-        '''
+        :returns:
+
+            ::
+                {
+                    low_3_data: list of field-value couples for lowest 3 criterions, lowest first
+                    probability: numerical value, used for display on tooltip
+                    team_name: string, name of lead team if any
+                    top_3_data: list of field-value couples for top 3 criterions, highest first
+                }
+
+        :rtype: dict
+        """
         self.ensure_one()
         _unused, tooltip_data = self._pls_get_naive_bayes_probabilities(is_tooltip=True)
         sorted_scores_with_name = []

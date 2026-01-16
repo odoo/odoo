@@ -158,14 +158,19 @@
         }
 
         .o_custom_snippet_edit {
-                > * {
-                color: rgba(0, 0, 0, 0.6);
+            > * {
                 font-size: 50px;
                 font-family: $o-we-font-family;
-                }
-                .btn:hover {
+            }
+            .btn:hover {
                 color: rgba(0, 0, 0, 0.8);
-                }
+            }
+        }
+    }
+
+    &.o_add_snippets_preview--dark {
+        .o_custom_snippet_edit {
+            color: $white;
         }
     }
 }

@@ -150,8 +150,33 @@ class TestHolidaysMultiContract(TestHolidayContract):
         self.assertEqual(first_leave.number_of_days, 11)
 
         second_leave = leaves.filtered(lambda l: l.date_from.day == 16 and l.date_to.day == 30)
-        self.assertEqual(second_leave.state, 'validate')
+        self.assertEqual(second_leave.state, 'confirm')
         self.assertEqual(second_leave.number_of_days, 11)
+
+    def test_multi_contracts_draft(self):
+        # Check that setting a contract as running correctly
+        # make the existing time off to draft for this employee
+        # which is after another contract with another
+        # working schedule
+        leave = self.create_leave(date(2022, 6, 27), date(2022, 6, 30), name="Doctor Appointment", employee_id=self.jules_emp.id)
+        leave.action_approve()
+        self.assertEqual(leave.number_of_days, 4)
+        self.assertEqual(leave.state, 'validate')
+
+        self.contract_cdi.contract_date_end = date(2022, 6, 15)
+        self.jules_emp.create_version({
+            'date_version': date(2022, 6, 16),
+            'contract_date_start': date(2022, 6, 16),
+            'contract_date_end': False,
+            'name': 'New Contract for Jules',
+            'resource_calendar_id': self.calendar_40h.id,
+            'wage': 5000.0,
+        })
+
+        leaves = self.env['hr.leave'].search([('employee_id', '=', self.jules_emp.id)])
+        self.assertEqual(len(leaves), 1)
+        self.assertEqual(leave.state, 'confirm')
+        self.assertEqual(leave.number_of_days, 4)
 
     def test_contract_traceability_calculate_nbr_leave(self):
         """

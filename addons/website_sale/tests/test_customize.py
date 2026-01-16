@@ -405,3 +405,17 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         })
 
         self.start_tour("/", 'tour_shop_multi_checkbox_single_value', login="website_user")
+
+    def test_shop_editor_no_alternative_products_visibility(self):
+        product_no_alternative = self.env['product.template'].create({
+            'name': 'product_without_alternative',
+            'is_published': True,
+        })
+        product_with_alternative = self.env['product.template'].create({
+            'name': 'product_with_alternative',
+            'is_published': True,
+            'alternative_product_ids': product_no_alternative.ids,
+        })
+        product_no_alternative.set_sequence_top()
+        product_with_alternative.set_sequence_top()
+        self.start_tour('/', 'shop_editor_no_alternative_products_visibility_tour', login="admin")

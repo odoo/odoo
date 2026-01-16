@@ -1119,11 +1119,16 @@ class HrExpense(models.Model):
                 raise UserError(_("You can not submit an expense without a category."))
             if not expense.manager_id:
                 expense.sudo().manager_id = expense._get_default_responsible_for_approval()
-        expenses_autovalidated = self.filtered(lambda expense: not expense.manager_id and not expense.employee_id.expense_manager_id)
+        expenses_autovalidated = self.filtered(lambda expense: expense._can_be_autovalidated())
         (self - expenses_autovalidated).approval_state = 'submitted'
         if expenses_autovalidated:  # Note, this will and should bypass the duplicate check. May be changed later
             expenses_autovalidated._do_approve(check=False)
         self.sudo().update_activities_and_mails()
+
+    def _can_be_autovalidated(self):
+        """ Check whether the given expenses can be auto-validated (no approver) """
+        self.ensure_one()
+        return (not self.manager_id and not self.employee_id.expense_manager_id) or self.manager_id == self.employee_id.user_id
 
     def action_approve(self):
         """ Approve an expense, pops a wizard if a duplicated expense is found to confirm they are all valid expenses """
@@ -1414,7 +1419,7 @@ class HrExpense(models.Model):
             expense.write({
                 'approval_state': 'approved',
                 'manager_id': self.env.user.id,
-                'approval_date': fields.Date.context_today(expense),
+                'approval_date': fields.Datetime().now(),
             })
         self.update_activities_and_mails()
 
@@ -1564,7 +1569,7 @@ class HrExpense(models.Model):
 
     def _prepare_receipts_vals(self):
         attachments_data = []
-        for attachment in self.message_main_attachment_id:
+        for attachment in self.attachment_ids:
             attachments_data.append(
                 Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
             )
@@ -1665,7 +1670,7 @@ class HrExpense(models.Model):
             'line_ids': [Command.create(line) for line in move_lines],
             'attachment_ids': [
                 Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
-                for attachment in self.message_main_attachment_id]
+                for attachment in self.attachment_ids]
         }
         return move_vals, payment_vals
 
@@ -1747,17 +1752,31 @@ class HrExpense(models.Model):
         return account
 
     def _get_expense_account_destination(self):
-        self.ensure_one()
-        if self.payment_mode == 'company_account':
-            account_dest = self.payment_method_line_id.payment_account_id or self._get_outstanding_account_id()
-        else:
-            if not self.employee_id.sudo().work_contact_id:
-                raise UserError(
-                    _("No work contact found for the employee %(name)s, please configure one.", name=self.employee_id.name)
-                )
-            partner = self.employee_id.sudo().work_contact_id.with_company(self.company_id)
-            account_dest = partner.property_account_payable_id or partner.parent_id.property_account_payable_id
-        return account_dest.id
+        # account.move used to allow having several expenses with payment_mode = 'company_account'.
+        # This method needs to support processing several expenses to allow reconciliation of old account.move.line
+        ids = set()
+        for expense in self:
+            if expense.payment_mode == 'company_account':
+                account_dest = expense.payment_method_line_id.payment_account_id or expense._get_outstanding_account_id()
+            elif not expense.employee_id.sudo().work_contact_id:
+                raise UserError(self.env._(
+                    "No work contact found for the employee %(name)s, please configure one.",
+                    name=expense.employee_id.name,
+                ))
+            else:
+                partner = expense.employee_id.sudo().work_contact_id.with_company(expense.company_id)
+                account_dest = partner.property_account_payable_id or partner.parent_id.property_account_payable_id
+            ids.add(account_dest.id)
+
+        # mimics <account.account>.id
+        if not ids:
+            return False
+        if len(ids) > 1:
+            raise UserError(self.env._(
+                "The following expenses payment method leads to several accounts payable and this isn't supported:\n%(expenses)s",
+                expenses=self.browse(ids),
+            ))
+        return ids.pop()
 
     def _get_outstanding_account_id(self):
         account_ref = 'account_journal_payment_debit_account_id' if self.payment_method_line_id.payment_type == 'inbound' else 'account_journal_payment_credit_account_id'

@@ -137,15 +137,13 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
     @classmethod
     def _create_product_with_form(cls, name, uom_id, routes=()):
-        p = Form(cls.env['product.product'])
-        p.name = name
-        p.is_storable = True
-        p.categ_id = cls.env.ref('product.product_category_goods')
-        p.uom_id = uom_id
-        p.route_ids.clear()
-        for r in routes:
-            p.route_ids.add(r)
-        return p.save()
+        return cls.env['product.product'].create({
+            'name': name,
+            'is_storable': True,
+            'categ_id': cls.env.ref('product.product_category_goods').id,
+            'uom_id': uom_id.id,
+            'route_ids': [Command.set([route.id for route in routes])],
+        })
 
         # Helper to process quantities based on a dict following this structure :
         #
@@ -225,7 +223,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             self.component_c,
         ]
 
-        self.assertEqual(sum([k.standard_price * k.qty_available for k in components]), 120 * 1260)
+        self.assertAlmostEqual(sum(k.standard_price * k.qty_available for k in components), 120 * 1260, delta=0.5)
 
     def test_kit_component_cost_multi_currency(self):
         # Set kit and component product to automated FIFO

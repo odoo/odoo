@@ -37,14 +37,14 @@
 # Konsta Aavaranta, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Saara Hakanen <sahak@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-18 14:40+0000\n"
+"POT-Creation-Date: 2026-01-09 18:36+0000\n"
+"PO-Revision-Date: 2026-01-07 15:35+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/stock/fi/"
 ">\n"
@@ -53,7 +53,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -831,7 +831,7 @@ msgstr "<span class=\"o_stat_text\">Tuotesiirrot</span>"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Putaway Rules</span>"
-msgstr "<span class=\"o_stat_text\">Putaway-säännöt</span>"
+msgstr "<span class=\"o_stat_text\">Hyllytyssäännöt</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -940,8 +940,8 @@ msgstr "<strong>Ota yhteyttä</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
-msgstr "<strong>Asiakkaan osoite</strong>"
+msgid "<strong>Customer</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -952,6 +952,11 @@ msgstr "<strong>Toimitettu</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
 msgstr "<strong>Toimitusosoite:</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -2554,8 +2559,8 @@ msgid ""
 "Create new putaway rules to dispatch automatically specific products to "
 "their appropriate destination location upon receptions."
 msgstr ""
-"Luo uusia siirtosääntöjä, joiden avulla määrätyt tuotteet lähetetään "
-"automaattisesti asianmukaiseen määränpäähän vastaanottojen yhteydessä."
+"Luo uusia hyllytyssääntöjä, jotta tietyt tuotteet lähetetään automaattisesti "
+"oikeaan määränpäähän vastaanoton yhteydessä."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2748,18 +2753,18 @@ msgstr "Asiakas"
 #: model:ir.model.fields,field_description:stock.field_product_product__sale_delay
 #: model:ir.model.fields,field_description:stock.field_product_template__sale_delay
 msgid "Customer Lead Time"
-msgstr "Asiakkaan läpimenoaika"
+msgstr "Toimitusaika asiakkaalle"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__property_stock_customer
 #: model:ir.model.fields,field_description:stock.field_res_users__property_stock_customer
 msgid "Customer Location"
-msgstr "Asiakkaan paikka"
+msgstr "Asiakkaan sijainti"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Customer Locations"
-msgstr "Asiakkaan paikat"
+msgstr "Asiakkaan sijainnit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -3286,31 +3291,31 @@ msgstr "Kuvaus sisäisille siirroille"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Receipts"
-msgstr "Kuvaus vastaanotoille"
+msgstr "Vastaanoton kuvaus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingout
 #: model:ir.model.fields,field_description:stock.field_product_template__description_pickingout
 msgid "Description on Delivery Orders"
-msgstr "Kuvaus toimitustilauksilla"
+msgstr "Toimitustilausten kuvaus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_picking
 #: model:ir.model.fields,field_description:stock.field_product_template__description_picking
 msgid "Description on Picking"
-msgstr "Kuvaus keräilyllä"
+msgstr "Keräilyn kuvaus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingin
 #: model:ir.model.fields,field_description:stock.field_product_template__description_pickingin
 msgid "Description on Receptions"
-msgstr "Kuvaus vastaanotoilla"
+msgstr "Vastaanoton kuvaus"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Description on transfer"
-msgstr "Kuvaus siirrosta"
+msgstr "Siirron kuvaus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_location_id
@@ -4903,12 +4908,12 @@ msgstr "Inventoinnin tiheys"
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_inventory
 msgid "Inventory Location"
-msgstr "Inventaariopaikka"
+msgstr "Varastoinnin sijainti"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "Inventaariopaikat"
+msgstr "Varastoinnin sijainnit"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__inventory
@@ -4919,7 +4924,7 @@ msgstr "Varastohävikki"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Inventory Loss Locations"
-msgstr ""
+msgstr "Varastotappioiden sijainnit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__inventory_name
@@ -7380,6 +7385,7 @@ msgstr "Tuoteryhmät"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_category_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_category_name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
@@ -7536,12 +7542,12 @@ msgstr "Valmistus"
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_production
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_production
 msgid "Production Location"
-msgstr "Valmistuksen paikka"
+msgstr "Valmistuspaikka"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Production Locations"
-msgstr "Valmistuksen paikat"
+msgstr "Valmistuspaikat"
 
 #. module: stock
 #. odoo-python
@@ -9044,7 +9050,7 @@ msgstr "Toimitus"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Shipping Connectors"
-msgstr "Toimitusliittimet"
+msgstr "Logistiikkayhteydet"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_type
@@ -9064,9 +9070,9 @@ msgid ""
 "labels and request carrier picking at your warehouse to ship to the "
 "customer. Apply shipping connector from delivery methods."
 msgstr ""
-"Toimitusliitännät mahdollistavat tarkkojen kuljetusmaksujen laskemisen, "
-"postimerkkien tulostamisen ja kuljettajan poimimisen varastossasi "
-"lähettämään asiakkaalle. Käytä toimitusliitäntää toimitusmenetelmistä."
+"Logistiikkayhteydet mahdollistavat tarkkojen kuljetusmaksujen laskemisen, "
+"lähetysetikettien tulostamisen sekä asiakkaalle lähetettävän tuotteen noudon "
+"pyytämisen. Salli logistiikkayhteys toimitusmenetelmistä käsin."
 
 #. module: stock
 #: model:mail.template,name:stock.mail_template_data_delivery_confirmation
@@ -9747,8 +9753,8 @@ msgid ""
 "The %s location is required by the Inventory app and cannot be deleted, but "
 "you can archive it."
 msgstr ""
-"Inventaario-sovellus tarvitsee sijainnin %s, eikä sitä voi poistaa, mutta "
-"voit arkistoida sen."
+"Varastointi-sovellus tarvitsee sijainnin %s. Sitä ei voi poistaa, mutta sen "
+"voi arkistoida."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__auto
@@ -9883,7 +9889,7 @@ msgstr "Varastojen väliset siirrot on tehty"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
 msgid "The inventory frequency (days) for a location must be non-negative"
-msgstr "Sijainnin inventointitiheyden (päivinä) on oltava ei-negatiivinen"
+msgstr "Sijainnin varastointitiheys (päivinä) ei voi olla negatiivinen"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_replenishment_info__product_min_qty
@@ -10105,9 +10111,9 @@ msgid ""
 "demand flow. The requested delivery address will be the customer delivery "
 "address and not your warehouse."
 msgstr ""
-"Tämä lisää dropshipping-reitin, jota voit soveltaa tuotteisiin, jotta voit "
-"pyytää myyjiäsi toimittamaan tuotteet asiakkaillesi. Dropship-tuote luo "
-"ostopyynnön tarjousta varten, kun myyntitilaus on vahvistettu. Tämä on "
+"Tämä lisää suoratoimitusreitin, jota voit soveltaa tuotteisiin pyytääksesi "
+"tavarantoimittajiasi toimittamaan tuotteet asiakkaillesi. Suoratoimituksen "
+"tuote luo ostopyynnön tarjoukselle, kun myyntitilaus on vahvistettu. Tämä on "
 "tarpeen mukainen toimitusketju. Pyydetty toimitusosoite on asiakkaan "
 "toimitusosoite eikä varastosi."
 
@@ -10216,7 +10222,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "This note is added to delivery orders."
-msgstr "Tämä teksti lisätään toimitustilauksille."
+msgstr "Tämä teksti lisätään toimitustilauksiiin."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -10319,8 +10325,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
 msgstr ""
-"Tätä varastojen sijaintia käytetään oletusarvon sijasta varastotietojen "
-"lähteenä, joka syntyy, kun teet varaston."
+"Tätä varastointisijaintia käytetään oletusarvon sijaan varastosiirtojen "
+"lähteenä, jotka syntyvät inventaarion yhteydessä."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__responsible_id
@@ -10565,7 +10571,7 @@ msgstr "Seurantaraportti"
 #: model:ir.model.fields,field_description:stock.field_product_template__is_storable
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_storable
 msgid "Track Inventory"
-msgstr "Seuraa inventaariota"
+msgstr "Seuraa varastoa"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_product_expiry
@@ -10970,12 +10976,12 @@ msgstr "Toimittaja"
 #: model:ir.model.fields,field_description:stock.field_res_partner__property_stock_supplier
 #: model:ir.model.fields,field_description:stock.field_res_users__property_stock_supplier
 msgid "Vendor Location"
-msgstr "Toimittajan paikka"
+msgstr "Toimittajan sijainti"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor Locations"
-msgstr "Toimittajan paikat"
+msgstr "Toimittajan sijainnit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -12230,6 +12236,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Toimitustilaus (viite {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "<strong>Customer Address</strong>"
+#~ msgstr "<strong>Asiakkaan osoite</strong>"
 
 #~ msgid "If ticked, you will be able to select entire packages to move"
 #~ msgstr "Jos valittuna, voit valita kokonaiset paketit, joita haluat siirtää"

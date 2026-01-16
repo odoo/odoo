@@ -30,6 +30,7 @@ def _read_escpos_with_retry(self):
 
         time.sleep(0.05)
         _logger.debug("Read attempt %s failed", attempt)
+    return b""
 
 
 # Monkeypatch the USB printer read method with our retrying version
@@ -60,6 +61,7 @@ class PrinterDriverBase(Driver, ABC):
 
         self.device_type = 'printer'
         self.job_ids = []
+        self.job_action_ids = {}
         self.escpos_device = None
 
         self._actions.update({
@@ -78,12 +80,15 @@ class PrinterDriverBase(Driver, ABC):
         ) else 'disconnected'
         return {'status': status, 'messages': ''}
 
-    def send_status(self, status, message=None):
+    def send_status(self, status, message=None, action_unique_id=None):
         """Sends a status update event for the printer.
 
         :param str status: The value of the status
         :param str message: A comprehensive message describing the status
+        :param str action_unique_id: The unique identifier of the action
         """
+        if status == "error":
+            self._recent_action_ids.pop(action_unique_id, None)  # avoid filtering duplicates on errors
         self.data['status'] = status
         self.data['message'] = message
         event_manager.device_changed(self, {'session_id': self.data.get('owner')})
@@ -100,7 +105,7 @@ class PrinterDriverBase(Driver, ABC):
         im = im.convert("1")
 
         print_command = getattr(self, 'format_%s' % self.receipt_protocol)(im)
-        self.print_raw(print_command)
+        self.print_raw(print_command, action_unique_id=data.get("action_unique_id"))
 
     @classmethod
     def format_escpos_bit_image_raster(cls, im):
@@ -221,24 +226,24 @@ class PrinterDriverBase(Driver, ABC):
 
         commands = self.RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
         for drawer in commands['drawers']:
-            self.print_raw(drawer)
+            self.print_raw(drawer, action_unique_id=data.get("action_unique_id"))
 
-    def check_printer_status(self):
+    def check_printer_status(self, action_unique_id=None):
         if not self.escpos_device:
             return True
         try:
             with EscposIO(self.escpos_device, autocut=False) as esc:
                 esc.printer.open()
                 if not esc.printer.is_online():
-                    self.send_status(status='error', message='ERROR_OFFLINE')
+                    self.send_status(status='error', message='ERROR_OFFLINE', action_unique_id=action_unique_id)
                     return False
                 paper_status = esc.printer.paper_status()
                 if paper_status == 0:
-                    self.send_status(status='error', message='ERROR_NO_PAPER')
+                    self.send_status(status='error', message='ERROR_NO_PAPER', action_unique_id=action_unique_id)
                     return False
                 elif paper_status == 1:
                     self.send_status(status='warning', message='WARNING_LOW_PAPER')
-        except (escpos.exceptions.Error, OSError, AssertionError):
+        except (escpos.exceptions.Error, OSError, AssertionError, TypeError):
             self.escpos_device = None
             _logger.warning("Failed to query ESC/POS status")
 
@@ -254,10 +259,11 @@ class PrinterDriverBase(Driver, ABC):
             time.sleep(1)
 
     @abstractmethod
-    def print_raw(self, data):
+    def print_raw(self, data, action_unique_id=None):
         """Sends the raw data to the printer.
 
         :param data: The data to send to the printer
+        :param str action_unique_id: The unique identifier of the action
         """
         pass
 

@@ -17,13 +17,17 @@ before(
 );
 
 test.tags("font-dependent");
-test("should apply font-size to completely selected list item", async () => {
+test("should apply font-size to completely selected list item (1)", async () => {
     await testEditor({
         styleContent: ":root { font: 14px Roboto }",
         contentBefore: "<ol><li>[abc]</li><li>def</li></ol>",
         stepFunction: setFontSize("56px"),
         contentAfter: `<ol style="padding-inline-start: 60px;"><li style="font-size: 56px;">[abc]</li><li>def</li></ol>`,
     });
+});
+
+test.tags("font-dependent");
+test("should apply font-size to completely selected list item (2)", async () => {
     await testEditor({
         styleContent: ":root { font: 14px Roboto }",
         contentBefore: unformat(`
@@ -276,28 +280,34 @@ test("should remove font-size class from list item containing sublist", async ()
     });
 });
 
-test("should remove font-size and its classes from partially selected list item", async () => {
+test("should remove font-size and its classes from partially selected list item (1)", async () => {
     await testEditor({
         styleContent: "ol { font: 14px Roboto }",
         contentBefore: `<ol><li>a</li><li style="font-size: 56px;">b[c]d</li><li>e</li></ol>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: `<ol style="padding-inline-start: 60px;"><li>a</li><li style="font-size: 56px;">b<span class="o_default_font_size">[c]</span>d</li><li>e</li></ol>`,
     });
+});
 
+test("should remove font-size and its classes from partially selected list item (2)", async () => {
     await testEditor({
         styleContent: "ol { font: 14px Roboto }",
         contentBefore: `<ol><li>a</li><li class="h2-fs">b[c]d</li><li>e</li></ol>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: `<ol><li>a</li><li class="h2-fs">b<span class="o_default_font_size">[c]</span>d</li><li>e</li></ol>`,
     });
+});
 
+test("should remove font-size and its classes from partially selected list item (3)", async () => {
     await testEditor({
         styleContent: "ol { font: 14px Roboto }",
         contentBefore: `<ol><li style="font-size: 56px;">a[bc</li><li style="font-size: 56px;">def</li><li style="font-size: 56px;">gh]i</li></ol>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: `<ol style="padding-inline-start: 60px;"><li style="font-size: 56px;">a<span class="o_default_font_size">[bc</span></li><li>def</li><li style="font-size: 56px;"><span class="o_default_font_size">gh]</span>i</li></ol>`,
     });
+});
 
+test("should remove font-size and its classes from partially selected list item (4)", async () => {
     await testEditor({
         styleContent: "ol { font: 14px Roboto }",
         contentBefore: `<ol><li class="h2-fs">a[bc</li><li class="h2-fs">def</li><li class="h2-fs">gh]i</li></ol>`,

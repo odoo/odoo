@@ -9,6 +9,7 @@ from . import test_dynamic_snippet_category
 from . import test_ecommerce_access
 from . import test_express_checkout_flows
 from . import test_fuzzy
+from . import test_main_controller
 from . import test_product_public_category
 from . import test_sale_order
 from . import test_sale_process
@@ -26,6 +27,7 @@ from . import test_website_sale_gmc
 from . import test_website_sale_image
 from . import test_website_sale_invoice
 from . import test_website_sale_mail
+from . import test_website_sale_mail_template
 from . import test_website_sale_pricelist
 from . import test_website_sale_product_attribute_value_config
 from . import test_website_sale_product_configurator

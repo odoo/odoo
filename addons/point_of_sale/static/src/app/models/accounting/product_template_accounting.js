@@ -2,16 +2,23 @@ import { roundPrecision } from "@web/core/utils/numbers";
 import { Base } from "../related_models";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { _t } from "@web/core/l10n/translation";
+import { formatCurrency } from "@web/core/currency";
 
 export class ProductTemplateAccounting extends Base {
     static pythonModel = "product.template";
 
     prepareProductBaseLineForTaxesComputationExtraValues(opts = {}) {
-        const { price = false, pricelist = false, fiscalPosition = false } = opts;
+        const { price = false, pricelist = false, fiscalPosition = false, priceExtra = 0 } = opts;
         const isVariant = Boolean(this?.product_tmpl_id);
         const config = this.models["pos.config"].getFirst();
         const productTemplate = isVariant ? this.product_tmpl_id : this;
-        const baseP = productTemplate.getPrice(pricelist, 1, 0, false, isVariant ? this : false);
+        const baseP = productTemplate.getPrice(
+            pricelist,
+            1,
+            priceExtra,
+            false,
+            isVariant ? this : false
+        );
         const priceUnit = price || price === 0 ? price : baseP;
         const currency = config.currency_id;
 
@@ -94,7 +101,7 @@ export class ProductTemplateAccounting extends Base {
         const generalRulesIds = pricelist.getGeneralRulesIdsByCategories(this.parentCategories);
         const rules = this.models["product.pricelist.item"]
             .readMany([...productRulesSet, ...tmplRulesSet, ...generalRulesIds])
-            .filter((r) => r.min_quantity <= quantity);
+            .filter((r) => !r.min_quantity || r.min_quantity <= quantity);
 
         const rule = rules.length && rules[0];
         if (!rule) {
@@ -138,7 +145,7 @@ export class ProductTemplateAccounting extends Base {
 
     getBaseLine(opts = {}) {
         const vals = opts.overridedValues || {};
-        const { price = false, pricelist = false, fiscalPosition = false } = vals;
+        const { price = false, pricelist = false, fiscalPosition = false, priceExtra = 0 } = vals;
 
         return accountTaxHelpers.prepare_base_line_for_taxes_computation(
             {},
@@ -146,6 +153,7 @@ export class ProductTemplateAccounting extends Base {
                 price,
                 pricelist,
                 fiscalPosition,
+                priceExtra,
                 ...vals,
             })
         );
@@ -157,5 +165,14 @@ export class ProductTemplateAccounting extends Base {
         accountTaxHelpers.add_tax_details_in_base_line(baseLine, config.company_id);
         accountTaxHelpers.round_base_lines_tax_details([baseLine], config.company_id);
         return baseLine.tax_details;
+    }
+
+    get displayPriceUnit() {
+        const config = this.models["pos.config"].getFirst();
+        const price =
+            config.iface_tax_included === "total"
+                ? this.getTaxDetails().total_included
+                : this.getTaxDetails().total_excluded;
+        return formatCurrency(price, config.currency_id.id);
     }
 }

@@ -15,7 +15,8 @@ from werkzeug.exceptions import NotFound
 from werkzeug.http import is_resource_modified, parse_cache_control_header
 
 import odoo
-from odoo import http
+from odoo import http, models
+from odoo.api import Self
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.modules.module_graph import ModuleGraph
@@ -42,11 +43,11 @@ class DocController(http.Controller):
         res.headers['X-Frame-Options'] = 'deny'
         return res
 
-    @http.route('/doc-bearer/index.json', type='http', auth='bearer')
+    @http.route('/doc-bearer/index.json', type='json2', auth='bearer')
     def doc_bearer_index(self):
         return self.doc_index()
 
-    @http.route('/doc/index.json', type='http', auth='user')
+    @http.route('/doc/index.json', type='json2', auth='user')
     def doc_index(self):
         """
         Get a listing of all modules, models, methods and fields. But
@@ -153,11 +154,11 @@ class DocController(http.Controller):
         ]
         return modules, models
 
-    @http.route('/doc-bearer/<model_name>.json', type='http', auth='bearer', readonly=True)
+    @http.route('/doc-bearer/<model_name>.json', type='json2', auth='bearer', readonly=True)
     def doc_bearer_modec(self, model_name):
         return self.doc_model(model_name)
 
-    @http.route('/doc/<model_name>.json', type='http', auth='user', readonly=True)
+    @http.route('/doc/<model_name>.json', type='json2', auth='user', readonly=True)
     def doc_model(self, model_name):
         """
         Get a complete listing of all the methods and fields for a
@@ -365,9 +366,8 @@ def parse_signature(method) -> Signature:
         break
 
     # replace BaseModel and such by list[int], see /json/2
-    return_type = str(isign.return_annotation).strip("'\"").rpartition('.')[2]
-    if return_type in ('Self', 'BaseModel', 'Model'):
-        isign = isign.replace(return_annotation='list[int]')
+    if isign.return_annotation in (Self, 'Self', models.BaseModel, models.Model):
+        isign = isign.replace(return_annotation=list[int])
 
     # parse the signature
     parameters = {
@@ -398,7 +398,7 @@ def enhance_signature_using_docstring(signature, method):
 
     # extract the ":param [annotation] <name>: text" and alike fields
     # from the docstring
-    field_lists = [node for node in doctree if node.tagname == 'field_list']
+    field_lists = [node for node in doctree if node.tagname in ('docinfo', 'field_list')]
     for field_list in field_lists:
         for field in field_list:
             field_name, field_body = field.children
@@ -413,25 +413,25 @@ def enhance_signature_using_docstring(signature, method):
                     if param := signature.parameters.get(name.strip()):
                         if not param.annotation:
                             param.annotation = annotation.strip()
-                        param.doc = _DocUtils.html_firstchild(field_body)
+                        param.doc = _DocUtils.html_children(field_body)
                 # :param <name>: <rst>
                 case ('param', name):
                     if param := signature.parameters.get(name):
-                        param.doc = _DocUtils.html_firstchild(field_body)
+                        param.doc = _DocUtils.html_children(field_body)
                 # :type <name>: <annotation>
                 case ('type', name):
                     if (param := signature.parameters.get(name)) and not param.annotation:
                         param.annotations = field_body.children[0].astext().strip()
                 # :returns: <rst>
                 case ('returns', ''):
-                    signature.return_.doc = _DocUtils.html_firstchild(field_body)
+                    signature.return_.doc = _DocUtils.html_children(field_body)
                 # :rtype: <annotation>
                 case ('rtype', ''):
                     if not signature.return_.annotation:
                         signature.return_.annotation = field_body.children[0].astext().strip()
                 # :raises <exception>: <rst>
                 case ('raises', exception):
-                    signature.raise_[exception] = _DocUtils.html_firstchild(field_body)
+                    signature.raise_[exception] = _DocUtils.html_children(field_body)
                 case _:
                     logger.warning(RST_PARSE_ERROR.format(docstring, f"cannot parse {field_name[0]}"))
         doctree.remove(field_list)
@@ -647,7 +647,8 @@ class _DocUtils:
         return html.partition(head)[2].removesuffix(tail).strip().decode()
 
     @classmethod
-    def html_firstchild(cls, tree):
-        if not tree.children:
-            return ''
-        return cls.html(tree.children[0])
+    def html_children(cls, tree):
+        return "".join(
+            cls.html(child)
+            for child in tree.children
+        )

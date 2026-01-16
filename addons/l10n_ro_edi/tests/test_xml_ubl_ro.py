@@ -143,6 +143,7 @@ class TestUBLRO(TestUBLCommon):
     @TestUBLCommon.setup_country('ro')
     def setUpClass(cls):
         super().setUpClass()
+        cls.other_currency = cls.setup_other_currency('EUR')
         cls.company_data['company'].write({
             'country_id': cls.env.ref('base.ro').id,  # needed to compute peppol_endpoint based on VAT
             'state_id': cls.env.ref('base.RO_B').id,

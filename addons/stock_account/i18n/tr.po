@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
 "PO-Revision-Date: 2025-11-28 12:49+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -53,8 +53,8 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
-msgid "%(quantity)s %(uom)s at product's standard price %(price)s"
-msgstr "%(quantity)s %(uom)s ürünün standart fiyatı üzerinden %(price)s"
+msgid "%(quantity)s %(uom)s at product's cost"
+msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -625,6 +625,11 @@ msgid "Journal Items"
 msgstr "Yevmiye Kalemleri"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__justification
+msgid "Justification"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
 msgid "Landed Costs"
 msgstr "Maliyet Yüklemeleri"
@@ -680,6 +685,17 @@ msgid "Move"
 msgstr "Hareket"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
+msgid "New Value"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Only is set (= True) is supported in search for remaining_qty."
+msgstr ""
+
+#. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
@@ -714,8 +730,8 @@ msgstr ""
 "Periyodik: Muhasebe girişleri envanter değerleme raporunda manuel olarak "
 "önerilir.\n"
 "        Sürekli: Bir ürün faturalandırıldığında veya fatura edildiğinde "
-"envanterini değerlemek için otomatik olarak bir muhasebe girişi oluşturulur."
-"\n"
+"envanterini değerlemek için otomatik olarak bir muhasebe girişi "
+"oluşturulur.\n"
 "        "
 
 #. module: stock_account
@@ -822,6 +838,11 @@ msgstr "Stoklar"
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
 msgid "Reference"
 msgstr "Referans"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_search
+msgid "Remaining"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_qty
@@ -1165,6 +1186,14 @@ msgstr "Bir seferde yalnızca bir hamle için değerlemeyi ayarlayabilirsiniz."
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
+msgid ""
+"You can only get the standard price at a given date for products with "
+"'Standard Price' as cost method."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
 msgid "You can only use the '=' operator to search on valuation field."
 msgstr ""
 "Değerleme alanında arama yapmak için yalnızca '=' operatörünü "
@@ -1189,6 +1218,9 @@ msgstr "stock_move_id"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "Birimler"
+
+#~ msgid "%(quantity)s %(uom)s at product's standard price %(price)s"
+#~ msgstr "%(quantity)s %(uom)s ürünün standart fiyatı üzerinden %(price)s"
 
 #~ msgid ""
 #~ "Manual: The accounting entries to value the inventory are not posted "

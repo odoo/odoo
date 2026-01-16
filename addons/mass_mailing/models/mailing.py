@@ -863,10 +863,12 @@ class MailingMailing(models.Model):
     def action_send_winner_mailing(self):
         """Send the winner mailing based on the winner selection field.
         This action is used in 2 cases:
-            - When the user clicks on a button to send the winner mailing. There is only one mailing in self
-            - When the cron is executed to send winner mailing based on the A/B testing schedule datetime. In this
-            case 'self' contains all the mailing for the campaigns so we just need to take the first to determine the
-            winner.
+
+        - When the user clicks on a button to send the winner mailing. There is only one mailing in self
+        - When the cron is executed to send winner mailing based on the A/B testing schedule datetime. In this
+          case 'self' contains all the mailing for the campaigns so we just need to take the first to determine the
+          winner.
+
         If the winner mailing is computed automatically, we sudo the mailings of the campaign in order to sort correctly
         the mailings based on the selection that can be used with sub-modules like CRM and Sales
         """

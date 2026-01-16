@@ -221,6 +221,10 @@ class ProductTemplate(models.Model):
         if products.filtered(lambda p: p.pos_optional_product_ids):
             products |= products.mapped("pos_optional_product_ids")
 
+        # Ensure products from loaded orders are loaded
+        if data.get('pos.order.line'):
+            products += self.env['product.product'].browse([l['product_id'] for l in data['pos.order.line']]).product_tmpl_id
+
         return self._load_pos_data_read(products, config)
 
     @api.model
@@ -230,7 +234,7 @@ class ProductTemplate(models.Model):
         return read_records
 
     def _load_product_with_domain(self, domain, load_archived=False, offset=0, limit=0):
-        context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived}
+        context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived, 'bin_size': True}
         domain = self._server_date_to_domain(domain)
         return self.with_context(context).search(
             domain,
@@ -299,7 +303,7 @@ class ProductTemplate(models.Model):
                 ))
 
     def _ensure_unused_in_pos(self):
-        open_pos_sessions = self.env['pos.session'].search([('state', '!=', 'closed')])
+        open_pos_sessions = self.env['pos.session'].sudo().search([('state', '!=', 'closed')])
         used_products = open_pos_sessions.order_ids.filtered(lambda o: o.state == "draft").lines.product_id.product_tmpl_id
         if used_products & self:
             raise UserError(_(

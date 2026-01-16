@@ -223,6 +223,12 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithRewardPro
             ProductScreen.clickDisplayedProduct("Product B"),
             ProductScreen.selectedOrderlineHas("Product B", "1", "50.00"),
             PosLoyalty.orderTotalIs("40.00"),
+
+            ProductScreen.clickControlButton("Reward"),
+            SelectionPopup.has("10$ on your order - Product B - Saleable", { run: "click" }),
+            ProductScreen.clickControlButton("Reward"),
+            SelectionPopup.has("10$ on your order - Product B - Not Saleable", { run: "click" }),
+            PosLoyalty.orderTotalIs("30.00"),
         ].flat(),
 });
 

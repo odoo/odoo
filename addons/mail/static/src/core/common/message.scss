@@ -8,6 +8,7 @@
 
     &.o-highlighted {
         transform: translateY(-#{map-get($spacers, 3)});
+        z-index: 2;
     }
 
     &.o-actionMenuMobileOpen {
@@ -53,7 +54,7 @@
         }
     }
 
-    & > p {
+    & > p:last-child, .o-mail-Message-richBody > p:last-child {
         margin-bottom: 0 !important;
     }
 

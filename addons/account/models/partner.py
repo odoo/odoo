@@ -279,7 +279,14 @@ class AccountFiscalPosition(models.Model):
         return all_auto_apply_fpos._get_first_matching_fpos(delivery)
 
     def action_open_related_taxes(self):
-        return self.tax_ids._get_records_action(name=_("%s taxes", self.display_name))
+        list_view = self.env.ref('account.account_tax_fiscal_position_view_tree', raise_if_not_found=False)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("%s taxes", self.display_name),
+            'res_model': 'account.tax',
+            'views': [(list_view.id if list_view else False, 'list'), (False, 'form')],
+            'domain': [('id', 'in', self.tax_ids.ids)],
+        }
 
     def action_create_foreign_taxes(self):
         self.ensure_one()
@@ -324,7 +331,7 @@ class ResPartner(models.Model):
     partner_company_registry_placeholder = fields.Char(compute='_compute_partner_company_registry_placeholder')
     duplicate_bank_partner_ids = fields.Many2many(related="bank_ids.duplicate_bank_partner_ids")
 
-    @api.depends('company_id')
+    @api.depends('company_id', 'country_code')
     @api.depends_context('allowed_company_ids')
     def _compute_fiscal_country_codes(self):
         for record in self:

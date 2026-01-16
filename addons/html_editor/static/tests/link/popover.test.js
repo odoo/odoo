@@ -113,6 +113,55 @@ describe("should open a popover", () => {
     });
 });
 
+describe("popover should not reposition when editing", () => {
+    test("when editing the link url, the popover should not reposition", async () => {
+        const { el } = await setupEditor("<p>H[ell]o</p>");
+        await waitFor(".o-we-toolbar");
+        await click(".o-we-toolbar .fa-link");
+        await animationFrame();
+        await waitFor(".o-we-linkpopover");
+        const popoverEl = queryOne(".o-we-linkpopover").parentElement;
+        const initialPopoverBox = popoverEl.getBoundingClientRect();
+
+        queryOne(".o-we-linkpopover input.o_we_href_input_link").focus();
+        await fill("test.com");
+        await animationFrame();
+        const newPopoverBox = popoverEl.getBoundingClientRect();
+
+        expect(Math.floor(newPopoverBox.top)).toBe(Math.floor(initialPopoverBox.top));
+        expect(Math.floor(newPopoverBox.left)).toBe(Math.floor(initialPopoverBox.left));
+
+        await waitFor(".o_we_apply_link:not([disabled])");
+        await click(".o_we_apply_link");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>H<a href="https://test.com">ell[]</a>o</p>'
+        );
+    });
+    test("In iframe, when editing the link url, the popover should not reposition", async () => {
+        const { el } = await setupEditor("<p>H[ell]o</p>", { props: { iframe: true } });
+        await waitFor(".o-we-toolbar");
+        await click(".o-we-toolbar .fa-link");
+        await animationFrame();
+        await waitFor(".o-we-linkpopover");
+        const popoverEl = queryOne(".o-we-linkpopover").parentElement;
+        const initialPopoverBox = popoverEl.getBoundingClientRect();
+
+        queryOne(".o-we-linkpopover input.o_we_href_input_link").focus();
+        await fill("test.com");
+        await animationFrame();
+        const newPopoverBox = popoverEl.getBoundingClientRect();
+
+        expect(Math.floor(newPopoverBox.top)).toBe(Math.floor(initialPopoverBox.top));
+        expect(Math.floor(newPopoverBox.left)).toBe(Math.floor(initialPopoverBox.left));
+
+        await waitFor(".o_we_apply_link:not([disabled])");
+        await click(".o_we_apply_link");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>H<a href="https://test.com">ell[]</a>o</p>'
+        );
+    });
+});
+
 describe("popover should switch UI depending on editing state", () => {
     test("after clicking on edit button, the popover should switch to editing mode", async () => {
         await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
@@ -1892,4 +1941,21 @@ describe("label is a valid URL", () => {
             message: "should focus label input by default, when we don't have a label",
         });
     });
+});
+
+test("Should properly show the preview if fetching metadata fails", async () => {
+    const id = Math.random().toString();
+    onRpc("/html_editor/link_preview_internal", () => Promise.reject(new Error(`No data ${id}`)));
+    onRpc("/contactus", () => ({}));
+    const originalConsoleWarn = console.warn.bind(console);
+    patchWithCleanup(console, {
+        warn: (msg, error, ...args) => {
+            if (!error?.message?.includes?.(id)) {
+                originalConsoleWarn(msg, error, ...args);
+            }
+        },
+    });
+    const { el } = await setupEditor('<p><a href="/contactus">a[]b</a></p>');
+    await waitFor(".o-we-linkpopover");
+    expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="/contactus">a[]b</a></p>');
 });

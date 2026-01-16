@@ -577,9 +577,6 @@ class MailThread(models.AbstractModel):
         for record in records:
             changes, _tracking_value_ids = tracking.get(record.id, (None, None))
             record._message_track_post_template(changes)
-        # this method is called after the main flush() and just before commit();
-        # we have to flush() again in case we triggered some recomputations
-        self.env.flush_all()
 
     def _track_set_author(self, author):
         """ Set the author of the tracking message. """
@@ -592,7 +589,6 @@ class MailThread(models.AbstractModel):
     def _track_post_template_finalize(self):
         """Call the tracking template method with right values from precommit."""
         self._message_track_post_template(self.env.cr.precommit.data.pop(f'mail.tracking.create.{self._name}.{self.id}', []))
-        self.env.flush_all()
 
     def _track_set_log_message(self, message):
         """ Link tracking to a message logged as body, in addition to subtype
@@ -1640,6 +1636,9 @@ class MailThread(models.AbstractModel):
                     break
                 if part.get_content_type() == 'binary/octet-stream':
                     _logger.warning("Message containing an unexpected Content-Type 'binary/octet-stream', assuming 'application/octet-stream'")
+                    part.replace_header('Content-Type', 'application/octet-stream')
+                if part.get_content_type() == '*/*':
+                    _logger.warning("Message containing an unexpected Content-Type '*/*', assuming 'application/octet-stream'")
                     part.replace_header('Content-Type', 'application/octet-stream')
                 if part.get_content_type() == 'multipart/alternative':
                     alternative = True
@@ -3000,7 +2999,10 @@ class MailThread(models.AbstractModel):
                 [('res_id', '=', self.id), ('model', '=', self._name), ('message_type', '!=', 'user_notification')],
                 order='date desc, id desc',
                 limit=200,  # arbitrary, but sometimes loops / spam may creater a long history
-            ).sorted(lambda msg: (msg.message_type in ('comment', 'email'), msg.date, msg.id), reverse=True)
+            ).sorted(
+                lambda msg: (msg.message_type in ('comment', 'email'), msg.date or msg.create_date, msg.id),
+                reverse=True,
+            )
             current_ancestor = current_ancestor[:1]
         return current_ancestor.id
 

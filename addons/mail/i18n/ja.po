@@ -12,14 +12,14 @@
 # 江口和志 <sandwhale1010@gmail.com>, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-28 01:36+0000\n"
+"POT-Creation-Date: 2026-01-02 18:35+0000\n"
+"PO-Revision-Date: 2026-01-08 07:39+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/mail/ja/"
 ">\n"
@@ -367,7 +367,7 @@ msgstr "%s (コピー)"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "%s created"
-msgstr "%s 登録"
+msgstr "%s を作成しました"
 
 #. module: mail
 #. odoo-javascript
@@ -650,8 +650,8 @@ msgid ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not "
 "has_external_mail_server\">Outgoing Mail Server</span>"
 msgstr ""
-"<span class=\"o_form_label fw-bold\" invisible="
-"\"not has_external_mail_server\">送信メールサーバ</span>"
+"<span class=\"o_form_label fw-bold\" invisible=\"not "
+"has_external_mail_server\">送信メールサーバ</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -843,7 +843,7 @@ msgstr "次の活動は活動を使用するモデルのみで計画できます
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid "A personal mail server is using that address, you can not use it."
-msgstr ""
+msgstr "そのアドレスは個人用メールサーバで使用中です。ご利用いただけません。"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_role_unique_name
@@ -914,13 +914,13 @@ msgstr "グループ \"%(groupFullName)s\"へのアクセスが制限されて�
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Account"
-msgstr "勘定科目"
+msgstr "アカウント"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_token
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Account Auth Token"
-msgstr ""
+msgstr "アカウント認証トークン"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_sid
@@ -1124,7 +1124,7 @@ msgstr "活動タイプ"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_icon
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動種別アイコン"
+msgstr "活動タイプアイコン"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
@@ -1217,7 +1217,7 @@ msgstr "GIFを追加"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Add Star"
-msgstr ""
+msgstr "星を追加"
 
 #. module: mail
 #. odoo-javascript
@@ -1759,7 +1759,7 @@ msgstr "添付"
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 msgid "Audio Output"
-msgstr ""
+msgstr "オーディオ出力"
 
 #. module: mail
 #. odoo-javascript
@@ -1786,7 +1786,7 @@ msgstr "認証"
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__author_id
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Author"
-msgstr "著作者"
+msgstr "作成者"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__author_id
@@ -1842,13 +1842,13 @@ msgstr "自動サブスクリプション"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Auto: %(subject)s"
-msgstr ""
+msgstr "自動:%(subject)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Autofocus speaker"
-msgstr ""
+msgstr "オートフォーカススピーカー"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__auto_comment
@@ -1876,7 +1876,7 @@ msgstr "現在の活動が完了とマークされたら、この活動を自動
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "Available everywhere"
-msgstr ""
+msgstr "どこでも利用可能"
 
 #. module: mail
 #. odoo-javascript
@@ -1934,7 +1934,7 @@ msgstr "外出"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Background Blur Performance Warning"
-msgstr ""
+msgstr "背景ぼかし処理のパフォーマンスに関する警告"
 
 #. module: mail
 #. odoo-javascript
@@ -2033,7 +2033,7 @@ msgstr "背景ぼかし"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/quick_video_settings.xml:0
 msgid "Blur background"
-msgstr ""
+msgstr "背景ぼかし"
 
 #. module: mail
 #. odoo-javascript
@@ -2153,7 +2153,7 @@ msgstr "通話を元に戻す"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Bring the call back here"
-msgstr ""
+msgstr "通話をここに戻す"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -2163,7 +2163,7 @@ msgstr "ブラウザ"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/device_select.xml:0
-msgid "Browser default"
+msgid "Browser Default"
 msgstr "ブラウザのデフォルト"
 
 #. module: mail
@@ -2186,12 +2186,12 @@ msgstr "利用中"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__email
 msgid "By Emails"
-msgstr ""
+msgstr "Eメール"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "By order of server priority"
-msgstr ""
+msgstr "サーバー優先度順"
 
 #. module: mail
 #. odoo-javascript
@@ -2250,12 +2250,16 @@ msgstr "カメラ"
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Camera access blocked. Enable in browser settings."
 msgstr ""
+"カメラへのアクセスがブロックされています。ブラウザの設定で有効にしてくださ"
+"い。"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Camera and microphone access blocked. Enable in browser settings."
 msgstr ""
+"カメラとマイクへのアクセスがブロックされています。ブラウザの設定で有効にして"
+"ください。"
 
 #. module: mail
 #. odoo-javascript
@@ -2371,6 +2375,8 @@ msgid ""
 "in your messages. Type '::' followed by the name of your shortcut "
 "(e.g. ::hello) to use in your messages."
 msgstr ""
+"定型文は、メッセージの中で自動的に長い内容に置き換えられます。'::' の後に"
+"ショートカット名(例 ::hello)を入力して下さい。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
@@ -2402,6 +2408,8 @@ msgid ""
 "Cannot create %(channels)s: initial message should belong to parent channel "
 "or one of its sub-channels."
 msgstr ""
+"%(channels)s を作成できません : 初期メッセージは親チャンネルまたはそのサブ"
+"チャンネルのいずれかに属している必要があります。"
 
 #. module: mail
 #. odoo-python
@@ -2418,7 +2426,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Capture replies in the chatter"
-msgstr ""
+msgstr "返信をチャターに記録"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -2522,7 +2530,7 @@ msgstr "チャネルメンバ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_name_member_ids
 msgid "Channel Name Member"
-msgstr ""
+msgstr "チャネル名 メンバー"
 
 #. module: mail
 #. odoo-javascript
@@ -2753,7 +2761,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated carbon copy of recipients addresses"
-msgstr ""
+msgstr "CCに指定する受信者のメールアドレス(カンマ区切り)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2851,7 +2859,7 @@ msgstr "設定"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure ICE Servers"
-msgstr ""
+msgstr "ICEサーバの設定"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2915,7 +2923,7 @@ msgstr "接続に失敗しました(送信メールサーバーの問題)"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/mail_server_configurator_selection/mail_server_configurator_selection.js:0
 msgid "Connection failed: %s"
-msgstr ""
+msgstr "接続に失敗しました:%s"
 
 #. module: mail
 #. odoo-python
@@ -3025,7 +3033,7 @@ msgstr "内容"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Conversations"
-msgstr ""
+msgstr "会話"
 
 #. module: mail
 #. odoo-javascript
@@ -3045,7 +3053,7 @@ msgstr "クリップボードにコピーする"
 msgid ""
 "Could not contact the mail server, please check your outgoing email server "
 "configuration."
-msgstr ""
+msgstr "メールサーバに接続できません。送信メールサーバ設定を確認して下さい。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
@@ -3289,17 +3297,17 @@ msgstr "カスタムバウンスメッセージ"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE Server with Twilio"
-msgstr ""
+msgstr "Twilio搭載の顧客ICEサーバ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE Servers"
-msgstr ""
+msgstr "カスタムICEサーバ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom SFU Server"
-msgstr ""
+msgstr "カスタムSFUサーバ"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
@@ -3319,12 +3327,12 @@ msgstr "カスタムチャネル名"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_required
 msgid "Customer is required for inbox notification"
-msgstr ""
+msgstr "受信トレイ通知には顧客が必要です"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_or_email_required
 msgid "Customer or email is required for inbox / email notification"
-msgstr ""
+msgstr "受信トレイ / メール通知には、顧客またはメールアドレスが必要です"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -3385,7 +3393,7 @@ msgstr "メッセージがピンされた日時"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_duration_mixin__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "このリソースが最後に更新されてからの経過日数"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__days
@@ -3395,7 +3403,7 @@ msgstr "日"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_duration_mixin__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "停滞日数"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -3481,7 +3489,7 @@ msgstr "ノート初期値"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default Recipients"
-msgstr ""
+msgstr "デフォルト宛先"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
@@ -3584,7 +3592,7 @@ msgstr "メールの削除"
 #: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Delete Thread"
-msgstr ""
+msgstr "スレッドを削除"
 
 #. module: mail
 #. odoo-javascript
@@ -3627,7 +3635,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Describe when this template should be used"
-msgstr ""
+msgstr "このテンプレートを使用すべき場合を説明してください"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__description
@@ -3650,7 +3658,7 @@ msgstr "このサブタイプのために投稿したメッセージに追加さ
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_spam
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_spam
 msgid "Detected As Spam"
-msgstr ""
+msgstr "スパムとして検出されました"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__default_display_mode
@@ -3681,7 +3689,7 @@ msgstr "ダイレクトメッセージ"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Disable speaker autofocus"
-msgstr ""
+msgstr "スピーカーの自動フォーカスを無効にする"
 
 #. module: mail
 #. odoo-javascript
@@ -3702,7 +3710,7 @@ msgstr "破棄"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Discard editing"
-msgstr ""
+msgstr "編集を破棄"
 
 #. module: mail
 #. odoo-javascript
@@ -3716,7 +3724,7 @@ msgstr "終了"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Disconnected from the call by the server"
-msgstr ""
+msgstr "サーバによって通話が切断されました"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_discuss
@@ -3757,7 +3765,7 @@ msgstr "閉じる"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Dismiss warning"
-msgstr ""
+msgstr "警告を閉じる"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_module_uninstall__display_name
@@ -3879,13 +3887,13 @@ msgstr "本当にこのプレビューを削除しますか？"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Do you want people to hear you in the meeting?"
-msgstr ""
+msgstr "会議で、あなたの音声を参加者に聞こえるようにしたいですか?"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Do you want people to see you in the meeting?"
-msgstr ""
+msgstr "会議で、あなたの映像を他の参加者に表示しますか?"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_upload_document
@@ -4331,7 +4339,7 @@ msgstr "メール To"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/mail_server_configurator_selection/mail_server_configurator_selection.xml:0
 msgid "Emails sent via"
-msgstr ""
+msgstr "送信元メールサーバ"
 
 #. module: mail
 #. odoo-javascript
@@ -4732,7 +4740,7 @@ msgstr "ファイル"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 msgid "Filter Messages"
-msgstr ""
+msgstr "メッセージをフィルタリング"
 
 #. module: mail
 #. odoo-javascript
@@ -4921,6 +4929,7 @@ msgstr ""
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 msgid "For performance reasons, use \"=\" operators on rotting fields."
 msgstr ""
+"パフォーマンス上の理由から、関連フィールドには「=」演算子を使用してください。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_schedule_view_form
@@ -4930,7 +4939,7 @@ msgstr "強制送信"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Force a Language"
-msgstr ""
+msgstr "言語を強制"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
@@ -5123,16 +5132,18 @@ msgid ""
 "Hardware acceleration is disabled. Blur effect impacts performance "
 "significantly."
 msgstr ""
+"ハードウェアアクセラレーションが無効になっています。ぼかし効果はパフォーマン"
+"スに大きく影響します。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__has_attachments
 msgid "Has Attachments"
-msgstr ""
+msgstr "添付ファイルあり"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__has_dynamic_reports
 msgid "Has Dynamic Reports"
-msgstr ""
+msgstr "動的レポートあり"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_error
@@ -5157,7 +5168,7 @@ msgstr "メールブラックリストあり"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__has_mail_server
 msgid "Has Mail Server"
-msgstr ""
+msgstr "メールサーバあり"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
@@ -5187,12 +5198,12 @@ msgstr "メッセージあり"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__has_several_languages_installed
 msgid "Has Several Languages Installed"
-msgstr ""
+msgstr "複数の言語インストール済"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_attachment__has_thumbnail
 msgid "Has Thumbnail"
-msgstr ""
+msgstr "サムネイルあり"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_warning
@@ -5253,7 +5264,7 @@ msgstr "すべての会話を非表示にする"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Hide camera preview"
-msgstr ""
+msgstr "カメラプレビューを非表示"
 
 #. module: mail
 #. odoo-javascript
@@ -5290,7 +5301,7 @@ msgstr "ホスト名あるいはEメールサーバのIP"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/discuss_channel_tour.js:0
 msgid "Hover on your message and add a star"
-msgstr ""
+msgstr "メッセージにカーソルを合わせて星を追加"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__voice_active_duration
@@ -5304,12 +5315,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_ice_server
 msgid "ICE Server"
-msgstr ""
+msgstr "ICEサーバ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_form
 msgid "ICE Server Configuration"
-msgstr ""
+msgstr "ICEサーバ設定"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_ice_servers
@@ -5619,7 +5630,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_sfu_server
 msgid "If you want to setup SFU server for large group calls."
-msgstr ""
+msgstr "大規模なグループ通話用にSFUサーバを設定したい場合。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -5672,7 +5683,7 @@ msgstr "%(country)s表示"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__inbox
 msgid "In Odoo"
-msgstr "Odooでは"
+msgstr "Odoo内"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__scheduled_date
@@ -5740,7 +5751,7 @@ msgstr "着信"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Incoming call from %(inviter)s"
-msgstr ""
+msgstr "着信元%(inviter)s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__automated
@@ -5945,19 +5956,19 @@ msgstr "招待URL"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 msgid "Invitation already sent to this address"
-msgstr ""
+msgstr "このアドレスには既に招待状が送信済みです"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Invitation link copied!"
-msgstr ""
+msgstr "招待リンクをコピーしました!"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Invitation link copy failed (Permission denied?)!"
-msgstr ""
+msgstr "招待リンクのコピーに失敗しました(権限不足?)!"
 
 #. module: mail
 #. odoo-python
@@ -5981,7 +5992,7 @@ msgstr "招待"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/avatar_autocomplete/avatar_many2x_autocomplete.js:0
 msgid "Invite \"%s\""
-msgstr ""
+msgstr "「%s 」を招待"
 
 #. module: mail
 #. odoo-javascript
@@ -6006,19 +6017,19 @@ msgstr "人を招待する"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Invite people or email"
-msgstr ""
+msgstr "人を招待、またはメールを送信"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/avatar_autocomplete/avatar_many2x_autocomplete.js:0
 msgid "Invite teammates"
-msgstr ""
+msgstr "チームメンバーを招待"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/avatar_autocomplete/avatar_many2x_autocomplete.js:0
 msgid "Invite teammates via email"
-msgstr ""
+msgstr "メールでチームメンバーを招待"
 
 #. module: mail
 #. odoo-javascript
@@ -6035,7 +6046,7 @@ msgstr "招待されたメンバ"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Inviting by email is not allowed for this channel type (%s)."
-msgstr ""
+msgstr "このチャンネルタイプ(%s )では、メールによる招待は許可されていません。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__is_active
@@ -6223,7 +6234,7 @@ msgstr "グループに参加"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "Join call"
-msgstr ""
+msgstr "通話に参加"
 
 #. module: mail
 #. odoo-javascript
@@ -6469,7 +6480,7 @@ msgstr "遅延"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Late Activities"
-msgstr "遅れた活動"
+msgstr "期限超過の活動"
 
 #. module: mail
 #. odoo-python
@@ -6545,7 +6556,7 @@ msgstr "リンク先:"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__linked_message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__linked_message_ids
 msgid "Linked Message"
-msgstr ""
+msgstr "リンクされたメッセージ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
@@ -6739,7 +6750,7 @@ msgstr "メールコンポーザーMixin"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__mail_email_address
 msgid "Mail Email Address"
-msgstr ""
+msgstr "メール メールアドレス"
 
 #. module: mail
 #. odoo-javascript
@@ -6888,7 +6899,7 @@ msgstr "主要添付"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Main partner's language"
-msgstr ""
+msgstr "主要パートナーの言語"
 
 #. module: mail
 #. odoo-javascript
@@ -6995,7 +7006,7 @@ msgstr "メンバー"
 #: model:ir.model.fields,help:mail.field_discuss_channel__channel_name_member_ids
 msgid ""
 "Members from which the channel name is computed when the name field is empty."
-msgstr ""
+msgstr "名前フィールドが空の場合にチャネル名が計算されるメンバー。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__group_ids
@@ -7309,13 +7320,15 @@ msgstr "音声添付用メタデータ"
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 msgid "Microphone"
-msgstr ""
+msgstr "マイク"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Microphone access blocked. Enable in browser settings."
 msgstr ""
+"マイクへのアクセスがブロックされています。ブラウザの設定で有効にしてくださ"
+"い。"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_missing
@@ -7361,7 +7374,7 @@ msgstr "モデル"
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 msgid "Model configuration does not support the rotting feature"
-msgstr ""
+msgstr "モデル構成は腐敗機能をサポートしていません"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model_change
@@ -7510,7 +7523,7 @@ msgstr "新規チャネル"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_search.js:0
 msgid "New Meeting"
-msgstr ""
+msgstr "新規ミーティング"
 
 #. module: mail
 #. odoo-javascript
@@ -7646,7 +7659,7 @@ msgstr "フォロワーなし"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_ice_servers
 msgid "No ICE servers found. Let's create one!"
-msgstr ""
+msgstr "ICEサーバが見つかりませんでした。作成しましょう!"
 
 #. module: mail
 #. odoo-javascript
@@ -7673,7 +7686,7 @@ msgstr "定型回答が見つかりません。作成しましょう!"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/action_list.xml:0
 msgid "No content."
-msgstr ""
+msgstr "コンテンツがありません。"
 
 #. module: mail
 #. odoo-javascript
@@ -7715,7 +7728,7 @@ msgstr "リンク済レコードなし"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "No mail server configured"
-msgstr ""
+msgstr "メールサーバが設定されていません"
 
 #. module: mail
 #. odoo-javascript
@@ -7727,7 +7740,7 @@ msgstr "メッセージが見つかりません"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "No one else is here."
-msgstr ""
+msgstr "他に誰もいません。"
 
 #. module: mail
 #. odoo-python
@@ -7825,7 +7838,7 @@ msgstr "なし"
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "None planned"
-msgstr ""
+msgstr "予定なし"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__email_normalized
@@ -8192,7 +8205,7 @@ msgstr "メッセージにスターを付けると、いつでもメッセージ
 msgid ""
 "One or more attachments do not exist, or you do not have the rights to "
 "access them."
-msgstr ""
+msgstr "1つ以上の添付ファイルが存在しないか、アクセス権限がありません。"
 
 #. module: mail
 #. odoo-javascript
@@ -8219,7 +8232,7 @@ msgstr "オンライン - %(online_count)s"
 #. odoo-python
 #: code:addons/mail/controllers/attachment.py:0
 msgid "Only PDF files can have thumbnail."
-msgstr ""
+msgstr "サムネイルを表示できるのはPDFファイルのみです。"
 
 #. module: mail
 #. odoo-python
@@ -8248,13 +8261,13 @@ msgstr "内部ユーザだけがOdooで通知を受け取ることができま�
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Only internal users can configure a personal mail server."
-msgstr ""
+msgstr "個人用メールサーバの設定は内部ユーザのみが行えます。"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Only internal users can configure personal mail servers."
-msgstr ""
+msgstr "個人用メールサーバの設定は内部ユーザのみが行えます。"
 
 #. module: mail
 #. odoo-python
@@ -8461,34 +8474,34 @@ msgstr "そうでなければ、このメールを無視して下さい。"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_from
 msgid "Out Of Office From"
-msgstr ""
+msgstr "不在開始日"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_to
 msgid "Out Of Office To"
-msgstr ""
+msgstr "不在終了日"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__is_out_of_office
 msgid "Out of Office"
-msgstr ""
+msgstr "不在"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Out-of-office"
-msgstr ""
+msgstr "不在"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__out_of_office
 msgid "Out-of-office Message"
-msgstr ""
+msgstr "不在通知"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "Out-of-office message"
-msgstr ""
+msgstr "不在通知"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -8592,7 +8605,7 @@ msgstr "送信メールサーバ"
 #: model:ir.model.fields.selection,name:mail.selection__survey_user_input__activity_state__overdue
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Overdue"
-msgstr "遅延"
+msgstr "期限超過"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__owner_user_id
@@ -8603,12 +8616,12 @@ msgstr "オーナー"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__owner_limit_count
 msgid "Owner Limit Count"
-msgstr ""
+msgstr "所有者別制限数"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__owner_limit_time
 msgid "Owner Limit Time"
-msgstr ""
+msgstr "所有者別制限時間"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -8760,13 +8773,19 @@ msgstr "ペイロード"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Performance Warning:"
-msgstr ""
+msgstr "パフォーマンス警告："
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
 msgid "Permanently delete this thread?"
-msgstr ""
+msgstr "このスレッドを完全に削除しますか?"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/device_select.xml:0
+msgid "Permission Needed"
+msgstr "許可が必要です"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
@@ -8949,7 +8968,7 @@ msgstr "有効なメールアドレスを入力してください"
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Please set your email before connecting your mail server."
-msgstr ""
+msgstr "メールサーバーを接続する前に、メールアドレスを設定してください。"
 
 #. module: mail
 #. odoo-javascript
@@ -8964,6 +8983,9 @@ msgid ""
 "- By Emails: notifications are sent to your email address\n"
 "- In Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
+"チャター通知の受信方法ポリシー:\n"
+"- メール：通知はあなたのメールアドレスに送信されます\n"
+"- Odoo内：通知はOdooの受信トレイに表示されます"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
@@ -9096,6 +9118,8 @@ msgid ""
 "Prevent sending messages to blacklisted contacts. Disable only when "
 "absolutely necessary."
 msgstr ""
+"ブラックリストに登録された連絡先へのメッセージ送信を防止します。絶対に必要な"
+"場合のみ無効化してください。"
 
 #. module: mail
 #. odoo-javascript
@@ -9199,7 +9223,7 @@ msgstr "プッシュツートークショートカット"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 msgid "Push-to-Talk"
-msgstr ""
+msgstr "プッシュツートーク"
 
 #. module: mail
 #. odoo-javascript
@@ -9308,7 +9332,7 @@ msgstr "送信準備完了"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.xml:0
 msgid "Ready to join?"
-msgstr ""
+msgstr "参加してみませんか?"
 
 #. module: mail
 #. odoo-javascript
@@ -9347,7 +9371,7 @@ msgstr "宛先"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_email_address
 msgid "Recipient email address"
-msgstr ""
+msgstr "受信者メールアドレス"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__partner_ids
@@ -9497,7 +9521,7 @@ msgstr "フォロワーを削除"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Remove Star"
-msgstr ""
+msgstr "星を削除"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
@@ -9701,7 +9725,7 @@ msgstr "メールテンプレート版とQWEBプレースホルダーの使用�
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_mail_server_view_form
 msgid "Restrict usage to a user"
-msgstr ""
+msgstr "ユーザの使用を制限"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__restricted_attachment_count
@@ -9772,7 +9796,7 @@ msgstr "役割検索"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_duration_mixin__is_rotting
 msgid "Rotting"
-msgstr ""
+msgstr "停滞"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__rtc_session_ids
@@ -9809,7 +9833,7 @@ msgstr "SSL/TLS"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_search
 msgid "STUN"
-msgstr ""
+msgstr "STUN"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__user_id
@@ -9958,6 +9982,8 @@ msgstr "個人活動のスケジュールには割当てユーザが必要です
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Screen sharing access blocked. Enable in browser settings."
 msgstr ""
+"画面共有へのアクセスがブロックされました。ブラウザの設定で有効にしてくださ"
+"い。"
 
 #. module: mail
 #. odoo-javascript
@@ -9989,7 +10015,7 @@ msgstr "グループの検索"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_search
 msgid "Search ICE Servers"
-msgstr ""
+msgstr "ICEサーバを検索"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -10051,7 +10077,7 @@ msgstr "名前で検索"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_search.xml:0
 msgid "Search conversations"
-msgstr ""
+msgstr "会話を検索"
 
 #. module: mail
 #. odoo-javascript
@@ -10189,6 +10215,14 @@ msgid "Select a user..."
 msgstr "ユーザを選択..."
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
+msgstr ""
+"選択されたユーザ '%(user)s' は、モデル '%(model)s' にドキュメントをアップロー"
+"ドできません"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
 msgid "Self Member"
 msgstr "セルフメンバ"
@@ -10216,7 +10250,7 @@ msgstr "送信して閉じる"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/view_dialog/avatar_user_form_view_dialog.xml:0
 msgid "Send & New Invitation"
-msgstr ""
+msgstr "送信して新規招待"
 
 #. module: mail
 #. odoo-javascript
@@ -10239,7 +10273,7 @@ msgstr "送信元"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Send Instantly"
-msgstr ""
+msgstr "すぐに送信"
 
 #. module: mail
 #. odoo-javascript
@@ -10315,7 +10349,7 @@ msgstr "このメッセージを完全に削除しますか?"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Sender & Recipients"
-msgstr ""
+msgstr "送信者と受信者"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_from
@@ -10334,7 +10368,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Sender's email"
-msgstr ""
+msgstr "送信者のメールアドレス"
 
 #. module: mail
 #. odoo-javascript
@@ -10449,12 +10483,13 @@ msgstr ""
 msgid ""
 "Set up your own server for large group calls by routing connections centrally"
 msgstr ""
+"大規模なグループ通話用に、接続を中央でルーティングする独自のサーバを設定"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid ""
 "Set up your own server for small group calls using peer-to-peer connections"
-msgstr ""
+msgstr "ピアツーピア接続を使用した少人数グループ通話用の専用サーバを設定"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -10486,7 +10521,7 @@ msgstr "共有"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Shared with all users"
-msgstr ""
+msgstr "すべてのユーザと共有"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__source
@@ -10548,7 +10583,7 @@ msgstr "次回活動日が過去のすべてのレコードを表示"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Show camera preview"
-msgstr ""
+msgstr "カメラプレビューを表示"
 
 #. module: mail
 #. odoo-javascript
@@ -10606,7 +10641,7 @@ msgstr "だから......お気に入りのGIFを探しに行くなどでしょう
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
 msgid "Source"
-msgstr "発生元"
+msgstr "参照元"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__source_lang
@@ -10666,13 +10701,13 @@ msgstr "スター付き"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.xml:0
 msgid "Starred message"
-msgstr ""
+msgstr "星付きメッセージ"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
 msgid "Starred messages"
-msgstr ""
+msgstr "星付きメッセージ"
 
 #. module: mail
 #. odoo-javascript
@@ -10743,7 +10778,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "活動に基づくステータス\n"
-"遅延: 期限が既に過ぎています\n"
+"期限超過：期限日がすでに過ぎています\n"
 "今日: 活動日は今日です\n"
 "予定: 将来の活動。"
 
@@ -10941,13 +10976,13 @@ msgstr "Outlook認証をサポート"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Switch Camera"
-msgstr ""
+msgstr "カメラを切り替え"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Switching back to the default server."
-msgstr ""
+msgstr "デフォルトサーバに戻します。"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_config_parameter
@@ -10965,7 +11000,7 @@ msgstr "システム通知"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_search
 msgid "TURN"
-msgstr ""
+msgstr "TURN"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__target_lang
@@ -11044,7 +11079,7 @@ msgstr "テンプレートプレビュー言語"
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 msgid "Template Preview: \"%(template_name)s\""
-msgstr ""
+msgstr "テンプレートプレビュー: \"%(template_name)s\""
 
 #. module: mail
 #: model:ir.model,name:mail.model_template_reset_mixin
@@ -11403,12 +11438,13 @@ msgstr ""
 msgid ""
 "The server \"%s\" cannot be forced as it belongs to a user and is archived."
 msgstr ""
+"サーバ「%s 」はユーザに属しアーカイブされているため、強制的に操作できません。"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_mail_server.py:0
 msgid "The server \"%s\" cannot be forced as it belongs to a user."
-msgstr ""
+msgstr "サーバ「%s 」はユーザに属しているため強制できません。"
 
 #. module: mail
 #. odoo-python
@@ -11416,6 +11452,7 @@ msgstr ""
 msgid ""
 "The server \"%s\" cannot be forced as the owner does not use it anymore."
 msgstr ""
+"サーバ「%s 」は、所有者がもう使用していないため強制的に停止できません。"
 
 #. module: mail
 #. odoo-python
@@ -11452,7 +11489,7 @@ msgstr "レコードへの読取りアクセス権を持つ候補会社はあり
 msgid ""
 "There was an error when trying to deliver your Email, please check your "
 "configuration."
-msgstr ""
+msgstr "メールの配信中にエラーが発生しました。設定をご確認ください。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -11487,7 +11524,7 @@ msgstr "このアクションにより、電子メールが送信されます。
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This applicant has been stuck in this stage for %(numberOfDays)s days."
-msgstr ""
+msgstr "この申請者は%(numberOfDays)s 日間この段階で停滞しています。"
 
 #. module: mail
 #. odoo-javascript
@@ -11523,7 +11560,7 @@ msgstr "この会話にはピンされたメッセージはありません。"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "This conversation isn’t available."
-msgstr ""
+msgstr "この会話は利用できません。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
@@ -11564,13 +11601,13 @@ msgstr "これは %(conversationName)s グループの開始です"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of the #%(channelName)s channel"
-msgstr ""
+msgstr "#%(channelName)s チャネルの開始です"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of your direct chat with %(userName)s"
-msgstr ""
+msgstr "これはあなたとの直接チャットの開始です%(userName)s"
 
 #. module: mail
 #. odoo-python
@@ -11582,7 +11619,7 @@ msgstr "このレイアウトはもう存在しないようです。"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This lead has been stuck in this stage for %(numberOfDays)s days."
-msgstr ""
+msgstr "このリードは%(numberOfDays)s 日間、このステージで停滞しています。"
 
 #. module: mail
 #. odoo-javascript
@@ -11621,7 +11658,7 @@ msgstr "このレコードには例外活動があります。"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This record has been stuck in this stage for %(numberOfDays)s days."
-msgstr ""
+msgstr "このレコードは%(numberOfDays)s 日間、このステージで停滞しています。"
 
 #. module: mail
 #. odoo-javascript
@@ -11645,7 +11682,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_widget.js:0
 msgid "This task has been stuck in this stage for %(numberOfDays)s days."
-msgstr ""
+msgstr "このタスクは%(numberOfDays)s 日間、このステージで停滞しています。"
 
 #. module: mail
 #. odoo-javascript
@@ -11683,13 +11720,13 @@ msgstr "スレッド"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.js:0
 msgid "Thread \"%(thread_name)s\" has been deleted"
-msgstr ""
+msgstr "スレッド「%(thread_name)s 」は削除されました"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
 msgid "Thread Actions"
-msgstr ""
+msgstr "スレッド操作"
 
 #. module: mail
 #. odoo-javascript
@@ -11739,7 +11776,7 @@ msgstr "タイムゾーン"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Tip: Write /field to insert dynamic content!"
-msgstr ""
+msgstr "ヒント: /field と記述すると動的コンテンツを挿入できます!"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_summary
@@ -11925,7 +11962,7 @@ msgstr "受信者を追跡"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Tracked Changes"
-msgstr ""
+msgstr "変更履歴"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__tracking_value_ids
@@ -12124,7 +12161,7 @@ msgstr "未割当の活動"
 #. odoo-python
 #: code:addons/mail/models/mail_mail.py:0
 msgid "Unauthorized server for some of the sending mails."
-msgstr ""
+msgstr "一部の送信メールに対して許可されていないサーバが使用されています。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
@@ -12212,6 +12249,8 @@ msgstr "会話をミュート解除"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/follower_model.js:0
+#: code:addons/mail/static/src/core/common/message_model.js:0
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 #: code:addons/mail/static/src/core/web/recipients_popover.js:0
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
@@ -12222,7 +12261,7 @@ msgstr "無名"
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_value.py:0
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
-msgstr ""
+msgstr "無題%(record_model_name)s (%(record_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -12364,7 +12403,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Use Camera"
-msgstr ""
+msgstr "カメラを使用"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__external_email_server_default
@@ -12380,18 +12419,18 @@ msgstr "デフォルトを使用"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_exclusion_list
 msgid "Use Exclusion List"
-msgstr ""
+msgstr "除外リストを使用"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Use Microphone"
-msgstr ""
+msgstr "マイクを使用"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_sfu_server
 msgid "Use SFU server"
-msgstr ""
+msgstr "SFUサーバを使用"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -12453,7 +12492,7 @@ msgstr "message_notifyを使用してユーザに通知を送る"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.xml:0
 msgid "Use microphone and camera"
-msgstr ""
+msgstr "マイクとカメラを使用"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_id
@@ -12471,6 +12510,8 @@ msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable"
 msgstr ""
+"Twilioが利用できない場合に備え、トラフィックの増加に対応し信頼性を確保するた"
+"め、通話には自社サーバを使用します"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_ice_servers
@@ -12478,6 +12519,8 @@ msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable."
 msgstr ""
+"Twilioが利用できない場合に備え、トラフィックの増加に対応し信頼性を確保するた"
+"め、通話には自社サーバを使用します。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -12573,7 +12616,7 @@ msgstr "ユーザタイプ"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_mail_server_view_form
 msgid "User email"
-msgstr ""
+msgstr "ユーザのEメール"
 
 #. module: mail
 #. odoo-javascript
@@ -12657,7 +12700,7 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid ""
 "Using picture-in-picture lets you stay in the call while you do other things."
-msgstr ""
+msgstr "ピクチャー・イン・ピクチャー機能を使えば、通話中に他の作業ができます。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -12673,7 +12716,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_message
 msgid "Vacation Responder"
-msgstr ""
+msgstr "休暇中自動返信"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__valid
@@ -12779,7 +12822,7 @@ msgstr "すべての活動を見る"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "View chat with %(channel_name)s"
-msgstr ""
+msgstr "チャットを表示%(channel_name)s"
 
 #. module: mail
 #. odoo-javascript
@@ -12791,7 +12834,7 @@ msgstr "チャネルを表示または参加する"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "View the %(channel_name)s channel"
-msgstr ""
+msgstr "%(channel_name)s チャネルを見る"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -13021,7 +13064,7 @@ msgstr "ここにメッセージを記入してください..."
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Wrong email address %s."
-msgstr ""
+msgstr "メールアドレスが間違っています%s。"
 
 #. module: mail
 #. odoo-python
@@ -13121,7 +13164,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "You are not allowed to create a personal mail server."
-msgstr ""
+msgstr "個人用メールサーバの作成は許可されていません。"
 
 #. module: mail
 #. odoo-python
@@ -13133,7 +13176,7 @@ msgstr "このスケジュール済メッセージを送る権利がありませ
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "You are not allowed to test personal mail servers."
-msgstr ""
+msgstr "個人用メールサーバのテストは許可されていません。"
 
 #. module: mail
 #. odoo-python
@@ -13177,7 +13220,7 @@ msgstr "専用ユーザーがいるパートナーとのみチャットできま
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "You can still turn off your %s anytime."
-msgstr ""
+msgstr "%s はいつでもオフにできます。"
 
 #. module: mail
 #. odoo-python
@@ -13244,7 +13287,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "You don't have access to invite users to this channel."
-msgstr ""
+msgstr "このチャネルにユーザを招待する権限がありません。"
 
 #. module: mail
 #. odoo-python
@@ -13268,6 +13311,7 @@ msgstr "#%sに招待されました。"
 #: code:addons/mail/models/mail_mail.py:0
 msgid "You may not create a message using another user's mail server."
 msgstr ""
+"他のユーザのメールサーバを使用してメッセージを作成することはできません。"
 
 #. module: mail
 #. odoo-python
@@ -13345,7 +13389,7 @@ msgstr "お使いのブラウザはwebRTCをサポートしていません"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Your call is in another window."
-msgstr ""
+msgstr "通話は別のウィンドウで表示されています。"
 
 #. module: mail
 #. odoo-python
@@ -13354,6 +13398,8 @@ msgid ""
 "Your email address is used by an alias domain, and so you can not create a "
 "mail server for it."
 msgstr ""
+"メールアドレスはエイリアスドメインで使用されているため、そのドメインに対して"
+"メールサーバを作成することはできません。"
 
 #. module: mail
 #. odoo-javascript
@@ -13365,7 +13411,7 @@ msgstr "名前"
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Your out-of-office message..."
-msgstr ""
+msgstr "不在時のメッセージ..."
 
 #. module: mail
 #. odoo-python
@@ -13630,19 +13676,19 @@ msgstr "例: ミーティングを予定"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g. Welcome to MyCompany!"
-msgstr ""
+msgstr "例：MyCompanyへようこそ!"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/shortcut_char_field/shortcut_char_field.js:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "e.g. hello"
-msgstr ""
+msgstr "例：こんにちは"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g. info@company.com"
-msgstr ""
+msgstr "例： info@company.com"
 
 #. module: mail
 #. odoo-javascript
@@ -13675,7 +13721,7 @@ msgstr "例: 注文確認を送信"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__outgoing_email_to
 #: model:ir.model.fields,field_description:mail.field_mail_message__outgoing_email_to
 msgid "emails To"
-msgstr ""
+msgstr "メール To"
 
 #. module: mail
 #. odoo-javascript
@@ -13867,7 +13913,7 @@ msgstr "他のメンバ"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_ir_mail_server_unique_owner_user_id
 msgid "owner_user_id must be unique"
-msgstr ""
+msgstr "owner_user_id は一意でなければなりません"
 
 #. module: mail
 #. odoo-javascript
@@ -13927,7 +13973,7 @@ msgstr "stun:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_form
 msgid "stun:stun.google.com:19302 or turn:turn.example.com:3478"
-msgstr ""
+msgstr "stun:stun.google.com:19302 または turn:turn.example.com:3478"
 
 #. module: mail
 #. odoo-python
@@ -14015,6 +14061,9 @@ msgstr "あなたのエイリアス"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” 、 “%(channel_name)s内”"
+
+#~ msgid "Browser default"
+#~ msgstr "ブラウザのデフォルト"
 
 #~ msgid "Disconnected from the RTC call by the server"
 #~ msgstr "サーバによるRTCコールからの切断"

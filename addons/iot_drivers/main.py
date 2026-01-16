@@ -23,11 +23,10 @@ unsupported_devices = {}
 
 
 class Manager(Thread):
-    daemon = True
     ws_channel = ""
 
     def __init__(self):
-        super().__init__()
+        super().__init__(daemon=True)
         self.identifier = helpers.get_identifier()
         self.domain = self._get_domain()
         self.version = helpers.get_version(detailed_version=True)
@@ -82,6 +81,7 @@ class Manager(Thread):
         """
         iot_box = {
             'identifier': self.identifier,
+            'mac': helpers.get_mac_address(),
             'ip': self.domain,
             'token': helpers.get_token(),
             'version': self.version,
@@ -156,6 +156,7 @@ class Manager(Thread):
         # Set scheduled actions
         schedule.every().day.at("00:00").do(certificate.ensure_validity)
         schedule.every().day.at("00:00").do(helpers.reset_log_level)
+        schedule.every().day.at("00:00").do(upgrade.check_git_branch)
 
         # Set up the websocket connection
         ws_client = WebsocketClient(self.ws_channel)

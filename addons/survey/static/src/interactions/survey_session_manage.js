@@ -116,7 +116,10 @@ export class SurveySessionManage extends Interaction {
                 delay: 0,
             }
         );
-        this.registerCleanup(() => this.copyBtnTooltip?.dispose());
+        this.registerCleanup(() => {
+            this.copyBtnPopover?.dispose();
+            this.copyBtnTooltip?.dispose();
+        });
         // Attendees count & navigation label
         this.sessionAttendeesCountText = "";
         this.sessionNavigationNextLabel = "";
@@ -172,18 +175,19 @@ export class SurveySessionManage extends Interaction {
         const copyBtnTooltipHideDelay = 800;
         this.copyBtnTooltip?.dispose();
         delete this.copyBtnTooltip;
-        const copyBtnPopover = window.Popover.getOrCreateInstance(ev.currentTarget, {
+        this.copyBtnPopover = window.Popover.getOrCreateInstance(ev.currentTarget, {
             content: _t("Copied!"),
             trigger: "manual",
             placement: "right",
             container: "body",
             offset: "0, 3",
         });
-        this.registerCleanup(() => copyBtnPopover.dispose());
-        await this.waitFor(browser.navigator.clipboard.writeText(ev.target.textContent));
+        await this.waitFor(
+            browser.navigator.clipboard.writeText(ev.currentTarget.innerText.trim())
+        );
         this.protectSyncAfterAsync(() => {
-            copyBtnPopover.show();
-            this.waitForTimeout(() => copyBtnPopover.hide(), copyBtnTooltipHideDelay);
+            this.copyBtnPopover.show();
+            this.waitForTimeout(() => this.copyBtnPopover.hide(), copyBtnTooltipHideDelay);
         })();
     }
 

@@ -62,17 +62,39 @@ class PrinterDriver(PrinterDriverBase):
         self.send_status('disconnected', 'Printer was disconnected')
         super().disconnect()
 
-    def print_raw(self, data):
-        if not self.check_printer_status():
-            return
-
-        with win32print_lock:
-            job_id = win32print.StartDocPrinter(self.printer_handle, 1, ('', None, "RAW"))
-            win32print.StartPagePrinter(self.printer_handle)
-            win32print.WritePrinter(self.printer_handle, data)
-            win32print.EndPagePrinter(self.printer_handle)
-            win32print.EndDocPrinter(self.printer_handle)
-        self.job_ids.append(job_id)
+    def print_raw(self, data, action_unique_id=None):
+        if not self.check_printer_status(action_unique_id):
+            _logger.warning("Printer %s is not ready, aborting raw print", self.device_name)
+            raise Exception("Printer not ready")
+        job_id = False
+        page_started = False
+        try:
+            with win32print_lock:
+                job_id = win32print.StartDocPrinter(self.printer_handle, 1, ('', None, "RAW"))
+                win32print.StartPagePrinter(self.printer_handle)
+                page_started = True
+                win32print.WritePrinter(self.printer_handle, data)
+                win32print.EndPagePrinter(self.printer_handle)
+                win32print.EndDocPrinter(self.printer_handle)
+                self.job_ids.append(job_id)
+                if action_unique_id:
+                    self.job_action_ids[job_id] = action_unique_id
+        except pywintypes.error as error:
+            _logger.error("Error while printing raw data to printer %s: %s", self.device_name, error)
+            if job_id or page_started:
+                try:
+                    with win32print_lock:
+                        if page_started:
+                            win32print.EndPagePrinter(self.printer_handle)
+                        if job_id:
+                            win32print.EndDocPrinter(self.printer_handle)
+                            self.job_ids.append(job_id)
+                            if action_unique_id:
+                                self.job_action_ids[job_id] = action_unique_id
+                except pywintypes.error as err:
+                    _logger.error("Error while finalizing print job to printer %s after failure: %s", self.device_name, err)
+                    self.send_status(status='error', message='ERROR_FAILED')
+                    raise
 
     def print_report(self, data):
         with win32print_lock:
@@ -108,10 +130,11 @@ class PrinterDriver(PrinterDriverBase):
 
         document = b64decode(data['document'])
         mimetype = guess_mimetype(document)
+        action_unique_id = data.get('action_unique_id')
         if mimetype == 'application/pdf':
             self.print_report(document)
         else:
-            self.print_raw(document)
+            self.print_raw(document, action_unique_id=action_unique_id)
         _logger.debug("_action_default finished with mimetype %s for printer %s", mimetype, self.device_name)
         return {'print_id': data['print_id']} if 'print_id' in data else {}
 
@@ -131,7 +154,9 @@ class PrinterDriver(PrinterDriverBase):
     def _cancel_job_with_error(self, job_id, error_message):
         self.job_ids.remove(job_id)
         win32print.SetJob(self.printer_handle, job_id, 0, None, win32print.JOB_CONTROL_DELETE)
-        self.send_status(status='error', message=error_message)
+        self.send_status(
+            status='error', message=error_message, action_unique_id=self.job_action_ids.pop(job_id, None)
+        )
 
     def _check_job_status(self, job_id):
         try:
@@ -140,6 +165,7 @@ class PrinterDriver(PrinterDriverBase):
             _logger.debug('job details for job id #%d: %s', job_id, job)
             if job['Status'] & win32print.JOB_STATUS_PRINTED:
                 self.job_ids.remove(job_id)
+                self.job_action_ids.pop(job_id, None)
                 self.send_status(status='success')
             # Print timeout, e.g. network printer is disconnected
             if elapsed_time.seconds > self.job_timeout_seconds:
@@ -156,6 +182,7 @@ class PrinterDriver(PrinterDriverBase):
             else:
                 _logger.exception('Win32 error occurred while querying print job')
             self.job_ids.remove(job_id)
+            self._recent_action_ids.pop(self.job_action_ids.pop(job_id, None), None)
 
 
 proxy_drivers['printer'] = PrinterDriver

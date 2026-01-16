@@ -7,13 +7,13 @@
 # Luis Bispo, 2023
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Maitê Dietze (madi)" <madi@odoo.com>, 2025.
+# "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-11-27 09:04+0000\n"
+"POT-Creation-Date: 2026-01-02 18:36+0000\n"
+"PO-Revision-Date: 2026-01-05 11:11+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-19/website_profile/pt_BR/>\n"
@@ -276,30 +276,29 @@ msgstr ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #F1F1F1; color: #454748; width: 100%; border-"
 "collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
-"\"padding: 16px; background-color: white; color: #454748; border-"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: white; color: #454748; border-"
 "collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- CABEÇALHO -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
-"0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr>\n"
 "                    <td valign=\"middle\">\n"
-"                        <span style=\"font-size: 20px; font-weight: bold;\">"
-"\n"
-"                           Validação do perfil da <t t-out="
-"\"object.company_id.name or ''\">YourCompany</t> \n"
+"                        <span style=\"font-size: 20px; font-weight: bold;"
+"\">\n"
+"                           Validação do perfil da <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t> \n"
 "                        </span>\n"
 "                    </td>\n"
 "                    <td t-if=\"not user.company_id.uses_default_logo\" "
 "valign=\"middle\" align=\"right\">\n"
-"                        <img t-attf-src="
-"\"/logo.png?company={{ user.company_id.id }}\" style="
-"\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt="
-"\"user.company_id.name\"/>\n"
+"                        <img t-attf-src=\"/logo.png?"
+"company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
 "                    </td>\n"
 "                </tr>\n"
 "                <tr>\n"
@@ -315,23 +314,23 @@ msgstr ""
 "    <!-- CONTEÚDO -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
-"0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                        <p style="
-"\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                            Olá,<t t-out=\"object.name or ''\">Marc Demo</t><"
-"br/><br/>\n"
+"                        <p style=\"margin: 0px; padding: 0px; font-size: "
+"13px;\">\n"
+"                            Olá,<t t-out=\"object.name or ''\">Marc Demo</"
+"t><br/><br/>\n"
 "                            Você deve validar o seu e-mail para ter acesso "
 "ao site da \"<t t-out=\"object.company_id.name or ''\">YourCompany</t>\".\n"
 "                            Para validar o e-mail, clique no link a seguir:\n"
 "                            </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                                <a t-att-href=\"ctx.get('token_url')\" t"
-"-attf-style=\"background-color: {{object.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
-"object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"                                <a t-att-href=\"ctx.get('token_url')\" t-"
+"attf-style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
 "font-size:13px;\">\n"
 "                                    Validar minha conta\n"
 "                                </a>\n"
@@ -353,30 +352,28 @@ msgstr ""
 "    <!-- RODAPÉ -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-width: "
-"590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; "
-"border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-"
+"width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px "
+"8px; border-collapse:separate;\">\n"
 "                <tr>\n"
 "                    <td valign=\"middle\" align=\"left\">\n"
-"                         <t t-out=\"user.company_id.name or ''\""
-">YourCompany</t>\n"
+"                         <t t-out=\"user.company_id.name or "
+"''\">YourCompany</t>\n"
 "                    </td>\n"
-"                    <td valign=\"middle\" align=\"right\" style="
-"\"opacity: 0.7;\">\n"
+"                    <td valign=\"middle\" align=\"right\" style=\"opacity: "
+"0.7;\">\n"
 "                        <t t-out=\"user.company_id.phone or ''\">+1 "
 "650-123-4567</t>\n"
 "                        <t t-if=\"user.company_id.email\">\n"
-"                            | <a t-attf-href="
-"\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"user.company_id.email or ''\""
-">info@yourcompany.com</a>\n"
+"                            | <a t-attf-href=\"'mailto:%s' % "
+"{{ user.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
 "                        </t>\n"
 "                        <t t-if=\"user.company_id.website\">\n"
-"                            | <a t-attf-href="
-"\"{{ user.company_id.website }}\" style=\"text-decoration:none; color: "
-"#454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>"
-"\n"
+"                            | <a t-attf-href=\"{{ user.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
 "                        </t>\n"
 "                    </td>\n"
 "                </tr>\n"
@@ -389,13 +386,12 @@ msgstr ""
 "<!-- DESENVOLVIDO POR -->\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
-"style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding:"
-" 8px; border-collapse:separate;\">\n"
+"style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; "
+"padding: 8px; border-collapse:separate;\">\n"
 "        <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"            Desenvolvido por <a target=\"_blank\" href="
-"\"https://www.odoo.com?utm_source=db&amp;utm_medium=forum\" t-attf-style="
-"\"color: {{object.company_id.email_secondary_color or '#875A7B'}};\">Odoo</a>"
-"\n"
+"            Desenvolvido por <a target=\"_blank\" href=\"https://"
+"www.odoo.com?utm_source=db&amp;utm_medium=forum\" t-attf-style=\"color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}};\">Odoo</a>\n"
 "        </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -476,6 +472,16 @@ msgstr "Biografia"
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__can_publish
 msgid "Can Publish"
 msgstr "Pode publicar"
+
+#. module: website_profile
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+msgid ""
+"Changing the country is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"Não é permitido alterar o país depois de emitir documentos na sua conta. "
+"Entre em contato conosco diretamente para realizar essa operação."
 
 #. module: website_profile
 #. odoo-javascript
@@ -578,7 +584,7 @@ msgstr "Como faço para acumular mais pontos?"
 #: model:ir.model.fields,field_description:website_profile.field_res_users__id
 #: model:ir.model.fields,field_description:website_profile.field_website__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__is_published
@@ -609,7 +615,7 @@ msgstr "Mais informações"
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -640,13 +646,13 @@ msgstr "Nenhum usuário encontrado para"
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
 msgid "Not have enough karma to view other users' profile."
-msgstr ""
+msgstr "Não há karma suficiente para ver perfis de outros usuários."
 
 #. module: website_profile
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 msgid "Public Profile"
-msgstr ""
+msgstr "Perfil público"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -657,7 +663,7 @@ msgstr "Classificações"
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
 msgid "Ranks and Badges"
-msgstr ""
+msgstr "Classificação e Medalhas"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -677,12 +683,12 @@ msgstr "Enviado a visitantes do fórum para que confirmem seus e-mails"
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
-msgstr ""
+msgstr "O URL absoluto completo para acessar o documento pelo site."
 
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__website_url
 msgid "The full relative URL to access the document through the website."
-msgstr ""
+msgstr "O URL relativo completo para acessar o documento através do site."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
@@ -713,6 +719,12 @@ msgid "Update"
 msgstr "Atualizar"
 
 #. module: website_profile
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.js:0
+msgid "Update failed."
+msgstr "Falha na atualização."
+
+#. module: website_profile
 #: model:ir.model,name:website_profile.model_res_users
 msgid "User"
 msgstr "Usuário"
@@ -721,7 +733,7 @@ msgstr "Usuário"
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
 msgid "User Profiles"
-msgstr ""
+msgstr "Perfis de usuário"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
@@ -753,7 +765,7 @@ msgstr "Site"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "URL absoluto do site"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_url
@@ -769,7 +781,7 @@ msgstr "Quando você termina um curso ou atinge marcos, você recebe emblemas."
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.js:0
 msgid "Write a few words about yourself..."
-msgstr ""
+msgstr "Escreva algumas palavras sobre você…"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
@@ -822,7 +834,7 @@ msgstr "ponto"
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
 msgid "slides"
-msgstr ""
+msgstr "slides"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card

@@ -8,14 +8,15 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Yoshi Tashiro <tashiro@quartile.co>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:35+0000\n"
-"PO-Revision-Date: 2025-11-25 07:30+0000\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-08 04:19+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/ja/>\n"
@@ -24,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -616,7 +617,7 @@ msgstr "Pine Labs決済端末での支払いを受け付ける"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a QFPay payment terminal"
-msgstr ""
+msgstr "QFPay決済端末で支払いを受け付ける"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -757,7 +758,7 @@ msgstr "活動ステータス"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動種別アイコン"
+msgstr "活動タイプアイコン"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -781,7 +782,7 @@ msgstr "チップ追加"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/orderline_note_button/orderline_note_button.js:0
 msgid "Add a "
-msgstr ""
+msgstr "追加 "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_unique_code
@@ -1020,7 +1021,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 msgid "Amount of guests"
-msgstr ""
+msgstr "ゲスト人数"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
@@ -1076,6 +1077,7 @@ msgid ""
 "An error occurred while generating an invoice. You can try again from the "
 "order list."
 msgstr ""
+"請求書の生成中にエラーが発生しました。オーダリストから再度お試しください。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1337,7 +1339,7 @@ msgstr "バックエンド"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Backend Invoice"
-msgstr ""
+msgstr "バックエンド請求書"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__customer_display_bg_img
@@ -1382,6 +1384,12 @@ msgstr "残高"
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_payment_method__type__bank
 msgid "Bank"
 msgstr "銀行"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "Bank App (QR Code)"
+msgstr "銀行アプリ (QRコード)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_payment_ids
@@ -1441,7 +1449,7 @@ msgstr "違いを閉じる前に"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Billing address:"
-msgstr "請求先住所:"
+msgstr "請求先:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_form
@@ -1590,7 +1598,7 @@ msgstr "キャンセル済"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Cannot edit orderline"
-msgstr ""
+msgstr "オーダ明細を編集できません"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1837,7 +1845,7 @@ msgstr "現金丸め"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Cashdrawer"
-msgstr "現金箱"
+msgstr "キャッシュドロワー"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__cashier
@@ -1968,6 +1976,8 @@ msgid ""
 "Check the printer configuration for the 'Device ID' setting.\n"
 "It should be set to: 'local_printer'"
 msgstr ""
+"プリンタの設定で「デバイスID」を確認してください。\n"
+"設定は「local_printer」である必要があります"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1976,6 +1986,8 @@ msgid ""
 "Check the printer configuration for the 'Device ID' setting.\n"
 "It should be set to: local_printer"
 msgstr ""
+"プリンタの設定で「デバイスID」を確認してください。\n"
+"設定は「local_printer」である必要があります"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_cheese_croissant_product_template
@@ -2029,7 +2041,7 @@ msgstr "ポータルサイトのURLを領収書にどのように印刷するか
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Choose the tax you want to apply"
-msgstr ""
+msgstr "適用したい税を選択してください"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2309,7 +2321,7 @@ msgstr "少なくとも1つのPOSを構成します。"
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Confirm"
@@ -2433,6 +2445,7 @@ msgid ""
 "Continuous printing of high-density printing caused a printing error. Please "
 "retry later"
 msgstr ""
+"高密度印刷の連続印刷により印刷エラーが発生しました。後ほど再試行してください"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2578,8 +2591,7 @@ msgid ""
 "Create one invoice for all orders related to same customer and same "
 "invoicing address"
 msgstr ""
-"同じ顧客、同じ請求先住所に関連するすべてのオーダに対して1つの請求書を作成しま"
-"す。"
+"同じ顧客、同じ請求先に関連するすべてのオーダに対して1つの請求書を作成します。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
@@ -2943,7 +2955,7 @@ msgstr "オーダを削除しますか？"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Delete all indexed DB"
-msgstr ""
+msgstr "インデックス付きデータベースをすべて削除"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3012,12 +3024,12 @@ msgstr "POS端末での表示順序を決定"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Device ID:"
-msgstr ""
+msgstr "デバイスID:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__device_seq_id
 msgid "Device Sequence"
-msgstr ""
+msgstr "デバイスシーケンス"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3203,7 +3215,7 @@ msgstr "電子値札によるプロダクト情報の表示と更新"
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_group_by_categ
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Display products grouped by categories."
-msgstr ""
+msgstr "プロダクトをカテゴリ別にグループ化して表示します。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__is_closing_entry_by_product
@@ -3242,9 +3254,21 @@ msgstr "ダウンロード"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download Logs"
+msgstr "ログのダウンロード"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Download a report with all the sales of the current PoS Session"
 msgstr "現在のPOSセッションのすべての売上を含むレポートを印刷します"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download logs"
+msgstr "ログのダウンロード"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3365,7 +3389,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__use_fast_payment
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_use_fast_payment
 msgid "Enable fast payment methods to validate orders on the product screen."
-msgstr ""
+msgstr "プロダクト画面でオーダを確定するための迅速な支払い方法を有効にします。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_electronic_scale
@@ -3444,7 +3468,7 @@ msgstr "エラー: インターネット接続がありません"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
 msgid "Everything is ready to go!"
-msgstr ""
+msgstr "準備万端です!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3495,7 +3519,7 @@ msgstr "失敗したピッキング"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "Failed to print a test receipt. Check your printer."
-msgstr ""
+msgstr "テストレシートの印刷に失敗しました。プリンタを確認してください。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3504,6 +3528,8 @@ msgid ""
 "Failed to reach the printer. Check the configured url. Make sure that the "
 "printer is online and you are on the same network."
 msgstr ""
+"プリンタに接続できませんでした。設定されたURLを確認してください。プリンタがオ"
+"ンライン状態であり、同じネットワークに接続されていることを確認してください。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3522,13 +3548,13 @@ msgstr "フォールバック命名法"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fast_payment_method_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_fast_payment_method_ids
 msgid "Fast Payment Methods"
-msgstr ""
+msgstr "クイック支払い方法"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_fast_payment
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_use_fast_payment
 msgid "Fast Payment Validation"
-msgstr ""
+msgstr "迅速な支払い確認"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3799,7 +3825,7 @@ msgstr "POSでプロダクトをグループ化する"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_group_by_categ
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_group_by_categ
 msgid "Group products by categories"
-msgstr ""
+msgstr "プロダクトをカテゴリ別にグループ化"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_ir_http
@@ -4393,7 +4419,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js:0
 msgid "It seems that the printer runs out of paper."
-msgstr ""
+msgstr "プリンタが紙切れになったようです。"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jean_jacket_product_template
@@ -4635,7 +4661,7 @@ msgstr "行番号"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Link Cashdrawer"
-msgstr ""
+msgstr "キャッシュドロワーをリンク"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_uom
@@ -4665,7 +4691,8 @@ msgstr "リンク済POS設定"
 msgid ""
 "List of account moves created when this POS order was reversed and invoiced "
 "after session close."
-msgstr ""
+msgstr "このPOSオーダをセッション終了後に取消・請求処理した際に作成された仕訳の一覧で"
+"す。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4697,7 +4724,8 @@ msgstr "読込中..."
 msgid ""
 "Local IP address of an Epson receipt printer, or its serial number if the "
 "'Automatic Certificate Update' option is enabled in the printer settings."
-msgstr ""
+msgstr "エプソン領収書プリンタのローカルIPアドレス、またはプリンタ設定で「自動証明書"
+"更新」オプションが有効になっている場合のシリアル番号。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4707,6 +4735,9 @@ msgid ""
 "Chromium-based. Please use a Chromium-based browser to benefit from this "
 "feature."
 msgstr ""
+"ローカルネットワークアクセス設定は有効化されていますが、お使いのブラウザはChr"
+"omiumベースではありません。この機能をご利用いただくには、Chromiumベースのブラ"
+"ウザをご利用ください。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4715,6 +4746,9 @@ msgid ""
 "Local Network Access is enabled for this POS, but your browser version does "
 "not support it. Please update your browser to the latest version."
 msgstr ""
+"このPOS端末ではローカルネットワークアクセスが有効化されていますが、お使いのブ"
+"ラウザのバージョンではサポートされていません。ブラウザを最新版に更新してくだ"
+"さい。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4723,6 +4757,9 @@ msgid ""
 "Local Network Access permission is denied. Some hardware devices might not "
 "work properly. Please allow Local Network Access in your browser settings."
 msgstr ""
+"ローカルネットワークアクセスが拒否されました。一部のハードウェアデバイスが正"
+"常に動作しない可能性があります。ブラウザの設定でローカルネットワークアクセス"
+"を許可してください。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4764,7 +4801,7 @@ msgstr "ロット/シリアル番号"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "Low voltage unrecoverable error occured, please check the printer"
-msgstr ""
+msgstr "低電圧による回復不能なエラーが発生しました。プリンタをご確認ください"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_lower
@@ -4896,7 +4933,7 @@ msgstr "最大値に達しました"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "Mechanical error, please check the printer"
-msgstr ""
+msgstr "機械的なエラー。プリンタをご確認ください。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4944,7 +4981,7 @@ msgstr "その他"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Missing required"
-msgstr ""
+msgstr "必須項目が不足しています"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__mobile
@@ -5131,7 +5168,7 @@ msgstr "次の注文リスト"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Next number:"
-msgstr ""
+msgstr "次の番号："
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5236,7 +5273,7 @@ msgstr "存在しないシリアル/ロット番号"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "No invoice journal configured for this POS session."
-msgstr ""
+msgstr "このPOSセッションには請求仕訳帳が設定されていません。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5299,6 +5336,12 @@ msgstr "その日に空きがありません"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__barcode_nomenclature_id
 msgid "Nomenclature"
 msgstr "体系"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "None required"
+msgstr "不要"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -5417,7 +5460,7 @@ msgstr "取引数:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Number stack:"
-msgstr ""
+msgstr "数値スタック:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5444,15 +5487,9 @@ msgid "Offline Orders"
 msgstr "オフライン注文"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
-msgid "Ok"
-msgstr "OK"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "One-click Payment"
-msgstr ""
+msgstr "ワンクリック決済"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5471,7 +5508,8 @@ msgstr "オンライン予約"
 msgid ""
 "Online payment, delivery payment, terminal payment, and methods that require "
 "customer identification are not supported for fast payment validation."
-msgstr ""
+msgstr "オンライン決済、配送時決済、端末決済、および顧客の本人確認が必要な支払い方法"
+"は、クイック支払いの検証には対応していません。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5686,7 +5724,7 @@ msgstr "注文%sは完全に支払われていません。"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__order_backend_seq_id
 msgid "Order Backend Sequence"
-msgstr ""
+msgstr "オーダバックエンド連番"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_invoice__count
@@ -5704,7 +5742,7 @@ msgstr "オーダ日"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__order_line_seq_id
 msgid "Order Line Sequence"
-msgstr ""
+msgstr "オーダ明細連番"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__lines
@@ -5933,25 +5971,25 @@ msgstr "POSセッション"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "POS device from config #%s"
-msgstr ""
+msgstr "設定 #%s のPOSデバイス"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "POS order backend from config #%s"
-msgstr ""
+msgstr "設定 #%sのPOSオーダバックエンド"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "POS order from config #%s"
-msgstr ""
+msgstr "設定 #%sのPOSオーダ"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "POS order line from config #%s"
-msgstr ""
+msgstr "設定 #%s のPOSオーダ明細"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6247,7 +6285,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "Please configure a valid ePoS url in order to test the printer"
-msgstr ""
+msgstr "プリンタをテストするには、有効なePoS URLを設定してください"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6333,7 +6371,7 @@ msgstr "支払方法を選択して下さい。"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Please select a time slot before proceeding."
-msgstr ""
+msgstr "先に時間帯を選択してください。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6946,13 +6984,13 @@ msgstr "プリンタタイプ"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "Printer cover is open, please close it before printing"
-msgstr ""
+msgstr "プリンタのカバーが開いています。印刷前に閉じてください"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js:0
 msgid "Printer cover is open. Please close it and try again!"
-msgstr ""
+msgstr "プリンタのカバーが開いています。閉めてからもう一度お試しください!"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7172,12 +7210,12 @@ msgstr "プロキシ警告"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "QFPay"
-msgstr ""
+msgstr "QFPay"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_qfpay
 msgid "QFPay Payment Terminal"
-msgstr ""
+msgstr "QFPay決済端末"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7590,7 +7628,7 @@ msgstr "返却済"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__reversed_move_ids
 msgid "Reversal Account Moves"
-msgstr ""
+msgstr "逆仕訳"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8169,7 +8207,7 @@ msgstr "モレロチェリーのフィリングが入ったショートクラス
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Shortcut to skip payment screen"
-msgstr ""
+msgstr "支払い画面をスキップするショートカット"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__show_category_images
@@ -8291,13 +8329,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
 msgid "Some process are still running in background, please wait..."
-msgstr ""
+msgstr "一部のプロセスがバックグラウンドで実行中です。お待ちください..."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Some required information is missing."
-msgstr ""
+msgstr "必要な情報が一部不足しています。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8360,7 +8398,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "活動に基づくステータス\n"
-"遅延: 期限が既に過ぎています\n"
+"期限超過：期限日がすでに過ぎています\n"
 "今日: 活動日は今日です\n"
 "予定: 将来の活動。"
 
@@ -8449,7 +8487,7 @@ msgstr "値引前小計"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "Succesfully printed a test receipt"
-msgstr ""
+msgstr "テストレシートの印刷に成功しました"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8618,6 +8656,12 @@ msgid "Tel:"
 msgstr "TEL:"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "Terminal"
+msgstr "端末"
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos_button.xml:0
 msgid "Test"
@@ -8704,7 +8748,7 @@ msgstr "POSは、'丸め行の追加'丸め戦略のみをサポートします�
 #. odoo-python
 #: code:addons/point_of_sale/controllers/main.py:0
 msgid "The Ticket Number should be at least 12 characters long."
-msgstr ""
+msgstr "チケット番号は12文字以上である必要があります。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8725,6 +8769,9 @@ msgid ""
 "The rounding precision is %(rounding)s so you should set %(expectedAmount)s "
 "as payment amount instead of %(paidAmount)s."
 msgstr ""
+"取引を確定するには、支払い明細行の金額を丸める必要があります。\n"
+"丸めの精度は %(rounding)s のため、支払い金額は %(expectedAmount)s "
+"(%(paidAmount)s ではなく)に設定してください。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_brand
@@ -8742,13 +8789,13 @@ msgstr "POS%(pos)sの丸め方針は以下である必要があります: '%(val
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "The company must have a fiscal country set."
-msgstr ""
+msgstr "会社には必ず会計上の国が設定されている必要があります。"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "The cutter has a foreign matter, please check the cutter mechanism"
-msgstr ""
+msgstr "カッターに異物があります。カッター機構をご確認ください"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8781,7 +8828,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid ""
 "The device is not connected, please check the printer power / connection"
-msgstr ""
+msgstr "デバイスが接続されていません。プリンタの電源/接続を確認してください"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8817,6 +8864,9 @@ msgid ""
 "To find more details on the error reason, please search online for: Epson "
 "Server Direct Print %s "
 msgstr ""
+"プリンタから次のエラーコードが返されました：%s\n"
+"エラーの原因について詳しく調べるには、オンラインで次を検索してください："
+"Epson Server Direct Print %s "
 
 #. module: point_of_sale
 #. odoo-python
@@ -8955,7 +9005,7 @@ msgstr "支払金額がオーダの合計金額と異なります。"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "The paper is empty, please load paper into the printer"
-msgstr ""
+msgstr "用紙がありません。用紙をプリンタにセットしてください"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9008,7 +9058,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js:0
 msgid "The printer is not reachable."
-msgstr ""
+msgstr "プリンタに接続できません。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category__hour_after
@@ -9170,14 +9220,15 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "The transactions are processed by QFPay on the terminal."
-msgstr ""
+msgstr "取引は端末上でQFPayによって処理されます。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_qfpay
 msgid ""
 "The transactions are processed by QFPay. Set your QFPay credentials on the "
 "related payment method."
-msgstr ""
+msgstr "取引はQFPayによって処理されます。関連する支払い方法にQFPayの認証情報を設定し"
+"てください。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_razorpay
@@ -9247,7 +9298,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "There is already a cash payment line."
-msgstr ""
+msgstr "すでに現金の支払い明細行があります。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9314,7 +9365,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fast_payment_method_ids
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_fast_payment_method_ids
 msgid "These payment methods will be available for fast payment"
-msgstr ""
+msgstr "これらの支払方法は、クイック支払いで利用できます"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9446,7 +9497,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid ""
 "This orderline has already been sent to the kitchen and cannot be edited."
-msgstr ""
+msgstr "このオーダは既にキッチンに送信済みで、編集できません。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9508,7 +9559,7 @@ msgstr "タイガーホワイトローフ"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "Timeout occured, please try again"
-msgstr ""
+msgstr "タイムアウトが発生しました。もう一度お試しください"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9584,7 +9635,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid ""
 "To enable invoice creation, please add a journal for it in the settings."
-msgstr ""
+msgstr "請求書を作成できるようにするには、設定で請求書用の仕訳帳を追加してください。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -9934,7 +9985,7 @@ msgstr "価格表を使用します。"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__iot
 msgid "Use a printer connected to the IoT Box"
-msgstr ""
+msgstr "IoT Boxに接続されたプリンタを使用"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__epson_epos
@@ -10169,7 +10220,7 @@ msgstr "作業詳細"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 msgid "Would you like to continue without printing or retry?"
-msgstr ""
+msgstr "印刷せずに続行しますか、それともやり直しますか?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10213,7 +10264,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 msgid "You can not change the %s of the refund order."
-msgstr ""
+msgstr "返金オーダの %s は変更できません。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10253,7 +10304,8 @@ msgstr "以下のオプションのいずれかを選択することで、更新
 msgid ""
 "You can't reset this invoice to draft because the POS session is still open. "
 "Please close the ongoing session first, then try again."
-msgstr ""
+msgstr "この請求書をドラフトに戻すことはできません。POSセッションがまだ開いているため"
+"です。まず進行中のセッションを閉じてから、再度お試しください。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10320,7 +10372,7 @@ msgstr "このセッションに関連付けられていない入出金は削除
 msgid ""
 "You cannot delete a customer that has point of sales orders. You can archive "
 "it instead."
-msgstr ""
+msgstr "POSオーダがある顧客は削除できません。代わりにアーカイブできます。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10347,7 +10399,7 @@ msgstr "POSの設定で使用されている丸め方法は削除できません
 #. odoo-python
 #: code:addons/point_of_sale/models/ir_sequence.py:0
 msgid "You cannot delete a sequence used in an active POS config: %s"
-msgstr ""
+msgstr "アクティブなPOS設定で使用されている連番は削除できません：%s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10567,7 +10619,7 @@ msgstr "例:会社の住所、ウェブサイト"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "e.g. Dine in"
-msgstr ""
+msgstr "例：店内飲食"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -10733,6 +10785,12 @@ msgid "return"
 msgstr "返品"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "terminal"
+msgstr "端末"
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "to activate the buttons."
@@ -10742,6 +10800,9 @@ msgstr "ボタンを有効化します。"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "支払方法:"
+
+#~ msgid "Ok"
+#~ msgstr "OK"
 
 #~ msgid "Confirm?"
 #~ msgstr "確定?"

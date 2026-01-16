@@ -3,7 +3,7 @@
     <record id="hr_employee_skill_history_report_view_graph" model="ir.ui.view">
         <field name="model">hr.employee.skill.history.report</field>
         <field name="arch" type="xml">
-            <graph js_class="skills_graph" type="line" stacked="0">
+            <graph js_class="skills_graph" type="line" stacked="0" disable_linking="1">
                 <field name="date" interval="day" type="row"/>
                 <field name="skill_id" type="row"/>
                 <field name="level_progress" type="measure"/>

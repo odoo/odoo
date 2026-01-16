@@ -52,3 +52,4 @@ Julia Elizondo jue@adhoc.inc https://github.com/jue-adhoc
 Matias Peralta mnp@adhoc.inc https://github.com/matiasperalta1
 Victoria Halac hav@adhoc.inc https://github.com/hav-adhoc
 Manuela Cepeda cem@adhoc.inc https://github.com/cem-adhoc
+Lara Valeri lav@adhoc.inc https://github.com/lav-adhoc

@@ -12,15 +12,15 @@
 # Martin Trigaux, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
 # Mohammad Abdulmoneim <abdu@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-21 14:14+0000\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-06 17:23+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/project/"
 "ar/>\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
@@ -602,6 +602,19 @@ msgid ""
 "                                            </span>\n"
 "                                        </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                            <i class=\"fa fa-lightbulb-o "
+"pe-2\"/>\n"
+"                                            <span "
+"name=\"rating_status_helper\">\n"
+"                                                <span "
+"invisible=\"rating_status == 'periodic'\">سيتم إرسال طلب التقييم بمجرد وصول "
+"المهمة إلى هذه المرحلة.</span>\n"
+"                                                <span "
+"invisible=\"rating_status == 'stage'\">سيتم إرسال طلبات التقييم طالما بقيت "
+"المهمة في هذه المرحلة.</span>\n"
+"                                            </span>\n"
+"                                        </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
@@ -1073,6 +1086,8 @@ msgid ""
 "                When creating a new project from the template, choose who "
 "will take on each role."
 msgstr ""
+"قم بتعيين الأدوار للمهام في قوالب مشروعك.\n"
+"                عند إنشاء مشروع جديد من القالب، اختر من سيتولى كل دور."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -1824,6 +1839,9 @@ msgid ""
 "disable         Changing this parameter will not affect the rotting status/"
 "date of resources last updated before this change."
 msgstr ""
+"عدد الأيام قبل أن تصبح المهام في هذه المرحلة قديمة. قم بتعيين القيمة كـ 0 "
+"لتعطيلها.          لن يؤثر تغيير هذا المعامل على حالة/تاريخ تقادم الموارد "
+"التي تم تحديثها آخر مرة قبل هذا التغيير."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rotting_days
@@ -2365,6 +2383,9 @@ msgid ""
 "individual tasks. Internal users automatically gain access to tasks they are "
 "assigned to."
 msgstr ""
+"امنح المستخدمين صلاحيات الوصول عن طريق إضافتهم كمتابعين — إما للمشروع أو "
+"للمهام الفردية. يحصل المستخدمون الداخليون تلقائيًا على صلاحيات الوصول إلى "
+"المهام المخصصة لهم."
 
 #. module: project
 #. odoo-javascript
@@ -2546,6 +2567,8 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban and List "
 "views of your projects. Projects in a folded stage are considered as closed."
 msgstr ""
+"إذا تم تمكين هذه المرحلة، فسيتم عرضها على أنها مطوية في عرضي Kanban والقائمة "
+"لمشاريعك. تعتبر المشاريع في المرحلة المطوية مغلقة."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2555,6 +2578,9 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task "
 "remains in this stage."
 msgstr ""
+"إذا تم تعيين هذا الخيار، فسيتم إرسال طلب التقييم تلقائيًا عبر البريد "
+"الإلكتروني إلى العميل عندما تصل المهمة إلى هذه المرحلة.\n"
+"أو سيتم إرساله على فترات منتظمة طالما بقيت المهمة في هذه المرحلة."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -4267,7 +4293,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__is_rotting
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rotting"
-msgstr ""
+msgstr "قيد الانتظار لفترة طويلة"
 
 #. module: project
 #. odoo-javascript
@@ -5760,6 +5786,8 @@ msgid ""
 "takes each role. These employees will be added to the tasks, along with "
 "anyone already assigned."
 msgstr ""
+"عند إنشاء مشروع من قالب، يمكنك اختيار الموظف الذي سيتولى كل دور. ستتم إضافة "
+"هؤلاء الموظفين إلى المهام، إلى جانب أي شخص قم تم إسناد المهام إليه بالفعل."
 
 #. module: project
 #: model:project.tags,name:project.project_tags_14

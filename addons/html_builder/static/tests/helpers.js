@@ -2,6 +2,7 @@ import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
 import { Img } from "@html_builder/core/img";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
+import { revertPreview } from "@html_builder/core/utils";
 import { unformat } from "@html_editor/../tests/_helpers/format";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
@@ -9,7 +10,7 @@ import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
-import { after } from "@odoo/hoot";
+import { after, queryFirst } from "@odoo/hoot";
 import { animationFrame, waitForNone, queryOne, waitFor, advanceTime, tick } from "@odoo/hoot-dom";
 import { Component, onMounted, useRef, useState, useSubEnv, xml } from "@odoo/owl";
 import {
@@ -24,6 +25,7 @@ import { loadBundle } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
+import { delay } from "@web/core/utils/concurrency";
 
 export function patchWithCleanupImg() {
     const defaultImg =
@@ -248,7 +250,7 @@ export async function setupHTMLBuilder(
 
     let lastUpdatePromise;
     const waitSidebarUpdated = async () => {
-        await attachedEditor.shared.operation.next();
+        await revertPreview(attachedEditor);
         // The tick ensures that lastUpdatePromise has correctly been assigned
         await tick();
         await lastUpdatePromise;
@@ -558,4 +560,13 @@ export async function setupHTMLBuilderWithDummySnippet(content) {
     };
 
     return await setupHTMLBuilder(content || "", snippetsStructure);
+}
+
+export async function editBuilderRangeValue(selector, newValue) {
+    const input = queryFirst(selector);
+    input.value = newValue;
+    input.dispatchEvent(new Event("input"));
+    await delay();
+    input.dispatchEvent(new Event("change"));
+    await delay();
 }

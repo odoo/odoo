@@ -48,12 +48,22 @@ class AnalyticMixin(models.AbstractModel):
             self._field_to_sql(table or self._table, 'analytic_distribution'),
         )
 
+    @api.model
+    def _get_analytic_account_ids_from_distributions(self, distributions):
+        if not distributions:
+            return []
+
+        if isinstance(distributions, (list, tuple, set)):
+            return {int(_id) for distribution in distributions for key in (distribution or {}) for _id in key.split(',')}
+        else:
+            return {int(_id) for key in (distributions or {}) for _id in key.split(',')}
+
     @api.depends('analytic_distribution')
     def _compute_distribution_analytic_account_ids(self):
-        all_ids = {int(_id) for rec in self for key in (rec.analytic_distribution or {}) for _id in key.split(',')}
+        all_ids = {int(_id) for rec in self for key in (rec.analytic_distribution or {}) for _id in key.split(',') if _id.isdigit()}
         existing_accounts_ids = set(self.env['account.analytic.account'].browse(all_ids).exists().ids)
         for rec in self:
-            ids = list(unique(int(_id) for key in (rec.analytic_distribution or {}) for _id in key.split(',') if int(_id) in existing_accounts_ids))
+            ids = list(unique(int(_id) for key in (rec.analytic_distribution or {}) for _id in key.split(',') if _id.isdigit() and int(_id) in existing_accounts_ids))
             rec.distribution_analytic_account_ids = self.env['account.analytic.account'].browse(ids)
 
     def _search_distribution_analytic_account_ids(self, operator, value):

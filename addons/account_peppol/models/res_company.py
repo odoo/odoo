@@ -60,7 +60,7 @@ class ResCompany(models.Model):
         help='Primary contact email for Peppol connection related communications and notifications.\n'
              'In particular, this email is used by Odoo to reconnect your Peppol account in case of database change.',
     )
-    account_peppol_migration_key = fields.Char(string="Migration Key")
+    account_peppol_migration_key = fields.Char(string="Migration Key", groups="base.group_system")
     account_peppol_phone_number = fields.Char(
         string='Mobile number',
         compute='_compute_account_peppol_phone_number', store=True, readonly=False,
@@ -98,10 +98,12 @@ class ResCompany(models.Model):
     peppol_metadata = fields.Json(string='Peppol Metadata')
     peppol_metadata_updated_at = fields.Datetime(string='Peppol meta updated at')
 
+    # Deprecated
     peppol_activate_self_billing_sending = fields.Boolean(
         string="Activate self-billing sending",
         help="If activated, you will be able to send vendor bills as self-billed invoices via Peppol.",
     )
+    # Deprecated
     peppol_self_billing_reception_journal_id = fields.Many2one(
         comodel_name='account.journal',
         string='Self-Billing reception journal',
@@ -238,12 +240,16 @@ class ResCompany(models.Model):
         self.peppol_parent_company_id = False
         for company in self:
             for parent_company in company.parent_ids[::-1][1:]:
-                if all((
-                    company.peppol_eas,
-                    company.peppol_endpoint,
-                    company.peppol_eas == parent_company.peppol_eas,
-                    company.peppol_endpoint == parent_company.peppol_endpoint,
-                )):
+                if (
+                    company.peppol_eas
+                    and company.peppol_endpoint
+                    and company.peppol_eas == parent_company.peppol_eas
+                    and company.peppol_endpoint == parent_company.peppol_endpoint
+                ) or (
+                    not company.peppol_endpoint
+                    and parent_company.peppol_eas
+                    and parent_company.peppol_endpoint
+                ):
                     company.peppol_parent_company_id = parent_company
                     break
 
@@ -370,18 +376,10 @@ class ResCompany(models.Model):
                     "SI-UBL 2.0 Invoice",
                 "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0::2.1":
                     "SI-UBL 2.0 CreditNote",
-                "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0::2.1":
-                    "SG Peppol BIS Billing 3.0 Invoice",
-                "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0::2.1":
-                    "SG Peppol BIS Billing 3.0 Credit Note",
                 "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0::2.1":
                     "XRechnung UBL Invoice V2.0",
                 "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0::2.1":
                     "XRechnung UBL CreditNote V2.0",
-                "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0::2.1":
-                    "AU-NZ Peppol BIS Billing 3.0 Invoice",
-                "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0::2.1":
-                    "AU-NZ Peppol BIS Billing 3.0 CreditNote",
             }
         }
 

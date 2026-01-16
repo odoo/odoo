@@ -74,6 +74,7 @@ _ref_vat = {
     'si': 'SI12345679',
     'sk': 'SK2022749619',
     'sm': 'SM24165',
+    'th': '1234545678781',
     'tr': _lt('17291716060 (NIN) or 1729171602 (VKN)'),
     'uy': _lt("Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"),
     've': 'V-12345678-1, V123456781, V-12.345.678-1',
@@ -306,12 +307,15 @@ class ResPartner(models.Model):
             return True
         return stdnum.util.get_cc_module('gr', 'vat').is_valid(vat)
 
+    # Our EDI provider Infile has designated this range of testing VATs for our customers.
+    __check_vat_gt_testing_infile = re.compile(r'98[0-9]{10}K')
+
     def check_vat_gt(self, vat):
         """
         Allow some custom Guatemala NIT numbers to pass the test to be used for testing the Guatemalan EDI.
         """
         guatemalan_test_vats = ('11201220K', '11201350K')
-        if vat in guatemalan_test_vats:
+        if vat in guatemalan_test_vats or self.__check_vat_gt_testing_infile.match(vat):
             return True
         return stdnum.util.get_cc_module('gt', 'vat').is_valid(vat)
 
@@ -738,6 +742,10 @@ class ResPartner(models.Model):
 
         return True
 
+    def check_vat_th(self, vat):
+        check_func = stdnum.util.get_cc_module('th', 'tin').is_valid
+        return check_func(vat)
+
     def check_vat_de(self, vat):
         is_valid_vat = stdnum.util.get_cc_module("de", "vat").is_valid
         is_valid_stnr = stdnum.util.get_cc_module("de", "stnr").is_valid
@@ -826,3 +834,10 @@ class ResPartner(models.Model):
         if self.env.context.get('import_file'):
             self.env.remove_to_compute(self._fields['vies_valid'], self)
         return res
+
+    def _create_contact_parent_company(self):
+        new_company = super()._create_contact_parent_company()
+        if new_company and self.vies_valid:
+            new_company.env.remove_to_compute(self._fields['vies_valid'], new_company)
+            new_company.vies_valid = self.vies_valid
+        return new_company

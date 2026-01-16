@@ -2,6 +2,7 @@ import { Component } from "@odoo/owl";
 import {
     basicContainerBuilderComponentProps,
     getAllActionsAndOperations,
+    revertPreview,
     useBuilderComponent,
     useDependencyDefinition,
     useDomState,
@@ -127,9 +128,7 @@ export class BuilderMany2One extends Component {
         });
     }
     revert() {
-        // The `next` will cancel the previous operation, which will revert
-        // the operation in case of a preview.
-        this.env.editor.shared.operation.next();
+        revertPreview(this.env.editor);
     }
     create(name) {
         const args = { editingElement: this.env.getEditingElement(), value: name };

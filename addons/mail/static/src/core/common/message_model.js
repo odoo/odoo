@@ -321,7 +321,7 @@ export class Message extends Record {
     }
 
     get hasTextContent() {
-        return !this.isBodyEmpty;
+        return !this.isBodyEmpty || this.edited;
     }
 
     isEmpty = fields.Attr(false, {
@@ -552,6 +552,7 @@ export class Message extends Record {
             mentionedChannels,
             mentionedPartners,
             mentionedRoles,
+            thread: this.thread,
         });
         const hadLink = this.hasLink; // to remove old previews if message no longer contains any link
         const updateData = {
@@ -622,7 +623,12 @@ export class Message extends Record {
      * @returns {string}
      */
     getPersonaName(persona) {
-        return this.thread?.getPersonaName(persona) || persona?.displayName || persona?.name;
+        return (
+            this.thread?.getPersonaName(persona) ||
+            persona?.displayName ||
+            persona?.name ||
+            _t("Unnamed")
+        );
     }
 
     async onClickToggleTranslation() {

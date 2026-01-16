@@ -13,7 +13,7 @@ from odoo import api, fields, models, _
 from odoo.fields import Command, Domain
 from odoo.tools import format_amount, format_date, formatLang, groupby, OrderedSet, SQL
 from odoo.tools.float_utils import float_is_zero, float_repr
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessDenied, UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -711,7 +711,7 @@ class PurchaseOrder(models.Model):
             'name': _("Bill Matching"),
             'res_model': 'purchase.bill.line.match',
             'domain': [
-                ('partner_id', '=', self.partner_id.id),
+                ('partner_id', 'in', (self.partner_id | self.partner_id.commercial_partner_id).ids),
                 ('company_id', 'in', self.env.company.ids),
                 ('purchase_order_id', 'in', [self.id, False]),
             ],
@@ -973,6 +973,8 @@ class PurchaseOrder(models.Model):
         """ This function returns the values to populate the custom dashboard in
             the purchase order views.
         """
+        if not self.env.user._is_internal():
+            raise AccessDenied()
         self.browse().check_access('read')
 
         result = {
@@ -1215,6 +1217,7 @@ class PurchaseOrder(models.Model):
                 # The discounted price is expressed in the product's UoM, not in the vendor
                 # price's UoM, so we need to convert it into to match the displayed UoM.
                 price = product_uom._compute_price(price, seller.product_uom_id)
+                product_infos.update(uomFactor=seller.product_uom_id.factor / product_uom.factor)
             product_infos.update(
                 price=price,
                 min_qty=seller.min_qty,

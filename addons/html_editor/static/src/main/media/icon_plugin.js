@@ -8,6 +8,7 @@ import { ICON_SELECTOR, isElement } from "@html_editor/utils/dom_info";
 export class IconPlugin extends Plugin {
     static id = "icon";
     static dependencies = ["history", "selection", "dialog"];
+    toolbarNamespace = "icon";
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -55,17 +56,20 @@ export class IconPlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
-        toolbar_namespaces: [
-            {
-                id: "icon",
-                isApplied: (targetedNodes) =>
+        toolbar_namespace_providers: [
+            (targetedNodes) => {
+                if (
+                    targetedNodes.length &&
                     targetedNodes.every(
+                        // All nodes should be icons, its ZWS child or its ancestors
                         (node) =>
-                            // All nodes should be icons, its ZWS child or its ancestors
                             node.classList?.contains("fa") ||
                             node.parentElement.classList.contains("fa") ||
                             (node.querySelector?.(".fa") && node.isContentEditable !== false)
-                    ),
+                    )
+                ) {
+                    return this.toolbarNamespace;
+                }
             },
         ],
         toolbar_groups: [

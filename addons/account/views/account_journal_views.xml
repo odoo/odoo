@@ -173,7 +173,9 @@
                                             <field name="alias_name" placeholder="alias"/>@
                                             <field name="alias_domain_id" placeholder="e.g. mycompany.com" options="{'no_create': True, 'no_open': True}"/>
                                         </div>
-                                        <field name="incoming_einvoice_notification_email" invisible="type != 'purchase'" placeholder="Enter an email to get notified"/>
+                                        <field name="incoming_einvoice_notification_email"
+                                               placeholder="e.g. finance@example.com; accountant@example.com"
+                                               class="w-100"/>
                                     </group>
                                     <!-- edi -->
                                     <group name="group_edi_config" string="Electronic Data Interchange" invisible="1"/>

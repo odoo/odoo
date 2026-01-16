@@ -40,7 +40,7 @@ class ResConfigSettings(models.TransientModel):
         for config in self:
             company = config.company_id._l10n_it_get_edi_company()
             company.l10n_it_edi_register = config.l10n_it_edi_register
-            proxy_user = self.env['account_edi_proxy_client.user'].search([
+            proxy_user = self.env['account_edi_proxy_client.user'].sudo().search([
                 ('company_id', '=', company.id),
                 ('proxy_type', '=', 'l10n_it_edi'),
                 ('edi_mode', '!=', 'demo'),  # make sure it's a "real" proxy_user (edi_mode is 'test' or 'prod')
@@ -56,12 +56,12 @@ class ResConfigSettings(models.TransientModel):
 
             if proxy_user:
                 # Delete any previously created demo proxy user
-                self.env['account_edi_proxy_client.user'].search([
+                self.env['account_edi_proxy_client.user'].sudo().search([
                     ('company_id', '=', company.id),
                     ('proxy_type', '=', 'l10n_it_edi'),
                     ('edi_mode', '=', 'demo'),
                     ('id', '!=', proxy_user.id),
-                ]).sudo().unlink()
+                ]).unlink()
 
     @api.depends('company_id.account_edi_proxy_client_ids', 'company_id.account_edi_proxy_client_ids.active')
     def _compute_use_root_proxy_user(self):

@@ -13,7 +13,7 @@ from odoo import api, fields, models, _
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import format_datetime
+from odoo.tools import SQL, format_datetime
 from odoo.tools.misc import OrderedSet, format_date, groupby as tools_groupby, topological_sort
 
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
@@ -615,7 +615,9 @@ class MrpProduction(models.Model):
             if not production.bom_id and not production._origin.product_id:
                 production.workorder_ids = workorders_list
             # if the product has changed or if in a second onchange with bom resets the relations
-            if production.product_id != production._origin.product_id or (production._origin.bom_id != production.bom_id and production._origin.bom_id.operation_ids and not production.workorder_ids.filtered(lambda wo: wo.ids and wo.operation_id)):
+            if production.product_id != production._origin.product_id \
+                or (not production._origin.bom_id and production.bom_id) \
+                or (production._origin.bom_id != production.bom_id and production._origin.bom_id.operation_ids and not production.workorder_ids.filtered(lambda wo: wo.ids and wo.operation_id)):
                 production.workorder_ids = [Command.clear()]
             if production.bom_id and production.product_id and production.product_qty > 0:
                 # keep manual entries
@@ -870,14 +872,23 @@ class MrpProduction(models.Model):
     def _search_is_delayed(self, operator, value):
         if operator not in ('in', 'not in'):
             return NotImplemented
-        sub_query = self._search([
-            ('state', 'in', ['confirmed', 'progress', 'to_close']),
-            ('date_deadline', '!=', False),
-            '|',
-                ('date_deadline', '<', self._field_to_sql('mrp_production', 'date_finished')),
-                ('date_deadline', '<', fields.Datetime.now())
-        ])
-        return [('id', operator, sub_query)]
+        delayed_productions = (
+            Domain([
+                ('state', 'in', ['confirmed', 'progress', 'to_close']),
+                ('date_deadline', '!=', False),
+            ])
+            & (
+                Domain.custom(
+                    to_sql=lambda model, alias, query: SQL(
+                        "%s < %s",
+                        SQL.identifier(alias, 'date_deadline'),
+                        SQL.identifier(alias, 'date_finished'),
+                    )
+                )
+                | Domain('date_deadline', '<', fields.Datetime.now())
+            )
+        )
+        return [('id', operator, delayed_productions)]
 
     @api.depends('delay_alert_date', 'state', 'date_deadline', 'date_finished')
     def _compute_is_delayed(self):
@@ -953,6 +964,8 @@ class MrpProduction(models.Model):
                 raise UserError(_("You cannot set more than 1 lot"))
 
     def write(self, vals):
+        if 'product_id' in vals and self.state != 'draft':
+            vals.pop('product_id')
         if 'move_byproduct_ids' in vals and 'move_finished_ids' not in vals:
             vals['move_finished_ids'] = vals.get('move_finished_ids', []) + vals['move_byproduct_ids']
             del vals['move_byproduct_ids']
@@ -971,7 +984,7 @@ class MrpProduction(models.Model):
         if 'workorder_ids' in self:
             production_to_replan = self.filtered(lambda p: p.is_planned)
         for move_str in ('move_raw_ids', 'move_finished_ids'):
-            if move_str not in vals or self.state in ['draft', 'cancel', 'done']:
+            if move_str not in vals or self.state in ['cancel', 'done']:
                 continue
             # When adding a move raw/finished, it should have the source location's `warehouse_id`.
             # Before, it was handle by an onchange, now it's forced if not already in vals.
@@ -1809,7 +1822,7 @@ class MrpProduction(models.Model):
         finish_moves = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         raw_moves = self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         (finish_moves | raw_moves).with_context(skip_mo_check=True)._action_cancel()
-        picking_ids = self.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and not x.move_ids.move_dest_ids)
+        picking_ids = self.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and not (x.move_ids.move_dest_ids or any(mo.state == 'done' for mo in x.production_ids)))
         picking_ids.action_cancel()
 
         for production, documents in documents_by_production.items():
@@ -2485,6 +2498,7 @@ class MrpProduction(models.Model):
             'picking_type_id': self.picking_type_id.id,
             'product_qty': sum(production.product_uom_qty for production in self),
             'product_uom_id': product_id.uom_id.id,
+            'location_final_id': all(mo.location_final_id for mo in self) and len(self.location_final_id) == 1 and self.location_final_id.id,
             'user_id': user_id.id,
             'reference_ids': [Command.link(r.id) for r in self.reference_ids],
             'origin': ",".join(sorted([production.name for production in self])),
@@ -2958,6 +2972,21 @@ class MrpProduction(models.Model):
             action = self.env.ref("stock.label_lot_template").report_action(lot_id.id, config=False)
             clean_action(action, self.env)
             return action
+
+    def _autoprint_mass_generated_lots(self):
+        actions = []
+        productions_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_generated_mrp_lot)
+        productions_by_print_formats = productions_to_print.grouped(lambda p: p.picking_type_id.generated_mrp_lot_label_to_print)
+        for print_format in productions_to_print.picking_type_id.mapped('generated_mrp_lot_label_to_print'):
+            grouped_productions = productions_by_print_formats.get(print_format)
+            lots_to_print = grouped_productions.mapped('lot_producing_ids')
+            if print_format == 'pdf':
+                action = self.env.ref("stock.action_report_lot_label").report_action(lots_to_print.ids, config=False)
+            elif print_format == 'zpl':
+                action = self.env.ref("stock.label_lot_template").report_action(lots_to_print.ids, config=False)
+            clean_action(action, self.env)
+            actions.append(action)
+        return actions
 
     def _prepare_finished_extra_vals(self):
         self.ensure_one()

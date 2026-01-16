@@ -177,6 +177,9 @@ patch(ExpressCheckout.prototype, {
                         },
                     },
                 ));
+                this.paymentContext['minorAmount'] = await this.waitFor(rpc(
+                    this.paymentContext['shippingAddressUpdateRoute'] + '/compute_taxes',
+                ));
                 const { delivery_methods, delivery_discount_minor_amount } = availableCarriersData;
                 if (delivery_methods.length === 0) {
                     ev.updateWith({status: 'invalid_shipping_address'});

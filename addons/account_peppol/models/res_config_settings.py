@@ -16,7 +16,7 @@ class ResConfigSettings(models.TransientModel):
     account_peppol_purchase_journal_id = fields.Many2one(related='company_id.peppol_purchase_journal_id', readonly=False)
     peppol_external_provider = fields.Char(related='company_id.peppol_external_provider', readonly=False)
     peppol_use_parent_company = fields.Boolean(compute='_compute_peppol_use_parent_company')
-    peppol_parent_company_name = fields.Char(related='company_id.peppol_parent_company_id.name', string="Peppol Parent Company Name")
+    peppol_parent_company_name = fields.Char(compute='_compute_peppol_use_parent_company')
     account_is_token_out_of_sync = fields.Boolean(related='account_peppol_edi_user.is_token_out_of_sync', readonly=False)
 
     # -------------------------------------------------------------------------
@@ -26,7 +26,15 @@ class ResConfigSettings(models.TransientModel):
     @api.depends('company_id.peppol_parent_company_id')
     def _compute_peppol_use_parent_company(self):
         for setting in self:
-            setting.peppol_use_parent_company = bool(setting.company_id.peppol_parent_company_id)
+            setting.peppol_use_parent_company = (
+                setting.company_id != setting.company_id.peppol_parent_company_id
+                and setting.company_id.peppol_can_send
+                and setting.company_id.peppol_parent_company_id.peppol_can_send
+            )
+            if setting.peppol_use_parent_company:
+                setting.peppol_parent_company_name = setting.company_id.peppol_parent_company_id.name
+            else:
+                setting.peppol_parent_company_name = None
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
@@ -38,6 +46,10 @@ class ResConfigSettings(models.TransientModel):
         return registration_action
 
     def button_open_peppol_config_wizard(self):
+        view = self.env.ref('account_peppol.peppol_config_wizard_form').sudo()
+        # TODO remove in master this hack to have the possibility of being only a sender
+        if 'button_peppol_reset_to_sender' not in view.arch_db:
+            view.reset_arch(mode="hard")
         return {
             'type': 'ir.actions.act_window',
             'name': 'Advanced Peppol Configuration',
@@ -64,20 +76,7 @@ class ResConfigSettings(models.TransientModel):
     def button_peppol_register_sender_as_receiver(self):
         """Register the existing user as a receiver."""
         self.ensure_one()
-        self.account_peppol_edi_user._peppol_register_sender_as_receiver()
-        self.account_peppol_edi_user._peppol_get_participant_status()
-        if self.account_peppol_proxy_state == 'smp_registration':
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _("Registered to receive documents via Peppol."),
-                    'type': 'success',
-                    'message': _("Your registration on Peppol network should be activated within a day. The updated status will be visible in Settings."),
-                    'next': {'type': 'ir.actions.act_window_close'},
-                }
-            }
-        return True
+        return self.env['peppol.config.wizard'].new().button_peppol_register_sender_as_receiver()
 
     def button_reconnect_this_database(self):
         """Re-establish an out-of-sync connection"""

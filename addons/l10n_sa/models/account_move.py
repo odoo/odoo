@@ -35,10 +35,13 @@ class AccountMove(models.Model):
     def _l10n_gcc_get_invoice_title(self):
         # EXTENDS l10n_gcc_invoice
         self.ensure_one()
-        if self.company_id.country_code == 'SA':
-            return self.env._('Tax Invoice')
+        if self.company_id.country_code != "SA":
+            return super()._l10n_gcc_get_invoice_title()
 
-        return super()._l10n_gcc_get_invoice_title()
+        if self._l10n_sa_is_simplified():
+            return self.env._("Simplified Tax Invoice")
+
+        return self.env._("Tax Invoice")
 
     @api.depends('country_code', 'move_type')
     def _compute_show_delivery_date(self):
@@ -65,7 +68,7 @@ class AccountMove(models.Model):
                 seller_name_enc = get_qr_encoding(1, record.company_id.display_name)
                 company_vat_enc = get_qr_encoding(2, record.company_id.vat)
                 time_sa = fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'), record.l10n_sa_confirmation_datetime)
-                timestamp_enc = get_qr_encoding(3, time_sa.isoformat())
+                timestamp_enc = get_qr_encoding(3, time_sa.strftime("%Y-%m-%dT%H:%M:%S"))
                 totals = record._get_l10n_sa_totals()
                 invoice_total_enc = get_qr_encoding(4, float_repr(abs(totals['total_amount']), 2))
                 total_vat_enc = get_qr_encoding(5, float_repr(abs(totals['total_tax']), 2))
@@ -123,3 +126,16 @@ class AccountMove(models.Model):
         for move in self.filtered('l10n_sa_confirmation_datetime'):
             move.l10n_sa_confirmation_datetime = datetime.combine(fields.Date.from_string(invoice_date), move.l10n_sa_confirmation_datetime.time())
         return result
+
+    def _l10n_sa_is_simplified(self):
+        """
+            Returns True if the customer is an individual, i.e: The invoice is B2C
+        :return:
+        """
+        self.ensure_one()
+
+        return (
+            self.partner_id.commercial_partner_id.company_type == "person"
+            if self.partner_id.commercial_partner_id
+            else self.partner_id.company_type == "person"
+        )

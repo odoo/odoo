@@ -2,8 +2,10 @@ from base64 import b64encode
 from datetime import timedelta
 
 from odoo import api, fields, models, _
+
 from odoo.addons.account.models.company import PEPPOL_LIST
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+
 
 class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
@@ -11,19 +13,16 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _get_default_sending_methods(self, move) -> set:
         """ By default, we use the sending method set on the partner or email and peppol. """
-        # OVERRIDE 'account'
-        if invoice_sending_method := move.commercial_partner_id.with_company(move.company_id).invoice_sending_method:
-            return {invoice_sending_method}
-
-        if self._is_applicable_to_company('peppol', move.company_id):
-            return {'email', 'peppol'}
-
-        return {'email'}
+        # EXTENDS 'account'
+        default_sending_methods = super()._get_default_sending_methods(move)
+        if self._is_applicable_to_move('peppol', move):
+            default_sending_methods.add('peppol')
+        return default_sending_methods
 
     @api.model
     def _get_move_constraints(self, move):
         constraints = super()._get_move_constraints(move)
-        if move.company_id.peppol_activate_self_billing_sending and move._is_exportable_as_self_invoice():
+        if move._is_exportable_as_self_invoice():
             constraints.pop('not_sale_document', None)
         return constraints
 
@@ -183,6 +182,10 @@ class AccountMoveSend(models.AbstractModel):
                     )
                     continue
 
+                if len(xml_file) > 64000000:
+                    invoice_data['error'] = _("Invoice %s is too big to send via peppol (64MB limit)", invoice.name)
+                    continue
+
                 receiver_identification = f"{partner.peppol_eas}:{partner.peppol_endpoint}"
                 params['documents'].append({
                     'filename': filename,
@@ -216,13 +219,33 @@ class AccountMoveSend(models.AbstractModel):
             else:
                 # the response only contains message uuids,
                 # so we have to rely on the order to connect peppol messages to account.move
-                invoices = self.env['account.move']
-                for message, (invoice, _invoice_data) in zip(response['messages'], invoices_data_peppol.items()):
+                attachments_linked_message = _("The invoice has been sent to the Peppol Access Point. The following attachments were sent with the XML:")
+                attachments_not_linked_message = _("Some attachments could not be sent with the XML:")
+                for message, (invoice, invoice_data) in zip(response['messages'], invoices_data_peppol.items()):
                     invoice.peppol_message_uuid = message['message_uuid']
                     invoice.peppol_move_state = 'processing'
-                    invoices |= invoice
-                log_message = _('The document has been sent to Peppol for processing')
-                invoices._message_log_batch(bodies={invoice.id: log_message for invoice in invoices})
+                    attachments_linked, attachments_not_linked = self._get_ubl_available_attachments(
+                        invoice_data.get('mail_attachments_widget', []),
+                        invoice_data['invoice_edi_format']
+                    )
+                    if attachments_not_linked:
+                        invoice._message_log(body=attachments_not_linked_message, attachment_ids=attachments_not_linked.mapped('id'))
+
+                    base_attachments = [
+                        (invoice_data[key]['name'], invoice_data[key]['raw'])
+                        for key in ['pdf_attachment_values', 'ubl_cii_xml_attachment_values']
+                        if invoice_data.get(key)
+                    ]
+
+                    attachments_embedded = [
+                        (attachment.name, attachment.raw)
+                        for attachment in attachments_linked
+                    ] + base_attachments
+
+                    invoice.message_post(
+                        body=attachments_linked_message,
+                        attachments=attachments_embedded
+                    )
                 self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=5))
 
         if self._can_commit():

@@ -2,9 +2,18 @@ import {
     addBuilderAction,
     addBuilderOption,
     setupHTMLBuilder,
+    waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { describe, expect, test } from "@odoo/hoot";
+import {
+    describe,
+    expect,
+    manuallyDispatchProgrammaticEvent,
+    press,
+    queryOne,
+    test,
+    waitFor,
+} from "@odoo/hoot";
 import { hover } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -222,4 +231,62 @@ test("button that matches with the highest priority should be active", async () 
     expect("[data-class-action='a']").not.toHaveClass("active");
     expect("[data-class-action='a b']").toHaveClass("active");
     expect("[data-class-action='a b c']").not.toHaveClass("active");
+});
+
+test("BuilderButton: no activation on preview", async () => {
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`
+                <BuilderButtonGroup>
+                    <BuilderButton id="'b1'" classAction="'b1'"/>
+                    <BuilderButton classAction="'b2'"/>
+                </BuilderButtonGroup>
+                <BuilderContext t-if="this.isActiveItem('b1')">
+                </BuilderContext>
+            `;
+        }
+    );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`
+                <BuilderSelect>
+                    <BuilderSelectItem id="'s1'" classAction="'s1'"/>
+                    <BuilderSelectItem classAction="'s2'"/>
+                </BuilderSelect>
+            `;
+        }
+    );
+    await setupHTMLBuilder(`<div class="test-options-target s1 b1">Homepage</div>`);
+
+    const targetEl = await waitFor(":iframe .test-options-target");
+    await contains(targetEl).click();
+    expect(targetEl).toHaveClass("b1", {
+        message: "b1 should be set on the element by default",
+    });
+
+    // Open the builder select
+    await contains("button.o-hb-select-toggle").click();
+
+    // Hover the builder button while the builder select is still open
+    const builderButtonEl = queryOne("button[data-class-action=b2]");
+    manuallyDispatchProgrammaticEvent(builderButtonEl, "pointerenter");
+    await waitForEndOfOperation();
+    expect(builderButtonEl).not.toHaveClass("active", {
+        message: "In preview, the button should not be active",
+    });
+    expect(targetEl).toHaveClass("b2", {
+        message: "It should preview b2",
+    });
+
+    // Close the builder select
+    await press(["Esc"]);
+    await waitForEndOfOperation();
+    expect(builderButtonEl).not.toHaveClass("active", {
+        message: "Since we are still in preview, the button should NOT switch to active",
+    });
+    expect(targetEl).toHaveClass("b2", {
+        message: "It should still preview b2",
+    });
 });

@@ -8,18 +8,18 @@ export function mockIndexedDB(_name, { fn }) {
                 this.mockIndexedDB = {};
             }
 
-            write(table, key, value) {
+            async write(table, key, value) {
                 if (!(table in this.mockIndexedDB)) {
                     this.mockIndexedDB[table] = {};
                 }
                 this.mockIndexedDB[table][key] = value;
             }
 
-            read(table, key) {
-                return Promise.resolve(this.mockIndexedDB[table]?.[key]);
+            async read(table, key) {
+                return this.mockIndexedDB[table]?.[key];
             }
 
-            invalidate(tables = null) {
+            async invalidate(tables = null) {
                 if (tables) {
                     tables = typeof tables === "string" ? [tables] : tables;
                     for (const table of tables) {

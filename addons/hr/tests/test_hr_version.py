@@ -702,6 +702,17 @@ class TestHrVersion(TestHrCommon):
             f"The following hr.version fields should have tracking=True: {fields_without_tracking}",
         )
 
+    def test_related_fields_on_version_onchange(self):
+        """ This test is to ensure that each _onchange method on version has a corresponding _onchange on employee that calls it. """
+        version_methods = {method for method in dir(self.env['hr.version']) if method.startswith('_onchange')}
+        employee_methods = {method for method in dir(self.env['hr.employee']) if method.startswith('_onchange')}
+        not_implemented_onchanges = version_methods - employee_methods
+        self.assertFalse(
+            not_implemented_onchanges,
+            f"""The following _onchange methods on hr.version should have corresponding methods implemented on hr.employee: {not_implemented_onchanges}\n
+                You might need to implement methods with the same name on hr.employee and call the corresponding self.version_id._onchange inside"""
+        )
+
     def test_search_on_version_fields(self):
         Department = self.env['hr.department'].with_context(tracking_disable=True)
         rd_dep = Department.create({
@@ -772,3 +783,23 @@ class TestHrVersion(TestHrCommon):
         self.assertEqual(HrEmployee_with_manager_user.search([('hr_responsible_id', '=', self.res_users_hr_manager.id), ('id', 'in', employees.ids)]), employee1)
         self.assertEqual(HrEmployee_with_manager_user.search([('version_id.hr_responsible_id', '=', self.res_users_hr_manager.id), ('id', 'in', employees.ids)]), employee1)
         self.assertEqual(HrEmployee_with_manager_user.search([('member_of_department', '=', True), ('id', 'in', employees.ids)]), employee1)
+
+    def test_archive_or_unassign_all_versions(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+        })
+        another_employee = self.env['hr.employee'].create({
+            'name': 'Jane Doe'
+        })
+        employee.create_version({
+            'date_version': '2021-01-01',
+        })
+        # make sure there are at least 2 versions
+        self.assertEqual(len(employee.version_ids), 2)
+        # attempt to archive all versions
+        with self.assertRaises(ValidationError):
+            employee.version_ids.action_archive()
+        # attempt to reassign all versions
+        with self.assertRaises(ValidationError):
+            employee.version_ids.write({"employee_id": another_employee.id})

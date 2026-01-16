@@ -444,7 +444,7 @@ describe("undo", () => {
 
     test("should work properly after undo and then redo", async () => {
         await testEditor({
-            contentBefore: "<p>[]</p>",
+            contentBefore: "<p>[]<br></p>",
             stepFunction: async (editor) => {
                 columnize(2)(editor);
                 undo(editor);

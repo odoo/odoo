@@ -44,7 +44,6 @@ import {
     secondClick,
     thirdClick,
 } from "./_helpers/selection";
-import { strong } from "./_helpers/tags";
 import { insertText } from "./_helpers/user_actions";
 import { expandToolbar } from "./_helpers/toolbar";
 import { nodeSize } from "@html_editor/utils/position";
@@ -66,6 +65,64 @@ test("toolbar is only visible when selection is not collapsed in desktop", async
     setContent(el, "<p>test[]</p>");
     await expectElementCount(".o-we-toolbar", 0);
 });
+test.tags("desktop");
+test("toolbar is only visible when selection is not empty in desktop", async () => {
+    const { el } = await setupEditor("<h1>test</h1><p>text</p>");
+    await expectElementCount(".o-we-toolbar", 0);
+    setContent(el, "<h1>tes[t</h1><p>]text</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    // Set an empty selection to close toolbar.
+    setContent(el, "<h1>test[</h1><p>]text</p>");
+    await expectElementCount(".o-we-toolbar", 0);
+});
+test.tags("desktop");
+test("toolbar is only visible when selection is not empty in desktop (2)", async () => {
+    const { el } = await setupEditor("<h1>test</h1><p>some text</p>");
+    await expectElementCount(".o-we-toolbar", 0);
+    setContent(el, "<h1>test</h1><p>some[ ]text</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    // Set an empty selection to close toolbar.
+    setContent(el, "<h1>test[</h1>]<p>some text</p>");
+    await expectElementCount(".o-we-toolbar", 0);
+});
+test.tags("desktop");
+test("toolbar is only visible when selection is not empty in desktop (3)", async () => {
+    const { el } = await setupEditor("<h1>test</h1> <p> text</p>");
+    await expectElementCount(".o-we-toolbar", 0);
+    setContent(el, "<h1>tes[t</h1> <p> t]ext</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    // Set an empty selection to close toolbar.
+    // The selection should be considered empty since it only contains invisible spaces.
+    // Spaces used to format the html.
+    setContent(el, "<h1>test</h1>[ <p> ]text</p>");
+    await expectElementCount(".o-we-toolbar", 0);
+});
+test.tags("desktop");
+test("toolbar is only visible when selection is not empty in desktop (4)", async () => {
+    const { el } = await setupEditor(
+        `<p>text
+text2</p>`
+    );
+    await expectElementCount(".o-we-toolbar", 0);
+    // a line break inside a block is considered as a space by the browser renderer
+    setContent(
+        el,
+        `<p>text[
+]text2</p>`
+    );
+    await expectElementCount(".o-we-toolbar", 1);
+});
+test.tags("desktop");
+test("toolbar is only visible when selection is not empty in desktop (5)", async () => {
+    const { el } = await setupEditor("<p>test <b> text</b></p>");
+    await expectElementCount(".o-we-toolbar", 0);
+    setContent(el, "<p>tes[t <b> t]ext</b></p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    // Set a selection on spaces only.
+    // The selection should NOT be considered empty since it contains one visible spaces.
+    setContent(el, "<p>test[ <b> ]text</b></p>");
+    await expectElementCount(".o-we-toolbar", 1);
+});
 
 test.tags("mobile");
 test("toolbar is also visible when selection is collapsed in mobile", async () => {
@@ -77,6 +134,17 @@ test("toolbar is also visible when selection is collapsed in mobile", async () =
     await expectElementCount(".o-we-toolbar", 1);
 
     setContent(el, "<p>test[]</p>");
+    await animationFrame();
+    await expectElementCount(".o-we-toolbar", 1);
+});
+test.tags("mobile");
+test("toolbar is also visible when selection is empty in mobile", async () => {
+    const { el } = await setupEditor("<h1>test</h1><p>text</p>");
+    await expectElementCount(".o-we-toolbar", 0);
+    setContent(el, "<h1>tes[t</h1><p>]text</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    // Set an empty selection
+    setContent(el, "<h1>test[</h1><p>]text</p>");
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 1);
 });
@@ -915,11 +983,9 @@ test("toolbar correctly show namespace button group and stop showing when namesp
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
         resources = {
-            toolbar_namespaces: [
-                {
-                    id: "aNamespace",
-                    isApplied: (nodeList) => !!nodeList.find((node) => node.tagName === "DIV"),
-                },
+            toolbar_namespace_providers: [
+                (nodeList) =>
+                    nodeList.find((node) => node.tagName === "DIV") ? "aNamespace" : undefined,
             ],
             user_commands: { id: "test_cmd", run: () => null },
             toolbar_groups: withSequence(24, { id: "test_group", namespaces: ["aNamespace"] }),
@@ -1165,6 +1231,13 @@ test("toolbar should open with image namespace the selection spans an image and 
     expect(queryAll(".o-we-toolbar .btn-group[name='decoration']").length).toBe(0);
 });
 
+test.tags("desktop");
+test("toolbar should not be visible for collapsed selection after image", async () => {
+    await setupEditor(`<p><img class="img-fluid" src="/web/static/img/logo.png">[]</p>`);
+    await animationFrame();
+    await expectElementCount(".o-we-toolbar", 0);
+});
+
 test("plugins can create buttons with text in toolbar", async () => {
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
@@ -1283,7 +1356,7 @@ test("keep the toolbar if the selection crosses two blocks, even if their conten
     setContent(el, "<p>a[</p><p>]b</p>");
     await tick(); // selectionChange
     await animationFrame();
-    await expectElementCount(".o-we-toolbar", 1);
+    await expectElementCount(".o-we-toolbar", 0);
 });
 
 test.tags("desktop");
@@ -1300,7 +1373,7 @@ test("keep the toolbar if the selection crosses two blocks, even if their conten
     setContent(el, "<p>a[</p>\n<p>]b</p>");
     await tick(); // selectionChange
     await animationFrame();
-    await expectElementCount(".o-we-toolbar", 1);
+    await expectElementCount(".o-we-toolbar", 0);
 });
 
 test.tags("desktop");
@@ -1331,15 +1404,17 @@ test("toolbar should close on edit link from preview", async () => {
 
 test.tags("desktop");
 test("close the toolbar if the selection contains any nodes (traverseNode = [], ignore zws)", async () => {
-    const { el } = await setupEditor(`<p>ab${strong("\u200B", "first")}cd</p>`);
+    const { el } = await setupEditor(
+        `<p>ab<strong data-oe-zws-empty-inline="">\u200B</strong>cd</p>`
+    );
     await expectElementCount(".o-we-toolbar", 0);
 
-    setContent(el, `<p>a[b${strong("\u200B", "first")}c]d</p>`);
+    setContent(el, `<p>a[b<strong data-oe-zws-empty-inline="">\u200B</strong>c]d</p>`);
     await tick(); // selectionChange
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 1);
 
-    setContent(el, `<p>ab${strong("[\u200B]", "first")}cd</p>`);
+    setContent(el, `<p>ab<strong data-oe-zws-empty-inline="">[\u200B]</strong>cd</p>`);
     await tick(); // selectionChange
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 0);
@@ -1390,9 +1465,19 @@ test("should not close image cropper while loading media", async () => {
     await waitForNone('.btn:contains("Discard")', { timeout: 1500 });
 });
 
-test("toolbar shouldn't be visible if can_display_toolbar === false", async () => {
+test("toolbar shouldn't be visible if namespace === disabled", async () => {
     const { el } = await setupEditor("<p>[test]<img></p>", {
-        config: { resources: { can_display_toolbar: (namespace) => namespace !== "image" } },
+        config: {
+            resources: {
+                toolbar_namespace_providers: [
+                    withSequence(1, (targetedNodes) =>
+                        targetedNodes.find((node) => node.tagName === "IMG")
+                            ? "disabled"
+                            : undefined
+                    ),
+                ],
+            },
+        },
     });
 
     await expectElementCount(".o-we-toolbar", 1);
@@ -1726,7 +1811,7 @@ test("toolbar update should be run only once", async () => {
     await waitFor(".o-we-toolbar");
     counter = 0;
     click(".o-we-toolbar .btn[name='bold']");
-    await animationFrame();
+    await waitFor(".btn[name='bold'].active");
     expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
     expect(counter).toBe(1);
 });

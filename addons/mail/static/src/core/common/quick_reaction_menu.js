@@ -73,7 +73,7 @@ export class QuickReactionMenu extends Component {
     }
 
     getEmojiShortcode(emoji) {
-        return this.store.emojiLoader.loaded?.emojiValueToShortcodes?.[emoji][0] ?? "?";
+        return this.store.emojiLoader.loaded?.emojiValueToShortcodes?.[emoji]?.[0] ?? "?";
     }
 
     onClick() {

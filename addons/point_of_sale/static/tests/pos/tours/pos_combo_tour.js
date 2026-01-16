@@ -16,6 +16,20 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            ...ProductScreen.clickDisplayedProduct("Sofa Combo"),
+            combo.select("Combo Product Sofa (L, red)"),
+            Dialog.confirm(),
+            inLeftSide([
+                ...Order.hasLine({
+                    productName: "Combo product Sofa",
+                    run: "click",
+                    quantity: "1",
+                    attributeLine: "L, red",
+                }),
+                Numpad.click("⌫"),
+                Numpad.click("⌫"),
+                ...Order.doesNotHaveLine(),
+            ]),
             scan_barcode("SuperCombo"),
             combo.select("Combo Product 3"),
             combo.isConfirmationButtonDisabled(),
@@ -237,5 +251,30 @@ registry.category("web_tour.tours").add("ProductComboDiscountTour", {
             inLeftSide([Numpad.click("%"), Numpad.click("2"), Numpad.click("0")]),
             ProductScreen.totalAmountIs("80.00"),
             ProductScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_item_image_display", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.checkImgAndSelect("Combo Product 2", true),
+            combo.checkImgAndSelect("Combo Product 4", true),
+            combo.checkImgAndSelect("Combo Product 6", true),
+            Dialog.confirm(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_item_image_not_display", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.checkImgAndSelect("Combo Product 2", false),
+            combo.checkImgAndSelect("Combo Product 4", false),
+            combo.checkImgAndSelect("Combo Product 6", false),
+            Dialog.confirm(),
         ].flat(),
 });

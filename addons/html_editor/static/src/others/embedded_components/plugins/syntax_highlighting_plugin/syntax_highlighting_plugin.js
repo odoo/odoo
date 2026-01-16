@@ -14,6 +14,7 @@ const CODE_BLOCK_SELECTOR = `div.${CODE_BLOCK_CLASS}`;
 export class SyntaxHighlightingPlugin extends Plugin {
     static id = "syntaxHighlighting";
     static dependencies = [
+        "baseContainer",
         "overlay",
         "history",
         "selection",
@@ -116,6 +117,17 @@ export class SyntaxHighlightingPlugin extends Plugin {
         if (name === "syntaxHighlighting") {
             Object.assign(props, {
                 onTextareaFocus: () => this.dependencies.history.stageFocus(),
+                convertToParagraph: ({ target }) => {
+                    this.dependencies.history.stageSelection();
+                    const component = target.closest(`[data-embedded='${name}']`);
+                    const embeddedProps = getEmbeddedProps(component);
+                    const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                    baseContainer.textContent = embeddedProps.value;
+                    component.replaceWith(baseContainer);
+                    newlinesToLineBreaks(baseContainer);
+                    this.dependencies.selection.setCursorStart(baseContainer);
+                    this.dependencies.history.addStep();
+                },
             });
             props.host.removeAttribute("data-syntax-highlighting-autofocus");
         }

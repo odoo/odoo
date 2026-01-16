@@ -536,6 +536,28 @@ test("An error is displayed if the pivot has invalid field", async function () {
     expect(getEvaluatedCell(model, "A1").message).toBe(`Field unknown does not exist`);
 });
 
+test("Datasources are in error when their RPC fails", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        mockRPC: async function (route, { model, method, kwargs }) {
+            if (model === "unknown" && method === "fields_get") {
+                throw makeServerError({ code: 404 });
+            }
+        },
+    });
+    const pivot = model.getters.getPivotCoreDefinition(pivotId);
+    model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...pivot,
+            model: "unknown",
+        },
+    });
+    setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability:avg")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("#ERROR");
+    expect(getEvaluatedCell(model, "A1").message).toBe(`The model "unknown" does not exist.`);
+});
+
 test("evaluates only once when two pivots are loading", async function () {
     const spreadsheetData = {
         sheets: [{ id: "sheet1" }],
@@ -2119,11 +2141,11 @@ test("changing order of group by", async () => {
                 </pivot>`,
         mockRPC: async function (route, args) {
             if (args.method === "formatted_read_grouping_sets") {
-                expect.step(args.kwargs.order || "NO_ORDER");
+                expect.step(args.kwargs.order);
             }
         },
     });
-    expect.verifySteps(["NO_ORDER"]);
+    expect.verifySteps(["foo"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -2144,7 +2166,7 @@ test("changing order of group by", async () => {
         },
     });
     await animationFrame();
-    expect.verifySteps(["NO_ORDER"]);
+    expect.verifySteps(["foo"]);
 });
 
 test("change date order", async () => {
@@ -2172,6 +2194,33 @@ test("change date order", async () => {
     });
     await animationFrame();
     expect.verifySteps(["date:year asc,date:month desc"]);
+});
+
+test("Order are set for all dimensions", async () => {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+                <pivot>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+        mockRPC: async function (route, args) {
+            if (args.method === "formatted_read_grouping_sets") {
+                expect.step(args.kwargs.order);
+            }
+        },
+    });
+    expect.verifySteps([""]);
+    model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...model.getters.getPivotCoreDefinition(pivotId),
+            columns: [
+                { fieldName: "date", granularity: "year", order: "asc" },
+                { fieldName: "foo" },
+            ],
+        },
+    });
+    await animationFrame();
+    expect.verifySteps(["date:year asc,foo"]);
 });
 
 test("duplicated dimension on col and row with different granularity", async () => {
