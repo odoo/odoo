@@ -130,7 +130,15 @@ export class VDomPlugin extends Plugin {
             return;
         }
         const renderFragment = this.cloneReferenceFragment(nodeInfo, options);
-        renderNode.replaceWith(renderFragment);
+        if (nodeInfo.referenceNode.nodeName === "STYLE") {
+            // TODO EGGMAIL: do something more specific for the `id="design-element"`
+            // Allow plugins to remove any element from the final rendering
+            // instead of adding their fragment.
+            renderNode.remove();
+            return;
+        } else {
+            renderNode.replaceWith(renderFragment);
+        }
         for (const descendant of childNodes(nodeInfo.referenceNode)) {
             const descendantInfo = this.getNodeInfo(descendant);
             this.renderReferenceFragment(descendantInfo, options);
