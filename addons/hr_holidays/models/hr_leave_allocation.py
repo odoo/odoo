@@ -644,7 +644,7 @@ class HrLeaveAllocation(models.Model):
 
         fake_allocation = self.env['hr.leave.allocation'].with_context(default_date_from=accrual_date).new(origin=self)
         fake_allocation.sudo().with_context(default_date_from=accrual_date)._process_accrual_plans(accrual_date, log=False)
-        if self.holiday_status_id.request_unit in ['hour']:
+        if self.holiday_status_id.unit_of_measure in ['hour']:
             res = float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
         else:
             res = round((fake_allocation.number_of_days - self.number_of_days), 2)
