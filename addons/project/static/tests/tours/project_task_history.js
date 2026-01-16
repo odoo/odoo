@@ -48,165 +48,163 @@ function insertEditorContent(newContent) {
     ];
 }
 
-
 registry.category("web_tour.tours").add("project_task_history_tour", {
     url: "/odoo?debug=1,tests",
-    steps: () => [stepUtils.showAppsMenuItem(), {
-        content: "Open the project app",
-        trigger: ".o_app[data-menu-xmlid='project.menu_main_pm']",
-        run: "click",
-    },
-    {
-        content: "Open Test History Project",
-        trigger: ".o_kanban_view .o_kanban_record:contains(Test History Project)",
-        run: "click",
-    },
-    {
-        content: "Open Test History Task",
-        trigger: ".o_kanban_view .o_kanban_record:contains(Test History Task)",
-        run: "click",
-    },
+    steps: () => [
+        stepUtils.showAppsMenuItem(),
+        {
+            content: "Open the project app",
+            trigger: ".o_app[data-menu-xmlid='project.menu_main_pm']",
+            run: "click",
+        },
+        {
+            content: "Open Test History Project",
+            trigger: ".o_kanban_view .o_kanban_record:contains(Test History Project)",
+            run: "click",
+        },
+        {
+            content: "Open Test History Task",
+            trigger: ".o_kanban_view .o_kanban_record:contains(Test History Task)",
+            run: "click",
+        },
         // edit the description content 3 times and save after each edit
         ...changeDescriptionContentAndSave("0"),
         ...changeDescriptionContentAndSave("1"),
         ...changeDescriptionContentAndSave("2"),
         ...changeDescriptionContentAndSave("3"),
-    {
-        content: "Go back to kanban view of tasks. this step is added because it takes some time to save the changes, so it's a sort of timeout to wait a bit for the save",
-        trigger: ".o_back_button a",
-        run: "click",
-    },
-    {
-        content: "Open Test History Task",
-        trigger: ".o_kanban_view .o_kanban_record:contains(Test History Task)",
-        run: "click",
-    },
-    {
-        content: "Open History Dialog",
-        trigger: ".o_form_view .o_cp_action_menus i.fa-cog",
-        run: "click",
-    },
-    {
-        trigger: ".dropdown-menu",
-    },
-    {
-        content: "Open History Dialog",
-        trigger: ".o_menu_item i.fa-history",
-        run: "click",
-    }, {
-        trigger: ".modal .html-history-dialog.html-history-loaded",
-    }, {
-        content: "Verify that 5 revisions are displayed (default empty description after the creation of the task + 3 edits + current version)",
-        trigger: ".modal .html-history-dialog .o_revision_panel .list-group-item",
-        run: function () {
-            const items = document.querySelectorAll(".o_revision_panel .list-group-item");
-            if (items.length !== 5) {
-                console.error("Expect 5 Revisions in the history dialog, got " + items.length);
-            }
+        {
+            content: "Open History Dialog",
+            trigger: ".o_form_view .o_cp_action_menus i.fa-cog",
+            run: "click",
         },
-    }, {
-        content: "Verify that the active revision (revision 4) is related to the current version",
-        trigger: `.modal .history-container .history-content-view .history-view-inner:contains(${baseDescriptionContent} 3)`,
-    }, {
-        content: "Go to the third revision related to the second edit",
-        trigger: ".modal .html-history-dialog .o_revision_panel .list-group-item:nth-child(3)",
-        run: "click",
-    }, {
-        trigger: ".modal .html-history-dialog.html-history-loaded",
-    }, {
-        content: "Verify that the active revision is the one clicked in the previous step",
-        trigger: `.modal .history-container .history-content-view .history-view-inner:contains(${baseDescriptionContent} 1)`,
-    }, {
-        // click on the comparison tab
-        trigger: '.history-container .history-view-top-bar label:contains(Show comparison)',
-        run: "click",
-    }, {
-        content: "Verify comparison text",
-        trigger: ".modal .history-container .history-comparison-view",
-        run: function () {
-            const comparaisonHtml = this.anchor.innerHTML;
-            const correctHtml = `<added>${baseDescriptionContent} 3</added><removed>${baseDescriptionContent} 1</removed>`;
-            if (!comparaisonHtml.includes(correctHtml)) {
-                console.error(`Expect comparison to be ${correctHtml}, got ${comparaisonHtml}`);
-            }
+        {
+            trigger: ".dropdown-menu",
         },
-    }, {
-        trigger: ".modal .html-history-dialog.html-history-loaded",
-    }, {
-        content: "Click on Restore History btn to get back to the selected revision in the previous step",
-        trigger: ".modal button.btn-primary:enabled",
-        run: "click",
-    }, {
-        content: "Verify the confirmation dialog is opened",
-        trigger: ".modal button.btn-primary:text(Restore)",
-        run: "click",
-    }, {
-        content: "Verify that the description contains the right text after the restore",
-        trigger: `div.note-editable.odoo-editor-editable`,
-        run: function () {
-            const p = this.anchor?.innerText;
-            const expected = `${baseDescriptionContent} 1`;
-            if (p !== expected) {
-                console.error(`Expect description to be ${expected}, got ${p}`);
-            }
-        }
-    }, {
-        content: "Go back to projects view.",
-        trigger: 'a[data-menu-xmlid="project.menu_projects"]',
-        run: "click",
-    }, {
-        trigger: ".o_kanban_view",
-    }, {
-        content: "Open Test History Project Without Tasks",
-        trigger: ".o_kanban_view .o_kanban_record:contains(Without tasks project)",
-        run: "click",
-    }, {
-        trigger: ".o_kanban_project_tasks",
-    }, {
-        content: "Switch to list view",
-        trigger: ".o_switch_view.o_list",
-        run: "click",
-    }, {
-        content: "Create a new task.",
-        trigger: '.o_list_button_add',
-        run: "click",
-    }, {
-        trigger: ".o_form_view",
-    }, {
-        trigger: 'div[name="name"] .o_input',
-        content: 'Set task name',
-        run: 'edit New task',
-    },
-    ...stepUtils.saveForm(),
+        {
+            content: "Open History Dialog",
+            trigger: ".o_popover .o_menu_item:has(i.fa-history):contains(Version history)",
+            run: "click",
+        },
+        {
+            content:
+                "Verify that 5 revisions are displayed (default empty description after the creation of the task + 3 edits + current version)",
+            trigger:
+                ".modal .html-history-dialog.html-history-loaded .o_revision_panel .list-group-item:count(5)",
+        },
+        {
+            content:
+                "Verify that the active revision (revision 4) is related to the current version",
+            trigger: `.modal .history-container .history-content-view .history-view-inner:contains(${baseDescriptionContent} 3)`,
+        },
+        {
+            content: "Go to the third revision related to the second edit",
+            trigger:
+                ".modal .html-history-dialog.html-history-loaded .o_revision_panel .list-group-item:nth-child(3)",
+            run: "click",
+        },
+        {
+            content: "Verify that the active revision is the one clicked in the previous step",
+            trigger: `.modal .history-container .history-content-view .history-view-inner:contains(${baseDescriptionContent} 1)`,
+        },
+        {
+            content: "click on the comparison tab",
+            trigger: ".history-container .history-view-top-bar label:contains(Show comparison)",
+            run: "click",
+        },
+        {
+            content: "Verify comparison text",
+            trigger: `.modal .history-container .history-comparison-view
+                :has(added:contains(Test project task history version 3))
+                :has(removed:contains(Test project task history version 1))
+            `,
+        },
+        {
+            content:
+                "Click on Restore History btn to get back to the selected revision in the previous step",
+            trigger: ".modal button.btn-primary:contains(restore history)",
+            run: "click",
+        },
+        {
+            content: "Verify the confirmation dialog is opened",
+            trigger:
+                ".modal:has(.modal-title:contains(Are you sure you want to restore this version ?)) button.btn-primary:text(Restore)",
+            run: "click",
+        },
+        {
+            content: "Verify that the description contains the right text after the restore",
+            trigger: `div.note-editable.odoo-editor-editable:contains(Test project task history version 1)`,
+        },
+        {
+            content: "Go back to projects view.",
+            trigger: 'a[data-menu-xmlid="project.menu_projects"]',
+            run: "click",
+        },
+        {
+            trigger: ".o_kanban_view",
+        },
+        {
+            content: "Open Test History Project Without Tasks",
+            trigger: ".o_kanban_view .o_kanban_record:contains(Without tasks project)",
+            run: "click",
+        },
+        {
+            trigger: ".o_kanban_project_tasks",
+        },
+        {
+            content: "Switch to list view",
+            trigger: ".o_switch_view.o_list",
+            run: "click",
+        },
+        {
+            content: "Create a new task.",
+            trigger: '.o_list_button_add',
+            run: "click",
+        },
+        {
+            trigger: ".o_form_view",
+        },
+        {
+            trigger: 'div[name="name"] .o_input',
+            content: 'Set task name',
+            run: 'edit New task',
+        },
+        ...stepUtils.saveForm(),
         ...changeDescriptionContentAndSave("0"),
         ...changeDescriptionContentAndSave("1"),
         ...changeDescriptionContentAndSave("2"),
         ...changeDescriptionContentAndSave("3"),
-    {
-        trigger: ".o_form_view",
-    }, {
-        content: "Open History Dialog",
-        trigger: ".o_cp_action_menus i.fa-cog",
-        run: "click",
-    }, {
-        trigger: ".dropdown-menu",
-    }, {
-        content: "Open History Dialog",
-        trigger: ".o_menu_item i.fa-history",
-        run: "click",
-    }, {
-        content: "Close History Dialog",
-        trigger: ".modal-header .btn-close",
-        run: "click",
-    }, {
-        content: "Go back to projects view. this step is added because Tour can't be finished with an open form view in edition mode.",
-        trigger: 'a[data-menu-xmlid="project.menu_projects"]',
-        run: "click",
-    }, {
-        content: "Verify that we are on kanban view",
-        trigger: 'button.o_switch_view.o_kanban.active',
-    }
-]});
+        {
+            trigger: ".o_form_view",
+        },
+        {
+            content: "Open History Dialog",
+            trigger: ".o_cp_action_menus i.fa-cog",
+            run: "click",
+        },
+        {
+            trigger: ".dropdown-menu",
+        },
+        {
+            content: "Open History Dialog",
+            trigger: ".o_menu_item i.fa-history",
+            run: "click",
+        },
+        {
+            content: "Close History Dialog",
+            trigger: ".modal-header .btn-close",
+            run: "click",
+        },
+        {
+            content: "Go back to projects view. this step is added because Tour can't be finished with an open form view in edition mode.",
+            trigger: 'a[data-menu-xmlid="project.menu_projects"]',
+            run: "click",
+        },
+        {
+            content: "Verify that we are on kanban view",
+            trigger: 'button.o_switch_view.o_kanban.active',
+        },
+    ],
+});
 
 registry.category("web_tour.tours").add("project_task_last_history_steps_tour", {
     url: "/odoo?debug=1,tests",
@@ -241,13 +239,7 @@ registry.category("web_tour.tours").add("project_task_last_history_steps_tour", 
         trigger: ".modal .html-history-dialog.html-history-loaded",
     }, {
         content: "Verify that 2 revisions are displayed",
-        trigger: ".modal .html-history-dialog .o_revision_panel .list-group-item",
-        run: function () {
-            const items = document.querySelectorAll(".o_revision_panel .list-group-item");
-            if (items.length !== 2) {
-                console.error("Expect 2 Revisions in the history dialog, got " + items.length);
-            }
-        },
+        trigger: ".modal .html-history-dialog .o_revision_panel .list-group-item:count(2)",
     }, {
         content: "Go to the second revision related to the initial blank document ",
         trigger: ".modal .html-history-dialog .o_revision_panel .list-group-item:nth-child(2)",
