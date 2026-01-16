@@ -572,6 +572,7 @@ patch(PosStore.prototype, {
 
         for (const rule of this.models["loyalty.rule"].getAll()) {
             rule.validProductIds = new Set(rule.raw.valid_product_ids);
+            rule.validCategId = rule.pos_categ_id?.id || null;
         }
 
         this.models["loyalty.card"].addEventListener("create", (records) => {

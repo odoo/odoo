@@ -331,6 +331,9 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         if 'website_sale_subscription' in addons:
             query_count += 1
             queries['product_product'] += 1
+        if 'point_of_sale' in addons:
+            query_count += 1
+            queries['pos_category'] = 1
 
         tax = self.env.ref('account.1_sale_tax_template', raise_if_not_found=False)
         if tax and tax.name == '15%':

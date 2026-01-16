@@ -426,7 +426,7 @@ patch(PosOrder.prototype, {
         }
 
         // Check if the reward line is part of the rule
-        if (!(rule.any_product || rule.validProductIds.has(line._reward_product_id?.id))) {
+        if (!this._isApplicableProduct(rule, line._reward_product_id)) {
             return false;
         }
 
@@ -461,6 +461,13 @@ patch(PosOrder.prototype, {
             }
         }
         return points;
+    },
+    _isApplicableProduct(rule, product) {
+        return (
+            rule.any_product ||
+            rule.validProductIds.has(product?.id) ||
+            product.product_tmpl_id?.pos_categ_ids?.some((c) => c.id === rule.validCategId)
+        );
     },
     _programIsApplicable(program) {
         if (
@@ -538,7 +545,7 @@ patch(PosOrder.prototype, {
                 }
                 for (const rule of program.rule_ids) {
                     // Skip lines to which the rule doesn't apply.
-                    if (rule.any_product || rule.validProductIds.has(line.product_id.id)) {
+                    if (this._isApplicableProduct(rule, line.product_id)) {
                         if (!linesPerRule[rule.id]) {
                             linesPerRule[rule.id] = [];
                         }
@@ -587,10 +594,9 @@ patch(PosOrder.prototype, {
                 for (const line of orderLines) {
                     if (
                         ((!line.reward_product_id &&
-                            (rule.any_product || rule.validProductIds.has(line.product_id.id))) ||
+                            this._isApplicableProduct(rule, line.product_id)) ||
                             (line.reward_product_id &&
-                                (rule.any_product ||
-                                    rule.validProductIds.has(line._reward_product_id?.id)))) &&
+                                this._isApplicableProduct(rule, line._reward_product_id))) &&
                         !line.ignoreLoyaltyPoints({ program })
                     ) {
                         // We only count reward products from the same program to avoid unwanted feedback loops
@@ -708,7 +714,7 @@ patch(PosOrder.prototype, {
     _computeNItems(rule) {
         return this._get_regular_order_lines().reduce((nItems, line) => {
             let increment = 0;
-            if (rule.any_product || rule.validProductIds.has(line.product_id.id)) {
+            if (this._isApplicableProduct(rule, line.product_id)) {
                 increment = line.getQuantity();
             }
             return nItems + increment;
@@ -1229,9 +1235,8 @@ patch(PosOrder.prototype, {
     },
     _isRewardProductPartOfRules(reward, product) {
         return (
-            reward.program_id.rule_ids.filter(
-                (rule) => rule.any_product || rule.validProductIds.has(product.id)
-            ).length > 0
+            reward.program_id.rule_ids.filter((rule) => this._isApplicableProduct(rule, product))
+                .length > 0
         );
     },
     /**
@@ -1296,7 +1301,7 @@ patch(PosOrder.prototype, {
                 let factor = 0;
                 let orderPoints = 0;
                 for (const rule of appliedRules) {
-                    if (rule.any_product || rule.validProductIds.has(product.id)) {
+                    if (this._isApplicableProduct(rule, product)) {
                         if (rule.reward_point_mode === "order") {
                             orderPoints += rule.reward_point_amount;
                         } else if (rule.reward_point_mode === "money") {

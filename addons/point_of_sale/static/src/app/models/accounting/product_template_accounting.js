@@ -99,8 +99,10 @@ export class ProductTemplateAccounting extends Base {
         const tmplRulesSet = new Set(tmplRules.map((rule) => rule.id));
         const productRulesSet = new Set(productRules.map((rule) => rule.id));
         const generalRulesIds = pricelist.getGeneralRulesIdsByCategories(this.parentCategories);
+        const posRulesIds = pricelist.getPOSCategRulesIdsByCategories(this.parentPosCategIds);
+
         const rules = this.models["product.pricelist.item"]
-            .readMany([...productRulesSet, ...tmplRulesSet, ...generalRulesIds])
+            .readMany([...productRulesSet, ...tmplRulesSet, ...generalRulesIds, ...posRulesIds])
             .filter((r) => !r.min_quantity || r.min_quantity <= quantity);
 
         const rule = rules.length && rules[0];

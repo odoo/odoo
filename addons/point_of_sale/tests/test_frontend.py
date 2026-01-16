@@ -1310,6 +1310,66 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'BarcodeScanningProductPackagingTour', login="pos_user")
 
+    def test_10_pos_pricelist_on_pos_category(self):
+        pos_category_1 = self.env['pos.category'].create({'name': 'Category1'})
+        pos_category_2 = self.env['pos.category'].create({'name': 'Category2'})
+        self.env['product.template'].create({
+            'name': 'Test Product 1',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'pos_categ_ids': [(6, 0, [pos_category_1.id])],
+        })
+        self.env['product.template'].create({
+            'name': 'Test Product 2',
+            'available_in_pos': True,
+            'list_price': 20,
+            'taxes_id': False,
+            'pos_categ_ids': [(6, 0, [pos_category_2.id])],
+        })
+
+        base_pricelist = self.env['product.pricelist'].create({
+            'name': 'base_pricelist',
+        })
+
+        # Test for percentage discount
+        base_pricelist_item = self.env['product.pricelist.item'].create({
+            'pricelist_id': base_pricelist.id,
+            'compute_price': 'percentage',
+            'applied_on': '4_pos_category',
+            'percent_price': 10,
+            'pos_categ_id': pos_category_1.id,
+        })
+        self.main_pos_config.write({
+            'pricelist_id': base_pricelist.id,
+            'available_pricelist_ids': [(6, 0, [base_pricelist.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('POSCategoryBasedDiscountPricelists', login='pos_user')
+
+        # Test for fixed price
+        base_pricelist_item.write({
+            'compute_price': 'fixed',
+            'fixed_price': 15,
+        })
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': base_pricelist.id,
+            'compute_price': 'fixed',
+            'applied_on': '4_pos_category',
+            'fixed_price': 17,
+            'pos_categ_id': pos_category_2.id,
+        })
+        self.start_pos_tour('POSCategoryBasedFixedPricelists', login='pos_user')
+
+        # Test for formula
+        base_pricelist_item.write({
+            'compute_price': 'formula',
+            'price_discount': 10,
+            'price_surcharge': 2,
+        })
+        # so rule applied will be (list_price * 0.9 + 2.00)
+        self.start_pos_tour('POSCategoryBasedFormulaPricelists', login='pos_user')
+
     def test_GS1_pos_barcodes_scan(self):
         barcodes_gs1_nomenclature = self.env.ref("barcodes_gs1_nomenclature.default_gs1_nomenclature")
         default_nomenclature_id = self.env.ref("barcodes.default_barcode_nomenclature")

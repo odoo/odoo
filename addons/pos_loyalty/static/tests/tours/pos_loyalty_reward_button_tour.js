@@ -7,6 +7,8 @@ import { registry } from "@web/core/registry";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
 import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
+import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 
 registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
     undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
@@ -165,6 +167,22 @@ registry.category("web_tour.tours").add("test_loyalty_free_product_rewards_2", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_loyalty_free_product_rewards_based_on_pos_categ", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            // Not auto-triggered: rule POS category ≠ reward product category
+            ProductScreen.clickControlButton("Reward"),
+            SelectionPopup.has("Free Product - Desk Organizer", { run: "click" }),
+            PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-5.10", "1.00"),
+            PosLoyalty.orderTotalIs("5.94"),
+            PosLoyalty.finalizeOrder("Cash", "5.94"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountTour", {
     steps: () =>
         [
@@ -205,6 +223,43 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithFreeProdu
             },
             Dialog.cancel(),
             PosLoyalty.orderTotalIs("130.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_loyalty_program_among_pos_categ", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Letter Tray"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
+            PosLoyalty.isPointsDisplayed(false),
+            // Rule is only applicable on desk category
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            PosLoyalty.checkAddedLoyaltyPoints("1.98"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            // Reward is available but can only be applied on desk
+            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.claimReward("10% Discount on chepeast from chair category"),
+            PosLoyalty.orderTotalIs("1.98"),
+            ProductScreen.clickDisplayedProduct("Letter Tray"),
+            // 1.98 + 5.28 = 7.26
+            PosLoyalty.orderTotalIs("7.26"),
+            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.claimReward("10% Discount on chepeast from chair category"),
+            // 1.98 + 5.28 - 0.528 (10% of 5.28) = 6.73
+            PosLoyalty.orderTotalIs("6.73"),
+            ProductScreen.clickDisplayedProduct("Test Chair"),
+            // 1.98 + 5.28 + 1.73 - 0.17 (10% of 1.73 chepest of (5.28, 1.73)) = 6.73
+            PosLoyalty.orderTotalIs("8.82"),
         ].flat(),
 });
 
