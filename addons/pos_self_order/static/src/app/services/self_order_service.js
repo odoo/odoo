@@ -630,7 +630,7 @@ export class SelfOrder extends Reactive {
         this.currentOrder.recomputeChanges();
         if (Math.max(this.currentOrder.lines.map((l) => l.qty)) <= 0) {
             this.router.navigate("default");
-            this.currentOrder.delete();
+            this.data.localDeleteCascade(this.currentOrder);
             this.selectedOrderUuid = null;
         }
     }
@@ -907,6 +907,25 @@ export class SelfOrder extends Reactive {
         return currentPaymentLine?.payment_method_id?.use_payment_terminal === terminalName
             ? currentPaymentLine
             : null;
+    }
+
+    get orderLineNotSend() {
+        return Object.entries(this.currentOrder.changes).reduce(
+            (acc, [key, { qty }]) => {
+                if (qty && qty > 0) {
+                    const line = this.models["pos.order.line"].getBy("uuid", key);
+                    if (!line.combo_parent_id) {
+                        acc.count += qty;
+                    }
+                    const { total_included, total_excluded } = line.unitPrices;
+                    acc.priceWithTax += total_included * qty;
+                    acc.priceWithoutTax += total_excluded * qty;
+                    acc.tax += (total_included - total_excluded) * qty;
+                }
+                return acc;
+            },
+            { priceWithTax: 0, priceWithoutTax: 0, count: 0, tax: 0 }
+        );
     }
 
     get kioskBackgroundImageUrl() {
