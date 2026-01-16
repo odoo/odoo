@@ -128,10 +128,6 @@ class TestWebsiteSaleComparisonUi(HttpCase):
         self.assertEqual(res.status_code, 200)
         root = etree.fromstring(res.content, etree.HTMLParser())
 
-        tr_varieties_simple_att = root.xpath('//div[@id="product_attributes_simple"]//tr')[0]
-        text = etree.tostring(tr_varieties_simple_att, encoding='unicode', method='text')
-        self.assertEqual(text.replace(' ', '').replace('\n', ''), "GrapeVarieties:CabernetSauvignon,Merlot,CabernetFranc,PetitVerdot")
-
         # Case product page with "Product attributes table" enabled
         self.env['website'].viewref('website_sale.product_attributes_body').active = True
         res = self.url_open('/shop/%d' % self.template_margaux.id)
@@ -208,3 +204,49 @@ class TestWebsiteSaleComparisonUi(HttpCase):
                 ]))
             ])),
         ]))
+
+    def test_single_value_attribute_specifications(self):
+        """Test that attribute with single custom value shouldn't be displayed in specifications.
+        The attribute with 'multi type single value' attribute should be displayed in specs
+        table."""
+        custom_attribute = self.env['product.attribute'].create([{
+            'name': 'Write here',
+            'value_ids': [
+                Command.create({
+                    'name': 'Custom',
+                    'is_custom': True,
+                }),
+            ],
+        }])
+        multi_attribute = self.env['product.attribute'].create([{
+            'name': 'multi',
+            'display_type': 'multi',
+            'create_variant': 'no_variant',
+            'value_ids': [
+                Command.create({
+                    'name': 'multi type single value',
+                }),
+            ],
+        }])
+        product = self.env['product.template'].create([{
+            'name': 'T-Shirt',
+            'is_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': custom_attribute.id,
+                    'value_ids': custom_attribute.value_ids,
+                }),
+                Command.create({
+                    'attribute_id': multi_attribute.id,
+                    'value_ids': multi_attribute.value_ids,
+                }),
+            ],
+        }])
+
+        single_value_including_multi_type = product.attribute_line_ids._prepare_single_value_for_display()
+        self.assertIn(multi_attribute.attribute_line_ids, single_value_including_multi_type.values())
+        self.assertNotIn(custom_attribute.attribute_line_ids, single_value_including_multi_type.values())
+
+        categories = product.attribute_line_ids._prepare_categories_for_display()
+        self.assertIn(multi_attribute.attribute_line_ids, categories.values())
+        self.assertNotIn(custom_attribute.attribute_line_ids, categories.values())

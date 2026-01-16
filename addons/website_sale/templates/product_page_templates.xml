@@ -156,32 +156,6 @@
                                     >
                                         <t t-call="website_sale.product_accordion"/>
                                     </div>
-                                    <t
-                                        t-set="single_value_attributes"
-                                        t-value="product.valid_product_template_attribute_line_ids._prepare_single_value_for_display()"
-                                    />
-                                    <div
-                                        id="product_attributes_simple"
-                                        t-if="single_value_attributes"
-                                        class="o_wsale_product_details_content_section o_wsale_product_details_content_section_specs mb-4"
-                                    >
-                                        <table t-attf-class="table table-sm text-muted {{'' if single_value_attributes else 'd-none'}}">
-                                            <t t-foreach="single_value_attributes" t-as="attribute">
-                                                <tr>
-                                                    <td>
-                                                        <span t-field="attribute.name"/>:
-                                                        <t
-                                                            t-foreach="single_value_attributes[attribute]"
-                                                            t-as="ptal"
-                                                        >
-                                                            <span t-field="ptal.product_template_value_ids._only_active().name"/>
-                                                            <t t-if="not ptal_last">, </t>
-                                                        </t>
-                                                    </td>
-                                                </tr>
-                                            </t>
-                                        </table>
-                                    </div>
                                     <t t-set="product_documents" t-value="product.sudo().product_document_ids.filtered(lambda doc: doc.shown_on_product_page)"/>
                                     <div
                                         id="product_documents"
@@ -1336,7 +1310,6 @@
     </template>
 
     <template id="product_attributes_body" inherit_id="website_sale.product" name="Product attributes table">
-        <xpath expr="//div[@id='product_attributes_simple']" position="replace"/>
         <xpath expr="//div[@id='product_full_description']" position="after">
             <t t-set="attrib_categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
             <t t-if="attrib_categories">
