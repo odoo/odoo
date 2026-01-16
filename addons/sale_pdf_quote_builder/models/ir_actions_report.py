@@ -216,6 +216,9 @@ class IrActionsReport(models.Model):
                 # Modifying the annots that hold every information about the form fields
                 for j in range(len(page['/Annots'])):
                     reader_annot = page['/Annots'][j].getObject()
+                    # Check parent object for '/T' if missing.
+                    if '/T' not in reader_annot and '/Parent' in reader_annot:
+                        reader_annot = reader_annot['/Parent'].getObject()
                     if reader_annot.get('/T') in field_names:
                         # Prefix all form fields in the document with the document identifier.
                         # This is necessary to know which value needs to be taken when filling the forms.
