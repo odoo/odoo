@@ -58,6 +58,7 @@ import { closestScrollableY } from "@web/core/utils/scrolling";
  * @property {(node: Node, newNode: Node) => Cursors} remapNode
  * @property {(newOffset: number) => Cursors} setAnchorOffset
  * @property {(newOffset: number) => Cursors} setFocusOffset
+ * @property {(callback: (cursor: Cursor) => void) => Cursors} setCursor
  * @property {(node: Node, newOffset: number) => Cursors} setOffset
  * @property {(node: Node, shiftOffset: number) => Cursors} shiftOffset
  * @property {{ node: Node, offset: number }} anchor
@@ -718,6 +719,15 @@ export class SelectionPlugin extends Plugin {
                         cursor.offset += shiftOffset;
                     }
                 });
+            },
+            setCursor: (callback) => {
+                this.preservedCursors.forEach((ref) => {
+                    const liveCursor = ref.deref();
+                    if (liveCursor) {
+                        callback(liveCursor);
+                    }
+                });
+                return cursor;
             },
         };
         this.preservedCursors = this.preservedCursors.filter((c) => c.deref()); // filter out dead cursors.
