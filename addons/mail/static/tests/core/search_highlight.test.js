@@ -118,18 +118,24 @@ test("Search highlight", async () => {
 test("Display highlighted search in chatter", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Groot" });
     pyEnv["mail.message"].create({
-        body: "not empty",
+        author_id: partnerId,
+        body: "I am Groot",
         model: "res.partner",
         res_id: partnerId,
     });
     await start();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
-    await insertText(".o_searchview_input", "empty");
+    await insertText(".o_searchview_input", "Groot");
     triggerHotkey("Enter");
-    await contains(`.o-mail-SearchMessageResult .o-mail-Message span.${HIGHLIGHT_CLASS}`);
+    await contains(
+        `.o-mail-SearchMessageResult .o-mail-Message-author .${HIGHLIGHT_CLASS}:text('Groot')`
+    );
+    await contains(
+        `.o-mail-SearchMessageResult .o-mail-Message-body .${HIGHLIGHT_CLASS}:text('Groot')`
+    );
 });
 
 test("Display multiple highlighted search in chatter", async () => {

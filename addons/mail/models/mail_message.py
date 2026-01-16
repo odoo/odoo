@@ -951,6 +951,10 @@ class MailMessage(models.Model):
             message_domain = Domain.OR([
                 # sudo: access to attachment is allowed if you have access to the parent model
                 [("attachment_ids", "in", self.env["ir.attachment"].sudo()._search([("name", "ilike", search_term)]))],
+                # sudo: res.partner - allow searching by author name
+                [("author_id", "in", self.env["res.partner"].sudo()._search([("name", "ilike", search_term)]))],
+                # sudo: mail.guest - allow searching by guest name
+                [("author_guest_id", "in", self.env["mail.guest"].sudo()._search([("name", "ilike", search_term)]))],
                 [("body", "ilike", search_term)],
                 [("subject", "ilike", search_term)],
                 [("subtype_id.description", "ilike", search_term)],
