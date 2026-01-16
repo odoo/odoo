@@ -194,16 +194,21 @@ class AccountEdiUBL(models.AbstractModel):
             target_base_line.setdefault('_aggregated_quantity', 0.0)
             target_base_line['_aggregated_quantity'] += base_line['quantity']
 
+        def grouping_function(base_line):
+            return {'tax': base_line['_removed_tax_data']['tax']}
+
         extra_base_lines = AccountTax._turn_removed_taxes_into_new_base_lines(
             base_lines=new_base_lines,
             company=company,
+            grouping_function=grouping_function,
             aggregate_function=aggregate_function,
         )
 
         # Restore back the values per quantity.
         for base_line in extra_base_lines:
             base_line['quantity'] = base_line['_aggregated_quantity']
-            base_line['price_unit'] /= base_line['_aggregated_quantity']
+            if base_line['_aggregated_quantity']:
+                base_line['price_unit'] /= base_line['_aggregated_quantity']
             base_line['product_id'] = self.env['product.product']
 
         return new_base_lines + extra_base_lines
