@@ -62,7 +62,7 @@
                                         <button type="button" t-att-data-db="db" data-bs-target=".o_database_duplicate" class="o_database_action btn btn-secondary">
                                             <i class="fa fa-files-o fa-fw"></i> Duplicate
                                         </button>
-                                        <button type="button" t-att-data-db="db" data-bs-target=".o_database_delete" class="o_database_action btn btn-danger">
+                                        <button type="button" t-att-data-db="db" data-bs-target=".o_database_delete" class="o_database_action btn btn-danger" t-att-disabled="db in protected_db and '1' or None">
                                             <i class="fa fa-trash-o fa-fw"></i> Delete
                                         </button>
                                     </div>

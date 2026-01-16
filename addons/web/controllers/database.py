@@ -90,6 +90,7 @@ def _render_template(**d):
     d.setdefault('manage', True)
     d['insecure'] = odoo.tools.config.verify_admin_password('admin')
     d['list_db'] = odoo.tools.config['list_db']
+    d['protected_db'] = odoo.tools.config['protected_db']
     try:
         d['langs'] = scan_languages()
     except Exception:
@@ -203,6 +204,10 @@ class Database(Controller):
 
     @route('/web/database/drop', type='http', auth="none", methods=['POST'], csrf=False)
     def drop(self, master_pwd, name):
+        if name in odoo.tools.config["protected_db"]:
+            e =_("Houston, we've got you covered! even a misclick can't lead to delete a protected database.")
+            res = Response(_render_template(error=e), UnprocessableEntity.code)
+            raise UnprocessableEntity(response=res)
         try:
             verify_access(master_pwd)
             odoo.modules.db.drop(name)
