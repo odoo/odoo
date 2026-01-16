@@ -112,6 +112,10 @@
                 </td>
             </tr>
         </table>
+    </template>
+
+    <template id="portal_timesheet_table_with_total" name="Portal Timesheet Table">
+        <t t-call="hr_timesheet.portal_timesheet_table"/>
         <div class="container_subtotal">
             <div class="row justify-content-end">
                 <div t-attf-class="{{'col-auto' if report_type != 'html' else 'col-sm-2'}}">
