@@ -347,8 +347,7 @@ class MailMessage(models.Model):
             return super()._search(domain, offset, limit, order, bypass_access=True, **kwargs)
 
         # Non-employee see only messages with a subtype and not internal
-        if not self.env.user._is_internal():
-            domain = self._get_search_domain_share() & Domain(domain)
+        domain = self._get_search_domain_share() & Domain(domain)
 
         # make the search query with the default rules
         query = super()._search(domain, offset, limit, order, **kwargs)
@@ -404,6 +403,8 @@ class MailMessage(models.Model):
         return allowed._as_query(order)
 
     def _get_search_domain_share(self):
+        if self.env.user._is_internal():
+            return Domain.TRUE
         return Domain(['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)])
 
     def _filter_records_for_message_operation(self, doc_model, doc_res_ids, operation):
@@ -507,16 +508,13 @@ class MailMessage(models.Model):
 
         # Non employees see only messages with a subtype (aka, not internal logs)
         if not self.env.user._is_internal():
-            message_type_condition = ''
-            if operation in ('create', 'read'):
-                message_type_condition = "message.message_type = 'comment' AND"
+            # reserve '_get_search_domain_share' domain, to make search and read coherent
             rows = self.env.execute_query(SQL(
                 ''' SELECT message.id
                     FROM "mail_message" AS message
                     LEFT JOIN "mail_message_subtype" as subtype ON message.subtype_id = subtype.id
-                    WHERE %s message.id = ANY (%%s)
-                        AND (message.is_internal IS TRUE OR message.subtype_id IS NULL OR subtype.internal IS TRUE)
-                ''' % message_type_condition,
+                    WHERE message.id = ANY (%s) AND (message.is_internal IS TRUE OR message.subtype_id IS NULL OR subtype.internal IS TRUE)
+                ''',
                 self.ids,
             ))
             if rows:

@@ -312,10 +312,10 @@ class TestMailMessageAccess(MessageAccessCommon):
             }, False, 'No access on record but reply to notified parent'),
             # internal = forbidden (internal users only)
             (self.record_portal, {'is_internal': True}, True, 'Internal subtype always forbidden'),
-            (self.record_portal, {'is_internal': True, 'message_type': 'notification'}, False, 'Automatic log accepted'),
+            (self.record_portal, {'is_internal': True, 'message_type': 'notification'}, True, 'Automatic log not accepted'),
             (self.record_portal, {'subtype_id': self.env.ref('mail.mt_note').id}, True, 'Internal flag always forbidden'),
             (self.record_portal, {'subtype_id': self.test_subtype_access_internal.id}, True, 'Internal flag (custom subtype) always forbidden'),
-            (self.record_portal, {'message_type': 'notification', 'subtype_id': self.test_subtype_access_internal.id}, False, 'Automatic log accepted'),
+            (self.record_portal, {'message_type': 'notification', 'subtype_id': self.test_subtype_access_internal.id}, True, 'Automatic log not accepted'),
             (self.record_portal, {'subtype_id': False}, True, 'No subtype = internal = always forbidden'),
         ]:
             with self.subTest(record=record, msg_vals=msg_vals, reason=reason):
@@ -538,14 +538,14 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.record_portal.message_ids[0], {
                 'message_type': 'email_outgoing',
                 'subtype_id': self.env.ref('mail.mt_note').id,
-            }, False, 'Note (email_outgoing) can be read by portal users'),
+            }, True, 'Note (email_outgoing) cannot be read by portal users'),
             (self.record_portal.message_ids[0], {
                 'is_internal': True,
             }, True, 'Internal message (comment) cannot be read by portal users'),
             (self.record_portal.message_ids[0], {
                 'is_internal': True,
                 'message_type': 'notification',
-            }, False, 'Internal message (notification) can be read by portal users'),
+            }, True, 'Internal message (notification) cannot be read by portal users'),
             (self.record_portal.message_ids[0], {
                 'message_type': 'user_notification',
             }, True, 'User notifications for other people can never be read by portal users'),
