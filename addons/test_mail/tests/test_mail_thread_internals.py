@@ -458,6 +458,39 @@ class TestAPI(ThreadRecipients):
             )
 
     @users('employee')
+    def test_find_localpart_aliases_vs_allowed_catchall_domain(self):
+        """ Test that _find_aliases correctly filters based on allowed catchall domains when using an alias
+        configured for local part detection AND designating a allowed domains for localpart detection. """
+
+        # General setup
+        local_part_alias = self.test_aliases.filtered(lambda x: x.alias_incoming_local)[0]
+        emails_to_check = [
+            local_part_alias.alias_full_name,  # Match with no sys param OR Match: allowed domain
+            f'{local_part_alias.alias_name}@random.com',  # Match with no sys param OR Match: 2nd allowed domain
+            f'{local_part_alias.alias_name}@otherrandom.com',  # Match with no sys param OR No Match: not in allowed list
+            f'otherrandomlocalpart@{local_part_alias.alias_domain}',  # No Match: local part doesn't exist
+        ]
+
+        # Scenario 1: no system parameter set for 'mail.catchall.domain.allowed'
+        found_no_sys_parameter = self.env['mail.alias.domain']._find_aliases(emails_to_check)
+
+        self.assertEqual(len(found_no_sys_parameter), 3,
+                              "Should only find 3 valid internal aliases when no allowed domains")
+        self.assertListEqual(emails_to_check[:3], found_no_sys_parameter)
+
+        # Scenario 2: Set the system parameter for allowed domains
+        self.env['ir.config_parameter'].sudo().set_param(
+            'mail.catchall.domain.allowed',
+            f'{local_part_alias.alias_domain},random.com'
+        )
+
+        found_with_sys_parameter = self.env['mail.alias.domain']._find_aliases(emails_to_check)
+
+        self.assertEqual(len(found_with_sys_parameter), 2,
+                          "Should only find 2 valid internal aliases when filtering")
+        self.assertListEqual(emails_to_check[:2], found_with_sys_parameter)
+
+    @users('employee')
     def test_message_get_default_recipients_banned(self):
         """ Test defensive behavior to avoid contacting critical emails like
         aliases, public users, ... """
