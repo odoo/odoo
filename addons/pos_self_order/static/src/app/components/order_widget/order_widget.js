@@ -53,28 +53,9 @@ export class OrderWidget extends Component {
         return { label, disabled };
     }
 
+    // TODO: remove in master
     get lineNotSend() {
-        const changes = this.selfOrder.currentOrder.changes;
-        return Object.entries(changes).reduce(
-            (acc, [key, value]) => {
-                if (value.qty && value.qty > 0) {
-                    const line = this.selfOrder.models["pos.order.line"].getBy("uuid", key);
-                    if (!line.combo_parent_id) {
-                        acc.count += value.qty;
-                    }
-                    if (line.combo_parent_id) {
-                        return acc;
-                    }
-
-                    acc.price += line.displayPrice;
-                }
-                return acc;
-            },
-            {
-                price: 0,
-                count: 0,
-            }
-        );
+        return this.selfOrder.orderLineNotSend;
     }
 
     shouldGoBack() {
