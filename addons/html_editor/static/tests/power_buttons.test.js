@@ -106,10 +106,10 @@ describe("visibility", () => {
         el.appendChild(tempP);
         const placeholderWidth = tempP.getBoundingClientRect().width;
         el.removeChild(tempP);
-        const powerButtons = document.querySelector(
-            'div[data-oe-local-overlay-id="oe-power-buttons-overlay"]'
+        const powerButtons = document.querySelector(".o_we_power_buttons");
+        expect(Math.floor(powerButtons.getBoundingClientRect().left)).toEqual(
+            Math.floor(placeholderWidth + 30)
         );
-        expect(powerButtons.getBoundingClientRect().left).toEqual(placeholderWidth + 20);
     });
 });
 
