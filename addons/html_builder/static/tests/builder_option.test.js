@@ -7,7 +7,7 @@ import {
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
-import { expect, test, describe } from "@odoo/hoot";
+import { expect, test, describe, queryOne, animationFrame } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 
@@ -298,4 +298,45 @@ test("Do not show parent container for no_parent_containers targets", async () =
     await contains(":iframe .test-parent-target").click();
     expect(".options-container").toHaveCount(1);
     expect(".options-container").toHaveAttribute("data-container-title", "Parent");
+});
+
+test("Option containers should update reactively", async () => {
+    class Option extends BaseOptionComponent {
+        static title = "Test";
+        static selector = ".test-options-target";
+        static template = xml`<BuilderButton classAction="'test'">Test</BuilderButton>`;
+    }
+
+    class TestPlugin extends Plugin {
+        static id = "test";
+        resources = {
+            builder_options: [Option],
+            clone_disabled_reason_providers: ({ el, reasons }) => {
+                if (el.classList.contains("value2")) {
+                    reasons.push("Test reason");
+                }
+            },
+            container_title: {
+                selector: ".test-options-target",
+                getTitleExtraInfo: (el) =>
+                    el.classList.contains("value2") ? " title 2" : " title 1",
+            },
+        };
+    }
+
+    addBuilderPlugin(TestPlugin);
+    const { getEditor } = await setupHTMLBuilder(`
+        <div data-name="Target" class="test-options-target target1">
+            Homepage
+        </div>
+    `);
+    await contains(":iframe .target1").click();
+    expect(".oe_snippet_clone").not.toHaveAttribute("disabled");
+    const target = queryOne(":iframe .target1");
+    target.classList.add("value2");
+    const editor = getEditor();
+    editor.shared.history.addStep();
+    await animationFrame();
+    expect(".oe_snippet_clone").toHaveAttribute("disabled");
+    expect(".options-container-label").toHaveText("Test title 2");
 });
