@@ -1043,4 +1043,5 @@ class configmanager:
             'hardcoded default': self._default_options.get(name, EMPTY),
         }
 
+
 config = configmanager()

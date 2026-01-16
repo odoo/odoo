@@ -205,7 +205,7 @@ class Database(Controller):
     @route('/web/database/drop', type='http', auth="none", methods=['POST'], csrf=False)
     def drop(self, master_pwd, name):
         if name in odoo.tools.config["protected_db"]:
-            e =_("Houston, we've got you covered! even a misclick can't lead to delete a protected database.")
+            e = _("Houston, we've got you covered! even a misclick can't lead to delete a protected database.")
             res = Response(_render_template(error=e), UnprocessableEntity.code)
             raise UnprocessableEntity(response=res)
         try:
