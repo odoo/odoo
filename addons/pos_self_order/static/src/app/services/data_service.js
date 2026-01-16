@@ -54,6 +54,11 @@ export const unpatchSelf = patch(PosData.prototype, {
             ? await super.getLocalDataFromIndexedDB(...arguments)
             : {};
     },
+    localDeleteCascade(record) {
+        return session.data.self_ordering_mode === "mobile"
+            ? super.localDeleteCascade(...arguments)
+            : record.delete();
+    },
     async missingRecursive(recordMap) {
         return recordMap;
     },
