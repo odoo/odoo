@@ -265,7 +265,7 @@ class TestConfigManager(TransactionCase):
 
             # security
             'list_db': False,
-            'protected_db': [],
+            'protected_db': ['horizon'],
 
             # advanced
             'dev_mode': ['xml'],  # blacklist for save, read from the config file
