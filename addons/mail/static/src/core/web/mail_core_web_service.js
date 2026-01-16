@@ -42,7 +42,9 @@ export class MailCoreWeb {
             /** @type {import("models").Message} */
             const message = this.store["mail.message"].get(messageId);
             this.addMessageToInbox(message, notifId);
-            this.store.env.services["mail.out_of_focus"].notify(message);
+            if (!this.store.self?.im_status?.includes("busy")) {
+                this.store.env.services["mail.out_of_focus"].notify(message);
+            }
         });
         this.busService.subscribe("mail.message/mark_as_unread", (payload, { id: notifId }) => {
             const { message_ids: messageIds, store_data } = payload;
