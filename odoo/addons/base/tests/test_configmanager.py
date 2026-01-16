@@ -265,6 +265,7 @@ class TestConfigManager(TransactionCase):
 
             # security
             'list_db': False,
+            'protected_db': [],
 
             # advanced
             'dev_mode': ['xml'],  # blacklist for save, read from the config file
@@ -348,6 +349,7 @@ class TestConfigManager(TransactionCase):
             'import_partial': '',
             'import_url_regex': '^(?:http|https)://',
             'list_db': True,
+            'protected_db': [],
             'load_language': None,
             'log_db': '',
             'log_db_level': 'warning',
