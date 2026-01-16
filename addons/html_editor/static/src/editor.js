@@ -63,7 +63,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 /**
  * Clean up DOM before taking into account for next history step remaining in
  * edit mode
- * @typedef {((root: EditorContext["editable"] | HTMLElement, stepState: "original"|"undo"|"redo"|"restore") => void)[]} normalize_processors
+ * @typedef {((root: EditorContext["editable"] | HTMLElement, stepType?: "original"|"undo"|"redo"|"restore") => void)[]} normalize_processors
  */
 
 /**
