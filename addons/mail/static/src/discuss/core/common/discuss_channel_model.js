@@ -290,10 +290,7 @@ export class DiscussChannel extends Record {
     /** @type {"loaded"|"loading"|"error"|undefined} */
     pinnedMessagesState = undefined;
     get showImStatus() {
-        return (
-            (this.channel_type === "chat" && this.correspondent) ||
-            (this.channel_type === "group" && this.hasOtherMembersTyping)
-        );
+        return this.channel_type === "chat" && this.correspondent;
     }
     sub_channel_ids = fields.Many("discuss.channel", {
         inverse: "parent_channel_id",
