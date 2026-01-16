@@ -21,9 +21,10 @@ class HrLeave(models.Model):
         """
         vals_list = []
         leave_ids = []
-        calendar_leaves_data = self.env['resource.calendar.leaves']._read_group([('holiday_id', 'in', self.ids)], ['holiday_id'], ['id:array_agg'])
+        leaves_with_active_employee = self.filtered(lambda l: l.employee_id.active)
+        calendar_leaves_data = self.env['resource.calendar.leaves']._read_group([('holiday_id', 'in', leaves_with_active_employee.ids)], ['holiday_id'], ['id:array_agg'])
         mapped_calendar_leaves = {leave: calendar_leave_ids[0] for leave, calendar_leave_ids in calendar_leaves_data}
-        for leave in self:
+        for leave in leaves_with_active_employee:
             project, task = leave.employee_id.company_id.internal_project_id, leave.employee_id.company_id.leave_timesheet_task_id
 
             if not project or not task or leave.work_entry_type_id.count_as == 'working_time':
