@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Template pour masquer le bloc total sur PDF -->
+        <template id="contenu_principal_saleorder_hide_total" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//div[@name='so_total_summary']" position="replace">
+                <t t-if="report_type != 'pdf'">
+                    <div class="clearfix" name="so_total_summary">
+                        <div id="total" class="row mt-n3" name="total">
+                            <div t-att-class="(report_type != 'html' and 'col-6 ms-auto' or 'col-sm-7 col-md-6 ms-auto')">
+                                <table class="o_total_table table table-borderless">
+                                    <!-- Tax totals -->
+                                    <t t-call="sale.document_tax_totals">
+                                        <t t-set="tax_totals" t-value="doc.tax_totals"/>
+                                        <t t-set="currency" t-value="doc.currency_id"/>
+                                    </t>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

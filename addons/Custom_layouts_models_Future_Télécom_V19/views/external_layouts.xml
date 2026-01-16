@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="external_layouts">
+        <!-- HEADER -->
+        <t t-set="header_shape_height" t-value="'0'"/>
+        <!-- BODY -->
+        <div t-attf-class="article o_report_layout_wave o_table_striped o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}" t-attf-style="{{report_type != 'pdf' and 'margin-top:' + header_shape_height + 'px;'}} {{ 'background-image: url(%s);' % layout_background_url if layout_background_url else ''}}">
+            <!-- En-tête du document, version professionnelle et compatible wkhtmltopdf -->
+
+            <style>
+                table, tr, td {
+                    border: white!important;
+                    border-bottom: white !important;
+                    border-top: white !important;
+                    border-collapse: collapse !important;
+                }
+               
+            </style>
+            <table border="0" cellpadding="0" cellspacing="0" style="width:100%; margin-bottom:0; border:none; background:transparent;">
+                <tr>
+                    <td style="width:80px; text-align:left; vertical-align:middle; background-color:#fff; border:none;">
+                        <img t-if="company.logo" class="o_company_logo_big" t-att-src="image_data_uri(company.logo)" alt="Logo" style="max-width:70px; max-height:70px; margin-top:30px;"/>
+                    </td>
+                    <td style="text-align:center; vertical-align:middle; background-color:#fff; border:none;">
+                        <strong t-if="not is_html_empty(company.report_header)" t-field="company.report_header" class="o_company_tagline" style="font-size:1.8em; font-weight:900; margin-bottom:0;"/>
+                    </td>
+                    <td style="width:80px; background-color:#fff; border:none;"/>
+                </tr>
+            </table>
+
+            <!-- Infos société centrées -->
+            <div style="width:100%; text-align:center; line-height:1.2; margin-top:0; margin-top:-35px;">
+                <t t-if="company.is_company_details_empty">
+                    <span t-field="company.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}" style="margin-bottom:2px;"/>
+                </t>
+                <t t-else="">
+                    <span t-field="company.company_details" style="margin-bottom:2px;"/>
+                </t>
+                <div t-if="forced_vat" style="margin-bottom:2px;">
+                    <span>
+                        <t t-esc="company.country_id.vat_label or 'Tax ID'"/>
+:                        <span t-esc="forced_vat"/>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Titre dynamique centré -->
+            <div style="width:100%; text-align:center; margin-bottom:20px;">
+                <div style="display:inline-block; background:#bdbdbd; color:#111; border-radius:8px; padding:10px 48px; font-weight:900; font-size:1.3em; min-width:320px; max-width:600px; width:60%; text-align:center;">
+                    <t t-if="o and o._name == 'account.move'">REÇU GLOBAL</t>
+                    <t t-elif="o and o._name == 'sale.order'">Commande N°<t t-if="o and o.name" t-esc="o.name"/></t>
+                    <t t-elif="o and o._name == 'stock.picking'">Bon de livraison<t t-if="o and o.name"> N°<t t-esc="o.name"/></t></t>
+                </div>
+            </div>
+
+            <!-- Date à droite -->
+            <div style="width:100%; text-align:right; font-size:1em; color:#222; font-weight:500; margin-top:-20px; margin-bottom:0px; font-weight: 900;">
+                <t t-if="o and 'invoice_date' in o._fields">
+                    <span t-field="o.invoice_date" t-field-options='{"format": "d MMMM yyyy"}'/>
+                </t>
+                <t t-elif="o and 'date_order' in o._fields">
+                    <span t-field="o.date_order" t-field-options='{"format": "d MMMM yyyy"}'/>
+                </t>
+                <t t-else="">
+                    <span/>
+                </t>
+            </div>
+
+            <!-- Cadre Client + Téléphone + Image, version compatible PDF/Odoo -->
+            <table border="0" cellpadding="0" cellspacing="0" style="border:none; background:transparent; border-radius:8px; font-weight:bold; font-size:15px; margin-bottom:0px;">
+                <tr>
+                    <!-- Image à gauche du client -->
+                    <td style="width:40px; text-align:center; vertical-align:middle; padding-right:12px; background:transparent; font-weight:900;">
+                        <img t-att-src="'/Custom_layouts_models_Future_Télécom_V19/static/description/logoclient.jpeg'" alt="Icône client" style="height:32px; width:auto;"/>
+                    </td>
+                    <!-- Infos client -->
+                    <td style="vertical-align:middle; padding-right:18px; background:transparent; font-weight:900;">
+                        <div style="display:inline-block; background:transparent; font-weight:900;">
+                            <span>
+                                Client N°
+                                <t t-if="o and o.partner_id">
+                                    <t t-esc="o.partner_id.id"/>
+                                </t>
+                            </span>
+                            <br/>
+                            <hr style="width:160px; margin:2px 0 0 0; border:1px solid black; background:transparent; font-weight:900;"/>
+                        </div>
+                    </td>
+                    <!-- Téléphone client -->
+                    <td style="vertical-align:middle; padding-left:20px; background:transparent; font-weight:900; white-space:nowrap;">
+                        <span>
+                            Tél:
+                            <t t-if="o and o.partner_id and o.partner_id.phone" t-esc="o.partner_id.phone"/>
+                            <t t-if="not o or not o.partner_id or not o.partner_id.phone">-</t>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Cadre Vendeur aligné à droite -->
+            <table border="0" cellpadding="0" cellspacing="0" style="width:100%; border:none; background:transparent;">
+                <tr>
+                    <td style="width:50%; background:transparent;"/>
+                    <td style=" font-weight:900; font-size:15px; padding-left:80px; background:transparent;">
+                                Vendeur:
+                        <t t-if="o and o.user_id and o.user_id.name" t-esc="o.user_id.name"/>
+                        <t t-if="not o or not o.user_id or not o.user_id.name">-</t>
+                    </td>
+                </tr>
+            </table>
+            <!-- Espacement minimal avant le bloc Nom/Prénoms -->
+            <table style="width:100%; border:none; background:transparent;">
+                <tr>
+                    <td style="height:2px; padding:0; margin:0;background:transparent;"/>
+                </tr>
+            </table>
+            <!-- Bloc Nom/Prénoms et nom regroupés -->
+            <table border="0" cellpadding="0" cellspacing="0" style="width:100%; border:none; background:transparent; border-radius:12px; font-weight:bold; font-size:15px;">
+                <tr>
+                    <td style="width:20%; padding:2px 0 2px 0; border-radius:8px; background:transparent; vertical-align:top; font-weight:900;">
+                        <span>Nom <br/>Prénoms:</span>
+                    </td>
+                    <td style="width:80%; padding:2px 0 2px 12px; background:transparent;vertical-align:top; font-weight:normal;font-weight:900;">
+                        <span>
+                            <t t-if="o and o.partner_id and o.partner_id.name" t-esc="o.partner_id.name"/>
+                            <t t-if="not o or not o.partner_id or not o.partner_id.name">-</t>
+                        </span>
+                    </td>
+                    <td style="width:80%; padding:2px 180px 2px 12px; vertical-align:top; background:transparent; font-weight:normal; font-weight:900;">
+                        Objet:
+                    </td>
+                </tr>
+            </table>
+            <table border="0" cellpadding="0" cellspacing="0" style="width:100%; max-width:700px; min-width:340px; background:transparent; margin-top: -40px;">
+                <style>
+                    .contenu-principal-move {
+                        margin-top: 0px; /* Modifie cette valeur pour monter ou descendre le tableau */
+                        padding-top: 0px;
+                    }
+                </style>
+                <div class="contenu-principal-move">
+                    <t t-out="0"/>
+                </div>
+
+
+
+                <!-- Bloc commande compatible PDF Odoo -->
+
+                <tr>
+                    <!-- Image à gauche -->
+                    <td style="width:40px; text-align:center; vertical-align:middle; padding-right:12px; background:transparent;">
+                        <img t-att-src="'/Custom_layouts_models_Future_Télécom_V19/static/description/monaie.jpeg'" alt="Icône commande" style="height:32px; width:auto; object-fit:contain;"/>
+                    </td>
+                    <!-- Infos commande -->
+                    <td style="vertical-align:middle; font-size:15px; font-weight:bold; background:transparent;">
+                                Commande N° :
+                        <t t-if="o and o.name">
+                            <t t-set="num_facture" t-value="o.name.replace('FAC/', '')"/>
+                            <t t-set="parts" t-value="num_facture.split('/')"/>
+                            <t t-set="annee" t-value="parts[0] if len(parts) &gt; 1 else ''"/>
+                            <t t-set="numero" t-value="parts[1] if len(parts) &gt; 1 else '0'"/>
+                            <t t-set="numero" t-value="str(numero).lstrip('0')"/>
+                            <t t-if="annee and numero">
+                                <t t-esc="annee + '/' + numero.zfill(4)"/>
+                            </t>
+                        </t>
+                        <t t-if="o and o._name == 'sale.order' and o.name and o.date_order">
+                            <t t-set="annee" t-value="o.date_order.year"/>
+                            <t t-esc="str(annee) + '/' + o.name"/>
+                        </t>
+                    </td>
+                    <td style="vertical-align:middle; font-size:15px; font-weight:bold; padding-left:10px; background:transparent;">
+                                M. Total :
+                        <t t-if="o and (o._name == 'account.move' or o._name == 'sale.order') and o.amount_total is not None and o.currency_id">
+                            <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                        </t>
+                        <t t-if="not o or (o._name in ['account.move', 'sale.order'] and (o.amount_total is None or not o.currency_id))"/>
+                    </td>
+                </tr>
+
+            </table>
+            <!-- Ligne de séparation -->
+            <table style="width:100%; max-width:700px; min-width:340px; background:transparent; border:none; margin-top:0; background:transparent;">
+                <hr style="width:100%; border:1.5px solid black; margin:0; background:transparent;"/>
+            </table>
+                <!-- Total versé -->
+                <t t-if="o and 'amount_residual' in o._fields and o.amount_total is not None and o.amount_residual is not None" t-set="montant_verse" t-value="o.amount_total - o.amount_residual"/>
+                <t t-elif="o and (o._name in ['account.move', 'sale.order']) and o.amount_total is not None" t-set="montant_verse" t-value="o.amount_total"/>
+                <t t-if="o and o._name == 'account.move'">
+                    <table border="0" cellpadding="0" cellspacing="0" style="border:none; background:transparent; border-radius:8px; min-width:220px; margin-bottom:8px; width:auto;">
+                        <tr>
+                            <td style="font-weight:bold; font-size:14px; background:transparent;">
+                                        Total versé :
+                            </td>
+                            <td style="font-size:14px; font-weight:bold; background:transparent;white-space:nowrap;">
+                                <t t-if="montant_verse is not None" t-esc="montant_verse"/>
+                                <t t-if="o and o.currency_id and o.currency_id.symbol" t-esc="o.currency_id.symbol"/>
+                                <t t-if="montant_verse is None">-</t>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="font-size:14px; font-weight:bold; background:transparent; white-space:nowrap;">
+                                <t t-if="montant_verse is not None">
+                                    <t t-esc="o.company_id.currency_id.amount_to_text(montant_verse)"/>
+                                </t>
+                            </td>
+                        </tr>
+                    </table>
+                
+                    <!-- Montant restant -->
+                    <table border="0" cellpadding="0" cellspacing="0" style="background:transparent; min-width:220px; width:auto; text-align:left;">
+                        <tr>
+                            <td style="font-size:14px; font-weight: 900;background:transparent;">
+                                        Montant restant :
+                            </td>
+                            <td style="font-size:14px; font-weight:900; background:transparent;white-space:nowrap;">
+                                <t t-if="o and 'amount_residual' in o._fields and o.amount_residual is not None and o.currency_id"/>
+                                <span t-if="o and 'amount_residual' in o._fields and o.amount_residual is not None and o.currency_id" t-field="o.amount_residual" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                <t t-if="not o or 'amount_residual' not in o._fields or o.amount_residual is None or not o.currency_id">-</t>
+                            </td>
+                        </tr>
+                    </table>
+                </t>
+               <t t-if="o and o._name == 'sale.order' and o.name">
+                    <table border="0" cellpadding="0" cellspacing="0" style="background:transparent; min-width:220px; width:auto; text-align:left;">
+                        <tr>
+                            <td style="font-size:16px; font-weight:900; background:transparent;">
+                                Montant à Payer :
+                            </td>
+                            <td style="font-size:16px; font-weight:900; background:transparent; white-space:nowrap;">
+                                <t t-if="o and o.amount_total is not None and o.currency_id">
+                                    <span t-field="o.amount_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.currency_id}"/>
+                                </t>
+                                <t t-if="not o or o.amount_total is None or not o.currency_id">-</t>
+                            </td>
+                        </tr>
+                    </table>
+                </t>
+                <table border="0" cellpadding="0" cellspacing="0" style="background:transparent;min-width:220px; width:100%; text-align:center;">
+                    <tr>
+                        <td style="background:transparent;">
+                            <span style="font-size:16px; font-weight:900;background:transparent;">Merci à BIENTOT !</span>
+                        </td>
+                    </tr>
+                </table>
+        </div>
+
+        <!-- Footer -->
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-flexed mt-auto mx-n5'}}">
+            <table style="width:100%; max-width:700px; min-width:340px; background:transparent; border:none; margin-top:-40px; background:transparent;">
+                <hr style="width:100%; border:1.5px solid black; margin:0; background:transparent;"/>
+            </table>
+            <table style="width:100%; height:100px; background:transparent; border:white;">
+                <tr style="vertical-align:bottom; background:transparent;">
+                    <td style="text-align:center; vertical-align:bottom; padding-bottom:8px; background:transparent; border:none;">
+                        <div t-field="company.report_footer"/>
+                        <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
+                    </td>
+                    <td style="text-align:right; vertical-align:bottom; width:80px; padding-bottom:8px; background:transparent; border:none;">
+                        <span t-if="report_type == 'pdf'" class="text-muted" style="font-size:10px; font-weight:900; background:transparent;">
+                            <span class="page"/>
+        /                            <span class="topage"/>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </template>
+</odoo>

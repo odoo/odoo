@@ -1,0 +1,700 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- ================================================================= -->
+  <!-- TEMPLATE PRINCIPAL : Layout personnalisé pour les factures       -->
+  <!-- ================================================================= -->
+  <template id="external_layout_modern" name="Facture style">
+    <t t-name="web.external_layout_standard">
+
+      <!-- Style global pour toute la page -->
+      <style>
+        * {
+          font-family: Arial, sans-serif !important;
+        }
+      </style>
+
+      <!-- ================================================================= -->
+      <!-- SECTION 1 : HEADER VIDE (pour compatibilité PDF)                -->
+      <!-- ================================================================= -->
+      <div class="container mt-3" t-attf-class="header o_company_#{company.id}_layout {{ report_type == 'pdf' and 'pt-5' or '' }}" style="font-family: Arial, sans-serif;">
+        <!-- Header vide - tout le contenu est dans le body pour éviter les problèmes de pagination -->
+      </div>
+
+      <!-- ================================================================= -->
+      <!-- SECTION 2 : BODY PRINCIPAL avec header intégré                   -->
+      <!-- ================================================================= -->
+      <div t-attf-class="article o_report_layout_standard o_table_standard o_company_#{company.id}_layout o_snail_mail {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}" t-attf-style="font-family: Arial, sans-serif;{{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+
+        <!-- ============================================================= -->
+        <!-- SECTION 2.1 : HEADER PERSONNALISÉ (Infos facture + Logo)    -->
+        <!-- ============================================================= -->
+        <table style="width:100%;box-shadow: none !important; border-collapse: collapse !important; border:1px solid transparent;font-family: Arial, sans-serif;">
+          <tr>
+            <!-- COLONNE GAUCHE : Informations de la facture et du client -->
+            <td style="width: 44%; padding-right: 10px; vertical-align: top;">
+              <t t-if="o">
+                <!-- Tableau principal avec les infos de facture -->
+                <table style="width: 100%; border: 2px solid black; border-collapse: collapse; font-size: 14px;font-family: 'Arial Black', sans-serif; font-weight: 900; color: #000;">
+
+                  <!-- TITRE DE LA FACTURE (dynamique selon le type) -->
+                  <tr>
+                    <td colspan="2" style="text-align: center; font-weight: bold; text-transform: uppercase; border: 2px solid black; padding: 14px; margin-top: 16px; font-size: 18px; font-family: 'Arial Black', sans-serif; font-weight: 900; color: #000;">
+                      <t t-if="o._name == 'account.move'">
+                        <t t-if="o.move_type == 'out_invoice' and not (locals.get('proforma') if locals else False)">FACTURE DÉFINITIVE</t>
+                        <t t-elif="locals.get('proforma') if locals else False">FACTURE PROFORMA</t>
+                        <t t-else="">DOCUMENT</t>
+                      </t>
+                      <t t-elif="o._name == 'sale.order'">FACTURE PROFORMA</t>
+                      <t t-else="">DOCUMENT</t>
+                    </td>
+                  </tr>
+
+                  <!-- NUMÉRO DE DOCUMENT -->
+                  <tr>
+                    <td style="border: 2px solid black; padding: 15px 2px 2px 2px; margin-top: 0px; font-size: 14px; font-weight: 900; font-family: Arial, sans-serif;">
+                      <strong>Document N°</strong>
+                    </td>
+                    <td style="border: 2px solid black; padding: 15px 2px 2px 2px;fw-bold; margin-top: 0px; text-align: center;font-size: 14px; font-weight: 900; font-family: Arial, sans-serif;">
+                      <strong>
+                        <span t-if="o._name == 'sale.order' and o.date_order" t-esc="o.name.replace('PRO', '', 1) + '-' + str(o.date_order.year)"/>
+                        <span t-elif="o._name == 'account.move' and o.invoice_date" t-esc="o.name.replace('FAC/%s/' % o.invoice_date.year, '', 1) + '-' + str(o.invoice_date.year)"/>
+                        <span t-else="" t-esc="o.name"/>
+                      </strong>
+                    </td>
+                  </tr>
+
+                  <!-- RÉFÉRENCE CLIENT -->
+                  <tr>
+                    <td style="border: 2px solid black; padding: 15px 2px 2px 2px;vertical-align: botton; margin-top: 0px; font-size: 14px; font-weight: 900; font-family: Arial, sans-serif;">
+                      <strong>Your Reference</strong>
+                    </td>
+                    <td style="border: 2px solid black; padding: 15px 2px 2px 2px; margin-top: 0px; font-size: 14px; text-align: center; font-weight: 900; font-family: Arial, sans-serif;">
+                      <strong>
+                        <t t-if="o._name == 'account.move'">
+                          <span t-esc="(o.ref or '')"/>
+                        </t>
+                        <t t-elif="o._name == 'sale.order'">
+                          <span t-esc="(o.client_order_ref or '').replace('PO#', '')"/>
+                        </t>
+                      </strong>
+                    </td>
+                  </tr>
+
+                  <!-- NOM DU CLIENT -->
+                  <tr>
+                    <td style="border: 2px solid black; padding: 15px 2px 2px 2px; margin-top: 0px; font-size: 14px; font-weight: 900; font-family: Arial, sans-serif;">
+                      <strong>Compte</strong>
+                    </td>
+                    <td style="border: 2px solid black; padding: 15px 2px 2px 2px; margin-top: 0px; font-size: 14px; text-align: center; font-weight: 900; font-family: Arial, sans-serif; vertical-align: middle;">
+                      <strong>
+                        <t t-if="o.partner_id">
+                          <span style="display: block; margin: 0 auto; max-width: 220px; word-break: break-word; white-space: normal; text-align: center; overflow-wrap: break-word; line-height: 1.1;">
+                            <t t-esc="o.partner_id.name or ''"/>
+                          </span>
+                        </t>
+                      </strong>
+                    </td>
+                  </tr>
+                  <!-- LIGNE VIDE -->
+                  <tr>
+                    <td style="border: 2px solid black; padding: 15px 2px 2px 2px; height: 20px;"/>
+                    <td style="border: 2px solid black; padding: 15px 2px 2px 2px; height: 20px;"/>
+                  </tr>
+                  <!-- DATE DE LA FACTURE -->
+                  <tr>
+                    <td style="border: 2px solid black; padding: 15px 2px 2px 2px; margin-top: 0px; font-size: 14px; font-weight: 900; font-family: Arial, sans-serif;">
+                      <strong>Date</strong>
+                    </td>
+                    <td style="border: 2px solid black; padding: 15px 2px 2px 2px; margin-top: 0px; font-size: 14px; text-align: center;">
+                      <strong>
+                        <span t-if="o._fields.get('invoice_date') and o.invoice_date" t-esc="o.invoice_date.strftime('%d/%m/%Y')"/>
+                        <span t-elif="o._fields.get('date_order') and o.date_order" t-esc="o.date_order.strftime('%d/%m/%Y')"/>
+                      </strong>
+                    </td>
+                  </tr>
+                  <!-- NUMÉRO DE PAGE -->
+                  <tr>
+                    <td style="border: 2px solid black; padding: 15px 2px 2px 2px; margin-top: 0px; font-size: 14px;">
+                      <strong>Page</strong>
+                    </td>
+                    <td style="border: 2px solid black; padding: 15px 2px 2px 2px; margin-top: 0px;text-align:center;font-size: 14px;font-weight: 900; font-family: Arial, sans-serif;">
+                      <t t-if="report_type == 'pdf'">
+                        <strong>
+                          <span class="page"/>
+                        1 <span class="topage"/>
+                        </strong>
+                      </t>
+                      <t t-else="">1</t>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- ADRESSE COMPLÈTE DU CLIENT -->
+                <div style="border: 2.5px solid black; padding: 5px; margin-top: 10px;  line-height: 1.3; font-size: 14px;">
+                  <!-- INFOS CLIENT-->
+                  <div t-if="o.partner_id" style="font-family: 'Arial Black', Arial, sans-serif; font-weight: 900; color: #000;">
+                    <div>
+                    CLIENT: <span t-esc="o.partner_id.name"/>
+                    </div>
+                    <div t-if="o.partner_id.street">
+                      <span t-esc="o.partner_id.street"/>
+                    </div>
+                    <div t-if="o.partner_id.street2">
+                      <span t-esc="o.partner_id.street2"/>
+                    </div>
+                    <div t-if="o.partner_id.zip or o.partner_id.city">
+                      <span t-if="o.partner_id.zip" t-esc="o.partner_id.zip"/>
+                      <span t-if="o.partner_id.city" t-esc="o.partner_id.city"/>
+                    </div>
+
+                    <div t-if="o.partner_id.phone">
+                    Tel: <span t-esc="o.partner_id.phone"/>
+                    </div>
+
+                    <div t-if="o.partner_id.country_id">
+                      <span t-esc="o.partner_id.country_id.name"/>
+                    </div>
+
+                  </div>
+
+                </div>
+              </t>
+            </td>
+
+            <!-- COLONNE DROITE : Logo de l'entreprise et informations -->
+            <td style="width: 100%; text-align: center; vertical-align: top; font-family: 'Arial Black', sans-serif; font-weight: 900; color: #000;">
+
+              <!-- LOGO DE L'ENTREPRISE -->
+              <div style="text-align: left; margin-bottom: 5px; padding-left: 110px;">
+                <img t-if="company.logo" class="o_company_logo" t-att-src="image_data_uri(company.logo)" style="max-height: 85px; margin-bottom: 45px;" alt="Logo"/>
+              </div>
+
+              <!-- INFORMATIONS DE L'ENTREPRISE -->
+              <div style="display: inline-block; text-align: left; padding: 2px 10px 2px 10px; margin-top: -80px; border: 1px solid transparent;">
+
+                <!-- SLOGAN/EN-TÊTE DE L'ENTREPRISE -->
+                <div style="padding-top: 40px; margin-left: 50px; font-size: 20px; font-family: 'Arial Black', sans-serif; font-weight: 900; color: #000; line-height: 1.0; margin-bottom: 0px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                  <span t-esc="company.report_header"/>
+                </div>
+
+                <!-- DÉTAILS DE L'ENTREPRISE (adresse, téléphone, etc.) -->
+                <div>
+                  <ul class="mb-0" style="list-style: none; padding: 0; margin-left: 50px; font-size: 17px; font-family: Arial, sans-serif;line-height: 1.0; margin-bottom: -40px; margin-top: -46px;">
+                    <li t-if="company.company_details">
+                      <span t-esc="company.company_details"/>
+                    </li>
+                    <li t-else="">
+                      <div class="placeholder-company p-3 text-center">
+                        <strong>Company details block</strong>
+                        <div>Contains the company details.</div>
+                      </div>
+                    </li>
+                    <li t-if="forced_vat" style="line-height: 1.1; margin-bottom: 0px;">
+                      <t t-esc="company.country_id.vat_label or 'Tax ID'"/>
+:
+                      <span t-esc="forced_vat"/>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <!-- DEBUG : Affichage des groupes d'infos principales -->
+
+        <!-- ================================================================= -->
+        <!-- SECTION 2.2 : CONTENU PRINCIPAL (lignes de facture)             -->
+        <!-- ================================================================= -->
+        <div class="container" t-attf-style="margin-top: {{ report_type == 'pdf' and '15px' or '30px' }}; margin-bottom: 20px; font-size: 13px; border: none;font-family: 'Arial Black', sans-serif; font-weight: 900; color: #000;">
+          <!-- Contenu dynamique injecté par Odoo (tableau des produits/services) -->
+          <style>
+          * {
+            font-family: 'Arial Black', sans-serif; font-weight: 900; color: #000; !important;
+          }
+          
+          .main-content * {
+            line-height: 1.1 !important;
+            margin-top: 0 !important;
+            margin-bottom: 2px !important;
+            padding-top: 2px !important;
+            padding-bottom: 1px !important;
+          }
+        
+          /* Style pour les deux traits horizontaux sous l'en-tête du tableau */
+          table.o_main_table thead th {
+            border-bottom: 1px solid black !important;
+            padding: 2px 4px !important;
+            position: relative;
+          }
+          
+          table.o_main_table thead th::after {
+            content: '';
+            position: absolute;
+            bottom: 1.5px;
+            left: 0;
+            right: 0;
+            border-bottom: 1px solid black;
+          }
+        
+          /* Espacement uniquement pour la PREMIÈRE ligne de produit */
+          table.o_main_table tbody tr:first-child td {
+            padding-top: 16px !important; /* Augmentez cette valeur pour plus d'espace */
+          }
+          </style>
+          <div class="main-content" style="margin-bottom: 10px;font-family: 'Arial Black', sans-serif; font-weight: 900; color: #000; !important">
+
+            <t t-out="0"/>
+
+          </div>
+        </div>
+
+        <!-- ================================================================= -->
+        <!-- SECTION 2.3 : SECTION FINALE (Traits + Totaux + Signature)      -->
+        <!-- ================================================================= -->
+        <div class="container" style="page-break-inside: avoid; break-inside: avoid; margin-top: 20px; margin-bottom: 20px; font-size: 14px; border: none;" t-if="o">
+
+          <!-- ============================================================= -->
+          <!-- TRAITS DE SÉPARATION DÉCORATIFS                              -->
+          <!-- ============================================================= -->
+          <div style="position: relative; width: 100%; height: 30px; margin-bottom: -10px;">
+
+            <!-- TRAIT EN FORME DE "L" (horizontal puis vertical avec écart) -->
+            <svg style="position: absolute; top: -130px; left: 0; width: 100%; height: 250px;" viewBox="0 0 1000 250">
+              <!-- 
+                Explication du path SVG MODIFIÉ :
+                M 0 50 = commence à gauche au milieu (point de départ)
+                L 1000 50 = trait horizontal jusqu'à 100% de la largeur
+                L 920 120 = descend en angle vers la gauche PLUS INCLINÉ (était L 970 120)
+              -->
+              <path d="M 0 50 L 1000 50 L 920 120" stroke="black" stroke-width="1" fill="none"/>
+            </svg>
+
+            <!-- TRAIT HORIZONTAL DU BAS (ligne de base) -->
+            <div style="position: absolute; top: -10px; left: 0; width: 100%; height: 1px; background-color: black;"/>
+          </div>
+
+          <!-- ============================================================= -->
+          <!-- SIGNATURE ET DATE                                             -->
+          <!-- ============================================================= -->
+          <div style="width: 100%; margin-top: 0px; margin-bottom: 5px;">
+            <table style="width: 100%; border: 1px solid white; border-collapse: collapse;">
+              <tr>
+                <!-- SIGNATURE -->
+                <td style="border: none; padding: 0; width: 35%; vertical-align: top; font-size: 13px; font-family: 'Arial Black', sans-serif; font-weight: 900; color: #000;">
+                  <strong>Signature:</strong>
+                </td>
+
+                <!-- DATE (formatée automatiquement) -->
+                <td style="border: none; padding: 0; width: 55%; text-align: left; padding-left: 35px; vertical-align: top; font-size: 13px; font-family: 'Arial Black', sans-serif; font-weight: 900; color: #000;">
+                  <strong>Date:</strong>
+                  <span t-if="o and o._fields.get('invoice_date') and o.invoice_date" t-esc="o.invoice_date.strftime('%d/%m/%Y')"/>
+                  <span t-elif="o and o._fields.get('date_order') and o.date_order" t-esc="o.date_order.strftime('%d/%m/%Y')"/>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- ============================================================= -->
+          <!-- RECTANGLE PRINCIPAL AVEC TOTAUX                               -->
+          <!-- ============================================================= -->
+          <div style="width: 100%; margin-top: -5px; page-break-inside: avoid; break-inside: avoid;">
+
+            <!-- CONTENEUR AVEC BORDURE NOIRE -->
+            <div style="border: 2px solid black; min-height: 10px;">
+
+              <table style="width: 100%; border-collapse: collapse; border: none; table-layout: fixed;  font-family: 'Arial Black', sans-serif; font-weight: 900; color: #000;">
+                <tr>
+
+                  <!-- PARTIE GAUCHE : Informations de livraison -->
+                  <td style="border: none; padding: 0px; vertical-align: top; width: 155%;">
+                    <table style="border: none; border-collapse: collapse; width: 100%; table-layout: fixed;">
+
+                      <!-- DESTINATAIRE DE LA LIVRAISON -->
+                      <tr>
+                        <td style="border: 1px solid white; padding: 0; padding-right: 20px; vertical-align: top; width: 80px; font-size: 13px; font-family: 'Arial Black', sans-serif; font-weight: 900; color: #000;">
+                          <strong>Delivery </strong>
+                        </td>
+                        <td style="border: 1px solid white, padding: 0; vertical-align: top; padding-left: 40px; word-wrap: break-word; font-size: 12px; font-family: 'Arial Black', sans-serif; font-weight: 900; color: #000;">
+                          <span t-if="o.partner_id" t-esc="o.partner_id.name"/>
+                        </td>
+                      </tr>
+
+                      <!-- ADRESSE DE LIVRAISON -->
+                      <tr>
+                        <td style="border: 1px solid white; padding: 0; padding-right: 20px; vertical-align: top; padding-top: 0px; margin-top: -50px; width: 80px; font-size: 13px; font-family: 'Arial Black', sans-serif; font-weight: 900; color: #000;">
+                          <strong>Address:</strong>
+                        </td>
+                        <td style="border: 1px solid white; padding: 0; vertical-align: top; padding-top: 0px; word-wrap: break-word; font-size: 13px; font-family: 'Arial Black', sans-serif; font-weight: 900; color: #000;">
+                          <!-- MODIFIABLE : Remplacez "Ouagadougou" par une variable dynamique si nécessaire -->
+                          Ouagadougou
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <!-- PARTIE DROITE : Tableau des totaux -->
+                  <td style="border: none; border-left: 1px solid black; padding: 0px; vertical-align: top; width: 120%;">
+                    <!-- ================================================= -->
+                    <!-- TABLEAU DES TOTAUX FINANCIERS                    -->
+                    <!-- ================================================= -->
+                    <table class="custom-totals" style="width: 100%; border-collapse: collapse; table-layout:auto; line-height: 1.1;">
+
+                      <!-- LIGNE 1 : SOUS-TOTAL HT -->
+                      <tr t-if="o._fields.get('amount_untaxed') and o.amount_untaxed">
+                        <td style="text-align: left; padding: 2px; border: 2px solid black; width: 35%; font-size: 13px;">
+                          <strong>Sous-Total F CFA</strong>
+                        </td>
+                        <!-- Colonne vide pour alignement avec les autres lignes -->
+                        <td style="text-align: center; padding: 2px; border: 2px solid black; width: 25%; font-size: 13px;"/>
+                        <!-- Montant formaté (espaces au lieu de virgules) -->
+                        <td style="text-align: right; padding: 2px; border: 2px solid black; width: 30%; white-space: nowrap;font-size: 13px;">
+                          <span t-esc="'{:,.2f}'.format(o.amount_untaxed).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
+                        </td>
+                      </tr>
+
+                      <!-- LIGNE VIDE entre Sous-Total et TVA -->
+                      <tr>
+                        <td style="border: 2px solid black; padding: 5px; height: 5px;"/>
+                        <td style="border: 2px solid black; padding: 5px; height: 5px;"/>
+                        <td style="border: 2px solid black; padding: 5px; height: 5px;"/>
+                      </tr>
+
+                      <!-- LIGNE 2 : TVA (Taxe sur la Valeur Ajoutée) -->
+                      <tr t-if="o._fields.get('amount_tax')">
+                        <td style="text-align: left; padding: 2px; border: 2px solid black; width: 35%; font-size: 13px;">
+                          <strong>TVA</strong>
+                        </td>
+                        <td style="text-align: center; padding: 2px; border: 2px solid black; width: 25%; font-size: 13px;">
+                          18%
+                        </td>
+                        <td style="text-align: right; padding: 2px; border: 2px solid black; width: 30%; white-space: nowrap; font-size: 13px;">
+                          <t t-set="bic_amount" t-value="0"/>
+                          <t t-if="o._fields.get('tax_totals') and o.tax_totals">
+                            <t t-foreach="o.tax_totals.get('subtotals', [])" t-as="subtotal">
+                              <t t-foreach="subtotal.get('tax_groups', [])" t-as="tax_group">
+                                <t t-if="'BIC' in tax_group.get('group_name', '').upper()">
+                                  <t t-set="bic_amount" t-value="bic_amount + float(tax_group.get('tax_amount_currency', 0))"/>
+                                </t>
+                              </t>
+                            </t>
+                          </t>
+                          <span t-esc="'{:,.2f}'.format((o.amount_tax or 0) - bic_amount).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
+                        </td>
+                      </tr>
+
+                      <!-- Facture : Affichage du pourcentage et du montant total de remise -->
+                      <t t-if="o._name == 'account.move'">
+                        <t t-set="total_remise" t-value="0"/>
+                        <t t-set="total_remise_percent" t-value="0"/>
+                        <t t-set="nb_remise_lignes" t-value="0"/>
+                        <t t-foreach="o.invoice_line_ids" t-as="line">
+                          <t t-if="line.discount and line.discount > 0">
+                            <t t-set="total_remise_percent" t-value="total_remise_percent + line.discount"/>
+                            <t t-set="nb_remise_lignes" t-value="nb_remise_lignes + 1"/>
+                          </t>
+                          <t t-if="line.name and 'remise' in line.name.lower()">
+                            <t t-set="total_remise" t-value="total_remise + line.price_subtotal"/>
+                          </t>
+                        </t>
+                        <!-- Si remise globale, adapte ici (exemple : o.global_discount_rate) -->
+                        <t t-if="o._fields.get('global_discount_rate') and o.global_discount_rate">
+                          <t t-set="total_remise_percent" t-value="o.global_discount_rate"/>
+                        </t>
+                        <tr t-if="total_remise != 0 or total_remise_percent != 0">
+                          <td style="text-align: left; padding: 2px; border: 2px solid black; width: 35%; font-size: 13px;">
+                            <strong>Remise</strong>
+                          </td>
+                          <td style="text-align: center; padding: 2px; border: 2px solid black; width: 25%; font-size: 13px;">
+                            <t t-if="o.amount_untaxed and total_remise">
+                              <span t-esc="'{:.2f}'.format(abs(total_remise) / o.amount_untaxed * 100).replace('.', ',')"/>
+ %
+                            </t>
+                            <t t-else="">
+                              <strong>Veillez choisir l'option Montant Fixe </strong>
+                            </t>
+                          </td>
+                          <td style="text-align: right; padding: 2px; border: 2px solid black; width: 30%; white-space: nowrap; font-size: 13px;">
+                            <span t-esc="'{:,.2f}'.format(abs(total_remise)).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
+                          </td>
+                        </tr>
+                      </t>
+
+                      <!-- Commande : Affichage du pourcentage et du montant total de remise -->
+                      <t t-if="o._name == 'sale.order'">
+                        <t t-set="total_remise" t-value="0"/>
+                        <t t-set="total_remise_percent" t-value="0"/>
+                        <t t-set="nb_remise_lignes" t-value="0"/>
+                        <t t-foreach="o.order_line" t-as="line">
+                          <t t-if="line.discount and line.discount > 0">
+                            <t t-set="total_remise_percent" t-value="total_remise_percent + line.discount"/>
+                            <t t-set="nb_remise_lignes" t-value="nb_remise_lignes + 1"/>
+                          </t>
+                          <t t-if="line.name and 'remise' in line.name.lower()">
+                            <t t-set="total_remise" t-value="total_remise + line.price_subtotal"/>
+                          </t>
+                        </t>
+                        <!-- Si remise globale, adapte ici (exemple : o.global_discount_rate) -->
+                        <t t-if="o._fields.get('global_discount_rate') and o.global_discount_rate">
+                          <t t-set="total_remise_percent" t-value="o.global_discount_rate"/>
+                        </t>
+                        <tr t-if="total_remise != 0 or total_remise_percent != 0">
+                          <td style="text-align: left; padding: 2px; border: 2px solid black; width: 35%; font-size: 13px;">
+                            <strong>Remise</strong>
+                          </td>
+                          <td style="text-align: center; padding: 2px; border: 2px solid black; width: 25%; font-size: 13px;">
+                            <t t-if="o.amount_untaxed and total_remise">
+                              <span t-esc="'{:.2f}'.format(abs(total_remise) / o.amount_untaxed * 100).replace('.', ',')"/>
+ %
+                            </t>
+                            <t t-else="">
+                              <strong>Veillez choisir l'option Montant Fixe </strong>
+                            </t>
+                          </td>
+                          <td style="text-align: right; padding: 2px; border: 2px solid black; width: 30%; white-space: nowrap; font-size: 13px;">
+                            <span t-esc="'{:,.2f}'.format(abs(total_remise)).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
+                          </td>
+                        </tr>
+                      </t>
+
+                      <tr t-if="o._fields.get('amount_total')">
+                        <td style="text-align: left; padding: 2px; border: 2px solid black; width: 35%; white-space: nowrap; font-size: 13px;">
+                          <strong>Total Général TTC F CFA</strong>
+                        </td>
+                        <td style="text-align: center; padding: 2px; border: 2px solid black; width: 25%; white-space: nowrap;  font-size: 13px;">
+                        </td>
+                        <td style="text-align: right; padding: 2px; border: 2px solid black; width: 30%; white-space: nowrap; font-size: 13px;">
+                          <strong>
+                            <span t-if="bic_amount > 0" t-esc="'{:,.2f}'.format((o.amount_untaxed or 0) + (o.amount_tax or 0) - bic_amount).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
+                            <span t-else="" t-esc="'{:,.2f}'.format((o.amount_untaxed or 0) + (o.amount_tax or 0)).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
+                          </strong>
+                        </td>
+                      </tr>
+
+                      <!-- Calcul du montant BIC -->
+                      <t t-set="htva_bic_vat18" t-value="0"/>
+                      <t t-set="somme_tva18_bic" t-value="0"/>
+                      <t t-if="o._fields.get('invoice_line_ids') and o.invoice_line_ids">
+                        <t t-foreach="o.invoice_line_ids" t-as="line">
+                          <t t-set="has_bic_group" t-value="False"/>
+                          <t t-set="has_vat18_group" t-value="False"/>
+                          <t t-foreach="line.tax_ids" t-as="tax">
+                            <t t-if="tax.tax_group_id and 'BIC (2%)' in tax.tax_group_id.name.upper()">
+                              <t t-set="has_bic_group" t-value="True"/>
+                            </t>
+                            <t t-if="tax.tax_group_id and 'T.V.A. 18%' in tax.tax_group_id.name.upper() and tax.amount == 18">
+                              <t t-set="has_vat18_group" t-value="True"/>
+                            </t>
+                          </t>
+                          <t t-if="has_bic_group and has_vat18_group">
+                            <t t-set="htva_bic_vat18" t-value="htva_bic_vat18 + line.price_subtotal"/>
+                            <t t-set="somme_tva18_bic" t-value="somme_tva18_bic + (line.price_subtotal * 0.18)"/>
+                          </t>
+                        </t>
+                      </t>
+                      <t t-set="bic_amount" t-value="(htva_bic_vat18 + somme_tva18_bic) * 0.02"/>
+                      <!-- Calcul du montant BIC pour les commandes de vente  sale order-->
+                      <t t-if="o._fields.get('order_line') and o.order_line">
+                        <t t-foreach="o.order_line" t-as="line">
+                          <t t-set="has_bic_group" t-value="False"/>
+                          <t t-set="has_vat18_group" t-value="False"/>
+                          <t t-foreach="line.tax_ids" t-as="tax">
+                            <t t-if="tax.tax_group_id and 'BIC (2%)' in tax.tax_group_id.name.upper()">
+                              <t t-set="has_bic_group" t-value="True"/>
+                            </t>
+                            <t t-if="tax.tax_group_id and 'T.V.A. 18%' in tax.tax_group_id.name.upper() and tax.amount == 18">
+                              <t t-set="has_vat18_group" t-value="True"/>
+                            </t>
+                          </t>
+                          <t t-if="has_bic_group and has_vat18_group">
+                            <t t-set="htva_bic_vat18" t-value="htva_bic_vat18 + line.price_subtotal"/>
+                            <t t-set="somme_tva18_bic" t-value="somme_tva18_bic + (line.price_subtotal * 0.18)"/>
+                          </t>
+                        </t>
+                      </t>
+                      <t t-set="bic_amount" t-value="(htva_bic_vat18 + somme_tva18_bic) * 0.02"/>
+
+
+                      <!-- Ligne BIC (affichée seulement si bic_amount > 0) -->
+                      <tr t-if="bic_amount &gt; 0">
+                        <td style="text-align: left; padding: 2px; border: 2px solid black; width: 35%; font-size: 13px;">
+                          <strong>BIC</strong>
+                        </td>
+                        <td style="text-align: center; padding: 2px; border: 2px solid black; width: 25%;font-size: 13px;">
+                          2%
+                        </td>
+                        <td style="text-align: right; padding: 2px; border: 2px solid black; width: 30%; white-space: nowrap;font-size: 13px;">
+                          <span t-esc="'{:,.0f}'.format(bic_amount).replace(',', ' ').replace('.', ',')"/>
+                        </td>
+                      </tr>
+                      <!--Pour les verisons en lignes d'odoo, dans le groupe des taxes la tva est recunue en tant que T.V.A. 18%
+                                    tandis que le BIC est recunue en tant que BIC (2%) -->
+
+                      <!--Pour ceux en locale la tva est reconnue en tant que VAT et le BIC en tant que BIC avant la mise en ligne 
+                                    verifie bien les valeurs sinon, ils ne vont pas s'afficher en ligne ou en local -->
+
+                      <!-- Calcul du HTVA des lignes avec BIC et TVA 18% -->
+                      <t t-set="htva_bic_vat18" t-value="0"/>
+                      <t t-if="o._fields.get('invoice_line_ids') and o.invoice_line_ids">
+                        <t t-foreach="o.invoice_line_ids" t-as="line">
+                          <t t-set="has_bic_group" t-value="False"/>
+                          <t t-set="has_vat18_group" t-value="False"/>
+                          <t t-foreach="line.tax_ids" t-as="tax">
+                            <t t-if="tax.tax_group_id and ('BIC' in tax.tax_group_id.name.upper() or 'BIC (2%)' in tax.tax_group_id.name.upper())">
+                              <t t-set="has_bic_group" t-value="True"/>
+                            </t>
+                            <t t-if="tax.tax_group_id and ('VAT' in tax.tax_group_id.name.upper() or 'T.V.A. 18%' in tax.tax_group_id.name.upper()) and tax.amount == 18">
+                              <t t-set="has_vat18_group" t-value="True"/>
+                            </t>
+                          </t>
+                          <!-- On additionne le HTVA uniquement si BIC et TVA 18% sont présents sur la ligne -->
+                          <t t-if="has_bic_group and has_vat18_group">
+                            <t t-set="htva_bic_vat18" t-value="htva_bic_vat18 + line.price_subtotal"/>
+                          </t>
+                          <!-- Si BIC seul ou TVA seule, on n'ajoute rien -->
+                        </t>
+                      </t>
+                      <t t-if="o._fields.get('order_line') and o.order_line">
+                        <t t-foreach="o.order_line" t-as="line">
+                          <t t-set="has_bic_group" t-value="False"/>
+                          <t t-set="has_vat18_group" t-value="False"/>
+                          <t t-foreach="line.tax_ids" t-as="tax">
+                            <t t-if="tax.tax_group_id and ('BIC' in tax.tax_group_id.name.upper() or 'BIC (2%)' in tax.tax_group_id.name.upper())">
+                              <t t-set="has_bic_group" t-value="True"/>
+                            </t>
+                            <t t-if="tax.tax_group_id and ('VAT' in tax.tax_group_id.name.upper() or 'T.V.A. 18%' in tax.tax_group_id.name.upper()) and tax.amount == 18">
+                              <t t-set="has_vat18_group" t-value="True"/>
+                            </t>
+                          </t>
+                          <t t-if="has_bic_group and has_vat18_group">
+                            <t t-set="htva_bic_vat18" t-value="htva_bic_vat18 + line.price_subtotal"/>
+                          </t>
+                        </t>
+                      </t>
+
+                      <!-- Calcul de la somme des TVA 18% associée au BIC -->
+                      <t t-set="somme_tva18_bic" t-value="0"/>
+                      <t t-if="o._fields.get('invoice_line_ids') and o.invoice_line_ids">
+                        <t t-foreach="o.invoice_line_ids" t-as="line">
+                          <t t-set="has_bic_group" t-value="False"/>
+                          <t t-set="has_vat18_group" t-value="False"/>
+                          <t t-foreach="line.tax_ids" t-as="tax">
+                            <t t-if="tax.tax_group_id and ('BIC' in tax.tax_group_id.name.upper() or 'BIC (2%)' in tax.tax_group_id.name.upper())">
+                              <t t-set="has_bic_group" t-value="True"/>
+                            </t>
+                            <t t-if="tax.tax_group_id and ('VAT' in tax.tax_group_id.name.upper() or 'T.V.A. 18%' in tax.tax_group_id.name.upper()) and tax.amount == 18">
+                              <t t-set="has_vat18_group" t-value="True"/>
+                            </t>
+                          </t>
+                          <!-- Calcul uniquement si BIC et TVA 18% sont présents sur la ligne -->
+                          <t t-if="has_bic_group and has_vat18_group">
+                            <t t-set="somme_tva18_bic" t-value="somme_tva18_bic + (line.price_subtotal * 0.18)"/>
+                          </t>
+                          <!-- Si BIC seul ou TVA seule, on n'ajoute rien -->
+                        </t>
+                      </t>
+                      <!--calcule de la tax pour sale order-->
+                      <t t-if="o._fields.get('order_line') and o.order_line">
+                        <t t-foreach="o.order_line" t-as="line">
+                          <t t-set="has_bic_group" t-value="False"/>
+                          <t t-set="has_vat18_group" t-value="False"/>
+                          <t t-foreach="line.tax_ids" t-as="tax">
+                            <t t-if="tax.tax_group_id and ('BIC' in tax.tax_group_id.name.upper() or 'BIC (2%)' in tax.tax_group_id.name.upper())">
+                              <t t-set="has_bic_group" t-value="True"/>
+                            </t>
+                            <t t-if="tax.tax_group_id and ('VAT' in tax.tax_group_id.name.upper() or 'T.V.A. 18%' in tax.tax_group_id.name.upper()) and tax.amount == 18">
+                              <t t-set="has_vat18_group" t-value="True"/>
+                            </t>
+                          </t>
+                          <t t-if="has_bic_group and has_vat18_group">
+                            <t t-set="somme_tva18_bic" t-value="somme_tva18_bic + (line.price_subtotal * 0.18)"/>
+                          </t>
+                        </t>
+                      </t>
+
+
+                      <!-- LIGNE 5 : NET À PAYER (affichée seulement si BIC > 0) -->
+                      <tr t-if="bic_amount &gt; 0 and o._fields.get('amount_total')">
+                        <td style="text-align: left; padding: 2px; border: 2px solid black; width: 35%; font-size: 13px;">
+                          <strong>Net à Payer F CFA</strong>
+                        </td>
+                        <td style="text-align: center; padding: 2px; border: 2px solid black; width: 25%;"/>
+                        <td style="text-align: right; padding: 2px; border: 2px solid black; width: 30%; white-space: nowrap; font-size: 13px;">
+                          <strong>
+                            <t t-set="net_a_payer" t-value="(o.amount_untaxed or 0) + (o.amount_tax or 0)"/>
+                            <span t-esc="'{:,.2f}'.format(net_a_payer).replace(',', ' ').replace('.00', '').replace('.', ',')"/>
+                          </strong>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <!-- Ajoute ce bloc dans ta boucle pour voir ce que contiennent les taxes sur chaque ligne use ce code 
+          <t t-foreach="o.invoice_line_ids or o.order_line" t-as="line">
+            <t t-foreach="line.tax_ids" t-as="tax">
+              <tr>
+                <td colspan="3" style="color: blue;">
+                  Groupe : <span t-esc="tax.tax_group_id.name"/> | Taux : <span t-esc="tax.amount"/>
+                </td>
+              </tr>
+            </t>
+          </t> -->
+          <!-- ============================================================= -->
+          <!-- MONTANT EN LETTRES (conversion automatique)                  -->
+          <!-- ============================================================= -->
+          <div style="width: 100%;">
+            <p style="margin: 5px; line-height: 1.1; word-wrap: break-word; overflow-wrap: break-word;">
+              <strong>
+                <!-- Texte différent selon le type de document -->
+                <t t-if="o._name == 'account.move'">
+                  <t t-if="o._fields.get('amount_total') and o.amount_total">
+                    ARRETE LA PRESENTE FACTURE DEFINITIVE A LA SOMME DE 
+                                                                                                                                                                                                                                                                                                                                                <!-- Conversion automatique du montant en lettres -->
+                    <span t-if="o._fields.get('currency_id') and o.currency_id" t-esc="o.currency_id.amount_to_text(o.amount_total).upper()"/>
+                    CFA.
+                  </t>
+                  <t t-else="">
+                    ARRETE LA PRESENTE FACTURE DEFINITIVE A LA SOMME DE ZERO CFA.
+                  </t>
+                </t>
+
+                <!-- Pour les devis/factures proforma -->
+                <t t-elif="o._name == 'sale.order'">
+                  <t t-if="o._fields.get('amount_total') and o.amount_total">
+                    ARRETE LA PRESENTE FACTURE PROFORMA A LA SOMME DE 
+                    <span t-if="o._fields.get('currency_id') and o.currency_id" t-esc="o.currency_id.amount_to_text(o.amount_total).upper()"/>
+                    CFA.
+                  </t>
+                  <t t-else="">
+                    ARRETE LA PRESENTE FACTURE PROFORMA A LA SOMME DE ZERO CFA.
+                  </t>
+                </t>
+              </strong>
+
+            </p>
+            <!-- Pour les factures : afficher NB seulement si narration non vide -->
+            <t t-if="o._name == 'account.move' and o.narration and o.narration.strip()">
+              <table style="border:1px solid #fff;">
+                <tr>
+                  <td style="font-weight: bold;"></td>
+                  <td t-esc="o.narration" style="padding-left: 8px;"/>
+                </tr>
+              </table>
+            </t>
+
+            <!-- Pour les bons de commande : afficher NB seulement si note non vide -->
+            <t t-elif="o._name == 'sale.order' and o.note and o.note.strip()">
+              <table style="border:1px solid #fff;">
+                <tr>
+                  <td style="font-weight: bold;"></td>
+                  <td t-esc="o.note" style="padding-left: 8px;"/>
+                </tr>
+              </table>
+            </t>
+          </div>
+        </div>
+      </div>
+    </t>
+  </template>
+</odoo>

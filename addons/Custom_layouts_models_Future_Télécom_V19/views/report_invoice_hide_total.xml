@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Masquer la div principale contenant tous les totaux -->
+        <template id="hide_invoice_totals_main" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@id='right-elements']" position="replace">
+                <!-- Section des totaux complètement supprimée -->
+            </xpath>
+        </template>
+
+        <!-- CSS de secours pour masquer visuellement ce qui pourrait rester -->
+        <template id="hide_invoice_totals_css" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@class='page mb-4']" position="inside">
+                <style>
+                    /* Masquer tous les éléments de totaux restants */
+                    #right-elements,
+                    #total, div[id='right-elements'], div[id='total'],
+                    .o_total_table,
+                    table.o_total_table {
+                        display: none !important;
+                    }
+                </style>
+            </xpath>
+        </template>
+    </data>
+</odoo>

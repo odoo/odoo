@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document_hide_discount" inherit_id="sale.report_saleorder_document">
+        <!-- Forcer la variable à False pour ne jamais afficher la colonne remise -->
+        <xpath expr="//t[@t-set='display_discount']" position="replace">
+            <t t-set="display_discount" t-value="False"/>
+        </xpath>
+        <xpath expr="//t[@t-foreach='lines_to_report']" position="replace">
+            <t t-foreach="lines_to_report.filtered(lambda l: l.display_type != False and l.name != 'Remise')" t-as="line">
+                <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
+                <tr t-att-class="'fw-bold o_line_section' if (
+                        line.display_type == 'line_section'
+                        or line.product_type == 'combo'
+                    )
+                    else 'fst-italic o_line_note' if line.display_type == 'line_note'
+                    else ''">
+                    <t t-if="not line.display_type and line.product_type != 'combo'">
+                        <td name="td_name">
+                            <span t-field="line.name">Bacon Burger</span>
+                        </td>
+                    </t>
+                </tr>
+            </t>
+        </xpath>
+    </template>
+</odoo>

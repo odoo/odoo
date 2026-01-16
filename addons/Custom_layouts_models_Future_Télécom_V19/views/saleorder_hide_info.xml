@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Template pour masquer date du devis, échéance et vendeur sur PDF -->
+        <template id="contenu_principal_saleorder_hide_info" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//div[@id='informations']/div[@name='informations_date']" position="replace">
+                <t t-if="report_type != 'pdf'">
+                    <div t-if="doc.date_order" class="col" name="informations_date">
+                        <strong t-if="is_proforma">Issued Date</strong>
+                        <strong t-elif="doc.state in ['draft', 'sent']">Quotation Date</strong>
+                        <strong t-else="">Order Date</strong>
+                        <div t-field="doc.date_order" t-options="{'widget': 'date'}">2023-12-31</div>
+                    </div>
+                </t>
+            </xpath>
+            <xpath expr="//div[@id='informations']/div[@name='expiration_date']" position="replace">
+                <t t-if="report_type != 'pdf'">
+                    <div t-if="doc.validity_date and doc.state in ['draft', 'sent']" class="col" name="expiration_date">
+                        <strong>Expiration</strong>
+                        <div t-field="doc.validity_date">2023-12-31</div>
+                    </div>
+                </t>
+            </xpath>
+            <xpath expr="//div[@id='informations']/div[div[@t-field='doc.user_id']]" position="replace">
+                <t t-if="report_type != 'pdf'">
+                    <div t-if="doc.user_id.name" class="col">
+                        <strong>Salesperson</strong>
+                        <div t-field="doc.user_id">Mitchell Admin</div>
+                    </div>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

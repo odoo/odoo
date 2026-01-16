@@ -1,0 +1,19 @@
+<odoo>
+  <template id="product_buy_now" inherit_id="website_sale.product" name="Buy Now Button">
+
+    <!-- Active le bouton Acheter Maintenant -->
+    <xpath expr="//t[@t-set='hasBuyNow']" position="attributes">
+      <attribute name="t-value">True</attribute>
+    </xpath>
+
+    <!-- Ajout du bouton "Acheter maintenant" à côté de "Ajouter au panier" -->
+    <xpath expr="//a[@id='add_to_cart']" position="after">
+      <a t-attf-href="/shop/buy_now/{{ product.id }}" 
+         class="btn btn-success ms-2"
+         style="z-index:10; position:relative;">
+        <i class="fa fa-bolt me-2"/> Acheter maintenant
+      </a>
+    </xpath>
+
+  </template>
+</odoo>

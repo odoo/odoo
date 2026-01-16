@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="hide_narration_in_saleorder" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//span[@t-field='doc.note']" position="replace">
+            <!-- Bloc masqué : rien ici -->
+        </xpath>
+    </template>
+</odoo>

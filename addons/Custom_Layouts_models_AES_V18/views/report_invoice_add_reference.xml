@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <template id="report_invoice_add_reference" inherit_id="account.report_invoice_document" priority="25">
+      <!-- 1️⃣  SUPPRIMER LA COLONNE N° DE L'ENTÊTE -->
+      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_line_number']" position="replace">
+      </xpath>
+
+      <!-- 1️⃣bis  ENTÊTE : ajoute "Référence" avant la colonne Description -->
+      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_description']" position="before">
+        <th name="th_product_ref" class="text-left fw-bold">Code</th>
+      </xpath>
+
+      <!-- 1️⃣ter  ENTÊTE : ajoute "Store" après la colonne Référence -->
+      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_product_ref']" position="after">
+        <th name="th_store" class="text-left fw-bold">Store</th>
+      </xpath>
+
+      <!-- 1️⃣quater  ENTÊTE : ajoute "Unité" après la colonne Quantité -->
+      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_quantity']" position="after">
+        <th name="th_unit" class="text-center fw-bold" style="width: 15mm;">Unité</th>
+      </xpath>
+
+      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_unit']" position="after">
+        <th name="th_priceunit" class="text-start fw-bold" style="font-weight: bold; text-align: left;">Prix unitaire</th>
+      </xpath>
+       <style>
+          th[name="th_priceunit"] {
+            text-align: right !important;
+            padding-right: 20px !important;
+          }
+        </style>
+
+      <!-- 1️⃣quinquies  SUPPRIMER LA COLONNE TAXES DE L'ENTÊTE -->
+      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_taxes']" position="replace">
+      </xpath>
+
+      <!-- 2️⃣  SUPPRIMER LA COLONNE N° DU CORPS -->
+      <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='td_line_number']" position="replace">
+      </xpath>
+
+      <!-- 2️⃣bis  CORPS : ajoute la valeur default_code avant la description -->
+      <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='account_invoice_line_name']" position="before">
+        <td name="td_product_ref" class="text-left">
+          <!-- Si le produit existe on affiche sa référence, sinon vide -->
+          <span t-esc="line.product_id and line.product_id.default_code or ''"/>
+        </td>
+      </xpath>
+
+      <!-- 2️⃣ter  CORPS : ajoute la colonne Store après la colonne Référence -->
+      <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='td_product_ref']" position="after">
+               <td name="td_source" class="text-left">
+                  <span t-field="o.invoice_incoterm_id.code"/>
+                  <span t-if="o.incoterm_location"> - <span t-field="o.incoterm_location"/></span>
+                </td>
+      </xpath>
+
+      <!-- 2️⃣quater  Supprimer l'unité de la cellule quantité -->
+      <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='td_quantity']/span[@t-field='line.product_uom_id']" position="replace">
+      </xpath>
+
+      <!-- 2️⃣quinquies  CORPS : ajouter la cellule Unité après la cellule Quantité -->
+      <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='td_quantity']" position="after">
+        <td name="td_unit" class="text-center" style="width: 15mm;">
+          <span t-if="line.product_uom_id" t-out="line.product_uom_id.name"/>
+          <span t-elif="line.product_id.uom_id" t-out="line.product_id.uom_id.name"/>
+          <span t-else="">-</span>
+        </td>
+      </xpath>
+
+      <!-- 2️⃣septies  CORPS : ajouter la cellule Prix unitaire après la cellule Unité -->
+      <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='td_unit']" position="after">
+        <td name="td_price_unit" class="text-center fw-bold" style="width: 10mm;">
+          <t t-set="formatted_price" t-value="'{:,}'.format(int(line.price_unit)).replace(',', ' ') if line.price_unit &gt;= 1 else '{:g}'.format(line.price_unit)"/>
+          <span t-out="formatted_price" style="white-space: nowrap;"/>
+        </td>
+      </xpath>
+
+      <!-- 2️⃣sexies  SUPPRIMER LA COLONNE TAXES DU CORPS -->
+      <xpath expr="//table[@name='invoice_line_table']/tbody//td[@name='td_taxes']" position="replace">
+      </xpath>
+
+      <!-- 3️⃣  COLGROUP : redéfinir entièrement le colgroup avec les nouvelles colonnes -->
+      <xpath expr="//table[@name='invoice_line_table']/colgroup" position="replace">
+        <colgroup>
+          <!-- Description -->
+          <col/>
+          <!-- Quantity -->
+          <col style="width: 15mm;"/>
+          <!-- Unité -->
+          <col style="width: 15mm;"/>
+          <!-- Unit Price -->
+          <col style="width: 12mm;"/>
+          <!-- TVA -->
+          <col style="width: 10mm;"/>
+          <!-- Montant HTVA -->
+          <col style="width: 15mm;"/>
+        </colgroup>
+      </xpath>
+
+      <!-- 4️⃣  Enlever CFA et formater avec des espaces pour la colonne Montant -->
+      <xpath expr="//table[@name='invoice_line_table']//tbody//tr//td[@name='td_subtotal']//span[@t-field='line.price_subtotal']" position="replace">
+        <t t-set="formatted_amount" t-value="'{:,}'.format(int(line.price_subtotal)).replace(',', ' ')"/>
+        <span t-out="formatted_amount" style="white-space: nowrap;"/>
+      </xpath>
+
+      <!-- 5️⃣  Modifier le titre de la colonne Amount en "Montant HTVA" -->
+      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_subtotal']" position="replace">
+        <th name="th_subtotal" class="text-center fw-bold">Montant HTVA</th>
+      </xpath>
+
+      <!-- 6️⃣  Formater la Quantité pour enlever les décimales inutiles -->
+      <xpath expr="//table[@name='invoice_line_table']//tbody//tr//td[@name='td_quantity']//span[@t-field='line.quantity']" position="replace">
+        <span t-out="line.quantity" t-options="{'widget': 'float', 'precision': 0, 'thousands_sep': ' '}"/>
+      </xpath>
+
+      <!-- 7️⃣  Formater le Prix unitaire avec des espaces et empêcher le retour à la ligne -->
+      <xpath expr="//span[@t-field='line.price_unit']" position="replace">
+        <t t-set="formatted_price" t-value="'{:,}'.format(int(line.price_unit)).replace(',', ' ') if line.price_unit &gt;= 1 else '{:g}'.format(line.price_unit)"/>
+        <span t-out="formatted_price" style="white-space: nowrap;"/>
+      </xpath>
+
+      <!-- 8️⃣  Enlever le code produit de la description - Version alternative -->
+      <xpath expr="//span[@t-field='line.name']" position="replace">
+        <t t-set="description_parts" t-value="(line.name or '').split(']')"/>
+        <t t-if="len(description_parts) &gt; 1">
+          <span t-out="']'.join(description_parts[1:]).strip()"/>
+        </t>
+        <t t-else="">
+          <span t-out="line.name"/>
+        </t>
+      </xpath>
+
+      <!-- Mettre Description en gras -->
+      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_description']" position="replace">
+        <th name="th_description" class="text-left fw-bold" style="width: 80mm">Description</th>
+      </xpath>
+
+      <!-- Mettre Quantity en gras -->
+      <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_quantity']" position="replace">
+        <th name="th_quantity" class="text-center fw-bold" style="width: 15mm;">Quantité</th>
+      </xpath>
+
+    </template>
+
+  </data>
+</odoo>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="contenu_principal_saleorder" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//table[contains(@class, 'o_has_total_table')]" position="replace">
+                <style>
+                        .custom-saleorder-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            font-size: 13px;
+                            font-family: Arial, Helvetica, sans-serif;
+                            border: 2px solid #222;
+                        }
+                        .custom-saleorder-table th, .custom-saleorder-table td {
+                            border: 1.5px solid #222 !important;
+                            padding: 1px 5px;
+                            text-align: center;
+                            vertical-align: middle;
+                            line-height: 1.0;
+                            height: 18px;
+                        }
+                        .custom-saleorder-table th {
+                            background: #cccccc; /* Gris pur pour l'entête */
+                            font-weight: bold;
+                            font-size: 13px;
+                            height: 20px;
+                        }
+                        .custom-saleorder-table .desc-cell {
+                            text-align: left;
+                            word-break: break-word;
+                            max-width: 320px;
+                        }
+                        .custom-saleorder-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            border: 2px solid #222;
+                        }
+                        .custom-saleorder-table td {
+                            background: transparent !important; /* Pas de couleur de fond */
+                        }
+                        .custom-saleorder-table {
+                            margin-top: 0 !important;
+                        }
+                </style>
+                <table class="custom-saleorder-table" style="border:2px solid #222;">
+                    <t t-set="display_taxes" t-value="any(line.tax_ids for line in lines_to_report)"/>
+                    <thead>
+                        <tr>
+                            <th style="width: 90px;">Réf</th>
+                            <th>Description</th>
+                            <th style="width: 60px;">Qté</th>
+                            <th style="width: 80px;">Prix</th>
+                            <t t-if="display_taxes">
+                                <th style="width: 70px;">Taxes</th>
+                            </t>
+                            <th style="width: 100px;">Sous total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="compteur" t-value="1"/>
+                        <t t-foreach="lines_to_report" t-as="line">
+                            <tr>
+                                <td>
+                                    <span t-esc="compteur"/>
+                                </td>
+                                <td class="desc-cell">
+                                    <span t-if="line.product_id and line.product_id.description_sale" t-esc="line.product_id.description_sale"/>
+                                    <span t-if="not line.product_id or not line.product_id.description_sale">-</span>
+                                </td>
+                                <td>
+                                    <span t-esc="int(line.product_uom_qty)"/>
+                                </td>
+                                <td>
+                                    <span t-esc="'{:,}'.format(int(line.price_unit)).replace(',', ' ')"/>
+                                </td>
+                                <t t-if="display_taxes">
+                                    <td>
+                                        <t t-foreach="line.tax_ids" t-as="tax">
+                                            <span t-esc="'{:,}'.format(int(tax.amount)).replace(',', ' ')"/>
+                                        </t>
+                                    </td>
+                                </t>
+                                <td>
+                                    <span t-esc="'{:,}'.format(int(line.price_total)).replace(',', ' ')"/>
+                                </td>
+                            </tr>
+                            <t t-set="compteur" t-value="compteur + 1"/>
+                        </t>
+                    </tbody>
+                </table>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Masquer l'affichage de l'incoterm dans le rapport de facture -->
+        <template id="report_invoice_hide_incoterm" inherit_id="account.report_invoice_document" priority="30">
+            <xpath expr="//div[@name='incoterm_id']" position="replace">
+            </xpath>
+        </template>
+    </data>
+</odoo>

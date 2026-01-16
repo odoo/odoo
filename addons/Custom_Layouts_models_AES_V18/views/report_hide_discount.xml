@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_invoice_document_hide_discount_lines" inherit_id="account.report_invoice_document">
+            <xpath expr="//t[@name='account_invoice_line_accountable']" position="attributes">
+                <attribute name="t-if">line.display_type == 'product' and line.price_subtotal &gt;= 0</attribute>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        
+        <xpath expr="//t[@t-call='web.external_layout']" position="inside">
+                <style type="text/css">
+                    p[name="payment_communication"] {
+                        display: none !important;
+                    }
+                </style>
+        </xpath>
+
+        <!-- Masquer complètement Invoice Date -->
+        <xpath expr="//div[@name='invoice_date']" position="replace">
+        </xpath>
+
+        <!-- Masquer complètement Source -->
+        <xpath expr="//div[@name='origin']" position="replace">
+        </xpath>
+
+        <!-- Masquer complètement Référence -->
+        <xpath expr="//div[@name='reference']" position="replace">
+        </xpath>
+
+        <!-- Masquer complètement la Date de livraison -->
+        <xpath expr="//div[@name='delivery_date']" position="replace">
+        </xpath>
+
+        <!-- Masquer complètement la Due Date -->
+        <xpath expr="//div[@name='due_date']" position="replace">
+        </xpath>
+
+        <!-- Masquer complètement le Total -->
+        <xpath expr="//div[@id='total']" position="replace">
+            <!-- Bloc masqué -->
+        </xpath>
+
+    </template>
+</odoo>

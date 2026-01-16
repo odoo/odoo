@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="hide_narration_in_invoice" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@name='comment']" position="replace">
+            <!-- Bloc NB masqué : rien ici -->
+        </xpath>
+    </template>
+</odoo>
