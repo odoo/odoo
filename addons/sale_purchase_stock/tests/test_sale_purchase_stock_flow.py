@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 
 from odoo import Command, fields
-from odoo.tests import Form, TransactionCase
+from odoo.tests import Form, TransactionCase, freeze_time
 
 
 class TestSalePurchaseStockFlow(TransactionCase):
@@ -535,3 +536,27 @@ class TestSalePurchaseStockFlow(TransactionCase):
         self.assertFalse(sale_orders.picking_ids.move_ids.move_orig_ids)
         sale_orders.picking_ids.action_assign()
         self.assertListEqual(sale_orders.picking_ids.move_ids.mapped('quantity'), [1.0, 1.0])
+
+    def test_product_monthly_demand(self):
+        """
+        Test monthly demand is counted once in a 3-step delivery flow.
+        """
+        self.env['res.config.settings'].write({'group_stock_adv_location': True})
+        self.warehouse.delivery_steps = 'pick_pack_ship'
+        with freeze_time(fields.Datetime.now() - relativedelta(days=1)):
+            so = self.env['sale.order'].create({
+                'partner_id': self.customer.id,
+                'warehouse_id': self.warehouse.id,
+                'order_line': [Command.create({
+                    'product_id': self.mto_product.id,
+                    'product_uom_qty': 10,
+                })],
+            })
+            so.action_confirm()
+            so.picking_ids[0].move_ids.quantity = 10
+            so.picking_ids[0].button_validate()
+            so.picking_ids[1].move_ids.quantity = 10
+            so.picking_ids[1].button_validate()
+            so.picking_ids[2].move_ids.quantity = 10
+            so.picking_ids[2].button_validate()
+        self.assertEqual(self.mto_product.monthly_demand, 10.0)
