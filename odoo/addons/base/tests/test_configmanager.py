@@ -145,6 +145,7 @@ class TestConfigManager(TransactionCase):
             'overwrite_existing_translations': False,
             # security
             'list_db': True,
+            'protected_db': [],
 
             # advanced
             'dev_mode': [],
@@ -347,6 +348,7 @@ class TestConfigManager(TransactionCase):
             'import_partial': '',
             'import_url_regex': '^(?:http|https)://',
             'list_db': True,
+            'protected_db': [],
             'load_language': None,
             'log_db': '',
             'log_db_level': 'warning',
@@ -563,6 +565,7 @@ class TestConfigManager(TransactionCase):
             'overwrite_existing_translations': True,
             # security
             'list_db': False,
+            'protected_db': [],
 
             # advanced
             'dev_mode': ['xml', 'reload'],
@@ -691,6 +694,7 @@ class TestConfigManager(TransactionCase):
 
             # security
             'list_db': False,
+            'protected_db': [],
 
             # advanced
             'dev_mode': ['xml', 'reload'],
