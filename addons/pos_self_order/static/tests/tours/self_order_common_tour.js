@@ -120,3 +120,16 @@ registry.category("web_tour.tours").add("kiosk_order_pos_closed", {
         Utils.checkIsNoBtn("Add to cart"),
     ],
 });
+
+registry.category("web_tour.tours").add("test_self_order_products_sorting_order", {
+    steps: () => [
+        LandingPage.isClosed(),
+        Utils.clickBtn("Order Now"),
+        LandingPage.selectLocation("Test-Takeout"),
+        ProductPage.checkNthProduct(1, "Free"),
+        ProductPage.checkNthProduct(2, "Desk Organizer"),
+        ProductPage.checkNthProduct(3, "Ketchup"),
+        ProductPage.checkNthProduct(4, "Fanta"),
+        ProductPage.checkNthProduct(5, "Coca-Cola"),
+    ],
+});
