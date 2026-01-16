@@ -428,6 +428,9 @@ patch(PosStore.prototype, {
         }
 
         const result = await super.addLineToCurrentOrder(vals, opt, configure);
+        if (!result) {
+            return;
+        }
 
         const rewardsToApply = [];
         for (const reward of potentialRewards) {
