@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, models
+from odoo import api, models, fields
 
 
 class ResUsers(models.Model):
     _inherit = "res.users"
+
+    digest_ids = fields.Many2many('digest.digest', string='Digests')
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -15,5 +15,5 @@ class ResUsers(models.Model):
         users_to_subscribe = users.filtered_domain([('share', '=', False)])
         if default_digest_emails and default_digest_id and users_to_subscribe:
             digest = self.env['digest.digest'].sudo().browse(int(default_digest_id)).exists()
-            digest.user_ids |= users_to_subscribe
+            users_to_subscribe.digest_ids |= digest
         return users
