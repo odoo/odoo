@@ -73,7 +73,7 @@ class MicrosoftService(models.AbstractModel):
             'refresh_token': rtoken,
         }
         microsoft_data = self._do_request(
-            DEFAULT_MICROSOFT_TOKEN_ENDPOINT,
+            self._get_token_endpoint(),
             params=data,
             headers=headers,
             method='POST',
