@@ -69,6 +69,7 @@ export class Editor extends PluginManager {
      */
     constructor(config, services) {
         super(config, services);
+        this.pluginPropertyName = "__editor";
     }
 
     setup() {

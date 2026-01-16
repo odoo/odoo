@@ -64,6 +64,7 @@ export class PluginManager {
      * @param { PluginManagerConfig } config
      */
     constructor(config = {}, services = {}) {
+        this.pluginPropertyName = "__pluginManager";
         this.isReady = false;
         this.isDestroyed = false;
         this.config = config;
@@ -115,7 +116,7 @@ export class PluginManager {
             }
             this.pluginsMap.set(P.id, P);
             const plugin = new P(this.getPluginContext(P.dependencies));
-            plugin.__editor = this;
+            plugin[this.pluginPropertyName] = this;
             this.plugins.push(plugin);
             const exports = {};
             for (const h of P.shared) {
