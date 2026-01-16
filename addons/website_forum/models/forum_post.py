@@ -913,6 +913,7 @@ class ForumPost(models.Model):
             'mapping': mapping,
             'icon': 'fa-comment-o',
             'order': order,
+            'options': options,
         }
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
