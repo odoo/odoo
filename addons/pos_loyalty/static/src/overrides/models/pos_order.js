@@ -1312,9 +1312,9 @@ patch(PosOrder.prototype, {
                     }
                 }
                 if (factor === 0) {
-                    freeQty = Math.floor(
-                        (remainingPoints / reward.required_points) * reward.reward_product_qty
-                    );
+                    freeQty =
+                        Math.floor(remainingPoints / reward.required_points) *
+                        reward.reward_product_qty;
                 } else {
                     const correction = shouldCorrectRemainingPoints
                         ? this._getPointsCorrection(reward.program_id)

@@ -435,6 +435,47 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.assertEqual(free_product.pos_order_count, 1)
 
+    def test_loyalty_free_product_rewards_3(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+        free_product = self.env['loyalty.program'].create({
+            'name': 'Buy X Take Y desk_organizer(s)',
+            'program_type': 'buy_x_get_y',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_ids': self.desk_organizer,
+                'reward_point_amount': 1,
+                'reward_point_mode': 'order',
+                'minimum_qty': 3,
+            }), (0, 0, {
+                'product_ids': self.desk_organizer,
+                'reward_point_amount': 2,
+                'reward_point_mode': 'order',
+                'minimum_qty': 6,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': self.desk_organizer.id,
+                'reward_product_qty': 1,
+                'required_points': 1,
+                'description': 'Desk Organizer x1',
+            }), (0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': self.desk_organizer.id,
+                'reward_product_qty': 2,
+                'required_points': 2,
+                'description': 'Desk Organizer x2',
+            })],
+        })
+
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ]
+        })
+        self.start_pos_tour("test_loyalty_free_product_rewards_3")
+        self.assertEqual(free_product.pos_order_count, 1)
+
     def test_pos_loyalty_tour_max_amount(self):
         """Test the loyalty program with a maximum amount and product with different taxe."""
 

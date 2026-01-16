@@ -437,9 +437,13 @@ patch(PosStore.prototype, {
         }
         const potentialRewards = this.getPotentialFreeProductRewards();
         const rewardsToApply = [];
+        const quantity = vals.qty;
         for (const reward of potentialRewards) {
             for (const reward_product_id of reward.reward.reward_product_ids) {
-                if (reward_product_id.id == product.id) {
+                if (
+                    reward_product_id.id == product.id &&
+                    (quantity === undefined || quantity === reward.potentialQty)
+                ) {
                     rewardsToApply.push(reward);
                 }
             }
