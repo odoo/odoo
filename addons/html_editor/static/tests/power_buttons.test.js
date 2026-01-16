@@ -172,11 +172,11 @@ describe("buttons", () => {
         await expectElementCount(".o-we-linkpopover", 1);
     });
 
-    test("should open powerbox using power buttons", async () => {
-        await setupEditor("<p>[]<br></p>");
+    test("should open the powerbox using the power buttons without losing editor focus", async () => {
+        const { el, editor } = await setupEditor("<p>[]<br></p>");
         click(".o_we_power_buttons .power_button.fa-ellipsis-v");
-        await animationFrame();
         await expectElementCount(".o-we-powerbox", 1);
+        expect(editor.document.activeElement).toBe(el);
     });
 });
 
