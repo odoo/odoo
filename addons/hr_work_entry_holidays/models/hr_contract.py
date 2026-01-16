@@ -110,14 +110,17 @@ class HrContract(models.Model):
                                   ('state', '!=', 'draft'),
                              ('kanban_state', '=', 'done'),
                     ]).sorted(key=lambda c: {'open': 1, 'close': 2, 'draft': 3, 'cancel': 4}[c.state])
-                    if len(overlapping_contracts.resource_calendar_id) <= 1:
-                        super(HrContract, contract).write(vals)
-                        if overlapping_contracts and leave.resource_calendar_id != overlapping_contracts[0].resource_calendar_id:
-                            leave.resource_calendar_id = overlapping_contracts[0].resource_calendar_id
-                            if not leave.request_unit_hours:
-                                leave.with_context(leave_skip_date_check=True, leave_skip_state_check=True)._compute_date_from_to()
-                                if leave.state == 'validate':
-                                    leave._validate_leave_request()
+                    vals_calendar = self.env['resource.calendar'].browse(vals.get('resource_calendar_id', False))
+                    all_calendars = overlapping_contracts.resource_calendar_id if not vals_calendar else (overlapping_contracts - self).resource_calendar_id | vals_calendar
+                    if len(all_calendars) <= 1:
+                        if overlapping_contracts:
+                            new_calendar = vals_calendar or overlapping_contracts[0].resource_calendar_id
+                            if leave.resource_calendar_id != new_calendar:
+                                leave.resource_calendar_id = new_calendar
+                                if not leave.request_unit_hours:
+                                    leave.with_context(leave_skip_date_check=True, leave_skip_state_check=True)._compute_date_from_to()
+                                    if leave.state == 'validate':
+                                        leave._validate_leave_request()
                         continue
                     if leave.id not in leaves_state:
                         leaves_state[leave.id] = leave.state

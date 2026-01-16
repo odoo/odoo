@@ -146,6 +146,11 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
         self.assertEqual(leave.state, 'validate')
 
         self.contract_cdi.date_end = date(2022, 6, 15)
+        # create another leave to ensure that we only write the state
+        # to the contract after ensuring that overlapped leaves are
+        # splitted correctly and not with other leaves while looping
+        no_overlap_leave = self.create_leave(date(2022, 7, 5), date(2022, 7, 10))
+        no_overlap_leave.action_approve()
         new_contract_cdi = self.env['hr.contract'].create({
             'date_start': date(2022, 6, 16),
             'name': 'New Contract for Jules',
@@ -158,7 +163,7 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
         new_contract_cdi.state = 'open'
 
         leaves = self.env['hr.leave'].search([('employee_id', '=', self.jules_emp.id)])
-        self.assertEqual(len(leaves), 3)
+        self.assertEqual(len(leaves), 4)
         self.assertEqual(leave.state, 'refuse')
 
         first_leave = leaves.filtered(lambda l: l.date_from.day == 1 and l.date_to.day == 15)
