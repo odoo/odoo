@@ -199,9 +199,8 @@ export class ClipboardPlugin extends Plugin {
         }
         ev.preventDefault();
 
-        this.dependencies.history.stageSelection();
-
         this.dispatchTo("before_paste_handlers", selection, ev);
+        this.dependencies.history.stageSelection();
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.dependencies.selection.getEditableSelection();
 
