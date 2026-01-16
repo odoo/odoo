@@ -22,7 +22,7 @@
                         <t t-else="">Hello,</t>
                     </div>
                     <br/>
-                    <div>Your order <t t-out="object.tracking_number">...</t> amounting in <t t-out="object.amount_total">$xx.xx</t> has been confirmed. <span t-if="object.preset_time">It will be ready at <t t-out="format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)">12:00 pm</t></span></div>
+                    <div>Your order <t t-out="object.tracking_number">...</t> amounting in <t t-out="format_amount(object.amount_total,object.currency_id)">$xx.xx</t> has been confirmed. <span t-if="object.preset_time">It will be ready at <t t-out="format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)">12:00 pm</t></span></div>
                     <br/>
                     <div>Thank you,</div>
                     <br/>
@@ -62,7 +62,7 @@
                         <t t-else="">Hello,</t>
                     </div>
                     <br/>
-                    <div>Your order <t t-out="object.tracking_number">...</t> amounting in <t t-out="object.amount_total">$xx.xx</t> has been confirmed. <span t-if="object.preset_time or client.street">It will be ready</span> <span t-if="object.preset_time">at <t t-out="format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)">12:00 pm</t></span> <span t-if="client.street">at <t t-out="street">street</t>, <t t-out="state">state</t>, <t t-out="client.zip or ''">zip</t>, <t t-out="city">city</t>, <t t-out="country">country</t></span></div>
+                    <div>Your order <t t-out="object.tracking_number">...</t> amounting in <t t-out="format_amount(object.amount_total,object.currency_id)">$xx.xx</t> has been confirmed. <span t-if="object.preset_time or client.street">It will be ready</span> <span t-if="object.preset_time">at <t t-out="format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)">12:00 pm</t></span> <span t-if="client.street">at <t t-out="street">street</t>, <t t-out="state">state</t>, <t t-out="client.zip or ''">zip</t>, <t t-out="city">city</t>, <t t-out="country">country</t></span></div>
                     <br/>
                     <div>Thank you,</div>
                     <br/>
