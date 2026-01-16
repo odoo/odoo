@@ -54,6 +54,7 @@ import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { Settings } from "@mail/core/common/settings_model";
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { range } from "@web/core/utils/numbers";
+import { Message } from "@mail/core/common/message";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -813,6 +814,16 @@ test("rendering of inbox message", async () => {
 test("Can right-click on message to opens message actions dropdown", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Refactoring" });
+    patchWithCleanup(Message.prototype, {
+        onContextMenu() {
+            expect.step("Message.onContextMenu");
+            super.onContextMenu(...arguments);
+        },
+        showRightClickMessageActions() {
+            expect.step("Message.showRightClickMessageActions");
+            super.showRightClickMessageActions(...arguments);
+        },
+    });
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             body: "message-body-1",
@@ -821,7 +832,7 @@ test("Can right-click on message to opens message actions dropdown", async () =>
             res_id: partnerId,
         },
         {
-            body: "msg-body-2",
+            body: "msg-body-2 <a href='#'>Test link</a>",
             model: "res.partner",
             needaction: true,
             res_id: partnerId,
@@ -845,6 +856,8 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message", { count: 2 });
     await rightClick(".o-mail-Message:eq(0)");
+    await animationFrame();
+    await expect.waitForSteps(["Message.onContextMenu", "Message.showRightClickMessageActions"]);
     await contains(".o-dropdown-item", { count: 6 });
     await contains(".o-dropdown-item:contains('Add a Reaction')");
     await contains(".o-dropdown-item:contains('Add Star')");
@@ -854,6 +867,13 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     await contains(".o-dropdown-item:contains('Copy Text')");
     await contains(".o-mail-Message:eq(0).o-selected");
     await contains(".o-mail-Message:eq(1):not(.o-selected)");
+    // Test inner-link in body of message doesn't trigger showing of message actions
+    await click(".o-mail-Thread");
+    await contains(".o-dropdown-item", { count: 0 });
+    await rightClick(".o-mail-Message-body:eq(1) a");
+    await expect.waitForSteps(["Message.onContextMenu"]);
+    await animationFrame();
+    expect.verifySteps([]);
 });
 
 test("Can add reaction from right-click on message", async () => {
