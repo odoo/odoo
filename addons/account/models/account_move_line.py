@@ -1302,10 +1302,10 @@ class AccountMoveLine(models.Model):
         for val, record_ids in parent_id_vals_to_lines.items():
             self.browse(record_ids).parent_id = val
 
-    @api.depends('move_id.move_type')
+    @api.depends('journal_id.type')
     def _compute_no_followup(self):
         for aml in self:
-            aml.no_followup = aml.move_id.is_entry() and not aml.move_id.origin_payment_id
+            aml.no_followup = aml.journal_id.type == 'general'
 
     def _inverse_no_followup(self):
         # If one line of an invoice gets excluded from or included in the follow up report, we want all
