@@ -39,7 +39,7 @@
                     <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': isEditing }" t-ref="messageContent">
                         <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.isNote, 'pe-2': props.asCard and isMobileOS }" name="header">
                             <span t-if="message.authorName and shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="getAuthorAttClass()">
-                                <strong class="me-1 o-fw-600" t-esc="message.authorName"/>
+                                <strong class="me-1 o-fw-600" t-out="props.messageSearch?.highlight(message.authorName) ?? message.authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
                             <t t-if="isAlignedRight and !message.bubbleColor and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
