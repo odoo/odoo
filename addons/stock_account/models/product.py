@@ -229,10 +229,10 @@ class ProductProduct(models.Model):
         return last_in
 
     def _get_value_from_lots(self):
-        lots = self.env['stock.lot'].search([
-            ('product_id', 'in', self.ids),
-            ('product_qty', '!=', 0),
-        ])
+        domain = Domain([('product_id', 'in', self.ids)])
+        if not self.env.context.get('warehouse_id'):
+            domain &= Domain([('product_qty', '!=', 0)])
+        lots = self.env['stock.lot'].search(domain)
         return sum(lots.mapped('total_value'))
 
     def _with_valuation_context(self):
@@ -300,13 +300,11 @@ class ProductProduct(models.Model):
 
         # If the last value was defined by the user just return it
         if product_values and not moves_in:
-            quantity = self._with_valuation_context().with_context(to_date=at_date).qty_available
+            quantity = self._with_valuation_context().with_context(to_date=at_date, lot_id=lot.id if lot else None, warehouse_id=False).qty_available
             last_value = product_values[-1]
             return last_value.value, last_value.value * quantity
         if product_values and moves_in and product_values[-1].date > moves_in[-1].date:
-            quantity = self._with_valuation_context().with_context(to_date=at_date).qty_available
-            if lot:
-                quantity = lot.product_qty
+            quantity = self._with_valuation_context().with_context(to_date=at_date, lot_id=lot.id if lot else None, warehouse_id=False).qty_available
             avco_value = product_values[-1].value
             return avco_value, avco_value * quantity
 

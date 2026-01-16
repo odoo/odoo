@@ -118,7 +118,7 @@ class TestStockValuationCommon(BaseCommon):
             in_move.move_line_ids.unlink()
             in_move.move_line_ids = [Command.create({
                 'location_id': self.supplier_location.id,
-                'location_dest_id': in_move.location_dest_id,
+                'location_dest_id': in_move.location_dest_id.id,
                 'quantity': quantity / len(lot_ids),
                 'product_id': product.id,
                 'lot_id': lot.id,
