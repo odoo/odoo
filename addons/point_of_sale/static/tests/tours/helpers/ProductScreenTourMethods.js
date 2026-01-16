@@ -92,6 +92,14 @@ export function clickOrderline(productName, quantity = "1.0") {
         },
     ];
 }
+export function clickProductInfoAttributeValue(attributeName, attributeValue) {
+    return [
+        {
+            content: `Choose the attribute ${attributeValue} for ${attributeName}`,
+            trigger: `.product-info-popup .section-variants div:contains("${attributeName}") + div .searchable:contains("${attributeValue}")`,
+        },
+    ];
+}
 export function clickSubcategory(name) {
     return [
         {
@@ -515,6 +523,21 @@ export function checkOrderlinesNumber(number) {
                 const orderline_amount = $(".order-container .orderline").length;
                 if (orderline_amount !== number) {
                     throw new Error(`Expected ${number} orderlines, got ${orderline_amount}`);
+                }
+            },
+        },
+    ];
+}
+
+export function checkProductsNumber(number) {
+    return [
+        {
+            content: `check products number should be ${number}`,
+            trigger: `.product-list .product`,
+            run: () => {
+                const productsCount = $(".product-list .product").length;
+                if (productsCount !== number) {
+                    throw new Error(`Expected ${number} products, got ${productsCount}`);
                 }
             },
         },
