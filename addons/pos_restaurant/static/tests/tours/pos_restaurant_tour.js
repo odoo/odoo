@@ -20,6 +20,7 @@ import {
     negate,
     negateStep,
     assertCurrentOrderDirty,
+    refresh,
 } from "@point_of_sale/../tests/generic_helpers/utils";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
@@ -548,7 +549,7 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             Chrome.clickPresetTimingSlot(),
             Chrome.presetTimingSlotHourNotExists("09:00"),
-            Chrome.selectPresetTimingSlotHour("15:00"),
+            Chrome.selectPresetTimingSlot("15:00"),
             Chrome.presetTimingSlotIs("15:00"),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
@@ -559,6 +560,32 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
             TicketScreen.nthRowContains(1, "Takeaway", false),
             TicketScreen.nthRowContains(2, "004"),
             TicketScreen.nthRowContains(2, "Eat in", false),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_cancel_future_order", {
+    steps: () =>
+        [
+            Chrome.freezeDateTime(1739370000000),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickNewOrder(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.selectPreset("Eat in", "Takeaway"),
+            TextInputPopup.inputText("John"),
+            Dialog.confirm(),
+            Chrome.clickPresetTimingSlot(),
+            Chrome.selectPresetTimingSlot("02/13/2025"),
+            Chrome.selectPresetTimingSlot("15:00"),
+            Chrome.presetTimingSlotIs("15:00"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Chrome.clickOrders(),
+            TicketScreen.deleteOrder("001"),
+            Dialog.confirm(),
+            refresh(),
+            negateStep(...TicketScreen.selectOrder("001")),
         ].flat(),
 });
 
@@ -964,5 +991,16 @@ registry.category("web_tour.tours").add("test_combo_children_qty_updated_with_no
             Order.hasLine({ productName: "Combo Product 2", quantity: 2 }),
             Order.hasLine({ productName: "Combo Product 4", quantity: 2 }),
             Order.hasLine({ productName: "Combo Product 6", quantity: 2 }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_futur_orders_are_not_cancelled", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickMenuOption("Close Register"),
+            Dialog.confirm("Close Register"),
+            Dialog.confirm("Cancel Orders", ".btn-secondary"),
         ].flat(),
 });

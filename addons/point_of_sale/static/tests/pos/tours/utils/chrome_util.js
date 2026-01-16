@@ -168,8 +168,8 @@ export function clickPresetTimingSlot() {
 export function presetTimingSlotIs(hour) {
     return { trigger: `.pos-leftheader .preset-time-btn:contains('${hour}')` };
 }
-export function selectPresetTimingSlotHour(hour) {
-    return { trigger: `.modal button:contains('${hour}')`, run: "click" };
+export function selectPresetTimingSlot(slot) {
+    return { trigger: `.modal button:contains('${slot}')`, run: "click" };
 }
 export function presetTimingSlotHourNotExists(hour) {
     return { trigger: negate(`.modal button:visible:contains('${hour}')`) };
