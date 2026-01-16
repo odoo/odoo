@@ -1674,9 +1674,10 @@ class PosOrderLine(models.Model):
         tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids)
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
         taxes = tax_ids_after_fiscal_position.compute_all(price, self.order_id.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id)
+        sign = -1 if self.order_id.is_refund else 1
         return {
-            'price_subtotal_incl': taxes['total_included'],
-            'price_subtotal': taxes['total_excluded'],
+            'price_subtotal_incl': taxes['total_included'] * sign,
+            'price_subtotal': taxes['total_excluded'] * sign,
         }
 
     @api.onchange('product_id')
