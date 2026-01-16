@@ -160,7 +160,7 @@ export class Builder extends Component {
                     },
                     on_current_options_containers_changed_handlers: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
-                        if (currentOptionsContainers.length) {
+                        if (currentOptionsContainers.length || this.props.onlyCustomizeTab) {
                             this.activeTargetEl = null;
                             this.setTab("customize");
                         } else if (this.state.activeTab === "customize") {
