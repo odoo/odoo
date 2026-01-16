@@ -97,21 +97,21 @@ class TestCalendarActivity(ActivityScheduleCase):
         })
 
         # default usage in successive create
-        event_1_1 = self.env['calendar.event'].with_context(default_activity_ids=[(6, 0, activity_1.ids)]).create({
+        event_1_1 = self.env['calendar.event'].with_context(default_meeting_activity_ids=[(6, 0, activity_1.ids)]).create({
             'name': 'Meeting 1',
             'start': datetime(2025, 3, 10, 17),
             'stop': datetime(2025, 3, 10, 22),
         })
-        self.assertEqual(event_1_1.activity_ids, activity_1)
+        self.assertEqual(event_1_1.meeting_activity_ids, activity_1)
         self.assertEqual(activity_1.calendar_event_id, event_1_1)
         self.assertEqual(activity_1.date_deadline, date(2025, 3, 10))
-        event_1_2 = self.env['calendar.event'].with_context(default_activity_ids=[(6, 0, activity_1.ids)]).create({
+        event_1_2 = self.env['calendar.event'].with_context(default_meeting_activity_ids=[(6, 0, activity_1.ids)]).create({
             'name': 'Meeting 2',
             'start': datetime(2025, 3, 12, 17),
             'stop': datetime(2025, 3, 12, 22),
         })
-        self.assertFalse(event_1_1.activity_ids, 'Changes activity ownership')
-        self.assertEqual(event_1_2.activity_ids, activity_1, 'Changes activity ownership')
+        self.assertFalse(event_1_1.meeting_activity_ids, 'Changes activity ownership')
+        self.assertEqual(event_1_2.meeting_activity_ids, activity_1, 'Changes activity ownership')
         self.assertEqual(activity_1.calendar_event_id, event_1_2)
         self.assertEqual(activity_1.date_deadline, date(2025, 3, 12))
 
@@ -130,7 +130,7 @@ class TestCalendarActivity(ActivityScheduleCase):
             'start': datetime(2025, 4, 10, 17),
             'stop': datetime(2025, 4, 10, 22),
         })
-        self.assertEqual(event_2_1.activity_ids, activity_2)
+        self.assertEqual(event_2_1.meeting_activity_ids, activity_2)
         self.assertEqual(activity_2.calendar_event_id, event_2_1)
         self.assertEqual(activity_2.date_deadline, date(2025, 4, 10))
 
@@ -141,12 +141,12 @@ class TestCalendarActivity(ActivityScheduleCase):
         })
         new_existing_activities = self.env['mail.activity'].search([])
         new_activity = new_existing_activities - existing_activities
-        self.assertEqual(event_2_1.activity_ids, activity_2, "Event 1's activity should still be the first activity")
+        self.assertEqual(event_2_1.meeting_activity_ids, activity_2, "Event 1's activity should still be the first activity")
         self.assertEqual(activity_2.calendar_event_id, event_2_1, "The first activity's event should still be event 1")
 
         self.assertEqual(len(new_activity), 1, "1 more activity record should have been created (by event 2)")
-        self.assertEqual(event_2_2.activity_ids, new_activity, "Event 2's activity should not be the first activity")
-        self.assertEqual(event_2_2.activity_ids.activity_type_id, activity_2.activity_type_id, "Event 2's activity should be the same activity type as the first activity")
+        self.assertEqual(event_2_2.meeting_activity_ids, new_activity, "Event 2's activity should not be the first activity")
+        self.assertEqual(event_2_2.meeting_activity_ids.activity_type_id, activity_2.activity_type_id, "Event 2's activity should be the same activity type as the first activity")
         self.assertEqual(test_record.activity_ids, activity_1 + activity_2 + new_activity, "Resource record should now have all activities")
 
     def test_event_activity_user_sync(self):
@@ -190,7 +190,7 @@ class TestCalendarActivity(ActivityScheduleCase):
 
         with freeze_time(datetime(2025, 6, 19, 12, 44, 00)):
             calendar_event = self.env['calendar.event'].create({
-                'activity_ids': [(6, 0, activity.ids)],
+                'meeting_activity_ids': [(6, 0, activity.ids)],
                 'name': 'Meeting with partner',
                 'start': datetime(2025, 6, 21, 21, 0, 0),
                 'stop': datetime(2025, 6, 22, 0, 0, 0),
@@ -228,7 +228,7 @@ class TestCalendarActivity(ActivityScheduleCase):
 
         with freeze_time(datetime(2025, 6, 19, 12, 44, 00)):
             calendar_event = self.env['calendar.event'].create({
-                'activity_ids': [(6, False, activity.ids)],
+                'meeting_activity_ids': [(6, False, activity.ids)],
                 'allday': True,
                 'name': 'All Day',
                 'start': datetime(2025, 6, 21, 0, 0, 0),
