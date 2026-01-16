@@ -1,4 +1,5 @@
 import { ImStatus } from "@mail/core/common/im_status";
+import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
 import { Component, useEffect, useRef, useState, useSubEnv } from "@odoo/owl";
@@ -33,7 +34,8 @@ class ChatBubblePreview extends Component {
  * @extends {Component<Props, Env>}
  */
 export class ChatBubble extends Component {
-    static components = { CountryFlag, ImStatus };
+    // @deprecated ImStatus
+    static components = { CountryFlag, ImStatus, ThreadIcon };
     static props = ["chatWindow"];
     static template = "mail.ChatBubble";
 
@@ -78,5 +80,12 @@ export class ChatBubble extends Component {
     /** @returns {import("models").Channel} */
     get channel() {
         return this.props.chatWindow.channel;
+    }
+
+    get showThreadIcon() {
+        return (
+            this.channel.channel_type === "chat" ||
+            (this.channel.channel_type === "group" && this.channel.hasOtherMembersTyping)
+        );
     }
 }
