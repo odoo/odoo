@@ -981,7 +981,20 @@ export class HistoryPlugin extends Plugin {
             }
             applied = true;
             const stepIndex = this.steps.findLastIndex((item) => item === step);
-            this.revertStepsUntil(stepIndex);
+            const lastRevertedStep = this.revertStepsUntil(stepIndex);
+            if (lastRevertedStep?.selection) {
+                selectionToRestore.setCursor((cursor) => {
+                    const anchorNode = this.idToNodeMap.get(
+                        lastRevertedStep.selection.anchorNodeId
+                    );
+                    const focusNode = this.idToNodeMap.get(lastRevertedStep.selection.focusNodeId);
+                    cursor.anchor.node = anchorNode;
+                    cursor.anchor.offset = lastRevertedStep.selection.anchorOffset;
+
+                    cursor.focus.node = focusNode;
+                    cursor.focus.offset = lastRevertedStep.selection.focusOffset;
+                });
+            }
             // Apply draft mutations to recover the same currentStep state
             // as before.
             this.applyMutations(draftMutations, { forNewStep: true });
@@ -1021,6 +1034,7 @@ export class HistoryPlugin extends Plugin {
      * irreversible steps are maintained. This will add a new consumed step.
      *
      * @param {Number} stepIndex
+     * @returns {HistoryStep}
      */
     revertStepsUntil(stepIndex) {
         // Discard current draft.
@@ -1062,6 +1076,7 @@ export class HistoryPlugin extends Plugin {
         // Register resulting mutations as a new consumed step (prevent undo).
         this.dispatchContentUpdated();
         this.addStep({ stepState: "consumed" });
+        return lastRevertedStep;
     }
 
     /**
