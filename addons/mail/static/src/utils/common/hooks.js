@@ -15,10 +15,10 @@ import {
 
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
-import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
@@ -51,9 +51,9 @@ export function useLazyExternalListener(target, eventName, handler, eventParams)
     });
 }
 
-export function onExternalClick(refName, cb) {
+export function onExternalClick(refOrName, cb) {
     let downTarget, upTarget;
-    const ref = useRef(refName);
+    const ref = typeof refOrName === "string" ? useRef(refOrName) : refOrName;
     function onClick(ev) {
         if (ref.el && !ref.el.contains(ev.composedPath()[0])) {
             cb(ev, { downTarget, upTarget });
@@ -262,6 +262,63 @@ export class UseHoverOverlay extends Component {
             removeTarget?.();
         });
     }
+}
+
+/**
+ * Hook returning reactive scroll state for a given scrollable element.
+ *
+ * @param {string} refName - The t-ref name of the scrollable element.
+ * @returns {{
+ *   hasScrollbar: boolean,
+ *   canScrollBefore: boolean,
+ *   canScrollAfter: boolean
+ * }}
+ */
+export function useScrollState(refName) {
+    const ref = useRef(refName);
+    const state = useState({
+        hasScrollbar: false,
+        canScrollBefore: false,
+        canScrollAfter: false,
+    });
+    function computeState() {
+        const el = ref.el;
+        if (!el) {
+            return;
+        }
+        const hasVScroll = el.scrollHeight > el.clientHeight + 1;
+        const hasHScroll = el.scrollWidth > el.clientWidth + 1;
+        state.hasScrollbar = hasVScroll || hasHScroll;
+        if (hasVScroll) {
+            const scrollTop = el.scrollTop;
+            state.canScrollBefore = scrollTop > 0;
+            state.canScrollAfter = scrollTop + el.clientHeight < el.scrollHeight - 1;
+        } else if (hasHScroll) {
+            const scrollLeft = el.scrollLeft;
+            state.canScrollBefore = scrollLeft > 0;
+            state.canScrollAfter = scrollLeft + el.clientWidth < el.scrollWidth - 1;
+        } else {
+            state.canScrollBefore = false;
+            state.canScrollAfter = false;
+        }
+    }
+    useEffect(
+        (el) => {
+            if (!el) {
+                return;
+            }
+            computeState();
+            el.addEventListener("scroll", computeState);
+            const resizeObserver = new ResizeObserver(computeState);
+            resizeObserver.observe(el);
+            return () => {
+                el.removeEventListener("scroll", computeState);
+                resizeObserver.disconnect();
+            };
+        },
+        () => [ref.el]
+    );
+    return state;
 }
 
 /**
