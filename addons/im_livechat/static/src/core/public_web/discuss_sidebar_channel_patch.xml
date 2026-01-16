@@ -4,7 +4,7 @@
         <xpath expr="//*[@t-ref='displayNameAdditionalContent']" position="inside">
             <t t-if="channel.livechat_status === 'need_help'">
                 <i t-if="channel.matchesSelfExpertise" class="fa fa-star o-mail-starred me-2" role="image" title="Relevant to your expertise"/>
-                <span t-if="helpState.text" class="o-livechat-LookingForHelp-timer text-muted fw-normal" t-esc="helpState.text"/>
+                <span t-if="helpState.text" class="o-livechat-LookingForHelp-timer text-muted fw-normal smaller" t-esc="helpState.text"/>
             </t>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-DiscussSidebarChannel-itemName')]" position="inside">
