@@ -19,7 +19,7 @@ class StockLot(models.Model):
     )
 
     @api.depends('product_id.lot_valuated', 'product_id.product_tmpl_id.lot_valuated')
-    @api.depends_context('to_date', 'company')
+    @api.depends_context('to_date', 'company', 'warehouse_id')
     def _compute_value(self):
         """Compute totals of multiple svl related values"""
         company_id = self.env.company
@@ -32,13 +32,17 @@ class StockLot(models.Model):
                 lot.avg_cost = 0.0
                 continue
 
-            qty_available = lot.product_qty
-            if lot.product_id.cost_method == 'standard':
-                lot.total_value = lot.standard_price * qty_available
-            elif lot.product_id.cost_method == 'average':
-                lot.total_value = lot.product_id._run_avco(at_date=at_date, lot=lot)[1]
+            valuated_product = lot.product_id.with_context(at_date=at_date, lot_id=lot.id)
+            qty_valued = valuated_product.qty_available
+            qty_available = valuated_product.with_context(warehouse_id=False).qty_available
+            if valuated_product.uom_id.is_zero(qty_valued):
+                lot.total_value = 0
+            elif valuated_product.cost_method == 'standard' or valuated_product.uom_id.is_zero(qty_available):
+                lot.total_value = lot.standard_price * qty_valued
+            elif valuated_product.cost_method == 'average':
+                lot.total_value = valuated_product._run_avco(at_date=at_date, lot=lot)[1] * qty_valued / qty_available
             else:
-                lot.total_value = lot.product_id._run_fifo(qty_available, at_date=at_date, lot=lot)
+                lot.total_value = valuated_product._run_fifo(qty_available, at_date=at_date, lot=lot) * qty_valued / qty_available
             lot.avg_cost = lot.total_value / qty_available if qty_available else 0.0
 
     @api.model_create_multi
