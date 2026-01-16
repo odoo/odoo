@@ -3,6 +3,7 @@ import { renderToElement, renderToFragment } from "@web/core/utils/render";
 import { loadIframe } from "@mail/convert_inline/iframe_utils";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { PluginManager } from "@html_editor/plugin_manager";
+import { children } from "@html_editor/utils/dom_traversal";
 
 export class EmailHtmlConverter extends PluginManager {
     setup() {
@@ -46,6 +47,9 @@ export class EmailHtmlConverter extends PluginManager {
         }
         this.setup();
         this.config = config;
+
+        // TODO EGGMAIL: remove everything related to the "previewContainer"
+        // if not necessary during the conversion process
         this.setupPreviewContainerIframe();
         await loadIframe(this.iframe, () => this.setupPreviewContainer());
 
@@ -53,9 +57,19 @@ export class EmailHtmlConverter extends PluginManager {
         this.startPlugins();
         this.isReady = true;
 
-        const inlineValue = await this.htmlConversion();
+        const inlineTemplate = await this.htmlConversion();
+
+        // Old toInline
+        // TODO EGGMAIL: adapt usage, use plugin instead of old method
+        // const cssRules = getCSSRules(this.config.referenceDocument);
+        // await toInline(this.config.reference, cssRules);
+
+        // TMP code to preview the value in an iframe
+        const emailHTML = inlineTemplate.innerHTML;
+        this.previewContainer.append(...children(inlineTemplate.content));
+
         this.cleanup();
-        return inlineValue;
+        return emailHTML;
     }
 
     getPluginContext() {
@@ -84,10 +98,6 @@ export class EmailHtmlConverter extends PluginManager {
 
         const emailTemplate = this.getEmailTemplate();
 
-        // Old toInline
-        // TODO EGGMAIL: adapt usage, use plugin instead of old method
-        // const cssRules = getCSSRules(this.config.referenceDocument);
-        // await toInline(this.config.reference, cssRules);
-        return emailTemplate.innerHTML;
+        return emailTemplate;
     }
 }
