@@ -23,10 +23,10 @@
         </xpath>
         <xpath expr="//td[@name='usedby_cell']" position="inside">
             <span t-if="line.move_out and line.move_out.picking_id and line.move_out.picking_id.sale_id" t-out="' - ' + line.move_out.picking_id.sale_id.partner_id.display_name"/>
-            <t t-if="line.reservation and (line.document_out._name != 'stock.picking' or line.document_out.id != line.reservation.id)">
+            <t t-if="line.reservation and (line.document_out._name != line.reservation._name or line.document_out.id != line.reservation.id)">
                 <span t-out="' - '"/>
                 <a t-if="line.reservation" t-out="line.reservation.name" href="#" class="fw-bold"
-                    t-on-click.prevent="() => this.props.openView('stock.picking', 'form', line.reservation.id)"/>
+                    t-on-click.prevent="() => this.props.openView(line.reservation._name, 'form', line.reservation.id)"/>
             </t>
             <span t-if="line.document_out and line.is_matched and line.document_out._name === 'sale.order'" t-out="' (Your SO)'"/>
         </xpath>
