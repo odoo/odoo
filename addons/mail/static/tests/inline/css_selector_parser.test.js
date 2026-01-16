@@ -31,6 +31,10 @@ describe("CSS selector to AST and specificity computation (parseSelector)", () =
         expect(selectorList.selector).toBe("ul#nav li.active>a:hover");
         expect(selectorList.specificity).toMatchObject([1, 2, 3]);
 
+        selectorList = parseSelector(".row > *");
+        expect(selectorList.selector).toBe(".row>*");
+        expect(selectorList.specificity).toMatchObject([0, 1, 0]);
+
         selectorList = parseSelector("div>span");
         expect(selectorList.selector).toBe("div>span");
         expect(selectorList.specificity).toMatchObject([0, 0, 2]);

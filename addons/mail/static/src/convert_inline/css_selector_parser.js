@@ -330,6 +330,9 @@ export function parseSelector(selector) {
             case "~": {
                 if (!currentQuote && !currentPseudo) {
                     addCombinator(new Combinator({ combinator: char }));
+                    while (CSS_WHITESPACE.has(selector[i + 1])) {
+                        i++;
+                    }
                     registerChar = false;
                 }
                 break;
