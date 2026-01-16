@@ -66,7 +66,7 @@ export class ProductListPage extends Component {
             (lines) => {
                 this.state.quantityByProductTmplId = lines
                     .filter((line) => !line.combo_parent_id)
-                    .reduce((acc, { product_id, qty }) => {
+                    .reduce((acc, { product_id, changes: { qty } }) => {
                         const tmplId = product_id.product_tmpl_id.id;
                         if (tmplId != null) {
                             acc[tmplId] = (acc[tmplId] || 0) + qty;
