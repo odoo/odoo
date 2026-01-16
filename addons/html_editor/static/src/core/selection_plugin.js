@@ -59,6 +59,7 @@ import { weakMemoize } from "@html_editor/utils/functions";
  * @property {() => void} restore
  * @property {(callback: (cursor: Cursor) => void) => Cursors} update
  * @property {(node: Node, newNode: Node) => Cursors} remapNode
+ * @property {(callback: (cursor: Cursor) => void) => Cursors} setCursor
  * @property {(node: Node, newOffset: number) => Cursors} setOffset
  * @property {(node: Node, shiftOffset: number) => Cursors} shiftOffset
  */
@@ -762,6 +763,15 @@ export class SelectionPlugin extends Plugin {
                         cursor.offset += shiftOffset;
                     }
                 });
+            },
+            setCursor: (callback) => {
+                this.preservedCursors.forEach((ref) => {
+                    const liveCursor = ref.deref();
+                    if (liveCursor) {
+                        callback(liveCursor);
+                    }
+                });
+                return cursor;
             },
         };
         this.preservedCursors = this.preservedCursors.filter((c) => c.deref()); // filter out dead cursors.
