@@ -219,6 +219,38 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_fixed_tax_emptying_turned_as_extra_invoice_lines')
 
+    def test_invoice_multiple_fixed_tax_emptying_turned_as_extra_invoice_lines(self):
+        tax_emptying_1 = self.fixed_tax(0.1, name="Vidange")
+        tax_emptying_2 = self.fixed_tax(0.2, name="Vidange x2")
+        tax_21 = self.percent_tax(21.0)
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                self._prepare_invoice_line(
+                    product_id=self.product_a,
+                    price_unit=20.0,
+                    quantity=2.0,
+                    tax_ids=tax_emptying_1 + tax_21,
+                ),
+                self._prepare_invoice_line(
+                    product_id=self.product_a,
+                    price_unit=0.0,
+                    quantity=-4.0,
+                    tax_ids=tax_emptying_1 + tax_21,
+                ),
+                self._prepare_invoice_line(
+                    product_id=self.product_a,
+                    price_unit=40.0,
+                    quantity=2.0,
+                    tax_ids=tax_emptying_2 + tax_21,
+                ),
+            ],
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_multiple_fixed_tax_emptying_turned_as_extra_invoice_lines')
+
     def test_invoice_custom_tax_emptying_turned_as_extra_invoice_lines(self):
         """ Ensure the emptying taxes (a.k.a 'vidange') are turned into extra invoice lines inside the xml. """
         tax_emptying = self.python_tax("quantity * 0.10", name="Vidange")
