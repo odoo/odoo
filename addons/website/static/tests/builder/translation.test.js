@@ -63,6 +63,22 @@ test("show invisible elements in translate mode", async () => {
     expect(":iframe .o_snippet_invisible").not.toHaveAttribute("data-invisible");
 });
 
+test("show+hide invisible elements in translate mode do not switch away from customize tab", async () => {
+    await setupSidebarBuilderForTranslation({ websiteContent: invisibleEl });
+    expect(".o_customize_tab").toHaveCount(1);
+    expect(":iframe .o_snippet_invisible").toHaveAttribute("data-invisible", "1");
+    await contains(
+        ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element') i.fa-eye-slash"
+    ).click();
+    expect(".o_customize_tab").toHaveCount(1);
+    expect(":iframe .o_snippet_invisible").not.toHaveAttribute("data-invisible");
+    await contains(
+        ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element') i.fa-eye"
+    ).click();
+    expect(".o_customize_tab").toHaveCount(1);
+    expect(":iframe .o_snippet_invisible").toHaveAttribute("data-invisible", "1");
+});
+
 test("translate text", async () => {
     const resultSave = [];
     onRpc("/website/field/translation/update", async (data) => {
