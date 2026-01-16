@@ -5116,6 +5116,12 @@ class BaseModel(metaclass=MetaModel):
         assert field_name, f"No 'active' field on model {self._name}"
         inactive_recs = self.filtered(lambda record: not record[field_name])
         inactive_recs[field_name] = True
+        if inactive_recs and 'company_id' in self:
+            inactive_recs._validate_fields(['company_id'])
+        if inactive_recs and self._check_company_auto and (
+            self._name == 'res.company' or 'company_id' in self or 'company_ids' in self
+        ):
+            inactive_recs._check_company()
 
     def _register_hook(self) -> None:
         """ stuff to do right after the registry is built """
