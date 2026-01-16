@@ -160,6 +160,7 @@ class ResUsers(models.Model):
                 'id': self.env['ir.model']._get('calendar.event').id,
                 'type': 'meeting',
                 'name': meeting_label,
+                'is_today_meetings': True,
                 'model': 'calendar.event',
                 'icon': modules.module.get_module_icon(EventModel._original_module),
                 'domain': [('active', 'in', [True, False])],

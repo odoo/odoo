@@ -39,6 +39,6 @@ test("activity menu widget:today meetings", async () => {
     await contains(".o-mail-ActivityGroup .o-calendar-meeting", { count: 2 });
     await contains(".o-calendar-meeting span.fw-bold", { text: "meeting1" });
     await contains(".o-calendar-meeting span:not(.fw-bold)", { text: "meeting2" });
-    await click(".o-mail-ActivityMenu .o-mail-ActivityGroup");
+    await click(".o-mail-ActivityGroup div[name='activityTitle']", { text: "Today's Meetings" });
     await expect.waitForSteps(["calendar.action_calendar_event"]);
 });

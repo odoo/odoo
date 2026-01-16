@@ -1126,7 +1126,7 @@ class HrLeave(models.Model):
                 'allday': allday_value,
                 'privacy': 'confidential',
                 'event_tz': user.tz,
-                'activity_ids': [(5, 0, 0)],
+                'meeting_activity_ids': [(5, 0, 0)],
                 'res_id': holiday.id,
             }
             # Add the partner_id (if exist) as an attendee

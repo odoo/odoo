@@ -59,6 +59,7 @@ export class ResUsers extends mailModels.ResUsers {
                 meetings: meetingsLines,
                 model: "calendar.event",
                 name: "Today's Meetings",
+                is_today_meetings: true,
                 type: "meeting",
             });
         }
