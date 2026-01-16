@@ -577,6 +577,24 @@ class AccountTestInvoicingCommon(ProductCommon):
             payment.action_post()
         return payment
 
+    @classmethod
+    def pay_with_statement_line(cls, move, bank_journal_id, payment_date, amount):
+        statement_line = cls.env['account.bank.statement.line'].create({
+            'payment_ref': 'ref',
+            'journal_id': bank_journal_id,
+            'amount': amount,
+            'date': payment_date,
+        })
+        _st_liquidity_lines, st_suspense_lines, _st_other_lines = statement_line\
+            .with_context(skip_account_move_synchronization=True)\
+            ._seek_for_lines()
+        line = move.line_ids.filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable'))
+
+        st_suspense_lines.account_id = line.account_id
+        (st_suspense_lines + line).reconcile()
+
+        return {'move_reconciled': line, 'statement_line_reconciled': st_suspense_lines}
+
     def create_line_for_reconciliation(self, balance, amount_currency, currency, move_date, account_1=None, partner=None):
         write_off_account_to_be_reconciled = account_1 if account_1 else self.receivable_account
         move = self.env['account.move'].create({
