@@ -35,6 +35,7 @@ export class ChatHub extends Component {
         this.options = useDropdownState();
         this.more = useDropdownState();
         this.ref = useRef("bubbles");
+        this.root = useRef("root");
         this.position = useState({
             dragged: false,
             isDragging: false,
