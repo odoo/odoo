@@ -26,3 +26,20 @@ class ProductTemplateAttributeLine(models.Model):
         for ptal in self:
             categories[ptal.attribute_id.category_id] |= ptal
         return categories
+
+    def _prepare_categories_for_display_in_specs_table(self):
+        """
+         Prepare attribute categories for display in a specs table.
+
+        Filters out attribute lines that have a single value and whose value is
+        marked as custom, then call _prepare_categories_for_display to group
+        the remaining attribute lines by category.
+
+        :return: OrderedDict [{
+        product.attribute.category: [product.template.attribute.line]
+        }]
+        """
+        filtered_self = self - self.filtered(
+            lambda ptal: len(ptal.value_ids) == 1 and ptal.value_ids.is_custom
+        )
+        return filtered_self._prepare_categories_for_display()
