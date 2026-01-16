@@ -29,7 +29,9 @@
             [data-snippet="s_carousel_cards"],
             [data-snippet="s_quotes_carousel_minimal"],
             [data-snippet="s_quotes_carousel"] {
-                height: 550px;
+                .carousel-inner, .carousel-inner > .carousel-item {
+                    height: fit-content;
+                }
             }
             [data-snippet="s_quotes_carousel_compact"] {
                 height: 350px;
