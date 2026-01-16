@@ -24,7 +24,6 @@ patch(PosSession.prototype, {
             "res.company",
             "account.tax",
             "account.tax.group",
-            "pos.printer",
             "res.country",
             "product.category",
             "product.pricelist",

@@ -2,9 +2,6 @@ import { Component, onMounted, onWillUnmount, useState, useEffect } from "@odoo/
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
-import { rpc } from "@web/core/network/rpc";
-import { PrintingFailurePopup } from "@pos_self_order/app/components/printing_failure_popup/printing_failure_popup";
-import { GeneratePrinterData } from "@point_of_sale/app/utils/generate_printer_data";
 
 export class ConfirmationPage extends Component {
     static template = "pos_self_order.ConfirmationPage";
@@ -94,40 +91,9 @@ export class ConfirmationPage extends Component {
 
     async printOrder() {
         if (this.selfOrder.config.self_ordering_mode === "kiosk" && this.canPrintReceipt()) {
-            try {
-                this.isPrinting = true;
-                const order = this.confirmedOrder;
-                const generator = new GeneratePrinterData(order);
-                const data = generator.generateHtml();
-                const result = await this.printer.printHtml(data, this.printOptions);
-
-                if (!this.selfOrder.has_paper) {
-                    this.updateHasPaper(true);
-                }
-                order.nb_print = 1;
-                if (order.isSynced && result) {
-                    await rpc("/pos_self_order/kiosk/increment_nb_print/", {
-                        access_token: this.selfOrder.access_token,
-                        order_id: order.id,
-                        order_access_token: order.access_token,
-                    });
-                }
-            } catch (e) {
-                if (["EPTR_REC_EMPTY", "EPTR_COVER_OPEN"].includes(e.errorCode)) {
-                    this.dialog.add(PrintingFailurePopup, {
-                        trackingNumber: this.confirmedOrder.tracking_number,
-                        message: e.body,
-                        close: () => {
-                            this.router.navigate("default");
-                        },
-                    });
-                    this.updateHasPaper(false);
-                } else {
-                    console.error(e);
-                }
-            } finally {
-                this.isPrinting = false;
-            }
+            this.isPrinting = true;
+            await this.selfOrder.printOrderReceipt(this.confirmedOrder, this.printOptions);
+            this.isPrinting = false;
         }
     }
 
@@ -139,14 +105,6 @@ export class ConfirmationPage extends Component {
         if (this.confirmedOrder.uiState.receiptReady && !this.setDefautLanguage()) {
             this.router.navigate("default");
         }
-    }
-
-    async updateHasPaper(state) {
-        await rpc("/pos-self-order/change-printer-status", {
-            access_token: this.selfOrder.access_token,
-            has_paper: state,
-        });
-        this.selfOrder.has_paper = state;
     }
 
     setDefautLanguage() {

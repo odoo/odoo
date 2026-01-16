@@ -2,8 +2,8 @@ import { test, describe, expect } from "@odoo/hoot";
 import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
 import { mockDate } from "@odoo/hoot-mock";
 import { registry } from "@web/core/registry";
-import { BasePrinter } from "@point_of_sale/app/utils/printer/base_printer";
 import { definePosSelfModels } from "../data/generate_model_definitions";
+import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 
 definePosSelfModels();
 
@@ -85,9 +85,12 @@ describe("initHardware", () => {
         store.kitchenPrinters = [];
 
         store.initHardware();
+        const posPrinter = store.models["pos.printer"].get(1);
+        const printer = store.kitchenPrinters[0];
 
         expect(store.kitchenPrinters).toHaveLength(1);
-        expect(store.kitchenPrinters[0]).toBeInstanceOf(BasePrinter);
+        expect(printer).toBeInstanceOf(EpsonPrinter);
+        expect(printer.url.includes(posPrinter.epson_printer_ip)).toBe(true);
     });
 
     test("adds payment terminals", async () => {

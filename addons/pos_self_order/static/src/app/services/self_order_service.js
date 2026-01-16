@@ -11,6 +11,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
 import { NetworkConnectionLostPopup } from "@pos_self_order/app/components/network_connectionLost_popup/network_connectionLost_popup";
 import { UnavailableProductsDialog } from "@pos_self_order/app/components/unavailable_product_dialog/unavailable_product_dialog";
+import { PrintingFailurePopup } from "@pos_self_order/app/components/printing_failure_popup/printing_failure_popup";
 import {
     constructFullProductName,
     random5Chars,
@@ -538,6 +539,49 @@ export class SelfOrder extends Reactive {
             }
         }
     }
+
+    async printOrderReceipt(order = this.currentOrder, opts = {}) {
+        try {
+            this.isPrinting = true;
+            const generator = new GeneratePrinterData(order);
+            const data = generator.generateHtml();
+            const result = await this.printer.printHtml(data, this.printOptions);
+
+            if (!this.selfOrder.has_paper) {
+                this.updateHasPaper(true);
+            }
+            order.nb_print = 1;
+            if (order.isSynced && result) {
+                await rpc("/pos_self_order/kiosk/increment_nb_print/", {
+                    access_token: this.selfOrder.access_token,
+                    order_id: order.id,
+                    order_access_token: order.access_token,
+                });
+            }
+        } catch (e) {
+            if (["EPTR_REC_EMPTY", "EPTR_COVER_OPEN"].includes(e.errorCode)) {
+                this.dialog.add(PrintingFailurePopup, {
+                    trackingNumber: this.confirmedOrder.tracking_number,
+                    message: e.body,
+                    close: () => {
+                        this.router.navigate("default");
+                    },
+                });
+                this.updateHasPaper(false);
+            } else {
+                console.error(e);
+            }
+        }
+    }
+
+    async updateHasPaper(state) {
+        await rpc("/pos-self-order/change-printer-status", {
+            access_token: this.access_token,
+            has_paper: state,
+        });
+        this.has_paper = state;
+    }
+
     async initKioskData() {
         if (this.session && this.access_token) {
             this.ordering = true;
