@@ -87,7 +87,10 @@ export class CarouselSlider extends Interaction {
         for (const itemEl of this.el.querySelectorAll(".carousel-item")) {
             const isActive = itemEl.classList.contains("active");
             itemEl.classList.add("active");
-            const height = itemEl.getBoundingClientRect().height;
+            // We must use "offsetHeight" instead of "getBoundingClientRect()"
+            // otherwise it is not correct in the snippet dialog because of
+            // the "transform: scale" on "o_snippets_preview_row" elements.
+            const height = itemEl.offsetHeight;
             if (height > this.maxHeight || this.maxHeight === undefined) {
                 this.maxHeight = height;
             }
