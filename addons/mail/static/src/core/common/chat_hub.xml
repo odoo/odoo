@@ -2,8 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ChatHub">
-    <div class="o-mail-ChatHub d-print-none">
-
+    <div class="o-mail-ChatHub d-print-none" t-ref="root">
         <t t-set="visibleChatWindows" t-value="chatHub.compact ? chatHub.opened.filter(({ bypassCompact }) => bypassCompact) : chatHub.opened "/>
         <t t-foreach="visibleChatWindows" t-as="cw" t-key="cw.localId">
             <ChatWindow chatWindow="cw" t-if="cw.canShow" right="chatHub.BUBBLE_START + chatHub.BUBBLE + (chatHub.BUBBLE_OUTER*2) + (visibleChatWindows.length - cw_index - 1) * (chatHub.WINDOW + chatHub.WINDOW_INBETWEEN * 2)"/>
