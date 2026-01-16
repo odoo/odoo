@@ -60,5 +60,5 @@ class RazorpayPosRequest:
     def _razorpay_get_request_parameters(self):
         return {
             'username': self.razorpay_username,
-            'appKey': self.sudo().razorpay_api_key,
+            'appKey': self.razorpay_api_key,
         }
