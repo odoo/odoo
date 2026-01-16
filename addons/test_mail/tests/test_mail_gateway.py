@@ -1049,6 +1049,22 @@ class TestMailgateway(MailGatewayCommon):
         self.assertNotSentEmail()
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_route_bounce_multi_company_alias_domain(self):
+        """Incoming emails: company-specific bounce alias from catchall"""
+        with self.mock_mail_gateway():
+            record = self.format_and_process(
+                MAIL_TEMPLATE, self.partner_1.email_formatted,
+                f'{self.alias_catchall_c2}@{self.alias_domain_c2_name}',
+                subject='Test multi-company routing alias',
+            )
+        self.assertFalse(record)
+        self.assertSentEmail(
+            f'"MAILER-DAEMON" <{self.alias_bounce_c2}@{self.alias_domain_c2_name}>',
+            ['whatever-2a840@postmaster.twitter.com'],
+            subject='Re: Test multi-company routing alias'
+        )
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_route_bounce_other_recipients(self):
         """Incoming email: bounce processing: bounce should be computed even if not first recipient """
         with self.mock_mail_gateway():
