@@ -479,9 +479,17 @@ export class SelectionPlugin extends Plugin {
                           : null,
                   })
                 : null;
+        // On Chrome, a specific sequence of actions could leave activeSelection
+        // having a connected anchorNode but with offset too high, pointing to
+        // an element that no longer exists. This is why the following condition
+        // is necessary (see commit message).
+        const isSelectionConnected =
+            this.activeSelection.anchorNode.isConnected &&
+            nodeSize(this.activeSelection.anchorNode) >= this.activeSelection.anchorOffset &&
+            nodeSize(this.activeSelection.focusNode) >= this.activeSelection.focusOffset;
         if (documentSelectionIsInEditable) {
             this.activeSelection = this.makeActiveSelection(selection);
-        } else if (!this.activeSelection.anchorNode.isConnected) {
+        } else if (!isSelectionConnected) {
             this.activeSelection = this.makeActiveSelection();
         }
         let { anchorNode, anchorOffset, focusNode, focusOffset, isCollapsed, direction } =
