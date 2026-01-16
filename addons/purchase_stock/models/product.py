@@ -141,10 +141,14 @@ class ProductProduct(models.Model):
             (We don't include returns in demand estimation - they come back on hand)
         """
         warehouse_id = self.env.context.get('warehouse_id')
+        non_return_moves_domain = ['!', ('move_dest_ids.origin_returned_move_id', '=', False)]
         if not warehouse_id:
-            return Domain.OR([
-                [('location_dest_usage', 'in', ['customer', 'production'])],
-                [('location_final_id.usage', 'in', ['customer', 'production'])],
+            return Domain.AND([
+                Domain.OR([
+                    [('location_dest_usage', 'in', ['customer', 'production'])],
+                    [('location_final_id.usage', 'in', ['customer', 'production'])],
+                ]),
+                non_return_moves_domain,
             ])
         else:
             return Domain.AND([
@@ -153,7 +157,8 @@ class ProductProduct(models.Model):
                     [('location_dest_id.warehouse_id', '!=', warehouse_id)],
                     [('location_final_id.warehouse_id', '!=', warehouse_id)]
                 ]),  # includes moves going to customer or production
-                [('location_dest_id.usage', '!=', 'inventory')]  # exclude scrap
+                [('location_dest_id.usage', '!=', 'inventory')],  # exclude scrap
+                non_return_moves_domain,
             ])
 
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
