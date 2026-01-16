@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 /**
  * @typedef { Object } EditInteractionShared
  * @property { EditInteractionPlugin['restartInteractions'] } restartInteractions
- * @property { EditInteractionPlugin['stopInteractions'] } stopInteractions
+ * @property { EditInteractionPlugin['stopInteraction'] } stopInteraction
  */
 
 /**
