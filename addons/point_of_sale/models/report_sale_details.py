@@ -388,7 +388,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 base_amounts[tax['id']] = tax['base']
 
             for tax_id, base_amount in base_amounts.items():
-                taxes['taxes'][tax_id]['base_amount'] += base_amount
+                taxes['taxes'][tax_id]['base_amount'] += currency.round(base_amount)
         else:
             taxes['taxes'].setdefault(0, {'name': _('No Taxes'), 'tax_amount': 0.0, 'base_amount': 0.0})
             taxes['taxes'][0]['base_amount'] += line.price_subtotal_incl
