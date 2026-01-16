@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+<<<<<<< 7b5c410c66d9a9683dd61c1027d50dbc3892e2a5
 <!-- Default Rules -->
         <record id="hr_attendance_overtime_employee_schedule_rule" model="hr.attendance.overtime.rule">
+||||||| e065caa086e0c232c1dfa3e5fa0d9f6310dd4a0e
+        <record id="hr_attendance_overtime_employee_schedule_rule" model="hr.attendance.overtime.rule">
+=======
+        <record id="hr_attendance_overtime_employee_schedule_rule" model="hr.attendance.overtime.rule" forcecreate="0">
+>>>>>>> 45232c1b73b8aec0be750112ad8ca99402db418f
             <field name="name">Employee Schedule Rule</field>
             <field name="base_off">quantity</field>
             <field name="timing_type">schedule</field>
@@ -11,7 +17,7 @@
             <field name="ruleset_id" ref="hr_attendance_default_ruleset"/>
         </record>
 
-        <record id="hr_attendance_overtime_non_working_days_rule" model="hr.attendance.overtime.rule">
+        <record id="hr_attendance_overtime_non_working_days_rule" model="hr.attendance.overtime.rule" forcecreate="0">
             <field name="name">Non Working Days Rule</field>
             <field name="base_off">timing</field>
             <field name="timing_type">non_work_days</field>
