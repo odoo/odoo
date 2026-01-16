@@ -289,6 +289,14 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
             }
         });
 
+        // TODO: Remove in master. This should be replaced with a simple
+        // `style="margin: 0 12px;"` in the snippet template, similar to
+        // the one used for building carousel items.
+        const imageGalleryCarouselEl = html.querySelector(".s_image_gallery.o_slideshow .carousel");
+        if (imageGalleryCarouselEl) {
+            imageGalleryCarouselEl.style.margin = "0 12px";
+        }
+
         // TODO remove in master: fixes the selector for the "Ratio" setting in
         // cards, preventing the setting of a parent to leak onto children when
         // cards are nested.
