@@ -1,6 +1,6 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useRef, useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { _t } from "@web/core/l10n/translation";
@@ -38,26 +38,23 @@ export class FeedbackScreen extends Component {
             this.scaleText();
         });
 
-        useLayoutEffect(
-            () => {
-                const waiter = async () => {
-                    try {
-                        if (this.props.waitFor) {
-                            await this.props.waitFor;
-                        }
-                    } finally {
-                        await this._afterWaitFinished();
-                    }
-                };
-
-                waiter();
-            },
-            () => []
-        );
+        onWillStart(() => {
+            this.waiter();
+        });
 
         onWillUnmount(() => {
             clearTimeout(this.state.timeout);
         });
+    }
+
+    async waiter() {
+        try {
+            if (this.props.waitFor) {
+                await this.props.waitFor;
+            }
+        } finally {
+            await this._afterWaitFinished();
+        }
     }
 
     async _afterWaitFinished() {
