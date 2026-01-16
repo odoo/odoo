@@ -102,6 +102,7 @@ RESET_SEQ = "\033[0m"
 COLOR_SEQ = "\033[1;%dm"
 BOLD_SEQ = "\033[1m"
 COLOR_PATTERN = f"{COLOR_SEQ}{COLOR_SEQ}%s{RESET_SEQ}"
+TRUE_COLOR_PATTERN = f"\033[38;5;%dm%s{RESET_SEQ}"
 LEVEL_COLOR_MAPPING = {
     logging.DEBUG: (BLUE, DEFAULT),
     logging.INFO: (GREEN, DEFAULT),
@@ -109,6 +110,8 @@ LEVEL_COLOR_MAPPING = {
     logging.ERROR: (RED, DEFAULT),
     logging.CRITICAL: (WHITE, RED),
 }
+# all colors but black, grey and silver; length must be prime.
+PID_COLORS = (1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15)
 
 class PerfFilter(logging.Filter):
 
@@ -163,6 +166,10 @@ class ColoredFormatter(logging.Formatter):
     def format(self, record):
         fg_color, bg_color = LEVEL_COLOR_MAPPING.get(record.levelno, (GREEN, DEFAULT))
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
+        if tools.config['workers']:
+            record.process = TRUE_COLOR_PATTERN % (PID_COLORS[record.process % len(PID_COLORS)], record.process)
+        else:
+            record.process = TRUE_COLOR_PATTERN % (PID_COLORS[record.thread % len(PID_COLORS)], record.process)
         return super().format(record)
 
 
