@@ -3,7 +3,6 @@
 from collections import defaultdict
 
 from odoo import models
-from odoo.tools import float_is_zero
 
 
 class SaleOrder(models.Model):
@@ -31,7 +30,7 @@ class SaleOrder(models.Model):
                 if not bom_line.product_id.is_storable:
                     # Relevant only for storable components.
                     continue
-                if float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.uom_id.rounding):
+                if bom_line.uom_id.is_zero(bom_line_data['qty']):
                     # As BoMs allow components with a quantity of 0 (i.e., optional components), we
                     # skip those to avoid a division by zero.
                     continue

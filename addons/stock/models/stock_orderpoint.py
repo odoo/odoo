@@ -14,7 +14,7 @@ from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.modules.registry import Registry
 from odoo.fields import Domain
 from odoo.sql_db import BaseCursor
-from odoo.tools import float_compare, float_is_zero, frozendict, split_every, format_date
+from odoo.tools import float_compare, frozendict, split_every, format_date
 
 _logger = logging.getLogger(__name__)
 
@@ -417,12 +417,11 @@ class StockWarehouseOrderpoint(models.Model):
     'product_id', 'location_id', 'product_id.seller_ids.delay', 'company_id.horizon_days')
     def _compute_qty_to_order_computed(self):
         def to_compute(orderpoint):
-            rounding = orderpoint.uom_id.rounding
             # The check is on purpose. We only want to consider the horizon days if the forecast is negative and
             # there is already something to resupply base on lead times.
             return (
                 orderpoint.id
-                and float_compare(orderpoint.qty_forecast, orderpoint.product_min_qty, precision_rounding=rounding) < 0
+                and orderpoint.uom_id.compare(orderpoint.qty_forecast, orderpoint.product_min_qty) < 0
             )
 
         orderpoints = self.filtered(to_compute)
@@ -471,10 +470,9 @@ class StockWarehouseOrderpoint(models.Model):
         qty_in_progress = qty_in_progress_by_orderpoint.get(self.id)
         if qty_in_progress is None:
             qty_in_progress = self._quantity_in_progress()[self.id]
-        rounding = self.uom_id.rounding
         # The check is on purpose. We only want to consider the horizon days if the forecast is negative and
         # there is already something to resupply base on lead times.
-        if float_compare(self.qty_forecast, self.product_min_qty, precision_rounding=rounding) < 0:
+        if self.uom_id.compare(self.qty_forecast, self.product_min_qty) < 0:
             product_context = self._get_product_context()
             qty_forecast_with_visibility = self.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + qty_in_progress
             qty_to_order = max(self.product_min_qty, self.product_max_qty) - qty_forecast_with_visibility

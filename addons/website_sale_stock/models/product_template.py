@@ -88,11 +88,13 @@ class ProductTemplate(models.Model):
                     request.cart._get_cart_qty(product_sudo.id),
                     to_unit=uom,
                 )
+            digits = self.env['decimal.precision'].precision_get('Product Unit')
+            rounding = 10 ** -digits
             res.update({
                 'free_qty': free_qty,
                 'cart_qty': cart_quantity,
                 'uom_name': uom.name,
-                'uom_rounding': uom.rounding,
+                'uom_rounding': rounding,
                 'show_availability': product_sudo.show_availability,
                 'out_of_stock_message': product_sudo.out_of_stock_message,
                 'has_stock_notification': has_stock_notification,

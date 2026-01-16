@@ -5,7 +5,7 @@ import {
     Many2ManyTagsField,
     many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
-import { roundPrecision } from "@web/core/utils/numbers";
+import { roundDecimals } from "@web/core/utils/numbers";
 import { onWillUpdateProps } from "@odoo/owl";
 
 export function getProductRelatedModel() {
@@ -42,7 +42,8 @@ export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
         if (props.productModel && props.productId) {
             const context = { "active_test" : false };
             const product = await this.orm.searchRead(props.productModel, [["id", "=", props.productId]], ["uom_id"], { context });
-            this.referenceUnit = (await this.orm.searchRead("uom.uom", [["id", "=", product[0].uom_id[0]]], ["name", "factor", "parent_path", "rounding"]))[0];
+            this.referenceUnit = (await this.orm.searchRead("uom.uom", [["id", "=", product[0].uom_id[0]]], ["name", "factor", "parent_path"]))[0];
+            this.roundingDigits = await this.orm.call("decimal.precision", "precision_get", ["Product Unit"]);
         }
     }
 
@@ -58,14 +59,14 @@ export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
             return uom1Path[0] === uom2Path[0];
         };
         records = records.map((record) => {
-            let relativeInfo = this.referenceUnit && this.referenceUnit.id !== record.id ? `${roundPrecision((this.props.productQuantity || 1) * record.factor / this.referenceUnit.factor, this.referenceUnit.rounding)} ${this.referenceUnit.name}` : "";
+            let relativeInfo = this.referenceUnit && this.referenceUnit.id !== record.id ? `${roundDecimals((this.props.productQuantity || 1) * record.factor / this.referenceUnit.factor, this.roundingDigits)} ${this.referenceUnit.name}` : "";
             if (
                 this.referenceUnit &&
                 record.id !== this.referenceUnit.id &&
                 hasCommonReference(record, this.referenceUnit) &&
                 record.relative_uom_id
             ) {
-                relativeInfo = `${roundPrecision((this.props.productQuantity || 1) * record.relative_factor, this.referenceUnit.rounding)} ${record.relative_uom_id[1]}`;
+                relativeInfo = `${roundDecimals((this.props.productQuantity || 1) * record.relative_factor, this.roundingDigits)} ${record.relative_uom_id[1]}`;
             }
             return {
                 ...record,

@@ -222,7 +222,7 @@ class StockMove(models.Model):
     @api.onchange('quantity', 'uom_id', 'picked')
     def _onchange_quantity(self):
         if self.raw_material_production_id and self.uom_id and \
-            not float_is_zero(self.quantity, precision_rounding=self.uom_id.rounding) and self.uom_id.compare(self.product_uom_qty, self.quantity) != 0:
+            not self.uom_id.is_zero(self.quantity) and self.uom_id.compare(self.product_uom_qty, self.quantity) != 0:
             self.manual_consumption = True
             self.picked = True
 

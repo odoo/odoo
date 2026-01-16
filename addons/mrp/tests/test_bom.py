@@ -48,7 +48,7 @@ class TestBoM(TestMrpCommon):
 
     def test_02_explode_rounding(self):
         fns, cmp1, cmp2 = self.env['product.product'].create([{'name': 'FNS'}, {'name': 'CMP1'}, {'name': 'CMP2'}])
-        self.uom_unit.rounding = 0.01
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 2
 
         fns_bom = self.env['mrp.bom'].create({
             'product_tmpl_id': fns.product_tmpl_id.id,
@@ -2916,8 +2916,8 @@ class TestTourBoM(HttpCase):
         """
         integer_unit = self.env['uom.uom'].create({
             'name': 'unit_int',
-            'rounding': 1.0,
         })
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
         prod, comp = self.env["product.product"].create([{
             "name": name,
             "uom_id": integer_unit.id

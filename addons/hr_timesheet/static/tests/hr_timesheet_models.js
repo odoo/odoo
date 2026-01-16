@@ -112,19 +112,16 @@ export function patchSession() {
             1: {
                 id: 1,
                 name: "hour",
-                rounding: 0.01,
                 timesheet_widget: "float_time",
             },
             2: {
                 id: 2,
                 name: "day",
-                rounding: 0.01,
                 timesheet_widget: "float_toggle",
             },
             3: {
                 id: 3,
                 name: "foo",
-                rounding: 0.01,
                 timesheet_widget: "float_factor",
             },
         },

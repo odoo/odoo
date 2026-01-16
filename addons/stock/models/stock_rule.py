@@ -10,7 +10,6 @@ from functools import partial
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import float_is_zero
 from odoo.tools.misc import split_every
 
 _logger = logging.getLogger(__name__)
@@ -443,9 +442,7 @@ class StockRule(models.Model):
 
     @api.model
     def _skip_procurement(self, procurement):
-        return procurement.product_id.type != "consu" or float_is_zero(
-            procurement.product_qty, precision_rounding=procurement.uom_id.rounding
-        )
+        return procurement.product_id.type != "consu" or procurement.uom_id.is_zero(procurement.product_qty)
 
     @api.model
     def run(self, procurements, raise_user_error=True):

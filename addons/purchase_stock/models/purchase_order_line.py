@@ -185,8 +185,7 @@ class PurchaseOrderLine(models.Model):
     def _create_or_update_picking(self):
         for line in self:
             if line.product_id and line.product_id.type == 'consu':
-                rounding = line.uom_id.rounding
-                if float_compare(line.product_qty, line.qty_invoiced, precision_rounding=rounding) < 0 and line.invoice_lines:
+                if line.uom_id.compare(line.product_qty, line.qty_invoiced) < 0 and line.invoice_lines:
                     # If the quantity is now below the invoiced quantity, create an activity on the vendor bill
                     # inviting the user to create a refund.
                     line.invoice_lines[0].move_id.activity_schedule(

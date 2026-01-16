@@ -24,7 +24,8 @@ class StockPackage(models.Model):
         uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
         if uom_id == self.env.ref('uom.product_uom_kgm'):
             self.weight_is_kg = True
-        self.weight_uom_rounding = uom_id.rounding
+        digits = self.env['decimal.precision'].precision_get('Product Unit')
+        self.weight_uom_rounding = 10 ** -digits
 
     weight = fields.Float(compute='_compute_weight', digits='Stock Weight', help="Total weight of all the products contained in the package.")
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)

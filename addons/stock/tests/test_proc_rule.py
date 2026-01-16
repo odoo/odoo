@@ -358,7 +358,6 @@ class TestProcRule(TransactionCase):
         single_unit = self.env['uom.uom'].create({
             'name': 'Test UoM',
             'relative_factor': 1,
-            'rounding': 1.0
         })
         self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.productA.id,

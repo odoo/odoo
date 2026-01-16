@@ -77,17 +77,20 @@ class Float(Field[float]):
 
     .. admonition:: Example
 
-        To round a quantity with the precision of the unit of measure::
+        To round a quantity with the precision of the Product Unit decimal precision::
 
-            fields.Float.round(self.product_uom_qty, precision_rounding=self.product_uom_id.rounding)
+            digits = self.env['decimal.precision'].precision_get('Product Unit')
+            fields.Float.round(self.product_uom_qty, precision_digits=digits)
 
-        To check if the quantity is zero with the precision of the unit of measure::
+        To check if the quantity is zero with the precision of the Product Unit::
 
-            fields.Float.is_zero(self.product_uom_qty, precision_rounding=self.product_uom_id.rounding)
+            digits = self.env['decimal.precision'].precision_get('Product Unit')
+            fields.Float.is_zero(self.product_uom_qty, precision_digits=digits)
 
         To compare two quantities::
 
-            field.Float.compare(self.product_uom_qty, self.qty_done, precision_rounding=self.product_uom_id.rounding)
+            digits = self.env['decimal.precision'].precision_get('Product Unit')
+            fields.Float.compare(self.product_uom_qty, self.qty_done, precision_digits=digits)
 
         The compare helper uses the __cmp__ semantics for historic purposes, therefore
         the proper, idiomatic way to use this helper is like so:

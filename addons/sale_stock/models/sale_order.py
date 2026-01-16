@@ -179,7 +179,7 @@ class SaleOrder(models.Model):
                 for order_line in order.order_line:
                     if order_line.display_type or order_line.is_downpayment:
                         continue
-                    if float_compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0), precision_rounding=order_line.product_uom_id.rounding) < 0:
+                    if order_line.product_uom_id.compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0)) < 0:
                         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
                 if to_log:
                     documents = self.env['stock.picking'].sudo()._log_activity_get_documents(to_log, 'move_ids', 'UP')

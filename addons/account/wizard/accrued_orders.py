@@ -162,6 +162,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                 move_lines.append(Command.create(values))
             else:
                 accrual_entry_date = self.env.context.get('accrual_entry_date', self.date)
+                precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
                 order_lines = lines.with_context(accrual_entry_date=accrual_entry_date).filtered(
                     # We only want non-comment lines (no sections, notes, ...) and include all lines
                     # for purchase orders but exclude downpayment lines for sales orders.
@@ -170,7 +171,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                     fields.Float.compare(
                         l.amount_to_invoice_at_date,
                         0,
-                        precision_rounding=l._get_rounding(),
+                        precision_digits=precision_digits,
                     ) != 0
                 )
                 for order_line in order_lines:
