@@ -1183,7 +1183,6 @@ class TestPurchase(AccountTestInvoicingCommon):
     def test_purchase_order_line_without_uom(self):
         uom_test = self.env['uom.uom'].create({
             'name': 'Test Uom',
-            'rounding': 1.0,
         })
 
         po = self.env['purchase.order'].create({

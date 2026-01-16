@@ -196,14 +196,14 @@ class MrpUnbuild(models.Model):
             raise UserError(error_message)
 
         for finished_move in finished_moves:
-            if float_compare(finished_move.product_uom_qty, finished_move.quantity, precision_rounding=finished_move.uom_id.rounding) > 0:
+            if finished_move.uom_id.compare(finished_move.product_uom_qty, finished_move.quantity) > 0:
                 finished_move_line_vals = self._prepare_finished_move_line_vals(finished_move)
                 self.env['stock.move.line'].create(finished_move_line_vals)
 
         # TODO: Will fail if user do more than one unbuild with lot on the same MO. Need to check what other unbuild has aready took
         qty_already_used = defaultdict(float)
         for move in produce_moves | consume_moves:
-            if float_compare(move.product_uom_qty, move.quantity, precision_rounding=move.uom_id.rounding) < 1:
+            if move.uom_id.compare(move.product_uom_qty, move.quantity) < 1:
                 continue
             original_move = move in produce_moves and self.mo_id.move_raw_ids or self.mo_id.move_finished_ids
             original_move = original_move.filtered(lambda m: m.product_id == move.product_id)

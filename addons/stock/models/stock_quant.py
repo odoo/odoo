@@ -1358,7 +1358,9 @@ class StockQuant(models.Model):
         if self.tracking != 'serial' or self.quantity > 1:
             quantity_ai = gs1_quantity_rules_ai_by_uom.get(self.uom_id.id)
             if quantity_ai:
-                qty_str = str(int(self.quantity / self.uom_id.rounding))
+                digits = self.env['decimal.precision'].precision_get('Product Unit')
+                rounding = 10 ** -digits
+                qty_str = str(int(self.quantity / rounding))
                 if len(qty_str) <= 6:
                     barcode += quantity_ai + '0' * (6 - len(qty_str)) + qty_str
             else:
@@ -1404,9 +1406,10 @@ class StockQuant(models.Model):
             ('is_gs1_nomenclature', '=', True)]
         )
         gs1_quantity_rules_ai_by_uom = {}
+        digits = self.env['decimal.precision'].precision_get('Product Unit')
 
         for rule in gs1_quantity_rules:
-            decimal = str(len(f'{rule.associated_uom_id.rounding:.10f}'.rstrip('0').split('.')[1]))
+            decimal = str(digits)
             rule_ai = rule.pattern[1:4] + decimal
             gs1_quantity_rules_ai_by_uom[rule.associated_uom_id.id] = rule_ai
 

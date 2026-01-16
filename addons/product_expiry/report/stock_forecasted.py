@@ -2,7 +2,7 @@
 from datetime import date
 
 from odoo import models
-from odoo.tools import float_is_zero, format_date
+from odoo.tools import format_date
 
 
 class StockForecasted_Product_Product(models.AbstractModel):
@@ -53,7 +53,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 to_reduce_here = min(to_reduce, free_stock_at_date)
                 to_reduce -= to_reduce_here
                 free_stock_at_date -= to_reduce_here
-                if not float_is_zero(free_stock_at_date, precision_rounding=product.uom_id.rounding) and removal_date:
+                if not product.uom_id.is_zero(free_stock_at_date) and removal_date:
                     res.append(self.with_context(removal_date=removal_date)._prepare_report_line(free_stock_at_date, product=product, read=read))
 
             # Compensate for any reserved products that are no longer fresh

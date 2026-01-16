@@ -6,7 +6,6 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.tools import float_compare, float_repr, float_round, float_is_zero, format_date, get_lang
 from datetime import datetime, timedelta
-from math import log10
 
 
 class ReportMrpReport_Mo_Overview(models.AbstractModel):
@@ -204,7 +203,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             'has_bom': bool(production.bom_id),
             'quantity': production.product_qty if production.state != 'done' else production.qty_produced,
             'uom_name': production.uom_id.display_name,
-            'uom_precision': self._get_uom_precision(production.uom_id.rounding or 0.01),
+            'uom_precision': self._get_uom_precision(),
             'quantity_free': product.uom_id._compute_quantity(max(product.free_qty, 0), production.uom_id) if product.is_storable else False,
             'quantity_on_hand': product.uom_id._compute_quantity(product.qty_available, production.uom_id) if product.is_storable else False,
             'quantity_reserved': 0.0,
@@ -264,8 +263,8 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             return _("%(producible_qty)s Ready", producible_qty=producible_qty)
         return _("Ready")
 
-    def _get_uom_precision(self, uom_rounding):
-        return max(0, int(-(log10(uom_rounding))))
+    def _get_uom_precision(self):
+        return self.env['decimal.precision'].precision_get('Product Unit')
 
     def _get_comparison_decorator(self, expected, current, rounding):
         compare = float_compare(current, expected, precision_rounding=rounding)
@@ -455,7 +454,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'name': product.display_name,
                 'quantity': move_bp.product_uom_qty if move_bp.state != 'done' else move_bp.quantity,
                 'uom_name': move_bp.uom_id.display_name,
-                'uom_precision': self._get_uom_precision(move_bp.uom_id.rounding),
+                'uom_precision': self._get_uom_precision(),
                 'unit_cost': self._get_unit_cost(move_bp),
                 'mo_cost': currency.round(mo_cost),
                 'mo_cost_decorator': mo_cost_decorator,
@@ -559,7 +558,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             'quantity': expected_quantity if move_raw.state != 'done' else current_quantity,
             'uom': move_raw.uom_id,
             'uom_name': move_raw.uom_id.display_name,
-            'uom_precision': self._get_uom_precision(move_raw.uom_id.rounding),
+            'uom_precision': self._get_uom_precision(),
             'quantity_free': product.uom_id._compute_quantity(max(product.free_qty, 0), move_raw.uom_id) if product.is_storable else False,
             'quantity_on_hand': product.uom_id._compute_quantity(product.qty_available, move_raw.uom_id) if product.is_storable else False,
             'quantity_reserved': self._get_reserved_qty(move_raw, production.warehouse_id, replenish_data),
@@ -651,7 +650,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'state': doc_in.state,
                 'quantity': line_quantity,
                 'uom_name': move_raw.uom_id.display_name,
-                'uom_precision': self._get_uom_precision(forecast_line['uom_id']['rounding']),
+                'uom_precision': self._get_uom_precision(),
                 'unit_cost': self._get_unit_cost(move_raw),
                 'mo_cost': forecast_line.get('cost', self._get_replenishment_mo_cost(product, line_quantity, move_raw.uom_id, currency, forecast_line.get('move_in'))),
                 'bom_cost': currency.round(self._get_component_real_cost(move_raw, bom_quantity)) if bom_quantity else False,
@@ -713,7 +712,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'quantity': missing_quantity,
                 'replenish_quantity': move_raw.uom_id._compute_quantity(missing_quantity, product.uom_id),
                 'uom_name': move_raw.uom_id.display_name,
-                'uom_precision': self._get_uom_precision(move_raw.uom_id.rounding),
+                'uom_precision': self._get_uom_precision(),
                 'real_cost': currency.round(product.standard_price * move_raw.uom_id._compute_quantity(available_qty, product.uom_id)),
                 'currency_id': currency.id,
                 'currency': currency,
@@ -769,7 +768,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             'product_id': product.id,
             'quantity': min(move_raw.product_uom_qty, in_transit['uom_id']._compute_quantity(in_transit['quantity'], move_raw.uom_id)),  # Avoid over-rounding
             'uom_name': move_raw.uom_id.display_name,
-            'uom_precision': self._get_uom_precision(move_raw.uom_id.rounding),
+            'uom_precision': self._get_uom_precision(),
             'mo_cost': mo_cost,
             'mo_cost_decorator': mo_cost_decorator,
             'bom_cost': bom_cost,
@@ -839,7 +838,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 # Sorting the extra documents so that the ones flagged with an explicit production_id are on top of the list.
                 extra_docs.sort(key=lambda ex: ex.get('production_id', False), reverse=True)
                 product_forecast_lines = list(filter(lambda line: line.get('product', {}).get('id') == product.id, forecast_lines))
-                updated_forecast_lines = self._add_extra_in_forecast(product_forecast_lines, extra_docs, product.uom_id.rounding)
+                updated_forecast_lines = self._add_extra_in_forecast(product_forecast_lines, extra_docs)
                 replenish_data = self._set_replenish_data(updated_forecast_lines, product, replenish_data)
 
         return replenish_data
@@ -894,7 +893,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                     line['in_transit'] = False
                     move_origin_qty = move_origin.uom_id._compute_quantity(move_origin.product_uom_qty, line['uom_id'])
                     # Move quantity matches forecast, can add origin to the line
-                    if float_compare(line['quantity'], move_origin_qty, precision_rounding=line['uom_id'].rounding) == 0:
+                    if line['uom_id'].compare(line['quantity'], move_origin_qty) == 0:
                         line['document_in'] = {'_name': doc_origin._name, 'id': doc_origin.id}
                         line['move_in'] = move_origin
                         break
@@ -919,7 +918,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             return move.production_id
         return False
 
-    def _add_extra_in_forecast(self, forecast_lines, extras, product_rounding):
+    def _add_extra_in_forecast(self, forecast_lines, extras):
         if not extras:
             return forecast_lines
 
@@ -935,7 +934,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 production_id = False
             index_to_remove = []
             for index, extra in enumerate(extras):
-                if float_is_zero(extra['quantity'], precision_rounding=product_rounding):
+                if forecast_line['uom_id'].is_zero(extra['quantity']):
                     index_to_remove.append(index)
                     continue
                 if production_id and extra.get('production_id', False) and extra['production_id'] != production_id:
@@ -957,9 +956,9 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 new_extra_line['cost'] = extra['cost'] * ratio
                 lines_with_extras.append(new_extra_line)
                 extra['quantity'] -= forecast_line['uom_id']._compute_quantity(taken_from_extra, extra['uom'])
-                if float_compare(extra['quantity'], 0, precision_rounding=product_rounding) <= 0:
+                if extra['uom'].compare(extra['quantity'], 0) <= 0:
                     index_to_remove.append(index)
-                if float_is_zero(line_qty, precision_rounding=product_rounding):
+                if forecast_line['uom_id'].is_zero(line_qty):
                     break
 
             for index in reversed(index_to_remove):

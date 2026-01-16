@@ -494,7 +494,7 @@ class StockPackage(models.Model):
             if len(new_location) > 1:
                 raise UserError(self.env._("Packages %(duplicate_names)s are moved to different locations while being in the same container %(container_name)s.",
                                             duplicate_names=packages.mapped('name'), container_name=container_package.name))
-            contained_quants = container_package.contained_quant_ids.filtered(lambda q: not float_is_zero(q.quantity, precision_rounding=q.uom_id.rounding))
+            contained_quants = container_package.contained_quant_ids.filtered(lambda q: not q.uom_id.is_zero(q.quantity))
             if contained_quants and contained_quants.location_id != new_location:
                 old_location = contained_quants.location_id - new_location
                 raise UserError(self.env._("Can't move a container having packages in another location (%(old_location)s) to a different location (%(new_location)s).",

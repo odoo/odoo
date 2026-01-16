@@ -345,7 +345,7 @@ class RepairOrder(models.Model):
             elif repair.parts_availability_state == 'late':
                 repair.is_parts_late = True
 
-    @api.depends('move_ids.quantity', 'move_ids.product_uom_qty', 'move_ids.uom_id.rounding')
+    @api.depends('move_ids.quantity', 'move_ids.product_uom_qty', 'move_ids.uom_id')
     def _compute_has_uncomplete_moves(self):
         for repair in self:
             repair.has_uncomplete_moves = any(move.uom_id and move.uom_id.compare(move.quantity, move.product_uom_qty) < 0 for move in repair.move_ids)

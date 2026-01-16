@@ -56,9 +56,8 @@ class SaleOrderLine(models.Model):
                         if any((m.location_dest_id.usage == 'customer' and m.state != 'done')
                                or (m.location_dest_id.usage != 'customer'
                                and m.state == 'done'
-                               and float_compare(m.quantity,
-                                                 sum(sub_m.uom_id._compute_quantity(sub_m.quantity, m.uom_id) for sub_m in m.returned_move_ids if sub_m.state == 'done'),
-                                                 precision_rounding=m.uom_id.rounding) > 0)
+                               and m.uom_id.compare(m.quantity,
+                                                 sum(sub_m.uom_id._compute_quantity(sub_m.quantity, m.uom_id) for sub_m in m.returned_move_ids if sub_m.state == 'done')) > 0)
                                for m in moves) or not moves:
                             delivered_qties[order_line] = 0
                         else:

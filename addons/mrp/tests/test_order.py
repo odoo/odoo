@@ -5259,7 +5259,6 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_product_qty_digits_precision(self):
         self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 5
-        self.bom_1.uom_id.rounding = 0.00001
         mo = self.env['mrp.production'].create({
             'bom_id': self.bom_1.id,
             'product_qty': 1.23456,

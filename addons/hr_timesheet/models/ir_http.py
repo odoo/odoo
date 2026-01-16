@@ -37,7 +37,6 @@ class IrHttp(models.AbstractModel):
                 {
                     'id': uom.id,
                     'name': uom.name,
-                    'rounding': uom.rounding,
                     'timesheet_widget': uom.timesheet_widget,
                 } for uom in uom_ids
         }

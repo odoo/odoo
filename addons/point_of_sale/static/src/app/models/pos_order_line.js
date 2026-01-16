@@ -71,12 +71,11 @@ export class PosOrderline extends PosOrderlineAccounting {
         const unit = this.product_id.uom_id;
         const decimalPoint = l10n.decimalPoint;
 
+        const ProductUnit = this.models["decimal.precision"].find(
+            (dp) => dp.name === "Product Unit"
+        );
         if (unit) {
-            if (unit.rounding) {
-                const ProductUnit = this.models["decimal.precision"].find(
-                    (dp) => dp.name === "Product Unit"
-                );
-
+            if (ProductUnit.digits) {
                 if (this.qty % 1 === 0) {
                     unitPart = this.qty.toFixed(0);
                 } else {
@@ -265,9 +264,7 @@ export class PosOrderline extends PosOrderlineAccounting {
             }
         }
 
-        const rounder =
-            this.product_id.uom_id ||
-            this.models["decimal.precision"].find((dp) => dp.name === "Product Unit");
+        const rounder = this.models["decimal.precision"].find((dp) => dp.name === "Product Unit");
 
         this.qty = rounder.round(quant);
 

@@ -9,7 +9,7 @@ from re import findall as regex_findall
 from odoo import _, api, Command, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.float_utils import float_compare, float_round
 from odoo.tools.misc import clean_context, OrderedSet, groupby
 
 PROCUREMENT_PRIORITIES = [('0', 'Normal'), ('1', 'Urgent')]
@@ -366,7 +366,7 @@ class StockMove(models.Model):
                 if move.inventory_name:
                     move.reference = move.inventory_name
                 else:
-                    move.reference = _('Product Quantity Confirmed') if float_is_zero(move.quantity, precision_rounding=move.uom_id.rounding) else _('Product Quantity Updated')
+                    move.reference = _('Product Quantity Confirmed') if move.uom_id.is_zero(move.quantity) else _('Product Quantity Updated')
                     if move.create_uid and move.create_uid.id != SUPERUSER_ID:
                         move.reference += f' ({move.create_uid.display_name})'
             else:
@@ -548,7 +548,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 move.forecast_availability = move.uom_id._compute_quantity(
                     move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
                 continue
-            elif move.state == 'draft' and float_compare(free_qty, move.product_qty, precision_rounding=move.product_id.uom_id.rounding) >= 0:
+            elif move.state == 'draft' and move.product_id.uom_id.compare(free_qty, move.product_qty) >= 0:
                 move.forecast_availability = free_qty
                 continue
             if move._is_consuming():
@@ -558,7 +558,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 elif move.state in ('waiting', 'confirmed', 'partially_available'):
                     outgoing_unreserved_moves_per_warehouse[move.location_id.warehouse_id].add(move.id)
             elif move.picking_type_id.code == 'internal':
-                if float_compare(free_qty, move.product_qty, precision_rounding=move.product_id.uom_id.rounding) >= 0:
+                if move.product_id.uom_id.compare(free_qty, move.product_qty) >= 0:
                     move.forecast_availability = free_qty
                     continue
             elif move.picking_type_id.code == 'incoming':
@@ -1890,8 +1890,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         grouped_move_lines_out = self._get_available_move_lines_out(assigned_moves_ids, partially_available_moves_ids)
         available_move_lines = {key: grouped_move_lines_in[key] - grouped_move_lines_out.get(key, 0) for key in grouped_move_lines_in}
         # pop key if the quantity available amount to 0
-        rounding = self.product_id.uom_id.rounding
-        return dict((k, v) for k, v in available_move_lines.items() if float_compare(v, 0, precision_rounding=rounding) > 0)
+        return {k: v for k, v in available_move_lines.items() if self.product_id.uom_id.compare(v, 0) > 0}
 
     def _action_assign(self, force_qty=False):
         """ Reserve stock moves by creating their stock move lines. A stock move is
@@ -1905,8 +1904,6 @@ Please change the quantity done or the rounding precision in your settings.""",
         # Read the `reserved_availability` field of the moves out of the loop to prevent unwanted
         # cache invalidation when actually reserving the move.
         reserved_availability = {move: move.quantity for move in self}
-
-        roundings = {move: move.product_id.uom_id.rounding for move in self}
         move_line_vals_list = []
         # Once the quantities are assigned, we want to find a better destination location thanks
         # to the putaway rules. This redirection will be applied on moves of `moves_to_redirect`.
@@ -1920,12 +1917,11 @@ Please change the quantity done or the rounding precision in your settings.""",
         quants_cache = self.env['stock.quant']._get_quants_by_products_locations(moves_mto.product_id, moves_mto.location_id)
         for move in moves_to_assign:
             move = move.with_company(move.company_id)
-            rounding = roundings[move]
             if not force_qty:
                 missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
             else:
                 missing_reserved_uom_quantity = force_qty
-            if float_compare(missing_reserved_uom_quantity, 0, precision_rounding=rounding) <= 0:
+            if move.product_id.uom_id.compare(missing_reserved_uom_quantity, 0) <= 0:
                 assigned_moves_ids.add(move.id)
                 continue
             missing_reserved_quantity = move.uom_id._compute_quantity(missing_reserved_uom_quantity, move.product_id.uom_id, rounding_method='HALF-UP')
@@ -1976,15 +1972,15 @@ Please change the quantity done or the rounding precision in your settings.""",
                         continue
                     # If we don't need any quantity, consider the move assigned.
                     need = missing_reserved_quantity
-                    if float_is_zero(need, precision_rounding=rounding):
+                    if move.product_id.uom_id.is_zero(need):
                         assigned_moves_ids.add(move.id)
                         continue
                     # Reserve new quants and create move lines accordingly.
                     taken_quantity = move._update_reserved_quantity(need, move.location_id, strict=False)
-                    if float_is_zero(taken_quantity, precision_rounding=rounding):
+                    if move.product_id.uom_id.is_zero(taken_quantity):
                         continue
                     moves_to_redirect.add(move.id)
-                    if float_compare(need, taken_quantity, precision_rounding=rounding) == 0:
+                    if move.product_id.uom_id.compare(need, taken_quantity) == 0:
                         assigned_moves_ids.add(move.id)
                     else:
                         partially_available_moves_ids.add(move.id)
@@ -2019,10 +2015,10 @@ Please change the quantity done or the rounding precision in your settings.""",
                         # partially `quantity`. When this happens, we chose to reserve the maximum
                         # still available. This situation could not happen on MTS move, because in
                         # this case `quantity` is directly the quantity on the quants themselves.
-                        if float_is_zero(taken_quantity, precision_rounding=rounding):
+                        if move.product_id.uom_id.is_zero(taken_quantity):
                             continue
                         moves_to_redirect.add(move.id)
-                        if float_is_zero(need - taken_quantity, precision_rounding=rounding):
+                        if move.product_id.uom_id.is_zero(need - taken_quantity):
                             assigned_moves_ids.add(move.id)
                             break
                         partially_available_moves_ids.add(move.id)
@@ -2254,12 +2250,11 @@ Please change the quantity done or the rounding precision in your settings.""",
             return
         moves_state_to_write = defaultdict(set)
         for move in self:
-            rounding = move.uom_id.rounding
             if move.state in ('cancel', 'done') or (move.state == 'draft' and not move.quantity):
                 continue
-            elif float_compare(move.quantity, move.product_uom_qty, precision_rounding=rounding) >= 0:
+            elif move.uom_id.compare(move.quantity, move.product_uom_qty) >= 0:
                 moves_state_to_write['assigned'].add(move.id)
-            elif move.quantity and float_compare(move.quantity, move.product_uom_qty, precision_rounding=rounding) <= 0:
+            elif move.quantity and move.uom_id.compare(move.quantity, move.product_uom_qty) <= 0:
                 moves_state_to_write['partially_available'].add(move.id)
             elif (move.procure_method == 'make_to_order' and not move.move_orig_ids) or\
                  (move.move_orig_ids and any(orig.uom_id.compare(orig.product_uom_qty, 0) > 0
@@ -2663,7 +2658,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         else:
             available_qty = sum(product.with_context(lot_id=lot.id).qty_available for lot in self.lot_ids)
         scrap_qty = self.uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
-        return float_compare(available_qty, scrap_qty, precision_rounding=self.product_id.uom_id.rounding) >= 0
+        return self.product_id.uom_id.compare(available_qty, scrap_qty) >= 0
 
     def _action_replenish(self, values=False):
         self.ensure_one()
