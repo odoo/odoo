@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <!-- Match the appropriate <li> by using contains() instead of matching the whole text() because we can't properly escape the double quotes in the text -->
-            <xpath expr="//block[@id='l10n_ro_edi_settings']//li[contains(text(), 'Serviciu') and contains(text(), 'select the option')]" position="replace">
+            <xpath expr="//block[@id='l10n_ro_edi_settings']//li//li[@id='serviciu']" position="replace">
                 <li>In "Serviciu", select the options "E-Factura" and "E-Transport"</li>
             </xpath>
         </field>
