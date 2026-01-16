@@ -106,6 +106,12 @@ class Im_LivechatReportChannel(models.Model):
                 EXTRACT(dow from C.create_date)::text AS day_number,
                 EXTRACT('epoch' FROM COALESCE(C.livechat_end_dt, NOW() AT TIME ZONE 'utc') - C.create_date)/60 AS duration,
                 CASE
+                    WHEN C.livechat_end_dt IS NOT NULL
+                         AND channel_member_history.has_agent
+                         AND message_vals.first_agent_message_dt > C.livechat_end_dt THEN NULL
+                    WHEN C.livechat_end_dt IS NOT NULL
+                         AND NOT channel_member_history.has_agent
+                         AND message_vals.first_agent_message_dt_legacy > C.livechat_end_dt THEN NULL
                     WHEN channel_member_history.has_agent AND channel_member_history.has_bot THEN
                         EXTRACT('epoch' FROM message_vals.first_agent_message_dt - message_vals.last_bot_message_dt)
                     WHEN channel_member_history.has_agent THEN
