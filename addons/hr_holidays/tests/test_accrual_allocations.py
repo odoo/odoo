@@ -4,7 +4,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from psycopg2 import IntegrityError
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
 from odoo.exceptions import ValidationError
@@ -4504,3 +4504,64 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 allocation._update_accrual()
                 self.assert_remaining_leaves_equal(self.leave_type_day, remaining_leaves, self.employee_emp, test_date, digits=3)
                 self.assertAlmostEqual(allocation.expiring_carryover_days, expiring_days, 2, msg=f'Incorrect number of expiring days for {test_date}')
+
+    def test_get_future_leaves_on(self):
+        today = fields.Date.today()
+        future_date = today + relativedelta(months=1, day=15)
+
+        allocation_day = self.env['hr.leave.allocation'].create({
+            'name': 'Daily Accrual',
+            'holiday_status_id': self.leave_type_day.id,
+            'employee_id': self.employee_emp.id,
+            'allocation_type': 'accrual',
+            'accrual_plan_id': self.accrual_plan_start1.id,
+            'number_of_days': 1.0,
+            'date_from': today,
+        })
+
+        allocation_day._action_validate()
+
+        res_day = allocation_day._get_future_leaves_on(future_date)
+        self.assertEqual(res_day, 1.0, f"Expected 1.0 day increase, got {res_day}")
+
+        # Assuming an 8-hour workday, 2 days = 16.0 hours
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': '2 Days Every 1st of Month',
+            'accrued_gain_time': 'start',
+            'level_ids': [Command.create({
+                'added_value': 2,
+                'added_value_type': 'day',
+                'frequency': 'monthly',
+                'first_day': 1,
+                'action_with_unused_accruals': 'all',
+                'milestone_date': 'creation',
+            })]
+        })
+
+        start_date = date(2026, 1, 1)
+        future_date = date(2026, 2, 2)
+
+        leave_type_hour = self.env['hr.leave.type'].create({
+            'name': 'Hourly Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': True,
+            'allocation_validation_type': 'hr',
+            'request_unit': 'day',
+            'unit_of_measure': 'hour',
+        })
+
+        allocation_hour = self.env['hr.leave.allocation'].create({
+            'name': 'Hourly Allocation with daily accrual',
+            'holiday_status_id': leave_type_hour.id,
+            'employee_id': self.employee_emp.id,
+            'allocation_type': 'accrual',
+            'accrual_plan_id': accrual_plan.id,
+            'number_of_hours_display': 0.0,
+            'date_from': start_date,
+        })
+        allocation_hour._action_validate()
+
+        # On Feb 1st, it should trigger the 16-hour (2 days) addition
+        res_hour = allocation_hour._get_future_leaves_on(future_date)
+
+        self.assertEqual(res_hour, 16.0, f"Expected 16.0 hours (2 days) increase, got {res_hour}")
