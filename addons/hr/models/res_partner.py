@@ -26,6 +26,7 @@ class ResPartner(models.Model):
                 'type': 'ir.actions.act_window',
                 'res_model': 'hr.employee',
                 'view_mode': 'kanban',
+                'views': [(False, 'kanban')],
                 'domain': [('id', 'in', self.employee_ids.ids),
                            ('company_id', 'in', self.env.companies.ids)],
             }
@@ -35,6 +36,7 @@ class ResPartner(models.Model):
             'res_model': 'hr.employee',
             'res_id': self.employee_ids.filtered(lambda e: e.company_id in self.env.companies).id,
             'view_mode': 'form',
+            'views': [(False, 'form')],
         }
 
     def _get_all_addr(self):
