@@ -36,6 +36,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     static getters = /** @type {const} */ ([
         "exportSheetWithActiveFilters",
         "getFilterDisplayValue",
+        "getGlobalFilterByName",
         "getGlobalFilterDomain",
         "getGlobalFilterValue",
         "getActiveFilterCount",
@@ -173,7 +174,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     }
 
     getFilterDisplayValue(filterName) {
-        const filter = this._getGlobalFilterLabel(filterName);
+        const filter = this.getGlobalFilterByName(filterName);
         if (!filter) {
             throw new EvaluationError(
                 _t(`Filter "%(filter_name)s" not found`, { filter_name: filterName })
@@ -293,7 +294,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
      * @param {string} label Label
      * @returns {GlobalFilter|undefined}
      */
-    _getGlobalFilterLabel(label) {
+    getGlobalFilterByName(label) {
         return this.getters
             .getGlobalFilters()
             .find(
