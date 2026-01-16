@@ -618,21 +618,6 @@ class MailMessage(models.Model):
             if not messages_to_check:
                 return forbidden
 
-            # Recipients condition for create (message_follower_ids)
-            for model, docid_msgids in model_docid_msgids.items():
-                domain = [
-                    ('res_model', '=', model),
-                    ('res_id', 'in', list(docid_msgids)),
-                    ('partner_id', '=', self.env.user.partner_id.id),
-                ]
-                followers = self.env['mail.followers'].sudo().search_fetch(domain, ['res_id'])
-                for follower in followers:
-                    for mid in docid_msgids[follower.res_id]:
-                        messages_to_check.pop(mid)
-
-            if not messages_to_check:
-                return forbidden
-
         forbidden += self.browse(messages_to_check)
         return forbidden
 
