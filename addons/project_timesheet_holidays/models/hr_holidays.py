@@ -71,6 +71,8 @@ class Holidays(models.Model):
         calendar_leaves_data = self.env['resource.calendar.leaves']._read_group([('holiday_id', 'in', self.ids)], ['holiday_id'], ['id:array_agg'])
         mapped_calendar_leaves = {leave: calendar_leave_ids[0] for leave, calendar_leave_ids in calendar_leaves_data}
         for leave in self:
+            if not leave.employee_id.active:
+                continue
             if leave.holiday_type != 'employee' or not leave.holiday_status_id.timesheet_generate:
                 continue
 
