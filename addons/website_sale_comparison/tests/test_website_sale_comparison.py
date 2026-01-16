@@ -254,3 +254,28 @@ class TestWebsiteSaleComparisonUi(HttpCase):
                 ]))
             ])),
         ]))
+
+    def test_attribute_single_custom_value(self):
+        """Test that attribute with single custom value shouldn't be
+        displayed in specifications or sinlge value attributes."""
+        attribute = self.env['product.attribute'].create({
+            'name': 'Write here',
+            'value_ids': [
+                Command.create({
+                    'name': 'Custom',
+                    'is_custom': True,
+                }),
+            ],
+        })
+        product = self.env['product.template'].create([{
+            'name': 'T-Shirt',
+            'is_published': True,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute.id,
+                    'value_ids': attribute.value_ids,
+                }),
+            ],
+        }])
+        self.assertFalse(product.attribute_line_ids._prepare_single_value_for_display())
+        self.assertFalse(product.attribute_line_ids._prepare_categories_for_display_in_specs_table())
