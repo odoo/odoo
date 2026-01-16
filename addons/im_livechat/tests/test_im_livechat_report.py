@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
 from freezegun import freeze_time
 from unittest.mock import patch
 
@@ -125,3 +126,20 @@ class TestImLivechatReport(TestImLivechatCommon):
             "im_livechat_sessions_report_pivot_redirect_tour",
             login="operator_1",
         )
+
+    def test_time_to_answer_does_not_count_messages_after_close(self):
+        with freeze_time("2025-05-20 06:00:00") as frozen_time:
+            data = self.make_jsonrpc_request(
+                    "/im_livechat/get_session",
+                    {"channel_id": self.livechat_channel.id},
+                )
+            chat = self.env["discuss.channel"].browse(data["channel_id"])
+            frozen_time.tick(delta=timedelta(minutes=1))
+            chat.message_post(body="Question", message_type="comment")
+            self._create_message(chat, self.env.user.partner_id, datetime.now())
+            frozen_time.tick(delta=timedelta(minutes=5))
+            self.make_jsonrpc_request("/im_livechat/visitor_leave_session", {"channel_id": chat.id})
+            frozen_time.tick(delta=timedelta(minutes=5))
+            self._create_message(chat, chat.livechat_operator_id, datetime.now())
+            report = self.env["im_livechat.report.channel"].search([("channel_id", "=", chat.id)])
+            self.assertEqual(report.time_to_answer, 0.0)
