@@ -729,6 +729,12 @@ export function selectFullText(elementName, selector) {
             range.selectNodeContents(this.anchor);
             selection.removeAllRanges();
             selection.addRange(range);
+            this.anchor.closest(".odoo-editor-editable").dispatchEvent(
+                new MouseEvent("pointerup", {
+                    bubbles: true,
+                    cancelable: true,
+                })
+            );
         },
     };
 }
