@@ -42,15 +42,17 @@
                 <div class="col-md-4 d-none d-md-flex flex-row align-items-center justify-content-end">
                     <!-- search -->
                     <t t-call="website.website_search_box_input"
-                        _classes.f="o_wslides_course_nav_search ms-1 position-relative"
-                        _input_classes.f="border-0 rounded-0 bg-transparent"
-                        _submit_classes.f="btn-link rounded-0 pe-1"
                         search_type.f="slides"
                         action.f="/slides"
                         display_description.f="true"
                         display_detail.f="false"
-                        placeholder.translate="Search courses"
-                        search="search_term"/>
+                        placeholder.translate="Search courses..."
+                        search="search_term"
+                        _input_group_classes.f="p-2 pe-0"
+                        _input_classes.f="border-0 bg-black-25 text-white"
+                        _submit_classes.f="border-0 bg-black-25 text-white"
+                        _modal_id.f="slides_courses"
+                        _force_modal_trigger.f="True"/>
                 </div>
 
                 <!-- Mobile Mode -->
@@ -87,17 +89,17 @@
                         </div>
 
                         <div class="btn-group ms-1 position-static">
-                            <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Search"><i class="fa fa-search"></i></a>
-                            <div class="dropdown-menu dropdown-menu-end w-100" style="right: 10px;">
-                                <t t-call="website.website_search_box_input"
-                                    _classes.f="px-3"
-                                    search_type.f="slides"
-                                    action="'/slides/%s' % slug(channel)"
-                                    display_description.f="true"
-                                    display_detail.f="false"
-                                    placeholder.translate="Search courses"
-                                    search="search_term"/>
-                            </div>
+                            <t t-call="website.website_search_box_input"
+                                search_type.f="slides"
+                                action="'/slides/%s' % slug(channel)"
+                                display_description.f="true"
+                                display_detail.f="false"
+                                placeholder.translate="Search courses..."
+                                search="search_term"
+                                _simple_button_layout="True"
+                                _simple_button_classes.f="bg-black-25 text-white rounded-end"
+                                _modal_id.f="slides_dropdown"
+                            />
                         </div>
                     </div>
                 </div>

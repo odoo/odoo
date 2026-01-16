@@ -173,21 +173,24 @@
                 </div>
                 <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="votes" t-if="uid == user.id">
                     <div class="mb-4">
-                        <h5 class="border-bottom pb-1 flex align-items-center justify-content-between" style="height:43px;">
-                            Votes
+                        <div class="d-flex justify-content-between mb-2 border-bottom">
+                            <h5>
+                                Votes
+                            </h5>
                             <t t-if="my_profile" t-call="website.website_search_box_input"
-                                _form_classes.f="d-flex flex-row align-items-center flex-wrap float-end"
                                 search_type.f="forums"
                                 action="'/forum/%s%s' % (forum_id or 'all', '/tag/%s/questions' % slug(tag) if tag else '')"
                                 display_description.f="false"
                                 display_detail.f="false"
-                                placeholder.f="Search Posts...">
+                                placeholder.f="Search Posts..."
+                                _modal_id.f="forum_votes"
+                            >
                                 <input type="hidden" name="my" value="upvoted"/>
                                 <input t-if="filters" type="hidden" name="filters" t-att-value="filters"/>
                                 <input t-if="sorting" type="hidden" name="sorting" t-att-value="sorting"/>
                                 <input type="hidden" name="include_answers" t-att-value="True"/>
                             </t>
-                        </h5>
+                        </div>
                         <t t-call="website_forum.forum_filter_tag"/>
                         <t t-call="website_forum.user_votes"/>
                     </div>

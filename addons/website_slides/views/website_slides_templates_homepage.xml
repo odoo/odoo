@@ -170,32 +170,6 @@
                     <a href="/slides" class="btn btn-light">Clear Filters</a>
                 </div>
             </div>
-            <!-- Search Modal for Mobile -->
-            <div
-                id="o_wslides_search_modal"
-                class="modal fade css_editable_mode_hidden"
-                aria-hidden="true"
-                tabindex="-1"
-            >
-                <div class="modal-dialog modal-lg pt-5">
-                    <div class="modal-content mt-5 bg-transparent border-0">
-                        <div class="o_container_small">
-                            <t t-call="website.website_search_box_input"
-                                default_style.f="true"
-                                search_type.f="slides"
-                                _classes.f="input-group rounded o_cc o_cc1 mb-1"
-                                _input_classes.f="border-0 p-3"
-                                _submit_classes.f="px-4"
-                                placeholder.translate="Search courses"
-                                search="original_search or search_term">
-                                <input type="hidden" name="my" t-attf-value="#{1 if search_my else 0}"/>
-                                <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
-                                <input type="hidden" name="prevent_redirect" value="True"/>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </t>
 </template>
@@ -231,28 +205,30 @@
             </div>
             <div class="d-flex gap-2 align-items-center ms-auto">
                 <t t-call="website.website_search_box_input"
-                    _classes.f="d-none d-md-flex"
                     search_type.f="slides"
                     display_description.f="true"
                     display_detail.f="false"
-                    placeholder.translate="Search courses"
-                    search="original_search or search_term">
+                    placeholder.translate="Search courses..."
+                    search="original_search or search_term"
+                    _form_classes.f="d-none d-md-flex"
+                    _modal_id.f="wslides_homepage_desktop">
                     <!-- No action: remain on same URL -->
                     <input type="hidden" name="my" t-attf-value="#{1 if search_my else 0}"/>
                     <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
                     <input type="hidden" name="prevent_redirect" value="True"/>
                 </t>
                 <!-- Mobile Search button -->
-                <a
-                    class="btn o_not_editable d-md-none btn-light"
-                    data-bs-target="#o_wslides_search_modal"
-                    data-bs-toggle="modal"
-                    role="button"
-                    title="Search Courses"
-                    href="#"
-                >
-                    <i class="oi oi-search" role="img"/>
-                </a>
+                <t t-call="website.website_search_box_input"
+                    search_type.f="slides"
+                    placeholder.translate="Search courses..."
+                    search="original_search or search_term"
+                    _simple_button_layout.f="True"
+                    _simple_button_classes.f="d-md-none btn-light"
+                    _modal_id.f="wslides_homepage_mobile">
+                    <input type="hidden" name="my" t-attf-value="#{1 if search_my else 0}"/>
+                    <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
+                    <input type="hidden" name="prevent_redirect" value="True"/>
+                </t>
                 <!-- Mobile Filter button -->
                 <button class="o_not_editable btn btn-light position-relative d-lg-none"
                     data-bs-toggle="offcanvas"

@@ -39,12 +39,13 @@
         </form>
         <div class="d-flex w-100 w-lg-auto">
             <t t-call="website.website_search_box_input"
-                _classes.f="o_wevent_event_sponsor_searchbar_form flex-grow-1"
                 search_type.translate="sponsor"
                 action="'/event/%s/exhibitors' % (slug(event))"
                 display_detail.f="false"
                 search="search or searches and searches['search']"
-                placeholder.translate="Search an exhibitor ...">
+                placeholder.translate="Search an exhibitor..."
+                _modal_id.f="event_exhibitors"
+                _form_classes.f="flex-grow-1">
                 <t t-foreach="searches" t-as="item">
                     <input t-if="item != 'search' and item_value != 'all'" type="hidden"
                         t-att-name="item" t-att-value="item_value"/>

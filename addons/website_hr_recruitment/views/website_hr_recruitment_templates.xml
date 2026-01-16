@@ -1040,9 +1040,10 @@
 <template id="job_search_bar" inherit_id="website_hr_recruitment.topbar_customizations" active="True">
     <xpath expr="//div[hasclass('o_jobs_topbar_search_bar')]/button" position="before">
         <t t-call="website.website_search_box_input"
-            _form_classes.f="flex-grow-1"
             search_type.f="jobs"
-            display_description.f="true">
+            display_description.f="true"
+            _modal_id.f="jobs"
+            _form_classes.f="flex-grow-1">
             <input t-if="country_id" type="hidden" name="country_id" t-att-value="country_id.id"/>
             <input t-if="office_id" type="hidden" name="office_id" t-att-value="office_id.id"/>
             <input t-if="department_id" type="hidden" name="department_id" t-att-value="department_id.id"/>

@@ -2,6 +2,7 @@
 <odoo>
 
 <template id="s_searchbar_input" name="Search">
+    <!-- TODO we can't use _modal_id because it won't be unique -->
     <t t-call="website.website_search_box_input"
         search_type.f="all"
         action.f="/website/search"
@@ -10,7 +11,9 @@
         display_description.f="true"
         display_extra_link.f="true"
         display_detail.f="true"
-        default_style="True"/>
+        default_style="True"
+        _input_classes.f="o_cc o_cc1 border"
+        _submit_classes.f="o_cc o_cc1 border"/>
 </template>
 <template id="s_searchbar" name="Search">
     <section class="s_searchbar o_colored_level o_cc o_cc2 pt48 pb48">

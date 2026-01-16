@@ -82,11 +82,12 @@
             </div>
             <!-- 'Search Box' -->
             <t t-call="website.website_search_box_input"
-                _form_classes.f="#{not len(blogs) &gt; 1 and 'ms-auto'} flex-grow-1 flex-lg-grow-0"
                 search_type.f="blogs"
                 action="blog_url(tag=tag,search=search)"
                 display_description.f="true"
-                display_detail.f="false">
+                display_detail.f="false"
+                _modal_id.f="blogs"
+                _form_classes.f="#{not len(blogs) &gt; 1 and 'ms-auto'} flex-grow-1 flex-lg-grow-0 w-lg-50 w-xl-25">
                 <input type="hidden" name="tag" t-att-value="tag"/>
                 <input type="hidden" name="date_begin" t-att-value="date_begin"/>
                 <input type="hidden" name="date_end" t-att-value="date_end"/>

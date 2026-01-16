@@ -488,7 +488,9 @@
                         <!-- Search bar -->
                         <t t-call="website.placeholder_header_search_box"
                             _classes.f="mb-3"
-                            _input_classes.f="rounded-start-pill text-bg-light ps-3"
+                            _force_modal_trigger="True"
+                            _modal_id.f="header_mobile"
+                            _input_classes.f="border-0 rounded-start-pill text-bg-light ps-3"
                             _submit_classes.f="rounded-end-pill bg-o-color-3 pe-3"
                             limit.f="0"/>
                         <!-- Navbar -->
@@ -617,10 +619,10 @@
                 <ul class="navbar-nav align-items-center gap-2 flex-shrink-0 justify-content-end ps-3">
                     <!-- Search Bar -->
                     <t t-call="website.placeholder_header_search_box"
-                        _layout.f="modal"
-                        _input_classes.f="border border-end-0 p-3"
-                        _submit_classes.f="border border-start-0 px-4 bg-o-color-4"
-                        _button_classes.f="o_navlink_background text-reset"/>
+                        _modal_id.f="default_header_search"
+                        _simple_button_layout="True"
+                        _simple_button_classes.f="o_navlink_background rounded-circle p-1 lh-1 text-reset"
+                        _simple_button_icon_classes.f="fa-stack lh-lg"/>
                     <!-- Text element -->
                     <t t-call="website.placeholder_header_text_element"/>
                     <!-- Social -->
@@ -693,8 +695,11 @@
                         <ul class="navbar-nav">
                             <!-- Search bar -->
                             <t t-call="website.placeholder_header_search_box"
-                                _input_classes.f="rounded-start-pill ps-3 text-bg-light"
-                                _submit_classes.f="rounded-end-pill bg-o-color-3"
+                                _input_group_classes.f="mb-3"
+                                _force_modal_trigger="True"
+                                _modal_id.f="header_burger"
+                                _input_classes.f="border-0 rounded-start-pill text-bg-light ps-3"
+                                _submit_classes.f="rounded-end-pill bg-o-color-3 pe-3"
                                 limit.f="0"/>
                             <!-- Navbar -->
                             <li>
@@ -822,7 +827,8 @@
                         _input_classes.f="o_header_stretch_search_input border-0 rounded-0 bg-transparent text-reset"
                         _submit_classes.f="o_navlink_background_hover rounded-0 text-reset"
                         _form_classes.f="h-100 z-0"
-                        _classes.f="h-100 border-start o_border_contrast"/>
+                        _input_group_classes.f="h-100 border-start o_border_contrast"
+                        _modal_id.f="stretch_header_search"/>
                     <!-- Social -->
                     <t t-call="website.placeholder_header_social_links"
                         _div_class.f="d-flex align-items-center h-100 border-start px-2 o_border_contrast"/>
@@ -884,10 +890,10 @@
                     <ul class="navbar-nav align-items-center gap-1">
                         <!-- Search bar -->
                         <t t-call="website.placeholder_header_search_box"
-                            _layout.f="modal"
-                            _input_classes.f="border border-end-0 p-3"
-                            _submit_classes.f="border border-start-0 px-4 bg-o-color-4"
-                            _button_classes.f="o_navlink_background text-reset"/>
+                            _modal_id.f="vertical_header_search"
+                            _simple_button_layout="True"
+                            _simple_button_classes.f="o_navlink_background rounded-circle p-1 lh-1 text-reset"
+                            _simple_button_icon_classes.f="fa-stack lh-lg"/>
                         <!-- Social Links -->
                         <t t-call="website.placeholder_header_social_links"/>
                         <!-- Text element -->
@@ -994,10 +1000,13 @@
                     <!-- Brand -->
                     <t t-call="website.placeholder_header_brand"
                         _link_class.f="mw-100 mx-auto"/>
-                    <ul class="o_header_search_right_col navbar-nav align-items-center gap-2 ms-auto ps-3">
+                    <ul class="o_header_search_right_col navbar-nav align-items-center gap-2 ms-auto ps-4 w-75">
                         <!-- Search bar -->
                         <t t-call="website.placeholder_header_search_box"
-                            _input_classes.f="rounded-start-pill ps-3 text-bg-light"
+                            _modal_id.f="search_header"
+                            _form_classes.f="o_search_radius_pill"
+                            _item_class.f="o_header_search flex-grow-1"
+                            _input_classes.f="border-0 rounded-start-pill ps-3 text-bg-light"
                             _submit_classes.f="rounded-end-pill pe-3 bg-o-color-3"/>
                         <!-- Call To Action -->
                         <t t-call="website.placeholder_header_call_to_action"/>
@@ -1061,10 +1070,10 @@
                             _div_class.f="d-flex align-items-center"/>
                         <!-- Search bar -->
                         <t t-call="website.placeholder_header_search_box"
-                            _layout.f="modal"
-                            _input_classes.f="border border-end-0 p-3"
-                            _submit_classes.f="border border-start-0 px-4 bg-o-color-4"
-                            _button_classes.f="o_navlink_background text-reset"/>
+                            _modal_id.f="sales_one_header_search"
+                            _simple_button_layout="True"
+                            _simple_button_classes.f="o_navlink_background rounded-circle p-1 lh-1 text-reset"
+                            _simple_button_icon_classes.f="fa-stack lh-lg"/>
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in"
                             _link_class.f="btn rounded-circle text-reset fw-bold o_navlink_background"/>
@@ -1151,7 +1160,9 @@
                         <ul class="navbar-nav align-items-center gap-1">
                             <!-- Search bar -->
                             <t t-call="website.placeholder_header_search_box"
-                                _input_classes.f="rounded-start-pill ps-3 text-bg-light"
+                                _modal_id.f="sales_two_header"
+                                _form_classes.f="o_search_radius_pill"
+                                _input_classes.f="border-0 rounded-start-pill ps-3 text-bg-light"
                                 _submit_classes.f="rounded-end-pill p-3 bg-o-color-3 lh-1"/>
                             <!-- Sign In -->
                             <t t-call="portal.placeholder_user_sign_in"
@@ -1225,13 +1236,15 @@
                                 _div_class.f="mx-auto"
                                 _item_class.f="flex-basis-0 flex-grow-1 flex-shrink-0"/>
                         </ul>
-                        <ul class="navbar-nav">
+                        <ul class="navbar-nav flex-fill justify-content-end">
                             <!-- Search bar -->
                             <t t-call="website.placeholder_header_search_box"
-                                _input_classes.f="border-0 border-start rounded-0"
-                                _submit_classes.f="rounded-0 bg-o-color-4"
+                                _modal_id.f="sales_three_header"
+                                _item_class.f="flex-grow-1 mw-50"
+                                _input_classes.f="border-0 border-start rounded-0 o_cc o_cc2"
+                                _submit_classes.f="rounded-0 o_cc o_cc2"
                                 _form_classes.f="h-100 z-0"
-                                _classes.f="h-100"/>
+                                _input_group_classes.f="h-100"/>
                             <!-- Call To Action -->
                             <t t-call="website.header_call_to_action_stretched"
                                 _div_class.f="d-flex h-100"/>
@@ -1350,9 +1363,10 @@
                             <!-- Search bar -->
                             <li class="o_header_sales_four_search_placeholder" t-if="is_view_active('website.header_search_box') == False"/>
                             <t t-call="website.placeholder_header_search_box"
-                                _form_classes.f="me-auto"
-                                _input_classes.f="rounded-start-pill ps-3 text-bg-light"
-                                _submit_classes.f="rounded-end-pill bg-o-color-3 lh-1"
+                                _modal_id.f="sales_four_header"
+                                _form_classes.f="o_search_radius_pill me-auto"
+                                _input_classes.f="border-0 rounded-start-pill ps-3 text-bg-light"
+                                _submit_classes.f="rounded-end-pill bg-o-color-3"
                                 _item_class.f="d-flex"/>
                             <!-- Brand -->
                             <li t-if="is_view_active('website.placeholder_header_brand')">
@@ -1406,9 +1420,12 @@
                         <ul class="navbar-nav p-0">
                             <!-- Search bar -->
                             <t t-call="website.placeholder_header_search_box"
-                                _classes.f="mb-3"
-                                _input_classes.f="rounded-start-pill ps-3 text-bg-light"
-                                _submit_classes.f="rounded-end-pill pe-3 bg-o-color-3"
+                                _input_group_classes.f="mb-3"
+                                _force_modal_trigger="True"
+                                _modal_id.f="header_sidebar"
+                                _form_classes.f="o_search_radius_pill"
+                                _input_classes.f="border-0 rounded-start-pill text-bg-light ps-3"
+                                _submit_classes.f="rounded-end-pill bg-o-color-3 pe-3"
                                 limit.f="0"/>
                             <!-- Navbar -->
                             <li>
@@ -1528,9 +1545,8 @@
                         <!-- Search Bar -->
                         <t t-call="website.placeholder_header_search_box"
                             _layout.f="modal"
-                            _input_classes.f="border border-end-0 p-3"
-                            _submit_classes.f="border border-start-0 px-4 bg-o-color-4"
-                            _button_classes.f="o_navlink_background text-reset"/>
+                            _modal_id.f="rounded_box_search"
+                            _simple_button_classes.f="o_navlink_background text-reset"/>
                         <!-- Text element -->
                         <t t-call="website.placeholder_header_text_element"/>
                         <!-- Social -->
@@ -3103,15 +3119,39 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
 </template>
 
 <template id="website_search_box" name="Website Searchbox">
-    <div t-attf-class="input-group #{_classes}" role="search">
-        <t t-set="search_placeholder">Search...</t>
-        <input type="search" name="search" t-att-class="'search-query form-control oe_search_box %s %s %s' % (_input_classes or '', '' if default_style else 'border-0', '' if _input_no_bg else 'bg-light')" t-att-placeholder="placeholder if placeholder else search_placeholder" t-att-value="search"/>
-        <button type="submit" t-att-class="'btn oe_search_button %s' % (_submit_classes or ('btn-primary' if default_style else 'btn-light'))" aria-label="Search" title="Search">
-            <small class="text-muted pe-2" t-if="hide_label_view_all_results"><t t-out="search_count or 0"/> result<t t-if="search_count &gt; 1">s</t></small>
-            <span t-if="search and not hide_label_view_all_results" class="oe_search_found">
-                <small>View all results (<t t-out="search_count or 0"/>)</small>
+    <t t-set="search_count_string">
+        <t t-if="(search_count or 0) == 1"><t t-out="search_count or 0"/> result</t>
+        <t t-else=""><t t-out="search_count or 0"/> results</t>
+    </t>
+
+    <div
+        t-attf-class="{{_input_group_classes}} o_search_input_group input-group cursor-pointer {{'d-none' if _simple_button_layout and not _in_modal else ''}}" role="search"
+        t-att-data-search-modal-id="_modal_id if _modal_id and not _in_modal else None"
+        t-att-data-force-modal-trigger="_force_modal_trigger or _simple_button_layout">
+        <input
+            type="search"
+            name="search"
+            t-attf-class="{{_input_classes or 'border-0 bg-light'}} {{'pe-none' if not _in_modal else ''}} search-query form-control oe_search_box"
+            t-att-placeholder="placeholder"
+            t-att-value="search"/>
+        <button
+            type="submit"
+            t-attf-class="{{_submit_classes or 'bg-light'}} btn btn-link oe_search_button opacity-100" aria-label="Search"
+            title="Search"
+            disabled="true">
+            <span
+                class="o_search_spinner d-none spinner-border spinner-border-sm text-500"
+                style="--spinner-border-width: 0.1em;"
+                role="status">
+                <span class="visually-hidden">Loading...</span>
             </span>
-            <i t-else="" class="oi oi-search"/>
+            <small class="o_search_found_results_action d-none text-primary">
+                <span class="o_search_count" t-out="search_count_string"/>
+            </small>
+            <small t-attf-class="o_search_found_results {{'d-none' if not search else ''}} text-muted">
+                <span class="o_search_count" t-out="search_count_string"/>
+            </small>
+            <i t-attf-class="{{'d-none' if search else ''}} oi oi-search text-muted"/>
         </button>
     </div>
 </template>
@@ -3221,7 +3261,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                 <div class="row justify-content-center">
                     <div class="col-12 col-xxl-10">
                         <t t-call="website.website_search_box_input"
-                            _classes.f="mt8"
+                            _input_group_classes.f="mt8"
                             search_type.f="all"
                             action.f="/website/search"
                             hide_label_view_all_results="True"/>
@@ -3252,7 +3292,8 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                                     <h2 class="mb-2 fs-6 fw-normal text-muted">
                                         <small t-out="bucket['groupName']"/>
                                         <small>
-                                        - <t t-out="bucket['searchCount']"/> <t t-out="'results' if bucket['searchCount'] > 1 else 'result'"/>
+                                        - <t t-if="bucket['searchCount'] == 1"><t t-out="bucket['searchCount']"/> result</t>
+                                        <t t-else=""><t t-out="bucket['searchCount']"/> results</t>
                                         </small>
                                     </h2>
                                     <!-- Items -->
@@ -3278,6 +3319,24 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
 
 <!-- Search Bar input-group template -->
 <template id="website_search_box_input" inherit_id="website.website_search_box" primary="True">
+    <!--
+        TODO - Dialog should be handled with Owl, we should have only one in
+        the DOM and change it's search_type and parameters according to the
+        triggered search_input.
+
+        Here is a temporary solution with multiple dialogs in the DOM.
+
+        If a '_modal_id' is specified this template will now render both
+        a dialog and a search_input. Using the search_input as a trigger.
+
+        By default the search_input will be displayed and triggers a dialog on
+        small viewports or if the input is under a certain width.
+            - '_simple_button_layout': renders a "simple" button to trigger the
+                dialog instead of rendering the search_input.
+            - '_is_modal_only': only the modal is rendered
+            - '_is_simple_button_only': only the simple button is rendered
+        These are useful to make multiple searches open the same modal.
+    -->
     <xpath expr="//input[@name='search']" position="attributes">
         <attribute name="t-att-data-search-type">search_type</attribute>
         <attribute name="t-att-data-limit">limit or '6'</attribute>
@@ -3291,11 +3350,39 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
         <attribute name="t-attf-class" remove="s_searchbar_input" separator=" "/>
     </xpath>
     <xpath expr="//div[@role='search']" position="replace">
-        <form t-attf-class="o_searchbar_form s_searchbar_input #{_form_classes}" t-att-action="action" method="get" t-attf-data-snippet="s_searchbar_input">
+        <t t-if="not placeholder" t-set="placeholder">Search...</t>
+        <t t-if="_modal_id" t-set="_modal_id" t-valuef="o_search_modal_{{_modal_id}}"/>
+
+        <form t-if="not _simple_button_layout and not _is_modal_only and not _is_simple_button_only" t-attf-class="o_searchbar_form s_searchbar_input #{_form_classes}" t-att-action="action" method="get" t-attf-data-snippet="s_searchbar_input">
             <t>$0</t>
             <input name="order" type="hidden" class="o_search_order_by oe_unremovable" t-att-value="order_by if order_by else 'name asc'"/>
             <t t-out="0"/>
         </form>
+        <t t-if="_modal_id">
+            <a t-if="_simple_button_layout or _is_simple_button_only" t-attf-class="{{_simple_button_classes or 'p-1 bg-o-color-3 lh-1'}} btn o_not_editable" t-att-data-bs-target="'#' + _modal_id" data-bs-toggle="modal" role="button" title="Search" href="#">
+                <i t-attf-class="{{_simple_button_icon_classes}} oi oi-search" role="img"/>
+            </a>
+            <div
+                t-if="not _is_simple_button_only"
+                t-att-id="_modal_id"
+                class="modal fade css_editable_mode_hidden"
+                tabindex="-1"
+                aria-hidden="true"
+            >
+                <div class="modal-dialog modal-lg pt-5">
+                    <div class="modal-content mt-lg-5">
+                        <t t-set="_input_group_classes" t-value="''"/>
+                        <t t-set="_input_classes" t-value="'o_cc o_cc1 border-0 p-3'"/>
+                        <t t-set="_submit_classes" t-value="'o_cc o_cc1 border-start border-bottom-0 p-3 bg-o-color-4'"/>
+                        <t t-set="_in_modal" t-value="True"/>
+                        <form class="o_searchbar_form" t-att-action="action" method="get">
+                            <t>$0</t>
+                            <input name="order" type="hidden" class="o_search_order_by oe_unremovable" t-att-value="order_by if order_by else 'name asc'"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
     </xpath>
 </template>
 
@@ -3398,24 +3485,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
 <template id="website.header_search_box" inherit_id="website.placeholder_header_search_box" name="Header Search Bar" active="True">
     <xpath expr="." position="inside">
         <li t-attf-class="#{_item_class}">
-            <t t-if="_layout == 'modal'">
-                <div class="modal fade css_editable_mode_hidden" id="o_search_modal" aria-hidden="true" tabindex="-1">
-                    <div class="modal-dialog modal-lg pt-5">
-                        <div class="modal-content mt-5">
-                            <t t-call="website.header_search_box_input"
-                                _classes.f="input-group-lg"
-                                _submit_classes.f="border-start border-bottom-0 bg-o-color-4"
-                                _input_no_bg.f="True"/>
-                        </div>
-                    </div>
-                </div>
-                <a t-attf-class="btn rounded-circle p-1 lh-1 #{_button_classes or 'bg-o-color-3'} o_not_editable" data-bs-target="#o_search_modal" data-bs-toggle="modal" role="button" title="Search" href="#">
-                    <i class="oi oi-search fa-stack lh-lg"/>
-                </a>
-            </t>
-            <t t-else="">
-                <t t-call="website.header_search_box_input"/>
-            </t>
+            <t t-call="website.header_search_box_input"/>
         </li>
     </xpath>
 </template>

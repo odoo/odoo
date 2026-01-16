@@ -2402,12 +2402,50 @@ $ribbon-padding: 100px;
     z-index: $zindex-modal + 1; // Over the modal backdrop.
 }
 
-.s_searchbar_input.show, .s_searchbar_input:where(:has(.o_dropdown_menu.show)) {
-    .oe_search_box, .oe_search_button {
-        border-bottom-right-radius: 0 !important; // !important for input-group
+.modal[id^='o_search_modal'] {
+    .modal-content:where(:has(.s_searchbar_input.show, .o_dropdown_menu.show)) {
+        border-bottom-right-radius: 0;
         border-bottom-left-radius: 0;
     }
 }
+
+
+.o_searchbar_form {
+    .oe_search_button {
+        padding-right: $input-padding-x;
+        padding-left: $input-padding-x;
+    }
+
+    .oe_search_box:focus, .oe_search_button:focus {
+        z-index: 1;
+        background-color: var(--o-color-4);
+        box-shadow: none !important;
+    }
+
+    &.o_keyboard_navigation {
+        .oe_search_box:focus, .oe_search_button:focus {
+            outline: $border-width * 2 solid $primary;
+            outline-offset: -(map-get($spacers, 2));
+        }
+    }
+
+    &:where(:has(.o_dropdown_menu.show):not(.o_search_radius_pill)) {
+        .oe_search_box, .oe_search_button {
+            border-bottom-right-radius: 0 !important; // !important for input-group
+            border-bottom-left-radius: 0;
+        }
+    }
+
+    &.o_search_radius_pill .o_dropdown_menu {
+        margin-top: map-get($spacers, 1);
+    }
+
+    &:not(.o_search_radius_pill) .o_dropdown_menu {
+        border-top-right-radius: 0;
+        border-top-left-radius: 0;
+    }
+}
+
 
 // Search results
 .o_searchbar_form .o_dropdown_menu, .o_searchbar_result {
@@ -2431,8 +2469,14 @@ $ribbon-padding: 100px;
         margin-top: var(--o-search-tags-highlight-margin-top, map-get($spacers, 1));
     }
 
-    &:not(.o_search_result_item_placeholder):hover {
+    &:not(.o_search_result_item_placeholder):hover,
+    & .o_search_result_link:focus-visible {
         background-color: $gray-200;
+    }
+
+    .o_search_result_link:focus-visible {
+        outline: $border-width * 2 solid $primary;
+        outline-offset: -($border-width * 2);
     }
 
     @container search-results (min-width: #{map-get($grid-breakpoints, md)}) {

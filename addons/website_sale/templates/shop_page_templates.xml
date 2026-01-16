@@ -15,15 +15,16 @@
     <!-- Search Bar input-group template -->
     <template id="website_sale.search" name="Search Box" active="True">
         <t t-call="website.website_search_box_input"
-            _form_classes.f="o_wsale_products_searchbar_form me-auto flex-grow-1 {{_form_classes}}"
-            _submit_classes.f="btn btn-{{navClass}}"
-            _input_classes.f="border-0 text-bg-{{navClass}}"
             search_type.f="products"
             action="keep(search=0)"
             display_image.f="true"
             display_description.f="true"
             display_extra_link.f="true"
-            display_detail.f="true"/>
+            display_detail.f="true"
+            _form_classes.f="o_wsale_products_searchbar_form flex-grow-1 {{_form_classes}}"
+            _submit_classes.f="btn-{{navClass}}"
+            _input_classes.f="border-0 text-bg-{{navClass}}"
+            _modal_id.f="wsale_products"/>
     </template>
 
     <template id="website_sale.product_variant_preview">
@@ -379,16 +380,11 @@
                                                 <t t-call="website_sale.search" placeholder="placeholder" search="original_search or search"/>
                                             </div>
                                             <!-- Mobile Search button -->
-                                            <a
-                                                t-attf-class="btn o_not_editable d-inline-block d-sm-none me-auto btn-{{navClass}}"
-                                                data-bs-target="#o_wsale_search_modal"
-                                                data-bs-toggle="modal"
-                                                role="button"
-                                                title="Search Products"
-                                                href="#"
-                                            >
-                                                <i class="oi oi-search" role="img"/>
-                                            </a>
+                                            <t t-call="website.website_search_box_input"
+                                                _is_simple_button_only="True"
+                                                _simple_button_classes.f="d-inline-block d-sm-none me-auto btn-{{navClass}}"
+                                                _modal_id.f="wsale_search"
+                                            />
                                         </t>
                                         <div t-attf-class="{{'d-lg-none' if not hasPricelistDropdown and not is_view_active('website_sale.sort') else ''}} o_wsale_products_header_dropdown_wrap d-flex gap-3">
                                             <t
@@ -547,28 +543,15 @@
                 </div>
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_products_2"/>
             </div>
-            <div
-                t-if="is_view_active('website_sale.search')"
-                id="o_wsale_search_modal"
-                class="modal fade css_editable_mode_hidden"
-                aria-hidden="true"
-                tabindex="-1"
-                >
-                <div class="modal-dialog modal-lg pt-5">
-                    <div class="modal-content mt-5 bg-transparent border-0">
-                        <div class="o_container_small">
-                            <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
-                            <t t-call="website.website_search_box_input"
-                                default_style.f="true"
-                                search_type.f="products"
-                                _classes.f="input-group rounded o_cc o_cc1 mb-1"
-                                _input_classes.f="border-0 p-3"
-                                _submit_classes.f="px-4"
-                                placeholder="placeholder"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
+            <t t-if="is_view_active('website_sale.search')"
+                t-call="website.website_search_box_input"
+                _modal_id.f="wsale_search"
+                _force_modal_trigger="True"
+                _is_modal_only="True"
+                placeholder="placeholder"
+                search_type.f="products"
+            />
         </t>
     </template>
 
@@ -1238,16 +1221,12 @@
                     t-attf-class="navbar position-sticky d-flex gap-1 gap-lg-2 flex-shrink-0 bg-body rounded mb-2 px-2 px-lg-3 shadow {{floatBar_hasSearch and 'ps-1 ps-lg-1'}}"
                 >
                     <div t-if="floatBar_hasSearch">
-                        <a
-                            t-attf-class="btn o_not_editable {{(wsale_has_filters_btn or floatBar_hasSort or floatBar_hasPricelist) and 'me-n2'}}"
-                            data-bs-target="#o_wsale_search_modal"
-                            data-bs-toggle="modal"
-                            role="button"
-                            title="Search Products"
-                            href="#"
-                        >
-                            <i class="oi oi-search" role="img"/>
-                        </a>
+                        <t t-call="website.website_search_box_input"
+                            _is_simple_button_only="True"
+                            _modal_id.f="wsale_search"
+                            search_type.f="products"
+                            _simple_button_classes.f="{{(wsale_has_filters_btn or floatBar_hasSort or floatBar_hasPricelist) and 'me-n2'}}"
+                        />
                     </div>
                     <span
                         t-if="floatBar_hasSearch and (wsale_has_filters_btn or floatBar_hasSort or floatBar_hasPricelist)"

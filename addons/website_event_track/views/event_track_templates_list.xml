@@ -54,12 +54,13 @@
             </div>
             <div class="o_wevent_search d-flex w-100 w-lg-auto">
                 <t t-call="website.website_search_box_input"
-                    _classes.f="o_wevent_event_track_searchbar_form flex-grow-1"
                     search_type.translate="track"
                     action="'/event/%s/track' % (slug(event))"
                     display_detail.f="false"
                     search="search or searches and searches['search']"
-                    placeholder.translate="Search a talk ...">
+                    placeholder.translate="Search a talk..."
+                    _modal_id.f="event_tracks"
+                    _form_classes.f="o_wevent_event_track_searchbar_form flex-grow-1">
                     <t t-foreach="searches" t-as="item">
                         <input t-if="item != 'search' and item_value != 'all'" type="hidden"
                             t-att-name="item" t-att-value="item_value"/>

@@ -5,7 +5,8 @@ import { markup } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { getTemplate } from "@web/core/templates";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/ui/ui_service";
+import { SIZES, MEDIAS_BREAKPOINTS, utils as ui } from "@web/core/ui/ui_service";
+import { _t } from "@web/core/l10n/translation";
 
 export class SearchBar extends Interaction {
     static selector = ".o_searchbar_form";
@@ -22,9 +23,13 @@ export class SearchBar extends Interaction {
             "t-on-input": this.debounced(this.onInput, 400),
             "t-on-keydown": this.onKeydown,
             "t-on-search": this.onSearch,
+            "t-on-click": this.removeKeyboardNavigation,
         },
         ".o_search_result_item a": {
             "t-on-keydown": this.onKeydown,
+        },
+        ".o_search_input_group": {
+            "t-on-click": this.switchInputToModal,
         },
     };
     autocompleteMinWidth = 300;
@@ -32,6 +37,13 @@ export class SearchBar extends Interaction {
     setup() {
         this.keepLast = new KeepLast();
         this.inputEl = this.el.querySelector(".search-query");
+        this.buttonEl = this.el.querySelector(".oe_search_button");
+        this.actionEl = this.buttonEl.querySelector(".o_search_found_results_action");
+        this.resultsEl = this.buttonEl.querySelector(".o_search_found_results");
+        this.iconEl = this.buttonEl.querySelector(".oi-search");
+        this.spinnerEl = this.buttonEl.querySelector(".o_search_spinner");
+        this.searchInputGroup = this.el.querySelector(".o_search_input_group");
+        this.initialInputValue = this.inputEl.value;
         this.menuEl = null;
         this.searchType = this.inputEl.dataset.searchType;
         const orderByEl = this.el.querySelector(".o_search_order_by");
@@ -155,9 +167,52 @@ export class SearchBar extends Interaction {
                 },
                 this.el
             )[0];
+            // TODO dev, the count doesn't always match search_count
+            this.updateSearchCount(res.results_count || 0);
+        } else {
+            this.clearButtonContent();
         }
         this.hasDropdown = !!res;
         prevMenuEl?.remove();
+    }
+
+    clearButtonContent() {
+        this.hideLoadingSpinner();
+        const isEmpty = !this.inputEl.value.trim();
+        this.buttonEl.disabled = true;
+        this.actionEl?.classList.add("d-none");
+        // If empty, only show icon; otherwise show results
+        this.resultsEl?.classList.toggle("d-none", isEmpty);
+        this.iconEl?.classList.toggle("d-none", !isEmpty);
+    }
+
+    /**
+     * @param {number} count
+     */
+    updateSearchCount(count) {
+        this.hideLoadingSpinner();
+        this.buttonEl.toggleAttribute("disabled", count === 0);
+        const countText = count <= 1 ? _t("%s result", count) : _t("%s results", count);
+        for (const el of this.buttonEl.querySelectorAll(".o_search_count")) {
+            el.textContent = countText;
+        }
+
+        const hasLiveResults = count > 0 && this.inputEl.value !== this.initialInputValue;
+        this.actionEl?.classList.toggle("d-none", !hasLiveResults);
+        this.buttonEl.toggleAttribute("disabled", !hasLiveResults);
+        this.resultsEl?.classList.toggle("d-none", hasLiveResults);
+        this.iconEl?.classList.add("d-none");
+    }
+
+    hideLoadingSpinner() {
+        this.spinnerEl?.classList.add("d-none");
+    }
+
+    showLoadingSpinner() {
+        this.actionEl?.classList.add("d-none");
+        this.resultsEl?.classList.add("d-none");
+        this.iconEl?.classList.add("d-none");
+        this.spinnerEl?.classList.remove("d-none");
     }
 
     getFieldsNames() {
@@ -179,7 +234,7 @@ export class SearchBar extends Interaction {
         if (this.searchType === "all" && !this.inputEl.value.trim().length) {
             this.render();
         } else {
-            // Show loading skeleton only if dropdown is not currently shown
+            this.showLoadingSpinner();
             if (!this.hasDropdown) {
                 this.renderLoading();
             }
@@ -239,6 +294,41 @@ export class SearchBar extends Interaction {
             case "Enter":
                 this.limit = 0; // prevent autocomplete
                 break;
+            case "Tab":
+                this.el.classList.add("o_keyboard_navigation");
+                break;
+        }
+    }
+
+    removeKeyboardNavigation() {
+        this.el.classList.remove("o_keyboard_navigation");
+    }
+
+    focusInput() {
+        this.inputEl.classList.remove("pe-none");
+        this.inputEl.focus();
+    }
+
+    switchInputToModal(ev) {
+        if (ev.target.closest(".oe_search_button")) {
+            return;
+        }
+        if (this.searchInputGroup.hasAttribute("data-search-modal-id")) {
+            const modalId = '#' + this.searchInputGroup.dataset.searchModalId;
+            const forceModalTrigger = this.searchInputGroup.hasAttribute('data-force-modal-trigger');
+
+            if (ui.isSmall() || this.searchInputGroup.getBoundingClientRect().width < 280 || forceModalTrigger) {
+                this.searchInputGroup.setAttribute("data-bs-toggle", "modal");
+                this.searchInputGroup.setAttribute("data-bs-target", modalId);
+                this.inputEl.classList.add("pe-none");
+                this.searchInputGroup.click();
+            } else {
+                this.searchInputGroup.removeAttribute("data-bs-toggle");
+                this.searchInputGroup.removeAttribute("data-bs-target");
+                this.focusInput();
+            }
+        } else {
+            this.focusInput();
         }
     }
 

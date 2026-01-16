@@ -73,16 +73,13 @@
                             </ol>
                             <div class="d-flex d-md-none gap-2 ms-auto">
                                 <t t-call="website_sale.pricelist_list"/>
-                                <a
-                                    t-attf-class="o_wsale_product_search_mobile_btn o_not_editable btn btn-{{navClass}} d-none"
-                                    data-bs-target="#o_wsale_product_search_modal"
-                                    data-bs-toggle="modal"
-                                    role="button"
-                                    title="Search Products"
-                                    href="#"
-                                >
-                                    <i class="oi oi-search" role="presentation"/>
-                                </a>
+                                <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
+                                <t t-call="website.website_search_box_input"
+                                    search_type.f="products"
+                                    placeholder="placeholder"
+                                    _simple_button_layout.f="True"
+                                    _modal_id.f="wsale_product_search"
+                                    _simple_button_classes.f="o_wsale_product_search_mobile_btn d-none btn-{{navClass}}"/>
                             </div>
                         </div>
                         <div
@@ -224,27 +221,6 @@
                     class="oe_structure oe_empty mt16"
                 />
                 <div class="oe_structure oe_empty oe_structure_not_nearest mt16" id="oe_structure_website_sale_product_2" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
-            </div>
-            <div
-                id="o_wsale_product_search_modal"
-                class="modal fade css_editable_mode_hidden"
-                aria-hidden="true"
-                tabindex="-1"
-            >
-                <div class="modal-dialog modal-lg pt-5">
-                    <div class="modal-content mt-5 bg-transparent border-0">
-                        <div class="o_container_small">
-                            <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
-                            <t t-call="website.website_search_box_input"
-                                default_style.f="true"
-                                search_type.f="products"
-                                _classes.f="input-group rounded o_cc o_cc1 mb-1"
-                                _input_classes.f="border-0 p-3"
-                                _submit_classes.f="px-4"
-                                placeholder="placeholder"/>
-                        </div>
-                    </div>
-                </div>
             </div>
         </t>
     </template>
@@ -670,8 +646,8 @@
         <xpath expr="//div[hasclass('o_wsale_product_top_bar_desktop')]" position="inside">
             <t t-call="website_sale.search" search="False" _classes.f="me-sm-2"/>
         </xpath>
-        <xpath expr="//a[contains(@t-attf-class, 'o_wsale_product_search_mobile_btn')]" position="attributes">
-            <attribute name="t-attf-class" add="d-md-none" remove="d-none" separator=" "/>
+        <xpath expr="//t[@t-call='website.website_search_box_input']" position="attributes">
+            <attribute name="_simple_button_classes.f" add="d-md-none" remove="d-none" separator=" "/>
         </xpath>
     </template>
 
