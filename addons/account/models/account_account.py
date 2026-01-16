@@ -252,28 +252,6 @@ class AccountAccount(models.Model):
         if self.env.cr.fetchone():
             raise ValidationError(_("The account is already in use in a 'sale' or 'purchase' journal. This means that the account's type couldn't be 'receivable' or 'payable'."))
 
-    @api.constrains('reconcile')
-    def _check_used_as_journal_default_debit_credit_account(self):
-        accounts = self.filtered(lambda a: not a.reconcile)
-        if not accounts:
-            return
-
-        query = self.env['account.payment.method.line'].sudo()._search(
-            Domain('payment_account_id', 'in', accounts.ids))
-        apml = query.table
-        journal_t = apml._join('journal_id', kind='JOIN')
-        query.add_where(SQL("%s <> %s", apml.payment_account_id, journal_t.default_account_id))
-
-        journals = self.env['account.journal'].browse(
-            id_ for id_, in self.env.execute_query(query.select(SQL("DISTINCT %s", journal_t.id))))
-
-        if journals:
-            raise ValidationError(_(
-                "This account is configured in %(journal_names)s journal(s) (ids %(journal_ids)s) as payment debit or credit account. This means that this account's type should be reconcilable.",
-                journal_names=journals.mapped('display_name'),
-                journal_ids=journals.ids
-            ))
-
     @api.constrains('code')
     def _check_account_code(self):
         for account in self:
