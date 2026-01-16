@@ -187,6 +187,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             {'name': 'test14', 'login': 'test14'},
             {'name': 'test15', 'login': 'test15'},
         ])
+        self.env.ref("base.partner_root").tz = "Europe/Brussels"
         self.employees = self.env['hr.employee'].create([{
             'user_id': user.id,
         } for user in self.users])
@@ -399,7 +400,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "is_company": False,
                     "main_user_id": self.user_root.id,
                     "name": "OdooBot",
-                    "tz": False,
+                    "tz": "Europe/Brussels",
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
