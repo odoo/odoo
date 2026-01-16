@@ -74,28 +74,50 @@ class LeaveReport(models.Model):
 
                 /* Obtain the minimum id for a given employee and type of leave */
                 LEFT JOIN
-                    (SELECT employee_id, holiday_status_id, min(id) as min_id
-                    FROM hr_leave_allocation GROUP BY employee_id, holiday_status_id) min_allocation_id
-                on (allocation.employee_id=min_allocation_id.employee_id and allocation.holiday_status_id=min_allocation_id.holiday_status_id)
+                    (SELECT
+                        employee_id,
+                        holiday_status_id,
+                        min(id) as min_id,
+                        EXTRACT(YEAR FROM date_from) as alloc_year
+                    FROM hr_leave_allocation
+                    WHERE state IN ('validate', 'validate1')
+                    GROUP BY employee_id, holiday_status_id, alloc_year
+                ) min_allocation_id
+                on (allocation.employee_id=min_allocation_id.employee_id 
+                and allocation.holiday_status_id=min_allocation_id.holiday_status_id
+                and EXTRACT(YEAR FROM allocation.date_from)=min_allocation_id.alloc_year)
 
                 /* Obtain the sum of allocations (validated) */
                 LEFT JOIN
-                    (SELECT employee_id, holiday_status_id,
-                        sum(CASE WHEN state = 'validate' THEN number_of_days ELSE 0 END) as number_of_days,
-                        sum(CASE WHEN state = 'validate' THEN number_of_hours_display ELSE 0 END) as number_of_hours
+                    (SELECT
+                        employee_id,
+                        holiday_status_id,
+                        sum(number_of_days) as number_of_days,
+                        sum(number_of_hours_display) as number_of_hours,
+                        EXTRACT(YEAR FROM date_from) as alloc_year
                     FROM hr_leave_allocation
-                    GROUP BY employee_id, holiday_status_id) aggregate_allocation
-                on (allocation.employee_id=aggregate_allocation.employee_id and allocation.holiday_status_id=aggregate_allocation.holiday_status_id)
+                    WHERE state IN ('validate', 'validate1')
+                    GROUP BY employee_id, holiday_status_id, alloc_year
+                ) aggregate_allocation
+                on (allocation.employee_id=aggregate_allocation.employee_id
+                and allocation.holiday_status_id=aggregate_allocation.holiday_status_id
+                and EXTRACT(YEAR FROM allocation.date_from)=aggregate_allocation.alloc_year)
 
                 /* Obtain the sum of requested leaves (validated) */
                 LEFT JOIN
-                    (SELECT employee_id, holiday_status_id,
-                        sum(CASE WHEN state IN ('validate', 'validate1') THEN number_of_days ELSE 0 END) as number_of_days,
-                        sum(CASE WHEN state IN ('validate', 'validate1') THEN number_of_hours ELSE 0 END) as number_of_hours
+                    (SELECT
+                        employee_id,
+                        holiday_status_id,
+                        sum(number_of_days) as number_of_days,
+                        sum(number_of_hours) as number_of_hours,
+                        EXTRACT(YEAR FROM date_from) as leave_year
                     FROM hr_leave
-
-                    GROUP BY employee_id, holiday_status_id) aggregate_leave
-                on (allocation.employee_id=aggregate_leave.employee_id and allocation.holiday_status_id = aggregate_leave.holiday_status_id)
+                    WHERE state IN ('validate', 'validate1')
+                    GROUP BY employee_id, holiday_status_id, leave_year) aggregate_leave
+                on (allocation.employee_id=aggregate_leave.employee_id
+                and allocation.holiday_status_id = aggregate_leave.holiday_status_id
+                and EXTRACT(YEAR FROM allocation.date_from)=aggregate_leave.leave_year)
+                WHERE allocation.state IN ('validate', 'validate1')
 
                 UNION ALL SELECT
                     request.employee_id as employee_id,
