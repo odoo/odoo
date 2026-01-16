@@ -63,6 +63,7 @@
                 <t t-if="fileName" t-esc="fileName" />
             </a>
         </t>
+        <t t-elif="props.fileNameField" t-out="fileName"/>
     </t>
 
     <t t-name="web.ListBinaryField" t-inherit="web.BinaryField">
