@@ -2946,7 +2946,9 @@ we-select.o_grid we-toggler {
             [data-snippet="s_carousel_intro"],
             [data-snippet="s_quotes_carousel_minimal"],
             [data-snippet="s_quotes_carousel"] {
-                height: 550px;
+                .carousel-inner {
+                    height: fit-content;
+                }
             }
             [data-snippet="s_three_columns"] .figure-img[style*="height:50vh"] {
                 /* In Travel theme. */
