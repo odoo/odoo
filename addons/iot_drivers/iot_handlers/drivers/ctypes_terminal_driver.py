@@ -129,7 +129,7 @@ class CtypesTerminalDriver(Driver, ABC):
         }
         # TODO: add `stacklevel=2` in image with python version > 3.8
         _logger.debug('%s: send_status data: %s', self.device_name, self.data, stack_info=True)
-        event_manager.device_changed(self)
+        event_manager.device_changed(self, request_data)
 
     # The following methods need to be implemented by the children classes
     @abstractmethod
