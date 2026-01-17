@@ -29,12 +29,12 @@ export const getStrNotes = (note) => {
     return "";
 };
 
-export const filterChangeByCategories = (categories, currentOrderChange, models) => {
+export const filterChangeByCategories = (categoryIdsSet, currentOrderChange, models) => {
     const matchesCategories = (change) => {
         const product = models["product.product"].get(change["product_id"]);
         const categoryIds = product.parentPosCategIds;
         for (const categoryId of categoryIds) {
-            if (categories.includes(categoryId)) {
+            if (categoryIdsSet.has(categoryId)) {
                 return true;
             }
         }

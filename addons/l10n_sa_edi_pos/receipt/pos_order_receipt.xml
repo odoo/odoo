@@ -9,24 +9,5 @@
                 </div>
             </div>
         </template>
-
-        <template id="l10n_sa_edi_pos.pos_order_receipt_footer" inherit_id="point_of_sale.pos_order_receipt_footer">
-            <tbody name="company_info" position="inside">
-                <tr t-if="company['l10n_sa_edi_building_number']">
-                    <td class="text-start">Building:</td>
-                    <td class="text-end" t-out="company['l10n_sa_edi_building_number']" />
-                </tr>
-                <tr t-if="company['l10n_sa_edi_plot_identification']">
-                    <td class="text-start">Plot:</td>
-                    <td class="text-end" t-out="company['l10n_sa_edi_plot_identification']" />
-                </tr>
-                <tr t-if="company['l10n_sa_edi_additional_identification_number']">
-                    <td class="text-start">
-                        <t t-if="company['l10n_sa_edi_additional_identification_scheme']" t-out="company['l10n_sa_edi_additional_identification_scheme'] + ':'"/>
-                    </td>
-                    <td class="text-end" t-out="company['l10n_sa_edi_additional_identification_number']" />
-                </tr>
-            </tbody>
-        </template>
     </data>
 </odoo>

@@ -4,10 +4,7 @@ import { isDisplayStandalone } from "@web/core/browser/feature_detection";
 
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
 import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
-import {
-    SaleDetailsButton,
-    handleSaleDetails,
-} from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
+import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
 import { Component, onMounted, useState, useExternalListener } from "@odoo/owl";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
@@ -188,7 +185,7 @@ export class Navbar extends Component {
     }
 
     async showSaleDetails() {
-        await handleSaleDetails(this.pos, this.dialog);
+        await this.pos.ticketPrinter.printSaleDetailsReceipt();
     }
 
     async openPresetTiming() {

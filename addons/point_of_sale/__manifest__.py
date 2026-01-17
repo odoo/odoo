@@ -55,7 +55,12 @@
         'views/pos_session_sales_details.xml',
         'views/product_tag_views.xml',
         'views/stock_reference_views.xml',
+        'receipt/pos_receipt_common.xml',  # needed in the backend and frontend
         'receipt/pos_order_receipt.xml',  # needed in the backend and frontend
+        'receipt/pos_order_change_receipt.xml',  # needed in the backend and frontend
+        'receipt/pos_tip_receipt.xml',  # needed in the backend and frontend
+        'receipt/pos_cash_move_receipt.xml',  # needed in the backend and frontend
+        'receipt/pos_sale_details_receipt.xml',  # needed in the backend and frontend
     ],
     'demo': [
         'data/demo_data.xml',

@@ -859,6 +859,10 @@ export class PosData extends Reactive {
 
         for (const id of ids) {
             const record = this.models[model].get(id);
+            if (!record) {
+                continue;
+            }
+
             delete vals.id;
             record.update(vals, { omitUnknownField: true });
 

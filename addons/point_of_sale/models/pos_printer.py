@@ -36,7 +36,7 @@ class PosPrinter(models.Model):
         string='Printer Type',
         default='epson_epos',
         selection=[
-            ('epson_epos', 'IP address'),
+            ('epson_epos', 'ePoS'),
         ]
     )
     use_type = fields.Selection(selection=[
@@ -45,7 +45,7 @@ class PosPrinter(models.Model):
     ], string="Type", default="preparation")
     product_categories_ids = fields.Many2many('pos.category', 'printer_category_rel', 'printer_id', 'category_id', string='Printed Product Categories')
     pos_config_ids = fields.Many2many('pos.config', 'pos_config_receipt_printer_rel', 'printer_id', 'config_id', string="Point of Sale")
-    epson_printer_ip = fields.Char(
+    printer_ip = fields.Char(
         string='Epson Printer IP Address',
         help=(
             "Local IP address of an Epson receipt printer, or its serial number if the "
@@ -55,7 +55,7 @@ class PosPrinter(models.Model):
     use_lna = fields.Boolean(string="Use Local Network Access")
 
     def copy_data(self, default=None):
-        default = dict(default or {}, pos_config_ids=[(5, 0, 0)], epson_printer_ip="0.0.0.0")
+        default = dict(default or {}, pos_config_ids=[(5, 0, 0)], printer_ip="0.0.0.0")
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for printer, vals in zip(self, vals_list):
@@ -68,16 +68,16 @@ class PosPrinter(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'product_categories_ids', 'printer_type', 'use_type', 'use_lna', 'epson_printer_ip']
+        return ['id', 'name', 'product_categories_ids', 'printer_type', 'use_type', 'use_lna', 'printer_ip']
 
-    @api.constrains('epson_printer_ip')
-    def _constrains_epson_printer_ip(self):
+    @api.constrains('printer_ip')
+    def _constrains_printer_ip(self):
         for record in self:
-            if record.printer_type == 'epson_epos' and not record.epson_printer_ip:
-                raise ValidationError(_("Epson Printer IP Address cannot be empty."))
+            if record.printer_type == 'epson_epos' and not record.printer_ip:
+                raise ValidationError(_("Printer IP Address cannot be empty."))
 
-    @api.onchange("epson_printer_ip")
-    def _onchange_epson_printer_ip(self):
+    @api.onchange("printer_ip")
+    def _onchange_printer_ip(self):
         for rec in self:
-            if rec.epson_printer_ip:
-                rec.epson_printer_ip = format_epson_certified_domain(rec.epson_printer_ip)
+            if rec.printer_ip:
+                rec.printer_ip = format_epson_certified_domain(rec.printer_ip)

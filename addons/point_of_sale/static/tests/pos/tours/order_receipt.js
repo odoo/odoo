@@ -25,8 +25,13 @@ registry.category("web_tour.tours").add("test_receipt_data", {
                     order.setOrderPrices();
                     order.state = "paid";
                     await posmodel.syncAllOrders({ orders: [order] });
-                    const generator = posmodel.getOrderReceiptGenerator(order);
-                    const html = await generator.generateHtml();
+                    const data = posmodel.ticketPrinter.getOrderReceiptData(order);
+                    const iframe = await posmodel.ticketPrinter.generateIframe(
+                        "point_of_sale.pos_order_receipt",
+                        data
+                    );
+                    const doc = iframe.contentDocument || iframe.contentWindow.document;
+                    const html = doc.getElementById("pos-receipt");
 
                     if (!html.innerHTML.includes("This is a test header for receipt")) {
                         throw new Error("Receipt header not found in generated HTML");
@@ -35,7 +40,6 @@ registry.category("web_tour.tours").add("test_receipt_data", {
                         throw new Error("Receipt footer not found in generated HTML");
                     }
 
-                    const data = generator.generateData();
                     try {
                         await posmodel.data.call("pos.order", "get_order_frontend_receipt_data", [
                             [order.id],

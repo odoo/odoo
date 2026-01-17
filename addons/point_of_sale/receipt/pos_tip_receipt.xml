@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="point_of_sale.pos_tip_receipt">
+            <html id="pos-receipt">
+                <head>
+                    <meta charset="UTF-8"></meta>  <!--  Needed for wkhtmltoimage to render UTF-8 characters properly -->
+                    <t t-call="point_of_sale.pos_order_receipt_style" />
+                </head>
+                <body>
+                    <div class="pos-receipt">
+                        <div class="w-100 text-center mb-3" name="logo">
+                            <img t-if="image.get('logo')" t-att-src="image['logo']" style="max-height: 75px" />
+                        </div>
+                        <div class="text-large text-center">
+                            <span t-esc="extra_data['date']" />
+                        </div>
+                        <div class="text-large text-center text-bold">
+                            Tip Receipt
+                        </div>
+                        <div t-if="extra_data.get('name')" class="pos-payment-terminal-receipt mb-2 text-center">
+                            <pre t-esc="extra_data['name']" style="font-family: inherit;" />
+                        </div>
+
+                        <table class="w-100 mb-3 text-large">
+                            <tbody>
+                                <tr>
+                                    <td class="text-start w-70" name="subtotal">Subtotal:</td>
+                                    <td class="text-end w-30"><t t-out="extra_data['prices']['subtotal_amount']" /></td>
+                                </tr>
+                                <tr class="text-bold">
+                                    <td class="text-start w-70" name="total">Total:</td>
+                                    <td class="text-end w-30"><span class="total-amount font-monospace" t-out="extra_data['prices']['total_amount']" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="mb-3 w-100 text-large">
+                            <tbody>
+                                <tr>
+                                    <td class="text-start">Tip:</td>
+                                    <td class="text-end">________________________</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="mb-3 w-100 text-large">
+                            <tbody>
+                                <tr>
+                                    <td class="text-start">Total:</td>
+                                    <td class="text-end">________________________</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="mb-3 w-100 text-large">
+                            <tbody>
+                                <tr>
+                                    <td class="text-start">Signature:</td>
+                                    <td class="text-end">________________________</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <t t-call="point_of_sale.company_info_receipt" />
+                    </div>
+                </body>
+            </html>
+        </template>
+    </data>
+</odoo>

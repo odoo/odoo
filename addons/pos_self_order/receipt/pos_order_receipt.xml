@@ -12,8 +12,7 @@
                         <span t-else="">Delivery</span>
                     </div>
                     <div t-if="order['tracking_number'] and config['self_ordering_mode'] != 'nothing'" class="tracking-number text-center text-bold" style="font-size: 100px; line-height: 130px;" t-out="order['tracking_number']" />
-                    <t t-set="from_self" t-value="order['source'] == 'mobile' or order['source'] == 'kiosk'"/>
-                    <div t-if="from_self and order['table_stand_number']" class="table-tracker text-center">
+                    <div t-if="order['table_stand_number']" class="table-tracker text-center">
                         Table Tracker:
                         <span class="pt-3" t-out="order['table_stand_number']" />
                     </div>

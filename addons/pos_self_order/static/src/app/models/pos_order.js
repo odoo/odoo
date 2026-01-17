@@ -1,5 +1,4 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
-import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 patch(PosOrder.prototype, {
@@ -63,16 +62,6 @@ patch(PosOrder.prototype, {
                 delete this.uiState.lineChanges[uuid];
             }
         }
-    },
-    getOrderData(reprint = false) {
-        const orderData = super.getOrderData(reprint);
-        return {
-            ...orderData,
-            name: this.pos_reference || _t("Self Order"),
-            tracker: this.table_stand_number,
-            tracking_number:
-                this.tracking_number != this.getName() ? orderData.tracking_number : "",
-        };
     },
     serializeForORM(opts = {}) {
         const data = super.serializeForORM(opts);

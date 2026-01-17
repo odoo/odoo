@@ -21,6 +21,7 @@
         "views/res_config_settings_views.xml",
         "views/point_of_sale_dashboard.xml",
         'receipt/pos_order_receipt.xml',
+        'receipt/pos_order_change_receipt.xml',
     ],
     "demo": [
         "data/kiosk_demo_data.xml",
@@ -30,9 +31,6 @@
         'web.assets_unit_tests_setup': [
             ('include', 'pos_self_order.assets'),
             ('remove', 'pos_self_order/static/src/app/root.js'),
-
-            # Remove the conflicting "printer" service to avoid duplicate registration during tests
-            ('remove', 'pos_self_order/static/src/app/services/printer_service.js'),
 
             # Remove CSS files since we're not testing the UI with hoot in PoS self order
             # CSS files make html_editor tests fail
@@ -87,16 +85,14 @@
             "point_of_sale/static/src/app/components/centered_icon/*",
             "point_of_sale/static/src/app/components/epos_templates.xml",
             "point_of_sale/static/src/css/pos_receipts.css",
-            "pos_self_order/static/src/overrides/utils/generate_printer_data.js",
-            "point_of_sale/static/src/app/utils/generate_printer_data.js",
+            "pos_self_order/static/src/overrides/utils/printer/generate_printer_data.js",
             "point_of_sale/static/src/app/utils/printer/*",
-            "point_of_sale/static/src/app/services/printer_service.js",
             'point_of_sale/static/src/app/utils/html-to-image.js',
             'point_of_sale/static/src/app/utils/use_timed_press.js',
-            "point_of_sale/static/src/app/services/render_service.js",
+            'point_of_sale/static/src/app/services/pos_ticket_printer_service.js',
+            'point_of_sale/static/src/app/components/popups/retry_print_popup/**',
             "pos_self_order/static/src/app/**/*",
             "web/static/src/core/utils/render.js",
-            "pos_self_order/static/src/app/store/order_change_receipt_template.xml",
             "account/static/src/helpers/*.js",
             'web/static/src/model/relational_model/operation.js',
             "web/static/src/views/fields/parsers.js",
@@ -113,7 +109,6 @@
             "point_of_sale/static/src/app/utils/devices_identifier_sequence.js",
             "point_of_sale/static/src/app/hooks/hooks.js",
             "point_of_sale/static/src/app/utils/debug-formatter.js",
-            "point_of_sale/static/src/app/store/order_change_receipt_template.xml",
 
             ('include', 'point_of_sale.payment_terminals'),
         ],

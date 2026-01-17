@@ -929,8 +929,10 @@ patch(PosStore.prototype, {
                 noteUpdateTitle: `${course.name} ${_t("fired")}`,
                 printNoteUpdateData: false,
             };
-            this.getOrder().uiState.lastPrints.push(changes);
-            await this.printChanges(this.getOrder(), [changes], false);
+            await this.ticketPrinter.printOrderChanges({
+                order: this.getOrder(),
+                opts: { orderChange: changes },
+            });
         } catch (e) {
             logPosMessage("Store", "printCourseTicket", "Unable to print course", CONSOLE_COLOR, [
                 e,

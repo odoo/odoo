@@ -7,7 +7,6 @@ patch(ControlButtons.prototype, {
     setup() {
         super.setup(...arguments);
         this.alert = useService("alert");
-        this.printer = useService("printer");
     },
     clickTableGuests() {
         this.pos.setCustomerCount();

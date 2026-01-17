@@ -49,7 +49,7 @@
                 <button
                     class="button w-50 btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                     t-on-click="() => doReprintOrder.call()"
-                    t-elif="!ui.isSmall and this.pos.kitchenPrinters.length and this.currentOrder.uiState.lastPrints.length"
+                    t-elif="!ui.isSmall and this.pos.ticketPrinter.hasPreparationPrinters and this.currentOrder.uiState.lastPrints.length"
                     t-att-disabled="doReprintOrder.status === 'loading'">
                     Reprint
                 </button>

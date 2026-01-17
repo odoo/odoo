@@ -101,7 +101,7 @@ export function useAsyncLockedMethod(method) {
  * ```js
  * {
  *   // inside in a component
- *   this.doPrint = useTrackedAsync(() => this.printReceipt())
+ *   this.doPrint = useTrackedAsync(() => this.printOrderReceipt())
  *   this.doPrint.status === 'idle'
  *   this.doPrint.call() // triggers the given async function
  *   this.doPrint.status === 'loading'

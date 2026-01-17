@@ -27,7 +27,6 @@ export class CartPage extends Component {
         });
 
         this.scrollShadow = useScrollShadow(useRef("scrollContainer"));
-        this.renderer = useService("renderer");
     }
 
     get showCancelButton() {

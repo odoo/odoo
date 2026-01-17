@@ -24,6 +24,10 @@ export function mockIndexedDB(_name, { fn }) {
                 this.mockIndexedDB[table][key] = value;
             }
 
+            async deleteDatabase() {
+                this.mockIndexedDB = {};
+            }
+
             async read(table, key) {
                 return this.mockIndexedDB[table]?.[key];
             }

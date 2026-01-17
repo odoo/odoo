@@ -36,6 +36,25 @@ export function logPosMessage(type, functionName, message, color = "#A1A1A1", ar
     posLogger.log(log);
 }
 
+export function logPosImage(image, size = 30) {
+    if (odoo.debug === "assets") {
+        const url = image.toDataURL();
+        const img = new Image();
+        img.src = url;
+        img.onload = function () {
+            const paddX = (this.height / 100) * size;
+            const paddY = (this.width / 100) * size;
+            const style = [
+                "font-size: 1px;",
+                `padding: ${paddX}px ${paddY}px;`,
+                `background: url("${url}") no-repeat;`,
+                "background-size: contain;",
+            ].join(" ");
+            console.log("%c ", style);
+        };
+    }
+}
+
 export async function downloadPosLogs() {
     const logs = await posLogger.getLogs();
     const blob = new Blob([JSON.stringify(logs, null, 2)], {

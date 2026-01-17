@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import qrcode
 from io import BytesIO
 from odoo import models, api, _
 from odoo.tools.misc import format_datetime, format_date
-
-import qrcode
 
 
 class PosOrderReceipt(models.AbstractModel):
@@ -16,10 +15,17 @@ class PosOrderReceipt(models.AbstractModel):
         names = [
             'point_of_sale.pos_order_receipt_header',
             'point_of_sale.pos_order_receipt_style',
+            'point_of_sale.company_info_receipt',
             'point_of_sale.pos_orderline_receipt_information',
             'point_of_sale.pos_orderline_receipt',
             'point_of_sale.pos_order_receipt_footer',
             'point_of_sale.pos_order_receipt',
+            'point_of_sale.pos_order_change_receipt',
+            'point_of_sale.pos_order_change_receipt_line',
+            'point_of_sale.pos_cash_move_receipt',
+            'point_of_sale.pos_tip_receipt',
+            'point_of_sale.pos_sale_details_receipt',
+            'point_of_sale.pos_sale_details_receipt_product_line',
         ]
         return [[name, self.env['ir.qweb']._get_template(name)[1]] for name in names]
 
@@ -152,8 +158,9 @@ class PosOrderReceipt(models.AbstractModel):
                 'module_pos_restaurant': self.config_id.module_pos_restaurant,
             },
             'extra_data': {
+                'vat_label': self.company_id.country_id.vat_label or _("Tax ID"),
                 'preset_datetime': format_datetime(self.env, self.preset_time) if self.preset_time else False,
-                'partner_vat_label': company.country_id.vat_label or _("Tax ID"),
+                'partner_vat_label': self.partner_id.country_id.vat_label if self.partner_id.country_id else _("Tax ID"),
                 'self_invoicing_url': f"{self.env.company.get_base_url()}/pos/ticket",
                 'prices': self._order_receipt_generate_taxe_data(),
                 'cashier_name': self.user_id.name.split(' ')[0] if self.user_id else '',

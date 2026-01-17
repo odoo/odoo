@@ -79,6 +79,36 @@
                             <i class="fa fa-download" aria-hidden="true" /> Download Logs
                         </button>
                     </div>
+                    <div data-tooltip="Print cash receipt" data-tooltip-delay="0">
+                        <button class="btn btn-secondary btn-sm text-nowrap" t-on-click="openCashBox">
+                            <i class="fa fa-money" aria-hidden="true" /> Open cashbox
+                        </button>
+                    </div>
+                    <div data-tooltip="Print cash move receipt" data-tooltip-delay="0">
+                        <button class="btn btn-secondary btn-sm text-nowrap" t-on-click="cashInOutPrint">
+                            <i class="fa fa-print" aria-hidden="true" /> Cash Receipt
+                        </button>
+                    </div>
+                    <div data-tooltip="Print order receipt" data-tooltip-delay="0">
+                        <button class="btn btn-secondary btn-sm text-nowrap" t-on-click="randomOrderPrint">
+                            <i class="fa fa-print" aria-hidden="true" /> Order Receipt
+                        </button>
+                    </div>
+                    <div data-tooltip="Print tip receipt" data-tooltip-delay="0">
+                        <button class="btn btn-secondary btn-sm text-nowrap" t-on-click="printTipReceipt">
+                            <i class="fa fa-print" aria-hidden="true" /> Tip Receipt
+                        </button>
+                    </div>
+                    <div data-tooltip="Print details receipt" data-tooltip-delay="0">
+                        <button class="btn btn-secondary btn-sm text-nowrap" t-on-click="printSaleDetails">
+                            <i class="fa fa-print" aria-hidden="true" /> Details Receipt
+                        </button>
+                    </div>
+                    <div data-tooltip="Print changes receipt" data-tooltip-delay="0">
+                        <button class="btn btn-secondary btn-sm text-nowrap" t-on-click="printOrderChanges">
+                            <i class="fa fa-print" aria-hidden="true" /> Changes Receipt
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -196,9 +196,9 @@ describe("pos_store.js", () => {
     test("changesToOrderNoPrepCateg", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
-        const orderChange = store.changesToOrder(order, new Set([]), false);
-        expect(orderChange.new.length).toBe(0);
-        expect(orderChange.cancelled.length).toBe(0);
+        const generator = store.ticketPrinter.getGenerator({ models: store.models, order });
+        const changes = generator.generatePreparationData(new Set([]), {});
+        expect(changes.length).toBe(0);
     });
 
     test("orderContainsProduct", async () => {
@@ -231,24 +231,13 @@ describe("pos_store.js", () => {
         order.lines[1].setNote('[{"text":"Wait","colorIndex":0}]');
 
         order.lines[0].setCustomerNote("Test Orderline Customer Note");
-        const orderChange = store.changesToOrder(order, new Set([...pos_categories]), false);
-
-        const { orderData, changes } = store.generateOrderChange(
-            order,
-            orderChange,
-            pos_categories,
-            false
-        );
-
-        const receiptsData = await store.generateReceiptsDataToPrint(
-            orderData,
-            changes,
-            orderChange
-        );
-        expect(receiptsData.length).toBe(1);
-        expect(receiptsData[0].changes.title).toBe("NEW");
-        expect(receiptsData[0].changes.data.length).toBe(2);
-        expect(receiptsData[0].changes.data[0]).toEqual({
+        const generator = store.ticketPrinter.getGenerator({ models: store.models, order });
+        const orderChange = generator.generatePreparationData(new Set([...pos_categories]), {});
+        const newChanges = orderChange[0].changes;
+        expect(orderChange.length).toBe(1);
+        expect(newChanges.title).toBe("NEW");
+        expect(newChanges.data.length).toBe(2);
+        expect(newChanges.data[0]).toEqual({
             uuid: order.lines[0].uuid,
             name: "TEST",
             basic_name: "TEST",
@@ -264,7 +253,7 @@ describe("pos_store.js", () => {
             group: undefined,
             isCombo: false,
         });
-        expect(receiptsData[0].changes.data[1]).toEqual({
+        expect(newChanges.data[1]).toEqual({
             uuid: order.lines[1].uuid,
             name: "TEST 2",
             basic_name: "TEST 2",
@@ -314,7 +303,7 @@ describe("pos_store.js", () => {
         };
 
         const filtered = filterChangeByCategories(
-            allowedCategories,
+            new Set(allowedCategories),
             currentOrderChange,
             store.models
         );
@@ -343,28 +332,6 @@ describe("pos_store.js", () => {
         expect(deletedOrders).toBe(true);
         openOrders = store.getOpenOrders();
         expect(openOrders.length).toBe(0);
-    });
-
-    test("getOrderData", async () => {
-        const store = await setupPosEnv();
-        const order = await getFilledOrder(store);
-        const orderData = order.getOrderData();
-        expect(orderData).toEqual({
-            reprint: false,
-            pos_reference: "1001",
-            config_name: "Hoot",
-            time: "10:30",
-            tracking_number: "1001",
-            preset_time: false,
-            preset_name: "In",
-            employee_name: "Administrator",
-            internal_note: "",
-            general_customer_note: "",
-            changes: {
-                title: "",
-                data: [],
-            },
-        });
     });
 
     test("productsToDisplay", async () => {
