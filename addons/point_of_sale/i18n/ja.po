@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2026-01-08 04:19+0000\n"
+"POT-Creation-Date: 2026-01-15 18:36+0000\n"
+"PO-Revision-Date: 2026-01-15 08:07+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/ja/>\n"
@@ -1399,7 +1399,7 @@ msgstr "銀行支払"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "銀行取引明細書内容"
+msgstr "銀行取引明細行"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2084,6 +2084,7 @@ msgstr "顧客"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3205,6 +3206,12 @@ msgid "Display Name"
 msgstr "表示名"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Display QR"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Display and update your products information through electronic price tags"
@@ -3669,6 +3676,12 @@ msgid "For imprecise industrial touchscreens."
 msgstr "不正確な産業用タッチスクリーン用。"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force Cancel"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
@@ -3680,6 +3693,12 @@ msgstr "セッション強制終了"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force Done"
 msgstr "強制的に完了"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force cancel"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3744,7 +3763,7 @@ msgstr "完全同期:"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__invoice_status__invoiced
 msgid "Fully Invoiced"
-msgstr "完全請求済"
+msgstr "全額請求済"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4053,7 +4072,7 @@ msgstr "チェックした場合は、新しいメッセージに注意が必要
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_has_error
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "選択されている場合、一部のメッセージで配信エラーが発生しています。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refunded_orderline_id
@@ -4691,7 +4710,8 @@ msgstr "リンク済POS設定"
 msgid ""
 "List of account moves created when this POS order was reversed and invoiced "
 "after session close."
-msgstr "このPOSオーダをセッション終了後に取消・請求処理した際に作成された仕訳の一覧で"
+msgstr ""
+"このPOSオーダをセッション終了後に取消・請求処理した際に作成された仕訳の一覧で"
 "す。"
 
 #. module: point_of_sale
@@ -4724,7 +4744,8 @@ msgstr "読込中..."
 msgid ""
 "Local IP address of an Epson receipt printer, or its serial number if the "
 "'Automatic Certificate Update' option is enabled in the printer settings."
-msgstr "エプソン領収書プリンタのローカルIPアドレス、またはプリンタ設定で「自動証明書"
+msgstr ""
+"エプソン領収書プリンタのローカルIPアドレス、またはプリンタ設定で「自動証明書"
 "更新」オプションが有効になっている場合のシリアル番号。"
 
 #. module: point_of_sale
@@ -4735,9 +4756,9 @@ msgid ""
 "Chromium-based. Please use a Chromium-based browser to benefit from this "
 "feature."
 msgstr ""
-"ローカルネットワークアクセス設定は有効化されていますが、お使いのブラウザはChr"
-"omiumベースではありません。この機能をご利用いただくには、Chromiumベースのブラ"
-"ウザをご利用ください。"
+"ローカルネットワークアクセス設定は有効化されていますが、お使いのブラウザは"
+"Chromiumベースではありません。この機能をご利用いただくには、Chromiumベースの"
+"ブラウザをご利用ください。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5508,7 +5529,8 @@ msgstr "オンライン予約"
 msgid ""
 "Online payment, delivery payment, terminal payment, and methods that require "
 "customer identification are not supported for fast payment validation."
-msgstr "オンライン決済、配送時決済、端末決済、および顧客の本人確認が必要な支払い方法"
+msgstr ""
+"オンライン決済、配送時決済、端末決済、および顧客の本人確認が必要な支払い方法"
 "は、クイック支払いの検証には対応していません。"
 
 #. module: point_of_sale
@@ -6398,7 +6420,7 @@ msgstr "POS設定"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.js:0
 msgid "PoS Customer Display opened in a new window"
 msgstr "PoS顧客ディスプレイが新しいウィンドウで開かれました"
 
@@ -7813,6 +7835,12 @@ msgstr "スキャン"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Scan QR"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Scan a barcode to create automatically, or load our sample data."
 msgstr ""
@@ -8470,6 +8498,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Subtotal"
 msgstr "小計"
 
@@ -8609,6 +8638,7 @@ msgstr "税込価格"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_tax
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_action_tax_form_open
@@ -8770,8 +8800,8 @@ msgid ""
 "as payment amount instead of %(paidAmount)s."
 msgstr ""
 "取引を確定するには、支払い明細行の金額を丸める必要があります。\n"
-"丸めの精度は %(rounding)s のため、支払い金額は %(expectedAmount)s "
-"(%(paidAmount)s ではなく)に設定してください。"
+"丸めの精度は %(rounding)s のため、支払い金額は %(expectedAmount)s (%"
+"(paidAmount)s ではなく)に設定してください。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_brand
@@ -9227,7 +9257,8 @@ msgstr "取引は端末上でQFPayによって処理されます。"
 msgid ""
 "The transactions are processed by QFPay. Set your QFPay credentials on the "
 "related payment method."
-msgstr "取引はQFPayによって処理されます。関連する支払い方法にQFPayの認証情報を設定し"
+msgstr ""
+"取引はQFPayによって処理されます。関連する支払い方法にQFPayの認証情報を設定し"
 "てください。"
 
 #. module: point_of_sale
@@ -9386,6 +9417,12 @@ msgid ""
 msgstr ""
 "この現金支払方法はすでに別のPOSで使用されています。\n"
 "このPOS用に新しい現金支払方法を作成する必要があります。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "This device"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -9635,7 +9672,8 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid ""
 "To enable invoice creation, please add a journal for it in the settings."
-msgstr "請求書を作成できるようにするには、設定で請求書用の仕訳帳を追加してください。"
+msgstr ""
+"請求書を作成できるようにするには、設定で請求書用の仕訳帳を追加してください。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -10262,6 +10300,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid ""
+"You can either use it on this device or scan the QR code to display it on "
+"another device"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 msgid "You can not change the %s of the refund order."
 msgstr "返金オーダの %s は変更できません。"
@@ -10304,7 +10350,8 @@ msgstr "以下のオプションのいずれかを選択することで、更新
 msgid ""
 "You can't reset this invoice to draft because the POS session is still open. "
 "Please close the ongoing session first, then try again."
-msgstr "この請求書をドラフトに戻すことはできません。POSセッションがまだ開いているため"
+msgstr ""
+"この請求書をドラフトに戻すことはできません。POSセッションがまだ開いているため"
 "です。まず進行中のセッションを閉じてから、再度お試しください。"
 
 #. module: point_of_sale
