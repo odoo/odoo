@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_crm
-# 
+#
 # Translators:
 # Timos Zacharatos <kokkinopioupiou@hotmail.com>, 2024
 # Martin Trigaux, 2024
 # Kostas Goutoudis <goutoudis@gmail.com>, 2024
 # Charalampos Loukas, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Charalampos Loukas, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: event_crm
@@ -117,6 +117,11 @@ msgid "Create a Lead Generation Rule"
 msgstr ""
 
 #. module: event_crm
+#: model:ir.model,website_form_label:event_crm.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_ids
 msgid "Created Leads"
 msgstr ""
@@ -150,8 +155,11 @@ msgid "Default lead type when this rule is applied."
 msgstr ""
 
 #. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:event_crm.field_event_event__display_name
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__display_name
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__display_name
+#: model:ir.model.fields,field_description:event_crm.field_event_registration__display_name
 msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
 
@@ -217,8 +225,8 @@ msgstr ""
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
 msgid ""
-"Filter the attendees to include those of this specific event. If not set, no"
-" event restriction will be applied."
+"Filter the attendees to include those of this specific event. If not set, no "
+"event restriction will be applied."
 msgstr ""
 
 #. module: event_crm
@@ -238,8 +246,11 @@ msgid "Got it! We've noted your request. Your leads will be created soon!"
 msgstr ""
 
 #. module: event_crm
+#: model:ir.model.fields,field_description:event_crm.field_crm_lead__id
+#: model:ir.model.fields,field_description:event_crm.field_event_event__id
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__id
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__id
+#: model:ir.model.fields,field_description:event_crm.field_event_registration__id
 msgid "ID"
 msgstr "Κωδικός"
 
@@ -259,6 +270,7 @@ msgid "Last Updated on"
 msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: event_crm
+#: model:ir.model,name:event_crm.model_crm_lead
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__lead
 msgid "Lead"
 msgstr "Σύσταση"
@@ -293,11 +305,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_type
 msgid "Lead Type"
 msgstr ""
-
-#. module: event_crm
-#: model:ir.model,name:event_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Σύσταση/Ευκαιρία"
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.crm_lead_action_from_event
@@ -402,7 +409,8 @@ msgstr ""
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__company_id
 msgid ""
-"Restrict the trigger of this rule to events belonging to a specific company.\n"
+"Restrict the trigger of this rule to events belonging to a specific "
+"company.\n"
 "If not set, no company restriction will be applied."
 msgstr ""
 
@@ -480,6 +488,11 @@ msgid "Updated registrations"
 msgstr ""
 
 #. module: event_crm
+#: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
+msgid "Visible to all"
+msgstr ""
+
+#. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_trigger
 msgid "When"
 msgstr "Πότε"
@@ -499,3 +512,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "e.g. B2B Fairs"
 msgstr ""
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "Σύσταση/Ευκαιρία"

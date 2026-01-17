@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_sale
-# 
+#
 # Translators:
 # Petko Karamotchev, 2024
 # Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2024
@@ -18,26 +18,20 @@
 # Martin Trigaux, 2024
 # Albena Mincheva <albena_vicheva@abv.bg>, 2024
 # Margarita Katzeva, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Margarita Katzeva, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: event_sale
-#. odoo-python
-#: code:addons/event_sale/models/sale_order.py:0
-msgid "%(event_name)s - Tickets"
-msgstr ""
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
@@ -196,10 +190,16 @@ msgid "Discard"
 msgstr "Отхвърлете"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event__display_name
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__display_name
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__display_name
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__display_name
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__display_name
+#: model:ir.model.fields,field_description:event_sale.field_product_template__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
+#: model:ir.model.fields,field_description:event_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__display_name
 msgid "Display Name"
 msgstr "Име за показване"
 
@@ -297,17 +297,10 @@ msgid "Exception:"
 msgstr "Изключение:"
 
 #. module: event_sale
-#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__free
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__free
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Free"
 msgstr "Безплатен"
-
-#. module: event_sale
-#. odoo-python
-#: code:addons/event_sale/models/sale_order.py:0
-msgid "Get Your Tickets"
-msgstr "Взимане на билетите"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -320,10 +313,16 @@ msgid "Has Available Tickets"
 msgstr "Има свободни билети"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event__id
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__id
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__id
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__id
+#: model:ir.model.fields,field_description:event_sale.field_product_template__id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__id
 msgid "ID"
 msgstr "ID"
 
@@ -331,7 +330,8 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/event_sale/wizard/event_configurator.py:0
 msgid "Invalid ticket choice \"%(ticket_name)s\" for event \"%(event_name)s\"."
-msgstr "Невалиден избор на билет \"%(ticket_name)s\" за събитие \"%(event_name)s\"."
+msgstr ""
+"Невалиден избор на билет \"%(ticket_name)s\" за събитие \"%(event_name)s\"."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__invoice_partner_id
@@ -378,9 +378,7 @@ msgid "Non-free tickets"
 msgstr "Билети на цена"
 
 #. module: event_sale
-#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__to_pay
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__to_pay
-#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 msgid "Not Sold"
 msgstr "Не е продадено"
 
@@ -509,19 +507,14 @@ msgid "Sale Order Status"
 msgstr "Статус на поръчката за продажба"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_status
-msgid "Sale Status"
-msgstr "Статус на продажба"
-
-#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Sales"
 msgstr "Продажби"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_subtotal
-msgid "Sales (Tax Excluded)"
-msgstr "Продажби (без данъци)"
+#: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_total
+msgid "Sales (Tax Included)"
+msgstr ""
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
@@ -549,9 +542,7 @@ msgid "Select an Event"
 msgstr "Избор на събитие"
 
 #. module: event_sale
-#: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__sold
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__sold
-#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Sold"
 msgstr "Продаден"
@@ -601,11 +592,6 @@ msgid "Total sales for this event"
 msgstr "Общи продажби за това събитие"
 
 #. module: event_sale
-#: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
-msgid "Transaction"
-msgstr "Транзакция"
-
-#. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__draft
 msgid "Unconfirmed"
 msgstr "Непотвърден"
@@ -613,12 +599,14 @@ msgstr "Непотвърден"
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_registration__state
 msgid ""
-"Unconfirmed: registrations in a pending state waiting for an action (specific case, notably with sale status)\n"
+"Unconfirmed: registrations in a pending state waiting for an action "
+"(specific case, notably with sale status)\n"
 "Registered: registrations considered taken by a client\n"
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
-"Непотвърдени: регистрации в чакащо състояние, чакащи действие (конкретен случай, по-специално със статус на продажба)\n"
+"Непотвърдени: регистрации в чакащо състояние, чакащи действие (конкретен "
+"случай, по-специално със статус на продажба)\n"
 "Регистрирани: регистрации, считани за направени от клиент\n"
 "Присъствали: регистрации, за които присъстващият е присъствал на събитието\n"
 "Анулирани: регистрациите са анулирани ръчно"
@@ -652,3 +640,15 @@ msgstr "предоставяне на подробности за присъст
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "to"
 msgstr "до"
+
+#~ msgid "Get Your Tickets"
+#~ msgstr "Взимане на билетите"
+
+#~ msgid "Sale Status"
+#~ msgstr "Статус на продажба"
+
+#~ msgid "Sales (Tax Excluded)"
+#~ msgstr "Продажби (без данъци)"
+
+#~ msgid "Transaction"
+#~ msgstr "Транзакция"

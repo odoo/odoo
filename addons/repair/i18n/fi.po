@@ -1,17 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* repair
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Jessica Jakara, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 20:36+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-08-05 19:58+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -53,13 +53,15 @@ msgstr "(<i>Poista</i>)"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__state
 msgid ""
-"* The 'New' status is used when a user is encoding a new and unconfirmed repair order.\n"
+"* The 'New' status is used when a user is encoding a new and unconfirmed "
+"repair order.\n"
 "* The 'Confirmed' status is used when a user confirms the repair order.\n"
 "* The 'Under Repair' status is used when the repair is ongoing.\n"
 "* The 'Repaired' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
-"* Tilaa \"Uusi\" käytetään, kun käyttäjä koodaa uutta ja vahvistamatonta korjaustilausta.\n"
+"* Tilaa \"Uusi\" käytetään, kun käyttäjä koodaa uutta ja vahvistamatonta "
+"korjaustilausta.\n"
 "* Tilaa \"Vahvistettu\" käytetään, kun käyttäjä vahvistaa korjaustilauksen.\n"
 "* Tilaa \"Korjauksessa\" käytetään, kun korjaus on käynnissä.\n"
 "* 'Korjattu'-tilaa käytetään, kun korjaus on valmis.\n"
@@ -241,12 +243,12 @@ msgstr "Mikä tahansa osa on myöhässä"
 #: code:addons/repair/models/product.py:0
 msgid ""
 "As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
-"been used for this product, the change of unit of measure can not be done.If"
-" you want to change it, please archive the product and create a new one."
+"been used for this product, the change of unit of measure can not be done.If "
+"you want to change it, please archive the product and create a new one."
 msgstr ""
-"Koska tätä tuotetta varten on jo käytetty muita mittayksiköitä (esim. "
-"%(problem_uom)s) mittayksikön %(uom)s sijasta, mittayksikön muutosta ei "
-"voida tehdä. Jos haluat muuttaa sen, arkistoi tuote ja luo uusi."
+"Koska tätä tuotetta varten on jo käytetty muita mittayksiköitä (esim. %"
+"(problem_uom)s) mittayksikön %(uom)s sijasta, mittayksikön muutosta ei voida "
+"tehdä. Jos haluat muuttaa sen, arkistoi tuote ja luo uusi."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
@@ -597,7 +599,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
-"                add or replace and record the time you spent on the different\n"
+"                add or replace and record the time you spent on the "
+"different\n"
 "                operations."
 msgstr ""
 "Korjaustilauksessa voit eritellä poistettavat osat yksityiskohtaisesti,\n"
@@ -836,8 +839,7 @@ msgstr "Toiminnon tyyppi"
 
 #. module: repair
 #. odoo-python
-#: code:addons/repair/models/product.py:0
-#: code:addons/repair/models/repair.py:0
+#: code:addons/repair/models/product.py:0 code:addons/repair/models/repair.py:0
 msgid "Operation not supported"
 msgstr "Toiminto ei ole tuettu"
 
@@ -1379,8 +1381,8 @@ msgid ""
 "This is the default recycle destination location when you create a repair "
 "order with this operation type."
 msgstr ""
-"Tämä on kierrätyksen oletuskohteen sijainti, kun luot korjaustilauksen tällä"
-" toimintotyypillä."
+"Tämä on kierrätyksen oletuskohteen sijainti, kun luot korjaustilauksen tällä "
+"toimintotyypillä."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_remove_location_dest_id
@@ -1394,8 +1396,8 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_src_id
 msgid ""
-"This is the default source location for the product to be repaired in repair"
-" orders with this operation type."
+"This is the default source location for the product to be repaired in repair "
+"orders with this operation type."
 msgstr ""
 "Tämä on korjattavan tuotteen oletusarvoinen lähdeluettelo tämän "
 "toimintatyypin korjaustilauksissa."
@@ -1553,12 +1555,12 @@ msgstr "Eilen"
 #: code:addons/repair/models/stock_lot.py:0
 msgid ""
 "You are not allowed to create a lot or serial number with this operation "
-"type. To change this, go on the operation type and tick the box \"Create New"
-" Lots/Serial Numbers\"."
+"type. To change this, go on the operation type and tick the box \"Create New "
+"Lots/Serial Numbers\"."
 msgstr ""
 "Et voi luoda erää tai sarjanumeroa tähän toimintatyyppiin. Jos haluat "
-"muuttaa tätä, siirry toimintatyyppiin ja merkitse ruutu \"Luo uudet kohteet "
-"/ sarjanumerot\"."
+"muuttaa tätä, siirry toimintatyyppiin ja merkitse ruutu \"Luo uudet "
+"kohteet / sarjanumerot\"."
 
 #. module: repair
 #. odoo-python
@@ -1576,11 +1578,13 @@ msgstr "Et voi peruuttaa jo valmistunutta korjaustilausta"
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid ""
-"You cannot create a quotation for a repair order that is already linked to an existing sale order.\n"
+"You cannot create a quotation for a repair order that is already linked to "
+"an existing sale order.\n"
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
-"Et voi luoda tarjousta korjaustilaukselle, joka on jo linkitetty olemassa olevaan myyntitilaukseen.\n"
+"Et voi luoda tarjousta korjaustilaukselle, joka on jo linkitetty olemassa "
+"olevaan myyntitilaukseen.\n"
 "Kyseessä olevat korjaustilaukset:\n"
 "%(ref_str)s"
 
@@ -1588,11 +1592,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid ""
-"You need to define a customer for a repair order in order to create an associated quotation.\n"
+"You need to define a customer for a repair order in order to create an "
+"associated quotation.\n"
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
-"Sinun on määriteltävä asiakas korjaustilaukselle, jotta voit luoda siihen liittyvän tarjouksen.\n"
+"Sinun on määriteltävä asiakas korjaustilaukselle, jotta voit luoda siihen "
+"liittyvän tarjouksen.\n"
 "Korjaustilaukset:\n"
 "%(ref_str)s"
 

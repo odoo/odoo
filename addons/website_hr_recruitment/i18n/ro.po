@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-11-22 13:09+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -53,12 +53,6 @@ msgstr ""
 #: code:addons/website_hr_recruitment/controllers/main.py:0
 msgid " In case of issue, contact %(contact_infos)s"
 msgstr " În caz de problemă, contactați %(contact_infos)s"
-
-#. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
-msgid "%s's Application"
-msgstr "Aplicarea lui %s"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -122,17 +116,19 @@ msgstr "<span class=\"fst-italic\">Nu este specificată nicio adresă</span>"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid ""
 "<span class=\"h5 fw-light\">In the meantime,</span><br/>\n"
-"                                            <span class=\"h3 mt8 mb32 fw-bold\">Take a look around our website:</span>"
+"                                            <span class=\"h3 mt8 mb32 fw-"
+"bold\">Take a look around our website:</span>"
 msgstr ""
 "<span class=\"h5 fw-light\">Între timp,</span><br/>\n"
-"                                            <span class=\"h3 mt8 mb32 fw-bold\">Aruncați o privire pe site-ul nostru:</span>"
+"                                            <span class=\"h3 mt8 mb32 fw-"
+"bold\">Aruncați o privire pe site-ul nostru:</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "<span class=\"navbar-brand h5 my-0 me-sm-auto\">Our Job Offers</span>"
 msgstr ""
-"<span class=\"navbar-brand h5 my-0 me-sm-auto\">Oferte de locuri de "
-"muncă</span>"
+"<span class=\"navbar-brand h5 my-0 me-sm-auto\">Oferte de locuri de muncă</"
+"span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -163,16 +159,19 @@ msgstr "<span class=\"s_website_form_label_content\">Introducere scurtă</span>"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid ""
 "<span class=\"s_website_form_label_content\">Your Email</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 "<span class=\"s_website_form_label_content\">Email-ul tău</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid ""
 "<span class=\"s_website_form_label_content\">Your Name</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 "<span class=\"s_website_form_label_content\">Numele dumneavoastră</span>\n"
 "<span class=\"s_website_form_mark\"> *</span>"
@@ -181,10 +180,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid ""
 "<span class=\"s_website_form_label_content\">Your Phone Number</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 msgstr ""
 "<span class=\"s_website_form_label_content\">Numărul tău de telefon</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -285,11 +286,11 @@ msgstr "Toate tipurile"
 #. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
 msgid ""
-"An application already exists for %(value)s. Duplicates might be rejected. "
-"%(recruiter_contact)s"
+"An application already exists for %(value)s. Duplicates might be rejected. %"
+"(recruiter_contact)s"
 msgstr ""
-"O aplicație există deja pentru %(value)s. Duplicatele pot fi respinse. "
-"%(recruiter_contact)s"
+"O aplicație există deja pentru %(value)s. Duplicatele pot fi respinse. %"
+"(recruiter_contact)s"
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_applicant
@@ -318,27 +319,44 @@ msgid "Apply Now!"
 msgstr "Aplică acum!"
 
 #. module: website_hr_recruitment
+#: model:ir.model,website_form_label:website_hr_recruitment.model_hr_applicant
+msgid "Apply for a Job"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid ""
 "As an employee of our company, you will <b>collaborate with each department\n"
-"                        to create and deploy disruptive products.</b> Come work at a growing company\n"
-"                        that offers great benefits with opportunities to moving forward and learn\n"
-"                        alongside accomplished leaders. We're seeking an experienced and outstanding\n"
+"                        to create and deploy disruptive products.</b> Come "
+"work at a growing company\n"
+"                        that offers great benefits with opportunities to "
+"moving forward and learn\n"
+"                        alongside accomplished leaders. We're seeking an "
+"experienced and outstanding\n"
 "                        member of staff.\n"
 "                        <br/><br/>\n"
-"                        This position is both <b>creative and rigorous</b> by nature you need to think\n"
-"                        outside the box. We expect the candidate to be proactive and have a \"get it done\"\n"
-"                        spirit. To be successful, you will have solid solving problem skills."
+"                        This position is both <b>creative and rigorous</b> "
+"by nature you need to think\n"
+"                        outside the box. We expect the candidate to be "
+"proactive and have a \"get it done\"\n"
+"                        spirit. To be successful, you will have solid "
+"solving problem skills."
 msgstr ""
 "Ca angajat al companiei noastre, veți <b>colabora cu fiecare departament\n"
-"                        pentru a crea și să implementa produse disruptive.</b> Vino să lucrezi la o companie în creștere\n"
-"                        care oferă beneficii excelente cu oportunități de a avansa și de a învăța\n"
-"                        alături de lideri desăvârșiți. Căutăm o experiență remarcabilă\n"
+"                        pentru a crea și să implementa produse disruptive.</"
+"b> Vino să lucrezi la o companie în creștere\n"
+"                        care oferă beneficii excelente cu oportunități de a "
+"avansa și de a învăța\n"
+"                        alături de lideri desăvârșiți. Căutăm o experiență "
+"remarcabilă\n"
 "                        în noul membru.\n"
 "                        <br/><br/>\n"
-"                        Această poziție este atât <b>creativă și riguroasă</b> prin natura ta trebuie să gândești\n"
-"                        în afara cutiei. Ne așteptăm ca candidatul să fie proactiv și să aibă un spirit de\n"
-"                        \"putem s-o facem\". Pentru a avea succes, trebuie să aveți abilități solide de rezolvare a problemelor."
+"                        Această poziție este atât <b>creativă și riguroasă</"
+"b> prin natura ta trebuie să gândești\n"
+"                        în afara cutiei. Ne așteptăm ca candidatul să fie "
+"proactiv și să aibă un spirit de\n"
+"                        \"putem s-o facem\". Pentru a avea succes, trebuie "
+"să aveți abilități solide de rezolvare a problemelor."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -396,11 +414,10 @@ msgstr "Creați conținut care va ajuta utilizatorii noștri zilnic"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid ""
-"Create new job pages from the <strong>+ <i>New</i></strong> top-right "
-"button."
+"Create new job pages from the <strong>+ <i>New</i></strong> top-right button."
 msgstr ""
-"Creați pagini noi de locuri de muncă cu butonul <strong>+ "
-"<i>Nou</i></strong> din dreapta-sus."
+"Creați pagini noi de locuri de muncă cu butonul <strong>+ <i>Nou</i></"
+"strong> din dreapta-sus."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -430,7 +447,11 @@ msgid "Discover our products."
 msgstr "Descoperă produsele noastre."
 
 #. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_applicant__display_name
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_department__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__display_name
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website__display_name
 msgid "Display Name"
 msgstr "Nume afișat"
 
@@ -438,10 +459,13 @@ msgstr "Nume afișat"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid ""
 "Each employee has a chance to see the impact of his work.\n"
-"                    You can make a real contribution to the success of the company.\n"
+"                    You can make a real contribution to the success of the "
+"company.\n"
 "                    <br/>\n"
-"                    Several activities are often organized all over the year, such as weekly\n"
-"                    sports sessions, team building events, monthly drink, and much more"
+"                    Several activities are often organized all over the "
+"year, such as weekly\n"
+"                    sports sessions, team building events, monthly drink, "
+"and much more"
 msgstr ""
 "Fiecare angajat are șansa să vadă impactul muncii sale.\n"
 "                    Poți aduce o contribuție reală la succesul companiei.\n"
@@ -512,24 +536,39 @@ msgstr "Acasă"
 msgid ""
 "I usually <strong>answer applications within 3 days</strong>.\n"
 "                                                <br/><br/>\n"
-"                                                The next step is either a call or a meeting in our offices.\n"
+"                                                The next step is either a "
+"call or a meeting in our offices.\n"
 "                                                <br/><br/>\n"
-"                                                Feel free to <strong>contact me if you want a faster\n"
-"                                                feedback</strong> or if you don't get news from me\n"
+"                                                Feel free to <strong>contact "
+"me if you want a faster\n"
+"                                                feedback</strong> or if you "
+"don't get news from me\n"
 "                                                quickly enough."
 msgstr ""
 "De obicei <strong>răspund aplicărilor în termen de 3 zile</strong>.\n"
 "                                                <br/><br/>\n"
-"                                                Următorul pas este fie un apel telefonic, fie o întâlnire în birourile noastre.\n"
+"                                                Următorul pas este fie un "
+"apel telefonic, fie o întâlnire în birourile noastre.\n"
 "                                                <br/><br/>\n"
-"                                                Nu ezitați să <strong>mă contactați dacă doriți un feedback\n"
-"                                                mai repede</strong> sau dacă nu primiți vești de la mine\n"
+"                                                Nu ezitați să <strong>mă "
+"contactați dacă doriți un feedback\n"
+"                                                mai repede</strong> sau dacă "
+"nu primiți vești de la mine\n"
 "                                                suficient de repede."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "I'm feeling lucky"
 msgstr "Mă simt norocos"
+
+#. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_applicant__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_department__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__id
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_website__id
+msgid "ID"
+msgstr ""
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -647,8 +686,8 @@ msgstr "Nu este specificată nicio adresă"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "No dumb managers, no stupid tools to use, no rigid working hours"
 msgstr ""
-"Fără manageri proști, fără instrumente stupide de folosit, fără ore de lucru"
-" rigide"
+"Fără manageri proști, fără instrumente stupide de folosit, fără ore de lucru "
+"rigide"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -662,12 +701,6 @@ msgid ""
 msgstr ""
 "Fără pierderi de timp în procesele de afaceri, responsabilități reale și "
 "autonomie"
-
-#. module: website_hr_recruitment
-#. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.xml:0
-msgid "Not Published"
-msgstr "Nepublicat"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
@@ -734,8 +767,6 @@ msgid "Products"
 msgstr "Produse"
 
 #. module: website_hr_recruitment
-#. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.xml:0
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_search_view_inherit
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_tree_inherit_website
@@ -755,8 +786,7 @@ msgstr "Calificați nevoile clientului"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Real responsibilities and challenges in a fast evolving company"
-msgstr ""
-"Responsabilități și provocări reale într-o companie cu evoluție rapidă"
+msgstr "Responsabilități și provocări reale într-o companie cu evoluție rapidă"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -813,6 +843,12 @@ msgid "Short Introduction"
 msgstr "Scurtă introducere"
 
 #. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid "Short introduction from applicant"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
 msgid "Sidebar"
 msgstr "Bară laterală"
@@ -838,10 +874,14 @@ msgid "Technical Expertise"
 msgstr "Expertiză tehnică"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_url
-msgid "The full URL to access the document through the website."
+#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
 msgstr ""
-"URL-ul complet pentru accesarea documentului prin intermediul site-ului web."
+
+#. module: website_hr_recruitment
+#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_url
+msgid "The full relative URL to access the document through the website."
+msgstr ""
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -857,7 +897,7 @@ msgstr "Oferta de muncă a fost închisă."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
-#: code:addons/website_hr_recruitment/static/src/js/website_hr_applicant_form.js:0
+#: code:addons/website_hr_recruitment/static/src/interactions/hr_recruitment_form.js:0
 msgid "The profile that you gave us doesn't seems like a linkedin profile"
 msgstr "Profilul pe care ni l-ați furnizat nu pare a fi un profil LinkedIn"
 
@@ -865,10 +905,12 @@ msgstr "Profilul pe care ni l-ați furnizat nu pare a fi un profil LinkedIn"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid ""
 "There are currently no open job opportunities,<br class=\"mb-2\"/>\n"
-"                                            but feel free to <span class=\"fw-bold\">contact us</span> for a spontaneous application."
+"                                            but feel free to <span "
+"class=\"fw-bold\">contact us</span> for a spontaneous application."
 msgstr ""
 "În prezent nu există oportunități de angajare deschise,<br class=\"mb-2\"/>\n"
-"                                            dar nu ezitați să <span class=\"fw-bold\">ne contactați</span> pentru o aplicare spontană."
+"                                            dar nu ezitați să <span "
+"class=\"fw-bold\">ne contactați</span> pentru o aplicare spontană."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -904,11 +946,15 @@ msgstr "Vizibil pe site-ul curent"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid ""
-"We are a team of passionate people whose goal is to improve everyone's life through disruptive products.\n"
-"                                We build great products to solve your business problems."
+"We are a team of passionate people whose goal is to improve everyone's life "
+"through disruptive products.\n"
+"                                We build great products to solve your "
+"business problems."
 msgstr ""
-"Suntem o echipă de oameni pasionați al căror scop este de a îmbunătăți viața tuturor prin intermediul unor produse revoluționare.\n"
-"                                Construim produse extraordinare pentru a vă rezolva problemele de afaceri."
+"Suntem o echipă de oameni pasionați al căror scop este de a îmbunătăți viața "
+"tuturor prin intermediul unor produse revoluționare.\n"
+"                                Construim produse extraordinare pentru a vă "
+"rezolva problemele de afaceri."
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -936,6 +982,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_id
 msgid "Website"
 msgstr "Site web"
+
+#. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_absolute_url
+msgid "Website Absolute URL"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
@@ -1006,7 +1057,8 @@ msgid ""
 "                                    We usually respond within 3 days..."
 msgstr ""
 "Aplicația dvs. a fost postată cu succes,<br class=\"mb-2\"/>\n"
-"                                    De obicei, răspundem în termen de 3 zile..."
+"                                    De obicei, răspundem în termen de 3 "
+"zile..."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -1051,3 +1103,14 @@ msgstr "poziții libere"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "unpublished"
 msgstr "nepublicat"
+
+#~ msgid "%s's Application"
+#~ msgstr "Aplicarea lui %s"
+
+#~ msgid "Not Published"
+#~ msgstr "Nepublicat"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr ""
+#~ "URL-ul complet pentru accesarea documentului prin intermediul site-ului "
+#~ "web."

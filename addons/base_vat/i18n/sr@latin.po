@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-11-22 13:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
@@ -33,8 +33,20 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "17291716060 (NIN) or 1729171602 (VKN)"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "1792060346001 or 1792060346"
 msgstr "1792060346001 ili 1792060346"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "3101012009"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -92,6 +104,11 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: base_vat
+#: model:ir.model,website_form_label:base_vat.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "DE123456788 or 12/345/67890"
@@ -104,10 +121,25 @@ msgid "DO1-01-85004-3 or 101850043"
 msgstr "DO1-01-85004-3 ili 101850043"
 
 #. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_account_fiscal_position__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,help:base_vat.field_res_users__vies_valid
 msgid "European VAT numbers are automatically checked on the VIES database."
 msgstr "Evropski PIB brojevi se automatski proveravaju u VIES bazi podataka."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
@@ -125,6 +157,14 @@ msgstr "GB123456782 ili XI123456782"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "HU12345676 or 12345678-1-11 or 8071592153"
 msgstr "HU12345676 ili 12345678-1-11 ili 8071592153"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_account_fiscal_position__id
+#: model:ir.model.fields,field_description:base_vat.field_res_company__id
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__id
+msgid "ID"
+msgstr ""
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -153,12 +193,6 @@ msgstr "MXGODE561231GR8 ili GODE561231GR8"
 #: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
 msgid "Perform Vies Validation"
 msgstr "Izvrši Vies validaciju"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)"
-msgstr "TR1234567890 (VERGINO) ili TR17291716060 (TCKIMLIKNO)"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
@@ -197,11 +231,17 @@ msgstr "PIB broj %s nije mogao biti interpretiran od strane VIES servera."
 #. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 msgid ""
-"The country detected for this foreign VAT number does not match the one set "
-"on this fiscal position."
+"The country detected for this foreign VAT number does not match any of the "
+"countries composing the country group set on this fiscal position."
 msgstr ""
-"Zemlja otkrivena za ovaj inostrani PIB broj ne podudara se sa onom podešenom "
-"za ovu fiskalnu poziciju."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a "
+"country to the fiscal position or set a country group"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -237,9 +277,10 @@ msgid "Vies Vat To Check"
 msgstr "Vies PIB za proveru"
 
 #. module: base_vat
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
-msgid "e.g. BE0477472701"
-msgstr "npr. BE0477472701"
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -258,3 +299,16 @@ msgstr "fiskalna pozicija [%s]"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "partner [%s]"
+
+#~ msgid "TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)"
+#~ msgstr "TR1234567890 (VERGINO) ili TR17291716060 (TCKIMLIKNO)"
+
+#~ msgid ""
+#~ "The country detected for this foreign VAT number does not match the one "
+#~ "set on this fiscal position."
+#~ msgstr ""
+#~ "Zemlja otkrivena za ovaj inostrani PIB broj ne podudara se sa onom "
+#~ "podešenom za ovu fiskalnu poziciju."
+
+#~ msgid "e.g. BE0477472701"
+#~ msgstr "npr. BE0477472701"

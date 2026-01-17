@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2025-11-16 08:54+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -26,32 +26,29 @@ msgstr ""
 
 #. module: hr_recruitment_skills
 #: model:ir.model,name:hr_recruitment_skills.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__applicant_id
 msgid "Applicant"
 msgstr "Candidat"
 
 #. module: hr_recruitment_skills
-#: model:ir.model,name:hr_recruitment_skills.model_hr_candidate
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__candidate_id
-msgid "Candidate"
-msgstr "Candidat"
+#: model:ir.model,website_form_label:hr_recruitment_skills.model_hr_applicant
+msgid "Apply for a Job"
+msgstr ""
 
 #. module: hr_recruitment_skills
-#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_candidate_view_tree
-msgid "Create Application"
-msgstr "Creează aplicație"
-
-#. module: hr_recruitment_skills
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__create_uid
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__create_uid
 msgid "Created by"
 msgstr "Creat de"
 
 #. module: hr_recruitment_skills
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__create_date
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__create_date
 msgid "Created on"
 msgstr "Creat pe"
 
 #. module: hr_recruitment_skills
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__display_name
 msgid "Display Name"
 msgstr "Nume afișat"
 
@@ -61,7 +58,9 @@ msgid "Expected Skills"
 msgstr "Aptitudini așteptate"
 
 #. module: hr_recruitment_skills
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__id
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__id
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__id
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__id
 msgid "ID"
 msgstr "ID"
 
@@ -71,49 +70,54 @@ msgid "Job Position"
 msgstr "Funcție"
 
 #. module: hr_recruitment_skills
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__write_uid
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__write_uid
 msgid "Last Updated by"
 msgstr "Ultima actualizare făcută de"
 
 #. module: hr_recruitment_skills
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__write_date
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__write_date
 msgid "Last Updated on"
 msgstr "Ultima actualizare pe"
 
 #. module: hr_recruitment_skills
 #. odoo-python
 #: code:addons/hr_recruitment_skills/models/hr_job.py:0
-msgid "Matching Candidates"
-msgstr "Candidați potriviți"
+msgid "Matching Applicants"
+msgstr ""
 
 #. module: hr_recruitment_skills
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate__matching_score
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__matching_score
 msgid "Matching Score(%)"
 msgstr "Scor potrivire(%)"
 
 #. module: hr_recruitment_skills
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate__matching_skill_ids
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__matching_skill_ids
 msgid "Matching Skills"
 msgstr "Aptitudini potrivite"
 
 #. module: hr_recruitment_skills
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate__missing_skill_ids
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__missing_skill_ids
 msgid "Missing Skills"
 msgstr "Aptitudini lipsă"
 
 #. module: hr_recruitment_skills
-#. odoo-python
-#: code:addons/hr_recruitment_skills/models/hr_job.py:0
-msgid "No Matching Candidates"
-msgstr "Niciun candidat potrivit"
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.crm_case_tree_view_inherit_hr_recruitment_skills
+msgid "Move to this Job Position"
+msgstr ""
 
 #. module: hr_recruitment_skills
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__level_progress
+#. odoo-python
+#: code:addons/hr_recruitment_skills/models/hr_job.py:0
+msgid "No Matching Applicants"
+msgstr ""
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__level_progress
 msgid "Progress"
 msgstr "În desfășurare"
 
 #. module: hr_recruitment_skills
-#: model:ir.model.fields,help:hr_recruitment_skills.field_hr_candidate_skill__level_progress
+#: model:ir.model.fields,help:hr_recruitment_skills.field_hr_applicant_skill__level_progress
 msgid "Progress from zero knowledge (0%) to fully mastered (100%)."
 msgstr "Progresează de la zero cunoștințe (0%) la complet stăpânit (100%)."
 
@@ -126,18 +130,17 @@ msgstr "Caută solicitanți potriviți"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__skill_ids
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate__skill_ids
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__skill_id
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__skill_id
 msgid "Skill"
 msgstr "Aptitudine"
 
 #. module: hr_recruitment_skills
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__skill_level_id
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__skill_level_id
 msgid "Skill Level"
 msgstr "Nivel Aptitudine"
 
 #. module: hr_recruitment_skills
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__skill_type_id
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__skill_type_id
 msgid "Skill Type"
 msgstr "Tipul Aptitudinii"
 
@@ -147,37 +150,34 @@ msgid "Skill Types"
 msgstr "Tipurile Aptitudinii"
 
 #. module: hr_recruitment_skills
-#: model:ir.model,name:hr_recruitment_skills.model_hr_candidate_skill
-msgid "Skill level for a candidate"
-msgstr "Nivelul aptitudinii pentru un candidat"
+#: model:ir.model,name:hr_recruitment_skills.model_hr_applicant_skill
+msgid "Skill level for an applicant"
+msgstr ""
 
 #. module: hr_recruitment_skills
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__candidate_skill_ids
-#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate__candidate_skill_ids
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__applicant_skill_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_skill_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_view_search
-#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_candidate_view_form
-#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_candidate_view_search
 msgid "Skills"
 msgstr "Aptitudini"
 
 #. module: hr_recruitment_skills
 #. odoo-python
-#: code:addons/hr_recruitment_skills/models/hr_candidate_skill.py:0
+#: code:addons/hr_recruitment_skills/models/hr_applicant_skill.py:0
 msgid "The skill %(name)s and skill type %(type)s doesn't match"
 msgstr "Competența %(name)s și tipul competenței %(type)s nu se potrivesc"
 
 #. module: hr_recruitment_skills
 #. odoo-python
-#: code:addons/hr_recruitment_skills/models/hr_candidate_skill.py:0
+#: code:addons/hr_recruitment_skills/models/hr_applicant_skill.py:0
 msgid "The skill level %(level)s is not valid for skill type: %(type)s"
 msgstr ""
-"Nivelul competenței %(level)s nu este valabil pentru tipul de competență: "
-"%(type)s"
+"Nivelul competenței %(level)s nu este valabil pentru tipul de competență: %"
+"(type)s"
 
 #. module: hr_recruitment_skills
-#: model:ir.model.constraint,message:hr_recruitment_skills.constraint_hr_candidate_skill__unique_skill
+#: model:ir.model.constraint,message:hr_recruitment_skills.constraint_hr_applicant_skill_HrApplicantSkill__unique_skill
 msgid "Two levels for the same skill is not allowed"
 msgstr "Două niveluri pentru aceeași aptitudine nu sunt permise"
 
@@ -185,8 +185,28 @@ msgstr "Două niveluri pentru aceeași aptitudine nu sunt permise"
 #. odoo-python
 #: code:addons/hr_recruitment_skills/models/hr_job.py:0
 msgid ""
-"We do not have any candidates who meet the skill requirements for this job "
+"We do not have any applicants who meet the skill requirements for this job "
 "position in the database at the moment."
 msgstr ""
-"Nu avem niciun candidat care să îndeplinească cerințele de aptitudini pentru "
-"această funcție în baza de date momentan."
+
+#~ msgid "Candidate"
+#~ msgstr "Candidat"
+
+#~ msgid "Create Application"
+#~ msgstr "Creează aplicație"
+
+#~ msgid "Matching Candidates"
+#~ msgstr "Candidați potriviți"
+
+#~ msgid "No Matching Candidates"
+#~ msgstr "Niciun candidat potrivit"
+
+#~ msgid "Skill level for a candidate"
+#~ msgstr "Nivelul aptitudinii pentru un candidat"
+
+#~ msgid ""
+#~ "We do not have any candidates who meet the skill requirements for this "
+#~ "job position in the database at the moment."
+#~ msgstr ""
+#~ "Nu avem niciun candidat care să îndeplinească cerințele de aptitudini "
+#~ "pentru această funcție în baza de date momentan."

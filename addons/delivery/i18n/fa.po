@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-# 
+#
 # Translators:
 # zakariya moradi, 2025
 # Tiffany Chang, 2025
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
 # Naser mars, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:03+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Naser mars, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: delivery
@@ -58,14 +58,16 @@ msgid ""
 "                </p>"
 msgstr ""
 "<p class=\"o_view_nocontent\">\n"
-"                    نسخه شرکتی اودو را بخرید تا فراهم‌کنندگان بیشتری داشته باشید .\n"
+"                    نسخه شرکتی اودو را بخرید تا فراهم‌کنندگان بیشتری داشته "
+"باشید .\n"
 "</p>  "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">تست</span>\n"
 "<span class=\"o_stat_text\">محیط</span>"
@@ -84,7 +86,8 @@ msgstr "<span class=\"text-success\">درخواست‌های اشکال‌زدا
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"text-success\">تولید</span>\n"
 "<span class=\"o_stat_text\">محیط</span>"
@@ -156,6 +159,13 @@ msgid "Archived"
 msgstr "بایگانی شده"
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
+msgid ""
+"Are you sure you want the delivery to be free for this order? You might have "
+"forgotten to compute the rates."
+msgstr ""
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Availability"
 msgstr "دسترسی"
@@ -187,8 +197,7 @@ msgstr "پیک"
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid ""
-"Carrier %s cannot have the same tag in both Must Have Tags and Excluded "
-"Tags."
+"Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags."
 msgstr ""
 "حمل کننده %s نمی‌تواند یک برچسب را در برچسب‌های Must Have و Excluded داشته "
 "باشد.."
@@ -249,6 +258,11 @@ msgid "Countries"
 msgstr "کشورها"
 
 #. module: delivery
+#: model:ir.model,website_form_label:delivery.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__create_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__create_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_uid
@@ -280,12 +294,6 @@ msgstr "مشتری"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
 msgid "Debug logging"
 msgstr "گزارش‌گیری اشکال‌زدایی"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
-#: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
-msgid "Default delivery method used in sales orders."
-msgstr "روش تحویل پیش‌فرض مورد استفاده در درخواست‌های فروش"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -393,6 +401,10 @@ msgstr "رها کردن"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__display_name
+#: model:ir.model.fields,field_description:delivery.field_product_category__display_name
+#: model:ir.model.fields,field_description:delivery.field_res_partner__display_name
+#: model:ir.model.fields,field_description:delivery.field_sale_order__display_name
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__display_name
 msgid "Display Name"
 msgstr "نام نمایشی"
 
@@ -403,8 +415,8 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
-"هر پیک (مانند UPS) می‌تواند چندین روش تحویل (مانند UPS Express، UPS "
-"Standard) داشته باشد که مجموعه‌ای از قوانین قیمت‌گذاری به هر روش مربوط است."
+"هر پیک (مانند UPS) می‌تواند چندین روش تحویل (مانند UPS Express، UPS Standard) "
+"داشته باشد که مجموعه‌ای از قوانین قیمت‌گذاری به هر روش مربوط است."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -426,11 +438,14 @@ msgstr "خطا: این روش تحویل در دسترس نیست."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "هزینه تخمینی: به مشتری هزینه تخمینی ارسال صورت‌حساب خواهد شد.\n"
-"هزینه واقعی: به مشتری هزینه واقعی ارسال صورت‌حساب خواهد شد و هزینه ارسال پس از تحویل در سفارش فروش به‌روزرسانی خواهد شد."
+"هزینه واقعی: به مشتری هزینه واقعی ارسال صورت‌حساب خواهد شد و هزینه ارسال پس "
+"از تحویل در سفارش فروش به‌روزرسانی خواهد شد."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -452,11 +467,11 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
-"Filling this form allows you to make the shipping method available according"
-" to the content of the order or its destination."
+"Filling this form allows you to make the shipping method available according "
+"to the content of the order or its destination."
 msgstr ""
-"پر کردن این فرم به شما این امکان را می دهد که روش ارسال را با توجه به محتوای"
-" سفارش یا مقصد آن در دسترس قرار دهید."
+"پر کردن این فرم به شما این امکان را می دهد که روش ارسال را با توجه به محتوای "
+"سفارش یا مقصد آن در دسترس قرار دهید."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -499,6 +514,10 @@ msgstr "دسته‌بندی بر اساس"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__id
+#: model:ir.model.fields,field_description:delivery.field_product_category__id
+#: model:ir.model.fields,field_description:delivery.field_res_partner__id
+#: model:ir.model.fields,field_description:delivery.field_sale_order__id
+#: model:ir.model.fields,field_description:delivery.field_sale_order_line__id
 msgid "ID"
 msgstr "شناسه"
 
@@ -508,8 +527,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
 msgstr ""
-"اگر مبلغ کل سفارش (به‌جز هزینه حمل و نقل) برابر یا بالاتر از این مقدار باشد،"
-" مشتری از حمل و نقل رایگان بهره‌مند می‌شود."
+"اگر مبلغ کل سفارش (به‌جز هزینه حمل و نقل) برابر یا بالاتر از این مقدار باشد، "
+"مشتری از حمل و نقل رایگان بهره‌مند می‌شود."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_volume
@@ -549,6 +568,12 @@ msgstr "پیام صدور فاکتور"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__invoice_policy
 msgid "Invoicing Policy"
 msgstr "خط‌مشی صدور فاکتور"
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_res_partner__is_pickup_location
+#: model:ir.model.fields,field_description:delivery.field_res_users__is_pickup_location
+msgid "Is Pickup Location"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
@@ -713,11 +738,11 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
-"پیشوندهای کد پستی که این پیک به آنها اعمال می‌شود. توجه داشته باشید که "
-"می‌توان از عبارات منظم برای پشتیبانی از کشورهایی با طول‌های متغیر کد پستی "
-"استفاده کرد، به عنوان مثال، '$' می‌تواند در انتهای پیشوند اضافه شود تا فقط "
-"با کد پستی دقیق مطابقت داشته باشد (به عنوان مثال '100$' فقط با '100' و نه "
-"'1000' مطابقت خواهد داشت)."
+"پیشوندهای کد پستی که این پیک به آنها اعمال می‌شود. توجه داشته باشید که می‌توان "
+"از عبارات منظم برای پشتیبانی از کشورهایی با طول‌های متغیر کد پستی استفاده "
+"کرد، به عنوان مثال، '$' می‌تواند در انتهای پیشوند اضافه شود تا فقط با کد پستی "
+"دقیق مطابقت داشته باشد (به عنوان مثال '100$' فقط با '100' و نه '1000' مطابقت "
+"خواهد داشت)."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -810,8 +835,8 @@ msgstr "محصول خدماتی"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
-"اگر اعتبارنامه‌های شما برای تولید تأیید شده است، این گزینه را روی True تنظیم"
-" کنید."
+"اگر اعتبارنامه‌های شما برای تولید تأیید شده است، این گزینه را روی True تنظیم "
+"کنید."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
@@ -835,8 +860,8 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
-"بیمه حمل و نقل، خدماتی است که ممکن است به فرستندگان بابت بسته‌های گمشده، "
-"سرقت شده و یا آسیب دیده در حین حمل و نقل، خسارت پرداخت کند."
+"بیمه حمل و نقل، خدماتی است که ممکن است به فرستندگان بابت بسته‌های گمشده، سرقت "
+"شده و یا آسیب دیده در حین حمل و نقل، خسارت پرداخت کند."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -844,8 +869,8 @@ msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
-"جزئیات روش حمل و نقل که باید در پایین سفارش‌های فروش و ایمیل‌های تأیید آن‌ها"
-" درج شود. به عنوان مثال، دستورالعمل‌هایی که مشتریان باید دنبال کنند."
+"جزئیات روش حمل و نقل که باید در پایین سفارش‌های فروش و ایمیل‌های تأیید آن‌ها "
+"درج شود. به عنوان مثال، دستورالعمل‌هایی که مشتریان باید دنبال کنند."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -881,8 +906,8 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
 msgid ""
-"The method is available only if at least one product of the order has one of"
-" these tags."
+"The method is available only if at least one product of the order has one of "
+"these tags."
 msgstr ""
 "این روش تنها در صورتی در دسترس است که حداقل یکی از محصولات سفارش دارای یکی "
 "از این برچسب‌ها باشد."
@@ -966,6 +991,12 @@ msgid "Update shipping cost"
 msgstr "به روز رسانی هزینه ارسال"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
+#: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
+msgid "Used in sales orders."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable
 msgid "Variable"
 msgstr "متغیر"
@@ -974,6 +1005,11 @@ msgstr "متغیر"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable_factor
 msgid "Variable Factor"
 msgstr "ضریب متغیر"
+
+#. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+msgid "Visible to all"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__volume
@@ -1012,12 +1048,15 @@ msgstr "برچسب واحد اندازه گیری وزن"
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid ""
-"You can not update the shipping costs on an order where it was already invoiced!\n"
+"You can not update the shipping costs on an order where it was already "
+"invoiced!\n"
 "\n"
-"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"The following delivery lines (product, invoiced quantity and price) have "
+"already been processed:\n"
 "\n"
 msgstr ""
-"شما نمی توانید هزینه های حمل و نقل را برای سفارشی که قبلاً فاکتور شده است، به روز رسانی کنید\n"
+"شما نمی توانید هزینه های حمل و نقل را برای سفارشی که قبلاً فاکتور شده است، به "
+"روز رسانی کنید\n"
 "\n"
 "خطوط تحویل زیر (محصول، مقدار فاکتور و قیمت) قبلا پردازش شده است\n"
 "\n"
@@ -1057,3 +1096,6 @@ msgstr "مانند UPS اکسپرس"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
 msgstr ""
+
+#~ msgid "Default delivery method used in sales orders."
+#~ msgstr "روش تحویل پیش‌فرض مورد استفاده در درخواست‌های فروش"

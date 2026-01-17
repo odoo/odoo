@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_skills
-# 
+#
 # Translators:
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2024
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2024
@@ -13,19 +13,19 @@
 # baaska sh <sh.baaskash@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
+"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_skills
@@ -484,14 +484,20 @@ msgid "Display"
 msgstr "Дэлгэц"
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_report_hr_skills_report_employee_cv__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_resource_resource__display_name
 msgid "Display Name"
 msgstr "Дэлгэрэнгүй нэр"
 
@@ -546,11 +552,6 @@ msgstr "Имэйл маркетинг"
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 msgid "Employee"
 msgstr "Ажилтан"
-
-#. module: hr_skills
-#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__display_name
-msgid "Employee Name"
-msgstr "Ажилтны нэр"
 
 #. module: hr_skills
 #: model:ir.actions.report,name:hr_skills.action_report_employee_cv
@@ -811,7 +812,9 @@ msgid "Human resources officer"
 msgstr "Хүний нөөцийн мэргэжилтэн"
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__id
@@ -820,6 +823,9 @@ msgstr "Хүний нөөцийн мэргэжилтэн"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__id
+#: model:ir.model.fields,field_description:hr_skills.field_report_hr_skills_report_employee_cv__id
+#: model:ir.model.fields,field_description:hr_skills.field_res_users__id
+#: model:ir.model.fields,field_description:hr_skills.field_resource_resource__id
 msgid "ID"
 msgstr "ID"
 
@@ -929,18 +935,23 @@ msgstr ""
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_line_admin_4
 msgid ""
 "Job position: Development team leader\n"
-"- Supported technical operations with investigating and correcting varied production support issues (Java, Perl, Shell scripts, SQL).\n"
-"- Led quality assurance planning for multiple concurrent projects relative to overall system architecture or trading system changes/new developments.\n"
-"- Configured and released business critical alpha and risk models using MATLAB and SQL with inputs from Portfolio Managers."
+"- Supported technical operations with investigating and correcting varied "
+"production support issues (Java, Perl, Shell scripts, SQL).\n"
+"- Led quality assurance planning for multiple concurrent projects relative "
+"to overall system architecture or trading system changes/new developments.\n"
+"- Configured and released business critical alpha and risk models using "
+"MATLAB and SQL with inputs from Portfolio Managers."
 msgstr ""
 
 #. module: hr_skills
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_line_admin_3
 msgid ""
 "Job position: Product manager\n"
-"- Coordinated and managed software deployment across five system environments from development to production.\n"
+"- Coordinated and managed software deployment across five system "
+"environments from development to production.\n"
 "- Developed stored procedures to assist Java level programming efforts.\n"
-"- Developed multiple renewable energy plant architectures, both commercial installations and defense-related."
+"- Developed multiple renewable energy plant architectures, both commercial "
+"installations and defense-related."
 msgstr ""
 
 #. module: hr_skills
@@ -1128,7 +1139,8 @@ msgstr ""
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_line_admin_1
 msgid ""
 "Master in Electrical engineering\n"
-"            Master thesis: Better grid management and control through machine learning"
+"            Master thesis: Better grid management and control through "
+"machine learning"
 msgstr ""
 
 #. module: hr_skills
@@ -1800,8 +1812,20 @@ msgid "Teamwork"
 msgstr "Багаар ажиллах чадвар"
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__technical_is_new_default
+msgid "Technical Is New Default"
+msgstr ""
+
+#. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_telugu
 msgid "Telugu"
+msgstr ""
+
+#. module: hr_skills
+#. odoo-python
+#: code:addons/hr_skills/models/hr_skill_type.py:0
+msgid ""
+"The following skills type must contain at least one skill and one level: %s"
 msgstr ""
 
 #. module: hr_skills
@@ -1817,8 +1841,8 @@ msgstr ""
 #: code:addons/hr_skills/models/hr_employee_skill.py:0
 msgid "The skill level %(level)s is not valid for skill type: %(type)s"
 msgstr ""
-"Ур чадварын түвшин %(level)s нь дараах ур чадварын төрөлд тохирохгүй байна: "
-"%(type)s"
+"Ур чадварын түвшин %(level)s нь дараах ур чадварын төрөлд тохирохгүй байна: %"
+"(type)s"
 
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_resume_line_date_check
@@ -1853,7 +1877,8 @@ msgid ""
 "                Create them in configuration and add them on the Employee."
 msgstr ""
 "Энэхүү тайлан нь танд ажилтан бүрээр ур чадварын тойм харуулах болно.\n"
-"                Ур чадварын үзүүлэлтүүдийг тохируулж оруулаад ажилтан дээр сонгож ашиглаарай."
+"                Ур чадварын үзүүлэлтүүдийг тохируулж оруулаад ажилтан дээр "
+"сонгож ашиглаарай."
 
 #. module: hr_skills
 #: model:hr.resume.line,name:hr_skills.employee_resume_vad_thomas_chirnside_primary_school
@@ -1897,12 +1922,12 @@ msgid "Turkish"
 msgstr ""
 
 #. module: hr_skills
-#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill__unique_skill
+#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_HrEmployeeSkill__unique_skill
 msgid "Two levels for the same skill is not allowed"
 msgstr "Нэг ур чадварын хоёр түвшинг сонгох боломжгүй"
 
 #. module: hr_skills
-#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_log__unique_skill_log
+#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_log_HrEmployeeSkillLog__unique_skill_log
 msgid "Two levels for the same skill on the same day is not allowed"
 msgstr "Нэг ур чадварын хоёр түвшинг ижил огноонд сонгох боломжгүй"
 
@@ -2044,3 +2069,6 @@ msgstr "ж.ш. Odoo компани"
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_sidepanel
 msgid "www.demo.com"
 msgstr ""
+
+#~ msgid "Employee Name"
+#~ msgstr "Ажилтны нэр"

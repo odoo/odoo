@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_collect
-# 
+#
 # Translators:
 # Petko Karamotchev, 2024
 # Turhan Aydin <taydin@unionproject.eu>, 2024
@@ -16,26 +16,26 @@
 # Veselina Slavkova, 2024
 # Maria Boyadjieva <marabo2000@gmail.com>, 2024
 # Martin Dinovski, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:41+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Martin Dinovski, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
 msgid ""
-"<i>Your order has been confirmed.</i><br>Please come to the store to pay for"
-" your products."
+"<i>Your order has been confirmed.</i><br>Please come to the store to pay for "
+"your products."
 msgstr ""
 "<i>Поръчката ви е потвърдена.</i><br>Моля елате в магазина за да платите за "
 "продуктите ви."
@@ -78,6 +78,30 @@ msgstr "Персонализиран режим"
 #: code:addons/website_sale_collect/models/res_config_settings.py:0
 msgid "Delivery Methods"
 msgstr "Методи на доставка"
+
+#. module: website_sale_collect
+#: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__display_name
+#: model:ir.model.fields,field_description:website_sale_collect.field_website__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_sale_collect
+#: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_payment_transaction__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_product_template__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__id
+#: model:ir.model.fields,field_description:website_sale_collect.field_website__id
+msgid "ID"
+msgstr ""
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__in_store_dm_id
@@ -162,6 +186,11 @@ msgstr "Доставчик"
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
+msgid "Remove"
+msgstr ""
+
+#. module: website_sale_collect
+#: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
 msgid "Remove from cart"
 msgstr "Премахни от количката"
 
@@ -226,11 +255,10 @@ msgstr "Уебсайт"
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/payment.py:0
 msgid ""
-"You can only pay on site when selecting the pick up in store delivery "
-"method."
+"You can only pay on site when selecting the pick up in store delivery method."
 msgstr ""
-"Можете да платите на място само когато изберете метода за доставка \"вземане"
-" от магазина\"."
+"Можете да платите на място само когато изберете метода за доставка \"вземане "
+"от магазина\"."
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,auth_msg:website_sale_collect.payment_provider_on_site

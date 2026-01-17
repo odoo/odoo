@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event
-# 
+#
 # Translators:
 # Siim Raasuke, 2024
 # Martin Aavastik <martin@avalah.ee>, 2024
@@ -16,19 +16,19 @@
 # JanaAvalah, 2024
 # Anna, 2024
 # Stevin Lilla, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event
@@ -125,8 +125,12 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
-msgid "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
-msgstr "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
+msgid ""
+"<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/"
+">"
+msgstr ""
+"<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/"
+">"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
@@ -152,19 +156,18 @@ msgstr ""
 "title=\"LinkedIn\"/>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
-msgid "<i class=\"fa fa-map-marker me-2\" title=\"Location\"/>"
-msgstr "<i class=\"fa fa-map-marker me-2\" title=\"Location\"/>"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/> Online event"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
-msgid "<i class=\"fa fa-tiktok text-tiktok\" aria-label=\"TikTok\" title=\"TikTok\"/>"
-msgstr "<i class=\"fa fa-tiktok text-tiktok\" aria-label=\"TikTok\" title=\"TikTok\"/>"
+msgid ""
+"<i class=\"fa fa-tiktok text-tiktok\" aria-label=\"TikTok\" title=\"TikTok\"/"
+">"
+msgstr ""
+"<i class=\"fa fa-tiktok text-tiktok\" aria-label=\"TikTok\" title=\"TikTok\"/"
+">"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -260,12 +263,16 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid ""
-"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" class=\"text-danger\">\n"
-"                                        <i class=\"fa fa-ban me-2\"/>Sold Out\n"
+"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" "
+"class=\"text-danger\">\n"
+"                                        <i class=\"fa fa-ban me-2\"/>Sold "
+"Out\n"
 "                                    </span>"
 msgstr ""
-"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" class=\"text-danger\">\n"
-"                                        <i class=\"fa fa-ban me-2\"/>Välja müüdud\n"
+"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" "
+"class=\"text-danger\">\n"
+"                                        <i class=\"fa fa-ban me-2\"/>Välja "
+"müüdud\n"
 "                                    </span>"
 
 #. module: website_event
@@ -556,7 +563,8 @@ msgstr "Kuupäev (vanemast uueni)"
 msgid ""
 "Defines the Visibility of the Event on the Website and searches.\n"
 "\n"
-"            Note that the Event is however always available via its link."
+"            Note that the EventEvent is however always available via its "
+"link."
 msgstr ""
 
 #. module: website_event
@@ -565,7 +573,16 @@ msgid "Description"
 msgstr "Kirjeldus"
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__display_name
+#: model:ir.model.fields,field_description:website_event.field_event_registration__display_name
+#: model:ir.model.fields,field_description:website_event.field_event_tag__display_name
+#: model:ir.model.fields,field_description:website_event.field_event_tag_category__display_name
+#: model:ir.model.fields,field_description:website_event.field_event_type__display_name
+#: model:ir.model.fields,field_description:website_event.field_website__display_name
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__display_name
+#: model:ir.model.fields,field_description:website_event.field_website_menu__display_name
+#: model:ir.model.fields,field_description:website_event.field_website_snippet_filter__display_name
+#: model:ir.model.fields,field_description:website_event.field_website_visitor__display_name
 msgid "Display Name"
 msgstr "Kuvatav nimi"
 
@@ -603,7 +620,7 @@ msgstr "Laadi alla piletid <i class=\"ms-1 fa fa-download\"/>"
 
 #. module: website_event
 #. odoo-javascript
-#: code:addons/website_event/static/src/js/website_event.js:0
+#: code:addons/website_event/static/src/interactions/modal_attendees_registration.js:0
 msgid "Error"
 msgstr "Viga"
 
@@ -647,11 +664,6 @@ msgstr "Sündmuse asukoht"
 #: model:ir.model.fields,field_description:website_event.field_event_event__menu_id
 msgid "Event Menu"
 msgstr "Ürituse menüü"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_add
-msgid "Event Name"
-msgstr "Sündmuse nimi"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -770,8 +782,7 @@ msgstr "Filtrid"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid ""
-"Find out what people see and say about this event, and join the "
-"conversation."
+"Find out what people see and say about this event, and join the conversation."
 msgstr ""
 "Uurige, mida inimesed selle sündmuse kohta näevad ja räägivad, ning liituge "
 "vestlusega."
@@ -786,6 +797,11 @@ msgstr "Jälgige meid"
 #: model_terms:ir.ui.view,arch_db:website_event.layout
 msgid "Following content will appear on all events."
 msgstr "Kõikidel sündmustel kuvatakse järgmine sisu."
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__footer_visible
+msgid "Footer Visible"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -815,6 +831,11 @@ msgid "Harmony Under the Stars"
 msgstr ""
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__header_visible
+msgid "Header Visible"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Hidden (visitor only)"
 msgstr ""
@@ -839,7 +860,16 @@ msgid "How did you learn about this event?"
 msgstr "Kuidas te sellest sündmusest teada saite?"
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__id
+#: model:ir.model.fields,field_description:website_event.field_event_registration__id
+#: model:ir.model.fields,field_description:website_event.field_event_tag__id
+#: model:ir.model.fields,field_description:website_event.field_event_tag_category__id
+#: model:ir.model.fields,field_description:website_event.field_event_type__id
+#: model:ir.model.fields,field_description:website_event.field_website__id
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__id
+#: model:ir.model.fields,field_description:website_event.field_website_menu__id
+#: model:ir.model.fields,field_description:website_event.field_website_snippet_filter__id
+#: model:ir.model.fields,field_description:website_event.field_website_visitor__id
 msgid "ID"
 msgstr "ID"
 
@@ -904,6 +934,16 @@ msgstr "On avaldatud"
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
 msgid "John DOE"
 msgstr "John DOE"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
+msgid "Join online"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
+msgid "Join online <i class=\"ms-1 fa fa-globe\"/>"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__write_uid
@@ -1041,11 +1081,6 @@ msgid "Online Events"
 msgstr "Online üritused"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
-msgid "Online event"
-msgstr ""
-
-#. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 msgid "OpenWood Collection Online Reveal"
@@ -1119,7 +1154,7 @@ msgstr "Raadio reklaam"
 
 #. module: website_event
 #. odoo-javascript
-#: code:addons/website_event/static/src/js/register_toaster_widget.js:0
+#: code:addons/website_event/static/src/interactions/register_toaster.js:0
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Register"
@@ -1152,6 +1187,11 @@ msgstr "Registreerimine"
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Registration confirmed!"
 msgstr "Registreerimine kinnitatud!"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Registration failed! Suspicious activity detected by Google reCaptcha."
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
@@ -1209,6 +1249,7 @@ msgstr "Mine tagasi sündmuste nimekirja"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_seo_optimized
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__is_seo_optimized
 msgid "SEO optimized"
 msgstr "SEO optimized"
 
@@ -1234,9 +1275,9 @@ msgid "Sample"
 msgstr "Näidis"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_search_box_input
-msgid "Search an event..."
-msgstr "Otsi sündmust..."
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
+msgid "Search an event.."
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_search
@@ -1246,6 +1287,7 @@ msgstr "Valitud vastus"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__seo_name
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__seo_name
 msgid "Seo name"
 msgstr "Seo nimi"
 
@@ -1294,11 +1336,6 @@ msgid "Start Today"
 msgstr "Algab täna"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_add
-msgid "Start → End"
-msgstr "Algus → Lõpp"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
 msgid "Starts <span/>"
 msgstr "Algab <span/>"
@@ -1309,22 +1346,23 @@ msgid "Sub-menu (Specific)"
 msgstr "Alammenüü (spetsiifiline)"
 
 #. module: website_event
-#. odoo-python
-#: code:addons/website_event/controllers/main.py:0
-msgid "Suspicious activity detected by Google reCaptcha."
-msgstr "Google reCaptcha tuvastas kahtlase tegevuse."
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Template badge"
 msgstr "Malli märk"
 
 #. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event__website_absolute_url
+#: model:ir.model.fields,help:website_event.field_event_tag__website_absolute_url
+#: model:ir.model.fields,help:website_event.field_event_tag_category__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
+
+#. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__website_url
 #: model:ir.model.fields,help:website_event.field_event_tag__website_url
 #: model:ir.model.fields,help:website_event.field_event_tag_category__website_url
-msgid "The full URL to access the document through the website."
-msgstr "Dokumendile veebisaidi kaudu juurdepääsuks täielik URL."
+msgid "The full relative URL to access the document through the website."
+msgstr ""
 
 #. module: website_event
 #. odoo-python
@@ -1386,6 +1424,12 @@ msgstr "Ülemine"
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Top Bar Filter"
 msgstr "Ülemise rea filter"
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/website_visitor.py:0
+msgid "Unsupported 'Not In' operation on visitors registrations"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_time
@@ -1486,6 +1530,13 @@ msgid "Website"
 msgstr "Veebileht"
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_absolute_url
+#: model:ir.model.fields,field_description:website_event.field_event_tag__website_absolute_url
+#: model:ir.model.fields,field_description:website_event.field_event_tag_category__website_absolute_url
+msgid "Website Absolute URL"
+msgstr ""
+
+#. module: website_event
 #: model:ir.model,name:website_event.model_website_event_menu
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_form
 msgid "Website Event Menu"
@@ -1543,21 +1594,25 @@ msgstr "Veebilehe Külastaja"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_description
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__website_meta_description
 msgid "Website meta description"
 msgstr "Veebilehe metakirjeldus"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_keywords
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__website_meta_keywords
 msgid "Website meta keywords"
 msgstr "Veebilehe meta võtmesõnad"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_title
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__website_meta_title
 msgid "Website meta title"
 msgstr "Veebilehe metapealkiri"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_og_img
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__website_meta_og_img
 msgid "Website opengraph image"
 msgstr "Veebilehe opengraph pilt"
 
@@ -1597,9 +1652,10 @@ msgid "available)"
 msgstr "saadaval)"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_add
-msgid "e.g. \"Conference for Architects\""
-msgstr "nt. Konverents arhitektidele"
+#. odoo-python
+#: code:addons/website_event/models/event_event.py:0
+msgid "date_end"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -1615,3 +1671,24 @@ msgstr "w-100"
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "w-100 py-sm-3 mt-sm-2"
 msgstr ""
+
+#~ msgid "<i class=\"fa fa-map-marker me-2\" title=\"Location\"/>"
+#~ msgstr "<i class=\"fa fa-map-marker me-2\" title=\"Location\"/>"
+
+#~ msgid "Event Name"
+#~ msgstr "Sündmuse nimi"
+
+#~ msgid "Search an event..."
+#~ msgstr "Otsi sündmust..."
+
+#~ msgid "Start → End"
+#~ msgstr "Algus → Lõpp"
+
+#~ msgid "Suspicious activity detected by Google reCaptcha."
+#~ msgstr "Google reCaptcha tuvastas kahtlase tegevuse."
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "Dokumendile veebisaidi kaudu juurdepääsuks täielik URL."
+
+#~ msgid "e.g. \"Conference for Architects\""
+#~ msgstr "nt. Konverents arhitektidele"

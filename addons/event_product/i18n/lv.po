@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_product
-# 
+#
 # Translators:
 # ievaputnina <ievai.putninai@gmail.com>, 2024
 # Arnis Putniņš <arnis@allegro.lv>, 2024
@@ -9,20 +9,21 @@
 # InfernalLV <karlisdreizis@gmail.com>, 2024
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
 # Martin Trigaux, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-29 00:00+0000\n"
 "Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lv\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
 
 #. module: event_product
 #: model:ir.model.fields,help:event_product.field_event_event_ticket__description
@@ -51,11 +52,22 @@ msgid "Description"
 msgstr "Apraksts"
 
 #. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event__display_name
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__display_name
+#: model:ir.model.fields,field_description:event_product.field_event_registration__display_name
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__display_name
+#: model:ir.model.fields,field_description:event_product.field_product_product__display_name
+#: model:ir.model.fields,field_description:event_product.field_product_template__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: event_product
 #: model:ir.model,name:event_product.model_event_event
 msgid "Event"
 msgstr "Notikums"
 
 #. module: event_product
+#: model:ir.model,name:event_product.model_event_registration
 #: model:ir.model.fields.selection,name:event_product.selection__product_template__service_tracking__event
 msgid "Event Registration"
 msgstr "Pasākuma reģistrācija"
@@ -84,6 +96,27 @@ msgstr "Pasākuma biļete"
 #: model:ir.model.fields,field_description:event_product.field_product_product__event_ticket_ids
 msgid "Event Tickets"
 msgstr "Pasākuma biļetes"
+
+#. module: event_product
+#: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__free
+msgid "Free"
+msgstr ""
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_event__id
+#: model:ir.model.fields,field_description:event_product.field_event_event_ticket__id
+#: model:ir.model.fields,field_description:event_product.field_event_registration__id
+#: model:ir.model.fields,field_description:event_product.field_event_type_ticket__id
+#: model:ir.model.fields,field_description:event_product.field_product_product__id
+#: model:ir.model.fields,field_description:event_product.field_product_template__id
+msgid "ID"
+msgstr ""
+
+#. module: event_product
+#: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__to_pay
+#: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
+msgid "Not Sold"
+msgstr ""
 
 #. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_event_event_ticket__price
@@ -120,6 +153,19 @@ msgid "Product Variant"
 msgstr "Preces variants"
 
 #. module: event_product
+#. odoo-python
+#: code:addons/event_product/models/product_product.py:0
+msgid ""
+"Products linked to an event ticket must have \"%(tracking)s\" set to \"%"
+"(event)s\"."
+msgstr ""
+
+#. module: event_product
+#: model:ir.model.fields,field_description:event_product.field_event_registration__sale_status
+msgid "Sale Status"
+msgstr ""
+
+#. module: event_product
 #: model_terms:ir.ui.view,arch_db:event_product.event_event_ticket_view_tree_from_event
 msgid "Sales End"
 msgstr "Pārdošanas beigas"
@@ -127,4 +173,15 @@ msgstr "Pārdošanas beigas"
 #. module: event_product
 #: model_terms:ir.ui.view,arch_db:event_product.event_event_ticket_view_tree_from_event
 msgid "Sales Start"
+msgstr ""
+
+#. module: event_product
+#: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__sold
+#: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
+msgid "Sold"
+msgstr ""
+
+#. module: event_product
+#: model_terms:ir.ui.view,arch_db:event_product.event_registration_ticket_view_form
+msgid "Transaction"
 msgstr ""

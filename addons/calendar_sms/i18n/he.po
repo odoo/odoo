@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 12:52+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-11-16 08:48+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -36,6 +36,13 @@ msgid "Calendar Event: Reminder"
 msgstr "אירוע לוח שנה: תזכורת"
 
 #. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
 msgid "Event Alarm"
 msgstr "התראת אירוע"
@@ -54,18 +61,18 @@ msgstr "תזכורת לארוע: %(name)s, %(time)s"
 #. module: calendar_sms
 #: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
 msgid ""
-"Event reminder: {{ object.name }}, {{ "
-"object.get_display_time_tz(object.partner_id.tz) }}"
+"Event reminder: {{ object.name }}, "
+"{{ object.get_display_time_tz(object.partner_id.tz) }}"
 msgstr ""
-"תזכורת לאירוע: {{ object.name }}, {{ "
-"object.get_display_time_tz(object.partner_id.tz) }}"
+"תזכורת לאירוע: {{ object.name }}, "
+"{{ object.get_display_time_tz(object.partner_id.tz) }}"
 
 #. module: calendar_sms
-#. odoo-python
-#: code:addons/calendar_sms/models/calendar_alarm.py:0
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_notify_responsible
-msgid "Notify Responsible"
-msgstr "עדכן אחראי"
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__id
+msgid "ID"
+msgstr ""
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
@@ -109,3 +116,6 @@ msgstr "אין משתתפים באירועים אלו"
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type
 msgid "Type"
 msgstr "סוג"
+
+#~ msgid "Notify Responsible"
+#~ msgstr "עדכן אחראי"

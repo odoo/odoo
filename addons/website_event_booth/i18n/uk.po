@@ -1,42 +1,49 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_booth
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
 msgid ""
-"<i class=\"fa fa-exclamation-triangle me-2\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"<i class=\"fa fa-exclamation-triangle me-2\" role=\"img\" aria-"
+"label=\"Error\" title=\"Error\"/>\n"
 "                    <span class=\"o_wbooth_registration_error_message\"/>"
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle me-2\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"<i class=\"fa fa-exclamation-triangle me-2\" role=\"img\" aria-"
+"label=\"Error\" title=\"Error\"/>\n"
 "                    <span class=\"o_wbooth_registration_error_message\"/>"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                                        <span>Sorry, several booths are now sold out. Please change your choices before validating again.</span>"
+"                                        <span>Sorry, several booths are now "
+"sold out. Please change your choices before validating again.</span>"
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                                        <span>На жаль, кілька стендів зараз розпродані. Змініть свій вибір перед повторною перевіркою.</span>"
+"                                        <span>На жаль, кілька стендів зараз "
+"розпродані. Змініть свій вибір перед повторною перевіркою.</span>"
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
@@ -111,7 +118,7 @@ msgstr "Реєстрація стенду завершена!"
 
 #. module: website_event_booth
 #. odoo-javascript
-#: code:addons/website_event_booth/static/src/js/booth_register.js:0
+#: code:addons/website_event_booth/static/src/interactions/booth_registration.js:0
 msgid "Booth registration failed."
 msgstr "Реєстрація стенду не вдалася."
 
@@ -146,6 +153,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
 msgid "Contact Us"
 msgstr "Зв'яжіться з нами"
+
+#. module: website_event_booth
+#: model:ir.model.fields,field_description:website_event_booth.field_event_event__display_name
+#: model:ir.model.fields,field_description:website_event_booth.field_event_type__display_name
+#: model:ir.model.fields,field_description:website_event_booth.field_website_event_menu__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: website_event_booth
 #: model:ir.model,name:website_event_booth.model_event_event
@@ -191,8 +205,15 @@ msgid "Go back"
 msgstr "Поверніться"
 
 #. module: website_event_booth
+#: model:ir.model.fields,field_description:website_event_booth.field_event_event__id
+#: model:ir.model.fields,field_description:website_event_booth.field_event_type__id
+#: model:ir.model.fields,field_description:website_event_booth.field_website_event_menu__id
+msgid "ID"
+msgstr ""
+
+#. module: website_event_booth
 #. odoo-javascript
-#: code:addons/website_event_booth/static/src/js/booth_register.js:0
+#: code:addons/website_event_booth/static/src/interactions/booth_registration.js:0
 msgid "It looks like your email is linked to an existing account."
 msgstr ""
 
@@ -233,7 +254,7 @@ msgstr ""
 
 #. module: website_event_booth
 #. odoo-javascript
-#: code:addons/website_event_booth/static/src/js/booth_register.js:0
+#: code:addons/website_event_booth/static/src/interactions/booth_registration.js:0
 msgid "Please fill out the form correctly."
 msgstr "Будь ласка, заповніть форму правильно."
 
@@ -249,7 +270,7 @@ msgstr "Вибачте, усі стенди розпродані."
 
 #. module: website_event_booth
 #. odoo-javascript
-#: code:addons/website_event_booth/static/src/js/booth_register.js:0
+#: code:addons/website_event_booth/static/src/interactions/booth_registration.js:0
 msgid "The booth category doesn't exist."
 msgstr "Категорія стенду не існує."
 

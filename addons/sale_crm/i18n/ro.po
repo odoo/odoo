@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2025-11-15 21:37+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -50,6 +50,11 @@ msgid "Create a new customer"
 msgstr "Creați un client nou"
 
 #. module: sale_crm
+#: model:ir.model,website_form_label:sale_crm.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_quotation_partner
 msgid "Create new or use existing Customer on new Quotation"
 msgstr "Creați un client nou sau folosiți unul existent pe o ofertă nouă"
@@ -75,7 +80,10 @@ msgid "Customer"
 msgstr "ClientClient"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__display_name
 msgid "Display Name"
 msgstr "Nume afișat"
 
@@ -92,14 +100,12 @@ msgstr ""
 "Venitul estimat a fost actualizat pe baza comenzilor de vânzări asociate."
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__id
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__id
 msgid "ID"
 msgstr "ID"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
-msgid "Invoiced in Sales Orders Target"
-msgstr "Facturat în comenzile de vânzări Țintă"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
@@ -113,8 +119,8 @@ msgstr "Ultima actualizare pe"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Pistă/Oportunitate"
+msgid "Lead"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
@@ -206,12 +212,16 @@ msgid "Untaxed Total of Confirmed Orders"
 msgstr "Total fără taxe în comenzile confirmate"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "User"
-msgstr "Utilizator"
-
-#. module: sale_crm
 #. odoo-python
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 msgid "You can only apply this action from a lead."
 msgstr "Puteți aplica această acțiune numai de la un potențial client."
+
+#~ msgid "Invoiced in Sales Orders Target"
+#~ msgstr "Facturat în comenzile de vânzări Țintă"
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "Pistă/Oportunitate"
+
+#~ msgid "User"
+#~ msgstr "Utilizator"

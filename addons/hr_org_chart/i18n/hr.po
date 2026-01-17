@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_org_chart
-# 
+#
 # Translators:
 # Bole <bole@dajmi5.com>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
@@ -61,6 +62,13 @@ msgid "Direct subordinates"
 msgstr "Direktno podređeni"
 
 #. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee
 msgid "Employee"
 msgstr "Djelatnik"
@@ -69,6 +77,13 @@ msgstr "Djelatnik"
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_department_hierarchy_view
 msgid "Employees"
 msgstr "Djelatnici"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__id
+msgid "ID"
+msgstr ""
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -148,8 +163,8 @@ msgstr "Javni djelatnik"
 #. module: hr_org_chart
 #: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
 msgid ""
-"Quickly find all the information you need for your employees such as contact"
-" data, job position, availability, etc."
+"Quickly find all the information you need for your employees such as contact "
+"data, job position, availability, etc."
 msgstr ""
 
 #. module: hr_org_chart

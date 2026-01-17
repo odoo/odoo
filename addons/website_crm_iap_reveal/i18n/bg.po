@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_crm_iap_reveal
-# 
+#
 # Translators:
 # Petko Karamotchev, 2024
 # Elena Varbanova, 2024
@@ -16,26 +16,26 @@
 # Milena Georgieva, 2024
 # Martin Dinovski, 2025
 # Veselina Slavkova, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Veselina Slavkova, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid ""
-"1 credit is consumed per visitor matching the website traffic conditions and"
-" whose company can be identified.<br/>"
+"1 credit is consumed per visitor matching the website traffic conditions and "
+"whose company can be identified.<br/>"
 msgstr ""
 
 #. module: website_crm_iap_reveal
@@ -114,6 +114,11 @@ msgid "Create a conversion rule"
 msgstr ""
 
 #. module: website_crm_iap_reveal
+#: model:ir.model,website_form_label:website_crm_iap_reveal.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: website_crm_iap_reveal
 #: model_terms:ir.actions.act_window,help:website_crm_iap_reveal.crm_reveal_rule_action
 msgid ""
 "Create rules to generate B2B leads/opportunities from your website visitors."
@@ -136,8 +141,10 @@ msgid "Data Tracking"
 msgstr ""
 
 #. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__display_name
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__display_name
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_ir_http__display_name
 msgid "Display Name"
 msgstr "Име за показване"
 
@@ -188,8 +195,10 @@ msgid "IAP Credits"
 msgstr ""
 
 #. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_lead__id
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__id
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__id
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_ir_http__id
 msgid "ID"
 msgstr "ID"
 
@@ -217,6 +226,7 @@ msgid "Last Updated on"
 msgstr "Последно актуализирано на"
 
 #. module: website_crm_iap_reveal
+#: model:ir.model,name:website_crm_iap_reveal.model_crm_lead
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_type__lead
 msgid "Lead"
 msgstr "Нов контакт"
@@ -247,13 +257,8 @@ msgstr "Прегледи на генерирани потенциални кли
 #: model:ir.actions.server,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead_ir_actions_server
 msgid "Lead Generation: Leads/Opportunities Generation"
 msgstr ""
-"Генериране на потенциални клиенти: генериране на потенциални "
-"клиенти/възможности"
-
-#. module: website_crm_iap_reveal
-#: model:ir.model,name:website_crm_iap_reveal.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Лийд / Възможност"
+"Генериране на потенциални клиенти: генериране на потенциални клиенти/"
+"възможности"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__industry_tag_ids
@@ -305,15 +310,14 @@ msgstr ""
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__country_ids
 msgid ""
-"Only visitors of following countries will be converted into "
-"leads/opportunities (using GeoIP)."
+"Only visitors of following countries will be converted into leads/"
+"opportunities (using GeoIP)."
 msgstr ""
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__state_ids
 msgid ""
-"Only visitors of following states will be converted into "
-"leads/opportunities."
+"Only visitors of following states will be converted into leads/opportunities."
 msgstr ""
 
 #. module: website_crm_iap_reveal
@@ -437,8 +441,8 @@ msgstr ""
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__suffix
 msgid ""
-"This will be appended in name of generated lead so you can identify "
-"lead/opportunity is generated with this rule"
+"This will be appended in name of generated lead so you can identify lead/"
+"opportunity is generated with this rule"
 msgstr ""
 
 #. module: website_crm_iap_reveal
@@ -513,3 +517,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "to"
 msgstr "до"
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "Лийд / Възможност"

@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_meet
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
@@ -80,13 +83,13 @@ msgstr "Дозволити створення кімнат"
 
 #. module: website_event_meet
 #. odoo-javascript
-#: code:addons/website_event_meet/static/src/js/website_event_meeting_room.js:0
+#: code:addons/website_event_meet/static/src/interactions/meeting_room.js:0
 msgid "Are you sure you want to close this room?"
 msgstr "Ви впевнені, що хочете закрити цю кімнату?"
 
 #. module: website_event_meet
 #. odoo-javascript
-#: code:addons/website_event_meet/static/src/js/website_event_meeting_room.js:0
+#: code:addons/website_event_meet/static/src/interactions/meeting_room.js:0
 msgid "Are you sure you want to duplicate this room?"
 msgstr "Ви впевнені, що хочете дублювати цю кімнату?"
 
@@ -108,8 +111,8 @@ msgid ""
 "Be sure you are ready to spend at least 10 minutes in the room if you want "
 "to initiate a new topic."
 msgstr ""
-"Переконайтеся, що ви готові витратити як мінімум 10 хвилин в кімнаті, у якій"
-" ви хочете запропонувати нову тему."
+"Переконайтеся, що ви готові витратити як мінімум 10 хвилин в кімнаті, у якій "
+"ви хочете запропонувати нову тему."
 
 #. module: website_event_meet
 #: model:event.meeting.room,name:website_event_meet.event_meeting_room_0
@@ -135,8 +138,8 @@ msgstr "Чат-кімната"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_main
 msgid ""
-"Choose a topic that interests you and start talking with the community. "
-"<br/> Don't forget to setup your camera and microphone."
+"Choose a topic that interests you and start talking with the community. <br/"
+"> Don't forget to setup your camera and microphone."
 msgstr ""
 "Оберіть тему, щоо вас цікавить та почніть говорити зі спільнотою. <br/> Не "
 "забудьте підключити вашу камеру та мікрофон."
@@ -188,7 +191,10 @@ msgid "Discard"
 msgstr "Відмінити"
 
 #. module: website_event_meet
+#: model:ir.model.fields,field_description:website_event_meet.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__display_name
+#: model:ir.model.fields,field_description:website_event_meet.field_event_type__display_name
+#: model:ir.model.fields,field_description:website_event_meet.field_website_event_menu__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
@@ -246,7 +252,10 @@ msgid "Group By"
 msgstr "Групувати за"
 
 #. module: website_event_meet
+#: model:ir.model.fields,field_description:website_event_meet.field_event_event__id
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__id
+#: model:ir.model.fields,field_description:website_event_meet.field_event_type__id
+#: model:ir.model.fields,field_description:website_event_meet.field_website_event_menu__id
 msgid "ID"
 msgstr "ID"
 
@@ -419,8 +428,8 @@ msgstr "Кімнати"
 msgid ""
 "Rooms allow your event attendees to meet up and chat on different topics."
 msgstr ""
-"Кімнати дозволяють відвідувачам заходу зустрітися та поспілкуватися на різні"
-" теми."
+"Кімнати дозволяють відвідувачам заходу зустрітися та поспілкуватися на різні "
+"теми."
 
 #. module: website_event_meet
 #: model:event.meeting.room,summary:website_event_meet.event_meeting_room_1
@@ -466,9 +475,14 @@ msgid ""
 msgstr ""
 
 #. module: website_event_meet
+#: model:ir.model.fields,help:website_event_meet.field_event_meeting_room__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
+
+#. module: website_event_meet
 #: model:ir.model.fields,help:website_event_meet.field_event_meeting_room__website_url
-msgid "The full URL to access the document through the website."
-msgstr "URL-адреса повністю, для доступу до документації через сайт."
+msgid "The full relative URL to access the document through the website."
+msgstr ""
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__name
@@ -507,6 +521,11 @@ msgstr "Vos meubles préférés ?"
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_aside
 msgid "Want to create your own discussion room?"
 msgstr "Хочете створити власну кімнати для обговорень?"
+
+#. module: website_event_meet
+#: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__website_absolute_url
+msgid "Website Absolute URL"
+msgstr ""
 
 #. module: website_event_meet
 #: model:ir.model,name:website_event_meet.model_website_event_menu
@@ -596,3 +615,6 @@ msgstr "зв'яжіться з нами!"
 #: model:event.meeting.room,target_audience:website_event_meet.event_meeting_room_0
 msgid "wood expert(s)"
 msgstr "експерти по дереву"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "URL-адреса повністю, для доступу до документації через сайт."

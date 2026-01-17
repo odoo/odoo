@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-11-22 13:03+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Greek <https://translate.odoo.com/projects/odoo-s18-2/repair/"
@@ -64,7 +64,8 @@ msgstr "(<i>Αφαίρεση</i>)"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__state
 msgid ""
-"* The 'New' status is used when a user is encoding a new and unconfirmed repair order.\n"
+"* The 'New' status is used when a user is encoding a new and unconfirmed "
+"repair order.\n"
 "* The 'Confirmed' status is used when a user confirms the repair order.\n"
 "* The 'Under Repair' status is used when the repair is ongoing.\n"
 "* The 'Repaired' status is set when repairing is completed.\n"
@@ -74,8 +75,8 @@ msgstr ""
 "επιβεβαιωμένη εντολή επισκευής.\n"
 "* Η κατάσταση 'Επιβεβαιωμένη' χρησιμοποείται όταν ο χρήστης επιβεβαιώνει την "
 "εντολή επισκευής.\n"
-"* Η κατάσταση 'Υπό Επισκευή' χρησιμοποείται όταν η επισκευή είναι σε εξέλιξη."
-"\n"
+"* Η κατάσταση 'Υπό Επισκευή' χρησιμοποείται όταν η επισκευή είναι σε "
+"εξέλιξη.\n"
 "* Η κατάσταση 'Επισκευασμένη' ορίζεται όταν η επισκευή ολοκληρωθεί.\n"
 "* Η κατάσταση 'Ακυρωμένη' χρησιμοποείται όταν ο χρήστης ακυρώσει την εντολή "
 "επισκευής."
@@ -232,6 +233,11 @@ msgid "Allowed Lot"
 msgstr "Επιτρεπόμενο Lot"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__reserve_visible
 msgid "Allowed to Reserve Production"
 msgstr "Επιτρέπεται η Δέσμευση για Παραγωγή"
@@ -245,6 +251,15 @@ msgstr "Επιτρέπεται η Αποδέσμευση από Παραγωγή
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_parts_late
 msgid "Any Part is late"
 msgstr "Οποιοδήποτε Ανταλλακτικό έχει καθυστερήσει"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/product.py:0
+msgid ""
+"As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
+"been used for this product, the change of unit of measure can not be done.If "
+"you want to change it, please archive the product and create a new one."
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
@@ -296,11 +311,6 @@ msgstr "Ακυρώθηκε"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Catalog"
 msgstr "Κατάλογος"
-
-#. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_order__product_uom_category_id
-msgid "Category"
-msgstr "Κατηγορία"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -364,15 +374,6 @@ msgid "Confirmed"
 msgstr "Επιβεβαιώθηκε"
 
 #. module: repair
-#: model:ir.model.fields,help:repair.field_repair_order__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Μετατροπή ανάμεσα σε Μονάδες Μέτρησης μπορεί να πραγματοποιηθεί μόνο αν "
-"ανήκουν στην ίδια κατηγορία. Η μετατροπή θα γίνει βάσει των αναλογιών."
-
-#. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Quotation"
 msgstr "Δημιουργία προσφοράς"
@@ -380,8 +381,6 @@ msgstr "Δημιουργία προσφοράς"
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/stock_picking.py:0
-#: model:ir.model.fields,field_description:repair.field_product_product__create_repair
-#: model:ir.model.fields,field_description:repair.field_product_template__create_repair
 msgid "Create Repair"
 msgstr "Δημιουργία επισκευής"
 
@@ -391,18 +390,15 @@ msgid "Create Repair Orders from Returns"
 msgstr "Δημιουργία Εντολών Επισκευής  από Επιστροφές"
 
 #. module: repair
-#: model:ir.model.fields,help:repair.field_product_product__create_repair
-#: model:ir.model.fields,help:repair.field_product_template__create_repair
-msgid ""
-"Create a linked Repair Order on Sale Order confirmation of this product."
-msgstr ""
-"Δημιουργία συνδεδεμένης Εντολής Επισκευής κατά την επιβεβαίωση Εντολής "
-"Πώλησης αυτού του προϊόντος."
-
-#. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
 msgid "Create a new tag"
 msgstr "Δημιουργήστε νέα ετικέτα"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_product_product__service_tracking
+#: model:ir.model.fields,field_description:repair.field_product_template__service_tracking
+msgid "Create on Order"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__create_uid
@@ -417,6 +413,11 @@ msgstr "Δημιουργήθηκε από"
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__create_date
 msgid "Created on"
 msgstr "Δημιουργήθηκε στις"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Creates a new serial/lot number"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__partner_id
@@ -446,8 +447,20 @@ msgid "Details"
 msgstr "Λεπτομέρειες"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_product_product__display_name
+#: model:ir.model.fields,field_description:repair.field_product_template__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_order__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_tags__display_name
+#: model:ir.model.fields,field_description:repair.field_sale_order__display_name
+#: model:ir.model.fields,field_description:repair.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_forecasted_product_product__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_move__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_traceability_report__display_name
+#: model:ir.model.fields,field_description:repair.field_stock_warehouse__display_name
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__display_name
 msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
@@ -540,8 +553,20 @@ msgid "Has Uncomplete Moves"
 msgstr "Έχει μη Ολοκληρωμένες Κινήσεις"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_product_product__id
+#: model:ir.model.fields,field_description:repair.field_product_template__id
 #: model:ir.model.fields,field_description:repair.field_repair_order__id
 #: model:ir.model.fields,field_description:repair.field_repair_tags__id
+#: model:ir.model.fields,field_description:repair.field_sale_order__id
+#: model:ir.model.fields,field_description:repair.field_sale_order_line__id
+#: model:ir.model.fields,field_description:repair.field_stock_forecasted_product_product__id
+#: model:ir.model.fields,field_description:repair.field_stock_lot__id
+#: model:ir.model.fields,field_description:repair.field_stock_move__id
+#: model:ir.model.fields,field_description:repair.field_stock_move_line__id
+#: model:ir.model.fields,field_description:repair.field_stock_picking__id
+#: model:ir.model.fields,field_description:repair.field_stock_picking_type__id
+#: model:ir.model.fields,field_description:repair.field_stock_traceability_report__id
+#: model:ir.model.fields,field_description:repair.field_stock_warehouse__id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__id
 msgid "ID"
 msgstr "Κωδικός"
@@ -587,11 +612,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
-"                add or replace and record the time you spent on the different\n"
+"                add or replace and record the time you spent on the "
+"different\n"
 "                operations."
 msgstr ""
-"Σε μία εντολή επισκευής, μπορείτε να καταγράψετε τα εξαρτήματα που αφαιρείτε,"
-"\n"
+"Σε μία εντολή επισκευής, μπορείτε να καταγράψετε τα εξαρτήματα που "
+"αφαιρείτε,\n"
 "                προσθέτετε ή αντικαθιστάτε και να καταγράψετε το χρόνο που "
 "αφιερώσατε στις διαφορετικές\n"
 "                εργασίες."
@@ -691,7 +717,6 @@ msgid "Location"
 msgstr "Τοποθεσία"
 
 #. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.repair_view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Locations"
 msgstr "Τοποθεσίες"
@@ -831,8 +856,7 @@ msgstr "Τύπος Λειτουργίας"
 
 #. module: repair
 #. odoo-python
-#: code:addons/repair/models/product.py:0
-#: code:addons/repair/models/repair.py:0
+#: code:addons/repair/models/product.py:0 code:addons/repair/models/repair.py:0
 msgid "Operation not supported"
 msgstr "Η λειτουργία δεν υποστηρίζεται."
 
@@ -877,6 +901,12 @@ msgstr "Συλλογή Είδους"
 #: model:ir.model,name:repair.model_stock_picking_type
 msgid "Picking Type"
 msgstr "Τύπος Διαλογής"
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/repair.py:0
+msgid "Please set the first Serial Number or a default sequence"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__priority
@@ -944,11 +974,6 @@ msgid "Product Tracking"
 msgstr "Παρακολούθηση Είδους"
 
 #. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_order__product_uom
-msgid "Product Unit of Measure"
-msgstr "Μονάδα Μέτρησης Είδους"
-
-#. module: repair
 #: model:ir.model,name:repair.model_product_product
 msgid "Product Variant"
 msgstr "Μεταβλητή Είδους"
@@ -975,6 +1000,7 @@ msgstr "Τα είδη που επισκευάστηκαν, ανήκουν όλα
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repair_properties
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Properties"
 msgstr "Ιδιότητες"
 
@@ -1065,6 +1091,7 @@ msgstr "Τύπος Ενέργειας Επισκευής"
 #: model:ir.actions.report,name:repair.action_report_repair_order
 #: model:ir.model,name:repair.model_repair_order
 #: model:ir.model.fields,field_description:repair.field_sale_order__repair_order_ids
+#: model:ir.model.fields.selection,name:repair.selection__product_template__service_tracking__repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Repair Order"
@@ -1355,16 +1382,6 @@ msgid "The day after tomorrow"
 msgstr "Μεθαύριο"
 
 #. module: repair
-#. odoo-python
-#: code:addons/repair/models/repair.py:0
-msgid ""
-"The product unit of measure you chose has a different category than the "
-"product unit of measure."
-msgstr ""
-"Η μονάδα μέτρησης του είδους που επιλέξατε έχει διαφορετική κατηγορία από "
-"την μονάδα μέτρησης του είδους."
-
-#. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "This is a repair note."
 msgstr "Αυτό είναι μία σημείωση επισκευής."
@@ -1400,8 +1417,8 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_product_location_src_id
 msgid ""
-"This is the default source location for the product to be repaired in repair"
-" orders with this operation type."
+"This is the default source location for the product to be repaired in repair "
+"orders with this operation type."
 msgstr ""
 "Αυτή είναι η προεπιλεγμένη τοποθεσία προέλευσης για το είδος προς επισκευή "
 "σε εντολές επισκευής με αυτόν τον τύπο ενέργειας."
@@ -1499,11 +1516,10 @@ msgid "Under Warranty"
 msgstr "Σε Εγγύηση"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__product_uom
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_uom_name
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
-msgid "Unit of Measure"
-msgstr "Μονάδα Μέτρησης"
+msgid "Unit"
+msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -1559,6 +1575,15 @@ msgstr "Χθες"
 
 #. module: repair
 #. odoo-python
+#: code:addons/repair/models/stock_lot.py:0
+msgid ""
+"You are not allowed to create a lot or serial number with this operation "
+"type. To change this, go on the operation type and tick the box \"Create New "
+"Lots/Serial Numbers\"."
+msgstr ""
+
+#. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "You can not enter negative quantities."
 msgstr "Δεν μπορείτε να εισάγετε αρνητικές ποσότητες."
@@ -1567,13 +1592,15 @@ msgstr "Δεν μπορείτε να εισάγετε αρνητικές ποσ�
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "You cannot cancel a Repair Order that's already been completed"
-msgstr "Δεν μπορείτε να ακυρώσετε μία Εντολή Επισκευής που έχει ήδη ολοκληρωθεί"
+msgstr ""
+"Δεν μπορείτε να ακυρώσετε μία Εντολή Επισκευής που έχει ήδη ολοκληρωθεί"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid ""
-"You cannot create a quotation for a repair order that is already linked to an existing sale order.\n"
+"You cannot create a quotation for a repair order that is already linked to "
+"an existing sale order.\n"
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
@@ -1586,7 +1613,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid ""
-"You need to define a customer for a repair order in order to create an associated quotation.\n"
+"You need to define a customer for a repair order in order to create an "
+"associated quotation.\n"
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
@@ -1601,6 +1629,47 @@ msgid "from location"
 msgstr "από τοποθεσία"
 
 #. module: repair
+#. odoo-python
+#: code:addons/repair/models/stock_picking.py:0
+msgid "id"
+msgstr ""
+
+#. module: repair
+#. odoo-python
+#: code:addons/repair/models/sale_order.py:0
+msgid "sale_order_id"
+msgstr ""
+
+#. module: repair
 #: model:ir.actions.server,name:repair.action_repair_overview
 msgid "stock.repair.type.overview"
 msgstr "stock.repair.type.overview"
+
+#~ msgid "Category"
+#~ msgstr "Κατηγορία"
+
+#~ msgid ""
+#~ "Conversion between Units of Measure can only occur if they belong to the "
+#~ "same category. The conversion will be made based on the ratios."
+#~ msgstr ""
+#~ "Μετατροπή ανάμεσα σε Μονάδες Μέτρησης μπορεί να πραγματοποιηθεί μόνο αν "
+#~ "ανήκουν στην ίδια κατηγορία. Η μετατροπή θα γίνει βάσει των αναλογιών."
+
+#~ msgid ""
+#~ "Create a linked Repair Order on Sale Order confirmation of this product."
+#~ msgstr ""
+#~ "Δημιουργία συνδεδεμένης Εντολής Επισκευής κατά την επιβεβαίωση Εντολής "
+#~ "Πώλησης αυτού του προϊόντος."
+
+#~ msgid "Product Unit of Measure"
+#~ msgstr "Μονάδα Μέτρησης Είδους"
+
+#~ msgid ""
+#~ "The product unit of measure you chose has a different category than the "
+#~ "product unit of measure."
+#~ msgstr ""
+#~ "Η μονάδα μέτρησης του είδους που επιλέξατε έχει διαφορετική κατηγορία από "
+#~ "την μονάδα μέτρησης του είδους."
+
+#~ msgid "Unit of Measure"
+#~ msgstr "Μονάδα Μέτρησης"

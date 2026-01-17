@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:40+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-11-15 10:26+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -45,14 +45,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid ""
 "<span class=\"d-md-none d-block\">Or install an authenticator app</span>\n"
-"                                        <span class=\"d-none d-md-block\">Install an authenticator app on your mobile device</span>"
+"                                        <span class=\"d-none d-md-"
+"block\">Install an authenticator app on your mobile device</span>"
 msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid ""
-"<span class=\"d-none d-md-block\">When requested to do so, scan the barcode below</span>\n"
-"                                    <span class=\"d-block d-md-none\">When requested to do so, copy the key below</span>"
+"<span class=\"d-none d-md-block\">When requested to do so, scan the barcode "
+"below</span>\n"
+"                                    <span class=\"d-block d-md-none\">When "
+"requested to do so, copy the key below</span>"
 msgstr ""
 
 #. module: auth_totp
@@ -77,11 +80,6 @@ msgid ""
 msgstr ""
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Activate"
-msgstr "Aktiviraj"
-
-#. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Added On"
@@ -90,8 +88,8 @@ msgstr "Dodano na"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid ""
-"Are you sure? The user may be asked to enter two-factor codes again on those"
-" devices"
+"Are you sure? The user may be asked to enter two-factor codes again on those "
+"devices"
 msgstr ""
 
 #. module: auth_totp
@@ -172,6 +170,7 @@ msgstr ""
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__display_name
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__display_name
 msgid "Display Name"
 msgstr "Naziv za prikaz"
 
@@ -188,6 +187,11 @@ msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Enable Two-Factor Authentication"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enter your six-digit code below"
 msgstr ""
 
@@ -199,6 +203,7 @@ msgstr "Datum isteka "
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__id
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__id
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -281,7 +286,8 @@ msgstr ""
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid ""
-"To login, enter below the six-digit authentication code provided by your Authenticator app.\n"
+"To login, enter below the six-digit authentication code provided by your "
+"Authenticator app.\n"
 "                        <br/>"
 msgstr ""
 
@@ -315,11 +321,13 @@ msgstr "Dvofaktorska autentifikacija"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid ""
 "Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
-"                        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
-"                        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
+"                        The first one is done with your password and the "
+"second one with a code you get from a dedicated mobile app.\n"
+"                        Popular ones include Authy, Google Authenticator or "
+"the Microsoft Authenticator."
 msgstr ""
-"Dvofaktorska autentifikacija (2FA) je sustav dvostruke provjere identiteta. "
-"\n"
+"Dvofaktorska autentifikacija (2FA) je sustav dvostruke provjere "
+"identiteta. \n"
 "                        Prva provjera se vrši pomoću vaše lozinke, a druga "
 "pomoću koda koji dobivate iz posebne mobilne aplikacije.\n"
 "                        Popularne aplikacije su Authy, Google Authenticator "
@@ -388,3 +396,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "e.g. 123456"
 msgstr ""
+
+#~ msgid "Activate"
+#~ msgstr "Aktiviraj"

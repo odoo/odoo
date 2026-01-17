@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2026-01-15 18:37+0000\n"
 "PO-Revision-Date: 2025-11-15 21:09+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -86,6 +86,8 @@ msgstr "Modo de teste"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__display_name
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_certificate_key__display_name
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_res_company__display_name
 msgid "Display Name"
 msgstr "Nome a Exibir"
 
@@ -111,6 +113,8 @@ msgstr "Identificação da EDI"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_certificate_key__id
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_res_company__id
 msgid "ID"
 msgstr "Id."
 
@@ -123,7 +127,9 @@ msgstr "Cliente do ID"
 #. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
 msgid ""
-"Invalid signature for request. This might be due to another connection to odoo Access Point server. It can occur if you have duplicated your database. \n"
+"Invalid signature for request. This might be due to another connection to "
+"odoo Access Point server. It can occur if you have duplicated your "
+"database. \n"
 "\n"
 "If you are not sure how to fix this, please contact our support."
 msgstr ""
@@ -212,11 +218,9 @@ msgid "This company has an active user already created for this EDI type"
 msgstr "Esta empresa tem um usuário ativo já criado para este tipo de EDI"
 
 #. module: account_edi_proxy_client
-#: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_active_edi_identification
-msgid "This edi identification is already assigned to an active user"
-msgstr "Esta identificação EDI já está atribuída a um utilizador ativo"
-
-#. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_id_client
 msgid "This id_client is already used on another user."
 msgstr "Esse id_client já é usado em outro usuário."
+
+#~ msgid "This edi identification is already assigned to an active user"
+#~ msgstr "Esta identificação EDI já está atribuída a um utilizador ativo"

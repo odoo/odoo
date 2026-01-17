@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_expense
-# 
+#
 # Translators:
 # Martin Trigaux, 2025
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-11 18:36+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_expense
@@ -76,8 +77,7 @@ msgstr "%(expense_name)s：你不是此項開支的公司的經理或人力資�
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid ""
-"%(user)s confirms this expense is not a duplicate with similar expense."
+msgid "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr "%(user)s 確認此費用與類似費用不重複。"
 
 #. module: hr_expense
@@ -160,9 +160,11 @@ msgstr "<span>總金額與原始金額不符。</span>"
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
 "A default outstanding account must be defined in the settings for company-"
-"paid expenses. You can alternatively specify one in the Journal for the "
-"%(method)s payment method."
-msgstr "必須在「設定」中，為公司支付的開支，定義預設未清繳賬戶。你也可在日記賬中，為「%(method)s」付款方式指定該賬戶。"
+"paid expenses. You can alternatively specify one in the Journal for the %"
+"(method)s payment method."
+msgstr ""
+"必須在「設定」中，為公司支付的開支，定義預設未清繳賬戶。你也可在日記賬中，為"
+"「%(method)s」付款方式指定該賬戶。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -597,7 +599,9 @@ msgid ""
 "Do not keep your expense tickets in your pockets any longer. Just snap a "
 "picture of your receipt and let Odoo digitalizes it for you. The OCR and "
 "Artificial Intelligence will fill the data automatically."
-msgstr "不要再把你的費用收據放在口袋裡了。只需拍下收據的照片，讓 Odoo 為您將其數位化。 OCR 和人工智能將自動辨識資訊。"
+msgstr ""
+"不要再把你的費用收據放在口袋裡了。只需拍下收據的照片，讓 Odoo 為您將其數位"
+"化。 OCR 和人工智能將自動辨識資訊。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_applicability__business_domain
@@ -659,8 +663,7 @@ msgstr "員工費用"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid ""
-"Enter a name then choose a category and configure the amount of your "
-"expense."
+"Enter a name then choose a category and configure the amount of your expense."
 msgstr "輸入名稱，然後選擇類別並配置費用金額。"
 
 #. module: hr_expense
@@ -1358,7 +1361,8 @@ msgstr "Odoo"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
-"Odoo had a look at your expense, its product, your company and the journal but came back with empty hands.\n"
+"Odoo had a look at your expense, its product, your company and the journal "
+"but came back with empty hands.\n"
 "Give Odoo a hand to find an account by setting up an expense account.\n"
 "%(expense)s %(expense_name)s.\n"
 msgstr ""
@@ -1590,7 +1594,9 @@ msgid ""
 "Ready? You can save it manually or discard modifications from here. You "
 "don't <em>need to save</em> - Odoo will save eveyrthing for you when you "
 "navigate."
-msgstr "準備好了嗎？你可在此處手動儲存或捨棄變更。你是<u>無需儲存</u>的：Odoo 會在你導覽時，為你儲存所有內容。"
+msgstr ""
+"準備好了嗎？你可在此處手動儲存或捨棄變更。你是<u>無需儲存</u>的：Odoo 會在你"
+"導覽時，為你儲存所有內容。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__reason
@@ -1707,7 +1713,8 @@ msgstr "掃描此二維碼以獲取 Odoo APP："
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
 "選擇負責審批該員工“費用”的用戶。\n"
 "如果為空，則審批由管理員或審批人完成（在設置/用戶中確定）。"
@@ -1726,7 +1733,9 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
-"向此電子郵件別名發送電子郵件，附件中包含收據，一鍵建立費用。如果郵件主題的第一個詞包含類別的內部引用或類別名稱，則會自動設置相應的類別。在郵件主題中鍵入費用金額以將其設置在費用上。"
+"向此電子郵件別名發送電子郵件，附件中包含收據，一鍵建立費用。如果郵件主題的第"
+"一個詞包含類別的內部引用或類別名稱，則會自動設置相應的類別。在郵件主題中鍵入"
+"費用金額以將其設置在費用上。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1892,8 +1901,7 @@ msgstr "用於記錄公司開支未清繳金額的賬戶。"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
-msgid ""
-"The company's default journal used when an employee expense is created."
+msgid "The company's default journal used when an employee expense is created."
 msgstr "創建員工支出時使用的公司默認日記帳。"
 
 #. module: hr_expense
@@ -1905,8 +1913,8 @@ msgstr "當前用戶沒有相關員工。請建立一個。"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
-"The first word of the email subject did not correspond to any category code."
-" You'll have to set the category manually on the expense."
+"The first word of the email subject did not correspond to any category code. "
+"You'll have to set the category manually on the expense."
 msgstr "電子郵件主題的第一個詞不對應任何類別代碼。您必須在費用上手動設置類別。"
 
 #. module: hr_expense
@@ -1915,7 +1923,9 @@ msgid ""
 "The following approved expenses have similar employee, amount and category "
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
-msgstr "以下審批的費用與本報告中的部分費用具有相似的員工、金額和類別。請確認此報告不包含重複項目。"
+msgstr ""
+"以下審批的費用與本報告中的部分費用具有相似的員工、金額和類別。請確認此報告不"
+"包含重複項目。"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__employee_journal_id
@@ -1945,7 +1955,8 @@ msgid ""
 "There are unsubmitted expenses linked to this category. Updating the "
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
-msgstr "此類別有未提交的開支。更新類別成本將改變開支金額。請確保這是你想要的效果。"
+msgstr ""
+"此類別有未提交的開支。更新類別成本將改變開支金額。請確保這是你想要的效果。"
 
 #. module: hr_expense
 #: model_terms:web_tour.tour,rainbow_man_message:hr_expense.hr_expense_tour
@@ -2129,18 +2140,18 @@ msgstr "網站溝通記錄"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
-"When the cost of an expense product is different than 0, then the user"
-"                                             using this product won't be "
-"able to change the amount of the expense,"
-"                                             only the quantity. Use a cost "
-"different than 0 for expense categories funded by"
-"                                             the company at fixed cost like "
-"allowances for mileage, per diem, accommodation"
-"                                             or meal."
+"When the cost of an expense product is different than 0, then the "
+"user                                             using this product won't be "
+"able to change the amount of the "
+"expense,                                             only the quantity. Use "
+"a cost different than 0 for expense categories funded "
+"by                                             the company at fixed cost "
+"like allowances for mileage, per diem, "
+"accommodation                                             or meal."
 msgstr ""
-"當費用產品的成本與 0 "
-"不同時，使用該產品的用戶將無法更改費用的金額，只能更改數量。對於公司以固定成本資助的支出類別，如里程、每日津貼、住宿或膳食津貼，應使用不同於 0 "
-"的成本。"
+"當費用產品的成本與 0 不同時，使用該產品的用戶將無法更改費用的金額，只能更改數"
+"量。對於公司以固定成本資助的支出類別，如里程、每日津貼、住宿或膳食津貼，應使"
+"用不同於 0 的成本。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2275,8 +2286,8 @@ msgstr "您需要在日記賬加入手動付款方式 (%s)"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
-"You need to have at least one category that can be expensed in your database"
-" to proceed!"
+"You need to have at least one category that can be expensed in your database "
+"to proceed!"
 msgstr "您需要至少一個可以在資料庫中費用的類別才能繼續！"
 
 #. module: hr_expense

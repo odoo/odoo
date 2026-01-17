@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_oauth
-# 
+#
 # Translators:
 # zakariya moradi, 2025
 # Tiffany Chang, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tiffany Chang, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: auth_oauth
@@ -89,6 +89,9 @@ msgstr "مقصد داده"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__display_name
 msgid "Display Name"
 msgstr "نام نمایش داده شده"
 
@@ -98,7 +101,15 @@ msgid "Google Authentication"
 msgstr "صدور مجوز گوگل"
 
 #. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__has_oauth_access_token
+msgid "Has OAuth Access Token"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__id
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__id
 msgid "ID"
 msgstr "شناسه"
 
@@ -138,9 +149,15 @@ msgid "Login button label"
 msgstr "برچسب دکمه‌ی ورود"
 
 #. module: auth_oauth
+#. odoo-python
+#: code:addons/auth_oauth/models/res_users.py:0
+msgid "Missing subject identity"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_access_token
-msgid "OAuth Access Token"
-msgstr "توکن دسترسی OAuth"
+msgid "OAuth Access Token Store"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_provider_id
@@ -187,6 +204,11 @@ msgstr "نام ارائه‌دهنده"
 #: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
 msgid "Providers"
 msgstr "ارائه‌دهندگان"
+
+#. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.view_users_form
+msgid "Remove Token"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__scope
@@ -237,9 +259,15 @@ msgid ""
 "Please ask for an invitation and be sure to follow the link in your "
 "invitation email."
 msgstr ""
-"شما به این پایگاه داده دسترسی ندارید و یا دعوت‌نامه‌ی شما منقضی شده است. "
-"لطفاً تقاضای دعوت‌نامه کنید و مطمئن شوید که لینک موجود در ایمیل دعوت خود را "
-"دنبال می‌کنید. "
+"شما به این پایگاه داده دسترسی ندارید و یا دعوت‌نامه‌ی شما منقضی شده است. لطفاً "
+"تقاضای دعوت‌نامه کنید و مطمئن شوید که لینک موجود در ایمیل دعوت خود را دنبال "
+"می‌کنید. "
+
+#. module: auth_oauth
+#. odoo-python
+#: code:addons/auth_oauth/models/res_users.py:0
+msgid "You do not have permissions to remove the access token"
+msgstr ""
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
@@ -251,3 +279,6 @@ msgstr "arch"
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
 msgstr "e.g. 1234-xyz.apps.googleusercontent.com"
+
+#~ msgid "OAuth Access Token"
+#~ msgstr "توکن دسترسی OAuth"

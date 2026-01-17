@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2025-11-22 13:04+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -41,6 +41,17 @@ msgid "Customer to Reinvoice"
 msgstr "Cliente a refaturar"
 
 #. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
 msgid "Expense"
 msgstr "Despesa"
@@ -52,11 +63,6 @@ msgid "Expense Policy Tooltip"
 msgstr "Dica de política de despesas"
 
 #. module: sale_expense
-#: model:ir.model,name:sale_expense.model_hr_expense_sheet
-msgid "Expense Report"
-msgstr "Relatório de Despesas"
-
-#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense_split
 msgid "Expense Split"
 msgstr "Divisão de Despesas"
@@ -64,6 +70,7 @@ msgstr "Divisão de Despesas"
 #. module: sale_expense
 #: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_ids
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order_line__expense_ids
 #: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
 msgid "Expenses"
 msgstr "Despesas"
@@ -95,6 +102,17 @@ msgstr ""
 "produto, lista de preços etc) de quando forem lançadas."
 
 #. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_account_move__id
+#: model:ir.model.fields,field_description:sale_expense.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__id
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__id
+#: model:ir.model.fields,field_description:sale_expense.field_product_template__id
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order_line__id
+msgid "ID"
+msgstr ""
+
+#. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
 msgid ""
 "If the category has an expense policy, it will be reinvoiced on this sales "
@@ -124,22 +142,26 @@ msgid "Product"
 msgstr "Artigo"
 
 #. module: sale_expense
-#. odoo-python
-#: code:addons/sale_expense/models/hr_expense_sheet.py:0
-msgid "Reinvoiced Sales Orders"
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_line_id
+msgid "Sale Order Line"
 msgstr ""
 
 #. module: sale_expense
-#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_sheet__sale_order_count
-msgid "Sale Order Count"
-msgstr "Número de Ordens de Venda"
-
-#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order
+#: model_terms:ir.ui.view,arch_db:sale_expense.hr_expense_form_view_inherit_sale_expense
 msgid "Sales Order"
 msgstr "Ordem de Venda"
 
 #. module: sale_expense
-#: model_terms:ir.ui.view,arch_db:sale_expense.hr_expense_sheet_view_form
-msgid "Sales Orders"
-msgstr "Ordens de Venda"
+#: model:ir.model,name:sale_expense.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#~ msgid "Expense Report"
+#~ msgstr "Relatório de Despesas"
+
+#~ msgid "Sale Order Count"
+#~ msgstr "Número de Ordens de Venda"
+
+#~ msgid "Sales Orders"
+#~ msgstr "Ordens de Venda"

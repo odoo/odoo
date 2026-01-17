@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2025-11-22 13:07+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -28,8 +28,8 @@ msgstr ""
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid ""
-"1 credit is consumed per visitor matching the website traffic conditions and"
-" whose company can be identified.<br/>"
+"1 credit is consumed per visitor matching the website traffic conditions and "
+"whose company can be identified.<br/>"
 msgstr ""
 "É consumido 1 crédito por visitante que corresponda às condições de tráfego "
 "do site e cuja empresa possa ser identificada.<br/>"
@@ -110,6 +110,11 @@ msgid "Create a conversion rule"
 msgstr "Criar uma regra de conversão"
 
 #. module: website_crm_iap_reveal
+#: model:ir.model,website_form_label:website_crm_iap_reveal.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: website_crm_iap_reveal
 #: model_terms:ir.actions.act_window,help:website_crm_iap_reveal.crm_reveal_rule_action
 msgid ""
 "Create rules to generate B2B leads/opportunities from your website visitors."
@@ -134,8 +139,10 @@ msgid "Data Tracking"
 msgstr "Rastreamento de dados"
 
 #. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__display_name
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__display_name
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_ir_http__display_name
 msgid "Display Name"
 msgstr "Nome a Exibir"
 
@@ -186,8 +193,10 @@ msgid "IAP Credits"
 msgstr "Créditos do IAP"
 
 #. module: website_crm_iap_reveal
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_lead__id
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__id
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__id
+#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_ir_http__id
 msgid "ID"
 msgstr "Id."
 
@@ -215,6 +224,7 @@ msgid "Last Updated on"
 msgstr "Última Atualização em"
 
 #. module: website_crm_iap_reveal
+#: model:ir.model,name:website_crm_iap_reveal.model_crm_lead
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_type__lead
 msgid "Lead"
 msgstr "Prospeto"
@@ -245,11 +255,6 @@ msgstr "Visualizações da geração de leads"
 #: model:ir.actions.server,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead_ir_actions_server
 msgid "Lead Generation: Leads/Opportunities Generation"
 msgstr "Geração de leads: Geração de leads/oportunidades"
-
-#. module: website_crm_iap_reveal
-#: model:ir.model,name:website_crm_iap_reveal.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Prospecto / Oportunidade"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__industry_tag_ids
@@ -305,8 +310,8 @@ msgstr "Número de oportunidades geradas"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__country_ids
 msgid ""
-"Only visitors of following countries will be converted into "
-"leads/opportunities (using GeoIP)."
+"Only visitors of following countries will be converted into leads/"
+"opportunities (using GeoIP)."
 msgstr ""
 "Somente os visitantes dos seguintes países serão convertidos em leads/"
 "oportunidades (usando GeoIP)."
@@ -314,8 +319,7 @@ msgstr ""
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__state_ids
 msgid ""
-"Only visitors of following states will be converted into "
-"leads/opportunities."
+"Only visitors of following states will be converted into leads/opportunities."
 msgstr ""
 "Somente os visitantes dos seguintes estados serão convertidos em leads/"
 "oportunidades."
@@ -448,8 +452,8 @@ msgstr ""
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__suffix
 msgid ""
-"This will be appended in name of generated lead so you can identify "
-"lead/opportunity is generated with this rule"
+"This will be appended in name of generated lead so you can identify lead/"
+"opportunity is generated with this rule"
 msgstr ""
 "Isso será anexado ao nome do lead gerado para que você possa identificar se "
 "o lead/oportunidade foi gerado com essa regra"
@@ -529,3 +533,6 @@ msgstr "funcionários"
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "to"
 msgstr "a"
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "Prospecto / Oportunidade"

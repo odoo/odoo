@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_meet
-# 
+#
 # Translators:
 # Bayarkhuu Bataa, 2024
 # baaska sh <sh.baaskash@gmail.com>, 2024
 # Batmunkh Ganbat <batmunkh2522@gmail.com>, 2024
 # Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2024
 # Martin Trigaux, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
+"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event_meet
@@ -77,13 +77,13 @@ msgstr ""
 
 #. module: website_event_meet
 #. odoo-javascript
-#: code:addons/website_event_meet/static/src/js/website_event_meeting_room.js:0
+#: code:addons/website_event_meet/static/src/interactions/meeting_room.js:0
 msgid "Are you sure you want to close this room?"
 msgstr ""
 
 #. module: website_event_meet
 #. odoo-javascript
-#: code:addons/website_event_meet/static/src/js/website_event_meeting_room.js:0
+#: code:addons/website_event_meet/static/src/interactions/meeting_room.js:0
 msgid "Are you sure you want to duplicate this room?"
 msgstr ""
 
@@ -130,8 +130,8 @@ msgstr ""
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_main
 msgid ""
-"Choose a topic that interests you and start talking with the community. "
-"<br/> Don't forget to setup your camera and microphone."
+"Choose a topic that interests you and start talking with the community. <br/"
+"> Don't forget to setup your camera and microphone."
 msgstr ""
 
 #. module: website_event_meet
@@ -181,7 +181,10 @@ msgid "Discard"
 msgstr "Үл хэрэгсэх"
 
 #. module: website_event_meet
+#: model:ir.model.fields,field_description:website_event_meet.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__display_name
+#: model:ir.model.fields,field_description:website_event_meet.field_event_type__display_name
+#: model:ir.model.fields,field_description:website_event_meet.field_website_event_menu__display_name
 msgid "Display Name"
 msgstr "Дэлгэрэнгүй нэр"
 
@@ -239,7 +242,10 @@ msgid "Group By"
 msgstr "Бүлэглэлт"
 
 #. module: website_event_meet
+#: model:ir.model.fields,field_description:website_event_meet.field_event_event__id
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__id
+#: model:ir.model.fields,field_description:website_event_meet.field_event_type__id
+#: model:ir.model.fields,field_description:website_event_meet.field_website_event_menu__id
 msgid "ID"
 msgstr "ID"
 
@@ -455,9 +461,14 @@ msgid ""
 msgstr ""
 
 #. module: website_event_meet
+#: model:ir.model.fields,help:website_event_meet.field_event_meeting_room__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
+
+#. module: website_event_meet
 #: model:ir.model.fields,help:website_event_meet.field_event_meeting_room__website_url
-msgid "The full URL to access the document through the website."
-msgstr "Вебсайтаар дамжин баримт руу хандах бүтэн URL."
+msgid "The full relative URL to access the document through the website."
+msgstr ""
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__name
@@ -494,6 +505,11 @@ msgstr ""
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_aside
 msgid "Want to create your own discussion room?"
+msgstr ""
+
+#. module: website_event_meet
+#: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__website_absolute_url
+msgid "Website Absolute URL"
 msgstr ""
 
 #. module: website_event_meet
@@ -580,3 +596,6 @@ msgstr ""
 #: model:event.meeting.room,target_audience:website_event_meet.event_meeting_room_0
 msgid "wood expert(s)"
 msgstr ""
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "Вебсайтаар дамжин баримт руу хандах бүтэн URL."

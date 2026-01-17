@@ -1,27 +1,42 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_sale
-# 
+#
 # Translators:
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/sale_order.py:0
+msgid "%(line_description)s (Cancelled)"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/account_move.py:0
+msgid "%(old_name)s (Cancelled)"
+msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/components/orderline/orderline.xml:0
+#: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "(tax incl.)"
 msgstr "(з ПДВ)"
 
@@ -32,7 +47,7 @@ msgstr "<span style=\"margin: 0px 5px;\">:</span>"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "A new order has been created."
 msgstr "Створено нове замовлення."
 
@@ -48,13 +63,13 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Apply a down payment (fixed amount)"
 msgstr "Застосувати авансовий платіж (фіксована сума)"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Apply a down payment (percentage)"
 msgstr "Застосувати авансовий платіж (відсоток)"
 
@@ -62,6 +77,16 @@ msgstr "Застосувати авансовий платіж (відсоток
 #: model:ir.model,name:pos_sale.model_res_config_settings
 msgid "Config Settings"
 msgstr "Налаштування"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model,website_form_label:pos_sale.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
@@ -79,16 +104,33 @@ msgid "Delivery Quantity"
 msgstr "Кількість доставки"
 
 #. module: pos_sale
-#. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
-msgid "Do you want to load the SN/Lots linked to the Sales Order?"
+#: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_res_partner__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_stock_picking__display_name
+msgid "Display Name"
 msgstr ""
-"Ви хочете завантажити серійний/партійний номер, пов'язаний із Замовленням на"
-" продаж?"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Do you want to load the SN/Lots linked to the Sales Order?"
+msgstr ""
+"Ви хочете завантажити серійний/партійний номер, пов'язаний із Замовленням на "
+"продаж?"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Down Payment"
 msgstr "Попередня оплата"
 
@@ -119,13 +161,13 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Due balance: %s"
 msgstr "Баланс боргу: %s"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Error amount too high"
 msgstr "Сума помилки занадто висока"
 
@@ -135,19 +177,41 @@ msgid "From"
 msgstr "Від"
 
 #. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_account_move__id
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_sale.field_product_template__id
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__id
+#: model:ir.model.fields,field_description:pos_sale.field_res_partner__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
+#: model:ir.model.fields,field_description:pos_sale.field_stock_picking__id
+msgid "ID"
+msgstr ""
+
+#. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
 msgid "Invoiced"
 msgstr "Виставлено рахунок"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
 msgstr ""
 "Схоже, ви не налаштували товар авансу у своїй точці продажу. Ви можете "
 "перейти до конфігурації точки продажу, щоб вибрати його."
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_account_move
+msgid "Journal Entry"
+msgstr ""
 
 #. module: pos_sale
 #. odoo-python
@@ -168,7 +232,7 @@ msgstr "Пов'язані замовлення на продаж"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "No down payment product"
 msgstr "Немає товару авансового платежу"
 
@@ -184,7 +248,7 @@ msgstr "Відкрити сесії"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+#: code:addons/pos_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Optional Products:"
 msgstr "Додаткові товари:"
 
@@ -245,25 +309,25 @@ msgid "Posted"
 msgstr "Опубліковано"
 
 #. module: pos_sale
-#: model:ir.model,name:pos_sale.model_product_product
-msgid "Product Variant"
-msgstr "Варіант товару"
+#: model:ir.model,name:pos_sale.model_product_template
+msgid "Product"
+msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/components/control_buttons/control_buttons.xml:0
+#: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Quotation/Order"
 msgstr "Пропозиція/Замовлення"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "SN/Lots Loading"
 msgstr "Завантаження серійного/партійного номерів"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/components/orderline/orderline.xml:0
+#: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "SO"
 msgstr "SO"
 
@@ -328,13 +392,13 @@ msgstr "Запуск сесій"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/components/control_buttons/control_buttons.xml:0
+#: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Set Sale Order"
 msgstr "Встановіть замовлення на продаж"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Settle the order"
 msgstr "Узгодити замовлення"
 
@@ -396,13 +460,24 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+msgid "Warning for %s"
+msgstr ""
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_partner_view_buttons_pos_sale
+msgid "Warning on Sale"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "What do you want to do?"
 msgstr "Що би ви хотіли зробити?"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+#: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid ""
 "You have tried to charge a down payment of %s but only %s remains to be "
 "paid, %s will be applied to the purchase order line."
@@ -412,6 +487,16 @@ msgstr ""
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+#: code:addons/pos_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "from"
 msgstr "від"
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/pos_order.py:0
+#: code:addons/pos_sale/models/sale_order.py:0
+msgid "id"
+msgstr ""
+
+#~ msgid "Product Variant"
+#~ msgstr "Варіант товару"

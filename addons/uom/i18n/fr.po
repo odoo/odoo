@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* uom
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Manon Rondou, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 20:37+0000\n"
+"POT-Creation-Date: 2026-01-15 18:38+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
@@ -86,13 +87,18 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference UoM for "
 "this unit"
 msgstr ""
-"Quelle est la différence de taille entre cette unité et l'unité de mesure de"
-" référence pour cette unité"
+"Quelle est la différence de taille entre cette unité et l'unité de mesure de "
+"référence pour cette unité"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__id
 msgid "ID"
 msgstr "ID"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_kwh
+msgid "KWH"
+msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
@@ -108,6 +114,11 @@ msgstr "Mis à jour le"
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
 msgstr "Gérer plusieurs unités de mesure"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_minute
+msgid "Minutes"
+msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_pack_6
@@ -175,13 +186,18 @@ msgid ""
 "Some critical fields have been modified on %s.\n"
 "Note that existing data WON'T be updated by this change.\n"
 "\n"
-"As units of measure impact the whole system, this may cause critical issues.\n"
-"Therefore, changing core units of measure in a running database is not recommended."
+"As units of measure impact the whole system, this may cause critical "
+"issues.\n"
+"Therefore, changing core units of measure in a running database is not "
+"recommended."
 msgstr ""
 "Certains champs critiques ont été modifiés sur %s.\n"
-"Veuillez noter que les données existantes NE SERONT PAS mises à jour par ce changement.\n"
-"Étant donné que les unités de mesure impactent l'ensemble du système, cela peut causer des problèmes critiques.\n"
-"Par conséquent, modifier les unités de mesure principales dans une base de données en fonctionnement n'est pas recommandé."
+"Veuillez noter que les données existantes NE SERONT PAS mises à jour par ce "
+"changement.\n"
+"Étant donné que les unités de mesure impactent l'ensemble du système, cela "
+"peut causer des problèmes critiques.\n"
+"Par conséquent, modifier les unités de mesure principales dans une base de "
+"données en fonctionnement n'est pas recommandé."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
@@ -192,10 +208,12 @@ msgstr "Le facteur de conversion d'une unité de mesure ne peut pas être 0 !"
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid ""
-"The following units of measure are used by the system and cannot be deleted: %s\n"
+"The following units of measure are used by the system and cannot be deleted: "
+"%s\n"
 "You can archive them instead."
 msgstr ""
-"Les unités de mesure suivantes sont utilisées par le système et ne peuvent pas être supprimées : %s\n"
+"Les unités de mesure suivantes sont utilisées par le système et ne peuvent "
+"pas être supprimées : %s\n"
 "Vous pouvez les archiver à la place."
 
 #. module: uom

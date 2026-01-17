@@ -1,29 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_vat
-# 
+#
 # Translators:
 # Tiffany Chang, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:03+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tiffany Chang, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
+msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
 "۱۰XXXXXXXXY یا ۲۰XXXXXXXXY یا ۱۵XXXXXXXXY یا ۱۶XXXXXXXXY یا ۱۷XXXXXXXXY"
 
@@ -94,13 +93,18 @@ msgid ""
 "Connection with the VIES server failed. The VAT number %s could not be "
 "validated."
 msgstr ""
-"اتصال با سرور VIES ناموفق بود. شماره مالیات بر ارزش افزوده %s نمی‌تواند "
-"تأیید شود."
+"اتصال با سرور VIES ناموفق بود. شماره مالیات بر ارزش افزوده %s نمی‌تواند تأیید "
+"شود."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
 msgstr "مخاطب"
+
+#. module: base_vat
+#: model:ir.model,website_form_label:base_vat.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -117,12 +121,20 @@ msgstr ""
 "<p>DO1-01-85004-3 یا 101850043</p>"
 
 #. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_account_fiscal_position__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,help:base_vat.field_res_users__vies_valid
 msgid "European VAT numbers are automatically checked on the VIES database."
 msgstr ""
-"شماره‌های مالیات بر ارزش افزوده اروپایی به‌طور خودکار در پایگاه‌داده VIES "
-"بررسی می‌شوند."
+"شماره‌های مالیات بر ارزش افزوده اروپایی به‌طور خودکار در پایگاه‌داده VIES بررسی "
+"می‌شوند."
 
 #. module: base_vat
 #. odoo-python
@@ -147,6 +159,14 @@ msgstr "یا XI123456782 GB123456782"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "HU12345676 or 12345678-1-11 or 8071592153"
 msgstr "HU12345676 یا 12345678-1-11 یا 8071592153"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_account_fiscal_position__id
+#: model:ir.model.fields,field_description:base_vat.field_res_company__id
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__id
+msgid "ID"
+msgstr ""
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -194,10 +214,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
+"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
+"to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
-"شماره %(vat_label)s [%(wrong_vat)s] برای %(record_label)s به نظر معتبر نمی‌رسد.\n"
+"شماره %(vat_label)s [%(wrong_vat)s] برای %(record_label)s به نظر معتبر "
+"نمی‌رسد.\n"
 "توجه: فرمت مورد انتظار %(expected_format)s می‌باشد."
 
 #. module: base_vat
@@ -218,19 +240,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a"
-" country to the fiscal position or set a country group"
+"The country of the foreign VAT number could not be detected. Please assign a "
+"country to the fiscal position or set a country group"
 msgstr ""
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The request for VAT validation was not processed. VIES service has responded"
-" with the following error: %s"
+"The request for VAT validation was not processed. VIES service has responded "
+"with the following error: %s"
 msgstr ""
-"درخواست برای اعتبارسنجی مالیات بر ارزش افزوده پردازش نشد. سرویس VIES با خطای"
-" زیر پاسخ داده است: %s"
+"درخواست برای اعتبارسنجی مالیات بر ارزش افزوده پردازش نشد. سرویس VIES با خطای "
+"زیر پاسخ داده است: %s"
 
 #. module: base_vat
 #. odoo-python

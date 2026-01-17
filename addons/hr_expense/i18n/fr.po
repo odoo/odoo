@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-11 18:36+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-10-24 01:00+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -82,8 +82,7 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid ""
-"%(user)s confirms this expense is not a duplicate with similar expense."
+msgid "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr ""
 "%(user)s confirme que cette dépense n'est pas un doublon avec une dépense "
 "similaire."
@@ -171,8 +170,8 @@ msgstr "<span>Le montant total ne correspond pas au montant initial.</span>"
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
 "A default outstanding account must be defined in the settings for company-"
-"paid expenses. You can alternatively specify one in the Journal for the "
-"%(method)s payment method."
+"paid expenses. You can alternatively specify one in the Journal for the %"
+"(method)s payment method."
 msgstr ""
 "Un compte en suspens par défaut doit être défini dans les paramètres pour "
 "les dépenses payées par l'entreprise. Vous pouvez également en spécifier un "
@@ -396,8 +395,8 @@ msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
 "taxes for expenses."
 msgstr ""
-"Les taxes incluses dans le prix et les taxes exclues du prix se comporteront"
-" comme des taxes incluses dans le prix pour les dépenses."
+"Les taxes incluses dans le prix et les taxes exclues du prix se comporteront "
+"comme des taxes incluses dans le prix pour les dépenses."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -681,8 +680,7 @@ msgstr "Dépenses de l'employé"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid ""
-"Enter a name then choose a category and configure the amount of your "
-"expense."
+"Enter a name then choose a category and configure the amount of your expense."
 msgstr ""
 "Saisissez un nom, puis choisissez une catégorie et configurez le montant de "
 "votre dépense."
@@ -897,8 +895,8 @@ msgid ""
 "Failed to send mails for submitted expenses. No valid email was found for "
 "the company"
 msgstr ""
-"Échec de l'envoi des e-mails pour les dépenses soumises. Aucun e-mail valide"
-" n'a été trouvé pour l'entreprise"
+"Échec de l'envoi des e-mails pour les dépenses soumises. Aucun e-mail valide "
+"n'a été trouvé pour l'entreprise"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__filter_for_expense
@@ -1388,11 +1386,13 @@ msgstr "Odoo"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
-"Odoo had a look at your expense, its product, your company and the journal but came back with empty hands.\n"
+"Odoo had a look at your expense, its product, your company and the journal "
+"but came back with empty hands.\n"
 "Give Odoo a hand to find an account by setting up an expense account.\n"
 "%(expense)s %(expense_name)s.\n"
 msgstr ""
-"Odoo a examiné votre dépense, son produit, votre entreprise et le journal, mais n’a rien trouvé.\n"
+"Odoo a examiné votre dépense, son produit, votre entreprise et le journal, "
+"mais n’a rien trouvé.\n"
 "Aidez Odoo à trouver un compte en configurant un compte de charges.\n"
 "%(expense)s %(expense_name)s.\n"
 
@@ -1749,10 +1749,13 @@ msgstr "Scannez ce QR code pour obtenir l'application Odoo :"
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
-"Sélectionnez l'utilisateur responsable de la validation des \"Dépenses\" de cet employé.\n"
-"Si vide, la validation est faite par un administrateur ou un approbateur (déterminé dans les paramètres/utilisateurs)."
+"Sélectionnez l'utilisateur responsable de la validation des \"Dépenses\" de "
+"cet employé.\n"
+"Si vide, la validation est faite par un administrateur ou un approbateur "
+"(déterminé dans les paramètres/utilisateurs)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
@@ -1943,8 +1946,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
-msgid ""
-"The company's default journal used when an employee expense is created."
+msgid "The company's default journal used when an employee expense is created."
 msgstr ""
 "Le journal de l'entreprise utilisé par défaut pour les dépenses payées par "
 "un employé."
@@ -1958,8 +1960,8 @@ msgstr "L'utilisateur actuel n'a pas d'employé associé. Veuillez en créer un.
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
-"The first word of the email subject did not correspond to any category code."
-" You'll have to set the category manually on the expense."
+"The first word of the email subject did not correspond to any category code. "
+"You'll have to set the category manually on the expense."
 msgstr ""
 "Le premier mot de l'objet de l'e-mail ne correspond à aucun code de "
 "catégorie. Vous devrez définir la catégorie manuellement sur la dépense."
@@ -2191,22 +2193,22 @@ msgstr "Historique de communication du site web"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
-"When the cost of an expense product is different than 0, then the user"
-"                                             using this product won't be "
-"able to change the amount of the expense,"
-"                                             only the quantity. Use a cost "
-"different than 0 for expense categories funded by"
-"                                             the company at fixed cost like "
-"allowances for mileage, per diem, accommodation"
-"                                             or meal."
+"When the cost of an expense product is different than 0, then the "
+"user                                             using this product won't be "
+"able to change the amount of the "
+"expense,                                             only the quantity. Use "
+"a cost different than 0 for expense categories funded "
+"by                                             the company at fixed cost "
+"like allowances for mileage, per diem, "
+"accommodation                                             or meal."
 msgstr ""
 "Lorsque le coût d'un produit de dépense est différent de 0, l'utilisateur "
-"qui utilise ce produit ne pourra pas modifier le montant de la dépense, mais"
-" seulement la quantité. Utilisez un coût différent de 0 pour les catégories "
+"qui utilise ce produit ne pourra pas modifier le montant de la dépense, mais "
+"seulement la quantité. Utilisez un coût différent de 0 pour les catégories "
 "de dépenses financées par                                             "
 "l'entreprise à un coût fixe, comme les indemnités kilométriques, les "
-"indemnités journalières, l'hébergement"
-"                                             ou les repas."
+"indemnités journalières, "
+"l'hébergement                                             ou les repas."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2299,8 +2301,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot edit the security fields of an expense manually"
 msgstr ""
-"Vous ne pouvez pas modifier manuellement les champs de sécurité d'une "
-"dépense"
+"Vous ne pouvez pas modifier manuellement les champs de sécurité d'une dépense"
 
 #. module: hr_expense
 #. odoo-python
@@ -2355,8 +2356,8 @@ msgstr "Vous devez ajouter un mode de paiement manuel sur le journal (%s)"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
-"You need to have at least one category that can be expensed in your database"
-" to proceed!"
+"You need to have at least one category that can be expensed in your database "
+"to proceed!"
 msgstr ""
 "Vous devez avoir au moins une catégorie qui peut être passée en dépenses "
 "dans votre base de données pour continuer !"

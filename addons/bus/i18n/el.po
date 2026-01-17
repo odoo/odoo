@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* bus
-# 
+#
 # Translators:
 # Methodoos Greece <info@methodoos.com>, 2024
 # Kostas Goutoudis <goutoudis@gmail.com>, 2024
 # George Tarasidis <george_tarasidis@yahoo.com>, 2024
 # Martin Trigaux, 2024
 # Charalampos Loukas, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:03+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Charalampos Loukas, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: bus
@@ -32,11 +32,6 @@ msgstr "Ομάδες Πρόσβασης"
 #: model:ir.model,name:bus.model_ir_attachment
 msgid "Attachment"
 msgstr "Συνημμένο"
-
-#. module: bus
-#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
-msgid "Away"
-msgstr "Εκτός"
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_listener_mixin
@@ -59,6 +54,11 @@ msgid "Contact"
 msgstr "Επαφή"
 
 #. module: bus
+#: model:ir.model,website_form_label:bus.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
 msgstr "Δημιουργήθηκε από"
@@ -70,9 +70,29 @@ msgstr "Δημιουργήθηκε στις"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
-#: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
+#: model:ir.model.fields,field_description:bus.field_bus_listener_mixin__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_http__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_model__display_name
+#: model:ir.model.fields,field_description:bus.field_ir_websocket__display_name
+#: model:ir.model.fields,field_description:bus.field_res_groups__display_name
+#: model:ir.model.fields,field_description:bus.field_res_partner__display_name
+#: model:ir.model.fields,field_description:bus.field_res_users__display_name
+#: model:ir.model.fields,field_description:bus.field_res_users_settings__display_name
 msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/debug/bus_logs_menu_item.xml:0
+msgid "Download logs"
+msgstr ""
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/debug/bus_logs_menu_item.xml:0
+msgid "Enable Bus Logging"
+msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_http
@@ -81,26 +101,17 @@ msgstr "HTTP Routing"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
-#: model:ir.model.fields,field_description:bus.field_bus_presence__id
+#: model:ir.model.fields,field_description:bus.field_bus_listener_mixin__id
+#: model:ir.model.fields,field_description:bus.field_ir_attachment__id
+#: model:ir.model.fields,field_description:bus.field_ir_http__id
+#: model:ir.model.fields,field_description:bus.field_ir_model__id
+#: model:ir.model.fields,field_description:bus.field_ir_websocket__id
+#: model:ir.model.fields,field_description:bus.field_res_groups__id
+#: model:ir.model.fields,field_description:bus.field_res_partner__id
+#: model:ir.model.fields,field_description:bus.field_res_users__id
+#: model:ir.model.fields,field_description:bus.field_res_users_settings__id
 msgid "ID"
 msgstr "Κωδικός"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence__status
-#: model:ir.model.fields,field_description:bus.field_res_partner__im_status
-#: model:ir.model.fields,field_description:bus.field_res_users__im_status
-msgid "IM Status"
-msgstr "Κατάσταση Άμεσης Συνομιλίας"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
-msgid "Last Poll"
-msgstr "Τελευταία Δημοσκόπηση"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence__last_presence
-msgid "Last Presence"
-msgstr "Τελευταία Παρουσία"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
@@ -121,16 +132,6 @@ msgstr "Μήνυμα"
 #: model:ir.model,name:bus.model_ir_model
 msgid "Models"
 msgstr "Μοντέλα"
-
-#. module: bus
-#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
-msgid "Offline"
-msgstr "Offline"
-
-#. module: bus
-#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
-msgid "Online"
-msgstr "Online"
 
 #. module: bus
 #. odoo-javascript
@@ -168,30 +169,44 @@ msgid "User"
 msgstr "Χρήστης"
 
 #. module: bus
-#: model:ir.model,name:bus.model_bus_presence
-msgid "User Presence"
-msgstr "Παρουσία Χρήστη"
-
-#. module: bus
 #: model:ir.model,name:bus.model_res_users_settings
 msgid "User Settings"
 msgstr "Ρυθμίσεις Χρήστη"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
-msgid "Users"
-msgstr "Χρήστες"
-
-#. module: bus
 #. odoo-python
 #: code:addons/bus/controllers/home.py:0
 msgid ""
-"Your password is the default (admin)! If this system is exposed to untrusted"
-" users it is important to change it immediately for security reasons. I will"
-" keep nagging you about it!"
+"Your password is the default (admin)! If this system is exposed to untrusted "
+"users it is important to change it immediately for security reasons. I will "
+"keep nagging you about it!"
 msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_websocket
 msgid "websocket message handling"
 msgstr ""
+
+#~ msgid "Away"
+#~ msgstr "Εκτός"
+
+#~ msgid "IM Status"
+#~ msgstr "Κατάσταση Άμεσης Συνομιλίας"
+
+#~ msgid "Last Poll"
+#~ msgstr "Τελευταία Δημοσκόπηση"
+
+#~ msgid "Last Presence"
+#~ msgstr "Τελευταία Παρουσία"
+
+#~ msgid "Offline"
+#~ msgstr "Offline"
+
+#~ msgid "Online"
+#~ msgstr "Online"
+
+#~ msgid "User Presence"
+#~ msgstr "Παρουσία Χρήστη"
+
+#~ msgid "Users"
+#~ msgstr "Χρήστες"

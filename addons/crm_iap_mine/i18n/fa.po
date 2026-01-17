@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* crm_iap_mine
-# 
+#
 # Translators:
 # zakariya moradi, 2025
 # Tiffany Chang, 2025
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
 # Naser mars, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Naser mars, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: crm_iap_mine
@@ -42,7 +42,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Dear,</p>\n"
 "    <p>There are no more credits on your IAP Lead Generation account.<br/>\n"
-"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br/></p>\n"
+"    You can charge your IAP Lead Generation account in the settings of the "
+"CRM app.<br/></p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
@@ -69,8 +70,8 @@ msgid ""
 "<span invisible=\"error_type != 'no_result'\">Your request did not return "
 "any result (no credits were used). Try removing some filters.</span>"
 msgstr ""
-"<span invisible=\"error_type != 'no_result'\">درخواست شما هیچ نتیجه‌ای نداشت"
-" (اعتباری مصرف نشد). سعی کنید برخی از فیلترها را حذف کنید.</span>"
+"<span invisible=\"error_type != 'no_result'\">درخواست شما هیچ نتیجه‌ای نداشت "
+"(اعتباری مصرف نشد). سعی کنید برخی از فیلترها را حذف کنید.</span>"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_238
@@ -190,6 +191,11 @@ msgid "Create a Lead Mining Request"
 msgstr "ایجاد درخواست استخراج سرنخ"
 
 #. module: crm_iap_mine
+#: model:ir.model,website_form_label:crm_iap_mine.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_uid
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__create_uid
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__create_uid
@@ -223,6 +229,7 @@ msgstr "برچسپ‌های پیش‌فرض"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_name
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__display_name
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__display_name
 msgid "Display Name"
 msgstr "نام نمایش داده شده"
 
@@ -368,6 +375,7 @@ msgstr "اطلاعیه تولید سرنخ IAP"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__id
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__id
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__id
 msgid "ID"
 msgstr "شناسه"
 
@@ -420,6 +428,11 @@ msgid "Last Updated on"
 msgstr "آخرین بروز رسانی در"
 
 #. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_lead
+msgid "Lead"
+msgstr ""
+
+#. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_contacts_credits
 msgid "Lead Contacts Credits"
 msgstr "اعتبارات مخاطبین سرنخ"
@@ -452,11 +465,6 @@ msgid "Lead Total Credits"
 msgstr "مجموع اعتبارهای سرنخ"
 
 #. module: crm_iap_mine
-#: model:ir.model,name:crm_iap_mine.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "سرنخ / فرصت"
-
-#. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Leads"
@@ -470,8 +478,7 @@ msgstr "قانونی"
 #. module: crm_iap_mine
 #. odoo-javascript
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
-msgid ""
-"Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
+msgid "Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
 msgstr ""
 "به دنبال فرصت‌های بیشتر هستید؟<br>از ابزار <b>تولید سرنخ</b> استفاده کنید."
 
@@ -759,8 +766,8 @@ msgstr "نوع"
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 msgid ""
-"Up to %(credit_count)d additional credits will be consumed to identify "
-"%(contact_count)d contacts per company."
+"Up to %(credit_count)d additional credits will be consumed to identify %"
+"(contact_count)d contacts per company."
 msgstr ""
 "حداکثر %(credit_count)d اعتبار اضافی مصرف خواهد شد تا %(contact_count)d "
 "مخاطب در هر شرکت شناسایی گردد."
@@ -806,3 +813,6 @@ msgstr "مدیر"
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "to"
 msgstr "به"
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "سرنخ / فرصت"

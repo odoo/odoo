@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-11-15 21:15+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -140,6 +140,11 @@ msgid "Activity State"
 msgstr "Fəaliyyət Statusu"
 
 #. module: fleet
+#: model:ir.model,name:fleet.model_mail_activity_type
+msgid "Activity Type"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
@@ -189,6 +194,7 @@ msgstr "Arxiv"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
@@ -327,6 +333,7 @@ msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__brand_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__brand_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Brand"
 msgstr "Marka"
@@ -424,8 +431,8 @@ msgstr "Kateqoriyalar"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_category_action
 msgid ""
-"Categories will help you manage your fleet more efficiently and arrange your"
-" vehicles."
+"Categories will help you manage your fleet more efficiently and arrange your "
+"vehicles."
 msgstr ""
 
 #. module: fleet
@@ -469,8 +476,7 @@ msgstr "Müqavilənin hələ etibarlı olub-olmadığını seçin"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type__category
-msgid ""
-"Choose whether the service refer to contracts, vehicle services or both"
+msgid "Choose whether the service refer to contracts, vehicle services or both"
 msgstr ""
 "Xidmətin müqavilələrə, avtomobil xidmətlərinə və ya hər ikisinə aid olub-"
 "olmadığını seçin"
@@ -632,6 +638,11 @@ msgid "Country Code"
 msgstr "Ölkə Kodu"
 
 #. module: fleet
+#: model:ir.model,website_form_label:fleet.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_category_action
 msgid "Create a new category"
 msgstr ""
@@ -752,8 +763,8 @@ msgstr "Müqavilənin əhatə sahəsinə start verildiyi tarix"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after"
-" begin date)"
+"Date when the coverage of the contract expirates (by default, one year after "
+"begin date)"
 msgstr ""
 "Müqavilənin əhatə etdiyi sahənin başa çatdığı tarix (susmaya görə olaraq, "
 "başlama tarixindən etibarən bir il)"
@@ -808,6 +819,9 @@ msgstr "Dizel"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__display_name
+#: model:ir.model.fields,field_description:fleet.field_mail_activity_type__display_name
+#: model:ir.model.fields,field_description:fleet.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:fleet.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Göstəriləcək Ad"
 
@@ -848,7 +862,6 @@ msgstr "Sürücü"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__driver_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__purchaser_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer__driver_id
 msgid "Driver address of the vehicle"
 msgstr ""
 
@@ -1205,6 +1218,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__id
+#: model:ir.model.fields,field_description:fleet.field_mail_activity_type__id
+#: model:ir.model.fields,field_description:fleet.field_res_config_settings__id
+#: model:ir.model.fields,field_description:fleet.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -1449,7 +1465,8 @@ msgid ""
 "            their related services, costs. Odoo will automatically warn\n"
 "            you when some contracts have to be renewed."
 msgstr ""
-"Bütün müqavilələrini (lizinq, sığorta və s.), onların müvafiq xidmətləri ilə, xərcləri ilə\n"
+"Bütün müqavilələrini (lizinq, sığorta və s.), onların müvafiq xidmətləri "
+"ilə, xərcləri ilə\n"
 "            idarə et. Bəzi müqavilələrinizin yenilənməli olduğu zaman Odoo\n"
 "            sizi bu barədə avtomatik olaraq xəbərdar edəcək."
 
@@ -1471,6 +1488,7 @@ msgstr "Əl ilə"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__brand_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 msgid "Manufacturer"
 msgstr "İstehsalçı"
 
@@ -1499,7 +1517,9 @@ msgstr "Mesajlar"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__model_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__model_ids
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -1786,13 +1806,13 @@ msgstr ""
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
 "E-poçt göndərərkən seçmək üçün əlavə tərcümə dili (ISO kodu). "
 "Quraşdırılmayıbsa, ingilis versiyası istifadə olunacaq. Bu, adətən müvafiq "
-"dili təmin edən yer tutucu ifadə olmalıdır, məs. {{ obyekt.partner_id.lang "
-"}}."
+"dili təmin edən yer tutucu ifadə olmalıdır, məs. "
+"{{ obyekt.partner_id.lang }}."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
@@ -2280,8 +2300,8 @@ msgid ""
 "This is the date at which the car will be available, if not set it means "
 "available instantly"
 msgstr ""
-"Bu avtomobilin mövcud olacağı tarixdir, təyin edilməyibsə, bu o deməkdir ki,"
-" dərhal mövcud olacaq"
+"Bu avtomobilin mövcud olacağı tarixdir, təyin edilməyibsə, bu o deməkdir ki, "
+"dərhal mövcud olacaq"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_44
@@ -2333,10 +2353,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
 msgid ""
 "Track all the services done on your vehicle.\n"
-"            Services can be of many types: occasional repair, fixed maintenance, etc."
+"            Services can be of many types: occasional repair, fixed "
+"maintenance, etc."
 msgstr ""
 "Nəqliyyat vasitənizdə göstərilmiş bütün xidmətləri izlə.\n"
-"            Xidmətlər müxtəlif növdən ola bilər: təsadüfi təmir, daimi texniki qulluq və s."
+"            Xidmətlər müxtəlif növdən ola bilər: təsadüfi təmir, daimi "
+"texniki qulluq və s."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__trailer_hook
@@ -2532,6 +2554,13 @@ msgid "Vendors"
 msgstr "Podratçılar"
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Visible to all"
+msgstr ""
+
+#. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_waiting_list
 msgid "Waiting List"
 msgstr ""
@@ -2624,7 +2653,8 @@ msgid ""
 "            each vehicle. Example: active, being repaired, sold."
 msgstr ""
 "Hər avtomobilin inkişafını izləmək üçün\n"
-"            əlverişli status qura bilərsiniz. Nümunə: aktivdir, təmir olunur, satılır."
+"            əlverişli status qura bilərsiniz. Nümunə: aktivdir, təmir "
+"olunur, satılır."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
