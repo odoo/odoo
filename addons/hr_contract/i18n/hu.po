@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_contract
-# 
+#
 # Translators:
 # f1b3a33e3b33fcf18004a5292e501f50_3500ca8 <373b677b151624c4521d9efc77b996fd_750224>, 2024
 # Tamás Dombos, 2024
@@ -10,19 +10,19 @@
 # Tamás Németh <ntomasz81@gmail.com>, 2024
 # Martin Trigaux, 2024
 # gezza <geza.nagy@oregional.hu>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_contract
@@ -49,7 +49,8 @@ msgstr ""
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
 msgid ""
-"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" title=\"In Contract Since\">\n"
+"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" "
+"title=\"In Contract Since\">\n"
 "                                    In Contract Since\n"
 "                                </span>"
 msgstr ""
@@ -62,12 +63,26 @@ msgid ""
 msgstr ""
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                                        Contracts\n"
+"                                    </span>"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.resource_calendar_view_form
+msgid "<span class=\"o_stat_text\">Contracts</span>"
+msgstr ""
+
+#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
 msgid ""
 "<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
 "                                    Contract\n"
 "                                </span>\n"
-"                                <span invisible=\"contracts_count == 1\" class=\"o_stat_text text-danger\">\n"
+"                                <span invisible=\"contracts_count == 1\" "
+"class=\"o_stat_text text-danger\">\n"
 "                                    Contracts\n"
 "                                </span>"
 msgstr ""
@@ -75,12 +90,8 @@ msgstr ""
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid ""
-"<span invisible=\"contracts_count == 1\" class=\"o_stat_text\">\n"
-"                                        Contracts\n"
-"                                    </span>\n"
-"                                    <span invisible=\"contracts_count &gt; 1\" class=\"o_stat_text\">\n"
-"                                        Contract\n"
-"                                    </span>"
+"<span>A contract configured without an employee will be saved as a template."
+"</span>"
 msgstr ""
 
 #. module: hr_contract
@@ -159,8 +170,15 @@ msgstr "Adminisztrátor"
 #. module: hr_contract
 #. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
+msgid "All fields have been pasted from template [%(template_name)s]."
+msgstr ""
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
 msgid ""
-"An employee can only have one contract at the same time. (Excluding Draft and Cancelled contracts).\n"
+"An employee can only have one contract at the same time. (Excluding Draft "
+"and Cancelled contracts).\n"
 "\n"
 "Employee: %(employee_name)s"
 msgstr ""
@@ -236,6 +254,7 @@ msgstr "Beállítások"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_id
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__contract_ids
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
@@ -296,6 +315,16 @@ msgid "Contract Start Date"
 msgstr "Szerződés indulási dátuma"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__default_contract_id
+msgid "Contract Template"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_templates
+msgid "Contract Templates"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_type_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_type_id
 msgid "Contract Type"
@@ -334,17 +363,27 @@ msgstr "Megújítandó szerződés"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_new
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_working_schedule
 #: model:ir.actions.act_window,name:hr_contract.hr_contract_history_view_form_action
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_ids
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract
 #: model:ir.ui.menu,name:hr_contract.menu_hr_employee_contracts
 #: model:ir.ui.menu,name:hr_contract.menu_human_resources_configuration_contract
+#: model:res.groups.privilege,name:hr_contract.res_groups_privilege_contracts
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_list
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_tree
-#: model_terms:ir.ui.view,arch_db:hr_contract.resource_calendar_view_form
 msgid "Contracts"
 msgstr "Szerződések"
+
+#. module: hr_contract
+#: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid ""
+"Contracts are the link between an employee and his company.<br>\n"
+"                It contains all the information about his salary package."
+"<br><br>"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.hr_contract_history_to_review_view_list_action
@@ -381,8 +420,8 @@ msgstr "Létrehozás"
 
 #. module: hr_contract
 #: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract
-msgid "Create a new contract"
-msgstr "Új szerződés"
+msgid "Create a Contract"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_uid
@@ -424,11 +463,6 @@ msgid "Currently Under Contract"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__default_resource_calendar_id
-msgid "Default Working Hours"
-msgstr "Alapértelmezett munkaórák"
-
-#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
 msgid "Delete"
 msgstr "Törlés"
@@ -460,7 +494,19 @@ msgstr "Részletek"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__display_name
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_departure_wizard__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_mail_activity_schedule__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar_leaves__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_resource_resource__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
@@ -512,6 +558,12 @@ msgstr "Az alkalmazott havi bruttó munkabére."
 #: model:ir.actions.act_window,name:hr_contract.hr_contract_history_view_list_action
 msgid "Employees"
 msgstr "Munkavállalók"
+
+#. module: hr_contract
+#: model:res.groups,comment:hr_contract.group_hr_contract_employee_manager
+msgid ""
+"Enable the user to see and manage the contracts from Employee application."
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_end
@@ -610,7 +662,19 @@ msgstr "Felvétel dátuma"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_departure_wizard__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__id
+#: model:ir.model.fields,field_description:hr_contract.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:hr_contract.field_mail_activity_schedule__id
+#: model:ir.model.fields,field_description:hr_contract.field_res_company__id
+#: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr_contract.field_res_users__id
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__id
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar_leaves__id
+#: model:ir.model.fields,field_description:hr_contract.field_resource_resource__id
 msgid "ID"
 msgstr "ID"
 
@@ -633,8 +697,7 @@ msgstr "Ha be van jelölve, akkor az új üzenetek figyelmet igényelnek."
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
+msgstr "Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__active_employee
@@ -691,6 +754,11 @@ msgid "Legal Name"
 msgstr ""
 
 #. module: hr_contract
+#: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract_templates
+msgid "Let's create one"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_ir_ui_menu
 msgid "Menu"
 msgstr "Menü"
@@ -709,6 +777,11 @@ msgstr "Üzenetek"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
 msgid "Monthly Wage"
 msgstr "Havi munkabér"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "My Activities"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__my_activity_date_deadline
@@ -747,9 +820,29 @@ msgid "No Contracts"
 msgstr "Nincs szerződés"
 
 #. module: hr_contract
+#: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract_templates
+msgid "No Template found"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "No contracts ?"
+msgstr ""
+
+#. module: hr_contract
 #: model_terms:ir.actions.act_window,help:hr_contract.hr_contract_history_view_list_action
 msgid "No data to display"
 msgstr "Nincs megjeleníthető adat."
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "No limit"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.view_resource_calendar_search_inherit_contract
+msgid "No running contracts"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__blocked
@@ -865,6 +958,11 @@ msgid "Running Contracts"
 msgstr "Érvényes szerződések"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__running_contracts_count
+msgid "Running contracts count"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "SMS kézbesítési hiba"
@@ -892,6 +990,13 @@ msgstr "Szerződés keresése"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 msgid "Search Reference Contracts"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__default_contract_id
+msgid ""
+"Select a contract template to auto-fill the contract form with predefined "
+"values. You can still edit the fields as needed after applying the template."
 msgstr ""
 
 #. module: hr_contract
@@ -942,6 +1047,16 @@ msgstr ""
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__state
 msgid "Status of the contract"
 msgstr "Szerződés állapota"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form_contract_templates
+msgid "Template"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.ui.menu,name:hr_contract.menu_hr_employee_contract_templates
+msgid "Templates"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__country_code
@@ -1049,6 +1164,11 @@ msgid "Work Permit No"
 msgstr "Munkavállalási engedély száma"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__default_resource_calendar_id
+msgid "Working Hours"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__resource_calendar_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__resource_calendar_id
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -1060,3 +1180,9 @@ msgstr "Munkabeosztás"
 #: code:addons/hr_contract/models/hr_employee.py:0
 msgid "You cannot delete an employee with a running contract."
 msgstr ""
+
+#~ msgid "Create a new contract"
+#~ msgstr "Új szerződés"
+
+#~ msgid "Default Working Hours"
+#~ msgstr "Alapértelmezett munkaórák"

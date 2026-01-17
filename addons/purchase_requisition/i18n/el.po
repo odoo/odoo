@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_requisition
-# 
+#
 # Translators:
 # Stefanos Nikou <stefanos.nikou@gmail.com>, 2024
 # Alexandros Kapetanios <alexandros@gnugr.org>, 2024
@@ -13,19 +13,19 @@
 # Charalampos Loukas, 2025
 # Christos Paraschos, 2025
 # Anastasia Mimou, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Anastasia Mimou, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_requisition
@@ -222,11 +222,6 @@ msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
-msgid "Category"
-msgstr "Κατηγορία"
-
-#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Choose"
 msgstr ""
@@ -309,15 +304,6 @@ msgid "Confirmed"
 msgstr "Επιβεβαιώθηκε"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Μετατροπή ανάμεσα σε Μονάδες Μέτρησης μπορεί να πραγματοποιηθεί μόνο αν "
-"ανήκουν στην ίδια κατηγορία. Η μετατροπή θα γίνει βάσει των αναλογιών."
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
 msgid "Copy Products"
 msgstr ""
@@ -331,9 +317,12 @@ msgstr ""
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid ""
-"Create a call for tender by adding alternative requests for quotation to different vendors.\n"
-"                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
-"                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
+"Create a call for tender by adding alternative requests for quotation to "
+"different vendors.\n"
+"                            Make your choice by selecting the best "
+"combination of lead time, OTD and/or total amount.\n"
+"                            By comparing product lines you can also decide "
+"to order some products from one vendor and others from another vendor."
 msgstr ""
 
 #. module: purchase_requisition
@@ -359,11 +348,6 @@ msgstr "Δημιουργήθηκε από"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__create_date
 msgid "Created on"
 msgstr "Δημιουργήθηκε στις"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
-msgid "Creation Blocked"
-msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__currency_id
@@ -392,11 +376,16 @@ msgid "Discard"
 msgstr "Απόρριψη"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_product__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
 
@@ -453,7 +442,8 @@ msgstr "Γραμματοσειρά awesome  π.χ. fa-tasks"
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specific period\n"
-"            (e.g. a year) and you order products within this agreement to benefit\n"
+"            (e.g. a year) and you order products within this agreement to "
+"benefit\n"
 "            from the negotiated prices."
 msgstr ""
 
@@ -469,7 +459,6 @@ msgstr "Ομαδοποίηση κατά"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__has_alternatives
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_kpis_tree_inherit_purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_tree_inherit_purchase_requisition
 msgid "Has Alternatives"
 msgstr ""
@@ -480,11 +469,16 @@ msgid "Has Message"
 msgstr "Έχει Μήνυμα"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_product__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_res_config_settings__id
 msgid "ID"
 msgstr "Κωδικός"
 
@@ -508,15 +502,6 @@ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζοντ�
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Αν επιλεγεί, κάποια μηνύματα έχουν σφάλμα παράδοσης."
-
-#. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
-msgid ""
-"If the chosen vendor or if any of the products in the original PO have a "
-"blocking warning then we prevent creation of alternative PO. This is because"
-" normally these fields are cleared w/warning message within form view, but "
-"we cannot recreate that in this case."
-msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
@@ -585,6 +570,11 @@ msgstr "Μηνύματα"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Mitchell Admin"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+msgid "My Activities"
 msgstr ""
 
 #. module: purchase_requisition
@@ -711,11 +701,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Product"
 msgstr "Είδος"
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_id
-msgid "Product Unit of Measure"
-msgstr "Μονάδα Μέτρησης Είδους"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
@@ -887,10 +872,8 @@ msgstr "Αναζήτηση Συμφωνιών Αγοράς"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Show all records which has next action date is before today"
+msgid "Show all records whose next activity date is past"
 msgstr ""
-"Εμφάνιση όλων των εγγραφών όπου η ημερομηνία επόμενης δράσης είναι πριν από "
-"σήμερα"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -962,15 +945,6 @@ msgstr ""
 
 #. module: purchase_requisition
 #. odoo-python
-#: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
-msgid ""
-"The vendor you have selected or at least one of the products you are copying"
-" from the original order has a blocking warning on it and cannot be selected"
-" to create an alternative."
-msgstr ""
-
-#. module: purchase_requisition
-#. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 msgid "There are no quantities to clear."
 msgstr ""
@@ -985,17 +959,12 @@ msgstr ""
 
 #. module: purchase_requisition
 #. odoo-python
-#: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
-msgid "This is a blocking warning!\n"
-msgstr ""
-
-#. module: purchase_requisition
-#. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid ""
 "To close this purchase requisition, cancel related Requests for Quotation.\n"
 "\n"
-"Imagine the mess if someone confirms these duplicates: double the order, double the trouble :)"
+"Imagine the mess if someone confirms these duplicates: double the order, "
+"double the trouble :)"
 msgstr ""
 
 #. module: purchase_requisition
@@ -1015,6 +984,7 @@ msgid "Type of the exception activity on record."
 msgstr "Τύπος της καταγεγραμμένης δραστηριότητας εξαίρεσης."
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_id
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Unit"
 msgstr "Μονάδα"
@@ -1024,11 +994,6 @@ msgstr "Μονάδα"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Unit Price"
 msgstr "Τιμή Μονάδας"
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
-msgid "UoM"
-msgstr "ΜΜ"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__vendor_id
@@ -1083,8 +1048,8 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__has_alternatives
 msgid ""
-"Whether or not this purchase order is linked to another purchase order as an"
-" alternative."
+"Whether or not this purchase order is linked to another purchase order as an "
+"alternative."
 msgstr ""
 
 #. module: purchase_requisition
@@ -1127,8 +1092,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid ""
-"You cannot confirm agreement '%(agreement)s' because it does not contain any"
-" product lines."
+"You cannot confirm agreement '%(agreement)s' because it does not contain any "
+"product lines."
 msgstr ""
 
 #. module: purchase_requisition
@@ -1143,3 +1108,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
 msgstr "π.χ. PO0025"
+
+#~ msgid "Category"
+#~ msgstr "Κατηγορία"
+
+#~ msgid ""
+#~ "Conversion between Units of Measure can only occur if they belong to the "
+#~ "same category. The conversion will be made based on the ratios."
+#~ msgstr ""
+#~ "Μετατροπή ανάμεσα σε Μονάδες Μέτρησης μπορεί να πραγματοποιηθεί μόνο αν "
+#~ "ανήκουν στην ίδια κατηγορία. Η μετατροπή θα γίνει βάσει των αναλογιών."
+
+#~ msgid "Product Unit of Measure"
+#~ msgstr "Μονάδα Μέτρησης Είδους"
+
+#~ msgid "Show all records which has next action date is before today"
+#~ msgstr ""
+#~ "Εμφάνιση όλων των εγγραφών όπου η ημερομηνία επόμενης δράσης είναι πριν "
+#~ "από σήμερα"
+
+#~ msgid "UoM"
+#~ msgstr "ΜΜ"

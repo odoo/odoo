@@ -1,28 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_oauth
-# 
+#
 # Translators:
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-
-#. module: auth_oauth
-#: model_terms:ir.ui.view,arch_db:auth_oauth.providers
-msgid "- or -"
-msgstr "- або -"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: auth_oauth
 #. odoo-python
@@ -89,6 +87,9 @@ msgstr "Кінцева точка даних"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
@@ -98,7 +99,15 @@ msgid "Google Authentication"
 msgstr "Google аутентифікація"
 
 #. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__has_oauth_access_token
+msgid "Has OAuth Access Token"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__id
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -118,29 +127,20 @@ msgid "Link text in Login Dialog"
 msgstr "Текст посилання у діалозі входу"
 
 #. module: auth_oauth
-#: model:auth.oauth.provider,body:auth_oauth.provider_facebook
-msgid "Log in with Facebook"
-msgstr "Зайти через Facebook"
-
-#. module: auth_oauth
-#: model:auth.oauth.provider,body:auth_oauth.provider_google
-msgid "Log in with Google"
-msgstr "Зайдіть через Google"
-
-#. module: auth_oauth
-#: model:auth.oauth.provider,body:auth_oauth.provider_openerp
-msgid "Log in with Odoo.com"
-msgstr "Зайдіть через Odoo.com"
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
 msgid "Login button label"
 msgstr "Мітка кнопки входу"
 
 #. module: auth_oauth
+#. odoo-python
+#: code:addons/auth_oauth/models/res_users.py:0
+msgid "Missing subject identity"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_access_token
-msgid "OAuth Access Token"
-msgstr "Токен доступу OAuth"
+msgid "OAuth Access Token Store"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_provider_id
@@ -189,6 +189,11 @@ msgid "Providers"
 msgstr "Провайдери"
 
 #. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.view_users_form
+msgid "Remove Token"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__scope
 msgid "Scope"
 msgstr "Сфера"
@@ -202,6 +207,21 @@ msgstr "Послідовність"
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__server_uri_google
 msgid "Server uri"
 msgstr "uri сервера"
+
+#. module: auth_oauth
+#: model:auth.oauth.provider,body:auth_oauth.provider_facebook
+msgid "Sign in with Facebook"
+msgstr ""
+
+#. module: auth_oauth
+#: model:auth.oauth.provider,body:auth_oauth.provider_google
+msgid "Sign in with Google"
+msgstr ""
+
+#. module: auth_oauth
+#: model:auth.oauth.provider,body:auth_oauth.provider_openerp
+msgid "Sign in with Odoo.com"
+msgstr ""
 
 #. module: auth_oauth
 #. odoo-python
@@ -242,6 +262,12 @@ msgstr ""
 "посиланням у своєму електронному листі запрошення."
 
 #. module: auth_oauth
+#. odoo-python
+#: code:addons/auth_oauth/models/res_users.py:0
+msgid "You do not have permissions to remove the access token"
+msgstr ""
+
+#. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
@@ -251,3 +277,18 @@ msgstr "arch"
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
 msgstr "e.g. 1234-xyz.apps.googleusercontent.com"
+
+#~ msgid "- or -"
+#~ msgstr "- або -"
+
+#~ msgid "Log in with Facebook"
+#~ msgstr "Зайти через Facebook"
+
+#~ msgid "Log in with Google"
+#~ msgstr "Зайдіть через Google"
+
+#~ msgid "Log in with Odoo.com"
+#~ msgstr "Зайдіть через Odoo.com"
+
+#~ msgid "OAuth Access Token"
+#~ msgstr "Токен доступу OAuth"

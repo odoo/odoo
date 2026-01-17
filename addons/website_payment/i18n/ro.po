@@ -1,38 +1,41 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_payment
-# 
+#
 # Translators:
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2024
 # Maria Muntean, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Maria Muntean, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid ""
 ".\n"
 "                        <br/>\n"
-"                        We appreciate your support for our organization as such.\n"
+"                        We appreciate your support for our organization as "
+"such.\n"
 "                        <br/>\n"
 "                        Regards."
 msgstr ""
 ".\n"
 "                        <br/>\n"
-"                        Vă mulțumim pentru sprijinul acordat organizației noastre.\n"
+"                        Vă mulțumim pentru sprijinul acordat organizației "
+"noastre.\n"
 "                        <br/>\n"
 "                        Cu respect."
 
@@ -70,6 +73,13 @@ msgstr "<b>Metodă plată:</b>"
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "<option value=\"\">Country...</option>"
 msgstr "<option value=\"\">Țară...</option>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_input
+msgid ""
+"<small class=\"text-danger d-none\" id=\"warning_message_id\">Please enter "
+"the amount to donate.</small>"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
@@ -147,6 +157,11 @@ msgid "Amount ("
 msgstr "Sumă ("
 
 #. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_input
+msgid "Amount to donate"
+msgstr ""
+
+#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "Amount("
 msgstr "Sumă("
@@ -197,7 +212,6 @@ msgstr "Țara este necesară."
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
-#: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Custom Amount"
@@ -217,6 +231,14 @@ msgstr "Sumă implicită"
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Descriptions"
 msgstr "Descrieri"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:website_payment.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:website_payment.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -291,6 +313,11 @@ msgid "Email is required."
 msgstr "Email-ul este necesar."
 
 #. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_input
+msgid "Enter a valid number!"
+msgstr ""
+
+#. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/js/payment_form.js:0
 msgid "Field '%s' is mandatory"
@@ -300,6 +327,14 @@ msgstr "Câmpul '%s' este obligatoriu"
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__first_provider_label
 msgid "First Provider Label"
 msgstr "Etichetă prim furnizor"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_account_payment__id
+#: model:ir.model.fields,field_description:website_payment.field_payment_provider__id
+#: model:ir.model.fields,field_description:website_payment.field_payment_transaction__id
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__id
+msgid "ID"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -417,7 +452,7 @@ msgstr "Doar Paypal"
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
+#: code:addons/website_payment/static/src/snippets/s_donation/donation_snippet.js:0
 msgid "Please select or enter an amount"
 msgstr "Vă rugăm să selectați sau să introduceți o sumă"
 
@@ -486,8 +521,13 @@ msgid "Thank you for your donation of"
 msgstr "Vă mulțumim pentru donația dumneavoastră de"
 
 #. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_input
+msgid "The minimum donation amount is"
+msgstr ""
+
+#. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
+#: code:addons/website_payment/static/src/snippets/s_donation/donation_snippet.js:0
 msgid "The minimum donation amount is %(amount)s"
 msgstr ""
 
@@ -512,11 +552,6 @@ msgid "Website"
 msgstr "Site web"
 
 #. module: website_payment
-#: model:mail.template,name:website_payment.mail_template_donation
-msgid "Website: Donation"
-msgstr "Pagină web: Donație"
-
-#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Write us a comment"
 msgstr "Scrie un comentariu"
@@ -530,3 +565,6 @@ msgstr "Comentariul tău"
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "made on"
 msgstr "făcut pe"
+
+#~ msgid "Website: Donation"
+#~ msgstr "Pagină web: Donație"

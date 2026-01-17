@@ -1,30 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_passkey
-# 
+#
 # Translators:
 # erpgo translator <jumshud@erpgo.az>, 2024
 # Jumshud Sultanov <cumshud@gmail.com>, 2024
 # Nurlan Farajov <coolinuxoid@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:40+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Nurlan Farajov <coolinuxoid@gmail.com>, 2025\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
+"Language: az\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: az\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_login
-msgid "- or -"
-msgstr ""
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
@@ -69,12 +64,16 @@ msgid "Create Passkey Wizard"
 msgstr ""
 
 #. module: auth_passkey
+#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__create_uid
+msgid "Create Uid"
+msgstr ""
+
+#. module: auth_passkey
 #: model:ir.model,name:auth_passkey.model_auth_passkey_key_create
 msgid "Create a Passkey"
 msgstr ""
 
 #. module: auth_passkey
-#: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__create_uid
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key_create__create_uid
 msgid "Created by"
 msgstr "Tərəfindən yaradılıb"
@@ -105,12 +104,16 @@ msgstr "Silin"
 #. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__display_name
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key_create__display_name
+#: model:ir.model.fields,field_description:auth_passkey.field_res_users__display_name
+#: model:ir.model.fields,field_description:auth_passkey.field_res_users_identitycheck__display_name
 msgid "Display Name"
 msgstr "Göstəriləcək Ad"
 
 #. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__id
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key_create__id
+#: model:ir.model.fields,field_description:auth_passkey.field_res_users__id
+#: model:ir.model.fields,field_description:auth_passkey.field_res_users_identitycheck__id
 msgid "ID"
 msgstr "ID"
 
@@ -138,11 +141,6 @@ msgstr "Son Yenilənmə tarixi"
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
 msgid "Last used:"
-msgstr ""
-
-#. module: auth_passkey
-#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_login
-msgid "Log in with Passkey"
 msgstr ""
 
 #. module: auth_passkey
@@ -226,6 +224,11 @@ msgstr ""
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
 msgid "Use Passkey"
+msgstr ""
+
+#. module: auth_passkey
+#: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_login_oauth
+msgid "Use a Passkey"
 msgstr ""
 
 #. module: auth_passkey

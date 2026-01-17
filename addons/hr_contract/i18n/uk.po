@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_contract
-# 
+#
 # Translators:
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_count
@@ -44,11 +47,13 @@ msgstr "/ місяць"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
 msgid ""
-"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" title=\"In Contract Since\">\n"
+"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" "
+"title=\"In Contract Since\">\n"
 "                                    In Contract Since\n"
 "                                </span>"
 msgstr ""
-"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" title=\"In Contract Since\">\n"
+"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" "
+"title=\"In Contract Since\">\n"
 "                                    В контракті з\n"
 "                                </span>"
 
@@ -62,38 +67,43 @@ msgstr ""
 "title=\"In Contract Since\"> В контракті з</span>"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                                        Contracts\n"
+"                                    </span>"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.resource_calendar_view_form
+msgid "<span class=\"o_stat_text\">Contracts</span>"
+msgstr ""
+
+#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
 msgid ""
 "<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
 "                                    Contract\n"
 "                                </span>\n"
-"                                <span invisible=\"contracts_count == 1\" class=\"o_stat_text text-danger\">\n"
+"                                <span invisible=\"contracts_count == 1\" "
+"class=\"o_stat_text text-danger\">\n"
 "                                    Contracts\n"
 "                                </span>"
 msgstr ""
 "<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
 "                                    Контракт\n"
 "                                </span>\n"
-"                                <span invisible=\"contracts_count == 1\" class=\"o_stat_text text-danger\">\n"
+"                                <span invisible=\"contracts_count == 1\" "
+"class=\"o_stat_text text-danger\">\n"
 "                                    Контракти\n"
 "                                </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid ""
-"<span invisible=\"contracts_count == 1\" class=\"o_stat_text\">\n"
-"                                        Contracts\n"
-"                                    </span>\n"
-"                                    <span invisible=\"contracts_count &gt; 1\" class=\"o_stat_text\">\n"
-"                                        Contract\n"
-"                                    </span>"
+"<span>A contract configured without an employee will be saved as a template."
+"</span>"
 msgstr ""
-"<span invisible=\"contracts_count == 1\" class=\"o_stat_text\">\n"
-"                                        Контракти\n"
-"                                    </span>\n"
-"                                    <span invisible=\"contracts_count &gt; 1\" class=\"o_stat_text\">\n"
-"                                        Контракт\n"
-"                                    </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
@@ -175,12 +185,20 @@ msgstr "Адміністратор"
 #. module: hr_contract
 #. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
+msgid "All fields have been pasted from template [%(template_name)s]."
+msgstr ""
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
 msgid ""
-"An employee can only have one contract at the same time. (Excluding Draft and Cancelled contracts).\n"
+"An employee can only have one contract at the same time. (Excluding Draft "
+"and Cancelled contracts).\n"
 "\n"
 "Employee: %(employee_name)s"
 msgstr ""
-"Працівник може мати лише один контракт одночасно. (За винятком проектів і анульованих контрактів).\n"
+"Працівник може мати лише один контракт одночасно. (За винятком проектів і "
+"анульованих контрактів).\n"
 "\n"
 "Співробітник: %(employee_name)s"
 
@@ -257,6 +275,7 @@ msgstr "Налаштування"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_id
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__contract_ids
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr_contract.res_config_settings_view_form
@@ -270,8 +289,8 @@ msgid ""
 "Contract %(contract)s: start date (%(start)s) must be earlier than contract "
 "end date (%(end)s)."
 msgstr ""
-"Контракт %(contract)s: дата початку (%(start)s) має бути раніше, ніж кінцева"
-" дата контракту (%(end)s)."
+"Контракт %(contract)s: дата початку (%(start)s) має бути раніше, ніж кінцева "
+"дата контракту (%(end)s)."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contracts_count
@@ -319,6 +338,16 @@ msgid "Contract Start Date"
 msgstr "Початок дії контракту"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__default_contract_id
+msgid "Contract Template"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_templates
+msgid "Contract Templates"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_type_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_type_id
 msgid "Contract Type"
@@ -357,17 +386,27 @@ msgstr "Контракт до оновлення"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_new
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_working_schedule
 #: model:ir.actions.act_window,name:hr_contract.hr_contract_history_view_form_action
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_ids
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract
 #: model:ir.ui.menu,name:hr_contract.menu_hr_employee_contracts
 #: model:ir.ui.menu,name:hr_contract.menu_human_resources_configuration_contract
+#: model:res.groups.privilege,name:hr_contract.res_groups_privilege_contracts
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_list
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_tree
-#: model_terms:ir.ui.view,arch_db:hr_contract.resource_calendar_view_form
 msgid "Contracts"
 msgstr "Контракти"
+
+#. module: hr_contract
+#: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid ""
+"Contracts are the link between an employee and his company.<br>\n"
+"                It contains all the information about his salary package."
+"<br><br>"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.hr_contract_history_to_review_view_list_action
@@ -404,8 +443,8 @@ msgstr "Створити"
 
 #. module: hr_contract
 #: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract
-msgid "Create a new contract"
-msgstr "Створити новий контракт"
+msgid "Create a Contract"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_uid
@@ -447,11 +486,6 @@ msgid "Currently Under Contract"
 msgstr "На даний момент за контрактом"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__default_resource_calendar_id
-msgid "Default Working Hours"
-msgstr "Робочі години за замовчуванням"
-
-#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
 msgid "Delete"
 msgstr "Видалити"
@@ -483,7 +517,19 @@ msgstr "Деталі"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__display_name
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_departure_wizard__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_mail_activity_schedule__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar_leaves__display_name
+#: model:ir.model.fields,field_description:hr_contract.field_resource_resource__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
@@ -535,6 +581,12 @@ msgstr "Щомісячна валова заробітна плата праці
 #: model:ir.actions.act_window,name:hr_contract.hr_contract_history_view_list_action
 msgid "Employees"
 msgstr "Співробітники"
+
+#. module: hr_contract
+#: model:res.groups,comment:hr_contract.group_hr_contract_employee_manager
+msgid ""
+"Enable the user to see and manage the contracts from Employee application."
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_end
@@ -633,7 +685,19 @@ msgstr "Дата найму"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_departure_wizard__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_contract.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__id
+#: model:ir.model.fields,field_description:hr_contract.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:hr_contract.field_mail_activity_schedule__id
+#: model:ir.model.fields,field_description:hr_contract.field_res_company__id
+#: model:ir.model.fields,field_description:hr_contract.field_res_config_settings__id
+#: model:ir.model.fields,field_description:hr_contract.field_res_users__id
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__id
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar_leaves__id
+#: model:ir.model.fields,field_description:hr_contract.field_resource_resource__id
 msgid "ID"
 msgstr "ID"
 
@@ -664,8 +728,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Якщо активне поле встановлено як Помилкове, це дозволить вам приховати запис"
-" кадрів, не видаливши його."
+"Якщо активне поле встановлено як Помилкове, це дозволить вам приховати запис "
+"кадрів, не видаливши його."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__is_under_contract
@@ -713,6 +777,11 @@ msgid "Legal Name"
 msgstr ""
 
 #. module: hr_contract
+#: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract_templates
+msgid "Let's create one"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_ir_ui_menu
 msgid "Menu"
 msgstr "Меню"
@@ -731,6 +800,11 @@ msgstr "Повідомлення"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
 msgid "Monthly Wage"
 msgstr "Місячний оклад"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "My Activities"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__my_activity_date_deadline
@@ -769,9 +843,29 @@ msgid "No Contracts"
 msgstr "Немає контрактів"
 
 #. module: hr_contract
+#: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract_templates
+msgid "No Template found"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "No contracts ?"
+msgstr ""
+
+#. module: hr_contract
 #: model_terms:ir.actions.act_window,help:hr_contract.hr_contract_history_view_list_action
 msgid "No data to display"
 msgstr "Немає даних для відображення"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "No limit"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.view_resource_calendar_search_inherit_contract
+msgid "No running contracts"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__blocked
@@ -891,6 +985,11 @@ msgid "Running Contracts"
 msgstr "Діючі контракти"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__running_contracts_count
+msgid "Running contracts count"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "Помилка доставки SMS"
@@ -919,6 +1018,13 @@ msgstr "Пошук контракту"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 msgid "Search Reference Contracts"
 msgstr "Шукати договори за номером"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__default_contract_id
+msgid ""
+"Select a contract template to auto-fill the contract form with predefined "
+"values. You can still edit the fields as needed after applying the template."
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_departure_wizard__set_date_end
@@ -968,6 +1074,16 @@ msgstr ""
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__state
 msgid "Status of the contract"
 msgstr "Статус контракту"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form_contract_templates
+msgid "Template"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.ui.menu,name:hr_contract.menu_hr_employee_contract_templates
+msgid "Templates"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__country_code
@@ -1075,6 +1191,11 @@ msgid "Work Permit No"
 msgstr "Дозвіл на роботу №"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__default_resource_calendar_id
+msgid "Working Hours"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__resource_calendar_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__resource_calendar_id
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -1086,3 +1207,26 @@ msgstr "Графік робочого часу"
 #: code:addons/hr_contract/models/hr_employee.py:0
 msgid "You cannot delete an employee with a running contract."
 msgstr "Ви не можете видалити працівника з діючим контрактом."
+
+#~ msgid ""
+#~ "<span invisible=\"contracts_count == 1\" class=\"o_stat_text\">\n"
+#~ "                                        Contracts\n"
+#~ "                                    </span>\n"
+#~ "                                    <span invisible=\"contracts_count "
+#~ "&gt; 1\" class=\"o_stat_text\">\n"
+#~ "                                        Contract\n"
+#~ "                                    </span>"
+#~ msgstr ""
+#~ "<span invisible=\"contracts_count == 1\" class=\"o_stat_text\">\n"
+#~ "                                        Контракти\n"
+#~ "                                    </span>\n"
+#~ "                                    <span invisible=\"contracts_count "
+#~ "&gt; 1\" class=\"o_stat_text\">\n"
+#~ "                                        Контракт\n"
+#~ "                                    </span>"
+
+#~ msgid "Create a new contract"
+#~ msgstr "Створити новий контракт"
+
+#~ msgid "Default Working Hours"
+#~ msgstr "Робочі години за замовчуванням"

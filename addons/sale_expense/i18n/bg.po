@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_expense
-# 
+#
 # Translators:
 # Petko Karamotchev, 2024
 # aleksandar ivanov, 2024
@@ -10,19 +10,19 @@
 # Igor Sheludko <igor.sheludko@gmail.com>, 2024
 # Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2024
 # Elena Varbanova, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Elena Varbanova, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_expense
@@ -43,6 +43,17 @@ msgid "Customer to Reinvoice"
 msgstr "Клиент за префактуриране"
 
 #. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
 msgid "Expense"
 msgstr "Разход"
@@ -54,11 +65,6 @@ msgid "Expense Policy Tooltip"
 msgstr "Насоки за политиката на разходите"
 
 #. module: sale_expense
-#: model:ir.model,name:sale_expense.model_hr_expense_sheet
-msgid "Expense Report"
-msgstr "Разходен отчет"
-
-#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense_split
 msgid "Expense Split"
 msgstr "Разпределяне на разходите"
@@ -66,6 +72,7 @@ msgstr "Разпределяне на разходите"
 #. module: sale_expense
 #: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_ids
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order_line__expense_ids
 #: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
 msgid "Expenses"
 msgstr "Разходи"
@@ -97,13 +104,24 @@ msgstr ""
 "цена (цена на продукта, ценова листа и т.н.), когато бъдат публикувани."
 
 #. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_account_move__id
+#: model:ir.model.fields,field_description:sale_expense.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__id
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__id
+#: model:ir.model.fields,field_description:sale_expense.field_product_template__id
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order_line__id
+msgid "ID"
+msgstr ""
+
+#. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
 msgid ""
 "If the category has an expense policy, it will be reinvoiced on this sales "
 "order"
 msgstr ""
-"Ако категорията има разходна политика, тя ще бъде фактурирана в тази поръчка"
-" за продажбаr"
+"Ако категорията има разходна политика, тя ще бъде фактурирана в тази поръчка "
+"за продажбаr"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
@@ -126,22 +144,29 @@ msgid "Product"
 msgstr "Продукт"
 
 #. module: sale_expense
-#. odoo-python
-#: code:addons/sale_expense/models/hr_expense_sheet.py:0
-msgid "Reinvoiced Sales Orders"
-msgstr "Префактурирани поръчки за продажба"
-
-#. module: sale_expense
-#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_sheet__sale_order_count
-msgid "Sale Order Count"
-msgstr "Брой поръчки за продажба"
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_line_id
+msgid "Sale Order Line"
+msgstr ""
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order
+#: model_terms:ir.ui.view,arch_db:sale_expense.hr_expense_form_view_inherit_sale_expense
 msgid "Sales Order"
 msgstr "Поръчка"
 
 #. module: sale_expense
-#: model_terms:ir.ui.view,arch_db:sale_expense.hr_expense_sheet_view_form
-msgid "Sales Orders"
-msgstr "Поръчки за продажби"
+#: model:ir.model,name:sale_expense.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#~ msgid "Expense Report"
+#~ msgstr "Разходен отчет"
+
+#~ msgid "Reinvoiced Sales Orders"
+#~ msgstr "Префактурирани поръчки за продажба"
+
+#~ msgid "Sale Order Count"
+#~ msgstr "Брой поръчки за продажба"
+
+#~ msgid "Sales Orders"
+#~ msgstr "Поръчки за продажби"

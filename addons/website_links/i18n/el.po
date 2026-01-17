@@ -1,48 +1,79 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_links
-# 
+#
 # Translators:
 # Martin Trigaux, 2024
 # George Tarasidis <george_tarasidis@yahoo.com>, 2024
 # Kostas Goutoudis <goutoudis@gmail.com>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2024\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#: code:addons/website_links/static/src/interactions/website_links_charts.js:0
 msgid "# of clicks"
 msgstr "# των κλικς"
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
-msgid "%(clicks)s clicks"
-msgstr ""
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
-msgid "%(count)s countries"
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid ""
+"<a class=\"copy-to-clipboard btn btn-sm btn-primary o_translate_inline\" t-"
+"att-data-clipboard-text=\"short_url\"><i class=\"fa fa-copy me-2\"/>Copy</a>"
 msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid ""
+"<a class=\"copy-to-clipboard btn btn-success text-nowrap "
+"o_translate_inline\"><i class=\"fa fa-copy me-2\"/>Copy</a>"
+msgstr ""
+
+#. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<i class=\"fa fa-copy me-2\"/>Copy"
+msgstr ""
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid ""
+"<span class=\"o_website_links_edit_tools\">\n"
+"                                        <a role=\"button\" "
+"class=\"o_website_links_ok_edit btn btn-sm btn-primary o_translate_inline\" "
+"href=\"#\">ok</a> or\n"
+"                                        <a "
+"class=\"o_website_links_cancel_edit o_translate_inline\" href=\"#\">cancel</"
+"a>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid ""
+"<span class=\"o_website_links_short_url d-flex align-items-center text-"
+"nowrap text-truncate\" id=\"short_url\"><span id=\"short-url-host\" "
+"class=\"text-truncate\"/><span id=\"o_website_links_code\"/></span>\n"
+"                                        <span "
+"class=\"o_website_links_edit_tools text-nowrap\" style=\"display:none;\">\n"
+"                                            <a role=\"button\" "
+"class=\"o_website_links_ok_edit btn btn-sm btn-primary o_translate_inline\" "
+"href=\"#\">ok</a> or\n"
+"                                            <a "
+"class=\"o_website_links_cancel_edit o_translate_inline\" href=\"#\">cancel</"
+"a>\n"
+"                                        </span>"
 msgstr ""
 
 #. module: website_links
@@ -118,6 +149,11 @@ msgid "Create option \""
 msgstr ""
 
 #. module: website_links
+#: model:ir.model.fields,field_description:website_links.field_link_tracker__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Edit code"
@@ -126,6 +162,11 @@ msgstr ""
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Generate Link Tracker"
+msgstr ""
+
+#. module: website_links
+#: model:ir.model.fields,field_description:website_links.field_link_tracker__id
+msgid "ID"
 msgstr ""
 
 #. module: website_links
@@ -145,8 +186,8 @@ msgstr "Προηγ. Εβδομάδα"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-#: code:addons/website_links/static/src/js/website_links_code_editor.js:0
+#: code:addons/website_links/static/src/interactions/website_links.js:0
+#: code:addons/website_links/static/src/interactions/website_links_code_editor.js:0
 msgid "Link Copied!"
 msgstr ""
 
@@ -171,12 +212,6 @@ msgstr "Περιγραφή"
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Newest"
 msgstr "Νεότερα"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
-msgid "No data"
-msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -215,27 +250,27 @@ msgstr ""
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_code_editor.js:0
+#: code:addons/website_links/static/src/interactions/website_links_code_editor.js:0
 msgid "The code cannot be left empty"
 msgstr ""
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#: code:addons/website_links/static/src/interactions/website_links_charts.js:0
 msgid "There is no data to show"
 msgstr "Δεν υπάρχουν δεδομένα για προβολή"
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_code_editor.js:0
+#: code:addons/website_links/static/src/interactions/website_links_code_editor.js:0
 msgid "This code is already taken"
 msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Those trackers can be used in Google Analytics to track clicks and visitors,"
-" or in Odoo reports to track opportunities and related revenues."
+"Those trackers can be used in Google Analytics to track clicks and visitors, "
+"or in Odoo reports to track opportunities and related revenues."
 msgstr ""
 "Αυτοί οι ιχνηλάτες μπορούν να χρησιμοποιηθούν στο Google Analytics για την "
 "ιχνηλάτηση των κλικ και των επισκεπτών ή στις αναφορές του Odoo για την "
@@ -248,13 +283,7 @@ msgstr ""
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-msgid "Unable to get recent links"
-msgstr "Δεν είναι δυνατή η λήψη πρόσφατων συνδέσμων"
-
-#. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#: code:addons/website_links/static/src/interactions/website_links_charts.js:0
 msgid "Undefined"
 msgstr "Μη ορισμένο"
 
@@ -271,27 +300,22 @@ msgid "Visit Webpage Statistics"
 msgstr ""
 
 #. module: website_links
-#. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
-msgid "You don't have any recent links."
-msgstr "Δεν έχετε πρόσφατους συνδέσμους."
-
-#. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Your tracked links"
 msgstr "Οι σύνδεσμοι που έχετε παρακολουθήσει"
 
 #. module: website_links
-#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-#: model_terms:ir.ui.view,arch_db:website_links.graphs
-msgid "cancel"
-msgstr "άκυρο"
-
-#. module: website_links
 #. odoo-javascript
+#: code:addons/website_links/static/src/interactions/website_links_charts.js:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 msgid "clicks"
 msgstr "κλικς"
+
+#. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/interactions/website_links_charts.js:0
+msgid "countries"
+msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -300,19 +324,19 @@ msgstr ""
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
+#: code:addons/website_links/static/src/interactions/website_links.js:0
 msgid "e.g. InMails, Ads, Social, ..."
 msgstr ""
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
+#: code:addons/website_links/static/src/interactions/website_links.js:0
 msgid "e.g. June Sale, Paris Roadshow, ..."
 msgstr ""
 
 #. module: website_links
 #. odoo-javascript
-#: code:addons/website_links/static/src/js/website_links.js:0
+#: code:addons/website_links/static/src/interactions/website_links.js:0
 msgid "e.g. LinkedIn, Facebook, Leads, ..."
 msgstr ""
 
@@ -321,14 +345,17 @@ msgstr ""
 msgid "e.g. https://www.odoo.com/contactus"
 msgstr ""
 
-#. module: website_links
-#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-#: model_terms:ir.ui.view,arch_db:website_links.graphs
-msgid "ok"
-msgstr "ΟΚ"
+#~ msgid "Unable to get recent links"
+#~ msgstr "Δεν είναι δυνατή η λήψη πρόσφατων συνδέσμων"
 
-#. module: website_links
-#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-#: model_terms:ir.ui.view,arch_db:website_links.graphs
-msgid "or"
-msgstr "ή"
+#~ msgid "You don't have any recent links."
+#~ msgstr "Δεν έχετε πρόσφατους συνδέσμους."
+
+#~ msgid "cancel"
+#~ msgstr "άκυρο"
+
+#~ msgid "ok"
+#~ msgstr "ΟΚ"
+
+#~ msgid "or"
+#~ msgstr "ή"

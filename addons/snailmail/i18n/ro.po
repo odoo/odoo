@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail
-# 
+#
 # Translators:
 # Larisa Pop, 2024
 # Betty Keresztesi, 2024
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__attachment_error
@@ -190,6 +191,11 @@ msgid "Cover Page"
 msgstr "Copertă"
 
 #. module: snailmail
+#: model:ir.model,website_form_label:snailmail.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_uid
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__create_uid
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__create_uid
@@ -204,6 +210,13 @@ msgid "Created on"
 msgstr "Creat pe"
 
 #. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:snailmail.field_mail_message__display_name
+#: model:ir.model.fields,field_description:snailmail.field_mail_notification__display_name
+#: model:ir.model.fields,field_description:snailmail.field_mail_thread__display_name
+#: model:ir.model.fields,field_description:snailmail.field_res_company__display_name
+#: model:ir.model.fields,field_description:snailmail.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:snailmail.field_res_partner__display_name
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__display_name
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__display_name
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__display_name
@@ -262,6 +275,13 @@ msgid "Format Error Sending a Snailmail Letter"
 msgstr "Eroare Format Trimitere Scrisoare Snailmail"
 
 #. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:snailmail.field_mail_message__id
+#: model:ir.model.fields,field_description:snailmail.field_mail_notification__id
+#: model:ir.model.fields,field_description:snailmail.field_mail_thread__id
+#: model:ir.model.fields,field_description:snailmail.field_res_company__id
+#: model:ir.model.fields,field_description:snailmail.field_res_config_settings__id
+#: model:ir.model.fields,field_description:snailmail.field_res_partner__id
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__id
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__id
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__id
@@ -373,12 +393,16 @@ msgstr "Raport optional care va fi printat si atasat"
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid ""
 "Our service cannot read your letter due to its format.<br/>\n"
-"                Please modify the format of the template or update your settings\n"
+"                Please modify the format of the template or update your "
+"settings\n"
 "                to automatically add a blank cover page to all letters."
 msgstr ""
-"Serviciul nostru nu poate citi scrisoarea dvs. datorită formatului său.<br/>\n"
-"                Vă rugăm să modificați formatul șablonului sau să actualizați setările\n"
-"                pentru a adăuga automat o pagină de copertă goală tuturor scrisorilor."
+"Serviciul nostru nu poate citi scrisoarea dvs. datorită formatului său.<br/"
+">\n"
+"                Vă rugăm să modificați formatul șablonului sau să "
+"actualizați setările\n"
+"                pentru a adăuga automat o pagină de copertă goală tuturor "
+"scrisorilor."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
@@ -467,6 +491,8 @@ msgid "Snailmail Cover Readonly"
 msgstr ""
 
 #. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
 msgid "Snailmail Credit Error"
 msgstr ""
@@ -484,6 +510,8 @@ msgid "Snailmail Failures"
 msgstr ""
 
 #. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_format
 msgid "Snailmail Format Error"
 msgstr ""
@@ -501,11 +529,15 @@ msgid "Snailmail Letters"
 msgstr "Scrisori Snailmail"
 
 #. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_fields
 msgid "Snailmail Missing Required Fields"
 msgstr ""
 
 #. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_price
 msgid "Snailmail No Price Available"
 msgstr ""
@@ -516,11 +548,15 @@ msgid "Snailmail Status Message"
 msgstr "Mesaj Stare Snailmail"
 
 #. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_trial
 msgid "Snailmail Trial Error"
 msgstr ""
 
 #. module: snailmail
+#. odoo-javascript
+#: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_error
 msgid "Snailmail Unknown Error"
 msgstr ""
@@ -590,8 +626,8 @@ msgstr "Adresa destinatarului nu este completă"
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid ""
-"The attachment of the letter could not be sent. Please check its content and"
-" contact the support if the problem persists."
+"The attachment of the letter could not be sent. Please check its content and "
+"contact the support if the problem persists."
 msgstr ""
 "Fișierul din scrisoare nu a putut fi trimis. Verificați conținutul acestuia "
 "și contactați asistența dacă problema persistă."
@@ -616,8 +652,8 @@ msgid ""
 "The customer address is not complete. Update the address here and re-send "
 "the letter."
 msgstr ""
-"Adresa clientului nu este completă. Actualizați adresa aici și trimiteți din"
-" nou scrisoarea."
+"Adresa clientului nu este completă. Actualizați adresa aici și trimiteți din "
+"nou scrisoarea."
 
 #. module: snailmail
 #. odoo-python
@@ -629,8 +665,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid ""
-"The letter could not be sent due to insufficient credits on your IAP "
-"account."
+"The letter could not be sent due to insufficient credits on your IAP account."
 msgstr ""
 
 #. module: snailmail
@@ -668,15 +703,18 @@ msgid ""
 "'comment': generated by user input e.g. through discuss or composer\n"
 "'email_outgoing': generated by a mailing\n"
 "'notification': generated by system e.g. tracking messages\n"
-"'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
+"'auto_comment': generated by automated notification mechanism e.g. "
+"acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
 "Folosit pentru a clasifica generatorul de mesaje\n"
 "„email\": generat de un e-mail primit, de exemplu prin mailgateway\n"
-"„comment\": generat de o contribuție a utilizatorului, de exemplu, prin intermediul discuss sau composer\n"
+"„comment\": generat de o contribuție a utilizatorului, de exemplu, prin "
+"intermediul discuss sau composer\n"
 "„email_outgoing\": generat de o trimitere\n"
 "'notification': generat de sistem, de exemplu mesaje de urmărire\n"
-"„auto_comment\": generat de un mecanism automat de notificare, de exemplu o confirmare de primire\n"
+"„auto_comment\": generat de un mecanism automat de notificare, de exemplu o "
+"confirmare de primire\n"
 "„user_notification\": generat pentru un anumit destinatar\n"
 "\n"
 "Translated with DeepL.com (free version)"
@@ -686,11 +724,13 @@ msgstr ""
 msgid ""
 "When a letter is created, the status is 'Pending'.\n"
 "If the letter is correctly sent, the status goes in 'Sent',\n"
-"If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
+"If not, it will got in state 'Error' and the error message will be displayed "
+"in the field 'Error Message'."
 msgstr ""
 "Când este creat ă o scrisoare, starea este „În așteptare”.\n"
 "Dacă scrisoarea este trimisă corect, starea va intra în „Trimis”,\n"
-"În caz contrar, va primi starea „Eroare” și mesajul de eroare va fi afișat în câmpul „Mesaj eroare”."
+"În caz contrar, va primi starea „Eroare” și mesajul de eroare va fi afișat "
+"în câmpul „Mesaj eroare”."
 
 #. module: snailmail
 #. odoo-python

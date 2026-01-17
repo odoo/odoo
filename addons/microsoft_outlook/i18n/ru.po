@@ -1,23 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* microsoft_outlook
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
@@ -38,22 +40,26 @@ msgstr ""
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
 msgid ""
-"<span invisible=\"server_type != 'outlook' or not microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"server_type != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
-"<span invisible=\"server_type != 'outlook' or not microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"server_type != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Токен Outlook действителен\n"
 "                    </span>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
 msgid ""
-"<span invisible=\"smtp_authentication != 'outlook' or not microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"smtp_authentication != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
-"<span invisible=\"smtp_authentication != 'outlook' or not microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"smtp_authentication != 'outlook' or not "
+"microsoft_outlook_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Токен Outlook действителен\n"
 "                    </span>"
 
@@ -85,10 +91,15 @@ msgstr "Параметры конфигурации"
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 msgid ""
 "Connect your Outlook account with the OAuth Authentication process.  \n"
-"By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
+"By default, only a user with a matching email address will be able to use "
+"this server. To extend its use, you should set a \"mail.default.from\" "
+"system parameter."
 msgstr ""
-"Подключите учетную запись Outlook с помощью процесса аутентификации OAuth.  \n"
-"По умолчанию только пользователь с соответствующим адресом электронной почты сможет использовать этот сервер. Чтобы расширить его использование, необходимо установить системный параметр \"mail.default.from\"."
+"Подключите учетную запись Outlook с помощью процесса аутентификации "
+"OAuth.  \n"
+"По умолчанию только пользователь с соответствующим адресом электронной почты "
+"сможет использовать этот сервер. Чтобы расширить его использование, "
+"необходимо установить системный параметр \"mail.default.from\"."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -98,7 +109,8 @@ msgid ""
 "You will be redirected to the Outlook login page to accept the permissions."
 msgstr ""
 "Подключите свою личную учетную запись Outlook с помощью OAuth.\n"
-"Вы будете перенаправлены на страницу входа в Outlook, чтобы принять разрешения."
+"Вы будете перенаправлены на страницу входа в Outlook, чтобы принять "
+"разрешения."
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__display_name
@@ -136,8 +148,8 @@ msgstr "Сервер входящей почты"
 #. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 msgid ""
-"Incorrect Connection Security for Outlook mail server “%s”. Please set it to"
-" \"TLS (STARTTLS)\"."
+"Incorrect Connection Security for Outlook mail server “%s”. Please set it to "
+"\"TLS (STARTTLS)\"."
 msgstr ""
 
 #. module: microsoft_outlook
@@ -221,8 +233,8 @@ msgid ""
 "the Outlook OAuthentication Token."
 msgstr ""
 "Заполните поле \"Имя пользователя\" именем пользователя Outlook/Office365 "
-"(ваш адрес электронной почты). Это должна быть та же учетная запись, которая"
-" используется для аутентификационного токена Outlook OAuthentication Token."
+"(ваш адрес электронной почты). Это должна быть та же учетная запись, которая "
+"используется для аутентификационного токена Outlook OAuthentication Token."
 
 #. module: microsoft_outlook
 #. odoo-python
@@ -262,8 +274,8 @@ msgstr "Тип сервера"
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
 msgid ""
-"Setup your Outlook API credentials in the general settings to link a Outlook"
-" account."
+"Setup your Outlook API credentials in the general settings to link a Outlook "
+"account."
 msgstr ""
 "Установите учетные данные Outlook API в общих настройках, чтобы связать "
 "учетную запись Outlook."

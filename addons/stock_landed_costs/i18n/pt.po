@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-11-16 22:50+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -33,7 +33,8 @@ msgstr ""
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
-msgid "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
+msgid ""
+"<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
 msgstr ""
 "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
 
@@ -239,9 +240,17 @@ msgid "Description"
 msgstr "Descrição"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__display_name
 msgid "Display Name"
 msgstr "Nome a Exibir"
 
@@ -273,8 +282,8 @@ msgid ""
 "By Volume: Cost will be divided depending on its volume."
 msgstr ""
 "Igual: O custo será dividido igualmente.\n"
-"Por quantidade: o custo será dividido de acordo com a quantidade do produto."
-"\n"
+"Por quantidade: o custo será dividido de acordo com a quantidade do "
+"produto.\n"
 "Por custo atual: o custo será dividido de acordo com o custo atual do "
 "produto.\n"
 "Por peso: o custo será dividido de acordo com seu peso.\n"
@@ -320,9 +329,17 @@ msgid "Has Message"
 msgstr "Tem Mensagem"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_layer__id
 msgid "ID"
 msgstr "Id."
 
@@ -470,6 +487,11 @@ msgid "Messages"
 msgstr "Mensagens"
 
 #. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "My Activities"
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "Prazo da Minha Atividade"
@@ -603,8 +625,8 @@ msgstr "Erro de Envio de SMS"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
-msgid "Show all records which has next action date is before today"
-msgstr "Mostrar todos os registos cuja data de ação é anterior à atual"
+msgid "Show all records whose next activity date is past"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__split_method
@@ -743,8 +765,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_landed_costs/models/product.py:0
 msgid ""
-"You cannot change the product type or disable landed cost option because the"
-" product is used in an account move line."
+"You cannot change the product type or disable landed cost option because the "
+"product is used in an account move line."
 msgstr ""
 "Não é possível alterar o tipo de produto ou desativar a opção de custos "
 "adicionais porque o produto é usado em uma linha de movimentação de conta."
+
+#~ msgid "Show all records which has next action date is before today"
+#~ msgstr "Mostrar todos os registos cuja data de ação é anterior à atual"

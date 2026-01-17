@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_stock
-# 
+#
 # Translators:
 # Petko Karamotchev, 2024
 # Martin Trigaux, 2024
@@ -10,19 +10,19 @@
 # Maria Boyadjieva <marabo2000@gmail.com>, 2024
 # Camille Dantinne <cmd@odoo.com>, 2024
 # Veselina Slavkova, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:37+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Veselina Slavkova, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_stock
@@ -75,13 +75,25 @@ msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
-" По подразбиране, наличността се задава за новосъздадените стокови продукти."
-" Тя може да бъде променяна на ниво продукт."
+" По подразбиране, наличността се задава за новосъздадените стокови продукти. "
+"Тя може да бъде променяна на ниво продукт."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Default visibility for custom messages."
 msgstr "Стандартна видимост за персонализирани съобщения."
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -94,6 +106,18 @@ msgstr "Получете известие, когато отново е в на�
 msgid "How to display products having low quantities (on hand - reserved)"
 msgstr ""
 "Как да показвате продукти с малки количества (в наличност - резервирани)"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__id
+msgid "ID"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-python
@@ -214,8 +238,8 @@ msgstr "Покажи наличните количества"
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid ""
-"Some products became unavailable and your cart has been updated. We're sorry"
-" for the inconvenience."
+"Some products became unavailable and your cart has been updated. We're sorry "
+"for the inconvenience."
 msgstr ""
 "Някои продукти вече не са налични и вашата кошница е актуализирана. "
 "Съжаляваме за неудобството."
@@ -307,8 +331,9 @@ msgstr ""
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
-msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
-msgstr "Поискали сте%(desired_qty)s продукта но само %(new_qty)s са налични"
+msgid ""
+"You ask for %(desired_qty)s products but only %(available_qty)s is available."
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -339,3 +364,7 @@ msgstr "само ако е под"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "youremail@gmail.com"
 msgstr "youremail@gmail.com"
+
+#~ msgid ""
+#~ "You ask for %(desired_qty)s products but only %(new_qty)s is available"
+#~ msgstr "Поискали сте%(desired_qty)s продукта но само %(new_qty)s са налични"

@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_sale
-# 
+#
 # Translators:
 # Daye Jeong, 2025
 # Wil Odoo, 2025
 # Sarah Park, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: event_sale
@@ -75,8 +75,8 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
-"여러 개의 시간대로 슬롯을 설정하세요. 커뮤니케이션, 최대 참석자 수, 최대 티켓 등록 수 항목은 전체 행사가 아닌 각 시간대별로 "
-"지정되어 있습니다."
+"여러 개의 시간대로 슬롯을 설정하세요. 커뮤니케이션, 최대 참석자 수, 최대 티"
+"켓 등록 수 항목은 전체 행사가 아닌 각 시간대별로 지정되어 있습니다."
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
@@ -343,13 +343,15 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/event_sale/wizard/event_configurator.py:0
 msgid "Invalid slot choice \"%(slot_name)s\" for event \"%(event_name)s\"."
-msgstr "%(event_name)s 행사에 대해 \"%(slot_name)s\" 슬롯이 잘못 선택되었습니다."
+msgstr ""
+"%(event_name)s 행사에 대해 \"%(slot_name)s\" 슬롯이 잘못 선택되었습니다."
 
 #. module: event_sale
 #. odoo-python
 #: code:addons/event_sale/wizard/event_configurator.py:0
 msgid "Invalid ticket choice \"%(ticket_name)s\" for event \"%(event_name)s\"."
-msgstr "%(event_name)s 행사에 대한 \"%(ticket_name)s\" 티켓 선택이 잘못되었습니다."
+msgstr ""
+"%(event_name)s 행사에 대한 \"%(ticket_name)s\" 티켓 선택이 잘못되었습니다."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__invoice_partner_id
@@ -595,8 +597,8 @@ msgid ""
 "The sale order line with the product %(product_name)s needs an event, a "
 "ticket and a slot in case the event has multiple time slots."
 msgstr ""
-"%(product_name)s 제품이 포함된 판매주문서 내역에는 행사, 티켓이 필요하며, 시간대가 여러 슬롯으로 되어 있는 경우 슬롯도 "
-"필요합니다."
+"%(product_name)s 제품이 포함된 판매주문서 내역에는 행사, 티켓이 필요하며, 시"
+"간대가 여러 슬롯으로 되어 있는 경우 슬롯도 필요합니다."
 
 #. module: event_sale
 #. odoo-python
@@ -629,7 +631,8 @@ msgstr "미확인됨"
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_registration__state
 msgid ""
-"Unconfirmed: registrations in a pending state waiting for an action (specific case, notably with sale status)\n"
+"Unconfirmed: registrations in a pending state waiting for an action "
+"(specific case, notably with sale status)\n"
 "Registered: registrations considered taken by a client\n"
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"

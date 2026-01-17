@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_contract
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Larissa Manderfeld, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:28+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_contract
@@ -44,11 +44,13 @@ msgstr "/ Monat"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
 msgid ""
-"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" title=\"In Contract Since\">\n"
+"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" "
+"title=\"In Contract Since\">\n"
 "                                    In Contract Since\n"
 "                                </span>"
 msgstr ""
-"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" title=\"In Contract Since\">\n"
+"<span class=\"o_stat_text text-danger\" invisible=\"not contract_warning\" "
+"title=\"In Contract Since\">\n"
 "                                    Unter Vertrag seit\n"
 "                                </span>"
 
@@ -83,22 +85,24 @@ msgid ""
 "<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
 "                                    Contract\n"
 "                                </span>\n"
-"                                <span invisible=\"contracts_count == 1\" class=\"o_stat_text text-danger\">\n"
+"                                <span invisible=\"contracts_count == 1\" "
+"class=\"o_stat_text text-danger\">\n"
 "                                    Contracts\n"
 "                                </span>"
 msgstr ""
 "<span invisible=\"contracts_count != 1\" class=\"o_stat_text text-danger\">\n"
 "                                    Vertrag\n"
 "                                </span>\n"
-"                                <span invisible=\"contracts_count == 1\" class=\"o_stat_text text-danger\">\n"
+"                                <span invisible=\"contracts_count == 1\" "
+"class=\"o_stat_text text-danger\">\n"
 "                                    Verträge\n"
 "                                </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid ""
-"<span>A contract configured without an employee will be saved as a "
-"template.</span>"
+"<span>A contract configured without an employee will be saved as a template."
+"</span>"
 msgstr ""
 "<span>Ein Vertrag ohne Mitarbeiter wird als Vorlage gespeichert.</span>"
 
@@ -189,11 +193,13 @@ msgstr "Alle Felder wurden aus Vorlage [%(template_name)s] kopiert."
 #. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 msgid ""
-"An employee can only have one contract at the same time. (Excluding Draft and Cancelled contracts).\n"
+"An employee can only have one contract at the same time. (Excluding Draft "
+"and Cancelled contracts).\n"
 "\n"
 "Employee: %(employee_name)s"
 msgstr ""
-"Ein Mitarbeiter kann nur einen Vertrag zur gleichen Zeit haben. (Ausgenommen sind Vertragsentwürfe und abgebrochene Verträge).\n"
+"Ein Mitarbeiter kann nur einen Vertrag zur gleichen Zeit haben. (Ausgenommen "
+"sind Vertragsentwürfe und abgebrochene Verträge).\n"
 "\n"
 "Mitarbeiter: %(employee_name)s"
 
@@ -232,8 +238,8 @@ msgid ""
 "calendar. This could lead to unexpected behaviors."
 msgstr ""
 "Kalenderabweichung: Der Kalender des Mitarbeiters stimmt nicht mit dem "
-"Kalender dieses Vertrags überein. Dies kann zu unerwarteten Verhaltensweisen"
-" führen."
+"Kalender dieses Vertrags überein. Dies kann zu unerwarteten Verhaltensweisen "
+"führen."
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__cancel
@@ -400,10 +406,13 @@ msgstr "Verträge"
 #: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract
 msgid ""
 "Contracts are the link between an employee and his company.<br>\n"
-"                It contains all the information about his salary package.<br><br>"
+"                It contains all the information about his salary package."
+"<br><br>"
 msgstr ""
-"Verträge stellen die Verbindung zwischen Mitarbeitern und dem Unternehmen dar. <br>\n"
-"                Sie enthalten alle Informationen zum Gehaltspaket des Mitarbeiters.<br><br>"
+"Verträge stellen die Verbindung zwischen Mitarbeitern und dem Unternehmen "
+"dar. <br>\n"
+"                Sie enthalten alle Informationen zum Gehaltspaket des "
+"Mitarbeiters.<br><br>"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.hr_contract_history_to_review_view_list_action
@@ -720,8 +729,7 @@ msgstr "Falls markiert, erfordern neue Nachrichten Ihre Aufmerksamkeit."
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
+msgstr "Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__active_employee
@@ -931,8 +939,8 @@ msgstr "Vertrag öffnen"
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__hr_responsible_id
 msgid "Person responsible for validating the employee's contracts."
 msgstr ""
-"Person, die für die Validierung der Verträge des Mitarbeiters verantwortlich"
-" ist."
+"Person, die für die Validierung der Verträge des Mitarbeiters verantwortlich "
+"ist."
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee_public
@@ -1028,8 +1036,8 @@ msgid ""
 "Select a contract template to auto-fill the contract form with predefined "
 "values. You can still edit the fields as needed after applying the template."
 msgstr ""
-"Wählen Sie eine Vertragsvorlage aus, um das Vertragsformular automatisch mit"
-" vordefinierten Werten auszufüllen. Sie können die Felder weiterhin nach "
+"Wählen Sie eine Vertragsvorlage aus, um das Vertragsformular automatisch mit "
+"vordefinierten Werten auszufüllen. Sie können die Felder weiterhin nach "
 "Anwendung der Vorlage nach Bedarf bearbeiten."
 
 #. module: hr_contract

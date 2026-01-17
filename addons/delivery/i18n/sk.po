@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-# 
+#
 # Translators:
 # MatejJurista, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 18:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
+">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: delivery
 #. odoo-python
@@ -58,7 +59,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 
 #. module: delivery
@@ -75,7 +77,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                <span class=\"o_stat_text\">Environment</span>"
+"                                <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 
 #. module: delivery
@@ -151,8 +154,8 @@ msgstr "Archivovaný"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid ""
-"Are you sure you want the delivery to be free for this order? You might have"
-" forgotten to compute the rates."
+"Are you sure you want the delivery to be free for this order? You might have "
+"forgotten to compute the rates."
 msgstr ""
 
 #. module: delivery
@@ -187,8 +190,7 @@ msgstr "Prepravca"
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid ""
-"Carrier %s cannot have the same tag in both Must Have Tags and Excluded "
-"Tags."
+"Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags."
 msgstr ""
 
 #. module: delivery
@@ -405,6 +407,7 @@ msgstr "Zrušiť"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__display_name
+#: model:ir.model.fields,field_description:delivery.field_ir_http__display_name
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:delivery.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:delivery.field_product_category__display_name
@@ -442,8 +445,10 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 
 #. module: delivery
@@ -465,8 +470,8 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
-"Filling this form allows you to make the shipping method available according"
-" to the content of the order or its destination."
+"Filling this form allows you to make the shipping method available according "
+"to the content of the order or its destination."
 msgstr ""
 
 #. module: delivery
@@ -506,10 +511,16 @@ msgid "Group By"
 msgstr "Zoskupiť podľa"
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__id
+#: model:ir.model.fields,field_description:delivery.field_ir_http__id
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__id
 #: model:ir.model.fields,field_description:delivery.field_payment_transaction__id
 #: model:ir.model.fields,field_description:delivery.field_product_category__id
@@ -916,8 +927,8 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
 msgid ""
-"The method is available only if at least one product of the order has one of"
-" these tags."
+"The method is available only if at least one product of the order has one of "
+"these tags."
 msgstr ""
 
 #. module: delivery
@@ -1053,9 +1064,11 @@ msgstr "Označenie mernej jednotky váhy"
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid ""
-"You can not update the shipping costs on an order where it was already invoiced!\n"
+"You can not update the shipping costs on an order where it was already "
+"invoiced!\n"
 "\n"
-"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"The following delivery lines (product, invoiced quantity and price) have "
+"already been processed:\n"
 "\n"
 msgstr ""
 

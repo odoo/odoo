@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale
-# 
+#
 # Translators:
 # Lancelot Semal, 2024
 # myacc-pro, 2024
@@ -15,20 +15,21 @@
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025
 # Will Sensors, 2025
 # ievaputnina <ievai.putninai@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:37+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: ievaputnina <ievai.putninai@gmail.com>, 2025\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lv\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard___data_fetched
@@ -108,32 +109,45 @@ msgstr "<b>Nosūtiet piedāvājumu</b> sev un pārbaudiet, ko saņems klients."
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
-"        <t t-set=\"transaction_sudo\" t-value=\"object.get_portal_last_transaction()\"/>\n"
+"        <t t-set=\"transaction_sudo\" t-"
+"value=\"object.get_portal_last_transaction()\"/>\n"
 "        Hello,\n"
 "        <br/><br/>\n"
 "        A payment with reference\n"
-"        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference or ''\">SOOO49</span>\n"
+"        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
+"or ''\">SOOO49</span>\n"
 "        amounting\n"
-"        <span style=\"font-weight:bold;\" t-out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"        <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ "
+"10.00</span>\n"
 "        for your order\n"
-"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span>\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
+"'pending'\">\n"
 "            is pending.\n"
 "            <br/>\n"
-"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid + transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in ('draft', 'sent')\">\n"
+"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
+"+ transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in "
+"('draft', 'sent')\">\n"
 "                Your order will be confirmed once the payment is confirmed.\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Once confirmed,\n"
-"                <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid - transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total - object.amount_paid - "
+"transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
 "                will remain to be paid.\n"
 "            </t>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            has been confirmed.\n"
-"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, object.amount_total) &lt; 0\">\n"
+"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, "
+"object.amount_total) &lt; 0\">\n"
 "                <br/>\n"
-"                <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid, object.currency_id) or ''\">$ 10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total - object.amount_paid, "
+"object.currency_id) or ''\">$ 10.00</span>\n"
 "                remains to be paid.\n"
 "            </t>\n"
 "        </t>\n"
@@ -141,58 +155,16 @@ msgid ""
 "        Thank you for your trust!\n"
 "        <br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
 "        </t>\n"
-"        <br/><br/>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
-"        <t t-set=\"transaction_sudo\" t-value=\"object.get_portal_last_transaction()\"/>\n"
-"        Sveicināti,\n"
-"        <br/><br/>\n"
-"        Maksājums ar referenci\n"
-"        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference or ''\">SOOO49</span>\n"
-"        kopsummā\n"
-"        <span style=\"font-weight:bold;\" t-out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
-"        par Jūsu pasūtījumu\n"
-"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span>\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">\n"
-"            tiek gaidīts.\n"
-"            <br/>\n"
-"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid + transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in ('draft', 'sent')\">\n"
-"                Jūsu pasūtījums tiks apstiprināts, kad maksājums tiks apstiprināts.\n"
-"            </t>\n"
-"            <t t-else=\"\">\n"
-"                Kad apstiprināts,\n"
-"                <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid - transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
-"                atliks apmaksai.\n"
-"            </t>\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            tika apstiprināts.\n"
-"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, object.amount_total) &lt; 0\">\n"
-"                <br/>\n"
-"                <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid, object.currency_id) or ''\">$ 10.00</span>\n"
-"                atliek apmaksai.\n"
-"            </t>\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"        Paldies Jums par Jūsu uzticību!\n"
-"        <br/>\n"
-"        Nevilcinieties sazināties ar mums, ja Jums ir kādi jautājumi.\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"    </p>\n"
-"</div>\n"
-"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -201,20 +173,27 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
 "        Hello,\n"
 "        <br/><br/>\n"
-"        <t t-set=\"tx_sudo\" t-value=\"object.get_portal_last_transaction()\"/>\n"
-"        Your order <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
-"        <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))\">\n"
+"        <t t-set=\"tx_sudo\" t-value=\"object.get_portal_last_transaction()"
+"\"/>\n"
+"        Your order <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">S00049</span> amounting in <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span>\n"
+"        <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in "
+"('done', 'authorized'))\">\n"
 "            has been confirmed.<br/>\n"
 "            Thank you for your trust!\n"
 "        </t>\n"
 "        <t t-elif=\"tx_sudo and tx_sudo.state == 'pending'\">\n"
 "            is pending. It will be confirmed when the payment is received.\n"
 "            <t t-if=\"object.reference\">\n"
-"                Your payment reference is <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"/>.\n"
+"                Your payment reference is <span style=\"font-weight:bold;\" "
+"t-out=\"object.reference or ''\"/>.\n"
 "            </t>\n"
 "        </t>\n"
 "        <br/>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
+">\n"
 "        <t t-if=\"documents\">\n"
 "            <br/> \n"
 "            <t t-if=\"len(documents)&gt;1\">\n"
@@ -226,29 +205,37 @@ msgid ""
 "            <ul style=\"margin-bottom: 0;\">\n"
 "                <t t-foreach=\"documents\" t-as=\"document\">\n"
 "                    <li style=\"font-size: 13px;\">\n"
-"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"/>\n"
+"                        <a t-out=\"document.ir_attachment_id.name\" t-att-"
+"href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-"
+"target=\"target\"/>\n"
 "                    </li>\n"
 "                </t>\n"
 "            </ul>\n"
 "        </t>\n"
 "        <br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
 "        </t>\n"
-"        <br/><br/>\n"
 "    </p>\n"
 "<t t-if=\"hasattr(object, 'website_id') and object.website_id\">\n"
 "    <div style=\"margin: 0px; padding: 0px;\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse; white-space: nowrap;\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
+"border-collapse: collapse; white-space: nowrap;\">\n"
 "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
-"                <td style=\"width: 150px;\"><span style=\"font-weight:bold;\">Products</span></td>\n"
+"                <td style=\"width: 150px;\"><span style=\"font-weight:bold;"
+"\">Products</span></td>\n"
 "                <td/>\n"
-"                <td width=\"15%\" align=\"center\"><span style=\"font-weight:bold;\">Quantity</span></td>\n"
+"                <td width=\"15%\" align=\"center\"><span style=\"font-"
+"weight:bold;\">Quantity</span></td>\n"
 "                <td width=\"20%\" align=\"right\">\n"
 "                    <span style=\"font-weight:bold;\">\n"
-"                        <t t-if=\"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
+"                        <t t-"
+"if=\"object.website_id.show_line_subtotals_tax_selection == "
+"'tax_excluded'\">\n"
 "                            Tax Excl.\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
@@ -260,149 +247,234 @@ msgid ""
 "        </table>\n"
 "        <t t-set=\"current_subtotal\" t-value=\"0\"/>\n"
 "        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
-"            <t t-set=\"line_subtotal\" t-value=\"                     line.price_subtotal                     if object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'                     else line.price_total                 \"/>\n"
-"            <t t-set=\"current_subtotal\" t-value=\"current_subtotal + line_subtotal\"/>\n"
-"            <t t-if=\"(not hasattr(line, 'is_delivery') or not line.is_delivery) and (                     line.display_type in ['line_section', 'line_note']                     or line.product_type == 'combo'                 )\">\n"
-"                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
-"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"/>\n"
-"                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"/>\n"
+"            <t t-set=\"line_subtotal\" t-value=\"                     "
+"line.price_subtotal                     if "
+"object.website_id.show_line_subtotals_tax_selection == "
+"'tax_excluded'                     else line.price_total                 \"/"
+">\n"
+"            <t t-set=\"current_subtotal\" t-value=\"current_subtotal + "
+"line_subtotal\"/>\n"
+"            <t t-if=\"(not hasattr(line, 'is_delivery') or not "
+"line.is_delivery) and (                     line.display_type in "
+"['line_section', 'line_note']                     or line.product_type == "
+"'combo'                 )\">\n"
+"                <table width=\"100%\" style=\"color: #454748; font-size: "
+"12px; border-collapse: collapse;\">\n"
+"                    <t t-set=\"loop_cycle_number\" t-"
+"value=\"loop_cycle_number or 0\"/>\n"
+"                    <tr t-att-style=\"'background-color: #f2f2f2' if "
+"loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+"                        <t t-set=\"loop_cycle_number\" t-"
+"value=\"loop_cycle_number + 1\"/>\n"
 "                        <td colspan=\"4\">\n"
-"                            <t t-if=\"line.display_type == 'line_section' or line.product_type == 'combo'\">\n"
-"                                <span style=\"font-weight:bold;\" t-out=\"line.name or ''\">Taking care of Trees Course</span>\n"
-"                                <t t-set=\"current_section\" t-value=\"line\"/>\n"
-"                                <t t-set=\"current_subtotal\" t-value=\"0\"/>\n"
+"                            <t t-if=\"line.display_type == 'line_section' or "
+"line.product_type == 'combo'\">\n"
+"                                <span style=\"font-weight:bold;\" t-"
+"out=\"line.name or ''\">Taking care of Trees Course</span>\n"
+"                                <t t-set=\"current_section\" t-"
+"value=\"line\"/>\n"
+"                                <t t-set=\"current_subtotal\" t-value=\"0\"/"
+">\n"
 "                            </t>\n"
 "                            <t t-elif=\"line.display_type == 'line_note'\">\n"
-"                                <i t-out=\"line.name or ''\">Taking care of Trees Course</i>\n"
+"                                <i t-out=\"line.name or ''\">Taking care of "
+"Trees Course</i>\n"
 "                            </t>\n"
 "                        </td>\n"
 "                    </tr>\n"
 "                </table>\n"
 "            </t>\n"
-"            <t t-elif=\"(not hasattr(line, 'is_delivery') or not line.is_delivery)\">\n"
-"                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
-"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"/>\n"
-"                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"/>\n"
+"            <t t-elif=\"(not hasattr(line, 'is_delivery') or not "
+"line.is_delivery)\">\n"
+"                <table width=\"100%\" style=\"color: #454748; font-size: "
+"12px; border-collapse: collapse;\">\n"
+"                    <t t-set=\"loop_cycle_number\" t-"
+"value=\"loop_cycle_number or 0\"/>\n"
+"                    <tr t-att-style=\"'background-color: #f2f2f2' if "
+"loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+"                        <t t-set=\"loop_cycle_number\" t-"
+"value=\"loop_cycle_number + 1\"/>\n"
 "                        <td style=\"width: 150px;\">\n"
-"                            <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                            <img t-attf-src=\"/web/image/product.product/"
+"{{ line.product_id.id }}/image_128\" style=\"width: 64px; height: 64px; "
+"object-fit: contain;\" alt=\"Product image\"/>\n"
 "                        </td>\n"
-"                        <td align=\"left\" t-out=\"line.product_id.name or ''\">\tTaking care of Trees Course</td>\n"
-"                        <td width=\"15%\" align=\"center\" t-out=\"line.product_uom_qty or ''\">1</td>\n"
-"                        <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold; white-space: nowrap;\">\n"
-"                        <t t-if=\"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
-"                            <t t-out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$ 10.00</t>\n"
+"                        <td align=\"left\" t-out=\"line.product_id.name or "
+"''\">\tTaking care of Trees Course</td>\n"
+"                        <td width=\"15%\" align=\"center\" t-"
+"out=\"line.product_uom_qty or ''\">1</td>\n"
+"                        <td width=\"20%\" align=\"right\"><span style=\"font-"
+"weight:bold; white-space: nowrap;\">\n"
+"                        <t t-"
+"if=\"object.website_id.show_line_subtotals_tax_selection == "
+"'tax_excluded'\">\n"
+"                            <t t-"
+"out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$ "
+"10.00</t>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
-"                            <t t-out=\"format_amount(line.price_reduce_taxinc, object.currency_id) or ''\">$ 10.00</t>\n"
+"                            <t t-"
+"out=\"format_amount(line.price_reduce_taxinc, object.currency_id) or ''\">$ "
+"10.00</t>\n"
 "                        </t>\n"
 "                        </span></td>\n"
 "                    </tr>\n"
 "                </table>\n"
 "            </t>\n"
-"            <t t-if=\"current_section and (                     line_last                     or object.order_line[line_index+1].display_type == 'line_section'                     or object.order_line[line_index+1].product_type == 'combo'                     or (                         line.combo_item_id                         and not object.order_line[line_index+1].combo_item_id                     )                 ) and not line.is_downpayment\">\n"
+"            <t t-if=\"current_section and "
+"(                     line_last                     or "
+"object.order_line[line_index+1].display_type == "
+"'line_section'                     or "
+"object.order_line[line_index+1].product_type == 'combo'                     "
+"or (                         line.combo_item_id                         and "
+"not "
+"object.order_line[line_index+1].combo_item_id                     )                 ) "
+"and not line.is_downpayment\">\n"
 "                <t t-set=\"current_section\" t-value=\"None\"/>\n"
-"                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
-"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"/>\n"
-"                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"/>\n"
+"                <table width=\"100%\" style=\"color: #454748; font-size: "
+"12px; border-collapse: collapse;\">\n"
+"                    <t t-set=\"loop_cycle_number\" t-"
+"value=\"loop_cycle_number or 0\"/>\n"
+"                    <tr t-att-style=\"'background-color: #f2f2f2' if "
+"loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+"                        <t t-set=\"loop_cycle_number\" t-"
+"value=\"loop_cycle_number + 1\"/>\n"
 "                        <td style=\"width: 100%\" align=\"right\">\n"
-"                            <span style=\"font-weight: bold;\">Subtotal:</span>\n"
-"                            <span t-out=\"format_amount(current_subtotal, object.currency_id) or ''\">$ 10.00</span>\n"
+"                            <span style=\"font-weight: bold;\">Subtotal:</"
+"span>\n"
+"                            <span t-out=\"format_amount(current_subtotal, "
+"object.currency_id) or ''\">$ 10.00</span>\n"
 "                        </td>\n"
 "                    </tr>\n"
 "                </table>\n"
 "            </t>\n"
 "        </t>\n"
 "    </div>\n"
-"    <div style=\"margin: 0px; padding: 0px;\" t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
+"    <div style=\"margin: 0px; padding: 0px;\" t-if=\"hasattr(object, "
+"'carrier_id') and object.carrier_id\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
+"border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Delivery:</span></td>\n"
-"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ 0.00</td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
+"align=\"right\"><span style=\"font-weight:bold;\">Delivery:</span></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
+"align=\"right\" t-out=\"format_amount(object.amount_delivery, "
+"object.currency_id) or ''\">$ 0.00</td>\n"
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-weight:bold;\">Untaxed Amount:</span></td>\n"
-"                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-"
+"weight:bold;\">Untaxed Amount:</span></td>\n"
+"                <td style=\"width: 10%;\" align=\"right\" t-"
+"out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ "
+"10.00</td>\n"
 "            </tr>\n"
 "        </table>\n"
 "    </div>\n"
 "    <div style=\"margin: 0px; padding: 0px;\" t-else=\"\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
+"border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Untaxed Amount:</span></td>\n"
-"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
+"align=\"right\"><span style=\"font-weight:bold;\">Untaxed Amount:</span></"
+"td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
+"align=\"right\" t-out=\"format_amount(object.amount_untaxed, "
+"object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
 "        </table>\n"
 "    </div>\n"
 "    <div style=\"margin: 0px; padding: 0px;\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
+"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
+"border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-weight:bold;\">Taxes:</span></td>\n"
-"                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_tax, object.currency_id) or ''\">$ 0.00</td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-"
+"weight:bold;\">Taxes:</span></td>\n"
+"                <td style=\"width: 10%;\" align=\"right\" t-"
+"out=\"format_amount(object.amount_tax, object.currency_id) or ''\">$ 0.00</"
+"td>\n"
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Total:</span></td>\n"
-"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
+"align=\"right\"><span style=\"font-weight:bold;\">Total:</span></td>\n"
+"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
+"align=\"right\" t-out=\"format_amount(object.amount_total, "
+"object.currency_id) or ''\">$ 10.00</td>\n"
 "            </tr>\n"
 "        </table>\n"
 "    </div>\n"
-"    <div t-if=\"object.partner_invoice_id\" style=\"margin: 0px; padding: 0px;\">\n"
+"    <div t-if=\"object.partner_invoice_id\" style=\"margin: 0px; padding: "
+"0px;\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td style=\"padding-top: 10px;\">\n"
 "                    <span style=\"font-weight:bold;\">Bill to:</span>\n"
-"                    <t t-out=\"object.partner_invoice_id.street or ''\">1201 S Figueroa St</t>\n"
-"                    <t t-out=\"object.partner_invoice_id.city or ''\">Los Angeles</t>\n"
-"                    <t t-out=\"object.partner_invoice_id.state_id.name or ''\">California</t>\n"
-"                    <t t-out=\"object.partner_invoice_id.zip or ''\">90015</t>\n"
-"                    <t t-out=\"object.partner_invoice_id.country_id.name or ''\">United States</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.street or ''\">1201 "
+"S Figueroa St</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.city or ''\">Los "
+"Angeles</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.state_id.name or "
+"''\">California</t>\n"
+"                    <t t-out=\"object.partner_invoice_id.zip or ''\">90015</"
+"t>\n"
+"                    <t t-out=\"object.partner_invoice_id.country_id.name or "
+"''\">United States</t>\n"
 "                </td>\n"
 "            </tr>\n"
 "            <tr>\n"
 "                <td>\n"
-"                    <span style=\"font-weight:bold;\">Payment Method:</span>\n"
+"                    <span style=\"font-weight:bold;\">Payment Method:</"
+"span>\n"
 "                    <t t-if=\"tx_sudo.token_id\">\n"
 "                        <t t-out=\"tx_sudo.token_id.display_name or ''\"/>\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
-"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"/>\n"
+"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"/"
+">\n"
 "                    </t>\n"
-"                    (<t t-out=\"format_amount(tx_sudo.amount, object.currency_id) or ''\">$ 10.00</t>)\n"
+"                    (<t t-out=\"format_amount(tx_sudo.amount, "
+"object.currency_id) or ''\">$ 10.00</t>)\n"
 "                </td>\n"
 "            </tr>\n"
 "        </table>\n"
 "    </div>\n"
-"    <div t-if=\"object.partner_shipping_id and not object.only_services\" style=\"margin: 0px; padding: 0px;\">\n"
+"    <div t-if=\"object.partner_shipping_id and not object.only_services\" "
+"style=\"margin: 0px; padding: 0px;\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td>\n"
 "                    <br/>\n"
 "                    <span style=\"font-weight:bold;\">Ship to:</span>\n"
-"                    <t t-out=\"object.partner_shipping_id.street or ''\">1201 S Figueroa St</t>\n"
-"                    <t t-out=\"object.partner_shipping_id.city or ''\">Los Angeles</t>\n"
-"                    <t t-out=\"object.partner_shipping_id.state_id.name or ''\">California</t>\n"
-"                    <t t-out=\"object.partner_shipping_id.zip or ''\">90015</t>\n"
-"                    <t t-out=\"object.partner_shipping_id.country_id.name or ''\">United States</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.street or "
+"''\">1201 S Figueroa St</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.city or ''\">Los "
+"Angeles</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.state_id.name or "
+"''\">California</t>\n"
+"                    <t t-out=\"object.partner_shipping_id.zip or ''\">90015</"
+"t>\n"
+"                    <t t-out=\"object.partner_shipping_id.country_id.name or "
+"''\">United States</t>\n"
 "                </td>\n"
 "            </tr>\n"
 "        </table>\n"
-"        <table t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\" width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
+"        <table t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\" "
+"width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td>\n"
-"                    <span style=\"font-weight:bold;\">Shipping Method:</span>\n"
+"                    <span style=\"font-weight:bold;\">Shipping Method:</"
+"span>\n"
 "                    <t t-out=\"object.carrier_id.name or ''\"/>\n"
 "                    <t t-if=\"object.amount_delivery == 0.0\">\n"
 "                        (Free)\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
-"                        (<t t-out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ 10.00</t>)\n"
+"                        (<t t-out=\"format_amount(object.amount_delivery, "
+"object.currency_id) or ''\">$ 10.00</t>)\n"
 "                    </t>\n"
 "                </td>\n"
 "            </tr>\n"
@@ -417,251 +489,27 @@ msgid ""
 "</t>\n"
 "</div>"
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
-"        Sveicināti,\n"
-"        <br/><br/>\n"
-"        <t t-set=\"tx_sudo\" t-value=\"object.get_portal_last_transaction()\"/>\n"
-"        Jūsu pasūtījums <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> kopsummā <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
-"        <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))\">\n"
-"            tika apstiprināts.<br/>\n"
-"            Paldies Jums par Jūsu uzticību!\n"
-"        </t>\n"
-"        <t t-elif=\"tx_sudo and tx_sudo.state == 'pending'\">\n"
-"            tiek gaidīts. Tas tiks apstiprināts, kad maksājums tiks saņemts.\n"
-"            <t t-if=\"object.reference\">\n"
-"                Jūsu maksājuma reference ir <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"/>.\n"
-"            </t>\n"
-"        </t>\n"
-"        <br/>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>\n"
-"        <t t-if=\"documents\">\n"
-"            <br/> \n"
-"            <t t-if=\"len(documents)&gt;1\">\n"
-"                Šeit ir daži papildus dokumenti, kas varētu Jūs interesēt:\n"
-"            </t>\n"
-"            <t t-else=\"\">\n"
-"                Šeit ir papildus dokuments, kas varētu Jūs interesēt:\n"
-"            </t>\n"
-"            <ul style=\"margin-bottom: 0;\">\n"
-"                <t t-foreach=\"documents\" t-as=\"document\">\n"
-"                    <li style=\"font-size: 13px;\">\n"
-"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"/>\n"
-"                    </li>\n"
-"                </t>\n"
-"            </ul>\n"
-"        </t>\n"
-"        <br/>\n"
-"        Nevilcinieties sazināties ar mums, ja Jums ir kādi jautājumi.\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"    </p>\n"
-"<t t-if=\"hasattr(object, 'website_id') and object.website_id\">\n"
-"    <div style=\"margin: 0px; padding: 0px;\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse; white-space: nowrap;\">\n"
-"            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
-"                <td style=\"width: 150px;\"><span style=\"font-weight:bold;\">Preces</span></td>\n"
-"                <td/>\n"
-"                <td width=\"15%\" align=\"center\"><span style=\"font-weight:bold;\">Daudzums</span></td>\n"
-"                <td width=\"20%\" align=\"right\">\n"
-"                    <span style=\"font-weight:bold;\">\n"
-"                        <t t-if=\"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
-"                            Bez PVN\n"
-"                        </t>\n"
-"                        <t t-else=\"\">\n"
-"                            Ar PVN\n"
-"                        </t>\n"
-"                    </span>\n"
-"                </td>\n"
-"            </tr>\n"
-"        </table>\n"
-"        <t t-set=\"current_subtotal\" t-value=\"0\"/>\n"
-"        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
-"            <t t-set=\"line_subtotal\" t-value=\"                     line.price_subtotal                     if object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'                     else line.price_total                 \"/>\n"
-"            <t t-set=\"current_subtotal\" t-value=\"current_subtotal + line_subtotal\"/>\n"
-"            <t t-if=\"(not hasattr(line, 'is_delivery') or not line.is_delivery) and (                     line.display_type in ['line_section', 'line_note']                     or line.product_type == 'combo'                 )\">\n"
-"                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
-"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"/>\n"
-"                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"/>\n"
-"                        <td colspan=\"4\">\n"
-"                            <t t-if=\"line.display_type == 'line_section' or line.product_type == 'combo'\">\n"
-"                                <span style=\"font-weight:bold;\" t-out=\"line.name or ''\">Koku kopšanas kurss</span>\n"
-"                                <t t-set=\"current_section\" t-value=\"line\"/>\n"
-"                                <t t-set=\"current_subtotal\" t-value=\"0\"/>\n"
-"                            </t>\n"
-"                            <t t-elif=\"line.display_type == 'line_note'\">\n"
-"                                <i t-out=\"line.name or ''\">Koku kopšanas kurss</i>\n"
-"                            </t>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </table>\n"
-"            </t>\n"
-"            <t t-elif=\"(not hasattr(line, 'is_delivery') or not line.is_delivery)\">\n"
-"                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
-"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"/>\n"
-"                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"/>\n"
-"                        <td style=\"width: 150px;\">\n"
-"                            <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 64px; height: 64px; object-fit: contain;\" alt=\"Product image\"/>\n"
-"                        </td>\n"
-"                        <td align=\"left\" t-out=\"line.product_id.name or ''\">\tKoku kopšanas kurss</td>\n"
-"                        <td width=\"15%\" align=\"center\" t-out=\"line.product_uom_qty or ''\">1</td>\n"
-"                        <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold; white-space: nowrap;\">\n"
-"                        <t t-if=\"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
-"                            <t t-out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$ 10.00</t>\n"
-"                        </t>\n"
-"                        <t t-else=\"\">\n"
-"                            <t t-out=\"format_amount(line.price_reduce_taxinc, object.currency_id) or ''\">$ 10.00</t>\n"
-"                        </t>\n"
-"                        </span></td>\n"
-"                    </tr>\n"
-"                </table>\n"
-"            </t>\n"
-"            <t t-if=\"current_section and (                     line_last                     or object.order_line[line_index+1].display_type == 'line_section'                     or object.order_line[line_index+1].product_type == 'combo'                     or (                         line.combo_item_id                         and not object.order_line[line_index+1].combo_item_id                     )                 ) and not line.is_downpayment\">\n"
-"                <t t-set=\"current_section\" t-value=\"None\"/>\n"
-"                <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-collapse: collapse;\">\n"
-"                    <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number or 0\"/>\n"
-"                    <tr t-att-style=\"'background-color: #f2f2f2' if loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
-"                        <t t-set=\"loop_cycle_number\" t-value=\"loop_cycle_number + 1\"/>\n"
-"                        <td style=\"width: 100%\" align=\"right\">\n"
-"                            <span style=\"font-weight: bold;\">Starpsumma:</span>\n"
-"                            <span t-out=\"format_amount(current_subtotal, object.currency_id) or ''\">$ 10.00</span>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </table>\n"
-"            </t>\n"
-"        </t>\n"
-"    </div>\n"
-"    <div style=\"margin: 0px; padding: 0px;\" t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
-"            <tr>\n"
-"                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Piegāde:</span></td>\n"
-"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ 0.00</td>\n"
-"            </tr>\n"
-"            <tr>\n"
-"                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-weight:bold;\">Summa bez nodokļiem:</span></td>\n"
-"                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
-"            </tr>\n"
-"        </table>\n"
-"    </div>\n"
-"    <div style=\"margin: 0px; padding: 0px;\" t-else=\"\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
-"            <tr>\n"
-"                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Summa bez nodokļiem:</span></td>\n"
-"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
-"            </tr>\n"
-"        </table>\n"
-"    </div>\n"
-"    <div style=\"margin: 0px; padding: 0px;\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
-"            <tr>\n"
-"                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-weight:bold;\">PVN:</span></td>\n"
-"                <td style=\"width: 10%;\" align=\"right\" t-out=\"format_amount(object.amount_tax, object.currency_id) or ''\">$ 0.00</td>\n"
-"            </tr>\n"
-"            <tr>\n"
-"                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Kopsumma:</span></td>\n"
-"                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</td>\n"
-"            </tr>\n"
-"        </table>\n"
-"    </div>\n"
-"    <div t-if=\"object.partner_invoice_id\" style=\"margin: 0px; padding: 0px;\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
-"            <tr>\n"
-"                <td style=\"padding-top: 10px;\">\n"
-"                    <span style=\"font-weight:bold;\">Norēķinu adrese:</span>\n"
-"                    <t t-out=\"object.partner_invoice_id.street or ''\">1201 S Figueroa St</t>\n"
-"                    <t t-out=\"object.partner_invoice_id.city or ''\">Los Angeles</t>\n"
-"                    <t t-out=\"object.partner_invoice_id.state_id.name or ''\">California</t>\n"
-"                    <t t-out=\"object.partner_invoice_id.zip or ''\">90015</t>\n"
-"                    <t t-out=\"object.partner_invoice_id.country_id.name or ''\">United States</t>\n"
-"                </td>\n"
-"            </tr>\n"
-"            <tr>\n"
-"                <td>\n"
-"                    <span style=\"font-weight:bold;\">Maksājuma metode:</span>\n"
-"                    <t t-if=\"tx_sudo.token_id\">\n"
-"                        <t t-out=\"tx_sudo.token_id.display_name or ''\"/>\n"
-"                    </t>\n"
-"                    <t t-else=\"\">\n"
-"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"/>\n"
-"                    </t>\n"
-"                    (<t t-out=\"format_amount(tx_sudo.amount, object.currency_id) or ''\">$ 10.00</t>)\n"
-"                </td>\n"
-"            </tr>\n"
-"        </table>\n"
-"    </div>\n"
-"    <div t-if=\"object.partner_shipping_id and not object.only_services\" style=\"margin: 0px; padding: 0px;\">\n"
-"        <table width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
-"            <tr>\n"
-"                <td>\n"
-"                    <br/>\n"
-"                    <span style=\"font-weight:bold;\">Piegādes adrese:</span>\n"
-"                    <t t-out=\"object.partner_shipping_id.street or ''\">1201 S Figueroa St</t>\n"
-"                    <t t-out=\"object.partner_shipping_id.city or ''\">Los Angeles</t>\n"
-"                    <t t-out=\"object.partner_shipping_id.state_id.name or ''\">California</t>\n"
-"                    <t t-out=\"object.partner_shipping_id.zip or ''\">90015</t>\n"
-"                    <t t-out=\"object.partner_shipping_id.country_id.name or ''\">United States</t>\n"
-"                </td>\n"
-"            </tr>\n"
-"        </table>\n"
-"        <table t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\" width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
-"            <tr>\n"
-"                <td>\n"
-"                    <span style=\"font-weight:bold;\">Piegādes metode:</span>\n"
-"                    <t t-out=\"object.carrier_id.name or ''\"/>\n"
-"                    <t t-if=\"object.amount_delivery == 0.0\">\n"
-"                        (Bezmaksas)\n"
-"                    </t>\n"
-"                    <t t-else=\"\">\n"
-"                        (<t t-out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ 10.00</t>)\n"
-"                    </t>\n"
-"                </td>\n"
-"            </tr>\n"
-"            <tr t-if=\"object.carrier_id.carrier_description\">\n"
-"                <td>\n"
-"                    <strong>Piegādes apraksts:</strong>\n"
-"                    <t t-out=\"object.carrier_id.carrier_description\"/>\n"
-"                </td>\n"
-"            </tr>\n"
-"        </table>\n"
-"    </div>\n"
-"</t>\n"
-"</div>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
+"('draft', 'sent') else 'order'\"/>\n"
 "        Hello,\n"
 "        <br/><br/>\n"
-"        Your\n"
-"        <t t-if=\"ctx.get('proforma')\">\n"
-"            Pro forma invoice for <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
-"            <t t-if=\"object.origin\">\n"
-"                (with reference: <t t-out=\"object.origin or ''\"/> )\n"
-"            </t>\n"
-"            amounting in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> is available.\n"
+"        Your <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-"
+"weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (with reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "        </t>\n"
-"        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
-"            <t t-if=\"object.origin\">\n"
-"                (with reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
-"            </t>\n"
-"            amounting in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> is ready for review.\n"
-"        </t>\n"
+"        amounting in <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span> is ready for review.\n"
 "        <br/>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
+">\n"
 "        <t t-if=\"documents\">\n"
 "            <br/> \n"
 "            <t t-if=\"len(documents)&gt;1\">\n"
@@ -673,63 +521,56 @@ msgid ""
 "            <ul style=\"margin-bottom: 0;\">\n"
 "                <t t-foreach=\"documents\" t-as=\"document\">\n"
 "                    <li style=\"font-size: 13px;\">\n"
-"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"/>\n"
+"                        <a t-out=\"document.ir_attachment_id.name\" t-att-"
+"href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-"
+"target=\"target\"/>\n"
 "                    </li>\n"
 "                </t>\n"
 "            </ul>\n"
 "        </t>\n"
 "        <br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
 "        </t>\n"
-"        <br/><br/>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
 
 #. module: sale
-#: model:mail.template,body_html:sale.mail_template_sale_cancellation
+#: model:mail.template,body_html:sale.email_template_proforma
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"object.type_name\"/>\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\">user</t>,\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
+"('draft', 'sent') else 'order'\"/>\n"
+"        Hello,\n"
 "        <br/><br/>\n"
-"        Please be advised that your\n"
-"        <t t-out=\"doc_name or ''\">quotation</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        Your Pro forma invoice for <t t-out=\"doc_name or ''\">quotation</t> "
+"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</"
+"span>\n"
 "        <t t-if=\"object.origin\">\n"
-"            (with reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"            (with reference: <t t-out=\"object.origin or ''\"/> )\n"
 "        </t>\n"
-"        has been cancelled. Therefore, you should not be charged further for this order.\n"
-"        If any refund is necessary, this will be executed at best convenience.\n"
+"        amounting in <span style=\"font-weight: bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span> is available.\n"
 "        <br/><br/>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <br/>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
+"        </t>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"object.type_name\"/>\n"
-"        Sveicināti <t t-out=\"object.partner_id.name or ''\">lietotāj</t>,\n"
-"        <br/><br/>\n"
-"        Lūdzu, ņemiet vērā, ka Jūsu\n"
-"        <t t-out=\"doc_name or ''\">piedāvājums</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
-"        <t t-if=\"object.origin\">\n"
-"            (ar referenci: <t t-out=\"object.origin or ''\">S00052</t> )\n"
-"        </t>\n"
-"        ir atcelts. Tādēļ jums nevajadzētu iekasēt papildu maksu par šo pasūtījumu.\n"
-"        Ja ir nepieciešama atmaksa, tā tiks veikta pēc iespējas ērtāk.\n"
-"        <br/><br/>\n"
-"        Nevilcinieties sazināties ar mums, ja Jums ir kādi jautājumi.\n"
-"        <br/>\n"
-"    </p>\n"
-"</div>\n"
-"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -770,8 +611,10 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Maksājuma gaidīšana"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
-msgid "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
-msgstr "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
+msgid ""
+"<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -796,13 +639,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-times\"/> Reject"
 msgstr "<i class=\"fa fa-times\"/> Atcelt"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.crm_lead_partner_kanban_view
-msgid ""
-"<i class=\"fa fa-usd me-1\" role=\"img\" aria-label=\"Sale orders\" "
-"title=\"Sales orders\"/>"
-msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -865,14 +701,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid ""
-"<span invisible=\"1\" class=\"oe_inline text-danger\" title=\"The Down Payment is greater than the amount remaining to be invoiced.\">\n"
-"                            <i class=\"fa fa-warning\"/>\n"
-"                        </span>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
-msgid ""
 "<span invisible=\"advance_payment_method != 'percentage'\" "
 "class=\"oe_inline\">% </span>"
 msgstr ""
@@ -880,7 +708,8 @@ msgstr ""
 #. module: sale
 #: model_terms:web_tour.tour,rainbow_man_message:sale.sale_tour
 msgid ""
-"<span><b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.\n"
+"<span><b>Congratulations</b>, your first quotation is sent!<br>Check your "
+"email to validate the quote.\n"
 "        </span>"
 msgstr ""
 
@@ -889,19 +718,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Amount</span>"
 msgstr "<span>Summa</span>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
-msgid ""
-"<span>Are you sure you want to cancel this order? <br/></span>\n"
-"                        <span id=\"display_invoice_alert\" invisible=\"not display_invoice_alert\">\n"
-"                            Draft invoices for this order will be cancelled. <br/>\n"
-"                        </span>"
-msgstr ""
-"<span>Vai esat pārliecināts, ka vēlaties atcelt šo pasūtījumu? <br/></span>\n"
-"                        <span id=\"display_invoice_alert\" invisible=\"not display_invoice_alert\">\n"
-"                            Šī pasūtījuma rēķinu projekti tiks anulēti. <br/>\n"
-"                        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -931,6 +747,11 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"mr16\">Subtotal</strong>"
 msgstr "<strong class=\"mr16\">Starpsumma</strong>"
@@ -949,11 +770,6 @@ msgstr "<strong>Piezīme par fiskālo stāvokli:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson</strong>"
 msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "<strong>Shipping Address</strong>"
-msgstr "<strong>Piegādes adrese</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1021,26 +837,17 @@ msgstr "Sadaļas nosaukums"
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__advance_payment_method
 msgid ""
 "A standard invoice is issued with all the order lines ready for "
-"invoicing,according to their invoicing policy (based on ordered or delivered"
-" quantity)."
+"invoicing,according to their invoicing policy (based on ordered or delivered "
+"quantity)."
 msgstr ""
-"Standarta rēķins tiek izrakstīts ar visām rēķina izrakstīšanai sagatavotajām"
-" pasūtījuma rindiņām saskaņā ar rēķinu izrakstīšanas politiku (pamatojoties "
+"Standarta rēķins tiek izrakstīts ar visām rēķina izrakstīšanai sagatavotajām "
+"pasūtījuma rindiņām saskaņā ar rēķinu izrakstīšanas politiku (pamatojoties "
 "uz pasūtīto vai piegādāto daudzumu)."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
 msgstr "Var tikt iestatīts brīdinājums klientam vai produktam (Tirdzneicība)"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"Ability to select a package type in sales orders and to force a quantity "
-"that is a multiple of the number of units per package."
-msgstr ""
-"Iespēja izvēlēties iepakojuma veidu pārdošanās pasūtījumos un pieprasīt "
-"daudzumu, kas ir vairākas vienības iepakojumā."
 
 #. module: sale
 #. odoo-python
@@ -1072,17 +879,24 @@ msgstr "Piekļuves brīdinājums"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Atbilstoši produkta konfigurācijai piegādājamo daudzumu var automātiski aprēķināt ar mehānisma palīdzību:\n"
+"Atbilstoši produkta konfigurācijai piegādājamo daudzumu var automātiski "
+"aprēķināt ar mehānisma palīdzību:\n"
 "  - Manuāli: daudzums tiek iestatīts manuāli uz līnijas\n"
-"  - Analītisks No izdevumiem: daudzums ir iegrāmatoto izdevumu daudzuma summa\n"
-"  - Laika grafiks: daudzums ir to stundu summa, kas reģistrētas uzdevumos, kuri saistīti ar šo pārdošanas pozīciju\n"
-"  - Krājumu pārvietošana: daudzums tiek iegūts no apstiprinātās komplektācijas\n"
+"  - Analītisks No izdevumiem: daudzums ir iegrāmatoto izdevumu daudzuma "
+"summa\n"
+"  - Laika grafiks: daudzums ir to stundu summa, kas reģistrētas uzdevumos, "
+"kuri saistīti ar šo pārdošanas pozīciju\n"
+"  - Krājumu pārvietošana: daudzums tiek iegūts no apstiprinātās "
+"komplektācijas\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_chart_template
@@ -1109,6 +923,11 @@ msgstr "Nepieciešama darbība"
 #: model:ir.ui.menu,name:sale.sale_menu_config_activities
 msgid "Activities"
 msgstr "Aktivitātes"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+msgid "Activities of"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_decoration
@@ -1140,7 +959,13 @@ msgstr "Aktivitāšu tipi"
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
 msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
-"                (e.g. \"Delivery scheduling\", \"Order Payment Follow-up\", ...)"
+"                (e.g. \"Delivery scheduling\", \"Order Payment Follow-"
+"up\", ...)"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+msgid "Activity type"
 msgstr ""
 
 #. module: sale
@@ -1197,6 +1022,16 @@ msgid "Add several variants to an order from a grid"
 msgstr "Vairāku variantu pievienošana pasūtījumam no režģa"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.mail_followers_edit_action_from_sale
+msgid "Add/Remove Followers"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
 msgstr "Atļauj nosūtīt Avansa rēķinu klientiem"
@@ -1210,12 +1045,17 @@ msgstr "Atļauj nosūtīt Avansa rēķinu."
 #: model:ir.model.fields,help:sale.field_product_document__attached_on_sale
 msgid ""
 "Allows you to share the document with your customers within a sale.\n"
-"Leave it empty if you don't want to share this document with sales customer.\n"
-"On quote: the document will be sent to and accessible by customers at any time.\n"
+"Leave it empty if you don't want to share this document with sales "
+"customer.\n"
+"On quote: the document will be sent to and accessible by customers at any "
+"time.\n"
 "e.g. this option can be useful to share Product description files.\n"
-"On order confirmation: the document will be sent to and accessible by customers.\n"
-"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation and sale order between the header pages and the quote table. "
+"On order confirmation: the document will be sent to and accessible by "
+"customers.\n"
+"e.g. this option can be useful to share User Manual or digital content "
+"bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation and "
+"sale order between the header pages and the quote table. "
 msgstr ""
 
 #. module: sale
@@ -1247,23 +1087,16 @@ msgid "Amount Before Discount"
 msgstr "Summa pirms atlaides"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
-msgid "Amount of quotations to invoice"
-msgstr "Piedāvājumu summa izrakstīšanai"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_to_invoice
-msgid "Amount to invoice"
-msgstr "Rēķinā norādāmā summa"
-
-#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
-"            ordered quantities, and the invoicing policy is based on ordered quantities."
+"            ordered quantities, and the invoicing policy is based on ordered "
+"quantities."
 msgstr ""
-"Pasūtījuma pieprādrošana ir palielināt pārdošanas apjomu, ja piegādātie daudzumi pārsniedz sākotnēji norādītos\n"
-"            pasūtītajiem daudzumiem, un rēķinu izrakstīšanas politika ir balstīta uz pasūtītajiem daudzumiem."
+"Pasūtījuma pieprādrošana ir palielināt pārdošanas apjomu, ja piegādātie "
+"daudzumi pārsniedz sākotnēji norādītos\n"
+"            pasūtītajiem daudzumiem, un rēķinu izrakstīšanas politika ir "
+"balstīta uz pasūtītajiem daudzumiem."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
@@ -1323,6 +1156,13 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
+"Are you sure you want to cancel this order? This may affect related "
+"documents or processes."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
@@ -1336,7 +1176,17 @@ msgid ""
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
 "Piemēram, ja pārdodat iepriekš apmaksātas pakalpojumu stundas, Odoo iesaka\n"
-"            pārdot papildu stundas, kad visas pasūtītās stundas ir izlietotas."
+"            pārdot papildu stundas, kad visas pasūtītās stundas ir "
+"izlietotas."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/product_product.py:0
+msgid ""
+"As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
+"been used for this product, the change of unit of measure can not be done.If "
+"you want to change it, please archive the product and create a new one."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1358,11 +1208,6 @@ msgstr "Atribūtu vērtības"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Attributes"
 msgstr "Atribūti"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__author_id
-msgid "Author"
-msgstr "Autors"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__authorized_transaction_ids
@@ -1406,17 +1251,6 @@ msgid "Beat competitors with stunning quotations!"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
-#: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__block
-msgid "Blocking Message"
-msgstr "Bloķēšanas ziņa"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body_has_template_value
-msgid "Body content is the same as the template"
-msgstr "Pamata saturs ir tāds pats kā veidnē"
-
-#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid ""
@@ -1434,8 +1268,8 @@ msgid ""
 msgstr ""
 "Palieliniet pārdošanas apjomu, izmantojot vairāku veidu programmas: Kuponi, "
 "akcijas, dāvanu kartes, lojalitātes programmas. Var iestatīt īpašus "
-"nosacījumus (produkti, klienti, minimālā pirkuma summa, periods). Atlīdzības"
-" var būt atlaides (% or summa) vai bezmaksas produkti."
+"nosacījumus (produkti, klienti, minimālā pirkuma summa, periods). Atlīdzības "
+"var būt atlaides (% or summa) vai bezmaksas produkti."
 
 #. module: sale
 #. odoo-javascript
@@ -1467,11 +1301,6 @@ msgid "Campaign"
 msgstr "Kampaņa"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__can_edit_body
-msgid "Can Edit Body"
-msgstr "Var rediģēt pamattekstu"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_updatable
 msgid "Can Edit Product"
 msgstr "Var rediģēt produktu"
@@ -1482,18 +1311,11 @@ msgstr "Var rediģēt produktu"
 #: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 #: model:ir.actions.act_window,name:sale.action_mass_cancel_orders
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Cancel"
 msgstr "Atcelt"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Cancel %s"
-msgstr "Atcelt %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
@@ -1522,8 +1344,11 @@ msgid ""
 "   • The invoicing policy of the product is configured correctly.\n"
 "\n"
 "If you want to invoice based on ordered quantities instead:\n"
-"   • For consumable or storable products, open the product, go to the 'General Information' tab and change the 'Invoicing Policy' from 'Delivered Quantities' to 'Ordered Quantities'.\n"
-"   • For services (and other products), change the 'Invoicing Policy' to 'Prepaid/Fixed Price'.\n"
+"   • For consumable or storable products, open the product, go to the "
+"'General Information' tab and change the 'Invoicing Policy' from 'Delivered "
+"Quantities' to 'Ordered Quantities'.\n"
+"   • For services (and other products), change the 'Invoicing Policy' to "
+"'Prepaid/Fixed Price'.\n"
 msgstr ""
 "Nevar izveidot rēķinu. Rēķina izrakstīšanai nav pieejami nekādi priekšmeti.\n"
 "\n"
@@ -1532,8 +1357,12 @@ msgstr ""
 "   - produkta rēķinu izrakstīšanas politika ir konfigurēta pareizi.\n"
 "\n"
 "Ja vēlaties rēķinu izrakstīt, pamatojoties uz pasūtītajiem daudzumiem:\n"
-"   - Attiecībā uz patērējamiem vai uzglabājamiem produktiem atveriet produktu, atveriet cilni \"Vispārīga informācija\" un mainiet \"Rēķinu izrakstīšanas politiku\" no \"Piegādātie daudzumi\" uz \"Pasūtītie daudzumi\".\n"
-"   - Pakalpojumiem (un citiem produktiem) mainiet \"Rēķinu izrakstīšanas politiku\" uz \"Priekšapmaksa/fiksēta cena\".\n"
+"   - Attiecībā uz patērējamiem vai uzglabājamiem produktiem atveriet "
+"produktu, atveriet cilni \"Vispārīga informācija\" un mainiet \"Rēķinu "
+"izrakstīšanas politiku\" no \"Piegādātie daudzumi\" uz \"Pasūtītie "
+"daudzumi\".\n"
+"   - Pakalpojumiem (un citiem produktiem) mainiet \"Rēķinu izrakstīšanas "
+"politiku\" uz \"Priekšapmaksa/fiksēta cena\".\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1546,9 +1375,9 @@ msgid "Catalog"
 msgstr "Katalogs"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_category_id
-msgid "Category"
-msgstr "Kategorija"
+#: model:ir.ui.menu,name:sale.menu_product_categories
+msgid "Categories"
+msgstr ""
 
 #. module: sale
 #: model:product.template,name:sale.product_product_1_product_template
@@ -1639,8 +1468,11 @@ msgstr "Uzņēmuma dokumentu izkārtojums"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Aprēķināt sūtīšanas izmaksas un nosūtīt ar DHL"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1649,8 +1481,16 @@ msgstr "Aprēķiniet nosūtīšanas izmaksas un nosūtiet ar Easypost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Aprēķināt sūtīšanas izmaksas un nosūtīt ar FedEx"
+msgid "Compute shipping costs and ship with Envia.com"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1669,13 +1509,19 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Aprēķināt sūtīšanas izmaksas un nosūtīt ar UPS"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Aprēķināt sūtīšanas izmaksas un nosūtīt ar USPS"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1732,21 +1578,6 @@ msgid "Contact"
 msgstr "Kontakts"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body
-msgid "Contents"
-msgstr "Saturs"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Mērvienību konvertēšana starp mērvienībām var notikt tikai tad, ja tās "
-"pieder vienai un tai pašai kategorijai. Pārrēķins tiks veikts, pamatojoties "
-"uz attiecībām."
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__country_code
 msgid "Country code"
 msgstr "Valsts kods"
@@ -1776,6 +1607,11 @@ msgstr "Izveidot rēķinu"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Create Invoices"
 msgstr "Rēķinu izveide"
+
+#. module: sale
+#: model:ir.model,website_form_label:sale.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
@@ -1813,8 +1649,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
 msgstr ""
-"Izveidojiet rēķinus, reģistrējiet maksājumus un sekojiet līdzi diskusijām ar"
-" Jūsu klientiem."
+"Izveidojiet rēķinus, reģistrējiet maksājumus un sekojiet līdzi diskusijām ar "
+"Jūsu klientiem."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__service_tracking
@@ -1824,17 +1660,14 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__consolidated_billing
 msgid ""
-"Create one invoice for all orders related to same customer and same "
-"invoicing address"
+"Create one invoice for all orders related to same customer, same invoicing "
+"address and same delivery address."
 msgstr ""
-"Izveidot vienu rēķinu visiem pasūtījumiem, kas saistīti ar vienu un to pašu "
-"klientu un vienu un to pašu rēķina izrakstīšanas adresi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order__create_uid
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__create_uid
@@ -1844,7 +1677,6 @@ msgstr "Izveidoja"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__create_date
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__create_date
@@ -1902,8 +1734,6 @@ msgid "Custom payment instructions"
 msgstr "Pielāgotie maksājuma norādījumi"
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__order_partner_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_id
@@ -1965,6 +1795,11 @@ msgstr "Lai apstiprinātu pasūtījumu, klientam ir jāveic vismaz %(amount)s."
 #: model:ir.ui.menu,name:sale.res_partner_menu
 msgid "Customers"
 msgstr "Klienti"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "DHL Connector"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
@@ -2103,7 +1938,6 @@ msgstr "Atl.%"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
 msgid "Discard"
 msgstr "Atmest"
@@ -2186,19 +2020,35 @@ msgid "Display Draft Invoice Warning"
 msgstr "Rādīt rēķina projekta brīdinājumu"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_invoice_amount_warning
-msgid "Display Invoice Amount Warning"
-msgstr "Rādīt rēķina summas brīdinājumu"
-
-#. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__display_name
+#: model:ir.model.fields,field_description:sale.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:sale.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:sale.field_account_invoice_report__display_name
+#: model:ir.model.fields,field_description:sale.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale.field_base_document_layout__display_name
+#: model:ir.model.fields,field_description:sale.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:sale.field_payment_link_wizard__display_name
+#: model:ir.model.fields,field_description:sale.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:sale.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__display_name
+#: model:ir.model.fields,field_description:sale.field_product_category__display_name
+#: model:ir.model.fields,field_description:sale.field_product_document__display_name
+#: model:ir.model.fields,field_description:sale.field_product_pricelist_item__display_name
+#: model:ir.model.fields,field_description:sale.field_product_product__display_name
+#: model:ir.model.fields,field_description:sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale.field_res_company__display_name
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale.field_res_partner__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_order__display_name
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report__display_name
+#: model:ir.model.fields,field_description:sale.field_utm_campaign__display_name
 msgid "Display Name"
 msgstr "Nosaukums"
 
@@ -2211,6 +2061,11 @@ msgstr "Parādīt tipu"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
 msgstr "Izplatīšanas analītiskais konts"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Documentation"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -2351,6 +2206,11 @@ msgid "Enter a customized value"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_envia
+msgid "Envia.com Connector"
+msgstr ""
+
+#. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid ""
@@ -2388,6 +2248,11 @@ msgid "Extended Filters"
 msgstr "Paplašināti filtri"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__extra_tax_data
+msgid "Extra Tax Data"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
 msgid "Extra Values"
 msgstr "Papildus vērtības"
@@ -2399,7 +2264,8 @@ msgid "Extra line with %s"
 msgstr "Papildus rinda ar %s"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex_rest
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "FedEx Connector"
 msgstr "FedEx savienotājs"
 
@@ -2412,8 +2278,7 @@ msgstr "Nodokļu Profils"
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
 msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
-"customers or sales orders/invoices.The default value comes from the "
-"customer."
+"customers or sales orders/invoices.The default value comes from the customer."
 msgstr ""
 "Fiskālās pozīcijas tiek izmantotas, lai pielāgotu nodokļus un kontus "
 "konkrētiem klientiem vai pārdošanas pasūtījumiem/rēķiniem.Noklusējuma "
@@ -2479,6 +2344,11 @@ msgid "Future Activities"
 msgstr "Nākotnes aktivitātes"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_gelato
+msgid "Gelato"
+msgstr ""
+
+#. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
 msgstr "Izveidot pārdošanas maksājumu saiti"
@@ -2490,8 +2360,7 @@ msgstr "Maksājuma saites izveide"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"Generate the invoice automatically when the online payment is confirmed"
+msgid "Generate the invoice automatically when the online payment is confirmed"
 msgstr ""
 "Automātiska rēķina ģenerēšana, kad ir apstiprināts tiešsaistes maksājums"
 
@@ -2582,14 +2451,35 @@ msgid "Hidden"
 msgstr "Slēpts"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__id
+#: model:ir.model.fields,field_description:sale.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:sale.field_account_chart_template__id
+#: model:ir.model.fields,field_description:sale.field_account_invoice_report__id
+#: model:ir.model.fields,field_description:sale.field_account_move__id
+#: model:ir.model.fields,field_description:sale.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale.field_base_document_layout__id
+#: model:ir.model.fields,field_description:sale.field_crm_team__id
+#: model:ir.model.fields,field_description:sale.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:sale.field_payment_link_wizard__id
+#: model:ir.model.fields,field_description:sale.field_payment_provider__id
+#: model:ir.model.fields,field_description:sale.field_payment_transaction__id
+#: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__id
+#: model:ir.model.fields,field_description:sale.field_product_category__id
+#: model:ir.model.fields,field_description:sale.field_product_document__id
+#: model:ir.model.fields,field_description:sale.field_product_pricelist_item__id
+#: model:ir.model.fields,field_description:sale.field_product_product__id
+#: model:ir.model.fields,field_description:sale.field_product_template__id
+#: model:ir.model.fields,field_description:sale.field_res_company__id
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale.field_res_partner__id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__id
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__id
 #: model:ir.model.fields,field_description:sale.field_sale_order__id
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__id
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__id
 #: model:ir.model.fields,field_description:sale.field_sale_report__id
+#: model:ir.model.fields,field_description:sale.field_utm_campaign__id
 msgid "ID"
 msgstr "ID"
 
@@ -2633,11 +2523,6 @@ msgstr ""
 "piegādāt."
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_product_packaging__sales
-msgid "If true, the packaging can be used for sales orders"
-msgstr "Ja ir patiess, iepakojumu var izmantot pārdošanas pasūtījumiem"
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
 msgstr "Ja mainīsiet cenrādi, tas ietekmēs tikai no jauna pievienotās rindas."
@@ -2653,10 +2538,22 @@ msgid "Import Amazon orders and sync deliveries"
 msgstr "Importēt Amazon pasūtījumus un sinhronizēt piegādes"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Import Shopee orders and sync deliveries"
+msgstr ""
+
+#. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "Import Template for Products"
 msgstr "Importēt veidni produktiem"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
+msgid ""
+"In sale order line original price is unit price and discount is in\n"
+"                                discount column."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
@@ -2667,6 +2564,13 @@ msgstr "Pasūtījumā"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Incl. tax)"
 msgstr "Iesk. nodokļus)"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_account_bank_statement_line__sale_warning_text
+#: model:ir.model.fields,help:sale.field_account_move__sale_warning_text
+#: model:ir.model.fields,help:sale.field_sale_order__sale_warning_text
+msgid "Internal warning for the partner or the products as set by the user."
+msgstr ""
 
 #. module: sale
 #. odoo-python
@@ -2696,11 +2600,6 @@ msgstr "Rēķins %s apmaksāts"
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_invoice_id
 msgid "Invoice Address"
 msgstr "Rēķina Adrese"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__display_invoice_alert
-msgid "Invoice Alert"
-msgstr "Brīdinājums par rēķinu"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
@@ -2824,7 +2723,6 @@ msgid "Invoices Statistics"
 msgstr "Rēķinu Statistika"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
@@ -2865,11 +2763,6 @@ msgid "Is Downpayment"
 msgstr "Ir avansa maksājums"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__is_mail_template_editor
-msgid "Is Editor"
-msgstr "Ir redaktors"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__is_expired
 msgid "Is Expired"
 msgstr "Iztecējis termiņš"
@@ -2901,8 +2794,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
-msgid ""
-"Is true if the sales order line comes from an expense or a vendor bills"
+msgid "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
 "Ir patiess, ja pārdošanas rīkojuma rinda nāk no izmaksas vai piegādātāja "
 "pavadzīmēm"
@@ -2933,11 +2825,6 @@ msgid "Journal Item"
 msgstr "Žurnāla ieraksts"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__lang
-msgid "Language"
-msgstr "Valoda"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Last Invoices"
 msgstr "Pēdējie rēķini"
@@ -2946,7 +2833,6 @@ msgstr "Pēdējie rēķini"
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order__write_uid
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__write_uid
@@ -2957,7 +2843,6 @@ msgstr "Pēdējo reizi atjaunoja"
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_date
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order__write_date
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__write_date
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__write_date
@@ -3022,11 +2907,6 @@ msgid "Locked orders cannot be modified."
 msgstr "Bloķētos rīkojumus nevar mainīt."
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__template_id
-msgid "Mail Template"
-msgstr "Ziņojuma veidne"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
@@ -3064,13 +2944,19 @@ msgstr "Ievadīt skaitu pēc pasūtījuma"
 #: model:ir.model.fields,help:sale.field_product_product__service_type
 #: model:ir.model.fields,help:sale.field_product_template__service_type
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation "
+"and track the work hours."
 msgstr ""
-"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-"Create a task and track hours: Create a task on the sales order validation and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered "
+"quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related "
+"timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation "
+"and track the work hours."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_margin
@@ -3094,12 +2980,6 @@ msgstr "Mārketings"
 #: model:ir.model.fields,field_description:sale.field_sale_report__medium_id
 msgid "Medium"
 msgstr "Vidējs"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
-#: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
-msgid "Message"
-msgstr "Ziņojums"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error
@@ -3134,6 +3014,11 @@ msgid "Method to update delivered qty"
 msgstr "Piegādātā daudzuma atjaunināšanas metode"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
+msgid "Min Qty"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
 msgid "Missing required fields on accountable sale order line."
 msgstr "Trūkst obligāto lauku uzskaites pārdošanas rīkojuma rindā."
@@ -3146,7 +3031,8 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Cien.\n"
 "       <t t-if=\"object.partner_id.parent_id\">\n"
-"           <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"           <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t "
+"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "       </t>\n"
 "       <t t-else=\"\">\n"
 "           <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
@@ -3154,25 +3040,35 @@ msgstr ""
 "       <br><br>\n"
 "        Šeit ir jūsu\n"
 "       <t t-if=\"object.name\">\n"
-"            kredīta atzīme <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"            kredīta atzīme <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
 "       </t>\n"
 "       <t t-else=\"\">\n"
 "            kredītrēķins\n"
 "       </t>\n"
 "       <t t-if=\"object.invoice_origin\">\n"
-"            (ar atsauci: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"            (ar atsauci: <t t-out=\"object.invoice_origin or ''\">SUB003</"
+"t>)\n"
 "       </t>\n"
-"       <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143 750,00</span>apmērā\n"
+"       <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143 "
+"750,00</span>apmērā\n"
 "        no <t t-out=\"object.company_id.name or ''\">Jūsu uzņēmuma</t>.\n"
 "       <br><br>\n"
 "        Ja jums ir kādi jautājumi, sazinieties ar mums.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--"
+"<br>Mitchell admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 "            "
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+msgid "My Activities"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
@@ -3229,12 +3125,6 @@ msgstr "Nākamās darbības veids"
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__no
 msgid "No"
 msgstr "Nr"
-
-#. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__no-message
-#: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__no-message
-msgid "No Message"
-msgstr "Nav ziņu"
 
 #. module: sale
 #. odoo-python
@@ -3311,16 +3201,6 @@ msgid "Number of messages with delivery error"
 msgstr "Ziņojumu, kas satur piegādes kļūdu, skaits"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_crm_team__quotations_count
-msgid "Number of quotations to invoice"
-msgstr "Pasūtījumu skaits, kas jāizraksta"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_crm_team__sales_to_invoice_count
-msgid "Number of sales to invoice"
-msgstr "Pārdošanas apjoms, kas jāizraksta"
-
-#. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
 msgid "Office chairs can harm your floor: protect it."
 msgstr ""
@@ -3344,10 +3224,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid ""
-"Once a sales order is confirmed, you can't remove one of its lines (we need to track if something gets invoiced or delivered).\n"
+"Once a sales order is confirmed, you can't remove one of its lines (we need "
+"to track if something gets invoiced or delivered).\n"
 "                Set the quantity to 0 instead."
 msgstr ""
-"Kad pārdošanas pasūtījums ir apstiprināts, jūs nevarat noņemt kādu no tā rindiņām (mums ir nepieciešams izsekot, vai par kādu preci tiek izrakstīts rēķins vai tā tiek piegādāta).\n"
+"Kad pārdošanas pasūtījums ir apstiprināts, jūs nevarat noņemt kādu no tā "
+"rindiņām (mums ir nepieciešams izsekot, vai par kādu preci tiek izrakstīts "
+"rēķins vai tā tiek piegādāta).\n"
 "                Tā vietā iestatiet daudzumu uz 0."
 
 #. module: sale
@@ -3355,8 +3238,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
-"Once the quotation is confirmed by the customer, it becomes a sales "
-"order.<br> You will be able to create an invoice and collect the payment."
+"Once the quotation is confirmed by the customer, it becomes a sales order."
+"<br> You will be able to create an invoice and collect the payment."
 msgstr ""
 "Kad klients ir apstiprinājis cenu piedāvājumu, tas kļūst par pārdošanas "
 "pasūtījumu.<br> Jūs varēsiet izveidot rēķinu un iekasēt maksājumu."
@@ -3418,20 +3301,8 @@ msgstr ""
 
 #. module: sale
 #. odoo-python
-#: code:addons/sale/models/product_product.py:0
-msgid "Operation not supported"
-msgstr "Operācija netiek atbalstīta"
-
-#. module: sale
-#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Option for: %s"
-msgstr "Variants: %s"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order_line.py:0
-msgid "Option: %s"
 msgstr "Variants: %s"
 
 #. module: sale
@@ -3447,19 +3318,6 @@ msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_cancel__lang
-msgid ""
-"Optional translation language (ISO code) to select when sending out an "
-"email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
-msgstr ""
-"Izvēles tulkošanas valoda (ISO kods), ko izvēlēties, sūtot e-pastu. Ja tas "
-"nav iestatīts, tiks izmantota versija angļu valodā. Parasti tai ir jābūt "
-"viettura izteiksmei, kas nodrošina atbilstošo valodu, piem. {{ "
-"object.partner_id.lang }}."
 
 #. module: sale
 #. odoo-python
@@ -3528,20 +3386,10 @@ msgid "Order Status"
 msgstr "Pasūtījuma statuss"
 
 #. module: sale
-#: model:mail.activity.type,name:sale.mail_act_sale_upsell
-msgid "Order Upsell"
-msgstr "Pasūtīt piepārdošanu"
-
-#. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "Order signed by %s"
 msgstr "Pasūtījumu parakstīja %s"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
-msgid "Order to Invoice"
-msgstr "Pasūtījums izrakstīšanai"
 
 #. module: sale
 #. odoo-python
@@ -3573,7 +3421,6 @@ msgstr "Pasūtījumi"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 msgid "Orders to Invoice"
 msgstr "Pasūtījumi izrakstīšanai"
 
@@ -3608,16 +3455,6 @@ msgstr "PDF piedāvājuma veidotājs"
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
 msgstr "Priekšapmaksas rēķins"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_id
-msgid "Packaging"
-msgstr "Iepakojums"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_qty
-msgid "Packaging Quantity"
-msgstr "Iepakojumu skaits"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
@@ -3707,9 +3544,19 @@ msgid "Payment terms"
 msgstr "Maksājuma nosacījumi"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__pending_email_template_id
+msgid "Pending Email Template"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_percentage
 msgid "Percentage"
 msgstr "Procentuālā attiecība"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Place orders through Gelato's print-on-demand service"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
@@ -3764,6 +3611,11 @@ msgid "Pricelist Item"
 msgstr "Cenu lapas pozīcija"
 
 #. module: sale
+#: model:ir.model,name:sale.model_product_pricelist_item
+msgid "Pricelist Rule"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Pricelists"
@@ -3773,6 +3625,11 @@ msgstr "Cenrāži"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Pricing"
 msgstr "Cenas"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Print"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
@@ -3819,11 +3676,6 @@ msgid "Product Catalog Product Is In Sale Order"
 msgstr "Produktu katalogs Produkts ir pārdošanas kārtībā"
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.menu_product_categories
-msgid "Product Categories"
-msgstr "Preču kategorijas"
-
-#. module: sale
 #: model:ir.model,name:sale.model_product_category
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -3841,11 +3693,6 @@ msgstr "Preces dokuments"
 #: code:addons/sale/static/src/js/product_card/product_card.xml:0
 msgid "Product Image"
 msgstr "Produkta attēls"
-
-#. module: sale
-#: model:ir.model,name:sale.model_product_packaging
-msgid "Product Packaging"
-msgstr "Preces iepakojums"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_tags
@@ -3973,7 +3820,6 @@ msgstr "Daudzums:"
 #: code:addons/sale/models/sale_order.py:0
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__draft
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__state__draft
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.product_document_search
 msgid "Quotation"
 msgstr "Piedāvājums"
@@ -4038,7 +3884,6 @@ msgstr "Klients apskatījis piedāvājumu %s"
 #: model:ir.actions.act_window,name:sale.action_quotations_salesteams
 #: model:ir.actions.act_window,name:sale.action_quotations_with_onboarding
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -4087,11 +3932,6 @@ msgid "Re-Invoice Policy visible"
 msgstr "Redzama atkārtotu rēķinu izrakstīšanas politika"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__recipient_ids
-msgid "Recipients"
-msgstr "Saņēmēji"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_view_form
 msgid "Recommend when 'Adding to Cart' or quotation"
 msgstr ""
@@ -4135,11 +3975,6 @@ msgid "Remove one"
 msgstr "Noņemt vienu"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__render_model
-msgid "Rendering Model"
-msgstr "Renderēšanasd modelis"
-
-#. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
 msgid "Reporting"
 msgstr "Atskaites"
@@ -4148,8 +3983,7 @@ msgstr "Atskaites"
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
 msgid "Request a online payment from the customer to confirm the order."
 msgstr ""
-"Pieprasiet klientam veikt tiešsaistes maksājumu, lai apstiprinātu "
-"pasūtījumu."
+"Pieprasiet klientam veikt tiešsaistes maksājumu, lai apstiprinātu pasūtījumu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
@@ -4225,8 +4059,13 @@ msgid "Sale Information"
 msgstr "Pārdošanas informācija"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__sale_line_warn_msg
+msgid "Sale Line Warn Msg"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__order_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__sale_order_id
 #: model:ir.model.fields.selection,name:sale.selection__account_analytic_applicability__business_domain__sale_order
 msgid "Sale Order"
@@ -4251,6 +4090,8 @@ msgid "Sale Order Warnings"
 msgstr "Pārdošanas pasūtījuma brīdinājums"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/models/res_partner.py:0
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
 msgid "Sale Orders"
 msgstr "Pārdošanas pasūtījumi"
@@ -4264,6 +4105,13 @@ msgstr "Pārdošanas pasūtījumu skaits"
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
 msgid "Sale Payment provider onboarding wizard"
 msgstr "Pārdošana Maksājumu pakalpojumu sniedzēja iekāpšanas vednis"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__sale_warning_text
+#: model:ir.model.fields,field_description:sale.field_account_move__sale_warning_text
+#: model:ir.model.fields,field_description:sale.field_sale_order__sale_warning_text
+msgid "Sale Warning"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4281,7 +4129,6 @@ msgid "Sale orders to cancel"
 msgstr "Pārdošanas rīkojumu atcelšana"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_packaging__sales
 #: model:ir.ui.menu,name:sale.menu_reporting_sales
 #: model:ir.ui.menu,name:sale.sale_menu_root
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
@@ -4351,11 +4198,6 @@ msgid "Sales Order"
 msgstr "Pārdošanas pasūtījums"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_order_cancel
-msgid "Sales Order Cancel"
-msgstr "Pārdošanas pasūtījums atcelts"
-
-#. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
@@ -4370,8 +4212,6 @@ msgstr "Pārdošanas pasūtījuma pozīcija"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__sale_order_line_id
-#: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn
-#: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn
 msgid "Sales Order Line"
 msgstr "Pasūtījuma Rinda"
 
@@ -4409,6 +4249,7 @@ msgstr "Pārdošanas pasūtījums(i)"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_order_calendar
@@ -4438,12 +4279,6 @@ msgid "Sales Teams"
 msgstr "Pārdošanas komandas"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn
-#: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
-msgid "Sales Warnings"
-msgstr "Pārdošanas brīdinājumi"
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
 msgid ""
 "Sales order item to which the time spent will be added in order to be "
@@ -4460,11 +4295,6 @@ msgid "Sales price"
 msgstr "Pārdošanas cena"
 
 #. module: sale
-#: model:mail.template,name:sale.mail_template_sale_cancellation
-msgid "Sales: Order Cancellation"
-msgstr "Pārdošana: Pasūtījums atcelts"
-
-#. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales: Order Confirmation"
 msgstr "Pārdošana: Pasūtījums apstiprināts"
@@ -4475,9 +4305,19 @@ msgid "Sales: Payment Done"
 msgstr "Pārdošana: Maksājums veikts"
 
 #. module: sale
+#: model:mail.template,name:sale.email_template_proforma
+msgid "Sales: Send Proforma"
+msgstr ""
+
+#. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales: Send Quotation"
 msgstr "Pārdošana: Nosūtīt piedāvājumu"
+
+#. module: sale
+#: model:ir.actions.server,name:sale.send_pending_emails_cron_ir_actions_server
+msgid "Sales: Send pending emails"
+msgstr ""
 
 #. module: sale
 #. odoo-python
@@ -4539,33 +4379,21 @@ msgid "Selected Combo Items"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
-#: model:ir.model.fields,help:sale.field_product_template__sale_line_warn
-#: model:ir.model.fields,help:sale.field_res_partner__sale_warn
-#: model:ir.model.fields,help:sale.field_res_users__sale_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Sell and purchase products in different units of measure or packagings"
 msgstr ""
-"Izvēloties \"Brīdinājumu\" lietotājam tiks ziņots, izvēloties \"Bloķēšanas "
-"ziņu\" ar šo ziņu lietotājs var apstādināt plūsmu. Ziņa jāieraksta nākamā "
-"laukā."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Sell and purchase products in different units of measure"
-msgstr "Pārdod un iepērc produktus dažādās mērvienībās"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Sell products by multiple of unit # per package"
-msgstr "Pārdod produktus dažādās mērvienībās # iepakojumā"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
 msgstr "Pārdod produktu variantus izmantojot atribūtus (izmērs, krāsa, utml.)"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Send"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4583,16 +4411,6 @@ msgid "Send an email"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
-msgid "Send and cancel"
-msgstr "Sūtīt un atcelt"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Send by Email"
-msgstr "Sūtīt ar e-pastu"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
 msgstr "Sendcloud savienotājs"
@@ -4606,13 +4424,8 @@ msgid ""
 msgstr ""
 "E-pasta sūtīšana ir noderīga, ja nepieciešams kopīgot konkrētu informāciju "
 "vai saturu par produktu (instrukcijas, noteikumus, saites, multivides u. "
-"c.). Izveidojiet un iestatiet e-pasta veidni produkta detalizācijas veidlapā"
-" (cilnē Grāmatvedība)."
-
-#. module: sale
-#: model:mail.template,description:sale.mail_template_sale_cancellation
-msgid "Sent automatically to customers when you cancel an order"
-msgstr "Automātiski nosūtīt klientam, kad atcelts vai pasūtīts"
+"c.). Izveidojiet un iestatiet e-pasta veidni produkta detalizācijas veidlapā "
+"(cilnē Grāmatvedība)."
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
@@ -4622,8 +4435,8 @@ msgstr "Sūtīt klientiem piedāvājuma apstiprinājumu"
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_payment_executed
 msgid ""
-"Sent to customers when a payment is received but doesn't immediately confirm"
-" their order"
+"Sent to customers when a payment is received but doesn't immediately confirm "
+"their order"
 msgstr ""
 "Nosūtīts klientiem, kad ir saņemts maksājums, bet pasūtījums netiek "
 "apstiprināts uzreiz"
@@ -4671,10 +4484,14 @@ msgid "Shiprocket Connector"
 msgstr "Shiprocket savienotājs"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Show all records which has next action date is before today"
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_shopee
+msgid "Shopee Sync"
 msgstr ""
-"Rādīt visus ierakstus, kuriem nākamais darbības datums ir pirms šodienas"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+msgid "Show all records whose next activity date is past"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4793,12 +4610,6 @@ msgid "Stripe"
 msgstr "Stripe"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__subject
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
-msgid "Subject"
-msgstr "Priekšmets"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_subtotal
 msgid "Subtotal"
 msgstr "Starpsumma"
@@ -4884,16 +4695,10 @@ msgstr "Nodokļu aprēķina noapaļošanas metode"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
-#: model:ir.model.fields,field_description:sale.field_sale_order_discount__tax_ids
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_ids
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Taxes"
 msgstr "Nodokļi"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_discount__tax_ids
-msgid "Taxes to add on the discount line."
-msgstr ""
 
 #. module: sale
 #. odoo-python
@@ -4956,8 +4761,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/account_move_line.py:0
 msgid ""
-"The Sales Order %(order)s to be reinvoiced is cancelled. You cannot register"
-" an expense on a cancelled Sales Order."
+"The Sales Order %(order)s to be reinvoiced is cancelled. You cannot register "
+"an expense on a cancelled Sales Order."
 msgstr ""
 
 #. module: sale
@@ -4981,13 +4786,6 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 msgid "The access token is invalid."
 msgstr "Piekļuves atslēgkods nav derīgs."
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_to_invoice
-msgid "The amount to invoice = Sale Order Total - Confirmed Down Payments."
-msgstr ""
-"Rēķinā norādāmā summa = Pārdošanas rīkojuma kopsumma - apstiprinātais "
-"priekšapmaksa."
 
 #. module: sale
 #. odoo-python
@@ -5016,30 +4814,42 @@ msgstr "Fiksētā summa, par kuru rēķins jāizsniedz avansā."
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid ""
-"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"The following products cannot be restricted to the company %(company)s "
+"because they have already been used in quotations or sales orders in another "
+"company:\n"
 "%(used_products)s\n"
-"You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
+"You can archive these products and recreate them with your company "
+"restriction instead, or leave them as shared product."
 msgstr ""
-"Šādus produktus nevar ierobežot attiecībā uz uzņēmumu %(company)s, jo tie jau ir izmantoti citos citos piedāvājumos vai pārdošanas pasūtījumos citā uzņēmumā:\n"
+"Šādus produktus nevar ierobežot attiecībā uz uzņēmumu %(company)s, jo tie "
+"jau ir izmantoti citos citos piedāvājumos vai pārdošanas pasūtījumos citā "
+"uzņēmumā:\n"
 "%(used_products)s\n"
-"Varat arhivēt šos produktus un no jauna izveidot tos ar sava uzņēmuma ierobežojumu vai atstāt tos kā koplietošanas produktus."
+"Varat arhivēt šos produktus un no jauna izveidot tos ar sava uzņēmuma "
+"ierobežojumu vai atstāt tos kā koplietošanas produktus."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
 msgid ""
-"The invoice is generated automatically and available in the customer portal when the transaction is confirmed by the payment provider.\n"
-"The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment provider.\n"
-"This mode is advised if you issue the final invoice at the order and not after the delivery."
+"The invoice is generated automatically and available in the customer portal "
+"when the transaction is confirmed by the payment provider.\n"
+"The invoice is marked as paid and the payment is registered in the payment "
+"journal defined in the configuration of the payment provider.\n"
+"This mode is advised if you issue the final invoice at the order and not "
+"after the delivery."
 msgstr ""
-"Rēķins tiek ģenerēts automātiski un ir pieejams klientu portālā, kad maksājumu pakalpojumu sniedzējs ir apstiprinājis darījumu.\n"
-"Rēķins tiek atzīmēts kā apmaksāts, un maksājums tiek reģistrēts maksājumu pakalpojumu sniedzēja konfigurācijā noteiktajā maksājumu žurnālā.\n"
-"Šo režīmu ieteicams izmantot, ja galīgo rēķinu izsniedzat pie pasūtījuma, nevis pēc piegādes."
+"Rēķins tiek ģenerēts automātiski un ir pieejams klientu portālā, kad "
+"maksājumu pakalpojumu sniedzējs ir apstiprinājis darījumu.\n"
+"Rēķins tiek atzīmēts kā apmaksāts, un maksājums tiek reģistrēts maksājumu "
+"pakalpojumu sniedzēja konfigurācijā noteiktajā maksājumu žurnālā.\n"
+"Šo režīmu ieteicams izmantot, ja galīgo rēķinu izsniedzat pie pasūtījuma, "
+"nevis pēc piegādes."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
-"The margin is computed as the sum of product sales prices minus the cost set"
-" in their detail form."
+"The margin is computed as the sum of product sales prices minus the cost set "
+"in their detail form."
 msgstr ""
 "Uzcenojums tiek aprēķināts no produkta pārdošanas vērtības mīnus izmaksa."
 
@@ -5161,19 +4971,19 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
-"Kad tiek izveidots jauns produkts, tam tiek piemēroti noklusējuma parametri."
-" Tos var izmainīt produkta kartiņā."
+"Kad tiek izveidots jauns produkts, tam tiek piemēroti noklusējuma parametri. "
+"Tos var izmainīt produkta kartiņā."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__campaign_id
 #: model:ir.model.fields,help:sale.field_account_move__campaign_id
 #: model:ir.model.fields,help:sale.field_sale_order__campaign_id
 msgid ""
-"This is a name that helps you keep track of your different campaign efforts,"
-" e.g. Fall_Drive, Christmas_Special"
+"This is a name that helps you keep track of your different campaign efforts, "
+"e.g. Fall_Drive, Christmas_Special"
 msgstr ""
-"Šis nosaukus palīdz jums sekot līdzi dažādiem kampaņas pasākumiem, piemēram,"
-" Fall_Drive, Christmas_Special"
+"Šis nosaukus palīdz jums sekot līdzi dažādiem kampaņas pasākumiem, piemēram, "
+"Fall_Drive, Christmas_Special"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__commitment_date
@@ -5218,29 +5028,19 @@ msgid "This payment will confirm the quotation."
 msgstr "Ar šo maksājumu tiks apstiprināts piedāvājums."
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order_line.py:0
-msgid ""
-"This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
-"%(quantity).2f %(unit)s."
-msgstr ""
-"Šo produktu iesaiņo %(pack_size).2f %(pack_name)s. Jums vajadzētu pārdot "
-"%(quantity).2f %(unit)s."
-
-#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_customers
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_products
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_salesperson
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
-"check your sales revenues and sort it by different group criteria (salesman,"
-" partner, product, etc.) Use this report to perform analysis on sales not "
+"check your sales revenues and sort it by different group criteria (salesman, "
+"partner, product, etc.) Use this report to perform analysis on sales not "
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"Šajā pārskatā tiek veikta jūsu piedāvājumu un pārdošanas pasūtījumu analīze."
-" Analizējiet pārdošanas ieņēmumus un sakārtojiet tos pēc dažādiem grupas "
+"Šajā pārskatā tiek veikta jūsu piedāvājumu un pārdošanas pasūtījumu analīze. "
+"Analizējiet pārdošanas ieņēmumus un sakārtojiet tos pēc dažādiem grupas "
 "kritērijiem (pārdevējs, partneris, produkts utt.) Izmantojiet šo pārskatu, "
 "lai veiktu analīzi par pārdošanu, par kuru vēl nav izrakstīti rēķini. Ja "
 "vēlaties analizēt savu apgrozījumu, lietotnē Grāmatvedība jāizmanto rēķinu "
@@ -5290,8 +5090,8 @@ msgstr ""
 msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr ""
-"Tādējādi tiks atjaunināta visu produktu vienības cena, pamatojoties uz jauno"
-" cenrādi."
+"Tādējādi tiks atjaunināta visu produktu vienības cena, pamatojoties uz jauno "
+"cenrādi."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -5375,15 +5175,14 @@ msgid "Transactions"
 msgstr "Darījumi"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__translated_product_name
+msgid "Translated Product Name"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name
 msgid "Type Name"
 msgstr "Rakstīt vārdu"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
-#: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
-msgid "Type a message..."
-msgstr "Rakstīt ziņojumu..."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
@@ -5401,12 +5200,14 @@ msgid "Type to find a product..."
 msgstr "Ierakstiet, lai atrastu produktu..."
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups_rest
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "UPS Connector"
 msgstr "UPS savienotājs"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps_rest
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "USPS Connector"
 msgstr "USPS savienotājs"
 
@@ -5419,6 +5220,12 @@ msgstr "UTM kampaņa"
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_to_invoice
 msgid "Un-invoiced Balance"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_id
+#: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_id
+msgid "Unit"
 msgstr ""
 
 #. module: sale
@@ -5435,23 +5242,10 @@ msgid "Unit Price:"
 msgstr "Vienības cena:"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom
-#: model:ir.model.fields,field_description:sale.field_sale_report__product_uom
-#: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
-msgid "Unit of Measure"
-msgstr "Mērvienība"
-
-#. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
-#: model:ir.ui.menu,name:sale.next_id_16
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Units of Measure"
-msgstr "Mērvienības"
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.menu_product_uom_categ_form_action
-msgid "Units of Measure Categories"
-msgstr "Mērvienību kategorijas"
+msgid "Units & Packagings"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5486,11 +5280,6 @@ msgstr "Kopā bez nodokļiem"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "UoM"
-msgstr "Mērv"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
 msgstr "Atjaunot cenas"
 
@@ -5512,6 +5301,11 @@ msgstr "Upsell %(order)s klientam %(customer)s"
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__line_invoice_status__upselling
 msgid "Upselling Opportunity"
 msgstr "Piepārdošanas iespēja"
+
+#. module: sale
+#: model:mail.template,description:sale.email_template_proforma
+msgid "Used by salespeople when they send proforma to prospects"
+msgstr ""
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
@@ -5538,6 +5332,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
+msgid "Validity Period"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
 msgid ""
 "Validity of the order, after that you will not able to sign & pay the "
@@ -5553,12 +5352,6 @@ msgstr "Izvēle varianta režģim"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "View Details"
 msgstr "Skatīt vairāk"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "View Order"
-msgstr "Skatīt pasūtījumu"
 
 #. module: sale
 #. odoo-python
@@ -5585,21 +5378,9 @@ msgstr "Tilpums"
 #. odoo-python
 #: code:addons/sale/models/product_product.py:0
 #: code:addons/sale/models/product_template.py:0
-#: code:addons/sale/models/sale_order_line.py:0
 #: code:addons/sale/wizard/res_config_settings.py:0
-#: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__warning
-#: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__warning
-#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Warning"
 msgstr "Brīdinājums"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/product_template.py:0
-#: code:addons/sale/models/sale_order.py:0
-#: code:addons/sale/models/sale_order_line.py:0
-msgid "Warning for %s"
-msgstr "Brīdinājums par %s"
 
 #. module: sale
 #. odoo-python
@@ -5608,14 +5389,14 @@ msgid "Warning for the change of your quotation's company"
 msgstr "Brīdinājums par jūsu piedāvājuma uzņēmuma maiņu"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
-msgid "Warning on the Sales Order"
-msgstr "Brīdinājums pārdošanas pasūtījumam"
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
+msgid "Warning on Sales Orders"
+msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
-msgid "Warning when Selling this Product"
-msgstr "Brīdinājums, kad pārdod šo produktu"
+#: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
+msgid "Warning on Sales Orders and Invoices"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
@@ -5628,9 +5409,12 @@ msgid "Website communication history"
 msgstr "Tīmekļa lapas komunikācijas vēsture"
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/product_template.py:0
-msgid "You can invoice goods before they are delivered."
+#: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
+msgid ""
+"When prices are calculated through formula or fixed, original price is NOT\n"
+"                                displayed in sale order lines. Calculated/"
+"fixed price is set as unit price\n"
+"                                with 0% discount."
 msgstr ""
 
 #. module: sale
@@ -5655,8 +5439,8 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
 msgid ""
-"You can set here the communication type that will appear on sales orders.The"
-" communication will be given to the customer when they choose the payment "
+"You can set here the communication type that will appear on sales orders.The "
+"communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
 "Šeit varat iestatīt saziņas veidu, kas tiks parādīts pārdošanas "
@@ -5718,7 +5502,8 @@ msgid ""
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
 "Jums ir jādefinē prece visam ko Jūs pārdodat vai iegādājaties,\n"
-"                neatkarīgi no tā, vai tā ir uzglabājama prece, patērējama prece vai pakalpojums."
+"                neatkarīgi no tā, vai tā ir uzglabājama prece, patērējama "
+"prece vai pakalpojums."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
@@ -5768,11 +5553,15 @@ msgstr "Jūsu pasūtījums ir stadijā, kad to nevar atcelt."
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
 msgstr ""
-"Jūsu piedāvājumā ir uzņēmuma %(product_company)s produkti, bet jūsu piedāvājums pieder uzņēmumam %(quote_company)s.\n"
-" Lūdzu, mainiet sava piedāvājuma uzņēmumu vai izņemiet produktus no citiem uzņēmumiem (%(bad_products)s)."
+"Jūsu piedāvājumā ir uzņēmuma %(product_company)s produkti, bet jūsu "
+"piedāvājums pieder uzņēmumam %(quote_company)s.\n"
+" Lūdzu, mainiet sava piedāvājuma uzņēmumu vai izņemiet produktus no citiem "
+"uzņēmumiem (%(bad_products)s)."
 
 #. module: sale
 #. odoo-javascript
@@ -5800,6 +5589,16 @@ msgstr "aizvērt"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "days"
 msgstr "dienas"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
+msgid "e.g. This customer has reported recurring issues with previous orders."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
+msgid "e.g. This product is defective."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5850,29 +5649,1101 @@ msgstr ""
 #: model:mail.template,subject:sale.mail_template_sale_payment_executed
 msgid ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
-" }})"
+"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/"
+"a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
-" }})"
+"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/"
+"a' }})"
+
+#. module: sale
+#: model:mail.template,subject:sale.email_template_proforma
+msgid ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"'Proforma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
+msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
 msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
-"object.name or 'n/a' }})"
+"'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
-"object.name or 'n/a' }})"
 
-#. module: sale
-#: model:mail.template,subject:sale.mail_template_sale_cancellation
-msgid ""
-"{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
-"object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} {{ object.type_name }} Atcelts (Ref {{ "
-"object.name or 'n/a' }})"
+#~ msgid ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+#~ "        <t t-set=\"transaction_sudo\" t-"
+#~ "value=\"object.get_portal_last_transaction()\"/>\n"
+#~ "        Hello,\n"
+#~ "        <br/><br/>\n"
+#~ "        A payment with reference\n"
+#~ "        <span style=\"font-weight:bold;\" t-"
+#~ "out=\"transaction_sudo.reference or ''\">SOOO49</span>\n"
+#~ "        amounting\n"
+#~ "        <span style=\"font-weight:bold;\" t-"
+#~ "out=\"format_amount(transaction_sudo.amount, object.currency_id) or "
+#~ "''\">$ 10.00</span>\n"
+#~ "        for your order\n"
+#~ "        <span style=\"font-weight:bold;\" t-out=\"object.name or "
+#~ "''\">S00049</span>\n"
+#~ "        <t t-if=\"transaction_sudo and transaction_sudo.state == "
+#~ "'pending'\">\n"
+#~ "            is pending.\n"
+#~ "            <br/>\n"
+#~ "            <t t-"
+#~ "if=\"object.currency_id.compare_amounts(object.amount_paid + "
+#~ "transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in "
+#~ "('draft', 'sent')\">\n"
+#~ "                Your order will be confirmed once the payment is "
+#~ "confirmed.\n"
+#~ "            </t>\n"
+#~ "            <t t-else=\"\">\n"
+#~ "                Once confirmed,\n"
+#~ "                <span style=\"font-weight:bold;\" t-"
+#~ "out=\"format_amount(object.amount_total - object.amount_paid - "
+#~ "transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+#~ "                will remain to be paid.\n"
+#~ "            </t>\n"
+#~ "        </t>\n"
+#~ "        <t t-else=\"\">\n"
+#~ "            has been confirmed.\n"
+#~ "            <t t-"
+#~ "if=\"object.currency_id.compare_amounts(object.amount_paid, "
+#~ "object.amount_total) &lt; 0\">\n"
+#~ "                <br/>\n"
+#~ "                <span style=\"font-weight:bold;\" t-"
+#~ "out=\"format_amount(object.amount_total - object.amount_paid, "
+#~ "object.currency_id) or ''\">$ 10.00</span>\n"
+#~ "                remains to be paid.\n"
+#~ "            </t>\n"
+#~ "        </t>\n"
+#~ "        <br/><br/>\n"
+#~ "        Thank you for your trust!\n"
+#~ "        <br/>\n"
+#~ "        Do not hesitate to contact us if you have any questions.\n"
+#~ "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-"
+#~ "mail-quote-container=\"1\">\n"
+#~ "            <br/><br/>\n"
+#~ "            <t t-out=\"object.user_id.signature or ''\" data-o-mail-"
+#~ "quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+#~ "        </t>\n"
+#~ "        <br/><br/>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+#~ "        <t t-set=\"transaction_sudo\" t-"
+#~ "value=\"object.get_portal_last_transaction()\"/>\n"
+#~ "        Sveicināti,\n"
+#~ "        <br/><br/>\n"
+#~ "        Maksājums ar referenci\n"
+#~ "        <span style=\"font-weight:bold;\" t-"
+#~ "out=\"transaction_sudo.reference or ''\">SOOO49</span>\n"
+#~ "        kopsummā\n"
+#~ "        <span style=\"font-weight:bold;\" t-"
+#~ "out=\"format_amount(transaction_sudo.amount, object.currency_id) or "
+#~ "''\">$ 10.00</span>\n"
+#~ "        par Jūsu pasūtījumu\n"
+#~ "        <span style=\"font-weight:bold;\" t-out=\"object.name or "
+#~ "''\">S00049</span>\n"
+#~ "        <t t-if=\"transaction_sudo and transaction_sudo.state == "
+#~ "'pending'\">\n"
+#~ "            tiek gaidīts.\n"
+#~ "            <br/>\n"
+#~ "            <t t-"
+#~ "if=\"object.currency_id.compare_amounts(object.amount_paid + "
+#~ "transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in "
+#~ "('draft', 'sent')\">\n"
+#~ "                Jūsu pasūtījums tiks apstiprināts, kad maksājums tiks "
+#~ "apstiprināts.\n"
+#~ "            </t>\n"
+#~ "            <t t-else=\"\">\n"
+#~ "                Kad apstiprināts,\n"
+#~ "                <span style=\"font-weight:bold;\" t-"
+#~ "out=\"format_amount(object.amount_total - object.amount_paid - "
+#~ "transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+#~ "                atliks apmaksai.\n"
+#~ "            </t>\n"
+#~ "        </t>\n"
+#~ "        <t t-else=\"\">\n"
+#~ "            tika apstiprināts.\n"
+#~ "            <t t-"
+#~ "if=\"object.currency_id.compare_amounts(object.amount_paid, "
+#~ "object.amount_total) &lt; 0\">\n"
+#~ "                <br/>\n"
+#~ "                <span style=\"font-weight:bold;\" t-"
+#~ "out=\"format_amount(object.amount_total - object.amount_paid, "
+#~ "object.currency_id) or ''\">$ 10.00</span>\n"
+#~ "                atliek apmaksai.\n"
+#~ "            </t>\n"
+#~ "        </t>\n"
+#~ "        <br/><br/>\n"
+#~ "        Paldies Jums par Jūsu uzticību!\n"
+#~ "        <br/>\n"
+#~ "        Nevilcinieties sazināties ar mums, ja Jums ir kādi jautājumi.\n"
+#~ "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-"
+#~ "mail-quote-container=\"1\">\n"
+#~ "            <br/><br/>\n"
+#~ "            <t t-out=\"object.user_id.signature or ''\" data-o-mail-"
+#~ "quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+#~ "        </t>\n"
+#~ "        <br/><br/>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
+
+#~ msgid ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+#~ "        Hello,\n"
+#~ "        <br/><br/>\n"
+#~ "        <t t-set=\"tx_sudo\" t-"
+#~ "value=\"object.get_portal_last_transaction()\"/>\n"
+#~ "        Your order <span style=\"font-weight:bold;\" t-out=\"object.name "
+#~ "or ''\">S00049</span> amounting in <span style=\"font-weight:bold;\" t-"
+#~ "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+#~ "10.00</span>\n"
+#~ "        <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in "
+#~ "('done', 'authorized'))\">\n"
+#~ "            has been confirmed.<br/>\n"
+#~ "            Thank you for your trust!\n"
+#~ "        </t>\n"
+#~ "        <t t-elif=\"tx_sudo and tx_sudo.state == 'pending'\">\n"
+#~ "            is pending. It will be confirmed when the payment is "
+#~ "received.\n"
+#~ "            <t t-if=\"object.reference\">\n"
+#~ "                Your payment reference is <span style=\"font-weight:bold;"
+#~ "\" t-out=\"object.reference or ''\"/>.\n"
+#~ "            </t>\n"
+#~ "        </t>\n"
+#~ "        <br/>\n"
+#~ "        <t t-set=\"documents\" t-value=\"object._get_product_documents()"
+#~ "\"/>\n"
+#~ "        <t t-if=\"documents\">\n"
+#~ "            <br/> \n"
+#~ "            <t t-if=\"len(documents)&gt;1\">\n"
+#~ "                Here are some additional documents that may interest "
+#~ "you:\n"
+#~ "            </t>\n"
+#~ "            <t t-else=\"\">\n"
+#~ "                Here is an additional document that may interest you:\n"
+#~ "            </t>\n"
+#~ "            <ul style=\"margin-bottom: 0;\">\n"
+#~ "                <t t-foreach=\"documents\" t-as=\"document\">\n"
+#~ "                    <li style=\"font-size: 13px;\">\n"
+#~ "                        <a t-out=\"document.ir_attachment_id.name\" t-att-"
+#~ "href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-"
+#~ "target=\"target\"/>\n"
+#~ "                    </li>\n"
+#~ "                </t>\n"
+#~ "            </ul>\n"
+#~ "        </t>\n"
+#~ "        <br/>\n"
+#~ "        Do not hesitate to contact us if you have any questions.\n"
+#~ "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-"
+#~ "mail-quote-container=\"1\">\n"
+#~ "            <br/><br/>\n"
+#~ "            <t t-out=\"object.user_id.signature or ''\" data-o-mail-"
+#~ "quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+#~ "        </t>\n"
+#~ "        <br/><br/>\n"
+#~ "    </p>\n"
+#~ "<t t-if=\"hasattr(object, 'website_id') and object.website_id\">\n"
+#~ "    <div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
+#~ "border-collapse: collapse; white-space: nowrap;\">\n"
+#~ "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
+#~ "                <td style=\"width: 150px;\"><span style=\"font-"
+#~ "weight:bold;\">Products</span></td>\n"
+#~ "                <td/>\n"
+#~ "                <td width=\"15%\" align=\"center\"><span style=\"font-"
+#~ "weight:bold;\">Quantity</span></td>\n"
+#~ "                <td width=\"20%\" align=\"right\">\n"
+#~ "                    <span style=\"font-weight:bold;\">\n"
+#~ "                        <t t-"
+#~ "if=\"object.website_id.show_line_subtotals_tax_selection == "
+#~ "'tax_excluded'\">\n"
+#~ "                            Tax Excl.\n"
+#~ "                        </t>\n"
+#~ "                        <t t-else=\"\">\n"
+#~ "                            Tax Incl.\n"
+#~ "                        </t>\n"
+#~ "                    </span>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "        <t t-set=\"current_subtotal\" t-value=\"0\"/>\n"
+#~ "        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
+#~ "            <t t-set=\"line_subtotal\" t-value=\"                     "
+#~ "line.price_subtotal                     if "
+#~ "object.website_id.show_line_subtotals_tax_selection == "
+#~ "'tax_excluded'                     else line.price_total                 "
+#~ "\"/>\n"
+#~ "            <t t-set=\"current_subtotal\" t-value=\"current_subtotal + "
+#~ "line_subtotal\"/>\n"
+#~ "            <t t-if=\"(not hasattr(line, 'is_delivery') or not "
+#~ "line.is_delivery) and (                     line.display_type in "
+#~ "['line_section', 'line_note']                     or line.product_type == "
+#~ "'combo'                 )\">\n"
+#~ "                <table width=\"100%\" style=\"color: #454748; font-size: "
+#~ "12px; border-collapse: collapse;\">\n"
+#~ "                    <t t-set=\"loop_cycle_number\" t-"
+#~ "value=\"loop_cycle_number or 0\"/>\n"
+#~ "                    <tr t-att-style=\"'background-color: #f2f2f2' if "
+#~ "loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+#~ "                        <t t-set=\"loop_cycle_number\" t-"
+#~ "value=\"loop_cycle_number + 1\"/>\n"
+#~ "                        <td colspan=\"4\">\n"
+#~ "                            <t t-if=\"line.display_type == 'line_section' "
+#~ "or line.product_type == 'combo'\">\n"
+#~ "                                <span style=\"font-weight:bold;\" t-"
+#~ "out=\"line.name or ''\">Taking care of Trees Course</span>\n"
+#~ "                                <t t-set=\"current_section\" t-"
+#~ "value=\"line\"/>\n"
+#~ "                                <t t-set=\"current_subtotal\" t-"
+#~ "value=\"0\"/>\n"
+#~ "                            </t>\n"
+#~ "                            <t t-elif=\"line.display_type == "
+#~ "'line_note'\">\n"
+#~ "                                <i t-out=\"line.name or ''\">Taking care "
+#~ "of Trees Course</i>\n"
+#~ "                            </t>\n"
+#~ "                        </td>\n"
+#~ "                    </tr>\n"
+#~ "                </table>\n"
+#~ "            </t>\n"
+#~ "            <t t-elif=\"(not hasattr(line, 'is_delivery') or not "
+#~ "line.is_delivery)\">\n"
+#~ "                <table width=\"100%\" style=\"color: #454748; font-size: "
+#~ "12px; border-collapse: collapse;\">\n"
+#~ "                    <t t-set=\"loop_cycle_number\" t-"
+#~ "value=\"loop_cycle_number or 0\"/>\n"
+#~ "                    <tr t-att-style=\"'background-color: #f2f2f2' if "
+#~ "loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+#~ "                        <t t-set=\"loop_cycle_number\" t-"
+#~ "value=\"loop_cycle_number + 1\"/>\n"
+#~ "                        <td style=\"width: 150px;\">\n"
+#~ "                            <img t-attf-src=\"/web/image/product.product/"
+#~ "{{ line.product_id.id }}/image_128\" style=\"width: 64px; height: 64px; "
+#~ "object-fit: contain;\" alt=\"Product image\"/>\n"
+#~ "                        </td>\n"
+#~ "                        <td align=\"left\" t-out=\"line.product_id.name "
+#~ "or ''\">\tTaking care of Trees Course</td>\n"
+#~ "                        <td width=\"15%\" align=\"center\" t-"
+#~ "out=\"line.product_uom_qty or ''\">1</td>\n"
+#~ "                        <td width=\"20%\" align=\"right\"><span "
+#~ "style=\"font-weight:bold; white-space: nowrap;\">\n"
+#~ "                        <t t-"
+#~ "if=\"object.website_id.show_line_subtotals_tax_selection == "
+#~ "'tax_excluded'\">\n"
+#~ "                            <t t-"
+#~ "out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or "
+#~ "''\">$ 10.00</t>\n"
+#~ "                        </t>\n"
+#~ "                        <t t-else=\"\">\n"
+#~ "                            <t t-"
+#~ "out=\"format_amount(line.price_reduce_taxinc, object.currency_id) or "
+#~ "''\">$ 10.00</t>\n"
+#~ "                        </t>\n"
+#~ "                        </span></td>\n"
+#~ "                    </tr>\n"
+#~ "                </table>\n"
+#~ "            </t>\n"
+#~ "            <t t-if=\"current_section and "
+#~ "(                     line_last                     or "
+#~ "object.order_line[line_index+1].display_type == "
+#~ "'line_section'                     or "
+#~ "object.order_line[line_index+1].product_type == "
+#~ "'combo'                     or "
+#~ "(                         line.combo_item_id                         and "
+#~ "not "
+#~ "object.order_line[line_index+1].combo_item_id                     )                 ) "
+#~ "and not line.is_downpayment\">\n"
+#~ "                <t t-set=\"current_section\" t-value=\"None\"/>\n"
+#~ "                <table width=\"100%\" style=\"color: #454748; font-size: "
+#~ "12px; border-collapse: collapse;\">\n"
+#~ "                    <t t-set=\"loop_cycle_number\" t-"
+#~ "value=\"loop_cycle_number or 0\"/>\n"
+#~ "                    <tr t-att-style=\"'background-color: #f2f2f2' if "
+#~ "loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+#~ "                        <t t-set=\"loop_cycle_number\" t-"
+#~ "value=\"loop_cycle_number + 1\"/>\n"
+#~ "                        <td style=\"width: 100%\" align=\"right\">\n"
+#~ "                            <span style=\"font-weight: bold;\">Subtotal:</"
+#~ "span>\n"
+#~ "                            <span t-out=\"format_amount(current_subtotal, "
+#~ "object.currency_id) or ''\">$ 10.00</span>\n"
+#~ "                        </td>\n"
+#~ "                    </tr>\n"
+#~ "                </table>\n"
+#~ "            </t>\n"
+#~ "        </t>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"margin: 0px; padding: 0px;\" t-if=\"hasattr(object, "
+#~ "'carrier_id') and object.carrier_id\">\n"
+#~ "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
+#~ "border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
+#~ "            <tr>\n"
+#~ "                <td style=\"width: 60%\"/>\n"
+#~ "                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
+#~ "align=\"right\"><span style=\"font-weight:bold;\">Delivery:</span></td>\n"
+#~ "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
+#~ "align=\"right\" t-out=\"format_amount(object.amount_delivery, "
+#~ "object.currency_id) or ''\">$ 0.00</td>\n"
+#~ "            </tr>\n"
+#~ "            <tr>\n"
+#~ "                <td style=\"width: 60%\"/>\n"
+#~ "                <td style=\"width: 30%;\" align=\"right\"><span "
+#~ "style=\"font-weight:bold;\">Untaxed Amount:</span></td>\n"
+#~ "                <td style=\"width: 10%;\" align=\"right\" t-"
+#~ "out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ "
+#~ "10.00</td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"margin: 0px; padding: 0px;\" t-else=\"\">\n"
+#~ "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
+#~ "border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
+#~ "            <tr>\n"
+#~ "                <td style=\"width: 60%\"/>\n"
+#~ "                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
+#~ "align=\"right\"><span style=\"font-weight:bold;\">Untaxed Amount:</span></"
+#~ "td>\n"
+#~ "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
+#~ "align=\"right\" t-out=\"format_amount(object.amount_untaxed, "
+#~ "object.currency_id) or ''\">$ 10.00</td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
+#~ "border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
+#~ "            <tr>\n"
+#~ "                <td style=\"width: 60%\"/>\n"
+#~ "                <td style=\"width: 30%;\" align=\"right\"><span "
+#~ "style=\"font-weight:bold;\">Taxes:</span></td>\n"
+#~ "                <td style=\"width: 10%;\" align=\"right\" t-"
+#~ "out=\"format_amount(object.amount_tax, object.currency_id) or ''\">$ "
+#~ "0.00</td>\n"
+#~ "            </tr>\n"
+#~ "            <tr>\n"
+#~ "                <td style=\"width: 60%\"/>\n"
+#~ "                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
+#~ "align=\"right\"><span style=\"font-weight:bold;\">Total:</span></td>\n"
+#~ "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
+#~ "align=\"right\" t-out=\"format_amount(object.amount_total, "
+#~ "object.currency_id) or ''\">$ 10.00</td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "    </div>\n"
+#~ "    <div t-if=\"object.partner_invoice_id\" style=\"margin: 0px; padding: "
+#~ "0px;\">\n"
+#~ "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;"
+#~ "\">\n"
+#~ "            <tr>\n"
+#~ "                <td style=\"padding-top: 10px;\">\n"
+#~ "                    <span style=\"font-weight:bold;\">Bill to:</span>\n"
+#~ "                    <t t-out=\"object.partner_invoice_id.street or "
+#~ "''\">1201 S Figueroa St</t>\n"
+#~ "                    <t t-out=\"object.partner_invoice_id.city or ''\">Los "
+#~ "Angeles</t>\n"
+#~ "                    <t t-out=\"object.partner_invoice_id.state_id.name or "
+#~ "''\">California</t>\n"
+#~ "                    <t t-out=\"object.partner_invoice_id.zip or "
+#~ "''\">90015</t>\n"
+#~ "                    <t t-out=\"object.partner_invoice_id.country_id.name "
+#~ "or ''\">United States</t>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "            <tr>\n"
+#~ "                <td>\n"
+#~ "                    <span style=\"font-weight:bold;\">Payment Method:</"
+#~ "span>\n"
+#~ "                    <t t-if=\"tx_sudo.token_id\">\n"
+#~ "                        <t t-out=\"tx_sudo.token_id.display_name or ''\"/"
+#~ ">\n"
+#~ "                    </t>\n"
+#~ "                    <t t-else=\"\">\n"
+#~ "                        <t t-out=\"tx_sudo.provider_id.sudo().name or "
+#~ "''\"/>\n"
+#~ "                    </t>\n"
+#~ "                    (<t t-out=\"format_amount(tx_sudo.amount, "
+#~ "object.currency_id) or ''\">$ 10.00</t>)\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "    </div>\n"
+#~ "    <div t-if=\"object.partner_shipping_id and not object.only_services\" "
+#~ "style=\"margin: 0px; padding: 0px;\">\n"
+#~ "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;"
+#~ "\">\n"
+#~ "            <tr>\n"
+#~ "                <td>\n"
+#~ "                    <br/>\n"
+#~ "                    <span style=\"font-weight:bold;\">Ship to:</span>\n"
+#~ "                    <t t-out=\"object.partner_shipping_id.street or "
+#~ "''\">1201 S Figueroa St</t>\n"
+#~ "                    <t t-out=\"object.partner_shipping_id.city or "
+#~ "''\">Los Angeles</t>\n"
+#~ "                    <t t-out=\"object.partner_shipping_id.state_id.name "
+#~ "or ''\">California</t>\n"
+#~ "                    <t t-out=\"object.partner_shipping_id.zip or "
+#~ "''\">90015</t>\n"
+#~ "                    <t t-out=\"object.partner_shipping_id.country_id.name "
+#~ "or ''\">United States</t>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "        <table t-if=\"hasattr(object, 'carrier_id') and "
+#~ "object.carrier_id\" width=\"100%\" style=\"color: #454748; font-size: "
+#~ "12px;\">\n"
+#~ "            <tr>\n"
+#~ "                <td>\n"
+#~ "                    <span style=\"font-weight:bold;\">Shipping Method:</"
+#~ "span>\n"
+#~ "                    <t t-out=\"object.carrier_id.name or ''\"/>\n"
+#~ "                    <t t-if=\"object.amount_delivery == 0.0\">\n"
+#~ "                        (Free)\n"
+#~ "                    </t>\n"
+#~ "                    <t t-else=\"\">\n"
+#~ "                        (<t t-out=\"format_amount(object.amount_delivery, "
+#~ "object.currency_id) or ''\">$ 10.00</t>)\n"
+#~ "                    </t>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"object.carrier_id.carrier_description\">\n"
+#~ "                <td>\n"
+#~ "                    <strong>Shipping Description:</strong>\n"
+#~ "                    <t t-out=\"object.carrier_id.carrier_description\"/>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "    </div>\n"
+#~ "</t>\n"
+#~ "</div>"
+#~ msgstr ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+#~ "        Sveicināti,\n"
+#~ "        <br/><br/>\n"
+#~ "        <t t-set=\"tx_sudo\" t-"
+#~ "value=\"object.get_portal_last_transaction()\"/>\n"
+#~ "        Jūsu pasūtījums <span style=\"font-weight:bold;\" t-"
+#~ "out=\"object.name or ''\">S00049</span> kopsummā <span style=\"font-"
+#~ "weight:bold;\" t-out=\"format_amount(object.amount_total, "
+#~ "object.currency_id) or ''\">$ 10.00</span>\n"
+#~ "        <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in "
+#~ "('done', 'authorized'))\">\n"
+#~ "            tika apstiprināts.<br/>\n"
+#~ "            Paldies Jums par Jūsu uzticību!\n"
+#~ "        </t>\n"
+#~ "        <t t-elif=\"tx_sudo and tx_sudo.state == 'pending'\">\n"
+#~ "            tiek gaidīts. Tas tiks apstiprināts, kad maksājums tiks "
+#~ "saņemts.\n"
+#~ "            <t t-if=\"object.reference\">\n"
+#~ "                Jūsu maksājuma reference ir <span style=\"font-"
+#~ "weight:bold;\" t-out=\"object.reference or ''\"/>.\n"
+#~ "            </t>\n"
+#~ "        </t>\n"
+#~ "        <br/>\n"
+#~ "        <t t-set=\"documents\" t-value=\"object._get_product_documents()"
+#~ "\"/>\n"
+#~ "        <t t-if=\"documents\">\n"
+#~ "            <br/> \n"
+#~ "            <t t-if=\"len(documents)&gt;1\">\n"
+#~ "                Šeit ir daži papildus dokumenti, kas varētu Jūs "
+#~ "interesēt:\n"
+#~ "            </t>\n"
+#~ "            <t t-else=\"\">\n"
+#~ "                Šeit ir papildus dokuments, kas varētu Jūs interesēt:\n"
+#~ "            </t>\n"
+#~ "            <ul style=\"margin-bottom: 0;\">\n"
+#~ "                <t t-foreach=\"documents\" t-as=\"document\">\n"
+#~ "                    <li style=\"font-size: 13px;\">\n"
+#~ "                        <a t-out=\"document.ir_attachment_id.name\" t-att-"
+#~ "href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-"
+#~ "target=\"target\"/>\n"
+#~ "                    </li>\n"
+#~ "                </t>\n"
+#~ "            </ul>\n"
+#~ "        </t>\n"
+#~ "        <br/>\n"
+#~ "        Nevilcinieties sazināties ar mums, ja Jums ir kādi jautājumi.\n"
+#~ "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-"
+#~ "mail-quote-container=\"1\">\n"
+#~ "            <br/><br/>\n"
+#~ "            <t t-out=\"object.user_id.signature or ''\" data-o-mail-"
+#~ "quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+#~ "        </t>\n"
+#~ "        <br/><br/>\n"
+#~ "    </p>\n"
+#~ "<t t-if=\"hasattr(object, 'website_id') and object.website_id\">\n"
+#~ "    <div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
+#~ "border-collapse: collapse; white-space: nowrap;\">\n"
+#~ "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
+#~ "                <td style=\"width: 150px;\"><span style=\"font-"
+#~ "weight:bold;\">Preces</span></td>\n"
+#~ "                <td/>\n"
+#~ "                <td width=\"15%\" align=\"center\"><span style=\"font-"
+#~ "weight:bold;\">Daudzums</span></td>\n"
+#~ "                <td width=\"20%\" align=\"right\">\n"
+#~ "                    <span style=\"font-weight:bold;\">\n"
+#~ "                        <t t-"
+#~ "if=\"object.website_id.show_line_subtotals_tax_selection == "
+#~ "'tax_excluded'\">\n"
+#~ "                            Bez PVN\n"
+#~ "                        </t>\n"
+#~ "                        <t t-else=\"\">\n"
+#~ "                            Ar PVN\n"
+#~ "                        </t>\n"
+#~ "                    </span>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "        <t t-set=\"current_subtotal\" t-value=\"0\"/>\n"
+#~ "        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
+#~ "            <t t-set=\"line_subtotal\" t-value=\"                     "
+#~ "line.price_subtotal                     if "
+#~ "object.website_id.show_line_subtotals_tax_selection == "
+#~ "'tax_excluded'                     else line.price_total                 "
+#~ "\"/>\n"
+#~ "            <t t-set=\"current_subtotal\" t-value=\"current_subtotal + "
+#~ "line_subtotal\"/>\n"
+#~ "            <t t-if=\"(not hasattr(line, 'is_delivery') or not "
+#~ "line.is_delivery) and (                     line.display_type in "
+#~ "['line_section', 'line_note']                     or line.product_type == "
+#~ "'combo'                 )\">\n"
+#~ "                <table width=\"100%\" style=\"color: #454748; font-size: "
+#~ "12px; border-collapse: collapse;\">\n"
+#~ "                    <t t-set=\"loop_cycle_number\" t-"
+#~ "value=\"loop_cycle_number or 0\"/>\n"
+#~ "                    <tr t-att-style=\"'background-color: #f2f2f2' if "
+#~ "loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+#~ "                        <t t-set=\"loop_cycle_number\" t-"
+#~ "value=\"loop_cycle_number + 1\"/>\n"
+#~ "                        <td colspan=\"4\">\n"
+#~ "                            <t t-if=\"line.display_type == 'line_section' "
+#~ "or line.product_type == 'combo'\">\n"
+#~ "                                <span style=\"font-weight:bold;\" t-"
+#~ "out=\"line.name or ''\">Koku kopšanas kurss</span>\n"
+#~ "                                <t t-set=\"current_section\" t-"
+#~ "value=\"line\"/>\n"
+#~ "                                <t t-set=\"current_subtotal\" t-"
+#~ "value=\"0\"/>\n"
+#~ "                            </t>\n"
+#~ "                            <t t-elif=\"line.display_type == "
+#~ "'line_note'\">\n"
+#~ "                                <i t-out=\"line.name or ''\">Koku "
+#~ "kopšanas kurss</i>\n"
+#~ "                            </t>\n"
+#~ "                        </td>\n"
+#~ "                    </tr>\n"
+#~ "                </table>\n"
+#~ "            </t>\n"
+#~ "            <t t-elif=\"(not hasattr(line, 'is_delivery') or not "
+#~ "line.is_delivery)\">\n"
+#~ "                <table width=\"100%\" style=\"color: #454748; font-size: "
+#~ "12px; border-collapse: collapse;\">\n"
+#~ "                    <t t-set=\"loop_cycle_number\" t-"
+#~ "value=\"loop_cycle_number or 0\"/>\n"
+#~ "                    <tr t-att-style=\"'background-color: #f2f2f2' if "
+#~ "loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+#~ "                        <t t-set=\"loop_cycle_number\" t-"
+#~ "value=\"loop_cycle_number + 1\"/>\n"
+#~ "                        <td style=\"width: 150px;\">\n"
+#~ "                            <img t-attf-src=\"/web/image/product.product/"
+#~ "{{ line.product_id.id }}/image_128\" style=\"width: 64px; height: 64px; "
+#~ "object-fit: contain;\" alt=\"Product image\"/>\n"
+#~ "                        </td>\n"
+#~ "                        <td align=\"left\" t-out=\"line.product_id.name "
+#~ "or ''\">\tKoku kopšanas kurss</td>\n"
+#~ "                        <td width=\"15%\" align=\"center\" t-"
+#~ "out=\"line.product_uom_qty or ''\">1</td>\n"
+#~ "                        <td width=\"20%\" align=\"right\"><span "
+#~ "style=\"font-weight:bold; white-space: nowrap;\">\n"
+#~ "                        <t t-"
+#~ "if=\"object.website_id.show_line_subtotals_tax_selection == "
+#~ "'tax_excluded'\">\n"
+#~ "                            <t t-"
+#~ "out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or "
+#~ "''\">$ 10.00</t>\n"
+#~ "                        </t>\n"
+#~ "                        <t t-else=\"\">\n"
+#~ "                            <t t-"
+#~ "out=\"format_amount(line.price_reduce_taxinc, object.currency_id) or "
+#~ "''\">$ 10.00</t>\n"
+#~ "                        </t>\n"
+#~ "                        </span></td>\n"
+#~ "                    </tr>\n"
+#~ "                </table>\n"
+#~ "            </t>\n"
+#~ "            <t t-if=\"current_section and "
+#~ "(                     line_last                     or "
+#~ "object.order_line[line_index+1].display_type == "
+#~ "'line_section'                     or "
+#~ "object.order_line[line_index+1].product_type == "
+#~ "'combo'                     or "
+#~ "(                         line.combo_item_id                         and "
+#~ "not "
+#~ "object.order_line[line_index+1].combo_item_id                     )                 ) "
+#~ "and not line.is_downpayment\">\n"
+#~ "                <t t-set=\"current_section\" t-value=\"None\"/>\n"
+#~ "                <table width=\"100%\" style=\"color: #454748; font-size: "
+#~ "12px; border-collapse: collapse;\">\n"
+#~ "                    <t t-set=\"loop_cycle_number\" t-"
+#~ "value=\"loop_cycle_number or 0\"/>\n"
+#~ "                    <tr t-att-style=\"'background-color: #f2f2f2' if "
+#~ "loop_cycle_number % 2 == 0 else 'background-color: #ffffff'\">\n"
+#~ "                        <t t-set=\"loop_cycle_number\" t-"
+#~ "value=\"loop_cycle_number + 1\"/>\n"
+#~ "                        <td style=\"width: 100%\" align=\"right\">\n"
+#~ "                            <span style=\"font-weight: bold;\">Starpsumma:"
+#~ "</span>\n"
+#~ "                            <span t-out=\"format_amount(current_subtotal, "
+#~ "object.currency_id) or ''\">$ 10.00</span>\n"
+#~ "                        </td>\n"
+#~ "                    </tr>\n"
+#~ "                </table>\n"
+#~ "            </t>\n"
+#~ "        </t>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"margin: 0px; padding: 0px;\" t-if=\"hasattr(object, "
+#~ "'carrier_id') and object.carrier_id\">\n"
+#~ "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
+#~ "border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
+#~ "            <tr>\n"
+#~ "                <td style=\"width: 60%\"/>\n"
+#~ "                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
+#~ "align=\"right\"><span style=\"font-weight:bold;\">Piegāde:</span></td>\n"
+#~ "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
+#~ "align=\"right\" t-out=\"format_amount(object.amount_delivery, "
+#~ "object.currency_id) or ''\">$ 0.00</td>\n"
+#~ "            </tr>\n"
+#~ "            <tr>\n"
+#~ "                <td style=\"width: 60%\"/>\n"
+#~ "                <td style=\"width: 30%;\" align=\"right\"><span "
+#~ "style=\"font-weight:bold;\">Summa bez nodokļiem:</span></td>\n"
+#~ "                <td style=\"width: 10%;\" align=\"right\" t-"
+#~ "out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ "
+#~ "10.00</td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"margin: 0px; padding: 0px;\" t-else=\"\">\n"
+#~ "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
+#~ "border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
+#~ "            <tr>\n"
+#~ "                <td style=\"width: 60%\"/>\n"
+#~ "                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
+#~ "align=\"right\"><span style=\"font-weight:bold;\">Summa bez nodokļiem:</"
+#~ "span></td>\n"
+#~ "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
+#~ "align=\"right\" t-out=\"format_amount(object.amount_untaxed, "
+#~ "object.currency_id) or ''\">$ 10.00</td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "    </div>\n"
+#~ "    <div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
+#~ "border-spacing: 0px 4px; white-space: nowrap;\" align=\"right\">\n"
+#~ "            <tr>\n"
+#~ "                <td style=\"width: 60%\"/>\n"
+#~ "                <td style=\"width: 30%;\" align=\"right\"><span "
+#~ "style=\"font-weight:bold;\">PVN:</span></td>\n"
+#~ "                <td style=\"width: 10%;\" align=\"right\" t-"
+#~ "out=\"format_amount(object.amount_tax, object.currency_id) or ''\">$ "
+#~ "0.00</td>\n"
+#~ "            </tr>\n"
+#~ "            <tr>\n"
+#~ "                <td style=\"width: 60%\"/>\n"
+#~ "                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" "
+#~ "align=\"right\"><span style=\"font-weight:bold;\">Kopsumma:</span></td>\n"
+#~ "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" "
+#~ "align=\"right\" t-out=\"format_amount(object.amount_total, "
+#~ "object.currency_id) or ''\">$ 10.00</td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "    </div>\n"
+#~ "    <div t-if=\"object.partner_invoice_id\" style=\"margin: 0px; padding: "
+#~ "0px;\">\n"
+#~ "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;"
+#~ "\">\n"
+#~ "            <tr>\n"
+#~ "                <td style=\"padding-top: 10px;\">\n"
+#~ "                    <span style=\"font-weight:bold;\">Norēķinu adrese:</"
+#~ "span>\n"
+#~ "                    <t t-out=\"object.partner_invoice_id.street or "
+#~ "''\">1201 S Figueroa St</t>\n"
+#~ "                    <t t-out=\"object.partner_invoice_id.city or ''\">Los "
+#~ "Angeles</t>\n"
+#~ "                    <t t-out=\"object.partner_invoice_id.state_id.name or "
+#~ "''\">California</t>\n"
+#~ "                    <t t-out=\"object.partner_invoice_id.zip or "
+#~ "''\">90015</t>\n"
+#~ "                    <t t-out=\"object.partner_invoice_id.country_id.name "
+#~ "or ''\">United States</t>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "            <tr>\n"
+#~ "                <td>\n"
+#~ "                    <span style=\"font-weight:bold;\">Maksājuma metode:</"
+#~ "span>\n"
+#~ "                    <t t-if=\"tx_sudo.token_id\">\n"
+#~ "                        <t t-out=\"tx_sudo.token_id.display_name or ''\"/"
+#~ ">\n"
+#~ "                    </t>\n"
+#~ "                    <t t-else=\"\">\n"
+#~ "                        <t t-out=\"tx_sudo.provider_id.sudo().name or "
+#~ "''\"/>\n"
+#~ "                    </t>\n"
+#~ "                    (<t t-out=\"format_amount(tx_sudo.amount, "
+#~ "object.currency_id) or ''\">$ 10.00</t>)\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "    </div>\n"
+#~ "    <div t-if=\"object.partner_shipping_id and not object.only_services\" "
+#~ "style=\"margin: 0px; padding: 0px;\">\n"
+#~ "        <table width=\"100%\" style=\"color: #454748; font-size: 12px;"
+#~ "\">\n"
+#~ "            <tr>\n"
+#~ "                <td>\n"
+#~ "                    <br/>\n"
+#~ "                    <span style=\"font-weight:bold;\">Piegādes adrese:</"
+#~ "span>\n"
+#~ "                    <t t-out=\"object.partner_shipping_id.street or "
+#~ "''\">1201 S Figueroa St</t>\n"
+#~ "                    <t t-out=\"object.partner_shipping_id.city or "
+#~ "''\">Los Angeles</t>\n"
+#~ "                    <t t-out=\"object.partner_shipping_id.state_id.name "
+#~ "or ''\">California</t>\n"
+#~ "                    <t t-out=\"object.partner_shipping_id.zip or "
+#~ "''\">90015</t>\n"
+#~ "                    <t t-out=\"object.partner_shipping_id.country_id.name "
+#~ "or ''\">United States</t>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "        <table t-if=\"hasattr(object, 'carrier_id') and "
+#~ "object.carrier_id\" width=\"100%\" style=\"color: #454748; font-size: "
+#~ "12px;\">\n"
+#~ "            <tr>\n"
+#~ "                <td>\n"
+#~ "                    <span style=\"font-weight:bold;\">Piegādes metode:</"
+#~ "span>\n"
+#~ "                    <t t-out=\"object.carrier_id.name or ''\"/>\n"
+#~ "                    <t t-if=\"object.amount_delivery == 0.0\">\n"
+#~ "                        (Bezmaksas)\n"
+#~ "                    </t>\n"
+#~ "                    <t t-else=\"\">\n"
+#~ "                        (<t t-out=\"format_amount(object.amount_delivery, "
+#~ "object.currency_id) or ''\">$ 10.00</t>)\n"
+#~ "                    </t>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "            <tr t-if=\"object.carrier_id.carrier_description\">\n"
+#~ "                <td>\n"
+#~ "                    <strong>Piegādes apraksts:</strong>\n"
+#~ "                    <t t-out=\"object.carrier_id.carrier_description\"/>\n"
+#~ "                </td>\n"
+#~ "            </tr>\n"
+#~ "        </table>\n"
+#~ "    </div>\n"
+#~ "</t>\n"
+#~ "</div>"
+
+#~ msgid ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "        <t t-set=\"doc_name\" t-value=\"object.type_name\"/>\n"
+#~ "        Dear <t t-out=\"object.partner_id.name or ''\">user</t>,\n"
+#~ "        <br/><br/>\n"
+#~ "        Please be advised that your\n"
+#~ "        <t t-out=\"doc_name or ''\">quotation</t> <strong t-"
+#~ "out=\"object.name or ''\">S00052</strong>\n"
+#~ "        <t t-if=\"object.origin\">\n"
+#~ "            (with reference: <t t-out=\"object.origin or ''\">S00052</"
+#~ "t> )\n"
+#~ "        </t>\n"
+#~ "        has been cancelled. Therefore, you should not be charged further "
+#~ "for this order.\n"
+#~ "        If any refund is necessary, this will be executed at best "
+#~ "convenience.\n"
+#~ "        <br/><br/>\n"
+#~ "        Do not hesitate to contact us if you have any questions.\n"
+#~ "        <br/>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
+#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+#~ "        <t t-set=\"doc_name\" t-value=\"object.type_name\"/>\n"
+#~ "        Sveicināti <t t-out=\"object.partner_id.name or ''\">lietotāj</"
+#~ "t>,\n"
+#~ "        <br/><br/>\n"
+#~ "        Lūdzu, ņemiet vērā, ka Jūsu\n"
+#~ "        <t t-out=\"doc_name or ''\">piedāvājums</t> <strong t-"
+#~ "out=\"object.name or ''\">S00052</strong>\n"
+#~ "        <t t-if=\"object.origin\">\n"
+#~ "            (ar referenci: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+#~ "        </t>\n"
+#~ "        ir atcelts. Tādēļ jums nevajadzētu iekasēt papildu maksu par šo "
+#~ "pasūtījumu.\n"
+#~ "        Ja ir nepieciešama atmaksa, tā tiks veikta pēc iespējas ērtāk.\n"
+#~ "        <br/><br/>\n"
+#~ "        Nevilcinieties sazināties ar mums, ja Jums ir kādi jautājumi.\n"
+#~ "        <br/>\n"
+#~ "    </p>\n"
+#~ "</div>\n"
+#~ "            "
+
+#~ msgid ""
+#~ "<span>Are you sure you want to cancel this order? <br/></span>\n"
+#~ "                        <span id=\"display_invoice_alert\" "
+#~ "invisible=\"not display_invoice_alert\">\n"
+#~ "                            Draft invoices for this order will be "
+#~ "cancelled. <br/>\n"
+#~ "                        </span>"
+#~ msgstr ""
+#~ "<span>Vai esat pārliecināts, ka vēlaties atcelt šo pasūtījumu? <br/></"
+#~ "span>\n"
+#~ "                        <span id=\"display_invoice_alert\" "
+#~ "invisible=\"not display_invoice_alert\">\n"
+#~ "                            Šī pasūtījuma rēķinu projekti tiks anulēti. "
+#~ "<br/>\n"
+#~ "                        </span>"
+
+#~ msgid "<strong>Shipping Address</strong>"
+#~ msgstr "<strong>Piegādes adrese</strong>"
+
+#~ msgid ""
+#~ "Ability to select a package type in sales orders and to force a quantity "
+#~ "that is a multiple of the number of units per package."
+#~ msgstr ""
+#~ "Iespēja izvēlēties iepakojuma veidu pārdošanās pasūtījumos un pieprasīt "
+#~ "daudzumu, kas ir vairākas vienības iepakojumā."
+
+#~ msgid "Amount of quotations to invoice"
+#~ msgstr "Piedāvājumu summa izrakstīšanai"
+
+#~ msgid "Amount to invoice"
+#~ msgstr "Rēķinā norādāmā summa"
+
+#~ msgid "Author"
+#~ msgstr "Autors"
+
+#~ msgid "Blocking Message"
+#~ msgstr "Bloķēšanas ziņa"
+
+#~ msgid "Body content is the same as the template"
+#~ msgstr "Pamata saturs ir tāds pats kā veidnē"
+
+#~ msgid "Can Edit Body"
+#~ msgstr "Var rediģēt pamattekstu"
+
+#~ msgid "Cancel %s"
+#~ msgstr "Atcelt %s"
+
+#~ msgid "Category"
+#~ msgstr "Kategorija"
+
+#~ msgid "Compute shipping costs and ship with DHL"
+#~ msgstr "Aprēķināt sūtīšanas izmaksas un nosūtīt ar DHL"
+
+#~ msgid "Compute shipping costs and ship with FedEx"
+#~ msgstr "Aprēķināt sūtīšanas izmaksas un nosūtīt ar FedEx"
+
+#~ msgid "Compute shipping costs and ship with UPS"
+#~ msgstr "Aprēķināt sūtīšanas izmaksas un nosūtīt ar UPS"
+
+#~ msgid "Compute shipping costs and ship with USPS"
+#~ msgstr "Aprēķināt sūtīšanas izmaksas un nosūtīt ar USPS"
+
+#~ msgid "Contents"
+#~ msgstr "Saturs"
+
+#~ msgid ""
+#~ "Conversion between Units of Measure can only occur if they belong to the "
+#~ "same category. The conversion will be made based on the ratios."
+#~ msgstr ""
+#~ "Mērvienību konvertēšana starp mērvienībām var notikt tikai tad, ja tās "
+#~ "pieder vienai un tai pašai kategorijai. Pārrēķins tiks veikts, "
+#~ "pamatojoties uz attiecībām."
+
+#~ msgid ""
+#~ "Create one invoice for all orders related to same customer and same "
+#~ "invoicing address"
+#~ msgstr ""
+#~ "Izveidot vienu rēķinu visiem pasūtījumiem, kas saistīti ar vienu un to "
+#~ "pašu klientu un vienu un to pašu rēķina izrakstīšanas adresi"
+
+#~ msgid "Display Invoice Amount Warning"
+#~ msgstr "Rādīt rēķina summas brīdinājumu"
+
+#~ msgid "If true, the packaging can be used for sales orders"
+#~ msgstr "Ja ir patiess, iepakojumu var izmantot pārdošanas pasūtījumiem"
+
+#~ msgid "Invoice Alert"
+#~ msgstr "Brīdinājums par rēķinu"
+
+#~ msgid "Is Editor"
+#~ msgstr "Ir redaktors"
+
+#~ msgid "Language"
+#~ msgstr "Valoda"
+
+#~ msgid "Mail Template"
+#~ msgstr "Ziņojuma veidne"
+
+#~ msgid "Message"
+#~ msgstr "Ziņojums"
+
+#~ msgid "No Message"
+#~ msgstr "Nav ziņu"
+
+#~ msgid "Number of quotations to invoice"
+#~ msgstr "Pasūtījumu skaits, kas jāizraksta"
+
+#~ msgid "Number of sales to invoice"
+#~ msgstr "Pārdošanas apjoms, kas jāizraksta"
+
+#~ msgid "Operation not supported"
+#~ msgstr "Operācija netiek atbalstīta"
+
+#~ msgid "Option: %s"
+#~ msgstr "Variants: %s"
+
+#~ msgid ""
+#~ "Optional translation language (ISO code) to select when sending out an "
+#~ "email. If not set, the english version will be used. This should usually "
+#~ "be a placeholder expression that provides the appropriate language, e.g. "
+#~ "{{ object.partner_id.lang }}."
+#~ msgstr ""
+#~ "Izvēles tulkošanas valoda (ISO kods), ko izvēlēties, sūtot e-pastu. Ja "
+#~ "tas nav iestatīts, tiks izmantota versija angļu valodā. Parasti tai ir "
+#~ "jābūt viettura izteiksmei, kas nodrošina atbilstošo valodu, piem. "
+#~ "{{ object.partner_id.lang }}."
+
+#~ msgid "Order Upsell"
+#~ msgstr "Pasūtīt piepārdošanu"
+
+#~ msgid "Order to Invoice"
+#~ msgstr "Pasūtījums izrakstīšanai"
+
+#~ msgid "Packaging"
+#~ msgstr "Iepakojums"
+
+#~ msgid "Packaging Quantity"
+#~ msgstr "Iepakojumu skaits"
+
+#~ msgid "Product Categories"
+#~ msgstr "Preču kategorijas"
+
+#~ msgid "Product Packaging"
+#~ msgstr "Preces iepakojums"
+
+#~ msgid "Recipients"
+#~ msgstr "Saņēmēji"
+
+#~ msgid "Rendering Model"
+#~ msgstr "Renderēšanasd modelis"
+
+#~ msgid "Sales Order Cancel"
+#~ msgstr "Pārdošanas pasūtījums atcelts"
+
+#~ msgid "Sales Warnings"
+#~ msgstr "Pārdošanas brīdinājumi"
+
+#~ msgid "Sales: Order Cancellation"
+#~ msgstr "Pārdošana: Pasūtījums atcelts"
+
+#~ msgid ""
+#~ "Selecting the \"Warning\" option will notify user with the message, "
+#~ "Selecting \"Blocking Message\" will throw an exception with the message "
+#~ "and block the flow. The Message has to be written in the next field."
+#~ msgstr ""
+#~ "Izvēloties \"Brīdinājumu\" lietotājam tiks ziņots, izvēloties "
+#~ "\"Bloķēšanas ziņu\" ar šo ziņu lietotājs var apstādināt plūsmu. Ziņa "
+#~ "jāieraksta nākamā laukā."
+
+#~ msgid "Sell and purchase products in different units of measure"
+#~ msgstr "Pārdod un iepērc produktus dažādās mērvienībās"
+
+#~ msgid "Sell products by multiple of unit # per package"
+#~ msgstr "Pārdod produktus dažādās mērvienībās # iepakojumā"
+
+#~ msgid "Send and cancel"
+#~ msgstr "Sūtīt un atcelt"
+
+#~ msgid "Send by Email"
+#~ msgstr "Sūtīt ar e-pastu"
+
+#~ msgid "Sent automatically to customers when you cancel an order"
+#~ msgstr "Automātiski nosūtīt klientam, kad atcelts vai pasūtīts"
+
+#~ msgid "Show all records which has next action date is before today"
+#~ msgstr ""
+#~ "Rādīt visus ierakstus, kuriem nākamais darbības datums ir pirms šodienas"
+
+#~ msgid "Subject"
+#~ msgstr "Priekšmets"
+
+#~ msgid "The amount to invoice = Sale Order Total - Confirmed Down Payments."
+#~ msgstr ""
+#~ "Rēķinā norādāmā summa = Pārdošanas rīkojuma kopsumma - apstiprinātais "
+#~ "priekšapmaksa."
+
+#~ msgid ""
+#~ "This product is packaged by %(pack_size).2f %(pack_name)s. You should "
+#~ "sell %(quantity).2f %(unit)s."
+#~ msgstr ""
+#~ "Šo produktu iesaiņo %(pack_size).2f %(pack_name)s. Jums vajadzētu pārdot %"
+#~ "(quantity).2f %(unit)s."
+
+#~ msgid "Type a message..."
+#~ msgstr "Rakstīt ziņojumu..."
+
+#~ msgid "Unit of Measure"
+#~ msgstr "Mērvienība"
+
+#~ msgid "Units of Measure"
+#~ msgstr "Mērvienības"
+
+#~ msgid "Units of Measure Categories"
+#~ msgstr "Mērvienību kategorijas"
+
+#~ msgid "UoM"
+#~ msgstr "Mērv"
+
+#~ msgid "View Order"
+#~ msgstr "Skatīt pasūtījumu"
+
+#~ msgid "Warning for %s"
+#~ msgstr "Brīdinājums par %s"
+
+#~ msgid "Warning on the Sales Order"
+#~ msgstr "Brīdinājums pārdošanas pasūtījumam"
+
+#~ msgid "Warning when Selling this Product"
+#~ msgstr "Brīdinājums, kad pārdod šo produktu"
+
+#~ msgid ""
+#~ "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+#~ "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref "
+#~ "{{ object.name or 'n/a' }})"
+#~ msgstr ""
+#~ "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+#~ "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref "
+#~ "{{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref "
+#~ "{{ object.name or 'n/a' }})"
+#~ msgstr ""
+#~ "{{ object.company_id.name }} {{ object.type_name }} Atcelts (Ref "
+#~ "{{ object.name or 'n/a' }})"

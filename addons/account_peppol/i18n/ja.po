@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:37+0000\n"
+"POT-Creation-Date: 2026-01-15 18:37+0000\n"
 "PO-Revision-Date: 2025-11-19 14:56+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -382,6 +382,8 @@ msgstr "会計仕訳がウィザードを送信"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_edi_user
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_edi_user
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_user
 msgid "Account Peppol Edi User"
 msgstr "会計Peppol Ediユーザ"
 
@@ -652,6 +654,11 @@ msgid "Company"
 msgstr "会社"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_name
+msgid "Company Name"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Company information"
 msgstr "会社情報"
@@ -730,8 +737,24 @@ msgstr "デモ"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Disable the reception."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Discard"
 msgstr "破棄"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Disconnect"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid "Disconnected this branch company peppol configuration from %s."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__display_name
@@ -782,7 +805,6 @@ msgstr "EDI操作モード"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__edi_user_id
-#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_user
 msgid "EDI user"
 msgstr "EDIユーザ"
 
@@ -802,6 +824,11 @@ msgstr "Edi識別確認"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Email"
 msgstr "Eメール"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Enable reception"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__enabled
@@ -1058,6 +1085,11 @@ msgid "PEPPOL: webhook keep alive"
 msgstr "PEPPOL: ウェブフック"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_id
+msgid "Parent Company"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
 msgid "Partner cannot receive format"
 msgstr ""
@@ -1130,6 +1162,22 @@ msgid "Peppol ID"
 msgstr "Peppol ID"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Peppol ID should be different from main company."
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_parent_company_id
+msgid "Peppol Parent Company"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_parent_company_name
+msgid "Peppol Parent Company Name"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_purchase_journal_id
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_purchase_journal_id
 msgid "Peppol Purchase Journal"
@@ -1149,6 +1197,11 @@ msgstr "Peppol登録"
 #: model:ir.model,name:account_peppol.model_account_peppol_service
 msgid "Peppol Service"
 msgstr "Peppolサービス"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_use_parent_company
+msgid "Peppol Use Parent Company"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1292,6 +1345,16 @@ msgid "Register as a receiver"
 msgstr "受信者として登録"
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_self
+msgid "Register using the current company"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_parent
+msgid "Register using the parent company by setting the same EAS/Endpoint"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Register with Odoo"
 msgstr "Odooで登録"
@@ -1310,7 +1373,7 @@ msgstr "Peppol経由でドキュメントを受信する登録済 (demo)。"
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid "Registered to receive documents via Peppol."
 msgstr "Peppol経由でドキュメントを受信する登録済。"
 
@@ -1336,6 +1399,11 @@ msgid "Save"
 msgstr "保存"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
+msgid "Selected Company"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Send"
@@ -1343,8 +1411,8 @@ msgstr "送信"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "Send electronic invoices, and receive bills automatically via Peppol"
-msgstr "電子請求書を送信し、Peppol経由で仕入先請求書を自動的に受信します。"
+msgid "Send electronic invoices, and receive bills automatically via Peppol."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__service_ids
@@ -1730,6 +1798,11 @@ msgid "There was an issue with the Peppol Participant."
 msgstr "Peppol参加者に問題がありました。"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "This branch company will use the active Peppol connection found on"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "This invoice has also been"
 msgstr "この請求書もすでに"
@@ -1802,6 +1875,16 @@ msgstr ""
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unknown Peppol Error: %s"
 msgstr "不明なPeppolエラー: %s"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection
+msgid "Use Parent Connection"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection_selection
+msgid "Use Parent Connection Selection"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -1878,6 +1961,11 @@ msgid ""
 "You are sending and receiving your e-invoices via Odoo with this Peppol ID"
 msgstr ""
 "このPeppol IDを使用して、Odoo経由で電子顧客請求書の送受信を行っています。"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "You are sending from"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1979,7 +2067,7 @@ msgstr "登録は拒否されました。サポートまでお問い合わせ下
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid ""
 "Your registration on Peppol network should be activated within a day. The "
 "updated status will be visible in Settings."
@@ -1997,6 +2085,11 @@ msgstr "登録は1日以内に有効になります。"
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your request is still being processed."
 msgstr "リクエストはまだ処理中です。"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "and send invoices via Peppol on their behalf."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2024,6 +2117,9 @@ msgstr "請求書を送信するには、しかし、この請求書は"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "ユーザー"
+
+#~ msgid "Send electronic invoices, and receive bills automatically via Peppol"
+#~ msgstr "電子請求書を送信し、Peppol経由で仕入先請求書を自動的に受信します。"
 
 #~ msgid "The document has been sent to the Peppol Access Point for processing"
 #~ msgstr ""

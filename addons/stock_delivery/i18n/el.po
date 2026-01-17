@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2025-11-15 11:17+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Greek <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -53,8 +53,12 @@ msgid "<span>Shipping Weight: </span>"
 msgstr "<span>Βάρος Αποστολής: </span>"
 
 #. module: stock_delivery
-#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
+msgid "<strong>Carrier:</strong>"
+msgstr ""
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>Carrier</strong>"
 msgstr ""
 
@@ -92,7 +96,9 @@ msgstr ""
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
-msgid "<strong>Weight</strong>"
+msgid ""
+"<strong>Weight:</strong>\n"
+"                <br/>"
 msgstr ""
 
 #. module: stock_delivery
@@ -108,8 +114,7 @@ msgstr "Ακύρωση"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid ""
-"Cancelling a delivery may not be undoable. Are you sure you want to "
-"continue?"
+"Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr ""
 
 #. module: stock_delivery
@@ -188,7 +193,19 @@ msgid "Discard"
 msgstr "Απόρριψη"
 
 #. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_sale_order__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_return_picking__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_route__display_name
 msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
 
@@ -200,11 +217,15 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "Εκτιμώμενο Κόστος: ο πελάτης θα τιμολογηθεί το εκτιμώμενο κόστος αποστολής.\n"
-"Πραγματικό Κόστος: ο πελάτης θα τιμολογηθεί το πραγματικό κόστος της αποστολής, το κόστος αποστολής θα ενημρωθεί στην Παραγγελία Πώλησης μετά την παράδοση."
+"Πραγματικό Κόστος: ο πελάτης θα τιμολογηθεί το πραγματικό κόστος της "
+"αποστολής, το κόστος αποστολής θα ενημρωθεί στην Παραγγελία Πώλησης μετά την "
+"παράδοση."
 
 #. module: stock_delivery
 #. odoo-python
@@ -232,7 +253,19 @@ msgid "HS Code"
 msgstr "HS Code / Tariff code"
 
 #. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__id
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__id
+#: model:ir.model.fields,field_description:stock_delivery.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:stock_delivery.field_product_template__id
+#: model:ir.model.fields,field_description:stock_delivery.field_sale_order__id
+#: model:ir.model.fields,field_description:stock_delivery.field_sale_order_line__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_return_picking__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_route__id
 msgid "ID"
 msgstr "Κωδικός"
 
@@ -268,6 +301,11 @@ msgid "Manual actions might be needed."
 msgstr ""
 
 #. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__move_line_ids
+msgid "Move Line"
+msgstr ""
+
+#. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
 msgstr ""
@@ -290,7 +328,7 @@ msgstr "Πακέτο"
 
 #. module: stock_delivery
 #. odoo-python
-#: code:addons/stock_delivery/models/stock_picking.py:0
+#: code:addons/stock_delivery/models/stock_move.py:0
 msgid "Package Details"
 msgstr ""
 
@@ -304,11 +342,6 @@ msgstr ""
 #: model:ir.model,name:stock_delivery.model_stock_quant_package
 msgid "Packages"
 msgstr "Συσκευασίες"
-
-#. module: stock_delivery
-#: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__picking_id
-msgid "Picking"
-msgstr "Συλλογή"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
@@ -356,8 +389,10 @@ msgstr "Διαδρομές"
 #: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
 msgid ""
-"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
-"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+"Rules of origin determine where goods originate, i.e. not where they have "
+"been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in "
+"commerce."
 msgstr ""
 
 #. module: stock_delivery
@@ -389,8 +424,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
-"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
-"%(ref)s"
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number %"
+"(ref)s"
 msgstr ""
 
 #. module: stock_delivery
@@ -554,11 +589,11 @@ msgstr ""
 
 #. module: stock_delivery
 #. odoo-python
-#: code:addons/stock_delivery/models/stock_picking.py:0
+#: code:addons/stock_delivery/models/stock_move.py:0
 msgid ""
 "You cannot pack products into the same package when they have different "
-"carriers (i.e. check that all of their transfers have a carrier assigned and"
-" are using the same carrier)."
+"carriers (i.e. check that all of their transfers have a carrier assigned and "
+"are using the same carrier)."
 msgstr ""
 
 #. module: stock_delivery
@@ -595,6 +630,21 @@ msgid "^FO310,200"
 msgstr ""
 
 #. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label
+msgid "^FO35, 180 ^A0N,15^FDHS:"
+msgstr ""
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.normal_zpl_label
+msgid "^FO35, 220 ^A0N,15^FDHS:"
+msgstr ""
+
+#. module: stock_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
+#: model_terms:ir.ui.view,arch_db:stock_delivery.normal_zpl_label
 msgid "^FS"
 msgstr ""
+
+#~ msgid "Picking"
+#~ msgstr "Συλλογή"

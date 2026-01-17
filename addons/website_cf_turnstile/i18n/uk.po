@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_cf_turnstile
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 06:52+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: website_cf_turnstile
 #: model_terms:ir.ui.view,arch_db:website_cf_turnstile.res_config_settings_view_form
@@ -42,7 +45,7 @@ msgstr "Ключ сайту CF"
 
 #. module: website_cf_turnstile
 #. odoo-javascript
-#: code:addons/website_cf_turnstile/static/src/js/error_handler.js:0
+#: code:addons/website_cf_turnstile/static/src/interactions/error_handler.js:0
 msgid "Cloudflare Turnstile Error"
 msgstr "Помилка Cloudflare Turnstile"
 
@@ -52,9 +55,34 @@ msgid "Config Settings"
 msgstr "Налаштування"
 
 #. module: website_cf_turnstile
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_cf_turnstile
 #: model:ir.model,name:website_cf_turnstile.model_ir_http
 msgid "HTTP Routing"
 msgstr "Маршрутизація HTTP"
+
+#. module: website_cf_turnstile
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_ir_http__id
+#: model:ir.model.fields,field_description:website_cf_turnstile.field_res_config_settings__id
+msgid "ID"
+msgstr ""
+
+#. module: website_cf_turnstile
+#. odoo-javascript
+#: code:addons/website_cf_turnstile/static/src/interactions/error_handler.js:0
+msgid ""
+"Please make sure your credentials for this service are properly set up.\\n"
+msgstr ""
+
+#. module: website_cf_turnstile
+#. odoo-python
+#: code:addons/website_cf_turnstile/models/ir_http.py:0
+msgid "Suspicious activity detected by Turnstile CAPTCHA."
+msgstr ""
 
 #. module: website_cf_turnstile
 #. odoo-python
@@ -69,6 +97,12 @@ msgid "The Cloudflare turnstile private key is invalid."
 msgstr "Приватний ключ Cloudflare turnstile недійсний."
 
 #. module: website_cf_turnstile
+#. odoo-javascript
+#: code:addons/website_cf_turnstile/static/src/interactions/error_handler.js:0
+msgid "The error code is: %s.\\n"
+msgstr ""
+
+#. module: website_cf_turnstile
 #. odoo-python
 #: code:addons/website_cf_turnstile/models/ir_http.py:0
 msgid "The request is invalid or malformed."
@@ -76,20 +110,34 @@ msgstr "Ваш запит недійсний чи неправильно сфо�
 
 #. module: website_cf_turnstile
 #. odoo-javascript
-#: code:addons/website_cf_turnstile/static/src/js/error_handler.js:0
-msgid ""
-"There was an error with Cloudflare Turnstile, the captcha system.\n"
-"Please make sure your credentials for this service are properly set up.\n"
-"The error code is: %s.\n"
-"You can find more information about this error code here: https://developers.cloudflare.com/turnstile/reference/errors."
+#: code:addons/website_cf_turnstile/static/src/interactions/error_handler.js:0
+msgid "There was an error with Cloudflare Turnstile, the captcha system.\\n"
 msgstr ""
-"Виникла помилка з Cloudflare Turnstile, системою captcha.\n"
-"Переконайтеся, що ваші облікові дані для цієї служби налаштовано належним чином.\n"
-"Код помилки: %s.\n"
-"Ви можете знайти більше інформації про цей код помилки тут: https://developers.cloudflare.com/turnstile/reference/errors."
+
+#. module: website_cf_turnstile
+#. odoo-javascript
+#: code:addons/website_cf_turnstile/static/src/interactions/error_handler.js:0
+msgid ""
+"You can find more information about this error code here: https://"
+"developers.cloudflare.com/turnstile/reference/errors."
+msgstr ""
 
 #. module: website_cf_turnstile
 #. odoo-python
 #: code:addons/website_cf_turnstile/models/ir_http.py:0
 msgid "Your request has timed out, please retry."
 msgstr "Термін вашого запиту минув, спробуйте ще раз."
+
+#~ msgid ""
+#~ "There was an error with Cloudflare Turnstile, the captcha system.\n"
+#~ "Please make sure your credentials for this service are properly set up.\n"
+#~ "The error code is: %s.\n"
+#~ "You can find more information about this error code here: https://"
+#~ "developers.cloudflare.com/turnstile/reference/errors."
+#~ msgstr ""
+#~ "Виникла помилка з Cloudflare Turnstile, системою captcha.\n"
+#~ "Переконайтеся, що ваші облікові дані для цієї служби налаштовано належним "
+#~ "чином.\n"
+#~ "Код помилки: %s.\n"
+#~ "Ви можете знайти більше інформації про цей код помилки тут: https://"
+#~ "developers.cloudflare.com/turnstile/reference/errors."

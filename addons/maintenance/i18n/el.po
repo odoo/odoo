@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-11-08 22:12+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Greek <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -61,7 +61,7 @@ msgid "<strong>Maintenance: </strong>"
 msgstr "<strong>Συντήρηση: </strong>"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_defaults
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_defaults
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
@@ -77,8 +77,8 @@ msgstr "Λάπτοπ Acer"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_needaction
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_needaction
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_needaction
 msgid "Action Needed"
 msgstr "Απαιτείται ενέργεια"
 
@@ -152,48 +152,48 @@ msgid "Add a team in the maintenance request"
 msgstr "Προσθήκη ομάδας αιτήματος συντήρησης"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_id
 msgid "Alias"
 msgstr "Ψευδώνυμο"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_contact
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_contact
 msgid "Alias Contact Security"
 msgstr "Ψευδώνυμο Ασφάλειας Επαφής"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_domain_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_domain_id
 msgid "Alias Domain"
 msgstr "Ψευδώνυμο Τομέα"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_domain
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_domain
 msgid "Alias Domain Name"
 msgstr "Όνομα Τομέα Ψευδονύμου"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_full_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_full_name
 msgid "Alias Email"
 msgstr "Ψευδώνυμο Email"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_name
 msgid "Alias Name"
 msgstr "Ψευδώνυμο ονόματος"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_status
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_status
 msgid "Alias Status"
 msgstr "Κατάσταση Ψευδωνύμου"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_status
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_status
 msgid "Alias status assessed on the last message received."
 msgstr ""
 "Η κατάσταση ψευδωνύμου καθορίστηκε στον τελευταίο μήνυμα που παραλήφθηκε."
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_model_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_model_id
 msgid "Aliased Model"
 msgstr "Μοντέλο Ψευδωνύμου"
 
@@ -243,8 +243,8 @@ msgstr "Ανατέθηκε σε"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_attachment_count
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_attachment_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_attachment_count
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_attachment_count
 msgid "Attachment Count"
 msgstr "Αριθμός Συνημμένων"
 
@@ -381,7 +381,7 @@ msgid "Current Maintenance"
 msgstr "Ενεργές Συντηρήσεις"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_bounced_content
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_bounced_content
 msgid "Custom Bounced Message"
 msgstr "Τυποποιημένο Μήνυμα Σφάλματος"
 
@@ -425,7 +425,7 @@ msgid "Days"
 msgstr "Ημέρες"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_defaults
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_defaults
 msgid "Default Values"
 msgstr "Προεπιλεγμένες τιμές"
 
@@ -444,9 +444,11 @@ msgstr "Περιγραφή"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__display_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__display_name
+#: model:ir.model.fields,field_description:maintenance.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
 
@@ -479,19 +481,15 @@ msgid "Effective Date"
 msgstr "Ημερομηνία έναρξης ισχύος"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_email
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_email
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "Email Alias"
 msgstr "Ψευδώνυμο Email"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_id
-msgid ""
-"Email alias for this equipment category. New emails will automatically "
-"create a new equipment under this category."
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_id
+msgid "Email alias for this maintenance team."
 msgstr ""
-"Ψεδόνυμο Email για την κατηγορία εξοπλισμού. Νέα emails Θα δημιουργούν "
-"αυτόματα νέο εξοπλισμό γι' αυτήν την κατηγορία."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__email_cc
@@ -500,7 +498,7 @@ msgid "Email cc"
 msgstr "Email προώθησης"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_domain
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
 msgstr "Email τομέα π.χ. 'example.com' στο 'odoo@example.com'"
 
@@ -606,15 +604,15 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_follower_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_follower_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_follower_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_follower_ids
 msgid "Followers"
 msgstr "Ακόλουθοι"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_partner_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_partner_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_partner_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Ακόλουθοι (Συνεργάτες)"
 
@@ -666,8 +664,8 @@ msgstr "Λάπτοπ HP"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__has_message
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__has_message
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__has_message
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__has_message
 msgid "Has Message"
 msgstr "Έχει Μήνυμα"
 
@@ -684,20 +682,22 @@ msgstr "Υψηλή προτεραιότητα"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__id
+#: model:ir.model.fields,field_description:maintenance.field_res_config_settings__id
 msgid "ID"
 msgstr "Κωδικός"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_parent_thread_id
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
 msgstr ""
-"Αναγνωριστικό της μητρικής εγγραφής που κρατά το ψευδώνυμο (παράδειγμα: έργο"
-" που κατέχει το ψευδώνυμο της δημιουργίας εργασίας)"
+"Αναγνωριστικό της μητρικής εγγραφής που κρατά το ψευδώνυμο (παράδειγμα: έργο "
+"που κατέχει το ψευδώνυμο της δημιουργίας εργασίας)"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_exception_icon
@@ -713,20 +713,20 @@ msgstr "Εικονίδιο που υποδεικνύει μια δραστηρι
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Αν επιλεγεί, κάποια μηνύματα έχουν σφάλμα παράδοσης."
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_bounced_content
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_bounced_content
 msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
@@ -763,8 +763,8 @@ msgstr "Εσωτερικά Σημειώματα"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_is_follower
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_is_follower
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_is_follower
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_is_follower
 msgid "Is Follower"
 msgstr "Είναι Ακόλουθος"
 
@@ -809,14 +809,9 @@ msgid "Latest Failure Date"
 msgstr "Ημερομηνία Τελευταίας Βλάβης"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_incoming_local
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_incoming_local
 msgid "Local-part based incoming detection"
 msgstr "Ανίχνευση εισερχομένων βάσει του προθέματος ηλεκτρονικής διεύθυνσης"
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__location
-msgid "Location"
-msgstr "Τοποθεσία"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
@@ -846,6 +841,7 @@ msgstr "MTTR"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__maintenance_ids
 #: model:ir.ui.menu,name:maintenance.menu_m_request
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_title
+#: model:res.groups.privilege,name:maintenance.res_groups_privilege_maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.res_config_settings_view_form
@@ -882,6 +878,7 @@ msgstr "Διατηρημένο Αντικείμενο Συντήρησης"
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_request
 #: model:mail.activity.type,name:maintenance.mail_act_maintenance_request
+#: model:mail.activity.type,summary:maintenance.mail_act_maintenance_request
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_request_view_activity
 msgid "Maintenance Request"
@@ -918,12 +915,16 @@ msgstr "Το Αίτημα Συντήρησης Δημιουργήθηκε"
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action_from_equipment
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action_link
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_todo_request_action_from_dashboard
-#: model:ir.actions.act_window,name:maintenance.maintenance_request_action_reports
-#: model:ir.ui.menu,name:maintenance.maintenance_request_reporting
 #: model:ir.ui.menu,name:maintenance.menu_m_request_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Maintenance Requests"
 msgstr "Αιτήματα Συντήρησης"
+
+#. module: maintenance
+#: model:ir.actions.act_window,name:maintenance.maintenance_request_action_reports
+#: model:ir.ui.menu,name:maintenance.maintenance_request_reporting
+msgid "Maintenance Requests Analysis"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_stage
@@ -956,11 +957,6 @@ msgid "Maintenance Type"
 msgstr "Τύπος Συντήρησης"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__match_serial
-msgid "Match Serial"
-msgstr "Σύνδεση Σειριακού Αριθμού"
-
-#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Mean Time Between Failure"
 msgstr "Μέσος Χρόνος Μεταξύ Βλαβών"
@@ -983,15 +979,15 @@ msgstr "Μέσος Χρόνος Επισκευής"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_error
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_has_error
 msgid "Message Delivery error"
 msgstr "Σφάλμα παράδοσης μηνύματος"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_ids
 msgid "Messages"
 msgstr "Μηνύματα"
 
@@ -1014,6 +1010,12 @@ msgstr "Οθόνες"
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_unit__month
 msgid "Months"
 msgstr "Μήνες"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+msgid "My Activities"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__my_activity_date_deadline
@@ -1084,8 +1086,8 @@ msgstr "Σημειώσεις"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction_counter
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_needaction_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_needaction_counter
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Πλήθος ενεργειών"
 
@@ -1116,34 +1118,34 @@ msgstr "Αριθμός Αιτημάτων σε Υψηλή Προτεραιότη
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_error_counter
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error_counter
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_has_error_counter
 msgid "Number of errors"
 msgstr "Αριθμός σφαλμάτων"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction_counter
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction_counter
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__message_needaction_counter
 msgid "Number of messages requiring action"
 msgstr "Αριθμός μηνυμάτων που απαιτούν ενέργεια"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error_counter
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error_counter
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Αριθμός μηνυμάτων με σφάλμα παράδοσης"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_force_thread_id
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Προαιρετική ταυτότητα ενός νήματος (εγγραφής), στην οποία όλα τα εισερχόμενα"
-" μηνύματα θα πρέπει να επισυνάπτονται, ακόμη και αν δεν απαντήσει σ 'αυτό. "
+"Προαιρετική ταυτότητα ενός νήματος (εγγραφής), στην οποία όλα τα εισερχόμενα "
+"μηνύματα θα πρέπει να επισυνάπτονται, ακόμη και αν δεν απαντήσει σ 'αυτό. "
 "Εάν οριστεί, αυτό θα απενεργοποιήσει εντελώς τη δημιουργία νέων αρχείων."
 
 #. module: maintenance
@@ -1166,20 +1168,20 @@ msgid "PDF"
 msgstr "PDF"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_parent_model_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_parent_model_id
 msgid "Parent Model"
 msgstr "Μοντέλο Γονέα"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_parent_thread_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_parent_thread_id
 msgid "Parent Record Thread ID"
 msgstr "Κωδικός γονικής εγγραφής νήματος"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_parent_model_id
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 "Γονικό μοντέλο κρατώντας το ψευδώνυμο. Το μοντέλο που κρατά το ψευδώνυμο "
@@ -1201,17 +1203,20 @@ msgid "Phones"
 msgstr "Τηλέφωνα"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_contact
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
-"Πολιτική για τη αποστολή μηνύματος στο έγγραφο χρησιμοποιώντας το mailgateway.\n"
+"Πολιτική για τη αποστολή μηνύματος στο έγγραφο χρησιμοποιώντας το "
+"mailgateway.\n"
 "- όλοι: ο καθένας μπορεί να αποστείλει\n"
 "- συνεργάτες: μόνο οι επικυρωμένοι συνεργάτες \n"
-"- ακόλουθοι: μόνο οι ακόλουθοι του σχετικού εγγράφου ή μέλη των παρακάτω καναλιών\n"
+"- ακόλουθοι: μόνο οι ακόλουθοι του σχετικού εγγράφου ή μέλη των παρακάτω "
+"καναλιών\n"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__maintenance_type__preventive
@@ -1235,6 +1240,7 @@ msgstr "Πληροφορίες Είδους"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__equipment_properties
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Properties"
 msgstr "Ιδιότητες"
 
@@ -1254,7 +1260,7 @@ msgid "Record Colour"
 msgstr "Χρώμα Καταγραφής"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_force_thread_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_force_thread_id
 msgid "Record Thread ID"
 msgstr "Ταυτότητα εγγραφής νήματος"
 
@@ -1388,7 +1394,6 @@ msgstr "Ακολουθία"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__serial_no
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Serial Number"
 msgstr "Σειριακός Αριθμός"
 
@@ -1409,10 +1414,8 @@ msgstr "Ρυθμίσεις"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
-msgid "Show all records which has next action date is before today"
+msgid "Show all records whose next activity date is past"
 msgstr ""
-"Εμφάνιση όλων των εγγραφών όπου η ημερομηνία επόμενης δράσης είναι πριν από "
-"σήμερα"
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_software
@@ -1501,25 +1504,31 @@ msgid "Text"
 msgstr "Κείμενο"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_model_id
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 msgstr ""
 "Το μοντέλο (Odoo Document Kind) στο οποίο αντιστοιχεί αυτό το ψευδώνυμο. "
 "Κάθε εισερχόμενο email που δεν έχει απαντηθεί σε υπάρχουσα εγγραφή, θα "
-"προκαλέσει τη δημιουργία μίας νέας εγγραφής αυτού του μοντέλου (π.χ. Εργασία"
-" Έργου)"
+"προκαλέσει τη δημιουργία μίας νέας εγγραφής αυτού του μοντέλου (π.χ. Εργασία "
+"Έργου)"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_name
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
 "Το όνομα του ψευδώνυμου email , π.χ. 'jobs', αν θέλετε να πάρετε emails για "
 "<jobs@example.odoo.com>"
+
+#. module: maintenance
+#. odoo-python
+#: code:addons/maintenance/models/maintenance.py:0
+msgid "The repeat interval cannot be less than 1."
+msgstr ""
 
 #. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
@@ -1556,7 +1565,8 @@ msgstr "Κύριες Προτεραιότητες"
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid ""
 "Track equipment and link it to an employee or department.\n"
-"                You will be able to manage allocations, issues and maintenance of your equipment."
+"                You will be able to manage allocations, issues and "
+"maintenance of your equipment."
 msgstr ""
 "Παρακολουθήστε τον εξοπλισμό και συνδέστε τον με κάποιον υπάλληλο ή τμήμα.\n"
 "                Θα μπορείτε να διαχειρίζεστε τις αναθέσεις, τα προβλήματα "
@@ -1602,11 +1612,6 @@ msgid "Upload your PDF file."
 msgstr "Φορτώστε το αρχείο PDF."
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
-msgid "Used in location"
-msgstr "Τοποθεσία χρήσης"
-
-#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__partner_id
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Vendor"
@@ -1621,6 +1626,14 @@ msgstr "Αναφορά Προμηθευτή"
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__0
 msgid "Very Low"
 msgstr "Πολύ χαμηλά"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_tree
+msgid "Visible to all"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__warranty_date
@@ -1653,7 +1666,7 @@ msgid "Your instructions"
 msgstr "Προσθέστε τις οδηγίες σας"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "alias"
 msgstr "Ψευδώνυμο"
 
@@ -1683,7 +1696,7 @@ msgid "e.g. Screen not working"
 msgstr "π.χ. Η οθόνη δεν λειτουργεί"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "e.g. mycompany.com"
 msgstr "π.χ. mycompany.com"
 
@@ -1693,3 +1706,24 @@ msgstr "π.χ. mycompany.com"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_tree
 msgid "maintenance Request"
 msgstr "Αίτηση συντήρησης"
+
+#~ msgid ""
+#~ "Email alias for this equipment category. New emails will automatically "
+#~ "create a new equipment under this category."
+#~ msgstr ""
+#~ "Ψεδόνυμο Email για την κατηγορία εξοπλισμού. Νέα emails Θα δημιουργούν "
+#~ "αυτόματα νέο εξοπλισμό γι' αυτήν την κατηγορία."
+
+#~ msgid "Location"
+#~ msgstr "Τοποθεσία"
+
+#~ msgid "Match Serial"
+#~ msgstr "Σύνδεση Σειριακού Αριθμού"
+
+#~ msgid "Show all records which has next action date is before today"
+#~ msgstr ""
+#~ "Εμφάνιση όλων των εγγραφών όπου η ημερομηνία επόμενης δράσης είναι πριν "
+#~ "από σήμερα"
+
+#~ msgid "Used in location"
+#~ msgstr "Τοποθεσία χρήσης"

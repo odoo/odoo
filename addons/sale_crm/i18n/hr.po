@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_crm
-# 
+#
 # Translators:
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2024
 # Bole <bole@dajmi5.com>, 2024
@@ -9,20 +9,21 @@
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2024
 # Goran Kliska <gkliska@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Goran Kliska <gkliska@gmail.com>, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -50,6 +51,11 @@ msgid "Create a new customer"
 msgstr "Kreiraj novog partnera"
 
 #. module: sale_crm
+#: model:ir.model,website_form_label:sale_crm.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_quotation_partner
 msgid "Create new or use existing Customer on new Quotation"
 msgstr ""
@@ -75,7 +81,10 @@ msgid "Customer"
 msgstr "Kupac"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__display_name
 msgid "Display Name"
 msgstr "Naziv za prikaz"
 
@@ -91,14 +100,12 @@ msgid "Expected revenue has been updated based on the linked Sales Orders."
 msgstr ""
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__id
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__id
 msgid "ID"
 msgstr "ID"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
-msgid "Invoiced in Sales Orders Target"
-msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
@@ -112,8 +119,8 @@ msgstr "Promijenjeno"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Potencijal/prilika"
+msgid "Lead"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
@@ -205,12 +212,13 @@ msgid "Untaxed Total of Confirmed Orders"
 msgstr "Ukupno prodajni nalozi bez poreza"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "User"
-msgstr "Korisnik"
-
-#. module: sale_crm
 #. odoo-python
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 msgid "You can only apply this action from a lead."
 msgstr ""
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "Potencijal/prilika"
+
+#~ msgid "User"
+#~ msgstr "Korisnik"

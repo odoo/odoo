@@ -1,31 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_vat
-# 
+#
 # Translators:
 # Arnis Putniņš <arnis@allegro.lv>, 2024
 # myacc-pro, 2024
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:03+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lv\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
+msgid "1-01-85004-3 or 101850043"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
 "10XXXXXXXXY vai 20XXXXXXXXY vai 15XXXXXXXXY vai 16XXXXXXXXY vai 17XXXXXXXXY"
 
@@ -44,16 +50,9 @@ msgstr "1792060346001 vai 1792060346"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "3101012009"
-msgstr "3101012009"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "310175397400003 [Fifteen digits, first and last digits should be \"3\"]"
 msgstr ""
-"310175397400003 [Piecpadsmit cipari, pirmajam un pēdējam ciparam jābūt "
-"\"3\"]"
+"310175397400003 [Piecpadsmit cipari, pirmajam un pēdējam ciparam jābūt \"3\"]"
 
 #. module: base_vat
 #. odoo-python
@@ -64,20 +63,8 @@ msgstr "49-098-576 vai 49098576"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "AR200-5536168-2 or 20055361682"
-msgstr "AR200-5536168-2 vai 20055361682"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
 msgstr "CHE-123.456.788 TVA vai CHE-123.456.788 MWST vai CHE-123.456.788 IVA"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "CO213123432-1 or CO213.123.432-1"
-msgstr "CO213123432-1 vai CO213.123.432-1"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -95,13 +82,24 @@ msgstr "Konfigurācijas uzstādījumi"
 msgid ""
 "Connection with the VIES server failed. The VAT number %s could not be "
 "validated."
-msgstr ""
-"Savienojums ar VIES serveri neizdevās. PVN numurs %s nevarēja validēt."
+msgstr "Savienojums ar VIES serveri neizdevās. PVN numurs %s nevarēja validēt."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
 msgstr "Kontakts"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_country
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__country_id
+#: model:ir.model.fields,field_description:base_vat.field_res_users__country_id
+msgid "Country"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model,website_form_label:base_vat.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -110,10 +108,12 @@ msgid "DE123456788 or 12/345/67890"
 msgstr "DE123456788 vai 12/345/67890"
 
 #. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid "DO1-01-85004-3 or 101850043"
-msgstr "DO1-01-85004-3 vai 101850043"
+#: model:ir.model.fields,field_description:base_vat.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -129,11 +129,6 @@ msgid ""
 msgstr ""
 
 #. module: base_vat
-#: model:ir.model,name:base_vat.model_account_fiscal_position
-msgid "Fiscal Position"
-msgstr "Fiskālā pozīcija"
-
-#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "GB123456782 or XI123456782"
@@ -142,8 +137,27 @@ msgstr "GB123456782 vai XI123456782"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "GODE561231GR8"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "HU12345676 or 12345678-1-11 or 8071592153"
 msgstr "HU12345676 vai 12345678-1-11, vai 8071592153"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_country__has_foreign_fiscal_position
+msgid "Has Foreign Fiscal Position"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__id
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_vat.field_res_country__id
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__id
+msgid "ID"
+msgstr ""
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -156,6 +170,13 @@ msgstr ""
 "rezultātiem."
 
 #. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"If you are trying to input a European number, this is the expected format: "
+msgstr ""
+
+#. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
 msgid "Intra-Community Valid"
@@ -164,8 +185,8 @@ msgstr "Derīgs starp iekšējiem uzņēmumiem"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "MXGODE561231GR8 or GODE561231GR8"
-msgstr "MXGODE561231GR8 vai GODE561231GR8"
+msgid "Note: the expected format is %(expected_format)s"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
@@ -174,6 +195,8 @@ msgid "Perform Vies Validation"
 msgstr "Veic VIES validāciju"
 
 #. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__vat
+#: model:ir.model.fields,field_description:base_vat.field_res_users__vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "Tax ID"
 msgstr "PVN Nr."
@@ -182,21 +205,26 @@ msgstr "PVN Nr."
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
-"Note: the expected format is %(expected_format)s"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
+"(expected_note)s"
 msgstr ""
-"%(vat_label)s numurs [%(wrong_vat)s] neizskatās derīgs. \n"
-"Piezīme: paredzamais formāts %(expected_format)s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
-"Note: the expected format is %(expected_format)s"
+"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
+"to be valid. %(expected_note)s"
 msgstr ""
-"%(vat_label)s numurs [%(wrong_vat)s] priekš %(record_label)s neizskatās derīgs. \n"
-"Piezīme: paredzamais formāts %(expected_format)s"
+
+#. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vat
+#: model:ir.model.fields,help:base_vat.field_res_users__vat
+msgid ""
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
@@ -206,33 +234,19 @@ msgstr "VIES serveris nevarēja interpretēt %s PVN numuru."
 
 #. module: base_vat
 #. odoo-python
-#: code:addons/base_vat/models/account_fiscal_position.py:0
+#: code:addons/base_vat/models/res_partner.py:0
 msgid ""
-"The country detected for this foreign VAT number does not match any of the "
-"countries composing the country group set on this fiscal position."
+"The request for VAT validation was not processed. VIES service has responded "
+"with the following error: %s"
 msgstr ""
-"Valsts, kas konstatēta šim ārvalstu PVN numuram, neatbilst nevienai no "
-"valstīm, kas veido šai fiskālajai pozīcijai iestatīto valstu grupu."
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/account_fiscal_position.py:0
-msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a"
-" country to the fiscal position or set a country group"
-msgstr ""
-"Valsts ar ārzemju PVN numuru netika atrasta. Lūdzu, piešķiriet valsti "
-"fiskālajai pozīcijai vai iestatiet valstu grupu"
+"Pieprasījums PVN validācijai nav apstrādāts. VIES pakalpojums atbildēja ar "
+"sekojošu kļūdu: %s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded"
-" with the following error: %s"
+msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
 msgstr ""
-"Pieprasījums PVN validācijai nav apstrādāts. VIES pakalpojums atbildēja ar "
-"sekojošu kļūdu: %s"
 
 #. module: base_vat
 #. odoo-python
@@ -252,12 +266,6 @@ msgid "Verify VAT numbers using the European VIES service"
 msgstr "Verificēt PVN numurus izmantojot Eiropas VIES pakalpojumu"
 
 #. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
-#: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
-msgid "Vies Vat To Check"
-msgstr "VIES PVN pārbaudei"
-
-#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
@@ -271,12 +279,60 @@ msgstr "vai 11 skaitļi priekš CPF vai 14 skaitļi priekš CNPJ"
 
 #. module: base_vat
 #. odoo-python
-#: code:addons/base_vat/models/account_fiscal_position.py:0
-msgid "fiscal position [%s]"
-msgstr "fiskālā pozīcija [%s]"
-
-#. module: base_vat
-#. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "partneris [%s]"
+
+#~ msgid "3101012009"
+#~ msgstr "3101012009"
+
+#~ msgid "AR200-5536168-2 or 20055361682"
+#~ msgstr "AR200-5536168-2 vai 20055361682"
+
+#~ msgid "CO213123432-1 or CO213.123.432-1"
+#~ msgstr "CO213123432-1 vai CO213.123.432-1"
+
+#~ msgid "DO1-01-85004-3 or 101850043"
+#~ msgstr "DO1-01-85004-3 vai 101850043"
+
+#~ msgid "Fiscal Position"
+#~ msgstr "Fiskālā pozīcija"
+
+#~ msgid "MXGODE561231GR8 or GODE561231GR8"
+#~ msgstr "MXGODE561231GR8 vai GODE561231GR8"
+
+#~ msgid ""
+#~ "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
+#~ "Note: the expected format is %(expected_format)s"
+#~ msgstr ""
+#~ "%(vat_label)s numurs [%(wrong_vat)s] neizskatās derīgs. \n"
+#~ "Piezīme: paredzamais formāts %(expected_format)s"
+
+#~ msgid ""
+#~ "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not "
+#~ "seem to be valid. \n"
+#~ "Note: the expected format is %(expected_format)s"
+#~ msgstr ""
+#~ "%(vat_label)s numurs [%(wrong_vat)s] priekš %(record_label)s neizskatās "
+#~ "derīgs. \n"
+#~ "Piezīme: paredzamais formāts %(expected_format)s"
+
+#~ msgid ""
+#~ "The country detected for this foreign VAT number does not match any of "
+#~ "the countries composing the country group set on this fiscal position."
+#~ msgstr ""
+#~ "Valsts, kas konstatēta šim ārvalstu PVN numuram, neatbilst nevienai no "
+#~ "valstīm, kas veido šai fiskālajai pozīcijai iestatīto valstu grupu."
+
+#~ msgid ""
+#~ "The country of the foreign VAT number could not be detected. Please "
+#~ "assign a country to the fiscal position or set a country group"
+#~ msgstr ""
+#~ "Valsts ar ārzemju PVN numuru netika atrasta. Lūdzu, piešķiriet valsti "
+#~ "fiskālajai pozīcijai vai iestatiet valstu grupu"
+
+#~ msgid "Vies Vat To Check"
+#~ msgstr "VIES PVN pārbaudei"
+
+#~ msgid "fiscal position [%s]"
+#~ msgstr "fiskālā pozīcija [%s]"

@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale
-# 
+#
 # Translators:
 # shahriyar rzayev, 2024
 # Nurlan Farajov <coolinuxoid@gmail.com>, 2024
 # Jumshud Sultanov <cumshud@gmail.com>, 2024
 # erpgo translator <jumshud@erpgo.az>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2026-01-13 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: erpgo translator <jumshud@erpgo.az>, 2025\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
+"Language: az\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: az\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale
@@ -37,11 +37,6 @@ msgstr ""
 "sifarişlərini izləməsinə imkan verir."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
-msgid "#{record.name.value}"
-msgstr "#{record.name.value}"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s review"
 msgstr "%s baxış"
@@ -50,16 +45,6 @@ msgstr "%s baxış"
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s reviews"
 msgstr "%sbaxışlar"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "&amp; Delivery"
-msgstr "&amp; Çatdırılma"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.products_item
-msgid "&amp;nbsp;"
-msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
@@ -72,6 +57,16 @@ msgid "'. Showing results for '"
 msgstr "'. Nəticələr göstərilir: '"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "- All products"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "1 Column"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__100_pc
 msgid "100 %"
 msgstr "100 %"
@@ -80,6 +75,11 @@ msgstr "100 %"
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "100 percent"
 msgstr "100 faiz"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "2 Columns"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__50_pc
@@ -102,6 +102,24 @@ msgid "66 percent"
 msgstr "66 faiz"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
+msgid ""
+"<a href=\"/terms\" class=\"text-muted o_translate_inline\"><u>Terms and "
+"Conditions</u></a><br/>\n"
+"                30-day money-back guarantee<br/>\n"
+"                Shipping: 2-3 Business Days"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid ""
+"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
+"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
+"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
+"                    <span class=\"align-middle\">to follow your order.</span>"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "<b class=\"w-100\">Order summary</b>"
 msgstr "<b class=\"w-100\">Sifarişin xülasəsi</b>"
@@ -119,15 +137,14 @@ msgid "<b>Communication: </b>"
 msgstr "<b>Əlaqə: </b>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-msgid "<b>Deliver to pickup point: </b>"
-msgstr "<b>Qəbul məntəqəsinə çatdırın:</b>"
+#: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
+msgid "<b>Deliver to pickup point</b>"
+msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "<b>Delivery: </b>"
-msgstr "<b>Çatdırılma: </b>"
+#: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
+msgid "<b>Delivery</b>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
@@ -136,30 +153,22 @@ msgstr "<b>Qiymət Aralığı</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
-msgid "<b>Pricelist</b>"
-msgstr "<b>Qiymət cədvəli</b>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 msgid "<b>Sort By</b>"
 msgstr "<b>Sırala</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_tags
-#: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
+#: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_filters_form
 msgid "<b>Tags</b>"
 msgstr "<b>Etiketlər</b>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
+#: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid ""
-"<br/>\n"
-"                30-day money-back guarantee<br/>\n"
-"                Shipping: 2-3 Business Days"
+"<i class=\"d-md-none fa fa-shopping-cart\" role=\"presentation\"/>\n"
+"                                <span class=\"d-none d-md-inline\">Add to "
+"cart</span>"
 msgstr ""
-"<br/>\n"
-"                30 günlük pulun geri qaytarılma zəmanəti<br/>\n"
-"                Çatdırılma: 2-3 iş günü"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -169,6 +178,13 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
 "                                    Çatdırılmaya qayıt"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
+msgid ""
+"<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
+"                    Continue shopping"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
@@ -199,19 +215,14 @@ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
+#: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
 msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
 msgstr "<i class=\"fa fa-pencil me-1\"/>Dəyiş"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_row
-msgid ""
-"<i class=\"fa fa-plus me-md-2\"/>\n"
-"                    <span class=\"d-none d-md-inline\">Add address</span>"
+#: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
+msgid "<i class=\"fa fa-pencil me-1\"/>Want an invoice?"
 msgstr ""
-"<i class=\"fa fa-plus me-md-2\"/><span class=\"d-none d-md-inline\">Ünvan "
-"əlavə edin</span></i>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -237,11 +248,6 @@ msgstr ""
 "                                                Səbətə at"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
-msgstr "<i class=\"fw-light fa fa-angle-left me-2\"/>Ləğv et"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid ""
 "<i class=\"oi oi-chevron-left d-lg-none me-1\" role=\"presentation\"/>All "
@@ -252,10 +258,11 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>All Products"
+msgid ""
+"<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>All Products"
 msgstr ""
-"<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>Bütün "
-"Məhsullar</i>"
+"<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>Bütün Məhsullar</"
+"i>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -276,62 +283,37 @@ msgstr ""
 "role=\"img\" aria-label=\"Növbəti\" title=\"Növbəti\"/>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<option value=\"\">Country...</option>"
-msgstr "<option value=\"\">Ölkə...</option>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<option value=\"\">State / Province...</option>"
-msgstr "<option value=\"\">Ştat / Vilayət...</option>"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        You can find all abandoned carts here, i.e. the carts generated by your website's visitors from over an hour ago that haven't been confirmed yet.</p>\n"
-"                        <p>You should send an email to the customers to encourage them!</p>\n"
+"                        You can find all abandoned carts here, i.e. the "
+"carts generated by your website's visitors from over an hour ago that "
+"haven't been confirmed yet.</p>\n"
+"                        <p>You should send an email to the customers to "
+"encourage them!</p>\n"
 "                    "
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Siz bütün tərk edilmiş səbətləri burada görə bilərsiz, misalçün, vebsaytınızın ziyarətçisi tərəfindən formalaşdırılmış amma təsdiqlənməmiş səbətləri.</p>\n"
-"                        <p>Müştərilərinizi həvəsləndirmək üçün onlara e-poçt göndərməlisiniz!</p>\n"
+"                        Siz bütün tərk edilmiş səbətləri burada görə "
+"bilərsiz, misalçün, vebsaytınızın ziyarətçisi tərəfindən formalaşdırılmış "
+"amma təsdiqlənməmiş səbətləri.</p>\n"
+"                        <p>Müştərilərinizi həvəsləndirmək üçün onlara e-poçt "
+"göndərməlisiniz!</p>\n"
 "                    "
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.sort
-msgid "<small class=\"d-none d-lg-inline text-muted\">Sort By:</small>"
-msgstr "<small class=\"d-none d-lg-inline text-muted\">Sırala</small>"
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid ""
+"<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
+"                                        <i class=\"oi oi-close\" "
+"role=\"presentation\"/>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"<small class=\"form-text text-muted\">\n"
-"                                                        Changing company name or VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.\n"
-"                                                    </small>"
+msgid "<span class=\"align-middle\">Already have an account?</span>"
 msgstr ""
-"<small class=\"form-text text-muted\">Hesabınız üçün sənəd(lər) verildikdən "
-"sonra şirkətin adının və ya ƏDV nömrəsinin dəyişdirilməsinə icazə verilmir. "
-"Bu əməliyyat üçün birbaşa bizimlə əlaqə saxlayın.</small>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
-msgid ""
-"<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
-"                            <i class=\"oi oi-close\" role=\"presentation\"/>"
-msgstr ""
-"<small class=\"mx-auto\"><b>Filtrləri təmizləyin</b></small><i class=\"oi "
-"oi-close\" role=\"presentation\"/>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
-msgid ""
-"<span class=\"d-md-none fa fa-shopping-cart\"/>\n"
-"                            <span class=\"d-none d-md-inline\">Add to cart</span>"
-msgstr ""
-"<span class=\"d-md-none fa fa-shopping-cart\"/>\n"
-"                            <span class=\"d-none d-md-inline\">Səbətə at</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -345,8 +327,10 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid ""
-"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" data-oe-expression=\"data['price']\">\n"
-"                                                <span class=\"oe_currency_value\">1,500.00</span>\n"
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
+"data-oe-expression=\"data['price']\">\n"
+"                                                <span "
+"class=\"oe_currency_value\">1,500.00</span>\n"
 "                                            </span>"
 msgstr ""
 "<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
@@ -356,8 +340,10 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid ""
-"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" data-oe-expression=\"data['price']\">\n"
-"                                                <span class=\"oe_currency_value\">140.00</span>\n"
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
+"data-oe-expression=\"data['price']\">\n"
+"                                                <span "
+"class=\"oe_currency_value\">140.00</span>\n"
 "                                            </span>"
 msgstr ""
 "<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
@@ -367,8 +353,10 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid ""
-"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" data-oe-expression=\"data['price']\">\n"
-"                                                <span class=\"oe_currency_value\">33.00</span>\n"
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
+"data-oe-expression=\"data['price']\">\n"
+"                                                <span "
+"class=\"oe_currency_value\">33.00</span>\n"
 "                                            </span>"
 msgstr ""
 "<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
@@ -378,8 +366,10 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid ""
-"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" data-oe-expression=\"data['price']\">\n"
-"                                                <span class=\"oe_currency_value\">750.00</span>\n"
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
+"data-oe-expression=\"data['price']\">\n"
+"                                                <span "
+"class=\"oe_currency_value\">750.00</span>\n"
 "                                            </span>"
 msgstr ""
 "<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
@@ -394,16 +384,17 @@ msgstr "<span class=\"mx-2 o_wsale_ppr_by\">görə</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_method
 msgid ""
-"<span class=\"o_wsale_delivery_price_badge float-end fw-bold\" name=\"price\">\n"
+"<span class=\"o_wsale_delivery_price_badge float-end fw-bold\" "
+"name=\"price\">\n"
 "                    Select to compute delivery rate\n"
 "                </span>"
 msgstr ""
-"<span class=\"o_wsale_delivery_price_badge float-end fw-bold\" name=\"price\">\n"
+"<span class=\"o_wsale_delivery_price_badge float-end fw-bold\" "
+"name=\"price\">\n"
 "                    Çatdırılma dərəcəsini hesablamaq üçün seçin\n"
 "                </span>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
 msgid "<span class=\"px-3\">or</span>"
@@ -411,7 +402,8 @@ msgstr "<span class=\"px-3\">yaxud</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
-msgid "<span class=\"s_website_form_label_content\">Give us your feedback</span>"
+msgid ""
+"<span class=\"s_website_form_label_content\">Give us your feedback</span>"
 msgstr ""
 "<span class=\"s_website_form_label_content\">Bizə rəyinizi bildirin</span>"
 
@@ -428,13 +420,29 @@ msgstr "<span class=\"s_website_form_label_content\">Sizin Referansınız</span>
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
 msgid ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based"
-" on variants</span>"
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
+"on variants</span>"
 msgstr ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= "
 "1\">Variantlara əsasən</span>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "<span class=\"text-muted\">Search results for </span>'"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "<span class=\"text-muted\">Searching</span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "<span class=\"text-muted\">in</span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.floating_bar
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"visually-hidden\">filters active</span>"
 msgstr "<span class=\"visually-hidden\">filterlər aktivdir</span>"
@@ -443,11 +451,6 @@ msgstr "<span class=\"visually-hidden\">filterlər aktivdir</span>"
 #: model_terms:web_tour.tour,rainbow_man_message:website_sale.test_01_admin_shop_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr "<span><b>Əla!</b> Bu turun bütün mərhələlərini keçdiniz.</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<span>Already have an account?</span>"
-msgstr "<span>Artıq hesabınız var?</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -462,11 +465,15 @@ msgstr "<span>Veb saytında dərc edin</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid ""
-"<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
-"                        Please contact the responsible of the shop for more information.</span>"
+"<span>Unfortunately your order can not be confirmed as the amount of your "
+"payment does not match the amount of your cart.\n"
+"                        Please contact the responsible of the shop for more "
+"information.</span>"
 msgstr ""
-"<span>Təəssüf ki, sifarişiniz təsdiqlənə bilmir, çünki ödəniş məbləğiniz səbətinizin məbləği ilə uyğun gəlmir.\n"
-"                        Ətraflı məlumat üçün mağaza məsul şəxsi ilə əlaqə saxlayın.</span>"
+"<span>Təəssüf ki, sifarişiniz təsdiqlənə bilmir, çünki ödəniş məbləğiniz "
+"səbətinizin məbləği ilə uyğun gəlmir.\n"
+"                        Ətraflı məlumat üçün mağaza məsul şəxsi ilə əlaqə "
+"saxlayın.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -474,14 +481,31 @@ msgid "<span>Video Preview</span>"
 msgstr "<span>Video Önizləmə</span>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"<strong>\n"
+"                                <a class=\"o_translate_inline\" t-attf-"
+"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+"&amp;revive_method=merge\">Click here</a>\n"
+"                            </strong> if you want to merge your previous "
+"cart into current cart."
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"<strong>\n"
+"                                <a class=\"o_translate_inline\" t-attf-"
+"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
+"&amp;revive_method=squash\">Click here</a>\n"
+"                            </strong> if you want to restore your previous "
+"cart. Your current cart will be replaced with your previous cart."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
 msgid "<strong>No suitable delivery method could be found.</strong>"
 msgstr "<strong>Uyğun çatdırılma üsulu tapılmadı.</strong>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "<strong>Total:</strong>"
-msgstr "<strong>Cəm:</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -497,41 +521,64 @@ msgstr "<strong>Xəbərdarlıq!</strong>"
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 0px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 0px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">THERE'S SOMETHING IN YOUR CART.</h1>\n"
+"                    <h1 style=\"color:#A9A9A9;\">THERE'S SOMETHING IN YOUR "
+"CART.</h1>\n"
 "                    Would you like to complete your purchase?<br/><br/>\n"
 "                    <t t-if=\"object.order_line\">\n"
-"                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
+"                        <t t-foreach=\"object.website_order_line\" t-"
+"as=\"line\">\n"
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; width:150px;\">\n"
-"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
+"                                        <img t-attf-src=\"/web/image/"
+"product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
+"height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
 "                                    </td>\n"
 "                                    <td>\n"
-"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Desk Combination</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Desk Combination Desk combination, black-brown: chair + desk + drawer.</t>\n"
+"                                        <strong t-"
+"out=\"line.product_id.display_name or ''\">[FURN_7800] Desk Combination</"
+"strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Desk Combination Desk "
+"combination, black-brown: chair + desk + drawer.</t>\n"
 "                                    </td>\n"
 "                                    <td width=\"100px\" align=\"right\">\n"
-"                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">Units</t>\n"
+"                                        <t t-out=\"int(line.product_uom_qty) "
+"or ''\">10000</t> <t t-out=\"line.product_uom_id.name or ''\">Units</t>\n"
 "                                    </td>\n"
 "                                </tr>\n"
 "                            </table>\n"
 "                        </t>\n"
 "                        <hr/>\n"
 "                    </t>\n"
-"                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
-"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                    <div style=\"text-align: center; padding: 16px 0px 16px "
+"0px; font-size: 14px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/"
+"cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
+"target=\"_blank\" t-attf-style=\"background-color: "
+"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"radius: 5px; font-size:13px;\">\n"
 "                            Resume order\n"
 "                        </a>\n"
 "                    </div>\n"
-"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
-"                    <div style=\"text-align: center;\"><strong>Thank you for shopping with <t t-out=\"company.name or ''\">My Company (San Francisco)</t>!</strong></div>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or "
+"object.user_id.company_id or user.company_id\"/>\n"
+"                    <div style=\"text-align: center;\"><strong>Thank you for "
+"shopping with <t t-out=\"company.name or ''\">My Company (San Francisco)</t>!"
+"</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -540,65 +587,12 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 0px; background-color: white; color: #454748; border-collapse:separate;\">\n"
-"    <tbody>\n"
-"        <!-- CONTENT -->\n"
-"        <tr>\n"
-"            <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
-"                    <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                        <h1 style=\"color:#A9A9A9;\">SƏBƏTİNİZDƏ NƏSƏ VAR.</h1>\n"
-"                        Sifarişi tamamlamaq istərdinizmi?<br/><br/>\n"
-"                        <t t-if=\"object.order_line\">\n"
-"                            <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
-"                                <hr/>\n"
-"                                <table width=\"100%\">\n"
-"                                    <tr>\n"
-"                                        <td style=\"padding: 10px; width:150px;\">\n"
-"                                            <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Məhsul şəkli\"/>\n"
-"                                        </td>\n"
-"                                        <td>\n"
-"                                            <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Masa Kombinasiyası</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Masa Kombinasiyası Qara-qəhvəyi: masa + stul + siyirmə.</t>\n"
-"                                        </td>\n"
-"                                        <td width=\"100px\" align=\"right\">\n"
-"                                            <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">Vahid</t>\n"
-"                                        </td>\n"
-"                                    </tr>\n"
-"                                </table>\n"
-"                            </t>\n"
-"                            <hr/>\n"
-"                        </t>\n"
-"                        <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
-"                            <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                                Sifarişi davam etdir\n"
-"                            </a>\n"
-"                        </div>\n"
-"                        <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
-"                        <div style=\"text-align: center;\"><strong><t t-out=\"company.name or ''\">My Company (San Francisco)</t> ilə alış-veriş etdiyiniz üçün təşəkkür edirik!</strong></div>\n"
-"                    </td></tr>\n"
-"                </table>\n"
-"            </td>\n"
-"        </tr>\n"
-"    </tbody>\n"
-"</table>\n"
-"            "
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
-msgid "<u>Terms and Conditions</u>"
-msgstr "<u>Şərtlər və Qaydalar</u>"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/combo_configurator.py:0
-msgid "A combo product can't be empty. Please select at least one option."
-msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sales Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
 "Müştərilərinizə çatdırmaq istədiyiniz məhsulun təsviri. Bu təsvir hər bir "
@@ -610,14 +604,14 @@ msgid ""
 "A detailed, formatted description to promote your product on this page. Use "
 "'/' to discover more features."
 msgstr ""
-"Bu səhifədə məhsulunuzu tanıtmaq üçün ətraflı, formatlanmış təsvir. Daha çox"
-" xüsusiyyətləri kəşf etmək üçün '/' istifadə edin."
+"Bu səhifədə məhsulunuzu tanıtmaq üçün ətraflı, formatlanmış təsvir. Daha çox "
+"xüsusiyyətləri kəşf etmək üçün '/' istifadə edin."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid ""
-"A detailed,formatted description to promote your product on"
-"                                      this page. Use '/' to discover more "
+"A detailed,formatted description to promote your product "
+"on                                      this page. Use '/' to discover more "
 "features."
 msgstr ""
 "Məhsulunuzu bu səhifədə tanıtmaq üçün ətraflı, formatlaşdırılmış təsvir. "
@@ -649,11 +643,6 @@ msgstr "Tərk edilmiş Səbət"
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandoned_orders
 msgid "Abandoned Carts"
 msgstr "Tərk edilmiş Səbətlər"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.crm_team_view_kanban_dashboard
-msgid "Abandoned Carts to Recover"
-msgstr "Bərpa etmək üçün Tərk edilmiş Səbətlər"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_abandoned_delay
@@ -690,8 +679,8 @@ msgstr "Məhsul üçün Aksesuarlar"
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__accessory_product_ids
 msgid ""
-"Accessories show up when the customer reviews the cart before payment "
-"(cross-sell strategy)."
+"Accessories show up when the customer reviews the cart before payment (cross-"
+"sell strategy)."
 msgstr ""
 "Aksesuarlar, müştəri ödənişdən əvvəl səbətə baxarkən görünür (çarpaz satış "
 "strategiyası)."
@@ -711,6 +700,11 @@ msgstr "Əməliyyat"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_needaction
 msgid "Action Needed"
 msgstr "Gərəkli Əməliyyat"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Actions"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -767,7 +761,7 @@ msgstr "Müqayisə üçün üstündən xətt çəkilmiş bir qiymət əlavə edi
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
 msgid "Add one"
 msgstr "Birini əlavə et"
@@ -792,13 +786,18 @@ msgid "Add to Cart Button"
 msgstr "Səbətə əlavə Et Düyməsi"
 
 #. module: website_sale
+#: model:website.checkout.step,name:website_sale.checkout_step_delivery
+msgid "Address"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_autocomplete
 msgid "Address Autocomplete"
 msgstr "Ünvan Avtomatik tamamlama"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.filter_select_attributes
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
-#: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
 msgid "All"
 msgstr "BÜTÜN"
 
@@ -807,11 +806,6 @@ msgstr "BÜTÜN"
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "All Products"
 msgstr "Bütün Məhsullar"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website__all_pricelist_ids
-msgid "All pricelists"
-msgstr "Bütün Qiymət cədvəlləri"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__everyone
@@ -829,8 +823,8 @@ msgid ""
 "Allow customers to pick up their online purchases at your store and pay in "
 "person"
 msgstr ""
-"Müştərilərə onlayn alış-verişlərini mağazanızdan götürməyə və şəxsən ödəməyə"
-" icazə verin"
+"Müştərilərə onlayn alış-verişlərini mağazanızdan götürməyə və şəxsən ödəməyə "
+"icazə verin"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -859,8 +853,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__alternative_product_ids
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_alternative_products
+#: model_terms:ir.ui.view,arch_db:website_sale.alternative_products
 msgid "Alternative Products"
 msgstr "Alternativ Məhsullar"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Always Fill the box"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
@@ -872,11 +872,6 @@ msgstr "Tərk edilmiş səbətlərin sayı"
 #: code:addons/website_sale/controllers/delivery.py:0
 msgid "Anonymous express checkout partner for order %s"
 msgstr "%s sifarişi üçün anonim ekspress ödəniş partnyoru"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Apartment, suite, etc."
-msgstr "Mənzil, otaq və s."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -907,7 +902,6 @@ msgstr "Qoşma Sayı"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_attribute_action
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Attributes"
 msgstr "Atributlar"
 
@@ -933,16 +927,29 @@ msgid "Average Rating"
 msgstr "Ortalam Reytinq"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__back_button_label
+msgid "Back Button Label"
+msgstr ""
+
+#. module: website_sale
+#: model:website.checkout.step,back_button_label:website_sale.checkout_step_delivery
+msgid "Back to address"
+msgstr ""
+
+#. module: website_sale
+#: model:website.checkout.step,back_button_label:website_sale.checkout_step_cart
 msgid "Back to cart"
 msgstr "Səbətə qayıt"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "Back to delivery"
-msgstr "Çatdırılmaya qayıt"
+#: model:website.checkout.step,back_button_label:website_sale.checkout_step_extra
+msgid "Back to extra info"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Back to {{0}}"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -982,11 +989,6 @@ msgid "Bathroom Cabinets"
 msgstr "Hamam şkafları"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Be aware!"
-msgstr "Diqqətli olun!"
-
-#. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
 msgid "BeNeLux"
 msgstr "BeNeLux"
@@ -1012,20 +1014,14 @@ msgid "Big Icons Subtitles"
 msgstr "Böyük İkonlar Altyazılar"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+#: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
 msgid "Billing"
 msgstr "Fakturanın Göndərilməsi"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_row
 msgid "Billing address"
 msgstr "Faktura Adresi"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-msgid "Billing:"
-msgstr "Ödəniş:"
 
 #. module: website_sale
 #. odoo-python
@@ -1088,11 +1084,6 @@ msgid "Button url"
 msgstr "Düymə url-i"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Buttons"
-msgstr "Düymələr"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__enabled_buy_now_button
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1123,6 +1114,7 @@ msgstr "1024 ölçüsündəki şəkil zoom edilə bilər"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__can_publish
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__can_publish
 msgid "Can Publish"
 msgstr "Dərc Oluna Bilər"
 
@@ -1159,9 +1151,9 @@ msgid "Cart recovery email already sent"
 msgstr "Səbət bərpası e-poçtu göndərilmişdir"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Carts are flagged as abandoned after this delay."
-msgstr "Bu gecikmədən sonra səbətlər tərk edilmiş olaraq işarələnir."
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Catalog of products"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1232,39 +1224,7 @@ msgid "Change location"
 msgstr "Məkanı dəyişdirin"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"Changing VAT number is not allowed once document(s) have been issued for "
-"your account. Please contact us directly for this operation."
-msgstr ""
-"VÖEN nömrəsini dəyişdirmək, sənəd(lər) hesabınız üçün təqdim edildikdən "
-"sonra mümkün deyil. Bu əməliyyat üçün birbaşa bizimlə əlaqə saxlayın."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"Changing company name is not allowed once document(s) have been issued for "
-"your account. Please contact us directly for this operation."
-msgstr ""
-"Şirkət adını dəyişdirmək, sənəd(lər) hesabınız üçün təqdim edildikdən sonra "
-"mümkün deyil. Bu əməliyyat üçün birbaşa bizimlə əlaqə saxlayın."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-"Hesabınız üçün hesab-fakturalar dərc edildikdən sonra adınızın "
-"dəyişdirilməsinə icazə verilmir. Bu əməliyyat üzrə birbaşa olaraq bizimlə "
-"əlaqə saxlayın."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
+#: model:website.checkout.step,main_button_label:website_sale.checkout_step_delivery
 msgid "Checkout"
 msgstr "Ödəmə"
 
@@ -1277,11 +1237,6 @@ msgstr "Ödəniş Səhifələri"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "Alt kateqoriyalar"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
-msgid "Choose a delivery method"
-msgstr "Çatdırılma üsulunu seçin"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1297,20 +1252,39 @@ msgid "Choose this location"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
+#: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
+msgid "Choose your favorite"
+msgstr ""
+
+#. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
 msgid "Christmas"
 msgstr "Milad"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "City"
-msgstr "Şəhər"
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Classic"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Classic Grid"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
-#: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
+#: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Clear Filters"
 msgstr "Filterləri Təmizlə"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Clear search for this category"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_collect
@@ -1324,11 +1298,6 @@ msgid ""
 msgstr ""
 "İlk məhsulunuzu yaratmaq üçün yuxarı sağ küncdəki <i>'Yeni'</i> düyməsini "
 "klikləyin."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid "Click here"
-msgstr "Buraya kliklə"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1350,6 +1319,13 @@ msgstr "Müştərilərinizin görə bilməsi üçün bu düyməni basın."
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
+#: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
+msgid "Click to select"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
 #: code:addons/website_sale/static/src/js/notification/cart_notification/cart_notification.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 msgid "Close"
@@ -1367,14 +1343,14 @@ msgid "Collapse Category Recursive"
 msgstr "Kateqoriyanı Rekursiv olaraq Aç"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Collapse sidebar sections"
+msgstr ""
+
+#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes_collapsible
 msgid "Collapsible Boxes"
 msgstr "Yığıla bilən qutular"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Collapsible sidebar"
-msgstr "Yığıla bilən yan panel"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1401,6 +1377,12 @@ msgstr ""
 "siyahısı"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Compact List"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_res_company
 msgid "Companies"
 msgstr "Şirkətlər"
@@ -1408,7 +1390,6 @@ msgstr "Şirkətlər"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Company Name"
 msgstr "Şirkətin Adı"
 
@@ -1441,23 +1422,35 @@ msgstr "Çatdırılma xərclərini hesabla və Shiprocket ilə göndər"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with DHL"
-msgstr "Çatdırılma xərclərini hesabla və DHL ilə göndər"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</"
+"strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with FedEx"
-msgstr "Çatdırılma xərclərini hesabla və FedEx ilə göndər"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</"
+"strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with UPS"
-msgstr "Çatdırılma xərclərini hesabla və UPS ilə göndər"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</"
+"strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with USPS"
-msgstr "Çatdırılma xərclərini hesabla və USPS ilə göndər"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                            <strong>(please go to Home&gt;Apps to install)</"
+"strong>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1468,6 +1461,12 @@ msgstr "Çatdırılma xərclərini hesabla və bpost ilə göndər"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
 msgstr "Sifarişlərdə çatdırılma xərclərii hesablayın"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/checkout.js:0
+msgid "Computed after delivery"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -1491,8 +1490,8 @@ msgid "Configure your product"
 msgstr "Məhsulunuzu konfiqurasiya edin"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
+#: model:website.checkout.step,main_button_label:website_sale.checkout_step_extra
+#: model:website.checkout.step,main_button_label:website_sale.checkout_step_payment
 msgid "Confirm"
 msgstr "Təsdiqlə"
 
@@ -1517,6 +1516,11 @@ msgid "Confirmed Orders"
 msgstr "Təsdiqlənmiş Sifarişlər"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Connect your eCommerce to Google Merchant Center via a product file."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_res_partner
 msgid "Contact"
 msgstr "Kontakt"
@@ -1532,6 +1536,16 @@ msgid "Contact Us Button URL"
 msgstr "Bizimlə Əlaqə düyməsi URL-i"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Contain within the box"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Content Width"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/website_sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
@@ -1539,26 +1553,20 @@ msgid "Continue Shopping"
 msgstr "Alış-verişə davam et"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Continue checkout"
-msgstr "Ödənişə davam et"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid ""
 "Continue checkout\n"
-"                                    <i class=\"fa fa-angle-right ms-2 fw-light\"/>"
+"                                    <i class=\"fa fa-angle-right ms-2 fw-"
+"light\"/>"
 msgstr ""
 "Ödənişə davam et\n"
-"                                    <i class=\"fa fa-angle-right ms-2 fw-light\"/>"
+"                                    <i class=\"fa fa-angle-right ms-2 fw-"
+"light\"/>"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "Continue shopping"
-msgstr "Alış-verişə davam et"
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Copy file link"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
@@ -1566,14 +1574,14 @@ msgid "Couches"
 msgstr "Divanlar"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Country"
-msgstr "Ölkə"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Create"
 msgstr "Yaradın"
+
+#. module: website_sale
+#: model:ir.model,website_form_label:website_sale.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -1585,6 +1593,7 @@ msgstr "Yeni məhsul yaradın"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__create_uid
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_uid
 msgid "Created by"
 msgstr "Tərəfindən yaradılıb"
@@ -1604,6 +1613,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__create_date
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__create_date
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__create_date
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__create_date
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_date
 msgid "Created on"
 msgstr "Tarixdə yaradıldı"
@@ -1651,39 +1661,7 @@ msgid "Customer Reviews"
 msgstr "Müştərinin Rəyləri"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid ""
-"Customer needs to be signed in otherwise the mail address is not known.     \n"
-"\n"
-"- If a potential customer creates one or more abandoned checkouts and then completes a sale before the recovery email gets sent, then the email won't be sent.     \n"
-"\n"
-"- If user has manually sent a recovery email, the mail will not be sent a second time     \n"
-"\n"
-"- If a payment processing error occurred when the customer tried to complete their checkout, then the email won't be sent.     \n"
-"\n"
-"- If your shop does not support shipping to the customer's address, then the email won't be sent.     \n"
-"\n"
-"- If none of the products in the checkout are available for purchase (empty inventory, for example), then the email won't be sent.     \n"
-"\n"
-"- If all the products in the checkout are free, and the customer does not visit the shipping page to add a shipping fee or the shipping fee is also free, then the email won't be sent."
-msgstr ""
-"Müştəri sayta daxil olmadan, e-poçt ünvanı məlum olmayacaq.     \n"
-"\n"
-"- Əgər potensial müştəri bir və ya bir neçə tərk edilmiş ödənişi yaradıb, lakin bərpa e-poçtu göndərilmədən əvvəl satış tamamlanarsa, o zaman e-poçt göndərilməyəcək.     \n"
-"\n"
-"- Əgər istifadəçi bərpa e-poçtunu əl ilə göndəribsə, e-poçt ikinci dəfə göndərilməyəcək.     \n"
-"\n"
-"- Əgər müştəri ödənişi tamamlayarkən ödəniş prosesi xətası baş veribsə, e-poçt göndərilməyəcək.     \n"
-"\n"
-"- Əgər mağazanız müştərinin ünvanına çatdırılmanı dəstəkləmirsə, e-poçt göndərilməyəcək.     \n"
-"\n"
-"- Əgər ödənişdəki məhsullardan heç biri alınabilən deyil (məsələn, anbar boşdursa), o zaman e-poçt göndərilməyəcək.     \n"
-"\n"
-"- Əgər ödənişdəki bütün məhsullar pulsuzdursa və müştəri göndərmə haqqını əlavə etmək üçün göndərmə səhifəsini ziyarət etməyibsə və ya göndərmə haqqı da pulsuzdursa, e-poçt göndərilməyəcək."
-
-#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Customers"
 msgstr "Müştərilər"
 
@@ -1705,13 +1683,8 @@ msgstr "E-poçt Şablonlarını fərdiləşdirin"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Express Connector"
-msgstr "DHL Express Bağlayıcı"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL Shipping Methods"
-msgstr "DHL Çatdırılma Metodları"
+msgid "DHL"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1739,11 +1712,6 @@ msgid "Default Currency"
 msgstr "Default Məzənnə"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website__pricelist_id
-msgid "Default Pricelist if any"
-msgstr "Default Qiymət Cədvəli əgər varsa"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Default Sort"
 msgstr "Default Sıralama"
@@ -1752,8 +1720,7 @@ msgstr "Default Sıralama"
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_id
 #: model:ir.model.fields,help:website_sale.field_product_template__base_unit_id
 #: model:ir.model.fields,help:website_sale.field_website_base_unit__name
-msgid ""
-"Define a custom unit to display in the price per unit of measure field."
+msgid "Define a custom unit to display in the price per unit of measure field."
 msgstr ""
 "Vahidə görə qiymət ölçüsü xanasında göstərmək üçün xüsusi bir vahid təyin "
 "edin. "
@@ -1774,17 +1741,15 @@ msgid "Delete Ribbon"
 msgstr "Lenti silin"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Delivery"
 msgstr "Təslimat"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-msgid "Delivery &amp;"
-msgstr "Təslimat &amp;"
+#: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
+msgid "Delivery &amp; Billing"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__amount_delivery
@@ -1798,7 +1763,6 @@ msgid "Delivery Methods"
 msgstr "Təslimat Metodları"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_row
 msgid "Delivery address"
 msgstr "Çatdırılma ünvanı"
@@ -1809,7 +1773,13 @@ msgid "Delivery and Installation"
 msgstr "Çatdırılma və Quraşdırma"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
+msgid "Delivery method"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Description"
 msgstr "Təsvir"
 
@@ -1848,6 +1818,17 @@ msgstr "Stol lampaları"
 #: model:product.public.category,name:website_sale.public_category_desks
 msgid "Desks"
 msgstr "İş masaları"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Detailed List"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Details"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
@@ -1889,11 +1870,39 @@ msgid "Discover our team"
 msgstr "Komandamızı kəşf edin"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_account_move__display_name
+#: model:ir.model.fields,field_description:website_sale.field_crm_team__display_name
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:website_sale.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:website_sale.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_sale.field_ir_module_module__display_name
+#: model:ir.model.fields,field_description:website_sale.field_payment_token__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_attribute__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_document__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_image__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist_item__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_product__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_tag__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_line__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_value__display_name
+#: model:ir.model.fields,field_description:website_sale.field_res_company__display_name
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_sale.field_res_partner__display_name
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:website_sale.field_sale_report__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_menu__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_track__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__display_name
 msgid "Display Name"
 msgstr "Göstəriləcək Ad"
 
@@ -1926,8 +1935,8 @@ msgstr "Məhsul səhifələrinin ən aşağısında göstərilir."
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_name
 #: model:ir.model.fields,help:website_sale.field_product_template__base_unit_name
 msgid ""
-"Displays the custom unit for the products if defined or the selected unit of"
-" measure otherwise."
+"Displays the custom unit for the products if defined or the selected unit of "
+"measure otherwise."
 msgstr ""
 "Məhsullar üçün təyin edilmiş xüsusi vahidi və ya əks halda seçilmiş ölçü "
 "vahidini göstərir."
@@ -1945,6 +1954,11 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale_reorder.js:0
 msgid "Do you wish to clear your cart before adding products to it?"
 msgstr "Səbətə məhsul əlavə etməzdən əvvəl onu təmizləmək istəyirsiniz?"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Documentation"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1979,10 +1993,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid ""
 "Drag building blocks here to customize the header for\n"
-"                                    \""
+"                                        \""
 msgstr ""
-"Başlığı fərdiləşdirmək üçün blokları buraya sürükləyin\n"
-"                                    \""
 
 #. module: website_sale
 #. odoo-python
@@ -2063,26 +2075,20 @@ msgid "Edit"
 msgstr "Redaktə et"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Edit address"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Edit the price of this product by clicking on the amount."
 msgstr "Məbləğin üzərinə klikləməklə bu məhsulun qiymətini redaktə edin."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
-msgid "Edit this address"
-msgstr "Bu Ünvanı dəyiş"
-
-#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_multimedia_education
 msgid "Education Tools"
 msgstr "Təhsil Vasitələri"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-msgid "Email"
-msgstr "Elektron poçt"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__embed_code
@@ -2113,15 +2119,14 @@ msgid "Error! You cannot create recursive categories."
 msgstr "Xəta! Siz rekursiv kateqoriyalar yarada bilməzsiniz."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Extra Images"
-msgstr "Əlavə Şəkillər"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
+#: model:website.checkout.step,name:website_sale.checkout_step_extra
 msgid "Extra Info"
 msgstr "Əlavə Məlumat"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Extra Media"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_template_image_ids
@@ -2155,11 +2160,6 @@ msgid "Extra info"
 msgstr "Əlavə məlumat"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-msgid "Facebook"
-msgstr "Facebook"
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "Featured"
@@ -2169,11 +2169,6 @@ msgstr "Premium"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
 msgstr "FedEx"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "FedEx Shipping Methods"
-msgstr "FedEx Çatdırılma Metodları"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__field_id
@@ -2197,13 +2192,14 @@ msgstr "Fayl Çəkməcələri"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Fill"
-msgstr "Doldur"
+msgid "Filmstrip - default"
+msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Fill in your address"
-msgstr "Ünvanınızı doldurun"
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Filters"
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -2213,9 +2209,20 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website__fiscal_position_id
-msgid "Fiscal Position"
-msgstr "Fiskal Pozisyon"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Floating"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Floating sticky Toolbar"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Focused"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_foldable
@@ -2249,9 +2256,9 @@ msgid "From Website"
 msgstr "Vebsaytdan"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Full name"
-msgstr "Ad və Soyad"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Full"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures
@@ -2270,14 +2277,18 @@ msgstr "Boşluq"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid ""
-"Generate the invoice automatically when the online payment is confirmed"
+msgid "Generate the invoice automatically when the online payment is confirmed"
 msgstr "Ödəniş təsdiqləndiyində Fakturanı avtomatik tərtib et"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_glass
 msgid "Glass Desks"
 msgstr "Şüşə masalar"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__gmc_xml_url
+msgid "Gmc Xml Url"
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -2287,8 +2298,13 @@ msgid "Go to cart"
 msgstr "Səbətə get"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__enabled_gmc_src
+#: model:ir.model.fields,field_description:website_sale.field_website__enabled_gmc_src
+msgid "Google Merchant Center Data Source"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__grid
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Grid"
@@ -2322,14 +2338,29 @@ msgid "Hidden"
 msgstr "Gizli"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Hide"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale
 msgid "Hide 'Add To Cart' when price = 0"
 msgstr "Qitmət = 0 olduqda \"Səbətə At\" -ı Gizlət"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Hide all filters"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Hours."
 msgstr "Saatlar."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__step_href
+msgid "Href"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -2342,11 +2373,39 @@ msgid "I agree to the"
 msgstr "Razılaşıram buna ki"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_account_move__id
+#: model:ir.model.fields,field_description:website_sale.field_crm_team__id
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:website_sale.field_digest_digest__id
+#: model:ir.model.fields,field_description:website_sale.field_ir_http__id
+#: model:ir.model.fields,field_description:website_sale.field_ir_module_module__id
+#: model:ir.model.fields,field_description:website_sale.field_payment_token__id
+#: model:ir.model.fields,field_description:website_sale.field_product_attribute__id
+#: model:ir.model.fields,field_description:website_sale.field_product_document__id
 #: model:ir.model.fields,field_description:website_sale.field_product_image__id
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__id
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist_item__id
+#: model:ir.model.fields,field_description:website_sale.field_product_product__id
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__id
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__id
+#: model:ir.model.fields,field_description:website_sale.field_product_tag__id
+#: model:ir.model.fields,field_description:website_sale.field_product_template__id
+#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_line__id
+#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_value__id
+#: model:ir.model.fields,field_description:website_sale.field_res_company__id
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_sale.field_res_partner__id
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__id
+#: model:ir.model.fields,field_description:website_sale.field_sale_report__id
+#: model:ir.model.fields,field_description:website_sale.field_website__id
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__id
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__id
+#: model:ir.model.fields,field_description:website_sale.field_website_menu__id
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__id
+#: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__id
+#: model:ir.model.fields,field_description:website_sale.field_website_track__id
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__id
 msgid "ID"
 msgstr "ID"
 
@@ -2383,19 +2442,6 @@ msgstr ""
 "göndərilir"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-"Xarici şəxs üçün sifariş edirsinizsə, lütfən, sifarişinizi backend "
-"vasitəsilə verin. Adınızı və ya e-poçt ünvanınızı dəyişdirmək "
-"istəyirsinizsə, lütfən, hesab parametrlərində bunu edin və ya "
-"administratorunuzla əlaqə saxlayın."
-
-#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__website_id
 msgid ""
 "If you want a pricelist to be available on a website,you must fill in this "
@@ -2409,7 +2455,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
-#: model:ir.model.fields,field_description:website_sale.field_product_tag__image
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 msgid "Image"
 msgstr "Şəkil"
@@ -2439,6 +2484,12 @@ msgid "Image 512"
 msgstr "Şəkil 512"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Image Grid"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Image Menu"
 msgstr "Şəkil Menyu"
@@ -2457,6 +2508,11 @@ msgstr "Şəkil Boşluğu"
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Image Zoom"
 msgstr "Şəkil Yaxınlaşdırması"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Images Fill"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2486,14 +2542,20 @@ msgstr "Səbətə atmaq əvəzinə, Həmən Ödəniş"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
-msgid "Invalid Email! Please enter a valid email address."
-msgstr "Yanlış E-poçt! Etibarlı e-poçt ünvanı daxil edin."
+msgid "Invalid category."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Invalid image"
 msgstr "Yanlış şəkil"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "Invalid video URL provided."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_account
@@ -2514,6 +2576,7 @@ msgstr "İzləyicidir"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__is_published
 #: model:ir.model.fields,field_description:website_sale.field_product_template__is_published
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__is_published
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_website_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_view_tree_website_sale
 msgid "Is Published"
@@ -2523,12 +2586,6 @@ msgstr "Paylaşılıb"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Issue invoices to customers"
 msgstr "Müştərilərinizə faktura tərtib edin"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/sale_order.py:0
-msgid "It is forbidden to modify a sales order which is not in draft status."
-msgstr "Qaralama statusunda olmayan satış sifarişini dəyişdirmək qadağandır."
 
 #. module: website_sale
 #. odoo-python
@@ -2552,7 +2609,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
+#: code:addons/website_sale/static/src/js/cart_service.js:0
 msgid "Item(s) added to your cart"
 msgstr "Məhsul(lar) səbətinizə əlavə edildi"
 
@@ -2593,6 +2650,12 @@ msgid "Landscape (4/3)"
 msgstr "Landşaft (4/3)"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Large Image"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -2600,16 +2663,11 @@ msgid "Last Month"
 msgstr "Son Ay"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_partner__last_website_so_id
-#: model:ir.model.fields,field_description:website_sale.field_res_users__last_website_so_id
-msgid "Last Online Sales Order"
-msgstr "Sonuncu Onlayn Satış Sifarişi"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__write_uid
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__write_uid
 msgid "Last Updated by"
 msgstr "Son Yeniləyən"
@@ -2619,6 +2677,7 @@ msgstr "Son Yeniləyən"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__write_date
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__write_date
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__write_date
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__write_date
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__write_date
 msgid "Last Updated on"
 msgstr "Son Yenilənmə tarixi"
@@ -2661,8 +2720,7 @@ msgstr "Müştəri çatdırılma ünvanını daxil edə bilsin"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Let the customer select a Mondial Relay shipping point"
-msgstr ""
-"​​Müştərinin Mondial Relay çatdırılma məntəqəsini seçməsinə imkan verin."
+msgstr "​​Müştərinin Mondial Relay çatdırılma məntəqəsini seçməsinə imkan verin."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__force_dialog
@@ -2682,8 +2740,8 @@ msgid ""
 "Let's now take a look at your eCommerce dashboard to get your eCommerce "
 "website ready in no time."
 msgstr ""
-"İndi e-ticarət veb saytınızı qısa zamanda hazır vəziyyətə gətirmək üçün "
-"e-ticarət panelinizə nəzər salaq."
+"İndi e-ticarət veb saytınızı qısa zamanda hazır vəziyyətə gətirmək üçün e-"
+"ticarət panelinizə nəzər salaq."
 
 #. module: website_sale
 #. odoo-python
@@ -2698,15 +2756,9 @@ msgid "Line Subtotals Tax Display"
 msgstr "Sətirlər üzrə Yekun Vergi Göstəricisi"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-msgid "LinkedIn"
-msgstr "LinkedIn"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "List"
-msgstr "Siyahı"
+msgid "List of products"
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -2748,11 +2800,14 @@ msgstr "Üzərinə gəldikdə böyüt"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
-"Mail only sent to signed in customers with items available for sale in their"
-" cart."
+"Mail only sent to signed in customers with items available for sale in carts "
+"created after the feature activation."
 msgstr ""
-"Yalnız səbətində satıla bilən məhsullar olan və daxil olmuş müştərilərə "
-"e-poçt göndərilir."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__main_button_label
+msgid "Main Button Label"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2813,6 +2868,22 @@ msgid "Messages"
 msgstr "Mesajlar"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Mobile"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Modern Showcase"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_ir_module_module
+msgid "Module"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Mondial Relay"
 msgstr "Mondial Relay"
@@ -2824,7 +2895,6 @@ msgstr "Mondial Relay Bağlayıcı"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accordion_more_information
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "More Information"
 msgstr "Ətraflı Məlumat"
 
@@ -2867,6 +2937,7 @@ msgstr "Mənim Səbətim"
 #: model:ir.model.fields,field_description:website_sale.field_product_image__name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__name
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__name
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Name"
 msgstr "Ad"
@@ -2892,6 +2963,11 @@ msgstr "Yeni"
 #: model:ir.actions.act_window,name:website_sale.product_product_action_add
 msgid "New Product"
 msgstr "Yeni Məhsul"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "New address"
+msgstr ""
 
 #. module: website_sale
 #: model:product.ribbon,name:website_sale.new_ribbon
@@ -2978,8 +3054,8 @@ msgstr "Nəticə tapılmadı: '"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid ""
-"No shipping method is available for your current order and shipping address."
-" Please contact us for more information."
+"No shipping method is available for your current order and shipping address. "
+"Please contact us for more information."
 msgstr ""
 "Cari sifarişiniz və göndərmə ünvanınız üçün heç bir göndərmə üsulu mövcud "
 "deyil. Əlavə məlumat üçün bizimlə əlaqə saxlayın."
@@ -3054,9 +3130,19 @@ msgid "Odoo Menu"
 msgstr "Odoo Menyu"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Off-screen Menu"
+msgstr ""
+
+#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_office
 msgid "Office Desks"
 msgstr "Ofis Masaları"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
+msgid "On the website original price is crossed out."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -3084,6 +3170,12 @@ msgstr "Onlayn Satışlar"
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_dashboard
 msgid "Online Sales Analysis"
 msgstr "Onlayn Satış Analizləri"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
+msgid "Online catalog"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__only_services
@@ -3134,14 +3226,14 @@ msgid "Optional"
 msgstr "Seçimli"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Options"
-msgstr "Opsionlar"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "Or scan me with your banking app."
 msgstr "Yaxud məni bank tətbiqinizlə skan edin."
+
+#. module: website_sale
+#: model:website.checkout.step,name:website_sale.checkout_step_cart
+msgid "Order"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -3158,8 +3250,8 @@ msgstr "Vebsaytda göstəriləcək Satış Sətrləri"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid "Order overview"
-msgstr "Sifariş icmalı"
+msgid "Order summary"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
@@ -3200,15 +3292,9 @@ msgid "Pay now"
 msgstr "İndi ödə"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
+#: model:website.checkout.step,name:website_sale.checkout_step_payment
 msgid "Payment"
 msgstr "Ödəniş"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "Payment Information"
-msgstr "Ödəniş Məlumatı"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_methods
@@ -3248,25 +3334,21 @@ msgid "Pedal-based opening system"
 msgstr "Pedala əsaslanan açılış sistemi"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Phone"
-msgstr "Telefon"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 msgid "Phone Number"
 msgstr "Telefon nömrəsi"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+msgid "Pickup Location"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Pills"
 msgstr "Haplar"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-msgid "Pinterest"
-msgstr "Pinterest"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -3316,6 +3398,7 @@ msgstr "Əvvəlki (Sol-Ox)"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Price"
 msgstr "Qiymət"
 
@@ -3330,11 +3413,6 @@ msgstr "Qiymət - Yüksəkdən Aşağıya"
 #: code:addons/website_sale/models/website.py:0
 msgid "Price - Low to High"
 msgstr "Qiymət - Aşağıdan Yüksəkə"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Price Filter"
-msgstr "Qiymət Filteri"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_price
@@ -3354,6 +3432,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
+#: model_terms:ir.ui.view,arch_db:website_sale.pricelist_list
 msgid "Pricelist"
 msgstr "Qiymət siyahısı"
 
@@ -3390,11 +3469,6 @@ msgstr "Ödəniş səhifəsinə keç"
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "Process the order once the payment is received."
 msgstr "Ödəniş qəbul olunduqda sifarişi tamamla."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Prod. Desc."
-msgstr "Məhsul Təsviri"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3461,6 +3535,8 @@ msgid "Product Names"
 msgstr "Məhsul adları"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Product Page"
 msgstr "Məhsul Səhifəsi"
@@ -3526,11 +3602,6 @@ msgstr "Məhsul Etiketi (tag)"
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Product Tags"
 msgstr "Məhsul Etiketləri"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Product Tags Filter"
-msgstr "Məhsul Etiketləri (tags) Filteri"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_tmpl_id
@@ -3601,11 +3672,6 @@ msgstr "Məhsullar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Products List"
-msgstr "Məhsulların Listi"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Products Page"
 msgstr "Məhsulların Səhifəsi"
 
@@ -3637,6 +3703,12 @@ msgid ""
 msgstr ""
 "'%s' üçün təqdim edilmiş video URL etibarlı deyil. Lütfən, düzgün video URL "
 "daxil edin."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__publish_date
+#: model:ir.model.fields,field_description:website_sale.field_product_template__publish_date
+msgid "Publish Date"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_document__shown_on_product_page
@@ -3673,18 +3745,20 @@ msgstr "Yuxarı itələ"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Quantity"
 msgstr "Miqdar"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Quick Browse Grid"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Radio"
 msgstr "Radio"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Rating"
-msgstr "Qiymətləndirmə"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg_text
@@ -3753,8 +3827,8 @@ msgstr "Yenicə satılmış Məhsullar"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
-msgid "Recently Viewed Products"
-msgstr "Yenicə baxış keçirilmiş Məhsullar"
+msgid "Recently Viewed Products (per user)"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_recliners
@@ -3770,6 +3844,11 @@ msgstr "Bərpa e-poçtu göndərildi"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email to Send"
 msgstr "Göndərmək üçün Bərpa e-poçtu"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Regular"
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -3801,10 +3880,15 @@ msgstr "Səbətdən sil"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
 msgid "Remove one"
 msgstr "Birini Silin"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Render a button to show the Off-screen Menu"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_repair_and_maintenance
@@ -3827,6 +3911,7 @@ msgstr "Kateqoriyaları sıfırlayın"
 #: model:ir.model.fields,help:website_sale.field_product_public_category__website_id
 #: model:ir.model.fields,help:website_sale.field_product_tag__website_id
 #: model:ir.model.fields,help:website_sale.field_product_template__website_id
+#: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_id
 msgid "Restrict to a specific website."
 msgstr "Müəyyən bir veb saytla məhdudlaşdırın."
 
@@ -3837,10 +3922,9 @@ msgid "Resume Order"
 msgstr "Sifarişi davam etdirin"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "Review Order"
-msgstr "Sifarişi nəzərdən keçirin"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Reviews"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_ribbon_id
@@ -3951,9 +4035,9 @@ msgid "Sample"
 msgstr "Nümunə"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Save address"
-msgstr "Ünvanı yadda saxla"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Search"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -3961,9 +4045,26 @@ msgid "Search Abandoned Sales Orders"
 msgstr "Tərk edilmiş Satış Sifarişlərini Axtar"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Search Bar"
-msgstr "Axtarış paneli"
+#: model_terms:ir.ui.view,arch_db:website_sale.floating_bar
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Search Products"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Search globally"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Search in"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Search {{0}} globally"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4001,7 +4102,7 @@ msgid "Selectable"
 msgstr "Seçilə bilən"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form
 msgid "Send a Recovery Email"
 msgstr "Bərpa Email-i Göndərin"
 
@@ -4011,7 +4112,7 @@ msgid "Send after"
 msgstr "Sonra göndərin"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form
 msgid "Send by Email"
 msgstr "Emaillə Göndər"
 
@@ -4029,6 +4130,7 @@ msgstr "Seo adı"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__sequence
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__sequence
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__sequence
 msgid "Sequence"
 msgstr "Ardıcıllıq"
@@ -4037,12 +4139,6 @@ msgstr "Ardıcıllıq"
 #: model:product.public.category,name:website_sale.public_category_services
 msgid "Services"
 msgstr "Xidmətlər"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Share"
-msgstr "Paylaşın"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_delivery_invoice_address
@@ -4125,6 +4221,21 @@ msgid "Show Empty"
 msgstr "Böşu Göstər"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Show a filmstrip navigation at the Top"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Show filters into Sidebar"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Show into Sidebar"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_search
 msgid "Show on Ecommerce"
 msgstr "E-ticarətdə Göstər"
@@ -4140,15 +4251,15 @@ msgid "Show/hide shopping cart"
 msgstr "Alış-veriş səbətini Göstər/Gizlət"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "Sign In"
-msgstr "Daxil ol"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Sidebar"
+msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "Sign Up"
-msgstr "Qeydiyyatdan Keç"
+#. odoo-python
+#: code:addons/website_sale/const.py:0
+msgid "Sidebar Grid"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -4201,14 +4312,13 @@ msgstr "Satıldı"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
-msgid "Some required fields are empty."
-msgstr "Bəzi tələb olunan sahələr boşdur."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
 msgid "Sorry, we are unable to ship your order."
 msgstr "Üzr istəyirik, sifarişinizi göndərə bilmirik."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sort
+msgid "Sort By"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4238,11 +4348,6 @@ msgid "Standing Desks"
 msgstr "Daimi Stollar"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "State / Province"
-msgstr "Ştat / Vilayət"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Status"
 msgstr "Status"
@@ -4258,11 +4363,6 @@ msgid "Storage Cabinets"
 msgstr "Saxlama şkafları"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Street and Number"
-msgstr "Küçə və nömrəsi"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Style"
 msgstr "Stil"
@@ -4276,8 +4376,8 @@ msgstr "Yekun"
 #: model:ir.model.fields,help:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__alternative_product_ids
 msgid ""
-"Suggest alternatives to your customer (upsell strategy). Those products show"
-" up on the product page."
+"Suggest alternatives to your customer (upsell strategy). Those products show "
+"up on the product page."
 msgstr ""
 "Müştərinizə alternativlər təklif edir (upsell strategiyası). Bu məhsullar "
 "məhsul səhifəsində görünür."
@@ -4299,6 +4399,7 @@ msgstr "E-ticarət səbətində təklif olunan aksesuarlar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tags"
 msgstr "Teqlər"
 
@@ -4331,6 +4432,11 @@ msgstr "Vergilər"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Terms and Conditions"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Text"
 msgstr "Mətn"
 
@@ -4338,11 +4444,6 @@ msgstr "Mətn"
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
 msgid "Text Color"
 msgstr "Lentə yazı rəngi"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale_text
-msgid "Text to show instead of price"
-msgstr "Qiymət əvəzinə göstərilən Yazı"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -4361,6 +4462,12 @@ msgid "The access token is invalid."
 msgstr "Giriş nişanı etibarsızdır."
 
 #. module: website_sale
+#: model:website.snippet.filter,help:website_sale.dynamic_filter_latest_viewed_products
+msgid ""
+"The building block will remain empty until the user visits a product page."
+msgstr ""
+
+#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "The cart has already been paid. Please refresh the page."
@@ -4376,18 +4483,30 @@ msgstr "Səbət yeniləndi. Səhifəni yeniləyin."
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid ""
-"The company of the website you are trying to sell from (%(website_company)s)"
-" is different than the one you want to use (%(company)s)"
+"The company of the website you are trying to sell from (%(website_company)s) "
+"is different than the one you want to use (%(company)s)"
 msgstr ""
 "Satış etməyə çalışdığınız veb saytın şirkəti (%(website_company)s) istifadə "
 "etmək istədiyinizdən fərqlidir (%(company)s)"
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_url
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
-#: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
 msgstr "Veb sayt vasitəsilə sənədə daxil olmaq üçün tam URL."
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_absolute_url
+#: model:ir.model.fields,help:website_sale.field_product_template__website_absolute_url
+#: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_url
+#: model:ir.model.fields,help:website_sale.field_product_template__website_url
+#: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_url
+msgid "The full relative URL to access the document through the website."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -4395,24 +4514,21 @@ msgstr "Veb sayt vasitəsilə sənədə daxil olmaq üçün tam URL."
 msgid ""
 "The given combination does not exist therefore it cannot be added to cart."
 msgstr ""
-"Verilmiş kombinasiya mövcud deyil, ona görə də onu səbətə əlavə etmək mümkün"
-" deyil."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/sale_order.py:0
-msgid "The given product does not exist therefore it cannot be added to cart."
-msgstr ""
-"Verilən məhsul mövcud deyil, ona görə də onu səbətə əlavə etmək mümkün "
+"Verilmiş kombinasiya mövcud deyil, ona görə də onu səbətə əlavə etmək mümkün "
 "deyil."
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/combo_configurator.py:0
-#: code:addons/website_sale/models/sale_order.py:0
+#: code:addons/website_sale/controllers/cart.py:0
+msgid "The given product does not exist therefore it cannot be added to cart."
+msgstr ""
+"Verilən məhsul mövcud deyil, ona görə də onu səbətə əlavə etmək mümkün deyil."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order_line.py:0
 msgid ""
-"The given product does not have a price therefore it cannot be added to "
-"cart."
+"The given product does not have a price therefore it cannot be added to cart."
 msgstr ""
 "Verilən məhsulun qiyməti yoxdur ona görə səbətə əlavə etmək mümkün deyil."
 
@@ -4422,8 +4538,8 @@ msgid ""
 "The mode selected here applies as invoicing policy of any new product "
 "created but not of products already existing."
 msgstr ""
-"Burada seçilən rejim yeni yaradılan hər hansı məhsulun faktura siyasəti kimi"
-" tətbiq olunur, lakin artıq mövcud olan məhsullara şamil edilmir."
+"Burada seçilən rejim yeni yaradılan hər hansı məhsulun faktura siyasəti kimi "
+"tətbiq olunur, lakin artıq mövcud olan məhsullara şamil edilmir."
 
 #. module: website_sale
 #. odoo-python
@@ -4434,13 +4550,14 @@ msgstr "Sifariş ləğv edilib."
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__public_categ_ids
+#: model:ir.model.fields,help:website_sale.field_sale_report__public_categ_ids
 msgid ""
 "The product will be available in each mentioned eCommerce category. Go to "
 "Shop > Edit Click on the page and enable 'Categories' to view all eCommerce "
 "categories."
 msgstr ""
-"Məhsul hər bir qeyd olunan e-ticarət kateqoriyasında mövcud olacaq. Mağaza >"
-" Redaktə et bölməsinə keçin, səhifəyə klikləyin və bütün e-ticarət "
+"Məhsul hər bir qeyd olunan e-ticarət kateqoriyasında mövcud olacaq. Mağaza > "
+"Redaktə et bölməsinə keçin, səhifəyə klikləyin və bütün e-ticarət "
 "kateqoriyalarını görmək üçün 'Kateqoriyalar' funksiyasını aktiv edin."
 
 #. module: website_sale
@@ -4459,8 +4576,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/models/product_product.py:0
 msgid ""
-"The value of Base Unit Count must be greater than 0. Use 0 to hide the price"
-" per unit on this product."
+"The value of Base Unit Count must be greater than 0. Use 0 to hide the price "
+"per unit on this product."
 msgstr ""
 "Əsas Vahid Sayının dəyəri 0-dan böyük olmalıdır. Bu məhsulda vahidin "
 "qiymətini gizlətmək üçün 0-dan istifadə edin."
@@ -4480,6 +4597,11 @@ msgstr "Vebsaydan hələ ki, ödənməmiş bir sifariş yoxdur."
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/map_container/map_container.js:0
 msgid "There was an error loading the map"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.alternative_products
+msgid "These other products might interest you"
 msgstr ""
 
 #. module: website_sale
@@ -4552,6 +4674,11 @@ msgid "Thumbnails"
 msgstr "Miniatürlər"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website__send_abandoned_cart_email_activation_time
+msgid "Time when the 'Send abandoned cart email' feature was activated."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "To send invitations in B2B mode, open a contact or select several ones in "
@@ -4559,18 +4686,18 @@ msgid ""
 "menu *Action*."
 msgstr ""
 "B2B rejimində dəvətnamələr göndərmək üçün kontaktı açın və ya siyahıda "
-"birdən çox əlaqə seçin və açılan *Action* menyusunda \"PORTALA girişin idarə"
-" edilməsi\" seçimini basın ."
+"birdən çox əlaqə seçin və açılan *Action* menyusunda \"PORTALA girişin idarə "
+"edilməsi\" seçimini basın ."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Toolbar"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Top"
 msgstr "Ən məşhur"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Top Bar"
-msgstr "Ən yuxarı Panel"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4635,11 +4762,6 @@ msgid "USPS"
 msgstr "USPS"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "USPS Shipping Methods"
-msgstr "USPS Çatdırma Metodları"
-
-#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers_underbed
 msgid "Under-bed Drawers"
 msgstr "Yataqaltı çəkməcələr"
@@ -4681,12 +4803,6 @@ msgstr ""
 "Places APİ istifadə et"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-msgid "VAT"
-msgstr "ƏDV"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 msgid "Variant"
 msgstr "Çeşid"
@@ -4698,11 +4814,6 @@ msgstr "Variant lent"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Variants"
-msgstr "Çeşidlər"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Vertical (2/3)"
 msgstr "Vertikal (2/3)"
 
@@ -4711,6 +4822,11 @@ msgstr "Vertikal (2/3)"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Video URL"
 msgstr "Video URL"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
+msgid "View More"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
@@ -4758,13 +4874,9 @@ msgstr "Görünən "
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_published
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_published
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__website_published
 msgid "Visible on current website"
 msgstr "Mövcud veb saytda görünür"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_tag__visible_on_ecommerce
-msgid "Visible on eCommerce"
-msgstr "E-ticarətdə görünür"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_track
@@ -4773,7 +4885,6 @@ msgstr "Ziyarət Edilmiş Səhifələr"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_ids
-#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_kanban
 msgid "Visited Products"
 msgstr "Ziyarət edilmiş Məhsullar"
 
@@ -4794,10 +4905,10 @@ msgstr "Qarderoblar"
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
+#: code:addons/website_sale/static/src/js/cart_service.js:0
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__shop_warning
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__shop_warning
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "Warning"
 msgstr "Xəbərdarlıq"
@@ -4824,6 +4935,14 @@ msgstr ""
 "zəmanət."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid ""
+"We weren't able to update your cart. Please refresh your page before trying "
+"again."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_website
 #: model:ir.model.fields,field_description:website_sale.field_account_bank_statement_line__website_id
 #: model:ir.model.fields,field_description:website_sale.field_account_move__website_id
@@ -4835,15 +4954,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__website_id
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__website_id
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__website_id
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Website"
 msgstr "Veb sayt"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_absolute_url
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_absolute_url
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__website_absolute_url
+msgid "Website Absolute URL"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_normalized
 msgid "Website Category"
 msgstr "Veb sayt kateqoriyası"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_website_checkout_step
+msgid "Website Checkout Step"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_menu
@@ -4887,6 +5019,7 @@ msgstr "Vebsayt Snippet Filteri"
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_url
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_url
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_url
+#: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__website_url
 msgid "Website URL"
 msgstr "Veb sayt URL-u"
 
@@ -4946,14 +5079,20 @@ msgid "What should be done on \"Add to Cart\"?"
 msgstr "\"Səbətə At\" zamanı nə edilməlidi?"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
-msgid "WhatsApp"
-msgstr "WhatsApp"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_tag__visible_on_ecommerce
-msgid "Whether the tag is displayed on the eCommerce."
-msgstr "E-Ticarətdə tag görünsünmü"
+#: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
+msgid ""
+"When prices are calculated through a formula or fixed, the original price "
+"is\n"
+"                    generally not displayed in the sale order lines or "
+"checkout. However, for\n"
+"                    specific formula-based pricing rules, the discount can "
+"be shown on the shop\n"
+"                    page (e.g. product pages and configurators), but not in "
+"the cart or at checkout.\n"
+"                    In these cases, the calculated/fixed price is set as the "
+"unit price with 0% discount\n"
+"                    in the order."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -4983,6 +5122,12 @@ msgid "With three feet"
 msgstr "Üç ayaqla"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "Wrong format: got `pricelist=%s`, expected an integer"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 msgid "Yes"
@@ -4992,11 +5137,12 @@ msgstr "Bəli"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid ""
 "You are editing your <b>delivery and billing</b> addresses\n"
-"                                        at the same time!<br/>\n"
-"                                        If you want to modify your billing address, create a"
+"                            at the same time!<br/>\n"
+"                            If you want to modify your billing address, "
+"create a\n"
+"                            <a class=\"o_translate_inline\" href=\"/shop/"
+"address?address_type=billing\">new address</a>."
 msgstr ""
-"Siz eyni zamanda <b>çatdırılma və faktura</b> ünvanlarınızı redaktə "
-"edirsiniz!<br/> Əgər faktura ünvanınızı dəyişdirmək istəyirsinizsə, yaradın"
 
 #. module: website_sale
 #. odoo-python
@@ -5024,19 +5170,13 @@ msgstr "Səbətinizdə əşyalar buraxdınız!"
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid ""
 "You'll find here all the carts abandoned by your visitors.\n"
-"                If they completed their address, you should send them a recovery email!"
+"                If they completed their address, you should send them a "
+"recovery email!"
 msgstr ""
-"Siz burada ziyarətçiləriniz tərəfindən tərk edilmiş səbətləri görə bilərsiniz.\n"
-"                Onlar əgər ünvanlarını tamamayıblarsa, siz onlara bərpa e-məktubu göndərməlisiz!"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.alternative_products
-msgid ""
-"Your Dynamic Snippet will be displayed here...\n"
-"                                This message is displayed because youy did not provide both a filter and a template to use."
-msgstr ""
-"Sizin Dinamik Snippet-iniz burada nümayiş olunacaq...\n"
-"                                Bu mesaj ona görə göstərilir ki, siz hər iki filter və şablonu istifadə üçün təmin etməmisiniz."
+"Siz burada ziyarətçiləriniz tərəfindən tərk edilmiş səbətləri görə "
+"bilərsiniz.\n"
+"                Onlar əgər ünvanlarını tamamayıblarsa, siz onlara bərpa e-"
+"məktubu göndərməlisiz!"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5051,7 +5191,6 @@ msgid "Your Name"
 msgstr "Adınız"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_row
 msgid "Your address"
 msgstr "Ünvanınız"
@@ -5092,11 +5231,6 @@ msgid "Your previous cart has already been completed."
 msgstr "Sizin bir öncəki səbətiniz artıq tamamlanmışdır."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Zip Code"
-msgstr "Poçt İndeksi"
-
-#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_delivery_zip_prefix
 msgid "Zip Prefix"
 msgstr "Poçt İndeksi prefiksi"
@@ -5126,10 +5260,16 @@ msgstr "e-Ticarət"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
+#: model:ir.model.fields,field_description:website_sale.field_sale_report__public_categ_ids
 #: model:ir.ui.menu,name:website_sale.menu_catalog_categories
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "eCommerce Categories"
 msgstr "e-Ticarət Kateqoriyaları"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "eCommerce Category"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__description_ecommerce
@@ -5163,6 +5303,13 @@ msgid "eCommerce cart"
 msgstr "e-Ticarət səbəti"
 
 #. module: website_sale
+#: model:ir.model.constraint,message:website_sale.constraint_website_check_gmc_ecommerce_access
+msgid ""
+"eCommerce must be accessible to all users for Google Merchant Center to "
+"operate properly."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
 msgid "eCommerce: send email to customers about their abandoned cart"
 msgstr ""
@@ -5170,28 +5317,45 @@ msgstr ""
 "göndərin"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid "if you want to merge your previous cart into current cart."
-msgstr "əgər köhnə səbətinizlə indiki səbətinizi birləşdirmək istəyirsinizsə."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"if you want to restore your previous cart. Your current cart will be "
-"replaced with your previous cart."
-msgstr ""
-"əgər bir əvvəlki səbətinizi bərpa etmək istəyirsinizsə. Sizin indiki "
-"səbətiniz bir əvvəlki ilə əvəz olunacaq."
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr "katoqoriyarda \""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "new address"
-msgstr "yeni ünvan"
+#. odoo-python
+#: code:addons/website_sale/models/crm_team.py:0
+msgid "is_abandoned_cart"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "list_price asc"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "list_price desc"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/res_config_settings.py:0
+msgid "model"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "name asc"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+msgid "publish_date desc"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -5203,7 +5367,543 @@ msgstr "sil"
 msgid "terms &amp; conditions"
 msgstr "qaydalar &amp; şərtlər"
 
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "to follow your order."
-msgstr "sifarişinizi izləmək üçün"
+#~ msgid "#{record.name.value}"
+#~ msgstr "#{record.name.value}"
+
+#~ msgid "&amp; Delivery"
+#~ msgstr "&amp; Çatdırılma"
+
+#~ msgid "&amp;nbsp;"
+#~ msgstr "&amp;nbsp;"
+
+#~ msgid "<b>Deliver to pickup point: </b>"
+#~ msgstr "<b>Qəbul məntəqəsinə çatdırın:</b>"
+
+#~ msgid "<b>Delivery: </b>"
+#~ msgstr "<b>Çatdırılma: </b>"
+
+#~ msgid "<b>Pricelist</b>"
+#~ msgstr "<b>Qiymət cədvəli</b>"
+
+#~ msgid ""
+#~ "<br/>\n"
+#~ "                30-day money-back guarantee<br/>\n"
+#~ "                Shipping: 2-3 Business Days"
+#~ msgstr ""
+#~ "<br/>\n"
+#~ "                30 günlük pulun geri qaytarılma zəmanəti<br/>\n"
+#~ "                Çatdırılma: 2-3 iş günü"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-plus me-md-2\"/>\n"
+#~ "                    <span class=\"d-none d-md-inline\">Add address</span>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-plus me-md-2\"/><span class=\"d-none d-md-inline\">Ünvan "
+#~ "əlavə edin</span></i>"
+
+#~ msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
+#~ msgstr "<i class=\"fw-light fa fa-angle-left me-2\"/>Ləğv et"
+
+#~ msgid "<option value=\"\">Country...</option>"
+#~ msgstr "<option value=\"\">Ölkə...</option>"
+
+#~ msgid "<option value=\"\">State / Province...</option>"
+#~ msgstr "<option value=\"\">Ştat / Vilayət...</option>"
+
+#~ msgid "<small class=\"d-none d-lg-inline text-muted\">Sort By:</small>"
+#~ msgstr "<small class=\"d-none d-lg-inline text-muted\">Sırala</small>"
+
+#~ msgid ""
+#~ "<small class=\"form-text text-muted\">\n"
+#~ "                                                        Changing company "
+#~ "name or VAT number is not allowed once document(s) have been issued for "
+#~ "your account. Please contact us directly for this operation.\n"
+#~ "                                                    </small>"
+#~ msgstr ""
+#~ "<small class=\"form-text text-muted\">Hesabınız üçün sənəd(lər) "
+#~ "verildikdən sonra şirkətin adının və ya ƏDV nömrəsinin dəyişdirilməsinə "
+#~ "icazə verilmir. Bu əməliyyat üçün birbaşa bizimlə əlaqə saxlayın.</small>"
+
+#~ msgid ""
+#~ "<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
+#~ "                            <i class=\"oi oi-close\" "
+#~ "role=\"presentation\"/>"
+#~ msgstr ""
+#~ "<small class=\"mx-auto\"><b>Filtrləri təmizləyin</b></small><i class=\"oi "
+#~ "oi-close\" role=\"presentation\"/>"
+
+#~ msgid ""
+#~ "<span class=\"d-md-none fa fa-shopping-cart\"/>\n"
+#~ "                            <span class=\"d-none d-md-inline\">Add to "
+#~ "cart</span>"
+#~ msgstr ""
+#~ "<span class=\"d-md-none fa fa-shopping-cart\"/>\n"
+#~ "                            <span class=\"d-none d-md-inline\">Səbətə at</"
+#~ "span>"
+
+#~ msgid "<span>Already have an account?</span>"
+#~ msgstr "<span>Artıq hesabınız var?</span>"
+
+#~ msgid "<strong>Total:</strong>"
+#~ msgstr "<strong>Cəm:</strong>"
+
+#~ msgid ""
+#~ "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+#~ "style=\"padding: 0px; background-color: white; color: #454748; border-"
+#~ "collapse:separate;\">\n"
+#~ "<tbody>\n"
+#~ "    <!-- CONTENT -->\n"
+#~ "    <tr>\n"
+#~ "        <td align=\"center\" style=\"min-width: 590px;\">\n"
+#~ "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+#~ "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+#~ "0px 0px 0px 0px; border-collapse:separate;\">\n"
+#~ "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+#~ "                    <h1 style=\"color:#A9A9A9;\">THERE'S SOMETHING IN "
+#~ "YOUR CART.</h1>\n"
+#~ "                    Would you like to complete your purchase?<br/><br/>\n"
+#~ "                    <t t-if=\"object.order_line\">\n"
+#~ "                        <t t-foreach=\"object.website_order_line\" t-"
+#~ "as=\"line\">\n"
+#~ "                            <hr/>\n"
+#~ "                            <table width=\"100%\">\n"
+#~ "                                <tr>\n"
+#~ "                                    <td style=\"padding: 10px; "
+#~ "width:150px;\">\n"
+#~ "                                        <img t-attf-src=\"/web/image/"
+#~ "product.product/{{ line.product_id.id }}/image_128\" style=\"width: "
+#~ "100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+#~ "                                    </td>\n"
+#~ "                                    <td>\n"
+#~ "                                        <strong t-"
+#~ "out=\"line.product_id.display_name or ''\">[FURN_7800] Desk Combination</"
+#~ "strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Desk Combination "
+#~ "Desk combination, black-brown: chair + desk + drawer.</t>\n"
+#~ "                                    </td>\n"
+#~ "                                    <td width=\"100px\" align=\"right\">\n"
+#~ "                                        <t t-"
+#~ "out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-"
+#~ "out=\"line.product_uom.name or ''\">Units</t>\n"
+#~ "                                    </td>\n"
+#~ "                                </tr>\n"
+#~ "                            </table>\n"
+#~ "                        </t>\n"
+#~ "                        <hr/>\n"
+#~ "                    </t>\n"
+#~ "                    <div style=\"text-align: center; padding: 16px 0px "
+#~ "16px 0px; font-size: 14px;\">\n"
+#~ "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/"
+#~ "cart?access_token={{ object.access_token }}\" target=\"_blank\" "
+#~ "style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-"
+#~ "decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+#~ "                            Resume order\n"
+#~ "                        </a>\n"
+#~ "                    </div>\n"
+#~ "                    <t t-set=\"company\" t-value=\"object.company_id or "
+#~ "object.user_id.company_id or user.company_id\"/>\n"
+#~ "                    <div style=\"text-align: center;\"><strong>Thank you "
+#~ "for shopping with <t t-out=\"company.name or ''\">My Company (San "
+#~ "Francisco)</t>!</strong></div>\n"
+#~ "                </td></tr>\n"
+#~ "            </table>\n"
+#~ "        </td>\n"
+#~ "    </tr>\n"
+#~ "</tbody>\n"
+#~ "</table>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+#~ "style=\"padding: 0px; background-color: white; color: #454748; border-"
+#~ "collapse:separate;\">\n"
+#~ "    <tbody>\n"
+#~ "        <!-- CONTENT -->\n"
+#~ "        <tr>\n"
+#~ "            <td align=\"center\" style=\"min-width: 590px;\">\n"
+#~ "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+#~ "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+#~ "0px 0px 0px 0px; border-collapse:separate;\">\n"
+#~ "                    <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+#~ "                        <h1 style=\"color:#A9A9A9;\">SƏBƏTİNİZDƏ NƏSƏ VAR."
+#~ "</h1>\n"
+#~ "                        Sifarişi tamamlamaq istərdinizmi?<br/><br/>\n"
+#~ "                        <t t-if=\"object.order_line\">\n"
+#~ "                            <t t-foreach=\"object.website_order_line\" t-"
+#~ "as=\"line\">\n"
+#~ "                                <hr/>\n"
+#~ "                                <table width=\"100%\">\n"
+#~ "                                    <tr>\n"
+#~ "                                        <td style=\"padding: 10px; "
+#~ "width:150px;\">\n"
+#~ "                                            <img t-attf-src=\"/web/image/"
+#~ "product.product/{{ line.product_id.id }}/image_128\" style=\"width: "
+#~ "100px; height: 100px; object-fit: contain;\" alt=\"Məhsul şəkli\"/>\n"
+#~ "                                        </td>\n"
+#~ "                                        <td>\n"
+#~ "                                            <strong t-"
+#~ "out=\"line.product_id.display_name or ''\">[FURN_7800] Masa "
+#~ "Kombinasiyası</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Masa "
+#~ "Kombinasiyası Qara-qəhvəyi: masa + stul + siyirmə.</t>\n"
+#~ "                                        </td>\n"
+#~ "                                        <td width=\"100px\" "
+#~ "align=\"right\">\n"
+#~ "                                            <t t-"
+#~ "out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-"
+#~ "out=\"line.product_uom.name or ''\">Vahid</t>\n"
+#~ "                                        </td>\n"
+#~ "                                    </tr>\n"
+#~ "                                </table>\n"
+#~ "                            </t>\n"
+#~ "                            <hr/>\n"
+#~ "                        </t>\n"
+#~ "                        <div style=\"text-align: center; padding: 16px "
+#~ "0px 16px 0px; font-size: 14px;\">\n"
+#~ "                            <a t-attf-href=\"{{ object.get_base_url() }}/"
+#~ "shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" "
+#~ "style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-"
+#~ "decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+#~ "                                Sifarişi davam etdir\n"
+#~ "                            </a>\n"
+#~ "                        </div>\n"
+#~ "                        <t t-set=\"company\" t-value=\"object.company_id "
+#~ "or object.user_id.company_id or user.company_id\"/>\n"
+#~ "                        <div style=\"text-align: center;\"><strong><t t-"
+#~ "out=\"company.name or ''\">My Company (San Francisco)</t> ilə alış-veriş "
+#~ "etdiyiniz üçün təşəkkür edirik!</strong></div>\n"
+#~ "                    </td></tr>\n"
+#~ "                </table>\n"
+#~ "            </td>\n"
+#~ "        </tr>\n"
+#~ "    </tbody>\n"
+#~ "</table>\n"
+#~ "            "
+
+#~ msgid "<u>Terms and Conditions</u>"
+#~ msgstr "<u>Şərtlər və Qaydalar</u>"
+
+#~ msgid "Abandoned Carts to Recover"
+#~ msgstr "Bərpa etmək üçün Tərk edilmiş Səbətlər"
+
+#~ msgid "All pricelists"
+#~ msgstr "Bütün Qiymət cədvəlləri"
+
+#~ msgid "Apartment, suite, etc."
+#~ msgstr "Mənzil, otaq və s."
+
+#~ msgid "Back to delivery"
+#~ msgstr "Çatdırılmaya qayıt"
+
+#~ msgid "Be aware!"
+#~ msgstr "Diqqətli olun!"
+
+#~ msgid "Billing:"
+#~ msgstr "Ödəniş:"
+
+#~ msgid "Buttons"
+#~ msgstr "Düymələr"
+
+#~ msgid "Carts are flagged as abandoned after this delay."
+#~ msgstr "Bu gecikmədən sonra səbətlər tərk edilmiş olaraq işarələnir."
+
+#~ msgid ""
+#~ "Changing VAT number is not allowed once document(s) have been issued for "
+#~ "your account. Please contact us directly for this operation."
+#~ msgstr ""
+#~ "VÖEN nömrəsini dəyişdirmək, sənəd(lər) hesabınız üçün təqdim edildikdən "
+#~ "sonra mümkün deyil. Bu əməliyyat üçün birbaşa bizimlə əlaqə saxlayın."
+
+#~ msgid ""
+#~ "Changing company name is not allowed once document(s) have been issued "
+#~ "for your account. Please contact us directly for this operation."
+#~ msgstr ""
+#~ "Şirkət adını dəyişdirmək, sənəd(lər) hesabınız üçün təqdim edildikdən "
+#~ "sonra mümkün deyil. Bu əməliyyat üçün birbaşa bizimlə əlaqə saxlayın."
+
+#~ msgid ""
+#~ "Changing your name is not allowed once invoices have been issued for your "
+#~ "account. Please contact us directly for this operation."
+#~ msgstr ""
+#~ "Hesabınız üçün hesab-fakturalar dərc edildikdən sonra adınızın "
+#~ "dəyişdirilməsinə icazə verilmir. Bu əməliyyat üzrə birbaşa olaraq bizimlə "
+#~ "əlaqə saxlayın."
+
+#~ msgid "Choose a delivery method"
+#~ msgstr "Çatdırılma üsulunu seçin"
+
+#~ msgid "City"
+#~ msgstr "Şəhər"
+
+#~ msgid "Click here"
+#~ msgstr "Buraya kliklə"
+
+#~ msgid "Collapsible sidebar"
+#~ msgstr "Yığıla bilən yan panel"
+
+#~ msgid "Compute shipping costs and ship with DHL"
+#~ msgstr "Çatdırılma xərclərini hesabla və DHL ilə göndər"
+
+#~ msgid "Compute shipping costs and ship with FedEx"
+#~ msgstr "Çatdırılma xərclərini hesabla və FedEx ilə göndər"
+
+#~ msgid "Compute shipping costs and ship with UPS"
+#~ msgstr "Çatdırılma xərclərini hesabla və UPS ilə göndər"
+
+#~ msgid "Compute shipping costs and ship with USPS"
+#~ msgstr "Çatdırılma xərclərini hesabla və USPS ilə göndər"
+
+#~ msgid "Continue checkout"
+#~ msgstr "Ödənişə davam et"
+
+#~ msgid "Continue shopping"
+#~ msgstr "Alış-verişə davam et"
+
+#~ msgid "Country"
+#~ msgstr "Ölkə"
+
+#~ msgid ""
+#~ "Customer needs to be signed in otherwise the mail address is not "
+#~ "known.     \n"
+#~ "\n"
+#~ "- If a potential customer creates one or more abandoned checkouts and "
+#~ "then completes a sale before the recovery email gets sent, then the email "
+#~ "won't be sent.     \n"
+#~ "\n"
+#~ "- If user has manually sent a recovery email, the mail will not be sent a "
+#~ "second time     \n"
+#~ "\n"
+#~ "- If a payment processing error occurred when the customer tried to "
+#~ "complete their checkout, then the email won't be sent.     \n"
+#~ "\n"
+#~ "- If your shop does not support shipping to the customer's address, then "
+#~ "the email won't be sent.     \n"
+#~ "\n"
+#~ "- If none of the products in the checkout are available for purchase "
+#~ "(empty inventory, for example), then the email won't be sent.     \n"
+#~ "\n"
+#~ "- If all the products in the checkout are free, and the customer does not "
+#~ "visit the shipping page to add a shipping fee or the shipping fee is also "
+#~ "free, then the email won't be sent."
+#~ msgstr ""
+#~ "Müştəri sayta daxil olmadan, e-poçt ünvanı məlum olmayacaq.     \n"
+#~ "\n"
+#~ "- Əgər potensial müştəri bir və ya bir neçə tərk edilmiş ödənişi yaradıb, "
+#~ "lakin bərpa e-poçtu göndərilmədən əvvəl satış tamamlanarsa, o zaman e-"
+#~ "poçt göndərilməyəcək.     \n"
+#~ "\n"
+#~ "- Əgər istifadəçi bərpa e-poçtunu əl ilə göndəribsə, e-poçt ikinci dəfə "
+#~ "göndərilməyəcək.     \n"
+#~ "\n"
+#~ "- Əgər müştəri ödənişi tamamlayarkən ödəniş prosesi xətası baş veribsə, e-"
+#~ "poçt göndərilməyəcək.     \n"
+#~ "\n"
+#~ "- Əgər mağazanız müştərinin ünvanına çatdırılmanı dəstəkləmirsə, e-poçt "
+#~ "göndərilməyəcək.     \n"
+#~ "\n"
+#~ "- Əgər ödənişdəki məhsullardan heç biri alınabilən deyil (məsələn, anbar "
+#~ "boşdursa), o zaman e-poçt göndərilməyəcək.     \n"
+#~ "\n"
+#~ "- Əgər ödənişdəki bütün məhsullar pulsuzdursa və müştəri göndərmə haqqını "
+#~ "əlavə etmək üçün göndərmə səhifəsini ziyarət etməyibsə və ya göndərmə "
+#~ "haqqı da pulsuzdursa, e-poçt göndərilməyəcək."
+
+#~ msgid "DHL Express Connector"
+#~ msgstr "DHL Express Bağlayıcı"
+
+#~ msgid "DHL Shipping Methods"
+#~ msgstr "DHL Çatdırılma Metodları"
+
+#~ msgid "Default Pricelist if any"
+#~ msgstr "Default Qiymət Cədvəli əgər varsa"
+
+#~ msgid "Delivery &amp;"
+#~ msgstr "Təslimat &amp;"
+
+#~ msgid ""
+#~ "Drag building blocks here to customize the header for\n"
+#~ "                                    \""
+#~ msgstr ""
+#~ "Başlığı fərdiləşdirmək üçün blokları buraya sürükləyin\n"
+#~ "                                    \""
+
+#~ msgid "Edit this address"
+#~ msgstr "Bu Ünvanı dəyiş"
+
+#~ msgid "Email"
+#~ msgstr "Elektron poçt"
+
+#~ msgid "Extra Images"
+#~ msgstr "Əlavə Şəkillər"
+
+#~ msgid "Facebook"
+#~ msgstr "Facebook"
+
+#~ msgid "FedEx Shipping Methods"
+#~ msgstr "FedEx Çatdırılma Metodları"
+
+#~ msgid "Fill"
+#~ msgstr "Doldur"
+
+#~ msgid "Fill in your address"
+#~ msgstr "Ünvanınızı doldurun"
+
+#~ msgid "Fiscal Position"
+#~ msgstr "Fiskal Pozisyon"
+
+#~ msgid "Full name"
+#~ msgstr "Ad və Soyad"
+
+#~ msgid ""
+#~ "If you are ordering for an external person, please place your order via "
+#~ "the backend. If you wish to change your name or email address, please do "
+#~ "so in the account settings or contact your administrator."
+#~ msgstr ""
+#~ "Xarici şəxs üçün sifariş edirsinizsə, lütfən, sifarişinizi backend "
+#~ "vasitəsilə verin. Adınızı və ya e-poçt ünvanınızı dəyişdirmək "
+#~ "istəyirsinizsə, lütfən, hesab parametrlərində bunu edin və ya "
+#~ "administratorunuzla əlaqə saxlayın."
+
+#~ msgid "Invalid Email! Please enter a valid email address."
+#~ msgstr "Yanlış E-poçt! Etibarlı e-poçt ünvanı daxil edin."
+
+#~ msgid ""
+#~ "It is forbidden to modify a sales order which is not in draft status."
+#~ msgstr ""
+#~ "Qaralama statusunda olmayan satış sifarişini dəyişdirmək qadağandır."
+
+#~ msgid "Last Online Sales Order"
+#~ msgstr "Sonuncu Onlayn Satış Sifarişi"
+
+#~ msgid "LinkedIn"
+#~ msgstr "LinkedIn"
+
+#~ msgid "List"
+#~ msgstr "Siyahı"
+
+#~ msgid ""
+#~ "Mail only sent to signed in customers with items available for sale in "
+#~ "their cart."
+#~ msgstr ""
+#~ "Yalnız səbətində satıla bilən məhsullar olan və daxil olmuş müştərilərə e-"
+#~ "poçt göndərilir."
+
+#~ msgid "Options"
+#~ msgstr "Opsionlar"
+
+#~ msgid "Order overview"
+#~ msgstr "Sifariş icmalı"
+
+#~ msgid "Payment Information"
+#~ msgstr "Ödəniş Məlumatı"
+
+#~ msgid "Phone"
+#~ msgstr "Telefon"
+
+#~ msgid "Pinterest"
+#~ msgstr "Pinterest"
+
+#~ msgid "Price Filter"
+#~ msgstr "Qiymət Filteri"
+
+#~ msgid "Prod. Desc."
+#~ msgstr "Məhsul Təsviri"
+
+#~ msgid "Product Tags Filter"
+#~ msgstr "Məhsul Etiketləri (tags) Filteri"
+
+#~ msgid "Products List"
+#~ msgstr "Məhsulların Listi"
+
+#~ msgid "Rating"
+#~ msgstr "Qiymətləndirmə"
+
+#~ msgid "Recently Viewed Products"
+#~ msgstr "Yenicə baxış keçirilmiş Məhsullar"
+
+#~ msgid "Review Order"
+#~ msgstr "Sifarişi nəzərdən keçirin"
+
+#~ msgid "Save address"
+#~ msgstr "Ünvanı yadda saxla"
+
+#~ msgid "Search Bar"
+#~ msgstr "Axtarış paneli"
+
+#~ msgid "Share"
+#~ msgstr "Paylaşın"
+
+#~ msgid "Sign In"
+#~ msgstr "Daxil ol"
+
+#~ msgid "Sign Up"
+#~ msgstr "Qeydiyyatdan Keç"
+
+#~ msgid "Some required fields are empty."
+#~ msgstr "Bəzi tələb olunan sahələr boşdur."
+
+#~ msgid "State / Province"
+#~ msgstr "Ştat / Vilayət"
+
+#~ msgid "Street and Number"
+#~ msgstr "Küçə və nömrəsi"
+
+#~ msgid "Text to show instead of price"
+#~ msgstr "Qiymət əvəzinə göstərilən Yazı"
+
+#~ msgid "Top Bar"
+#~ msgstr "Ən yuxarı Panel"
+
+#~ msgid "USPS Shipping Methods"
+#~ msgstr "USPS Çatdırma Metodları"
+
+#~ msgid "VAT"
+#~ msgstr "ƏDV"
+
+#~ msgid "Variants"
+#~ msgstr "Çeşidlər"
+
+#~ msgid "Visible on eCommerce"
+#~ msgstr "E-ticarətdə görünür"
+
+#~ msgid "WhatsApp"
+#~ msgstr "WhatsApp"
+
+#~ msgid "Whether the tag is displayed on the eCommerce."
+#~ msgstr "E-Ticarətdə tag görünsünmü"
+
+#~ msgid ""
+#~ "You are editing your <b>delivery and billing</b> addresses\n"
+#~ "                                        at the same time!<br/>\n"
+#~ "                                        If you want to modify your "
+#~ "billing address, create a"
+#~ msgstr ""
+#~ "Siz eyni zamanda <b>çatdırılma və faktura</b> ünvanlarınızı redaktə "
+#~ "edirsiniz!<br/> Əgər faktura ünvanınızı dəyişdirmək istəyirsinizsə, "
+#~ "yaradın"
+
+#~ msgid ""
+#~ "Your Dynamic Snippet will be displayed here...\n"
+#~ "                                This message is displayed because youy "
+#~ "did not provide both a filter and a template to use."
+#~ msgstr ""
+#~ "Sizin Dinamik Snippet-iniz burada nümayiş olunacaq...\n"
+#~ "                                Bu mesaj ona görə göstərilir ki, siz hər "
+#~ "iki filter və şablonu istifadə üçün təmin etməmisiniz."
+
+#~ msgid "Zip Code"
+#~ msgstr "Poçt İndeksi"
+
+#~ msgid "if you want to merge your previous cart into current cart."
+#~ msgstr ""
+#~ "əgər köhnə səbətinizlə indiki səbətinizi birləşdirmək istəyirsinizsə."
+
+#~ msgid ""
+#~ "if you want to restore your previous cart. Your current cart will be "
+#~ "replaced with your previous cart."
+#~ msgstr ""
+#~ "əgər bir əvvəlki səbətinizi bərpa etmək istəyirsinizsə. Sizin indiki "
+#~ "səbətiniz bir əvvəlki ilə əvəz olunacaq."
+
+#~ msgid "new address"
+#~ msgstr "yeni ünvan"
+
+#~ msgid "to follow your order."
+#~ msgstr "sifarişinizi izləmək üçün"

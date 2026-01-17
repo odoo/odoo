@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-11-16 22:50+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -21,10 +21,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
-"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
-"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
-"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: hr_skills
@@ -315,14 +315,14 @@ msgstr "Початкова школа Craigmore South"
 #. module: hr_skills
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
-msgid "Create a new entry"
-msgstr "Створити новий запис"
+msgid "Create Resume Lines"
+msgstr ""
 
 #. module: hr_skills
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
-msgid "Create new Skills"
-msgstr "Створити нові навички"
+msgid "Create Skills"
+msgstr ""
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__create_uid
@@ -485,14 +485,20 @@ msgid "Display"
 msgstr "Відобразити"
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_report_hr_skills_report_employee_cv__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_res_users__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_resource_resource__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
@@ -547,11 +553,6 @@ msgstr "Email-маркетинг"
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_report_view_search
 msgid "Employee"
 msgstr "Співробітник"
-
-#. module: hr_skills
-#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__display_name
-msgid "Employee Name"
-msgstr "ПІБ співробітника"
 
 #. module: hr_skills
 #: model:ir.actions.report,name:hr_skills.action_report_employee_cv
@@ -814,7 +815,9 @@ msgid "Human resources officer"
 msgstr "Керівник кадрів"
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__id
@@ -823,6 +826,9 @@ msgstr "Керівник кадрів"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__id
+#: model:ir.model.fields,field_description:hr_skills.field_report_hr_skills_report_employee_cv__id
+#: model:ir.model.fields,field_description:hr_skills.field_res_users__id
+#: model:ir.model.fields,field_description:hr_skills.field_resource_resource__id
 msgid "ID"
 msgstr "ID"
 
@@ -882,8 +888,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Якщо активне поле встановлено як Помилкове, це дозволить вам приховати запис"
-" кадрів, не видаливши його."
+"Якщо активне поле встановлено як Помилкове, це дозволить вам приховати запис "
+"кадрів, не видаливши його."
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_indonesian
@@ -934,18 +940,23 @@ msgstr "Дизайнер ювелірних прикрас"
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_line_admin_4
 msgid ""
 "Job position: Development team leader\n"
-"- Supported technical operations with investigating and correcting varied production support issues (Java, Perl, Shell scripts, SQL).\n"
-"- Led quality assurance planning for multiple concurrent projects relative to overall system architecture or trading system changes/new developments.\n"
-"- Configured and released business critical alpha and risk models using MATLAB and SQL with inputs from Portfolio Managers."
+"- Supported technical operations with investigating and correcting varied "
+"production support issues (Java, Perl, Shell scripts, SQL).\n"
+"- Led quality assurance planning for multiple concurrent projects relative "
+"to overall system architecture or trading system changes/new developments.\n"
+"- Configured and released business critical alpha and risk models using "
+"MATLAB and SQL with inputs from Portfolio Managers."
 msgstr ""
 
 #. module: hr_skills
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_line_admin_3
 msgid ""
 "Job position: Product manager\n"
-"- Coordinated and managed software deployment across five system environments from development to production.\n"
+"- Coordinated and managed software deployment across five system "
+"environments from development to production.\n"
 "- Developed stored procedures to assist Java level programming efforts.\n"
-"- Developed multiple renewable energy plant architectures, both commercial installations and defense-related."
+"- Developed multiple renewable energy plant architectures, both commercial "
+"installations and defense-related."
 msgstr ""
 
 #. module: hr_skills
@@ -1133,10 +1144,12 @@ msgstr "Мартін, Стенлі і Дункан"
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_line_admin_1
 msgid ""
 "Master in Electrical engineering\n"
-"            Master thesis: Better grid management and control through machine learning"
+"            Master thesis: Better grid management and control through "
+"machine learning"
 msgstr ""
 "Магістр електротехніки\n"
-"             Магістерська робота: Покращене управління мережею та контроль за допомогою машинного навчання"
+"             Магістерська робота: Покращене управління мережею та контроль "
+"за допомогою машинного навчання"
 
 #. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_matlab
@@ -1807,9 +1820,21 @@ msgid "Teamwork"
 msgstr ""
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__technical_is_new_default
+msgid "Technical Is New Default"
+msgstr ""
+
+#. module: hr_skills
 #: model:hr.skill,name:hr_skills.hr_skill_telugu
 msgid "Telugu"
 msgstr "Телугу"
+
+#. module: hr_skills
+#. odoo-python
+#: code:addons/hr_skills/models/hr_skill_type.py:0
+msgid ""
+"The following skills type must contain at least one skill and one level: %s"
+msgstr ""
 
 #. module: hr_skills
 #. odoo-python
@@ -1836,9 +1861,7 @@ msgstr "Терапевт, логопед"
 #. module: hr_skills
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
-msgid ""
-"There are no resume lines on this employee.\n"
-"                        Why not add a new one?"
+msgid "There are no resume lines on this employee."
 msgstr ""
 
 #. module: hr_skills
@@ -1896,12 +1919,12 @@ msgid "Turkish"
 msgstr "Турецька"
 
 #. module: hr_skills
-#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill__unique_skill
+#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_HrEmployeeSkill__unique_skill
 msgid "Two levels for the same skill is not allowed"
 msgstr "Два рівні для однієї і тієї ж навички не допускаються"
 
 #. module: hr_skills
-#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_log__unique_skill_log
+#: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill_log_HrEmployeeSkillLog__unique_skill_log
 msgid "Two levels for the same skill on the same day is not allowed"
 msgstr "Два рівні для однієї й тієї ж навички в один день не допускаються"
 
@@ -1971,12 +1994,6 @@ msgid "Whitsunday Anglican School"
 msgstr "Англіканська школа Whitsunday"
 
 #. module: hr_skills
-#. odoo-javascript
-#: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
-msgid "Why not try adding some ?"
-msgstr "Чому б не спробувати додати трохи?"
-
-#. module: hr_skills
 #: model:hr.resume.line,name:hr_skills.employee_resume_jth_wilkinson_plc
 msgid "Wilkinson PLC"
 msgstr "Wilkinson PLC"
@@ -2041,3 +2058,15 @@ msgstr "напр., Odoo Inc."
 #: model_terms:ir.ui.view,arch_db:hr_skills.report_employee_cv_sidepanel
 msgid "www.demo.com"
 msgstr "www.demo.com"
+
+#~ msgid "Create a new entry"
+#~ msgstr "Створити новий запис"
+
+#~ msgid "Create new Skills"
+#~ msgstr "Створити нові навички"
+
+#~ msgid "Employee Name"
+#~ msgstr "ПІБ співробітника"
+
+#~ msgid "Why not try adding some ?"
+#~ msgstr "Чому б не спробувати додати трохи?"

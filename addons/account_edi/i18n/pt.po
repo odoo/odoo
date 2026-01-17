@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-11-15 11:03+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -85,14 +85,20 @@ msgstr "Nível de Bloqueio"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
 msgid ""
-"Blocks the current operation of the document depending on the error severity:\n"
-"  * Info: the document is not blocked and everything is working as it should.\n"
-"  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
-"  * Error: there is an error that blocks the current Electronic Invoicing operation."
+"Blocks the current operation of the document depending on the error "
+"severity:\n"
+"  * Info: the document is not blocked and everything is working as it "
+"should.\n"
+"  * Warning: there is an error that doesn't prevent the current Electronic "
+"Invoicing operation to succeed.\n"
+"  * Error: there is an error that blocks the current Electronic Invoicing "
+"operation."
 msgstr ""
 "Bloqueia a operação atual do documento dependendo da gravidade do erro:\n"
-"* Info: o documento não está bloqueado e tudo está funcionando como deveria.\n"
-"* Aviso: há um erro que não impede que a operação atual de Fatura Eletrónica seja bem-sucedida.\n"
+"* Info: o documento não está bloqueado e tudo está funcionando como "
+"deveria.\n"
+"* Aviso: há um erro que não impede que a operação atual de Fatura Eletrónica "
+"seja bem-sucedida.\n"
 "* Erro: há um erro que bloqueia a operação da Fatura Eletrónica atual."
 
 #. module: account_edi
@@ -141,6 +147,12 @@ msgstr "Criado em"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__display_name
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__display_name
+#: model:ir.model.fields,field_description:account_edi.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_edi.field_account_move__display_name
+#: model:ir.model.fields,field_description:account_edi.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:account_edi.field_account_resequence_wizard__display_name
+#: model:ir.model.fields,field_description:account_edi.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:account_edi.field_ir_attachment__display_name
 msgid "Display Name"
 msgstr "Nome a Exibir"
 
@@ -276,6 +288,12 @@ msgstr "Quantas EDIs têm erro para esta movimentação?"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__id
+#: model:ir.model.fields,field_description:account_edi.field_account_journal__id
+#: model:ir.model.fields,field_description:account_edi.field_account_move__id
+#: model:ir.model.fields,field_description:account_edi.field_account_move_send__id
+#: model:ir.model.fields,field_description:account_edi.field_account_resequence_wizard__id
+#: model:ir.model.fields,field_description:account_edi.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:account_edi.field_ir_attachment__id
 msgid "ID"
 msgstr "Id."
 
@@ -407,8 +425,7 @@ msgstr "A fatura será enviada em breve para"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
 msgid ""
-"The text of the last error that happened during Electronic Invoice "
-"operation."
+"The text of the last error that happened during Electronic Invoice operation."
 msgstr ""
 "O texto do último erro ocorrido durante a operação da fatura eletrônica."
 
@@ -427,8 +444,8 @@ msgstr "Este documento já está sendo enviado por outro processo. "
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid ""
-"This invoice was canceled while the EDIs %s still had a pending cancellation"
-" request."
+"This invoice was canceled while the EDIs %s still had a pending cancellation "
+"request."
 msgstr ""
 "Essa fatura foi cancelada enquanto os EDIs %s ainda tinha uma solicitação de "
 "cancelamento pendente."
@@ -455,13 +472,13 @@ msgstr "Aviso"
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid ""
-"You can't edit the following journal entry %s because an electronic document"
-" has already been sent. Please use the 'Request EDI Cancellation' button "
+"You can't edit the following journal entry %s because an electronic document "
+"has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
 "Não é possível editar o seguinte lançamento de diário %s porque um documento "
-"eletrônico já foi enviado. Em vez disso, use o botão "
-"\"Solicitar cancelamento de EDI\"."
+"eletrônico já foi enviado. Em vez disso, use o botão \"Solicitar "
+"cancelamento de EDI\"."
 
 #. module: account_edi
 #. odoo-python

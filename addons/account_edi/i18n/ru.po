@@ -1,23 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_edi
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: account_edi
 #. odoo-python
@@ -60,8 +62,7 @@ msgid ""
 "Are you sure you want to cancel this invoice without waiting for the EDI "
 "document to be canceled?"
 msgstr ""
-"Вы уверены, что хотите отменить этот счёт, не дожидаясь отмены документа "
-"EDI?"
+"Вы уверены, что хотите отменить этот счёт, не дожидаясь отмены документа EDI?"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -77,15 +78,21 @@ msgstr "Уровень блокировки"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
 msgid ""
-"Blocks the current operation of the document depending on the error severity:\n"
-"  * Info: the document is not blocked and everything is working as it should.\n"
-"  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
-"  * Error: there is an error that blocks the current Electronic Invoicing operation."
+"Blocks the current operation of the document depending on the error "
+"severity:\n"
+"  * Info: the document is not blocked and everything is working as it "
+"should.\n"
+"  * Warning: there is an error that doesn't prevent the current Electronic "
+"Invoicing operation to succeed.\n"
+"  * Error: there is an error that blocks the current Electronic Invoicing "
+"operation."
 msgstr ""
 "Блокирует текущую операцию документа в зависимости от серьезности ошибки:\n"
 "  * Информация: документ не заблокирован, и всё работает как должно.\n"
-"  * Предупреждение: есть ошибка, которая не препятствует успешному выполнению текущей операции электронного выставления счетов.\n"
-"  * Ошибка: есть ошибка, которая блокирует текущую операцию электронного выставления счетов."
+"  * Предупреждение: есть ошибка, которая не препятствует успешному "
+"выполнению текущей операции электронного выставления счетов.\n"
+"  * Ошибка: есть ошибка, которая блокирует текущую операцию электронного "
+"выставления счетов."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -410,8 +417,7 @@ msgstr "Счет скоро будет отправлен"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
 msgid ""
-"The text of the last error that happened during Electronic Invoice "
-"operation."
+"The text of the last error that happened during Electronic Invoice operation."
 msgstr "Текст последней ошибки при работе с электронным счетом."
 
 #. module: account_edi
@@ -429,8 +435,8 @@ msgstr "Этот документ уже отправляется другим �
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid ""
-"This invoice was canceled while the EDIs %s still had a pending cancellation"
-" request."
+"This invoice was canceled while the EDIs %s still had a pending cancellation "
+"request."
 msgstr "Этот счёт отменён, но запрос на отмену для EDI %s ещё не обработан."
 
 #. module: account_edi
@@ -455,8 +461,8 @@ msgstr "Предупреждение"
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid ""
-"You can't edit the following journal entry %s because an electronic document"
-" has already been sent. Please use the 'Request EDI Cancellation' button "
+"You can't edit the following journal entry %s because an electronic document "
+"has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
 "Вы не можете изменить записи журнала %s, так как электронный документ уже "

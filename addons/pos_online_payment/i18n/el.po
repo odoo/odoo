@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_online_payment
-# 
+#
 # Translators:
 # Timos Zacharatos <kokkinopioupiou@hotmail.com>, 2024
 # George Tarasidis <george_tarasidis@yahoo.com>, 2024
 # Kostas Goutoudis <goutoudis@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Anastasia Mimou, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Anastasia Mimou, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_online_payment
@@ -30,8 +30,7 @@ msgstr ""
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
-msgid ""
-"<strong>Error:</strong> There was a problem during the payment process."
+msgid "<strong>Error:</strong> There was a problem during the payment process."
 msgstr ""
 
 #. module: pos_online_payment
@@ -49,8 +48,7 @@ msgstr ""
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-msgid ""
-"A validation payment cannot be used for a Point of Sale online payment."
+msgid "A validation payment cannot be used for a Point of Sale online payment."
 msgstr ""
 
 #. module: pos_online_payment
@@ -79,7 +77,7 @@ msgstr "Ποσό"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "Amount:"
 msgstr "Ποσό:"
 
@@ -117,8 +115,30 @@ msgid ""
 msgstr ""
 
 #. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider
 msgid "Has An Online Payment Provider"
+msgstr ""
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_payment_transaction__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__id
+msgid "ID"
 msgstr ""
 
 #. module: pos_online_payment
@@ -195,7 +215,7 @@ msgstr "Αναφορά Εντολής"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "Order reference:"
 msgstr ""
 
@@ -263,19 +283,19 @@ msgstr "Επεξεργάστηκε από"
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "QR Code to pay"
 msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "Scan the QR code to pay"
 msgstr ""
 
 #. module: pos_online_payment
 #. odoo-javascript
-#: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
 msgid "Scan to pay"
 msgstr ""
 
@@ -284,6 +304,12 @@ msgstr ""
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Server error"
 msgstr "Σφάλμα διακομιστή"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "The %s already has one online payment."
+msgstr ""
 
 #. module: pos_online_payment
 #. odoo-python

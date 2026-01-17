@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* crm_iap_mine
-# 
+#
 # Translators:
 # yael terner, 2024
 # שהאב חוסיין <shhab89@gmail.com>, 2024
@@ -16,20 +16,21 @@
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
 # or balmas, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:40+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: he\n"
-"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % "
+"1 == 0) ? 1: 2;\n"
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -50,7 +51,8 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Dear,</p>\n"
 "    <p>There are no more credits on your IAP Lead Generation account.<br/>\n"
-"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br/></p>\n"
+"    You can charge your IAP Lead Generation account in the settings of the "
+"CRM app.<br/></p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
@@ -58,7 +60,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>יקר,</p>\n"
 "    <p>אין עוד נקודות זכות בחשבון יצירת לידים IAP  שלך.<br/>\n"
-"    אתה יכול לחייב את חשבון יצירת לידים IAP שלך בהגדרות של יישום ניהול קשרי לקוחות.<br/></p>\n"
+"    אתה יכול לחייב את חשבון יצירת לידים IAP שלך בהגדרות של יישום ניהול קשרי "
+"לקוחות.<br/></p>\n"
 "    <p>כל טוב,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
@@ -203,6 +206,11 @@ msgid "Create a Lead Mining Request"
 msgstr "צור בקשת כריית לידים"
 
 #. module: crm_iap_mine
+#: model:ir.model,website_form_label:crm_iap_mine.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__create_uid
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__create_uid
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__create_uid
@@ -236,6 +244,7 @@ msgstr "תגיות ברירת מחדל"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_name
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__display_name
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__display_name
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__display_name
 msgid "Display Name"
 msgstr "שם לתצוגה"
 
@@ -381,6 +390,7 @@ msgstr "הודעה על יצירת לידים של IAP"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__id
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__id
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__id
+#: model:ir.model.fields,field_description:crm_iap_mine.field_crm_lead__id
 msgid "ID"
 msgstr "מזהה"
 
@@ -433,6 +443,11 @@ msgid "Last Updated on"
 msgstr "עדכון אחרון ב"
 
 #. module: crm_iap_mine
+#: model:ir.model,name:crm_iap_mine.model_crm_lead
+msgid "Lead"
+msgstr ""
+
+#. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_contacts_credits
 msgid "Lead Contacts Credits"
 msgstr "נקודות זכות אנשי קשר ליד"
@@ -465,11 +480,6 @@ msgid "Lead Total Credits"
 msgstr "סה\"כ נקודות זכות ליד"
 
 #. module: crm_iap_mine
-#: model:ir.model,name:crm_iap_mine.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "ליד/הזדמנות"
-
-#. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__lead_type__lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Leads"
@@ -483,8 +493,7 @@ msgstr "משפטי"
 #. module: crm_iap_mine
 #. odoo-javascript
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
-msgid ""
-"Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
+msgid "Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
 msgstr ""
 
 #. module: crm_iap_mine
@@ -771,8 +780,8 @@ msgstr "סוג"
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 msgid ""
-"Up to %(credit_count)d additional credits will be consumed to identify "
-"%(contact_count)d contacts per company."
+"Up to %(credit_count)d additional credits will be consumed to identify %"
+"(contact_count)d contacts per company."
 msgstr ""
 "עד ל%(credit_count)d קרדיטים נוספים  ייצרכו לזיהוי %(contact_count)d אנשי "
 "קשר לכל חברה."
@@ -818,3 +827,6 @@ msgstr "מנהל"
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "to"
 msgstr "ל"
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "ליד/הזדמנות"

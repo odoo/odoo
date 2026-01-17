@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* spreadsheet_dashboard
-# 
+#
 # Translators:
 # NumerSpiral HBG, 2025
 # Wil Odoo, 2025
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 07:49+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: spreadsheet_dashboard
 #. odoo-python
@@ -87,6 +88,7 @@ msgstr "Criado em"
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__dashboard_ids
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__dashboard_id
+#: model:res.groups.privilege,name:spreadsheet_dashboard.res_groups_privilege_dashboard
 msgid "Dashboard"
 msgstr "Painel"
 
@@ -96,6 +98,9 @@ msgid "Dashboard Group"
 msgstr "Grupo de Painéis"
 
 #. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/assets/dashboard_action_loader.js:0
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.js:0
 #: model:ir.actions.act_window,name:spreadsheet_dashboard.spreadsheet_dashboard_action_configuration_dashboards
 #: model:ir.actions.client,name:spreadsheet_dashboard.ir_actions_dashboard_action
 #: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_menu_configuration_dashboards
@@ -120,6 +125,23 @@ msgstr "Nome a Exibir"
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__excel_export
 msgid "Excel Export"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_loader.js:0
+msgid "FAVORITES"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__favorite_user_ids
+msgid "Favorite Users"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/pivot/clickable_cell.js:0
+msgid "Filter on this value"
 msgstr ""
 
 #. module: spreadsheet_dashboard
@@ -148,6 +170,16 @@ msgstr "Recursos Humanos"
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__id
 msgid "ID"
 msgstr "Id."
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,help:spreadsheet_dashboard.field_spreadsheet_dashboard__is_favorite
+msgid "Indicates whether the dashboard is favorited by the current user"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__is_favorite
+msgid "Is Favorite"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__is_published
@@ -206,11 +238,17 @@ msgstr "Nenhum painel disponível"
 #. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_figure_container/mobile_figure_container.xml:0
 msgid ""
-"Only chart figures are displayed in small screens but this dashboard doesn't"
-" contain any"
+"Only chart figures are displayed in small screens but this dashboard doesn't "
+"contain any"
 msgstr ""
 "Apenas são apresentados os valores dos gráficos em ecrãs de dimensões "
 "reduzidas mas este painel não contém nenhum"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/list/clickable_cell.js:0
+msgid "Open record"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__published_dashboard_ids
@@ -221,6 +259,12 @@ msgstr ""
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_sales
 msgid "Sales"
 msgstr "Vendas"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/pivot/clickable_cell.js:0
+msgid "See records"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__sequence
@@ -268,9 +312,25 @@ msgid "Thumbnail"
 msgstr "Miniatura"
 
 #. module: spreadsheet_dashboard
+#. odoo-javascript
+#: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
+msgid "Toggle favorite"
+msgstr ""
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_share__full_url
 msgid "URL"
 msgstr "URL"
+
+#. module: spreadsheet_dashboard
+#: model:ir.model.fields,help:spreadsheet_dashboard.field_spreadsheet_dashboard__favorite_user_ids
+msgid "Users who have favorited this dashboard"
+msgstr ""
+
+#. module: spreadsheet_dashboard
+#: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_view_list
+msgid "Visible to all"
+msgstr ""
 
 #. module: spreadsheet_dashboard
 #: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_website

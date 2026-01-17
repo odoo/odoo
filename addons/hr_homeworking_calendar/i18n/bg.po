@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_homeworking_calendar
-# 
+#
 # Translators:
 # Petko Karamotchev, 2024
 # Ивайло Малинов <iv.malinov@gmail.com>, 2024
@@ -11,19 +11,19 @@
 # Maria Boyadjieva <marabo2000@gmail.com>, 2024
 # Veselina Slavkova, 2025
 # Martin Dinovski, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-29 00:00+0000\n"
 "Last-Translator: Martin Dinovski, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_homeworking_calendar
@@ -60,6 +60,11 @@ msgid "Cover Image"
 msgstr ""
 
 #. module: hr_homeworking_calendar
+#: model:ir.model,website_form_label:hr_homeworking_calendar.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: hr_homeworking_calendar
 #: model:ir.model.fields,field_description:hr_homeworking_calendar.field_homework_location_wizard__create_uid
 msgid "Created by"
 msgstr "Създаден от"
@@ -81,6 +86,8 @@ msgstr ""
 
 #. module: hr_homeworking_calendar
 #: model:ir.model.fields,field_description:hr_homeworking_calendar.field_homework_location_wizard__display_name
+#: model:ir.model.fields,field_description:hr_homeworking_calendar.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_homeworking_calendar.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Име за показване"
 
@@ -96,6 +103,8 @@ msgstr "Име на служител"
 
 #. module: hr_homeworking_calendar
 #: model:ir.model.fields,field_description:hr_homeworking_calendar.field_homework_location_wizard__id
+#: model:ir.model.fields,field_description:hr_homeworking_calendar.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_homeworking_calendar.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -110,6 +119,8 @@ msgid "Last Updated on"
 msgstr "Последно актуализирано на"
 
 #. module: hr_homeworking_calendar
+#. odoo-javascript
+#: code:addons/hr_homeworking_calendar/static/src/calendar/common/calendar_common_renderer.xml:0
 #: model:ir.model.fields,field_description:hr_homeworking_calendar.field_homework_location_wizard__work_location_id
 #: model_terms:ir.ui.view,arch_db:hr_homeworking_calendar.homework_location_wizard_view_form
 msgid "Location"
@@ -126,13 +137,17 @@ msgid "Repeat every"
 msgstr "Повтаряйте всеки"
 
 #. module: hr_homeworking_calendar
+#. odoo-javascript
+#: code:addons/hr_homeworking_calendar/static/src/calendar/common/calendar_common_renderer.xml:0
+msgid "Set"
+msgstr ""
+
+#. module: hr_homeworking_calendar
 #: model:ir.model,name:hr_homeworking_calendar.model_homework_location_wizard
 msgid "Set Homework Location Wizard"
 msgstr ""
 
 #. module: hr_homeworking_calendar
-#. odoo-javascript
-#: code:addons/hr_homeworking_calendar/static/src/calendar/common/calendar_common_renderer.xml:0
 #: model:ir.actions.act_window,name:hr_homeworking_calendar.set_location_wizard_action
 #: model_terms:ir.ui.view,arch_db:hr_homeworking_calendar.homework_location_wizard_view_form
 msgid "Set Location"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, "
 "2022\n"
@@ -49,6 +49,11 @@ msgid "Create a new customer"
 msgstr "Kreiraj novog kupca"
 
 #. module: sale_crm
+#: model:ir.model,website_form_label:sale_crm.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_quotation_partner
 msgid "Create new or use existing Customer on new Quotation"
 msgstr ""
@@ -74,7 +79,10 @@ msgid "Customer"
 msgstr "Kupac"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__display_name
 msgid "Display Name"
 msgstr "Naziv za prikaz"
 
@@ -84,14 +92,18 @@ msgid "Do not link to a customer"
 msgstr "Nemoj povezivati sa kupcem"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
-msgid "ID"
-msgstr "ID"
+#. odoo-python
+#: code:addons/sale_crm/models/crm_lead.py:0
+msgid "Expected revenue has been updated based on the linked Sales Orders."
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
-msgid "Invoiced in Sales Orders Target"
-msgstr ""
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__id
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__id
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
@@ -105,8 +117,8 @@ msgstr "Poslednje ažuriranje dana"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Lid/Prodajna prilika"
+msgid "Lead"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
@@ -198,15 +210,16 @@ msgid "Untaxed Total of Confirmed Orders"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "User"
-msgstr "Korisnik"
-
-#. module: sale_crm
 #. odoo-python
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 msgid "You can only apply this action from a lead."
 msgstr ""
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "Lid/Prodajna prilika"
+
+#~ msgid "User"
+#~ msgstr "Korisnik"
 
 #~ msgid "Last Modified on"
 #~ msgstr "Poslednja izmena dana"

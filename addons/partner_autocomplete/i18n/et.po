@@ -1,31 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* partner_autocomplete
-# 
+#
 # Translators:
 # Stevin Lilla, 2024
 # Triine Aavik <triine@avalah.ee>, 2024
 # Anna, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:37+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Anna, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__additional_info
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__additional_info
-msgid "Additional info"
-msgstr "Lisainfo"
 
 #. module: partner_autocomplete
 #: model:iap.service,description:partner_autocomplete.iap_service_partner_autocomplete
@@ -44,13 +38,6 @@ msgid "Companies"
 msgstr "Ettevõtted"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__partner_gid
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__partner_gid
-msgid "Company database ID"
-msgstr "Ettevõtte andmebaasi ID"
-
-#. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_config_settings
 msgid "Config Settings"
 msgstr "Seadistused"
@@ -61,17 +48,16 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__create_uid
-msgid "Created by"
-msgstr "Loonud"
+#: model:ir.model,website_form_label:partner_autocomplete.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__create_date
-msgid "Created on"
-msgstr "Loodud"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_iap_autocomplete_api__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_ir_http__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Kuvatav nimi"
 
@@ -102,7 +88,11 @@ msgid "IAP Partner Autocomplete API"
 msgstr "IAP partneri automaatse täienduse API"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_iap_autocomplete_api__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_ir_http__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -110,21 +100,6 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__partner_autocomplete_insufficient_credit
 msgid "Insufficient credit"
 msgstr "Ebapiisav krediit"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__synched
-msgid "Is synched"
-msgstr "On sünkroniseeritud"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__write_uid
-msgid "Last Updated by"
-msgstr "Viimati uuendatud"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__write_date
-msgid "Last Updated on"
-msgstr "Viimati uuendatud"
 
 #. module: partner_autocomplete
 #. odoo-python
@@ -138,21 +113,6 @@ msgstr "Konto token puudub"
 msgid "Not enough credits for Partner Autocomplete"
 msgstr ""
 "Pole piisavalt palju punkte, et täiendada partneri andmeid automaatselt"
-
-#. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__partner_id
-msgid "Partner"
-msgstr "Kontakti kaart"
-
-#. module: partner_autocomplete
-#: model:ir.model,name:partner_autocomplete.model_res_partner_autocomplete_sync
-msgid "Partner Autocomplete Sync"
-msgstr "Partneri automaatse täienduse sünkroniseerimine"
-
-#. module: partner_autocomplete
-#: model:ir.actions.server,name:partner_autocomplete.ir_cron_partner_autocomplete_ir_actions_server
-msgid "Partner Autocomplete: Sync with remote DB"
-msgstr ""
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -184,3 +144,30 @@ msgstr "Testrežiim "
 #: code:addons/partner_autocomplete/models/res_partner.py:0
 msgid "Unable to enrich company (no credit was consumed)."
 msgstr ""
+
+#~ msgid "Additional info"
+#~ msgstr "Lisainfo"
+
+#~ msgid "Company database ID"
+#~ msgstr "Ettevõtte andmebaasi ID"
+
+#~ msgid "Created by"
+#~ msgstr "Loonud"
+
+#~ msgid "Created on"
+#~ msgstr "Loodud"
+
+#~ msgid "Is synched"
+#~ msgstr "On sünkroniseeritud"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Viimati uuendatud"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Viimati uuendatud"
+
+#~ msgid "Partner"
+#~ msgstr "Kontakti kaart"
+
+#~ msgid "Partner Autocomplete Sync"
+#~ msgstr "Partneri automaatse täienduse sünkroniseerimine"

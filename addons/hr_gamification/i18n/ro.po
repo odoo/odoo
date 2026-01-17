@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_gamification
-# 
+#
 # Translators:
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
@@ -43,27 +44,24 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid ""
 "Assign a list of goals to chosen users to evaluate them.\n"
-"                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
-"                    The goals are created for the specified users or member of the group."
+"                    The challenge can use a period (weekly, monthly...) for "
+"automatic creation of goals.\n"
+"                    The goals are created for the specified users or member "
+"of the group."
 msgstr ""
 "Alocați o listă de obiective utilizatorilor aleși pentru a le evalua.\n"
-"                    Provocare poate folosi o perioadă (săptămânală, lunară ...) pentru crearea automată a obiectivelor.\n"
-"                    Obiectivele sunt create pentru utilizatorii sau membrii grupului specificați."
+"                    Provocare poate folosi o perioadă (săptămânală, "
+"lunară ...) pentru crearea automată a obiectivelor.\n"
+"                    Obiectivele sunt create pentru utilizatorii sau membrii "
+"grupului specificați."
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__badge_ids
 #: model:ir.ui.menu,name:hr_gamification.gamification_badge_menu_hr
-msgid "Badges"
-msgstr "Insigne"
-
-#. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid ""
-"Badges are rewards of good work. Give them to people you believe deserve it."
-msgstr ""
-"Insignele sunt recompense ale muncii bune. Dă-le oamenilor despre care crezi"
-" că merită."
+msgid "Badges"
+msgstr "Insigne"
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__direct_badge_ids
@@ -110,6 +108,15 @@ msgstr "Descrieți ce au făcut și de ce contează (va fi public)"
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Direct Badge"
 msgstr "Insignă directă"
+
+#. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__employee_id
@@ -164,12 +171,6 @@ msgid "Grant a Badge"
 msgstr "Acordă o insignă"
 
 #. module: hr_gamification
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "Grant this employee his first badge"
-msgstr "Acordă-i acestui angajat prima insignă"
-
-#. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
 msgid "Granted"
 msgstr "Acordat"
@@ -187,10 +188,13 @@ msgid "Has Badges"
 msgstr "Are insigne"
 
 #. module: hr_gamification
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "Received Badges"
-msgstr "Insigne primite"
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__id
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__id
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__id
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users__id
+msgid "ID"
+msgstr ""
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
@@ -210,6 +214,14 @@ msgid "The selected employee does not correspond to the selected user."
 msgstr "Angajatul selectat nu corespunde utilizatorului selectat."
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
+msgid ""
+"There are no badges for this employee.<br/>\n"
+"                                It's time to allow the first one."
+msgstr ""
+
+#. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_res_users
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__user_id
 msgid "User"
@@ -226,8 +238,18 @@ msgstr "Pentru ce esti recunoscator?"
 msgid "You can not send a badge to yourself."
 msgstr "Nu vă puteți trimite o insignă."
 
-#. module: hr_gamification
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "to reward this employee for a good action"
-msgstr "pentru a recompensa acest angajat pentru o acțiune bună"
+#~ msgid ""
+#~ "Badges are rewards of good work. Give them to people you believe deserve "
+#~ "it."
+#~ msgstr ""
+#~ "Insignele sunt recompense ale muncii bune. Dă-le oamenilor despre care "
+#~ "crezi că merită."
+
+#~ msgid "Grant this employee his first badge"
+#~ msgstr "Acordă-i acestui angajat prima insignă"
+
+#~ msgid "Received Badges"
+#~ msgstr "Insigne primite"
+
+#~ msgid "to reward this employee for a good action"
+#~ msgstr "pentru a recompensa acest angajat pentru o acțiune bună"

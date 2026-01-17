@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_online_payment
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Anastasiia Koroleva, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -27,8 +29,7 @@ msgstr "<strong>Ошибка:</strong> Валюта отсутствует ил�
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
-msgid ""
-"<strong>Error:</strong> There was a problem during the payment process."
+msgid "<strong>Error:</strong> There was a problem during the payment process."
 msgstr "<strong>Ошибка:</strong> В процессе оплаты возникла проблема."
 
 #. module: pos_online_payment
@@ -46,8 +47,7 @@ msgstr "Необходимо указать вариант оплаты."
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-msgid ""
-"A validation payment cannot be used for a Point of Sale online payment."
+msgid "A validation payment cannot be used for a Point of Sale online payment."
 msgstr ""
 "Подтверждающий платеж не может быть использован для онлайн-оплаты в точках "
 "продаж."
@@ -317,6 +317,12 @@ msgstr "Ошибка сервера"
 
 #. module: pos_online_payment
 #. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "The %s already has one online payment."
+msgstr ""
+
+#. module: pos_online_payment
+#. odoo-python
 #: code:addons/pos_online_payment/models/payment_transaction.py:0
 msgid "The POS online payment (tx.id=%d) could not be saved correctly"
 msgstr "Онлайн-платеж POS (tx.id=%d) не может быть сохранен корректно"
@@ -500,8 +506,8 @@ msgid ""
 "To use an online payment method in a POS config, it must have at least one "
 "published payment provider supporting the currency of that POS config."
 msgstr ""
-"Чтобы использовать метод онлайн-оплаты в конфигурации POS, в ней должен быть"
-" опубликован хотя бы один поставщик платежей, поддерживающий валюту этой "
+"Чтобы использовать метод онлайн-оплаты в конфигурации POS, в ней должен быть "
+"опубликован хотя бы один поставщик платежей, поддерживающий валюту этой "
 "конфигурации POS."
 
 #. module: pos_online_payment

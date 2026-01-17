@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_gamification
-# 
+#
 # Translators:
 # zakariya moradi, 2025
 # Tiffany Chang, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tiffany Chang, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_gamification
@@ -43,27 +43,24 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid ""
 "Assign a list of goals to chosen users to evaluate them.\n"
-"                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
-"                    The goals are created for the specified users or member of the group."
+"                    The challenge can use a period (weekly, monthly...) for "
+"automatic creation of goals.\n"
+"                    The goals are created for the specified users or member "
+"of the group."
 msgstr ""
-"فهرستی از اهداف را به کاربران انتخاب شده اختصاص داده تا آن‌ها را ارزیابی کنید.\n"
-"                    چالش می تواند یک دوره (هفتگی، ماهانه...) برای ایجاد خودکار اهداف استفاده کنید.\n"
+"فهرستی از اهداف را به کاربران انتخاب شده اختصاص داده تا آن‌ها را ارزیابی "
+"کنید.\n"
+"                    چالش می تواند یک دوره (هفتگی، ماهانه...) برای ایجاد "
+"خودکار اهداف استفاده کنید.\n"
 "                    اهداف برای کاربران مشخص شده یا عضو گروه ایجاد می شود."
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__badge_ids
 #: model:ir.ui.menu,name:hr_gamification.gamification_badge_menu_hr
-msgid "Badges"
-msgstr "بج‌ها"
-
-#. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid ""
-"Badges are rewards of good work. Give them to people you believe deserve it."
-msgstr ""
-"نشان‌ها، پاداش کار خوب هستند. آن‌ها را به کسانی بدهید که باور دارید لياقتش "
-"را دارند."
+msgid "Badges"
+msgstr "بج‌ها"
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__direct_badge_ids
@@ -110,6 +107,15 @@ msgstr "آنچه را که انجام دادند و چرا اهمیت دارد �
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Direct Badge"
 msgstr "نشان مستقیم"
+
+#. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__employee_id
@@ -164,12 +170,6 @@ msgid "Grant a Badge"
 msgstr "اعطای یک نشان"
 
 #. module: hr_gamification
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "Grant this employee his first badge"
-msgstr "به این کارمند اولین نشانش را اعطا کن"
-
-#. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
 msgid "Granted"
 msgstr "اعطاشده"
@@ -187,10 +187,13 @@ msgid "Has Badges"
 msgstr "دارای نشان"
 
 #. module: hr_gamification
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "Received Badges"
-msgstr "نشان‌های دریافتی"
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__id
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__id
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__id
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users__id
+msgid "ID"
+msgstr ""
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
@@ -210,6 +213,14 @@ msgid "The selected employee does not correspond to the selected user."
 msgstr "کارمند انتخاب شده با کاربر انتخاب شده مطابقت ندارد."
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
+msgid ""
+"There are no badges for this employee.<br/>\n"
+"                                It's time to allow the first one."
+msgstr ""
+
+#. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_res_users
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__user_id
 msgid "User"
@@ -226,8 +237,18 @@ msgstr "از چه چیزی ممنون هستید؟"
 msgid "You can not send a badge to yourself."
 msgstr "شما نمی‌توانید برای خود نشان ارسال کنید."
 
-#. module: hr_gamification
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "to reward this employee for a good action"
-msgstr "برای پاداش دادن به این کارمند برای یک اقدام خوب"
+#~ msgid ""
+#~ "Badges are rewards of good work. Give them to people you believe deserve "
+#~ "it."
+#~ msgstr ""
+#~ "نشان‌ها، پاداش کار خوب هستند. آن‌ها را به کسانی بدهید که باور دارید لياقتش "
+#~ "را دارند."
+
+#~ msgid "Grant this employee his first badge"
+#~ msgstr "به این کارمند اولین نشانش را اعطا کن"
+
+#~ msgid "Received Badges"
+#~ msgstr "نشان‌های دریافتی"
+
+#~ msgid "to reward this employee for a good action"
+#~ msgstr "برای پاداش دادن به این کارمند برای یک اقدام خوب"

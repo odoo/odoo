@@ -1,24 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product_expiry
-# 
+#
 # Translators:
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/models/production_lot.py:0
+msgid "\t--Expire on %(date)s--"
+msgstr ""
+
+#. module: product_expiry
+#. odoo-python
+#: code:addons/product_expiry/models/production_lot.py:0
+msgid "\t--Expired--"
+msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -53,7 +66,8 @@ msgid "Alert Date"
 msgstr "Data alertei"
 
 #. module: product_expiry
-#: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
+#. odoo-python
+#: code:addons/product_expiry/models/production_lot.py:0
 msgid "Alert Date Reached"
 msgstr "Data alertei a fost atinsă"
 
@@ -137,6 +151,15 @@ msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_procurement_group__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__display_name
 msgid "Display Name"
 msgstr "Nume afișat"
 
@@ -189,6 +212,15 @@ msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
+#: model:ir.model.fields,field_description:product_expiry.field_procurement_group__id
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__id
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__id
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_lot__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_picking__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__id
 msgid "ID"
 msgstr "ID"
 
@@ -256,8 +288,8 @@ msgstr ""
 #: model:ir.model.fields,help:product_expiry.field_product_template__use_time
 msgid ""
 "Number of days before the Expiration Date after which the goods starts "
-"deteriorating, without being dangerous yet. It will be computed on the "
-"lot/serial number."
+"deteriorating, without being dangerous yet. It will be computed on the lot/"
+"serial number."
 msgstr ""
 "Număr de zile înainte de data de expirare după care mărfurile încep să se "
 "deterioreze, fără a fi încă periculoase. Acesta va fi calculat pe lot / "
@@ -393,8 +425,8 @@ msgstr "Folosiți data de expirare"
 #: model:ir.model.fields,help:product_expiry.field_stock_move_line__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
 msgid ""
-"When this box is ticked, you have the possibility to specify dates to manage"
-" product expiration, on the product and on the corresponding lot/serial "
+"When this box is ticked, you have the possibility to specify dates to manage "
+"product expiration, on the product and on the corresponding lot/serial "
 "numbers"
 msgstr ""
 "Când această casetă este bifată, aveți posibilitatea să specificați datele "
@@ -413,7 +445,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
 msgid ""
-"You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
+"You are going to deliver the product %(product_name)s, %(lot_name)s which is "
+"expired.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
 

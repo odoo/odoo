@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* iap
-# 
+#
 # Translators:
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2024
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Batmunkh Ganbat <batmunkh2522@gmail.com>, 2024
 # Minj P <pminj322@gmail.com>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Minj P <pminj322@gmail.com>, 2024\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
+"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: iap
@@ -65,18 +65,6 @@ msgid "Banned"
 msgstr ""
 
 #. module: iap
-#. odoo-javascript
-#: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
-msgid "Buy credits"
-msgstr "Credit худалдан авах"
-
-#. module: iap
-#. odoo-javascript
-#: code:addons/iap/static/src/xml/iap_templates.xml:0
-msgid "Cancel"
-msgstr "Цуцлах"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_ids
 msgid "Company"
 msgstr "Компани"
@@ -106,6 +94,7 @@ msgstr "Тайлбар"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
+#: model:ir.model.fields,field_description:iap.field_iap_enrich_api__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_service__display_name
 msgid "Display Name"
 msgstr "Дэлгэрэнгүй нэр"
@@ -124,8 +113,8 @@ msgstr ""
 #: model:iap.service,description:iap.iap_service_reveal
 msgid ""
 "Get quality leads and opportunities: convert your website visitors into "
-"leads, generate leads based on a set of criteria and enrich the company data"
-" of your opportunities."
+"leads, generate leads based on a set of criteria and enrich the company data "
+"of your opportunities."
 msgstr ""
 
 #. module: iap
@@ -158,15 +147,10 @@ msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
+#: model:ir.model.fields,field_description:iap.field_iap_enrich_api__id
 #: model:ir.model.fields,field_description:iap.field_iap_service__id
 msgid "ID"
 msgstr "ID"
-
-#. module: iap
-#. odoo-javascript
-#: code:addons/iap/static/src/xml/iap_templates.xml:0
-msgid "Insufficient credit to perform this service."
-msgstr "Энэ үйлчилгээг үзүүлэхэд шаардлагатай нэгж хүрэлцэхгүй байна."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
@@ -196,6 +180,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:iap.field_iap_service__name
 msgid "Name"
 msgstr "Нэр"
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "No service exists with the provided technical name"
+msgstr ""
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
@@ -237,12 +227,6 @@ msgid "Service Locked"
 msgstr ""
 
 #. module: iap
-#. odoo-javascript
-#: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
-msgid "Start a Trial at Odoo"
-msgstr "Odoo системийг туршиж эхлэх"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__state
 msgid "State"
 msgstr "Төлөв"
@@ -282,3 +266,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "View your IAP Services and recharge your credits"
 msgstr ""
+
+#~ msgid "Buy credits"
+#~ msgstr "Credit худалдан авах"
+
+#~ msgid "Cancel"
+#~ msgstr "Цуцлах"
+
+#~ msgid "Insufficient credit to perform this service."
+#~ msgstr "Энэ үйлчилгээг үзүүлэхэд шаардлагатай нэгж хүрэлцэхгүй байна."
+
+#~ msgid "Start a Trial at Odoo"
+#~ msgstr "Odoo системийг туршиж эхлэх"

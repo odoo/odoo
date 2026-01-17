@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_purchase
-# 
+#
 # Translators:
 # Stevin Lilla, 2024
 # Siim Raasuke, 2024
@@ -10,19 +10,19 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2024
 # Tairi Tiimann, 2024
 # Katrin Kampura, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Katrin Kampura, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_purchase
@@ -36,29 +36,18 @@ msgstr ""
 "            Võib-olla on vaja teha manuaalseid tegevusi."
 
 #. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
-msgid "<span class=\"o_stat_text\">Purchase</span>"
-msgstr "<span class=\"o_stat_text\">Ost</span>"
-
-#. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
 msgid "<span class=\"o_stat_text\">Sale</span>"
 msgstr "<span class=\"o_stat_text\">Müük</span>"
 
 #. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_cancel_view_form
-msgid ""
-"<span id=\"display_invoice_alert\" position=\"after\">\n"
-"                <span id=\"display_purchase_orders_alert\" invisible=\"not display_purchase_orders_alert\" groups=\"purchase.group_purchase_user\">\n"
-"                    There are active purchase orders linked to this sale order that are not cancelled automatically! <br/>\n"
-"                </span>\n"
-"            </span>"
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__display_name
+msgid "Display Name"
 msgstr ""
-"<span id=\"display_invoice_alert\" position=\"after\">\n"
-"                <span id=\"display_purchase_orders_alert\" invisible=\"not display_purchase_orders_alert\" groups=\"purchase.group_purchase_user\">\n"
-"                    Antud müügitellimusega on seotud aktiivseid ostutellimusi, mida ei tühistata automaatselt!<br/>\n"
-"                </span>\n"
-"            </span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
@@ -82,6 +71,15 @@ msgstr "Muudatus(ed):"
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_ids
 msgid "Generated Purchase Lines"
 msgstr "Loodud ostu read"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__id
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__id
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__id
+msgid "ID"
+msgstr ""
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
@@ -146,14 +144,14 @@ msgid "Product that is not a service can not create RFQ."
 msgstr "Toode, mis pole teenus, ei saa Hinnapäringut luua."
 
 #. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
+msgid "Purchase"
+msgstr ""
+
+#. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
 msgid "Purchase Order"
 msgstr "Ostutellimus"
-
-#. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_cancel__display_purchase_orders_alert
-msgid "Purchase Order Alert"
-msgstr "Ostutellimuse hoiatus"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order_line
@@ -191,11 +189,6 @@ msgid "Sales Order"
 msgstr "Müügitellimus"
 
 #. module: sale_purchase
-#: model:ir.model,name:sale_purchase.model_sale_order_cancel
-msgid "Sales Order Cancel"
-msgstr "Müügitellimuse tühistamine"
-
-#. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Müügitellimuse rida"
@@ -211,6 +204,12 @@ msgstr "Müügitellimuste allikad %s"
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
 msgid "Subcontract Service"
 msgstr "Alltöövõtu teenus"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__has_sale_order
+msgid ""
+"Technical field for whether the purchase order has associated sale orders"
+msgstr ""
 
 #. module: sale_purchase
 #. odoo-python
@@ -247,3 +246,31 @@ msgstr "punkti"
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "ordered instead of"
 msgstr "tellitud selle asemel"
+
+#~ msgid "<span class=\"o_stat_text\">Purchase</span>"
+#~ msgstr "<span class=\"o_stat_text\">Ost</span>"
+
+#~ msgid ""
+#~ "<span id=\"display_invoice_alert\" position=\"after\">\n"
+#~ "                <span id=\"display_purchase_orders_alert\" "
+#~ "invisible=\"not display_purchase_orders_alert\" "
+#~ "groups=\"purchase.group_purchase_user\">\n"
+#~ "                    There are active purchase orders linked to this sale "
+#~ "order that are not cancelled automatically! <br/>\n"
+#~ "                </span>\n"
+#~ "            </span>"
+#~ msgstr ""
+#~ "<span id=\"display_invoice_alert\" position=\"after\">\n"
+#~ "                <span id=\"display_purchase_orders_alert\" "
+#~ "invisible=\"not display_purchase_orders_alert\" "
+#~ "groups=\"purchase.group_purchase_user\">\n"
+#~ "                    Antud müügitellimusega on seotud aktiivseid "
+#~ "ostutellimusi, mida ei tühistata automaatselt!<br/>\n"
+#~ "                </span>\n"
+#~ "            </span>"
+
+#~ msgid "Purchase Order Alert"
+#~ msgstr "Ostutellimuse hoiatus"
+
+#~ msgid "Sales Order Cancel"
+#~ msgstr "Müügitellimuse tühistamine"

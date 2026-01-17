@@ -6,15 +6,15 @@
 # Wil Odoo, 2025
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # Fernanda Alvarez, 2025
-# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
 # "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 18:37+0000\n"
-"PO-Revision-Date: 2025-12-20 11:45+0000\n"
+"POT-Creation-Date: 2026-01-15 18:37+0000\n"
+"PO-Revision-Date: 2026-01-17 02:44+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s18-3/point_of_sale/es_419/>\n"
@@ -1438,6 +1438,12 @@ msgid "Basic Receipt"
 msgstr "Recibo básico"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
+msgid "Be aware that reloading data will delete unsaved orders."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
 msgid "Before Closing Difference"
 msgstr "Antes de la diferencia de cierre"
@@ -2071,7 +2077,7 @@ msgstr "Un cinturón clásico de piel. Un accesorio indispensable en tu closet."
 #: code:addons/point_of_sale/static/src/app/services/data_service.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Clear cache"
-msgstr ""
+msgstr "Borrar caché"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2088,6 +2094,7 @@ msgstr "Cliente"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Close"
@@ -2447,7 +2454,7 @@ msgstr "Información de contacto"
 #: code:addons/point_of_sale/static/src/app/services/data_service.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Continue"
-msgstr ""
+msgstr "Continuar"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3226,6 +3233,12 @@ msgid "Display Name"
 msgstr "Nombre en pantalla"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Display QR"
+msgstr "Mostrar QR"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Display and update your products information through electronic price tags"
@@ -3497,6 +3510,9 @@ msgid ""
 "cached data.\n"
 "Would you like to clear the cache and reload?"
 msgstr ""
+"Ocurrió un error al inicializar la aplicación. Esto suele ocurrir porque los "
+"datos en caché están desactualizados.\n"
+"¿Quieres borrar la caché y recargar?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3627,6 +3643,12 @@ msgid "For imprecise industrial touchscreens."
 msgstr "Para pantallas táctiles industriales imprecisas"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force Cancel"
+msgstr "Forzar cancelación"
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
@@ -3638,6 +3660,12 @@ msgstr "Forzar el cierre de sesión"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force Done"
 msgstr "Forzar terminación"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force cancel"
+msgstr "Forzar cancelación"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4119,7 +4147,7 @@ msgstr "Dirección de envío incorrecta"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/data_service.js:0
 msgid "IndexedDB Initialization error"
-msgstr ""
+msgstr "Error de inicialización de IndexedDB"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6328,7 +6356,7 @@ msgstr "Configuración del PdV"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.js:0
 msgid "PoS Customer Display opened in a new window"
 msgstr "La pantalla para cliente de PdV se abrió en una ventana nueva"
 
@@ -7414,6 +7442,8 @@ msgstr "Sesión relacionada: %(link)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.js:0
+#: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
 msgid "Reload Data"
 msgstr "Volver a cargar datos"
 
@@ -7735,6 +7765,12 @@ msgstr "Escanear"
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Scan EAN-13"
 msgstr "Escanear EAN-13"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Scan QR"
+msgstr "Escanear QR"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8637,6 +8673,10 @@ msgid ""
 "a corrupted IndexedDB database. We recommend you to clear your browser's "
 "IndexedDB for this site and reload the Point of Sale."
 msgstr ""
+"La base de datos de IndexedDB está tardando demasiado en inicializarse. Esto "
+"puede deberse a que hay un error con la base de datos de IndexedDB. Te "
+"recomendamos borrar la IndexedDB de tu navegador para este sitio y recargar "
+"el punto de venta."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9263,6 +9303,12 @@ msgid ""
 msgstr ""
 "Este método de pago en efectivo ya se está usando en otro Punto de Venta.\n"
 "Se debe crear un nuevo método de pago en efectivo para este Punto de Venta."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "This device"
+msgstr "Este dispositivo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -10183,6 +10229,16 @@ msgstr ""
 "Está tratando de vender productos con números de serie o de lote, pero "
 "algunos no se han establecido.\n"
 "¿Desea continuar?"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid ""
+"You can either use it on this device or scan the QR code to display it on "
+"another device"
+msgstr ""
+"Puedes usarlo en este dispositivo o escanear el código QR para verlo en otro "
+"dispositivo"
 
 #. module: point_of_sale
 #. odoo-python

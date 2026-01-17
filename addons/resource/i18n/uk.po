@@ -1,24 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* resource
-# 
+#
 # Translators:
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+msgid "# Work Resources"
+msgstr ""
 
 #. module: resource
 #. odoo-python
@@ -29,18 +37,23 @@ msgstr "%s (копія)"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"ms-1\">%</span>"
+msgstr ""
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"ms-2\">hours/week</span>"
+msgstr ""
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"o_stat_text\">Time Off</span>"
 msgstr "<span class=\"o_stat_text\">Відпустка</span>"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "<span class=\"o_stat_text\">Work Resources</span>"
-msgstr "<span class=\"o_stat_text\">Робочі ресурси</span>"
-
-#. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "<span> hours/week</span>"
-msgstr "<span> години/тиждень</span>"
+msgid "<span>hours/week</span>"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__active
@@ -95,8 +108,7 @@ msgstr "Середня година на день"
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
 msgid ""
 "Average hours per day a resource is supposed to work with this calendar."
-msgstr ""
-"Середній час роботи на день ресурс повинен працювати з цим календарем."
+msgstr "Середній час роботи на день ресурс повинен працювати з цим календарем."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__lunch
@@ -190,9 +202,12 @@ msgstr ""
 "учасників проекту"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_res_company__display_name
+#: model:ir.model.fields,field_description:resource.field_res_users__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__display_name
+#: model:ir.model.fields,field_description:resource.field_resource_mixin__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
@@ -254,6 +269,11 @@ msgid "First week"
 msgstr "Перший тиждень"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
+msgid "Flexible"
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__flexible_hours
 msgid "Flexible Hours"
 msgstr "Гнучкі години"
@@ -308,6 +328,7 @@ msgid "Hours"
 msgstr "Години"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_week
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Hours per Week"
 msgstr "Години на тиждень"
@@ -319,9 +340,12 @@ msgid "Human"
 msgstr "Людський"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_res_company__id
+#: model:ir.model.fields,field_description:resource.field_res_users__id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__id
+#: model:ir.model.fields,field_description:resource.field_resource_mixin__id
 #: model:ir.model.fields,field_description:resource.field_resource_resource__id
 msgid "ID"
 msgstr "ID"
@@ -341,8 +365,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Якщо активне поле встановлено як Помилкове, це дозволить вам приховати запис"
-" кадрів, не видаливши його."
+"Якщо активне поле встановлено як Помилкове, це дозволить вам приховати запис "
+"кадрів, не видаливши його."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__active
@@ -359,6 +383,11 @@ msgstr ""
 msgid ""
 "In a calendar with 2 weeks mode, all periods need to be in the sections."
 msgstr "У календарі з режимом 2 тижні усі періоди повинні бути у секціях."
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__is_fulltime
+msgid "Is Full Time"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_uid
@@ -420,14 +449,18 @@ msgstr "Назва"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__full_time_required_hours
 msgid ""
-"Number of hours to work on the company schedule to be considered as "
-"fulltime."
+"Number of hours to work on the company schedule to be considered as fulltime."
 msgstr "Кількість годин роботи за графіком компанії вважається повною."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__other
 msgid "Other"
 msgstr "Інше"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
+msgid "Partial working schedules"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -513,13 +546,18 @@ msgid ""
 "workload based on their weekly working hours."
 msgstr ""
 "Ресурси дозволяють створювати та керувати ресурсами, які потрібно залучити "
-"до певної фази проекту. Ви також можете встановити їх рівень ефективності та"
-" навантаження залежно від їх тижневого робочого часу."
+"до певної фази проекту. Ви також можете встановити їх рівень ефективності та "
+"навантаження залежно від їх тижневого робочого часу."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
 msgid "Saturday"
 msgstr "Субота"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+msgid "Schedule Total Time"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -596,6 +634,11 @@ msgstr "Дата початку відпустки"
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
 msgid "Sunday"
 msgstr "Неділя"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -709,6 +752,11 @@ msgid "Timezone offset"
 msgstr "Зсув часового поясу"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Total"
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
 msgid "Tuesday"
 msgstr "Вівторок"
@@ -743,6 +791,12 @@ msgstr "Тип"
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "User"
 msgstr "Користувач"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
+msgid "Visible to all"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__2
@@ -782,8 +836,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
 msgid ""
-"Whether this should be computed as a time off or as work time (eg: "
-"formation)"
+"Whether this should be computed as a time off or as work time (eg: formation)"
 msgstr ""
 "Чи слід розраховувати це як відпустку або як робочий час (наприклад: "
 "формування)"
@@ -794,9 +847,32 @@ msgid "Work Detail"
 msgstr "Деталі роботи"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Work Resources"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__work_resources_count
+msgid "Work Resources count"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__work_time_rate
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Work Time Rate"
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_from
 msgid "Work from"
 msgstr "Робота з"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__work_time_rate
+msgid ""
+"Work time rate versus full time working schedule, should be between 0 and "
+"100 %."
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_to
@@ -864,3 +940,9 @@ msgstr "секунда"
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "this week"
 msgstr "цього тижня"
+
+#~ msgid "<span class=\"o_stat_text\">Work Resources</span>"
+#~ msgstr "<span class=\"o_stat_text\">Робочі ресурси</span>"
+
+#~ msgid "<span> hours/week</span>"
+#~ msgstr "<span> години/тиждень</span>"

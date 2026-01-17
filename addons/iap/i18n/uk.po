@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* iap
-# 
+#
 # Translators:
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -64,18 +67,6 @@ msgid "Banned"
 msgstr "Забанено"
 
 #. module: iap
-#. odoo-javascript
-#: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
-msgid "Buy credits"
-msgstr "Купіть кредити"
-
-#. module: iap
-#. odoo-javascript
-#: code:addons/iap/static/src/xml/iap_templates.xml:0
-msgid "Cancel"
-msgstr "Скасувати"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_ids
 msgid "Company"
 msgstr "Компанія"
@@ -105,6 +96,7 @@ msgstr "Опис"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
+#: model:ir.model.fields,field_description:iap.field_iap_enrich_api__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_service__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
@@ -123,8 +115,8 @@ msgstr ""
 #: model:iap.service,description:iap.iap_service_reveal
 msgid ""
 "Get quality leads and opportunities: convert your website visitors into "
-"leads, generate leads based on a set of criteria and enrich the company data"
-" of your opportunities."
+"leads, generate leads based on a set of criteria and enrich the company data "
+"of your opportunities."
 msgstr ""
 
 #. module: iap
@@ -157,15 +149,10 @@ msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
+#: model:ir.model.fields,field_description:iap.field_iap_enrich_api__id
 #: model:ir.model.fields,field_description:iap.field_iap_service__id
 msgid "ID"
 msgstr "ID"
-
-#. module: iap
-#. odoo-javascript
-#: code:addons/iap/static/src/xml/iap_templates.xml:0
-msgid "Insufficient credit to perform this service."
-msgstr "Недостатній кредит для виконання цієї послуги."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
@@ -195,6 +182,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:iap.field_iap_service__name
 msgid "Name"
 msgstr "Назва"
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "No service exists with the provided technical name"
+msgstr ""
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
@@ -236,12 +229,6 @@ msgid "Service Locked"
 msgstr ""
 
 #. module: iap
-#. odoo-javascript
-#: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
-msgid "Start a Trial at Odoo"
-msgstr "Почати випробування в Odoo"
-
-#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__state
 msgid "State"
 msgstr "Область"
@@ -281,3 +268,15 @@ msgstr "Переглянути мої послуги"
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "View your IAP Services and recharge your credits"
 msgstr "Перегляньте послуги IAP та поповніть ваші кредити"
+
+#~ msgid "Buy credits"
+#~ msgstr "Купіть кредити"
+
+#~ msgid "Cancel"
+#~ msgstr "Скасувати"
+
+#~ msgid "Insufficient credit to perform this service."
+#~ msgstr "Недостатній кредит для виконання цієї послуги."
+
+#~ msgid "Start a Trial at Odoo"
+#~ msgstr "Почати випробування в Odoo"

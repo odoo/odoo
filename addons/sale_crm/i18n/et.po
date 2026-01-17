@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_crm
-# 
+#
 # Translators:
 # Stevin Lilla, 2024
 # Siim Raasuke, 2024
 # Arma Gedonsky <armagedonsky@hot.ee>, 2024
 # Katrin Kampura, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Katrin Kampura, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_crm
@@ -48,6 +48,11 @@ msgid "Create a new customer"
 msgstr "Loo uus klient"
 
 #. module: sale_crm
+#: model:ir.model,website_form_label:sale_crm.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_quotation_partner
 msgid "Create new or use existing Customer on new Quotation"
 msgstr "Loo uus või kasuta olemasolevat klienti uuel pakkumisel"
@@ -73,7 +78,10 @@ msgid "Customer"
 msgstr "Klient"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__display_name
 msgid "Display Name"
 msgstr "Kuvatav nimi"
 
@@ -89,14 +97,12 @@ msgid "Expected revenue has been updated based on the linked Sales Orders."
 msgstr "Eeldatavat tulu on uuendatud seotud müügitellimuste põhjal."
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__id
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__id
 msgid "ID"
 msgstr "ID"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
-msgid "Invoiced in Sales Orders Target"
-msgstr "Müügitellimuste eesmärgist arveldatud"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
@@ -110,8 +116,8 @@ msgstr "Viimati uuendatud"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Müügivihje/müügivõimalus"
+msgid "Lead"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
@@ -203,12 +209,16 @@ msgid "Untaxed Total of Confirmed Orders"
 msgstr "Kinnitatud tellimuste maksustamata kogusumma"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "User"
-msgstr "Kasutaja"
-
-#. module: sale_crm
 #. odoo-python
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 msgid "You can only apply this action from a lead."
 msgstr "Seda toimingut saab rakendada ainult müügivihje kaudu."
+
+#~ msgid "Invoiced in Sales Orders Target"
+#~ msgstr "Müügitellimuste eesmärgist arveldatud"
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "Müügivihje/müügivõimalus"
+
+#~ msgid "User"
+#~ msgstr "Kasutaja"

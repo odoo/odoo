@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_wishlist
-# 
+#
 # Translators:
 # Martin Trigaux, 2024
 # Ákos Nagy <akos.nagy@oregional.hu>, 2024
@@ -9,19 +9,19 @@
 # krnkris, 2024
 # Tamás Dombos, 2024
 # gezza <geza.nagy@oregional.hu>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:41+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_wishlist
@@ -36,7 +36,8 @@ msgstr ""
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid ""
-"<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to wishlist\"/>\n"
+"<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to wishlist\"/"
+">\n"
 "                    Add to wishlist"
 msgstr ""
 
@@ -48,14 +49,22 @@ msgstr "<small><i class=\"fa fa-trash-o\"/> Eltávolítás</small>"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid ""
-"<span class=\"fa fa-fw fa-shopping-cart\"/>\n"
-"                                                <span class=\"d-none d-md-inline\">Add</span>"
+"<span class=\"fa fa-fw fa-shopping-cart o_not-animable\"/>\n"
+"                                                <span class=\"d-none d-md-"
+"inline\">Add</span>"
 msgstr ""
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
-msgid "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
-msgstr "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+msgid ""
+"<span class=\"fa fa-heart o_not-animable\" role=\"img\" aria-label=\"Add to "
+"wishlist\"/>"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_cart_lines
+msgid "<span class=\"text-300\">|</span>"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
@@ -89,6 +98,11 @@ msgid "Contact Us"
 msgstr "Kapcsolatfelvétel"
 
 #. module: website_sale_wishlist
+#: model:ir.model,website_form_label:website_sale_wishlist.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_uid
 msgid "Created by"
 msgstr "Létrehozta"
@@ -104,7 +118,11 @@ msgid "Default Currency"
 msgstr "Alapértelmezett pénznem"
 
 #. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template__display_name
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
@@ -114,7 +132,11 @@ msgid "Duplicated wishlisted product for this partner."
 msgstr "Duplikált kivánságlista termék ehhez a partnerhez."
 
 #. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template__id
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -212,3 +234,8 @@ msgstr "Weboldal"
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
 msgid "Wishlist"
 msgstr "Kívánságlista"
+
+#~ msgid ""
+#~ "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+#~ msgstr ""
+#~ "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"

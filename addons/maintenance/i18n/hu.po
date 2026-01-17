@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2025-11-08 22:12+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -60,7 +60,7 @@ msgid "<strong>Maintenance: </strong>"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_defaults
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_defaults
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
@@ -76,8 +76,8 @@ msgstr "Acer laptop"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_needaction
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_needaction
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_needaction
 msgid "Action Needed"
 msgstr "Akció szükséges"
 
@@ -151,47 +151,47 @@ msgid "Add a team in the maintenance request"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_id
 msgid "Alias"
 msgstr "Álnév"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_contact
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_contact
 msgid "Alias Contact Security"
 msgstr "Álnév kapcsolat biztonság"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_domain_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_domain_id
 msgid "Alias Domain"
 msgstr "Tartomány álnév"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_domain
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_domain
 msgid "Alias Domain Name"
 msgstr "Alias domain név"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_full_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_full_name
 msgid "Alias Email"
 msgstr "Álnév email"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_name
 msgid "Alias Name"
 msgstr "Álnév elnevezése"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_status
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_status
 msgid "Alias Status"
 msgstr "Álnév állapot"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_status
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_status
 msgid "Alias status assessed on the last message received."
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_model_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_model_id
 msgid "Aliased Model"
 msgstr "Álnevesített modell"
 
@@ -241,8 +241,8 @@ msgstr "Hozzárendelve"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_attachment_count
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_attachment_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_attachment_count
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_attachment_count
 msgid "Attachment Count"
 msgstr "Mellékletek száma"
 
@@ -378,7 +378,7 @@ msgid "Current Maintenance"
 msgstr "Aktuális karbantartás"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_bounced_content
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_bounced_content
 msgid "Custom Bounced Message"
 msgstr ""
 
@@ -420,7 +420,7 @@ msgid "Days"
 msgstr "nap"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_defaults
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_defaults
 msgid "Default Values"
 msgstr "Alapértelmezett értékek"
 
@@ -439,9 +439,11 @@ msgstr "Leírás"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__display_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__display_name
+#: model:ir.model.fields,field_description:maintenance.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
@@ -474,16 +476,14 @@ msgid "Effective Date"
 msgstr "Tényleges dátum"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_email
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_email
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "Email Alias"
 msgstr "E-mail álnév"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_id
-msgid ""
-"Email alias for this equipment category. New emails will automatically "
-"create a new equipment under this category."
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_id
+msgid "Email alias for this maintenance team."
 msgstr ""
 
 #. module: maintenance
@@ -493,7 +493,7 @@ msgid "Email cc"
 msgstr "E-mail másolat"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_domain
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
 msgstr "Email domain pl. 'example.com' az 'odoo@example.com'-ban"
 
@@ -597,15 +597,15 @@ msgstr "A karbantartási igény nyomon követése és kommunikáció a felelőss
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_follower_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_follower_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_follower_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_follower_ids
 msgid "Followers"
 msgstr "Követők"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_partner_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_partner_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_partner_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Követők (Partnerek)"
 
@@ -657,8 +657,8 @@ msgstr "HP Laptop"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__has_message
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__has_message
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__has_message
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__has_message
 msgid "Has Message"
 msgstr "Van üzenet"
 
@@ -675,17 +675,19 @@ msgstr "Magas prioritású"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__id
+#: model:ir.model.fields,field_description:maintenance.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_parent_thread_id
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
 msgstr ""
 "Az álnevet tartalmazó szülő rekord azonosítója (példa: a feladat "
 "létrehozására szolgáló álnevet tartalmazó projekt)"
@@ -704,21 +706,20 @@ msgstr "Kivétel tevékenységet jelző ikon"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Ha be van jelölve, akkor az új üzenetek figyelmet igényelnek."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
+msgstr "Ha be van jelölve, akkor néhány üzenetnél kézbesítési hiba lépett fel."
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_bounced_content
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_bounced_content
 msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
@@ -753,8 +754,8 @@ msgstr "Belső jegyzetek"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_is_follower
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_is_follower
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_is_follower
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_is_follower
 msgid "Is Follower"
 msgstr "Követő"
 
@@ -799,14 +800,9 @@ msgid "Latest Failure Date"
 msgstr "Legutóbbi hiba dátuma"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_incoming_local
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_incoming_local
 msgid "Local-part based incoming detection"
 msgstr ""
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__location
-msgid "Location"
-msgstr "Lokáció"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
@@ -836,6 +832,7 @@ msgstr "MTTR"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__maintenance_ids
 #: model:ir.ui.menu,name:maintenance.menu_m_request
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_title
+#: model:res.groups.privilege,name:maintenance.res_groups_privilege_maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.res_config_settings_view_form
@@ -872,6 +869,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_request
 #: model:mail.activity.type,name:maintenance.mail_act_maintenance_request
+#: model:mail.activity.type,summary:maintenance.mail_act_maintenance_request
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_request_view_activity
 msgid "Maintenance Request"
@@ -908,12 +906,16 @@ msgstr "Karbantartási igény létrehozva"
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action_from_equipment
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action_link
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_todo_request_action_from_dashboard
-#: model:ir.actions.act_window,name:maintenance.maintenance_request_action_reports
-#: model:ir.ui.menu,name:maintenance.maintenance_request_reporting
 #: model:ir.ui.menu,name:maintenance.menu_m_request_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Maintenance Requests"
 msgstr "Karbantartási igények"
+
+#. module: maintenance
+#: model:ir.actions.act_window,name:maintenance.maintenance_request_action_reports
+#: model:ir.ui.menu,name:maintenance.maintenance_request_reporting
+msgid "Maintenance Requests Analysis"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_stage
@@ -946,11 +948,6 @@ msgid "Maintenance Type"
 msgstr "Karbantartás típus"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__match_serial
-msgid "Match Serial"
-msgstr ""
-
-#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Mean Time Between Failure"
 msgstr ""
@@ -971,15 +968,15 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_error
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_has_error
 msgid "Message Delivery error"
 msgstr "Üzenetkézbesítési hiba"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_ids
 msgid "Messages"
 msgstr "Üzenetek"
 
@@ -1002,6 +999,12 @@ msgstr "Monitorok"
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_unit__month
 msgid "Months"
 msgstr "Hónap"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+msgid "My Activities"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__my_activity_date_deadline
@@ -1072,8 +1075,8 @@ msgstr "Megjegyzések"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction_counter
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_needaction_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_needaction_counter
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Akciók száma"
 
@@ -1104,27 +1107,27 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_error_counter
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error_counter
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_has_error_counter
 msgid "Number of errors"
 msgstr "Hibák száma"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction_counter
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction_counter
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__message_needaction_counter
 msgid "Number of messages requiring action"
 msgstr "Üzenetek száma, melyek akciót igényelnek"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error_counter
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error_counter
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Kézbesítési hibával rendelkező üzenetek száma"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_force_thread_id
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
@@ -1154,20 +1157,20 @@ msgid "PDF"
 msgstr "PDF"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_parent_model_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_parent_model_id
 msgid "Parent Model"
 msgstr "Szülő modell"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_parent_thread_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_parent_thread_id
 msgid "Parent Record Thread ID"
 msgstr "Szülő rekord szál azonosító"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_parent_model_id
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 "Az álnevet tartalmazó szülő modell. Az álnév hivatkozást tartalmazó modell "
@@ -1187,17 +1190,19 @@ msgid "Phones"
 msgstr "Telefonok"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_contact
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
 "A dokumentumra küldött üzenetek szabályai a levélátjáró használatával.\n"
 "- mindenki: mindenki tud üzenni\n"
 "- partnerek: csak a hitelesített partnerek\n"
-"- követők: csak a kapcsolódó dokumentum követői vagy a következő csatornák tagjai\n"
+"- követők: csak a kapcsolódó dokumentum követői vagy a következő csatornák "
+"tagjai\n"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__maintenance_type__preventive
@@ -1221,6 +1226,7 @@ msgstr "Termék információ"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__equipment_properties
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Properties"
 msgstr "Tulajdonságok"
 
@@ -1240,7 +1246,7 @@ msgid "Record Colour"
 msgstr "Bejegyzés szín"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_force_thread_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_force_thread_id
 msgid "Record Thread ID"
 msgstr "Bejegyzés üzenetlista azonosító"
 
@@ -1374,7 +1380,6 @@ msgstr "Sorszám"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__serial_no
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Serial Number"
 msgstr "Szériaszám"
 
@@ -1393,10 +1398,8 @@ msgstr "Beállítások"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
-msgid "Show all records which has next action date is before today"
+msgid "Show all records whose next activity date is past"
 msgstr ""
-"Az összes olyan rekord megjelenítése, melynél a következő akció dátuma a mai"
-" nap előtti"
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_software
@@ -1485,24 +1488,30 @@ msgid "Text"
 msgstr "Szöveg"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_model_id
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 msgstr ""
 "A modell (Odoo dokumentum típus), amelyre ez az álnév vonatkozik. Bármely "
 "bejövő e-mail, amely nem válaszol egy meglévő rekordra, ezen modell egy új "
 "rekordjának létrehozását fogja előidézni (pl. egy projekt feladatot)"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_name
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
 "Az e-mail álnév neve, pl. 'állások', ha erre az e-mailcímre szeretne "
 "leveleket kapni: <allasok@pelda.odoo.com>"
+
+#. module: maintenance
+#. odoo-python
+#: code:addons/maintenance/models/maintenance.py:0
+msgid "The repeat interval cannot be less than 1."
+msgstr ""
 
 #. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
@@ -1537,7 +1546,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid ""
 "Track equipment and link it to an employee or department.\n"
-"                You will be able to manage allocations, issues and maintenance of your equipment."
+"                You will be able to manage allocations, issues and "
+"maintenance of your equipment."
 msgstr ""
 
 #. module: maintenance
@@ -1580,11 +1590,6 @@ msgid "Upload your PDF file."
 msgstr "Töltse fel a PDF fájlját!"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
-msgid "Used in location"
-msgstr ""
-
-#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__partner_id
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Vendor"
@@ -1599,6 +1604,14 @@ msgstr "Beszállítói hivatkozás"
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__0
 msgid "Very Low"
 msgstr "Nagyon alacsony"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_tree
+msgid "Visible to all"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__warranty_date
@@ -1629,7 +1642,7 @@ msgid "Your instructions"
 msgstr ""
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "alias"
 msgstr "alias"
 
@@ -1659,7 +1672,7 @@ msgid "e.g. Screen not working"
 msgstr ""
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "e.g. mycompany.com"
 msgstr "pl. mycompany.com"
 
@@ -1669,3 +1682,11 @@ msgstr "pl. mycompany.com"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_tree
 msgid "maintenance Request"
 msgstr "Karbantartási igény"
+
+#~ msgid "Location"
+#~ msgstr "Lokáció"
+
+#~ msgid "Show all records which has next action date is before today"
+#~ msgstr ""
+#~ "Az összes olyan rekord megjelenítése, melynél a következő akció dátuma a "
+#~ "mai nap előtti"

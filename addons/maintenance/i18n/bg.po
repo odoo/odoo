@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* maintenance
-# 
+#
 # Translators:
 # Petko Karamotchev, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Petko Karamotchev, 2024\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: maintenance
@@ -50,7 +50,7 @@ msgid "<strong>Maintenance: </strong>"
 msgstr "<strong>Поддръжка: </strong>"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_defaults
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_defaults
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
@@ -66,8 +66,8 @@ msgstr "Acer лаптоп"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_needaction
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_needaction
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_needaction
 msgid "Action Needed"
 msgstr "Необходимо действие"
 
@@ -141,47 +141,47 @@ msgid "Add a team in the maintenance request"
 msgstr "Добавяне на екип в заявката за поддръжка"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_id
 msgid "Alias"
 msgstr "Псевдоним"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_contact
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_contact
 msgid "Alias Contact Security"
 msgstr "Сигурност на контакт за псевдоним"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_domain_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_domain_id
 msgid "Alias Domain"
 msgstr "Псевдоним на домейн"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_domain
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_domain
 msgid "Alias Domain Name"
 msgstr "Псевдоним на име на домейн"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_full_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_full_name
 msgid "Alias Email"
 msgstr "Псевдоним имейл"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_name
 msgid "Alias Name"
 msgstr "Псевдоним име"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_status
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_status
 msgid "Alias Status"
 msgstr "Псевдоним статус"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_status
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_status
 msgid "Alias status assessed on the last message received."
 msgstr "Статус на псевдонима, оценен при последното получено съобщение."
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_model_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_model_id
 msgid "Aliased Model"
 msgstr "Преименуван модел"
 
@@ -231,8 +231,8 @@ msgstr "Разпределен към"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_attachment_count
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_attachment_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_attachment_count
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_attachment_count
 msgid "Attachment Count"
 msgstr "Брой прикачени файлове"
 
@@ -368,7 +368,7 @@ msgid "Current Maintenance"
 msgstr "Текуща поддръжка"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_bounced_content
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_bounced_content
 msgid "Custom Bounced Message"
 msgstr "Персонализирано отвхвърлено съобщение"
 
@@ -412,7 +412,7 @@ msgid "Days"
 msgstr "Дни"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_defaults
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_defaults
 msgid "Default Values"
 msgstr "Стойности по подразбиране"
 
@@ -431,9 +431,11 @@ msgstr "Описание"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__display_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__display_name
+#: model:ir.model.fields,field_description:maintenance.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Име за показване"
 
@@ -466,19 +468,15 @@ msgid "Effective Date"
 msgstr "Дата на влизане в сила"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_email
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_email
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "Email Alias"
 msgstr "Имейл псевдоним"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_id
-msgid ""
-"Email alias for this equipment category. New emails will automatically "
-"create a new equipment under this category."
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_id
+msgid "Email alias for this maintenance team."
 msgstr ""
-"Псевдоним на имейл за тази категория оборудване. Новите имейли автоматично "
-"ще създадат ново оборудване в тази категория."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__email_cc
@@ -487,7 +485,7 @@ msgid "Email cc"
 msgstr "Имейл копие"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_domain
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
 msgstr "Имейл домейн напр. 'example.com' в 'odoo@example.com'"
 
@@ -591,15 +589,15 @@ msgstr "Следвайте процеса на заявката и общува�
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_follower_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_follower_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_follower_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_follower_ids
 msgid "Followers"
 msgstr "Последователи"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_partner_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_partner_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_partner_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Последователи (партньори)"
 
@@ -651,8 +649,8 @@ msgstr "Лаптоп HP"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__has_message
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__has_message
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__has_message
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__has_message
 msgid "Has Message"
 msgstr "има съобщение"
 
@@ -669,20 +667,22 @@ msgstr "Висок приоритет"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__id
+#: model:ir.model.fields,field_description:maintenance.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_parent_thread_id
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
 msgstr ""
-"ID на родителския запис, притежаващ псевдонима (например: проект, притежаващ"
-" псевдонима за създаване на задача)"
+"ID на родителския запис, притежаващ псевдонима (например: проект, притежаващ "
+"псевдонима за създаване на задача)"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_exception_icon
@@ -698,20 +698,20 @@ msgstr "Икона за обозначаване на дейност по изк
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Ако е отметнато, новите съобщения ще изискват внимание."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Ако е отметнато, някои съобщения имат грешка при доставката."
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_bounced_content
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_bounced_content
 msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
@@ -748,8 +748,8 @@ msgstr "Вътрешни записки"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_is_follower
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_is_follower
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_is_follower
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_is_follower
 msgid "Is Follower"
 msgstr "е последовател"
 
@@ -794,14 +794,9 @@ msgid "Latest Failure Date"
 msgstr "Дата на последната грешка"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_incoming_local
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_incoming_local
 msgid "Local-part based incoming detection"
 msgstr "Откриване на входящи съобщения на база локалната част на имейла"
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__location
-msgid "Location"
-msgstr "Локация"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
@@ -831,6 +826,7 @@ msgstr "MTTR"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__maintenance_ids
 #: model:ir.ui.menu,name:maintenance.menu_m_request
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_title
+#: model:res.groups.privilege,name:maintenance.res_groups_privilege_maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.res_config_settings_view_form
@@ -867,6 +863,7 @@ msgstr "Поддържан артикул от поддръжката"
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_request
 #: model:mail.activity.type,name:maintenance.mail_act_maintenance_request
+#: model:mail.activity.type,summary:maintenance.mail_act_maintenance_request
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_request_view_activity
 msgid "Maintenance Request"
@@ -903,12 +900,16 @@ msgstr "Създадена заявка за поддръжка"
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action_from_equipment
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action_link
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_todo_request_action_from_dashboard
-#: model:ir.actions.act_window,name:maintenance.maintenance_request_action_reports
-#: model:ir.ui.menu,name:maintenance.maintenance_request_reporting
 #: model:ir.ui.menu,name:maintenance.menu_m_request_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Maintenance Requests"
 msgstr "Заявка за поддръжка "
+
+#. module: maintenance
+#: model:ir.actions.act_window,name:maintenance.maintenance_request_action_reports
+#: model:ir.ui.menu,name:maintenance.maintenance_request_reporting
+msgid "Maintenance Requests Analysis"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_stage
@@ -941,11 +942,6 @@ msgid "Maintenance Type"
 msgstr "Тип поддръжка"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__match_serial
-msgid "Match Serial"
-msgstr "Съвпадение на сериен номер"
-
-#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Mean Time Between Failure"
 msgstr "Средно време между повредите"
@@ -968,15 +964,15 @@ msgstr "Средно време за ремонт"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_error
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_has_error
 msgid "Message Delivery error"
 msgstr "Грешка при доставяне на съобщението"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_ids
 msgid "Messages"
 msgstr "Съобщения"
 
@@ -999,6 +995,12 @@ msgstr "Монитори"
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_unit__month
 msgid "Months"
 msgstr "Месеци"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+msgid "My Activities"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__my_activity_date_deadline
@@ -1069,8 +1071,8 @@ msgstr "Бележки"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction_counter
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_needaction_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_needaction_counter
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Брой действия"
 
@@ -1101,27 +1103,27 @@ msgstr "Брой заявки от висок приоритет"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_error_counter
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error_counter
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_has_error_counter
 msgid "Number of errors"
 msgstr "Брой грешки"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction_counter
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction_counter
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__message_needaction_counter
 msgid "Number of messages requiring action"
 msgstr "Брой съобщения изискващи действие"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error_counter
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error_counter
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Брой съобщения с грешка при доставка"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_force_thread_id
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
@@ -1151,20 +1153,20 @@ msgid "PDF"
 msgstr "PDF"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_parent_model_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_parent_model_id
 msgid "Parent Model"
 msgstr "Родителски модел "
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_parent_thread_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_parent_thread_id
 msgid "Parent Record Thread ID"
 msgstr "ID на нишката на родителския запис"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_parent_model_id
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 "Родителски модел, който притежава псевдонима. Моделът, който държи "
@@ -1186,17 +1188,19 @@ msgid "Phones"
 msgstr "Телефони"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_contact
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
 "Политика за публикуване на съобщение в документа с помощта на mailgateway.\n"
 "- всеки: всеки може да публикува\n"
 "- партньори: само автентифицирани партньори\n"
-"- последователи: само последователи на свързания документ или членове на следващите канали\n"
+"- последователи: само последователи на свързания документ или членове на "
+"следващите канали\n"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__maintenance_type__preventive
@@ -1220,6 +1224,7 @@ msgstr "Продуктова информация"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__equipment_properties
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Properties"
 msgstr "Свойства"
 
@@ -1239,7 +1244,7 @@ msgid "Record Colour"
 msgstr "Цвят на записа"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_force_thread_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_force_thread_id
 msgid "Record Thread ID"
 msgstr "ID на запис на нишката"
 
@@ -1373,7 +1378,6 @@ msgstr "Последователност"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__serial_no
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Serial Number"
 msgstr "Сериен номер"
 
@@ -1394,10 +1398,8 @@ msgstr "Настройки"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
-msgid "Show all records which has next action date is before today"
+msgid "Show all records whose next activity date is past"
 msgstr ""
-"Показване на всички записи, на които следващата дата на действие е преди "
-"днес"
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_software
@@ -1486,24 +1488,30 @@ msgid "Text"
 msgstr "Текст"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_model_id
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 msgstr ""
 "Моделът (Odoo Document Kind), към който съответства този псевдоним. Всеки "
 "входящ имейл, който не отговаря на съществуващ запис, ще доведе до "
 "създаването на нов запис на този модел (например задача за проекта)"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_name
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
 "Името на имейла, напр. \"работни места\", ако искате да уловите имейли за "
 "<jobs@example.odoo.com>"
+
+#. module: maintenance
+#. odoo-python
+#: code:addons/maintenance/models/maintenance.py:0
+msgid "The repeat interval cannot be less than 1."
+msgstr ""
 
 #. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
@@ -1539,10 +1547,12 @@ msgstr "Топ приоритети"
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid ""
 "Track equipment and link it to an employee or department.\n"
-"                You will be able to manage allocations, issues and maintenance of your equipment."
+"                You will be able to manage allocations, issues and "
+"maintenance of your equipment."
 msgstr ""
 "Проследяване на оборудване и асоцииране към служител или отдел.\n"
-"                Ще можете да управлявате разпределяне на заявки за проблеми и поддръжка на вашето оборудване."
+"                Ще можете да управлявате разпределяне на заявки за проблеми "
+"и поддръжка на вашето оборудване."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_exception_decoration
@@ -1584,11 +1594,6 @@ msgid "Upload your PDF file."
 msgstr "Прикачете вашия PDF файл."
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
-msgid "Used in location"
-msgstr "Използва се на място"
-
-#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__partner_id
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Vendor"
@@ -1603,6 +1608,14 @@ msgstr "Референция на преводача"
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__0
 msgid "Very Low"
 msgstr "Много нисък"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_tree
+msgid "Visible to all"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__warranty_date
@@ -1635,7 +1648,7 @@ msgid "Your instructions"
 msgstr "Вашите инструкции"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "alias"
 msgstr "псевдоним"
 
@@ -1665,7 +1678,7 @@ msgid "e.g. Screen not working"
 msgstr "напр. екранът не работи"
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "e.g. mycompany.com"
 msgstr "напр. mycompany.com"
 
@@ -1675,3 +1688,24 @@ msgstr "напр. mycompany.com"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_tree
 msgid "maintenance Request"
 msgstr "Заявка за поддръжка"
+
+#~ msgid ""
+#~ "Email alias for this equipment category. New emails will automatically "
+#~ "create a new equipment under this category."
+#~ msgstr ""
+#~ "Псевдоним на имейл за тази категория оборудване. Новите имейли "
+#~ "автоматично ще създадат ново оборудване в тази категория."
+
+#~ msgid "Location"
+#~ msgstr "Локация"
+
+#~ msgid "Match Serial"
+#~ msgstr "Съвпадение на сериен номер"
+
+#~ msgid "Show all records which has next action date is before today"
+#~ msgstr ""
+#~ "Показване на всички записи, на които следващата дата на действие е преди "
+#~ "днес"
+
+#~ msgid "Used in location"
+#~ msgstr "Използва се на място"

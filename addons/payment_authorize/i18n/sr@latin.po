@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2025-11-15 11:24+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
@@ -110,8 +110,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid ""
-"Could not retrieve the transaction details. (error code: %s; error_details: "
-"%s)"
+"Could not retrieve the transaction details. (error code: %(error_code)s; "
+"error_details: %(error_message)s)"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: payment_authorize
@@ -135,6 +142,13 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "How to get paid with Authorize.Net"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__id
+msgid "ID"
 msgstr ""
 
 #. module: payment_authorize
@@ -219,7 +233,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid ""
-"The transaction is not in a status to be refunded. (status: %s, details: %s)"
+"The transaction is not in a status to be refunded. (status: %(status)s, "
+"details: %(message)s)"
 msgstr ""
 
 #. module: payment_authorize

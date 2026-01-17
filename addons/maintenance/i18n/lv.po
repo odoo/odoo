@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* maintenance
-# 
+#
 # Translators:
 # Will Sensors, 2024
 # JanisJanis <jbojars@gmail.com>, 2024
@@ -11,20 +11,21 @@
 # ievaputnina <ievai.putninai@gmail.com>, 2024
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025
 # Arnis Putniņš <arnis@allegro.lv>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Arnis Putniņš <arnis@allegro.lv>, 2025\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lv\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -57,7 +58,7 @@ msgid "<strong>Maintenance: </strong>"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_defaults
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_defaults
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
@@ -73,8 +74,8 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_needaction
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_needaction
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_needaction
 msgid "Action Needed"
 msgstr "Nepieciešama darbība"
 
@@ -148,47 +149,47 @@ msgid "Add a team in the maintenance request"
 msgstr "Pievienot jaunu komandu apkopes pieprasījumam"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_id
 msgid "Alias"
 msgstr "Alias"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_contact
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_contact
 msgid "Alias Contact Security"
 msgstr "Alias Contact Security"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_domain_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_domain_id
 msgid "Alias Domain"
 msgstr "Aizstājvārda domēns"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_domain
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_domain
 msgid "Alias Domain Name"
 msgstr "Aizstājvārda domēna nosaukums"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_full_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_full_name
 msgid "Alias Email"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_name
 msgid "Alias Name"
 msgstr "Alias Name"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_status
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_status
 msgid "Alias Status"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_status
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_status
 msgid "Alias status assessed on the last message received."
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_model_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_model_id
 msgid "Aliased Model"
 msgstr "Aliased Model"
 
@@ -238,8 +239,8 @@ msgstr "Piešķirts"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_attachment_count
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_attachment_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_attachment_count
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_attachment_count
 msgid "Attachment Count"
 msgstr "Pielikumu skaits"
 
@@ -375,7 +376,7 @@ msgid "Current Maintenance"
 msgstr "Pašreizējā apkope"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_bounced_content
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_bounced_content
 msgid "Custom Bounced Message"
 msgstr "Pielāgots atlēkušais ziņojums"
 
@@ -417,7 +418,7 @@ msgid "Days"
 msgstr "Dienas"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_defaults
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_defaults
 msgid "Default Values"
 msgstr "Noklusējuma vērtības"
 
@@ -436,9 +437,11 @@ msgstr "Apraksts"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__display_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__display_name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__display_name
+#: model:ir.model.fields,field_description:maintenance.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Nosaukums"
 
@@ -471,16 +474,14 @@ msgid "Effective Date"
 msgstr "Izpildes Datums"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_email
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_email
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "Email Alias"
 msgstr "Email Alias"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_id
-msgid ""
-"Email alias for this equipment category. New emails will automatically "
-"create a new equipment under this category."
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_id
+msgid "Email alias for this maintenance team."
 msgstr ""
 
 #. module: maintenance
@@ -490,7 +491,7 @@ msgid "Email cc"
 msgstr "E-pasta CC"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_domain
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
 msgstr "E-pasta domēns piem., 'piemers.lv' e-pastā 'odoo@piemers.lv'"
 
@@ -594,15 +595,15 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_follower_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_follower_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_follower_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_follower_ids
 msgid "Followers"
 msgstr "Sekotāji"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_partner_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_partner_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_partner_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Sekotāji (Partneri)"
 
@@ -654,8 +655,8 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__has_message
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__has_message
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__has_message
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__has_message
 msgid "Has Message"
 msgstr "Ir ziņojums"
 
@@ -672,17 +673,19 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__id
+#: model:ir.model.fields,field_description:maintenance.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_parent_thread_id
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
 msgstr ""
 "Sākotnējā ieraksta ID, kurā ir aizstājvārds (piemērs: projekts, kurā ir "
 "uzdevuma izveides aizstājvārds)"
@@ -701,20 +704,20 @@ msgstr "Ikona izņēmuma aktivitātes identificēšanai."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "Ja atzīmēts, jums jāpievērš uzmanība jauniem ziņojumiem."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Ja atzīmēts, daži ziņojumi satur piegādes kļūdu."
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_bounced_content
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_bounced_content
 msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
@@ -749,8 +752,8 @@ msgstr "Iekšējās piezīmes"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_is_follower
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_is_follower
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_is_follower
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_is_follower
 msgid "Is Follower"
 msgstr "Ir sekotājs"
 
@@ -795,14 +798,9 @@ msgid "Latest Failure Date"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_incoming_local
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_incoming_local
 msgid "Local-part based incoming detection"
 msgstr ""
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__location
-msgid "Location"
-msgstr "Atrašanās vieta"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
@@ -832,6 +830,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_mixin__maintenance_ids
 #: model:ir.ui.menu,name:maintenance.menu_m_request
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_title
+#: model:res.groups.privilege,name:maintenance.res_groups_privilege_maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.res_config_settings_view_form
@@ -868,6 +867,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_request
 #: model:mail.activity.type,name:maintenance.mail_act_maintenance_request
+#: model:mail.activity.type,summary:maintenance.mail_act_maintenance_request
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_request_view_activity
 msgid "Maintenance Request"
@@ -904,12 +904,16 @@ msgstr "Apkopes pieprasījums izveidots"
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action_from_equipment
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action_link
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_todo_request_action_from_dashboard
-#: model:ir.actions.act_window,name:maintenance.maintenance_request_action_reports
-#: model:ir.ui.menu,name:maintenance.maintenance_request_reporting
 #: model:ir.ui.menu,name:maintenance.menu_m_request_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Maintenance Requests"
 msgstr "Apkopes pieprasījumi"
+
+#. module: maintenance
+#: model:ir.actions.act_window,name:maintenance.maintenance_request_action_reports
+#: model:ir.ui.menu,name:maintenance.maintenance_request_reporting
+msgid "Maintenance Requests Analysis"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_stage
@@ -942,11 +946,6 @@ msgid "Maintenance Type"
 msgstr "Apkopes tips"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__match_serial
-msgid "Match Serial"
-msgstr ""
-
-#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Mean Time Between Failure"
 msgstr ""
@@ -967,15 +966,15 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_error
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_has_error
 msgid "Message Delivery error"
 msgstr "Ziņojuma piegādes kļūda"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_ids
 msgid "Messages"
 msgstr "Ziņojumi"
 
@@ -998,6 +997,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_unit__month
 msgid "Months"
 msgstr "Mēneši"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+msgid "My Activities"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__my_activity_date_deadline
@@ -1068,8 +1073,8 @@ msgstr "Piezīmes"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction_counter
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_needaction_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_needaction_counter
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Darbību skaits"
 
@@ -1100,27 +1105,27 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_error_counter
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error_counter
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__message_has_error_counter
 msgid "Number of errors"
 msgstr "Kļūdu skaits"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction_counter
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction_counter
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__message_needaction_counter
 msgid "Number of messages requiring action"
 msgstr "Ziņojumu, kuriem nepieciešama darbība, skaits"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error_counter
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error_counter
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Ziņojumu, kas satur piegādes kļūdu, skaits"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_force_thread_id
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
@@ -1150,24 +1155,24 @@ msgid "PDF"
 msgstr "PDF"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_parent_model_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_parent_model_id
 msgid "Parent Model"
 msgstr "Virsmodelis"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_parent_thread_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_parent_thread_id
 msgid "Parent Record Thread ID"
 msgstr "Virsieraksta sarakstes ID"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_parent_model_id
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 
 #. module: maintenance
@@ -1183,17 +1188,19 @@ msgid "Phones"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_contact
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
 "Veids, kādā notiek ziņojumu ievietošana dokumentā:\n"
 "- visi: ikviens var izlikt\n"
 "- partneri: tikai autentificēti partneri\n"
-"- sekotāji: tikai saistītā dokumenta sekotāji vai sekojošo kanālu dalībnieki\n"
+"- sekotāji: tikai saistītā dokumenta sekotāji vai sekojošo kanālu "
+"dalībnieki\n"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__maintenance_type__preventive
@@ -1217,6 +1224,7 @@ msgstr "Produkta informācija"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__equipment_properties
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Properties"
 msgstr "Īpašības"
 
@@ -1236,7 +1244,7 @@ msgid "Record Colour"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_force_thread_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_force_thread_id
 msgid "Record Thread ID"
 msgstr "Ierakstīt sarakstes ID"
 
@@ -1370,7 +1378,6 @@ msgstr "Sekvence"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__serial_no
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Serial Number"
 msgstr "Sērijas numurs"
 
@@ -1389,9 +1396,8 @@ msgstr "Uzstādījumi"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
-msgid "Show all records which has next action date is before today"
+msgid "Show all records whose next activity date is past"
 msgstr ""
-"Rādīt visus ierakstus, kuriem nākamais darbības datums ir pirms šodienas"
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_software
@@ -1480,24 +1486,30 @@ msgid "Text"
 msgstr "Teksts"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_model_id
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 msgstr ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_name
+#: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
+
+#. module: maintenance
+#. odoo-python
+#: code:addons/maintenance/models/maintenance.py:0
+msgid "The repeat interval cannot be less than 1."
+msgstr ""
 
 #. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
@@ -1532,7 +1544,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid ""
 "Track equipment and link it to an employee or department.\n"
-"                You will be able to manage allocations, issues and maintenance of your equipment."
+"                You will be able to manage allocations, issues and "
+"maintenance of your equipment."
 msgstr ""
 
 #. module: maintenance
@@ -1575,11 +1588,6 @@ msgid "Upload your PDF file."
 msgstr ""
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
-msgid "Used in location"
-msgstr ""
-
-#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__partner_id
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Vendor"
@@ -1594,6 +1602,14 @@ msgstr "Pārdevēja reference"
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__0
 msgid "Very Low"
 msgstr "Ļoti zems"
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_tree
+msgid "Visible to all"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__warranty_date
@@ -1624,7 +1640,7 @@ msgid "Your instructions"
 msgstr ""
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "alias"
 msgstr ""
 
@@ -1654,7 +1670,7 @@ msgid "e.g. Screen not working"
 msgstr ""
 
 #. module: maintenance
-#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "e.g. mycompany.com"
 msgstr ""
 
@@ -1664,3 +1680,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_tree
 msgid "maintenance Request"
 msgstr "apkopes pieprasījums"
+
+#~ msgid "Location"
+#~ msgstr "Atrašanās vieta"
+
+#~ msgid "Show all records which has next action date is before today"
+#~ msgstr ""
+#~ "Rādīt visus ierakstus, kuriem nākamais darbības datums ir pirms šodienas"

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_payment
-# 
+#
 # Translators:
 # yael terner, 2024
 # Ha Ketem <haketem@gmail.com>, 2024
@@ -18,27 +18,29 @@
 # NoaFarkash, 2024
 # tomerlayline, 2024
 # or balmas, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: he\n"
-"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % "
+"1 == 0) ? 1: 2;\n"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid ""
 ".\n"
 "                        <br/>\n"
-"                        We appreciate your support for our organization as such.\n"
+"                        We appreciate your support for our organization as "
+"such.\n"
 "                        <br/>\n"
 "                        Regards."
 msgstr ""
@@ -77,6 +79,13 @@ msgstr "<b>צורת תשלום:</b>"
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "<option value=\"\">Country...</option>"
 msgstr "<option value=\"\">ארץ...</option>"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_input
+msgid ""
+"<small class=\"text-danger d-none\" id=\"warning_message_id\">Please enter "
+"the amount to donate.</small>"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
@@ -154,6 +163,11 @@ msgid "Amount ("
 msgstr "סכום ("
 
 #. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_input
+msgid "Amount to donate"
+msgstr ""
+
+#. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "Amount("
 msgstr "סכום ("
@@ -202,7 +216,6 @@ msgstr ""
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/options.xml:0
-#: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Custom Amount"
@@ -222,6 +235,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Descriptions"
 msgstr "תיאורים"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:website_payment.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:website_payment.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -294,6 +315,11 @@ msgid "Email is required."
 msgstr "יש צורך בדוא\"ל."
 
 #. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_input
+msgid "Enter a valid number!"
+msgstr ""
+
+#. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/js/payment_form.js:0
 msgid "Field '%s' is mandatory"
@@ -302,6 +328,14 @@ msgstr ""
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__first_provider_label
 msgid "First Provider Label"
+msgstr ""
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_account_payment__id
+#: model:ir.model.fields,field_description:website_payment.field_payment_provider__id
+#: model:ir.model.fields,field_description:website_payment.field_payment_transaction__id
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__id
+msgid "ID"
 msgstr ""
 
 #. module: website_payment
@@ -418,7 +452,7 @@ msgstr ""
 
 #. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
+#: code:addons/website_payment/static/src/snippets/s_donation/donation_snippet.js:0
 msgid "Please select or enter an amount"
 msgstr ""
 
@@ -485,8 +519,13 @@ msgid "Thank you for your donation of"
 msgstr ""
 
 #. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_input
+msgid "The minimum donation amount is"
+msgstr ""
+
+#. module: website_payment
 #. odoo-javascript
-#: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
+#: code:addons/website_payment/static/src/snippets/s_donation/donation_snippet.js:0
 msgid "The minimum donation amount is %(amount)s"
 msgstr ""
 
@@ -509,11 +548,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id
 msgid "Website"
 msgstr "אתר אינטרנט"
-
-#. module: website_payment
-#: model:mail.template,name:website_payment.mail_template_donation
-msgid "Website: Donation"
-msgstr ""
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information

@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_edi
-# 
+#
 # Translators:
 # zakariya moradi, 2025
 # Tiffany Chang, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tiffany Chang, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_edi
@@ -76,10 +76,14 @@ msgstr "میزان بلوکه کردن"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
 msgid ""
-"Blocks the current operation of the document depending on the error severity:\n"
-"  * Info: the document is not blocked and everything is working as it should.\n"
-"  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
-"  * Error: there is an error that blocks the current Electronic Invoicing operation."
+"Blocks the current operation of the document depending on the error "
+"severity:\n"
+"  * Info: the document is not blocked and everything is working as it "
+"should.\n"
+"  * Warning: there is an error that doesn't prevent the current Electronic "
+"Invoicing operation to succeed.\n"
+"  * Error: there is an error that blocks the current Electronic Invoicing "
+"operation."
 msgstr ""
 "عملیات فعلی سند را بسته به شدت خطا متوقف می‌کند:\n"
 "اطلاعات: سند متوقف نشده و همه چیز همان‌طور که باید در جریان است.\n"
@@ -131,6 +135,12 @@ msgstr "ایجادشده در"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__display_name
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__display_name
+#: model:ir.model.fields,field_description:account_edi.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_edi.field_account_move__display_name
+#: model:ir.model.fields,field_description:account_edi.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:account_edi.field_account_resequence_wizard__display_name
+#: model:ir.model.fields,field_description:account_edi.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:account_edi.field_ir_attachment__display_name
 msgid "Display Name"
 msgstr "نام نمایش داده شده"
 
@@ -266,6 +276,12 @@ msgstr "در این سند چند خطا در رابطه با تبادل الک�
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__id
+#: model:ir.model.fields,field_description:account_edi.field_account_journal__id
+#: model:ir.model.fields,field_description:account_edi.field_account_move__id
+#: model:ir.model.fields,field_description:account_edi.field_account_move_send__id
+#: model:ir.model.fields,field_description:account_edi.field_account_resequence_wizard__id
+#: model:ir.model.fields,field_description:account_edi.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:account_edi.field_ir_attachment__id
 msgid "ID"
 msgstr "شناسه"
 
@@ -397,8 +413,7 @@ msgstr "فاکتور به زودی به ... ارسال می‌شود"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
 msgid ""
-"The text of the last error that happened during Electronic Invoice "
-"operation."
+"The text of the last error that happened during Electronic Invoice operation."
 msgstr "متن آخرین خطای رخ داده در حین عملیات فاکتور الکترونیکی."
 
 #. module: account_edi
@@ -416,8 +431,8 @@ msgstr "این سند قبلاً با فرآیند دیگری ارسال شده 
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid ""
-"This invoice was canceled while the EDIs %s still had a pending cancellation"
-" request."
+"This invoice was canceled while the EDIs %s still had a pending cancellation "
+"request."
 msgstr ""
 
 #. module: account_edi
@@ -442,8 +457,8 @@ msgstr "هشدار"
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid ""
-"You can't edit the following journal entry %s because an electronic document"
-" has already been sent. Please use the 'Request EDI Cancellation' button "
+"You can't edit the following journal entry %s because an electronic document "
+"has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
 "شما نمی توانید ورودی روزنامه %s زیر را ویرایش کنید زیرا یک سند الکترونیکی "

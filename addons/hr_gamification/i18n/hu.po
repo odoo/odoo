@@ -1,26 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_gamification
-# 
+#
 # Translators:
 # gezza <geza.nagy@oregional.hu>, 2024
 # krnkris, 2024
 # Tamás Németh <ntomasz81@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Valics Lehel, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Valics Lehel, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_gamification
@@ -30,7 +30,8 @@ msgid ""
 "                    Goals can be created automatically by using challenges."
 msgstr ""
 "A célt a felhasználó és a cél típusa határozza meg.\n"
-"                    Célokat automatikusan is létrehozhatja a kihívások használatával."
+"                    Célokat automatikusan is létrehozhatja a kihívások "
+"használatával."
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__badge_ids
@@ -40,34 +41,31 @@ msgid ""
 "All employee badges, linked to the employee either directly or through the "
 "user"
 msgstr ""
-"Összes alkalmazotti jelvény, hozzá csatolva az alkalmazotthoz direktben vagy"
-" a felhasználón keresztül"
+"Összes alkalmazotti jelvény, hozzá csatolva az alkalmazotthoz direktben vagy "
+"a felhasználón keresztül"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid ""
 "Assign a list of goals to chosen users to evaluate them.\n"
-"                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
-"                    The goals are created for the specified users or member of the group."
+"                    The challenge can use a period (weekly, monthly...) for "
+"automatic creation of goals.\n"
+"                    The goals are created for the specified users or member "
+"of the group."
 msgstr ""
-"Hozzárendelhet egy, a felhasználók által kiválasztható cél listát, melyből kiértékelheti Őket. \n"
-"A felmérés használhat egy időszakot (heti, havi...) a célok automatikus létrehozásához.\n"
+"Hozzárendelhet egy, a felhasználók által kiválasztható cél listát, melyből "
+"kiértékelheti Őket. \n"
+"A felmérés használhat egy időszakot (heti, havi...) a célok automatikus "
+"létrehozásához.\n"
 "A célt az ide vonatkozó felhasználóhoz vagy egy csoport tagjához hozza létre."
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__badge_ids
 #: model:ir.ui.menu,name:hr_gamification.gamification_badge_menu_hr
-msgid "Badges"
-msgstr "Jelvények"
-
-#. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid ""
-"Badges are rewards of good work. Give them to people you believe deserve it."
-msgstr ""
-"Kitűzők a jó munkáért járó jutalmak. Azoknak az embereknek adja akik, "
-"véleménye szerint megérdemlik."
+msgid "Badges"
+msgstr "Jelvények"
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__direct_badge_ids
@@ -113,6 +111,15 @@ msgstr "Írja le mit csinált és az miért számított (nyilvános lesz)"
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__direct_badge_ids
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Direct Badge"
+msgstr ""
+
+#. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: hr_gamification
@@ -168,12 +175,6 @@ msgid "Grant a Badge"
 msgstr "Egy kitüntetést adományoz"
 
 #. module: hr_gamification
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "Grant this employee his first badge"
-msgstr ""
-
-#. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
 msgid "Granted"
 msgstr "Kitüntetett"
@@ -191,10 +192,13 @@ msgid "Has Badges"
 msgstr "Kitüntetett"
 
 #. module: hr_gamification
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "Received Badges"
-msgstr "Megkapott kitüntetések"
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__id
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__id
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__id
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users__id
+msgid "ID"
+msgstr ""
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
@@ -215,6 +219,14 @@ msgstr ""
 "A kiválasztott munkavállaló nincs összhangban a kiválasztott felhasználóhoz."
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
+msgid ""
+"There are no badges for this employee.<br/>\n"
+"                                It's time to allow the first one."
+msgstr ""
+
+#. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_res_users
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__user_id
 msgid "User"
@@ -231,8 +243,15 @@ msgstr "Mire hálás?"
 msgid "You can not send a badge to yourself."
 msgstr "Önmagának nem küldhet jelvényt."
 
-#. module: hr_gamification
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "to reward this employee for a good action"
-msgstr "egy jó cselekedetért jutalmazza meg ezt a munkavállalót"
+#~ msgid ""
+#~ "Badges are rewards of good work. Give them to people you believe deserve "
+#~ "it."
+#~ msgstr ""
+#~ "Kitűzők a jó munkáért járó jutalmak. Azoknak az embereknek adja akik, "
+#~ "véleménye szerint megérdemlik."
+
+#~ msgid "Received Badges"
+#~ msgstr "Megkapott kitüntetések"
+
+#~ msgid "to reward this employee for a good action"
+#~ msgstr "egy jó cselekedetért jutalmazza meg ezt a munkavállalót"

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* fleet
-# 
+#
 # Translators:
 # Arnis Putniņš <arnis@allegro.lv>, 2024
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2024
@@ -10,20 +10,21 @@
 # Anzelika Adejanova, 2024
 # Martin Trigaux, 2024
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lv\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
@@ -37,7 +38,8 @@ msgid ""
 "                                <span class=\"o_stat_text\">Vehicle</span>"
 msgstr ""
 "<span class=\"o_stat_value\">Jauns</span>\n"
-"                                <span class=\"o_stat_text\">Transportlīdzeklis</span>"
+"                                <span "
+"class=\"o_stat_text\">Transportlīdzeklis</span>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
@@ -55,22 +57,18 @@ msgid "<span>cm</span>"
 msgstr "<span>cm</span>"
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "<span>g/km</span>"
-msgstr "<span>g/km</span>"
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__trailer_hook
+msgid ""
+"A trailer hitch is a device attached to a vehicle's chassis for towing "
+"purposes,             such as pulling trailers, boats, or other vehicles."
+msgstr ""
 
 #. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "<span>kW</span>"
-msgstr "<span>kW</span>"
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "<span>km</span>"
-msgstr "<span>km</span>"
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__trailer_hook
+msgid ""
+"A trailer hitch is a device attached to a vehicle's chassis for towing "
+"purposes,            such as pulling trailers, boats, or other vehicles."
+msgstr ""
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_1
@@ -128,6 +126,11 @@ msgid "Activities"
 msgstr "Aktivitātes"
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+msgid "Activities of"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_exception_decoration
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_exception_decoration
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_exception_decoration
@@ -144,6 +147,11 @@ msgid "Activity State"
 msgstr "Aktivitātes stāvoklis"
 
 #. module: fleet
+#: model:ir.model,name:fleet.model_mail_activity_type
+msgid "Activity Type"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
@@ -156,6 +164,11 @@ msgstr "Aktivitātes tipa ikona"
 #: model:ir.ui.menu,name:fleet.fleet_menu_config_activity_type
 msgid "Activity Types"
 msgstr "Aktivitāšu tipi"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+msgid "Activity type"
+msgstr ""
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
@@ -178,6 +191,11 @@ msgid "All vehicles"
 msgstr "Visi transportlīdzekļi"
 
 #. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__drive_type__awd
+msgid "All-Wheel Drive (AWD)"
+msgstr ""
+
+#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Apply New Driver"
 msgstr "Pielietot jaunu vadītāju"
@@ -193,6 +211,7 @@ msgstr "Arhīvs"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
@@ -331,6 +350,7 @@ msgstr "Bremžu kluča(-u) nomaiņa"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__brand_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__brand_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Brand"
 msgstr "Marka"
@@ -347,25 +367,20 @@ msgid "CNG"
 msgstr "Dabas gāze"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__default_co2
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_tree
 msgid "CO2 Emissions"
 msgstr "CO2 emisijas"
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_tree
-msgid "CO2 Emissions g/km"
-msgstr "CO2 emisijas g/kg"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_standard
-msgid "CO2 Standard"
-msgstr "CO2 standarts"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__co2
 msgid "CO2 emissions of the vehicle"
 msgstr "Transportlīdzekļa CO2 emisijas"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__default_co2
+msgid "CO₂ Emissions"
+msgstr ""
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_1
@@ -428,8 +443,8 @@ msgstr "Kategorijas"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_category_action
 msgid ""
-"Categories will help you manage your fleet more efficiently and arrange your"
-" vehicles."
+"Categories will help you manage your fleet more efficiently and arrange your "
+"vehicles."
 msgstr ""
 "Kategorijas palīdz Jums daudz efektīvāk pārvaldīt un sakārtot Jūsu "
 "transportlīdzekļus."
@@ -438,7 +453,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__category
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__category_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__category_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_report__category_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_report_view_search
 msgid "Category"
 msgstr "Kategorija"
 
@@ -475,8 +492,7 @@ msgstr "Izvēlieties vai līgums vēl ir derīgs vai nē"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type__category
-msgid ""
-"Choose whether the service refer to contracts, vehicle services or both"
+msgid "Choose whether the service refer to contracts, vehicle services or both"
 msgstr ""
 
 #. module: fleet
@@ -485,9 +501,10 @@ msgid "Closed"
 msgstr "Slēgts"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__co2_standard
-msgid "Co2 Standard"
-msgstr "Co2 standarts"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_emission_unit
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__co2_emission_unit
+msgid "Co2 Emission Unit"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__color
@@ -524,11 +541,6 @@ msgstr "Konfigurācijas uzstādījumi"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
 msgid "Configuration"
 msgstr "Konfigurācija"
-
-#. module: fleet
-#: model:ir.model,name:fleet.model_res_partner
-msgid "Contact"
-msgstr "Kontakts"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
@@ -576,6 +588,7 @@ msgstr "Līguma reģistrs"
 
 #. module: fleet
 #: model:mail.activity.type,name:fleet.mail_act_fleet_contract_to_renew
+#: model:mail.activity.type,summary:fleet.mail_act_fleet_contract_to_renew
 msgid "Contract to Renew"
 msgstr "Līgums pagarināšanai"
 
@@ -734,6 +747,9 @@ msgstr "Ikdienas"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__date
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_report__recorded_date
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_report_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
 msgid "Date"
 msgstr "Datums"
 
@@ -756,8 +772,8 @@ msgstr "Datums, kad līguma segums sākas"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after"
-" begin date)"
+"Date when the coverage of the contract expirates (by default, one year after "
+"begin date)"
 msgstr ""
 
 #. module: fleet
@@ -807,9 +823,12 @@ msgstr "Dīzeļdegviela"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_category__display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_report__display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__display_name
+#: model:ir.model.fields,field_description:fleet.field_mail_activity_type__display_name
+#: model:ir.model.fields,field_description:fleet.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Nosaukums"
 
@@ -824,14 +843,13 @@ msgid "Door Window Motor/Regulator Replacement"
 msgstr "Durvju logu motoru/regulatoru nomaiņa"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__doors
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__doors
-msgid "Doors Number"
-msgstr "Durvju skaits"
-
-#. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_downgraded
 msgid "Downgraded"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__drive_type
+msgid "Drive Type"
 msgstr ""
 
 #. module: fleet
@@ -850,7 +868,6 @@ msgstr "Vadītājs"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__driver_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__purchaser_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer__driver_id
 msgid "Driver address of the vehicle"
 msgstr "Transportlīdzekļa vadītāja adrese"
 
@@ -896,6 +913,26 @@ msgstr "Elektrisks"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__electric_assistance
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__electric_assistance
 msgid "Electric Assistance"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_standard
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__co2_standard
+msgid "Emission Standard"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__co2_standard
+msgid ""
+"Emission Standard specifies the regulatory test procedure             or "
+"guideline under which a vehicle's emissions are measured."
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__co2_standard
+msgid ""
+"Emission Standard specifies the regulatory test procedure or             "
+"guideline under which a vehicle's emissions are measured."
 msgstr ""
 
 #. module: fleet
@@ -986,10 +1023,10 @@ msgid "Fiscality"
 msgstr "Fiskalitāte"
 
 #. module: fleet
-#: model:ir.module.category,name:fleet.module_fleet_category
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_menu
 #: model:ir.ui.menu,name:fleet.fleet_vehicles
 #: model:ir.ui.menu,name:fleet.menu_root
+#: model:res.groups.privilege,name:fleet.res_groups_privilege_fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "Fleet"
 msgstr "Auto parks"
@@ -1018,6 +1055,11 @@ msgstr "Autoparka pārvaldība"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 msgid "Fleet Manager"
 msgstr "Autoparka pārvaldnieks"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_odometer_report
+msgid "Fleet Odometer Analysis Report"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_service_type
@@ -1054,9 +1096,19 @@ msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Fonts awesome ikona, piem., fa-tasks"
 
 #. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__drive_type__4wd
+msgid "Four-Wheel Drive (4WD)"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__frame_size
 msgid "Frame Size"
 msgstr "Rāmja izmērs"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__drive_type__fwd
+msgid "Front-Wheel Drive (FWD)"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__fuel_type
@@ -1076,6 +1128,8 @@ msgstr "Degvielas sūkņa nomaiņa"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__fuel_type
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__default_fuel_type
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_report__fuel_type
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_report_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Fuel Type"
 msgstr "Degvielas veids"
@@ -1171,9 +1225,13 @@ msgstr "Apsildes šļūtenes nomaiņa"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__horsepower
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__horsepower
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__power_unit__horsepower
-#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__power_unit__horsepower
 msgid "Horsepower"
 msgstr "Zirgspēki"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__power_unit__horsepower
+msgid "Horsepower (hp)"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__horsepower_tax
@@ -1198,9 +1256,12 @@ msgstr "Ūdeņradis"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_category__id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_report__id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__id
+#: model:ir.model.fields,field_description:fleet.field_mail_activity_type__id
+#: model:ir.model.fields,field_description:fleet.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
@@ -1315,11 +1376,6 @@ msgstr "Ir sekotājs"
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_junior
 msgid "Junior"
 msgstr "Juniors"
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_kanban
-msgid "Km"
-msgstr "km"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__lpg
@@ -1437,6 +1493,11 @@ msgid "Mail to Driver"
 msgstr ""
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Make Vehicle Available"
+msgstr ""
+
+#. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
 msgid ""
 "Manage all your contracts (leasing, insurances, etc.) with\n"
@@ -1447,6 +1508,11 @@ msgstr ""
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
 msgid "Manage efficiently your different effective vehicles Costs with Odoo."
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_reporting_action
+msgid "Manage efficiently your vehicle Odometers with Odoo."
 msgstr ""
 
 #. module: fleet
@@ -1461,7 +1527,10 @@ msgid "Manual"
 msgstr "Manuāls"
 
 #. module: fleet
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle_model_brand.py:0
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__brand_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 msgid "Manufacturer"
 msgstr "Ražotājs"
 
@@ -1489,10 +1558,19 @@ msgid "Messages"
 msgstr "Ziņojumi"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_report__mileage_delta
+msgid "Mileage Delta"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__model_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__model_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_report__model_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_report_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Model"
@@ -1532,6 +1610,8 @@ msgid "Model of a vehicle"
 msgstr "Transportlīdzekļa marka"
 
 #. module: fleet
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle_model_brand.py:0
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_action
 #: model:ir.ui.menu,name:fleet.fleet_models_configuration
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_model_menu
@@ -1546,6 +1626,12 @@ msgstr "Markas"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__monthly
 msgid "Monthly"
 msgstr "Ikmēneša"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "My Activities"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__my_activity_date_deadline
@@ -1636,6 +1722,11 @@ msgid "No data for analysis"
 msgstr "Nav datu analīzei"
 
 #. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_reporting_action
+msgid "No data for odometer analysis"
+msgstr ""
+
+#. module: fleet
 #. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "No plate"
@@ -1664,6 +1755,12 @@ msgstr "Piezīmes"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Darbību skaits"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__doors
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__doors
+msgid "Number of Doors"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__doors
@@ -1707,10 +1804,20 @@ msgid "Odometer"
 msgstr "Odometrs"
 
 #. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_reporting_action
+msgid "Odometer Analysis"
+msgstr ""
+
+#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_tree
 msgid "Odometer Logs"
 msgstr "Odometra reģistri"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Odometer Report"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__odometer_unit
@@ -1720,6 +1827,7 @@ msgstr "Odometra vienība"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__odometer
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__value
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_report__odometer_value
 msgid "Odometer Value"
 msgstr "Odometra vērtība"
 
@@ -1743,6 +1851,7 @@ msgstr "Odometra rādījums sākumā"
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_odometer_menu
+#: model:ir.ui.menu,name:fleet.menu_fleet_odometer_reporting_odometer
 msgid "Odometers"
 msgstr "Odometri"
 
@@ -1767,23 +1876,17 @@ msgid "Omnium"
 msgstr "Omnium"
 
 #. module: fleet
-#. odoo-python
-#: code:addons/fleet/models/fleet_vehicle_model.py:0
-msgid "Operation not supported."
-msgstr "Darbība nav atbalstīta."
-
-#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_send_mail__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
 "Izvēles tulkošanas valoda (ISO kods), ko izvēlēties, sūtot e-pastu. Ja tas "
 "nav iestatīts, tiks izmantota versija angļu valodā. Parasti tai ir jābūt "
-"viettura izteiksmei, kas nodrošina atbilstošo valodu, piem. {{ "
-"object.partner_id.lang }}."
+"viettura izteiksmei, kas nodrošina atbilstošo valodu, piem. "
+"{{ object.partner_id.lang }}."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
@@ -1817,15 +1920,11 @@ msgstr "Skābekļa sensora nomaiņa"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__plan_to_change_bike
-#: model:ir.model.fields,field_description:fleet.field_res_partner__plan_to_change_bike
-#: model:ir.model.fields,field_description:fleet.field_res_users__plan_to_change_bike
 msgid "Plan To Change Bike"
 msgstr "Plāni mainīt motociklu"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__plan_to_change_car
-#: model:ir.model.fields,field_description:fleet.field_res_partner__plan_to_change_car
-#: model:ir.model.fields,field_description:fleet.field_res_users__plan_to_change_car
 msgid "Plan To Change Car"
 msgstr "Plāni mainīt mašīnu"
 
@@ -1901,9 +2000,20 @@ msgid "Range"
 msgstr "Diapazons"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__range_unit
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__range_unit
+msgid "Range Unit"
+msgstr ""
+
+#. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
 msgid "Ready to manage your fleet more efficiently?"
 msgstr "Gatavi pārvaldīt Jūsu transportlīdzekļu parku daudz efektīvāk?"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__drive_type__rwd
+msgid "Rear-Wheel Drive (RWD)"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_generated
@@ -2032,8 +2142,8 @@ msgstr "Saglabāt kā jaunu ziņojuma veidni"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__seats
-msgid "Seats Number"
-msgstr "Sēdvietu skaits"
+msgid "Seating Capacity"
+msgstr ""
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
@@ -2122,9 +2232,8 @@ msgstr "Uzstādījumi"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
-msgid "Show all records which has next action date is before today"
+msgid "Show all records whose next activity date is past"
 msgstr ""
-"Rādīt visus ierakstus, kuriem nākamais darbības datums ir pirms šodienas"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_6
@@ -2135,6 +2244,13 @@ msgstr "Ziemas riepas"
 #: model:fleet.service.type,name:fleet.type_service_41
 msgid "Spark Plug Replacement"
 msgstr "Aizdedzes sveču nomaiņa"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__doors
+msgid ""
+"Specifies the total number of doors, including the truck and hatch doors, if "
+"applicable."
+msgstr ""
 
 #. module: fleet
 #. odoo-python
@@ -2276,6 +2392,12 @@ msgstr ""
 "uzreiz"
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid ""
+"This will allow this vehicle to be selectable for the Salary Configurator"
+msgstr ""
+
+#. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_44
 msgid "Tie Rod End Replacement"
 msgstr ""
@@ -2325,7 +2447,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
 msgid ""
 "Track all the services done on your vehicle.\n"
-"            Services can be of many types: occasional repair, fixed maintenance, etc."
+"            Services can be of many types: occasional repair, fixed "
+"maintenance, etc."
 msgstr ""
 
 #. module: fleet
@@ -2404,10 +2527,12 @@ msgstr "Vienība"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__vehicle_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__vehicle_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__vehicle_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_report__vehicle_id
 #: model:ir.ui.menu,name:fleet.fleet_vehicles_configuration
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_costs_report_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_report_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
@@ -2439,6 +2564,11 @@ msgstr "Transportlīdzekļa informācija"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__name
 msgid "Vehicle Name"
 msgstr "Transportlīdzekļa nosaukums"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_report_view_graph
+msgid "Vehicle Odometer Timeline"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vehicle_properties_definition
@@ -2521,6 +2651,13 @@ msgid "Vendors"
 msgstr "Piegādātāji"
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Visible to all"
+msgstr ""
+
+#. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_waiting_list
 msgid "Waiting List"
 msgstr "Gaidīšanas saraksts"
@@ -2578,8 +2715,7 @@ msgstr "Pierakstiet šeit visu pārējo informāciju saistīto ar šo līgumu"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Write here any other information related to the service completed."
-msgstr ""
-"Pierakstiet šeit jebkādu citu informāciju saistīto ar paveikto apkopi."
+msgstr "Pierakstiet šeit jebkādu citu informāciju saistīto ar paveikto apkopi."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -2624,11 +2760,13 @@ msgstr ""
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form_quick_create
 msgid "e.g. Model S"
 msgstr "piem., Model S"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form_quick_create
 msgid "e.g. PAE 326"
 msgstr "piem., PAR 326"
 
@@ -2638,6 +2776,24 @@ msgid "e.g. Tesla"
 msgstr "piem., Tesla"
 
 #. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "eg. WLTP, Euro 6, or EPA, ..."
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__co2_emission_unit__g/km
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__co2_emission_unit__g/km
+msgid "g/km"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__co2_emission_unit__g/mi
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__co2_emission_unit__g/mi
+msgid "g/mi"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__power_unit__power
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__power_unit__power
 msgid "kW"
@@ -2645,11 +2801,15 @@ msgstr "kW"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__odometer_unit__kilometers
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__range_unit__km
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__range_unit__km
 msgid "km"
 msgstr "km"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__odometer_unit__miles
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__range_unit__mi
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__range_unit__mi
 msgid "mi"
 msgstr "mi"
 
@@ -2667,3 +2827,40 @@ msgstr "parādīt odometra rādījumus šim transportlīdzeklim"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "show the services logs for this vehicle"
 msgstr "parādīt apkopes ierakstus šim transportlīdzeklis"
+
+#~ msgid "<span>g/km</span>"
+#~ msgstr "<span>g/km</span>"
+
+#~ msgid "<span>kW</span>"
+#~ msgstr "<span>kW</span>"
+
+#~ msgid "<span>km</span>"
+#~ msgstr "<span>km</span>"
+
+#~ msgid "CO2 Emissions g/km"
+#~ msgstr "CO2 emisijas g/kg"
+
+#~ msgid "CO2 Standard"
+#~ msgstr "CO2 standarts"
+
+#~ msgid "Co2 Standard"
+#~ msgstr "Co2 standarts"
+
+#~ msgid "Contact"
+#~ msgstr "Kontakts"
+
+#~ msgid "Doors Number"
+#~ msgstr "Durvju skaits"
+
+#~ msgid "Km"
+#~ msgstr "km"
+
+#~ msgid "Operation not supported."
+#~ msgstr "Darbība nav atbalstīta."
+
+#~ msgid "Seats Number"
+#~ msgstr "Sēdvietu skaits"
+
+#~ msgid "Show all records which has next action date is before today"
+#~ msgstr ""
+#~ "Rādīt visus ierakstus, kuriem nākamais darbības datums ir pirms šodienas"

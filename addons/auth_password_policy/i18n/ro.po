@@ -1,28 +1,41 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_password_policy
-# 
+#
 # Translators:
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:40+0000\n"
+"POT-Creation-Date: 2026-01-13 18:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_config_settings
 msgid "Config Settings"
 msgstr "Setări de configurare"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__id
+msgid "ID"
+msgstr ""
 
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
@@ -34,8 +47,8 @@ msgstr "Lungime Minimă Parolă"
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
 msgstr ""
-"Numărul minim de caractere trebuie să conțină parolele, setați pe 0 pentru a"
-" dezactiva."
+"Numărul minim de caractere trebuie să conțină parolele, setați pe 0 pentru a "
+"dezactiva."
 
 #. module: auth_password_policy
 #. odoo-javascript
@@ -49,7 +62,8 @@ msgstr "Parola"
 msgid ""
 "Required: %s\n"
 "\n"
-"Hint: to increase password strength, increase length, use multiple words, and use non-letter characters."
+"Hint: to increase password strength, increase length, use multiple words, "
+"and use non-letter characters."
 msgstr ""
 "Necesar: %s\n"
 "\n"
@@ -85,3 +99,9 @@ msgstr "cel puțin %s caractere"
 #: code:addons/auth_password_policy/static/src/password_policy.js:0
 msgid "at least %s words"
 msgstr "cel puțin %s cuvinte"
+
+#. module: auth_password_policy
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_meter.js:0
+msgid "no requirements"
+msgstr ""

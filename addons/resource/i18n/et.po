@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* resource
-# 
+#
 # Translators:
 # Tairi Tiimann, 2024
 # Siim Raasuke, 2024
@@ -17,20 +17,25 @@
 # Martin Aavastik <martin@avalah.ee>, 2024
 # Martin Trigaux, 2024
 # Anna, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Anna, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+msgid "# Work Resources"
+msgstr ""
 
 #. module: resource
 #. odoo-python
@@ -41,18 +46,23 @@ msgstr "%s (koopia)"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"ms-1\">%</span>"
+msgstr ""
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "<span class=\"ms-2\">hours/week</span>"
+msgstr ""
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"o_stat_text\">Time Off</span>"
 msgstr "<span class=\"o_stat_text\">Puudumised</span>"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "<span class=\"o_stat_text\">Work Resources</span>"
-msgstr "<span class=\"o_stat_text\">Tööressursid</span>"
-
-#. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid "<span> hours/week</span>"
-msgstr "<span> tunnid/nädal</span>"
+msgid "<span>hours/week</span>"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__active
@@ -201,9 +211,12 @@ msgid ""
 msgstr "Määratle oma projektiliikmete töötunnid ja ajaarvestustabel."
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_res_company__display_name
+#: model:ir.model.fields,field_description:resource.field_res_users__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__display_name
+#: model:ir.model.fields,field_description:resource.field_resource_mixin__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource__display_name
 msgid "Display Name"
 msgstr "Kuvatav nimi"
@@ -264,6 +277,11 @@ msgid "First week"
 msgstr "Esimene nädal"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
+msgid "Flexible"
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__flexible_hours
 msgid "Flexible Hours"
 msgstr "Paindlik tööaeg"
@@ -318,6 +336,7 @@ msgid "Hours"
 msgstr "Tund(i)"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_week
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Hours per Week"
 msgstr "Tunde nädalas"
@@ -329,9 +348,12 @@ msgid "Human"
 msgstr "Inimene"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_res_company__id
+#: model:ir.model.fields,field_description:resource.field_res_users__id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__id
+#: model:ir.model.fields,field_description:resource.field_resource_mixin__id
 #: model:ir.model.fields,field_description:resource.field_resource_resource__id
 msgid "ID"
 msgstr "ID"
@@ -362,6 +384,11 @@ msgstr ""
 #: code:addons/resource/models/resource_calendar.py:0
 msgid ""
 "In a calendar with 2 weeks mode, all periods need to be in the sections."
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__is_fulltime
+msgid "Is Full Time"
 msgstr ""
 
 #. module: resource
@@ -424,14 +451,18 @@ msgstr "Nimi"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__full_time_required_hours
 msgid ""
-"Number of hours to work on the company schedule to be considered as "
-"fulltime."
+"Number of hours to work on the company schedule to be considered as fulltime."
 msgstr ""
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__other
 msgid "Other"
 msgstr "Muu"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
+msgid "Partial working schedules"
+msgstr ""
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -526,6 +557,11 @@ msgid "Saturday"
 msgstr "Laupäev"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+msgid "Schedule Total Time"
+msgstr ""
+
+#. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Search Resource"
 msgstr "Search Resource"
@@ -601,6 +637,11 @@ msgstr "Pühapäev"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Switch"
+msgstr ""
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Switch to 1 week calendar"
 msgstr "Vaheta 1 nädala kalendrile"
 
@@ -648,8 +689,8 @@ msgid ""
 msgstr ""
 "Seda välja kasutatakse töökäsu eeldatava kestuse arvutamiseks selles "
 "töökeskuses. Näiteks, kui töökäsk võtab aega ühe tunni ja efektiivsusfaktor "
-"on 100%, siis eeldatav kestus on üks tund. Kui efektiivsusfaktor on 200%, on"
-" eeldatav kestus 30 minutit."
+"on 100%, siis eeldatav kestus on üks tund. Kui efektiivsusfaktor on 200%, on "
+"eeldatav kestus 30 minutit."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
@@ -709,6 +750,11 @@ msgid "Timezone offset"
 msgstr "Ajavööndi nihe"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Total"
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
 msgid "Tuesday"
 msgstr "Teisipäev"
@@ -743,6 +789,12 @@ msgstr "Tüüp"
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "User"
 msgstr "Kasutaja"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
+msgid "Visible to all"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__2
@@ -784,8 +836,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
 msgid ""
-"Whether this should be computed as a time off or as work time (eg: "
-"formation)"
+"Whether this should be computed as a time off or as work time (eg: formation)"
 msgstr "Kas see peaks olema arvutatud kui vaba aeg või tööaeg (nt: koolitus)"
 
 #. module: resource
@@ -794,9 +845,32 @@ msgid "Work Detail"
 msgstr "Work Detail"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Work Resources"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__work_resources_count
+msgid "Work Resources count"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__work_time_rate
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Work Time Rate"
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_from
 msgid "Work from"
 msgstr "Töötab alates"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar__work_time_rate
+msgid ""
+"Work time rate versus full time working schedule, should be between 0 and "
+"100 %."
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_to
@@ -864,3 +938,9 @@ msgstr "teine"
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "this week"
 msgstr "see nädal"
+
+#~ msgid "<span class=\"o_stat_text\">Work Resources</span>"
+#~ msgstr "<span class=\"o_stat_text\">Tööressursid</span>"
+
+#~ msgid "<span> hours/week</span>"
+#~ msgstr "<span> tunnid/nädal</span>"

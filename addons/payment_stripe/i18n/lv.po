@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_stripe
-# 
+#
 # Translators:
 # Arnis Putniņš <arnis@allegro.lv>, 2024
 # Martin Trigaux, 2024
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
 # Will Sensors, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Will Sensors, 2024\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lv\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
 
 #. module: payment_stripe
 #. odoo-javascript
@@ -51,6 +52,13 @@ msgid "Delivery"
 msgstr "Piegāde"
 
 #. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Enable Apple Pay"
 msgstr "Iespējot Apple Pay"
@@ -69,6 +77,13 @@ msgstr ""
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Get your Secret and Publishable keys"
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__id
+msgid "ID"
 msgstr ""
 
 #. module: payment_stripe
@@ -267,16 +282,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 msgid ""
-"You cannot set the provider state to Enabled until your onboarding to Stripe"
-" is completed."
+"You cannot set the provider state to Enabled until your onboarding to Stripe "
+"is completed."
 msgstr ""
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 msgid ""
-"You cannot set the provider to Test Mode while it is linked with your Stripe"
-" account."
+"You cannot set the provider to Test Mode while it is linked with your Stripe "
+"account."
 msgstr ""
 
 #. module: payment_stripe

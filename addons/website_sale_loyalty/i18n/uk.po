@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_loyalty
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
@@ -126,6 +129,12 @@ msgstr "Сума знижок"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__display_name
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_card__display_name
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_program__display_name
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_rule__display_name
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_sale_order_line__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
@@ -156,6 +165,12 @@ msgstr "Подарункові картки та електронний гама
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__id
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_card__id
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_program__id
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_rule__id
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_sale_order_line__id
 msgid "ID"
 msgstr "ID"
 
@@ -203,6 +218,11 @@ msgstr "Правило лояльності"
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Pay with eWallet"
 msgstr "Платіть через електронний гаманець"
+
+#. module: website_sale_loyalty
+#: model:ir.model,name:website_sale_loyalty.model_product_product
+msgid "Product Variant"
+msgstr ""
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__program_id
@@ -277,13 +297,16 @@ msgid "Show Discount in Subtotal"
 msgstr "Показати знижку в підсумку"
 
 #. module: website_sale_loyalty
+#: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_program__show_non_published_product_warning
+msgid "Show Non Published Product Warning"
+msgstr ""
+
+#. module: website_sale_loyalty
 #. odoo-python
 #: code:addons/website_sale_loyalty/controllers/main.py:0
 msgid ""
-"The coupon will be automatically applied when you add something in your "
-"cart."
-msgstr ""
-"Купон буде автоматично застосовано, коли ви додасте щось у свій кошик."
+"The coupon will be automatically applied when you add something in your cart."
+msgstr "Купон буде автоматично застосовано, коли ви додасте щось у свій кошик."
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.layout
@@ -303,6 +326,19 @@ msgid "The shared website should correspond to the website of the program."
 msgstr "Спільний веб-сайт має відповідати веб-сайту програми."
 
 #. module: website_sale_loyalty
+#: model_terms:ir.ui.view,arch_db:website_sale_loyalty.loyalty_program_view_form_inherit_website_sale_loyalty
+msgid ""
+"To be able to top up eWallet from the portal, eWallet products must be\n"
+"                     published."
+msgstr ""
+
+#. module: website_sale_loyalty
+#. odoo-javascript
+#: code:addons/website_sale_loyalty/static/src/js/portal_loyalty_card.xml:0
+msgid "Top Up"
+msgstr ""
+
+#. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Use"
 msgstr "Користування"
@@ -319,10 +355,12 @@ msgstr "Веб-сайт"
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.coupon_share_view_form
 msgid ""
 "You can share this promotion with your customers.\n"
-"                            It will be applied at checkout when the customer uses this link."
+"                            It will be applied at checkout when the customer "
+"uses this link."
 msgstr ""
 "Ви можете поділитися цією акцією зі своїми клієнтами.\n"
-"                           Її буде застосовано під час оформлення замовлення, коли клієнт використовує це посилання."
+"                           Її буде застосовано під час оформлення "
+"замовлення, коли клієнт використовує це посилання."
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_customer
-# 
+#
 # Translators:
 # Stevin Lilla, 2024
 # Patrick-Jordan Kiudorv, 2024
@@ -12,31 +12,27 @@
 # Eneli Õigus <enelioigus@gmail.com>, 2024
 # Triine Aavik <triine@avalah.ee>, 2024
 # Anna, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2026-01-13 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Anna, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.details
-msgid "<i class=\"fa fa-chevron-left me-2\"/>Back to references"
-msgstr "<i class=\"fa fa-chevron-left me-2\"/>Tagasi viidete juurde"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid ""
 "<i class=\"fa fa-info-circle me-2\"/>\n"
-"                        There are no matching customers found for the selected country. Displaying results across all countries instead."
+"                        There are no matching customers found for the "
+"selected country. Displaying results across all countries instead."
 msgstr ""
 
 #. module: website_customer
@@ -47,6 +43,11 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" "
 "title=\"Open map\"/>"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.details
+msgid "<i class=\"oi oi-chevron-left me-2\"/>Back to references"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
@@ -123,6 +124,11 @@ msgid "Countries Filter"
 msgstr "Riikide filter"
 
 #. module: website_customer
+#: model:ir.model,website_form_label:website_customer.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid "Create a new contact tag"
 msgstr "Looge uus kontakti silt"
@@ -143,7 +149,9 @@ msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL CUSTOMERS"
 msgstr ""
 
 #. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
+#: model:ir.model.fields,field_description:website_customer.field_website__display_name
 msgid "Display Name"
 msgstr "Kuvatav nimi"
 
@@ -168,6 +176,16 @@ msgid "Filter by Tags"
 msgstr "Filtreeritud siltide järgi"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
+msgid "Filter by country"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
+msgid "Filter by industry"
+msgstr ""
+
+#. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner__website_tag_ids
 #: model:ir.model.fields,help:website_customer.field_res_users__website_tag_ids
 msgid "Filter published customers on the .../customers website page"
@@ -184,7 +202,9 @@ msgid "Go to customer"
 msgstr "Vaata klienti"
 
 #. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner__id
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__id
+#: model:ir.model.fields,field_description:website_customer.field_website__id
 msgid "ID"
 msgstr "ID"
 
@@ -221,16 +241,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "No results found for \""
 msgstr "Päringule tulemusi ei leitud"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
-msgid "Open countries dropdown"
-msgstr "Ava riikide rippmenüü"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
-msgid "Open industries dropdown"
-msgstr "Ava valdkonnade rippmenüü"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
@@ -304,9 +314,14 @@ msgid "Tags Filter"
 msgstr "Siltide filter"
 
 #. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
+
+#. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
-msgid "The full URL to access the document through the website."
-msgstr "Dokumendile veebisaidi kaudu juurdepääsuks täielik URL."
+msgid "The full relative URL to access the document through the website."
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
@@ -317,6 +332,11 @@ msgstr "Nähtav praegusel veebilehel"
 #: model:ir.model,name:website_customer.model_website
 msgid "Website"
 msgstr "Veebileht"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_absolute_url
+msgid "Website Absolute URL"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
@@ -341,3 +361,15 @@ msgstr "Veebilehe sildid"
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country
 msgid "World Map"
 msgstr "Maailma kaart"
+
+#~ msgid "<i class=\"fa fa-chevron-left me-2\"/>Back to references"
+#~ msgstr "<i class=\"fa fa-chevron-left me-2\"/>Tagasi viidete juurde"
+
+#~ msgid "Open countries dropdown"
+#~ msgstr "Ava riikide rippmenüü"
+
+#~ msgid "Open industries dropdown"
+#~ msgstr "Ava valdkonnade rippmenüü"
+
+#~ msgid "The full URL to access the document through the website."
+#~ msgstr "Dokumendile veebisaidi kaudu juurdepääsuks täielik URL."

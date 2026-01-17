@@ -6,13 +6,13 @@
 # Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2025
 # Marta Wacławek, 2025
 # Wil Odoo, 2025
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:37+0000\n"
-"PO-Revision-Date: 2025-09-30 00:21+0000\n"
+"POT-Creation-Date: 2026-01-13 18:36+0000\n"
+"PO-Revision-Date: 2026-01-15 16:45+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-3/mrp/pl/"
 ">\n"
@@ -21,9 +21,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -82,12 +82,12 @@ msgstr "# BOM gdzie zostało użyte"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__num_splits
 msgid "# Splits"
-msgstr ""
+msgstr "# Podziały"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
 msgid "# To Do Work Orders"
-msgstr ""
+msgstr "# Zlecenia do wykonania"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workorder_count
@@ -152,13 +152,13 @@ msgstr "%(qty)s %(measure)s niezbudowany w %(order)s"
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "%(qty)s Ready To Produce"
-msgstr ""
+msgstr "%(qty)s Gotowy do produkcji"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "%(qty)s To %(route)s"
-msgstr ""
+msgstr "%(qty)s Do %(route)s"
 
 #. module: mrp
 #. odoo-python
@@ -220,7 +220,7 @@ msgstr "+ %ddni"
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid "+ %s day(s)"
-msgstr ""
+msgstr "+ %s dzień(dni)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
@@ -509,7 +509,7 @@ msgstr "<span>minuty</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<span> (minutes)</span>"
-msgstr ""
+msgstr "<span> (minuty)</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -883,7 +883,7 @@ msgstr "Zarchiwizowane"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Are you sure you want to cancel these manufacturing orders?"
-msgstr ""
+msgstr "Czy na pewno chcesz anulować te zlecenia z zakresu produkcji?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1412,7 +1412,7 @@ msgstr "Capacity"
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_positive_capacity
 msgid "Capacity should be a non-negative number."
-msgstr ""
+msgstr "Pojemność powinna być liczbą nieujemną."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_reported_from_previous_wo
@@ -3354,6 +3354,7 @@ msgstr "Zarządzaj zleceniami operacji"
 msgid ""
 "Manage the manufacturing processes and generate reports on those processes."
 msgstr ""
+"Zarządzaj procesami produkcji i generuj raporty dotyczące tych procesów."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__manual_consumption
@@ -3598,7 +3599,7 @@ msgstr "Dostępność materiałów"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__max_batch_size
 msgid "Max Batch Size"
-msgstr ""
+msgstr "Maksymalny rozmiar partii"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_merge
@@ -3689,7 +3690,7 @@ msgstr "Moje czynności"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__my_activity_date_deadline
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Ostateczny terminin moich aktywności"
+msgstr "Ostateczny termin moich aktywności"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3758,13 +3759,13 @@ msgstr "Bez pobrania częściowego"
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid "No BoM Found"
-msgstr ""
+msgstr "Nie znaleziono zestawienia materiałów"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "No Ready To Produce"
-msgstr ""
+msgstr "Nie gotowy do produkcji"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -3952,6 +3953,8 @@ msgid ""
 "Number of pieces that can be produced in parallel for this product or for "
 "all, depending on the unit."
 msgstr ""
+"Liczba elementów, które mogą być produkowane równolegle dla tego produktu "
+"lub dla wszystkich, w zależności od jednostki."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -4613,6 +4616,8 @@ msgstr "Produkt do budowy..."
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_workcenter_product_product_uom_unique
 msgid "Product/Unit capacity should be unique for each workcenter."
 msgstr ""
+"Wydajność produktu/jednostki powinna być unikalna dla każdego stanowiska "
+"pracy."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__production_id
@@ -5225,7 +5230,7 @@ msgstr "Pokaż produkuj wszystko"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__show_time_total
 msgid "Show Total Duration?"
-msgstr ""
+msgstr "Pokazać całkowity czas trwania?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -6021,7 +6026,7 @@ msgstr "Całkowity czas trwania"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Total Duration (minutes)"
-msgstr ""
+msgstr "Całkowity czas trwania (w minutach)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_late_count
@@ -6631,7 +6636,7 @@ msgstr "Zlecenia operacji"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_report
 msgid "Work Orders Analysis"
-msgstr ""
+msgstr "Analiza zleceń pracy"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_workcenter_report
@@ -6824,6 +6829,7 @@ msgstr "Można połączyć produkcję tylko z tym samym stanem."
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "You cannot cancel a manufacturing order that is already done."
 msgstr ""
+"Nie można anulować zlecenia produkcyjnego, które zostało już zrealizowane."
 
 #. module: mrp
 #. odoo-python
@@ -6861,6 +6867,7 @@ msgstr "Nie można tworzyć zależności cyklicznych."
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "You cannot delete a manufacturing order that is already done."
 msgstr ""
+"Nie można usunąć zlecenia produkcyjnego, które zostało już zrealizowane."
 
 #. module: mrp
 #. odoo-python
