@@ -101,6 +101,10 @@ export class PosOrder extends Base {
         return this.state !== "draft";
     }
 
+    get canBeRemovedFromIndexedDB() {
+        return (this.finalized && typeof this.id === "number") || this.state === "cancel";
+    }
+
     get totalQuantity() {
         return this.lines.reduce((sum, line) => sum + line.get_quantity(), 0);
     }

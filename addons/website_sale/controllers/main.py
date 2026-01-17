@@ -1696,10 +1696,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 )
             # Process the delivery method.
             if shipping_option:
-                delivery_method_sudo = request.env['delivery.carrier'].sudo().browse(
-                    int(shipping_option['id'])
-                ).exists()
-                order_sudo._set_delivery_method(delivery_method_sudo)
+                dm_id = int(shipping_option['id'])
+                available_dms = order_sudo._get_delivery_methods()
+                order_sudo._set_delivery_method(available_dms.filtered(lambda dm: dm.id == dm_id))
 
         return order_sudo.partner_id.id
 

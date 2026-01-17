@@ -9,7 +9,7 @@ import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 import * as ProductConfigurator from "@point_of_sale/../tests/tours/utils/product_configurator_util";
 import { registry } from "@web/core/registry";
-import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
+import { run, inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("ReceiptScreenTour", {
     steps: () =>
@@ -215,5 +215,94 @@ registry.category("web_tour.tours").add("test_free_text_custom_attribute_on_rece
                 productName: "Configurable Chair (Fabrics: Other: Custom Fabric)",
             }),
             ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_receipt_screen_edit_payment_lines", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Letter Tray"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+            {
+                trigger: ".edit-order-payment",
+                run: "click",
+            },
+            {
+                trigger: '.nav-item > a:contains("Payments")',
+                run: "click",
+            },
+            {
+                content: "focus the amount input",
+                trigger: "tr.o_data_row:first-child .o_data_cell[name=amount]",
+                run: "click",
+            },
+            {
+                content: "change amount from 5.28 to 4.28",
+                trigger: "tr.o_data_row:first-child .o_data_cell[name=amount]",
+                run: "edit 4.28",
+            },
+            {
+                content: "add a new payment line",
+                trigger: "a:contains(Add a line)",
+                run: "click",
+            },
+            {
+                isActive: ["desktop"],
+                trigger: "tr.o_data_row:nth-child(2) .o_data_cell[name=payment_method_id]",
+                run: "edit Cash",
+            },
+            {
+                isActive: ["desktop"],
+                trigger: ".o-autocomplete--dropdown-menu",
+            },
+            {
+                isActive: ["desktop"],
+                content: "select the cash payment method",
+                trigger: ".o-autocomplete--dropdown-item:contains('Cash')",
+                run: "click",
+            },
+            {
+                isActive: ["mobile"],
+                trigger:
+                    "tr.o_data_row:nth-child(2) .o_data_cell[name=payment_method_id] .o_input_dropdown input",
+                run: "click",
+            },
+            {
+                isActive: ["mobile"],
+                content: "select the cash payment method",
+                trigger: ".o_kanban_record:contains('Cash')",
+                run: "click",
+            },
+            {
+                content: "fill in the remaining amount, 1",
+                trigger: "tr.o_data_row:nth-child(2) .o_data_cell[name=amount]",
+                run: "edit 1",
+            },
+            {
+                content: "save the edited payment lines",
+                trigger: ".o_form_button_save",
+                run: "click",
+            },
+            {
+                trigger: "body:not(:has(.modal))",
+            },
+            run(() => {
+                const paymentLines = document.querySelectorAll(".pos-receipt .paymentlines");
+                if (paymentLines.length !== 2) {
+                    throw new Error(
+                        `Expected 2 paymentlines element, but found ${paymentLines.length}`
+                    );
+                }
+            }, "There should be only two payment lines, the old edited one, and the new one"),
+            {
+                content: "The payment lines should have the correct payment method and amount",
+                trigger:
+                    ".pos-receipt .paymentlines:contains('Bank'):contains('4.28') ~ .paymentlines:contains('Cash'):contains('1.00')",
+            },
         ].flat(),
 });

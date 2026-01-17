@@ -12,6 +12,9 @@ patch(DataServiceOptions.prototype, {
                         (l) => l.sale_order_origin_id?.id === record.id
                     );
                 },
+                getRecordsBasedOnLines: (orderlines) => {
+                    return orderlines.map((line) => line.sale_order_origin_id).filter((so) => so);
+                },
             },
             "sale.order.line": {
                 key: "id",
@@ -19,6 +22,9 @@ patch(DataServiceOptions.prototype, {
                     return record.models["pos.order.line"].find(
                         (l) => l.sale_order_line_id?.id === record.id
                     );
+                },
+                getRecordsBasedOnLines: (orderlines) => {
+                    return orderlines.map((line) => line.sale_order_line_id).filter((sol) => sol);
                 },
             },
         };

@@ -226,9 +226,9 @@ export class ProductScreen extends Component {
                 "find_product_by_barcode",
                 [odoo.pos_session_id, code.base_code, this.pos.config.id]
             );
-            await this.pos.processProductAttributes();
 
             if (records && records["product.product"].length > 0) {
+                await this.pos.processProductAttributesByProducts(records["product.product"]);
                 product = records["product.product"][0];
                 await this.pos._loadMissingPricelistItems([product]);
             }
@@ -513,7 +513,7 @@ export class ProductScreen extends Component {
             }
         );
 
-        await this.pos.processProductAttributes();
+        await this.pos.processProductAttributesByProducts(product);
         return product;
     }
 

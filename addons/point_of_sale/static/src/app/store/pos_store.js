@@ -373,12 +373,20 @@ export class PosStore extends Reactive {
         }
     }
     async processProductAttributes() {
+        const products = this.models["product.product"].getAll();
+        await this.processProductAttributesByProducts(products);
+    }
+
+    async processProductAttributesByProducts(products) {
+        if (!products?.length) {
+            return;
+        }
         const productIds = new Set();
         const productTmplIds = new Set();
         const productByTmplId = {};
 
-        for (const product of this.models["product.product"].getAll()) {
-            if (product.product_template_variant_value_ids.length > 0) {
+        for (const product of products) {
+            if (product.raw?.product_template_variant_value_ids?.length > 0) {
                 productTmplIds.add(product.raw.product_tmpl_id);
                 productIds.add(product.id);
 
@@ -391,17 +399,17 @@ export class PosStore extends Reactive {
         }
 
         if (productIds.size > 0) {
-            await this.data.searchRead("product.product", [
+            const missingVariants = await this.data.searchRead("product.product", [
                 "&",
                 ["id", "not in", [...productIds]],
                 ["product_tmpl_id", "in", [...productTmplIds]],
             ]);
-        }
-
-        for (const product of this.models["product.product"].filter(
-            (p) => !productIds.has(p.id) && p.product_template_variant_value_ids.length > 0
-        )) {
-            productByTmplId[product.raw.product_tmpl_id].push(product);
+            for (const product of missingVariants.filter(
+                (p) =>
+                    !productIds.has(p.id) && p.raw?.product_template_variant_value_ids?.length > 0
+            )) {
+                productByTmplId[product.raw.product_tmpl_id].push(product);
+            }
         }
 
         for (const products of Object.values(productByTmplId)) {
@@ -1940,6 +1948,7 @@ export class PosStore extends Reactive {
         return await user.checkAccessRight("product.product", "create");
     }
     orderDetailsProps(order) {
+        const oldPaymentIds = order.payment_ids.map((p) => p.id);
         return {
             resModel: "pos.order",
             resId: order.id,
@@ -1948,10 +1957,7 @@ export class PosStore extends Reactive {
             },
             onRecordSaved: async (record) => {
                 await this.data.read("pos.order", [record.evalContext.id]);
-                await this.data.read(
-                    "pos.payment",
-                    order.payment_ids.map((p) => p.id)
-                );
+                await this.data.read("pos.payment", oldPaymentIds);
                 this.action.doAction({
                     type: "ir.actions.act_window_close",
                 });

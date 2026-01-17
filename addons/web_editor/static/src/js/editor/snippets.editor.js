@@ -3400,9 +3400,10 @@ class SnippetsMenu extends Component {
                 return snippet.category.id === "snippet_custom";
             });
             for (const customSnippet of customSnippets) {
-                // The "s_button" has a numeric value added to its name when it
-                // is custom, so we need to consider this in the search.
-                const customSnippetName = /s_button_\d+/.test(customSnippet.name) ?
+                // Custom "s_button" snippets add a unique suffix to their name
+                // (e.g. s_button_xxx). To reliably detect custom buttons, we
+                // normalize the name by removing this suffix.
+                const customSnippetName = customSnippet.name.startsWith("s_button_") ?
                     "s_button" :
                     customSnippet.name;
 
