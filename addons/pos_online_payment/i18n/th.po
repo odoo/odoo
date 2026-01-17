@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2026-01-16 18:36+0000\n"
 "PO-Revision-Date: 2025-08-25 07:43+0000\n"
 "Last-Translator: \"Rasareeyar Lappiam (rlap)\" <rlap@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -29,8 +29,7 @@ msgstr "<strong>เกิดข้อผิดพลาด:</strong> สกุ�
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
-msgid ""
-"<strong>Error:</strong> There was a problem during the payment process."
+msgid "<strong>Error:</strong> There was a problem during the payment process."
 msgstr "<strong>เกิดข้อผิดพลาด:</strong> เกิดปัญหาระหว่างขั้นตอนการชำระเงิน"
 
 #. module: pos_online_payment
@@ -48,8 +47,7 @@ msgstr "ต้องระบุตัวเลือกการชำระเ
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-msgid ""
-"A validation payment cannot be used for a Point of Sale online payment."
+msgid "A validation payment cannot be used for a Point of Sale online payment."
 msgstr "ไม่สามารถใช้การชำระเงินเพื่อยืนยันการชำระเงินออนไลน์การขายหน้าร้านได้"
 
 #. module: pos_online_payment
@@ -65,8 +63,8 @@ msgid ""
 "same currency as the Sales Journal, or the company currency if that is not "
 "set, of the POS config."
 msgstr ""
-"ผู้ให้บริการการชำระเงินทั้งหมดที่กำหนดค่าสำหรับวิธีการชำระเงินออนไลน์ต้องใช้สกุลเงินเดียวกันกับสมุดร"
-"ายวันการขาย หรือสกุลเงินของบริษัท หากไม่ได้ตั้งค่าการกำหนดค่า POS ไว้"
+"ผู้ให้บริการการชำระเงินทั้งหมดที่กำหนดค่าสำหรับวิธีการชำระเงินออนไลน์ต้องใช้สกุลเงินเดียวกันกับสมุดรายวันการขาย "
+"หรือสกุลเงินของบริษัท หากไม่ได้ตั้งค่าการกำหนดค่า POS ไว้"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
@@ -118,8 +116,8 @@ msgid ""
 "Could not create an online payment method (company_id=%(company_id)d, "
 "pos_config_id=%(pos_config_id)d)"
 msgstr ""
-"ไม่สามารถสร้างวิธีการชำระเงินออนไลน์ได้ (company_id=%(company_id)d, "
-"pos_config_id=%(pos_config_id)d)"
+"ไม่สามารถสร้างวิธีการชำระเงินออนไลน์ได้ (company_id=%(company_id)d, pos_config_id=%"
+"(pos_config_id)d)"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__display_name
@@ -324,6 +322,12 @@ msgstr "เซิร์ฟเวอร์ผิดพลาด"
 
 #. module: pos_online_payment
 #. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "The %s already has one online payment."
+msgstr ""
+
+#. module: pos_online_payment
+#. odoo-python
 #: code:addons/pos_online_payment/models/payment_transaction.py:0
 msgid "The POS online payment (tx.id=%d) could not be saved correctly"
 msgstr "ไม่สามารถบันทึกการชำระเงินออนไลน์ POS (tx.id=%d) ได้อย่างถูกต้อง"
@@ -407,8 +411,7 @@ msgstr "ผู้ให้บริการชำระเงินไม่ถ
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
-msgstr ""
-"การชำระเงินควรเป็นการชำระเงินโดยตรง หรือมีการเปลี่ยนเส้นทาง หรือชำระด้วยโทเค็น"
+msgstr "การชำระเงินควรเป็นการชำระเงินโดยตรง หรือมีการเปลี่ยนเส้นทาง หรือชำระด้วยโทเค็น"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -462,8 +465,7 @@ msgstr "มีการชำระเงินออนไลน์ที่ข
 msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved."
-msgstr ""
-"เกิดปัญหากับเซิร์ฟเวอร์ ไม่สามารถเรียกคืนสถานะการชำระเงินสำหรับการสั่งซื้อออนไลน์ได้"
+msgstr "เกิดปัญหากับเซิร์ฟเวอร์ ไม่สามารถเรียกคืนสถานะการชำระเงินสำหรับการสั่งซื้อออนไลน์ได้"
 
 #. module: pos_online_payment
 #. odoo-javascript

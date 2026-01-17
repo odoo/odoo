@@ -1,23 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_edi_proxy_client
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2026-01-16 18:35+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -122,11 +124,15 @@ msgstr "Id klienta"
 #. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
 msgid ""
-"Invalid signature for request. This might be due to another connection to odoo Access Point server. It can occur if you have duplicated your database. \n"
+"Invalid signature for request. This might be due to another connection to "
+"odoo Access Point server. It can occur if you have duplicated your "
+"database. \n"
 "\n"
 "If you are not sure how to fix this, please contact our support."
 msgstr ""
-"Nieprawidłowy podpis dla żądania. Może to być spowodowane innym połączeniem z serwerem punktu dostępu Odoo. Może się to zdarzyć, jeśli skopiowałeś swoją bazę danych.\n"
+"Nieprawidłowy podpis dla żądania. Może to być spowodowane innym połączeniem "
+"z serwerem punktu dostępu Odoo. Może się to zdarzyć, jeśli skopiowałeś swoją "
+"bazę danych.\n"
 "\n"
 "Jeśli nie wiesz, jak to naprawić, skontaktuj się z naszym zespołem wsparcia."
 
@@ -208,11 +214,9 @@ msgid "This company has an active user already created for this EDI type"
 msgstr "Ta spółka ma już aktywnego użytkownika stworzonego dla tego typu EDI"
 
 #. module: account_edi_proxy_client
-#: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_active_edi_identification
-msgid "This edi identification is already assigned to an active user"
-msgstr "Ta indentyfikacja EDI jest już przypisana do aktywnego użytkownika"
-
-#. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_id_client
 msgid "This id_client is already used on another user."
 msgstr "Ten id_client jest aktualnie powiązany z innym użytkownikiem."
+
+#~ msgid "This edi identification is already assigned to an active user"
+#~ msgstr "Ta indentyfikacja EDI jest już przypisana do aktywnego użytkownika"

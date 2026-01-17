@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2026-01-16 18:36+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: payment
@@ -40,34 +40,39 @@ msgstr ""
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %(bank)s</li><li>Account "
-"Number: %(account_number)s</li><li>Account Holder: "
-"%(account_holder)s</li></ul>"
+"Number: %(account_number)s</li><li>Account Holder: %(account_holder)s</li></"
+"ul>"
 msgstr ""
 "<h3>Lütfen Ödeme yapmak için: </h3><ul><li>Banka: %(bank)s</li><li>Hesap "
-"Numarası: %(account_number)s</li><li>Hesap Sahibi: "
-"%(account_holder)s</li></ul>"
+"Numarası: %(account_number)s</li><li>Hesap Sahibi: %(account_holder)s</li></"
+"ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/> These properties are set to\n"
-"                                match the behavior of providers and that of their integration with\n"
-"                                Odoo regarding this payment method. Any change may result in errors\n"
-"                                and should be tested on a test database first."
+"                                match the behavior of providers and that of "
+"their integration with\n"
+"                                Odoo regarding this payment method. Any "
+"change may result in errors\n"
+"                                and should be tested on a test database "
+"first."
 msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
-msgid "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
-msgstr "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+msgid ""
+"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
+msgstr ""
+"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
-"<i class=\"fa fa-info-circle oe_inline\" invisible=\"support_partial_capture"
-" != 'full_only'\" title=\"Some of the transactions you intend to capture can"
-" only be captured in full. Handle the transactions individually to capture a"
-" partial amount.\"/>"
+"<i class=\"fa fa-info-circle oe_inline\" "
+"invisible=\"support_partial_capture != 'full_only'\" title=\"Some of the "
+"transactions you intend to capture can only be captured in full. Handle the "
+"transactions individually to capture a partial amount.\"/>"
 msgstr ""
 
 #. module: payment
@@ -80,7 +85,8 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
-msgstr "<i class=\"oi oi-arrow-right me-1\"></i> Ödeme sağlayıcısını yapılandırma"
+msgstr ""
+"<i class=\"oi oi-arrow-right me-1\"></i> Ödeme sağlayıcısını yapılandırma"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -141,7 +147,8 @@ msgstr "<span><i class=\"fa fa-lock\"/> Tarafından emniyete alınmış</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
-msgid "<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
+msgid ""
+"<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
 msgstr ""
 
 #. module: payment
@@ -163,11 +170,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a partial capture pending. Please wait a\n"
-"                    moment for it to be processed. Check your payment provider configuration if\n"
+"                    moment for it to be processed. Check your payment "
+"provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
 "<strong>Uyarı!</strong> Kısmi bir yakalama bekleniyor. lütfen bekleyin\n"
-"                    işleme alınması için . Aşağıdaki durumlarda ödeme sağlayıcınızın yapılandırmasını kontrol edin\n"
+"                    işleme alınması için . Aşağıdaki durumlarda ödeme "
+"sağlayıcınızın yapılandırmasını kontrol edin\n"
 "                   yakalama için birkaç dakika daha beklemede."
 
 #. module: payment
@@ -182,20 +191,25 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid ""
-"<strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.\n"
+"<strong>Warning</strong> Creating a payment provider from the <em>CREATE</"
+"em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>Uyarı</strong> CREATE düğmesinden bir ödeme sağlayıcısı <em>oluşturma</em> desteklenmez.\n"
-"                        Lütfen bunun yerine <em>Kopyala</em> eylemini kullanın."
+"<strong>Uyarı</strong> CREATE düğmesinden bir ödeme sağlayıcısı "
+"<em>oluşturma</em> desteklenmez.\n"
+"                        Lütfen bunun yerine <em>Kopyala</em> eylemini "
+"kullanın."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid ""
 "<strong>Warning</strong> Make sure you are logged in as the\n"
-"                                    correct partner before making this payment."
+"                                    correct partner before making this "
+"payment."
 msgstr ""
 "<strong>Uyarı</strong> olarak oturum açtığınızdan emin olun.\n"
-"                                    Bu ödemeyi yapmadan önce doğru iş ortağını arayın."
+"                                    Bu ödemeyi yapmadan önce doğru iş "
+"ortağını arayın."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -205,8 +219,7 @@ msgstr "<strong>Uyarı</strong> Para birimi eksik veya hatalı."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> You must be logged in to pay."
-msgstr ""
-"<strong>Uyarı</strong> Ödeme yapabilmek için giriş yapmış olmalısınız."
+msgstr "<strong>Uyarı</strong> Ödeme yapabilmek için giriş yapmış olmalısınız."
 
 #. module: payment
 #. odoo-python
@@ -411,6 +424,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "Apply"
 msgstr "Uygula"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_appota
+msgid "Appota"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -742,7 +760,8 @@ msgid ""
 "you are sure you can ship the goods to them."
 msgstr ""
 "Teslimat tamamlandığında miktarı Odoo'dan yakalayın.\n"
-"Müşteri kartlarınızdan yalnızca şu durumlarda ücret almak istiyorsanız bunu kullanın:\n"
+"Müşteri kartlarınızdan yalnızca şu durumlarda ücret almak istiyorsanız bunu "
+"kullanın:\n"
 "malları onlara gönderebileceğinizden eminsiniz."
 
 #. module: payment
@@ -1315,8 +1334,7 @@ msgstr "ID"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid ""
-"If you believe that it is an error, please contact the website "
-"administrator."
+"If you believe that it is an error, please contact the website administrator."
 msgstr ""
 "Bunun bir hata olduğunu düşünüyorsanız, lütfen web sitesi yöneticisine "
 "başvurun."
@@ -1456,6 +1474,11 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_krungthai_bank
 msgid "KrungThai Bank"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_kfh
+msgid "Kuwait Finance House"
 msgstr ""
 
 #. module: payment
@@ -2511,8 +2534,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 msgid ""
-"Some of the transactions you intend to capture can only be captured in full."
-" Handle the transactions individually to capture a partial amount."
+"Some of the transactions you intend to capture can only be captured in full. "
+"Handle the transactions individually to capture a partial amount."
 msgstr ""
 
 #. module: payment
@@ -2671,8 +2694,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__brand_ids
 msgid ""
-"The brands of the payment methods that will be displayed on the payment "
-"form."
+"The brands of the payment methods that will be displayed on the payment form."
 msgstr ""
 
 #. module: payment
@@ -2763,9 +2785,9 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_currency_ids
 msgid ""
-"The list of currencies for that are supported by this payment method (if the"
-" provider allows it). When paying with another currency, this payment method"
-" is not available to customers."
+"The list of currencies for that are supported by this payment method (if the "
+"provider allows it). When paying with another currency, this payment method "
+"is not available to customers."
 msgstr ""
 
 #. module: payment
@@ -2832,8 +2854,10 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__primary_payment_method_id
 msgid ""
-"The primary payment method of the current payment method, if the latter is a brand.\n"
-"For example, \"Card\" is the primary payment method of the card brand \"VISA\"."
+"The primary payment method of the current payment method, if the latter is a "
+"brand.\n"
+"For example, \"Card\" is the primary payment method of the card brand "
+"\"VISA\"."
 msgstr ""
 
 #. module: payment
@@ -2911,8 +2935,8 @@ msgstr "Belirteç ile ödeme yaparken satır içi ödeme formunu oluşturan şab
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s encountered an error "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s encountered an error (%"
+"(provider_name)s)."
 msgstr ""
 "%(amount)s için %(ref)s referanslı işlem bir hatayla (%(provider_name)s) "
 "karşılaştı."
@@ -2921,18 +2945,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s has been authorized "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s has been authorized (%"
+"(provider_name)s)."
 msgstr ""
-"%(amount)s için %(ref)s referanslı işleme izin verilmiştir "
-"(%(provider_name)s)."
+"%(amount)s için %(ref)s referanslı işleme izin verilmiştir (%"
+"(provider_name)s)."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s has been confirmed "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s has been confirmed (%"
+"(provider_name)s)."
 msgstr ""
 "%(amount)s için %(ref)s referanslı işlem onaylanmıştır (%(provider_name)s)."
 
@@ -2940,16 +2964,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s is canceled "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s is canceled (%"
+"(provider_name)s)."
 msgstr ""
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid ""
-"The transaction with reference %(ref)s for %(amount)s is pending "
-"(%(provider_name)s)."
+"The transaction with reference %(ref)s for %(amount)s is pending (%"
+"(provider_name)s)."
 msgstr ""
 
 #. module: payment
@@ -2992,13 +3016,18 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
 msgid ""
-"This controls whether customers can save their payment methods as payment tokens.\n"
-"A payment token is an anonymous link to the payment method details saved in the\n"
+"This controls whether customers can save their payment methods as payment "
+"tokens.\n"
+"A payment token is an anonymous link to the payment method details saved in "
+"the\n"
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
-"Bu, müşterilerin ödeme yöntemlerini ödeme belirteci olarak kaydedip kaydedemeyeceğini kontrol eder.\n"
-"Ödeme belirteci, ödeme yöntemi ayrıntılarının kaydedildiği anonim bir bağlantıdır.\n"
-"sağlayıcının veritabanına kaydedilir ve müşterinin bir sonraki satın alma işlemi için yeniden kullanmasına olanak tanır."
+"Bu, müşterilerin ödeme yöntemlerini ödeme belirteci olarak kaydedip "
+"kaydedemeyeceğini kontrol eder.\n"
+"Ödeme belirteci, ödeme yöntemi ayrıntılarının kaydedildiği anonim bir "
+"bağlantıdır.\n"
+"sağlayıcının veritabanına kaydedilir ve müşterinin bir sonraki satın alma "
+"işlemi için yeniden kullanmasına olanak tanır."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -3007,17 +3036,19 @@ msgid ""
 "checkout enables customers to pay with Google Pay and Apple Pay from which "
 "address information is collected at payment."
 msgstr ""
-"Bu, müşterilerin hızlı ödeme yöntemlerini kullanıp kullanamayacağını kontrol"
-" eder. Ekspres ödeme, müşterilerin ödeme sırasında adres bilgilerinin "
+"Bu, müşterilerin hızlı ödeme yöntemlerini kullanıp kullanamayacağını kontrol "
+"eder. Ekspres ödeme, müşterilerin ödeme sırasında adres bilgilerinin "
 "toplandığı Google Pay ve Apple Pay ile ödeme yapmasını sağlar."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid ""
-"This partner has no email, which may cause issues with some payment providers.\n"
+"This partner has no email, which may cause issues with some payment "
+"providers.\n"
 "                     Setting an email for this partner is advised."
 msgstr ""
-"Bu iş ortağının e-postası yoktur, bu da bazı ödeme sağlayıcılarıyla sorunlara neden olabilir.\n"
+"Bu iş ortağının e-postası yoktur, bu da bazı ödeme sağlayıcılarıyla "
+"sorunlara neden olabilir.\n"
 "                     Bu iş ortağı için bir e-posta ayarlamanız önerilir."
 
 #. module: payment
@@ -3096,8 +3127,8 @@ msgid ""
 "Transaction authorization is not supported by the following payment "
 "providers: %s"
 msgstr ""
-"İşlem yetkilendirmesi aşağıdaki ödeme sağlayıcıları tarafından desteklenmez:"
-" %s"
+"İşlem yetkilendirmesi aşağıdaki ödeme sağlayıcıları tarafından desteklenmez: "
+"%s"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_truemoney
@@ -3170,6 +3201,16 @@ msgid "VISA"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_vnptwallet
+msgid "VNPT Money"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_vpbank
+msgid "VP Bank"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_valu
 msgid "ValU"
 msgstr ""
@@ -3185,8 +3226,18 @@ msgid "Venmo"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_vietcapital
+msgid "Viet Capital"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_vietcom
 msgid "Vietcombank"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_viettelpay
+msgid "Viettel Pay"
 msgstr ""
 
 #. module: payment
@@ -3274,6 +3325,11 @@ msgstr ""
 #: model:payment.provider,name:payment.payment_provider_transfer
 msgid "Wire Transfer"
 msgstr "Manuel Transfer"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_woori
+msgid "Woori Bank"
+msgstr ""
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_worldline

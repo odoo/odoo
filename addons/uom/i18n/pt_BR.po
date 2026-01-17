@@ -11,11 +11,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:39+0000\n"
+"POT-Creation-Date: 2026-01-16 18:36+0000\n"
 "PO-Revision-Date: 2025-08-22 23:41+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
-"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
-"odoo-s18-4/uom/pt_BR/>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
+"s18-4/uom/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,6 +99,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: uom
+#: model:uom.uom,name:uom.product_uom_kwh
+msgid "KWH"
+msgstr ""
+
+#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
 msgid "Last Updated by"
 msgstr "Última atualização por"
@@ -112,6 +117,11 @@ msgstr "Última atualização em"
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
 msgstr "Gerenciar várias unidades de medida"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_minute
+msgid "Minutes"
+msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_pack_6
@@ -181,14 +191,18 @@ msgid ""
 "Some critical fields have been modified on %s.\n"
 "Note that existing data WON'T be updated by this change.\n"
 "\n"
-"As units of measure impact the whole system, this may cause critical issues.\n"
-"Therefore, changing core units of measure in a running database is not recommended."
+"As units of measure impact the whole system, this may cause critical "
+"issues.\n"
+"Therefore, changing core units of measure in a running database is not "
+"recommended."
 msgstr ""
 "Alguns campos críticos foram modificados em %s.\n"
 "Observe que os dados existentes NÃO serão atualizados por essa alteração.\n"
 "\n"
-"Como as unidades de medida afetam todo o sistema, isso pode causar problemas críticos.\n"
-"Portanto, não é recomendável alterar as unidades de medida principais em uma base de dados em execução."
+"Como as unidades de medida afetam todo o sistema, isso pode causar problemas "
+"críticos.\n"
+"Portanto, não é recomendável alterar as unidades de medida principais em uma "
+"base de dados em execução."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
@@ -199,10 +213,12 @@ msgstr "A taxa de conversão para uma unidade de medida não pode ser 0."
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid ""
-"The following units of measure are used by the system and cannot be deleted: %s\n"
+"The following units of measure are used by the system and cannot be deleted: "
+"%s\n"
 "You can archive them instead."
 msgstr ""
-"As seguintes unidades de medida são usadas pelo sistema e não podem ser excluídas: %s\n"
+"As seguintes unidades de medida são usadas pelo sistema e não podem ser "
+"excluídas: %s\n"
 "Em vez disso, você pode arquivá-las."
 
 #. module: uom
@@ -215,8 +231,7 @@ msgstr "Ton"
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"Desmarque o campo 'ativo' para desativar uma unidade de medida sem excluí-"
-"la."
+"Desmarque o campo 'ativo' para desativar uma unidade de medida sem excluí-la."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name

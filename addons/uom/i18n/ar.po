@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:39+0000\n"
+"POT-Creation-Date: 2026-01-16 18:36+0000\n"
 "PO-Revision-Date: 2025-08-13 10:38+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s18-4/uom/ar/"
@@ -98,6 +98,11 @@ msgid "ID"
 msgstr "المُعرف"
 
 #. module: uom
+#: model:uom.uom,name:uom.product_uom_kwh
+msgid "KWH"
+msgstr ""
+
+#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
 msgid "Last Updated by"
 msgstr "آخر تحديث بواسطة"
@@ -111,6 +116,11 @@ msgstr "آخر تحديث في"
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
 msgstr "إدارة وحدات قياس متعددة "
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_minute
+msgid "Minutes"
+msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_pack_6
@@ -180,8 +190,10 @@ msgid ""
 "Some critical fields have been modified on %s.\n"
 "Note that existing data WON'T be updated by this change.\n"
 "\n"
-"As units of measure impact the whole system, this may cause critical issues.\n"
-"Therefore, changing core units of measure in a running database is not recommended."
+"As units of measure impact the whole system, this may cause critical "
+"issues.\n"
+"Therefore, changing core units of measure in a running database is not "
+"recommended."
 msgstr ""
 "لقد تم تعديل بعض الحقول الأساسية في %s. \n"
 "يرجى العلم بأنه لن يتم تحديث البيانات الموجودة بالفعل جراء هذا التغيير. \n"
@@ -198,7 +210,8 @@ msgstr "لا يمكن أن يكون معدل التحويل لوحدة قياس 
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid ""
-"The following units of measure are used by the system and cannot be deleted: %s\n"
+"The following units of measure are used by the system and cannot be deleted: "
+"%s\n"
 "You can archive them instead."
 msgstr ""
 "وحدات القياس التالية مستخدمة من قِبَل النظام ولا يمكن حذفها: %s \n"

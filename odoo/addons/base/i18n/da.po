@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-03 12:30+0000\n"
-"PO-Revision-Date: 2026-01-10 13:04+0000\n"
+"PO-Revision-Date: 2026-01-17 13:14+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/base/"
 "da/>\n"
@@ -1165,7 +1165,7 @@ msgstr ""
 "\n"
 "    Betalingskontoen vises i listen som kontonummer.\n"
 "\n"
-"    **Kontoholders navn** – Kan indtastes her, hvis påkrævet. Godkendes "
+"    **Kontohavers navn** – Kan indtastes her, hvis påkrævet. Godkendes "
 "normalt ikke\n"
 "    af bankerne i ABA-filen, men kan vises på den betalingsmodtagerens\n"
 "kontoudtog.\n"
@@ -1182,7 +1182,7 @@ msgstr ""
 "\n"
 "    **BSB** – Påkrævet, 6 cifre, formateres automatisk.\n"
 "\n"
-"    **Kontoholders navn** – Valgfrit.\n"
+"    **Kontohavers navn** – Valgfrit.\n"
 "\n"
 "Brug\n"
 "---\n"
@@ -14340,6 +14340,26 @@ msgid ""
 "exactly the same xml as the expected,\n"
 "valid ones.\n"
 msgstr ""
+"\n"
+"Dette modul tester modulet 'account_edi_ubl_cii'. Det er adskilt, da der er "
+"behov for afhængigheder til visse\n"
+"lokaliseringer. Modulnavnet begynder med 'l10n' for at undgå at overbelaste "
+"runbot.\n"
+"\n"
+"Testfilerne er opdelt efter kilde og stammer fra:\n"
+"\n"
+"* factur-x-dokumentet (fra FNFE)\n"
+"* peppol-bis-invoice-3-dokumentet (GitHub-arkivet: https://github.com/"
+"OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples contains examples)"
+"\n"
+"* Odoo, disse filer består alle af valideringstests "
+"(ved hjælp af ecosio eller FNFE-validatoren)\n"
+"\n"
+"Vi tester, om eksterne eksempler importeres korrekt, herunder at valuta, "
+"samlet beløb og samlet skat stemmer overens.\n"
+"Vi tester også, om generering af XML fra Odoo med de givne parametre giver "
+"præcis den samme XML, som forventes\n"
+"og er gyldig.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_website_slides_full
@@ -14351,10 +14371,10 @@ msgid ""
 "certification flow including purchase, certification, failure and success.\n"
 msgstr ""
 "\n"
-"Dette modul vil teste Odoos primære certificerings-flow.\n"
-"Det vil installere e-lærings, spørgeskema, og e-handels applikationerne, og "
-"lave en fuld certificerings-flow, inklusiv indkøb, certificering, fejl, og "
-"succes.\n"
+"Dette modul tester Odoos primære certificeringsflow.\n"
+"Det vil installere e-lærings-, spørgeundersøgelses- og e-handelsapps samt "
+"gennemføre et fuldt certificeringsflow, inklusive indkøb, certificering, "
+"håndtering af fejl og succes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_event_full
@@ -14366,10 +14386,11 @@ msgid ""
 "automatic lead generation, full Online support, ...\n"
 msgstr ""
 "\n"
-"Dette modul vil teste de primære begivenheds flows i Odoo, både front-end og "
+"Dette modul tester de primære begivenhedsflows i Odoo, både front-end og "
 "back-end.\n"
-"Den installerer salgs muligheder, front-end flow, eHandel, spørgsmål og\n"
-"automatisk generering af kundeemner, fuld online support, ...\n"
+"Det installerer salgsmuligheder, front-end-flow, e-handel, "
+"spørgeundersøgelser samt\n"
+"automatisk generering af leads og fuld online support m.m.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_event_full_enterprise
@@ -14381,6 +14402,13 @@ msgid ""
 "automatic lead generation, full Online support, sms and whatsapp "
 "support, ...\n"
 msgstr ""
+"\n"
+"Dette modul tester de primære begivenhedsflows i Odoo, både front-end og "
+"back-end.\n"
+"Det installerer salgsmuligheder, front-end-flow, e-handel, "
+"spørgeundersøgelser samt\n"
+"automatisk generering af leads og fuld online support samt support til SMS "
+"og WhatsApp m.m.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_main_flows
@@ -14391,9 +14419,9 @@ msgid ""
 "actions.\n"
 msgstr ""
 "\n"
-"Dette modul vil teste Odoos primære workflow.\n"
-"Det vil installere visse primære applikationer, og vil forsøge at udføre de "
-"vigtigste handlinger.\n"
+"Dette modul tester Odoos primære workflow.\n"
+"Det installerer udvalgte centrale applikationer og gennemfører de vigtigste "
+"handlinger i workflowet.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_my_edi
@@ -14401,6 +14429,9 @@ msgid ""
 "\n"
 "This modules allows the user to send their invoices to the MyInvois system.\n"
 msgstr ""
+"\n"
+"Dette modul gør det muligt for brugeren at sende fakturaer til MyInvois-"
+"systemet.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_kz
@@ -14409,6 +14440,9 @@ msgid ""
 "This provides a base chart of accounts and taxes template for use in Odoo "
 "for Kazakhstan.\n"
 msgstr ""
+"\n"
+"Dette modul leverer en grundlæggende kontoplan og skatteskabelon til brug i "
+"Odoo for Kasakhstan.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke
@@ -14416,6 +14450,9 @@ msgid ""
 "\n"
 "This provides a base chart of accounts and taxes template for use in Odoo.\n"
 msgstr ""
+"\n"
+"Dette modul leverer en grundlæggende kontoplan og skatteskabelon til brug i "
+"Odoo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_holidays
@@ -14424,7 +14461,7 @@ msgid ""
 "Time off documents will be automatically integrated to the Document app.\n"
 msgstr ""
 "\n"
-"Fritid dokumenter vil automatisk blive integreret i Dokument applikationen.\n"
+"Fraværsdokumenter bliver automatisk integreret i Dokumenterappen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -14444,18 +14481,15 @@ msgid ""
 "used, for example, in food industries.\n"
 msgstr ""
 "\n"
-"Følg diverse datoer på produkter og produktnumre.\n"
+"Hold øje med forskellige datoer på produkter og produktnumre.\n"
 "======================================================\n"
 "\n"
 "Følgende datoer kan spores:\n"
 "-------------------------------\n"
-"    - end of life\n"
-"    - bedst før dato\n"
-"    - fjernelses dato\n"
-"    - advarsels dato\n"
-"\n"
-"Implementerer også en Første Udløbsdato Først Ud (FEFO) fjernelses "
-"strategien, alment benyttet i, for eksempel, fødevareindustrier.\n"
+"    - Slut-/udløbsdato\n"
+"    - Bedst før-dato\n"
+"    - Fjernelsesdato\n"
+"    - Advarselsdato\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance
@@ -14463,6 +14497,8 @@ msgid ""
 "\n"
 "Track equipment and maintenance requests"
 msgstr ""
+"\n"
+"Spor udstyr og vedligeholdelsesanmodninger"
 
 #. module: base
 #: model:ir.module.module,description:base.module_transifex
@@ -14481,6 +14517,21 @@ msgid ""
 "The language the user tries to translate must be activated on the Transifex\n"
 "project.\n"
 msgstr ""
+"\n"
+"Transifex-integration\n"
+"=====================\n"
+"Dette modul tilføjer et link til Transifex-projektet i "
+"oversættelsesvisningen.\n"
+"Formålet med modulet er at fremskynde oversættelser af Odoos hovedmoduler.\n"
+"\n"
+"For at modulet fungerer bruger Odoo Transifex-konfigurationsfilerne '.tx/"
+"config' til at registrere\n"
+"projektkilden. Brugerdefinerede moduler oversættes ikke (da de ikke er "
+"offentliggjort på\n"
+"det primære Transifex-projekt).\n"
+"\n"
+"Det sprog, brugeren ønsker at oversætte, skal være aktiveret i Transifex-\n"
+"projektet.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp
@@ -14510,8 +14561,8 @@ msgstr ""
 "fra sin bekræftelsesapp, før der gives adgang til systemet.\n"
 "Alle almindelige bekræftelsesapps understøttes.\n"
 "\n"
-"Bemærk: Totrinsbekræftelse forhindrer som forventet adgang til RPC ved brug "
-"af adgangskode for de brugere,\n"
+"Bemærk: Totrinsbekræftelse forhindrer, som forventet, adgang til RPC ved "
+"brug af adgangskode for de brugere,\n"
 "der har aktiveret funktionen. For at kunne køre RPC-scripts kan brugeren\n"
 "i stedet oprette API-nøgler, som erstatter deres primære adgangskoder.\n"
 
@@ -14526,6 +14577,13 @@ msgid ""
 "- Income tax calculations\n"
 "- Stamp tax deductions\n"
 msgstr ""
+"\n"
+"Løn- og skatteregler i Tyrkiet\n"
+"=============================\n"
+"- Beregning af socialsikringsbidrag og forsikring for beskæftigelse og "
+"arbejdsløshed\n"
+"- Beregning af indkomstskat\n"
+"- Fradrag for stempelafgift\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ua
@@ -14534,6 +14592,9 @@ msgid ""
 "Ukraine - Chart of accounts.\n"
 "============================\n"
 msgstr ""
+"\n"
+"Ukraine - Kontoplan.\n"
+"============================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae
@@ -14550,6 +14611,18 @@ msgid ""
 "- Tax Report\n"
 "- Fiscal Positions\n"
 msgstr ""
+"\n"
+"Regnskabsmodul til De Forenede Arabiske Emirater\n"
+"=======================================================\n"
+"Grundlæggende tabeller og lokaliseret regnskab til brug i De Forenede "
+"Arabiske Emirater.\n"
+"\n"
+"Aktiverer:\n"
+"\n"
+"- Kontoplan\n"
+"- Skatter\n"
+"- Skatterapport\n"
+"- Skattepositioner\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_hr_payroll
@@ -14572,21 +14645,21 @@ msgid ""
 "- WPS\n"
 msgstr ""
 "\n"
-"Saudi Arabien – Regler for lønudbetaling og ophør af ansættelsesforhold.\n"
+"Saudi-Arabien – Regler for lønudbetaling og ophør af ansættelsesforhold.\n"
 "=======================================================\n"
 "- Grundlæggende lønberegning\n"
-"- Fratrædelsesberegninger\n"
-"- Overførsel til årlig ferie samt afslutning af ansættelsesforhold.\n"
-"- Socialforsikringsregler gældende for lokale borgere\n"
-"- Regler for overarbejde i tilfælde af andre indtastninger\n"
+"- Beregning af fratrædelsesgodtgørelse\n"
+"- Overførsel til årlig ferie og håndtering af ansættelsesophør\n"
+"- Socialforsikringsregler for lokale borgere\n"
+"- Regler for overarbejde ved forskellige indtastninger\n"
 "- Beregning af sygefravær\n"
 "- DEWS-beregninger\n"
-"- Beregning ved ansættelsesperiodens udløb for frizoner (DMCC)\n"
+"- Beregning ved ansættelsesperiodens udløb for frizoner (f.eks. DMCC)\n"
 "- Beregninger ved kontraktudløb\n"
-"- Beregning af ikke-afholdte feriedage ved ansættelsesforholdets ophør.\n"
-"- Supplerende inputregler vedrørende bonus, provision, restancer m.fl.\n"
+"- Beregning af ikke-afholdte feriedage ved ophør af ansættelsesforhold\n"
+"- Supplerende inputregler vedrørende bonus, provision, restancer m.m.\n"
 "- Eksport af lønsedler (hovedeksport)\n"
-"- Arbejdspræstationsstandarder\n"
+"- Standarder for arbejdspræstation\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_hr_payroll
@@ -14603,6 +14676,17 @@ msgid ""
 "    * Employee Payslip\n"
 "    * Integrated with Leaves Management\n"
 msgstr ""
+"\n"
+"Amerikanske lønregler.\n"
+"============================\n"
+"\n"
+"    * Medarbejderoplysninger\n"
+"    * Medarbejderkontrakter\n"
+"    * Pasbaserede kontrakter\n"
+"    * Tillæg og fradrag\n"
+"    * Mulighed for at konfigurere grundløn, bruttoløn og nettoløn\n"
+"    * Medarbejderlønsedler\n"
+"    * Integration med ferieadministration\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_budget
@@ -14612,8 +14696,8 @@ msgid ""
 "--------------------------------------------------------------\n"
 msgstr ""
 "\n"
-"Brug budgetter til at sammenligne faktiske med forventede indtægter og "
-"omkostninger\n"
+"Brug budgetter til at sammenligne faktiske indtægter og omkostninger med de "
+"forventede\n"
 "--------------------------------------------------------------\n"
 
 #. module: base
@@ -14624,8 +14708,8 @@ msgid ""
 "products.\n"
 msgstr ""
 "\n"
-"Brug enheder forbundet til en IoT Boks, til at kontrollere kvaliteten på "
-"dine produkter.\n"
+"Brug enheder tilsluttet en IoT-boks til at kontrollere kvaliteten af dine "
+"produkter.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_survey
@@ -14635,6 +14719,10 @@ msgid ""
 "This module is integrated with the survey module\n"
 "to allow you to define interviews for different jobs.\n"
 msgstr ""
+"\n"
+"Brug spørgeskemaer under ansøgningsprocessen.\n"
+"Dette modul er tilknyttet undersøgelsesmodulet,\n"
+"så du kan oprette spørgeskemaer til dine ledige stillinger.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_booth_sale
@@ -14652,6 +14740,9 @@ msgid ""
 "Using this application you can manage Sales Teams with CRM and/or Sales\n"
 "=======================================================================\n"
 msgstr ""
+"\n"
+"Med denne app kan du administrere salgsteams via CRM og/eller salgsmodulet\n"
+"=======================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_vat
@@ -14696,6 +14787,43 @@ msgid ""
 "countries,\n"
 "only the country code will be validated.\n"
 msgstr ""
+"\n"
+"Momsvalidering af partneres momsnumre.\n"
+"=========================================\n"
+"\n"
+"Efter installation af modulet vil de momsnumre, der indtastes for partnere,\n"
+"blive valideret i alle understøttede lande. Landet identificeres ud fra den\n"
+"tobogstavskode, der står foran momsnummeret. For eksempel vil "
+"``BE0477472701``\n"
+"blive valideret efter de belgiske regler.\n"
+"\n"
+"To niveauer af momsnummervalidering:\n"
+"--------------------------------------------------------\n"
+"    * Som standard udføres en simpel offline-kontrol ud fra de kendte "
+"valideringsregler\n"
+"      for det pågældende land, typisk et kontrolciffer. Denne metode er "
+"hurtig og \n"
+"      altid tilgængelig, men tillader momsnummre, der muligvis ikke er "
+"tildelt\n"
+"      eller ikke længere er gyldige.\n"
+"\n"
+"    * Når indstillingen \"Moms VIES-kontrol\" er aktiveret i konfigurationen "
+"af\n"
+"      virksomhedens oplysninger, sendes momsnumre til den online EU VIES-\n"
+"      database, som bekræfter, at nummeret er gyldigt og aktuelt\n"
+"      tildelt en EU-virksomhed. Denne metode er lidt langsommere end\n"
+"      offline-kontrollen, kræver internetadgang og er ikke altid tilgængelig."
+"\n"
+"      Hvis tjenesten ikke kan tilgås, eller hvis det pågældende land ikke "
+"understøttes\n"
+"      (f.eks. lande uden for EU), foretages i stedet en standard\n"
+"      offlinekontrol.\n"
+"\n"
+"De understøttede lande omfatter i øjeblikket EU-lande samt enkelte ikke-EU-"
+"lande\n"
+"som Chile, Colombia, Mexico, Norge og Rusland. For lande, der ikke "
+"understøttes,\n"
+"valideres kun landekoden.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_industry_fsm_stock
@@ -14705,7 +14833,7 @@ msgid ""
 "======================================\n"
 msgstr ""
 "\n"
-"Validér lagerbevægelse for felttjeneste\n"
+"Validér lagerbevægelse for Udkørende service\n"
 "======================================\n"
 
 #. module: base
@@ -14729,22 +14857,22 @@ msgid ""
 "* Analysis graph for costs\n"
 msgstr ""
 "\n"
-"Køretøj, leje, forsikring, omkostning\n"
+"Køretøjer, leje, forsikring og omkostninger\n"
 "==================================\n"
-"Med dette modul hjælper Odoo dig med at administrere alle dine køretøjer, "
-"kontrakterne samt tjenesterne forbundet med de køretøjer, brandstofs "
-"logning, omkostninger, og mange andre funktioner som er nødvendige for "
-"administrationen af din flåde af køretøj(er)\n"
+"Med dette modul hjælper Odoo dig med at administrere dine køretøjer, de "
+"tilhørende kontrakter samt relaterede tjenester, herunder "
+"brændstofregistrering, omkostninger og andre funktioner, der er nødvendige "
+"for effektiv flådeadministration\n"
 "\n"
 "Primære funktioner\n"
 "-------------\n"
-"* Tilføj køretøjer til din flåde\n"
-"* Administrer kontrakter for køretøjer\n"
-"* Påmindelse om hvornår en kontrakt udløber\n"
-"* Tilføj tjenester, brandstof logning, kilometertæller værdier for alle "
-"køretøjer\n"
-"* Vis alle omkostninger forbundet med et køretøj eller form for tjeneste\n"
-"* Graf-analyse af omkostninger\n"
+"* Tilføj og administrer køretøjer i din flåde\n"
+"* Administrér kontrakter tilknyttet køretøjer\n"
+"* Modtag påmindelser om kontraktudløb\n"
+"* Registrér tjenester, brændstofforbrug og kilometertal for alle køretøjer\n"
+"* Få et overblik over alle omkostninger forbundet med et køretøj eller en "
+"bestemt tjeneste\n"
+"* Analysér omkostninger visuelt med grafer\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn_edi_viettel
@@ -14754,6 +14882,10 @@ msgid ""
 "=====================\n"
 "Using SInvoice by Viettel\n"
 msgstr ""
+"\n"
+"Vietnam – e-fakturering\n"
+"=====================\n"
+"Brug af SInvoice fra Viettel\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -14773,6 +14905,22 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 msgstr ""
+"\n"
+"WMS-bogføringsmodul\n"
+"======================\n"
+"Dette modul forbinder modulerne 'lager' og 'konto' og giver dig mulighed for "
+"at oprette regnskabsposteringer, så du kan værdiansætte dine "
+"lagerbevægelser\n"
+"\n"
+"Nøglefunktioner\n"
+"------------\n"
+"* Lageropgørelse (periodisk eller automatisk)\n"
+"* Fakturering ud fra plukning\n"
+"\n"
+"Dashboard og rapporter til lagerstyring inkluderer:\n"
+"------------------------------------------------------\n"
+"* Lagerbeholdningens værdi på en given dato (understøtter datoer i fortiden)"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_forum
@@ -14785,6 +14933,14 @@ msgid ""
 "    Transform tickets into questions on the forum with a single click.\n"
 "\n"
 msgstr ""
+"\n"
+"Integration af hjemmesideforum med kundeservicemodulet\n"
+"=================================================\n"
+"\n"
+"    Giv dine teams mulighed for at oprette relaterede fora, hvor de kan "
+"besvare kundespørgsmål.\n"
+"    Konvertér billetter til forumspørgsmål med blot ét klik.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_livechat
@@ -14800,6 +14956,17 @@ msgid ""
 "    - Create new tickets with ease using commands in the channel.\n"
 "\n"
 msgstr ""
+"\n"
+"Websted IM Livechat-integration med kundeservicemodulet\n"
+"=======================================================\n"
+"\n"
+"Funktioner:\n"
+"\n"
+"    - Opret teamrelaterede livechat-kanaler til at besvare kundernes "
+"spørgsmål.\n"
+"    - Opret nye billetter hurtigt og nemt direkte fra kanalen ved hjælp af "
+"kommandoer.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_slides
@@ -14812,6 +14979,13 @@ msgid ""
 "them those before submitting new tickets.\n"
 "\n"
 msgstr ""
+"\n"
+"Integration af hjemmesideslides med kundeservicemodulet\n"
+"==================================================\n"
+"\n"
+"    Tilføj slidepræsentationer til dit team, så kunder kan se relevant "
+"information, inden de indsender nye billetter.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_timesheet
@@ -14820,6 +14994,9 @@ msgid ""
 "When hiding the timesheets in the portal, this module allows also hiding "
 "timesheet information on other records.\n"
 msgstr ""
+"\n"
+"Hvis tidsregistreringerne skjules i portalen, giver dette modul dig også "
+"mulighed for at skjule tidsregistreringsoplysninger i andre datasæt.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet_enterprise
@@ -14828,6 +15005,10 @@ msgid ""
 "When invoicing timesheets, allows invoicing either all timesheets\n"
 "linked to an SO, or only the validated timesheets\n"
 msgstr ""
+"\n"
+"Ved fakturering af tidsregistreringer kan du vælge at inkludere enten alle "
+"tidsregistreringer\n"
+"knyttet til en salgsordre eller kun de validerede tidsregistreringer\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_documents
@@ -14836,6 +15017,9 @@ msgid ""
 "When sharing documents/folder, the domain of the shared URL can be chosen by "
 "selecting a target website.\n"
 msgstr ""
+"\n"
+"Når du deler dokumenter eller mapper, kan du vælge domænet for den delte URL "
+"ved at angive et målwebsted.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_online_synchronization
@@ -14845,6 +15029,10 @@ msgid ""
 "online bank accounts (for supported banking institutions), and configure\n"
 "a periodic and automatic synchronization of their bank statements.\n"
 msgstr ""
+"\n"
+"Med dette modul kan brugerne forbinde bankjournaler med deres\n"
+"onlinebankkonti (for understøttede pengeinstitutter) og konfigurere\n"
+"periodisk eller automatisk synkronisering af kontoudtog.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi_withholding
@@ -14862,6 +15050,16 @@ msgid ""
 "    Please also update the Italian Accounting module (l10n_it) when you "
 "install this module.\n"
 msgstr ""
+"\n"
+"Kildeskat og pensionsfondshåndtering ved e-faktura i Italien.\n"
+"\n"
+"    Kildeskat og pensionsfondsskat beregnes i rækkefølge som øvrige skatter,"
+"\n"
+"    så sørg for, at rækkefølgen er korrekt\n"
+"    i din skattekonfiguratio.\n"
+"\n"
+"    Husk desuden at opdatere det italienske regnskabsmodul (l10n_it) ed "
+"installation af dette modul.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_rs_edi
@@ -14869,6 +15067,8 @@ msgid ""
 "\n"
 "eFaktura E-invoice implementation for Serbia\n"
 msgstr ""
+"\n"
+"Implementering af elektroniske fakturaer med eFaktura i Serbien\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_dmfa_sftp
@@ -14897,17 +15097,41 @@ msgid ""
 "This module ensures compliance with ONSS electronic declaration\n"
 "requirements and reduces manual interaction with the SFTP portal.\n"
 msgstr ""
+"\n"
+"Synkronisere DmfA med LSS-portalen\n"
+"===============================\n"
+"\n"
+"Dette modul automatiserer synkroniseringen af DmfA ONSS-erklæringer til den "
+"officielle belgiske SFTP-portal.\n"
+"\n"
+"Modulet integreres med de eksisterende moduler `l10n_be_hr_payroll` og\n"
+"`l10n_be_hr_payroll_dmfa` og gør det muligt at:\n"
+"\n"
+"- Uploade FO, FS og GO-filer til de korrekte ONSS-miljømapper\n"
+"  (IN, INTEST, INTEST-S).\n"
+"- Overvåge OUT-mapperne (OUT, OUTTEST, OUTTEST-S) for returnerede filer.\n"
+"- Knytte modtagne filer til de tilsvarende erklæringer og medarbejdere,\n"
+"  når det er relevant.\n"
+"\n"
+"Tekniske funktioner:\n"
+"- Sikker forbindelse via privat nøgle og tekniske brugeroplysninger.\n"
+"- Parsing af XML-filer til ACRF- og notifikationsfiler.\n"
+"- Fejlhåndtering og logning af manglende mapper eller fejlformaterede filer."
+"\n"
+"\n"
+"Dette modul sikrer overholdelse af ONSS’ krav til elektronisk deklaration\n"
+"og reducerer behovet for manuel håndtering af SFTP-portalen.\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_mondialrelay
 msgid " Let's choose a Point Relais® as shipping address "
-msgstr " Lad os vælge en Point Relais® som leveringsadresse "
+msgstr " Vælg en Point Relais® som leveringsadresse "
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "\"group_by\" value must be a string %(attribute)s=“%(value)s”"
-msgstr ""
+msgstr "\"group_by\"-værdien skal være en streng %(attribute)s=\"%(value)s\""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__accesses_count
@@ -14954,12 +15178,14 @@ msgid ""
 "%(integral_amount)s %(currency_unit)s and %(fractional_amount)s %"
 "(currency_subunit)s"
 msgstr ""
+"%(integral_amount)s %(currency_unit)s og %(fractional_amount)s %"
+"(currency_subunit)s"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "%(method)s on %(model)s is private and cannot be called from a button"
-msgstr "%(method)s i %(model)s er privat og kan ikke kaldes fra en knap"
+msgstr "%(method)s for %(model)s er privat og kan ikke tilgås via en knap"
 
 #. module: base
 #. odoo-python
@@ -14980,7 +15206,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%A - Full day of the week."
-msgstr ""
+msgstr "%A - Hel ugedag."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -15015,7 +15241,7 @@ msgstr "%Y - Årstal med århundrede.\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%a - Abbreviated day of the week."
-msgstr ""
+msgstr "%a - Forkortet ugedag."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -15035,19 +15261,18 @@ msgstr "%j - Dag i året [001,366].\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%m - Month number [01,12].\""
-msgstr "%m - Måned nummer [01,12].\""
+msgstr "%m - Månedsnummer [01,12].\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%p - Equivalent of either AM or PM.\""
-msgstr ""
-"%p - Tilsvarende til enten AM (nat/morgen) eller PM (eftermiddag/aften).\""
+msgstr "%p - Svarer til enten AM (nat/morgen) eller PM (eftermiddag/aften).\""
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 msgid "%s (Dedicated Outgoing Mail Server):"
-msgstr ""
+msgstr "%s (Dedikeret udgående mailserver):"
 
 #. module: base
 #. odoo-python
@@ -15064,7 +15289,7 @@ msgstr "%s (kopi)"
 #. odoo-python
 #: code:addons/base/models/res_currency.py:0
 msgid "%s per Unit"
-msgstr "%s per Enhed"
+msgstr "%s pr. enhed"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -15088,6 +15313,8 @@ msgid ""
 "'%(value)s' does not seem to be a valid Property value for field '%%"
 "(field)s'. Each property need at least 'name', 'type' and 'string' attribute."
 msgstr ""
+"'%(value)s' er ikke en gyldig egenskabsværdi for feltet '%%(field)s'. Hver "
+"egenskab skal have mindst ét attribut: 'navn', 'type' and 'streng'."
 
 #. module: base
 #. odoo-python
@@ -15096,6 +15323,8 @@ msgid ""
 "'%(value)s' does not seem to be a valid Selection value for '%"
 "(label_property)s' (subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' er ikke en gyldig valgværdi for feltet '%(label_property)s' "
+"(underfelt til feltet '%%(field)s')."
 
 #. module: base
 #. odoo-python
@@ -15104,6 +15333,8 @@ msgid ""
 "'%(value)s' does not seem to be a valid Tag value for '%(label_property)s' "
 "(subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' er ikke en gyldig nøgleordsværdi for feltet '%(label_property)s' "
+"(underfelt til feltet '%%(field)s')."
 
 #. module: base
 #. odoo-python
@@ -15112,6 +15343,8 @@ msgid ""
 "'%(value)s' does not seem to be an float for field '%(label_property)s' "
 "property (subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' er ikke et flydende kommatal for egenskabsfeltet '%"
+"(label_property)s' (underfelt til feltet '%%(field)s')."
 
 #. module: base
 #. odoo-python
@@ -15120,69 +15353,72 @@ msgid ""
 "'%(value)s' does not seem to be an integer for field '%(label_property)s' "
 "property (subfield of '%%(field)s' field)."
 msgstr ""
+"'%(value)s' er ikke et heltal for egenskabsfeltet '%(label_property)s' "
+"(underfelt til feltet '%%(field)s')."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 msgid "'%s' does not seem to be a number for field '%%(field)s'"
-msgstr "'%s' ikke synes at være et tal i felt '%%(field)s'"
+msgstr "'%s' er ikke et tal i feltet '%%(field)s'"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 msgid "'%s' does not seem to be a valid JSON for field '%%(field)s'"
-msgstr ""
+msgstr "'%s' er ikke en gyldig JSON for feltet '%%(field)s'"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
-msgstr "'%s' ikke synes at være en gyldig dato for feltet '%%(field)s'"
+msgstr "'%s' er ikke en gyldig dato for feltet '%%(field)s'"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
-msgstr "'%s' er ikke gyldig dato eller klokkeslæt for feltet '%%(field)s'"
+msgstr ""
+"'%s' er ikke gyldig dato eller et gyldigt klokkeslæt for feltet '%%(field)s'"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_fields.py:0
 msgid "'%s' does not seem to be an integer for field '%%(field)s'"
-msgstr "'%s' ikke synes at være et heltal i felt '%%(field)s'"
+msgstr "'%s' er ikke et heltal i feltet '%%(field)s'"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "'action-' is a reserved prefix."
-msgstr ""
+msgstr "'action-' er et reserveret præfiks."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "'m-' is a reserved prefix."
-msgstr ""
+msgstr "'m-' er et reserveret præfiks."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "'new' is reserved, and can not be used as path."
-msgstr ""
+msgstr "'new' er et reserveret ord og kan ikke bruges som sti."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "(Same"
-msgstr ""
+msgstr "(Samme"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ") and"
-msgstr ""
+msgstr ") og"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid ", or your preferred text editor"
-msgstr "Eller dit foretrukne teksteditor"
+msgstr ", eller din foretrukne teksteditor"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -15209,7 +15445,7 @@ msgstr "- domæne ="
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "- element “%(node)s” is shown in the view for groups: %(groups)s"
-msgstr ""
+msgstr "- element “%(node)s” vises i visningen for grupper: %(groups)s"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -15220,13 +15456,13 @@ msgstr "- felt ="
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "- field “%(name)s” does not exist in model “%(model)s”."
-msgstr ""
+msgstr "- felt “%(name)s” findes ikke i modellen “%(model)s”."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "- field “%(name)s” is accessible for groups: %(field_groups)s"
-msgstr ""
+msgstr "- felt “%(name)s” er ikke tilgængelig for grupperne: %(field_groups)s"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -15241,12 +15477,12 @@ msgstr "- ondelete ="
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- relation ="
-msgstr "- relation ="
+msgstr "- forhold ="
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- selection = ["
-msgstr "- valg = ["
+msgstr "- udvalg = ["
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -15256,37 +15492,37 @@ msgstr "- størrelse ="
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__days_1
 msgid "1 Day"
-msgstr "1 Dag"
+msgstr "1 dag"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__hours_1
 msgid "1 Hour"
-msgstr "1 Time"
+msgstr "1 time"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__months_1
 msgid "1 Month"
-msgstr "1 Måned"
+msgstr "1 måned"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "1. %b, %B         ==&gt; Dec, December"
-msgstr "1. %b, %B         ==&gt; Dec, December"
+msgstr "1. %b, %B         ==&gt; dec, december"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_1099
 msgid "1099 Reporting"
-msgstr "1099 Rapportering"
+msgstr "1099 rapportering"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "2. %a ,%A         ==&gt; Fri, Friday"
-msgstr "2. %a ,%A         ==&gt; Fri, Fredag"
+msgstr "2. %a ,%A         ==&gt; fre, fredag"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_totp_mail
 msgid "2FA Invite mail"
-msgstr "2FA Invitations email"
+msgstr "2FA-invitationsmail"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -15296,17 +15532,17 @@ msgstr "3. %y, %Y         ==&gt; 08, 2008"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal_survey
 msgid "360 Feedback"
-msgstr "360 Feeback"
+msgstr "360-feeback"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_external_tax
 msgid "3rd Party Tax Calculation"
-msgstr ""
+msgstr "Skatteberegning foretaget af tredjepart"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_external_tax
 msgid "3rd Party Tax Calculation for Sale"
-msgstr ""
+msgstr "Skatteberegning af tredjepart for salg"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -15316,7 +15552,7 @@ msgstr "4. %d, %m         ==&gt; 05, 12"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__minutes_5
 msgid "5 Minutes"
-msgstr "5 Minutter"
+msgstr "5 minutter"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -15341,7 +15577,7 @@ msgstr "8. %S              ==&gt; 20"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "9. %w              ==&gt; 5 ( Friday is the 6th day)"
-msgstr "9. %w              ==&gt; 5 ( Fredag er den 6. dag)"
+msgstr "9. %w              ==&gt; 5 ( fredag er den 6. dag)"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_1
@@ -15351,13 +15587,13 @@ msgstr "9. %w              ==&gt; 5 ( Fredag er den 6. dag)"
 msgid ""
 "<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Discover more</a>"
 msgstr ""
-"<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Få mere at vide</"
-"a>"
+"<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Få mere at "
+"vide</a>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>Command</code>: x2many commands namespace"
-msgstr ""
+msgstr "<code>Command</code>: x2many-kommando-navnerum"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -15365,29 +15601,32 @@ msgid ""
 "<code>UserError</code>: exception class for raising user-facing warning "
 "messages"
 msgstr ""
+"<code>UserError</code>: undtagelsesklasse til håndtering af brugeradvarsler"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>_logger.info(message)</code>: logger to emit messages in server logs"
 msgstr ""
+"<code>_logger.info(message)</code>: logger til udsendelse af meddelelser i "
+"serverlogfiler"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>datetime</code> (Python module)"
-msgstr "<code>datetime</code> (Python modul)"
+msgstr "<code>datetime</code> (Python-modul)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>dateutil</code> (Python module)"
-msgstr "<code>dateutil</code> (Python modul)"
+msgstr "<code>dateutil</code> (Python-modul)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: environment on which the action is triggered"
-msgstr ""
+msgstr "<code>env</code>: Miljø, hvor handlingen udløses"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -15395,6 +15634,8 @@ msgid ""
 "<code>float_compare()</code>: utility function to compare floats based on a "
 "specific precision"
 msgstr ""
+"<code>float_compare()</code>: Hjælpefunktion til at sammenligne flydende tal "
+"med en angivet præcision"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -15402,6 +15643,8 @@ msgid ""
 "<code>log(message, level='info')</code>: logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
+"<code>log(message, level='info')</code>: Logging-funktion til registrering "
+"af fejlsøgningsoplysninger i tabellen <code>ir.logging</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -15409,17 +15652,19 @@ msgid ""
 "<code>model</code>: model of the record on which the action is triggered; is "
 "a void recordset"
 msgstr ""
+"<code>model</code>: Modellen for den post, som handlingen udløses på, er et "
+"ugyldigt postsæt"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>record</code>: record on which the action is triggered"
-msgstr ""
+msgstr "<code>record</code>: Datasæt, som handlingen udløses på"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>record</code>: record on which the action is triggered; may be be void"
-msgstr "<code>record</code>: data hvorpå handlingen udløses; kan være ugyldig"
+msgstr "<code>record</code>: Data, som handlingen udløses på, kan være ugyldige"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -15427,6 +15672,8 @@ msgid ""
 "<code>records</code>: recordset of all records on which the action is "
 "triggered in multi mode"
 msgstr ""
+"<code>records</code>: Datasæt for alle data, der udløser handlingen i "
+"multitilstand"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -15434,20 +15681,20 @@ msgid ""
 "<code>records</code>: recordset of all records on which the action is "
 "triggered in multi mode; may be void"
 msgstr ""
-"<code>records</code>: datasæt af alle data hvorpå en handling udløses i "
-"multi tilstand; kan være ugyldig"
+"<code>records</code>: Datasæt af alle data, som udløser en handling i "
+"multitilstand; kan være ugyldigt"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>self</code> (the set of records to compute)"
-msgstr "<code>self</code> (sættet af data der skal beregnes)"
+msgstr "<code>self</code> (antal poster, der skal behandles)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "<code>time</code> (Python module)"
-msgstr "<code>time</code> (Python modul)"
+msgstr "<code>time</code> (Python-modul)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -15456,7 +15703,7 @@ msgid ""
 "<code>timezone</code>: useful Python libraries"
 msgstr ""
 "<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
-"<code>timezone</code>: nyttige Python biblioteker"
+"<code>timezone</code>: nyttige Python-biblioteker"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -15464,8 +15711,8 @@ msgid ""
 "<i class=\"fa fa-building\" role=\"img\" aria-label=\"Enterprise\" "
 "title=\"Enterprise\"/>"
 msgstr ""
-"<i class=\"fa fa-building\" role=\"img\" aria-label=\"Enterprise\" "
-"title=\"Enterprise\"/>"
+"<i class=\"fa fa-building\" role=\"img\" aria-label=\"Enterprise\" title="
+"\"Enterprise\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
@@ -15473,14 +15720,13 @@ msgid ""
 "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" "
 "title=\"Invalid\"/>"
 msgstr ""
-"<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" "
-"title=\"Invalid\"/>"
+"<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ugyldig\" title="
+"\"Ugyldig\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
-msgstr ""
-"<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
+msgstr "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
@@ -15491,6 +15737,7 @@ msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "<i class=\"fa fa-fw me-1 fa-building text-primary\" title=\"Company\"/>"
 msgstr ""
+"<i class=\"fa fa-fw me-1 fa-building text-primary\" title=\"Virksomhed\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
@@ -15498,14 +15745,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "<i class=\"fa fa-fw me-1 fa-envelope text-primary\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-envelope text-primary\" title=\"E-mail\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<i class=\"fa fa-fw me-1 fa-map-marker text-primary\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-map-marker text-primary\" title=\"Sted\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
@@ -15513,18 +15760,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "<i class=\"fa fa-fw me-1 fa-phone text-primary\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-phone text-primary\" title=\"Telefon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<i class=\"fa fa-fw me-1 fa-suitcase text-primary\" title=\"Position\"/>"
 msgstr ""
+"<i class=\"fa fa-fw me-1 fa-suitcase text-primary\" title=\"Stilling\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "<i class=\"fa fa-gear\"/> Detect Max Limit"
-msgstr ""
+msgstr "<i class=\"fa fa-gear\"/> Registrér maksimal grænse"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -15532,18 +15780,18 @@ msgid ""
 "<i class=\"fa fa-info fa-3x text-info float-start\" role=\"img\" aria-"
 "label=\"Info\" title=\"Info\"/>"
 msgstr ""
-"<i class=\"fa fa-info fa-3x text-info float-start\" role=\"img\" aria-"
-"label=\"Info\" title=\"Info\"/>"
+"<i class=\"fa fa-info fa-3x text-info float-start\" role=\"img\" aria-label="
+"\"Oplysninger\" title=\"Oplysninger\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<i class=\"fa fa-warning pe-2\" title=\"Warning\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-warning pe-2\" title=\"Advarsel\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_kanban
 msgid "<span class=\"badge rounded-pill bg-light border\">inactive</span>"
-msgstr ""
+msgstr "<span class=\"badge rounded-pill bg-light border\">inaktiv</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_device_view_kanban
@@ -15551,6 +15799,8 @@ msgid ""
 "<span class=\"fa fa-laptop fs-1\" title=\"Computer\" role=\"img\" aria-"
 "label=\"Computer\"/>"
 msgstr ""
+"<span class=\"fa fa-laptop fs-1\" title=\"Computer\" role=\"img\" aria-label="
+"\"Computer\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_device_view_kanban
@@ -15558,6 +15808,8 @@ msgid ""
 "<span class=\"fa fa-mobile fs-1\" title=\"Mobile\" role=\"img\" aria-"
 "label=\"Mobile\"/>"
 msgstr ""
+"<span class=\"fa fa-mobile fs-1\" title=\"Mobil\" role=\"img\" aria-label="
+"\"Mobil\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -15565,13 +15817,13 @@ msgid ""
 "<span class=\"o_form_label\" colspan=\"2\">Click on Update below to start "
 "the process...</span>"
 msgstr ""
-"<span class=\"o_form_label\" colspan=\"2\">Klik på Opdatér nedenfor for at "
-"starte processen...</span>"
+"<span class=\"o_form_label\" colspan=\"2\">Klik på \"Opdatér\" nedenfor for "
+"at starte processen ...</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "<span class=\"o_form_label\">MB</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">MB</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -15579,6 +15831,8 @@ msgid ""
 "<span class=\"o_form_label\">The selected modules have been updated/"
 "installed!</span>"
 msgstr ""
+"<span class=\"o_form_label\">De valgte moduler er blevet opdateret eller "
+"installeret!</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -15586,43 +15840,43 @@ msgid ""
 "<span class=\"o_form_label\">We suggest to reload the menu tab to see the "
 "new menus (Ctrl+T then Ctrl+R).\"</span>"
 msgstr ""
-"<span class=\"o_form_label\">Vi foreslår at genindlæse menufanen for at se "
-"de nye menuer (Ctrl+T then Ctrl+R).</span>"
+"<span class=\"o_form_label\">Vi anbefaler at genindlæse menufanen for at se "
+"de nye menuer (Ctrl+T efterfulgt af Ctrl+R).</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "<span class=\"o_stat_text\">Activate and Translate</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Aktivér og oversæt</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "<span class=\"o_stat_text\">Add to the 'Print' menu</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Føj til menuen 'Udskriv'</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<span class=\"o_stat_text\">Parent Action</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Overordnet handling</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "<span class=\"o_stat_text\">Qweb Views</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Qweb-visninger</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "<span class=\"o_stat_text\">Remove from the 'Print' menu</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Fjern fra menuen 'Udskriv'</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<span class=\"o_stat_text\">Scheduled Action</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Planlagt handling</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_form
 msgid "<span class=\"text-bg-primary\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-primary\">Arkiveret</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -15633,6 +15887,7 @@ msgstr "<span class=\"text-white text-uppercase\">Farezone</span>"
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<span colspan=\"2\" class=\"text-muted\"> Available variables: </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted\"> Tilgængelige variabler: </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -15659,8 +15914,8 @@ msgid ""
 "(0:Monday): %(weekday)s</span>"
 msgstr ""
 "<span colspan=\"2\">Dag på året: %(doy)s</span>\n"
-"                                <span colspan=\"2\">Uge af året: %(woy)s</"
-"span>\n"
+"                                <span colspan=\"2\">Uge på året: %(woy)"
+"s</span>\n"
 "                                <span colspan=\"2\">Ugedag (0:Mandag): %"
 "(weekday)s</span>"
 
@@ -15674,10 +15929,10 @@ msgid ""
 "                                <span colspan=\"2\">Second: %(sec)s</span>"
 msgstr ""
 "<span colspan=\"2\">Time 00-&gt;24: %(h24)s</span>\n"
-"                                <span colspan=\"2\">Time 00-&gt;12: %(h12)s</"
-"span>\n"
-"                                <span colspan=\"2\">Minutter: %(min)s</"
-"span>\n"
+"                                <span colspan=\"2\">Time 00-&gt;12: %(h12)"
+"s</span>\n"
+"                                <span colspan=\"2\">Minutter: %(min)s</span>"
+"\n"
 "                                <span colspan=\"2\">Sekunder: %(sec)s</span>"
 
 #. module: base
@@ -15689,6 +15944,11 @@ msgid ""
 "                                <span colspan=\"2\">ISO 8601 Week Number: %"
 "(isoweek)s</span>"
 msgstr ""
+"<span colspan=\"2\">ISO 8601 uge, år med århundrede: %(isoyear)s</span>\n"
+"                                <span colspan=\"2\">ISO 8601 uge, år uden "
+"århundrede: %(isoy)s</span>\n"
+"                                <span colspan=\"2\">ISO 8601 ugenummer: %"
+"(isoweek)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -15698,6 +15958,10 @@ msgid ""
 "                                <span invisible=\"evaluation_type != "
 "'sequence'\">with</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or update_field_type in "
+"['one2many', 'many2many']\">til</span>\n"
+"                                <span invisible="
+"\"evaluation_type != 'sequence'\">med</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -15705,11 +15969,13 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value' or update_field_type not in "
 "['one2many', 'many2many']\">by</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or update_field_type not in "
+"['one2many', 'many2many']\">af</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "<span invisible=\"not is_company\">Address</span>"
-msgstr ""
+msgstr "<span invisible=\"not is_company\">Adresse</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -15721,6 +15987,12 @@ msgid ""
 "                        <span invisible=\"reset_mode != 'other_view'\">You "
 "need two views to compare.</span>"
 msgstr ""
+"<span invisible=\"reset_mode != 'soft'\">Denne visning har ingen tidligere "
+"version.</span>\n"
+"                        <span invisible=\"reset_mode != 'hard'\">Denne "
+"visning stammer ikke fra en fil.</span>\n"
+"                        <span invisible=\"reset_mode != 'other_view'\">Du "
+"skal have to visninger for at kunne sammenligne.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -15732,6 +16004,12 @@ msgid ""
 "                                    to this Python expression:\n"
 "                                </span>"
 msgstr ""
+"<span invisible=\"update_field_id != False or evaluation_type != 'value'\" "
+"class=\"o_actions_server_set_a_value text-muted\">Angiv en værdi ...</span>\n"
+"                                <span invisible="
+"\"evaluation_type != 'equation'\">\n"
+"                                    for dette Python-udtryk:\n"
+"                                </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -15771,12 +16049,12 @@ msgstr "<span>Internet</span>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Apps</strong>"
-msgstr "<strong>Applikationer</strong>"
+msgstr "<strong>Apps</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Attribute</strong>"
-msgstr "<strong>Egenskaber</strong>"
+msgstr "<strong>Attributter</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -15786,7 +16064,7 @@ msgstr "<strong>O</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Dependencies:</strong>"
-msgstr ""
+msgstr "<strong>Afhængigheder:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -15813,10 +16091,10 @@ msgid ""
 "store it securely."
 msgstr ""
 "<strong>Vigtigt:</strong>\n"
-"                            Nøglen kan ikke indhentes senere og tildele "
-"<b>fuld adgang</b>\n"
-"                            til din bruger konto, det er meget vigtigt at du "
-"opbevarer den forsvarligt."
+"                            Nøglen kan ikke hentes igen og giver <b>fuld "
+"adgang</b>\n"
+"                            til din brugerkonto. Det er derfor yderst "
+"vigtigt, at du opbevarer den sikkert."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -15831,7 +16109,7 @@ msgstr "<strong>Etiket</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Menu:</strong>"
-msgstr ""
+msgstr "<strong>Menu:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -15851,7 +16129,7 @@ msgstr "<strong>Telefon</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
 msgid "<strong>Please confirm your identity by entering your password</strong>"
-msgstr ""
+msgstr "<strong>Bekræft din identitet ved at indtaste adgangskoden</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -15861,7 +16139,7 @@ msgstr "<strong>L</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Reports:</strong>"
-msgstr ""
+msgstr "<strong>Rapporter:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -15889,7 +16167,8 @@ msgid ""
 "<strong>This operation will permanently erase all data currently stored by "
 "the modules!</strong>"
 msgstr ""
-"<strong>Denne handling vil permanent slette al data gemt i appsene!</strong>"
+"<strong>Denne handling vil permanent slette al data gemt i "
+"modulerne!</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -15909,7 +16188,7 @@ msgstr "<strong>U</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>View:</strong>"
-msgstr ""
+msgstr "<strong>Visning:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -15919,7 +16198,7 @@ msgstr "<strong>S</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>XML ID</strong>"
-msgstr "<strong>XML ID</strong>"
+msgstr "<strong>XML-ID</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -16015,23 +16294,24 @@ msgid ""
 ".. figure:: static/description/invoice_custom_xml.png\n"
 msgstr ""
 "==========================================\n"
-"Odoo Mexico lokalisering for lager / landing\n"
+"Odoos mexicanske lokalisering for lager/vareindkøb\n"
 "==========================================\n"
 "\n"
-"Dette modul udvider funktionaliteten af den Mexicanske lokalisering til at "
+"Dette modul udvider funktionaliteten i den mexicanske lokalisering ved at "
 "understøtte\n"
-"toldnumre forbundet med landede omkostninger, når du opretter elektroniske\n"
+"toldnumre, der er forbundet med landede omkostninger, når du opretter "
+"elektroniske\n"
 " fakturaer\n"
 "\n"
-"Brug\n"
+"Anvendelse\n"
 "=====\n"
 "\n"
-"For at bruge dette modul, skal du:\n"
+"For at bruge modulet skal du følge disse trin:\n"
 "\n"
-"* Oprette en ny købsordre på et udenlandsk produkt. Landede omkostninger er\n"
-"kun mulige for produkter konfigurerede med 'automatiserede' værdisætning "
-"med\n"
-"'FIFO' omkostningsmetode. Omkostningsmetoden er konfigureret i "
+"* Opret en ny købsordre på et udenlandsk produkt. Landede omkostninger er\n"
+"kun mulige for produkter, der er konfigureret med 'automatiseret' "
+"værdisætning og\n"
+"'FIFO'-omkostningsmetode. Omkostningsmetoden er konfigureret i "
 "produktkategorien.\n"
 "\n"
 ".. figur:: static/description/purchase_order_new.png\n"
@@ -16040,98 +16320,95 @@ msgstr ""
 "\n"
 ".. figur:: static/description/picking_done_purchase.png\n"
 "\n"
-"* Gå til Inventar -> Inventar kontrol -> Landede omkostning\n"
+"* Gå til Lager -> Lagerstyring -> Landede omkostning\n"
 "\n"
-"* Opret en ny landet omkostning som indikerer plukningen af købsordren\n"
-"og nummeret på toldinformationen (andragende). Landede omkostninger er kun "
-"muligt for produkter konfigureret i realtids-vurdering med rigtige pris "
-"omkostningsmetoder. Omkostningsmetoden er konfigureret under "
-"produktkategorien\n"
+"* Opret en ny landede omkostning, der angiver plukningen fra købsordren\n"
+"samt toldnummeret (andragende). Landede omkostninger er kun mulige for "
+"produkter, der er konfigureret med realtids-vurdering og korrekt "
+"omkostningsmetode, som sættes under produktkategorien\n"
 "\n"
 ".. figur:: static/description/landed_cost_picking.png\n"
 "\n"
-"* Start ved at opret specifikke produkter til at indikere dine forskellige "
-"landede omkostninger, så som fragt, forsikring, og told.\n"
+"* Start med at oprette specifikke produkter, som repræsenterer dine "
+"forskellige typer landede omkostninger, f.eks. fragt, forsikring og told.\n"
 "\n"
-"  gå til Inventar -> Konfiguration -> Landede omkostningstyper. Landede "
-"omkostninger er kun mulige for produkter konfigureret i realtids-vurderinger "
-"med rigtige pris omkostningsmetoder. Omkostningsmetoden er konfigureret "
-"under produktkategorien.\n"
+"  Gå til Lager -> Konfiguration -> Landede omkostningstyper. Landede "
+"omkostninger kan kun anvendes på produkter, der er konfigureret med realtids-"
+"vurdering og korrekt omkostningsmetode, som sættes under produktkategorien.\n"
 "\n"
 ".. figur:: static/description/product_landed_cost.png\n"
 "\n"
-"* Klik på Udregn knappen og se hvorledes de landede omkostninger deles over "
-"pluklinjerne.\n"
+"* Klik på knappen \"Udregn\" for at se, hvordan de landede omkostninger "
+"fordeles over pluklinjerne.\n"
 "\n"
 ".. figur:: static/description/compute_landed_cost.png\n"
 "\n"
-"* For at godkende fordelingen af landede omkostninger, klik på Godkend "
-"knappen.\n"
+"* For at godkende fordelingen af de landede omkostninger, klik på knappen "
+"\"Godkend\".\n"
 "\n"
 ".. figur:: static/description/validate_landed_cost.png\n"
 "\n"
-"* Opret en salgsordre for produktet købt fra udlandet\n"
+"* Opret en salgsordre for det produkt, der er købt i udlandet\n"
 "\n"
 ".. figur:: static/description/sale_order_new.png\n"
 "\n"
-"* Levér produktet forbundet med salgsordren\n"
+"* Levér produktet tilknyttet salgsordren\n"
 "\n"
 ".. figur:: static/description/picking_done_sale.png\n"
 "\n"
-"* Opret og valider en ny faktura forbundet med salgsordren\n"
+"* Opret og validér en ny faktura tilknyttet salgsordren\n"
 "\n"
 ".. figur:: static/description/validate_invoice_customs.png\n"
 "\n"
-"* Toldinformationen findes i linjerne af fakturaen forbundet med hvert "
-"produkt.\n"
+"* Toldinformationen vises på linjerne i fakturaen for hvert produkt.\n"
 "\n"
 ".. figur:: static/description/invoice_custom_pedimento.png\n"
 "\n"
-"* Check den elektroniske faktura forbundet med produktet, hvor knudepunktet "
-"for toldinformationer er vist\n"
+"* Tjek den elektroniske faktura for produktet, hvor toldinformationerne "
+"vises\n"
 "\n"
 ".. figur:: static/description/invoice_custom_xml.png\n"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_A
 msgid "A - AGRICULTURE, FORESTRY AND FISHING"
-msgstr ""
+msgstr "A - LANDBRUG, SKOVBRUG OG FISKERI"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "A <graph> can only contains <field> nodes, found a <%s>"
-msgstr "En <graph> kan kun indeholde <field> noder, fandt en <%s>"
+msgstr "En <graph> kan kun indeholde <field>-noder; en <%s> blev fundet"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_adyen
 msgid "A Dutch payment provider covering Europe and the US."
-msgstr ""
+msgstr "En hollandsk betalingsudbyder med dækning i Europa og USA."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_mollie
 msgid "A Dutch payment provider covering several European countries."
-msgstr ""
+msgstr "En hollandsk betalingsudbyder med dækning i flere europæiske lande."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_buckaroo
 msgid "A Dutch payment provider covering several countries in Europe."
-msgstr ""
+msgstr "En hollandsk betalingsudbyder med dækning i flere lande i Europa."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_worldline
 msgid "A French payment provider covering several European countries."
-msgstr ""
+msgstr "En fransk betalingsudbyder med dækning i flere europæiske lande."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_dpo
 msgid "A Kenyan payment provider covering several African countries."
-msgstr ""
+msgstr "En kenyansk betalingsudbyder med dækning i flere afrikanske lande."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_flutterwave
 msgid "A Nigerian payment provider covering several African countries."
-msgstr ""
+msgstr "En nigeriansk betalingsudbyder med dækning i flere afrikanske lande."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides_forum
@@ -16149,6 +16426,8 @@ msgid ""
 "effortlessly check in and out while ensuring seamless notifications for "
 "hosts."
 msgstr ""
+"Et omfattende receptionstyringssystem, der gør ind- og udtjekning nem for "
+"gæster, samtidig med at værterne modtager beskeder uden problemer."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_groups
@@ -16160,37 +16439,37 @@ msgid ""
 "to see. Whether they can have a read, write, create and delete access right "
 "can be managed from here."
 msgstr ""
-"En gruppe er et sæt af funktionelle områder, der vil blive tildelt til "
-"brugeren for at give dem adgang og rettigheder til specifikke programmer og "
-"opgaver i systemet. Du kan oprette brugerdefinerede grupper eller redigere "
-"dem, der gælder som standard for at tilpasse visningen af ​​menuen, at "
-"brugerne vil være i stand til at se. Uanset om de kan have en læse, skrive, "
-"oprette og slette adgangsrettigheder kan styres herfra."
+"En gruppe er et sæt funktionelle områder, som tildeles brugere for at give "
+"dem adgang og rettigheder til specifikke programmer og opgaver i systemet. "
+"Du kan oprette brugerdefinerede grupper eller redigere de standardgrupper, "
+"der allerede findes, for at tilpasse, hvilke menupunkter brugerne kan se. "
+"Adgangsrettigheder – herunder læse-, skrive-, oprette- og sletteadgang – kan "
+"også styres direkte fra gruppen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mimetypes
 msgid "A module to generate exceptions."
-msgstr "Et modul for at generere undtagelser."
+msgstr "Et modul til at generere undtagelser."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_http
 msgid "A module to test HTTP"
-msgstr ""
+msgstr "Et modul til at teste HTTP"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_lint
 msgid "A module to test Odoo code with various linters."
-msgstr "Et modul til test af Odoo kode med diverse lint værktøjer."
+msgstr "Et modul til at teste Odoo-kode ved hjælp af forskellige lints."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_orm
 msgid "A module to test the ORM."
-msgstr ""
+msgstr "Et modul til at teste ORM-funktionalitet."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_rpc
 msgid "A module to test the RPC requests."
-msgstr "Et modul til test af RPC anmodninger."
+msgstr "Et modul til at teste RPC-anmodninger."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_uninstall
@@ -16200,35 +16479,34 @@ msgstr "Et modul til at teste afinstallationsfunktionen."
 #. module: base
 #: model:ir.module.module,description:base.module_test_translation_import
 msgid "A module to test translation import."
-msgstr "Et modul til at teste import af oversættelse."
+msgstr "Et modul til at teste import af oversættelser."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_assetsbundle
 msgid "A module to verify the Assets Bundle mechanism."
-msgstr "Et modul til at bekræfte aktiver bundle-mekanismen."
+msgstr "Et modul til at teste den aktive bundle-mekanisme."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherit_depends
 msgid "A module to verify the inheritance using _inherit across modules."
-msgstr ""
+msgstr "Et modul til at teste arv med _inherit på tværs af moduler."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits_depends
 msgid ""
 "A module to verify the inheritance using _inherits in non-original modules."
 msgstr ""
-"Et modul til at bekræfte nedarvningen ved brug af _inherits i ikke-originale "
-"moduler."
+"Et modul til at teste nedarvning ved brug af _inherits i eksterne moduler."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits
 msgid "A module to verify the inheritance using _inherits."
-msgstr "Et modul til at bekræfte nedarvningen ved brug af _inherits."
+msgstr "Et modul til at teste nedarvning ved brug af _inherits."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherit
 msgid "A module to verify the inheritance."
-msgstr "Et modul til at verificere nedarvninger."
+msgstr "Et modul til at teste nedarvninger."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_3
@@ -16240,9 +16518,9 @@ msgid ""
 "and\n"
 "                    turbomachinery and propulsion)."
 msgstr ""
-"En nonprofit international uddannelsesmæssig og videnskabelig\n"
-"                    organisation, som er vært for tre afdelinger (luftfart,\n"
-"                    miljømæssig og anvendt væskedynamik, og\n"
+"En non-profit international uddannelses- og forskningsorganisation,\n"
+"                    som huser tre afdelinger (luftfart,\n"
+"                    miljø- og anvendt væskedynamik samt\n"
 "                    turbomaskiner og fremdrift)."
 
 #. module: base
@@ -16252,52 +16530,58 @@ msgid ""
 "three departments (aeronautics and aerospace, environmental and applied "
 "fluid dynamics, and turbomachinery and propulsion)."
 msgstr ""
+"En non-profit international uddannelses- og forskningsorganisation, som "
+"huser tre afdelinger "
+"(luftfart, miljø- og anvendt væskedynamik samt turbomaskiner og fremdrift)."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_razorpay
 msgid "A payment provider covering India."
-msgstr ""
+msgstr "En betalingsudbyder, der dækker Indien."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_nuvei
 msgid "A payment provider covering Latin America."
-msgstr ""
+msgstr "En betalingsudbyder, der dækker Latinamerika."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_mercado_pago
 msgid "A payment provider covering several countries in Latin America."
-msgstr ""
+msgstr "En betalingsudbyder, der dækker nogle lande i Latinamerika."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_xendit
 msgid "A payment provider for Indonesian and the Philippines."
-msgstr ""
+msgstr "En betalingsudbyder for Indonesien og Filippinerne."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_custom
 msgid "A payment provider for custom flows like wire transfers."
 msgstr ""
+"En betalingsudbyder til brugerdefinerede processer, såsom bankoverførsler."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_sepa_direct_debit
 msgid "A payment provider for enabling Sepa Direct Debit in the EU."
-msgstr ""
+msgstr "En betalingsudbyder, der understøtter SEPA-betalinger i EU."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_demo
 msgid "A payment provider for running fake payment flows for demo purposes."
 msgstr ""
+"En betalingsudbyder til simulerede betalingsprocesser til "
+"demonstrationsformål."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "A sequence must only be used with character fields."
-msgstr ""
+msgstr "En sekvens kan kun bruges med tekstfelter."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
 msgid "A user associated to the contact"
-msgstr "En bruger der er tilknyttet kontakten"
+msgstr "Bruger tilknyttet kontakten"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__disjoint_ids
@@ -16305,6 +16589,9 @@ msgid ""
 "A user may not belong to this group and one of those.  For instance, users "
 "may not be portal users and internal users."
 msgstr ""
+"En bruger må ikke være medlem af denne gruppe samtidig med en anden gruppe. "
+"For eksempel kan en bruger ikke være både portalbruger og intern bruger på "
+"samme tid."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_appraisals
@@ -16312,12 +16599,15 @@ msgid ""
 "A user without any rights on Appraisals will be able to see the application, "
 "create and manage appraisals for himself and the people he's manager of."
 msgstr ""
+"En bruger uden rettigheder til medarbejdervurdering kan se applikationen "
+"samt oprette og administrere vurderinger for sig selv og de personer, som "
+"vedkommende er leder for."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "A valid email is required for find_or_create to work properly."
-msgstr "Der kræves en gyldig email for at find_or_create kan fungere korrekt."
+msgstr "Der kræves en gyldig e-mail, for at find_or_create kan fungere korrekt."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__a0
@@ -16372,7 +16662,7 @@ msgstr "A9  13  37 x 52 mm"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au_aba
 msgid "ABA Credit Transfer"
-msgstr "ABA kreditoverførsel"
+msgstr "ABA-kreditoverførsel"
 
 #. module: base
 #: model:res.country,vat_label:base.au
@@ -16383,59 +16673,59 @@ msgstr "ABN"
 #: model:ir.module.category,name:base.module_category_ai
 #: model:ir.module.module,shortdesc:base.module_ai
 msgid "AI"
-msgstr "KI"
+msgstr "AI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_calendar
 msgid "AI Calendar"
-msgstr ""
+msgstr "AI-kalender"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_account
 msgid "AI Text Draft - Accounting"
-msgstr ""
+msgstr "AI-tekstudkast – Bogføring"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_knowledge
 msgid "AI Text Draft - Knowledge"
-msgstr ""
+msgstr "AI-tekstudkast – Vidensdeling"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_account
 msgid "AI text draft integration with accounting"
-msgstr ""
+msgstr "Integration af AI-tekstudkast med bogføring"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_knowledge
 msgid "AI text draft integration with knowledge"
-msgstr ""
+msgstr "Integration af AI-tekstudkast med vidensdeling"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users_apikeys_description
 msgid "API Key Description"
-msgstr ""
+msgstr "API-nøglebeskrivelse"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "API Key Ready"
-msgstr ""
+msgstr "API-nøgle klar"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users_keys_description
 msgid "API Key: description input wizard"
-msgstr "API Nøgle: Beskrivelse input wizard"
+msgstr "API-nøgle: assistent til input af beskrivelse"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__api_key_ids
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "API Keys"
-msgstr "API Nøgler"
+msgstr "API-nøgler"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_apikeys_admin
 msgid "API Keys Listing"
-msgstr "API Nøgler listning"
+msgstr "Liste over API-nøgler"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -16443,11 +16733,13 @@ msgid ""
 "API Keys are used to connect to Odoo from external tools without the need "
 "for a password or Two-factor Authentication."
 msgstr ""
+"API-nøgler bruges til at forbinde eksterne værktøjer med Odoo uden at kræve "
+"adgangskode eller totrinsbekræftelse."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__api_key_duration
 msgid "API Keys maximum duration days"
-msgstr ""
+msgstr "Maksimal gyldighed i dage for API-nøgler"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
@@ -16462,12 +16754,12 @@ msgstr "Abstrakt model"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Abstract: False"
-msgstr ""
+msgstr "Abstrakt: falsk"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Abstract: True"
-msgstr ""
+msgstr "Abstrakt: sandt"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__user_ids
@@ -16499,7 +16791,7 @@ msgstr "Adgangsgrupper"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__menu_access
 msgid "Access Menu"
-msgstr "Adgangs menu"
+msgstr "Adgangsmenu"
 
 #. module: base
 #. odoo-python
@@ -16525,7 +16817,7 @@ msgstr "Adgangsrettigheder"
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Access Rights Inconsistency"
-msgstr ""
+msgstr "Uoverensstemmelse i adgangsrettigheder"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__access_token
@@ -16545,68 +16837,68 @@ msgstr "Tilgå hjemmesideprofilen tilhørende brugerne"
 #. module: base
 #: model:res.groups,comment:base.group_user
 msgid "Access to the home menu"
-msgstr ""
+msgstr "Adgang til startmenuen"
 
 #. module: base
 #: model:res.groups,comment:base.group_system
 msgid "Access to the settings to configure the apps"
-msgstr ""
+msgstr "Tillad adgang til indstillingerne for at konfigurere apps"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Accessible only for the super user"
-msgstr ""
+msgstr "Kun tilgængelig for superbrugeren"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_update_tax_tags
 msgid "Account - Allow updating tax grids"
-msgstr ""
+msgstr "Konto – Tillad opdatering af skattegitre"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
 msgid "Account Automatic Transfers"
-msgstr "Automatisk kontooverførsler"
+msgstr "Automatiske kontooverførsler"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_extract
 msgid "Account Bank Statement Extract"
-msgstr ""
+msgstr "Uddrag af kontoudtog"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import
 msgid "Account Bank Statement Import"
-msgstr "Kontoudtog importering"
+msgstr "Import af kontoudtog"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_accountant_batch_payment
 msgid "Account Batch Payment Reconciliation"
-msgstr "Regnskab Samlet Betaling Afstemning"
+msgstr "Afstemning af samlede betalinger"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_account_charts
 msgid "Account Charts"
-msgstr "Kontoplan"
+msgstr "Kontoplaner"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_extract
 msgid "Account Extract"
-msgstr ""
+msgstr "Kontoudtog"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__partner_id
 msgid "Account Holder"
-msgstr "Indehaver"
+msgstr "Kontohaver"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr "Kontoindehaver"
+msgstr "Kontohavernavn"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
 msgid "Account Invoice Extract"
-msgstr "Kontofaktura uddrag"
+msgstr "Fakturaudtræk"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract_purchase
@@ -26039,7 +26331,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_voip_onsip
 msgid "Enables VoIP compatibility with OnSIP."
-msgstr ""
+msgstr "Aktivér VoIP-kompatibilitet med OnSIP."
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_enark
@@ -48260,7 +48552,7 @@ msgstr "f.eks. DK12345678"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "e.g. Brandon Freeman"
-msgstr ""
+msgstr "f.eks. Brandon Freeman"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
