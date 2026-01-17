@@ -12,21 +12,22 @@
 # Dionysis Zacharioudakis <d.zacharioudakis@dileanity.com>, 2025.
 # Panagiotis karampaglis <panosdotk@gmail.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:36+0000\n"
-"PO-Revision-Date: 2025-11-17 10:56+0000\n"
-"Last-Translator: Dionysis Zacharioudakis <d.zacharioudakis@dileanity.com>\n"
-"Language-Team: Greek <https://translate.odoo.com/projects/odoo-19/product/el/"
-">\n"
+"POT-Creation-Date: 2026-01-16 18:37+0000\n"
+"PO-Revision-Date: 2026-01-16 05:44+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"Language-Team: Greek <https://translate.odoo.com/projects/odoo-s19-1/product/"
+"el/>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: product
 #. odoo-python
@@ -718,7 +719,6 @@ msgstr "Apple"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Applied On"
 msgstr ""
 
@@ -988,12 +988,6 @@ msgstr "Κατηγορίες"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Category"
 msgstr "Κατηγορία"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "Category: %s"
-msgstr "Κατηγορία: %s"
 
 #. module: product
 #: model:product.combo,name:product.chairs_combo
@@ -1393,10 +1387,8 @@ msgstr "Δεδομένα Βάσης"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
-#, fuzzy
-#| msgid "End Date"
 msgid "Date"
-msgstr "Ημερ. Λήξης"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -1789,6 +1781,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__fixed
 msgid "Fixed Price"
 msgstr "Σταθερή τιμή"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__fixed_pricelist_rule_ids
+#: model:ir.model.fields,field_description:product.field_product_template__fixed_pricelist_rule_ids
+msgid "Fixed Pricelist Rule"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_20_product_template
@@ -3004,6 +3002,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Price"
 msgstr "ΤΙΜΗ"
 
@@ -3492,10 +3491,8 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__qty_available
 #: model:ir.model.fields,field_description:product.field_product_template__qty_available
-#, fuzzy
-#| msgid "Quantity"
 msgid "Quantity On Hand"
-msgstr "Ποσότητα"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -3651,8 +3648,14 @@ msgid "Rule Tip"
 msgstr ""
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "Rules"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
 #: model:ir.model.fields,field_description:product.field_product_template__sale_ok
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3674,11 +3677,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Sales Price"
 msgstr "Τιμή Πώλησης"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
-msgid "Sales Prices"
-msgstr "Τιμές Πώλησης"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__lst_price
@@ -3761,6 +3759,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__show_qty_update_button
 #: model:ir.model.fields,field_description:product.field_product_template__show_qty_update_button
 msgid "Show Qty Update Button"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__show_sales_price_page
+#: model:ir.model.fields,field_description:product.field_product_template__show_sales_price_page
+msgid "Show Sales Price Page"
 msgstr ""
 
 #. module: product
@@ -4171,10 +4175,8 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_storable
 #: model:ir.model.fields,field_description:product.field_product_template__is_storable
-#, fuzzy
-#| msgid "Inventory"
 msgid "Track Inventory"
-msgstr "Αποθήκη"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_01_product_template
@@ -4287,10 +4289,8 @@ msgstr "Μονάδες Μέτρησης & Συσκευασίες"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
-#, fuzzy
-#| msgid "Quantities"
 msgid "Update Quantities"
-msgstr "Ποσότητες"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_variant_edit_qty_action
@@ -4384,13 +4384,12 @@ msgid "Valid Product Attribute Lines"
 msgstr "Έγκυρες γραμμές χαρακτηριστικών προϊόντος"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
-msgid "Validity"
-msgstr ""
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Validity Period"
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Validity"
 msgstr ""
 
 #. module: product
@@ -4426,6 +4425,7 @@ msgstr "Τιμές"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Variant"
 msgstr "Παραλλαγή"
 
@@ -4490,12 +4490,6 @@ msgstr "Ετικέτες Παραλλαγής"
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
 msgid "Variant Values"
 msgstr "Αξίες Παραλλαγής"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "Variant: %s"
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
@@ -5004,3 +4998,9 @@ msgstr "σε"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr ""
+
+#~ msgid "Category: %s"
+#~ msgstr "Κατηγορία: %s"
+
+#~ msgid "Sales Prices"
+#~ msgstr "Τιμές Πώλησης"

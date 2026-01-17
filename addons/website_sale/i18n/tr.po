@@ -27,21 +27,22 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+# "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2025-11-21 14:46+0000\n"
-"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-01-16 18:36+0000\n"
+"PO-Revision-Date: 2026-01-13 16:10+0000\n"
+"Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_sale/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -221,23 +222,11 @@ msgstr "% 66"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-#, fuzzy
-#| msgid ""
-#| "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-#| "order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-#| "class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
-#| "                    <span class=\"align-middle\">to follow your order.</"
-#| "span>"
 msgid ""
 "<a role=\"button\" t-att-href=\"signup_url\" class=\"btn btn-primary "
 "o_translate_inline\">Sign Up</a>\n"
 "                    <span class=\"align-middle\">to follow your order.</span>"
 msgstr ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Siparişinizi takip etmek için</"
-"a>\n"
-"                    <span class=\"align-middle\">adresine kaydolun.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -1059,11 +1048,6 @@ msgstr ""
 "Siparişi, Teslimat Siparişi ve Müşteri Faturası/Kredi Notuna kopyalanacaktır"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
-msgid "A detailed, formatted description to promote your product on this page."
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
 msgid ""
 "A detailed, formatted description to promote your product on this page. Use "
@@ -1071,6 +1055,12 @@ msgid ""
 msgstr ""
 "Bu sayfada ürününüzü tanıtmak için ayrıntılı, biçimlendirilmiş bir açıklama. "
 "Daha fazla özellik keşfetmek için '/' kullanın."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
+msgid ""
+"A detailed, formatted description to promote your product on your eCommerce."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -2772,11 +2762,6 @@ msgid "Ecommerce Access"
 msgstr "E-ticaret Erişimi"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
-msgid "Ecommerce Shop"
-msgstr "E-ticaret Mağazası"
-
-#. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_cart_recovery
 msgid "Ecommerce: Cart Recovery"
 msgstr "E-ticaret: Sepet Kurtarma"
@@ -2926,15 +2911,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Filters"
 msgstr "Filtreler"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/product_template.py:0
-msgid ""
-"Final price may vary based on selection. Tax will be calculated at checkout."
-msgstr ""
-"Nihai fiyat seçime bağlı olarak değişebilir. Vergi ödeme sırasında "
-"hesaplanacaktır."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -4181,10 +4157,8 @@ msgstr "Açık Satış Siparişleri"
 
 #. module: website_sale
 #: model:ir.actions.act_url,name:website_sale.action_open_shop_page
-#, fuzzy
-#| msgid "Shop Payment"
 msgid "Open Shop Page"
-msgstr "Mağaza Ödemesi"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -4362,10 +4336,8 @@ msgstr "Ödeme Token'ları"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_payment_transaction
-#, fuzzy
-#| msgid "Payment Transactions"
 msgid "Payment Transaction"
-msgstr "Ödeme İşlemleri"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
@@ -5396,6 +5368,7 @@ msgstr "Sevkiyat"
 #: model:ir.ui.menu,name:website_sale.menu_open_shop
 #: model:website.menu,name:website_sale.menu_shop
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Shop"
 msgstr "Mağaza"
 
@@ -5783,6 +5756,12 @@ msgstr "Web sitesi yapılandırmasına bağlı olarak KDV dahil veya hariçtir."
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Taxes"
 msgstr "Vergiler"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/product_template.py:0
+msgid "Taxes calculated at checkout."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__variants_default_code
@@ -6733,6 +6712,7 @@ msgstr "örn. lamba, kutu"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "eCommerce"
 msgstr "e-Ticaret"
@@ -6920,6 +6900,16 @@ msgstr "şartlar &amp; koşullar"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "{{0}} image"
 msgstr "{{0}} görüntü"
+
+#~ msgid "Ecommerce Shop"
+#~ msgstr "E-ticaret Mağazası"
+
+#~ msgid ""
+#~ "Final price may vary based on selection. Tax will be calculated at "
+#~ "checkout."
+#~ msgstr ""
+#~ "Nihai fiyat seçime bağlı olarak değişebilir. Vergi ödeme sırasında "
+#~ "hesaplanacaktır."
 
 #~ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 #~ msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"

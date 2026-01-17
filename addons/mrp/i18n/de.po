@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-06 12:13+0000\n"
+"PO-Revision-Date: 2026-01-16 14:22+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/mrp/de/"
 ">\n"
@@ -429,7 +429,7 @@ msgstr "<span class=\"o_stat_text\">Untergeordneter Fertigungsauftrag</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">Copy Existing Operations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Vorhandene Vorgänge kopieren</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -520,6 +520,12 @@ msgid ""
 "quantity later.\n"
 "                    </span>"
 msgstr ""
+"<span class=\"text-muted\">\n"
+"                        Durch Ändern der Produktionsmenge werden auch die "
+"Mengen der für diesen Fertigungsauftrag zu verbrauchenden Komponenten "
+"geändert. <br/>Teilen Sie den Fertigungsauftrag auf, wenn Sie die restliche "
+"Menge später produzieren möchten.\n"
+"                   </span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -1005,6 +1011,8 @@ msgid ""
 "Are you sure you want to cancel these manufacturing orders?\n"
 "This action cannot be undone."
 msgstr ""
+"Möchten Sie diese Fertigungsaufträge wirklich stornieren?\n"
+"Diese Aktion kann nicht rückgängig gemacht werden."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1012,6 +1020,8 @@ msgid ""
 "Are you sure you want to cancel this manufacturing order?\n"
 "This action cannot be undone."
 msgstr ""
+"Sind Sie sicher, dass Sie diesen Fertigungsauftrag stornieren möchten?\n"
+"Diese Aktion kann nicht rückgängig gemacht werden."
 
 #. module: mrp
 #. odoo-python
@@ -1532,22 +1542,22 @@ msgstr "Abbrechen"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Cancel Manufacturing Order"
-msgstr ""
+msgstr "Fertigungsauftrag stornieren"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Cancel Manufacturing Orders"
-msgstr ""
+msgstr "Fertigungsaufträge stornieren"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Cancel these Orders"
-msgstr ""
+msgstr "Diese Aufträge stornieren"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Cancel this Order"
-msgstr ""
+msgstr "Diesen Auftrag stornieren"
 
 #. module: mrp
 #. odoo-javascript
@@ -3156,7 +3166,7 @@ msgstr "Lagerbewegungen"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "Bestandsroute"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
@@ -3551,10 +3561,8 @@ msgstr "Fertigungsauftrag ausstehend"
 
 #. module: mrp
 #: model:mail.message.subtype,name:mrp.mrp_mo_planned
-#, fuzzy
-#| msgid "Planned"
 msgid "MO Planned"
-msgstr "Geplant"
+msgstr "Fertigungsauftrag geplant"
 
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_progress
@@ -4279,7 +4287,7 @@ msgstr "Vorgang"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__code
 msgid "Operation Category"
-msgstr ""
+msgstr "Vorgangskategorie"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__allow_operation_dependencies
@@ -4544,10 +4552,8 @@ msgstr "Aufträge planen"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_plan_at_date
-#, fuzzy
-#| msgid "Delay Alert Date"
 msgid "Plan at Date"
-msgstr "Warndatum bei Verzögerung"
+msgstr "Zum Datum Planen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4606,7 +4612,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/wizard/change_production_qty.py:0
 msgid "Please specify a quantity bigger than 0."
-msgstr ""
+msgstr "Geben Sie eine Menge größer als 0 an."
 
 #. module: mrp
 #. odoo-python
@@ -5453,6 +5459,8 @@ msgid ""
 "Set a quantity that is smaller than the intial demand to split the "
 "manufacturing order."
 msgstr ""
+"Legen Sie eine Menge fest, die kleiner als der ursprüngliche Bedarf ist, um "
+"den Fertigungsauftrag aufzuteilen."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_replenishment_tree_view
@@ -5521,7 +5529,7 @@ msgstr "Stücklistenreiter anzeigen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__show_copy_operations_button
 msgid "Show Copy Operations Button"
-msgstr ""
+msgstr "Schaltfläche „Vorgänge kopieren“ anzeigen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -5900,6 +5908,8 @@ msgid ""
 "Technical field used to control the visibility of the 'Copy Existing "
 "Operations' button."
 msgstr ""
+"Technisches Feld zur Steuerung der Sichtbarkeit der Schaltfläche „Vorhandene "
+"Vorgänge kopieren“."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
@@ -5927,7 +5937,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/wizard/change_production_qty.py:0
 msgid "The backorder %s has been created."
-msgstr ""
+msgstr "Der Lieferrückstand %s wurde erstellt."
 
 #. module: mrp
 #. odoo-python
@@ -5960,18 +5970,14 @@ msgstr "Der folgende Auffüllungsauftrag wurde generiert."
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
-#| msgid "No manufacturing order found. Let's create one."
 msgid "The manufacturing order has been planned."
-msgstr "Kein Fertigungsauftrag gefunden. Erstellen Sie einen!"
+msgstr "Der Fertigungsauftrag wurde geplant."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
-#| msgid "No manufacturing order found. Let's create one."
 msgid "The manufacturing order has been unplanned."
-msgstr "Kein Fertigungsauftrag gefunden. Erstellen Sie einen!"
+msgstr "Die Planung des Fertigungsauftrags wurde aufgehoben."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
@@ -7117,7 +7123,7 @@ msgstr "Arbeitsauftrag"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss_type
 msgid "Workorder Productivity Loss Type"
-msgstr ""
+msgstr "Art des Produktivitätsverlusts bei Arbeitsaufträgen"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__yesterday

@@ -4,14 +4,14 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
-# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-06 17:35+0000\n"
+"PO-Revision-Date: 2026-01-16 18:33+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-1/mass_mailing/es_419/>\n"
@@ -161,10 +161,8 @@ msgstr "% de destinatarios"
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
-#, fuzzy
-#| msgid "%s Mailing Contacts have been added. "
 msgid "%(added_contacts_count)s Mailing Contacts have been added."
-msgstr "Se agregaron %s contactos de correo. "
+msgstr "Se agregaron %(added_contacts_count)s contactos de correo."
 
 #. module: mass_mailing
 #. odoo-python
@@ -567,10 +565,8 @@ msgstr "<i class=\"fa fa-copy\"/> Cree una alternativa"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_kanban
-#, fuzzy
-#| msgid "<i class=\"fa fa-envelope\"/> Send this as winner"
 msgid "<i class=\"fa fa-envelope text-primary me-2\" title=\"Email\"/>"
-msgstr "<i class=\"fa fa-envelope\"/> Envíe esto al ganador"
+msgstr "<i class=\"fa fa-envelope text-primary me-2\" title=\"Correo\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1241,7 +1237,7 @@ msgstr "Decoración de la actividad de excepción"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Planes de actividad"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_state
@@ -1282,18 +1278,14 @@ msgstr "Agregar contactos a la lista de correos"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_contact_to_list_action
-#, fuzzy
-#| msgid "Add Contacts to Mailing List"
 msgid "Add Contacts to a Mailing List"
-msgstr "Agregar contactos a la lista de correos"
+msgstr "Agregar contactos a una lista de correo"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_links.xml:0
-#, fuzzy
-#| msgid "Add to List"
 msgid "Add Custom Link"
-msgstr "Agregar a la lista"
+msgstr "Agregar enlace personalizado"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -2073,7 +2065,7 @@ msgstr "Regrese una vez que su correo se haya enviado para ver quién lo abrió.
 #: code:addons/mass_mailing/static/src/builder/options/social_media_links.xml:0
 #: model:ir.model,name:mass_mailing.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__company_name
@@ -2113,10 +2105,8 @@ msgstr "Configuración"
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_links.xml:0
-#, fuzzy
-#| msgid "Configuration"
 msgid "Configure Company"
-msgstr "Configuración"
+msgstr "Configurar empresa"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
@@ -2218,17 +2208,13 @@ msgstr "Portada"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
-#, fuzzy
-#| msgid "Creation Date"
 msgid "Create Date"
 msgstr "Fecha de creación"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form_simplified
-#, fuzzy
-#| msgid "Create a Mailing List"
 msgid "Create Mailing List"
-msgstr "Cree una lista de correos"
+msgstr "Crear lista de correo"
 
 #. module: mass_mailing
 #: model:ir.model,website_form_label:mass_mailing.model_res_partner
@@ -2316,10 +2302,8 @@ msgstr "Personalizado"
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
-#, fuzzy
-#| msgid "Custom"
 msgid "Custom Color"
-msgstr "Personalizado"
+msgstr "Color personalizado"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -2387,10 +2371,8 @@ msgstr "Predeterminado"
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
-#, fuzzy
-#| msgid "Default Reversed"
 msgid "Default Colors"
-msgstr "Predeterminado inverso"
+msgstr "Colores predeterminados"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2453,10 +2435,8 @@ msgstr ""
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/themes/theme_selector/theme_selector.js:0
-#, fuzzy
-#| msgid "Design removed from the %s Templates!"
 msgid "Design removed from the templates!"
-msgstr "El diseño se quitó de las plantillas %s"
+msgstr "Diseño eliminado de las plantillas."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__dest_list_id
@@ -2795,10 +2775,8 @@ msgstr ""
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/components/company_update_dialog.js:0
-#, fuzzy
-#| msgid "Facebook"
 msgid "Facebook Account"
-msgstr "Facebook"
+msgstr "Cuenta de Facebook"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__failed
@@ -2912,10 +2890,8 @@ msgstr "Primera lista de características"
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_links.xml:0
-#, fuzzy
-#| msgid "Followers"
 msgid "Follow Us on"
-msgstr "Seguidores"
+msgstr "Síguenos en"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_follower_ids
@@ -3317,10 +3293,8 @@ msgstr "Contenido interno"
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/components/company_update_dialog.js:0
-#, fuzzy
-#| msgid "Instagram"
 msgid "Instagram Account"
-msgstr "Instagram"
+msgstr "Cuenta de Instagram"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_schedule
@@ -3567,10 +3541,8 @@ msgstr "Clic de enlaces"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form_simplified
-#, fuzzy
-#| msgid "Last Name"
 msgid "List Name"
-msgstr "Apellido"
+msgstr "Nombre de la lista"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_import__mailing_list_ids
@@ -3662,10 +3634,8 @@ msgstr "Correo electrónico"
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_trace_report_action_mail
 #: model:ir.ui.menu,name:mass_mailing.mailing_menu_report_mailing
-#, fuzzy
-#| msgid "Mass Mailing Analysis"
 msgid "Mailing Analysis"
-msgstr "Análisis de correos masivos"
+msgstr "Análisis de correo"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__campaign
@@ -3680,10 +3650,8 @@ msgstr "Campañas de correo"
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
-#, fuzzy
-#| msgid "Mailing Contact"
 msgid "Mailing Color"
-msgstr "Contacto de correo"
+msgstr "Color del correo"
 
 #. module: mass_mailing
 #. odoo-python
@@ -3712,7 +3680,7 @@ msgstr "Correo activado"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_filter
 msgid "Mailing Favorite Filter"
-msgstr ""
+msgstr "Filtro favorito de correo"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
@@ -3961,7 +3929,7 @@ msgstr "Estadísticas de envíos masivos"
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__ir_ui_view__technical_usage__mass_mailing
 msgid "Mass Mailing Technical"
-msgstr ""
+msgstr "Ajustes técnicos de envío masivo de correos"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__mailing_ids
@@ -4079,7 +4047,7 @@ msgstr "No se encuentra en la dirección"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_ir_model
 msgid "Model"
-msgstr ""
+msgstr "Modelo"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -4131,7 +4099,7 @@ msgstr "Nombre / Correo electrónico"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
 msgid "New Mailing"
-msgstr ""
+msgstr "Correo nuevo"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__new_list_name
@@ -4537,7 +4505,7 @@ msgstr "Saliente"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mail
 msgid "Outgoing Mail"
-msgstr ""
+msgstr "Correo saliente"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -4780,7 +4748,7 @@ msgstr "¡Listos para el despegue!"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Ready to unleash emails?"
-msgstr ""
+msgstr "¿Todo listo para enviar tus correos?"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__opt_out_reason_id
@@ -5002,10 +4970,8 @@ msgstr "Asistente para el correo de prueba"
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/components/company_update_dialog.xml:0
-#, fuzzy
-#| msgid "Saved by"
 msgid "Save"
-msgstr "Guardado por"
+msgstr "Guardar"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -5015,10 +4981,8 @@ msgstr "Guardar como filtro favorito"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-#, fuzzy
-#| msgid "Save as Favorite Filter"
 msgid "Save as favorite"
-msgstr "Guardar como filtro favorito"
+msgstr "Guardar como favorito"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__create_uid
@@ -5105,10 +5069,8 @@ msgstr "Ver más <span class=\"fa fa-long-arrow-right\" role=\"img\"/>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-#, fuzzy
-#| msgid "Select a Target Model..."
 msgid "Select a Target"
-msgstr "Seleccione un modelo objetivo..."
+msgstr "Selecciona un objetivo"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_form
@@ -5117,10 +5079,8 @@ msgstr "Seleccione un modelo objetivo..."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
-#, fuzzy
-#| msgid "Select mailing lists"
 msgid "Select a list..."
-msgstr "Seleccione listas de correo"
+msgstr "Selecciona una lista..."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -5794,10 +5754,8 @@ msgstr "Título"
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
-#, fuzzy
-#| msgid "Edit Conditions"
 msgid "Title Position"
-msgstr "Editar condiciones"
+msgstr "Posición del título"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_three_columns
@@ -5925,10 +5883,8 @@ msgstr "Fuente UTM"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
-#, fuzzy
-#| msgid "Archive"
 msgid "Unarchive"
-msgstr "Archivar"
+msgstr "Desarchivar"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__unknown
@@ -5952,10 +5908,8 @@ msgstr "Fecha de cancelación"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
-#, fuzzy
-#| msgid "Upload a file"
 msgid "Upload"
-msgstr "Subir archivo"
+msgstr "Subir"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -6046,7 +6000,7 @@ msgstr "Video"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_ir_ui_view
 msgid "View"
-msgstr ""
+msgstr "Ver"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -6057,7 +6011,7 @@ msgstr "Ver en línea"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_ui_view__technical_usage
 msgid "View's Technical Usage"
-msgstr ""
+msgstr "Uso técnico de la vista"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -6347,6 +6301,8 @@ msgid ""
 "Your custom snippet was successfully saved as %s. Find it in your custom "
 "snippets collection."
 msgstr ""
+"Tu snippet personalizado se guardo como %s. Lo podrás encontrar en tu "
+"colección de snippets personalizados."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -6421,10 +6377,8 @@ msgstr "Por ejemplo, John Smith"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form_simplified
-#, fuzzy
-#| msgid "e.g. Consumer Newsletter"
 msgid "e.g. Monthly Newsletter"
-msgstr "Por ejemplo, Boletín del consumidor"
+msgstr "Por ejemplo, boletín mensual"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -6433,10 +6387,8 @@ msgstr "Por ejemplo, Nuevas rebajas en todas las playeras"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
-#, fuzzy
-#| msgid "e.g. \"VIP\", \"Roadshow\", ..."
 msgid "e.g. Roadshow"
-msgstr "Por ejemplo, \"VIP\", \"Roadshow\", etc..."
+msgstr "Por ejemplo, Roadshow"
 
 #. module: mass_mailing
 #: model:ir.model.constraint,message:mass_mailing.constraint_mailing_mailing_email_from
@@ -6534,10 +6486,8 @@ msgstr "www.ejemplo.com"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
-#, fuzzy
-#| msgid "Blacklisted"
 msgid "✉ Blacklisted"
-msgstr "En la lista de exclusión"
+msgstr "✉ En la lista de exclusión"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed

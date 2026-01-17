@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 18:37+0000\n"
-"PO-Revision-Date: 2026-01-08 09:18+0000\n"
+"POT-Creation-Date: 2026-01-16 18:36+0000\n"
+"PO-Revision-Date: 2026-01-16 08:22+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/mail/"
 "ko/>\n"
@@ -175,10 +175,8 @@ msgstr "%(date)s %(time)s"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/utils/common/dates.js:0
-#, fuzzy
-#| msgid "%(date)s at %(time)s"
 msgid "%(datetime)s local time"
-msgstr "%(date)s %(time)s"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -357,16 +355,14 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
-msgid "%(user)s connected. This is their first connection. Wish them luck."
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "%(user)s deleted the thread \"%(thread_name)s\""
 msgstr ""
-"%(user)s 사용자 접속 완료. 첫 접속이며, 앞으로 유용하게 사용하시기를 바랍니"
-"다."
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_model.js:0
-msgid "%(user)s deleted the thread \"%(thread_name)s\""
+#: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
+msgid "%(user)s just connected for the first time. Wish them luck!"
 msgstr ""
 
 #. module: mail
@@ -658,18 +654,14 @@ msgstr "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
-#, fuzzy
-#| msgid "<i class=\"fa fa-check\"/> Done"
 msgid "<i class=\"fa fa-sign-in\" role=\"img\"/> Join"
-msgstr "<i class=\"fa fa-check\"/> 완료"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
-#, fuzzy
-#| msgid "<i class=\"fa fa-times\"/> Cancel"
 msgid "<i class=\"fa fa-sign-out\" role=\"img\"/> Leave"
-msgstr "<i class=\"fa fa-times\"/> 취소"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
@@ -1666,10 +1658,8 @@ msgstr "전체"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__kpi_provider_visibility__all
-#, fuzzy
-#| msgid "Show All Activities"
 msgid "All Activities"
-msgstr "전체 활동 보기"
+msgstr "모든 활동"
 
 #. module: mail
 #. odoo-javascript
@@ -1682,10 +1672,8 @@ msgstr "모든 메시지"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_preview.xml:0
-#, fuzzy
-#| msgid "Use microphone and camera"
 msgid "Allow Microphone and Camera"
-msgstr "마이크 및 카메라 사용"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_poll__allow_multiple_options
@@ -2456,17 +2444,13 @@ msgstr "역할 편집 가능"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__can_join
-#, fuzzy
-#| msgid "Join"
 msgid "Can Join"
-msgstr "참여"
+msgstr "다음 참여 가능"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__can_leave
-#, fuzzy
-#| msgid "Leave"
 msgid "Can Leave"
-msgstr "나가기"
+msgstr "다음에서 나갈 수 있음"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -2628,10 +2612,8 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
-#, fuzzy
-#| msgid "No conversation selected."
 msgid "Cannot undo; the conversation was deleted."
-msgstr "선택한 대화가 없습니다."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -2703,7 +2685,10 @@ msgid "Catchall emails should be unique"
 msgstr "캐치올 이메일은 고유해야 합니다."
 
 #. module: mail
+#: model:ir.actions.act_window,name:mail.discuss_category_settings_action
 #: model:ir.ui.menu,name:mail.menu_discuss_category
+#: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_form
+#: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_tree
 msgid "Categories"
 msgstr "카테고리"
 
@@ -2951,7 +2936,7 @@ msgstr "다시 시도하려면 여기를 클릭하세요"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.xml:0
 msgid "Click the"
-msgstr ""
+msgstr "클릭:"
 
 #. module: mail
 #. odoo-javascript
@@ -3318,10 +3303,8 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
-#, fuzzy
-#| msgid "Conversations"
 msgid "Conversation hidden."
-msgstr "대화"
+msgstr "대화 숨겨짐."
 
 #. module: mail
 #. odoo-javascript
@@ -4058,13 +4041,6 @@ msgid "Discuss"
 msgstr "메일 및 채팅"
 
 #. module: mail
-#: model:ir.actions.act_window,name:mail.discuss_category_settings_action
-#: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_form
-#: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_tree
-msgid "Discuss Categories"
-msgstr "메일 및 채팅 카테고리"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.js:0
 msgid "Discuss cannot access your camera"
@@ -4079,10 +4055,8 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.js:0
-#, fuzzy
-#| msgid "\"%(hostname)s\" needs to access your microphone"
 msgid "Discuss cannot access your microphone"
-msgstr "\"%(hostname)s\" 님이 귀하의 마이크에 액세스해야 합니다."
+msgstr ""
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_discuss_channel_member_unmute_ir_actions_server
@@ -5470,6 +5444,11 @@ msgid ""
 msgstr "그룹 승인이나 그룹 자동 구독은 채널에서만 지원되는 기능입니다."
 
 #. module: mail
+#: model_terms:ir.actions.act_window,help:mail.discuss_category_settings_action
+msgid "Group related channels together to make them easier to find."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_tree
 msgid "Groups"
 msgstr "그룹"
@@ -5661,10 +5640,8 @@ msgstr "고정 메시지 숨기기"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
-#, fuzzy
-#| msgid "Hide Pinned Messages"
 msgid "Hide Until New Message"
-msgstr "고정 메시지 숨기기"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -6170,10 +6147,8 @@ msgstr "수신 전화"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-#, fuzzy
-#| msgid "Incoming call"
 msgid "Incoming call..."
-msgstr "수신 전화"
+msgstr "전화 수신 중..."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__automated
@@ -6415,6 +6390,7 @@ msgstr "\"%s\" 초대"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Invite People"
 msgstr "다른 사람 초대하기"
@@ -6459,10 +6435,8 @@ msgstr "그룹 채팅 초대"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
-#, fuzzy
-#| msgid "Invited Member"
 msgid "Invite to Meeting"
-msgstr "초대된 멤버"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__invited_member_ids
@@ -6672,10 +6646,8 @@ msgstr "카메라를 사용하여 통화 참여"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
-#, fuzzy
-#| msgid "Join"
 msgid "Joined"
-msgstr "참여"
+msgstr "가입"
 
 #. module: mail
 #. odoo-javascript
@@ -6698,7 +6670,7 @@ msgstr "KB"
 #. module: mail
 #: model:ir.model,name:mail.model_kpi_provider
 msgid "KPI Provider"
-msgstr ""
+msgstr "KPI 제공업체"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__kpi_provider_visibility
@@ -6763,10 +6735,8 @@ msgstr "사용 언어"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__last_interest_dt
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__last_interest_dt
-#, fuzzy
-#| msgid "List Activity"
 msgid "Last Activity"
-msgstr "작업 목록"
+msgstr "최근 활동"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -7424,10 +7394,8 @@ msgstr "완료"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
-#, fuzzy
-#| msgid "Mark as Unread"
 msgid "Marked as unread"
-msgstr "안읽음 표시"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8109,10 +8077,8 @@ msgstr "아니오"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_preview.xml:0
-#, fuzzy
-#| msgid "Show camera preview"
 msgid "No Camera Preview"
-msgstr "카메라 미리보기 표시"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -8153,6 +8119,11 @@ msgid "No canned response found. Let's create one!"
 msgstr "미리 준비된 답변이 없습니다. 하나 만들어 보세요!"
 
 #. module: mail
+#: model_terms:ir.actions.act_window,help:mail.discuss_category_settings_action
+msgid "No categories found. Let's create one!"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/action_list.xml:0
 msgid "No content."
@@ -8175,11 +8146,6 @@ msgstr "선택한 대화가 없습니다."
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 msgid "No conversation yet..."
 msgstr "아직 대화가 없습니다 ..."
-
-#. module: mail
-#: model_terms:ir.actions.act_window,help:mail.discuss_category_settings_action
-msgid "No discuss category found. Let's create one!"
-msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -8220,10 +8186,8 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
-#, fuzzy
-#| msgid "Search people to invite"
 msgid "No people found to invite."
-msgstr "초대할 사람 검색"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -8337,10 +8301,8 @@ msgstr "확인 안됨"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
-#, fuzzy
-#| msgid "Not Confirmed"
 msgid "Not Joined"
-msgstr "확인 안됨"
+msgstr "가입하지 않음"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__not_tested
@@ -8830,10 +8792,8 @@ msgstr "채팅 열기"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_menu.xml:0
-#, fuzzy
-#| msgid "Unpin Conversation"
 msgid "Open Conversation"
-msgstr "대화 핀고정 해제"
+msgstr "대화 열기"
 
 #. module: mail
 #. odoo-javascript
@@ -9131,10 +9091,8 @@ msgstr "기한이 지난"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__kpi_provider_visibility__own
-#, fuzzy
-#| msgid "Activities"
 msgid "Own Activities"
-msgstr "활동"
+msgstr "자체 활동"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__owner_user_id
@@ -9320,10 +9278,8 @@ msgstr "승인 필요"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.xml:0
-#, fuzzy
-#| msgid "Permission Needed"
 msgid "Permissions Lady"
-msgstr "승인 필요"
+msgstr "권한 관리자"
 
 #. module: mail
 #. odoo-javascript
@@ -9334,10 +9290,8 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.xml:0
-#, fuzzy
-#| msgid "Permission Needed"
 msgid "Permissions Toggle"
-msgstr "승인 필요"
+msgstr "권한 토글"
 
 #. module: mail
 #. odoo-javascript
@@ -10827,10 +10781,8 @@ msgstr "조회 :"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_menu.xml:0
-#, fuzzy
-#| msgid "Server Action"
 msgid "Select Actions"
-msgstr "서버작업"
+msgstr "활동 선택"
 
 #. module: mail
 #. odoo-javascript
@@ -11963,10 +11915,8 @@ msgstr "대화가 비어 있습니다."
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
-#, fuzzy
-#| msgid "No conversation selected."
 msgid "The conversation was deleted."
-msgstr "선택한 대화가 없습니다."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__can_write
@@ -12776,10 +12726,8 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.js:0
-#, fuzzy
-#| msgid "Turn camera on"
 msgid "Turn on the camera permission"
-msgstr "카메라 켜기"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -12790,10 +12738,8 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_preview.xml:0
-#, fuzzy
-#| msgid "Do you really want to delete this preview?"
 msgid "Turn on your camera to see the preview."
-msgstr "정말로 미리보기를 삭제하시겠습니까?"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__state
@@ -13231,11 +13177,6 @@ msgid "Use different domains for your mail aliases"
 msgstr "메일 별칭용으로 다른 도메인 사용"
 
 #. module: mail
-#: model_terms:ir.actions.act_window,help:mail.discuss_category_settings_action
-msgid "Use discuss categories to organize the channels."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__is_batch_mode
 msgid "Use in batch"
 msgstr "일괄 사용"
@@ -13603,10 +13544,8 @@ msgstr "%(channel_name)s 님과의 채팅 내용 보기"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_app/sidebar/sidebar.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
-#, fuzzy
-#| msgid "Hide all conversations"
 msgid "View hidden conversations"
-msgstr "모든 대화 숨기기"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -13628,10 +13567,8 @@ msgstr "%(channel_name)s 채널 보기"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_my_conversations_view_search
-#, fuzzy
-#| msgid "Visible to all"
 msgid "Visible"
-msgstr "모든 사람에게 표시"
+msgstr "공개"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -14493,6 +14430,12 @@ msgid "e.g. Discuss proposal"
 msgstr "예: 업무 협의 제안"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_form
+#: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_tree
+msgid "e.g. General"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "e.g. Hello, how may I help you?"
@@ -14512,12 +14455,6 @@ msgstr "예: 신입 사원 연수 프로그램"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "e.g. Schedule a meeting"
 msgstr "예. 회의 예약하기"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_form
-#: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_tree
-msgid "e.g. Service"
-msgstr "예: 서비스"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -14912,6 +14849,17 @@ msgstr "별칭"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s”의 “%(channel_name)s”"
+
+#~ msgid "%(user)s connected. This is their first connection. Wish them luck."
+#~ msgstr ""
+#~ "%(user)s 사용자 접속 완료. 첫 접속이며, 앞으로 유용하게 사용하시기를 바랍"
+#~ "니다."
+
+#~ msgid "Discuss Categories"
+#~ msgstr "메일 및 채팅 카테고리"
+
+#~ msgid "e.g. Service"
+#~ msgstr "예: 서비스"
 
 #~ msgid "Grouped Chat"
 #~ msgstr "그룹 채팅"

@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-09 18:37+0000\n"
-"PO-Revision-Date: 2026-01-10 12:04+0000\n"
-"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
+"PO-Revision-Date: 2026-01-16 18:33+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-1/hr/es_419/>\n"
 "Language: es_419\n"
@@ -405,7 +405,7 @@ msgstr "<span class=\"o_stat_text\">Contactos</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
 msgid "<span class=\"o_stat_text\">Eligible Employees</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Empleados elegibles</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
@@ -448,6 +448,8 @@ msgid ""
 "<span class=\"text-uppercase fw-bolder\" style=\"font-size: "
 "13px\">Organization Chart</span>"
 msgstr ""
+"<span class=\"text-uppercase fw-bolder\" style=\"font-size: 13px\""
+">Organigrama</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -456,10 +458,8 @@ msgstr "<span invisible=\"not contract_date_start\">al</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
-#, fuzzy
-#| msgid "<span invisible=\"not contract_date_start\">to</span>"
 msgid "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
-msgstr "<span invisible=\"not contract_date_start\">al</span>"
+msgstr "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -495,7 +495,7 @@ msgstr "<span>Ver</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "<span>employees</span>"
-msgstr ""
+msgstr "<span>empleados</span>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
@@ -740,7 +740,7 @@ msgstr "Empleado activo"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 msgid "Active Employees"
-msgstr ""
+msgstr "Empleados activos"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_ids
@@ -752,7 +752,7 @@ msgstr "Actividades"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity
 msgid "Activity"
-msgstr ""
+msgstr "Actividad"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_exception_decoration
@@ -771,7 +771,7 @@ msgstr "Plan de actividad"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_plans_ids
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Planes de actividad"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_state
@@ -958,7 +958,7 @@ msgstr "Aprobadores"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__4
 msgid "April"
-msgstr ""
+msgstr "Abril"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -1307,7 +1307,7 @@ msgstr "Asistencia/punto de venta"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__8
 msgid "August"
-msgstr ""
+msgstr "Agosto"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
@@ -1443,7 +1443,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__barcode
 msgid "Barcode"
-msgstr ""
+msgstr "Código de barras"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -1497,7 +1497,7 @@ msgstr "Cumpleaños"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_month
 msgid "Birthday Month"
-msgstr ""
+msgstr "Mes de cumpleaños"
 
 #. module: hr
 #. odoo-javascript
@@ -1518,10 +1518,8 @@ msgstr "Cancelar"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-#, fuzzy
-#| msgid "Cannot archive the only active record of an employee."
 msgid "Cannot archive all the active versions of an employee."
-msgstr "No puedes archivar el único registro activo de un empleado."
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -1536,10 +1534,8 @@ msgstr ""
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-#, fuzzy
-#| msgid "Cannot unassign the only active record of an employee."
 msgid "Cannot unassign all the active versions of an employee."
-msgstr "No puedes desasignar el único registro activo de un empleado."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
@@ -1570,12 +1566,12 @@ msgstr "Director técnico"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__child_all_count
 msgid "Child All Count"
-msgstr ""
+msgstr "Número total de hijos"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__child_count
 msgid "Child Count"
-msgstr ""
+msgstr "Número de hijos"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
@@ -1759,10 +1755,8 @@ msgstr "Contrato"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
-#, fuzzy
-#| msgid "Contract End Date"
 msgid "Contract End"
-msgstr "Fecha de finalización del contrato"
+msgstr "Fin del contrato"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_date
@@ -1790,10 +1784,8 @@ msgstr "Resumen del contrato"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
-#, fuzzy
-#| msgid "Contract Start Date"
 msgid "Contract Start"
-msgstr "Fecha de inicio del contrato"
+msgstr "Inicio del contrato"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__contract_date_start
@@ -1899,7 +1891,7 @@ msgstr "Crear empleado"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__create_uid
 msgid "Create Uid"
-msgstr ""
+msgstr "Crear UID"
 
 #. module: hr
 #. odoo-python
@@ -1923,7 +1915,7 @@ msgstr "Crear un puesto de trabajo"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
 msgid "Create a new contract type"
-msgstr ""
+msgstr "Crear un nuevo tipo de contacto"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
@@ -1945,7 +1937,7 @@ msgstr "Crear un plan de actividad"
 #: model_terms:ir.actions.act_window,help:hr.action_hr_employee_org_chart
 #: model_terms:ir.actions.act_window,help:hr.action_hr_employee_public_org_chart
 msgid "Create an employee."
-msgstr ""
+msgstr "Crea un empleado."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1997,7 +1989,7 @@ msgstr "Creado el"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__creation_date
 msgid "Creation Date"
-msgstr ""
+msgstr "Fecha de creación"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__currency_id
@@ -2014,12 +2006,12 @@ msgstr "Símbolo de la moneda, se utiliza al imprimir importes."
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__current_date_version
 msgid "Current Date Employee Record"
-msgstr ""
+msgstr "Fecha del registro actual del empleado"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__current_version_id
 msgid "Current Employee Record"
-msgstr ""
+msgstr "Registro actual del empleado"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
@@ -2051,7 +2043,7 @@ msgstr "Depurar y resolver problemas de software"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__12
 msgid "December"
-msgstr ""
+msgstr "Diciembre"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2117,7 +2109,7 @@ msgstr "Departamento asignable"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__department_color
 msgid "Department Color"
-msgstr ""
+msgstr "Color del departamento"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__name
@@ -2212,13 +2204,13 @@ msgstr "Desarrollo"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__child_count
 msgid "Direct Subordinates Count"
-msgstr ""
+msgstr "Número de subordinados directos"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__subordinate_ids
 #: model:ir.model.fields,help:hr.field_hr_employee_public__subordinate_ids
 msgid "Direct and indirect subordinates"
-msgstr ""
+msgstr "Subordinados directos e indirectos"
 
 #. module: hr
 #. odoo-javascript
@@ -2396,7 +2388,7 @@ msgstr "Elemento a observar"
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__eligible_employee_line_ids
 #: model_terms:ir.ui.view,arch_db:hr.hr_export_employee_mixin_list_view
 msgid "Eligible Employees"
-msgstr ""
+msgstr "Empleados elegibles"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_email
@@ -2410,7 +2402,7 @@ msgstr "Correo electrónico"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias
 msgid "Email Alias"
-msgstr ""
+msgstr "Alias de correo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
@@ -2498,7 +2490,7 @@ msgstr "Propiedades del empleado"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__version_id
 msgid "Employee Record"
-msgstr ""
+msgstr "Registro del empleado"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_version
@@ -2511,7 +2503,7 @@ msgstr "Registros de los empleados"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__versions_count
 msgid "Employee Records Count"
-msgstr ""
+msgstr "Número de registros de empleados"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_salary_amount_is_percentage
@@ -2759,32 +2751,32 @@ msgstr "Vence el"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_activity__technical_usage__hr_expiring_contract
 msgid "Expiring Contract"
-msgstr ""
+msgstr "Contrato por vencer"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_activity__technical_usage__hr_expiring_work_permit
 msgid "Expiring Work Permit"
-msgstr ""
+msgstr "Permiso de trabajo por vencer"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_export_employee_mixin__export_id
 msgid "Export"
-msgstr ""
+msgstr "Exportar"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_list_view
 msgid "Export Employee"
-msgstr ""
+msgstr "Exportar empleado"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__export_file
 msgid "Export File"
-msgstr ""
+msgstr "Exportar archivo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__export_filename
 msgid "Export Filename"
-msgstr ""
+msgstr "Exportar nombre del archivo"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__share
@@ -2845,7 +2837,7 @@ msgstr "Familia"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__2
 msgid "February"
-msgstr ""
+msgstr "Febrero"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_state
@@ -2867,7 +2859,7 @@ msgstr "Campo de estudio"
 #: model_terms:ir.actions.act_window,help:hr.action_hr_employee_org_chart
 #: model_terms:ir.actions.act_window,help:hr.action_hr_employee_public_org_chart
 msgid "Find all the information on employees."
-msgstr ""
+msgstr "Encuentra toda la información sobre tus empleados."
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_fired
@@ -2877,7 +2869,7 @@ msgstr "Despedido"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Flexible"
-msgstr ""
+msgstr "Flexible"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
@@ -2967,7 +2959,7 @@ msgstr "Generar"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
 msgid "Generate Export File"
-msgstr ""
+msgstr "Generar archivo de exportación"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -3021,17 +3013,17 @@ msgstr "Empleado de RR. HH.: Actualizar versión actual"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
 msgid "HR Export"
-msgstr ""
+msgstr "Exportación de RR. HH."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_export_employee_mixin
 msgid "HR Export Employee"
-msgstr ""
+msgstr "Exportar empleados RR. HH."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_export_mixin
 msgid "HR Export Mixin"
-msgstr ""
+msgstr "Mixin de exportación de RR. HH."
 
 #. module: hr
 #. odoo-javascript
@@ -3048,7 +3040,7 @@ msgstr "Responsable de RR. HH."
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_country_contract_type
 msgid "Has Country Contract Type"
-msgstr ""
+msgstr "El tipo de contrato tiene país"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__has_department_manager_access
@@ -3119,7 +3111,7 @@ msgstr "Unidad de la distancia entre la casa y el trabajo"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hourly_cost
 msgid "Hourly Cost"
-msgstr ""
+msgstr "Costo por hora"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
@@ -3319,13 +3311,13 @@ msgstr "Indefinido"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__child_all_count
 msgid "Indirect Subordinates Count"
-msgstr ""
+msgstr "Número de subordinados indirectos"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "Indirect subordinates"
-msgstr ""
+msgstr "Subordinados indirectos"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_interim
@@ -3401,7 +3393,7 @@ msgstr "Es anterior"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_subordinate
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_subordinate
 msgid "Is Subordinate"
-msgstr ""
+msgstr "Es subordinado"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__is_system
@@ -3421,7 +3413,7 @@ msgstr "Es usuario"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Issued by Government"
-msgstr ""
+msgstr "Emitido por el gobierno"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -3431,7 +3423,7 @@ msgstr "Prioriza la toma de decisiones basada en datos"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__1
 msgid "January"
-msgstr ""
+msgstr "Enero"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_id
@@ -3484,17 +3476,17 @@ msgstr "Empleos"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__7
 msgid "July"
-msgstr ""
+msgstr "Julio"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__6
 msgid "June"
-msgstr ""
+msgstr "Junio"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Km Home Work"
-msgstr ""
+msgstr "KM de la casa al trabajo"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -3630,7 +3622,7 @@ msgstr "Vincula un elemento con el valor booleano TRUE (verdadero)."
 #. odoo-javascript
 #: code:addons/hr/static/src/xml/contract_template_button.xml:0
 msgid "Load Contract Template"
-msgstr ""
+msgstr "Cargar plantilla del contrato"
 
 #. module: hr
 #: model:ir.actions.server,name:hr.action_hr_employee_load_demo_data
@@ -3641,7 +3633,7 @@ msgstr "Cargar datos de muestra"
 #. odoo-javascript
 #: code:addons/hr/static/src/xml/contract_template_button.xml:0
 msgid "Load Template"
-msgstr ""
+msgstr "Cargar plantilla"
 
 #. module: hr
 #. odoo-javascript
@@ -3725,7 +3717,7 @@ msgstr "No se ha establecido el gerente del empleado %s."
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__3
 msgid "March"
-msgstr ""
+msgstr "Marzo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
@@ -3764,7 +3756,7 @@ msgstr "Dominar demostraciones de nuestro software"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__5
 msgid "May"
-msgstr ""
+msgstr "Mayo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__member_of_department
@@ -3813,13 +3805,13 @@ msgstr "Teléfono celular"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "Modified on the Employee Record '%s'"
-msgstr ""
+msgstr "Modificado en el registro del empleado \"%s\""
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "More managers"
-msgstr ""
+msgstr "Más gerentes"
 
 #. module: hr
 #. odoo-javascript
@@ -3871,7 +3863,7 @@ msgstr "Nombre"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__nationality_country_code
 msgid "Nationality"
-msgstr ""
+msgstr "Nacionalidad"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_id
@@ -4000,7 +3992,7 @@ msgstr "No empleado"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__0
 msgid "Not specified"
-msgstr ""
+msgstr "Sin especificar"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
@@ -4012,7 +4004,7 @@ msgstr "Nota"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__11
 msgid "November"
-msgstr ""
+msgstr "Noviembre"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction_counter
@@ -4082,7 +4074,7 @@ msgstr "Número de empleados que espera contratar."
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__10
 msgid "October"
-msgstr ""
+msgstr "Octubre"
 
 #. module: hr
 #. odoo-javascript
@@ -4147,12 +4139,12 @@ msgstr "Operación incompatible."
 #: model:ir.actions.act_window,name:hr.action_hr_employee_org_chart
 #: model:ir.actions.act_window,name:hr.action_hr_employee_public_org_chart
 msgid "Org Chart"
-msgstr ""
+msgstr "Organigrama"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Organization Chart"
-msgstr ""
+msgstr "Organigrama"
 
 #. module: hr
 #. odoo-python
@@ -4270,12 +4262,12 @@ msgstr "Excelente nivel de inglés escrito"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__period_start
 msgid "Period Start"
-msgstr ""
+msgstr "Inicio del periodo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__period_stop
 msgid "Period Stop"
-msgstr ""
+msgstr "Detener periodo"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4330,7 +4322,7 @@ msgstr "Teléfono"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__pin
 msgid "Pin"
-msgstr ""
+msgstr "Fijar"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__place_of_birth
@@ -4410,7 +4402,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
 msgid "Populate"
-msgstr ""
+msgstr "Completar"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_simple_modif
@@ -4706,7 +4698,7 @@ msgstr "Empleado relacionado"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_public_ids
 msgid "Related employee (public)"
-msgstr ""
+msgstr "Empleado relacionado (público)"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_res_partner__employee_ids
@@ -4860,7 +4852,7 @@ msgstr "Por temporada"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "See All"
-msgstr ""
+msgstr "Ver todo"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_version__contract_template_id
@@ -4885,7 +4877,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__9
 msgid "September"
-msgstr ""
+msgstr "Septiembre"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__sequence
@@ -4904,7 +4896,7 @@ msgstr "Establecer fecha de finalización de contrato"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "Set a manager or reports to show in org chart."
-msgstr ""
+msgstr "Asigna un responsable o reportes para mostrar en el organigrama."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -4962,8 +4954,6 @@ msgstr "Gestión de habilidades"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
 #: model:ir.model.fields,field_description:hr.field_hr_version__ssnid
-#, fuzzy
-#| msgid "Social Security Number"
 msgid "Social Security No"
 msgstr "Número de seguridad social"
 
@@ -4980,6 +4970,8 @@ msgid ""
 "Some employees are present in a loop.\n"
 "                Click"
 msgstr ""
+"Algunos empleados están en bucle.\n"
+"                Haz clic en"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -5107,7 +5099,7 @@ msgstr "Estudiante"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__subordinate_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__subordinate_ids
 msgid "Subordinates"
-msgstr ""
+msgstr "Subordinados"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -5147,7 +5139,7 @@ msgstr "Objetivo"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hooks.js:0
 msgid "Team"
-msgstr ""
+msgstr "Equipo"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
@@ -5157,7 +5149,7 @@ msgstr "Mentalidad orientada al trabajo en equipo"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity__technical_usage
 msgid "Technical Usage"
-msgstr ""
+msgstr "Uso técnico"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__create_employee_id
@@ -5172,7 +5164,7 @@ msgstr "Campo técnico, si se debe crear un empleado"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_activity__technical_usage
 msgid "Technical identifier"
-msgstr ""
+msgstr "Identificador técnico"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
@@ -5262,7 +5254,7 @@ msgstr "El contrato debe tener una fecha de inicio."
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The contract of %(employee_name)s is about to expire."
-msgstr ""
+msgstr "El contrato de %(employee_name)s está a punto de vencer."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
@@ -5360,13 +5352,13 @@ msgstr ""
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_version_check_wage_positive
 msgid "The wage must be a positive value."
-msgstr ""
+msgstr "El sueldo debe ser un valor positivo."
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The work permit of %(employee_name)s is about to expire."
-msgstr ""
+msgstr "El permiso de trabajo de %(employee_name)s está a punto de vencer."
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_thesis
@@ -5451,7 +5443,7 @@ msgstr "Actividades de hoy"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
@@ -5587,7 +5579,7 @@ msgstr "Empleado usuario"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "User Timezone"
-msgstr ""
+msgstr "Zona horaria del usuario"
 
 #. module: hr
 #. odoo-python
@@ -5643,7 +5635,7 @@ msgstr "Permiso de trabajo válido para Bélgica"
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
 msgid "View employee"
-msgstr ""
+msgstr "Ver empleado"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -5658,7 +5650,7 @@ msgstr "Fecha de vencimiento de la visa"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expire"
-msgstr ""
+msgstr "Vencimiento de la visa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -5933,6 +5925,8 @@ msgid ""
 "You are not allowed to access \"Employee\" (hr.employee) records.\n"
 "    We can redirect you to the public employee list."
 msgstr ""
+"No tienes permiso de acceder a los registros de \"Empleado\" (hr.employee).\n"
+"    Te podemos redirigir a la lista de empleados pública."
 
 #. module: hr
 #. odoo-python

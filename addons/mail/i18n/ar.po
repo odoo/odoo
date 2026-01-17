@@ -12,16 +12,16 @@
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 18:37+0000\n"
-"PO-Revision-Date: 2025-12-10 12:51+0000\n"
+"POT-Creation-Date: 2026-01-16 18:36+0000\n"
+"PO-Revision-Date: 2026-01-16 06:54+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/mail/ar/"
-">\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-1/mail/"
+"ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -178,10 +178,8 @@ msgstr "%(date)s الساعة %(time)s"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/utils/common/dates.js:0
-#, fuzzy
-#| msgid "%(date)s at %(time)s"
 msgid "%(datetime)s local time"
-msgstr "%(date)s الساعة %(time)s"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -359,16 +357,15 @@ msgstr "%(user)s غير اسم المحادثة إلى %(name)s"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
-msgid "%(user)s connected. This is their first connection. Wish them luck."
-msgstr ""
-"%(user)s متصلون. هذه هي المرة الأولى التي يتصلون فيها. تمنّ لهم حظاً موفقاً."
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(user)s deleted the thread \"%(thread_name)s\""
 msgstr "%(user)s حذف المحادثة \"%(thread_name)s\""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
+msgid "%(user)s just connected for the first time. Wish them luck!"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -663,18 +660,14 @@ msgstr "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
-#, fuzzy
-#| msgid "<i class=\"fa fa-check\"/> Done"
 msgid "<i class=\"fa fa-sign-in\" role=\"img\"/> Join"
-msgstr "<i class=\"fa fa-check\"/> تم الانتهاء"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
-#, fuzzy
-#| msgid "<i class=\"fa fa-times\"/> Cancel"
 msgid "<i class=\"fa fa-sign-out\" role=\"img\"/> Leave"
-msgstr "<i class=\"fa fa-times\"/> تم الإلغاء"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_kanban_open_target
@@ -1676,10 +1669,8 @@ msgstr "الكل"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__kpi_provider_visibility__all
-#, fuzzy
-#| msgid "Show All Activities"
 msgid "All Activities"
-msgstr "إظهار كافة الأنشطة"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -1692,10 +1683,8 @@ msgstr "كافة الرسائل"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_preview.xml:0
-#, fuzzy
-#| msgid "Use microphone and camera"
 msgid "Allow Microphone and Camera"
-msgstr "استخدام الميكروفون والكاميرا"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_poll__allow_multiple_options
@@ -2465,17 +2454,13 @@ msgstr "يمكن تعديل الدور"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__can_join
-#, fuzzy
-#| msgid "Join"
 msgid "Can Join"
-msgstr "انضمام"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__can_leave
-#, fuzzy
-#| msgid "Leave"
 msgid "Can Leave"
-msgstr "مغادرة"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -2639,10 +2624,8 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
-#, fuzzy
-#| msgid "No conversation selected."
 msgid "Cannot undo; the conversation was deleted."
-msgstr "لم يتم تحديد محادثة."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -2714,7 +2697,10 @@ msgid "Catchall emails should be unique"
 msgstr "يجب أن تكون رسائل البريد الإلكتروني الجماعية فريدة من نوعها"
 
 #. module: mail
+#: model:ir.actions.act_window,name:mail.discuss_category_settings_action
 #: model:ir.ui.menu,name:mail.menu_discuss_category
+#: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_form
+#: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_tree
 msgid "Categories"
 msgstr ""
 
@@ -3331,10 +3317,8 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
-#, fuzzy
-#| msgid "Conversations"
 msgid "Conversation hidden."
-msgstr "المحادثات"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -4076,13 +4060,6 @@ msgid "Discuss"
 msgstr "المناقشة"
 
 #. module: mail
-#: model:ir.actions.act_window,name:mail.discuss_category_settings_action
-#: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_form
-#: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_tree
-msgid "Discuss Categories"
-msgstr ""
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.js:0
 msgid "Discuss cannot access your camera"
@@ -4097,10 +4074,8 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.js:0
-#, fuzzy
-#| msgid "\"%(hostname)s\" needs to access your microphone"
 msgid "Discuss cannot access your microphone"
-msgstr "\"%(hostname)s\" بحاجة إلى الوصول إلى المايكروفون الخاص بك"
+msgstr ""
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_discuss_channel_member_unmute_ir_actions_server
@@ -4257,10 +4232,8 @@ msgstr "هل تريد أن يسمعك الناس في الاجتماع؟"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_preview.xml:0
-#, fuzzy
-#| msgid "Do you want people to hear you in the meeting?"
 msgid "Do you want people to see and hear you in the meeting?"
-msgstr "هل تريد أن يسمعك الناس في الاجتماع؟"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5489,6 +5462,11 @@ msgstr ""
 "خاصيتي التفويض الجماعي والاشتراك التلقائي الجماعي مدعومتان في القنوات فقط."
 
 #. module: mail
+#: model_terms:ir.actions.act_window,help:mail.discuss_category_settings_action
+msgid "Group related channels together to make them easier to find."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_tree
 msgid "Groups"
 msgstr "المجموعات"
@@ -5680,10 +5658,8 @@ msgstr "إخفاء الرسائل المثبتة"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
-#, fuzzy
-#| msgid "Hide Pinned Messages"
 msgid "Hide Until New Message"
-msgstr "إخفاء الرسائل المثبتة"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -6191,10 +6167,8 @@ msgstr "مكالمة واردة"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.xml:0
-#, fuzzy
-#| msgid "Incoming call"
 msgid "Incoming call..."
-msgstr "مكالمة واردة"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__automated
@@ -6432,6 +6406,7 @@ msgstr "دعوة \"%s\""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Invite People"
 msgstr "دعوة الأفراد"
@@ -6476,10 +6451,8 @@ msgstr "الدعوة إلى الدردشة الجماعية"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
-#, fuzzy
-#| msgid "Invited Member"
 msgid "Invite to Meeting"
-msgstr "عضو مدعو"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__invited_member_ids
@@ -6688,10 +6661,8 @@ msgstr "الانضمام إلى المكالمة مع الكاميرا"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
-#, fuzzy
-#| msgid "Join"
 msgid "Joined"
-msgstr "انضمام"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -6780,10 +6751,8 @@ msgstr "اللغة"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__last_interest_dt
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__last_interest_dt
-#, fuzzy
-#| msgid "List Activity"
 msgid "Last Activity"
-msgstr "نشاط القائمة"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -7440,10 +7409,8 @@ msgstr "التعيين كمنتهي"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
-#, fuzzy
-#| msgid "Mark as Unread"
 msgid "Marked as unread"
-msgstr "التعيين كغير مقروء"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8127,10 +8094,8 @@ msgstr "لا"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_preview.xml:0
-#, fuzzy
-#| msgid "Show camera preview"
 msgid "No Camera Preview"
-msgstr "عرض معاينة الكاميرا"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -8171,6 +8136,11 @@ msgid "No canned response found. Let's create one!"
 msgstr "لم يتم العثور على أي رد جاهز. فلنقم بإنشاء واحد!"
 
 #. module: mail
+#: model_terms:ir.actions.act_window,help:mail.discuss_category_settings_action
+msgid "No categories found. Let's create one!"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/action_list.xml:0
 msgid "No content."
@@ -8193,11 +8163,6 @@ msgstr "لم يتم تحديد محادثة."
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 msgid "No conversation yet..."
 msgstr "لا توجد محادثات بعد..."
-
-#. module: mail
-#: model_terms:ir.actions.act_window,help:mail.discuss_category_settings_action
-msgid "No discuss category found. Let's create one!"
-msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -8238,10 +8203,8 @@ msgstr "لا يوجد أحد آخر هنا."
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
-#, fuzzy
-#| msgid "Search people to invite"
 msgid "No people found to invite."
-msgstr "ابحث عن أشخاص لدعوتهم"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -8355,10 +8318,8 @@ msgstr "غير مؤكد"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
-#, fuzzy
-#| msgid "Not Confirmed"
 msgid "Not Joined"
-msgstr "غير مؤكد"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__not_tested
@@ -8853,10 +8814,8 @@ msgstr "فتح الدردشة"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_menu.xml:0
-#, fuzzy
-#| msgid "Unpin Conversation"
 msgid "Open Conversation"
-msgstr "إلغاء تثبيت المحادثة"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -9157,10 +9116,8 @@ msgstr "متأخر"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__kpi_provider_visibility__own
-#, fuzzy
-#| msgid "Activities"
 msgid "Own Activities"
-msgstr "الأنشطة"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__owner_user_id
@@ -9537,10 +9494,8 @@ msgstr "تشغيل"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_preview.xml:0
-#, fuzzy
-#| msgid "Camera access blocked. Enable in browser settings."
 msgid "Please allow access in your browser settings."
-msgstr "تم حظر الوصول إلى الكاميرا. قم بتمكينها في إعدادات المتصفح."
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -10856,10 +10811,8 @@ msgstr "تمت المشاهدة من قِبَل:"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_menu.xml:0
-#, fuzzy
-#| msgid "Server Action"
 msgid "Select Actions"
-msgstr "إجراء الخادم"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -11996,10 +11949,8 @@ msgstr "المحادثة فارغة."
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
-#, fuzzy
-#| msgid "No conversation selected."
 msgid "The conversation was deleted."
-msgstr "لم يتم تحديد محادثة."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__can_write
@@ -12814,10 +12765,8 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.js:0
-#, fuzzy
-#| msgid "Turn camera on"
 msgid "Turn on the camera permission"
-msgstr "تشغيل الكاميرا"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -12828,10 +12777,8 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_preview.xml:0
-#, fuzzy
-#| msgid "Do you really want to delete this preview?"
 msgid "Turn on your camera to see the preview."
-msgstr "هل ترغب حقاً في حذف هذه المعاينة؟"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__state
@@ -13274,11 +13221,6 @@ msgid "Use different domains for your mail aliases"
 msgstr "استخدم نطاقات مختلفة لألقاب البريد الإلكتروني الخاصة بك."
 
 #. module: mail
-#: model_terms:ir.actions.act_window,help:mail.discuss_category_settings_action
-msgid "Use discuss categories to organize the channels."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__is_batch_mode
 msgid "Use in batch"
 msgstr "استخدام على دفعات"
@@ -13657,10 +13599,8 @@ msgstr "عرض الدردشة مع %(channel_name)s"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_app/sidebar/sidebar.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
-#, fuzzy
-#| msgid "Hide all conversations"
 msgid "View hidden conversations"
-msgstr "إخفاء كافة المحادثات"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -13682,10 +13622,8 @@ msgstr "عرض قناة %(channel_name)s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_my_conversations_view_search
-#, fuzzy
-#| msgid "Visible to all"
 msgid "Visible"
-msgstr "مرئي للكل"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -14556,6 +14494,12 @@ msgid "e.g. Discuss proposal"
 msgstr "مثال: مناقشة المقترح"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_form
+#: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_tree
+msgid "e.g. General"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "e.g. Hello, how may I help you?"
@@ -14575,12 +14519,6 @@ msgstr "مثال: التأهيل"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "e.g. Schedule a meeting"
 msgstr "مثال: جدولة اجتماع"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_form
-#: model_terms:ir.ui.view,arch_db:mail.discuss_category_view_tree
-msgid "e.g. Service"
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -14973,6 +14911,10 @@ msgstr "لقبك"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” في “%(channel_name)s”"
+
+#~ msgid "%(user)s connected. This is their first connection. Wish them luck."
+#~ msgstr ""
+#~ "%(user)s متصلون. هذه هي المرة الأولى التي يتصلون فيها. تمنّ لهم حظاً موفقاً."
 
 #~ msgid "Camera and microphone access blocked. Enable in browser settings."
 #~ msgstr ""

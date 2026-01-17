@@ -9,22 +9,22 @@
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2025-12-11 13:00+0000\n"
+"PO-Revision-Date: 2026-01-16 06:53+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_attendance/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
-"1000000 == 0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : "
+"((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_attendance
@@ -558,7 +558,7 @@ msgstr "Navigateur"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__can_edit
 msgid "Can Edit"
-msgstr ""
+msgstr "Peut modifier"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -1108,6 +1108,8 @@ msgid ""
 "Grants users permission to modify their own attendance entries that are "
 "pending approval."
 msgstr ""
+"Accorde aux utilisateurs l’autorisation de modifier leurs propres entrées de "
+"présence en attente d’approbation."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_ir_http
@@ -1274,7 +1276,7 @@ msgstr "Est manager"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__is_own
 msgid "Is Own"
-msgstr ""
+msgstr "Est personnel"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__kiosk
@@ -1549,7 +1551,7 @@ msgstr "Logo Odoo"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/hr_presence_status/hr_attendance_presence_status.js:0
 msgid "Off-Hours"
-msgstr ""
+msgstr "En dehors des horaires de travail"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
@@ -1725,19 +1727,19 @@ msgstr "Généré par"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/hr_presence_status/hr_attendance_presence_status.js:0
 msgid "Present (untracked)"
-msgstr ""
+msgstr "Présent (non suivi)"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
 msgid "Print"
-msgstr ""
+msgstr "Imprimer"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
 msgid "Print It"
-msgstr ""
+msgstr "Imprimer"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
@@ -1973,7 +1975,7 @@ msgstr "Sélectionner sur la tablette"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_own
 msgid "Self Attendance Edit"
-msgstr ""
+msgstr "Modification de sa propre présence"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__sequence
@@ -2062,6 +2064,9 @@ msgid ""
 "hours compared to what is expected if the Absence Management setting is "
 "enabled."
 msgstr ""
+"La présence peut afficher des heures supplémentaires négatives afin de "
+"représenter les heures manquantes par rapport à celles attendues lorsque le "
+"paramètre de gestion des absences est activé."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2305,10 +2310,8 @@ msgstr "Lorsque l’employé est absent"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
-#| msgid "With a tolerance in favor of the employer of"
 msgid "With a tolerance in favor of the employee of"
-msgstr "Avec une tolérance en faveur de l’employeur de"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -2391,7 +2394,7 @@ msgstr "jour"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "differs"
-msgstr ""
+msgstr "diffère"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2411,17 +2414,13 @@ msgstr "par ex. Plus de 8 heures par jour"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
-#| msgid "a specific duration"
 msgid "from a specific duration"
-msgstr "une durée spécifique"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-#, fuzzy
-#| msgid "the amount defined on the contract"
 msgid "from the amount defined on the contract"
-msgstr "le montant défini dans le contrat"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -2443,7 +2442,7 @@ msgstr "ou"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "traitement des messages du websocket"
 
 #. module: hr_attendance
 #. odoo-python

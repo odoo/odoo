@@ -36,16 +36,16 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Saara Hakanen <sahak@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2025-12-03 14:25+0000\n"
+"PO-Revision-Date: 2026-01-16 14:23+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/project/"
-"fi/>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-1/"
+"project/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -442,6 +442,23 @@ msgid ""
 "out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    Hyvä <t t-out=\"object.partner_id.name or 'customer'\">Brandon "
+"Freeman</t>,<br/>\n"
+"    Voin ilokseni ilmoittaa, että olemme viimeistelleet onnistuneesti "
+"\"<strong t-out=\"object.name or ''\">Remontit</strong>\" -projektin.\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
+"\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style="
+"\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" "
+"groups=\"project.group_project_stages\">Sait tämän sähköpostin, koska "
+"projektisi on siirretty vaiheeseen <b t-out=\"object.stage_id.name or ''\""
+">Valmis</b></span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -465,6 +482,24 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Hyvä <t t-out=\"object.partner_id.name or 'customer'\">Brandon "
+"Freeman</t>,<br/><br/>\n"
+"    Kiitos yhteydenotostasi. Arvostamme kiinnostustasi palveluamme/"
+"tuotettamme kohtaan.<br/>\n"
+"    Tiimimme käy parhaillaan läpi pyyntöäsi ja vastaa sähköpostiisi "
+"mahdollisimman pian.<br/>\n"
+"    Jos sinulle tulee sillä aikaa muuta kysyttävää, ethän epäröi ottaa "
+"meihin yhteyttä. Olemme täällä auttaaksemme.<br/><br/>\n"
+"    Kiitos kärsivällisyydestäsi.<br/>\n"
+"    Parhain terveisin,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
+"\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1026,10 +1061,8 @@ msgstr "Oletko varma, että haluat palauttaa tämän version?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
-#, fuzzy
-#| msgid "Customer Ratings"
 msgid "Ask for Ratings"
-msgstr "Asiakasarviot"
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -1861,10 +1894,8 @@ msgstr "Hyvä"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
-#, fuzzy
-#| msgid "Default Values"
 msgid "Default"
-msgstr "Oletusarvot"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -2289,10 +2320,8 @@ msgstr "Seuraa"
 
 #. module: project
 #: model:portal.entry,description:project.portal_tasks
-#, fuzzy
-#| msgid "Follow and comment on tasks in your projects"
 msgid "Follow and comments tasks of your projects"
-msgstr "Seuraa ja kommentoi projekteissasi olevia tehtäviä"
+msgstr ""
 
 #. module: project
 #: model:portal.entry,description:project.portal_projects
@@ -3418,10 +3447,8 @@ msgstr "Aikataulussa"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__periodic
-#, fuzzy
-#| msgid "on a periodic basis"
 msgid "On a periodic basis"
-msgstr "määräajoin"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__monthly
@@ -4058,10 +4085,8 @@ msgstr "Kekismääräisen luokituksen teksti"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
-#, fuzzy
-#| msgid "Rating Email Template"
 msgid "Rating Email"
-msgstr "Arvostelun sähköpostimalli"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
@@ -4090,10 +4115,8 @@ msgstr "Arvion viimeisin arvo"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
-#, fuzzy
-#| msgid "Rating Text"
 msgid "Rating Periodicity"
-msgstr "Luokitusteksti"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
@@ -4696,10 +4719,8 @@ msgstr "Vaihe muutettu"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__name
 #: model:ir.model.fields,field_description:project.field_project_task_type__name
-#, fuzzy
-#| msgid "Stage Changed"
 msgid "Stage Name"
-msgstr "Vaihe muutettu"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
@@ -5340,18 +5361,14 @@ msgstr ""
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
-#, fuzzy
-#| msgid "A new task has been created in the \"%(project_name)s\" project."
 msgid "This new task has been created in the \"%(project_name)s\" project."
-msgstr "Projektiin \"%(project_name)s\" on luotu uusi tehtävä."
+msgstr ""
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
-#, fuzzy
-#| msgid "A new task has been created and is not part of any project."
 msgid "This new task is not part of any project."
-msgstr "Uusi tehtävä on luotu, eikä se kuulu mihinkään projektiin."
+msgstr ""
 
 #. module: project
 #. odoo-python
@@ -5704,10 +5721,8 @@ msgstr "Päivitä luominen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
-#, fuzzy
-#| msgid "Update Created"
 msgid "Update Stage"
-msgstr "Päivitä luominen"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__3
@@ -6179,10 +6194,8 @@ msgstr "esim. tuotteen lanseeraus"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
-#, fuzzy
-#| msgid "Specifications"
 msgid "e.g. Qualification"
-msgstr "Määrittelyt"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form

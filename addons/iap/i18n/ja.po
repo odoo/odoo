@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2026-01-09 06:25+0000\n"
+"PO-Revision-Date: 2026-01-16 05:40+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/iap/"
 "ja/>\n"
@@ -186,7 +186,7 @@ msgstr "IAPサービス"
 #. module: iap
 #: model:ir.model,name:iap.model_iap_service_pack
 msgid "IAP Service Pack"
-msgstr ""
+msgstr "IAP サービスパック"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
@@ -199,24 +199,24 @@ msgstr "ID"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__iap_service_pack_identifier
 msgid "Iap Service Pack Identifier"
-msgstr ""
+msgstr "IAP サービス パック識別子"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "In-App Purchase Account"
-msgstr ""
+msgstr "アプリ内課金アカウント"
 
 #. module: iap
 #: model:ir.actions.act_window,name:iap.iap_account_action
 #: model:ir.ui.menu,name:iap.iap_account_menu
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "In-App Purchase Accounts"
-msgstr ""
+msgstr "アプリ内課金アカウント"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_service_pack_view_tree
 msgid "In-App Purchase Service Packs"
-msgstr ""
+msgstr "アプリ内課金サービスパック"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
@@ -226,7 +226,7 @@ msgstr "整数残高"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__is_balance_below_warning_threshold
 msgid "Is Balance Below Warning Threshold"
-msgstr ""
+msgstr "残高が警告閾値未満"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
@@ -277,14 +277,16 @@ msgid ""
 "Once you have this many credits or less, the system will automatically buy "
 "the following pack with your payment method on file. Set to 0 to disable "
 "auto-refill."
-msgstr ""
+msgstr "このクレジット数以下になると、システムは登録済みの支払い方法で自動的に次のパ"
+"ックを購入します。自動補充を無効にするには0に設定してください。"
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__warning_threshold
 msgid ""
 "Once you have this many credits or less, the system will automatically "
 "notify the following recipients by email. Set to 0 to disable email warnings."
-msgstr ""
+msgstr "このクレジット数以下になった場合、システムは自動的に以下の受信者にメールで通"
+"知します。メール警告を無効にするには0に設定してください。"
 
 #. module: iap
 #. odoo-python
@@ -304,7 +306,8 @@ msgstr "特定のtechnical_nameで存在できるサービスは1つのみです
 #: model:ir.model.constraint,message:iap.constraint_iap_service_pack_unique_iap_service_pack_identifier
 msgid ""
 "Only one service pack can exist with a specific iap_service_pack_identifier"
-msgstr ""
+msgstr "特定のiap_service_pack_identifierに対して、サービスパックは1つしか存在できま"
+"せん。"
 
 #. module: iap
 #. odoo-python
@@ -342,7 +345,7 @@ msgstr "サービスがロックされました"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__pack_ids
 msgid "Service Packs"
-msgstr ""
+msgstr "サービスパック"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree

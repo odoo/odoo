@@ -4,12 +4,13 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:37+0000\n"
-"PO-Revision-Date: 2026-01-10 12:05+0000\n"
+"PO-Revision-Date: 2026-01-16 17:18+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-1/website_crm_partner_assign/es_419/>\n"
@@ -253,6 +254,48 @@ msgid ""
 "</t>\n"
 "            </t>"
 msgstr ""
+"<t>\n"
+"Hola:<br/>\n"
+"Algunos leads que se encuentran en tu región se han puesto en contacto con "
+"nosotros, por lo que te hemos asignado los siguientes leads: <t t-out="
+"\"ctx['partner_id'].name or ''\"/>:<br/>\n"
+"<ol>\n"
+"    <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href="
+"\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\""
+">Asunto indefinido</a>, <t t-out=\"lead['lead_id'].partner_name or lead"
+"['lead_id'].contact_name or 'Contact Name Undefined'"
+"\">Nombre de contacto indefinido</t>, <t t-out=\"lead['lead_id'].country_id "
+"and lead['lead_id'].country_id.name or 'Country Undefined'"
+"\">País indefinido</t>, <t t-out=\"lead['lead_id'].email_from or 'Email "
+"Undefined' or ''\">Correo indefinido</t>, <t t-out=\"lead['lead_id'].phone "
+"or ''\">+1 650-123-4567</t> </li><br/>\n"
+"</ol>\n"
+"<t t-if=\"ctx.get('partner_in_portal')\">\n"
+"    Conéctate a tu <a t-att-href="
+"\"'%s?db=%s' % (object.get_base_url(), object.env.cr.dbname)\">Portal de "
+"partner</a> para obtener más detalles. En cada lead encontrarás dos botones "
+"en la esquina superior izquierda que debes presionar después de contactar al "
+"lead: \"Me interesa\" o \"No me interesa\"<br/>\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"    Todavía no tienes acceso al portal de nuestra base de datos. Ponte en "
+"contacto con\n"
+"    <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email "
+"and 'your account manager %s (%s)' % "
+"(ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'\""
+">nosotros</t>.<br/>\n"
+"</t>\n"
+"El lead se le enviará a otro partner si no le contactas en los próximos 20 "
+"días.<br/><br/>\n"
+"Gracias,<br/>\n"
+"<t t-out="
+"\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''\"/>"
+"\n"
+"<br/>\n"
+"<t t-if=\"not ctx['partner_id'].user_id\">\n"
+"    P. D.: Parece que no tienes un gerente de cuenta asignado, contáctanos.\n"
+"</t>\n"
+"            </t>"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__activation
@@ -333,7 +376,7 @@ msgstr "Socio asignado:"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "Publicar de forma automática el"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
@@ -343,7 +386,7 @@ msgstr "Asignación automática"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__publish_on
 msgid "Automatically publish the page on the chosen date and time."
-msgstr ""
+msgstr "Publica la página de forma automática en la fecha y hora elegidas."
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_forward_to_partner__body
@@ -1024,7 +1067,7 @@ msgstr "Página del contacto"
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_partner_pages_list
 msgid "Partner Pages"
-msgstr ""
+msgstr "Páginas de partners"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_partner_assign_form
@@ -1110,7 +1153,7 @@ msgstr "Probabilidad"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__published_date
 msgid "Published date"
-msgstr ""
+msgstr "Fecha de publicación"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -1410,7 +1453,7 @@ msgstr "Mapa mundial"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/wizard/crm_forward_to_partner.py:0
 msgid "Your leads"
-msgstr ""
+msgstr "Tus leads"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity

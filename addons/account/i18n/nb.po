@@ -17,21 +17,22 @@
 # Martin Trigaux, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 18:37+0000\n"
-"PO-Revision-Date: 2025-11-10 15:46+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-19/"
-"account/nb_NO/>\n"
+"POT-Creation-Date: 2026-01-16 18:36+0000\n"
+"PO-Revision-Date: 2026-01-15 20:37+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-"
+"s19-1/account/nb_NO/>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -349,10 +350,8 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
-#, fuzzy
-#| msgid "Rounding"
 msgid "- Ending"
-msgstr "Avrunding"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1371,10 +1370,8 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
-#, fuzzy
-#| msgid "<span invisible=\"not early_discount\"> days</span>"
 msgid "<span invisible=\"not account_id\">on</span>"
-msgstr "<span invisible=\"not early_discount\">dager</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -1399,10 +1396,8 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
-#, fuzzy
-#| msgid "<span invisible=\"not early_discount\"> days</span>"
 msgid "<span invisible=\"repartition_type == 'base'\">%</span>"
-msgstr "<span invisible=\"not early_discount\">dager</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1472,19 +1467,11 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
-#| msgid ""
-#| "<span class=\"o_stat_text\">\n"
-#| "                                        Taxes\n"
-#| "                                    </span>"
 msgid ""
 "<span>1.00</span>\n"
 "                                                            <span "
 "groups=\"uom.group_uom\">Units</span>"
 msgstr ""
-"<span class=\"o_stat_text\">\n"
-"                                     Skatter\n"
-"                                      </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2076,7 +2063,7 @@ msgid ""
 "                            </div>\n"
 "\n"
 "                            <div style=\"margin-top:32px; text-align:center;"
-"\">\n"
+"\" t-if=\"object.move_type != 'in_invoice'\">\n"
 "                                <a t-if=\"portal_url\" t-attf-"
 "href=\"{{ portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
 "padding:13px 30px; min-width:210px; background:linear-"
@@ -2586,10 +2573,8 @@ msgstr "Konto avgiftsgruppe"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_form
-#, fuzzy
-#| msgid "Tax Repartition Line"
 msgid "Account Tax Repartition Line"
-msgstr "Skattefordelingslinje"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
@@ -16158,10 +16143,8 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
-#, fuzzy
-#| msgid "Settings"
 msgid "Starting"
-msgstr "Innstillinger"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -18888,10 +18871,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__transaction_uuid
-#, fuzzy
-#| msgid "Transactions"
 msgid "Transaction ID"
-msgstr "Transaksjoner"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_type
@@ -20924,7 +20905,7 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "e.g. finance@example.com; billing@example.com"
+msgid "e.g. finance@example.com; accountant@example.com"
 msgstr ""
 
 #. module: account

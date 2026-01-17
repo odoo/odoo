@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 18:37+0000\n"
-"PO-Revision-Date: 2026-01-07 02:13+0000\n"
+"POT-Creation-Date: 2026-01-16 18:36+0000\n"
+"PO-Revision-Date: 2026-01-15 21:57+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "account/id/>\n"
@@ -367,10 +367,8 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
-#, fuzzy
-#| msgid "Rounding"
 msgid "- Ending"
-msgstr "Pembulatan"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1425,10 +1423,8 @@ msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
-#, fuzzy
-#| msgid "<span invisible=\"not early_discount\"> days</span>"
 msgid "<span invisible=\"not account_id\">on</span>"
-msgstr "<span invisible=\"not early_discount\"> hari</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -1455,10 +1451,8 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
-#, fuzzy
-#| msgid "<span invisible=\"not early_discount\"> days</span>"
 msgid "<span invisible=\"repartition_type == 'base'\">%</span>"
-msgstr "<span invisible=\"not early_discount\"> hari</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1528,19 +1522,11 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#, fuzzy
-#| msgid ""
-#| "<span class=\"o_stat_text\">\n"
-#| "                                    Taxes\n"
-#| "                                </span>"
 msgid ""
 "<span>1.00</span>\n"
 "                                                            <span "
 "groups=\"uom.group_uom\">Units</span>"
 msgstr ""
-"<span class=\"o_stat_text\">\n"
-"                                    Pajak-Pajak\n"
-"                                </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2136,7 +2122,7 @@ msgid ""
 "                            </div>\n"
 "\n"
 "                            <div style=\"margin-top:32px; text-align:center;"
-"\">\n"
+"\" t-if=\"object.move_type != 'in_invoice'\">\n"
 "                                <a t-if=\"portal_url\" t-attf-"
 "href=\"{{ portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
 "padding:13px 30px; min-width:210px; background:linear-"
@@ -2664,10 +2650,8 @@ msgstr "Grup Akun Pajak"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_form
-#, fuzzy
-#| msgid "Tax Repartition Line"
 msgid "Account Tax Repartition Line"
-msgstr "Tax Repartition Line"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
@@ -16434,10 +16418,8 @@ msgstr "Komunikasi standar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
-#, fuzzy
-#| msgid "Settings"
 msgid "Starting"
-msgstr "Pengaturan"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -19264,10 +19246,8 @@ msgstr "Feed Transaksi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__transaction_uuid
-#, fuzzy
-#| msgid "Transactions"
 msgid "Transaction ID"
-msgstr "Transaksi-transaksi"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_type
@@ -21363,7 +21343,7 @@ msgstr "contoh Perusahaan Saya"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "e.g. finance@example.com; billing@example.com"
+msgid "e.g. finance@example.com; accountant@example.com"
 msgstr ""
 
 #. module: account

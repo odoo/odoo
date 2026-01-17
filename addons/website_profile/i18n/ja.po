@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-09 18:39+0000\n"
-"PO-Revision-Date: 2026-01-06 06:21+0000\n"
+"PO-Revision-Date: 2026-01-16 05:57+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_profile/ja/>\n"
@@ -168,6 +168,25 @@ msgid ""
 "                            Thanks for your participation!\n"
 "            </t>"
 msgstr ""
+"<t>\n"
+"                             <t t-out=\"object.name or ''\">Marc Demo</t>様<"
+"br/><br/>\n"
+"                            いつもご利用いただきありがとうございます。 "
+"\"<t t-out=\"object.company_id.name or ''\">YourCompany</t>\" のウェブサイト"
+"へアクセスするため、メールアドレスの確認をお願いいたします。\n"
+"                             下記のボタンをクリックして、メールアドレスの確認"
+"を完了してください:\n"
+"                            <div style=\"margin: 32px 0px 32px 0px;\">\n"
+"                                <a t-att-href=\"ctx.get('token_url')\" t"
+"-attf-style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
+"object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                                    アカウントを確認する\n"
+"                                </a>\n"
+"                            </div>\n"
+"                            よろしくお願いいたします。\n"
+"            </t>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -209,12 +228,12 @@ msgstr "常に"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "自動公開日"
 
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__publish_on
 msgid "Automatically publish the page on the chosen date and time."
-msgstr ""
+msgstr "選択した日付と時刻にページを自動的に公開します。"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
@@ -260,7 +279,8 @@ msgstr "公開可"
 msgid ""
 "Changing the country is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
-msgstr ""
+msgstr "アカウントに対してドキュメントが発行された後は、国を変更することはできません"
+"。この操作については、直接お問い合わせください。"
 
 #. module: website_profile
 #. odoo-javascript
@@ -507,10 +527,8 @@ msgstr "更新"
 #. module: website_profile
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.js:0
-#, fuzzy
-#| msgid "Update"
 msgid "Update failed."
-msgstr "更新"
+msgstr ""
 
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_res_users

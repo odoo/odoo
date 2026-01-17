@@ -33,23 +33,24 @@
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-09 18:37+0000\n"
-"PO-Revision-Date: 2025-12-03 14:25+0000\n"
+"PO-Revision-Date: 2026-01-15 20:32+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/hr/pl/>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/hr/pl/>"
+"\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: hr
@@ -474,10 +475,8 @@ msgstr "<span invisible=\"not contract_date_start\">do</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
-#, fuzzy
-#| msgid "<span invisible=\"not contract_date_start\">to</span>"
 msgid "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
-msgstr "<span invisible=\"not contract_date_start\">do</span>"
+msgstr "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1526,10 +1525,8 @@ msgstr "Anuluj"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-#, fuzzy
-#| msgid "Cannot archive the only active record of an employee."
 msgid "Cannot archive all the active versions of an employee."
-msgstr "Nie można zarchiwizować jedynego aktywnego rekordu pracownika."
+msgstr "Nie można zarchiwizować wszystkich aktywnych wersji pracownika."
 
 #. module: hr
 #. odoo-python
@@ -1543,10 +1540,8 @@ msgstr ""
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-#, fuzzy
-#| msgid "Cannot unassign the only active record of an employee."
 msgid "Cannot unassign all the active versions of an employee."
-msgstr "Nie można cofnąć przypisania jedynego aktywnego rekordu pracownika."
+msgstr "Nie można cofnąć przypisania wszystkich aktywnych wersji pracownika."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
@@ -1766,10 +1761,8 @@ msgstr "Umowa"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
-#, fuzzy
-#| msgid "Contract End Date"
 msgid "Contract End"
-msgstr "Data zakończenia umowy"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_date
@@ -1797,10 +1790,8 @@ msgstr "Przegląd umowy"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
-#, fuzzy
-#| msgid "Contract Start Date"
 msgid "Contract Start"
-msgstr "Początek trwania umowy"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__contract_date_start
@@ -2321,7 +2312,7 @@ msgstr "Dokument"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Documents"
-msgstr ""
+msgstr "Dokumenty"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
@@ -3849,7 +3840,7 @@ msgstr "Moje czynności"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__my_activity_date_deadline
 #: model:ir.model.fields,field_description:hr.field_hr_version__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Ostateczny terminin moich aktywności"
+msgstr "Ostateczny termin moich aktywności"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
@@ -3980,7 +3971,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "No user linked"
-msgstr ""
+msgstr "Brak powiązanych użytkowników"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4955,10 +4946,8 @@ msgstr "Zarządzanie umiejętnościami"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
 #: model:ir.model.fields,field_description:hr.field_hr_version__ssnid
-#, fuzzy
-#| msgid "Social Security Number"
 msgid "Social Security No"
-msgstr "PESEL"
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -5371,7 +5360,7 @@ msgstr "Ten pracownik ma już użytkownika."
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
-msgstr ""
+msgstr "To pole %(field_name)s nie istnieje w tym modelu (hr.version)."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz

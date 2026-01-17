@@ -4,13 +4,13 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
-# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-10 12:05+0000\n"
+"PO-Revision-Date: 2026-01-16 18:34+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-1/stock/es_419/>\n"
@@ -653,6 +653,47 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hola <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>:<"
+"br/><br/>\n"
+"        Nos complace informarte que hemos enviado tu orden.\n"
+"        <t t-if="
+"\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">"
+"\n"
+"            Tu referencia de rastreo es\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value="
+"\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" "
+"t-out=\"line[0] or ''\"/>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Encontrarás más detalles en la orden de entrega adjunta.<br/><br/>\n"
+"        Gracias,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -888,7 +929,7 @@ msgstr "<strong>Contacto</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>Cliente</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -903,7 +944,7 @@ msgstr "<strong>Dirección de entrega:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Delivery Address</strong>"
-msgstr ""
+msgstr "<strong>Dirección de entrega</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1142,7 +1183,7 @@ msgstr "Decoración de la actividad de excepción"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_plans_ids
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Planes de actividad"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_state
@@ -1407,7 +1448,7 @@ msgstr "Andrwep"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Annual Inventory Date"
-msgstr ""
+msgstr "Fecha del inventario anual"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_month
@@ -1541,7 +1582,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__move_type__direct
 msgid "As soon as possible, with back orders"
-msgstr ""
+msgstr "Tan pronto como sea posible, con órdenes parciales"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__ask
@@ -1862,6 +1903,8 @@ msgstr "Por número de serie único"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "By default, next physical inventory will be scheduled at this date"
 msgstr ""
+"De forma predeterminada, el siguiente inventario físico se programará para "
+"esta fecha"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__procure_method
@@ -2332,7 +2375,7 @@ msgstr "Confirmar"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Confirmation Email"
-msgstr ""
+msgstr "Correo de confirmación"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_conflict
@@ -3434,7 +3477,7 @@ msgstr "Diferencia"
 #. module: stock
 #: model:ir.model,name:stock.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Resumen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -4609,7 +4652,7 @@ msgstr "Traslado inmediato"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Import"
-msgstr ""
+msgstr "Importar"
 
 #. module: stock
 #. odoo-javascript
@@ -4958,7 +5001,7 @@ msgstr "Solicitud de inventario"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "Ruta de inventario"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
@@ -5152,12 +5195,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_digest_digest__kpi_stock_delivery_count_value
 msgid "Kpi Stock Delivery Count Value"
-msgstr ""
+msgstr "KPI de valor de la cantidad de entrega de existencias"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_digest_digest__kpi_stock_receipt_count_value
 msgid "Kpi Stock Receipt Count Value"
-msgstr ""
+msgstr "KPI del valor de la cantidad recibida de existencias"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_print_labels
@@ -5525,7 +5568,7 @@ msgstr "Ubicaciones"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Lock"
-msgstr ""
+msgstr "Bloquear"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -6388,6 +6431,12 @@ msgid ""
 "                                        barcode operator and configure the "
 "routing of the reports."
 msgstr ""
+"Odoo abre una vista previa en PDF de forma predeterminada. Si tú"
+"(usuario Enterprise) deseas imprimir de forma inmediata,\n"
+"                                        instala la aplicación IoT en una "
+"computadora que esté en la misma red local que\n"
+"                                        el operador del código de barras y "
+"configura el enrutamiento de los reportes."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -6448,7 +6497,7 @@ msgstr "Abrir"
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__picking_type_code
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Operation Category"
-msgstr ""
+msgstr "Categoría de operación"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__move
@@ -7154,7 +7203,7 @@ msgstr "Operaciones de recolección"
 #: model:ir.model.fields,field_description:stock.field_res_company__picking_policy
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__picking_policy
 msgid "Picking Policy"
-msgstr ""
+msgstr "Política de recolección"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__picking_properties_definition
@@ -7229,12 +7278,12 @@ msgstr "Ruta preferida"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence_code
 msgid "Prefix value of the record for the sequence"
-msgstr ""
+msgstr "Valor del prefijo del registro para la secuencia"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Presence depends on the operation category."
-msgstr ""
+msgstr "La presencia depende de la categoría de la operación."
 
 #. module: stock
 #. odoo-python
@@ -8247,6 +8296,8 @@ msgid ""
 "Quantity To Order has been manually forced, this quantity will be ordered "
 "instead."
 msgstr ""
+"Reabastecer productos a la cantidad máxima establecida. Si la cantidad por "
+"ordenar se forzó de forma manual, esta cantidad se ordenará en su lugar."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
@@ -9366,16 +9417,14 @@ msgstr "Dividir"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, fuzzy
-#| msgid "No Backorder"
 msgid "Split Backorder"
-msgstr "Sin orden parcial"
+msgstr "Dividir orden abierta"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Split from %(original_picking_link)s."
-msgstr ""
+msgstr "Separado desde %(original_picking_link)s."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -9413,6 +9462,7 @@ msgstr "Estado"
 #: code:addons/stock/static/src/fields/stock_picking_locked_statusbar_field.js:0
 msgid "Status bar with lock/unlock indicator for Pickings"
 msgstr ""
+"Barra de estado con un indicador de bloqueo o desbloqueo para recolecciones"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_state
@@ -9487,12 +9537,12 @@ msgstr "Movimientos de stock"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action_outgoing
 msgid "Stock Moves (deliveries)"
-msgstr ""
+msgstr "Movimientos de inventario (entregas)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action_incoming
 msgid "Stock Moves (receipts)"
-msgstr ""
+msgstr "Movimientos de inventario (recepciones)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_graph
@@ -9876,10 +9926,8 @@ msgstr "La fecha real en la que se procesó la transferencia."
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, fuzzy
-#| msgid "The backorder %s has been created."
 msgid "The backorder %(backorder_picking_link)s has been created."
-msgstr "Se creó la orden parcial %s."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
@@ -10270,6 +10318,8 @@ msgid ""
 "This location will be used as the source location for stock moves generated "
 "by an inventory adjustment."
 msgstr ""
+"Esta ubicación se usará como la ubicación de origen para movimientos de "
+"inventario que se generen de un ajuste de inventario."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -10278,6 +10328,8 @@ msgid ""
 "This location will be used as the source location for stock moves generated "
 "by a manufacturing order."
 msgstr ""
+"Esta ubicación se usará como la ubicación origen de los movimientos de "
+"inventario que se generen de una orden de fabricación."
 
 #. module: stock
 #. odoo-python
@@ -10516,7 +10568,7 @@ msgstr "Por ordenar manual"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order_to_max
 msgid "To Order to Reach Max"
-msgstr ""
+msgstr "La orden para alcanzar el máximo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -10920,11 +10972,13 @@ msgid ""
 "Unless previously specified by the source document, this will be the default "
 "shipping policy for this operation type."
 msgstr ""
+"A no ser que se especifique antes en el documento origen, esta será la "
+"política predeterminada de envío para este tipo de operación."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Unlock"
-msgstr ""
+msgstr "Desbloquear"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_form
@@ -11089,7 +11143,7 @@ msgstr "Ver ubicación"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "View and allocate received quantities"
-msgstr ""
+msgstr "Ver y asignar las cantidades recibidas"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
@@ -11453,7 +11507,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "When to start shipping"
-msgstr ""
+msgstr "Cuándo comenzar el envío"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder
@@ -11947,6 +12001,12 @@ msgid ""
 "            some products, and automate these rules to create RFQs or "
 "Manufacturing Orders."
 msgstr ""
+"Aquí encontrarás propuestas inteligentes de reabastecimiento según los "
+"pronósticos de inventario.\n"
+"            Crea nuevas reglas de reabastecimiento si quieres mantener "
+"niveles mínimos de existencias para\n"
+"            algunos productos y automatizar estas reglas para crear "
+"solicitudes de cotización u órdenes de fabricación."
 
 #. module: stock
 #: model_terms:res.company,lunch_notify_message:stock.res_company_1

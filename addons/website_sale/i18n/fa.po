@@ -18,21 +18,22 @@
 # Ali Reza Feizi Derakhshi, 2023
 # fardin mardani, 2023
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2025-11-08 17:59+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-01-16 18:36+0000\n"
+"PO-Revision-Date: 2026-01-15 21:57+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"Language-Team: Persian <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_sale/fa/>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -907,11 +908,6 @@ msgstr ""
 "فروش، سفارش تحویل و فاکتور مشتری/یادداشت اعتبار کپی می‌شود."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
-msgid "A detailed, formatted description to promote your product on this page."
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
 msgid ""
 "A detailed, formatted description to promote your product on this page. Use "
@@ -919,6 +915,12 @@ msgid ""
 msgstr ""
 "یک توضیح دقیق و قالب‌بندی شده برای تبلیغ محصول شما در این صفحه. از '/' "
 "استفاده کنید تا ویژگی‌های بیشتری را کشف کنید."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
+msgid ""
+"A detailed, formatted description to promote your product on your eCommerce."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -2585,11 +2587,6 @@ msgid "Ecommerce Access"
 msgstr "دسترسی تجارت الکترونیک"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
-msgid "Ecommerce Shop"
-msgstr "فروشگاه تجارت الکترونیک"
-
-#. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_cart_recovery
 msgid "Ecommerce: Cart Recovery"
 msgstr "تجارت الکترونیک: بازیابی سبد خرید"
@@ -2739,15 +2736,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Filters"
 msgstr "فیلترها"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/product_template.py:0
-msgid ""
-"Final price may vary based on selection. Tax will be calculated at checkout."
-msgstr ""
-"قیمت نهایی ممکن است بر اساس انتخاب متفاوت باشد. مالیات در هنگام تسویه حساب "
-"محاسبه می شود."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -4172,10 +4160,8 @@ msgstr "توکن های پرداخت"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_payment_transaction
-#, fuzzy
-#| msgid "Payment Transactions"
 msgid "Payment Transaction"
-msgstr "تراکنش های پرداخت"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
@@ -5202,6 +5188,7 @@ msgstr "حمل و نقل"
 #: model:ir.ui.menu,name:website_sale.menu_open_shop
 #: model:website.menu,name:website_sale.menu_shop
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Shop"
 msgstr "فروشگاه"
 
@@ -5585,6 +5572,12 @@ msgstr "پیکربندی وب‌سایت تعیین می‌کند که مالی�
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Taxes"
 msgstr "مالیات ها"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/product_template.py:0
+msgid "Taxes calculated at checkout."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__variants_default_code
@@ -6517,6 +6510,7 @@ msgstr "مثال: لامپ، سطل"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "eCommerce"
 msgstr "تجارت الکترونیکی"
@@ -6687,6 +6681,16 @@ msgstr "شرایط و ضوابط"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "{{0}} image"
 msgstr ""
+
+#~ msgid "Ecommerce Shop"
+#~ msgstr "فروشگاه تجارت الکترونیک"
+
+#~ msgid ""
+#~ "Final price may vary based on selection. Tax will be calculated at "
+#~ "checkout."
+#~ msgstr ""
+#~ "قیمت نهایی ممکن است بر اساس انتخاب متفاوت باشد. مالیات در هنگام تسویه "
+#~ "حساب محاسبه می شود."
 
 #~ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 #~ msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"

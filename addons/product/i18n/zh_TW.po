@@ -8,21 +8,22 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 19:06+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-01-16 18:37+0000\n"
+"PO-Revision-Date: 2026-01-16 05:49+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-19/product/zh_Hant/>\n"
+"projects/odoo-s19-1/product/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: product
 #. odoo-python
@@ -355,10 +356,8 @@ msgstr "<span class=\"o_stat_text\">產品</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-#, fuzzy
-#| msgid "<span>%</span>"
 msgid "<span> - </span>"
-msgstr "<span>%</span>"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -698,7 +697,6 @@ msgstr "Apple"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Applied On"
 msgstr "套用於"
 
@@ -975,12 +973,6 @@ msgstr "類別"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Category"
 msgstr "類別"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "Category: %s"
-msgstr "類別:%s"
 
 #. module: product
 #: model:product.combo,name:product.chairs_combo
@@ -1375,10 +1367,8 @@ msgstr "資料庫資料"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
-#, fuzzy
-#| msgid "End Date"
 msgid "Date"
-msgstr "結束日期"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -1770,6 +1760,12 @@ msgstr "文件櫃"
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__fixed
 msgid "Fixed Price"
 msgstr "固定價格"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__fixed_pricelist_rule_ids
+#: model:ir.model.fields,field_description:product.field_product_template__fixed_pricelist_rule_ids
+msgid "Fixed Pricelist Rule"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_20_product_template
@@ -2991,6 +2987,7 @@ msgstr "按下按鈕，您的辦公桌可以在幾秒鐘內輕鬆地從坐姿滑
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Price"
 msgstr "價格"
 
@@ -3477,10 +3474,8 @@ msgstr "數量（計量單位：%s）"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__qty_available
 #: model:ir.model.fields,field_description:product.field_product_template__qty_available
-#, fuzzy
-#| msgid "Quantity"
 msgid "Quantity On Hand"
-msgstr "數量"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -3636,8 +3631,14 @@ msgid "Rule Tip"
 msgstr "規則提示"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "Rules"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
 #: model:ir.model.fields,field_description:product.field_product_template__sale_ok
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3658,11 +3659,6 @@ msgstr "銷售描述"
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Sales Price"
-msgstr "銷售價格"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
-msgid "Sales Prices"
 msgstr "銷售價格"
 
 #. module: product
@@ -3749,6 +3745,12 @@ msgstr "顯示名稱"
 #: model:ir.model.fields,field_description:product.field_product_product__show_qty_update_button
 #: model:ir.model.fields,field_description:product.field_product_template__show_qty_update_button
 msgid "Show Qty Update Button"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__show_sales_price_page
+#: model:ir.model.fields,field_description:product.field_product_template__show_sales_price_page
+msgid "Show Sales Price Page"
 msgstr ""
 
 #. module: product
@@ -4056,14 +4058,10 @@ msgstr "捨入方式必須嚴格為正數。"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_combo_item__lst_price
 #: model:ir.model.fields,help:product.field_product_product__lst_price
-#, fuzzy
-#| msgid ""
-#| "The sale price is managed from the product template. Click on the "
-#| "'Configure Variants' button to set the extra attribute prices."
 msgid ""
 "The sale price can be set manually or computed from the product template. "
 "Click on the 'Configure Variants' button to set the extra attribute prices."
-msgstr "銷售價是從產品模板管理的.按一下 \"組態變體\" 按鈕以設定額外的屬性價格."
+msgstr ""
 
 #. module: product
 #. odoo-python
@@ -4170,10 +4168,8 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_storable
 #: model:ir.model.fields,field_description:product.field_product_template__is_storable
-#, fuzzy
-#| msgid "Inventory"
 msgid "Track Inventory"
-msgstr "庫存"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_01_product_template
@@ -4286,10 +4282,8 @@ msgstr "計量單位及包裝單位"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
-#, fuzzy
-#| msgid "Quantities"
 msgid "Update Quantities"
-msgstr "數量"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_variant_edit_qty_action
@@ -4383,14 +4377,13 @@ msgid "Valid Product Attribute Lines"
 msgstr "有效的產品屬性資料行"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Validity"
 msgstr "有效期"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Validity Period"
-msgstr "有效期間"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__name
@@ -4428,6 +4421,7 @@ msgstr "選項"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Variant"
 msgstr "變體"
 
@@ -4492,12 +4486,6 @@ msgstr "款式標籤"
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
 msgid "Variant Values"
 msgstr "變體值"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "Variant: %s"
-msgstr "變體: %s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
@@ -5029,3 +5017,15 @@ msgstr "到"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid "Category: %s"
+#~ msgstr "類別:%s"
+
+#~ msgid "Sales Prices"
+#~ msgstr "銷售價格"
+
+#~ msgid "Validity Period"
+#~ msgstr "有效期間"
+
+#~ msgid "Variant: %s"
+#~ msgstr "變體: %s"

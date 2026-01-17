@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:36+0000\n"
-"PO-Revision-Date: 2026-01-08 09:18+0000\n"
+"POT-Creation-Date: 2026-01-16 18:37+0000\n"
+"PO-Revision-Date: 2026-01-16 11:23+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
 "product/ko/>\n"
@@ -360,10 +360,8 @@ msgstr "<span class=\"o_stat_text\">품목</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-#, fuzzy
-#| msgid "<span>%</span>"
 msgid "<span> - </span>"
-msgstr "<span>%</span>"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -705,7 +703,6 @@ msgstr "Apple"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Applied On"
 msgstr "다음에 적용됨"
 
@@ -984,12 +981,6 @@ msgstr "카테고리"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Category"
 msgstr "카테고리"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "Category: %s"
-msgstr "범주 : %s"
 
 #. module: product
 #: model:product.combo,name:product.chairs_combo
@@ -1346,6 +1337,14 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"품목의 현재 수량입니다.\n"
+"재고 위치가 하나 뿐인 경우, 해당 위치 또는 하위 위치에 보관된 품목이 모두 포"
+"함됩니다.\n"
+"창고가 하나 뿐인 경우에는, 해당 창고의 재고 위치 또는 하위 재고 위치에 보관"
+"된 품목이 모두 포함됩니다.\n"
+"상점의 창고 재고 위치 또는 그 하위의 재고 위치에 모두 보관됩니다.\n"
+"그 외에는 '내부' 유형인 모든 보관 위치에 보관되어 있는 품목이 모두 포함됩니"
+"다."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_custom
@@ -1387,10 +1386,8 @@ msgstr "데이터베이스 데이터"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
-#, fuzzy
-#| msgid "End Date"
 msgid "Date"
-msgstr "종료일"
+msgstr "날짜"
 
 #. module: product
 #. odoo-javascript
@@ -1702,7 +1699,7 @@ msgstr "파일을 내보내는 중에 오류가 발생했습니다. 다시 시�
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__excluded_value_ids
 msgid "Exclude For"
-msgstr ""
+msgstr "다음에 대해 제외"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__name
@@ -1784,6 +1781,12 @@ msgid "Fixed Price"
 msgstr "고정 가격"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__fixed_pricelist_rule_ids
+#: model:ir.model.fields,field_description:product.field_product_template__fixed_pricelist_rule_ids
+msgid "Fixed Pricelist Rule"
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Flipover"
 msgstr "플립 차트"
@@ -1846,7 +1849,7 @@ msgstr "예측 수량"
 #: model:ir.model.fields,field_description:product.field_product_product__virtual_available
 #: model:ir.model.fields,field_description:product.field_product_template__virtual_available
 msgid "Forecasted Quantity"
-msgstr ""
+msgstr "예상 수량"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__print_format
@@ -2176,7 +2179,7 @@ msgstr "입고"
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "Increase quantity"
-msgstr ""
+msgstr "수량 늘리기"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__index_content
@@ -2796,12 +2799,12 @@ msgstr "올리브"
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "On Hand"
-msgstr ""
+msgstr "보유 중"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
 msgid "On hand:"
-msgstr ""
+msgstr "보유 중:"
 
 #. module: product
 #. odoo-python
@@ -3013,6 +3016,7 @@ msgstr "버튼을 누르면 책상이 몇 초 만에 스탠딩 책상으로 부�
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Price"
 msgstr "가격"
 
@@ -3369,7 +3373,7 @@ msgstr "품목 단위"
 #: model:ir.model.fields,field_description:product.field_product_product__import_attribute_values
 #: model:ir.model.fields,field_description:product.field_product_template__import_attribute_values
 msgid "Product Values"
-msgstr ""
+msgstr "품목 가격"
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -3499,10 +3503,8 @@ msgstr "수량 (%s 단위)"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__qty_available
 #: model:ir.model.fields,field_description:product.field_product_template__qty_available
-#, fuzzy
-#| msgid "Quantity"
 msgid "Quantity On Hand"
-msgstr "수량"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -3660,8 +3662,14 @@ msgid "Rule Tip"
 msgstr "규칙 도움말"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "Rules"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
 #: model:ir.model.fields,field_description:product.field_product_template__sale_ok
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3683,11 +3691,6 @@ msgstr "판매 설명"
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Sales Price"
 msgstr "판매 가격"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
-msgid "Sales Prices"
-msgstr "판매가"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__lst_price
@@ -3757,7 +3760,7 @@ msgstr "신발 사이즈"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Short Description"
-msgstr ""
+msgstr "간단한 설명"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__show_price_extra
@@ -3774,6 +3777,12 @@ msgstr "이름 보기"
 #: model:ir.model.fields,field_description:product.field_product_product__show_qty_update_button
 #: model:ir.model.fields,field_description:product.field_product_template__show_qty_update_button
 msgid "Show Qty Update Button"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__show_sales_price_page
+#: model:ir.model.fields,field_description:product.field_product_template__show_sales_price_page
+msgid "Show Sales Price Page"
 msgstr ""
 
 #. module: product
@@ -4091,16 +4100,10 @@ msgstr "올림 방법은 반드시 양수여야 합니다."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_combo_item__lst_price
 #: model:ir.model.fields,help:product.field_product_product__lst_price
-#, fuzzy
-#| msgid ""
-#| "The sale price is managed from the product template. Click on the "
-#| "'Configure Variants' button to set the extra attribute prices."
 msgid ""
 "The sale price can be set manually or computed from the product template. "
 "Click on the 'Configure Variants' button to set the extra attribute prices."
 msgstr ""
-"판매 가격은 품목 양식에서 관리합니다. 추가 속성별 가격을 설정하려면 '세부 품"
-"목 설정' 버튼을 클릭하세요."
 
 #. module: product
 #. odoo-python
@@ -4201,7 +4204,7 @@ msgstr "오늘 활동"
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Total Forecasted"
-msgstr ""
+msgstr "총 예측 수량"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
@@ -4213,10 +4216,8 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_storable
 #: model:ir.model.fields,field_description:product.field_product_template__is_storable
-#, fuzzy
-#| msgid "Inventory"
 msgid "Track Inventory"
-msgstr "재고 관리"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_01_product_template
@@ -4329,10 +4330,8 @@ msgstr "측정 단위 및 포장"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
-#, fuzzy
-#| msgid "Quantities"
 msgid "Update Quantities"
-msgstr "수량"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_variant_edit_qty_action
@@ -4426,14 +4425,13 @@ msgid "Valid Product Attribute Lines"
 msgstr "유효한 품목 사양 내역"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Validity"
 msgstr "유효 기간"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Validity Period"
-msgstr "휴가 기간"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__name
@@ -4472,6 +4470,7 @@ msgstr "값"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Variant"
 msgstr "세부선택"
 
@@ -4536,12 +4535,6 @@ msgstr "세부선택 사항 태그"
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
 msgid "Variant Values"
 msgstr "세부사항항목 값"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "Variant: %s"
-msgstr "세부선택사항 : %s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
@@ -5090,3 +5083,15 @@ msgstr "부터"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid "Category: %s"
+#~ msgstr "범주 : %s"
+
+#~ msgid "Sales Prices"
+#~ msgstr "판매가"
+
+#~ msgid "Validity Period"
+#~ msgstr "휴가 기간"
+
+#~ msgid "Variant: %s"
+#~ msgstr "세부선택사항 : %s"

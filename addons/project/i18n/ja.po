@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-08 07:56+0000\n"
+"PO-Revision-Date: 2026-01-16 05:47+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "project/ja/>\n"
@@ -414,6 +414,25 @@ msgid ""
 "out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"        <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>"
+"様<br/>\n"
+"    いつもお世話になっております。この度、 \"<strong t-out=\"object.name or "
+"''\">リノベーション</strong>\"プロジェクトが無事完了いたしましたことを、ご報"
+"告申し上げます。ご利用いただき誠にありがとうございました。今後ともよろしくお"
+"願いいたします。\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
+"\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style="
+"\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" "
+"groups=\"project.group_project_stages\">このメールはプロジェクトが <b t-out="
+"\"object.stage_id.name or ''\">完了</b>に移動したため自動で送信されています。"
+"</span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -437,6 +456,24 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"     <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>様<"
+"br/><br/>\n"
+"    このたびはお問い合わせいただき、誠にありがとうございます。弊社の製品・サ"
+"ービスにご関心をお寄せいただき、心より御礼申し上げます。<br/>\n"
+"    現在、担当チームにて内容を確認しております。確認が取れ次第、できるだけ早"
+"くご連絡いたします。<br/>\n"
+"    の間にご不明な点やご質問等がございましたら、どうぞお気軽にお知らせくださ"
+"い。いつでもお手伝いさせていただきます。.<br/><br/>\n"
+"    ご返信まで今しばらくお待ちいただけますと幸いです。<br/>\n"
+"    何卒よろしくお願いいたします。\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
+"\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -998,10 +1035,8 @@ msgstr "本当にこのバージョンを復元しますか？"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
-#, fuzzy
-#| msgid "Customer Ratings"
 msgid "Ask for Ratings"
-msgstr "顧客評価"
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -1840,10 +1875,8 @@ msgstr "Dear"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
-#, fuzzy
-#| msgid "Default Values"
 msgid "Default"
-msgstr "デフォルト値"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -2262,10 +2295,8 @@ msgstr "フォロー"
 
 #. module: project
 #: model:portal.entry,description:project.portal_tasks
-#, fuzzy
-#| msgid "Follow and comment on tasks in your projects"
 msgid "Follow and comments tasks of your projects"
-msgstr "プロジェクトのタスクのフォローやコメントができます"
+msgstr ""
 
 #. module: project
 #: model:portal.entry,description:project.portal_projects
@@ -2537,7 +2568,7 @@ msgstr "チェックした場合は、新しいメッセージに注意が必要
 #: model:ir.model.fields,help:project.field_project_update__message_has_error
 #: model:ir.model.fields,help:project.field_project_update__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "選択されている場合、一部のメッセージで配信エラーが発生しています。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__fold
@@ -3383,10 +3414,8 @@ msgstr "予定通り"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__periodic
-#, fuzzy
-#| msgid "on a periodic basis"
 msgid "On a periodic basis"
-msgstr "定期的に"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__monthly
@@ -4018,10 +4047,8 @@ msgstr "評価平均テキスト"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
-#, fuzzy
-#| msgid "Rating Email Template"
 msgid "Rating Email"
-msgstr "メールテンプレート"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
@@ -4050,10 +4077,8 @@ msgstr "評価前回の数値"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
-#, fuzzy
-#| msgid "Rating Text"
 msgid "Rating Periodicity"
-msgstr "評価テキスト"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
@@ -4649,10 +4674,8 @@ msgstr "ステージ変更"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__name
 #: model:ir.model.fields,field_description:project.field_project_task_type__name
-#, fuzzy
-#| msgid "Stage Changed"
 msgid "Stage Name"
-msgstr "ステージ変更"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
@@ -5288,18 +5311,14 @@ msgstr ""
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
-#, fuzzy
-#| msgid "A new task has been created in the \"%(project_name)s\" project."
 msgid "This new task has been created in the \"%(project_name)s\" project."
-msgstr "新規タスクが \"%(project_name)s\"プロジェクトに作成されました。"
+msgstr ""
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
-#, fuzzy
-#| msgid "A new task has been created and is not part of any project."
 msgid "This new task is not part of any project."
-msgstr "新規タスクが作成されましたが、どのプロジェクトにも属していません。"
+msgstr ""
 
 #. module: project
 #. odoo-python
@@ -5642,10 +5661,8 @@ msgstr "更新作成済"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
-#, fuzzy
-#| msgid "Update Created"
 msgid "Update Stage"
-msgstr "更新作成済"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__3
@@ -6124,10 +6141,8 @@ msgstr "例: プロダクトのローンチ"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
-#, fuzzy
-#| msgid "Specifications"
 msgid "e.g. Qualification"
-msgstr "仕様設計"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form

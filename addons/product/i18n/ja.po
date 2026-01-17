@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:36+0000\n"
-"PO-Revision-Date: 2026-01-08 07:56+0000\n"
+"POT-Creation-Date: 2026-01-16 18:37+0000\n"
+"PO-Revision-Date: 2026-01-16 05:46+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "product/ja/>\n"
@@ -232,7 +232,7 @@ msgstr "2年"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "2025-05-25"
-msgstr ""
+msgstr "2025-05-25"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_2xl
@@ -362,10 +362,8 @@ msgstr "<span class=\"o_stat_text\">プロダクト</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-#, fuzzy
-#| msgid "<span>%</span>"
 msgid "<span> - </span>"
-msgstr "<span>%</span>"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -714,7 +712,6 @@ msgstr "Apple"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Applied On"
 msgstr "適用対象"
 
@@ -993,12 +990,6 @@ msgstr "カテゴリ"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Category"
 msgstr "カテゴリー"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "Category: %s"
-msgstr "カテゴリ: %s"
 
 #. module: product
 #: model:product.combo,name:product.chairs_combo
@@ -1395,10 +1386,8 @@ msgstr "データベースデータ"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
-#, fuzzy
-#| msgid "End Date"
 msgid "Date"
-msgstr "終了日"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -1793,6 +1782,12 @@ msgid "Fixed Price"
 msgstr "固定価格"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__fixed_pricelist_rule_ids
+#: model:ir.model.fields,field_description:product.field_product_template__fixed_pricelist_rule_ids
+msgid "Fixed Pricelist Rule"
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Flipover"
 msgstr "フリップオーバー"
@@ -2068,7 +2063,7 @@ msgstr "チェックした場合は、新しいメッセージに注意が必要
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "選択されている場合、一部のメッセージで配信エラーが発生しています。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
@@ -3022,6 +3017,7 @@ msgstr "ボタンを押すだけで、座位から立位まで数秒で楽に調
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Price"
 msgstr "価格"
 
@@ -3508,10 +3504,8 @@ msgstr "数量 (%s 単位)"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__qty_available
 #: model:ir.model.fields,field_description:product.field_product_template__qty_available
-#, fuzzy
-#| msgid "Quantity"
 msgid "Quantity On Hand"
-msgstr "数量"
+msgstr ""
 
 #. module: product
 #. odoo-javascript
@@ -3669,8 +3663,14 @@ msgid "Rule Tip"
 msgstr "規則ヒント"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "Rules"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
 #: model:ir.model.fields,field_description:product.field_product_template__sale_ok
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3691,11 +3691,6 @@ msgstr "販売用説明"
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Sales Price"
-msgstr "販売価格"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
-msgid "Sales Prices"
 msgstr "販売価格"
 
 #. module: product
@@ -3782,6 +3777,12 @@ msgstr "名前を表示"
 #: model:ir.model.fields,field_description:product.field_product_product__show_qty_update_button
 #: model:ir.model.fields,field_description:product.field_product_template__show_qty_update_button
 msgid "Show Qty Update Button"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__show_sales_price_page
+#: model:ir.model.fields,field_description:product.field_product_template__show_sales_price_page
+msgid "Show Sales Price Page"
 msgstr ""
 
 #. module: product
@@ -4104,16 +4105,10 @@ msgstr "丸め方法は必ず正の値にして下さい。"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_combo_item__lst_price
 #: model:ir.model.fields,help:product.field_product_product__lst_price
-#, fuzzy
-#| msgid ""
-#| "The sale price is managed from the product template. Click on the "
-#| "'Configure Variants' button to set the extra attribute prices."
 msgid ""
 "The sale price can be set manually or computed from the product template. "
 "Click on the 'Configure Variants' button to set the extra attribute prices."
 msgstr ""
-"販売価格はプロダクトテンプレートから管理されます。追加属性価格を設定するに"
-"は、「バリアントを設定する」ボタンをクリックして下さい。"
 
 #. module: product
 #. odoo-python
@@ -4229,10 +4224,8 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_storable
 #: model:ir.model.fields,field_description:product.field_product_template__is_storable
-#, fuzzy
-#| msgid "Inventory"
 msgid "Track Inventory"
-msgstr "在庫管理"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_01_product_template
@@ -4345,10 +4338,8 @@ msgstr "単位 & パッケージング"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
-#, fuzzy
-#| msgid "Quantities"
 msgid "Update Quantities"
-msgstr "数量"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_variant_edit_qty_action
@@ -4442,13 +4433,12 @@ msgid "Valid Product Attribute Lines"
 msgstr "有効なプロダクト属性明細"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
-msgid "Validity"
-msgstr "有効期間"
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "Validity Period"
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Validity"
 msgstr "有効期間"
 
 #. module: product
@@ -4488,6 +4478,7 @@ msgstr "値"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Variant"
 msgstr "バリアント"
 
@@ -4552,12 +4543,6 @@ msgstr "バリアントタグ"
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
 msgid "Variant Values"
 msgstr "バリアント値"
-
-#. module: product
-#. odoo-python
-#: code:addons/product/models/product_pricelist_item.py:0
-msgid "Variant: %s"
-msgstr "バリアント： %s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
@@ -5104,3 +5089,15 @@ msgstr "to"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid "Category: %s"
+#~ msgstr "カテゴリ: %s"
+
+#~ msgid "Sales Prices"
+#~ msgstr "販売価格"
+
+#~ msgid "Validity Period"
+#~ msgstr "有効期間"
+
+#~ msgid "Variant: %s"
+#~ msgstr "バリアント： %s"

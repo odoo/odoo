@@ -12,16 +12,16 @@
 # Thi Huong Nguyen, 2023
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2025-12-03 12:34+0000\n"
+"POT-Creation-Date: 2026-01-16 18:36+0000\n"
+"PO-Revision-Date: 2026-01-13 16:10+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
-"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_sale/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
@@ -1009,11 +1009,6 @@ msgstr ""
 "báo có."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
-msgid "A detailed, formatted description to promote your product on this page."
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
 msgid ""
 "A detailed, formatted description to promote your product on this page. Use "
@@ -1021,6 +1016,12 @@ msgid ""
 msgstr ""
 "Mô tả chi tiết và được định dạng để quảng bá sản phẩm của bạn trên trang "
 "này. Sử dụng '/' để khám phá thêm các tính năng."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
+msgid ""
+"A detailed, formatted description to promote your product on your eCommerce."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -2706,11 +2707,6 @@ msgid "Ecommerce Access"
 msgstr "Quyền truy cập Thương mại điện tử"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
-msgid "Ecommerce Shop"
-msgstr "Cửa hàng Thương mại điện tử"
-
-#. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_cart_recovery
 msgid "Ecommerce: Cart Recovery"
 msgstr "Thương mại điện tử: Khôi phục giỏ hàng"
@@ -2860,15 +2856,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Filters"
 msgstr "Bộ lọc"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/product_template.py:0
-msgid ""
-"Final price may vary based on selection. Tax will be calculated at checkout."
-msgstr ""
-"Giá cuối cùng có thể thay đổi tùy theo lựa chọn. Thuế sẽ được tính khi thanh "
-"toán."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -4289,10 +4276,8 @@ msgstr "Token thanh toán"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_payment_transaction
-#, fuzzy
-#| msgid "Payment Transactions"
 msgid "Payment Transaction"
-msgstr "Giao dịch thanh toán"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
@@ -5318,6 +5303,7 @@ msgstr "Vận chuyển"
 #: model:ir.ui.menu,name:website_sale.menu_open_shop
 #: model:website.menu,name:website_sale.menu_shop
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Shop"
 msgstr "Cửa hàng"
 
@@ -5704,6 +5690,12 @@ msgstr "Bao gồm hoặc loại trừ thuế tùy thuộc vào cấu hình trang
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Taxes"
 msgstr "Thuế"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/product_template.py:0
+msgid "Taxes calculated at checkout."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__variants_default_code
@@ -6651,6 +6643,7 @@ msgstr "VD: đèn, thùng"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "eCommerce"
 msgstr "Thương mại điện tử"
@@ -6820,6 +6813,16 @@ msgstr "điều khoản &amp; điều kiện"
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "{{0}} image"
 msgstr ""
+
+#~ msgid "Ecommerce Shop"
+#~ msgstr "Cửa hàng Thương mại điện tử"
+
+#~ msgid ""
+#~ "Final price may vary based on selection. Tax will be calculated at "
+#~ "checkout."
+#~ msgstr ""
+#~ "Giá cuối cùng có thể thay đổi tùy theo lựa chọn. Thuế sẽ được tính khi "
+#~ "thanh toán."
 
 #~ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 #~ msgstr "<i class=\"fa fa-globe me-1\" title=\"Trang web\"/>"

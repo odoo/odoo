@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-24 08:34+0000\n"
-"PO-Revision-Date: 2026-01-08 12:55+0000\n"
+"PO-Revision-Date: 2026-01-15 10:00+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/base/nl/"
 ">\n"
@@ -6503,6 +6503,86 @@ msgid ""
 "* Unit of measures ARCA codes\n"
 "* Partners: Consumidor Final and ARCA\n"
 msgstr ""
+"\n"
+"Functioneel\n"
+"----------\n"
+"\n"
+"Deze module voegt boekhoudfuncties toe voor de Argentijnse lokalisatie, die "
+"de minimale configuratie vertegenwoordigen die nodig is voor een bedrijf om "
+"in Argentinië en onder de regelgeving en richtlijnen van de AFIP "
+"(Administración Federal de Ingresos Públicos) te opereren.\n"
+"\n"
+"Volg de volgende configuratiestappen voor Productie:\n"
+"\n"
+"1. Ga naar je bedrijf en configureer je btw-nummer en AFIP "
+"Verantwoordelijkheidstype\n"
+"2. Ga naar Boekhouding / Instellingen en stel het rekeningstelsel in dat je "
+"wilt gebruiken.\n"
+"3. Maak je verkoopdagboeken aan rekening houdend met AFIP POS info.\n"
+"\n"
+"Demo-gegevens om te testen:\n"
+"\n"
+"* er zijn 3 bedrijven gemaakt, één voor elk AFIP-verantwoordelijkheidstype "
+"met het respectievelijke rekeningstelsel geïnstalleerd. Kies het bedrijf dat "
+"voor jou geschikt is om te testen:\n"
+"\n"
+"  * (AR) Verantwoordelijke Inscripto\n"
+"  * (AR) Exento\n"
+"  * (AR) Monotributo\n"
+"\n"
+"* Verkoopdagboek geconfigureerd voor Voorgeprinte en Expofacturen in alle "
+"bedrijven\n"
+"* Facturen en andere documentvoorbeelden al gevalideerd in "
+"\"(AR) Responsable Inscripto\" bedrijf\n"
+"* Voorbeeldpartners voor verschillende verantwoordelijkheidstypes:\n"
+"\n"
+"  * ADHOC (IVA Responsable Inscripto)\n"
+"  * Servicios Globales (IVA Sujeto Exento)\n"
+"  * Gritti (Monotributo)\n"
+"  * Montana Sur. IVA Liberado in Zona Franca\n"
+"  * Barcelona food (Buitenlandklant)\n"
+"  * Odoo (Bewerker van buiten)\n"
+"\n"
+"Hoogtepunten:\n"
+"\n"
+"* Rekeningschema's worden niet automatisch geïnstalleerd, elk rekeningschema "
+"is afhankelijk van de AFIP-verantwoordelijkheid van het bedrijf, je moet de "
+"rekeningschema's voor je behoeften installeren.\n"
+"* Er worden geen verkoopdagboeken gegenereerd wanneer je een CoA "
+"installeert, je moet je dagboeken handmatig configureren.\n"
+"* Het documenttype wordt vooraf geselecteerd bij het maken van een factuur, "
+"afhankelijk van de fiscale verantwoordelijkheid van de verstrekker en "
+"ontvanger van het document en het bijbehorende dagboek.\n"
+"* Er is een CBU-rekeningstype toegevoegd en ook CBU-validatie\n"
+"\n"
+"\n"
+"Technisch\n"
+"---------\n"
+"\n"
+"Deze module voegt zowel modellen als velden toe die uiteindelijk gebruikt "
+"zullen worden voor de elektronische factuurmodule. Hier volgt een overzicht "
+"van de belangrijkste functies:\n"
+"\n"
+"Stamgegevens:\n"
+"\n"
+"* Chart of Account: één voor elke AFIP-verantwoordelijkheid die gerelateerd "
+"is aan een rechtspersoon:\n"
+"\n"
+"  * Responsable Inscripto (RI)\n"
+"  * Exento (EX)\n"
+"  * Monotributo (Mono)\n"
+"\n"
+"* Argentijnse Belastingen en Rekeningen Belastinggroepen "
+"(btw-belastingen met de bestaande aliquots en andere typen)\n"
+"* AFIP Verantwoordelijkheidstypes\n"
+"* Fiscale posities (om belastingen in kaart te brengen)\n"
+"* Soorten juridische documenten in Argentinië\n"
+"* Identificatietypen die geldig zijn in Argentinië.\n"
+"* Land AFIP-codes en Land btw-codes voor rechtspersonen, natuurlijke "
+"personen en anderen\n"
+"* Valuta AFIP-codes\n"
+"* Maateenheid AFIP-codes\n"
+"* Partners: Consumidor Final en AFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -9916,6 +9996,18 @@ msgid ""
 "- Withholding Return\n"
 "- Fiscal Positions\n"
 msgstr ""
+"\n"
+"Boekhoudmodule voor Saoedi-Arabië\n"
+"===========================================================\n"
+"Boekhoudkundige basisgrafieken en lokalisatie voor Saoedi-Arabië\n"
+"\n"
+"Activeert:\n"
+"\n"
+"- Grootboekschema\n"
+"- Belastingen\n"
+"- Btw-aangifte\n"
+"- Aangifte voor roerende voorheffing\n"
+"- Fiscale posities\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_pos
@@ -10191,6 +10283,24 @@ msgid ""
 "-   24-hour session timeout for privileged users.\n"
 "-   Audit logging for sensitive fields.\n"
 msgstr ""
+"\n"
+"Single Touch Payroll en Super Stream via Superchoice API\n"
+"================================================================\n"
+"Deze module biedt de API's die nodig zijn om Single Touch Payroll\n"
+"(STP) en Super Stream te verwerken in Australië met behulp van de "
+"Superchoice API.\n"
+"\n"
+"Deze module gebruikt Superchoice als Clearing House voor het beheer van "
+"pensioenbetalingen\n"
+"en hun api wordt gebruikt om STP-rapporten in te dienen.\n"
+"\n"
+"Het implementeert ook de nodige beveiligings- en loggingfuncties om te "
+"voldoen aan de eisen van de ATO\n"
+"voor de verwerking van salarisgegevens.\n"
+"-   Verplichte MFA voor gebruikers van salarisadministratie en boekhouding.\n"
+"-   Maximaal 30 minuten inactiviteit voor bevoorrechte gebruikers.\n"
+"-   24-uurs sessietime-out voor bevoorrechte gebruikers.\n"
+"-   Audit logging voor gevoelige velden.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills
@@ -14945,7 +15055,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__time_format__%i:%m:%s_%p
-#, fuzzy
 msgid " 1:00:00 PM"
 msgstr " 13:00:00"
 
@@ -15269,7 +15378,7 @@ msgstr "2FA Uitnodigingsmail"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal_survey
 msgid "360 Feedback"
-msgstr "360 Feedback"
+msgstr "360°-Feedback"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_3pl_logistic_company
@@ -15908,7 +16017,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Inherited</strong>"
-msgstr "<strong>Overerfd</strong>"
+msgstr "<strong>Overgeërfd</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -16952,7 +17061,7 @@ msgstr "Actief Parent-model"
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Actual Code"
-msgstr ""
+msgstr "Werkelijke code"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_next_actual
@@ -21394,7 +21503,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_company__child_ids
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 msgid "Branches"
-msgstr "Branches"
+msgstr "Filialen"
 
 #. module: base
 #: model:res.country,name:base.br
@@ -23727,7 +23836,7 @@ msgstr "Maak een bankrekening"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_category_form
 msgid "Create a Contact Tag"
-msgstr "Een contacttag maken"
+msgstr "Contactlabel aanmaken"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
@@ -24871,8 +24980,8 @@ msgid ""
 "Demo data should only be used on test databases!\n"
 "                             Once they are loaded, they cannot be removed!"
 msgstr ""
-"Demo data zou alleen gebruikt moeten worden op test databases!\n"
-"Als de demo data geladen is kan deze niet meer verwijderd worden!"
+"Gebruik Demodata enkel in testdatabases!\n"
+"Als de Demodata geladen zijn, kunnen ze niet meer verwijderd worden!"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo_failure
@@ -29998,7 +30107,7 @@ msgid ""
 "enabled\n"
 "         "
 msgstr ""
-"Als deze weergave overerfd is,\n"
+"Als deze weergave overgeëerfd is,\n"
 "* indien waar zal de weergave altijd de bovenliggende uitbreiden\n"
 "* indien niet waar zal de weergave niet de bovenliggende uitbreiden maar kan "
 "dit wel worden ingeschakeld\n"
@@ -30619,27 +30728,27 @@ msgstr "Informatie"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Inherit"
-msgstr "Overerfd"
+msgstr "Overgeërfd"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "Inherited"
-msgstr "Overerfd"
+msgstr "Overgeërfd"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__inherit_id
 msgid "Inherited View"
-msgstr "Overerfde weergave"
+msgstr "Overgeërfde weergave"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
 msgid "Inherited Views"
-msgstr "Overerfde weergaven"
+msgstr "Overgeërfde weergaven"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__inherited_model_ids
 msgid "Inherited models"
-msgstr "Overerfde modellen"
+msgstr "Overgeërfde modellen"
 
 #. module: base
 #. odoo-python
@@ -30949,7 +31058,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/template_inheritance.py:0
 msgid "Invalid Expression while parsing xpath “%s”"
-msgstr "Ongeldige uitdrukking bij het verwerken van xpath “%s”"
+msgstr "Ongeldige expressie bij het verwerken van xpath “%s”"
 
 #. module: base
 #. odoo-python
@@ -30982,7 +31091,7 @@ msgid ""
 "\n"
 " %(error)s"
 msgstr ""
-"Ongeldige context: “%(expr)s” is geen geldige Python-uitdrukking \n"
+"Ongeldige context: “%(expr)s” is geen geldige Python-expressie \n"
 "\n"
 " %(error)s"
 
@@ -31476,7 +31585,7 @@ msgstr "Jersey"
 #. odoo-python
 #: code:addons/base/models/ir_cron.py:0
 msgid "Job '%s' already executing"
-msgstr "Job '%s' wordt al uitgevoerd"
+msgstr "Taak '%s' wordt al uitgevoerd"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_integration_monster
@@ -32555,7 +32664,8 @@ msgstr "Lijst"
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "List child can only have one of %(tags)s tag (not %(wrong_tag)s)"
-msgstr "List child kan alleen een tag %(tags)s hebben (niet %(wrong_tag)s)"
+msgstr ""
+"Onderliggende lijst kan maar één %(tags)s-label hebben (niet %(wrong_tag)s)"
 
 #. module: base
 #. odoo-python
@@ -33293,7 +33403,7 @@ msgstr "Certificaat beheren"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_plm
 msgid "Manage engineering change orders on products, bills of material"
-msgstr "Beheer technische wijzigingsorders op producten, stuklijsten"
+msgstr "Beheer engineering change orders op producten, stuklijsten"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_booth
@@ -34921,7 +35031,6 @@ msgstr "Nigeria - Boekhoudrapporten"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_night_clubs
-#, fuzzy
 msgid "Night Clubs"
 msgstr "Nachtclubs"
 
@@ -39624,8 +39733,8 @@ msgid ""
 "Please confirm that you want to <b>irreversibly</b> make this database a "
 "demo database."
 msgstr ""
-"Bevestig alsjeblieft dat je van deze database een demo database wilt maken, "
-"deze optie is <b>onomkeerbaar</b>."
+"Bevestig alsjeblieft dat je van deze database een testdatabase wilt maken, "
+"want deze optie is <b>onomkeerbaar</b>."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_form
@@ -42479,7 +42588,6 @@ msgstr "Saoedi-Arabië - Kassa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_withholding_tax
-#, fuzzy
 msgid "Saudi Arabia - Withholding Tax"
 msgstr "Saoedi-Arabië - Roerende voorheffing"
 
@@ -42995,11 +43103,12 @@ msgid ""
 "emails are compromised. Once verified, you can activate the ability to send "
 "money."
 msgstr ""
-"Het verzenden van valse facturen met een frauduleus rekeningnummer is een "
-"veel voorkomende phishingpraktijk. Om jezelf te beschermen moet je altijd "
-"nieuwe rekeningsnummers controleren, bij voorkeur door de leverancier te "
-"bellen, want phishing gebeurt meestal wanneer hun e-mails gecompromitteerd "
-"zijn. Eenmaal gecontroleerd, kan je de functie om geld te sturen inschakelen."
+"Het versturen van valse facturen met een frauduleus rekeningnummer is een "
+"veelvoorkomende manier van phising. Om jezelf te beschermen moet je nieuwe "
+"rekeningnummers altijd controleren, bij voorkeur door de leverancier te "
+"bellen, aangezien phishing meestal plaatsvindt wanneer hun e-mails zijn "
+"gehackt. Na de controle kun je de mogelijkheid om geld over te maken "
+"activeren."
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.WST
@@ -43526,7 +43635,7 @@ msgstr "Vaardigheden certificering"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_skills_event
 msgid "Skills Events"
-msgstr ""
+msgstr "Vaardigheden Evenementen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_skills
@@ -44838,7 +44947,7 @@ msgstr "TRN"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__report_tables_id
 msgid "Table Design"
-msgstr ""
+msgstr "Tabelontwerp"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__tabloid
@@ -45920,7 +46029,7 @@ msgid ""
 "[('color','=','red')]"
 msgstr ""
 "Het optionele domein om mogelijke waardes voor relatievelden te beperken, in "
-"de vorm van een Python uitdrukking bestaande uit een lijst van triplets. "
+"de vorm van een Python-expressie bestaande uit een lijst van triplets. "
 "Bijvoorbeeld: [('color','=','red')]"
 
 #. module: base
@@ -47173,7 +47282,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_productivity_to-do
 #: model:ir.module.module,shortdesc:base.module_project_todo
 msgid "To-Do"
-msgstr "To-Do"
+msgstr "To-do"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
@@ -48716,7 +48825,6 @@ msgstr "Vertikale balk"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_veterinary_clinic
-#, fuzzy
 msgid "Veterinary Clinic"
 msgstr "Dierenkliniek"
 
@@ -49834,7 +49942,7 @@ msgstr "Het is niet mogelijk een recursieve partnerhiërarchie te maken."
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "You cannot create recursive inherited views."
-msgstr "Het is niet mogelijk een recursieve overerfde weergave te maken."
+msgstr "Het is niet mogelijk een recursieve overgeërfde weergave te maken."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_sequence_date_range_unique_range_per_sequence

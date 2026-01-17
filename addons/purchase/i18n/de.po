@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-09 09:15+0000\n"
+"PO-Revision-Date: 2026-01-16 11:23+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/"
 "purchase/de/>\n"
@@ -435,14 +435,15 @@ msgid ""
 "                                    Incoming\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_value text-muted\">\n"
+"                                    Eingang\n"
+"                               </span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
-#, fuzzy
-#| msgid "<span class=\"o_stat_text\">Purchased</span>"
 msgid "<span groups=\"!uom.group_uom\">Purchased</span>"
-msgstr "<span class=\"o_stat_text\">Eingekauft</span>"
+msgstr "<span groups=\"!uom.group_uom\">Gekauft</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -489,7 +490,7 @@ msgstr "<strong class=\"d-block mb-1\">Rechnungen</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Shipping address:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">Versandadresse:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -1452,6 +1453,8 @@ msgstr "Erwartete Ankunft"
 msgid ""
 "Expected delivery date of goods by the vendor based on the latest information"
 msgstr ""
+"Vom Verkäufer erwarteter Liefertermin der Waren basierend auf den neuesten "
+"Informationen"
 
 #. module: purchase
 #. odoo-python
@@ -1514,10 +1517,8 @@ msgstr "Vollständig abgerechnet"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__full
-#, fuzzy
-#| msgid "Bills Received"
 msgid "Fully Received"
-msgstr "Erhaltene Rechnungen"
+msgstr "Vollständig erhalten"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -2093,10 +2094,8 @@ msgstr "Nicht anerkannt"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__pending
-#, fuzzy
-#| msgid "Qty Received"
 msgid "Not Received"
-msgstr "Erhaltene Menge"
+msgstr "Nicht erhalten"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -2210,7 +2209,7 @@ msgstr "Auftragsdatum"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Order DeadLine: Last 365 Days"
-msgstr ""
+msgstr "Bestellfrist: Letzte 365 Tage"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
@@ -2223,7 +2222,7 @@ msgstr "Auftragsfrist"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Order Deadline: Last 365 Days"
-msgstr ""
+msgstr "Bestellfrist: Letzte 365 Tage"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__order_line
@@ -2257,7 +2256,7 @@ msgstr "Bestellung fällig am %(date)s"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Other Info"
-msgstr ""
+msgstr "Weitere Informationen"
 
 #. module: purchase
 #: model:portal.entry,name:purchase.portal_purchase_orders
@@ -2271,10 +2270,8 @@ msgstr "Übergeordnete Abschnittszeile"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__partial
-#, fuzzy
-#| msgid "Bills Received"
 msgid "Partially Received"
-msgstr "Erhaltene Rechnungen"
+msgstr "Teilweise erhalten"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__partner_id
@@ -2666,6 +2663,8 @@ msgid ""
 "Purchased in the last 365 days. Incoming represents confirmed purchase "
 "orders not received or partially received"
 msgstr ""
+"In den letzten 365 Tagen gekauft. Eingang steht für bestätigte Bestellungen, "
+"die noch nicht oder nur teilweise eingegangen sind."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -2673,6 +2672,8 @@ msgid ""
 "Purchased in the last 365 days. Incoming represents confirmed sales order "
 "not received, or partially received"
 msgstr ""
+"In den letzten 365 Tagen gekauft. Eingang steht für bestätigte "
+"Verkaufsaufträge, die noch nicht oder nur teilweise eingegangen sind."
 
 #. module: purchase
 #. odoo-python
@@ -2807,16 +2808,12 @@ msgstr "Eingangserinnerung per E-Mail"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_status
-#, fuzzy
-#| msgid "Status"
 msgid "Receipt Status"
-msgstr "Status"
+msgstr "Empfangsstatus"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
-#, fuzzy
-#| msgid "Received"
 msgid "Receive"
 msgstr "Erhalten"
 
@@ -3055,7 +3052,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_mass_mail
 msgid "Send by mail"
-msgstr ""
+msgstr "Per E-Mail versenden"
 
 #. module: purchase
 #. odoo-javascript
@@ -3114,10 +3111,8 @@ msgstr "Vergleich anzeigen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__show_receive_button
-#, fuzzy
-#| msgid "Received Quantity"
 msgid "Show Receive Button"
-msgstr "Erhaltene Menge"
+msgstr "Schaltfläche „Erhalten“ anzeigen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3323,7 +3318,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__price_unit_product_uom
 msgid "The Price of one unit of the product's Unit of Measure"
-msgstr ""
+msgstr "Der Preis einer Einheit der Maßeinheit des Produkts"
 
 #. module: purchase
 #. odoo-python
@@ -3332,6 +3327,8 @@ msgid ""
 "The following purchase orders %(invalid_orders) can't be received. Cancelled "
 "all receptions."
 msgstr ""
+"Die folgenden Bestellungen %(invalid_orders) können nicht empfangen werden. "
+"Alle Wareneingänge wurden storniert."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3545,10 +3542,8 @@ msgstr "Einheitspreis (Rabattiert)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit_product_uom
-#, fuzzy
-#| msgid "Unit Price"
 msgid "Unit Price Product UoM"
-msgstr "Einzelpreis"
+msgstr "Produkt-Maßeinheit für Stückpreis"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3872,7 +3867,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "billing"
-msgstr ""
+msgstr "Abrechnung"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3904,7 +3899,7 @@ msgstr "partner_id"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "purchase"
-msgstr ""
+msgstr "Einkauf"
 
 #. module: purchase
 #. odoo-python
@@ -3939,7 +3934,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "tracking"
-msgstr ""
+msgstr "Verfolgung"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document

@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-09 16:29+0000\n"
+"PO-Revision-Date: 2026-01-14 16:35+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/stock/"
 "nl/>\n"
@@ -889,7 +889,7 @@ msgstr "<strong>Contactpersoon</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>Klant</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -904,7 +904,7 @@ msgstr "<strong>Afleveradres:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Delivery Address</strong>"
-msgstr ""
+msgstr "<strong>Afleveradres</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1154,12 +1154,12 @@ msgstr "Activiteitsfase"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_type_icon
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Activiteitensoort icoon"
+msgstr "Activiteitstype icoon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Activity type"
-msgstr "Soort activiteit"
+msgstr "Activiteitstype"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_activity
@@ -3240,9 +3240,9 @@ msgid ""
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
 msgstr ""
-"Afhankelijk van de geïnstalleerde modules geeft je dit de mogelijkheid om de "
-"route van het product aan te geven: waar het gekocht worden, gemaakt wordt, "
-"aangevuld wordt op de order, enz."
+"Afhankelijk van de geïnstalleerde modules geeft dit je de mogelijkheid om de "
+"route van het product te bepalen: of het ingekocht wordt, geproduceerd "
+"wordt, of aangevuld wordt per order, enz."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__note
@@ -8806,9 +8806,8 @@ msgid ""
 "                end up in a scrap location that can be used for reporting "
 "purpose."
 msgstr ""
-"Door een product af te keuren wordt deze verwijderd uit de voorraad. Het "
-"product wordt\n"
-"opgenomen in de afkeurlocatie, welke kan worden gebruikt voor rapportages."
+"Een afgekeurd product wordt verwijderd uit de voorraad. Het product wordt\n"
+"opgenomen in de afkeurlocatie, die kan worden gebruikt voor rapportages."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -9380,10 +9379,8 @@ msgstr "Splitsen"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, fuzzy
-#| msgid "No Backorder"
 msgid "Split Backorder"
-msgstr "Geen backorder"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -9887,10 +9884,8 @@ msgstr "De werkelijke datum van verwerking van de overdracht."
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, fuzzy
-#| msgid "The backorder %s has been created."
 msgid "The backorder %(backorder_picking_link)s has been created."
-msgstr "De backorder %s is aangemaakt."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq

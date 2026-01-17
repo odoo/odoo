@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-09 09:15+0000\n"
+"PO-Revision-Date: 2026-01-13 11:32+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/"
 "website_slides/de/>\n"
@@ -500,6 +500,41 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">"
+"\n"
+"                        Hallo,<br/><br/>\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> hat "
+"das <t t-out=\"object.slide_category or ''\">Dokument</t> <strong t-out="
+"\"object.name or ''\">Bäume</strong> mit Ihnen geteilt!\n"
+"                        </p><div style="
+"\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\""
+"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else "
+"object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\""
+"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" "
+"style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style="
+"\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\""
+"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else "
+"object.website_share_url\" t-attf-style=\"background-color: {{"
+"user.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px "
+"16px; text-decoration: none; color: {{user.company_id.email_primary_color or "
+"'#FFFFFF'}}; border-radius: 5px;\"><strong t-out=\"object.name or ''\""
+">Bäume</strong> ansehen</a>\n"
+"                        </div>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br/>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    \n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -542,6 +577,43 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">"
+"\n"
+"                        Hallo,<br/><br/>\n"
+"                        es gibt neue Inhalte in dem Kurs <strong t-out="
+"\"object.channel_id.name or ''\">Bäume, Holz und Gärten</strong>, den Sie "
+"belegen:<br/><br/>\n"
+"                        </p><center><strong t-out=\"object.name or ''\""
+">Bäume</strong></center>\n"
+"                        <t t-if=\"object.image_1024\">\n"
+"                            <div style="
+"\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                                <a t-att-href=\"object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\""
+"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" "
+"style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        </t>\n"
+"                        <div style="
+"\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_share_url\" t"
+"-attf-style=\"background-color: {{"
+"object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: 8px "
+"16px 8px 16px; text-decoration: none; color: {{"
+"object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-radius: "
+"5px;\">Inhalte ansehen</a>\n"
+"                        </div>\n"
+"                        Viel Spaß mit diesem exklusiven Inhalt!\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br/>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    \n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
@@ -1236,7 +1308,7 @@ msgstr "<strong>Noch keine Teilnehmer!</strong>"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_partner_action_report_certified
 msgid "<strong>No Certified Attendees Yet!</strong>"
-msgstr ""
+msgstr "<strong>Noch keine zertifizierten Teilnehmer!</strong>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -1797,7 +1869,7 @@ msgstr "Teilnehmer"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_digest_digest__kpi_nbr_of_new_attendees
 msgid "Attendee Registrations"
-msgstr ""
+msgstr "Teilnehmeranmeldungen"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__member_status
@@ -1836,7 +1908,7 @@ msgstr "Automatisch eingeschriebene Gruppen"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__publish_on
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "Automatisch veröffentlichen am"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__publish_on
@@ -1844,6 +1916,8 @@ msgstr ""
 #: model:ir.model.fields,help:website_slides.field_slide_slide__publish_on
 msgid "Automatically publish the page on the chosen date and time."
 msgstr ""
+"Veröffentlichen Sie die Seite automatisch zum ausgewählten Datum und zur "
+"ausgewählten Uhrzeit."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_avg
@@ -2006,7 +2080,7 @@ msgstr "Zertifizierungen"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_digest_digest__kpi_nbr_of_certified_attendees
 msgid "Certified Attendees"
-msgstr ""
+msgstr "Zertifizierte Teilnehmer"
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_certification
@@ -2017,7 +2091,7 @@ msgstr "Zertifiziertes Wissen"
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_partner_action_report_certified
 msgid "Certified attendees"
-msgstr ""
+msgstr "Zertifizierte Teilnehmer"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__channel_id
@@ -2052,7 +2126,7 @@ msgstr "Kanaltyp"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel_tag_group
 msgid "Channel/Course Group"
-msgstr ""
+msgstr "Kanal-/Kursgruppe"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel_tag
@@ -2307,7 +2381,7 @@ msgstr "Zeitaufwand"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completion_date
 #: model:ir.model.fields,help:website_slides.field_slide_channel_partner__completion_date
 msgid "Completion date"
-msgstr ""
+msgstr "Abschlussdatum"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
@@ -2914,7 +2988,7 @@ msgstr "Haben Sie den ganzen Artikel gelesen?"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Übersicht"
 
 #. module: website_slides
 #. odoo-javascript
@@ -4124,12 +4198,12 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_digest_digest__kpi_nbr_of_certified_attendees_value
 msgid "Kpi Nbr Of Certified Attendees Value"
-msgstr ""
+msgstr "KPI-Wert der Anzahl zertifizierter Teilnehmer"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_digest_digest__kpi_nbr_of_new_attendees_value
 msgid "Kpi Nbr Of New Attendees Value"
-msgstr ""
+msgstr "KPI-Wert der Anzahl neuer Teilnehmer"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__lang
@@ -5064,7 +5138,7 @@ msgstr "Veröffentlichungsdatum"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__published_date
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__published_date
 msgid "Published date"
-msgstr ""
+msgstr "Veröffentlichungsdatum"
 
 #. module: website_slides
 #. odoo-python
@@ -7115,13 +7189,13 @@ msgstr "YouTube:"
 #. odoo-python
 #: code:addons/website_slides/wizard/slide_channel_invite.py:0
 msgid "Your %s"
-msgstr ""
+msgstr "Ihre %s"
 
 #. module: website_slides
 #. odoo-python
 #: code:addons/website_slides/wizard/slide_channel_invite.py:0
 msgid "Your document"
-msgstr ""
+msgstr "Ihr Dokument"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_action_overview

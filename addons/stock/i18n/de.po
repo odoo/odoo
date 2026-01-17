@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-06 12:13+0000\n"
+"PO-Revision-Date: 2026-01-16 14:24+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/stock/"
 "de/>\n"
@@ -9455,10 +9455,8 @@ msgstr "Aufteilen"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, fuzzy
-#| msgid "No Backorder"
 msgid "Split Backorder"
-msgstr "Kein Lieferrückstand"
+msgstr "Lieferrückstand zerteilen"
 
 #. module: stock
 #. odoo-python
@@ -9965,10 +9963,8 @@ msgstr "Das tatsächliche Datum, an dem der Transfer bearbeitet wurde."
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, fuzzy
-#| msgid "The backorder %s has been created."
 msgid "The backorder %(backorder_picking_link)s has been created."
-msgstr "Der Lieferrückstand %s wurde erstellt."
+msgstr "Der Lieferrückstand %(backorder_picking_link)s wurde erstellt."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
@@ -11025,6 +11021,8 @@ msgid ""
 "Unless previously specified by the source document, this will be the default "
 "shipping policy for this operation type."
 msgstr ""
+"Sofern im Quelldokument nicht anders angegeben, gilt dies als "
+"Standardversandrichtlinie für diese Vorgangsart."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -11194,7 +11192,7 @@ msgstr "Lagerort ansehen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "View and allocate received quantities"
-msgstr ""
+msgstr "Zeigen Sie die erhaltenen Mengen an und ordnen Sie sie zu."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
@@ -11559,7 +11557,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "When to start shipping"
-msgstr ""
+msgstr "Wann soll der Versand beginnen"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder
@@ -12068,6 +12066,12 @@ msgid ""
 "            some products, and automate these rules to create RFQs or "
 "Manufacturing Orders."
 msgstr ""
+"Hier finden Sie intelligente Auffüllvorschläge auf der Grundlage von "
+"Prognosen des Lagerbestandes.\n"
+"Erstellen Sie neue Auffüllregeln, wenn Sie Mindestbestände für bestimmte "
+"Produkte einhalten möchten,\n"
+"und automatisieren Sie diese Regeln, um Angebotsanfragen oder "
+"Fertigungsaufträge zu erstellen."
 
 #. module: stock
 #: model_terms:res.company,lunch_notify_message:stock.res_company_1

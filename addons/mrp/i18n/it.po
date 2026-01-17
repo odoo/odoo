@@ -10,24 +10,24 @@
 # Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2025-11-17 15:08+0000\n"
+"PO-Revision-Date: 2026-01-16 11:23+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/mrp/it/"
-">\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1/mrp/"
+"it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
-"0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -516,6 +516,12 @@ msgid ""
 "quantity later.\n"
 "                    </span>"
 msgstr ""
+"<span class=\"text-muted\">\n"
+"                        Modificando la quantità da produrre si "
+"modificheranno anche le quantità dei componenti da consumare per questo "
+"ordine di produzione. <br/>Se prevedi di produrre la quantità rimanente in "
+"un secondo momento, dividi l'ordine di produzione.\n"
+"                   </span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -765,7 +771,7 @@ msgstr "Decorazione eccezione attività"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__activity_plans_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Piani attività"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_state
@@ -998,6 +1004,8 @@ msgid ""
 "Are you sure you want to cancel these manufacturing orders?\n"
 "This action cannot be undone."
 msgstr ""
+"Sei sicuro di voler annullare questi ordini di produzione?\n"
+"Questa azione non può essere annullata."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1005,6 +1013,8 @@ msgid ""
 "Are you sure you want to cancel this manufacturing order?\n"
 "This action cannot be undone."
 msgstr ""
+"Sei sicuro di voler annullare questo ordine di produzione?\n"
+"L'azione non può essere annullata."
 
 #. module: mrp
 #. odoo-python
@@ -1524,22 +1534,22 @@ msgstr "Annulla"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Cancel Manufacturing Order"
-msgstr ""
+msgstr "Annulla ordine di produzione"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Cancel Manufacturing Orders"
-msgstr ""
+msgstr "Annulla ordini di produzione"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Cancel these Orders"
-msgstr ""
+msgstr "Annulla questi ordini"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Cancel this Order"
-msgstr ""
+msgstr "Annulla questo ordine"
 
 #. module: mrp
 #. odoo-javascript
@@ -3533,10 +3543,8 @@ msgstr "OdP in sospeso"
 
 #. module: mrp
 #: model:mail.message.subtype,name:mrp.mrp_mo_planned
-#, fuzzy
-#| msgid "Planned"
 msgid "MO Planned"
-msgstr "Pianificato"
+msgstr ""
 
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_progress
@@ -4518,10 +4526,8 @@ msgstr "Pianifica ordini"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_plan_at_date
-#, fuzzy
-#| msgid "Delay Alert Date"
 msgid "Plan at Date"
-msgstr "Data di avviso ritardo"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4580,7 +4586,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/wizard/change_production_qty.py:0
 msgid "Please specify a quantity bigger than 0."
-msgstr ""
+msgstr "Specifica una quantità maggiore di 0."
 
 #. module: mrp
 #. odoo-python
@@ -5428,6 +5434,8 @@ msgid ""
 "Set a quantity that is smaller than the intial demand to split the "
 "manufacturing order."
 msgstr ""
+"Imposta una quantità inferiore alla domanda iniziale per suddividere "
+"l'ordine di produzione."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_replenishment_tree_view
@@ -5900,7 +5908,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/wizard/change_production_qty.py:0
 msgid "The backorder %s has been created."
-msgstr ""
+msgstr "L'ordine arretrato %s è stato creato."
 
 #. module: mrp
 #. odoo-python
@@ -5933,18 +5941,14 @@ msgstr "È stato generato il seguente ordine di rifornimento"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
-#| msgid "No manufacturing order found. Let's create one."
 msgid "The manufacturing order has been planned."
-msgstr "Nessun ordine di produzione trovato. Creane uno!"
+msgstr "L'ordine di produzione è stato pianificato."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
-#| msgid "No manufacturing order found. Let's create one."
 msgid "The manufacturing order has been unplanned."
-msgstr "Nessun ordine di produzione trovato. Creane uno!"
+msgstr "L'ordine di produzione non è stato pianificato."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
@@ -7079,7 +7083,7 @@ msgstr "Ordine di lavoro"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss_type
 msgid "Workorder Productivity Loss Type"
-msgstr ""
+msgstr "Tipo di perdita di produttività dell'ordine di lavoro"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__yesterday

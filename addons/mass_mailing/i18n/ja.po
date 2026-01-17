@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-09 06:25+0000\n"
+"PO-Revision-Date: 2026-01-15 21:52+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "mass_mailing/ja/>\n"
@@ -183,7 +183,7 @@ msgstr "%(contact_name)sは以下のメーリングリストから登録解除�
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_import.py:0
 msgid "%(imported_count)s contacts have been imported."
-msgstr ""
+msgstr "%(imported_count)s 連絡先がインポートされました。"
 
 #. module: mass_mailing
 #. odoo-python
@@ -192,12 +192,15 @@ msgid ""
 "%(imported_count)s contacts have been imported. %(duplicate_count)s contacts "
 "are duplicates and have been ignored."
 msgstr ""
+"%(imported_count)s件の連絡先がインポートされました。%(duplicate_count)s 件の"
+"連絡先は重複していたため、無視されました。"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/res_company.py:0
 msgid "%(key)s is not a valid social link field name, use `write` instead."
-msgstr ""
+msgstr "%(key)s は有効なソーシャルリンクのフィールド名ではありません。代わりに`write`"
+" を使用してください。"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
@@ -561,10 +564,8 @@ msgstr "<i class=\"fa fa-copy\"/> 代替案を作成"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_kanban
-#, fuzzy
-#| msgid "<i class=\"fa fa-envelope\"/> Send this as winner"
 msgid "<i class=\"fa fa-envelope text-primary me-2\" title=\"Email\"/>"
-msgstr "<i class=\"fa fa-envelope\"/>これを当選者として送ります。"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1259,18 +1260,14 @@ msgstr "連絡先をメーリングリストに追加"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_contact_to_list_action
-#, fuzzy
-#| msgid "Add Contacts to Mailing List"
 msgid "Add Contacts to a Mailing List"
-msgstr "連絡先をメーリングリストに追加"
+msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_links.xml:0
-#, fuzzy
-#| msgid "Add to List"
 msgid "Add Custom Link"
-msgstr "リストに追加"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -2081,10 +2078,8 @@ msgstr "設定"
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_links.xml:0
-#, fuzzy
-#| msgid "Configuration"
 msgid "Configure Company"
-msgstr "設定"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
@@ -2185,17 +2180,13 @@ msgstr "カバー"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
-#, fuzzy
-#| msgid "Creation Date"
 msgid "Create Date"
-msgstr "作成日"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form_simplified
-#, fuzzy
-#| msgid "Create a Mailing List"
 msgid "Create Mailing List"
-msgstr "メーリングリストを作成"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model,website_form_label:mass_mailing.model_res_partner
@@ -2283,10 +2274,8 @@ msgstr "カスタム"
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
-#, fuzzy
-#| msgid "Custom"
 msgid "Custom Color"
-msgstr "カスタム"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -2353,10 +2342,8 @@ msgstr "デフォルト"
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_option.xml:0
-#, fuzzy
-#| msgid "Default Reversed"
 msgid "Default Colors"
-msgstr "デフォルト反転"
+msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2418,10 +2405,8 @@ msgstr ""
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/themes/theme_selector/theme_selector.js:0
-#, fuzzy
-#| msgid "Design removed from the %s Templates!"
 msgid "Design removed from the templates!"
-msgstr "デザインが %sテンプレートから削除されました！"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__dest_list_id
@@ -2757,10 +2742,8 @@ msgstr ""
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/components/company_update_dialog.js:0
-#, fuzzy
-#| msgid "Facebook"
 msgid "Facebook Account"
-msgstr "Facebook"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__failed
@@ -2874,10 +2857,8 @@ msgstr "特徴リストの一"
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_links.xml:0
-#, fuzzy
-#| msgid "Followers"
 msgid "Follow Us on"
-msgstr "フォロワー"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_follower_ids
@@ -3160,7 +3141,7 @@ msgstr ""
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_has_error
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "選択されている場合、一部のメッセージで配信エラーが発生しています。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_compose_message__mass_mailing_name
@@ -3263,10 +3244,8 @@ msgstr "内部コンテンツ"
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/components/company_update_dialog.js:0
-#, fuzzy
-#| msgid "Instagram"
 msgid "Instagram Account"
-msgstr "Instagram"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_schedule
@@ -3510,10 +3489,8 @@ msgstr "リンククリック"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form_simplified
-#, fuzzy
-#| msgid "Last Name"
 msgid "List Name"
-msgstr "姓"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_import__mailing_list_ids
@@ -3605,10 +3582,8 @@ msgstr "メール"
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_trace_report_action_mail
 #: model:ir.ui.menu,name:mass_mailing.mailing_menu_report_mailing
-#, fuzzy
-#| msgid "Mass Mailing Analysis"
 msgid "Mailing Analysis"
-msgstr "メール一括配信分析"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__campaign
@@ -3623,10 +3598,8 @@ msgstr "メーリングキャンペーン"
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
-#, fuzzy
-#| msgid "Mailing Contact"
 msgid "Mailing Color"
-msgstr "メール連絡先"
+msgstr ""
 
 #. module: mass_mailing
 #. odoo-python
@@ -4937,10 +4910,8 @@ msgstr "サンプルメールウィザード"
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/components/company_update_dialog.xml:0
-#, fuzzy
-#| msgid "Saved by"
 msgid "Save"
-msgstr "保存者"
+msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -4950,10 +4921,8 @@ msgstr "お気に入りフィルタとして保存"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-#, fuzzy
-#| msgid "Save as Favorite Filter"
 msgid "Save as favorite"
-msgstr "お気に入りフィルタとして保存"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__create_uid
@@ -5040,10 +5009,8 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
-#, fuzzy
-#| msgid "Select a Target Model..."
 msgid "Select a Target"
-msgstr "ターゲットモデルを選択..."
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_form
@@ -5052,10 +5019,8 @@ msgstr "ターゲットモデルを選択..."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
-#, fuzzy
-#| msgid "Select mailing lists"
 msgid "Select a list..."
-msgstr "メール配信リストを選択"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -5850,10 +5815,8 @@ msgstr "UTMソース"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
-#, fuzzy
-#| msgid "Archive"
 msgid "Unarchive"
-msgstr "アーカイブ"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__unknown
@@ -5877,10 +5840,8 @@ msgstr "登録解除日"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
-#, fuzzy
-#| msgid "Upload a file"
 msgid "Upload"
-msgstr "ファイルをアップロード"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -6336,10 +6297,8 @@ msgstr "例: John Smith"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form_simplified
-#, fuzzy
-#| msgid "e.g. Consumer Newsletter"
 msgid "e.g. Monthly Newsletter"
-msgstr "例: 消費者ニュースレター"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -6348,10 +6307,8 @@ msgstr "例：Tシャツ全品、新発売セール"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
-#, fuzzy
-#| msgid "e.g. \"VIP\", \"Roadshow\", ..."
 msgid "e.g. Roadshow"
-msgstr "例: \"VIP\"、 \"ロードショー\"、 ..."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.constraint,message:mass_mailing.constraint_mailing_mailing_email_from
@@ -6448,10 +6405,8 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
-#, fuzzy
-#| msgid "Blacklisted"
 msgid "✉ Blacklisted"
-msgstr "ブラックリスト"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed

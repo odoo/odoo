@@ -4,15 +4,15 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Saara Hakanen <sahak@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-09 18:37+0000\n"
-"PO-Revision-Date: 2025-12-20 09:49+0000\n"
+"PO-Revision-Date: 2026-01-16 09:47+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-1/"
 "account_edi_ubl_cii/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -28,8 +28,8 @@ msgid ""
 "%s should have a KVK or OIN number set in Company ID field or as Peppol e-"
 "address (EAS code 0106 or 0190)."
 msgstr ""
-"%s:n tulisi olla KVK- tai OIN-numero, joka on asetettu yritystunnukseksi "
-"sille omistettuun kenttään tai Peppol e-osoite (EAS-koodi 0106 tai 0190)."
+"%s:lla tulisi olla KVK- tai OIN-numero määritettynä yritystunnus-kenttään "
+"tai sähköiseksi Peppol-osoitteeksi (EAS-koodi 0106 tai 0190)."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -40,18 +40,18 @@ msgstr "1.0"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "A payment of %s was detected."
-msgstr "Havaittiin maksu %s."
+msgstr "Havaittiin maksu: %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "A rounding amount of %s was detected."
-msgstr "Pyöristysmäärä %s havaittu."
+msgstr "Havaittiin %s suuruinen pyöristys."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
-msgstr "A-NZ BIS laskutus 3.0"
+msgstr "A-NZ BIS Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__ae
@@ -61,7 +61,7 @@ msgstr "AE - Käänteinen arvonlisävero"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__as
 msgid "AS2 exchange"
-msgstr "AS2 exchange"
+msgstr "AS2-tiedonsiirto"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
@@ -76,12 +76,12 @@ msgstr "Ohjattu tilikirjauksen lähetys"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9923
 msgid "Albania VAT"
-msgstr "Albania ALV"
+msgstr "Albanian ALV"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9922
 msgid "Andorra VAT"
-msgstr "Andorra ALV"
+msgstr "Andorran ALV"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -96,7 +96,7 @@ msgid ""
 "At least one of the following fields %(field_list)s is required on %"
 "(record)s."
 msgstr ""
-"Vähintään yksi seuraavista kentistä %(field_list)s on pakollinen tietueissa %"
+"Vähintään yksi seuraavista kentistä %(field_list)s vaaditaan tietueissa %"
 "(record)s."
 
 #. module: account_edi_ubl_cii
@@ -134,7 +134,7 @@ msgstr "Käytettävissä oleva Peppol Eas"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__b
 msgid "B - Transferred (VAT), In Italy"
-msgstr "B - Siirretty (alv), Italiassa"
+msgstr "B - Siirretty (ALV), Italiassa"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_de
@@ -144,7 +144,7 @@ msgstr "BIS3 DE (XRechnung)"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl
 msgid "Base helpers for UBL"
-msgstr ""
+msgstr "UBL:n perusapuvälineet"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0208
@@ -175,7 +175,7 @@ msgstr "Yritysrekisteriverkosto"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "Check Partner(s)"
-msgstr "Tarkista kumppanit"
+msgstr "Tarkista kumppani(t)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_partner__peppol_eas
@@ -185,8 +185,8 @@ msgid ""
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
 "codelist/eas/"
 msgstr ""
-"Koodi, jota käytetään BIS Billing 3.0:n ja sen johdannaisten päätepisteen "
-"tunnistamiseen.\n"
+"BIS Billing 3.0:n ja sen johdannaisten päätepisteen tunnistamiseen "
+"käytettävä koodi.\n"
 "             Luettelo on saatavilla osoitteessa https://docs.peppol.eu/poacc/"
 "billing/3.0/codelist/eas/"
 
@@ -204,8 +204,7 @@ msgstr "Codice Univoco Unità Organizzativa iPA"
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_common
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
-msgstr ""
-"EDI-asiakirjojen yhteiset toiminnot: tietojen ja rajoitusten luominen jne"
+msgstr "EDI-asiakirjojen yleistoiminnot: tietojen luominen, rajoitukset, jne"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -231,7 +230,7 @@ msgstr "Yhteystiedot"
 msgid ""
 "Could not retrieve a partner corresponding to '%s'. A new partner was "
 "created."
-msgstr "'%s' -nimistä kumppania ei voitu noutaa. Uusi kumppani on luotu."
+msgstr "'%s' vastaavan kumppanin haku ei onnistunut. Luotiin uusi kumppani."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -240,8 +239,8 @@ msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and "
 "activate the currency?"
 msgstr ""
-"Valuuttaa ei voitu noutaa: %s. Onko sinulla monivaluutta-asetuksen käytössä "
-"ja aktivoitko valuutan?"
+"Valuutan hakeminen ei onnistunut: %s. Onko sinulla monivaluutta-asetus "
+"käytössä ja valuutta aktivoituna?"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -250,26 +249,28 @@ msgid ""
 "Could not retrieve partner with details: Name: %(name)s, Vat: %(vat)s, "
 "Phone: %(phone)s, Email: %(email)s"
 msgstr ""
-"Kumppania ei voitu hakea tiedoilla: Nimi: %(name)s, ALV: %(vat)s, Puhelin: %"
-"(phone)s, Sähköposti: %(email)s"
+"Kumppanin hakeminen ei onnistunut näillä tiedoilla: Nimi: %(name)s, ALV: %"
+"(vat)s, Puhelin: %(phone)s, Sähköposti: %(email)s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Could not retrieve the tax: %(amount)s %% for line '%(line)s'."
-msgstr "Veroa ei voitu hakea: %(amount)s %% rivillä '%(line)s'."
+msgstr "Veron hakeminen ei onnistunut: %(amount)s %% riville '%(line)s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Could not retrieve the tax: %(tax_percentage)s %% for line '%(line)s'."
-msgstr "Veroa ei voitu hakea: %(tax_percentage)s %% rivillä '%(line)s'."
+msgstr ""
+"Veron hakeminen ei onnistunut: %(tax_percentage)s %% riville '%(line)s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Could not retrieve the tax: %s for the document level allowance/charge."
-msgstr "Veroa ei voitu hakea: %s asiakirjan tason korvausta/maksua varten."
+msgstr ""
+"Veron hakeminen ei onnistunut: %s asiakirjatason määrärahaa/maksua varten."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,website_form_label:account_edi_ubl_cii.model_res_partner
@@ -320,7 +321,7 @@ msgstr "Euroopan komission pääosastot"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Discount"
-msgstr ""
+msgstr "Alennus"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_common__display_name
@@ -372,7 +373,7 @@ msgstr "EU-standardi (Peppol Bis 3.0)"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "Each invoice line shall have one and only one tax."
-msgstr "Kullakin laskurivillä voi olla vain yksi vero."
+msgstr "Kullakin laskurivillä saa olla vain yksi vero."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -389,18 +390,18 @@ msgstr "Jokaisella laskurivillä on oltava vähintään yksi vero."
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__em
 msgid "Electronic mail"
-msgstr "Sähköposti"
+msgstr "Sähköinen posti"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "Errors occurred while creating the EDI document (format: %s):"
-msgstr "EDI-asiakirjan luomisessa tapahtui virheitä (muoto: %s):"
+msgstr "EDI-asiakirjaa luodessa tapahtui virheitä (muoto: %s):"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0191
 msgid "Estonia Company code"
-msgstr "Viron Y-tunnus"
+msgstr "Viron yritystunnus"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9931
@@ -457,20 +458,19 @@ msgid ""
 "For intracommunity supply, the actual delivery date or the invoicing period "
 "should be included."
 msgstr ""
-"Yhteisön sisäisten toimitusten osalta on ilmoitettava todellinen "
-"toimituspäivä tai laskutusjakso."
+"Yhteisömyynnissä on ilmoitettava todellinen toimituspäivä tai laskutusjakso."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "For intracommunity supply, the delivery address should be included."
-msgstr "Yhteisön sisäisten toimitusten osalta on ilmoitettava toimitusosoite."
+msgstr "Yhteisömyynnin tulee sisältää toimitusosoite."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "Format used to import the document: %s"
-msgstr "Asiakirjan tuonnissa käytetty muoto: %s"
+msgstr "Asiakirjan tuonnissa käytettävä muoto: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -486,12 +486,12 @@ msgstr "Ranska (FacturX)"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0225
 msgid "France FRCTC Electronic Address"
-msgstr "Ranskan FRCTC Sähköinen osoite"
+msgstr "Ranskan FRCTC -sähköinen osoite"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0240
 msgid "France Register of legal persons"
-msgstr "Ranskan oikeushenkilöiden rekisteri"
+msgstr "Ranskan oikeushenkilörekisteri"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0002
@@ -562,7 +562,7 @@ msgstr "Unkarin ALV"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_ir_actions_report__id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0196
@@ -584,7 +584,7 @@ msgstr "Asenna Chorus Pro"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Intra-Community supply"
-msgstr "Yhteisön sisäiset toimitukset"
+msgstr "Yhteisömyynti"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -606,13 +606,13 @@ msgstr "Irlannin ALV"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__is_peppol_edi_format
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__is_peppol_edi_format
 msgid "Is Peppol Edi Format"
-msgstr "On Peppol EDI-muoto"
+msgstr "On Peppol EDI-muodossa"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__is_ubl_format
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__is_ubl_format
 msgid "Is Ubl Format"
-msgstr "Onko UBL-muoto"
+msgstr "On UBL-muodossa"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0097
@@ -622,7 +622,7 @@ msgstr "Italian FTI"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0211
 msgid "Italia Partita IVA"
-msgstr "Italian Partita ALV"
+msgstr "Italian Partita IVA"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0221
@@ -637,14 +637,14 @@ msgstr "Japanin SST"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move
 msgid "Journal Entry"
-msgstr "Päiväkirjamerkintä"
+msgstr "Päiväkirjan kirjaus"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__k
 msgid "K - VAT exempt for EEA intra-community supply of goods and services"
 msgstr ""
-"K - arvonlisäverosta vapautettu ETA:n sisäinen tavaroiden luovutus ja "
-"palvelujen suoritus yhteisön sisällä"
+"K - arvonlisäverosta vapautettu ETA:n sisäinen tavaroiden ja palvelujen "
+"yhteisömyynti"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9919
@@ -659,7 +659,7 @@ msgstr "L - Kanariansaarten yleinen välillinen vero"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0218
 msgid "Latvia Unified registration number"
-msgstr "Latvia Unified registration number"
+msgstr "Latvian yhtenäinen rekisterinumero"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9939
@@ -694,9 +694,7 @@ msgstr "Luxemburgin ALV"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__m
 msgid "M - Tax for production, services and importation in Ceuta and Melilla"
-msgstr ""
-"M - Ceutassa ja Melillassa tuotannosta, palveluista ja tuonnista kannettava "
-"vero"
+msgstr "M - Palveluiden ja tuonnin tuotantovero Ceutassa ja Melillassa"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9942
@@ -754,12 +752,12 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0192
 msgid "Norway Org.nr."
-msgstr "Norjan Org.nro"
+msgstr "Norjan Org.nr."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__o
 msgid "O - Services outside scope of tax"
-msgstr "O - Veron soveltamisalan ulkopuoliset palvelut"
+msgstr "O - Veron ulkopuoliset palvelut"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__an
@@ -785,13 +783,13 @@ msgstr "Peppol-päätepiste"
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
 msgid "Peppol ID"
-msgstr "Peppol ID"
+msgstr "Peppol-tunnus"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_eas
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_eas
 msgid "Peppol e-address (EAS)"
-msgstr "Peppol-sähköpostiosoite (EAS)"
+msgstr "Peppol verkko-osoite (EAS)"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -805,9 +803,7 @@ msgstr "Täytä kumppanin ALV-tunnus tai Peppol-osoite."
 msgid ""
 "Please fill in your company's VAT or Peppol Address to generate a complete "
 "XML file."
-msgstr ""
-"Täytä yrityksesi ALV-tunnus tai Peppol-osoite täydellisen XML-tiedoston "
-"luomiseksi."
+msgstr "Täytä yrityksesi ALV tai Peppol-osoite täyden XML-tiedoston luomiseksi."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -831,7 +827,7 @@ msgstr "Portugalin ALV"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
 msgid "Report Action"
-msgstr "Raportointitoiminto"
+msgstr "Raporttitoiminto"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9947
@@ -847,7 +843,7 @@ msgstr "Pyöristys"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__s
 msgid "S - Standard rate"
-msgstr "S - Vakiomaksu"
+msgstr "S - Yleinen verokanta"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9918
@@ -857,7 +853,7 @@ msgstr "S.W.I.F.T"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0142
 msgid "SECETI Object Identifiers"
-msgstr "SECETI-kohteen tunnisteet"
+msgstr "SECETI -kohdetunnisteet"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
@@ -872,7 +868,7 @@ msgstr "SI-UBL 2.0 (NLCIUS)"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0135
 msgid "SIA Object Identifiers"
-msgstr "SIA-kohteen tunnisteet"
+msgstr "SIA -kohdetunnisteet"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9951
@@ -912,7 +908,7 @@ msgstr "Espanjan ALV"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0007
 msgid "Sweden Org.nr."
-msgstr "Ruotsin Org.nro"
+msgstr "Ruotsin Org.nr."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9955
@@ -948,12 +944,12 @@ msgstr "Veroluokan koodi"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_exemption_reason
 msgid "Tax Exemption Reason"
-msgstr ""
+msgstr "Verovapautuksen syy"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_exemption_reason_code
 msgid "Tax Exemption Reason Code"
-msgstr "Verovapautuksen syy Koodi"
+msgstr "Verovapautuksen syykoodi"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -962,6 +958,8 @@ msgid ""
 "Tax with matching exigibility could not be retrieved: '%(exigibility)s' for "
 "line '%(line)s'."
 msgstr ""
+"Vastaavaa verovelvollisuutta ei saatu haettua: '%(exigibility)s' riville '%"
+"(line)s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -970,8 +968,8 @@ msgid ""
 "The Peppol endpoint (%s) is not valid. It should contain only letters and "
 "digit."
 msgstr ""
-"Peppol-päätepiste (%s) ei ole kelvollinen. Sen tulee sisältää vain kirjaimia "
-"ja numeroita."
+"Peppol-päätepiste (%s) ei kelpaa. Sen saa sisältää vain kirjaimia ja "
+"numeroita."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -980,26 +978,26 @@ msgid ""
 "The Peppol endpoint is not valid. It should contain exactly 10 digits "
 "(Company Registry number).The expected format is: 1234567890"
 msgstr ""
-"Peppol-päätepiste ei ole voimassa. Sen tulee sisältää täsmälleen 10 numeroa "
+"Peppol-päätepiste ei kelpaa. Sen tulee sisältää täsmälleen 10 numeroa "
 "(yritysrekisterinumero). Odotettu muoto on: 1234567890"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 msgid "The Peppol endpoint is not valid. The expected format is: 0239843188"
-msgstr "Peppol-päätepiste ei ole voimassa. Odotettu muoto on: 0239843188"
+msgstr "Peppol-päätepiste ei kelpaa. Odotettu muoto on: 0239843188"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 msgid ""
 "The Peppol endpoint is not valid. The expected format is: 73282932000074"
-msgstr "Peppol-päätepiste ei ole voimassa. Odotettu muoto on: 73282932000074"
+msgstr "Peppol-päätepiste ei kelpaa. Odotettu muoto on: 73282932000074"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_category_code
 msgid "The VAT category code used for electronic invoicing purposes."
-msgstr "Sähköisessä laskutuksessa käytettävä alv-luokan koodi."
+msgstr "Sähköisessä laskutuksessa käytettävä ALV-luokan koodi."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1008,14 +1006,13 @@ msgid ""
 "The VAT number of the supplier does not seem to be valid. It should be of "
 "the form: NO179728982MVA."
 msgstr ""
-"Toimittajan ALV-numero ei näytä olevan voimassa. Sen pitäisi olla "
-"seuraavanlainen: NO179728982MVA."
+"Toimittajan ALV-numero ei kelpaa. Sen pitäisi olla muodossa: NO179728982MVA."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "The VAT of the %s should be prefixed with its country code."
-msgstr "%s-arvonlisäveron etuliitteeksi on lisättävä sen maakoodi."
+msgstr "%s:n ALV-etuliitteen pitäisi olla sen maakoodi."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1033,7 +1030,7 @@ msgstr "Valuutta '%s' ei ole aktiivinen."
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "The element %(record)s is required on %(field_list)s."
-msgstr "Elementti %(record)s tarvitaan kohteessa %(field_list)s."
+msgstr "Elementti %(record)s vaaditaan kohteessa %(field_list)s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1045,8 +1042,7 @@ msgstr "Kenttä %(field)s vaaditaan kohteessa %(record)s."
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 msgid "The field 'Sanitized Account Number' is required on the Recipient Bank."
-msgstr ""
-"Kenttä \"Sanitized Account Number\" vaaditaan vastaanottavassa pankissa."
+msgstr "Kenttä 'Siistitty tilinumero' vaaditaan vastaanottavassa pankissa."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1063,8 +1059,8 @@ msgid ""
 "The reason why the amount is exempted from VAT or why no VAT is being "
 "charged, used for electronic invoicing purposes."
 msgstr ""
-"Syy, miksi määrä on vapautettu arvonlisäverosta tai miksi arvonlisäveroa ei "
-"peritä, käytetään sähköisessä laskutuksessa."
+"Syy, miksi määrä on vapautettu arvonlisäverosta tai miksi sitä ei peritä, "
+"käytetään sähköisessä laskutuksessa."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
@@ -1074,7 +1070,7 @@ msgstr "Turkin ALV"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0235
 msgid "UAE Tax Identification Number (TIN)"
-msgstr "UAE verotunnistenumero (TIN)"
+msgstr "Arabiemiirikuntien verotunniste (TIN)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
@@ -1089,18 +1085,18 @@ msgstr "UBL 2.1"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_bis3
 msgid "UBL BIS Billing 3.0.12"
-msgstr "UBL BIS laskutus 3.0.12"
+msgstr "UBL BIS Billing 3.0.12"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0193
 msgid "UBL.BE party identifier"
-msgstr "UBL.BE-osapuolen tunniste"
+msgstr "UBL.BE -osapuolen tunniste"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__ubl_cii_xml_file
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__ubl_cii_xml_file
 msgid "UBL/CII File"
-msgstr "UBL/CII-tiedosto"
+msgstr "UBL/CII -tiedosto"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__ubl_cii_xml_filename
@@ -1126,7 +1122,7 @@ msgid ""
 "known as 'Endpoint ID'."
 msgstr ""
 "BIS Billing 3.0:n ja sen johdannaisten käyttämä yksilöllinen tunniste, joka "
-"tunnetaan myös nimellä \"Endpoint ID\" (päätepisteen tunnus)."
+"tunnetaan myös nimellä 'Päätepisteen tunnus'."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9932
@@ -1137,14 +1133,14 @@ msgstr "Yhdistyneen kuningaskunnan ALV"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
 msgid "Unspported file type via %s"
-msgstr ""
+msgstr "Tiedostotyyppi ei ole tuettu %s kautta"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132
 msgid ""
 "VATEX-EU-132 - Exempt based on article 132 of Council Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132 - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan "
+"VATEX-EU-132 - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
 "perusteella"
 
 #. module: account_edi_ubl_cii
@@ -1153,8 +1149,8 @@ msgid ""
 "VATEX-EU-132-1A - Exempt based on article 132, section 1 (a) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1A - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan a alakohdan perusteella"
+"VATEX-EU-132-1A - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (a) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1b
@@ -1162,8 +1158,8 @@ msgid ""
 "VATEX-EU-132-1B - Exempt based on article 132, section 1 (b) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1B - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan b alakohdan perusteella"
+"VATEX-EU-132-1B - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (b) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1c
@@ -1171,8 +1167,8 @@ msgid ""
 "VATEX-EU-132-1C - Exempt based on article 132, section 1 (c) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1C - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan c alakohdan nojalla"
+"VATEX-EU-132-1C - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (c) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1d
@@ -1180,8 +1176,8 @@ msgid ""
 "VATEX-EU-132-1D - Exempt based on article 132, section 1 (d) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1D - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan d alakohdan perusteella"
+"VATEX-EU-132-1D - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (d) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1e
@@ -1189,8 +1185,8 @@ msgid ""
 "VATEX-EU-132-1E - Exempt based on article 132, section 1 (e) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1E - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan e alakohdan perusteella"
+"VATEX-EU-132-1E - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (e) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1f
@@ -1198,8 +1194,8 @@ msgid ""
 "VATEX-EU-132-1F - Exempt based on article 132, section 1 (f) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1F - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan f alakohdan perusteella"
+"VATEX-EU-132-1F - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (f) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1g
@@ -1207,8 +1203,8 @@ msgid ""
 "VATEX-EU-132-1G - Exempt based on article 132, section 1 (g) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1G - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan g alakohdan perusteella"
+"VATEX-EU-132-1G - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (g) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1h
@@ -1216,8 +1212,8 @@ msgid ""
 "VATEX-EU-132-1H - Exempt based on article 132, section 1 (h) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1H - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan h alakohdan perusteella"
+"VATEX-EU-132-1H - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (h) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1i
@@ -1225,8 +1221,8 @@ msgid ""
 "VATEX-EU-132-1I - Exempt based on article 132, section 1 (i) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1I - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan i alakohdan perusteella"
+"VATEX-EU-132-1I - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (i) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1j
@@ -1234,8 +1230,8 @@ msgid ""
 "VATEX-EU-132-1J - Exempt based on article 132, section 1 (j) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1J - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan j alakohdan perusteella"
+"VATEX-EU-132-1J - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (j) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1k
@@ -1243,8 +1239,8 @@ msgid ""
 "VATEX-EU-132-1K - Exempt based on article 132, section 1 (k) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1K - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan k alakohdan perusteella"
+"VATEX-EU-132-1K - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (k) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1l
@@ -1252,8 +1248,8 @@ msgid ""
 "VATEX-EU-132-1L - Exempt based on article 132, section 1 (l) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1L - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan l alakohdan perusteella"
+"VATEX-EU-132-1L - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (l) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1m
@@ -1261,8 +1257,8 @@ msgid ""
 "VATEX-EU-132-1M - Exempt based on article 132, section 1 (m) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1M - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan m alakohdan nojalla"
+"VATEX-EU-132-1M - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (m) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1n
@@ -1270,8 +1266,8 @@ msgid ""
 "VATEX-EU-132-1N - Exempt based on article 132, section 1 (n) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1N - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan n alakohdan perusteella"
+"VATEX-EU-132-1N - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (n) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1o
@@ -1279,8 +1275,8 @@ msgid ""
 "VATEX-EU-132-1O - Exempt based on article 132, section 1 (o) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1O - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan o alakohdan perusteella"
+"VATEX-EU-132-1O - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (o) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1p
@@ -1288,8 +1284,8 @@ msgid ""
 "VATEX-EU-132-1P - Exempt based on article 132, section 1 (p) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1P - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan p alakohdan nojalla"
+"VATEX-EU-132-1P - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (p) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1q
@@ -1297,15 +1293,15 @@ msgid ""
 "VATEX-EU-132-1Q - Exempt based on article 132, section 1 (q) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-132-1Q - Vapautus neuvoston direktiivin 2006/112/EY 132 artiklan 1 "
-"kohdan q alakohdan nojalla"
+"VATEX-EU-132-1Q - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
+"kohdan 1 (q) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143
 msgid ""
 "VATEX-EU-143 - Exempt based on article 143 of Council Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143 - Vapautus neuvoston direktiivin 2006/112/EY 143 artiklan "
+"VATEX-EU-143 - Vapautus neuvoston direktiivin 2006/112/EY artiklan 143 "
 "perusteella"
 
 #. module: account_edi_ubl_cii
@@ -1314,8 +1310,8 @@ msgid ""
 "VATEX-EU-143-1A - Exempt based on article 143, section 1 (a) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1A - Vapautus neuvoston direktiivin 2006/112/EY 143 artiklan 1 "
-"kohdan a alakohdan perusteella"
+"VATEX-EU-143-1A - Vapautus neuvoston direktiivin 2006/112/EY artiklan 143 "
+"kohdan 1 (a) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1b
@@ -1323,8 +1319,8 @@ msgid ""
 "VATEX-EU-143-1B - Exempt based on article 143, section 1 (b) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1B - Vapautus neuvoston direktiivin 2006/112/EY 143 artiklan 1 "
-"kohdan b alakohdan perusteella"
+"VATEX-EU-143-1B - Vapautus neuvoston direktiivin 2006/112/EY artiklan 143 "
+"kohdan 1 (b) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1c
@@ -1332,8 +1328,8 @@ msgid ""
 "VATEX-EU-143-1C - Exempt based on article 143, section 1 (c) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1C - Vapautus neuvoston direktiivin 2006/112/EY 143 artiklan 1 "
-"kohdan c alakohdan nojalla"
+"VATEX-EU-143-1C - Vapautus neuvoston direktiivin 2006/112/EY artiklan 143 "
+"kohdan 1 (c) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1d
@@ -1341,8 +1337,8 @@ msgid ""
 "VATEX-EU-143-1D - Exempt based on article 143, section 1 (d) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1D - Vapautus neuvoston direktiivin 2006/112/EY 143 artiklan 1 "
-"kohdan d alakohdan perusteella"
+"VATEX-EU-143-1D - Vapautus neuvoston direktiivin 2006/112/EY artiklan 143 "
+"kohdan 1 (d) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1e
@@ -1350,8 +1346,8 @@ msgid ""
 "VATEX-EU-143-1E - Exempt based on article 143, section 1 (e) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1E - Vapautus neuvoston direktiivin 2006/112/EY 143 artiklan 1 "
-"kohdan e alakohdan perusteella"
+"VATEX-EU-143-1E - Vapautus neuvoston direktiivin 2006/112/EY artiklan 143 "
+"kohdan 1 (e) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1f
@@ -1359,8 +1355,8 @@ msgid ""
 "VATEX-EU-143-1F - Exempt based on article 143, section 1 (f) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1F - Vapautus neuvoston direktiivin 2006/112/EY 143 artiklan 1 "
-"kohdan f alakohdan nojalla"
+"VATEX-EU-143-1F - Vapautus neuvoston direktiivin 2006/112/EY artiklan 143 "
+"kohdan 1 (f) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1fa
@@ -1368,8 +1364,8 @@ msgid ""
 "VATEX-EU-143-1FA - Exempt based on article 143, section 1 (fa) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1FA - Vapautus neuvoston direktiivin 2006/112/EY 143 artiklan 1 "
-"kohdan fa alakohdan perusteella"
+"VATEX-EU-143-1FA - Vapautus neuvoston direktiivin 2006/112/EY artiklan 143 "
+"kohdan 1 (fa) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1g
@@ -1377,8 +1373,8 @@ msgid ""
 "VATEX-EU-143-1G - Exempt based on article 143, section 1 (g) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1G - Vapautus neuvoston direktiivin 2006/112/EY 143 artiklan 1 "
-"kohdan g alakohdan perusteella"
+"VATEX-EU-143-1G - Vapautus neuvoston direktiivin 2006/112/EY artiklan 143 "
+"kohdan 1 (g) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1h
@@ -1386,8 +1382,8 @@ msgid ""
 "VATEX-EU-143-1H - Exempt based on article 143, section 1 (h) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1H - Vapautus neuvoston direktiivin 2006/112/EY 143 artiklan 1 "
-"kohdan h alakohdan perusteella"
+"VATEX-EU-143-1H - Vapautus neuvoston direktiivin 2006/112/EY artiklan 143 "
+"kohdan 1 (h) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1i
@@ -1395,8 +1391,8 @@ msgid ""
 "VATEX-EU-143-1I - Exempt based on article 143, section 1 (i) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1I - Vapautus neuvoston direktiivin 2006/112/EY 143 artiklan 1 "
-"kohdan i alakohdan perusteella"
+"VATEX-EU-143-1I - Vapautus neuvoston direktiivin 2006/112/EY artiklan 143 "
+"kohdan 1 (i) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1j
@@ -1404,8 +1400,8 @@ msgid ""
 "VATEX-EU-143-1J - Exempt based on article 143, section 1 (j) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1J - Vapautus neuvoston direktiivin 2006/112/EY 143 artiklan 1 "
-"kohdan j alakohdan perusteella"
+"VATEX-EU-143-1J - Vapautus neuvoston direktiivin 2006/112/EY artiklan 143 "
+"kohdan 1 (j) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1k
@@ -1413,8 +1409,8 @@ msgid ""
 "VATEX-EU-143-1K - Exempt based on article 143, section 1 (k) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1K - Vapautus neuvoston direktiivin 2006/112/EY 143 artiklan 1 "
-"kohdan k alakohdan perusteella"
+"VATEX-EU-143-1K - Vapautus neuvoston direktiivin 2006/112/EY artiklan 143 "
+"kohdan 1 (k) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1l
@@ -1422,15 +1418,15 @@ msgid ""
 "VATEX-EU-143-1L - Exempt based on article 143, section 1 (l) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-143-1L - Vapautus neuvoston direktiivin 2006/112/EY 143 artiklan 1 "
-"kohdan l alakohdan nojalla"
+"VATEX-EU-143-1L - Vapautus neuvoston direktiivin 2006/112/EY artiklan 143 "
+"kohdan 1 (l) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148
 msgid ""
 "VATEX-EU-148 - Exempt based on article 148 of Council Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-148 - Vapautus neuvoston direktiivin 2006/112/EY 148 artiklan "
+"VATEX-EU-148 - Vapautus neuvoston direktiivin 2006/112/EY artiklan 148 "
 "perusteella"
 
 #. module: account_edi_ubl_cii
@@ -1439,8 +1435,8 @@ msgid ""
 "VATEX-EU-148-A - Exempt based on article 148, section (a) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-148-A - Vapautus neuvoston direktiivin 2006/112/EY 148 artiklan a "
-"kohdan perusteella"
+"VATEX-EU-148-A - Vapautus neuvoston direktiivin 2006/112/EY artiklan 148 "
+"kohdan (a) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-b
@@ -1448,8 +1444,8 @@ msgid ""
 "VATEX-EU-148-B - Exempt based on article 148, section (b) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-148-B - Vapautus neuvoston direktiivin 2006/112/EY 148 artiklan b "
-"kohdan perusteella"
+"VATEX-EU-148-B - Vapautus neuvoston direktiivin 2006/112/EY artiklan 148 "
+"kohdan (b) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-c
@@ -1457,8 +1453,8 @@ msgid ""
 "VATEX-EU-148-C - Exempt based on article 148, section (c) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-148-C - Vapautus neuvoston direktiivin 2006/112/EY 148 artiklan c "
-"kohdan perusteella"
+"VATEX-EU-148-C - Vapautus neuvoston direktiivin 2006/112/EY artiklan 148 "
+"kohdan (c) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-d
@@ -1466,8 +1462,8 @@ msgid ""
 "VATEX-EU-148-D - Exempt based on article 148, section (d) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-148-D - Vapautus neuvoston direktiivin 2006/112/EY 148 artiklan d "
-"kohdan perusteella"
+"VATEX-EU-148-D - Vapautus neuvoston direktiivin 2006/112/EY artiklan 148 "
+"kohdan (d) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-e
@@ -1475,8 +1471,8 @@ msgid ""
 "VATEX-EU-148-E - Exempt based on article 148, section (e) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-148-E - Vapautus neuvoston direktiivin 2006/112/EY 148 artiklan e "
-"kohdan perusteella"
+"VATEX-EU-148-E - Vapautus neuvoston direktiivin 2006/112/EY artiklan 148 "
+"kohdan (e) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-f
@@ -1484,8 +1480,8 @@ msgid ""
 "VATEX-EU-148-F - Exempt based on article 148, section (f) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-148-F - Vapautus neuvoston direktiivin 2006/112/EY 148 artiklan f "
-"kohdan perusteella"
+"VATEX-EU-148-F - Vapautus neuvoston direktiivin 2006/112/EY artiklan 148 "
+"kohdan (f) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-g
@@ -1493,15 +1489,15 @@ msgid ""
 "VATEX-EU-148-G - Exempt based on article 148, section (g) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-148-G - Vapautus neuvoston direktiivin 2006/112/EY 148 artiklan g "
-"kohdan perusteella"
+"VATEX-EU-148-G - Vapautus neuvoston direktiivin 2006/112/EY artiklan 148 "
+"kohdan (g) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151
 msgid ""
 "VATEX-EU-151 - Exempt based on article 151 of Council Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151 - Vapautus neuvoston direktiivin 2006/112/EY 151 artiklan "
+"VATEX-EU-151 - Vapautus neuvoston direktiivin 2006/112/EY artiklan 151 "
 "perusteella"
 
 #. module: account_edi_ubl_cii
@@ -1510,8 +1506,8 @@ msgid ""
 "VATEX-EU-151-1A - Exempt based on article 151, section 1 (a) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1A - Vapautus neuvoston direktiivin 2006/112/EY 151 artiklan 1 "
-"kohdan a alakohdan perusteella"
+"VATEX-EU-151-1A - Vapautus neuvoston direktiivin 2006/112/EY artiklan 151 "
+"kohdan 1 (a) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1aa
@@ -1519,8 +1515,8 @@ msgid ""
 "VATEX-EU-151-1AA - Exempt based on article 151, section 1 (aa) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1AA - Vapautus neuvoston direktiivin 2006/112/EY 151 artiklan 1 "
-"kohdan aa alakohdan nojalla"
+"VATEX-EU-151-1AA - Vapautus neuvoston direktiivin 2006/112/EY artiklan 151 "
+"kohdan 1 (aa) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1b
@@ -1528,8 +1524,8 @@ msgid ""
 "VATEX-EU-151-1B - Exempt based on article 151, section 1 (b) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1B - Vapautus neuvoston direktiivin 2006/112/EY 151 artiklan 1 "
-"kohdan b alakohdan perusteella"
+"VATEX-EU-151-1B - Vapautus neuvoston direktiivin 2006/112/EY artiklan 151 "
+"kohdan 1 (b) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1c
@@ -1537,8 +1533,8 @@ msgid ""
 "VATEX-EU-151-1C - Exempt based on article 151, section 1 (c) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1C - Vapautus neuvoston direktiivin 2006/112/EY 151 artiklan 1 "
-"kohdan c alakohdan nojalla"
+"VATEX-EU-151-1C - Vapautus neuvoston direktiivin 2006/112/EY artiklan 151 "
+"kohdan 1 (c) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1d
@@ -1546,8 +1542,8 @@ msgid ""
 "VATEX-EU-151-1D - Exempt based on article 151, section 1 (d) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1D - Vapautus neuvoston direktiivin 2006/112/EY 151 artiklan 1 "
-"kohdan d alakohdan perusteella"
+"VATEX-EU-151-1D - Vapautus neuvoston direktiivin 2006/112/EY artiklan 151 "
+"kohdan 1 (d) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1e
@@ -1555,15 +1551,15 @@ msgid ""
 "VATEX-EU-151-1E - Exempt based on article 151, section 1 (e) of Council "
 "Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-151-1E - Vapautus neuvoston direktiivin 2006/112/EY 151 artiklan 1 "
-"kohdan e alakohdan perusteella"
+"VATEX-EU-151-1E - Vapautus neuvoston direktiivin 2006/112/EY artiklan 151 "
+"kohdan 1 (e) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-309
 msgid ""
 "VATEX-EU-309 - Exempt based on article 309 of Council Directive 2006/112/EC"
 msgstr ""
-"VATEX-EU-309 - Vapautus neuvoston direktiivin 2006/112/EY 309 artiklan "
+"VATEX-EU-309 - Vapautus neuvoston direktiivin 2006/112/EY artiklan 309 "
 "perusteella"
 
 #. module: account_edi_ubl_cii
@@ -1572,8 +1568,8 @@ msgid ""
 "VATEX-EU-79-C - Exempt based on article 79, point c of Council Directive "
 "2006/112/EC"
 msgstr ""
-"VATEX-EU-79-C - Vapautus neuvoston direktiivin 2006/112/EY 79 artiklan c "
-"alakohdan perusteella"
+"VATEX-EU-79-C - Vapautus neuvoston direktiivin 2006/112/EY artiklan 79 "
+"kohdan c perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-ae
@@ -1584,12 +1580,12 @@ msgstr "VATEX-EU-AE - Käänteinen verovelvollisuus"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-d
 msgid ""
 "VATEX-EU-D - Intra-Community acquisition from second hand means of transport"
-msgstr "VATEX-EU-D - Yhteisön sisäiset hankinnat käytetyistä kulkuneuvoista"
+msgstr "VATEX-EU-D - Yhteisöhankinnat käytetyistä kuljetusvälineistä"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-f
 msgid "VATEX-EU-F - Intra-Community acquisition of second hand goods"
-msgstr "VATEX-EU-F - Käytettyjen tavaroiden yhteisöhankinnat yhteisön sisällä"
+msgstr "VATEX-EU-F - Käytettyjen tavaroiden yhteisöhankinnat"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-g
@@ -1599,24 +1595,23 @@ msgstr "VATEX-EU-G - Vienti EU:n ulkopuolelle"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-i
 msgid "VATEX-EU-I - Intra-Community acquisition of works of art"
-msgstr "VATEX-EU-I - Yhteisön sisäiset taideteosten hankinnat"
+msgstr "VATEX-EU-I - Taideteosten yhteisöhankinnat"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-ic
 msgid "VATEX-EU-IC - Intra-Community supply"
-msgstr "VATEX-EU-IC - Yhteisön sisäiset luovutukset"
+msgstr "VATEX-EU-IC - Yhteisömyynti"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-j
 msgid ""
 "VATEX-EU-J - Intra-Community acquisition of collectors items and antiques"
-msgstr ""
-"VATEX-EU-J - Keräilyesineiden ja antiikkiesineiden yhteisön sisäinen hankinta"
+msgstr "VATEX-EU-J - Keräily- ja antiikkiesineiden yhteisöhankinta"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-o
 msgid "VATEX-EU-O - Not subject to VAT"
-msgstr "VATEX-EU-O - Ei alv:n alainen"
+msgstr "VATEX-EU-O - Ei ALV:n alainen"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cnwvat
@@ -1624,15 +1619,13 @@ msgid ""
 "VATEX-FR-CNWVAT - France domestic Credit Notes without VAT, due to supplier "
 "forfeit of VAT for discount"
 msgstr ""
-"VATEX-FR-CNWVAT - Ranskan kotimaiset hyvityslaskut ilman arvonlisäveroa, "
-"koska toimittaja ei ole maksanut arvonlisäveroa alennusta varten"
+"VATEX-FR-CNWVAT - Ranskan kotimaiset hyvityslaskut ilman arvonlisäveroa, kun "
+"toimittaja luopuu ALV-alennuksesta"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-franchise
 msgid "VATEX-FR-FRANCHISE - France domestic VAT franchise in base"
-msgstr ""
-"VATEX-FR-FRANCHISE - Ranskan kotimainen arvonlisäverotuksen franchising-"
-"verkkopohja"
+msgstr "VATEX-FR-FRANCHISE - Ranskan kotimainen ALV (franchise in base)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9953
@@ -1643,7 +1636,7 @@ msgstr "Vatikaanin ALV"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "View Partner(s)"
-msgstr "Näytä kumppanit"
+msgstr "Näytä kumppani(t)"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1658,7 +1651,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__aq
 msgid "X.400 address for mail text"
-msgstr "X.400 -osoite viestin tekstille"
+msgstr "X.400 -osoite postin tekstille"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1675,13 +1668,13 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__z
 msgid "Z - Zero rated goods"
-msgstr "Z - Nollaluokitellut tavarat"
+msgstr "Z - Nollaverokannan tavarat"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__invoice_edi_format
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__invoice_edi_format
 msgid "eInvoice format"
-msgstr "e-laskun muoto"
+msgstr "Sähköisen laskun muoto"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata

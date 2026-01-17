@@ -8,7 +8,7 @@
 # Mathieu Walravens, 2023
 # Abe Manyo, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # lpe <lpe@odoo.com>, 2025.
 msgid ""
@@ -16,10 +16,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2025-12-20 09:42+0000\n"
+"PO-Revision-Date: 2026-01-14 07:34+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/stock/"
-"id/>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
+"stock/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8154,6 +8154,9 @@ msgid ""
 "Quantity To Order has been manually forced, this quantity will be ordered "
 "instead."
 msgstr ""
+"Pulihkan produk sampai dengan Kuantitas Maks                     ditetapkan. "
+"Bila Kuantitas untuk Dipesan secara manual dipaksa, kuantitas ini akan alih-"
+"alih dipesan."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
@@ -9264,16 +9267,14 @@ msgstr "Pisahkan"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, fuzzy
-#| msgid "No Backorder"
 msgid "Split Backorder"
-msgstr "Tidak Backorder"
+msgstr "Pisah Backorder"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Split from %(original_picking_link)s."
-msgstr ""
+msgstr "Pisah dari %(original_picking_link)s."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -9310,7 +9311,7 @@ msgstr "Status"
 #. odoo-javascript
 #: code:addons/stock/static/src/fields/stock_picking_locked_statusbar_field.js:0
 msgid "Status bar with lock/unlock indicator for Pickings"
-msgstr ""
+msgstr "Bar status dengan indikator kunci/buka kunci untuk Picking"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_state
@@ -9770,10 +9771,8 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, fuzzy
-#| msgid "The backorder %s has been created."
 msgid "The backorder %(backorder_picking_link)s has been created."
-msgstr "Backorder %s telah dibuat."
+msgstr "Backorder %(backorder_picking_link)s telah dibuat."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq

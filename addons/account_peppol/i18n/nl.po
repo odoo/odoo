@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:36+0000\n"
-"PO-Revision-Date: 2026-01-08 16:50+0000\n"
+"POT-Creation-Date: 2026-01-16 18:36+0000\n"
+"PO-Revision-Date: 2026-01-14 16:32+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
 "account_peppol/nl/>\n"
@@ -461,6 +461,11 @@ msgid "Active Parent Company"
 msgstr "Actief moederbedrijf"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__active_parent_company_name
+msgid "Active Parent Company Name"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Advanced Configuration"
 msgstr "Geavanceerde configuratie"
@@ -720,7 +725,7 @@ msgid "Company"
 msgstr "Bedrijf"
 
 #. module: account_peppol
-#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__active_parent_company_name
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_name
 msgid "Company Name"
 msgstr "Bedrijfsnaam"
 
@@ -843,6 +848,11 @@ msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_use_parent_connection_selection
+msgid "Display Use Parent Connection Selection"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_identifier
 msgid "Document Identifier"
 msgstr "Identificatie van documenten"
@@ -888,7 +898,7 @@ msgstr "EDI-gebruiker moet van het type Peppol zijn"
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_identification
 msgid "Edi Identification"
-msgstr "EDI identificatie"
+msgstr "EDI-identificatie"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -926,7 +936,7 @@ msgid ""
 "please go to Settings > Accounting > Peppol Settings and click on 'Reconnect "
 "this database'."
 msgstr ""
-"Verbinding met Peppol Access Point mislukt. Dit kan gebeuren als je een "
+"Verbinding met Peppol Toegangspunt mislukt. Dit kan gebeuren als je een "
 "database hebt hersteld vanuit een back-up of hebt gekopieerd zonder deze te "
 "neutraliseren. Om dit op te lossen, ga je naar Instellingen > Boekhouding > "
 "Peppol Instellingen en klik je op 'Deze database opnieuw verbinden'."
@@ -1148,6 +1158,11 @@ msgstr "Overige"
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_proxy_state
 msgid "PEPPOL status"
 msgstr "PEPPOL-status"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_id
+msgid "Parent Company"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
@@ -1968,7 +1983,7 @@ msgstr "Dit nummer wordt alleen gebruikt voor identificatiedoeleinden."
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "This user is not registered on our Access Point."
-msgstr "Deze gebruiker is niet geregistreerd op ons Access Point."
+msgstr "Deze gebruiker is niet geregistreerd op ons Toegangspunt."
 
 #. module: account_peppol
 #. odoo-python
@@ -2241,7 +2256,7 @@ msgid ""
 "Your company is already registered on an Access Point (%s) for receiving "
 "invoices. We will register you on Odoo as a sender only."
 msgstr ""
-"Je bedrijf is al geregistreerd op een Access Point (%s) voor het ontvangen "
+"Je bedrijf is al geregistreerd op een Toegangspunt (%s) voor het ontvangen "
 "van facturen. Je wordt alleen als verzender in Odoo geregistreerd."
 
 #. module: account_peppol

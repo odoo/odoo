@@ -9,22 +9,22 @@
 # Kevilyn Rosa, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# "Maitê Dietze (madi)" <madi@odoo.com>, 2025.
+# "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2025-12-12 15:40+0000\n"
+"PO-Revision-Date: 2026-01-16 14:23+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
-"odoo-19/purchase/pt_BR/>\n"
+"odoo-s19-1/purchase/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
-"1000000 == 0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : "
+"((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: purchase
@@ -139,9 +139,48 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Prezado(a) <t t-out=\"object.partner_id.name or ''\">Brandon "
+"Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"       Aqui fica um lembrete de que a entrega da pedido de compra <span style"
+"=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref "
+"or ''\">REF_XXX</t>)</span>\n"
+"        </t>\n"
+"        é esperado para \n"
+"        <t t-if=\"object.date_planned\">\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date"
+"(object.date_planned) or ''\">05/05/2021</span>.\n"
+"        </t>\n"
+"         <t t-else=\"\">\n"
+"            <span style=\"font-weight:bold;\">indefinido</span>.\n"
+"        </t>\n"
+"        Você poderia confirmar se será entregue no prazo?\n"
+"        <br/><br/>\n"
+"        <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" "
+"style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-"
+"color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Reconhecer</a>\n"
+"        <br/><br/>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -182,9 +221,46 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Prezado <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+"\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"       </t>\n"
+"        <br/> <br/> \n"
+"        Segue em anexo um pedido de compra <span style=\"font-weight:bold;"
+"\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            com referência: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
+"\n"
+"        </t>\n"
+"        no valor de <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 10,00</span>\n"
+"        da <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
+"       <br/><br/> \n"
+"       <t t-if=\"object.date_planned\"> \n"
+"            A confirmação de recebimento é esperada para <span style=\"font-"
+"weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/"
+"2021</span>.\n"
+"           <br/><br/> \n"
+"            Você poderia confirmar o recebimento deste pedido? <br/><br/> <a "
+"t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" style=\"padding"
+": 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B;"
+" border: 1px solid #875A7B; border-radius: 3px\"> Confirmar</a>\n"
+"        </t> <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/> <br/>\n"
+"            <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"       </t>\n"
+"        <br/> <br/>\n"
+"    </p> \n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -213,6 +289,33 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Prezado <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+"\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"       </t>\n"
+"        <br/> <br/> \n"
+"        Segue em anexo uma solicitação de cotação <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            com referência: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
+"\n"
+"        </t>\n"
+"        da <t t-out=\"object.company_id.name or ''\">SuaEmpresa</t>.\n"
+"       <br/><br/> \n"
+"        Caso tenha alguma dúvida, não hesite em nos contatar.\n"
+"       <br/><br/> \n"
+"        Atenciosamente,\n"
+"       <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/> <br/>\n"
+"            <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"       </t>\n"
+"    </p> \n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -338,10 +441,8 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
-#, fuzzy
-#| msgid "<span class=\"o_stat_text\">Purchased</span>"
 msgid "<span groups=\"!uom.group_uom\">Purchased</span>"
-msgstr "<span class=\"o_stat_text\">Comprado</span>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -1406,10 +1507,8 @@ msgstr "Totalmente faturado"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__full
-#, fuzzy
-#| msgid "Bills Received"
 msgid "Fully Received"
-msgstr "Faturas recebidas"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -1981,10 +2080,8 @@ msgstr "Não reconhecido"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__pending
-#, fuzzy
-#| msgid "Qty Received"
 msgid "Not Received"
-msgstr "Qtd. recebida"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -2159,10 +2256,8 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__partial
-#, fuzzy
-#| msgid "Bills Received"
 msgid "Partially Received"
-msgstr "Faturas recebidas"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__partner_id
@@ -2691,18 +2786,14 @@ msgstr "E-mail de lembrete de recebimento"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_status
-#, fuzzy
-#| msgid "Status"
 msgid "Receipt Status"
-msgstr "Status"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
-#, fuzzy
-#| msgid "Received"
 msgid "Receive"
-msgstr "Recebido"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_at_date
@@ -2995,10 +3086,8 @@ msgstr "Mostrar comparação"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__show_receive_button
-#, fuzzy
-#| msgid "Received Quantity"
 msgid "Show Receive Button"
-msgstr "Quantidade recebida"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3421,10 +3510,8 @@ msgstr "Preço unitário (com desconto)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit_product_uom
-#, fuzzy
-#| msgid "Unit Price"
 msgid "Unit Price Product UoM"
-msgstr "Preço unitário"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
