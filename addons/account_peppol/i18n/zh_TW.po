@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"POT-Creation-Date: 2026-01-15 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
@@ -513,6 +513,11 @@ msgid "Peppol Ready invoices"
 msgstr "Peppol 準備好的發票"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_use_parent_company
+msgid "Peppol Use Parent Company"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_view_tree
 msgid "Peppol Validity"
 msgstr "Peppol 有效性"
@@ -819,6 +824,15 @@ msgstr "此功能已棄用。若需要遷移金鑰，請聯絡 Odoo 技術支援
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "This invoice has also been"
 msgstr "此發票也已經"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"This peppol identification is already used by %(parent_name)s. Please use "
+"something else."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
