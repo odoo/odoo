@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_pos_deleted_audit" model="ir.ui.view">
+        <field name="name">res.users.form.pos.deleted.audit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='access_rights']/group" position="inside">
+                <group string="Auditoría Eliminados POS">
+                    <field name="pos_delete_justification_enabled"/>
+                    <field name="pos_deleted_audit_can_delete"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
