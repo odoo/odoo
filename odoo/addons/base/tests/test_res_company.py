@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.api import lazy_property
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 
 
 class TestCompany(TransactionCase):
@@ -54,3 +55,43 @@ class TestCompany(TransactionCase):
     def test_create_branch_with_default_parent_id(self):
         branch = self.env['res.company'].with_context(default_parent_id=self.env.company.id).create({'name': 'Branch Company'})
         self.assertFalse(branch.partner_id.parent_id)
+
+
+class TestUserCompany(TransactionCase):
+
+    def test_get_company_ids_clear_cache(self):
+        self.env = self.env(user=self.env.ref('base.user_admin'))
+        self.assertFalse(self.env.su)
+        self.company_1 = self.env['res.company'].create({'name': 'Company 1'})
+        self.company_2 = self.env['res.company'].create({'name': 'Company 2'})
+        companies = self.env.user._get_company_ids()
+        self.assertIn(self.company_1.id, companies)
+        self.assertIn(self.company_2.id, companies)
+
+        # ensure that cache _get_company_ids will be called during the write
+        self.env.registry.clear_cache()
+        self.env.invalidate_all()
+        lazy_property.reset_all(self.env)
+        self.company_2.with_context(allowed_company_ids=[self.company_1.id]).active = False
+
+        companies = self.env.user._get_company_ids()
+        self.assertIn(self.company_1.id, companies)
+        # making this assertion fail is actually verry hard to reproduce since it will only occur if _get_company_ids is called betwwen the clear and the write
+        # this is not always the case because _get_company_ids is hiden behind another lazy_property, env.companies
+        # this can be warmup by some overrides, like _get_tax_closing_journal.
+        self.assertNotIn(self.company_2.id, companies, "Company2 should not be in _get_company_ids after it was deactivated")
+
+        self.env.registry.clear_cache()
+        self.env.invalidate_all()
+        lazy_property.reset_all(self.env)
+        self.company_2.with_context(allowed_company_ids=[self.company_1.id]).active = True
+
+        companies = self.env.user._get_company_ids()
+        self.assertIn(self.company_1.id, companies)
+        self.assertIn(self.company_2.id, companies, "Company2 should not be in _get_company_ids after it was deactivated")
+
+
+@tagged('post_install', '-at_install')
+class TestUserCompanyPostInstall(TestUserCompany):
+    def test_get_company_ids_clear_cache(self):
+        super().test_get_company_ids_clear_cache()
