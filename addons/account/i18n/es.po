@@ -25,15 +25,15 @@
 # Gelo, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 18:36+0000\n"
-"PO-Revision-Date: 2025-12-20 09:44+0000\n"
+"POT-Creation-Date: 2026-01-15 18:36+0000\n"
+"PO-Revision-Date: 2026-01-13 15:35+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/account/"
 "es/>\n"
@@ -2510,7 +2510,7 @@ msgid ""
 "                            </div>\n"
 "\n"
 "                            <div style=\"margin-top:32px; text-align:center;"
-"\">\n"
+"\" t-if=\"object.move_type != 'in_invoice'\">\n"
 "                                <a t-if=\"portal_url\" t-attf-"
 "href=\"{{ portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
 "padding:13px 30px; min-width:210px; background:linear-"
@@ -12830,7 +12830,7 @@ msgstr "Términos necesarios Dirty"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__amount_signed
 msgid "Negative value of amount field if payment_type is outbound"
-msgstr "Valor negativo del campo de cantidad si el payment_type es de salida."
+msgstr "Valor negativo del campo de importe si el payment_type es de salida"
 
 #. module: account
 #. odoo-python
@@ -21827,7 +21827,7 @@ msgstr "p. ej. Mi Compañía"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "e.g. finance@example.com; billing@example.com"
+msgid "e.g. finance@example.com; accountant@example.com"
 msgstr ""
 
 #. module: account
