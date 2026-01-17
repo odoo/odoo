@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-10 09:18+0000\n"
+"POT-Creation-Date: 2026-01-16 19:02+0000\n"
 "PO-Revision-Date: 2025-11-16 11:10+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s18-4-l10n/"
@@ -383,8 +383,8 @@ msgid ""
 "Error uploading the e-invoice file %(file)s.\n"
 "%(error)s"
 msgstr ""
-"Si è verificato un errore durante il caricamento della fattura elettronica "
-"%(file)s."
+"Si è verificato un errore durante il caricamento della fattura elettronica %"
+"(file)s."
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -743,8 +743,8 @@ msgid ""
 "(SpA, SApA, Srl), this field must contain the amount        of share capital "
 "actually paid up as resulting from the last        financial statement"
 msgstr ""
-"Obbligatorio se il venditore/fornitore è un'azienda con capitale sociale ("
-"SpA, SApA, Srl), il campo deve contenere l'ammontare del capitale sociale "
+"Obbligatorio se il venditore/fornitore è un'azienda con capitale sociale "
+"(SpA, SApA, Srl), il campo deve contenere l'ammontare del capitale sociale "
 "attuale come risulta dall'ultimo rendiconto finanziario."
 
 #. module: l10n_it_edi
@@ -1124,8 +1124,8 @@ msgid ""
 "It will try again for 10 days, after which it will be considered accepted, "
 "but you will still have to send it by post or e-mail."
 msgstr ""
-"La fattura elettronica %(file)s non può essere inviata a %(partner)s ("
-"Amministrazione pubblica) dall'SdI al momento.\n"
+"La fattura elettronica %(file)s non può essere inviata a %(partner)s "
+"(Amministrazione pubblica) dall'SdI al momento.\n"
 "Verranno effettuati nuovi tentativi per 10 giorni, in seguito verrà "
 "considerata accettata, ma dovrai inviarla via posta o e-mail."
 
@@ -1136,8 +1136,8 @@ msgid ""
 "The e-invoice file %(file)s couldn't be forwarded to %(partner)s.\n"
 "Please remember to send it via post or e-mail."
 msgstr ""
-"Non è stato possibile inviare la fattura elettronica %(file)s a %(partner)s."
-"\n"
+"Non è stato possibile inviare la fattura elettronica %(file)s a %"
+"(partner)s.\n"
 "Ricordati di inviarla via posta o e-mail."
 
 #. module: l10n_it_edi
@@ -1147,8 +1147,8 @@ msgid ""
 "The e-invoice file %(file)s has been accepted by %(partner)s (Public "
 "Administration), a payment will be issued soon"
 msgstr ""
-"La fattura elettronica %(file)s è stata accettata da %(partner)s ("
-"Amministrazione pubblica), il pagamento verrà effettuato a breve"
+"La fattura elettronica %(file)s è stata accettata da %(partner)s "
+"(Amministrazione pubblica), il pagamento verrà effettuato a breve"
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -1174,8 +1174,8 @@ msgid ""
 "contact the PA partner to create a new one according to their requests and "
 "submit it."
 msgstr ""
-"La fattura elettronica %(file)s è stata rifiutata da %(partner)s ("
-"Amministrazione pubblica).\n"
+"La fattura elettronica %(file)s è stata rifiutata da %(partner)s "
+"(Amministrazione pubblica).\n"
 "Hai 5 giorni da ora per effettuare il rimborso della fattura e contattare il "
 "partner PA per crearne e inviarne una nuova secondo le richieste."
 
@@ -1328,6 +1328,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "This document is being sent by another process already."
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.constraint,message:l10n_it_edi.constraint_account_edi_proxy_client_user_unique_identification_l10n_it_edi
+msgid "This edi identification is already assigned to an active user"
 msgstr ""
 
 #. module: l10n_it_edi
