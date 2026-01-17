@@ -10,15 +10,15 @@
 # Marta Wacławek, 2025
 # Wil Odoo, 2025
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2025
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-08 18:36+0000\n"
-"PO-Revision-Date: 2026-01-03 18:01+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-01-15 18:38+0000\n"
+"PO-Revision-Date: 2026-01-17 09:09+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/account/"
 "pl/>\n"
 "Language: pl\n"
@@ -10412,7 +10412,7 @@ msgid ""
 "partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "Ręcznie: Uzyskaj płatność za pomocą dowolnej metody poza Odoo.\n"
-"Dostawcy płatności: Każdy dostawca płatności ma swoją własną Metodę "
+"Operatorzy płatności: Każdy operator płatności ma swoją własną Metodę "
 "płatności. Zażądaj transakcji na/do karty dzięki tokenowi płatniczemu "
 "wpisanemu przez partnera podczas zakupu lub subskrypcji online.\n"
 "Depozyt wsadowy: Zbierz kilka czeków klientów jednocześnie generując i "
@@ -10453,7 +10453,7 @@ msgid ""
 msgstr ""
 "Instrukcja: Płać lub otrzymuj płatności za pomocą dowolnej metody poza "
 "Odoo.\n"
-"Dostawcy płatności: Każdy dostawca płatności ma swoją własną Metodę "
+"Operatorzy płatności: Każdy operator płatności ma swoją własną Metodę "
 "płatności. Zażądaj transakcji na/do karty dzięki tokenowi płatniczemu "
 "wpisanemu przez partnera podczas zakupu lub subskrypcji online.\n"
 "Czek: Płać rachunki czekiem i drukuj go z Odoo.\n"
@@ -15817,14 +15817,6 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "Wpis %(name)s (id %(id)s) musi być w wersji roboczej."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"The entry '%(move_name)s (id %(move_id)s) is using accounts from a different "
-"company."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -18924,6 +18916,12 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
 msgstr "Nie można zamieścić wpisu w zarchiwizowanym dzienniku (%(journal)s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
 
 #. module: account
 #. odoo-python

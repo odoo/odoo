@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-08 18:36+0000\n"
-"PO-Revision-Date: 2026-01-10 09:14+0000\n"
+"POT-Creation-Date: 2026-01-15 18:38+0000\n"
+"PO-Revision-Date: 2026-01-17 09:09+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/account/nl/"
 ">\n"
@@ -2433,7 +2433,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Accrued %(entry_type)s entry as of %(date)s"
-msgstr "Toegenomen %(entry_type)s boekingen vanaf %(date)s"
+msgstr "Overlopende %(entry_type)s boekingen vanaf %(date)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2443,7 +2443,7 @@ msgstr "Overlopende rekening"
 #. module: account
 #: model:ir.model,name:account.model_account_accrued_orders_wizard
 msgid "Accrued Orders Wizard"
-msgstr "Wizard overgelopen orders"
+msgstr "Wizard overlopende orders"
 
 #. module: account
 #. odoo-python
@@ -6877,7 +6877,7 @@ msgstr "Concept betaling"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft Purchase Receipt"
-msgstr "Concept inkoopbewijs"
+msgstr "Concept kassabon"
 
 #. module: account
 #. odoo-python
@@ -7401,7 +7401,7 @@ msgstr "Kostenrekening"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__expense_accrual_account
 #: model:ir.model.fields,field_description:account.field_res_company__expense_accrual_account_id
 msgid "Expense Accrual Account"
-msgstr "Grootboekrekening uitgestelde kosten"
+msgstr "Grootboekrekening overlopende kosten"
 
 #. module: account
 #: model:account.account,name:account.1_expense
@@ -13518,7 +13518,7 @@ msgstr "Omzet"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__revenue_accrual_account
 #: model:ir.model.fields,field_description:account.field_res_company__revenue_accrual_account_id
 msgid "Revenue Accrual Account"
-msgstr "Grootboekrekening uitgestelde omzet"
+msgstr "Grootboekrekening overlopende omzet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_id
@@ -14233,11 +14233,12 @@ msgid ""
 "emails are compromised. Once verified, you can activate the ability to send "
 "money."
 msgstr ""
-"Het verzenden van valse facturen met een frauduleus rekeningnummer is een "
-"veel voorkomende phishingpraktijk. Om jezelf te beschermen moet je altijd "
-"nieuwe rekeningsnummers controleren, bij voorkeur door de leverancier te "
-"bellen, want phishing gebeurt meestal wanneer hun e-mails gecompromitteerd "
-"zijn. Eenmaal gecontroleerd, kan je de functie om geld te sturen inschakelen."
+"Het versturen van valse facturen met een frauduleus rekeningnummer is een "
+"veelvoorkomende manier van phising. Om jezelf te beschermen moet je nieuwe "
+"rekeningnummers altijd controleren, bij voorkeur door de leverancier te "
+"bellen, aangezien phishing meestal plaatsvindt wanneer hun e-mails zijn "
+"gehackt. Na de controle kun je de mogelijkheid om geld over te maken "
+"activeren."
 
 #. module: account
 #. odoo-python
@@ -15877,21 +15878,13 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_origin
 #: model:ir.model.fields,help:account.field_account_move__invoice_origin
 msgid "The document(s) that generated the invoice."
-msgstr "De documenten die het factuur gegenereerd hebben."
+msgstr "De documenten die de factuur gegenereerd hebben."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "De boeking %(name)s (id %(id)s) moet in concept zijn."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"The entry '%(move_name)s (id %(move_id)s) is using accounts from a different "
-"company."
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
@@ -19019,6 +19012,12 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
 msgstr "Je kunt geen item in een gearchiveerd dagboek (%(journal)s) plaatsen"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
 
 #. module: account
 #. odoo-python
