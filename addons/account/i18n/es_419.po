@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-08 18:36+0000\n"
-"PO-Revision-Date: 2026-01-10 09:10+0000\n"
+"POT-Creation-Date: 2026-01-15 18:38+0000\n"
+"PO-Revision-Date: 2026-01-17 09:09+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-18/account/es_419/>\n"
@@ -14266,13 +14266,12 @@ msgid ""
 "emails are compromised. Once verified, you can activate the ability to send "
 "money."
 msgstr ""
-"Con frecuencia se reciben correos que contienen facturas falsas con números "
-"de cuenta fraudulentos, a esta práctica se le llama phishing. Es importante "
-"verificar los nuevos números de cuenta y la mejor manera de hacerlo es "
-"llamar al proveedor, lo cual es esencial porque si se encuentra en esta "
-"situación, quiere decir que el correo del proveedor está en peligro. Una vez "
-"que haya comprobado que la información es correcta, puede activar la función "
-"de enviar dinero."
+"Enviar facturas falsas con un número de cuenta fraudulento es una práctica "
+"común de phishing. Para protegerte, es importante que siempre verifiques los "
+"números de cuenta nuevos, de preferencia por teléfono con el proveedor, ya "
+"que el phishing suele ocurrir cuando sus correos están comprometidos. Una "
+"vez que hayas verificado que la información es correcta puedes activar la "
+"función para enviar dinero."
 
 #. module: account
 #. odoo-python
@@ -15926,14 +15925,6 @@ msgstr "El documento o documentos que generaron esta factura"
 #: code:addons/account/models/account_move.py:0
 msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "El asiento %(name)s (id %(id)s) debe ser un borrador."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"The entry '%(move_name)s (id %(move_id)s) is using accounts from a different "
-"company."
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
@@ -19062,6 +19053,12 @@ msgstr "No puede publicar un asiento en un diario archivado (%(journal)s)"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
@@ -19861,6 +19858,13 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Pago recibido (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "The entry '%(move_name)s (id %(move_id)s) is using accounts from a "
+#~ "different company."
+#~ msgstr ""
+#~ "El asiento contable %(move_name)s (id %(move_id)s) usa cuentas de una "
+#~ "empresa distinta."
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "No puede cambiar esta configuración después de crear una factura."

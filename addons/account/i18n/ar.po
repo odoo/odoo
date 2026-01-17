@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-08 18:36+0000\n"
+"POT-Creation-Date: 2026-01-15 18:38+0000\n"
 "PO-Revision-Date: 2026-01-10 09:10+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-18/account/"
@@ -15645,14 +15645,6 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "القيد %(name)s (المعرف %(id)s) يجب أن يكون في حالة المسودة. "
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"The entry '%(move_name)s (id %(move_id)s) is using accounts from a different "
-"company."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -18641,6 +18633,12 @@ msgstr "لا يمكنك القيام بهذا الإجراء في حساب يح�
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
 msgstr "لا يمكنك ترحيل قيد في يومية مؤرشفة (%(journal)s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
 
 #. module: account
 #. odoo-python

@@ -12,17 +12,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-01-10 09:07+0000\n"
-"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
+"POT-Creation-Date: 2026-01-15 18:38+0000\n"
+"PO-Revision-Date: 2026-01-17 09:05+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-18/mail/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: mail
@@ -214,9 +214,8 @@ msgstr "%(recipientCount)s más"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
-msgid "%(user)s connected. This is their first connection. Wish them luck."
+msgid "%(user)s just connected for the first time. Wish them luck!"
 msgstr ""
-"%(user)s se conectó. Es la primera vez que se conecta, dele la bienvenida."
 
 #. module: mail
 #. odoo-python
@@ -1870,7 +1869,7 @@ msgstr "Navegador predeterminado"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__endpoint
 msgid "Browser endpoint"
-msgstr "Punto de conexión del navegador "
+msgstr "Punto de conexión del navegador"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__keys
@@ -5405,11 +5404,11 @@ msgid ""
 "- auth: The auth value should be treated as a secret and not shared outside "
 "of Odoo"
 msgstr ""
-"Se refiere a las claves de navegador que la notificación utiliza: \n"
-"- p256dh: es la clave pública de suscripción que el navegador genera. El "
+"Se refiere a las claves del navegador que usa la notificación: \n"
+"- p256dh: es la clave pública de suscripción que genera el navegador. El "
 "navegador mantendrá \n"
-"          la clave privada como secreto y la usará para desencriptar la "
-"carga efectiva.\n"
+"          la clave privada en secreto y la usará para descifrar la carga "
+"útil.\n"
 "- auth: el valor auth debe tratarse como secreto y no se debe compartir "
 "fuera de Odoo."
 
@@ -12286,6 +12285,10 @@ msgstr "{{ object.partner_id.lang }}"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” en “%(channel_name)s”"
+
+#~ msgid "%(user)s connected. This is their first connection. Wish them luck."
+#~ msgstr ""
+#~ "%(user)s se conectó. Es la primera vez que se conecta, dele la bienvenida."
 
 #~ msgid "The channel type cannot be empty"
 #~ msgstr "El tipo de canal no puede estar vacío"

@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-08 18:36+0000\n"
+"POT-Creation-Date: 2026-01-15 18:38+0000\n"
 "PO-Revision-Date: 2026-01-02 15:49+0000\n"
 "Last-Translator: Vojtěch Olšan <vojtech.olsan@systee.cz>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-18/account/cs/"
@@ -15730,14 +15730,6 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "Záznam %(name)s (id %(id)s) musí být v návrhu."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"The entry '%(move_name)s (id %(move_id)s) is using accounts from a different "
-"company."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -18767,6 +18759,12 @@ msgstr "Tuto akci nelze provést na účtu, který obsahuje účetní položky."
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
 msgstr "Nemůžete zaúčtovat záznam v archivovaném deníku (%(journal)s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
 
 #. module: account
 #. odoo-python

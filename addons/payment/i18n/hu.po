@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment
+# * payment
 #
 # Translators:
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2024
@@ -16,20 +16,22 @@
 # Martin Trigaux, 2024
 # krnkris, 2024
 # gezza <geza.nagy@oregional.hu>, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2025\n"
-"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"POT-Creation-Date: 2026-01-15 18:39+0000\n"
+"PO-Revision-Date: 2026-01-17 12:48+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-18/"
+"payment/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
@@ -162,7 +164,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment method available</strong>"
-msgstr ""
+msgstr "<strong>Nincsenek fizetési lehetőségek beállítva</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -398,6 +400,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "Apply"
 msgstr "Alkalmazás"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_appota
+msgid "Appota"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -1391,6 +1398,11 @@ msgid "KrungThai Bank"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_kfh
+msgid "Kuwait Finance House"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_linepay
 msgid "LINE Pay"
 msgstr ""
@@ -2033,7 +2045,7 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_unknown
 msgid "Payment method"
-msgstr ""
+msgstr "Fizetési mód"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
@@ -2933,6 +2945,16 @@ msgid "VISA"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_vnptwallet
+msgid "VNPT Money"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_vpbank
+msgid "VP Bank"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation
 msgid "Validation of the payment method"
 msgstr ""
@@ -2943,8 +2965,18 @@ msgid "Venmo"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_vietcapital
+msgid "Viet Capital"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_vietcom
 msgid "Vietcombank"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_viettelpay
+msgid "Viettel Pay"
 msgstr ""
 
 #. module: payment
@@ -3029,6 +3061,11 @@ msgstr ""
 #: model:payment.provider,name:payment.payment_provider_transfer
 msgid "Wire Transfer"
 msgstr "Banki átutalás"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_woori
+msgid "Woori Bank"
+msgstr ""
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_worldline
@@ -3282,7 +3319,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 msgid "payment method"
-msgstr ""
+msgstr "fizetési mód"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
