@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_deleted_product_audit_tree" model="ir.ui.view">
+        <field name="name">pos.deleted.product.audit.tree</field>
+        <field name="model">pos.deleted.product.audit</field>
+        <field name="arch" type="xml">
+            <tree string="Productos Eliminados" default_order="deletion_datetime desc" delete="true">
+                <field name="order_name"/>
+                <field name="product_id"/>
+                <field name="removed_qty"/>
+                <field name="user_id"/>
+                <field name="deletion_datetime"/>
+                <field name="justification_summary" string="Justificación"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pos_deleted_product_audit_form" model="ir.ui.view">
+        <field name="name">pos.deleted.product.audit.form</field>
+        <field name="model">pos.deleted.product.audit</field>
+        <field name="arch" type="xml">
+            <form string="Producto Eliminado">
+                <sheet>
+                    <group>
+                        <field name="order_name"/>
+                        <field name="product_id"/>
+                        <field name="removed_qty"/>
+                        <field name="user_id"/>
+                        <field name="deletion_datetime"/>
+                        <field name="justification"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_pos_deleted_product_audit" model="ir.actions.act_window">
+        <field name="name">Productos Eliminados</field>
+        <field name="res_model">pos.deleted.product.audit</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_pos_deleted_product_audit_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No hay productos eliminados registrados.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_pos_deleted_product_audit"
+        name="Productos Eliminados"
+        parent="point_of_sale.menu_point_rep"
+        action="action_pos_deleted_product_audit"
+        sequence="50"
+        groups="pos_deleted_audit_restaurant.group_pos_deleted_audit_manager"/>
+</odoo>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_deleted_justification_tree" model="ir.ui.view">
+        <field name="name">pos.deleted.justification.tree</field>
+        <field name="model">pos.deleted.justification</field>
+        <field name="arch" type="xml">
+            <tree string="Justificaciones de Eliminaciones">
+                <field name="name"/>
+                <field name="description"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pos_deleted_justification_form" model="ir.ui.view">
+        <field name="name">pos.deleted.justification.form</field>
+        <field name="model">pos.deleted.justification</field>
+        <field name="arch" type="xml">
+            <form string="Justificación">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_pos_deleted_justification" model="ir.actions.act_window">
+        <field name="name">Justificaciones de Eliminaciones</field>
+        <field name="res_model">pos.deleted.justification</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Cree justificaciones predeterminadas para el POS.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_pos_deleted_justification"
+        name="Justificaciones de Eliminaciones"
+        parent="point_of_sale.menu_point_config_product"
+        action="action_pos_deleted_justification"
+        sequence="90"
+        groups="point_of_sale.group_pos_manager"/>
+</odoo>
