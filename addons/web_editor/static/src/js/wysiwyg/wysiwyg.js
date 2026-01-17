@@ -1840,7 +1840,13 @@ export class Wysiwyg extends Component {
                     this.mutex.exec(() => {
                         // TODO In master use a trigger parameter
                         const event = $.Event("image_changed", {_complete: resolve});
-                        $element.trigger(event);
+                        const events = $._data($element[0], "events");
+                        const hasListener = events && events["image_changed"];
+                        if (hasListener && hasListener.length) {
+                            $element.trigger(event);
+                        } else {
+                            resolve();
+                        }
                     });
                 });
             }
