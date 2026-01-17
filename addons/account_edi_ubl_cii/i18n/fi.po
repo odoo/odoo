@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_edi_ubl_cii
+# * account_edi_ubl_cii
 #
 # Translators:
 # Martin Trigaux, 2023
@@ -11,20 +11,22 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Wil Odoo, 2025
 # Jessica Jakara, 2025
-#
+# Saara Hakanen <sahak@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"PO-Revision-Date: 2026-01-17 08:16+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-17/"
+"account_edi_ubl_cii/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -34,8 +36,8 @@ msgid ""
 "%s should have a KVK or OIN number set in Company ID field or as Peppol e-"
 "address (EAS code 0106 or 0190)."
 msgstr ""
-"%s:n tulisi olla KVK- tai OIN-numero, joka on asetettu yritystunnukseksi "
-"sille omistettuun kenttään tai Peppol e-osoite (EAS-koodi 0106 tai 0190)."
+"%s:lla tulisi olla KVK- tai OIN-numero määritettynä yritystunnus-kenttään "
+"tai sähköiseksi Peppol-osoitteeksi (EAS-koodi 0106 tai 0190)."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0002
@@ -511,19 +513,19 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "A payment of %s was detected."
-msgstr "Havaittiin maksu %s."
+msgstr "Havaittiin maksu: %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "A rounding amount of %s was detected."
-msgstr "Pyöristysmäärä %s havaittu."
+msgstr "Havaittiin %s suuruinen pyöristys."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
-msgstr "A-NZ BIS laskutus 3.0"
+msgstr "A-NZ BIS Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__an
@@ -548,14 +550,14 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
 msgid "Account Move Send"
-msgstr "Lähetä tilin siirto"
+msgstr "Lähetä tilikirjaus"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Articles 226 items 11 to 15 Directive 2006/112/EN"
-msgstr "226 artiklan 11-15 kohta Direktiivi 2006/112/EN"
+msgstr "226 artiklan kohdat 11-15, direktiivi 2006/112/EN"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -609,8 +611,8 @@ msgid ""
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
 "codelist/eas/"
 msgstr ""
-"Koodi, jota käytetään BIS Billing 3.0:n ja sen johdannaisten päätepisteen "
-"tunnistamiseen.\n"
+"BIS Billing 3.0:n ja sen johdannaisten päätepisteen tunnistamiseen "
+"käytettävä koodi.\n"
 "             Luettelo on saatavilla osoitteessa https://docs.peppol.eu/poacc/"
 "billing/3.0/codelist/eas/"
 
@@ -618,8 +620,7 @@ msgstr ""
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_common
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
-msgstr ""
-"EDI-asiakirjojen yhteiset toiminnot: tietojen ja rajoitusten luominen jne"
+msgstr "EDI-asiakirjojen yleistoiminnot: tietojen luominen, rajoitukset, jne"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_company
@@ -646,7 +647,7 @@ msgstr "Asetukset"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_partner
 msgid "Contact"
-msgstr "Kontakti"
+msgstr "Yhteystiedot"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -657,8 +658,8 @@ msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and "
 "activate the currency?"
 msgstr ""
-"Valuuttaa ei voitu hakea: %s. Otitko monivaluutta-asetuksen käyttöön ja "
-"aktivoitko valuutan?"
+"Valuutan hakeminen ei onnistunut: %s. Onko sinulla monivaluutta-asetus "
+"käytössä ja valuutta aktivoituna?"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -707,7 +708,7 @@ msgstr "Kullakin laskurivillä saa olla vain yksi vero."
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line should have a product or a label."
-msgstr "Jokaisella laskurivillä on oltava tuote tai kuvaus."
+msgstr "Jokaisella laskurivillä on oltava tuote tai nimike."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -731,7 +732,7 @@ msgstr "Ota Ubl Cii Xml käyttöön"
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid "Errors occurred while creating the EDI document (format: %s):"
-msgstr "EDI-asiakirjan luomisessa tapahtui virheitä (muoto: %s):"
+msgstr "EDI-asiakirjaa luodessa tapahtui virheitä (muoto: %s):"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -758,15 +759,14 @@ msgid ""
 "For intracommunity supply, the actual delivery date or the invoicing period "
 "should be included."
 msgstr ""
-"Yhteisön sisäisten toimitusten osalta olisi ilmoitettava todellinen "
-"toimituspäivä tai laskutusjakso."
+"Yhteisömyynnissä on ilmoitettava todellinen toimituspäivä tai laskutusjakso."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "For intracommunity supply, the delivery address should be included."
-msgstr "Yhteisön sisäisten toimitusten osalta on ilmoitettava toimitusosoite."
+msgstr "Yhteisömyynnin tulee sisältää toimitusosoite."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__ubl_cii_format
@@ -797,7 +797,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Intra-Community supply"
-msgstr "Yhteisön sisäiset toimitukset"
+msgstr "Yhteisömyynti"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -821,7 +821,7 @@ msgstr "NLCIUS"
 msgid ""
 "No gross price, net price nor line subtotal amount found for line in xml"
 msgstr ""
-"Riville ei löydy bruttohintaa, nettohintaa, eikä rivin välisummaa xml:ssä"
+"Riville ei löydy bruttohintaa, nettohintaa, eikä välisummaa XML-muodossa"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -866,13 +866,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_endpoint
 msgid "Peppol Endpoint"
-msgstr "Peppol Endpoint"
+msgstr "Peppol-päätepiste"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_eas
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_eas
 msgid "Peppol e-address (EAS)"
-msgstr "Peppolin sähköpostiosoite (EAS)"
+msgstr "Peppol verkko-osoite (EAS)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_config_settings__invoice_is_ubl_cii
@@ -891,7 +891,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
 msgid "Report Action"
-msgstr "Raporttin"
+msgstr "Raporttitoiminto"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -925,7 +925,7 @@ msgid ""
 "The Peppol endpoint is not valid. It should contain exactly 10 digits "
 "(Company Registry number).The expected format is: 1234567890"
 msgstr ""
-"Peppol-päätepiste ei ole voimassa. Sen tulee sisältää täsmälleen 10 numeroa "
+"Peppol-päätepiste ei kelpaa. Sen tulee sisältää täsmälleen 10 numeroa "
 "(yritysrekisterinumero). Odotettu muoto on: 1234567890"
 
 #. module: account_edi_ubl_cii
@@ -933,7 +933,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 #, python-format
 msgid "The Peppol endpoint is not valid. The expected format is: 0239843188"
-msgstr "Peppol-päätepiste ei ole voimassa. Odotettu muoto on: 0239843188"
+msgstr "Peppol-päätepiste ei kelpaa. Odotettu muoto on: 0239843188"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -941,7 +941,7 @@ msgstr "Peppol-päätepiste ei ole voimassa. Odotettu muoto on: 0239843188"
 #, python-format
 msgid ""
 "The Peppol endpoint is not valid. The expected format is: 73282932000074"
-msgstr "Peppol-päätepiste ei ole voimassa. Odotettu muoto on: 73282932000074"
+msgstr "Peppol-päätepiste ei kelpaa. Odotettu muoto on: 73282932000074"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -951,22 +951,21 @@ msgid ""
 "The VAT number of the supplier does not seem to be valid. It should be of "
 "the form: NO179728982MVA."
 msgstr ""
-"Toimittajan ALV-numero ei näytä olevan voimassa. Sen pitäisi olla "
-"seuraavanlainen: NO179728982MVA."
+"Toimittajan ALV-numero ei kelpaa. Sen pitäisi olla muodossa: NO179728982MVA."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The VAT of the %s should be prefixed with its country code."
-msgstr "%s-arvonlisäveron etuliitteeksi on lisättävä sen maakoodi."
+msgstr "%s:n ALV-etuliitteen pitäisi olla sen maakoodi."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The country is required for the %s."
-msgstr "Maa tarvitaan %s."
+msgstr "%s vaatii maan."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -995,7 +994,7 @@ msgstr "Kenttä %s vaaditaan kentässä %s."
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #, python-format
 msgid "The field 'Sanitized Account Number' is required on the Recipient Bank."
-msgstr "Kenttä \"Sanitized Account Number\" vaaditaan vastaanottajapankissa."
+msgstr "Kenttä 'Siistitty tilinumero' vaaditaan vastaanottavassa pankissa."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1044,14 +1043,14 @@ msgstr "UBL 2.1"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_bis3
 msgid "UBL BIS Billing 3.0.12"
-msgstr "UBL BIS laskutus 3.0.12"
+msgstr "UBL BIS Billing 3.0.12"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__ubl_cii_xml_file
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__ubl_cii_xml_file
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_payment__ubl_cii_xml_file
 msgid "UBL/CII File"
-msgstr "UBL/CII-tiedosto"
+msgstr "UBL/CII -tiedosto"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -1061,7 +1060,7 @@ msgid ""
 "known as 'Endpoint ID'."
 msgstr ""
 "BIS Billing 3.0:n ja sen johdannaisten käyttämä yksilöllinen tunniste, joka "
-"tunnetaan myös nimellä \"Endpoint ID\"."
+"tunnetaan myös nimellä 'Päätepisteen tunnus'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
