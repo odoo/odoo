@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2026-01-06 15:22+0000\n"
+"PO-Revision-Date: 2026-01-15 08:07+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/base/ru/>"
 "\n"
@@ -2381,7 +2381,7 @@ msgid ""
 "Accounting reports for Spain\n"
 msgstr ""
 "\n"
-"Бухгалтерские отчеты для Испании\n"
+"Accounting reports for Spain\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_reports
@@ -8466,7 +8466,7 @@ msgid ""
 "Modelo 303: Extra fields regarding Rectificación\n"
 msgstr ""
 "\n"
-"Модель 303: Дополнительные поля для исправлений\n"
+"Modelo 303: Extra fields regarding Rectificación\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_integration_skills_monster
@@ -10332,6 +10332,22 @@ msgid ""
 "5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal "
 "Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 msgstr ""
+"\n"
+"Spanish charts of accounts (PGCE 2008).\n"
+"========================================\n"
+"\n"
+"    * Defines the following chart of account templates:\n"
+"        * Spanish general chart of accounts 2008\n"
+"        * Spanish general chart of accounts 2008 for small and medium "
+"companies\n"
+"        * Spanish general chart of accounts 2008 for associations\n"
+"    * Defines templates for sale and purchase VAT\n"
+"    * Defines tax templates\n"
+"    * Defines fiscal positions for spanish fiscal legislation\n"
+"    * Defines tax reports mod 111, 115, 130 and 303\n"
+"\n"
+"5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 "
+"(Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -12358,8 +12374,8 @@ msgid ""
 "localization and generates a mod 347 report.\n"
 msgstr ""
 "\n"
-"Этот модуль позволяет пользователю добавлять данные, связанные с "
-"недвижимостью, в испанскую локализацию и формировать отчёт mod 347.\n"
+"This module allows the user to add real estate related data to the Spanish "
+"localization and generates a mod 347 report.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_integration_website
@@ -12977,13 +12993,13 @@ msgid ""
 "FACE.aspx\n"
 msgstr ""
 "\n"
-"Этот модуль создаёт файл Facturae, необходимый для отправки информации о "
-"счетах-фактурах в Главные государственные администрации.\n"
-"Он поддерживает экспорт и подпись файлов Facturae.\n"
-"Текущая поддерживаемая версия Facturae — 3.2.2.\n"
+"This module create the Facturae file required to send the invoices "
+"information to the General State Administrations.\n"
+"It allows the export and signature of the signing of Facturae files.\n"
+"The current version of Facturae supported is the 3.2.2\n"
 "\n"
-"Для дополнительной информации см. https://www.facturae.gob.es/face/Paginas/"
-"FACE.aspx\n"
+"for more informations, see https://www.facturae.gob.es/face/Paginas/FACE."
+"aspx\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk_bacs
@@ -13987,17 +14003,16 @@ msgid ""
 "You need to configure your certificate and the tax agency.\n"
 msgstr ""
 "\n"
-"Этот модуль отправляет счета-фактуры и счета поставщиков в \"Diputaciones\n"
-"Forales\" Арабы/Алавы, Бискайи и Гипускоа.\n"
+"This module sends invoices and vendor bills to the \"Diputaciones\n"
+"Forales\" of Araba/Álava, Bizkaia and Gipuzkoa.\n"
 "\n"
-"Счета и счета-фактуры преобразуются в XML и регулярно отправляются на "
-"серверы\n"
-"правительства Басконии, которые присваивают им уникальный идентификатор.\n"
-"Цепочка хэшей обеспечивает непрерывность последовательности счетов/фактур.\n"
-"QR-коды добавляются к выпущенным (отправленным/распечатанным) счетам,\n"
-"счетам и билетам, чтобы любой мог проверить их декларирование.\n"
+"Invoices and bills get converted to XML and regularly sent to the\n"
+"Basque government servers which provides them with a unique identifier.\n"
+"A hash chain ensures the continuous nature of the invoice/bill\n"
+"sequences. QR codes are added to emitted (sent/printed) invoices,\n"
+"bills and tickets to allow anyone to check they have been declared.\n"
 "\n"
-"Необходимо настроить сертификат и налоговое агентство.\n"
+"You need to configure your certificate and the tax agency.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_edi_sii
@@ -14019,21 +14034,20 @@ msgid ""
 "You need to configure your certificate and the tax agency.\n"
 msgstr ""
 "\n"
-"Этот модуль отправляет информацию о налогах (в основном НДС)\n"
-"счетов поставщиков и счетов-фактур клиентов в SII. Процесс называется\n"
-"Procedimiento G417 - IVA. Llevanza de libros registro. Это\n"
-"обязательно для компаний с оборотом более 6 млн евро, но другие также могут\n"
-"воспользоваться этим. Счета-фактуры автоматически\n"
-"отправляются после подтверждения.\n"
+"This module sends the taxes information (mostly VAT) of the\n"
+"vendor bills and customer invoices to the SII.  It is called\n"
+"Procedimiento G417 - IVA. Llevanza de libros registro.  It is\n"
+"required for every company with a turnover of +6M€ and others can\n"
+"already make use of it.  The invoices are automatically\n"
+"sent after validation.\n"
 "\n"
-"Способ отправки информации в SII зависит от\n"
-"настроек, заданных в налогах. Налоги,\n"
-"включённые в шаблон плана счетов (l10n_es), автоматически\n"
-"настраиваются на правильный тип. Однако возможно,\n"
-"потребуется создать дополнительные налоги для определённых случаев "
-"освобождения/неподлежащих налогообложению.\n"
+"How the information is sent to the SII depends on the\n"
+"configuration that is put in the taxes.  The taxes\n"
+"that were in the chart template (l10n_es) are automatically\n"
+"configured to have the right type.  It is possible however\n"
+"that extra taxes need to be created for certain exempt/no sujeta reasons.\n"
 "\n"
-"Необходимо настроить сертификат и налоговое агентство.\n"
+"You need to configure your certificate and the tax agency.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_mrp_renting
@@ -16819,7 +16833,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_es_edi_verifactu_pos
 msgid "Add Veri*Factu support to Point of Sale"
-msgstr ""
+msgstr "Add Veri*Factu support to Point of Sale"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -21622,7 +21636,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_es_sale_amazon
 msgid "Bridge module between the Spanish localization and Amazon"
-msgstr "Модуль интеграции между испанской локализацией и Amazon"
+msgstr "Bridge module between the Spanish localization and Amazon"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_booth_sale_exhibitor
@@ -34661,7 +34675,7 @@ msgstr "Исключение модуля"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_es_edi_verifactu
 msgid "Module for sending Spanish Veri*Factu XML to the AEAT"
-msgstr ""
+msgstr "Module for sending Spanish Veri*Factu XML to the AEAT"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase_inter_company_rules
@@ -37401,7 +37415,7 @@ msgstr ""
 "\n"
 "Готовые блоки основаны на адаптивной, мобильно-дружелюбной системе сеток, "
 "которая\n"
-"автоматически масштабируется до 12 колонок по мере увеличения размера "
+"автоматически масштабируется до 12 столбцов по мере увеличения размера "
 "устройства или области просмотра.\n"
 "\n"
 "Профессиональные темы\n"
@@ -44221,67 +44235,67 @@ msgstr "Испания"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es
 msgid "Spain - Accounting (PGCE 2008)"
-msgstr "Испания — Бухгалтерия (PGCE 2008)"
+msgstr "Spain - Accounting (PGCE 2008)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports
 msgid "Spain - Accounting (PGCE 2008) Reports"
-msgstr "Испания — Отчеты по бухгалтерии (PGCE 2008)"
+msgstr "Spain - Accounting (PGCE 2008) Reports"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports_2024
 msgid "Spain - Accounting Reports (2024 Update)"
-msgstr "Испания — Бухгалтерские отчеты (обновление 2024)"
+msgstr "Spain - Accounting Reports (2024 Update)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_sale_amazon
 msgid "Spain - Amazon Connector"
-msgstr "Испания — Коннектор Amazon"
+msgstr "Spain - Amazon Connector"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_facturae
 msgid "Spain - Facturae EDI"
-msgstr "Испания — Facturae EDI"
+msgstr "Spain - Facturae EDI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_pos
 msgid "Spain - Point of Sale"
-msgstr "Испания — Точка продаж"
+msgstr "Spain - Point of Sale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_tbai_pos
 msgid "Spain - Point of Sale + TicketBAI"
-msgstr "Испания — Точка продаж + TicketBAI"
+msgstr "Spain - Point of Sale + TicketBAI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_real_estates
 msgid "Spain - Real Estates"
-msgstr "Испания — Недвижимость"
+msgstr "Spain - Real Estates"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_sii
 msgid "Spain - SII EDI Suministro de Libros"
-msgstr "Испания — SII EDI Suministro de Libros"
+msgstr "Spain - SII EDI Suministro de Libros"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_tbai
 msgid "Spain - TicketBAI"
-msgstr "Испания — TicketBAI"
+msgstr "Spain - TicketBAI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_verifactu
 msgid "Spain - Veri*Factu"
-msgstr ""
+msgstr "Spain - Veri*Factu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_verifactu_pos
 msgid "Spain - Veri*Factu for Point of Sale"
-msgstr ""
+msgstr "Spain - Veri*Factu for Point of Sale"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_es_pos
 msgid "Spanish localization for Point of Sale"
-msgstr "Испанская локализация для точки продаж"
+msgstr "Spanish localization for Point of Sale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_sparse_field
