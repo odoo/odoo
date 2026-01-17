@@ -81,7 +81,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "kiosk_simple_order")
+        self.start_tour(self_route, "test_duplicate_order_kiosk")
         orders = self.env['pos.order'].search(['&', ('state', '=', 'draft'), '|', ('config_id', '=', self.pos_config.id), ('config_id', 'in', self.pos_config.trusted_config_ids.ids)])
         self.assertEqual(len(orders), 1)
 

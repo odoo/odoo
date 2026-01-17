@@ -16,9 +16,11 @@ export class PrintPopup extends Component {
     setup() {
         this.pos = usePos();
         this.ui = useService("ui");
-        this.doFullPrint = useTrackedAsync(() => this.pos.printReceipt({ order: this.order }));
+        this.doFullPrint = useTrackedAsync(() =>
+            this.pos.ticketPrinter.printOrderReceipt({ order: this.order })
+        );
         this.doBasicPrint = useTrackedAsync(() =>
-            this.pos.printReceipt({ order: this.order, basic: true })
+            this.pos.ticketPrinter.printOrderReceipt({ order: this.order, basic: true })
         );
         if (this.printList.length === 1) {
             this.printList[0].method();

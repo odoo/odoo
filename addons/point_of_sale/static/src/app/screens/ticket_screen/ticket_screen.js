@@ -135,7 +135,7 @@ export class TicketScreen extends Component {
         }
     }
     async print(order) {
-        await this.pos.printReceipt({ order: order });
+        await this.pos.ticketPrinter.printOrderReceipt({ order });
     }
     async onFilterSelected(selectedFilter) {
         this.state.filter = selectedFilter;
@@ -200,7 +200,7 @@ export class TicketScreen extends Component {
     async onClickReprintAll(order) {
         const printingChanges = order.uiState?.lastPrints;
         if (printingChanges) {
-            await this.pos.printChanges(order, printingChanges, true);
+            await this.pos.ticketPrinter.printOrderChanges({ order, opts: printingChanges });
         }
     }
     async onNextPage() {

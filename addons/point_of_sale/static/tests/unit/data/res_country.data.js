@@ -13,7 +13,7 @@ export class ResCountry extends webModels.ResCountry {
             id: 233,
             name: "United States",
             code: "US",
-            vat_label: "",
+            vat_label: "TIN",
         },
     ];
 }

@@ -97,8 +97,14 @@ export function checkTicketData(data, basic = false) {
     //   }],
     // }
     const check = async (data, basic) => {
-        const generator = posmodel.getOrderReceiptGenerator(posmodel.getOrder(), basic);
-        const ticket = await generator.generateHtml();
+        const order = posmodel.getOrder();
+        const orderData = posmodel.ticketPrinter.getOrderReceiptData(order, basic);
+        const iframe = await posmodel.ticketPrinter.generateIframe(
+            "point_of_sale.pos_order_receipt",
+            orderData
+        );
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        const ticket = doc.getElementById("pos-receipt");
 
         if (!ticket && !Object.keys(data).length) {
             return true;

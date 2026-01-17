@@ -10,6 +10,7 @@
         'l10n_sa_edi',
     ],
     'data': [
+        'receipt/pos_receipt_common.xml',
         'receipt/pos_order_receipt.xml',
     ],
     'summary': "ZATCA E-Invoicing, support for PoS",

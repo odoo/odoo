@@ -26,6 +26,7 @@ This module adds several features to the Point of Sale that are specific to rest
         'views/pos_preset_views.xml',
         'views/res_config_settings_views.xml',
         'receipt/pos_order_receipt.xml',
+        'receipt/pos_order_change_receipt.xml',
     ],
     'demo': [
         'data/demo_data.xml',

@@ -5,7 +5,6 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useRef, onMounted } from "@odoo/owl";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
-import { TipReceipt } from "@point_of_sale/app/components/tip_receipt/tip_receipt";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 
 export class TipScreen extends Component {
@@ -17,7 +16,6 @@ export class TipScreen extends Component {
         this.pos = usePos();
         this.posReceiptContainer = useRef("pos-receipt-container");
         this.dialog = useService("dialog");
-        this.printer = useService("printer");
         this.state = this.currentOrder.uiState.TipScreen;
         this._totalAmount = this.currentOrder.priceIncl;
         useRouterParamsChecker();
@@ -121,15 +119,7 @@ export class TipScreen extends Component {
             Boolean
         );
         for (let i = 0; i < receipts.length; i++) {
-            await this.printer.print(
-                TipReceipt,
-                {
-                    data: receipts[i] || {},
-                    order: order,
-                    total: this.env.utils.formatCurrency(this.totalAmount),
-                },
-                { webPrintFallback: false }
-            );
+            await this.pos.ticketPrinter.printTipReceipt({ order, name: receipts[i] });
         }
     }
 }

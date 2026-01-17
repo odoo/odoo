@@ -35,7 +35,6 @@ export class PaymentScreen extends Component {
         this.dialog = useService("dialog");
         this.invoiceService = useService("account_move");
         this.notification = useService("notification");
-        this.printer = useService("printer");
         this.payment_methods_from_config = this.configPaymentMethods || [];
         this.numberBuffer = useService("number_buffer");
         this.numberBuffer.use(this._getNumberBufferConfig);

@@ -4,7 +4,6 @@ import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 import { PrintingFailurePopup } from "@pos_self_order/app/components/printing_failure_popup/printing_failure_popup";
-import { GeneratePrinterData } from "@point_of_sale/app/utils/generate_printer_data";
 
 export class ConfirmationPage extends Component {
     static template = "pos_self_order.ConfirmationPage";
@@ -13,7 +12,6 @@ export class ConfirmationPage extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
-        this.printer = useService("printer");
         this.dialog = useService("dialog");
         this.changeToDisplay = [];
         this.state = useState({
@@ -30,11 +28,16 @@ export class ConfirmationPage extends Component {
         });
         useEffect(
             () => {
-                if (!this.confirmedOrder) {
+                if (!this.confirmedOrder || !this.confirmedOrder.uiState?.receiptReady) {
                     return;
                 }
 
-                this.printOrder();
+                const printReceipts = async () => {
+                    await this.printOrder();
+                    await this.printOrderChanges();
+                };
+
+                printReceipts();
             },
             () => [this.confirmedOrder?.uiState?.receiptReady]
         );
@@ -92,14 +95,22 @@ export class ConfirmationPage extends Component {
         return true;
     }
 
+    async printOrderChanges() {
+        if (this.selfOrder.config.self_ordering_mode === "kiosk") {
+            const order = this.confirmedOrder;
+            await this.selfOrder.ticketPrinter.printOrderChanges({ order, webFallback: false });
+        }
+    }
+
     async printOrder() {
         if (this.selfOrder.config.self_ordering_mode === "kiosk" && this.canPrintReceipt()) {
             try {
                 this.isPrinting = true;
                 const order = this.confirmedOrder;
-                const generator = new GeneratePrinterData(order);
-                const data = generator.generateHtml();
-                const result = await this.printer.printHtml(data, this.printOptions);
+                const result = await this.selfOrder.ticketPrinter.printOrderReceipt({
+                    order,
+                    webFallback: false,
+                });
 
                 if (!this.selfOrder.has_paper) {
                     this.updateHasPaper(true);

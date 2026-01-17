@@ -2,7 +2,7 @@ import { Transition } from "@web/core/transition";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { Navbar } from "@point_of_sale/app/components/navbar/navbar";
 import { usePos, usePosRouter } from "@point_of_sale/app/hooks/pos_hook";
-import { reactive, Component, onMounted, onWillStart } from "@odoo/owl";
+import { reactive, Component, onMounted } from "@odoo/owl";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { CustomerDisplayPosAdapter } from "@point_of_sale/app/customer_display/customer_display_adapter";
 import { useIdleTimer } from "./utils/use_idle_timer";
@@ -48,7 +48,6 @@ export class Chrome extends Component {
             body.classList.add("big-scrollbars");
         }
 
-        onWillStart(this.pos._loadFonts);
         onMounted(this.props.disableLoader);
         effect(
             debounce((pos, routerState) => {

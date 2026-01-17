@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="pos_restaurant.pos_order_change_receipt" inherit_id="point_of_sale.pos_order_change_receipt">
+            <div name="receipt-header" position="inside">
+                <div class="pos-customer-info" t-if="order.get('customer_count') or extra_data.get('table_name')">
+                    <span t-if="extra_data.get('table_name')">Table <t t-out="extra_data['table_name']" /></span>
+                    <span t-if="extra_data.get('table_name') and order.get('customer_count')">, </span>
+                    <span t-if="order.get('customer_count')">Guest <t t-out="order['customer_count']"/></span>
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

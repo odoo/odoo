@@ -588,7 +588,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         cls.printer = cls.env['pos.printer'].create({
             'name': 'Printer',
             'printer_type': 'epson_epos',
-            'epson_printer_ip': '0.0.0.0',
+            'printer_ip': '0.0.0.0',
             'use_type': 'receipt',
         })
 
@@ -1548,7 +1548,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['pos.printer'].create({
             'name': 'Printer',
             'printer_type': 'epson_epos',
-            'epson_printer_ip': '0.0.0.0',
+            'printer_ip': '0.0.0.0',
             'use_type': 'preparation',
             'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
         })
@@ -3045,7 +3045,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         pos_printer = self.env['pos.printer'].create({
             'name': 'Printer',
             'printer_type': 'epson_epos',
-            'epson_printer_ip': '0.0.0.0',
+            'printer_ip': '0.0.0.0',
             'use_type': 'receipt',
         })
         self.main_pos_config.write({
@@ -3175,6 +3175,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({
             'iface_print_auto': True,
             'iface_print_skip_screen': True,
+            'receipt_printer_ids': [self.printer.id],
+            'default_receipt_printer_id': self.printer.id,
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()

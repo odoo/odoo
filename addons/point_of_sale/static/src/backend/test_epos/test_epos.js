@@ -52,7 +52,7 @@ export class TestEPos extends Component {
             const response = await this.orm.read(
                 "pos.printer",
                 [printer_id],
-                ["epson_printer_ip", "name", "printer_type", "use_lna"]
+                ["printer_ip", "name", "printer_type", "use_lna"]
             );
             return response[0];
         } else {
@@ -60,7 +60,7 @@ export class TestEPos extends Component {
             return {
                 id: this.props.record.resId || null,
                 name: data.name,
-                epson_printer_ip: data.epson_printer_ip,
+                printer_ip: data.printer_ip,
                 printer_type: data.printer_type,
                 use_lna: data.use_lna,
             };
@@ -135,7 +135,7 @@ export class TestEPos extends Component {
                         EPSON_ERRORS[errorCode] ||
                         _t("Failed to print a test receipt. Check your printer.");
                     this.notification.add(
-                        `${printer.name} (${printer.epson_printer_ip}): ${errorMessage}`,
+                        `${printer.name} (${printer.printer_ip}): ${errorMessage}`,
                         {
                             type: "warning",
                         }
@@ -143,9 +143,7 @@ export class TestEPos extends Component {
                 }
             } catch {
                 this.notification.add(
-                    `${printer.name} (${printer.epson_printer_ip}): ${_t(
-                        "Cannot reach the printer."
-                    )}`,
+                    `${printer.name} (${printer.printer_ip}): ${_t("Cannot reach the printer.")}`,
                     { type: "danger" }
                 );
             }

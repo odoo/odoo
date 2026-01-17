@@ -171,4 +171,47 @@ export class DebugWidget extends Component {
     get bufferRepr() {
         return `"${this.state.buffer}"`;
     }
+
+    get randomOrder() {
+        const orderLength = this.pos.models["pos.order"].length;
+        const randomIndex = Math.floor(Math.random() * orderLength);
+        return this.pos.models["pos.order"].getAll()[randomIndex];
+    }
+
+    async cashInOutPrint() {
+        await this.pos.ticketPrinter.printCashMoveReceipt({
+            reason: "Some random reason",
+            translatedType: "In",
+            order: this.pos.models["pos.order"].getFirst(),
+            formattedAmount: "$100.00",
+        });
+    }
+
+    async openCashBox() {
+        await this.pos.ticketPrinter.openCashbox();
+    }
+
+    async randomOrderPrint() {
+        await this.pos.ticketPrinter.printOrderReceipt({ order: this.randomOrder });
+    }
+
+    async printTipReceipt() {
+        await this.pos.ticketPrinter.printTipReceipt({
+            order: this.randomOrder,
+            name: "Random tip receipt",
+        });
+    }
+
+    async printSaleDetails() {
+        await this.pos.ticketPrinter.printSaleDetailsReceipt();
+    }
+
+    async printOrderChanges() {
+        const order = this.pos.getOrder();
+        if (!order) {
+            this.notification.add(_t("No order to print changes for."), { type: "warning" });
+            return;
+        }
+        await this.pos.ticketPrinter.printOrderChanges({ order });
+    }
 }

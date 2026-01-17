@@ -17,7 +17,6 @@ export class SendReceiptPopup extends Component {
 
     setup() {
         this.pos = usePos();
-        this.renderer = useService("renderer");
         this.ui = useService("ui");
         this.dialog = useService("dialog");
         const partner = this.order.getPartner();

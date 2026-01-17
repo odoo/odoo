@@ -25,8 +25,7 @@ registry.category("web_tour.tours").add("test_receipt_data_pos_loyalty", {
                 run: async () => {
                     const order = posmodel.models["pos.order"].find((o) => o.finalized);
                     await posmodel.postProcessLoyalty(order);
-                    const generator = posmodel.getOrderReceiptGenerator(order);
-                    const data = generator.generateData();
+                    const data = posmodel.ticketPrinter.getOrderReceiptData(order);
                     try {
                         await posmodel.data.call("pos.order", "get_order_frontend_receipt_data", [
                             [order.id],

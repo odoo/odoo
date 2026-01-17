@@ -112,7 +112,7 @@ registry.category("web_tour.tours").add("self_order_kiosk_cancel", {
     ],
 });
 
-registry.category("web_tour.tours").add("kiosk_simple_order", {
+registry.category("web_tour.tours").add("test_duplicate_order_kiosk", {
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
