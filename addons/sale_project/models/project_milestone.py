@@ -34,7 +34,7 @@ class ProjectMilestone(models.Model):
 
     sale_line_display_name = fields.Char("Sale Line Display Name", related='sale_line_id.display_name', export_string_translation=False)
     product_uom_id = fields.Many2one(related="sale_line_id.product_uom_id", export_string_translation=False)
-    product_uom_qty = fields.Float("Quantity", compute="_compute_product_uom_qty", readonly=False)
+    product_uom_qty = fields.Float("Quantity", compute="_compute_product_uom_qty", compute_sudo=True, readonly=False)
 
     @api.depends('sale_line_id.product_uom_qty', 'product_uom_qty')
     def _compute_quantity_percentage(self):
