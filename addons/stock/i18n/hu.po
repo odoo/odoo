@@ -18,13 +18,14 @@
 # Szabolcs Rádi, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Nagy Géza <geza.nagy@oregional.hu>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-08 19:02+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-01-09 18:36+0000\n"
+"PO-Revision-Date: 2026-01-16 08:00+0000\n"
+"Last-Translator: Nagy Géza <geza.nagy@oregional.hu>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/stock/"
 "hu/>\n"
 "Language: hu\n"
@@ -32,7 +33,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -639,7 +640,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Allocation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kiosztás</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -678,7 +679,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Moves</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Mozgások</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -704,7 +705,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 msgid "<span class=\"o_stat_text\">Product Moves</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Termékmozgások</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -726,7 +727,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "<span class=\"o_stat_text\">Traceability</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Nyomonkövetés</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -814,7 +815,7 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
+msgid "<strong>Customer</strong>"
 msgstr ""
 
 #. module: stock
@@ -825,6 +826,11 @@ msgstr "<strong>Kiszállított</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
 msgstr ""
 
 #. module: stock
@@ -1456,7 +1462,7 @@ msgstr "Hozzárendelés"
 #: code:addons/stock/static/src/components/reception_report_table/stock_reception_report_table.xml:0
 #: code:addons/stock/static/src/xml/report_stock_reception.xml:0
 msgid "Assign All"
-msgstr ""
+msgstr "Összes hozzárendelése"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__owner_id
@@ -1544,12 +1550,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_reception_report
 msgid "Auto Print Reception Report"
-msgstr ""
+msgstr "Átvétel riport automatikus nyomtatása"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_reception_report_labels
 msgid "Auto Print Reception Report Labels"
-msgstr ""
+msgstr "Átvétel riport címkék automatikus nyomtatása"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_return_slip
@@ -1697,7 +1703,7 @@ msgstr "Alapján"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch, Wave & Cluster Transfers"
-msgstr ""
+msgstr "Köteg, hullám & klaszter átvitelek"
 
 #. module: stock
 #. odoo-python
@@ -3966,7 +3972,7 @@ msgstr "Van üzenet"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_scrap_move
 msgid "Has Scrap Moves"
-msgstr "Van selejt"
+msgstr "Van selejt mozgás"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_tracking
@@ -5634,7 +5640,7 @@ msgstr "Mozgások"
 #: model:ir.actions.act_window,name:stock.stock_move_action
 #: model:ir.ui.menu,name:stock.stock_move_menu
 msgid "Moves Analysis"
-msgstr ""
+msgstr "Mozgások elemzése"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_line_action
@@ -5858,7 +5864,7 @@ msgstr ""
 #: code:addons/stock/static/src/components/reception_report_main/stock_reception_report_main.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "No allocation need found."
-msgstr ""
+msgstr "Nem található kiosztási igény."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
@@ -6294,7 +6300,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Origin Moves"
-msgstr ""
+msgstr "Forrás mozgások"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__origin_package_ids
@@ -7050,6 +7056,7 @@ msgstr "Termék kategóriák"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_category_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_category_name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
@@ -7658,7 +7665,7 @@ msgstr "Beszállítások"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Receive From"
-msgstr ""
+msgstr "Partner"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__one_step
@@ -7705,17 +7712,17 @@ msgstr "Érkezett menny."
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_reception_report
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Reception Report"
-msgstr ""
+msgstr "Átvétel riport"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_picking
 msgid "Reception Report Label"
-msgstr ""
+msgstr "Átvétel riport címke"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Reception Report Labels"
-msgstr ""
+msgstr "Átvétel riport címkék"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
@@ -8136,7 +8143,7 @@ msgstr "Készlet kiigazítás visszacsinálása"
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "Reverted Moves"
-msgstr ""
+msgstr "VIsszafordított mozgások"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__route_id
@@ -8705,7 +8712,7 @@ msgstr "Rövidített név a raktár azonosítására"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_allocation
 msgid "Show Allocation"
-msgstr ""
+msgstr "Kiosztás megjelenítése"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_check_availability
@@ -8770,7 +8777,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_show_reception_report
 msgid "Show Reception Report at Validation"
-msgstr ""
+msgstr "Átvétel riport megjelenítése jóváhagyáskor"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__show_supply_warning
@@ -9034,7 +9041,7 @@ msgstr "Készletmozgások"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_graph
 #: model_terms:ir.ui.view,arch_db:stock.view_move_pivot
 msgid "Stock Moves Analysis"
-msgstr "Készletmozgás analízis"
+msgstr "Készletmozgás elemzés"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__move_id
@@ -9076,7 +9083,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_reception
 msgid "Stock Reception Report"
-msgstr ""
+msgstr "Készletátvétel riport"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
@@ -9309,6 +9316,7 @@ msgid ""
 "Technical Field used to decide whether the button \"Allocation\" should be "
 "displayed."
 msgstr ""
+"Technikai mező annak eldöntésére, hogy megjelenjen-e a \"Kiosztás\" gomb."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__lot_sequence_id
@@ -10316,7 +10324,7 @@ msgstr "Egység"
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Egységek és csomagolások"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
@@ -10400,7 +10408,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_reception_report
 msgid "Use Reception Report"
-msgstr ""
+msgstr "Átvételi riport használata"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10552,7 +10560,7 @@ msgstr "Másik műveletre várakozás"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Waiting Moves"
-msgstr "Mozgásokra vár"
+msgstr "Várakozó mozgások"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting

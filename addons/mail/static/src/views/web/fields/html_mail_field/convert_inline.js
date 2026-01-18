@@ -1,5 +1,7 @@
 import { isBlock } from "@html_editor/utils/blocks";
 import { getAdjacentPreviousSiblings } from "@html_editor/utils/dom_traversal";
+import { loadImage } from "@html_editor/utils/image_processing";
+import { getImageSrc } from "@html_editor/utils/image";
 import { blendColors } from "@web/core/utils/colors";
 
 function parentsGet(node, root = undefined) {
@@ -869,6 +871,7 @@ function enforceImagesResponsivity(element) {
  *                            specificity: number;}>
  */
 export async function toInline(element, cssRules) {
+    await waitUntilImagesLoaded(element);
     // Fix card-img-top heights (must happen before we transform everything).
     for (const imgTop of element.querySelectorAll(".card-img-top")) {
         imgTop.style.setProperty("height", _getHeight(imgTop) + "px");
@@ -2123,4 +2126,15 @@ function correctBorderAttributes(style) {
         return style;
     }
     return style.trim().replace(/;?$/, "; border-style: solid;");
+}
+
+function waitUntilImagesLoaded(root) {
+    const promises = [];
+    for (const img of root.querySelectorAll('img[src]:not([src=""])')) {
+        const src = getImageSrc(img);
+        if (src) {
+            promises.push(loadImage(src));
+        }
+    }
+    return Promise.allSettled(promises);
 }

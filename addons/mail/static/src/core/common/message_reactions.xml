@@ -6,7 +6,8 @@
             'flex-row-reverse me-3': env.inChatWindow and env.alignedRight,
             'ms-3': !(env.inChatWindow and env.alignedRight) and (props.message.isDiscussion),
             'o-emojiPickerOpen': emojiPicker.isOpen,
-            'mt-n1': props.message.message_type === 'comment',
+            'mt-n1': props.message.message_type === 'comment' and !props.message.attachment_ids.length,
+            'o-mt-0_5': props.message.attachment_ids.length,
         }">
         <t t-foreach="props.message.reactions" t-as="reaction" t-key="reaction.content">
             <MessageReactionList message="this.props.message" openReactionMenu="this.props.openReactionMenu" reaction="reaction"/>

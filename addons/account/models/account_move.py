@@ -386,6 +386,7 @@ class AccountMove(models.Model):
         copy=False,
         store=True,
         compute='_compute_delivery_date',
+        inverse='_inverse_delivery_date',
         precompute=True,
         readonly=False,
     )
@@ -1122,16 +1123,20 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.invoice_date or fields.Date.context_today(self)
 
+    def _get_expected_currency_rate_at(self, date):
+        self.ensure_one()
+        return self.env['res.currency']._get_conversion_rate(
+            from_currency=self.company_currency_id,
+            to_currency=self.currency_id,
+            company=self.company_id,
+            date=date,
+        )
+
     @api.depends('currency_id', 'company_currency_id', 'company_id', 'invoice_date', 'taxable_supply_date')
     def _compute_expected_currency_rate(self):
         for move in self:
             if move.currency_id:
-                move.expected_currency_rate = move.env['res.currency']._get_conversion_rate(
-                    from_currency=move.company_currency_id,
-                    to_currency=move.currency_id,
-                    company=move.company_id,
-                    date=move._get_invoice_currency_rate_date(),
-                )
+                move.expected_currency_rate = move._get_expected_currency_rate_at(move._get_invoice_currency_rate_date())
             else:
                 move.expected_currency_rate = 1
 
@@ -2486,6 +2491,9 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # INVERSE METHODS
     # -------------------------------------------------------------------------
+
+    def _inverse_delivery_date(self):
+        pass
 
     def _inverse_tax_totals(self):
         with self._disable_recursion({'records': self}, 'skip_invoice_sync') as disabled:
@@ -5500,8 +5508,7 @@ class AccountMove(models.Model):
             # lines are recomputed accordingly (if the user didnt' change the rate manually)
             if not invoice.invoice_date:
                 if invoice.is_sale_document(include_receipts=True):
-                    is_manual_rate = invoice.invoice_currency_rate != invoice.expected_currency_rate
-                    # keep the rate set by the user
+                    is_manual_rate = invoice.invoice_currency_rate != invoice._get_expected_currency_rate_at(invoice.create_date.date())
                     with self.env.protecting([self._fields['invoice_currency_rate']], invoice) if is_manual_rate else nullcontext():
                         invoice.invoice_date = fields.Date.context_today(self)
                 elif invoice.is_purchase_document(include_receipts=True):
@@ -5764,7 +5771,22 @@ class AccountMove(models.Model):
         }
 
     def action_update_fpos_values(self):
-        self.invoice_line_ids._compute_price_unit()
+        lines_to_recompute = self.env['account.move.line']
+        for line in self.invoice_line_ids:
+            if line.display_type in ('line_section', 'line_note'):
+                continue
+            if not line.price_unit:
+                lines_to_recompute |= line
+                continue
+            new_taxes = line._get_computed_taxes()
+            if line.tax_ids.filtered('price_include') != new_taxes.filtered('price_include'):
+                line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
+                    line.price_unit,
+                    line.tax_ids,
+                    fiscal_position=line.move_id.fiscal_position_id,
+                    product_taxes_after_fp=new_taxes,
+                )
+        lines_to_recompute._compute_price_unit()
         self.invoice_line_ids._compute_tax_ids()
         self.line_ids._compute_account_id()
 

@@ -5,9 +5,10 @@ from datetime import date
 from freezegun import freeze_time
 
 from odoo import Command, fields
-from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests import tagged, Form
+from odoo.tests import Form, tagged
+
+from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 
 
 @tagged('-at_install', 'post_install')
@@ -149,6 +150,18 @@ class TestExpenses(TestExpenseCommon):
             {'balance':   18.46, 'account_id': tax_account_id,              'name': '15% (copy)',                                'date': date(2021, 10, 11), 'invoice_date': False},
             {'balance': -160.00, 'account_id': company_payment_account_id,  'name': 'expense_employee: Company PB 160 + 2*15%',  'date': date(2021, 10, 11), 'invoice_date': False},
 
+        ])
+
+        # Check lines partners:
+        self.assertRecordValues(expenses_by_employee.account_move_id.line_ids, [
+            # If the test fails, it is probably because the partner is the company's partner instead of the employee's one
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
         ])
 
         in_payment_state = expenses_by_employee.account_move_id._get_invoice_in_payment_state()
@@ -546,6 +559,25 @@ class TestExpenses(TestExpenseCommon):
             'res_model': 'account.move',
             'res_id': expense_2_move.id
         }])
+
+    def test_multiple_attachments_in_move_from_company_expense(self):
+        """ Checks that all attachments from expense are copied to their journal entries. """
+        expense = self.create_expenses({
+            'name': 'Company expense',
+            'payment_mode': 'company_account',
+        })
+        self.env['ir.attachment'].create([{
+            'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'name': f'file{i}.png',
+            'res_model': 'hr.expense',
+            'res_id': expense.id,
+        } for i in range(1, 3)])
+
+        expense.action_submit()
+        expense._do_approve()  # Skip duplicate wizard
+        expense.action_post()
+
+        self.assertEqual(len(expense.account_move_id.attachment_ids), 2)
 
     def test_expense_payment_method(self):
         default_payment_method_line = self.company_data['default_journal_bank'].outbound_payment_method_line_ids[0]
@@ -1021,3 +1053,45 @@ class TestExpenses(TestExpenseCommon):
         expense.action_approve()
         # Should not raise trust validation error despite missing recipient partner bank
         expense.action_post()
+
+    def test_expense_analytic_vendor_bill_count(self):
+        """
+        Verify that purchase receipts appear when opening a vendor bill via the smart button,
+        and that the vendor bill count matches the records shown.
+        """
+        expense = self.create_expenses([
+            {
+                'name': 'Employee PA 2*800 + 15%',
+                'analytic_distribution': {self.analytic_account_1.id: 100},
+            }])
+        expense.action_submit()
+        expense.action_approve()
+        self.post_expenses_with_wizard(expense)
+
+        self.assertEqual('in_receipt', expense.account_move_id.move_type)
+
+        vendor_bill_view = self.analytic_account_1.action_view_vendor_bill()
+        self.assertTrue(expense.account_move_id.id in vendor_bill_view['domain'][0][2])
+
+    def test_expense_paid_company_no_autobalancing_line(self):
+        """
+        Test that when creating the move associated with an expense paid by company, no autobalancing line
+        appears when an analytic is added to a move line.
+        """
+        expense = self.create_expenses({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'total_amount_currency': 100.0,
+            'product_id': self.product_c.id,
+            'payment_mode': 'company_account',
+            'company_id': self.company_data['company'].id,
+            'tax_ids': [self.tax_sale_a.id],
+            })
+
+        expense.action_submit()
+        expense.action_approve()
+        expense.analytic_distribution = {self.analytic_account_1.id: 100.00}
+        expense.action_post()
+
+        # Check that there is no fourth autobalancing line on the account move
+        self.assertEqual(expense.account_move_id.line_ids.mapped('balance'), [86.96, 13.04, -100.0])

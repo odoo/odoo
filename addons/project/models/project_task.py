@@ -955,10 +955,10 @@ class ProjectTask(models.Model):
 
     def stage_find(self, section_id, domain=[], order='sequence, id'):
         """ Override of the base.stage method
-            Parameter of the stage search taken from the lead:
-            - section_id: if set, stages must belong to this section or
-              be a default stage; if not set, stages must be default
-              stages
+        Parameter of the stage search taken from the lead:
+
+        :param section_id: if set, stages must belong to this section or
+            be a default stage; if not set, stages must be default stages
         """
         # collect all section_ids
         section_ids = []
@@ -2075,7 +2075,6 @@ class ProjectTask(models.Model):
         child_tasks = self.child_ids.filtered(lambda child_task: not child_task.display_in_project)
         if child_tasks:
             child_tasks.action_archive()
-        self.filtered(lambda t: not t.display_in_project and t.parent_id).display_in_project = True
         return super().action_archive()
 
     # ---------------------------------------------------

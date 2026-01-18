@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-20 07:35+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
+"PO-Revision-Date: 2025-12-20 09:48+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/website_event/zh_Hans/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_count
@@ -56,7 +56,7 @@ msgstr ", at"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Cancelled</b>"
-msgstr ""
+msgstr "<b>已取消</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -131,8 +131,8 @@ msgid ""
 "<i class=\"fa fa-discord text-discord\" aria-label=\"Discord\" "
 "title=\"Discord\"/>"
 msgstr ""
-"<i class=\"fa fa-discord text-discord\" aria-label=\"Discord\" title="
-"\"Discord\"/>"
+"<i class=\"fa fa-discord text-discord\" aria-label=\"Discord\" "
+"title=\"Discord\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -795,6 +795,7 @@ msgstr "描述"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_registration__display_name
+#: model:ir.model.fields,field_description:website_event.field_event_slot__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_type__display_name
@@ -901,6 +902,11 @@ msgstr "活动登记链接"
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_ids
 msgid "Event Registrations"
 msgstr "活动登记"
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_event_slot
+msgid "Event Slot"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
@@ -1113,6 +1119,7 @@ msgstr "您是如何得知此次活动的？"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__id
 #: model:ir.model.fields,field_description:website_event.field_event_registration__id
+#: model:ir.model.fields,field_description:website_event.field_event_slot__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__id
 #: model:ir.model.fields,field_description:website_event.field_event_type__id

@@ -12,6 +12,14 @@ registerThreadAction("livechat-info", {
     panelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
     icon: "fa fa-fw fa-info",
     name: _t("Information"),
+    open: ({ store }) => {
+        store.discuss.isLivechatInfoPanelOpenByDefault = true;
+    },
+    close: ({ action, store }) => {
+        if (action.condition) {
+            store.discuss.isLivechatInfoPanelOpenByDefault = false;
+        }
+    },
     sequence: 10,
     sequenceGroup: 7,
     toggle: true,

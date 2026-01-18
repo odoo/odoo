@@ -39,14 +39,14 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Saara Hakanen <sahak@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-12-12 09:27+0000\n"
+"PO-Revision-Date: 2026-01-16 08:00+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/base/fi/>"
 "\n"
@@ -716,6 +716,9 @@ msgid ""
 "\n"
 "Use iMin ePOS Printers without the IoT Box in the Point of Sale\n"
 msgstr ""
+"\n"
+"\n"
+"Käytä iMin ePOS -tulostimia ilman IoT-boksia Kassajärjestelmässä\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
@@ -779,6 +782,9 @@ msgid ""
 "        Augment Livechat with AI Agents.\n"
 "    "
 msgstr ""
+"\n"
+"        Laajenna Livechat-palvelua tekoälyagenttien avulla.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_sa_edi
@@ -843,6 +849,32 @@ msgid ""
 "Especificaciones.doc\n"
 "\n"
 msgstr ""
+"\n"
+"* Lisää ALV-kirjan raportti, joka on Argentiinassa lakisääteinen vaatimus. "
+"Se sisältää yksityiskohtaiset ALV-tiedot ajanjakson aikana tehdyistä "
+"myynneistä ja ostoista.\n"
+"* Lisää ALV-yhteenvetoraportti, jota käytetään laskutuksen analysointiin\n"
+"* Lisää digitaalinen ALV-kirjan toiminto, joka mahdollistaa TXT-tiedostojen "
+"luomisen ARCA:n lataamiseksi. Käyttämämme muodot ovat:\n"
+"\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+"\n"
+"Virallinen ARCA-dokumentaatio\n"
+"\n"
+"* Digitaalinen ALV-kirja - tietueen malli https://www.afip.gob.ar/"
+"libro-iva-digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* CITI - tietueen malli (sama kuin digitaalisessa ALV-kirjassa): https://"
+"www.afip.gob.ar/comprasyventas/documentos/"
+"RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+"* CITI - määrittely (tarjoaa lisätietoja numeroiden muodosta sekä "
+"numeeristen/aakkosnumeeristen kenttien täytöstä): https://www.afip.gob.ar/"
+"comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-"
+"Especificaciones.doc\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_reports_simple
@@ -850,6 +882,8 @@ msgid ""
 "\n"
 "* Add export of IVA Simple Tax Report.\n"
 msgstr ""
+"\n"
+"* Lisää yksinkertaisen IVA-veroilmoituksen vienti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_app
@@ -925,6 +959,9 @@ msgid ""
 "\n"
 "- Send and receive documents via Nemhandel network in OIOUBL 2.1 format\n"
 msgstr ""
+"\n"
+"- Lähetä ja vastaanota asiakirjoja Nemhandel-verkon kautta OIOUBL 2.1 -"
+"muodossa\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -1280,11 +1317,11 @@ msgstr ""
 "\n"
 "Kirjanpidon pääsyoikeudet\n"
 "========================\n"
-"Se antaa Ylläpitäjän pääsyoikeuden käyttäjälle kaikkiin kirjanpito-"
-"ominaisuuksiin, kuten päiväkirjatietoihin ja tililuetteloon.\n"
+"Se antaa Ylläpitäjä-käyttäjälle pääsyoikeuden kaikkiin kirjanpito-"
+"ominaisuuksiin, kuten kirjausriveihin sekä tilikarttaan.\n"
 "\n"
-"Se antaa Kirjanpito-sovelluksen pääkäyttäjälle hallinto- ja käyttöoikeudet "
-"ja demokäyttäjälle vain käyttöoikeudet.\n"
+"Se antaa Kirjanpito-sovelluksen ylläpitäjälle hallinto- sekä käyttöoikeudet "
+"ja demokäyttäjälle ainoastaan käyttöoikeudet.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_asset
@@ -3624,30 +3661,28 @@ msgstr ""
 "\n"
 "    - Urakoitsijoille (tai aliurakoitsijoille) palveluista suoritetut maksut "
 "tai\n"
-"    - avustukset, jotka valtion yksiköt maksavat ABN-tunnuksen haltijoille\n"
+"    - Valtion maksamat avustukset ABN-tunnuksen haltijoille\n"
 "\n"
-"raportoitavaksi, jos sitä edellytetään veronalaisten maksujen "
+"raportoitava, jos sitä edellytetään veronalaisten maksujen "
 "raportointijärjestelmässä (Taxable Payments Reporting System, TPRS) ja "
 "veronalaisia julkisia avustuksia ja maksuja koskevassa "
-"raportointitoimenpiteessä (Taxable Government Grants and Payments reporting "
-"measure).\n"
+"raportointitoimenpiteessä "
+"(Taxable Government Grants and Payments reporting measure).\n"
 "\n"
 "TPAR-ilmoitus on toimitettava kunkin vuoden elokuun 28. päivään mennessä.\n"
 "\n"
-"Jos TPAR-ilmoitusta ei toimiteta ajoissa, siitä voidaan määrätä "
-"rangaistuksia.\n"
+"Jos TPAR-ilmoitusta ei toimiteta ajoissa, voi seurata rangaistuksia.\n"
 "\n"
 "Lisätietoja siitä, kenen on toimitettava veronalaisten maksujen "
-"vuosiraportti, on osoitteessa\n"
+"vuosiraportti, löytyy osoitteesta\n"
 "https://softwaredevelopers.ato.gov.au/tprs\n"
 "\n"
 "Vuosikertomus on toimitettava komissaarille viimeistään 28. elokuuta "
-"tilikauden päättymisen jälkeen. Raportit voidaan halutessaan lähettää "
-"useammin.\n"
+"tilivuoden päätyttyä. Raportit voi halutessaan lähettää useamminkin.\n"
 "\n"
-"Raportissa käytetään verotunnisteita ``Service`` ja ``Tax Withheld``, jotta "
-"voidaan löytää asianmukaiset päiväkirjakohdat. Nämä asetetaan käyttämällä "
-"verovelvollisuusasemia ja oikeaa tuotetyyppiä (Palvelut).\n"
+"Raportissa käytetään verotunnisteita ``Service`` ja ``Tax Withheld`` "
+"asianmukaisten kirjausrivien löytämiseksi. Nämä asetetaan "
+"verovelvollisuusasemien sekä oikean tuotetyypin (Palvelut) perusteella.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_hr_payroll
@@ -10274,6 +10309,27 @@ msgid ""
 "-   24-hour session timeout for privileged users.\n"
 "-   Audit logging for sensitive fields.\n"
 msgstr ""
+"\n"
+"Single Touch Payroll ja Super Stream käyttäen Superchoice-"
+"ohjelmointirajapintaa\n"
+"================================================================\n"
+"Tämä moduuli tarjoaa välttämättömät ohjelmointirajapinnat Single Touch "
+"Payroll (STP) -palvelun\n"
+"käsittelemiseksi sekä Super Stream -vaatimustenmukaisuuden varmistamiseksi "
+"Australiassa, käyttäen Superchoice-ohjelmointirajapintaa.\n"
+"\n"
+"Tämä moduuli käyttää Superchoicea selvitysyhtiönä hallinnoidakseen "
+"eläkerahastomaksuja.\n"
+"Niiden ohjelmointirajapintaa käytetään STP-raporttien lähettämiseen.\n"
+"\n"
+"Se toteuttaa myös välttämättömät turvallisuus- ja kirjausominaisuudet ATO-"
+"vaatimusten täyttämiseksi\n"
+"palkanlaskennan ja tiedonkäsittleyn suhteen.\n"
+"-   Pakollinen monivaiheinen tunnistautuminen Palkanlaskenta- ja Kirjanpito-"
+"sovellusten käyttäjille.\n"
+"-   Korkeintaan 30 minuutin epäaktiivisuusaika valtuutetuille käyttäjille.\n"
+"-   24 tunnin istuntoaikakatkaisu valtuutetuille käyttäille.\n"
+"-   Tarkastuskirjaukset arkaluontoisille kentille.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills
@@ -11061,7 +11117,7 @@ msgid ""
 "module.\n"
 msgstr ""
 "\n"
-"Tämä yhdysmoduuli mahdollistaa alihankinnan hallinnan suoratoimitusmoduulin "
+"Tämä siltamoduuli mahdollistaa alihankinnan hallinnan suoratoimitusmoduulin "
 "kanssa.\n"
 
 #. module: base
@@ -11180,16 +11236,16 @@ msgid ""
 "Set the payment reference type from the Sales Journal.\n"
 msgstr ""
 "\n"
-"Tämä on Odoo-moduuli kirjanpidon hallintaan Suomessa.\n"
+"Tämä on Odoo-moduuli kirjanpidon hallinnoimiseen Suomessa.\n"
 "============================================================\n"
 "\n"
-"Kun olet asentanut tämän moduulin, saat käyttöösi seuraavat toiminnot:\n"
+"Asennettuasi tämän moduulin, saat käyttöösi seuraavat toiminnot:\n"
 "    * Suomalainen tilikartta\n"
 "    * Verovelvollisuusasemat\n"
-"    * Laskun maksun viitetyypit (Suomen standardi viitenumero (RF))\n"
+"    * Laskun maksuviitetyypit (Suomen standardiviite & velkojan viite (RF))\n"
 "    * Suomalainen viitemuoto myyntitilauksille\n"
 "\n"
-"Aseta maksuviitetyyppi Myyntikirjasta.\n"
+"Määritä maksuviitetyyppi Myyntipäiväkirjasta.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_uom
@@ -16663,7 +16719,7 @@ msgstr "Kirjanpito"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_accountant_hr_expense
 msgid "Accounting - Expense"
-msgstr ""
+msgstr "Kirjanpito - Kulu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_accountant_fleet
@@ -20124,7 +20180,7 @@ msgstr "Aasia/Jerevan"
 #. module: base
 #: model:ir.module.module,summary:base.module_auth_timeout
 msgid "Ask for authentication after user inactivity"
-msgstr ""
+msgstr "Pyydä tunnistautumista käyttäjän epäaktiivisuuden jälkeen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
@@ -32095,7 +32151,7 @@ msgstr "Jordanian e-laskutus"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_journal_item
 msgid "Journal Items associated to the contact"
-msgstr "Yhteystietoon liittyvät päiväkirjaviennit"
+msgstr "Yhteystietoon liittyvät kirjausrivit"
 
 #. module: base
 #. odoo-python
@@ -33094,7 +33150,7 @@ msgstr "Lira"
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__list
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "List"
-msgstr "Lista"
+msgstr "Luettelo"
 
 #. module: base
 #. odoo-python
@@ -43027,7 +43083,7 @@ msgstr "Tarkista korvattavissa oleva HTML"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__sanitized_acc_number
 msgid "Sanitized Account Number"
-msgstr "Tarkistettu tilinumero"
+msgstr "Siistitty tilinumero"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.RWF
@@ -43919,7 +43975,7 @@ msgstr "Shillingit"
 #. module: base
 #: model:ir.module.category,name:base.module_category_shipping_connectors
 msgid "Shipping Connectors"
-msgstr "Toimitusliittimet"
+msgstr "Logistiikkayhteydet"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_sendcloud

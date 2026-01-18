@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:35+0000\n"
+"POT-Creation-Date: 2026-01-15 18:36+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
@@ -1994,6 +1994,7 @@ msgstr "Client"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2231,7 +2232,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Confirm"
@@ -3110,6 +3111,12 @@ msgid "Display Name"
 msgstr "Parādīt vārdu"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Display QR"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Display and update your products information through electronic price tags"
@@ -3156,8 +3163,20 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download Logs"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Download a report with all the sales of the current PoS Session"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download logs"
 msgstr ""
 
 #. module: point_of_sale
@@ -3545,6 +3564,12 @@ msgid "For imprecise industrial touchscreens."
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force Cancel"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
@@ -3555,6 +3580,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force Done"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force cancel"
 msgstr ""
 
 #. module: point_of_sale
@@ -5308,12 +5339,6 @@ msgid "Offline Orders"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
-msgid "Ok"
-msgstr "Ok"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "One-click Payment"
 msgstr ""
@@ -6207,7 +6232,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.js:0
 msgid "PoS Customer Display opened in a new window"
 msgstr ""
 
@@ -7611,6 +7636,12 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Scan QR"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Scan a barcode to create automatically, or load our sample data."
 msgstr ""
@@ -8255,6 +8286,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Subtotal"
 msgstr "Starpsumma"
 
@@ -8392,6 +8424,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_tax
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_action_tax_form_open
@@ -9087,6 +9120,12 @@ msgstr ""
 msgid ""
 "This cash payment method is already used in another Point of Sale.\n"
 "A new cash payment method should be created for this Point of Sale."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "This device"
 msgstr ""
 
 #. module: point_of_sale
@@ -9918,6 +9957,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid ""
+"You can either use it on this device or scan the QR code to display it on "
+"another device"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 msgid "You can not change the %s of the refund order."
 msgstr ""
@@ -10428,6 +10475,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr ""
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
 
 #~ msgid "%(pos_name)s (not used)"
 #~ msgstr "%(pos_name)s (netiek izmantots)"

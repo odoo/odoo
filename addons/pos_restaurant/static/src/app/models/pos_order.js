@@ -20,7 +20,7 @@ patch(PosOrder.prototype, {
         return this.customer_count;
     },
     setCustomerCount(count) {
-        this.customer_count = Math.max(count, 0);
+        this.customer_count = Math.max(count, 1);
     },
     getTable() {
         return this.table_id;
@@ -49,7 +49,7 @@ patch(PosOrder.prototype, {
             if (this.getTable()) {
                 const table = this.getTable();
                 const child_tables = this.models["restaurant.table"].filter((t) => {
-                    if (t.floor_id && t.floor_id.id === table.floor_id.id) {
+                    if (t.floor_id && t.floor_id.id === table.floor_id?.id) {
                         return table.isParent(t);
                     }
                 });

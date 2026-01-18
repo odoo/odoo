@@ -3,14 +3,14 @@
 # * account_peppol
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:35+0000\n"
-"PO-Revision-Date: 2025-12-10 03:26+0000\n"
+"POT-Creation-Date: 2026-01-15 18:36+0000\n"
+"PO-Revision-Date: 2026-01-06 06:54+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/id/>\n"
@@ -456,6 +456,11 @@ msgid "Active Parent Company"
 msgstr "Perusahaan Induk Aktif"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__active_parent_company_name
+msgid "Active Parent Company Name"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Advanced Configuration"
 msgstr "Konfigurasi Advance"
@@ -606,6 +611,9 @@ msgid ""
 "Any self-billed invoices / credit notes received via Peppol will be created "
 "in draft in this journal. Defaults to the first sale journal."
 msgstr ""
+"Faktur / nota kredit tagihan mandiri apa pun yang diterima melalui Peppol "
+"akan dibuat di draft di jurnal ini. Secara default mengarah ke jurnal "
+"penjualan pertama."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_edi_formats
@@ -710,7 +718,7 @@ msgid "Company"
 msgstr "Perusahaan"
 
 #. module: account_peppol
-#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__active_parent_company_name
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_name
 msgid "Company Name"
 msgstr "Nama Perusahaan"
 
@@ -793,6 +801,11 @@ msgstr "Demo"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Disable the reception."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Discard"
 msgstr "Buang"
 
@@ -829,6 +842,11 @@ msgstr "Konfigurasi peppol cabang perusahaan ini telah di-disconnect dari %s."
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Nama Tampilan"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_use_parent_connection_selection
+msgid "Display Use Parent Connection Selection"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_identifier
@@ -882,6 +900,11 @@ msgstr "Identifikasi Edi"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Email"
 msgstr "Email"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Enable reception"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__enabled
@@ -956,6 +979,9 @@ msgid ""
 "Peppol.You can still disable reception by disabling the self-billing "
 "document types below."
 msgstr ""
+"Bila diaktifkan, Anda akan dapat mengirim dan menerima faktur tagihan-"
+"mandiri melalui Peppol. Anda masih dapat menonaktifkan penerimaan dengan "
+"menonaktifkan tipe-tipe dokumen tagihan-mandiri di bawah."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_activate_self_billing_sending
@@ -963,6 +989,8 @@ msgid ""
 "If activated, you will be able to send vendor bills as self-billed invoices "
 "via Peppol."
 msgstr ""
+"Bila diaktfikan, Anda akan dapat mengirim tagihan vendor sebagai faktur "
+"tagihan-mandiri melalui Peppol."
 
 #. module: account_peppol
 #. odoo-python
@@ -979,7 +1007,7 @@ msgstr "Jurnal Faktur yang Akan Masuk"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Invoice %s is too big to send via peppol (64MB limit)"
-msgstr ""
+msgstr "Faktur %s terlalub esar untuk dikirim melalui peppol (batas 64MB)"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -1176,6 +1204,11 @@ msgid "PEPPOL: webhook keep alive"
 msgstr "PEPPOL: webhook keep alive"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_id
+msgid "Parent Company"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
 msgid "Partner cannot receive format"
 msgstr ""
@@ -1194,7 +1227,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
 msgid "Partner is on Peppol"
-msgstr ""
+msgstr "Partner ada di Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -1408,6 +1441,10 @@ msgid ""
 "In particular, this email is used by Odoo to reconnect your Peppol account "
 "in case of database change."
 msgstr ""
+"Email kontak primer untuk hubungan Peppol terkait komunikasi dan "
+"notifikasi.\n"
+"Secara khusus, email ini digunakan oleh Odoo untuk menghubungkan ulang akun "
+"Peppol Anda apabila terdapat perubahan database."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -1473,7 +1510,7 @@ msgstr "Didaftarkan untuk menerima dokumen melalui Peppol (demo)."
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid "Registered to receive documents via Peppol."
 msgstr "Didaftarkan untuk menerima dokumen melalui Peppol."
 
@@ -1554,7 +1591,7 @@ msgstr "Sebuah pertanyaan tidak bisa terjawab dan melewatkan"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Some attachments could not be sent with the XML:"
-msgstr ""
+msgstr "Beberapa lampiran tidak dapat dikirim dengan XML:"
 
 #. module: account_peppol
 #. odoo-python
@@ -1573,13 +1610,9 @@ msgstr ""
 msgid ""
 "Some service support migration keys. If this is your case you can enter your "
 "migration key below.\n"
-"                        If not, you should de-register from your current "
+"                            If not, you should de-register from your current "
 "service provider and register with Odoo afterward."
 msgstr ""
-"Beberapa layanan mendukung migration keys. Bila ini betul untuk Anda Anda "
-"dapat memasukkan migration key di bawah.\n"
-"                        Bila tidak, Anda harus membatalkan pendaftaran dari "
-"provider layanan Anda saat ini dan mendaftar dengan Odoo setelahnya."
 
 #. module: account_peppol
 #. odoo-python
@@ -1821,6 +1854,8 @@ msgid ""
 "The invoice has been sent to the Peppol Access Point. The following "
 "attachments were sent with the XML:"
 msgstr ""
+"Faktur telah dikirim ke Access Point Peppol. Lampiran berikut dikirim dengan "
+"XML:"
 
 #. module: account_peppol
 #. odoo-python
@@ -1936,6 +1971,9 @@ msgid ""
 "the proxy server. It is set to True when the token needs to be refreshed or "
 "updated."
 msgstr ""
+"Field ini digunakan untuk mengindikasikan bahwa token user edi tidak sinkron "
+"dengan server proxy. Ini ditetapkan menjadi True saat Token butuh direfresh "
+"atau diupdate."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -1947,7 +1985,7 @@ msgstr "Faktur ini juga telah"
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "This number is used for identification purposes only."
-msgstr ""
+msgstr "Nomor ini digunakan hanya untuk tujuan identifikasi."
 
 #. module: account_peppol
 #. odoo-python
@@ -1998,7 +2036,7 @@ msgstr "Tidak dapat memverifikasi digest value."
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
 msgid "Unchecked"
-msgstr ""
+msgstr "Tidak dicentang"
 
 #. module: account_peppol
 #. odoo-python
@@ -2100,6 +2138,8 @@ msgid ""
 "your Company Registry (BCE/KBO) first to be compliant with the new "
 "regulation."
 msgstr ""
+"Anda akan mendaftar nomor PPN Anda. Pastikan Anda mendaftar dengan Company "
+"Registry Anda (BCE/KBO) agar mematuhi peraturan baru."
 
 #. module: account_peppol
 #. odoo-python
@@ -2252,7 +2292,7 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid ""
 "Your registration on Peppol network should be activated within a day. The "
 "updated status will be visible in Settings."
@@ -2302,6 +2342,17 @@ msgstr "untuk mengirim faktur, tapi yang ini"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "user-user"
+
+#~ msgid ""
+#~ "Some service support migration keys. If this is your case you can enter "
+#~ "your migration key below.\n"
+#~ "                        If not, you should de-register from your current "
+#~ "service provider and register with Odoo afterward."
+#~ msgstr ""
+#~ "Beberapa layanan mendukung migration keys. Bila ini betul untuk Anda Anda "
+#~ "dapat memasukkan migration key di bawah.\n"
+#~ "                        Bila tidak, Anda harus membatalkan pendaftaran "
+#~ "dari provider layanan Anda saat ini dan mendaftar dengan Odoo setelahnya."
 
 #~ msgid "The document has been sent to Peppol for processing"
 #~ msgstr "Dokumen telah dikirim ke Peppol untuk diproses"

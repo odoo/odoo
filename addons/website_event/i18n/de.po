@@ -8,14 +8,14 @@
 # Larissa Manderfeld, 2023
 # Stefan Reisich <nafex@gmx.net>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-28 14:27+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
+"PO-Revision-Date: 2026-01-13 15:35+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "website_event/de/>\n"
@@ -810,6 +810,7 @@ msgstr "Beschreibung"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_registration__display_name
+#: model:ir.model.fields,field_description:website_event.field_event_slot__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_type__display_name
@@ -918,6 +919,11 @@ msgstr "Link zur Veranstaltungsregistrierung"
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_ids
 msgid "Event Registrations"
 msgstr "Veranstaltungsregistrierungen"
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_event_slot
+msgid "Event Slot"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
@@ -1134,6 +1140,7 @@ msgstr "Wie haben Sie von dieser Veranstaltung erfahren?"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__id
 #: model:ir.model.fields,field_description:website_event.field_event_registration__id
+#: model:ir.model.fields,field_description:website_event.field_event_slot__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__id
 #: model:ir.model.fields,field_description:website_event.field_event_type__id
@@ -1813,7 +1820,7 @@ msgstr "Dieses Ticket steht für diese Veranstaltung nicht zur Verfügung."
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Ticket #"
-msgstr "Ticket #"
+msgstr "Ticket-Nr."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration

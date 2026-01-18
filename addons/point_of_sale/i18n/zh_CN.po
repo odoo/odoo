@@ -10,13 +10,14 @@
 # Martin Trigaux, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:35+0000\n"
-"PO-Revision-Date: 2025-11-18 14:05+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-01-15 18:36+0000\n"
+"PO-Revision-Date: 2026-01-08 02:24+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/point_of_sale/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -24,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -163,7 +164,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "(DUPLICATE !)"
-msgstr ""
+msgstr "（重复！）"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2046,6 +2047,7 @@ msgstr "客户端"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2283,7 +2285,7 @@ msgstr "请至少配置一个POS营业点."
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Confirm"
@@ -3162,6 +3164,12 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Display QR"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Display and update your products information through electronic price tags"
@@ -3208,9 +3216,21 @@ msgstr "下载"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download Logs"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Download a report with all the sales of the current PoS Session"
 msgstr "下载包含当前PoS会话的所有销售额的报表"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download logs"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3601,6 +3621,12 @@ msgid "For imprecise industrial touchscreens."
 msgstr "对于不精确的工业用触摸屏。"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force Cancel"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
@@ -3612,6 +3638,12 @@ msgstr "强制关闭会话"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force Done"
 msgstr "强制完成"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force cancel"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5385,12 +5417,6 @@ msgid "Offline Orders"
 msgstr "离线订单"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
-msgid "Ok"
-msgstr "确定"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "One-click Payment"
 msgstr ""
@@ -6288,7 +6314,7 @@ msgstr "POS 配置"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.js:0
 msgid "PoS Customer Display opened in a new window"
 msgstr "在新窗口中打开 PoS 客户显示屏"
 
@@ -7695,6 +7721,12 @@ msgstr "扫描"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Scan QR"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Scan a barcode to create automatically, or load our sample data."
 msgstr "扫描条形码即可自动创建，或加载我们的样本数据。"
@@ -8343,6 +8375,7 @@ msgstr "时尚皮夹克，经久耐用，各种场合百搭。"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Subtotal"
 msgstr "小计"
 
@@ -8480,6 +8513,7 @@ msgstr "含税价格"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_tax
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_action_tax_form_open
@@ -9198,6 +9232,12 @@ msgid ""
 msgstr ""
 "此现金支付方式已经在另一个 POS 使用。\n"
 "应为此 POS 创建一个新的现金支付方式。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "This device"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -10045,6 +10085,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid ""
+"You can either use it on this device or scan the QR code to display it on "
+"another device"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 msgid "You can not change the %s of the refund order."
 msgstr ""
@@ -10561,6 +10609,9 @@ msgstr "以激活按钮。"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "使用中"
+
+#~ msgid "Ok"
+#~ msgstr "确定"
 
 #~ msgid "Confirm?"
 #~ msgstr "确认？"

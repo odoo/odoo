@@ -7,13 +7,14 @@
 # Martin Trigaux, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:35+0000\n"
-"PO-Revision-Date: 2025-11-16 22:48+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-06 17:23+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "hr_work_entry/ar/>\n"
 "Language: ar\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_employee__work_entry_source
@@ -54,7 +55,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "%(employee)s does not have a contract on %(date)s."
-msgstr ""
+msgstr "ليس لدى %(employee)s عقد بتاريخ %(date)s."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -68,6 +69,9 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>Employees in "
 "red will be skipped because they have at least one validated work entry."
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>سيتم تجاوز "
+"الموظفين المحددين باللون الأحمر لأنه قد تم تصديق إحدى قيود العمل الخاصة بهم "
+"على الأقل."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
@@ -169,7 +173,7 @@ msgstr "إجازة قصيرة (عيد ميلادك)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_compensatory
 msgid "CTO"
-msgstr ""
+msgstr "المدير التقني"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
@@ -202,6 +206,8 @@ msgid ""
 "Check this setting if you want the hours to be considered as extra time and "
 "added as a bonus to the basic salary."
 msgstr ""
+"حدد هذا الإعداد إذا كنت تريد اعتبار الساعات كساعات عمل إضافية وإضافتها "
+"كمكافأة إلى الراتب الأساسي."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__color
@@ -438,7 +444,7 @@ msgstr "من"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_leave
 msgid "GTO"
-msgstr ""
+msgstr "GTO"
 
 #. module: hr_work_entry
 #: model:ir.actions.server,name:hr_work_entry.ir_cron_generate_missing_work_entries_ir_actions_server
@@ -475,7 +481,7 @@ msgstr "نوع قيد عمل الموارد البشرية"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_home_working
 msgid "HW"
-msgstr ""
+msgstr "HW"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
@@ -561,6 +567,8 @@ msgid ""
 "In order to regenerate the work entries, you need to provide the wizard with "
 "an employee_id, a date_from and a date_to."
 msgstr ""
+"حتى تتمكن من إعادة إنشاء قيود العمل، عليك تزويد المعالج بـ employee_id و "
+"date_from و date_to."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_interruption_wt
@@ -735,7 +743,7 @@ msgstr "الإخطار (لم يتم تقديمها)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_overtime
 msgid "OT"
-msgstr ""
+msgstr "OT"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.hr_work_entry_type_out_of_contract
@@ -1228,7 +1236,7 @@ msgstr "النوع"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_unpaid_leave
 msgid "UN"
-msgstr ""
+msgstr "غير مدفوعة"
 
 #. module: hr_work_entry
 #. odoo-python

@@ -10,14 +10,14 @@
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025, 2026.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-10 14:27+0000\n"
+"POT-Creation-Date: 2026-01-09 18:36+0000\n"
+"PO-Revision-Date: 2026-01-16 08:35+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/stock/it/"
 ">\n"
@@ -25,9 +25,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
-"0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -944,8 +944,8 @@ msgstr "<strong>Contatto</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
-msgstr "<strong>Indirizzo cliente</strong>"
+msgid "<strong>Customer</strong>"
+msgstr "<strong>Cliente</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -956,6 +956,11 @@ msgstr "<strong>Consegnato</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
 msgstr "<strong>Indirizzo di consegna:</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
+msgstr "<strong>Indirizzo di consegna</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -7461,6 +7466,7 @@ msgstr "Categorie prodotto"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_category_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_category_name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
@@ -10752,7 +10758,7 @@ msgstr "Trasferimento"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
 msgid "Transfer to"
-msgstr "Trasferire"
+msgstr "Trasferisci a"
 
 #. module: stock
 #. odoo-python
@@ -12376,6 +12382,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Buono di consegna (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "<strong>Customer Address</strong>"
+#~ msgstr "<strong>Indirizzo cliente</strong>"
 
 #~ msgid ""
 #~ "There is nothing eligible to put in a pack. Either there are no "

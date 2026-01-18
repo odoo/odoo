@@ -12,8 +12,9 @@ import {
     isEmptyBlock,
     isRedundantElement,
     isTextNode,
+    isVisibleTextNode,
     isWhitespace,
-    isZwnbsp,
+    isZWS,
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { isColorGradient, rgbaToHex } from "@web/core/utils/colors";
@@ -158,8 +159,8 @@ export class ColorPlugin extends Plugin {
         if (selection.isCollapsed) {
             let zws;
             if (
-                selection.anchorNode.nodeType !== Node.TEXT_NODE &&
-                selection.anchorNode.textContent !== "\u200b"
+                selection.anchorNode.nodeType === Node.TEXT_NODE &&
+                selection.anchorNode.textContent === "\u200b"
             ) {
                 zws = selection.anchorNode;
             } else {
@@ -329,7 +330,8 @@ export class ColorPlugin extends Plugin {
                         font = [];
                     }
                 } else if (
-                    (node.nodeType === Node.TEXT_NODE && !isZwnbsp(node)) ||
+                    (node.nodeType === Node.TEXT_NODE &&
+                        (isVisibleTextNode(node) || isZWS(node))) ||
                     (node.nodeName === "BR" && isEmptyBlock(node.parentNode)) ||
                     (node.nodeType === Node.ELEMENT_NODE &&
                         ["inline", "inline-block"].includes(getComputedStyle(node).display) &&

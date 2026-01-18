@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:37+0000\n"
-"PO-Revision-Date: 2025-12-05 10:59+0000\n"
+"POT-Creation-Date: 2026-01-09 18:38+0000\n"
+"PO-Revision-Date: 2025-12-27 08:37+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-19/web/pt_BR/>\n"
@@ -28,8 +28,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : "
-"((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: web
@@ -488,17 +488,17 @@ msgid ""
 "Temporal mode will merge all samples.<br/>It can lead to partially invalid "
 "result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
-"<select class=\"form-select\" name=\"profile_aggregation_mode\" id="
-"\"profile_aggregation_mode\">\n"
-"                                        <option value=\"tabs\">Separados "
-"(um por aba)</option>\n"
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" "
+"id=\"profile_aggregation_mode\">\n"
+"                                        <option value=\"tabs\">Separados (um "
+"por aba)</option>\n"
 "                                        <option value=\"temporal\">Temporal "
 "(experimental)</option>\n"
 "                                    </select> <span id=\"temporal_warning\" "
 "class=\"alert alert-warning\" style=\"display:none\"><b> Aviso:</b> O modo "
 "temporal mescla todas as amostras.<br/>Isso pode levar a resultados "
-"parcialmente inválidos no caso de perfis simultâneos.<br/>Use com cautela "
-"</span>"
+"parcialmente inválidos no caso de perfis simultâneos.<br/>Use com cautela </"
+"span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -914,7 +914,7 @@ msgstr "Adicionar foto"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 msgid "Add Property"
-msgstr ""
+msgstr "Adicionar propriedade"
 
 #. module: web
 #. odoo-javascript
@@ -1182,12 +1182,13 @@ msgstr "Tem certeza de que quer remover essa ação incorporada?"
 #: code:addons/web/static/src/views/view_components/multi_selection_buttons.js:0
 msgid "Are you sure you want to delete the %(nbSelected)s selected records?"
 msgstr ""
+"Tem certeza de que quer excluir os registros selecionados %(nbSelected)s?"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_components/multi_selection_buttons.js:0
 msgid "Are you sure you want to delete the selected record?"
-msgstr ""
+msgstr "Tem certeza de que quer excluir o registro selecionado?"
 
 #. module: web
 #. odoo-javascript
@@ -1205,7 +1206,7 @@ msgstr "Tem certeza de que quer excluir esta coluna?"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "Are you sure you want to delete this property field?"
-msgstr ""
+msgstr "Tem certeza de que deseja excluir este campo de propriedade?"
 
 #. module: web
 #. odoo-javascript
@@ -4953,6 +4954,12 @@ msgstr "Nenhum dado"
 #: code:addons/web/static/src/views/no_content_helpers.xml:0
 msgid "No data to display"
 msgstr "Nenhum dado para exibir"
+
+#. module: web
+#. odoo-python
+#: code:addons/web/controllers/pivot.py:0
+msgid "No data to export"
+msgstr ""
 
 #. module: web
 #. odoo-javascript

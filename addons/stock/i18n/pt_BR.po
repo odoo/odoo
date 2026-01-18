@@ -13,13 +13,13 @@
 # Layna Nascimento, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# "Maitê Dietze (madi)" <madi@odoo.com>, 2025.
+# "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-12-12 15:40+0000\n"
+"POT-Creation-Date: 2026-01-09 18:36+0000\n"
+"PO-Revision-Date: 2026-01-05 20:42+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-19/stock/pt_BR/>\n"
@@ -27,8 +27,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : "
-"((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
@@ -946,8 +946,8 @@ msgstr "<strong>Contato</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
-msgstr "<strong>Endereço do cliente</strong>"
+msgid "<strong>Customer</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -958,6 +958,11 @@ msgstr "<strong>Entregue</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
 msgstr "<strong>Endereço de entrega</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1126,6 +1131,7 @@ msgstr "Um código de barras só pode ser atribuído a um tipo de embalagem."
 msgid ""
 "A package can't have one of its contained packages as destination container."
 msgstr ""
+"Um pacote não pode ter um dos pacotes que contém como contêiner de destino."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
@@ -1358,7 +1364,7 @@ msgstr "Todas as categorias"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__all_children_package_ids
 msgid "All Children Package"
-msgstr ""
+msgstr "Pacote Todas as Crianças"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -1489,7 +1495,7 @@ msgstr "Qualquer categoria"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_request_count_form_view
 msgid "Anyone"
-msgstr ""
+msgstr "Qualquer pessoa"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -1619,7 +1625,7 @@ msgstr "Atribuir a"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__child_package_dest_ids
 msgid "Assigned Contained Packages"
-msgstr ""
+msgstr "Pacotes contidos atribuídos"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -7419,6 +7425,7 @@ msgstr "Categorias de produtos"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_category_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_category_name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
@@ -12302,6 +12309,9 @@ msgid ""
 msgstr ""
 "Pedido de entrega de {{ object.company_id.name }} (Ref. {{ object.name or 'n/"
 "d' }})"
+
+#~ msgid "<strong>Customer Address</strong>"
+#~ msgstr "<strong>Endereço do cliente</strong>"
 
 #~ msgid "If ticked, you will be able to select entire packages to move"
 #~ msgstr ""

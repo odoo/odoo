@@ -20,7 +20,7 @@ class HrLeaveType(models.Model):
 
         employee = self.env['hr.employee'].browse(self.env.context.get('employee_id')).sudo()
         unspent_overtime = self.env['hr.leave']._get_deductible_employee_overtime(employee)[employee]
-        if unspent_overtime <= 0:
+        if not unspent_overtime:
             return super()._compute_display_name()
 
         overtime_leaves = self.filtered(lambda l_type: l_type.overtime_deductible and not l_type.requires_allocation)
@@ -57,7 +57,8 @@ class HrLeaveType(models.Model):
                             'icon': leave_type.sudo().icon_id.url,
                             'allows_negative': leave_type.allows_negative,
                             'max_allowed_negative': leave_type.max_allowed_negative,
-                            'overtime_deductible': True
+                            'overtime_deductible': True,
+                            'employee_company': employee.company_id.id,
                         },
                         leave_type.requires_allocation,
                         leave_type.id)

@@ -60,7 +60,7 @@ class ResCompany(models.Model):
         help='Primary contact email for Peppol connection related communications and notifications.\n'
              'In particular, this email is used by Odoo to reconnect your Peppol account in case of database change.',
     )
-    account_peppol_migration_key = fields.Char(string="Migration Key")
+    account_peppol_migration_key = fields.Char(string="Migration Key", groups="base.group_system")
     account_peppol_phone_number = fields.Char(
         string='Mobile number',
         compute='_compute_account_peppol_phone_number', store=True, readonly=False,
@@ -240,12 +240,16 @@ class ResCompany(models.Model):
         self.peppol_parent_company_id = False
         for company in self:
             for parent_company in company.parent_ids[::-1][1:]:
-                if all((
-                    company.peppol_eas,
-                    company.peppol_endpoint,
-                    company.peppol_eas == parent_company.peppol_eas,
-                    company.peppol_endpoint == parent_company.peppol_endpoint,
-                )):
+                if (
+                    company.peppol_eas
+                    and company.peppol_endpoint
+                    and company.peppol_eas == parent_company.peppol_eas
+                    and company.peppol_endpoint == parent_company.peppol_endpoint
+                ) or (
+                    not company.peppol_endpoint
+                    and parent_company.peppol_eas
+                    and parent_company.peppol_endpoint
+                ):
                     company.peppol_parent_company_id = parent_company
                     break
 

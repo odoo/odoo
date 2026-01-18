@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
 from freezegun import freeze_time
 from unittest.mock import patch
 
@@ -126,3 +127,51 @@ class TestImLivechatReport(TestImLivechatCommon):
             "im_livechat_sessions_report_pivot_redirect_tour",
             login="operator_1",
         )
+
+    def test_day_of_week_ordered_by_lang_week_start(self):
+        agent = new_test_user(self.env, login="test_agent", groups="im_livechat.im_livechat_group_manager")
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {"name": "Test Support", "user_ids": [agent.id]}
+        )
+        today_dt = datetime.now()
+        for i in range(1, 8):
+            date = today_dt + timedelta(days=i)
+            with freeze_time(date):
+                channel_id = self.make_jsonrpc_request(
+                    "/im_livechat/get_session",
+                    {"anonymous_name": f"Visitor_{i}", "channel_id": livechat_channel.id},
+                )["channel_id"]
+                channel = self.env["discuss.channel"].browse(channel_id)
+                self._create_message(channel, channel.livechat_operator_id, date)
+        en_lang = self.env["res.lang"]._activate_lang("en_US")
+        report_model = self.env["im_livechat.report.channel"].with_user(agent)
+        result = report_model.formatted_read_group(domain=[], groupby=["day_number"])
+        expected_order = ["0", "1", "2", "3", "4", "5", "6"]
+        actual_order = [group["day_number"] for group in result]
+        self.assertEqual(actual_order, expected_order)
+        en_lang.week_start = "6"
+        result = report_model.formatted_read_group(domain=[], groupby=["day_number"])
+        expected_order = ["6", "0", "1", "2", "3", "4", "5"]
+        actual_order = [group["day_number"] for group in result]
+        self.assertEqual(
+            actual_order,
+            expected_order,
+            f"Days should be ordered starting from Saturday. Got {actual_order}, expected {expected_order}"
+        )
+
+    def test_time_to_answer_does_not_count_messages_after_close(self):
+        with freeze_time("2025-05-20 06:00:00") as frozen_time:
+            data = self.make_jsonrpc_request(
+                    "/im_livechat/get_session",
+                    {"channel_id": self.livechat_channel.id},
+                )
+            chat = self.env["discuss.channel"].browse(data["channel_id"])
+            frozen_time.tick(delta=timedelta(minutes=1))
+            chat.message_post(body="Question", message_type="comment")
+            self._create_message(chat, self.env.user.partner_id, datetime.now())
+            frozen_time.tick(delta=timedelta(minutes=5))
+            self.make_jsonrpc_request("/im_livechat/visitor_leave_session", {"channel_id": chat.id})
+            frozen_time.tick(delta=timedelta(minutes=5))
+            self._create_message(chat, chat.livechat_operator_id, datetime.now())
+            report = self.env["im_livechat.report.channel"].search([("channel_id", "=", chat.id)])
+            self.assertEqual(report.time_to_answer, 0.0)

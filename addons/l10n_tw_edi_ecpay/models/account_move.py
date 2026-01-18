@@ -575,14 +575,15 @@ class AccountMove(models.Model):
             "MerchantID": self.company_id.sudo().l10n_tw_edi_ecpay_merchant_id,
             "RelateNumber": self.l10n_tw_edi_related_number,
             "CustomerIdentifier": self.partner_id.vat if self.l10n_tw_edi_is_b2b and self.partner_id.vat else "",
-            "CustomerAddr": self.partner_id.contact_address,
+            "CustomerAddr": self.partner_id._l10n_tw_edi_formatted_address(),
             "CustomerEmail": self.partner_id.email or "",
             "CustomerPhone": formatted_phone,
             "InvType": self.l10n_tw_edi_invoice_type,
             "TaxType": tax_type,
-            "InvoiceRemark": self.ref,
         }
 
+        if self.ref:
+            json_data["InvoiceRemark"] = self.ref
         if special_tax_type:
             json_data["SpecialTaxType"] = special_tax_type
 
@@ -651,7 +652,6 @@ class AccountMove(models.Model):
             })
         else:
             json_data.update({
-                "AllowanceDate": self.l10n_tw_edi_invoice_create_date.strftime("%Y-%m-%d %H:%M:%S"),
                 "CustomerEmail": self.partner_id.email,
             })
 
@@ -672,8 +672,8 @@ class AccountMove(models.Model):
             "EmailAddress": self.partner_id.commercial_partner_id.email,
         }
 
-        if self.partner_id.commercial_partner_id.contact_address_inline:
-            buyer_json_data["Address"] = self.partner_id.commercial_partner_id.contact_address_inline
+        if partner := self.partner_id.commercial_partner_id:
+            buyer_json_data["Address"] = partner._l10n_tw_edi_formatted_address()
         if number := self.partner_id.commercial_partner_id.phone:
             buyer_json_data["TelephoneNumber"] = self._reformat_phone_number(number)
 

@@ -95,7 +95,7 @@
             </t>
         </xpath>
         <!-- Insert Position Column as the First Column in the Table Header -->
-        <xpath expr="//table/thead/tr/th[1]" position="before">
+        <xpath expr="//th[@name='th_description']" position="before">
             <t t-if="doc.company_id.has_position_column">
                 <th name="th_position" class="text-start">Position</th>
             </t>

@@ -86,7 +86,6 @@ class TestStockValuationCommon(BaseCommon):
             ''uom_id: Unit of measure
             ''owner_id: Consignment owner
         """
-        unit_cost = unit_cost or product.standard_price
         product_qty = quantity
         if kwargs.get('uom_id'):
             uom = self.env['uom.uom'].browse(kwargs.get('uom_id'))
@@ -101,6 +100,9 @@ class TestStockValuationCommon(BaseCommon):
         }
         if unit_cost:
             move_vals['value_manual'] = unit_cost * product_qty
+            move_vals['price_unit'] = unit_cost
+        else:
+            move_vals['value_manual'] = product.standard_price * product_qty
         in_move = self.env['stock.move'].create(move_vals)
 
         if create_picking:
@@ -109,6 +111,7 @@ class TestStockValuationCommon(BaseCommon):
                 'location_id': in_move.location_id.id,
                 'location_dest_id': in_move.location_dest_id.id,
                 'owner_id': kwargs.get('owner_id', False),
+                'partner_id': kwargs.get('partner_id', False),
                 })
             in_move.picking_id = picking.id
 
@@ -130,7 +133,10 @@ class TestStockValuationCommon(BaseCommon):
             in_move.move_line_ids.owner_id = kwargs.get('owner_id')
 
         in_move.picked = True
-        in_move._action_done()
+        if create_picking:
+            picking.button_validate()
+        else:
+            in_move._action_done()
 
         return in_move
 
@@ -285,6 +291,10 @@ class TestStockValuationCommon(BaseCommon):
         cls.stock_location = cls.warehouse.lot_stock_id
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
+        cls.inventory_location = cls.env['stock.location'].search([
+            ('usage', '=', 'inventory'),
+            ('company_id', '=', cls.company.id)
+        ], limit=1)
 
         cls.account_expense = cls.company.expense_account_id
         cls.account_stock_valuation = cls.company.account_stock_valuation_id

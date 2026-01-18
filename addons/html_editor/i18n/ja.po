@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:36+0000\n"
-"PO-Revision-Date: 2025-12-09 14:08+0000\n"
+"POT-Creation-Date: 2026-01-15 18:36+0000\n"
+"PO-Revision-Date: 2025-12-24 10:24+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "html_editor/ja/>\n"
@@ -413,6 +413,7 @@ msgstr "閉じる"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/syntax_highlighting.xml:0
 msgid "Code"
 msgstr "コード"
 
@@ -463,6 +464,12 @@ msgstr "4カラムに変換"
 #: code:addons/html_editor/static/src/main/column_plugin.js:0
 msgid "Convert into columns"
 msgstr "列に変換"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/backend/syntax_highlighting/code_toolbar.xml:0
+msgid "Convert to paragraph"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -975,6 +982,12 @@ msgstr "水平方向の罫線を挿入"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Insert a monospace banner"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/star_plugin.js:0
 msgid "Insert a rating"
 msgstr "評価を挿入"
@@ -1102,7 +1115,7 @@ msgstr "リンク"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Link Popover"
-msgstr ""
+msgstr "リンク ポップオーバー"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1154,7 +1167,7 @@ msgstr "ループ"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "MM:SS"
-msgstr ""
+msgstr "MM:SS"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1191,6 +1204,18 @@ msgstr "ファイルが見つかりません"
 #: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
 msgid "Modules"
 msgstr "モジュール"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Monospace"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/banner_plugin.js:0
+msgid "Monospace Banner"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1315,7 +1340,7 @@ msgstr "新しいタブで開く"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Open in new tab"
-msgstr ""
+msgstr "新規タブで開く"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1362,7 +1387,7 @@ msgstr "ポジションY"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.js:0
 msgid "Prevents the new page from accessing the original window (security)"
-msgstr ""
+msgstr "新しいページが元のウィンドウにアクセスするのを防止します(セキュリティ)"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1530,7 +1555,7 @@ msgstr "カラムを削除"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.js:0
 msgid "Removes referrer information sent to the target site"
-msgstr ""
+msgstr "ターゲットサイトに送信されるリファラー情報を削除します"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1669,7 +1694,7 @@ msgstr "画像を検索"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/image_selector.xml:0
 msgid "Search the web for royalty-free images"
-msgstr ""
+msgstr "ロイヤリティフリーの画像をウェブで検索"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1693,13 +1718,13 @@ msgstr "メディアを選択"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Select button shape"
-msgstr ""
+msgstr "ボタンの形状を選択"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "Select button size"
-msgstr ""
+msgstr "ボタンサイズを選択"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1774,12 +1799,13 @@ msgid ""
 "Showing all differences between the current version and the selected one "
 "updated by"
 msgstr ""
+"現在のバージョンと、更新された選択バージョンとのすべての差異を表示します"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Showing the document as it was on"
-msgstr ""
+msgstr "ドキュメントを当時の状態で表示："
 
 #. module: html_editor
 #. odoo-javascript
@@ -1815,7 +1841,7 @@ msgstr "プロンプトが長すぎます。もっと短い言葉にして下さ
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Split view"
-msgstr ""
+msgstr "分割表示"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1827,7 +1853,7 @@ msgstr "星"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.js:0
 msgid "Start at"
-msgstr ""
+msgstr "開始"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1870,7 +1896,7 @@ msgstr "目次"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.js:0
 msgid "Tells search engines not to follow this link"
-msgstr ""
+msgstr "検索エンジンにこのリンクをクロールしないよう指示します"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1919,6 +1945,8 @@ msgid ""
 "The image could not be deleted because it is used in the\n"
 "                following pages or views:"
 msgstr ""
+"以下のページまたはビューで使用されているため、\n"
+"                画像を削除できません:"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1966,7 +1994,7 @@ msgstr "この画像は外部画像です"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "This is the current version, nothing to compare."
-msgstr ""
+msgstr "これは現行バージョンのため、比較対象はありません。"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2067,13 +2095,13 @@ msgstr "他のキーワードで検索してみましょう。"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
 msgid "Turn into header"
-msgstr ""
+msgstr "ヘッダに変換"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_menu.js:0
 msgid "Turn into row"
-msgstr ""
+msgstr "列に変換"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2115,7 +2143,7 @@ msgstr "戻す"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Unified view"
-msgstr ""
+msgstr "統合ビュー"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2147,7 +2175,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "Version date"
-msgstr ""
+msgstr "バージョン日付"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2189,19 +2217,19 @@ msgstr "ビュー"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "View Content"
-msgstr ""
+msgstr "コンテンツを表示"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "View comparison"
-msgstr ""
+msgstr "比較を表示"
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/components/history_dialog/history_dialog.xml:0
 msgid "View content"
-msgstr ""
+msgstr "コンテンツを表示"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2346,7 +2374,7 @@ msgstr "ファイル"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "noopener"
-msgstr ""
+msgstr "noopener"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2370,7 +2398,7 @@ msgstr "px"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "title"
-msgstr ""
+msgstr "タイトル"
 
 #. module: html_editor
 #. odoo-javascript

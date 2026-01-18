@@ -32,6 +32,7 @@ test("should display the channel invitation form after clicking on the invite bu
     });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
     await click(".o-mail-DiscussContent-header button[title='Invite People']");
     await contains(".o-discuss-ChannelInvitation");
 });
@@ -85,6 +86,7 @@ test("should be able to search for a new user to invite from an existing chat", 
     });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
     await click(".o-mail-DiscussContent-header button[title='Invite People']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
     await contains(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });
@@ -107,6 +109,7 @@ test("Invitation form should display channel group restriction", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
     await click(".o-mail-DiscussContent-header button[title='Invite People']");
     await contains(".o-discuss-ChannelInvitation div", {
         text: 'Access restricted to group "testGroup"',
@@ -137,9 +140,11 @@ test("should be able to create a new group chat from an existing chat", async ()
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-DiscussContent-header button[title='Invite People']");
+    await contains(".o-discuss-ChannelInvitation");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
     await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner2" });
     await click("button[title='Create Group Chat']:enabled");
+    await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await contains(".o-mail-DiscussSidebarChannel", {
         text: "Mitchell Admin, TestPartner, and TestPartner2",
     });

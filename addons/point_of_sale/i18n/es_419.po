@@ -3,15 +3,15 @@
 # * point_of_sale
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
 # "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:35+0000\n"
-"PO-Revision-Date: 2025-12-09 14:09+0000\n"
+"POT-Creation-Date: 2026-01-15 18:36+0000\n"
+"PO-Revision-Date: 2026-01-16 20:31+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/point_of_sale/es_419/>\n"
@@ -1039,7 +1039,7 @@ msgstr "El importe de %(old_pm)s cambió de %(old_amount)s a %(new_amount)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 msgid "Amount of guests"
-msgstr "Número de huéspedes"
+msgstr "Número de invitados"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
@@ -2116,6 +2116,7 @@ msgstr "Cliente"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2354,7 +2355,7 @@ msgstr "Configure al menos un punto de venta."
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Confirm"
@@ -3249,6 +3250,12 @@ msgid "Display Name"
 msgstr "Nombre en pantalla"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Display QR"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Display and update your products information through electronic price tags"
@@ -3303,9 +3310,21 @@ msgstr "Descargar"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download Logs"
+msgstr "Descargar registros"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Download a report with all the sales of the current PoS Session"
 msgstr "Descargar un reporte con todas las ventas de la sesión de PdV actual"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download logs"
+msgstr "Descargar registros"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3714,6 +3733,12 @@ msgid "For imprecise industrial touchscreens."
 msgstr "Para pantallas táctiles industriales imprecisas"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force Cancel"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
@@ -3725,6 +3750,12 @@ msgstr "Forzar el cierre de sesión"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force Done"
 msgstr "Forzar terminación"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force cancel"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5559,12 +5590,6 @@ msgid "Offline Orders"
 msgstr "Órdenes sin conexión"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
-msgid "Ok"
-msgstr "De acuerdo"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "One-click Payment"
 msgstr "Pago con un clic"
@@ -6489,7 +6514,7 @@ msgstr "Configuración del PdV"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.js:0
 msgid "PoS Customer Display opened in a new window"
 msgstr "La pantalla para cliente de PdV se abrió en una ventana nueva"
 
@@ -7906,6 +7931,12 @@ msgstr "Escanear"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Scan QR"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Scan a barcode to create automatically, or load our sample data."
 msgstr ""
@@ -8566,6 +8597,7 @@ msgstr "Chamarra de piel durable y a la moda para cualquier ocasión."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Subtotal"
 msgstr "Subtotal"
 
@@ -8705,6 +8737,7 @@ msgstr "Precio con impuestos incluidos"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_tax
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_action_tax_form_open
@@ -9525,6 +9558,12 @@ msgid ""
 msgstr ""
 "Este método de pago en efectivo ya se está usando en otro Punto de Venta.\n"
 "Se debe crear un nuevo método de pago en efectivo para este Punto de Venta."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "This device"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -10415,6 +10454,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid ""
+"You can either use it on this device or scan the QR code to display it on "
+"another device"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 msgid "You can not change the %s of the refund order."
 msgstr "No puedes cambiar el %s de la orden de reembolso."
@@ -10459,7 +10506,7 @@ msgid ""
 "Please close the ongoing session first, then try again."
 msgstr ""
 "No puedes restablecer esta factura a borrador porque la sesión de PdV sigue "
-"abierta. Cierra la sesión primero y vuelve a intentarlo."
+"abierta. Primero cierra la sesión y luego vuelve a intentarlo."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10975,6 +11022,9 @@ msgstr "para activar los botones."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "usando"
+
+#~ msgid "Ok"
+#~ msgstr "De acuerdo"
 
 #~ msgid "Confirm?"
 #~ msgstr "¿Confirmar?"

@@ -34,7 +34,7 @@ describe("Regular list", () => {
 });
 
 describe("Checklist", () => {
-    test("should outdent a checklist", async () => {
+    test("should outdent a checklist (1)", async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -50,6 +50,9 @@ describe("Checklist", () => {
                     <li class="o_checked">a[b]c</li>
                 </ul>`),
         });
+    });
+
+    test("should outdent a checklist (2)", async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -67,7 +70,7 @@ describe("Checklist", () => {
         });
     });
 
-    test('should outdent a checklist and previous line as "title"', async () => {
+    test('should outdent a checklist and previous line as "title" (1)', async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -84,6 +87,9 @@ describe("Checklist", () => {
                         <li class="o_checked">d[e]f</li>
                     </ul>`),
         });
+    });
+
+    test('should outdent a checklist and previous line as "title" (2)', async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -187,7 +193,7 @@ describe("with selection collapsed", () => {
         });
     });
 
-    test("should outdent the last element of a list with sublist", async () => {
+    test("should outdent the last element of a list with sublist (1)", async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul>
@@ -215,6 +221,9 @@ describe("with selection collapsed", () => {
                         </li>
                     </ul>`),
         });
+    });
+
+    test("should outdent the last element of a list with sublist (2)", async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul>
@@ -708,7 +717,7 @@ describe("with selection", () => {
     // So, not passing this test does not mean that a previously working feature
     // is broken, as the user had no way to trigger the "indentList" command.
     // By the way: is this a valid contentBefore?
-    test.skip("should outdent multiples list item in the middle element of a list with sublist", async () => {
+    test.skip("should outdent multiples list item in the middle element of a list with sublist (1)", async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul>
@@ -741,6 +750,10 @@ describe("with selection", () => {
                         <li>e</li>
                     </ul>`),
         });
+    });
+
+    // @wrongCommand (same as above)
+    test.skip("should outdent multiples list item in the middle element of a list with sublist (2)", async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul>

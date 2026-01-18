@@ -233,3 +233,97 @@ test("Disable actions for non-livechat users", async () => {
     await waitFor("textarea[placeholder='Add your notes here...']:disabled");
     await waitFor(".o-livechat-ExpertiseTagsAutocomplete.o-disabled");
 });
+
+test("info panel toggle state persists across chats", async () => {
+    const pyEnv = await startServer();
+    const [guestId1, guestId2] = pyEnv["mail.guest"].create([
+        { name: "Visitor 1" },
+        { name: "Visitor 2" },
+    ]);
+    pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guestId1, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+            livechat_operator_id: serverState.partnerId,
+        },
+        {
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guestId2, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+            livechat_operator_id: serverState.partnerId,
+        },
+    ]);
+    await start();
+    await openDiscuss();
+    await click(".o-mail-DiscussSidebarChannel:text('Visitor 1')");
+    await contains(".o-livechat-ChannelInfoList");
+    await click("button[name='livechat-info']");
+    await contains(".o-livechat-ChannelInfoList", { count: 0 });
+    await click(".o-mail-DiscussSidebarChannel:text('Visitor 2')");
+    await contains(".o-mail-DiscussContent-threadName[title='Visitor 2']");
+    await contains(".o-livechat-ChannelInfoList", { count: 0 });
+    await click("button[name='livechat-info']");
+    await contains(".o-livechat-ChannelInfoList");
+    await click(".o-mail-DiscussSidebarChannel:text('Visitor 1')");
+    await contains(".o-mail-DiscussContent-threadName[title='Visitor 1']");
+    await contains(".o-livechat-ChannelInfoList");
+});
+
+test("auto-open of livechat info & members panels should combine", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
+    pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+            livechat_operator_id: serverState.partnerId,
+        },
+        {
+            channel_type: "channel",
+            name: "General",
+        },
+    ]);
+    await start();
+    await openDiscuss();
+    await click(".o-mail-DiscussSidebarChannel:text('General')");
+    await contains(".o-discuss-ChannelMemberList");
+    await click(".o-mail-DiscussSidebarChannel:text('Visitor')");
+    await contains(".o-discuss-ChannelMemberList", { count: 0 });
+    await contains(".o-livechat-ChannelInfoList");
+    await click("button[name='livechat-info']");
+    await contains(".o-livechat-ChannelInfoList", { count: 0 });
+    await contains(".o-discuss-ChannelMemberList", { count: 0 });
+    await click(".o-mail-DiscussSidebarChannel:text('General')");
+    await contains(".o-discuss-ChannelMemberList");
+    await contains(".o-livechat-ChannelInfoList", { count: 0 });
+    await click("button[name='member-list']");
+    await contains(".o-discuss-ChannelMemberList", { count: 0 });
+    await contains(".o-livechat-ChannelInfoList", { count: 0 });
+    await click(".o-mail-DiscussSidebarChannel:text('Visitor')");
+    await click("button[name='livechat-info']");
+    await contains(".o-livechat-ChannelInfoList");
+    await contains(".o-discuss-ChannelMemberList", { count: 0 });
+    await click("button[name='member-list']");
+    await contains(".o-discuss-ChannelMemberList");
+    await contains(".o-livechat-ChannelInfoList", { count: 0 });
+    await click(".o-mail-DiscussSidebarChannel:text('General')");
+    await contains(".o-discuss-ChannelMemberList");
+    await contains(".o-livechat-ChannelInfoList", { count: 0 });
+});

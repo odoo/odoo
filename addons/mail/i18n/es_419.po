@@ -3,15 +3,15 @@
 # * mail
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
-# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:35+0000\n"
-"PO-Revision-Date: 2025-12-04 03:36+0000\n"
+"POT-Creation-Date: 2026-01-02 18:35+0000\n"
+"PO-Revision-Date: 2026-01-16 20:31+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/mail/es_419/>\n"
@@ -80,7 +80,7 @@ msgstr "\" no se sigue más."
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 msgid "\"%(activity_name)s: %(summary)s\" assigned to you"
-msgstr "Le asignaron \"%(activity_name)s:%(summary)s\""
+msgstr "Te asignaron \"%(activity_name)s: %(summary)s\""
 
 #. module: mail
 #. odoo-javascript
@@ -2178,7 +2178,7 @@ msgstr "Navegador"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/device_select.xml:0
 msgid "Browser Default"
-msgstr ""
+msgstr "Navegador predeterminado"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__endpoint
@@ -6240,11 +6240,11 @@ msgid ""
 "- auth: The auth value should be treated as a secret and not shared outside "
 "of Odoo"
 msgstr ""
-"Se refiere a las claves de navegador que la notificación utiliza: \n"
-"- p256dh: es la clave pública de suscripción que el navegador genera. El "
+"Se refiere a las claves del navegador que usa la notificación: \n"
+"- p256dh: es la clave pública de suscripción que genera el navegador. El "
 "navegador mantendrá \n"
-"          la clave privada como secreto y la usará para desencriptar la "
-"carga efectiva.\n"
+"          la clave privada en secreto y la usará para descifrar la carga "
+"útil.\n"
 "- auth: el valor auth debe tratarse como secreto y no se debe compartir "
 "fuera de Odoo."
 
@@ -8877,7 +8877,7 @@ msgstr "¿Quieres borrar este hilo de forma permanente?"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/device_select.xml:0
 msgid "Permission Needed"
-msgstr ""
+msgstr "Permiso necesario"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
@@ -10321,6 +10321,8 @@ msgstr "Seleccionar usuario..."
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
 msgstr ""
+"El usuario seleccionado \"%(user)s\" no puede subir documentos al modelo \"%"
+"(model)s\""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
@@ -12379,6 +12381,8 @@ msgstr "Dejar de silenciar conversación"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/follower_model.js:0
+#: code:addons/mail/static/src/core/common/message_model.js:0
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 #: code:addons/mail/static/src/core/web/recipients_popover.js:0
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
@@ -13204,7 +13208,7 @@ msgstr "Escriba sus comentarios"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
 msgid "Write your message here..."
-msgstr "Escriba su mensaje aquí..."
+msgstr "Escribe tu mensaje aquí..."
 
 #. module: mail
 #. odoo-python
@@ -13443,12 +13447,12 @@ msgstr "No tienes los permisos para invitar usuarios a este canal."
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "You have been assigned to %s"
-msgstr "Le asignaron %s"
+msgstr "Te asignaron %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "You have been assigned to the"
-msgstr "Le asignaron:"
+msgstr "Te asignaron"
 
 #. module: mail
 #. odoo-javascript

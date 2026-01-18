@@ -127,6 +127,8 @@ class IrModuleModule(models.Model):
         values['latest_version'] = terp.version
         if self.env.context.get('data_module'):
             values['module_type'] = 'industries'
+        if with_demo:
+            values['demo'] = True
 
         unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
 
@@ -408,10 +410,10 @@ class IrModuleModule(models.Model):
     def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
         if _domain_asks_for_industries(domain):
             fields_name = list(specification.keys())
-            modules_list = self._get_modules_from_apps(fields_name, 'industries', False, domain, offset=offset, limit=limit)
+            modules_list = self._get_modules_from_apps(fields_name, 'industries', False, domain, offset=offset)
             return {
-                'length': len(modules_list),
-                'records': modules_list,
+                'length': len(modules_list) + offset,
+                'records': modules_list[:(limit or 80)],
             }
         else:
             return super().web_search_read(domain, specification, offset=offset, limit=limit, order=order, count_limit=count_limit)

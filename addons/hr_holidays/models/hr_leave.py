@@ -588,7 +588,7 @@ Versions:
             if leave.employee_id:
                 # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
                 # sudo as is_flexible is on version model and employee does not have access to it.
-                if leave.employee_id.sudo().is_flexible and leave.date_to.date() == leave.date_from.date():
+                if leave.employee_id.sudo().is_flexible and leave.request_date_to == leave.request_date_from:
                     public_holidays = self.env['resource.calendar.leaves'].search([
                         ('resource_id', '=', False),
                         ('date_from', '<', leave.date_to),
@@ -759,8 +759,11 @@ Versions:
             leave_data = leave_type.get_allocation_data(employees, date_from)
             if leave_type.allows_negative:
                 max_excess = leave_type.max_allowed_negative
+                is_cancellation = all(leave.state in ('cancel', 'refuse') for leave in leaves)
                 for employee in employees:
-                    if not leave_data[employee]:
+                    if is_cancellation:
+                        continue
+                    if not leave_data[employee][0][1]['max_leaves']:
                         raise ValidationError(_("You do not have any allocation for this time off type.\n"
                                                 "Please request an allocation before submitting your time off request."))
                     if leave_data[employee] and leave_data[employee][0][1]['virtual_remaining_leaves'] < -max_excess:
@@ -773,7 +776,7 @@ Versions:
             for employee in employees:
                 previous_emp_data = previous_leave_data[employee] and previous_leave_data[employee][0][1]['virtual_excess_data']
                 emp_data = leave_data[employee] and leave_data[employee][0][1]['virtual_excess_data']
-                if not leave_data[employee]:
+                if not leave_data[employee][0][1]['max_leaves']:
                     raise ValidationError(_("You do not have any allocation for this time off type.\n"
                                             "Please request an allocation before submitting your time off request."))
                 if not previous_emp_data and not emp_data:
@@ -928,7 +931,8 @@ Versions:
                 values['request_date_to'] = values['date_to']
         result = super().write(values)
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'holiday_status_id', 'employee_id', 'state']):
-            self._check_validity()
+            if not values.get('state') or values.get('state') not in ('refuse', 'cancel'):
+                self._check_validity()
             self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
         if not self.env.context.get('leave_fast_create'):
             for holiday in self:
@@ -1047,13 +1051,18 @@ Versions:
             allday_value = not holiday.request_unit_half
             if holiday.leave_type_request_unit == 'hour':
                 allday_value = float_compare(holiday.number_of_days, 1.0, 1) >= 0
+
+            leave_tz = pytz.timezone(holiday.tz) if holiday.tz else pytz.UTC
+            start_value = pytz.UTC.localize(holiday.date_from).astimezone(leave_tz).replace(tzinfo=None)
+            stop_value = pytz.UTC.localize(holiday.date_to).astimezone(leave_tz).replace(tzinfo=None)
+
             meeting_values = {
                 'name': meeting_name,
                 'duration': holiday.number_of_days * (holiday.resource_calendar_id.hours_per_day or HOURS_PER_DAY),
                 'description': holiday.notes,
                 'user_id': user.id,
-                'start': holiday.date_from,
-                'stop': holiday.date_to,
+                'start': start_value,
+                'stop': stop_value,
                 'allday': allday_value,
                 'privacy': 'confidential',
                 'event_tz': user.tz,
@@ -1602,6 +1611,9 @@ is approved, validated or refused.')
             leave_type = leave.holiday_status_id
             date = leave.date_from.date()
             leave_type_data = leave_type.get_allocation_data(leave.employee_id, date)
+            if not leave_type_data[leave.employee_id][0][1]['max_leaves']:
+                leave._force_cancel(reason, 'mail.mt_note')
+                continue
             exceeding_duration = leave_type_data[leave.employee_id][0][1]['total_virtual_excess']
             excess_limit = leave_type.max_allowed_negative if leave_type.allows_negative else 0
             if exceeding_duration <= excess_limit:

@@ -28,7 +28,9 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
     def test_attachment_delete_linked_to_public_channel(self):
         """Test access to delete an attachment associated with a public channel
         whether or not limited `ownership_token` is sent"""
-        channel = self.env["discuss.channel"].create({"name": "public channel"})
+        channel = self.env["discuss.channel"].create(
+            {"group_public_id": None, "name": "public channel"}
+        )
         self._execute_subtests_delete(self.all_users, token=True, allowed=True, thread=channel)
         self._execute_subtests_delete(
             (self.user_admin, self.user_employee),

@@ -338,8 +338,8 @@ class PosConfig(models.Model):
 
     def _split_qr_codes_list(self, floors: List[Dict], cols: int) -> List[Dict]:
         """
-        :floors: the list of floors
-        :cols: the number of qr codes per row
+        :param floors: the list of floors
+        :param cols: the number of qr codes per row
         """
         self.ensure_one()
         return [

@@ -65,6 +65,7 @@ export function generateVideoIframe(parentEl, manageIframeSrcFct) {
     const iframeEl = document.createElement("iframe");
     iframeEl.setAttribute("frameborder", "0");
     iframeEl.setAttribute("allowfullscreen", "allowfullscreen");
+    iframeEl.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
     parentEl.appendChild(iframeEl);
     manageIframeSrcFct ? manageIframeSrcFct(iframeEl, src) : manageIframeSrcOnLoad(iframeEl, src);
 

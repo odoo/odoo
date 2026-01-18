@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-12 09:34+0000\n"
+"POT-Creation-Date: 2026-01-09 18:36+0000\n"
+"PO-Revision-Date: 2025-12-20 09:39+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/stock/es/"
 ">\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -926,8 +926,8 @@ msgstr "<strong>Contacto</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
-msgstr "<strong>Dirección del cliente</strong>"
+msgid "<strong>Customer</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -938,6 +938,11 @@ msgstr "<strong>Entregado</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
 msgstr "<strong>Dirección de entrega:</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -3963,7 +3968,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_template_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
 msgid "Forecasted"
-msgstr "Pronosticado"
+msgstr "Previsto"
 
 #. module: stock
 #. odoo-javascript
@@ -7404,6 +7409,7 @@ msgstr "Categorías de producto"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_category_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_category_name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
@@ -12302,6 +12308,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Orden de entrega (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "<strong>Customer Address</strong>"
+#~ msgstr "<strong>Dirección del cliente</strong>"
 
 #~ msgid "If ticked, you will be able to select entire packages to move"
 #~ msgstr "Si está marcado, podrá seleccionar paquetes completos para mover"

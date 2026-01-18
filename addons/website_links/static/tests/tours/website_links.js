@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
 import { stepUtils } from "@web_tour/tour_utils";
 
 function fillSelectMenu(inputID, search) {
@@ -48,18 +47,6 @@ registry.category("web_tour.tours").add('website_links_tour', {
         ...fillSelectMenu("campaign-select-wrapper", campaignValue),
         ...fillSelectMenu("channel-select-wrapper", mediumValue),
         ...fillSelectMenu("source-select-wrapper", sourceValue),
-        {
-            content: "Copy tracker link",
-            trigger: '#btn_shorten_url',
-            run: function () {
-                // Patch and ignore write on clipboard in tour as we don't have permissions
-                const oldWriteText = browser.navigator.clipboard.writeText;
-                browser.navigator.clipboard.writeText = () => {
-                    console.info("Copy in clipboard ignored!");
-                };
-                browser.navigator.clipboard.writeText = oldWriteText;
-            },
-        },
         {
             content: "Generate Link Tracker",
             trigger: "#btn_shorten_url",

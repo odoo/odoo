@@ -50,6 +50,15 @@ export class CartPage extends Component {
         return lines.filter((line) => !line.combo_parent_id);
     }
 
+    get totalPriceAndTax() {
+        const { amountTaxes, priceIncl } = this.selfOrder.currentOrder;
+        const { priceWithTax, tax, count } = this.selfOrder.orderLineNotSend;
+        return {
+            priceWithTax: count > 0 ? priceWithTax : priceIncl,
+            tax: count > 0 ? tax : amountTaxes,
+        };
+    }
+
     get optionalProducts() {
         const optionalProducts =
             this.selfOrder.currentOrder.lines.flatMap(
@@ -160,7 +169,6 @@ export class CartPage extends Component {
     selectTable(table) {
         if (table) {
             this.selectTableDependingOnMode(table);
-            this.selfOrder.currentTable = table;
             this.router.addTableIdentifier(table);
             this.pay();
         }

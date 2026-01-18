@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:36+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
 "PO-Revision-Date: 2025-11-15 11:30+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Burmese <https://translate.odoo.com/projects/odoo-19/hr/my/>\n"
@@ -387,6 +387,11 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span invisible=\"not contract_date_start\">to</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+msgid "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
 msgstr ""
 
 #. module: hr
@@ -1236,7 +1241,7 @@ msgstr "မလုပ်"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot archive the only active record of an employee."
+msgid "Cannot archive all the active versions of an employee."
 msgstr ""
 
 #. module: hr
@@ -1250,7 +1255,7 @@ msgstr ""
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot unassign the only active record of an employee."
+msgid "Cannot unassign all the active versions of an employee."
 msgstr ""
 
 #. module: hr
@@ -4715,6 +4720,12 @@ msgstr "စာတမ်း"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "This employee already has an user."
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
 msgstr ""
 
 #. module: hr

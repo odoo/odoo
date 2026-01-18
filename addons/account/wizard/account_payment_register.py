@@ -1,10 +1,12 @@
 from collections import defaultdict
+from datetime import date
 
 import markupsafe
 
 from odoo import Command, models, fields, api, _
 from odoo.exceptions import UserError
 from odoo.tools import frozendict, SQL
+from odoo.tools.misc import clean_context
 
 
 class AccountPaymentRegister(models.TransientModel):
@@ -630,7 +632,7 @@ class AccountPaymentRegister(models.TransientModel):
         all_lines = self.env['account.move.line']
         for batch_result in batch_results:
             all_lines |= batch_result['lines']
-        all_lines = all_lines.sorted(key=lambda line: (line.move_id, line.date_maturity))
+        all_lines = all_lines.sorted(key=lambda line: (line.move_id, line.date_maturity or date.max))
         for lines in all_lines.grouped('move_id').values():
             installments = lines._get_installments_data(payment_currency=self.currency_id, payment_date=self.payment_date, next_payment_date=next_payment_date)
             last_installment_mode = False
@@ -1275,7 +1277,9 @@ class AccountPaymentRegister(models.TransientModel):
 
         wizard = self.sudo() if from_sibling_companies else self
 
-        payments = wizard._init_payments(to_process, edit_mode=edit_mode)
+        # Prevent default_ context keys to interfere with account.payment context (eg: ``default_partner_bank_id``
+        # transfered from ``account.payment.register`` wizard to ``account.payment`` creation.
+        payments = wizard.with_context(clean_context(self.env.context))._init_payments(to_process, edit_mode=edit_mode)
         wizard._post_payments(to_process, edit_mode=edit_mode)
         wizard._reconcile_payments(to_process, edit_mode=edit_mode)
         return payments.sudo(flag=False)

@@ -9,14 +9,14 @@
 # Martin Trigaux, 2023
 # Thi Huong Nguyen, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:35+0000\n"
-"PO-Revision-Date: 2025-12-03 10:32+0000\n"
+"POT-Creation-Date: 2026-01-15 18:36+0000\n"
+"PO-Revision-Date: 2026-01-05 08:57+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/vi/>\n"
@@ -876,7 +876,7 @@ msgstr "Thông tin bắt buộc khác:"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Additional required invoicing information:"
-msgstr "Thông tin xuất hoá đơn bắt buộc khác:"
+msgstr "Thông tin lập hoá đơn bắt buộc khác:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -1470,7 +1470,7 @@ msgstr "Chênh lệch trước khi đóng"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Billing address:"
-msgstr "Địa chỉ xuất hoá đơn:"
+msgstr "Địa chỉ lập hoá đơn:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_form
@@ -2102,6 +2102,7 @@ msgstr "Khách hàng"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2339,7 +2340,7 @@ msgstr "Cấu hình ít nhất một POS."
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Confirm"
@@ -2612,7 +2613,7 @@ msgid ""
 "invoicing address"
 msgstr ""
 "Tạo một hóa đơn cho tất cả đơn hàng liên quan đến cùng một khách hàng và "
-"cùng một địa chỉ xuất hoá đơn"
+"cùng một địa chỉ lập hoá đơn"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
@@ -3231,6 +3232,12 @@ msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Display QR"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Display and update your products information through electronic price tags"
@@ -3282,9 +3289,21 @@ msgstr "Tải xuống"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download Logs"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Download a report with all the sales of the current PoS Session"
 msgstr "Tải xuống báo cáo tất cả mục bán hàng của phiên PoS hiện tại"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download logs"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3689,6 +3708,12 @@ msgid "For imprecise industrial touchscreens."
 msgstr "Cho các màn hình cảm ứng công nghiệp thiếu chính xác."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force Cancel"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
@@ -3700,6 +3725,12 @@ msgstr "Bắt buộc đóng phiên"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force Done"
 msgstr "Bắt buộc hoàn tất"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force cancel"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3764,7 +3795,7 @@ msgstr "Đồng bộ toàn bộ:"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__invoice_status__invoiced
 msgid "Fully Invoiced"
-msgstr "Đã xuất hoá đơn hết"
+msgstr "Đã lập hoá đơn hết"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4326,7 +4357,7 @@ msgstr "Hóa đơn"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Invoicing confirmation"
-msgstr "Xác nhận xuất hoá đơn"
+msgstr "Xác nhận lập hoá đơn"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4917,7 +4948,7 @@ msgstr "Marc Demo"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__margin
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__margin
 msgid "Margin"
-msgstr "Biên lợi nhuận"
+msgstr "Lợi nhuận"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__margin_percent
@@ -4929,13 +4960,13 @@ msgstr "Biên lợi nhuận (%)"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Margin:"
-msgstr "Biên lợi nhuận:"
+msgstr "Lợi nhuận:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_margins_costs_accessible_to_every_user
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_margins_costs_accessible_to_every_user
 msgid "Margins & Costs"
-msgstr "Biên lợi nhuận & chi phí"
+msgstr "Lợi nhuận & chi phí"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5387,7 +5418,7 @@ msgstr "Không được phân loại"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Not Invoiced"
-msgstr "Chưa xuất hoá đơn"
+msgstr "Chưa lập hoá đơn"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5516,12 +5547,6 @@ msgstr "Odoo Sneaker"
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Offline Orders"
 msgstr "Đơn hàng offline"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
-msgid "Ok"
-msgstr "Ok"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6446,7 +6471,7 @@ msgstr "Cấu hình PoS"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.js:0
 msgid "PoS Customer Display opened in a new window"
 msgstr "Màn hình PoS cho khách hàng được mở trong một cửa sổ mới"
 
@@ -7862,6 +7887,12 @@ msgstr "Quét"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Scan QR"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Scan a barcode to create automatically, or load our sample data."
 msgstr "Quét mã vạch để tạo tự động hoặc tải dữ liệu mẫu của chúng tôi."
@@ -8292,12 +8323,12 @@ msgstr "Hiển thị màn hình đăng nhập của nhân viên"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show margins & costs"
-msgstr "Hiển thị biên lợi nhuận & chi phí"
+msgstr "Hiển thị lợi nhuận & chi phí"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show margins & costs on product information"
-msgstr "Hiển thị biên lợi nhuận và chi phí trên thông tin sản phẩm"
+msgstr "Hiển thị lợi nhuận và chi phí trên thông tin sản phẩm"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8516,6 +8547,7 @@ msgstr "Áo khoác da phong cách, bền và thời trang, phù hợp với mọ
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Subtotal"
 msgstr "Thành tiền"
 
@@ -8653,6 +8685,7 @@ msgstr "Giá bao gồm thuế"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_tax
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_action_tax_form_open
@@ -9443,6 +9476,12 @@ msgstr ""
 "Một phương thức thanh toán tiền mặt mới sẽ được tạo cho POS này."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "This device"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_amount_authorized_diff
 msgid ""
@@ -9650,7 +9689,7 @@ msgstr "Cần đóng"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__invoice_status__to_invoice
 msgid "To Invoice"
-msgstr "Cần xuất hoá đơn"
+msgstr "Cần lập hoá đơn"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9697,7 +9736,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
 msgid "To invoice"
-msgstr "Cần xuất hoá đơn"
+msgstr "Cần lập hoá đơn"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
@@ -9743,7 +9782,7 @@ msgstr "Tổng chiết khấu"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Total Margin:"
-msgstr "Tổng biên lợi nhuận:"
+msgstr "Tổng lợi nhuận:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -10240,8 +10279,8 @@ msgid ""
 "When disabled, only PoS manager can view the margin and cost of product "
 "among the Product info."
 msgstr ""
-"Khi tắt, chỉ quản lý POS mới có thể xem biên lợi nhuận và chi phí sản phẩm "
-"trong Thông tin sản phẩm."
+"Khi tắt, chỉ quản lý POS mới có thể xem lợi nhuận và chi phí sản phẩm trong "
+"Thông tin sản phẩm."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -10323,6 +10362,14 @@ msgstr ""
 "Bạn đang cố gắng bán sản phẩm với số lô/sê-ri, nhưng một sản phẩm trong đó "
 "chưa được thiết lập.\n"
 "Bạn có muốn tiếp tục thực hiện không?"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid ""
+"You can either use it on this device or scan the QR code to display it on "
+"another device"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10574,7 +10621,7 @@ msgstr "Bạn cần tài khoản ghi lãi và lỗ trong sổ nhật ký tiền 
 msgid ""
 "You need to select the customer before you can invoice or ship an order."
 msgstr ""
-"Bạn cần chọn khách hàng trước khi có thể xuất hoá đơn hoặc giao đơn hàng."
+"Bạn cần chọn khách hàng trước khi có thể lập hoá đơn hoặc giao đơn hàng."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10868,6 +10915,9 @@ msgstr "để kích hoạt nút."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "sử dụng"
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
 
 #~ msgid "Confirm?"
 #~ msgstr "Xác nhận?"

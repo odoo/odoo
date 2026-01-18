@@ -10,7 +10,7 @@ import * as SelectionPopup from "@point_of_sale/../tests/generic_helpers/selecti
 import * as BackendUtils from "@point_of_sale/../tests/pos/tours/utils/backend_utils";
 import * as Utils from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
-import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
+import { negate, scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("PosHrTour", {
     steps: () =>
@@ -364,3 +364,43 @@ registry
                 Chrome.notExistMenuOption("Backend"),
             ].flat(),
     });
+
+registry.category("web_tour.tours").add("test_maximum_closing_difference", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            ProductScreen.enterOpeningAmount("10"),
+            Chrome.clickBtn("Open Register"),
+
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Test Manager 2", { run: "click" }),
+            PosHr.enterPin("5652"),
+            Chrome.clickMenuOption("Close Register"),
+            Chrome.clickBtn("Close Register"),
+            {
+                trigger: negate(`button:contains("Proceed anyway")`),
+            },
+            Chrome.clickBtn("Ok"),
+            Chrome.clickBtn("Discard"),
+
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Chrome.clickMenuOption("Close Register"),
+            Chrome.clickBtn("Close Register"),
+            Chrome.hasBtn("Proceed anyway"),
+            Chrome.clickBtn("Proceed anyway", { expectUnloadPage: true }),
+            PosHr.loginScreenIsShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_scan_employee_barcode_with_pos_hr_disabled", {
+    steps: () =>
+        [
+            // scan a barcode with 041 as prefix for cashiers
+            scan_barcode("041123"),
+            Chrome.clickBtn("Open Register"),
+            ProductScreen.isShown(),
+        ].flat(),
+});

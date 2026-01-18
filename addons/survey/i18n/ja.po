@@ -9,14 +9,14 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
 # Andy Yiu, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-12-05 09:20+0000\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-15 02:03+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/survey/"
 "ja/>\n"
@@ -273,26 +273,26 @@ msgstr ""
 "            <tr><td>\n"
 "                <!-- アンケート調査を作成した会社のロゴを使用します(マルチカ"
 "ンパニーのケースに対応するため)  -->\n"
-"                <a href=\"/\"><img t-if="
-"\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src="
-"\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style"
-"=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-if=\"not "
+"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
+"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
+"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    認定書: <t t-out=\"object.survey_id.display_name or ''\">"
 "フィードバックフォーム</t>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
-"    <table style="
-"\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px "
+"solid #e1e1e1;\">\n"
 "        <tbody>\n"
 "            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
 "                <p> <span t-out=\"object.partner_id.name or 'participant'\">"
 "ご参加者</span>様</p>\n"
 "                <p>\n"
 "                    添付にて\n"
-"                        <strong t-out=\"object.survey_id.display_name or ''\""
-">家具製作</strong>\n"
+"                        <strong t-out=\"object.survey_id.display_name or "
+"''\">家具製作</strong>\n"
 "                    認定書をお送りいたします。\n"
 "                </p>\n"
 "                <p>テストに合格されました。おめでとうございます。 スコア:"
@@ -880,7 +880,7 @@ msgstr "活動ステータス"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_type_icon
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動種別アイコン"
+msgstr "活動タイプアイコン"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -900,7 +900,7 @@ msgstr "既存の連絡先を追加..."
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__emails
 msgid "Additional emails"
-msgstr "追加の電子メール"
+msgstr "追加のメールアドレス"
 
 #. module: survey
 #: model:res.groups,name:survey.group_survey_manager
@@ -1121,7 +1121,7 @@ msgstr "参加者はすぐに答えると、より多くのポイントを取得
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__author_id
 msgid "Author"
-msgstr "著作者"
+msgstr "作成者"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__certification_mail_template_id
@@ -1517,7 +1517,7 @@ msgstr "条件付きの質問が含まれています"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__body
 msgid "Contents"
-msgstr "内容"
+msgstr "本文"
 
 #. module: survey
 #. odoo-javascript
@@ -1768,7 +1768,7 @@ msgstr "説明"
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_2_choice_2
 msgid "Desk Combination"
-msgstr "デスクコンビネーション"
+msgstr "デスクの組み合わせ"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.survey_user_input_line_action
@@ -1898,7 +1898,7 @@ msgstr "既存のパートナー"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_emails
 msgid "Existing emails"
-msgstr "既存の電子メール"
+msgstr "既存のメール"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -2265,7 +2265,7 @@ msgstr "チェックした場合は、新しいメッセージに注意が必要
 #: model:ir.model.fields,help:survey.field_survey_user_input__message_has_error
 #: model:ir.model.fields,help:survey.field_survey_user_input__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "選択されている場合、一部のメッセージで配信エラーが発生しています。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__save_as_email
@@ -3275,8 +3275,8 @@ msgid ""
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
 "メール送信時に選択できる任意の翻訳言語(ISOコード)。未設定の場合は、関連する取"
-"引先の言語が使用されます。通常は、たとえば {{ object.partner_id.lang }} "
-"のような、適切な言語を指定するプレースホルダー式を使用します。"
+"引先の言語が使用されます。通常は、たとえば {{ object.partner_id.lang }} のよ"
+"うな、適切な言語を指定するプレースホルダー式を使用します。"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -4172,7 +4172,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "活動に基づくステータス\n"
-"遅延: 期限が既に過ぎています\n"
+"期限超過：期限日がすでに過ぎています\n"
 "今日: 活動日は今日です\n"
 "予定: 将来の活動。"
 
@@ -4804,7 +4804,8 @@ msgstr "参加する:"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_form.js:0
 msgid "To take this survey, please close all other tabs on %(hostname)s"
-msgstr "このアンケートにご回答いただくには、他のタブをすべて閉じてください。%"
+msgstr ""
+"このアンケートにご回答いただくには、他のタブをすべて閉じてください。%"
 "(hostname)s"
 
 #. module: survey

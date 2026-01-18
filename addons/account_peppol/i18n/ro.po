@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:35+0000\n"
+"POT-Creation-Date: 2026-01-15 18:36+0000\n"
 "PO-Revision-Date: 2025-12-09 14:08+0000\n"
 "Last-Translator: Alin Ilie <alin.ilie@logit-solutions.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
@@ -458,6 +458,11 @@ msgid "Active Parent Company"
 msgstr "Companie mamă activă"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__active_parent_company_name
+msgid "Active Parent Company Name"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Advanced Configuration"
 msgstr "Configurare avansată"
@@ -715,7 +720,7 @@ msgid "Company"
 msgstr "Companie"
 
 #. module: account_peppol
-#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__active_parent_company_name
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_name
 msgid "Company Name"
 msgstr "Nume companie"
 
@@ -798,6 +803,11 @@ msgstr "demonstrație"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Disable the reception."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Discard"
 msgstr "Renunţa"
 
@@ -836,6 +846,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Numele de afișare"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_use_parent_connection_selection
+msgid "Display Use Parent Connection Selection"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_identifier
@@ -889,6 +904,11 @@ msgstr "Identificare Edi"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Email"
 msgstr "E-mail"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Enable reception"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__enabled
@@ -1195,6 +1215,11 @@ msgid "PEPPOL: webhook keep alive"
 msgstr "PEPPOL: webhook-ul menține activ"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_id
+msgid "Parent Company"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
 msgid "Partner cannot receive format"
 msgstr "Partenerul nu poate primi formatul"
@@ -1498,7 +1523,7 @@ msgstr "Înregistrat pentru a primi documente prin Peppol (demo)."
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid "Registered to receive documents via Peppol."
 msgstr "Înregistrat pentru a primi documente prin Peppol."
 
@@ -1598,13 +1623,9 @@ msgstr ""
 msgid ""
 "Some service support migration keys. If this is your case you can enter your "
 "migration key below.\n"
-"                        If not, you should de-register from your current "
+"                            If not, you should de-register from your current "
 "service provider and register with Odoo afterward."
 msgstr ""
-"Unele servicii acceptă chei de migrare. Dacă este cazul tău, poți introduce "
-"cheia de migrare mai jos.\n"
-"Dacă nu, ar trebui să te dezregistrezi de la actualul furnizor de servicii "
-"și să te înregistrezi ulterior cu Odoo."
 
 #. module: account_peppol
 #. odoo-python
@@ -2290,7 +2311,7 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid ""
 "Your registration on Peppol network should be activated within a day. The "
 "updated status will be visible in Settings."
@@ -2340,6 +2361,17 @@ msgstr "pentru a trimite facturi, dar aceasta"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "utilizări"
+
+#~ msgid ""
+#~ "Some service support migration keys. If this is your case you can enter "
+#~ "your migration key below.\n"
+#~ "                        If not, you should de-register from your current "
+#~ "service provider and register with Odoo afterward."
+#~ msgstr ""
+#~ "Unele servicii acceptă chei de migrare. Dacă este cazul tău, poți "
+#~ "introduce cheia de migrare mai jos.\n"
+#~ "Dacă nu, ar trebui să te dezregistrezi de la actualul furnizor de "
+#~ "servicii și să te înregistrezi ulterior cu Odoo."
 
 #~ msgid "The document has been sent to Peppol for processing"
 #~ msgstr "Documentul a fost trimis către Peppol pentru procesare."

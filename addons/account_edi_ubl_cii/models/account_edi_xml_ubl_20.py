@@ -338,12 +338,18 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _add_invoice_delivery_nodes(self, document_node, vals):
         invoice = vals['invoice']
+        partner_shipping = vals['partner_shipping']
         document_node['cac:Delivery'] = {
             'cbc:ActualDeliveryDate': {'_text': invoice.delivery_date},
             'cac:DeliveryLocation': {
-                'cac:Address': self._get_address_node({'partner': vals['partner_shipping']})
+                'cac:Address': self._get_address_node({'partner': partner_shipping}),
             },
         }
+        # TODO master: clean that code a bit hacky, when the module account_add_gln is merged with account
+        if gln := 'global_location_number' in partner_shipping._fields and partner_shipping.global_location_number:
+            document_node['cac:Delivery']['cac:DeliveryLocation'].update({
+                'cbc:ID': {'schemeID': '0088', '_text': gln},
+            })
 
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         invoice = vals['invoice']
@@ -1085,8 +1091,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'vat': self._find_value(f'.//cac:{role}Party//cbc:CompanyID[string-length(text()) > 5]', tree),
             'phone': self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:Telephone', tree),
             'email': self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:ElectronicMail', tree),
-            'name': self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:Name', tree) or
-                    self._find_value(f'.//cac:{role}Party//cbc:RegistrationName', tree),
+            'name': self._find_value(f'.//cac:{role}Party//cbc:RegistrationName', tree) or
+                    self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:Name', tree),
             'postal_address': self._get_postal_address(tree, role),
         }
 

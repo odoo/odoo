@@ -233,10 +233,11 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         )
         attachment1 = self.env["ir.attachment"].create({"name": "test.txt"})
         attachment2 = self.env["ir.attachment"].with_user(self.visitor_user).create({"name": "test2.txt"})
-        channel.message_post(body="Operator Here")
-        channel.message_post(body="", attachment_ids=[attachment1.id])
-        channel.with_user(self.visitor_user).message_post(body="Visitor Here")
-        channel.with_user(self.visitor_user).message_post(body="", attachment_ids=[attachment2.id])
+        channel.message_post(body="Operator Here", message_type="comment")
+        channel.message_post(body="", message_type="comment", attachment_ids=[attachment1.id])
+        channel.with_user(self.visitor_user).message_post(body="Visitor Here", message_type="comment")
+        channel.with_user(self.visitor_user).message_post(body="", message_type="comment", attachment_ids=[attachment2.id])
+        channel.message_post(body="Some notification", message_type="notification")
         channel_history = channel.with_user(self.visitor_user)._get_channel_history()
         self.assertEqual(
             channel_history,

@@ -87,7 +87,7 @@ class PosOrder(models.Model):
 
         self._check_existing_loyalty_cards(coupon_data)
         self._remove_duplicate_coupon_data(coupon_data)
-        updated_gift_cards = self._process_existing_gift_cards(coupon_data)
+        self._process_existing_gift_cards(coupon_data)
 
         # Map negative id to newly created ids.
         coupon_new_id_map = {k: k for k in coupon_data.keys() if k > 0}
@@ -96,7 +96,7 @@ class PosOrder(models.Model):
         coupons_to_create = {k: v for k, v in coupon_data.items() if k < 0}
         coupon_create_vals = [{
             'program_id': p['program_id'],
-            'partner_id': get_partner_id(p.get('partner_id', False)),
+            'partner_id': get_partner_id(p.get('partner_id', self.partner_id.id)),
             'code': p.get('code') or p.get('barcode') or self.env['loyalty.card']._generate_code(),
             'points': 0,
             'expiration_date': p.get('date_to', False),
@@ -130,7 +130,7 @@ class PosOrder(models.Model):
         report_per_program = {}
         coupon_per_report = defaultdict(list)
         # Important to include the updated gift cards so that it can be printed. Check coupon_report.
-        for coupon in new_coupons | updated_gift_cards:
+        for coupon in new_coupons:
             if coupon.program_id not in report_per_program:
                 report_per_program[coupon.program_id] = coupon.program_id.communication_plan_ids.\
                     filtered(lambda c: c.trigger == 'create').pos_report_print_id

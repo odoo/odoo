@@ -74,6 +74,7 @@
         <!-- Jobs -->
         <record id="job_cto" model="hr.job">
             <field name="name">Chief Technical Officer</field>
+            <field name="company_id" eval="False"/>
             <field name="department_id" ref="dep_rd"/>
             <field name="description">You will take part in the consulting services we provide to our partners and customers: design, analysis, development, testing, project management, support/coaching. You will work autonomously as well as coordinate and supervise small distributed development teams for some projects. Optionally, you will deliver Odoo training sessions to partners and customers (8-10 people/session). You will report to the Head of Professional Services and work closely with all developers and consultants.
 
@@ -100,6 +101,7 @@ Good language skills, other than English (Dutch and French preferred, others wel
 
         <record id="job_consultant" model="hr.job">
             <field name="name">Consultant</field>
+            <field name="company_id" eval="False"/>
             <field name="department_id" ref="dep_ps"/>
             <field name="no_of_recruitment">5</field>
             <field name="contract_type_id" ref="contract_type_interim"/>
@@ -111,6 +113,7 @@ Good language skills, other than English (Dutch and French preferred, others wel
 
         <record id="job_developer" model="hr.job">
             <field name="name">Experienced Developer</field>
+            <field name="company_id" eval="False"/>
             <field name="department_id" ref="dep_rd"/>
             <field name="no_of_recruitment">5</field>
             <field name="contract_type_id" ref="contract_type_permanent"/>
@@ -123,6 +126,7 @@ Good language skills, other than English (Dutch and French preferred, others wel
 
         <record id="job_hrm" model="hr.job">
             <field name="name">Human Resources Manager</field>
+            <field name="company_id" eval="False"/>
             <field name="department_id" ref="dep_administration"/>
             <field name="description">
                 A Human Resources (HR) Manager is responsible for overseeing an organization's workforce and ensuring
@@ -138,6 +142,7 @@ Good language skills, other than English (Dutch and French preferred, others wel
 
         <record id="job_marketing" model="hr.job">
             <field name="name">Marketing and Community Manager</field>
+            <field name="company_id" eval="False"/>
             <field name="department_id" ref="dep_sales"/>
             <field name="description">
                 The Marketing Manager defines the mid- to long-term marketing strategy for his covered market segments
@@ -149,6 +154,7 @@ Good language skills, other than English (Dutch and French preferred, others wel
 
         <record id="job_trainee" model="hr.job">
             <field name="name">Trainee</field>
+            <field name="company_id" eval="False"/>
             <field name="description">You participate to the update of our tutorial tools and pre-sales tools after the launch of a new version of Odoo. Indeed, any new version of the software brings significant improvements in terms of functionalities, ergonomics and configuration.
 You will have to become familiar with the existing tools (books, class supports, Odoo presentation’s slides, commercial tools),
 to participate to the update of those tools in order to make them appropriate for the new version of the software and, for sure,

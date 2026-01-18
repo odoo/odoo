@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* point_of_sale
+# * point_of_sale
 #
 # Translators:
 # Robert Kirschner <robertkirschner@yahoo.com>, 2022
@@ -12,21 +12,23 @@
 # Martin Trigaux, 2022
 # Jan Prokop, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
-#
+# Tomáš Píšek <Tomas.Pisek@seznam.cz>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:35+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2023\n"
-"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"POT-Creation-Date: 2026-01-15 18:36+0000\n"
+"PO-Revision-Date: 2026-01-04 21:55+0000\n"
+"Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/"
+"point_of_sale/sk/>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
 ">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2010,6 +2012,7 @@ msgstr "Klient"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2247,7 +2250,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Confirm"
@@ -3127,6 +3130,12 @@ msgid "Display Name"
 msgstr "Zobrazovaný názov"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Display QR"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Display and update your products information through electronic price tags"
@@ -3173,8 +3182,20 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download Logs"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Download a report with all the sales of the current PoS Session"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download logs"
 msgstr ""
 
 #. module: point_of_sale
@@ -3562,6 +3583,12 @@ msgid "For imprecise industrial touchscreens."
 msgstr "Pre nepresné priemyselné dotykové obrazovky."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force Cancel"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
@@ -3572,6 +3599,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force Done"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force cancel"
 msgstr ""
 
 #. module: point_of_sale
@@ -4057,8 +4090,9 @@ msgid ""
 "                Invocing/Accounting app will create Bank and Cash payment\n"
 "                methods automatically."
 msgstr ""
-"Inštaláciou účtového rozvrhu z aplikácie všeobecné nastavenia fakturácie / "
-"účtovníctva sa automaticky vytvoria spôsoby platby v banke a na pokladňi."
+"Inštaláciou účtovnej osnovy z Obecných nastavení aplikácie\n"
+"                Fakturácia/Účtovníctvo sa automaticky vytvoria platobné "
+"metódy Bankový prevod a Hotovosť."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -4320,7 +4354,7 @@ msgstr "Účtovný denník"
 #: model:ir.model,name:point_of_sale.model_account_move
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__move_id
 msgid "Journal Entry"
-msgstr "Vstup účtovnej knihy"
+msgstr "Účtovný záznam"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_move_line
@@ -5340,12 +5374,6 @@ msgid "Offline Orders"
 msgstr "Offline objednávky"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
-msgid "Ok"
-msgstr "Ok"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "One-click Payment"
 msgstr ""
@@ -5915,7 +5943,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Payment Method"
-msgstr "Metóda platby"
+msgstr "Platobná metóda"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_method_form
@@ -5981,7 +6009,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Payment method"
-msgstr "Spôsob platby"
+msgstr "Platobná metóda"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6245,7 +6273,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.js:0
 msgid "PoS Customer Display opened in a new window"
 msgstr ""
 
@@ -7649,6 +7677,12 @@ msgstr "Skenovanie"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Scan QR"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Scan a barcode to create automatically, or load our sample data."
 msgstr ""
@@ -7899,7 +7933,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_move_id
 msgid "Session Journal Entry"
-msgstr ""
+msgstr "Účtovný záznam relácie"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_daily_sales_reports
@@ -8299,6 +8333,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Subtotal"
 msgstr "Medzisúčet"
 
@@ -8436,6 +8471,7 @@ msgstr "Cena s daňou"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_tax
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_action_tax_form_open
@@ -9092,10 +9128,10 @@ msgid ""
 " Please pay the exact amount or add a cash payment method in the point of "
 "sale configuration"
 msgstr ""
-"Neexistuje žiadna metóda platby v hotovosti k dispozícii v tomto mieste "
-"predaja pre zvládnutie výdavku.\n"
+"Neexistuje žiadna hotovostná platobná metóda k dispozícii v tomto mieste "
+"predaja pre spracovanie výdavku.\n"
 "\n"
-"Prosím zaplaťte presnú sumu, alebo pridajte metódu platby v hotovosti v "
+"Prosím zaplaťte presnú sumu, alebo pridajte hotovostnú metódu platby v "
 "konfigurácii miesta predaja."
 
 #. module: point_of_sale
@@ -9146,6 +9182,12 @@ msgstr ""
 msgid ""
 "This cash payment method is already used in another Point of Sale.\n"
 "A new cash payment method should be created for this Point of Sale."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "This device"
 msgstr ""
 
 #. module: point_of_sale
@@ -9987,6 +10029,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid ""
+"You can either use it on this device or scan the QR code to display it on "
+"another device"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 msgid "You can not change the %s of the refund order."
 msgstr ""
@@ -10497,6 +10547,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "použité"
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
 
 #~ msgid " REFUND"
 #~ msgstr "VRÁTIŤ"

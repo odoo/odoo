@@ -7,14 +7,14 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-12-11 13:01+0000\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-15 14:42+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "stock_account/es/>\n"
@@ -43,8 +43,8 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
-msgid "%(quantity)s %(uom)s at product's standard price %(price)s"
-msgstr "%(quantity)s %(uom)s al precio estándar del producto %(price)s"
+msgid "%(quantity)s %(uom)s at product's cost"
+msgstr "%(quantity)s %(uom)s al coste del producto"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -170,7 +170,7 @@ msgstr "Planes analíticos"
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
 msgid "As of"
-msgstr "A partir del"
+msgstr "Hasta el"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_account__account_stock_variation_id
@@ -621,6 +621,11 @@ msgid "Journal Items"
 msgstr "Apuntes contables"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__justification
+msgid "Justification"
+msgstr "Justificación"
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
 msgid "Landed Costs"
 msgstr "Costes en destino"
@@ -674,6 +679,17 @@ msgstr "Mensual"
 #: model:ir.model.fields,field_description:stock_account.field_product_value__move_id
 msgid "Move"
 msgstr "Movimiento"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
+msgid "New Value"
+msgstr "Nuevo valor"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Only is set (= True) is supported in search for remaining_qty."
+msgstr "Solo se admite el valor (= True) en la búsqueda de remaining_qty."
 
 #. module: stock_account
 #. odoo-python
@@ -821,6 +837,11 @@ msgstr "Cuantos"
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
 msgid "Reference"
 msgstr "Referencia"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_search
+msgid "Remaining"
+msgstr "Restante"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_qty
@@ -1167,6 +1188,16 @@ msgstr "Solo se puede ajustar la valoración de un movimiento de uno en uno."
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
+msgid ""
+"You can only get the standard price at a given date for products with "
+"'Standard Price' as cost method."
+msgstr ""
+"Solo se puede obtener el precio estándar en una fecha determinada para los "
+"productos con «Precio estándar» como método de coste."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
 msgid "You can only use the '=' operator to search on valuation field."
 msgstr ""
 "Solo se puede utilizar el operador «=» para buscar en el campo de valoración."
@@ -1190,6 +1221,9 @@ msgstr "movimiento_stock_id"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "unidades"
+
+#~ msgid "%(quantity)s %(uom)s at product's standard price %(price)s"
+#~ msgstr "%(quantity)s %(uom)s al precio estándar del producto %(price)s"
 
 #~ msgid ""
 #~ "Manual: The accounting entries to value the inventory are not posted "

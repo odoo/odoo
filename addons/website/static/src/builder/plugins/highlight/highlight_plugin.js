@@ -126,7 +126,7 @@ export class HighlightPlugin extends Plugin {
             );
             this.highlightState.color = style.every((v) => v === style[0])
                 ? style[0]
-                : getComputedStyle(this.document.body).getPropertyValue("--o-color-1");
+                : getComputedStyle(this.document.body).getPropertyValue("--hb-cp-o-color-1");
             const thickness = nodes.map((node) =>
                 getComputedStyle(node).getPropertyValue("--text-highlight-width")
             );

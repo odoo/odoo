@@ -12,15 +12,15 @@
 # Martin Trigaux, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
 # 何彬 <vnsoft.he@gmail.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:36+0000\n"
-"PO-Revision-Date: 2025-12-02 14:48+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
+"PO-Revision-Date: 2026-01-07 05:53+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/hr/zh_Hans/>\n"
@@ -422,6 +422,11 @@ msgid "<span invisible=\"not contract_date_start\">to</span>"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+msgid "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
 "<span invisible=\"not user_id or is_user_active\">\n"
@@ -538,7 +543,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "<strong class=\"s_rating_title\">Personal Evolution</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">个人进化</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
@@ -1327,7 +1332,7 @@ msgstr "取消"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot archive the only active record of an employee."
+msgid "Cannot archive all the active versions of an employee."
 msgstr ""
 
 #. module: hr
@@ -1341,7 +1346,7 @@ msgstr ""
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot unassign the only active record of an employee."
+msgid "Cannot unassign all the active versions of an employee."
 msgstr ""
 
 #. module: hr
@@ -4160,7 +4165,7 @@ msgstr "准备好开始更加高效的招聘工作了吗?"
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Ready to start your experience?"
-msgstr ""
+msgstr "准备好开始您的体验了吗？"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4835,6 +4840,12 @@ msgstr "毕业论文"
 #: code:addons/hr/models/hr_employee.py:0
 msgid "This employee already has an user."
 msgstr "这个员工已经有绑定用户。"
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz

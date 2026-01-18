@@ -248,7 +248,7 @@ class HrVersion(models.Model):
                 real_leaves = (static_attendances & multi_day_leaves) | one_day_leaves
                 real_worked_leaves = (static_attendances & multi_day_worked_leaves) | one_day_worked_leaves
 
-            elif version.has_static_work_entries() or not leaves or not worked_leaves:
+            elif version.has_static_work_entries() or not leaves:
                 # Empty leaves means empty real_leaves
                 real_worked_leaves = attendances - real_attendances - leaves
                 real_leaves = attendances - real_attendances - real_worked_leaves
@@ -258,6 +258,8 @@ class HrVersion(models.Model):
                     start_dt, end_dt, resources=resource, tz=tz)[resource.id]
                 real_leaves = static_attendances & leaves
                 real_worked_leaves = static_attendances & worked_leaves
+
+            real_attendances = self._get_real_attendances(attendances, leaves, worked_leaves)
 
             if not version.has_static_work_entries():
                 # An attendance based version might have an invalid planning, by definition it may not happen with
@@ -333,6 +335,10 @@ class HrVersion(models.Model):
                         ('version_id', version.id),
                     ] + version._get_more_vals_leave_interval(interval, interval_leaves))]
         return version_vals
+
+    # will override in attendance bridge to add overtime vals
+    def _get_real_attendances(self, attendances, leaves, worked_leaves):
+        return attendances - leaves - worked_leaves
 
     def _get_work_entries_values(self, date_start, date_stop):
         """

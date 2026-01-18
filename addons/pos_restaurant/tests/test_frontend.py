@@ -341,6 +341,10 @@ class TestFrontend(TestFrontendCommon):
     def test_pos_restaurant_course(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_pos_restaurant_course')
+        order = self.pos_config.current_session_id.order_ids
+        self.assertEqual(len(order), 1)
+        # Verify whether the two courses have different timestamps
+        self.assertNotEqual(order.course_ids[0].fired_date, order.course_ids[1].fired_date)
 
     def test_preparation_printer_content(self):
         self.preset_eat_in = self.env['pos.preset'].create({
@@ -536,6 +540,11 @@ class TestFrontend(TestFrontendCommon):
         self.assertEqual(line_1.tax_ids, self.tax_sale_a)
         self.assertEqual(line_2.tax_ids, self.tax_sale_a)
 
+    def test_no_ghost_floor(self):
+        self.pos_config.is_order_printer = False
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('no_ghost_floor', login="pos_admin")
+
     def test_multiple_preparation_printer_different_categories(self):
         """This test make sure that no empty receipt are sent when using multiple printer with different categories
            The tour will check that we tried did not try to print two receipt. We can achieve that by checking the content
@@ -593,11 +602,20 @@ class TestFrontend(TestFrontendCommon):
             'name': 'Takeaway',
             'identification': 'name',
         })
+        self.preset_delivery = self.env['pos.preset'].create({
+            'name': 'Delivery',
+            'identification': 'address',
+        })
         self.main_pos_config.write({
             'use_presets': True,
-            'default_preset_id': self.preset_eat_in.id,
-            'available_preset_ids': [(6, 0, [self.preset_takeaway.id])],
+            'default_preset_id': self.preset_delivery.id,
+            'available_preset_ids': [(6, 0, [
+                self.preset_takeaway.id,
+                self.preset_eat_in.id,
+                self.preset_delivery.id,
+            ])],
         })
+        self.start_pos_tour('test_preset_delivery_restaurant')
         resource_calendar = self.env['resource.calendar'].create({
             'name': 'Takeaway',
             'attendance_ids': [(0, 0, {
@@ -612,13 +630,14 @@ class TestFrontend(TestFrontendCommon):
             'use_timing': True,
             'resource_calendar_id': resource_calendar
         })
+        self.main_pos_config.write({'default_preset_id': self.preset_takeaway.id})
+        self.start_pos_tour('test_open_register_with_preset_takeaway')
+        self.main_pos_config.write({'default_preset_id': self.preset_eat_in.id})
         self.start_pos_tour('test_preset_timing_restaurant')
         self.preset_eat_in.write({
             'use_guest': True,
         })
         self.start_pos_tour('test_guest_count_bank_payment')
-        self.main_pos_config.write({'default_preset_id': self.preset_takeaway.id})
-        self.start_pos_tour('test_open_register_with_preset_takeaway')
 
     def test_restaurant_preset_eatin_tour(self):
         self.pos_config.write({

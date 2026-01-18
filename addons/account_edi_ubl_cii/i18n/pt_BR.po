@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:35+0000\n"
-"PO-Revision-Date: 2025-12-12 15:40+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
+"PO-Revision-Date: 2025-12-29 09:27+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-19/account_edi_ubl_cii/pt_BR/>\n"
@@ -72,7 +72,7 @@ msgstr "Envio de movimentação de conta"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send_wizard
 msgid "Account Move Send Wizard"
-msgstr ""
+msgstr "Assistente de envio de movimentação de conta"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9923
@@ -143,6 +143,11 @@ msgid "BIS3 DE (XRechnung)"
 msgstr "BIS3 DE (XRechnung)"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl
+msgid "Base helpers for UBL"
+msgstr "Ajudantes básicos para UBL"
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0208
 msgid "Belgian Company Registry"
 msgstr "Registro de empresa belga"
@@ -205,6 +210,7 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 msgid "Conditional cash/payment discount"
 msgstr "Desconto condicional de pagamento à vista"
@@ -319,7 +325,14 @@ msgid "Directorates of the European Commission"
 msgstr "Diretorias da Comissão Europeia"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
+msgid "Discount"
+msgstr "Desconto"
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_common__display_name
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_ubl__display_name
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_xml_cii__display_name
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_xml_ubl_20__display_name
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_xml_ubl_21__display_name
@@ -541,6 +554,7 @@ msgstr "VAT Hungria"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_common__id
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_ubl__id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_xml_cii__id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_xml_ubl_20__id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_xml_ubl_21__id
@@ -807,6 +821,8 @@ msgstr ""
 msgid ""
 "Please install the french Chorus pro module to have all the specific rules."
 msgstr ""
+"Instale o módulo Chorus Pro francês para ter acesso a todas as regras "
+"específicas."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9945
@@ -877,7 +893,7 @@ msgstr "VAT Sérvia"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_sg
 msgid "Singapore (BIS Billing 3.0 SG)"
-msgstr ""
+msgstr "Cingapura (BIS Billing 3.0 SG)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0195
@@ -939,6 +955,14 @@ msgstr "Tax Category Code"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_exemption_reason_code
 msgid "Tax Exemption Reason Code"
 msgstr "Tax Exemption Reason Code"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
+"Tax with matching exigibility could not be retrieved: '%(exigibility)s' for "
+"line '%(line)s'."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1086,7 +1110,7 @@ msgstr "UBL/CII File"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__ubl_cii_xml_filename
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__ubl_cii_xml_filename
 msgid "UBL/CII Filename"
-msgstr ""
+msgstr "Nome do arquivo UBL/CII"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9959
@@ -1117,7 +1141,7 @@ msgstr "VAT Reino Unido"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
 msgid "Unspported file type via %s"
-msgstr ""
+msgstr "Tipo de arquivo não suportado via %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132

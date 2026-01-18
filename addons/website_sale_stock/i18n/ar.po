@@ -8,13 +8,14 @@
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-10-13 12:16+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:38+0000\n"
+"PO-Revision-Date: 2025-12-29 09:27+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "website_sale_stock/ar/>\n"
 "Language: ar\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -31,6 +32,7 @@ msgstr ""
 msgid ""
 "%(product_name)s has not been added to your cart since it is not available."
 msgstr ""
+"لم تتم إضافة %(product_name)s إلى سلة التسوق الخاصة بك لأن المنتج غير متوفر."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -101,6 +103,11 @@ msgid ""
 "- New: Applied based on the New period you will define.\n"
 "- Out Of Stock: Applied when the product is out of stock."
 msgstr ""
+"يحدد الطريقة التي يتم بها تعيين هذا الشريط للمنتجات:\n"
+"- يدويًا: تعيين الشريط للمنتجات يدويًا.\n"
+"- تخفيضات: يتم تطبيقه عندما تكون المنتجات ضمن فترة التخفيضات.\n"
+"- جديد: يتم تطبيقه بناءً على فترة ”جديد“ التي ستحددها.\n"
+"- غير متوفر: يتم تطبيقه عندما يكون المنتج غير متوفر."
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__display_name
@@ -322,8 +329,8 @@ msgid ""
 "You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
 "available"
 msgstr ""
-"قمت بتحديد %(desired_qty)s %(product_name)s ولكن الكمية المتوفرة هي "
-"%(new_qty)s فقط"
+"قمت بتحديد %(desired_qty)s %(product_name)s ولكن الكمية المتوفرة هي %"
+"(new_qty)s فقط"
 
 #. module: website_sale_stock
 #. odoo-python

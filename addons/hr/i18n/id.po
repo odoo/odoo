@@ -10,14 +10,14 @@
 # Martin Trigaux, 2023
 # Abe Manyo, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:36+0000\n"
-"PO-Revision-Date: 2025-12-10 03:26+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
+"PO-Revision-Date: 2026-01-06 06:53+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/hr/id/"
 ">\n"
@@ -421,6 +421,11 @@ msgstr "<span class=\"text-muted small\">Waktu untuk Menjawab</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span invisible=\"not contract_date_start\">to</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+msgid "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
 msgstr ""
 
 #. module: hr
@@ -831,12 +836,12 @@ msgstr "Alokasi"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__allowed_country_state_ids
 #: model:ir.model.fields,field_description:hr.field_hr_version__allowed_country_state_ids
 msgid "Allowed Country State"
-msgstr ""
+msgstr "Negara Bagian yang Diizinkan"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__allowed_user_ids
 msgid "Allowed User"
-msgstr ""
+msgstr "User yang Diizinkan"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__amount
@@ -1425,8 +1430,8 @@ msgstr "Batal"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot archive the only active record of an employee."
-msgstr "Tidak dapat mengarsip satu-satunya rekaman aktif karyawan."
+msgid "Cannot archive all the active versions of an employee."
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -1441,8 +1446,8 @@ msgstr ""
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot unassign the only active record of an employee."
-msgstr "Tidak dapat membatalkan satu-satunya rekaman aktif karyawan."
+msgid "Cannot unassign all the active versions of an employee."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
@@ -2356,7 +2361,7 @@ msgstr "Rekaman Karyawan"
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_salary_amount_is_percentage
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_salary_amount_is_percentage
 msgid "Employee Salary Amount Is Percentage"
-msgstr ""
+msgstr "Jumlah Gaji Karyawan Adalah Persentase"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -2388,7 +2393,7 @@ msgstr "Versi-Versi Karyawan"
 #: model:ir.model.fields,help:hr.field_res_users__bank_account_ids
 #: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_ids
 msgid "Employee bank accounts to pay salaries"
-msgstr ""
+msgstr "Akun bank karyawan untuk membayar gaji"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2404,7 +2409,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_ids
 msgid "Employee's Bank Accounts"
-msgstr ""
+msgstr "Akun Bank Karyawan"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -2529,6 +2534,9 @@ msgid ""
 "(e.g., Aadhaar, SIN, NIN). This is used for official records and statutory "
 "compliance."
 msgstr ""
+"Masukkan Nomor Identifikasi Nasional karyawan yang diterbitkan oleh "
+"pemerintah (contoh., Aadhaar, SIN, KTP). Ini akan digunakan untuk rekaman "
+"resmi dan pematuhan hukum."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2847,7 +2855,7 @@ msgstr "Memiliki Pesan"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_multiple_bank_accounts
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_has_multiple_bank_accounts
 msgid "Has Multiple Bank Accounts"
-msgstr ""
+msgstr "Memiliki Lebih Dari Satu Akun Bank"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -3018,7 +3026,7 @@ msgstr "Jika dicentang, beberapa pesan mempunyai kesalahan dalam pengiriman."
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_wizard__remove_related_user
 msgid "If checked, the related user will be removed from the system."
-msgstr ""
+msgstr "Bila dicentang, user terkait akan dihapus dari sistem."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -3168,12 +3176,12 @@ msgstr "Apakah Sistem"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_trusted_bank_account
 msgid "Is Trusted Bank Account"
-msgstr ""
+msgstr "Apakah Akun Bank Terpercaya"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_user
 msgid "Is User"
-msgstr ""
+msgstr "Apakah User"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -3926,7 +3934,7 @@ msgstr "Semangat untuk produk software"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_expiration_date
 #: model:ir.model.fields,field_description:hr.field_hr_version__passport_expiration_date
 msgid "Passport Expiration Date"
-msgstr ""
+msgstr "Tanggal Kadaluwarsa Paspor"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
@@ -4123,7 +4131,7 @@ msgstr "Previous internship or project experience"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__primary_bank_account_id
 msgid "Primary Bank Account"
-msgstr ""
+msgstr "Akun Bank Primer"
 
 #. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
@@ -4479,12 +4487,12 @@ msgstr "Nomor Jamkesmas"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Salary Allocation"
-msgstr ""
+msgstr "Alokasi Gaji"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__salary_distribution
 msgid "Salary Distribution"
-msgstr ""
+msgstr "Distribusi Gaji"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
@@ -4987,6 +4995,12 @@ msgid "This employee already has an user."
 msgstr "Karyawan ini sudah memiliki user."
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
+msgstr "Field ini %(field_name)s tidak tersedia di model ini (hr.version)."
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
 #: model:ir.model.fields,help:hr.field_hr_version__tz
 msgid ""
@@ -5175,7 +5189,7 @@ msgstr "Notifikasi Pembuatan User"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__is_user_employee
 msgid "User Employee"
-msgstr ""
+msgstr "Karyawan user"
 
 #. module: hr
 #. odoo-python
@@ -5192,7 +5206,7 @@ msgstr "User sudah tersedia dengan email yang sama untuk Karyawan %s"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_user_active
 msgid "User's active"
-msgstr ""
+msgstr "User aktif"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
@@ -5831,6 +5845,12 @@ msgstr "kerja"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid "Cannot archive the only active record of an employee."
+#~ msgstr "Tidak dapat mengarsip satu-satunya rekaman aktif karyawan."
+
+#~ msgid "Cannot unassign the only active record of an employee."
+#~ msgstr "Tidak dapat membatalkan satu-satunya rekaman aktif karyawan."
 
 #~ msgid "&amp;nbsp;"
 #~ msgstr "&amp;nbsp;"

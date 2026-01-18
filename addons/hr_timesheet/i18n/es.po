@@ -8,13 +8,13 @@
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-11-19 10:18+0000\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-08 07:39+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "hr_timesheet/es/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
 " ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -634,7 +634,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Import Template for Timesheets"
-msgstr ""
+msgstr "Importar plantilla para Partes de horas"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -767,6 +767,14 @@ msgstr "No se han encontrado actividades, ¡creemos una nueva!"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "No data yet!"
 msgstr "¡Todavía no hay información!"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid "No timesheets created: employees aren’t working on the selected days"
+msgstr ""
+"No se han creado partes de horas: los empleados no están trabajando en los "
+"días seleccionados"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -978,6 +986,16 @@ msgid ""
 msgstr ""
 "Hay algunas entradas de partes de horas para estas tareas. Elimínelas "
 "primero y, a continuación, podrá eliminarlas."
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid ""
+"Some timesheets were not created: employees aren’t working on the selected "
+"days"
+msgstr ""
+"No se han creado algunos partes de horas: los empleados no están trabajando "
+"en los días seleccionados"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1334,12 +1352,6 @@ msgid "Timesheets cannot be created on a private task."
 msgstr "No se pueden crear partes de horas en una tarea privada."
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
-msgid "Timesheets could not be created for any of the selected days"
-msgstr ""
-
-#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
@@ -1365,10 +1377,10 @@ msgid "Timesheets of %(name)s"
 msgstr "Partes de horas de %(name)s"
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets successfully created"
-msgstr ""
+msgstr "Partes de horas creados correctamente"
 
 #. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
@@ -1467,8 +1479,8 @@ msgstr ""
 "        !! Asignar prioridad alta a la tarea\n"
 "        !!! Asignar prioridad urgente a la tarea\n"
 "\n"
-"        Asegúrate de utilizar el formato y el orden correcto, por ejemplo: ¡"
-"Mejorar la pantalla de configuración 5 h #función #v16 @Mitchell!"
+"        Asegúrate de utilizar el formato y el orden correcto, por ejemplo: "
+"¡Mejorar la pantalla de configuración 5 h #función #v16 @Mitchell!"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id

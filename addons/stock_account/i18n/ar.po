@@ -8,13 +8,14 @@
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-08 21:55+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-05 14:58+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "stock_account/ar/>\n"
 "Language: ar\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock_account
 #. odoo-python
@@ -36,11 +37,12 @@ msgstr " [تمت المحاسبة في %s]"
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s"
 msgstr ""
+"تم تحديث سعر %(lot)s من %(old_price)s إلى %(new_price)s بواسطة %(user)s"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
-msgid "%(quantity)s %(uom)s at product's standard price %(price)s"
+msgid "%(quantity)s %(uom)s at product's cost"
 msgstr ""
 
 #. module: stock_account
@@ -604,6 +606,11 @@ msgid "Journal Items"
 msgstr "عناصر اليومية"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__justification
+msgid "Justification"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
 msgid "Landed Costs"
 msgstr "إجمالي التكاليف"
@@ -659,6 +666,17 @@ msgid "Move"
 msgstr "حركة"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
+msgid "New Value"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Only is set (= True) is supported in search for remaining_qty."
+msgstr ""
+
+#. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid ""
@@ -688,6 +706,9 @@ msgid ""
 "inventory when a product is billed or invoiced.\n"
 "        "
 msgstr ""
+"دوري: يتم اقتراح القيود المحاسبية يدويًا في تقرير تقييم المخزون.\n"
+"دائم: يتم إنشاء قيد محاسبي تلقائيًا لتقييم المخزون عند إصدار فاتورة للمنتج.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
@@ -791,6 +812,11 @@ msgstr "سجلات الكميات"
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
 msgid "Reference"
 msgstr "الرقم المرجعي"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_search
+msgid "Remaining"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_qty
@@ -1121,12 +1147,24 @@ msgid ""
 "With perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
 msgstr ""
+"مع التقييم الدائم، سيحتفظ هذا الحساب بفرق السعر بين السعر القياسي وسعر "
+"الفاتورة."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "You can only adjust valuation for one move at a time."
 msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"You can only get the standard price at a given date for products with "
+"'Standard Price' as cost method."
+msgstr ""
+"لا يمكنك الحصول على السعر القياسي في تاريخ معين إلا للمنتجات التي تستخدم "
+"\"السعر القياسي\" كطريقة تحديد التكلفة."
 
 #. module: stock_account
 #. odoo-python

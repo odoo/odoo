@@ -13,6 +13,7 @@ import {
     start,
     startServer,
     triggerEvents,
+    triggerHotkey,
     waitStoreFetch,
     dragenterFiles,
     dropFiles,
@@ -1126,6 +1127,7 @@ test("discuss sidebar call participant shows appropriate status icon", async () 
     await contains(
         ".o-mail-DiscussSidebarCallParticipants:contains('Mitchell Admin') .fa-microphone-slash"
     );
+    await contains("button[title='Unmute']");
     await click("button[title='Voice Settings']");
     await click(".dropdown-menu button:contains('Deafen')");
     await contains(".o-mail-DiscussSidebarCallParticipants:contains('Mitchell Admin') .fa-deaf");
@@ -1133,7 +1135,7 @@ test("discuss sidebar call participant shows appropriate status icon", async () 
         ".o-mail-DiscussSidebarCallParticipants:contains('Mitchell Admin') .fa-microphone-slash",
         { count: 0 }
     );
-    await click("button[title='Unmute']");
+    await click("button[title='Undeafen']");
     await contains(".o-mail-DiscussSidebarCallParticipants:contains('Mitchell Admin') .fa-deaf", {
         count: 0,
     });
@@ -1171,4 +1173,69 @@ test("auto-focus participant video in one-to-one call in chat window", async () 
     await mockedRemote.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await contains(".o-discuss-CallParticipantCard[title='Batman'] video");
     await contains(".o-discuss-CallParticipantCard", { count: 2 }); // card does not get focused in meeting view
+});
+
+test("show pulse effect on fullscreen mode only when another participant's camera is on", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const aliceMemberId = pyEnv["discuss.channel.member"].create({
+        channel_id: channelId,
+        partner_id: pyEnv["res.partner"].create({ name: "Alice" }),
+    });
+    setupChatHub({ opened: [channelId] });
+    const env = await start();
+    const network = await makeMockRtcNetwork({ env, channelId });
+    const aliceRemote = network.makeMockRemote(aliceMemberId);
+    await click("[title='Join Call']");
+    await aliceRemote.updateConnectionState("connected");
+    await contains(".o-discuss-Call");
+    await aliceRemote.updateInfo({ is_camera_on: true });
+    await contains(".o-discuss-CallActionList-pulse[title='Fullscreen']");
+    await aliceRemote.updateInfo({ is_camera_on: false });
+    await contains(".o-discuss-CallActionList-pulse[title='Fullscreen']", { count: 0 });
+});
+
+test.tags("focus required");
+test("open conversation from call invitation (chat window)", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const [memberId] = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+    const rtcSessionId = pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: memberId,
+        channel_id: channelId,
+    });
+    pyEnv["discuss.channel.member"].write([memberId], { rtc_inviting_session_id: rtcSessionId });
+    await start();
+    await contains(".o-discuss-CallInvitation");
+    await click(".o-mail-CallInvitation-avatar");
+    await contains(".o-mail-ChatWindow .o-mail-Composer.o-focused");
+    triggerHotkey("Escape");
+    await contains(".o-mail-ChatWindow", { count: 0 });
+    await contains(".o-discuss-CallInvitation");
+    await click("[title='Join Call']");
+    await contains(".o-mail-ChatWindow .o-mail-Composer.o-focused");
+});
+
+test("open conversation from call invitation (discuss app)", async () => {
+    const pyEnv = await startServer();
+    const channelId1 = pyEnv["discuss.channel"].create({ name: "General" });
+    const channelId2 = pyEnv["discuss.channel"].create({ name: "Test" });
+    const memberId = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId1]]);
+    const rtcSessionId = pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId1,
+            partner_id: pyEnv["res.partner"].create({ name: "Armstrong" }),
+        }),
+        channel_id: channelId1,
+    });
+    pyEnv["discuss.channel.member"].write(memberId, { rtc_inviting_session_id: rtcSessionId });
+    await start();
+    await openDiscuss(channelId2);
+    await contains(".o-discuss-CallInvitation");
+    await click(".o-mail-CallInvitation-avatar");
+    await contains(".o-mail-DiscussContent-threadName[title=General]");
+    await click(".o-mail-DiscussSidebarChannel:text('Test')");
+    await contains(".o-discuss-CallInvitation");
+    await click("[title='Join Call']");
+    await contains(".o-mail-DiscussContent-threadName[title=General]");
 });

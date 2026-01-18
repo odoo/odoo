@@ -60,6 +60,7 @@ test(`copy from HtmlViewer must support application/vnd.odoo.odoo-editor`, async
     const ev = new ClipboardEvent("copy", { bubbles: true, clipboardData });
     beforeNode.dispatchEvent(ev);
 
+    expect(clipboardData.getData("text/plain").trim()).toBe("A");
     expect(clipboardData.getData("text/html")).toInclude("background-color");
     expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
         clipboardData.getData("text/html")

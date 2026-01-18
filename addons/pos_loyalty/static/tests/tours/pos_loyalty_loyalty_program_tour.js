@@ -276,7 +276,7 @@ registry.category("web_tour.tours").add("test_not_create_loyalty_card_expired_pr
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.clickCustomer("Test Partner", true),
             ProductScreen.addOrderline("Desk Organizer", "3"),
             PosLoyalty.finalizeOrder("Cash", "15.3"),
         ].flat(),

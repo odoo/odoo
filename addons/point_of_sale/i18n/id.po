@@ -8,14 +8,14 @@
 # Martin Trigaux, 2023
 # Abe Manyo, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:35+0000\n"
-"PO-Revision-Date: 2025-12-10 03:26+0000\n"
+"POT-Creation-Date: 2026-01-15 18:36+0000\n"
+"PO-Revision-Date: 2026-01-06 10:37+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/id/>\n"
@@ -2103,6 +2103,7 @@ msgstr "Klien"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2340,7 +2341,7 @@ msgstr "Konfigurasi setidaknya satu POS."
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Confirm"
@@ -3053,7 +3054,7 @@ msgstr "ID Perangkat:"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__device_seq_id
 msgid "Device Sequence"
-msgstr ""
+msgstr "Urutan Perangkat"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3230,6 +3231,12 @@ msgid "Display Name"
 msgstr "Nama Tampilan"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Display QR"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Display and update your products information through electronic price tags"
@@ -3241,7 +3248,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_group_by_categ
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Display products grouped by categories."
-msgstr ""
+msgstr "Tampilkan produk-produk yang dikelompokkan berdasarkan kategori."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__is_closing_entry_by_product
@@ -3279,9 +3286,21 @@ msgstr "Unduh"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download Logs"
+msgstr "Unduh Log"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Download a report with all the sales of the current PoS Session"
 msgstr "Unduh laporan dengan semua sale pada sesi POS saat ini"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download logs"
+msgstr "Unduh rekaman"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3405,6 +3424,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_use_fast_payment
 msgid "Enable fast payment methods to validate orders on the product screen."
 msgstr ""
+"Aktifkan metode pembayaran cepat untuk memvalidasi pesanan di layar produk."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_electronic_scale
@@ -3563,13 +3583,13 @@ msgstr "Fallback Nomenclature"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fast_payment_method_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_fast_payment_method_ids
 msgid "Fast Payment Methods"
-msgstr ""
+msgstr "Metode Pembayaran Cepat"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_fast_payment
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_use_fast_payment
 msgid "Fast Payment Validation"
-msgstr ""
+msgstr "Validasi Pembayaran Cepat"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3686,6 +3706,12 @@ msgid "For imprecise industrial touchscreens."
 msgstr "Untuk layar sentuh industri yang tidak akurat."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force Cancel"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
@@ -3697,6 +3723,12 @@ msgstr "Paksa Tutup Sesi"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force Done"
 msgstr "Paksa Selesai"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force cancel"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3842,7 +3874,7 @@ msgstr "Kelompokkan Produk Pada POS"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_group_by_categ
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_group_by_categ
 msgid "Group products by categories"
-msgstr ""
+msgstr "Kelompokkan produk berdasarkan kategori"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_ir_http
@@ -4723,6 +4755,8 @@ msgid ""
 "List of account moves created when this POS order was reversed and invoiced "
 "after session close."
 msgstr ""
+"Daftar pergerakkan akun yang dibuat saat pesanan POS ini diputarbalik dan "
+"difaktur setelah penutupan sesi."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4755,6 +4789,8 @@ msgid ""
 "Local IP address of an Epson receipt printer, or its serial number if the "
 "'Automatic Certificate Update' option is enabled in the printer settings."
 msgstr ""
+"Alamat IP lokal dari printer kwitansi Epson, atau nomor serinya bila opsi "
+"'Update Sertifikat Otomatis' diaktifkan di pengaturan printer."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5523,12 +5559,6 @@ msgid "Offline Orders"
 msgstr "Order Luring"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
-msgid "Ok"
-msgstr "Ok"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "One-click Payment"
 msgstr ""
@@ -5768,7 +5798,7 @@ msgstr "Order %s tidak dibayar penuh."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__order_backend_seq_id
 msgid "Order Backend Sequence"
-msgstr ""
+msgstr "Pesan Urutan Backend"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_invoice__count
@@ -5786,7 +5816,7 @@ msgstr "Tanggal Order"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__order_line_seq_id
 msgid "Order Line Sequence"
-msgstr ""
+msgstr "Urutan Baris Pesanan"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__lines
@@ -6448,7 +6478,7 @@ msgstr "Konfigurasi PoS"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.js:0
 msgid "PoS Customer Display opened in a new window"
 msgstr "Tampilan Pelanggan POS dibuka di jendela baru"
 
@@ -7264,7 +7294,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_qfpay
 msgid "QFPay Payment Terminal"
-msgstr ""
+msgstr "Terminal Pembayaran QFPay"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7677,7 +7707,7 @@ msgstr "Jumlah Pengembalian"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__reversed_move_ids
 msgid "Reversal Account Moves"
-msgstr ""
+msgstr "Pengembalian Pergerakkan Akun"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7860,6 +7890,12 @@ msgstr "Timbangan error"
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Scan"
 msgstr "Pindai"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Scan QR"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8520,6 +8556,7 @@ msgstr "Stylish leather jacket, durable and fashionable for all occasions."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Subtotal"
 msgstr "Subtotal"
 
@@ -8658,6 +8695,7 @@ msgstr "Harga Termasuk Pajak"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_tax
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_action_tax_form_open
@@ -9290,6 +9328,8 @@ msgid ""
 "The transactions are processed by QFPay. Set your QFPay credentials on the "
 "related payment method."
 msgstr ""
+"Transaksi diproses oleh QFPay. Tetapkan kredensial QFPay Anda di metode "
+"pembayaran terkait."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_razorpay
@@ -9430,7 +9470,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fast_payment_method_ids
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_fast_payment_method_ids
 msgid "These payment methods will be available for fast payment"
-msgstr ""
+msgstr "Metode pembayaran ini akan tersedia untuk pembayaran cepat"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9451,6 +9491,12 @@ msgid ""
 msgstr ""
 "Metode pembayaran kas ini sudah digunakan di POS lain.\n"
 "Metode pembayaran kas baru harus dibuat untuk POS ini."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "This device"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -10057,7 +10103,7 @@ msgstr "Gunakan daftar harga."
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__iot
 msgid "Use a printer connected to the IoT Box"
-msgstr ""
+msgstr "Gunakan printer yang terhubung ke IoT Box"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__epson_epos
@@ -10334,6 +10380,14 @@ msgstr ""
 "Anda sedang mencoba menjual produk dengan nomor seri/lot, tapi beberapa dari "
 "mereka belum ditetapkan.\n"
 "Apakah Anda yakin ingin tetap melanjutkan?"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid ""
+"You can either use it on this device or scan the QR code to display it on "
+"another device"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10890,6 +10944,9 @@ msgstr "untuk mengaktifkan tombol-tombol."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "menggunakan"
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
 
 #~ msgid "Confirm?"
 #~ msgstr "Konfirmasi?"

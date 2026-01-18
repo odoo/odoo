@@ -48,7 +48,6 @@ import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
-import { uuid } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -551,60 +550,79 @@ export class PosStore extends WithLazyGetterTrap {
                 return false;
             }
         }
+        const refundedOrderLines = order.lines
+            .filter((line) => line.refunded_orderline_id?.order_id)
+            .map((line) => ({
+                order: line.refunded_orderline_id.order_id,
+                uuid: line.refunded_orderline_id.uuid,
+            }));
+
         const orderIsDeleted = await this.deleteOrders([order]);
-        if (orderIsDeleted) {
-            order.uiState.displayed = false;
-            await this.afterOrderDeletion();
+        if (!orderIsDeleted) {
+            return false;
         }
-        return orderIsDeleted;
+        order.uiState.displayed = false;
+        // Delete refunded lines linked to the current order
+        for (const refundedLine of refundedOrderLines) {
+            delete refundedLine.order?.uiState?.lineToRefund[refundedLine.uuid];
+        }
+
+        await this.afterOrderDeletion();
+        return true;
     }
     async afterOrderDeletion() {
-        this.setOrder(this.getOpenOrders().at(-1) || this.addNewOrder());
+        if (!this.config.module_pos_restaurant) {
+            this.setOrder(this.getOpenOrders().at(-1) || this.addNewOrder());
+        }
     }
 
     async deleteOrders(orders, serverIds = [], ignoreChange = false) {
-        const ids = new Set();
-        for (const order of orders) {
-            if (order && (await this._onBeforeDeleteOrder(order))) {
-                if (
-                    !ignoreChange &&
-                    order.isSynced &&
-                    Object.keys(order.last_order_preparation_change).length > 0
-                ) {
-                    const orderPresetDate = DateTime.fromISO(order.preset_time);
-                    const isSame = DateTime.now().hasSame(orderPresetDate, "day");
-                    if (!order.preset_time || isSame) {
-                        await this.sendOrderInPreparation(order, {
-                            cancelled: true,
-                            orderDone: true,
-                        });
+        const ordersToDelete = [];
+        const actionPosOrderCancelCall = async (orderIds) => {
+            await this.data.call("pos.order", "action_pos_order_cancel", orderIds, {
+                context: {
+                    device_identifier: this.device.identifier,
+                },
+            });
+        };
+        try {
+            for (const order of orders) {
+                if (order && (await this._onBeforeDeleteOrder(order))) {
+                    if (
+                        !ignoreChange &&
+                        order.isSynced &&
+                        Object.keys(order.last_order_preparation_change).length > 0
+                    ) {
+                        const orderPresetDate = DateTime.fromISO(order.preset_time);
+                        const isSame = DateTime.now().hasSame(orderPresetDate, "day");
+                        if (!order.preset_time || isSame) {
+                            await this.sendOrderInPreparation(order, {
+                                cancelled: true,
+                                orderDone: true,
+                            });
+                        }
                     }
-                }
 
-                const cancelled = this.removeOrder(order, false);
-                this.removePendingOrder(order);
-                if (!cancelled) {
+                    if (order.isSynced) {
+                        await actionPosOrderCancelCall([order.id]);
+                    }
+                    ordersToDelete.push(order);
+                } else {
                     return false;
-                } else if (order.isSynced) {
-                    ids.add(order.id);
                 }
-            } else {
-                return false;
             }
-        }
 
-        if (serverIds.length > 0) {
-            for (const id of serverIds) {
-                if (typeof id !== "number") {
-                    continue;
-                }
-                ids.add(id);
+            if (serverIds.length > 0) {
+                await actionPosOrderCancelCall([
+                    ...new Set(serverIds.filter((id) => typeof id === "number")),
+                ]);
             }
-        }
-
-        if (ids.size > 0) {
-            await this.data.call("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
-            return true;
+        } finally {
+            // Remove orders locally at the end to avoid reactivity during the async process
+            for (const order of ordersToDelete) {
+                this.removeOrder(order, false);
+                this.removePendingOrder(order);
+            }
         }
 
         return true;
@@ -667,10 +685,6 @@ export class PosStore extends WithLazyGetterTrap {
         if (paidUnsyncedOrderIds.length > 0) {
             this.addPendingOrder(paidUnsyncedOrderIds);
         }
-
-        this.data.models["pos.order"]
-            .filter((order) => order._isResidual)
-            .forEach((order) => (order.state = "cancel"));
 
         const openOrders = this.data.models["pos.order"].filter((order) => !order.finalized);
         await this.syncAllOrders();
@@ -902,10 +916,19 @@ export class PosStore extends WithLazyGetterTrap {
                 const decimalAccuracy = this.models["decimal.precision"].find(
                     (dp) => dp.name === "Product Unit"
                 ).digits;
+
+                const overridedValues = {};
+                if (order.pricelist_id) {
+                    overridedValues.pricelist = order.pricelist_id;
+                }
+                if (order.fiscal_position_id) {
+                    overridedValues.fiscalPosition = order.fiscal_position_id;
+                }
+
                 this.scale.setProduct(
                     values.product_id,
                     decimalAccuracy,
-                    values.product_id.getTaxDetails().total_included
+                    values.product_id.getTaxDetails({ overridedValues }).total_included
                 );
                 const weight = await this.weighProduct();
                 if (weight) {
@@ -927,7 +950,7 @@ export class PosStore extends WithLazyGetterTrap {
         if (configure) {
             this.numberBuffer.reset();
         }
-        const selectedOrderline = order.getSelectedOrderline();
+        let selectedOrderline = order.getSelectedOrderline();
         if (options.draftPackLotLines && configure) {
             selectedOrderline.setPackLotLines({
                 ...options.draftPackLotLines,
@@ -938,6 +961,7 @@ export class PosStore extends WithLazyGetterTrap {
         // Merge orderline if needed
         this.tryMergeOrderline(order, line, merge, selectedOrderline);
 
+        selectedOrderline = order.getSelectedOrderline();
         if (values.product_id.tracking === "lot") {
             const productTemplate = values.product_id.product_tmpl_id;
             const related_lines = [];
@@ -947,7 +971,7 @@ export class PosStore extends WithLazyGetterTrap {
                 values.price_extra,
                 false,
                 values.product_id,
-                line,
+                selectedOrderline,
                 related_lines
             );
             related_lines.forEach((line) => line.setUnitPrice(price));
@@ -1058,9 +1082,9 @@ export class PosStore extends WithLazyGetterTrap {
                     ]),
                     combo_item_id: comboItem.combo_item_id,
                     price_unit: comboItem.price_unit,
-                    price_type: "automatic",
+                    price_type: "original",
                     order_id: order,
-                    qty: comboItem.qty,
+                    qty: comboItem.qty * values.qty,
                     attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
                         "link",
                         attr,
@@ -1571,7 +1595,8 @@ export class PosStore extends WithLazyGetterTrap {
             productProduct?.id,
         ]);
 
-        const priceWithoutTax = productInfo["all_prices"]["price_without_tax"];
+        const productTaxDetails = productTemplate.getTaxDetails();
+        const priceWithoutTax = productTaxDetails.total_excluded;
         const margin = priceWithoutTax - productTemplate.standard_price;
         const orderPriceWithoutTax = order.priceExcl;
         const orderCost = order.getTotalCost();
@@ -1583,9 +1608,9 @@ export class PosStore extends WithLazyGetterTrap {
             order.prices.taxDetails.order_sign * order.prices.taxDetails.total_amount_currency
         );
         const taxAmount = this.env.utils.formatCurrency(
-            productInfo.all_prices.tax_details[0]?.amount || 0
+            productTaxDetails.taxes_data.reduce((sum, d) => sum + d.tax_amount_currency, 0)
         );
-        const taxName = productInfo.all_prices.tax_details[0]?.name || "";
+        const taxName = productTemplate.taxes_id.map((t) => t.name)?.join(", ");
 
         const costCurrency = this.env.utils.formatCurrency(productTemplate.standard_price);
         const marginCurrency = this.env.utils.formatCurrency(margin);
@@ -2050,11 +2075,10 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async printOrderChanges(data, printer) {
-        const actionId = data.changes.data[0]?.uuid || uuid();
         const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
             data: data,
         });
-        return await printer.printReceipt(receipt, actionId);
+        return await printer.printReceipt(receipt);
     }
 
     filterChangeByCategories(categories, currentOrderChange) {
@@ -2144,6 +2168,7 @@ export class PosStore extends WithLazyGetterTrap {
      * @param {import("@point_of_sale/app/models/product_product").ProductProduct?} product leave undefined to create a new product
      */
     async editProduct(product) {
+        const orderContainsProduct = product && this.orderContainsProduct(product);
         this.action.doAction(
             product
                 ? "point_of_sale.product_template_action_edit_pos"
@@ -2160,6 +2185,9 @@ export class PosStore extends WithLazyGetterTrap {
                             type: "ir.actions.act_window_close",
                         });
                     },
+                },
+                additionalContext: {
+                    taxes_readonly: orderContainsProduct,
                 },
             }
         );
@@ -2191,6 +2219,9 @@ export class PosStore extends WithLazyGetterTrap {
         return {
             resModel: "pos.order",
             resId: order.id,
+            context: {
+                from_frontend: true,
+            },
             onRecordSaved: async (record) => {
                 await this.data.loadServerOrders([["id", "=", record.evalContext.id]]);
                 this.action.doAction({
@@ -2268,6 +2299,8 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         if (preset) {
+            order.setPreset(preset);
+
             if (preset.needsPartner) {
                 const partner = order.partner_id || (await this.selectPartner(order));
                 if (!partner) {
@@ -2281,7 +2314,7 @@ export class PosStore extends WithLazyGetterTrap {
                     }
                 }
             }
-            order.setPreset(preset);
+
             if (preset.identification === "name") {
                 await this.handleSelectNamePreset(order);
             }
@@ -2714,18 +2747,41 @@ export class PosStore extends WithLazyGetterTrap {
     get productToDisplayByCateg() {
         const sortedProducts = this.productsToDisplay;
         if (!this.config.iface_group_by_categ) {
-            return sortedProducts.length ? [[0, sortedProducts]] : [];
+            return sortedProducts.length ? [["0", sortedProducts]] : [];
         } else {
             const groupedByCategory = {};
             for (const product of sortedProducts) {
-                for (const categ of product.pos_categ_ids) {
-                    if (!groupedByCategory[categ.id]) {
-                        groupedByCategory[categ.id] = [];
+                if (product.pos_categ_ids.length === 0) {
+                    if (!groupedByCategory[0]) {
+                        groupedByCategory[0] = [];
                     }
-                    groupedByCategory[categ.id].push(product);
+                    groupedByCategory[0].push(product);
+                    continue;
+                }
+                const category_ids = this.selectedCategory
+                    ? [this.selectedCategory.id]
+                    : product.pos_categ_ids.map((c) => c.id);
+                for (const categ_id of category_ids) {
+                    if (!groupedByCategory[categ_id]) {
+                        groupedByCategory[categ_id] = [];
+                    }
+                    groupedByCategory[categ_id].push(product);
                 }
             }
             const res = Object.entries(groupedByCategory).sort(([a], [b]) => {
+                // None category goes last
+                const aNoneCategory = a === "0";
+                const bNoneCategory = b === "0";
+                if (aNoneCategory && bNoneCategory) {
+                    return 0;
+                }
+                if (aNoneCategory) {
+                    return 1;
+                }
+                if (bNoneCategory) {
+                    return -1;
+                }
+
                 const catA = this.models["pos.category"].get(a);
                 const catB = this.models["pos.category"].get(b);
 
@@ -2738,30 +2794,31 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
 
-    sortByWordIndex(products, words) {
-        return products.sort((a, b) => {
-            const nameA = normalize(a.name);
-            const nameB = normalize(b.name);
-
-            const indexA = nameA.indexOf(words);
-            const indexB = nameB.indexOf(words);
-            return (
-                (indexA === -1) - (indexB === -1) || indexA - indexB || nameA.localeCompare(nameB)
-            );
-        });
-    }
-
     getProductsBySearchWord(searchWord, products) {
-        const words = normalize(searchWord);
-        const matches = products.filter(
-            (p) =>
-                normalize(p.searchString).includes(words) ||
-                p.product_variant_ids.some((variant) =>
-                    normalize(variant.searchString).includes(words)
-                )
+        const query = normalize(searchWord);
+        const matches = [];
+
+        for (const product of products) {
+            const searchStr = product.searchString;
+
+            if (searchStr.includes(query)) {
+                const normName = product.normalizedName;
+                matches.push({
+                    product: product,
+                    index: normName.indexOf(query),
+                    name: normName,
+                });
+            }
+        }
+
+        matches.sort(
+            (a, b) =>
+                (a.index === -1) - (b.index === -1) ||
+                a.index - b.index ||
+                (a.name == b.name ? 0 : a.name > b.name ? 1 : -1)
         );
 
-        return this.sortByWordIndex(matches, words);
+        return matches.map((m) => m.product);
     }
     getPaymentMethodFmtAmount(pm, order) {
         const amount = order.getDefaultAmountDueToPayIn(pm);
@@ -2836,6 +2893,10 @@ export class PosStore extends WithLazyGetterTrap {
 
     get showSaveOrderButton() {
         return this.config.raw.trusted_config_ids.length > 0;
+    }
+
+    canEditPayment(order) {
+        return order.nb_print === 0;
     }
 }
 

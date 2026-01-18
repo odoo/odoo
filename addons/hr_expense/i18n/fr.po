@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:35+0000\n"
-"PO-Revision-Date: 2025-11-14 15:21+0000\n"
+"POT-Creation-Date: 2026-01-15 18:36+0000\n"
+"PO-Revision-Date: 2025-12-30 12:58+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "hr_expense/fr/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -569,6 +569,7 @@ msgstr "Numériser vos reçus avec l'OCR et l'Intelligence Artificielle"
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_account_tax__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__display_name
@@ -974,6 +975,7 @@ msgstr "Domaine d'alias des charges RH"
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_move_line__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_payment__id
+#: model:ir.model.fields,field_description:hr_expense.field_account_payment_register__id
 #: model:ir.model.fields,field_description:hr_expense.field_account_tax__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__id
@@ -1489,6 +1491,11 @@ msgid "Partner"
 msgstr "Partenaire"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_payment_register
+msgid "Pay"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_method_line_id
 msgid "Payment Method"
 msgstr "Mode de paiement"
@@ -1996,6 +2003,9 @@ msgid ""
 "this isn't supported:\n"
 "%(expenses)s"
 msgstr ""
+"Le mode de paiement des dépenses suivant entraîne la création de plusieurs "
+"comptes fournisseurs, ce qui n’est pas pris en charge :\n"
+"%(expenses)s"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__employee_journal_id
@@ -2174,7 +2184,8 @@ msgstr "Télécharger ou déposer un justificatif de dépense"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Use the breadcrumbs to go back to the list of expenses."
-msgstr "Utilisez le fil d'Ariane pour retourner à la liste des dépenses."
+msgstr ""
+"Utilisez le chemin de navigation pour retourner à la liste des dépenses."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_approve_duplicate_action

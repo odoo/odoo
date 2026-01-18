@@ -20,13 +20,14 @@
 # Igor Sheludko <igor.sheludko@gmail.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Toma Tomov <toma.tomov@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-08 19:07+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-01-09 18:36+0000\n"
+"PO-Revision-Date: 2025-12-27 08:37+0000\n"
+"Last-Translator: Toma Tomov <toma.tomov@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/stock/"
 "bg/>\n"
 "Language: bg\n"
@@ -34,7 +35,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -802,7 +803,7 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
+msgid "<strong>Customer</strong>"
 msgstr ""
 
 #. module: stock
@@ -813,6 +814,11 @@ msgstr "<strong>Доставени</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
 msgstr ""
 
 #. module: stock
@@ -3065,7 +3071,7 @@ msgstr "Описание за външни трансфери"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Receipts"
-msgstr ""
+msgstr "Описание за Получавания"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingout
@@ -3089,7 +3095,7 @@ msgstr "Забележка към получаване"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Description on transfer"
-msgstr ""
+msgstr "Описание за прехвърляния"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_location_id
@@ -3752,7 +3758,7 @@ msgstr "Прогнозно количество"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__in
 msgid "Forecasted Receipts"
-msgstr ""
+msgstr "Прогнозни получавания"
 
 #. module: stock
 #. odoo-javascript
@@ -3865,7 +3871,7 @@ msgstr "Бъдещи производства"
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 msgid "Future Receipts"
-msgstr "Бъдещи касови бележки"
+msgstr "Очаквани доставки"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -3930,7 +3936,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Goods Receipt Note"
-msgstr ""
+msgstr "Складова разписка за прием"
 
 #. module: stock
 #. odoo-javascript
@@ -7057,6 +7063,7 @@ msgstr "Продуктови категории"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_category_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_category_name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
@@ -7648,12 +7655,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
 msgid "Receipt"
-msgstr "Касова бележка"
+msgstr "Приемане на стока"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__reception_route_id
 msgid "Receipt Route"
-msgstr "Маршрут на касова бележка"
+msgstr "Входящи доставки"
 
 #. module: stock
 #. odoo-python
@@ -7663,7 +7670,7 @@ msgstr "Маршрут на касова бележка"
 #: model:stock.picking.type,name:stock.picking_type_in
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Receipts"
-msgstr "Касови бележки"
+msgstr "Входящи доставки"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -9388,6 +9395,14 @@ msgid ""
 "Otherwise, the serial number should be corrected to prevent inconsistent "
 "data."
 msgstr ""
+"Серийния номер (%(serial_number)s) вече се ползва в следната локация(и): %"
+"(location_list)s.\n"
+"\n"
+"Очаквано ли е това? Например, това може да се случи, ако операция по "
+"доставка е валидирана преди съответстващата ѝ операция по получаване. В този "
+"случай проблемът ще бъде разрешен автоматично, след като всички стъпки бъдат "
+"изпълнени. В противен случай серийният номер трябва да бъде коригиран, за да "
+"се предотвратят несъответствия в данните."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -9785,6 +9800,8 @@ msgid ""
 "This note is added to receipt orders (e.g. where to store the product in the "
 "warehouse)."
 msgstr ""
+"Тази бележка се добавя към приемите (входящите доставки) (напр. къде да се "
+"складира продуктът в склада)."
 
 #. module: stock
 #. odoo-python

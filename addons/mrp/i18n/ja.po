@@ -13,16 +13,16 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Yoshi Tashiro <tashiro@quartile.co>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-12-09 14:05+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@quartile.co>\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-13 15:32+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/mrp/ja/>"
 "\n"
 "Language: ja\n"
@@ -763,7 +763,7 @@ msgstr "活動ステータス"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__activity_type_icon
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動種別アイコン"
+msgstr "活動タイプアイコン"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__cost_mode__actual
@@ -2122,7 +2122,7 @@ msgstr "生産開始予定日または実際の生産開始日。"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Date: Last 365 Days"
-msgstr "日付: 過去365日"
+msgstr "日付: 直近365日"
 
 #. module: mrp
 #. odoo-javascript
@@ -2435,7 +2435,8 @@ msgstr "ユニット毎の作業時間"
 msgid ""
 "Each operation can have multiple steps (scan products, view instructions) or "
 "even quality checks."
-msgstr "各オペレーションには、複数のステップ(スキャンや手順確認）、品質チェックなどを"
+msgstr ""
+"各オペレーションには、複数のステップ(スキャンや手順確認）、品質チェックなどを"
 "設定できます。"
 
 #. module: mrp
@@ -2458,7 +2459,8 @@ msgstr "有効性カテゴリ"
 msgid ""
 "Either the Bill of Materials set directly or the one computed to be used by "
 "this replenishment"
-msgstr "この補充で使用される、直接設定された部品表、または計算によって決定された部品"
+msgstr ""
+"この補充で使用される、直接設定された部品表、または計算によって決定された部品"
 "表のいずれか"
 
 #. module: mrp
@@ -2927,7 +2929,7 @@ msgstr "チェックした場合は、新しいメッセージに注意が必要
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__message_has_error
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "選択されている場合、一部のメッセージで配信エラーが発生しています。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate_cancel
@@ -3578,7 +3580,7 @@ msgstr "製造プロダクト"
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model_terms:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "Manufactured in the last 365 days"
-msgstr "過去365日で製造"
+msgstr "直近365日で製造"
 
 #. module: mrp
 #. odoo-python
@@ -3958,8 +3960,9 @@ msgstr "作業予定の作業オーダはありません！"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
-msgstr "現在進行中の作業オーダはありません。クリックで作業区をブロックステータスにマ"
-"ークします。"
+msgstr ""
+"現在進行中の作業オーダはありません。クリックで作業区をブロックステータスに"
+"マークします。"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__0
@@ -4139,7 +4142,8 @@ msgstr "手持在庫"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
 "Only manufacturing orders in either a draft or confirmed state can be %s."
-msgstr "ドラフトステータスまたは確定ステータスの製造オーダーのみ%sであることが可能で"
+msgstr ""
+"ドラフトステータスまたは確定ステータスの製造オーダーのみ%sであることが可能で"
 "す。"
 
 #. module: mrp
@@ -5177,7 +5181,8 @@ msgstr "工順作業区"
 msgid ""
 "Run your Shop Floor with work orders for each operation defined on your bill "
 "of material."
-msgstr "部品表に定義された各オペレーションに対して作業オーダを発行し、製造現場を運用"
+msgstr ""
+"部品表に定義された各オペレーションに対して作業オーダを発行し、製造現場を運用"
 "しましょう。"
 
 #. module: mrp
@@ -5585,7 +5590,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "活動に基づくステータス\n"
-"遅延: 期限が既に過ぎています\n"
+"期限超過：期限日がすでに過ぎています\n"
 "今日: 活動日は今日です\n"
 "予定: 将来の活動。"
 
@@ -5800,7 +5805,8 @@ msgid ""
 "The percentage of the final production cost for this by-product line "
 "(divided between the quantity produced).The total of all by-products' cost "
 "share must be less than or equal to 100."
-msgstr "この副産品の最終生産原価に占める割合(製造済数量で割ったもの)。すべての副産品"
+msgstr ""
+"この副産品の最終生産原価に占める割合(製造済数量で割ったもの)。すべての副産品"
 "の原価割合の合計は100以下である必要があります。"
 
 #. module: mrp
@@ -6049,8 +6055,9 @@ msgstr "準備のための時間（分）"
 msgid ""
 "Time in minutes:- In fixed mode, time used- In computed mode, supposed first "
 "time when there aren't any work orders yet"
-msgstr "時間(分):– 固定モードでは、使用される時間– "
-"計算モードでは、作業指図がまだ存在しないときに仮定される初回の時間"
+msgstr ""
+"時間(分):– 固定モードでは、使用される時間– 計算モードでは、作業指図がまだ存在"
+"しないときに仮定される初回の時間"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tz
@@ -6967,7 +6974,8 @@ msgstr "すでに完了している製造オーダはキャンセルできませ
 msgid ""
 "You cannot change the quantity produced of a work order that is in done or "
 "cancel state."
-msgstr "完了またはキャンセル状態の作業オーダの製造済数量を変更することはできません。"
+msgstr ""
+"完了またはキャンセル状態の作業オーダの製造済数量を変更することはできません。"
 
 #. module: mrp
 #. odoo-python
@@ -7135,7 +7143,8 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
 "You need to generate Lot/Serial Number(s) to mark as done some productions"
-msgstr "一部の製造を完了とするには、ロット/シリアル番号を生成する必要があります"
+msgstr ""
+"一部の製造を完了とするには、ロット/シリアル番号を生成する必要があります"
 
 #. module: mrp
 #. odoo-python
@@ -7189,7 +7198,8 @@ msgstr "キャンセル済"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
 msgid "copy paste a list and/or use Generate"
-msgstr "リストをコピー＆ペーストするおよび/または「生成」機能を使用してください"
+msgstr ""
+"リストをコピー＆ペーストするおよび/または「生成」機能を使用してください"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view

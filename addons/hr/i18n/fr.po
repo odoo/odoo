@@ -17,16 +17,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:36+0000\n"
-"PO-Revision-Date: 2025-12-09 14:04+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
+"PO-Revision-Date: 2025-12-29 15:48+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/hr/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : "
-"((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: hr
@@ -438,6 +438,11 @@ msgstr "<span class=\"text-muted small\">Temps pour répondre</span>"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span invisible=\"not contract_date_start\">to</span>"
 msgstr "<span invisible=\"not contract_date_start\">au</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+msgid "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
+msgstr "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1459,8 +1464,8 @@ msgstr "Annuler"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot archive the only active record of an employee."
-msgstr "Impossible d’archiver l’unique enregistrement actif d’un employé."
+msgid "Cannot archive all the active versions of an employee."
+msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -1475,8 +1480,8 @@ msgstr ""
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot unassign the only active record of an employee."
-msgstr "Impossible de désaffecter l’unique enregistrement actif d’un employé."
+msgid "Cannot unassign all the active versions of an employee."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
@@ -5044,6 +5049,12 @@ msgid "This employee already has an user."
 msgstr "Cet employé a déjà un utilisateur."
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
+msgstr "Ce champ %(field_name)s n'existe pas dans ce modèle (hr.version)."
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
 #: model:ir.model.fields,help:hr.field_hr_version__tz
 msgid ""
@@ -5902,6 +5913,13 @@ msgstr "travail"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid "Cannot archive the only active record of an employee."
+#~ msgstr "Impossible d’archiver l’unique enregistrement actif d’un employé."
+
+#~ msgid "Cannot unassign the only active record of an employee."
+#~ msgstr ""
+#~ "Impossible de désaffecter l’unique enregistrement actif d’un employé."
 
 #~ msgid "Not linked to an user"
 #~ msgstr "Non lié à un utilisateur"

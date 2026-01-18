@@ -8,13 +8,13 @@
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-12 08:00+0000\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-06 17:23+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "hr_attendance/ar/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_attendance
 #. odoo-python
@@ -36,7 +36,7 @@ msgstr "لا يمكن أن يكون وقت \"تسجيل الخروج\" قبل و
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
 msgid "%(nb_hours)d h / %(period)s"
-msgstr ""
+msgstr "%(nb_hours)d ساعة (ساعات) / %(period)s"
 
 #. module: hr_attendance
 #. odoo-python
@@ -249,6 +249,8 @@ msgid ""
 "Allow the collection of GPS location, IP address, and browser/device details "
 "used to track employee access and attendance"
 msgstr ""
+"السماح بجمع موقع GPS وعنوان IP وتفاصيل المتصفح/الجهاز المستخدمة لتتبع وصول "
+"الموظفين وحضورهم"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__rule_ids
@@ -505,6 +507,11 @@ msgid ""
 "per day/week.\n"
 "Use 'Timing' when overtime hours happen on specific days or at specific times"
 msgstr ""
+"أساس لحساب ساعات العمل الإضافية.\n"
+"استخدم ”الكمية“ عندما تكون ساعات العمل الإضافية تزيد عن مقدار معين في اليوم/"
+"الأسبوع.\n"
+"استخدم ”التوقيت“ عندما تكون ساعات العمل الإضافية في أيام معينة أو في أوقات "
+"معينة"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__base_off
@@ -703,6 +710,12 @@ msgid ""
 "    e.g.: combined rate for 150% & 120% = 100% (baseline) + (150-100)% + "
 "(120-100)% = 170%\n"
 msgstr ""
+"يتحكم في كيفية دمج الأجور من القواعد المختلفة المطبقة.\n"
+"  الحد الأقصى: استخدام أعلى معدل. (على سبيل المثال: مجموع 150٪ و 120 = "
+"150٪)\n"
+"  المجموع: اجمع الأجر *الإضافي* (أي فوق 100٪).\n"
+"  على سبيل المثال: المعدل المجمع لـ 150٪ و 120٪ = 100٪ (الأساس) + (150-100)٪ "
+"+ (120-100)٪ = 170٪\n"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__country_id
@@ -931,7 +944,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
 msgid "Error: "
-msgstr ""
+msgstr "خطأ: "
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1809,7 +1822,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__ruleset_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_version__ruleset_id
 msgid "Ruleset"
-msgstr ""
+msgstr "مجموعة القواعد"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
@@ -1824,7 +1837,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_ruleset_action
 msgid "Rulesets"
-msgstr ""
+msgstr "مجموعات القواعد"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_has_sms_error
@@ -1905,7 +1918,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.js:0
 msgid "Set-up"
-msgstr ""
+msgstr "الإعداد"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -1962,6 +1975,16 @@ msgstr "Systray"
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__technical
 msgid "Technical"
 msgstr "تقني"
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime_rule__expected_hours_from_contract
+msgid ""
+"The attendance can go into negative extra hours to represent the missing "
+"hours compared to what is expected if the Absence Management setting is "
+"enabled."
+msgstr ""
+"يمكن أن يتحول الحضور إلى ساعات إضافية سلبية لتمثيل الساعات المفقودة مقارنة "
+"بما هو متوقع إذا تم تمكين إعداد إدارة الغياب."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2197,6 +2220,11 @@ msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "With a tolerance in favor of the employee of"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "With a tolerance in favor of the employer of"
 msgstr ""
 
@@ -2252,11 +2280,6 @@ msgstr "لا تملك صلاحيات كافية لتنفيذ هذا الإجرا
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-msgid "a specific duration"
-msgstr ""
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "and"
 msgstr "و"
 
@@ -2279,6 +2302,11 @@ msgid "day"
 msgstr "يوم"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "differs"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
 msgid "e.g. John Doe"
@@ -2296,7 +2324,12 @@ msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-msgid "exceed"
+msgid "from a specific duration"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
+msgid "from the amount defined on the contract"
 msgstr ""
 
 #. module: hr_attendance
@@ -2315,11 +2348,6 @@ msgstr "أيقونة (مثال: للعمل عن بُعد)"
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 msgid "or"
 msgstr "أو"
-
-#. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
-msgid "the amount defined on the contract"
-msgstr ""
 
 #. module: hr_attendance
 #. odoo-python

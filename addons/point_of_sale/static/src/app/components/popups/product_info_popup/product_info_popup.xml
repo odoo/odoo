@@ -76,8 +76,8 @@
                     <div class="grid gap-2">
                         <label class="fw-bold">Price excl. Tax:</label>
                         <span><t t-esc="env.utils.formatCurrency(props.info.productInfo.all_prices.price_without_tax)"/></span>
-                        <label class="fw-bold">VAT:</label>
-                        <span>
+                        <label class="fw-bold vat-label"><t t-out="vatLabel"/>:</label>
+                        <span class="vat-value">
                             <t t-esc="props.info.taxAmount"/>
                             (<t t-esc="props.info.taxName"/>)
                         </span>
@@ -118,7 +118,7 @@
             <t t-set-slot="footer">
                 <div class="d-flex flex-row gap-2 w-100">
                     <button class="btn btn-primary btn-lg lh-lg w-50" t-on-click="props.close">Close</button>
-                    <button t-if="allowProductEdition" t-att-disabled="this.pos.orderContainsProduct(this.props.productTemplate)" class="btn btn-secondary btn-lg lh-lg w-50" t-on-click="editProduct">Edit</button>
+                    <button t-if="allowProductEdition" class="btn btn-secondary btn-lg lh-lg w-50" t-on-click="editProduct">Edit</button>
                 </div>
             </t>
         </Dialog>

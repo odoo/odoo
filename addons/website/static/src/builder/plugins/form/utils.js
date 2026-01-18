@@ -127,7 +127,7 @@ export function renderField(field, resetId = false) {
     if (["url", "email", "tel"].includes(field.type)) {
         params.field.inputType = field.type;
     }
-    if (["boolean", "selection", "binary"].includes(field.type)) {
+    if (["boolean", "selection"].includes(field.type)) {
         params.field.isCheck = true;
     }
     if (field.type === "one2many" && field.relation !== "ir.attachment") {

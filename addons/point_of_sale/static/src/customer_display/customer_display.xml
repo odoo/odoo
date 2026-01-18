@@ -102,9 +102,19 @@
 
                 <div t-if="order.amount and !order.finalized" class="py-3 px-4 bg-view border-top">
                     <div class="d-flex flex-column justify-content-center gap-1 w-100 w-sm-50 ms-auto">
-                        <div class="row fs-2 fw-bolder">
-                            <div class="col text-end">Total</div>
-                            <div class="col text-end" t-esc="order.amount"/>
+                        <div class="d-flex flex-column gap-1 fw-bolder lh-sm">
+                            <div t-if="order.subtotal" class="row fs-5 text-muted">
+                                <div class="col text-end">Subtotal</div>
+                                <div class="col text-end" t-esc="order.subtotal"/>
+                            </div>
+                            <div t-if="order.amountTaxes" class="row fs-5 text-muted">
+                                <div class="col text-end">Taxes</div>
+                                <div class="col text-end" t-esc="order.amountTaxes"/>
+                            </div>
+                            <div class="row fs-2">
+                                <div class="col text-end">Total</div>
+                                <div class="col text-end" t-esc="order.amount"/>
+                            </div>
                         </div>
                         <div t-foreach="order.paymentLines or []" t-as="line" t-key="line_index" class="row">
                             <div class="col text-end" t-esc="line.name" />

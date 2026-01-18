@@ -21,3 +21,9 @@ class TestUi(Testl10nFrPosCert):
         self.assertEqual(company.country_id.code, "FR", "Company should be set to France (FR)")
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour("l10nFrPosCertSelfInvoicingTour", login="pos_user")
+
+    def test_correct_old_price_upon_price_change_fr(self):
+        company = self.main_pos_config.company_id
+        self.assertEqual(company.country_id.code, "FR", "Company should be set to France (FR)")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour("test_correct_old_price_upon_price_change_fr", login="pos_user")

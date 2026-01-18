@@ -13,7 +13,9 @@ class ResCompany(models.Model):
     def _default_company_token(self):
         return str(uuid.uuid4())
 
+    # TODO: Remove in master
     overtime_company_threshold = fields.Integer(string="Tolerance Time In Favor Of Company", default=0)
+    # TODO: Remove in master
     overtime_employee_threshold = fields.Integer(string="Tolerance Time In Favor Of Employee", default=0)
     hr_attendance_display_overtime = fields.Boolean(string="Display Extra Hours")
     attendance_kiosk_mode = fields.Selection([
@@ -38,7 +40,7 @@ class ResCompany(models.Model):
     auto_check_out = fields.Boolean(string="Automatic Check Out", default=False)
     auto_check_out_tolerance = fields.Float(default=2, export_string_translation=False)
     absence_management = fields.Boolean(string="Absence Management", default=False)
-    attendance_device_tracking = fields.Boolean(string="Device & Location Tracking", default=True)
+    attendance_device_tracking = fields.Boolean(string="Device & Location Tracking", default=False)
 
     @api.depends("attendance_kiosk_key")
     def _compute_attendance_kiosk_url(self):

@@ -3,19 +3,19 @@
 # * hr
 #
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025.
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025, 2026.
 # Jolien De Paepe, 2023
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:36+0000\n"
-"PO-Revision-Date: 2025-12-02 14:37+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
+"PO-Revision-Date: 2026-01-15 08:07+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/hr/nl/>\n"
 "Language: nl\n"
@@ -269,7 +269,7 @@ msgstr "<small>Documenten</small>"
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "<small>Fleet</small>"
-msgstr "<small>Vloot</small>"
+msgstr "<small>Wagenpark</small>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
@@ -435,6 +435,11 @@ msgid "<span invisible=\"not contract_date_start\">to</span>"
 msgstr "<span invisible=\"not contract_date_start\">tot</span>"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+msgid "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
+msgstr "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
 "<span invisible=\"not user_id or is_user_active\">\n"
@@ -560,12 +565,12 @@ msgstr "<strong class=\"s_rating_title\">Persoonlijke ontwikkeling</strong>"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<strong class=\"s_rating_title\">Problem-Solving</strong>"
-msgstr "<strong class=\"s_rating_title\">Probleemoplossend</strong>"
+msgstr "<strong class=\"s_rating_title\">Probleemoplossend denken</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "<strong class=\"s_rating_title\">Problem-solving</strong>"
-msgstr "<strong class=\"s_rating_title\">Probleemoplossend</strong>"
+msgstr "<strong class=\"s_rating_title\">Probleemoplossend denken</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -741,7 +746,7 @@ msgstr "Activiteitsfase"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_icon
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Activiteitensoort icoon"
+msgstr "Activiteitstype icoon"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_list_activites_view
@@ -1440,8 +1445,9 @@ msgstr "Annuleren"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot archive the only active record of an employee."
-msgstr "Kan de enige actieve record van een werknemer niet archiveren."
+msgid "Cannot archive all the active versions of an employee."
+msgstr ""
+"Het is niet mogelijk om alle actieve versies van een werknemer te archiveren."
 
 #. module: hr
 #. odoo-python
@@ -1456,8 +1462,10 @@ msgstr ""
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
-msgid "Cannot unassign the only active record of an employee."
-msgstr "Kan de enige actieve record van een werknemer niet ongedaan maken."
+msgid "Cannot unassign all the active versions of an employee."
+msgstr ""
+"Het is niet mogelijk om de toewijzing van alle actieve versies van een "
+"werknemer te verwijderen."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
@@ -1707,7 +1715,7 @@ msgstr "Contractsjabloon"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_version_wizard_action
 msgid "Contract Template Load"
-msgstr "Contract sjabloon laden"
+msgstr "Contractsjabloon laden"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_version_wizard
@@ -2190,7 +2198,7 @@ msgstr "Document"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Documents"
-msgstr ""
+msgstr "Documenten"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
@@ -2414,7 +2422,7 @@ msgstr "De ontwikkeling van werknemers is van essentieel belang"
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee will be excluded from Pay Runs"
-msgstr ""
+msgstr "Werknemer wordt uitgesloten van betaalrondes"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_ids
@@ -3709,7 +3717,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "No user linked"
-msgstr ""
+msgstr "Geen gebruiker gekoppeld"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4621,7 +4629,7 @@ msgstr "Toon hr-pictogramweergave"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Toon alle records waarvan de volgende activiteitsdatum is verstreken"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display
@@ -5014,6 +5022,12 @@ msgstr "Scriptie"
 #: code:addons/hr/models/hr_employee.py:0
 msgid "This employee already has an user."
 msgstr "Deze werknemer heeft al een gebruiker."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
+msgstr "Dit veld %(field_name)s bestaat niet in dit model (hr.version)."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -5807,7 +5821,6 @@ msgstr "bijvoorbeeld myprivateemail@example.com"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_mixin
-#, fuzzy
 msgid "hr.mixin"
 msgstr "hr.mixin"
 
@@ -5867,6 +5880,12 @@ msgstr "werk"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid "Cannot archive the only active record of an employee."
+#~ msgstr "Kan de enige actieve record van een werknemer niet archiveren."
+
+#~ msgid "Cannot unassign the only active record of an employee."
+#~ msgstr "Kan de enige actieve record van een werknemer niet ongedaan maken."
 
 #~ msgid "Not linked to an user"
 #~ msgstr "Niet gekoppeld aan een gebruiker"

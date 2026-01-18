@@ -502,3 +502,36 @@ class TestSalePurchaseStockFlow(TransactionCase):
             {'sale_line_id': so1.order_line.id, 'value': 10.0},
             {'sale_line_id': so2.order_line.id, 'value': 20.0},
         ])
+
+    def test_mto_cancel_multi_steps_confirmed_purchase(self):
+        '''
+        In multi step reception, after purchase confirmation, test that when the
+        reception gets cancelled, the delivery (to the client) can be made from
+        stock.
+        '''
+        two_step_wh = self.warehouse
+        three_step_wh = self.env.ref('stock.warehouse0')
+        two_step_wh.reception_steps = 'two_steps'
+        three_step_wh.reception_steps = 'three_steps'
+        sale_orders = self.env['sale.order']
+        for wh in (two_step_wh, three_step_wh):
+            self.env['stock.quant']._update_available_quantity(self.mto_product, wh.lot_stock_id, 10)
+            sale_orders |= self.env['sale.order'].create([{
+                'partner_id': self.customer.id,
+                'order_line': [Command.create({
+                    'product_id': self.mto_product.id,
+                    'product_uom_qty': 1,
+                })],
+                'warehouse_id': wh.id,
+            }])
+        sale_orders.action_confirm()
+        self.assertListEqual(sale_orders.picking_ids.mapped('state'), ['waiting', 'waiting'])
+        self.assertListEqual(sale_orders.picking_ids.move_ids.mapped('procure_method'), ['make_to_order', 'make_to_order'])
+        purchase_orders = sale_orders._get_purchase_orders()
+        purchase_orders.button_confirm()
+        self.assertListEqual(sale_orders.picking_ids.move_ids.move_orig_ids.ids, purchase_orders.picking_ids.move_ids.ids)
+        purchase_orders.picking_ids.action_cancel()
+        self.assertListEqual(sale_orders.picking_ids.mapped('state'), ['confirmed', 'confirmed'])
+        self.assertFalse(sale_orders.picking_ids.move_ids.move_orig_ids)
+        sale_orders.picking_ids.action_assign()
+        self.assertListEqual(sale_orders.picking_ids.move_ids.mapped('quantity'), [1.0, 1.0])

@@ -2,6 +2,7 @@ import { fields } from "@mail/core/common/record";
 import { DiscussApp } from "@mail/core/public_web/discuss_app_model";
 import { effectWithDebouncedCleanup } from "@mail/utils/common/misc";
 
+import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
@@ -10,6 +11,7 @@ import { patch } from "@web/core/utils/patch";
 // when the user closes the sidebar or switches to another app, wait for 5
 // minutes before unsubscribing.
 export const LFH_UNSUBSCRIBE_DELAY = 5 * 60 * 1000;
+const LIVECHAT_INFO_DEFAULT_OPEN_LS = "im_livechat.isInfoPanelOpenByDefault";
 
 const discussAppStaticPatch = {
     new() {
@@ -82,6 +84,26 @@ patch(DiscussApp.prototype, {
         });
         this.lastThread = fields.One("Thread");
         this.livechats = fields.Many("Thread", { inverse: "appAsLivechats" });
+        this.isLivechatInfoPanelOpenByDefault = fields.Attr(true, {
+            compute() {
+                return browser.localStorage.getItem(LIVECHAT_INFO_DEFAULT_OPEN_LS) !== "false";
+            },
+            /** @this {import("models").DiscussApp} */
+            onUpdate() {
+                if (this.isLivechatInfoPanelOpenByDefault) {
+                    browser.localStorage.removeItem(LIVECHAT_INFO_DEFAULT_OPEN_LS);
+                } else {
+                    browser.localStorage.setItem(LIVECHAT_INFO_DEFAULT_OPEN_LS, "false");
+                }
+            },
+        });
+    },
+
+    shouldDisableMemberPanelAutoOpenFromClose(nextActiveAction) {
+        if (nextActiveAction?.id === "livechat-info") {
+            return false;
+        }
+        return super.shouldDisableMemberPanelAutoOpenFromClose(...arguments);
     },
 
     _threadOnUpdate() {
@@ -96,5 +118,12 @@ patch(DiscussApp.prototype, {
         }
         this.lastThread = this.thread;
         super._threadOnUpdate();
+    },
+
+    onStorage(ev) {
+        super.onStorage(ev);
+        if (ev.key === LIVECHAT_INFO_DEFAULT_OPEN_LS) {
+            this.isLivechatInfoPanelOpenByDefault = ev.newValue !== "false";
+        }
     },
 });

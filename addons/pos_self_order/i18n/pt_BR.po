@@ -3,14 +3,14 @@
 # * pos_self_order
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Maitê Dietze (madi)" <madi@odoo.com>, 2025.
+# "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-12-12 15:40+0000\n"
+"POT-Creation-Date: 2025-12-30 18:37+0000\n"
+"PO-Revision-Date: 2026-01-05 17:19+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-19/pos_self_order/pt_BR/>\n"
@@ -31,12 +31,6 @@ msgstr "“QR codes”"
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "(require Odoo Enterprise)"
 msgstr "(requer o Odoo Enterprise)"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
-msgid "/ Tracker number:"
-msgstr "/ Número do rastreador:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -820,6 +814,12 @@ msgid "Kiosk"
 msgstr "Quiosque"
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "Kiosk T"
+msgstr "Quiosque T"
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
 msgid "Label"
 msgstr "Rótulo"
@@ -889,7 +889,8 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/components/missing_required_details/missing_required_details.xml:0
 msgid ""
 "Make sure you choose all your options for this item. You're alomost there."
-msgstr "Certifique-se de escolher todas as opções deste item. Estamos quase lá."
+msgstr ""
+"Certifique-se de escolher todas as opções deste item. Estamos quase lá."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1023,6 +1024,7 @@ msgstr "Abrir quiosque"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.js:0
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
 msgid "Order"
 msgstr "Pedido"
 
@@ -1241,7 +1243,7 @@ msgstr "Quantidade selecionada"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 msgid "Required"
-msgstr ""
+msgstr "Obrigatório"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1268,19 +1270,19 @@ msgstr "Tentar novamente"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.js:0
 msgid "Retrying in %s second..."
-msgstr ""
+msgstr "Tentando novamente em %s segundo..."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.js:0
 msgid "Retrying in %s seconds..."
-msgstr ""
+msgstr "Repetindo em %s segundos..."
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Retrying..."
-msgstr ""
+msgstr "Tentando novamente..."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__secondary
@@ -1296,7 +1298,7 @@ msgstr "Chave de segurança"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/missing_required_details/missing_required_details.xml:0
 msgid "See what you missed"
-msgstr ""
+msgstr "Veja o que você perdeu"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1406,12 +1408,18 @@ msgstr "URL de autoatendimento"
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_order__source__kiosk
 msgid "Self-Order Kiosk"
-msgstr ""
+msgstr "Quiosque de autoatendimento"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_order__source__mobile
 msgid "Self-Order Mobile"
-msgstr ""
+msgstr "Autoatendimento móvel"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "Self-Order T"
+msgstr "Pedido de autoatendimento T"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1511,7 +1519,7 @@ msgstr "Rastreador de mesas:"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order__self_ordering_table_id
 msgid "Table reference"
-msgstr ""
+msgstr "Referência da tabela"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1626,6 +1634,8 @@ msgid ""
 "We invite you to get the receipt at the counter. Please remember your order "
 "number:"
 msgstr ""
+"Convidamos você a retirar o recibo no balcão. Lembre-se do número do seu "
+"pedido:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1684,7 +1694,7 @@ msgstr "Sim"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "You are back online. You can complete your order now."
-msgstr ""
+msgstr "Você está online novamente. Agora você pode concluir o seu pedido."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1798,6 +1808,9 @@ msgstr "não está mais disponível. Volte e edite seu pedido."
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "odoo"
 msgstr "odoo"
+
+#~ msgid "/ Tracker number:"
+#~ msgstr "/ Número do rastreador:"
 
 #~ msgid ""
 #~ "%s is not available anymore, it has thus been removed from your order. "

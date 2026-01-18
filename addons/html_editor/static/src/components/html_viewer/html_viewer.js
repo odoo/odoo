@@ -11,11 +11,12 @@ import {
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
-import { fillClipboardData } from "@html_editor/utils/clipboard";
+import { fillHtmlTransferData } from "@html_editor/utils/clipboard";
 import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 import { getDeepestPosition } from "@html_editor/utils/dom_info";
+import { scrollAndHighlightHeading } from "@html_editor/utils/url";
 
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
@@ -72,6 +73,10 @@ export class HtmlViewer extends Component {
                 () => [this.props.config.value.toString(), this.readonlyElementRef?.el]
             );
         }
+
+        onMounted(() => {
+            scrollAndHighlightHeading(this.readonlyElementRef?.el || this.iframeRef?.el);
+        });
 
         if (this.props.config.cssAssetId) {
             onWillStart(async () => {
@@ -160,7 +165,9 @@ export class HtmlViewer extends Component {
         range.setStart(deepAnchorNode, deepAnchorOffset);
         range.setEnd(deepFocusNode, deepFocusOffset);
         const clonedContents = range.cloneContents();
-        fillClipboardData(ev, clonedContents);
+        fillHtmlTransferData(ev, "clipboardData", clonedContents, {
+            textContent: selection.toString(),
+        });
     }
 
     /**

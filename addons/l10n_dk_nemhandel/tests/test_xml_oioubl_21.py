@@ -76,7 +76,7 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         cls.dk_foreign_sale_tax_2 = cls.env["account.chart.template"].ref('tax_s7')
         cls.dk_local_purchase_tax_goods = cls.env["account.chart.template"].ref('tax_k1')
 
-    def create_post_and_send_invoice(self, partner=None, move_type='out_invoice'):
+    def create_post_and_send_invoice(self, partner=None, move_type='out_invoice', send=True):
         if not partner:
             partner = self.partner_a
 
@@ -112,12 +112,17 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
             ],
         })
         invoice.action_post()
+        if send:
+            self._send_patched(invoice)
+        return invoice
+
+    @classmethod
+    def _send_patched(cls, invoice):
         with patch('odoo.addons.l10n_dk_nemhandel.models.res_partner.ResPartner._get_nemhandel_verification_state', return_value='not_valid'):
-            wizard = self.env['account.move.send.wizard'] \
+            wizard = cls.env['account.move.send.wizard'] \
                 .with_context(active_model=invoice._name, active_ids=invoice.ids) \
                 .create({})
             wizard.action_send_and_print()
-        return invoice
 
     @classmethod
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
@@ -167,7 +172,13 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
 
     @freeze_time('2017-01-01')
     def test_export_credit_note_partner_dk(self):
-        refund = self.create_post_and_send_invoice(move_type='out_refund')
+        """ Check the export of a credit note that has been partially paid """
+        refund = self.create_post_and_send_invoice(move_type='out_refund', send=False)
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=refund.ids).create({
+            'amount': 1000,
+        })._create_payments()
+
+        self._send_patched(refund)
         self.assertTrue(refund.ubl_cii_xml_id)
         self._assert_invoice_attachment(refund.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_refund_partner_dk.xml")
 
@@ -183,6 +194,33 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         invoice = self.create_post_and_send_invoice()
         self.assertTrue(invoice.ubl_cii_xml_id)
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_partner_dk.xml")
+
+    @freeze_time('2017-01-01')
+    def test_oioubl_export_import_with_discount(self):
+        """ Tests that the discount on a line is well exported, then taken into account when imported """
+        line_vals = {
+            'product_id': self.product_a.id,
+            'quantity': 10.0,
+            'price_unit': 500.0,
+            'discount': 10,
+            'tax_ids': [self.dk_local_sale_tax_1.id],
+        }
+        invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'partner_bank_id': self.env.company.partner_id.bank_ids[:1].id,
+            'invoice_date': '2017-01-01',
+            'date': '2017-01-01',
+            'narration': 'test narration',
+            'ref': 'ref_move',
+            'invoice_line_ids': [Command.create(line_vals)],
+        })
+        invoice.action_post()
+        self._send_patched(invoice)
+        self.assertTrue(invoice.ubl_cii_xml_id)
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_discount.xml")
+        new_invoice = invoice.journal_id._create_document_from_attachment(invoice.ubl_cii_xml_id.ids)
+        self.assertRecordValues(new_invoice.invoice_line_ids, [line_vals])
 
     @freeze_time('2017-01-01')
     def test_oioubl_export_should_raise_an_error_when_partner_building_number_is_missing(self):

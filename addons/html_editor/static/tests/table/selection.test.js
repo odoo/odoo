@@ -1243,7 +1243,7 @@ describe("move cursor with arrow keys", () => {
                 `),
             });
         });
-        test("should move cursor to the end in the cell above", async () => {
+        test("should move cursor to the end in the cell above (1)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <table>
@@ -1275,6 +1275,8 @@ describe("move cursor with arrow keys", () => {
                     </table>
                 `),
             });
+        });
+        test("should move cursor to the end in the cell above (2)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <table>
@@ -1474,7 +1476,7 @@ describe("move cursor with arrow keys", () => {
                 `),
             });
         });
-        test("should move cursor to the start of the cell below", async () => {
+        test("should move cursor to the start of the cell below (1)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <table>
@@ -1506,6 +1508,8 @@ describe("move cursor with arrow keys", () => {
                     </table>
                 `),
             });
+        });
+        test("should move cursor to the start of the cell below (2)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <table>

@@ -40,6 +40,9 @@ class StockMove(models.Model):
         'product.product', 'Product',
         check_company=True,
         domain="[('type', '=', 'consu')]", index=True, required=True)
+    product_category_id = fields.Many2one(
+        'product.category', 'Product Category',
+        related='product_id.categ_id')
     never_product_template_attribute_value_ids = fields.Many2many(
         'product.template.attribute.value',
         'template_attribute_value_stock_move_rel',
@@ -905,6 +908,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             'res_id': self.id,
             'context': dict(
                 self.env.context,
+                allow_parent_move_picked_reset=True,
             ),
         }
 
@@ -2032,7 +2036,13 @@ Please change the quantity done or the rounding precision in your settings.""",
             if move.propagate_cancel:
                 # only cancel the next move if all my siblings are also cancelled
                 if all(state == 'cancel' for state in siblings_states):
-                    move.move_dest_ids.filtered(lambda m: m.state != 'done' and move.location_dest_id == m.location_id)._action_cancel()
+                    move_dest_to_cancel = move.move_dest_ids.filtered(lambda m: m.state != 'done' and move.location_dest_id == m.location_id)
+                    move_dest_to_cancel._action_cancel()
+                    # Unlink from dest if dest is not in the chain
+                    (move.move_dest_ids - move_dest_to_cancel).write({
+                        'procure_method': 'make_to_stock',
+                        'move_orig_ids': [Command.unlink(move.id)]
+                    })
                     if cancel_moves_origin:
                         move.move_orig_ids.sudo().filtered(lambda m: m.state != 'done')._action_cancel()
             else:

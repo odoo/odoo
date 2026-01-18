@@ -7,17 +7,17 @@
 # Martin Trigaux, 2022
 # Dylan Kiss, 2022
 # Jolien De Paepe, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025.
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025, 2026.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-12-02 14:37+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-13 15:31+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/crm/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -203,10 +203,10 @@ msgid ""
 "                                    <span class=\"o_stat_text\" "
 "invisible=\"duplicate_lead_count &gt; 1\">Similar Lead</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\""
-">Soortgelijke leads</span> \n"
-"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &gt; 1\""
-">Soortgelijke lead</span>"
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; "
+"2\">Soortgelijke leads</span> \n"
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &gt; "
+"1\">Soortgelijke lead</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
@@ -1871,6 +1871,10 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 20 credits for free."
 msgstr ""
+"Voor een verkoopteam is er niets erger dan een gebrek aan leads. Gelukkig "
+"kun je met slechts een paar muisklikken leads genereren die specifiek zijn "
+"afgestemd op je behoeften: bedrijfsgrootte, bedrijfstak, enz. Om je te "
+"helpen de functie te testen, bieden wij je 20 gratis credits aan."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1882,7 +1886,7 @@ msgstr "Forceer toewijzing"
 #: model:ir.actions.act_window,name:crm.crm_lead_action_forecast
 #: model:ir.ui.menu,name:crm.crm_menu_forecast
 msgid "Forecast"
-msgstr "Forecast"
+msgstr "Prognose"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_pivot_forecast
@@ -3046,6 +3050,8 @@ msgid ""
 "Number of leads assigned to this member in the last 24 hours (lost leads "
 "excluded)"
 msgstr ""
+"Aantal leads dat in de afgelopen 24 uur aan dit lid is toegewezen "
+"(verloren leads niet meegerekend)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
@@ -3276,8 +3282,7 @@ msgid ""
 "(parent_model) and task (model))"
 msgstr ""
 "Bovenliggend model dat de alias bevat. Het model dat de aliasverwijzing "
-"bevat,\n"
-"is niet noodzakelijk het model dat door alias_model_id wordt gegeven "
+"bevat is niet noodzakelijk het model dat door alias_model_id wordt gegeven "
 "(bijvoorbeeld: project (parent_model) en taak (model))"
 
 #. module: crm
@@ -3728,7 +3733,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
-msgstr "Stel een nieuwe fase in in je verkoopkansen pijplijn"
+msgstr "Maak een nieuwe fase in je pijplijn met verkoopkansen"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_config_settings_action
@@ -3739,7 +3744,7 @@ msgstr "Instellingen"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Shared with all teams"
-msgstr ""
+msgstr "Gedeeld met alle teams"
 
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
@@ -4357,11 +4362,11 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
-"Gebruik leads als je eerst een kwalificatie wilt toevoegen voordat je\n"
-"een verkoopkans of klant aanmaakt. Het kan bijvoorbeeld een visitekaartje\n"
-"zijn welke je hebt gehad, of een contactformulier van je website. Maar het "
-"kan ook een lijst met ongekwalificeerde verkoopkansen zijn welke je "
-"importeert. Na de kwalificatie kan de lead worden geconverteerd nar een "
+"Gebruik leads als je eerst een kwalificatie wilt uitvoeren voordat je een "
+"verkoopkans of klant aanmaakt. Het kan bijvoorbeeld gaan om een "
+"visitekaartje dat je hebt ontvangen of een ingevuld contactformulier van je "
+"website. Maar het kan ook een lijst met ongekwalificeerde prospecten zijn "
+"die je importeert. Na de kwalificatie kan de lead worden omgezet in een "
 "verkoopkans en/of een nieuwe klant in je adresboek."
 
 #. module: crm
@@ -4567,8 +4572,8 @@ msgstr "Je hebt zonet je persoonlijk record verbroken voor de laatste 7 dagen."
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You just expanded the map! First win in %(country)s."
 msgstr ""
-"Je hebt zojuist grenzen verlegd op de kaart! Eerste overwinning in "
-"%(country)s."
+"Je hebt zojuist grenzen verlegd op de kaart! Eerste overwinning in %"
+"(country)s."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:35+0000\n"
+"POT-Creation-Date: 2026-01-15 18:36+0000\n"
 "PO-Revision-Date: 2025-11-08 22:02+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-19/"
@@ -344,6 +344,11 @@ msgid "Active Parent Company"
 msgstr ""
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__active_parent_company_name
+msgid "Active Parent Company Name"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Advanced Configuration"
 msgstr ""
@@ -565,7 +570,7 @@ msgid "Company"
 msgstr "Компани"
 
 #. module: account_peppol
-#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__active_parent_company_name
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_name
 msgid "Company Name"
 msgstr "Компанийн нэр"
 
@@ -646,6 +651,11 @@ msgstr "Туршилтын хувилбар"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Disable the reception."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Discard"
 msgstr "Үл хэрэгсэх"
 
@@ -682,6 +692,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Дэлгэрэнгүй нэр"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_use_parent_connection_selection
+msgid "Display Use Parent Connection Selection"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_identifier
@@ -735,6 +750,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Email"
 msgstr "Имэйл"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Enable reception"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__enabled
@@ -1012,6 +1032,11 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_webhook_keepalive_ir_actions_server
 msgid "PEPPOL: webhook keep alive"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_id
+msgid "Parent Company"
 msgstr ""
 
 #. module: account_peppol
@@ -1304,7 +1329,7 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid "Registered to receive documents via Peppol."
 msgstr ""
 
@@ -1401,7 +1426,7 @@ msgstr ""
 msgid ""
 "Some service support migration keys. If this is your case you can enter your "
 "migration key below.\n"
-"                        If not, you should de-register from your current "
+"                            If not, you should de-register from your current "
 "service provider and register with Odoo afterward."
 msgstr ""
 
@@ -2016,7 +2041,7 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid ""
 "Your registration on Peppol network should be activated within a day. The "
 "updated status will be visible in Settings."

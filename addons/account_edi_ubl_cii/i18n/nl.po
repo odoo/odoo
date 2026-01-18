@@ -3,14 +3,14 @@
 # * account_edi_ubl_cii
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:35+0000\n"
-"PO-Revision-Date: 2025-11-24 12:09+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
+"PO-Revision-Date: 2026-01-13 15:36+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "account_edi_ubl_cii/nl/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -71,7 +71,7 @@ msgstr "Boeking verzenden"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send_wizard
 msgid "Account Move Send Wizard"
-msgstr ""
+msgstr "Wizard voor Boeking verzenden"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9923
@@ -108,7 +108,7 @@ msgstr "Bijlage"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_a_nz
 msgid "Australia (BIS Billing 3.0 A-NZ)"
-msgstr ""
+msgstr "Australië (BIS Billing 3.0 A-NZ)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0151
@@ -140,6 +140,11 @@ msgstr "B - Overgedragen (BTW), In Italië"
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_de
 msgid "BIS3 DE (XRechnung)"
 msgstr "BIS3 DE (XRechnung)"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl
+msgid "Base helpers for UBL"
+msgstr "Basisfuncties voor UBL"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0208
@@ -205,6 +210,7 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 msgid "Conditional cash/payment discount"
 msgstr "Voorwaardelijke betalingskorting"
@@ -316,7 +322,14 @@ msgid "Directorates of the European Commission"
 msgstr "Directoraten van de Europese Commissie"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
+msgid "Discount"
+msgstr "Korting"
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_common__display_name
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_ubl__display_name
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_xml_cii__display_name
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_xml_ubl_20__display_name
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_xml_ubl_21__display_name
@@ -539,6 +552,7 @@ msgstr "Hongarije BTW"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_common__id
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_ubl__id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_xml_cii__id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_xml_ubl_20__id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_xml_ubl_21__id
@@ -571,7 +585,7 @@ msgstr "Indirizzo di Posta Elettronica Certificata"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "Install Chorus Pro"
-msgstr ""
+msgstr "Chorus Pro installeren"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -805,6 +819,7 @@ msgstr ""
 msgid ""
 "Please install the french Chorus pro module to have all the specific rules."
 msgstr ""
+"Installeer de Franse Chorus pro-module om alle specifieke regels te krijgen."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9945
@@ -875,7 +890,7 @@ msgstr "Servië BTW"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_sg
 msgid "Singapore (BIS Billing 3.0 SG)"
-msgstr ""
+msgstr "Singapore (BIS-facturering 3.0 SG)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0195
@@ -937,6 +952,14 @@ msgstr "Code belastingcategorie"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_exemption_reason_code
 msgid "Tax Exemption Reason Code"
 msgstr "Belastingvrijstelling Reden Code"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
+"Tax with matching exigibility could not be retrieved: '%(exigibility)s' for "
+"line '%(line)s'."
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1086,7 +1109,7 @@ msgstr "UBL/CII bestand"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__ubl_cii_xml_filename
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__ubl_cii_xml_filename
 msgid "UBL/CII Filename"
-msgstr ""
+msgstr "UBL/CII-bestandsnaam"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9959
@@ -1117,7 +1140,7 @@ msgstr "Verenigd Koninkrijk BTW"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
 msgid "Unspported file type via %s"
-msgstr ""
+msgstr "Niet-ondersteund bestandstype via %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132

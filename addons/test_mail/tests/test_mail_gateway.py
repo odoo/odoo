@@ -41,6 +41,21 @@ class TestEmailParsing(MailCommon):
              "Content-Type 'binary/octet-stream', assuming 'application/octet-stream'"),
         ])
 
+    def test_message_parse_and_replace_wildcard(self):
+        """Incoming email containing a wrong Content-Type (*/*) as described in RFC2046/section-3"""
+        mail_with_wildcard_mime = self.format(test_mail_data.MAIL_PDF_MIME_TEMPLATE, pdf_mime="*/*")
+        self.assertIn("Content-Type: */*", mail_with_wildcard_mime, "Wildcard for content-type not found")
+        with self.assertLogs("odoo.addons.mail.models.mail_thread", level="WARNING") as capture:
+            extracted_mail = self.env['mail.thread'].message_parse(self.from_string(mail_with_wildcard_mime))
+
+        self.assertEqual(len(extracted_mail['attachments']), 1)
+        attachment = extracted_mail['attachments'][0]
+        self.assertEqual(attachment.fname, 'scan_soraya.lernout_1691652648.pdf')
+        self.assertEqual(capture.output, [
+            ("WARNING:odoo.addons.mail.models.mail_thread:Message containing an unexpected "
+             "Content-Type '*/*', assuming 'application/octet-stream'"),
+        ])
+
     def test_message_parse_body(self):
         # test pure plaintext
         plaintext = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>')
@@ -1331,6 +1346,49 @@ class TestMailgateway(MailGatewayCommon):
         self.assertFalse(record)
         self.assertEqual(self.partner_1.message_bounce, 1)
         self.assertEqual(self.test_record.message_bounce, 0)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_bounce_records_partner_multi(self):
+        """Bounce must only affect the notification matching the bounced email."""
+
+        bounce_email = 'specific.bounce.address@example.com'
+
+        message = self._create_gateway_message(
+            self.test_record,
+            'bounce_multi',
+            body='Test message',
+            message_type='email',
+            partner_ids=(self.partner_1 + self.partner_employee).ids,
+            subject='Test Multi Partner',
+        )
+
+        notif_partner, notif_employee = self.env['mail.notification'].create([
+            {
+                'mail_message_id': message.id,
+                'res_partner_id': self.partner_1.id,
+                'notification_type': 'email',
+                'notification_status': 'sent',
+                'mail_email_address': bounce_email,
+            },
+            {
+                'mail_message_id': message.id,
+                'res_partner_id': self.partner_employee.id,
+                'notification_type': 'email',
+                'notification_status': 'sent',
+            },
+        ])
+
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                test_mail_data.MAIL_BOUNCE,
+                bounce_email,
+                f'groups@{self.alias_domain}',
+                subject='Undelivered Mail Returned to Sender',
+                extra=message.message_id,
+            )
+
+        self.assertEqual(notif_partner.notification_status, 'bounce')
+        self.assertEqual(notif_employee.notification_status, 'sent')
 
     # --------------------------------------------------
     # Thread formation
