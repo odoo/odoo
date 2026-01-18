@@ -469,7 +469,7 @@ class AccountMove(models.Model):
             if not tax:
                 continue
 
-            is_withholding = tax.l10n_es_edi_facturae_tax_type == '04' # IRPF
+            is_withholding = tax.l10n_es_edi_facturae_tax_type == '04'  # IRPF
             tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data({**values, 'grouping_key': tax})
             invoice_values['TaxesWithheld' if is_withholding else 'TaxOutputs'].append(tax_data)
             invoice_values['TotalTaxesWithheld' if is_withholding else 'TotalTaxOutputs'] += values['tax_amount_currency']
