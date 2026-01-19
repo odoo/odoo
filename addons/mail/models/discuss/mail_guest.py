@@ -63,6 +63,7 @@ class MailGuest(models.Model):
         """Returns the current guest record from the context, if applicable."""
         guest = self.env.context.get('guest')
         if isinstance(guest, self.pool['mail.guest']):
+            guest = guest.with_env(self.env)
             assert len(guest) <= 1, "Context guest should be empty or a single record."
             return guest.sudo(False).with_context(guest=guest)
         return self.env['mail.guest']
