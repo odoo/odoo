@@ -27,7 +27,7 @@ QUnit.module('Project', {
         ]);
         this.views = {
             "project.task,false,kanban":
-                `<kanban js_class="project_task_kanban">
+                `<kanban default_group_by="stage_id" js_class="project_task_kanban">
                     <templates>
                         <t t-name="card">
                             <field name="name"/>

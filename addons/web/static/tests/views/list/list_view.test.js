@@ -1955,6 +1955,9 @@ test(`grouped list rendering with groupby m2o and m2m field`, async () => {
         `,
         groupBy: ["m2o", "m2m"],
     });
+    expect(`.o_list_footer td > button`).toHaveCount(0, {
+        message: "no quick create since no default groupby",
+    });
     expect(queryAllTexts(`tbody > tr`)).toEqual(["Value 1 (3)", "Value 2 (1)"]);
 
     await contains(`th.o_group_name`).click();
@@ -1979,6 +1982,27 @@ test(`grouped list rendering with groupby m2o and m2m field`, async () => {
     ]);
 });
 
+test(`grouped list rendering with groupby m2o field: group_create = false`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list group_create="false"><field name="foo"/></list>`,
+        groupBy: ["m2o"],
+    });
+    expect(`.o_list_footer td > button`).toHaveCount(0);
+});
+
+test(`grouped list rendering with groupby non m2o field`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list group_create="false"><field name="foo"/></list>`,
+        groupBy: ["bar"],
+    });
+    expect(`.o_list_footer td > button`).toHaveCount(0);
+});
+
+test.tags("desktop");
 test(`grouped list with (disabled) pager inside group`, async () => {
     let def;
     onRpc("web_search_read", () => def);

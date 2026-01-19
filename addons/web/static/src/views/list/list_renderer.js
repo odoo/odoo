@@ -345,6 +345,17 @@ export class ListRenderer extends Component {
         return this.props.activeActions || {};
     }
 
+    get canCreateGroup() {
+        const { archInfo, list, readonly } = this.props;
+        const { activeActions, defaultGroupBy } = archInfo;
+        return (
+            !readonly &&
+            activeActions.createGroup &&
+            list.groupByField.type === "many2one" &&
+            list.groupByField.name === defaultGroupBy?.split(",")?.[0]
+        );
+    }
+
     get canResequenceRows() {
         if (!this.props.list.canResequence()) {
             return false;
