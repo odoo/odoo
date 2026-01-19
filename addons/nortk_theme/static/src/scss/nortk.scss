@@ -1,0 +1,44 @@
+/* static/src/scss/nortk.scss */
+
+:root {
+    /* --- Main Backgrounds --- */
+    --o-view-background-color: #1e1e1e;
+    --o-component-background-color: #2b2b2b;
+    --o-web-client-background-color: #121212;
+
+    /* --- Text Colors --- */
+    --o-main-text-color: #e0e0e0;
+    --o-secondary-text-color: #a0a0a0;
+
+    /* --- Borders and Separators --- */
+    --o-border-color: #444444;
+    --o-separator-color: #444444;
+
+    /* --- Inputs and Forms --- */
+    --o-input-background-color: #2b2b2b;
+    --o-input-border-color: #555555;
+    --o-input-text-color: #ffffff;
+
+    /* --- Navigation / Navbar --- */
+    --o-navbar-background-color: #121212;
+    --o-navbar-text-color: #ffffff;
+
+    /* --- Control Panel (Search bar area) --- */
+    --o-control-panel-background-color: #1e1e1e;
+
+    /* --- Menus --- */
+    --o-dropdown-background-color: #2b2b2b;
+    --o-dropdown-item-text-color: #e0e0e0;
+    --o-dropdown-item-hover-background-color: #444444;
+}
+
+/* Force standard scrollbars to be dark in supported browsers */
+html {
+    color-scheme: dark;
+}
+
+/* Optional: Fix specific hardcoded white backgrounds in some list views */
+.o_list_view .o_list_table {
+    background-color: var(--o-view-background-color) !important;
+    color: var(--o-main-text-color) !important;
+}
