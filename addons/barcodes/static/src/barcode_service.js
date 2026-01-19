@@ -95,7 +95,6 @@ export const barcodeService = {
             // don't trigger native event handlers of elements. So this means that
             // our fake events will not appear in eg. an <input> element.
             if (currentTarget !== barcodeInput && isEditable(currentTarget) &&
-                !currentTarget.dataset.enableBarcode &&
                 currentTarget.getAttribute("barcode_events") !== "true") {
                 return;
             }
