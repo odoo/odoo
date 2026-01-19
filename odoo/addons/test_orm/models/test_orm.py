@@ -1298,6 +1298,7 @@ class TestOrmModel_Child(models.Model):
     _check_company_auto = True
 
     name = fields.Char()
+    active = fields.Boolean(default=True)
     company_id = fields.Many2one('res.company')
     parent_id = fields.Many2one('test_orm.model_parent', string="Parent", check_company=True)
     parent_ids = fields.Many2many('test_orm.model_parent', string="Parents", check_company=True)
