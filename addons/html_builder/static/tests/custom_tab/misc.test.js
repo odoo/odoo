@@ -3,6 +3,7 @@ import {
     addBuilderOption,
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
+import { Builder } from "@html_builder/builder";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
@@ -11,7 +12,7 @@ import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { withSequence } from "@html_editor/utils/resource";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { onWillStart, xml } from "@odoo/owl";
+import { Component, onWillStart, xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -325,6 +326,49 @@ test("fallback on the 'Blocks' tab if no option match the selected element", asy
     await setupHTMLBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
     await contains(":iframe .parent-target > div").click();
     expect(".o-snippets-tabs button:contains('Blocks')").toHaveClass("active");
+});
+
+test("move back on the 'Blocks' tab if no more option match the selected element", async () => {
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".parent-target";
+            static template = xml`<BuilderRow label="'Row 1'">
+                <BuilderButton classAction="'my-custom-class'"/>
+            </BuilderRow>`;
+        }
+    );
+    await setupHTMLBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
+    await contains(":iframe .parent-target > div").click();
+    expect(".o-snippets-tabs button[data-name=customize]").toHaveClass("active");
+    await contains("button.oe_snippet_remove").click();
+    expect(".o-snippets-tabs button[data-name=blocks]").toHaveClass("active");
+});
+
+test("stay on the 'Theme' tab if no more option match the selected element", async () => {
+    patchWithCleanup(Builder.prototype, {
+        setup() {
+            super.setup();
+            this.ThemeTab = class DummyThemeTab extends Component {
+                static template = xml`<div>Dummy Theme Tab</div>`;
+                static props = ["*"];
+            };
+        },
+    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".parent-target";
+            static template = xml`<BuilderRow label="'Row 1'">
+                <BuilderButton classAction="'my-custom-class'"/>
+            </BuilderRow>`;
+        }
+    );
+    const { getEditor } = await setupHTMLBuilder(
+        `<div class="parent-target"><div class="child-target">b</div></div>`
+    );
+    await contains(".o-snippets-tabs button[data-name=theme]").click();
+    expect(".o-snippets-tabs button[data-name=theme]").toHaveClass("active");
+    getEditor().shared.builderOptions.deactivateContainers();
+    expect(".o-snippets-tabs button[data-name=theme]").toHaveClass("active");
 });
 
 test("display empty message if no option container is visible", async () => {
