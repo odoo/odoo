@@ -203,15 +203,6 @@ class ChannelController(http.Controller):
         store = Store().add(attachments, "_store_attachment_fields")
         return {"store_data": store.get_result(), "count": len(attachments)}
 
-    @http.route("/discuss/channel/join", methods=["POST"], type="jsonrpc", auth="public")
-    @add_guest_to_context
-    def discuss_channel_join(self, channel_id):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
-        if not channel:
-            raise NotFound()
-        channel._find_or_create_member_for_self()
-        return Store().add(channel, "_store_channel_fields").get_result()
-
     @http.route("/discuss/channel/sub_channel/create", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_sub_channel_create(self, parent_channel_id, from_message_id=None, name=None):
         channel = request.env["discuss.channel"].search([("id", "=", parent_channel_id)])
