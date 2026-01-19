@@ -62,7 +62,7 @@ class ProductTemplate(models.Model):
 
     website_description = fields.Html(
         string="Description for the website",
-        translate=html_translate,
+        translate=True,
         sanitize_overridable=True,
         sanitize_attributes=False,
         sanitize_form=False,
@@ -70,7 +70,7 @@ class ProductTemplate(models.Model):
     )
     description_ecommerce = fields.Html(
         string="eCommerce Description",
-        translate=html_translate,
+        translate=True,
         sanitize_overridable=True,
         sanitize_attributes=False,
         sanitize_form=False,
