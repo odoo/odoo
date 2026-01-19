@@ -285,6 +285,65 @@ export class TicketScreen extends Component {
             });
         }
 
+<<<<<<< b1cacbf25cb9d7a03ad77b9f8283fc43dd7816b3
+||||||| 69f1398d0f417ef861bbe65b783225d1f94a5244
+        // First pass: add all products to the destination order
+        for (const refundDetail of allToRefundDetails) {
+            const product = this.pos.db.get_product_by_id(refundDetail.orderline.productId);
+            const options = this._prepareRefundOrderlineOptions(refundDetail);
+            const newOrderline = await destinationOrder.add_product(product, options);
+            originalToDestinationLineMap.set(refundDetail.orderline.id, newOrderline);
+            refundDetail.destinationOrderUid = destinationOrder.uid;
+        }
+        // Second pass: update combo relationships in the destination order
+        for (const refundDetail of allToRefundDetails) {
+            const originalOrderline = refundDetail.orderline;
+            const destinationOrderline = originalToDestinationLineMap.get(originalOrderline.id);
+            if (originalOrderline.comboParent) {
+                const comboParentLine = originalToDestinationLineMap.get(
+                    originalOrderline.comboParent.id
+                );
+                if (comboParentLine) {
+                    destinationOrderline.comboParent = comboParentLine;
+                }
+            }
+            if (originalOrderline.comboLines && originalOrderline.comboLines.length > 0) {
+                destinationOrderline.comboLines = originalOrderline.comboLines.map((comboLine) => {
+                    return originalToDestinationLineMap.get(comboLine.id);
+                });
+            }
+        }
+=======
+        // First pass: add all products to the destination order
+        for (const refundDetail of allToRefundDetails) {
+            const product = await this.pos.getProductById(refundDetail.orderline.productId);
+            if (!product) {
+                continue;
+            }
+            const options = this._prepareRefundOrderlineOptions(refundDetail);
+            const newOrderline = await destinationOrder.add_product(product, options);
+            originalToDestinationLineMap.set(refundDetail.orderline.id, newOrderline);
+            refundDetail.destinationOrderUid = destinationOrder.uid;
+        }
+        // Second pass: update combo relationships in the destination order
+        for (const refundDetail of allToRefundDetails) {
+            const originalOrderline = refundDetail.orderline;
+            const destinationOrderline = originalToDestinationLineMap.get(originalOrderline.id);
+            if (originalOrderline.comboParent) {
+                const comboParentLine = originalToDestinationLineMap.get(
+                    originalOrderline.comboParent.id
+                );
+                if (comboParentLine) {
+                    destinationOrderline.comboParent = comboParentLine;
+                }
+            }
+            if (originalOrderline.comboLines && originalOrderline.comboLines.length > 0) {
+                destinationOrderline.comboLines = originalOrderline.comboLines.map((comboLine) => {
+                    return originalToDestinationLineMap.get(comboLine.id);
+                });
+            }
+        }
+>>>>>>> ad04ff37438387f78d90b44515c583c16ae5d948
         //Add a check too see if the fiscal position exist in the pos
         if (order.fiscal_position_not_found) {
             this.dialog.add(AlertDialog, {

@@ -1561,6 +1561,140 @@ export class PosStore extends Reactive {
     getCurrencySymbol() {
         return this.currency ? this.currency.symbol : "$";
     }
+<<<<<<< b1cacbf25cb9d7a03ad77b9f8283fc43dd7816b3
+||||||| 69f1398d0f417ef861bbe65b783225d1f94a5244
+    /**
+     * Make the products corresponding to the given ids to be available_in_pos and
+     * fetch them to be added on the loaded products.
+     */
+    async _addProducts(ids, setAvailable = true) {
+        if (setAvailable) {
+            try {
+                await this.orm.write("product.product", ids, { available_in_pos: true });
+            } catch (error) {
+                const ignoreError =
+                    error instanceof RPCError &&
+                    error.exceptionName === "odoo.exceptions.AccessError";
+                if (!ignoreError) {
+                    throw error;
+                }
+            }
+        }
+        const products = await this._loadProductByIds(ids);
+        const missingProductIds = await this._loadMissingPosCombos(products);
+        if (missingProductIds && missingProductIds.length) {
+            products.push(...(await this._loadProductByIds(missingProductIds)));
+        }
+        await this._loadMissingPricelistItems(products);
+        this._loadProductProduct(products);
+    }
+    async _loadProductByIds(productIds) {
+        return await this.orm.call("pos.session", "get_pos_ui_product_product_by_params", [
+            odoo.pos_session_id,
+            { domain: [["id", "in", productIds]] },
+        ]);
+    }
+    async _loadMissingPosCombos(products) {
+        const missingComboIds = unique(
+            products
+                .flatMap((product) => product.combo_ids)
+                .filter((id) => !this.db.combo_by_id[id]),
+        );
+        if (!missingComboIds.length) {
+            return;
+        }
+        const combos = await this.orm.call("pos.combo", "search_read", [], {
+            fields: ["id", "name", "combo_line_ids", "base_price"],
+            domain: [["id", "in", missingComboIds]],
+        });
+        this.db.add_combos(combos);
+        const comboLines = await this.orm.call("pos.combo.line", "search_read", [], {
+            fields: ["id", "product_id", "combo_price", "combo_id"],
+            domain: [["combo_id", "in", missingComboIds]],
+        });
+        this.db.add_combo_lines(comboLines);
+        const missingProductIds = unique(
+            comboLines
+                .map((comboLine) => comboLine.product_id[0])
+                .filter(
+                    (id) =>
+                        !this.db.get_product_by_id(id) &&
+                        !products.map((product) => product.id).includes(id),
+                ),
+        );
+        return missingProductIds;
+    }
+=======
+    /**
+     * Make the products corresponding to the given ids to be available_in_pos and
+     * fetch them to be added on the loaded products.
+     */
+    async _addProducts(ids, setAvailable = true) {
+        if (setAvailable) {
+            try {
+                await this.orm.write("product.product", ids, { available_in_pos: true });
+            } catch (error) {
+                const ignoreError =
+                    error instanceof RPCError &&
+                    error.exceptionName === "odoo.exceptions.AccessError";
+                if (!ignoreError) {
+                    throw error;
+                }
+            }
+        }
+        const products = await this._loadProductByIds(ids);
+        const missingProductIds = await this._loadMissingPosCombos(products);
+        if (missingProductIds && missingProductIds.length) {
+            products.push(...(await this._loadProductByIds(missingProductIds)));
+        }
+        await this._loadMissingPricelistItems(products);
+        this._loadProductProduct(products);
+    }
+    async getProductById(productId) {
+        let product = this.db.get_product_by_id(productId);
+        if (!product) {
+            await this._addProducts([productId], false);
+            product = this.db.get_product_by_id(productId);
+        }
+        return product;
+    }
+    async _loadProductByIds(productIds) {
+        return await this.orm.call("pos.session", "get_pos_ui_product_product_by_params", [
+            odoo.pos_session_id,
+            { domain: [["id", "in", productIds]] },
+        ]);
+    }
+    async _loadMissingPosCombos(products) {
+        const missingComboIds = unique(
+            products
+                .flatMap((product) => product.combo_ids)
+                .filter((id) => !this.db.combo_by_id[id]),
+        );
+        if (!missingComboIds.length) {
+            return;
+        }
+        const combos = await this.orm.call("pos.combo", "search_read", [], {
+            fields: ["id", "name", "combo_line_ids", "base_price"],
+            domain: [["id", "in", missingComboIds]],
+        });
+        this.db.add_combos(combos);
+        const comboLines = await this.orm.call("pos.combo.line", "search_read", [], {
+            fields: ["id", "product_id", "combo_price", "combo_id"],
+            domain: [["combo_id", "in", missingComboIds]],
+        });
+        this.db.add_combo_lines(comboLines);
+        const missingProductIds = unique(
+            comboLines
+                .map((comboLine) => comboLine.product_id[0])
+                .filter(
+                    (id) =>
+                        !this.db.get_product_by_id(id) &&
+                        !products.map((product) => product.id).includes(id),
+                ),
+        );
+        return missingProductIds;
+    }
+>>>>>>> ad04ff37438387f78d90b44515c583c16ae5d948
     isOpenOrderShareable() {
         return this.config.raw.trusted_config_ids.length > 0;
     }
