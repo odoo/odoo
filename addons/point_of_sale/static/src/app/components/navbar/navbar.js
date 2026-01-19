@@ -168,7 +168,7 @@ export class Navbar extends Component {
         }/${getDeviceUuid()}`;
 
         this.dialog.add(QrCodeCustomerDisplay, {
-            customerDisplayURL: `${this.pos.session._base_url}${customer_display_url}`,
+            customerDisplayURL: `${this.pos.config._base_url}${customer_display_url}`,
         });
     }
 
