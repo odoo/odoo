@@ -1,4 +1,5 @@
 import json
+import logging
 from base64 import b64decode, b64encode
 from datetime import datetime
 from urllib.parse import urljoin
@@ -30,6 +31,8 @@ SANDBOX_AUTH = {
     'binarySecurityToken': "TUlJRDFEQ0NBM21nQXdJQkFnSVRid0FBZTNVQVlWVTM0SS8rNVFBQkFBQjdkVEFLQmdncWhrak9QUVFEQWpCak1SVXdFd1lLQ1pJbWlaUHlMR1FCR1JZRmJHOWpZV3d4RXpBUkJnb0praWFKay9Jc1pBRVpGZ05uYjNZeEZ6QVZCZ29Ka2lhSmsvSXNaQUVaRmdkbGVIUm5ZWHAwTVJ3d0dnWURWUVFERXhOVVUxcEZTVTVXVDBsRFJTMVRkV0pEUVMweE1CNFhEVEl5TURZeE1qRTNOREExTWxvWERUSTBNRFl4TVRFM05EQTFNbG93U1RFTE1Ba0dBMVVFQmhNQ1UwRXhEakFNQmdOVkJBb1RCV0ZuYVd4bE1SWXdGQVlEVlFRTEV3MW9ZWGxoSUhsaFoyaHRiM1Z5TVJJd0VBWURWUVFERXdreE1qY3VNQzR3TGpFd1ZqQVFCZ2NxaGtqT1BRSUJCZ1VyZ1FRQUNnTkNBQVRUQUs5bHJUVmtvOXJrcTZaWWNjOUhEUlpQNGI5UzR6QTRLbTdZWEorc25UVmhMa3pVMEhzbVNYOVVuOGpEaFJUT0hES2FmdDhDL3V1VVk5MzR2dU1ObzRJQ0p6Q0NBaU13Z1lnR0ExVWRFUVNCZ0RCK3BId3dlakViTUJrR0ExVUVCQXdTTVMxb1lYbGhmREl0TWpNMGZETXRNVEV5TVI4d0hRWUtDWkltaVpQeUxHUUJBUXdQTXpBd01EYzFOVGc0TnpBd01EQXpNUTB3Q3dZRFZRUU1EQVF4TVRBd01SRXdEd1lEVlFRYURBaGFZWFJqWVNBeE1qRVlNQllHQTFVRUR3d1BSbTl2WkNCQ2RYTnphVzVsYzNNek1CMEdBMVVkRGdRV0JCU2dtSVdENmJQZmJiS2ttVHdPSlJYdkliSDlIakFmQmdOVkhTTUVHREFXZ0JSMllJejdCcUNzWjFjMW5jK2FyS2NybVRXMUx6Qk9CZ05WSFI4RVJ6QkZNRU9nUWFBL2hqMW9kSFJ3T2k4dmRITjBZM0pzTG5waGRHTmhMbWR2ZGk1ellTOURaWEowUlc1eWIyeHNMMVJUV2tWSlRsWlBTVU5GTFZOMVlrTkJMVEV1WTNKc01JR3RCZ2dyQmdFRkJRY0JBUVNCb0RDQm5UQnVCZ2dyQmdFRkJRY3dBWVppYUhSMGNEb3ZMM1J6ZEdOeWJDNTZZWFJqWVM1bmIzWXVjMkV2UTJWeWRFVnVjbTlzYkM5VVUxcEZhVzUyYjJsalpWTkRRVEV1WlhoMFoyRjZkQzVuYjNZdWJHOWpZV3hmVkZOYVJVbE9WazlKUTBVdFUzVmlRMEV0TVNneEtTNWpjblF3S3dZSUt3WUJCUVVITUFHR0gyaDBkSEE2THk5MGMzUmpjbXd1ZW1GMFkyRXVaMjkyTG5OaEwyOWpjM0F3RGdZRFZSMFBBUUgvQkFRREFnZUFNQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01DQmdnckJnRUZCUWNEQXpBbkJna3JCZ0VFQVlJM0ZRb0VHakFZTUFvR0NDc0dBUVVGQndNQ01Bb0dDQ3NHQVFVRkJ3TURNQW9HQ0NxR1NNNDlCQU1DQTBrQU1FWUNJUUNWd0RNY3E2UE8rTWNtc0JYVXovdjFHZGhHcDdycVNhMkF4VEtTdjgzOElBSWhBT0JOREJ0OSszRFNsaWpvVmZ4enJkRGg1MjhXQzM3c21FZG9HV1ZyU3BHMQ==",
     'secret': "Xlj15LyMCgSC66ObnEO/qVPfhSbs3kDTjWnGheYhfSs="
 }
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountJournal(models.Model):
@@ -148,6 +151,27 @@ class AccountJournal(models.Model):
 
     # ====== Certificate Methods =======
 
+    def _l10n_sa_get_csid_error(self, csid):
+        """
+            Return a formatted error string if the CSID response has an 'error' or 'errors'
+            key or doesn't have a 'binarySecurityToken'
+        """
+        error_msg = ""
+        unknown_error_msg = _("Unknown response returned from ZATCA. Please check the logs.")
+        if error := csid.get('error'):
+            error_msg = error
+        elif errors := csid.get('errors'):
+            error_msg = " <br/>" + " <br/>- ".join([err['message'] if isinstance(err, dict) else err for err in errors])
+        elif 'error' in [csid.get('type', "").lower(), csid.get('status', "").lower()]:
+            error_msg = csid.get('message') or unknown_error_msg
+        elif not csid.get('binarySecurityToken'):
+            error_msg = unknown_error_msg
+
+        if error_msg:
+            _logger.warning("Failed to obtain CSID: %s", csid)
+
+        return error_msg
+
     def _l10n_sa_reset_certificates(self):
         """
             Reset all certificate values, including CSR and compliance checks
@@ -200,9 +224,9 @@ class AccountJournal(models.Model):
             Request a Compliance Cryptographic Stamp Identifier (CCSID) from ZATCA
         """
         CCSID_data = self._l10n_sa_api_get_compliance_CSID(otp)
-        if CCSID_data.get('errors') or CCSID_data.get('error'):
-            raise UserError(_("Could not obtain Compliance CSID: %s",
-                              CCSID_data['errors'][0]['message'] if CCSID_data.get('errors') else CCSID_data['error']))
+        if error := self._l10n_sa_get_csid_error(CCSID_data):
+            raise UserError(_("Could not obtain Compliance CSID: %s", error))
+
         cert_id = self.env['certificate.certificate'].sudo().create({
             'name': 'CCSID Certificate',
             'content': b64decode(CCSID_data['binarySecurityToken']),
@@ -239,12 +263,8 @@ class AccountJournal(models.Model):
 
         CCSID_data = json.loads(self_sudo.l10n_sa_compliance_csid_json)
         PCSID_data = self_sudo._l10n_sa_request_production_csid(CCSID_data, renew, OTP)
-        if PCSID_data.get('error') or PCSID_data.get('errors'):
-            raise UserError(_(
-                "Could not obtain Production CSID: %s",
-                PCSID_data['errors'][0] if PCSID_data.get('errors') else PCSID_data['error']
-            ))
-
+        if error := self._l10n_sa_get_csid_error(PCSID_data):
+            raise UserError(_("Could not obtain Production CSID: %s", error))
         self_sudo.l10n_sa_production_csid_json = json.dumps(PCSID_data)
         pcsid_certificate = self_sudo.env['certificate.certificate'].create({
             'name': 'PCSID Certificate',
