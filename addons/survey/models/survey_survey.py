@@ -25,10 +25,6 @@ class SurveySurvey(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     @api.model
-    def _get_default_access_token(self):
-        return str(uuid.uuid4())
-
-    @api.model
     def default_get(self, fields):
         result = super().default_get(fields)
         # allows to propagate the text one write in a many2one widget after
@@ -96,7 +92,7 @@ class SurveySurvey(models.Model):
         ('public', 'Anyone with the link'),
         ('token', 'Invited people only')], string='Access Mode',
         default='public', required=True)
-    access_token = fields.Char('Access Token', default=lambda self: self._get_default_access_token(), copy=False)
+    access_token = fields.Char('Access Token', compute='_compute_access_token')
     users_login_required = fields.Boolean('Require Login', help="If checked, users have to login before answering even with a valid token.")
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
     users_can_signup = fields.Boolean('Users can signup', compute='_compute_users_can_signup')
@@ -174,10 +170,6 @@ class SurveySurvey(models.Model):
     # conditional questions management
     has_conditional_questions = fields.Boolean("Contains conditional questions", compute="_compute_has_conditional_questions")
 
-    _access_token_unique = models.Constraint(
-        'unique(access_token)',
-        'Access token should be unique',
-    )
     _session_code_unique = models.Constraint(
         'unique(session_code)',
         'Session code should be unique',
@@ -206,6 +198,15 @@ class SurveySurvey(models.Model):
         'CHECK (session_speed_rating != TRUE OR session_speed_rating_time_limit IS NOT NULL AND session_speed_rating_time_limit > 0)',
         'A positive default time limit is required when the session rewards quick answers.',
     )
+
+    @api.depends_context('uid')
+    def _compute_access_token(self):
+        self.access_token = False
+        for survey, origin in zip(self, self._origin):
+            origin.check_access('read')
+            survey.access_token = self.env.user.sudo().retrieve_access_token(origin, 'access-survey')
+            if not survey.access_token and survey.id:  # grant only to real records
+                survey.access_token = self.env.user.sudo().grant_access_token(origin, 'access-survey')
 
     @api.depends('background_image', 'access_token')
     def _compute_background_image_url(self):
@@ -470,6 +471,9 @@ class SurveySurvey(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         surveys = super().create(vals_list)
+        for survey, vals in zip(surveys, vals_list):
+            if 'access_token' in vals:
+                self.env.user.sudo().grant_access_token(survey, 'access-survey', value=vals['access_token'])
         for survey_sudo in surveys.filtered(lambda survey: survey.certification_give_badge).sudo():
             survey_sudo._create_certification_badge_trigger()
         return surveys
@@ -1187,10 +1191,6 @@ class SurveySurvey(models.Model):
 
     def get_start_url(self):
         return '/survey/start/%s' % self.access_token
-
-    def get_start_short_url(self):
-        """ See controller method docstring for more details. """
-        return '/s/%s' % self.access_token[:6]
 
     def get_print_url(self):
         return '/survey/print/%s' % self.access_token

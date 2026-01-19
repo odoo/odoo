@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import contextlib
 import datetime
 import json
 
@@ -8,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http
+from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import is_html_empty
 
@@ -18,7 +20,9 @@ class UserInputSession(http.Controller):
     def _fetch_from_token(self, survey_token):
         """ Check that given survey_token matches a survey 'access_token'.
         Unlike the regular survey controller, user trying to access the survey must have full access rights! """
-        return request.env['survey.survey'].search([('access_token', '=', survey_token)])
+        with contextlib.suppress(AccessError):
+            return self.env.user.use_access_token(survey_token, 'access-survey').sudo(False)
+        return request.env['survey.survey']
 
     def _fetch_start_url_from_session_code(self, session_code):
         """ Matches a survey against a passed session_code, and checks if it is valid.

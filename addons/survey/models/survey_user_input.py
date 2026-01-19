@@ -42,7 +42,7 @@ class SurveyUser_Input(models.Model):
     attempts_number = fields.Integer("Attempt n°", compute='_compute_attempts_info')
     survey_time_limit_reached = fields.Boolean("Survey Time Limit Reached", compute='_compute_survey_time_limit_reached')
     # identification / access
-    access_token = fields.Char('Identification token', default=lambda self: str(uuid.uuid4()), readonly=True, required=True, copy=False)
+    access_token = fields.Char('Identification_token', compute='_compute_access_token')
     invite_token = fields.Char('Invite token', readonly=True, copy=False)  # no unique constraint, as it identifies a pool of attempts
     partner_id = fields.Many2one('res.partner', string='Contact', readonly=True, index='btree_not_null')
     email = fields.Char('Email', readonly=True)
@@ -58,10 +58,14 @@ class SurveyUser_Input(models.Model):
     is_session_answer = fields.Boolean('Is in a Session', help="Is that user input part of a survey session or not.")
     question_time_limit_reached = fields.Boolean("Question Time Limit Reached", compute='_compute_question_time_limit_reached')
 
-    _unique_token = models.Constraint(
-        'UNIQUE (access_token)',
-        'An access token must be unique!',
-    )
+    @api.depends_context('uid')
+    def _compute_access_token(self):
+        self.access_token = False
+        for survey_input, origin in zip(self, self._origin):
+            origin.check_access('read')
+            survey_input.access_token = self.env.user.sudo().retrieve_access_token(origin, 'access-survey-input')
+            if not survey_input.access_token and survey_input.id:  # grant only to real records
+                survey_input.access_token = self.env.user.sudo().grant_access_token(origin, 'access-survey-input')
 
     @api.depends('user_input_line_ids.answer_score', 'user_input_line_ids.question_id', 'predefined_question_ids.answer_score')
     def _compute_scoring_values(self):

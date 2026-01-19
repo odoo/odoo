@@ -9,7 +9,7 @@ import werkzeug
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, fields, http
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.http.stream import content_disposition
@@ -34,15 +34,18 @@ class Survey(http.Controller):
         if not survey_token:
             return SurveySudo, UserInputSudo
         if answer_token:
-            answer_sudo = UserInputSudo.search(
-                Domain('survey_id', 'any',
-                    Domain('access_token', '=', survey_token)
-                    & Domain('active', 'in', (True, False))  # keeping active test for UserInput
-                ) & Domain('access_token', '=', answer_token), limit=1)
-            if answer_sudo:
+            try:
+                answer_sudo = self.env.user.use_access_token(answer_token, 'access-survey-input')
                 return answer_sudo.survey_id, answer_sudo
+            except AccessError:
+                _logger.warning('Try of using invalid access token for survey input')
+        try:
+            survey_sudo = self.env.user.use_access_token(survey_token, 'access-survey')
+            return survey_sudo, UserInputSudo
+        except AccessError:
+            _logger.warning('Try of using invalid access token for survey')
 
-        return SurveySudo.with_context(active_test=False).search([('access_token', '=', survey_token)]), UserInputSudo
+        return SurveySudo, UserInputSudo
 
     def _check_validity(self, survey_sudo, answer_sudo, answer_token, ensure_token=True, check_partner=True):
         """ Check survey is open and can be taken. This does not check for

@@ -9,7 +9,7 @@ from odoo.tests.common import tagged, HttpCase
 from odoo.tools import mute_logger
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('-at_install', 'post_install')  # LEGACY at_install
 class TestSurveyController(common.TestSurveyCommon, HttpCase):
 
     def test_submit_route_scoring_after_page(self):
@@ -84,7 +84,8 @@ class TestSurveyController(common.TestSurveyCommon, HttpCase):
                     page0, _ = self.env['survey.question'].create(pages)
 
                 response = self._access_start(survey)
-                user_input = self.env['survey.user_input'].search([('access_token', '=', response.url.split('/')[-1])])
+                access_token = response.url.split('/')[-1]
+                user_input = self.env.user.use_access_token(access_token, 'access-survey-input')
                 answer_token = user_input.access_token
 
                 r = self._access_page(survey, answer_token)
