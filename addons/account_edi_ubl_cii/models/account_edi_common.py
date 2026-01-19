@@ -1,3 +1,4 @@
+import re
 from markupsafe import Markup
 
 from odoo import _, api, models
@@ -844,12 +845,15 @@ class AccountEdiCommon(models.AbstractModel):
     def _import_lines(self, record, tree, xpath, document_type=False, tax_type=False, qty_factor=1):
         logs = []
         lines_values = []
+        vehicle = self._import_vehicle(tree, 'move', document_type, record.company_id)
         for line_tree in tree.iterfind(xpath):
             line_values = self.with_company(record.company_id)._retrieve_invoice_line_vals(record, line_tree, document_type, qty_factor)
             line_values['tax_ids'], tax_logs = self._retrieve_taxes(record, line_values, tax_type)
             logs += tax_logs
             if not line_values['product_uom_id']:
                 line_values.pop('product_uom_id')  # if no uom, pop it so it's inferred from the product_id
+            if self._need_vehicle_id(document_type):
+                line_values['vehicle_id'] = vehicle or self._import_vehicle(line_tree, 'line', document_type, record.company_id)
             lines_values.append(line_values)
             lines_values += self._retrieve_line_charges(record, line_values, line_values['tax_ids'])
         return lines_values, logs
@@ -1082,6 +1086,62 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _import_product(self, partner, **product_vals):
         return self.env['product.product']._retrieve_product(**product_vals)
+
+    def _import_vehicle(self, tree, tree_type, document_type, company):
+        """
+        For xmls where the VIN is located somewhere in a tag under Invoice or InvoiceLine
+        :param tree: etree object
+        :param tree_type: 'line' if the tree root element is <InvoiceLine> or 'move' if it's <Invoice>
+        """
+        if not self._need_vehicle_id(document_type):
+            return False
+        default_parent_node_path = './{*}Item/{*}AdditionalItemProperty'
+        default_value_path = './{*}Value'
+
+        def default_condition(parent_node, node, value):
+            return parent_node.findtext('./{*}Name') == value
+        paths = [
+            # {
+            #   'path_type': 'line' or 'move'
+            #   'parent_node_path': 'path to the parent node',
+            #   'condition': lambda prent_node, node, value: 'where parent_node = parent node, node = node containing VIN Number, value = vin_identifier',
+            #   'value_path': 'path to the node where the information is to be found',
+            #   'vin_identifier': 'to be used in condition, to perform a check',
+            # }
+            {'path_type': 'line', 'vin_identifier': 'SerialNumber'},  # BNP Leasing
+            {'path_type': 'line', 'vin_identifier': 'VIN'},  # BMW
+            {
+                # Tesla
+                'path_type': 'move',
+                'parent_node_path': './{*}AdditionalDocumentReference',
+                'condition': lambda parent_node, node, value: node.get('schemeID') == 'AKG',
+                'value_path': './{*}ID',
+            },
+        ]
+
+        chassis_numbers = []
+        for path in [p for p in paths if p.get('path_type') == tree_type]:
+            parent_nodes = tree.findall(path.get('parent_node_path', default_parent_node_path))
+            for parent_node in parent_nodes:
+                vin_node = parent_node.find(path.get('value_path', default_value_path))
+                if vin_node is not None and path.get('condition', default_condition)(parent_node, vin_node, path.get('vin_identifier', '')):
+                    vin_sn = vin_node.text
+                    if vin_sn and re.fullmatch(r'[A-Za-z0-9]{17}', vin_sn):  # applies to vin after 1981
+                        chassis_numbers.append(vin_sn)
+
+        if len(chassis_numbers) != 1:
+            return False
+
+        vehicles = self.env.get('fleet.vehicle').search([
+            ('vin_sn', 'in', chassis_numbers),
+            ('company_id', '=', company.id),
+        ], limit=2)
+        if len(vehicles) == 1:
+            return vehicles.id
+        return False
+
+    def _need_vehicle_id(self, document_type):
+        return document_type == 'in_invoice' and 'fleet.vehicle' in self.env
 
     def _retrieve_fixed_tax(self, company_id, fixed_tax_vals):
         """ Retrieve the fixed tax at import, iteratively search for a tax:
