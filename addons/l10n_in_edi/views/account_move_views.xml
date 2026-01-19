@@ -38,6 +38,15 @@
                         groups="base.group_no_one"
                         string="Download EDI JSON"/>
             </xpath>
+             <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_l10n_in_edi_logs"
+                    type="object"
+                    groups="base.group_no_one"
+                    string="View logs"
+                    class="oe_stat_button"
+                    invisible="country_code != 'IN'"
+                    icon="fa-list"/>
+            </xpath>
             <xpath expr="//div[@name='journal_div']" position="after">
                 <field name="l10n_in_edi_status" invisible="not l10n_in_edi_status or state == 'draft'"/>
             </xpath>
