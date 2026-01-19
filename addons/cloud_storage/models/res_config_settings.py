@@ -36,6 +36,8 @@ class ResConfigSettings(models.TransientModel):
         default=DEFAULT_CLOUD_STORAGE_MIN_FILE_SIZE,
     )
 
+    cloud_storage_upload_record_attachments = fields.Boolean(string='Upload Record Attachments', config_parameter='cloud_storage_upload_record_attachments')
+
     def _setup_cloud_storage_provider(self):
         """
         Setup the cloud storage provider and check the validity of the account
@@ -79,3 +81,5 @@ class ResConfigSettings(models.TransientModel):
             raise UserError(self.env._('Please configure the Cloud Storage before enabling it'))
         if cloud_storage_configuration and cloud_storage_configuration != cloud_storage_configuration_before:
             self._setup_cloud_storage_provider()
+        if self.cloud_storage_upload_record_attachments and not cloud_storage_configuration:
+            ICP.set_bool('cloud_storage_upload_record_attachments', False)
