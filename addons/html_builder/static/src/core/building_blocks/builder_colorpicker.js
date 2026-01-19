@@ -1,5 +1,5 @@
 import { ColorSelector } from "@html_editor/main/font/color_selector";
-import { Component, useComponent, useRef } from "@odoo/owl";
+import { Component, useComponent } from "@odoo/owl";
 import {
     useColorPicker,
     DEFAULT_COLORS,
@@ -107,6 +107,24 @@ export function useColorPickerBuilderComponent() {
     };
 }
 
+export class ColorPickerButton extends Component {
+    static template = "html_builder.ColorPickerButton";
+    static props = {
+        title: { type: String, optional: true },
+        style: { type: String, optional: true },
+        tooltip: { type: String, optional: true },
+        colorPickerConfig: { type: Object, optional: true },
+    };
+
+    setup() {
+        useColorPicker(
+            "colorButton",
+            this.props.colorPickerConfig.props,
+            this.props.colorPickerConfig.options
+        );
+    }
+}
+
 export class BuilderColorPicker extends Component {
     static template = "html_builder.BuilderColorPicker";
     static props = {
@@ -130,16 +148,16 @@ export class BuilderColorPicker extends Component {
     static components = {
         ColorSelector: ColorSelector,
         BuilderComponent,
+        ColorPickerButton,
     };
 
     setup() {
         useBuilderComponent();
         const { state, onApply, onPreview, onPreviewRevert } = useColorPickerBuilderComponent();
-        this.colorButton = useRef("colorButton");
         this.state = state;
-        useColorPicker(
-            "colorButton",
-            {
+
+        this.colorPickerConfig = {
+            props: {
                 state,
                 applyColor: onApply,
                 applyColorPreview: onPreview,
@@ -155,11 +173,11 @@ export class BuilderColorPicker extends Component {
                 className: "o-hb-colorpicker",
                 editColorCombination: this.env.editColorCombination,
             },
-            {
+            options: {
                 onClose: onPreviewRevert,
                 popoverClass: "o-hb-colorpicker-popover",
-            }
-        );
+            },
+        };
     }
 
     getSelectedColorStyle() {
