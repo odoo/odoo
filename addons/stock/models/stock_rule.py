@@ -337,6 +337,8 @@ class StockRule(models.Model):
         product_id = product_id.with_context(lang=(partner and partner.lang) or self.env.user.lang)
         picking_description = product_id._get_description(self.picking_type_id)
         if values.get('product_description_variants'):
+            if picking_description.startswith(name):
+                picking_description = picking_description.removeprefix(name).strip()
             picking_description += values['product_description_variants']
         # it is possible that we've already got some move done, so check for the done qty and create
         # a new move with the correct qty
