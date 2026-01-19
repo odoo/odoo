@@ -2473,10 +2473,21 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_product_long_press(self):
         """ Test the long press on product to open the product info """
         archive_products(self.env)
+        group_tax = self.env['account.tax'].create({
+            'name': 'Parent Tax',
+            'amount_type': 'group',
+            'children_tax_ids': [(0, 0, {
+                'name': 'Child Tax 1',
+                'amount': 10,
+            }), (0, 0, {
+                'name': 'Child Tax 2',
+                'amount': 5,
+            })],
+        })
         self.env['product.product'].create({
             'name': 'Test Product',
             'list_price': 100,
-            'taxes_id': False,
+            'taxes_id': [(6, 0, [group_tax.id])],
             'available_in_pos': True,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
