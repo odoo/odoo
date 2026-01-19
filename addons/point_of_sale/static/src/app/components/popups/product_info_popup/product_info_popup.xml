@@ -80,8 +80,8 @@
                     <div class="grid gap-2">
                         <label class="fw-bold">Price excl. Tax:</label>
                         <span><t t-esc="env.utils.formatCurrency(props.info.productInfo.all_prices.price_without_tax)"/></span>
-                        <label class="fw-bold">Tax:</label>
-                        <span>
+                        <label class="fw-bold vat-label"><t t-out="vatLabel"/>:</label>
+                        <span class="vat-value">
                             <t t-esc="props.info.taxAmount"/>
                             (<t t-esc="props.info.taxName"/>)
                         </span>

@@ -1664,7 +1664,8 @@ export class PosStore extends WithLazyGetterTrap {
             productProduct?.id,
         ]);
 
-        const priceWithoutTax = productInfo["all_prices"]["price_without_tax"];
+        const productTaxDetails = productTemplate.getTaxDetails();
+        const priceWithoutTax = productTaxDetails.total_excluded;
         const margin = priceWithoutTax - productTemplate.standard_price;
         const orderPriceWithoutTax = order.priceExcl;
         const orderCost = order.getTotalCost();
@@ -1676,9 +1677,9 @@ export class PosStore extends WithLazyGetterTrap {
             order.prices.taxDetails.order_sign * order.prices.taxDetails.total_amount_currency
         );
         const taxAmount = this.env.utils.formatCurrency(
-            productInfo.all_prices.tax_details[0]?.amount || 0
+            productTaxDetails.taxes_data.reduce((sum, d) => sum + d.tax_amount_currency, 0)
         );
-        const taxName = productInfo.all_prices.tax_details[0]?.name || "";
+        const taxName = productTemplate.taxes_id.map((t) => t.name)?.join(", ");
 
         const costCurrency = this.env.utils.formatCurrency(productTemplate.standard_price);
         const marginCurrency = this.env.utils.formatCurrency(margin);
