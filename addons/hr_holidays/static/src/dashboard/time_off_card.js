@@ -25,6 +25,7 @@ export class TimeOffCardPopover extends Component {
         "timeOffType",
         "employeeId",
         "employeeCompany",
+        "employeeCountry",
     ];
 
     setup() {
@@ -54,7 +55,7 @@ export class TimeOffCardPopover extends Component {
             list_view_ref: "hr_holidays.hr_leave_allocation_view_tree_my",
             form_view_ref: "hr_holidays.hr_leave_allocation_view_form",
         }
-        const domain = [["holiday_status_id", "=", timeOffType], ['employee_company_id','=', employeeCompany],
+        const domain = [["work_entry_type_id", "=", timeOffType], ['employee_company_id','=', employeeCompany],
                 '|', ["date_to", "=", false], ["date_to", ">=", today],
                 employeeId ? ['employee_id', '=', employeeId] : ['employee_id.user_id', '=', user.userId]]
 
@@ -62,14 +63,14 @@ export class TimeOffCardPopover extends Component {
     }
 
     async navigateInfo(stateList) {
-        const { employeeId, timeOffType, employeeCompany } = this.props;
+        const { employeeId, timeOffType } = this.props;
         const isInHolidaysUserGroup = await user.hasGroup("hr_holidays.group_hr_holidays_user");
 
         const resModel = "hr.leave"
         const name = "My Time Off"
         const domain = [
             ['state', 'in', stateList],
-            ['holiday_status_id', '=', timeOffType], ['company_id','=', employeeCompany],
+            ['work_entry_type_id', '=', timeOffType],
             employeeId ? ['employee_id', '=', employeeId] : ['user_id', '=', user.userId]
         ];
         const context = isInHolidaysUserGroup ? {
@@ -157,7 +158,8 @@ export class TimeOffCard extends Component {
             accrualExcess: this.getAccrualExcess(data),
             timeOffType: holidayStatusId,
             employeeId: employeeId,
-            employeeCompany: data.employee_company
+            employeeCompany: data.employee_company,
+            employeeCountry: data.employee_country
         });
     }
 
@@ -179,7 +181,7 @@ export class TimeOffCard extends Component {
         const resModel = "hr.leave"
         const name = "My Time Off"
         const domain = [
-            ['holiday_status_id', '=', holidayStatusId], ['company_id','=', data.employee_company],
+            ['work_entry_type_id', '=', holidayStatusId], ['company_id','=', data.employee_company],
             employeeId ? ['employee_id', '=', employeeId] : ['user_id', '=', user.userId]
         ];
         const context = isInHolidaysUserGroup ? {

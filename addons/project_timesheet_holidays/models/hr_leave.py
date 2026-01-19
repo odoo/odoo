@@ -25,7 +25,7 @@ class HrLeave(models.Model):
         for leave in self:
             project, task = leave.employee_id.company_id.internal_project_id, leave.employee_id.company_id.leave_timesheet_task_id
 
-            if not project or not task or leave.holiday_status_id.time_type == 'other':
+            if not project or not task or leave.work_entry_type_id.count_as == 'working_time':
                 continue
 
             leave_ids.append(leave.id)
@@ -40,11 +40,11 @@ class HrLeave(models.Model):
 
             employee_timezone = ZoneInfo(tz)
 
-            if employee.sudo().is_flexible and (leave.leave_type_request_unit == 'hour' or leave.leave_type_request_unit == 'half_day' or leave.date_from.date() == leave.date_to.date()):
+            if employee.sudo().is_flexible and (leave.work_entry_type_request_unit == 'hour' or leave.work_entry_type_request_unit == 'half_day' or leave.date_from.date() == leave.date_to.date()):
                 leave_date = leave.date_from.astimezone(employee_timezone).date()
-                if leave.leave_type_request_unit == 'hour':
+                if leave.work_entry_type_request_unit == 'hour':
                     hours = leave.request_hour_to - leave.request_hour_from
-                elif leave.leave_type_request_unit == 'half_day':
+                elif leave.work_entry_type_request_unit == 'half_day':
                     hours = employee.sudo().hours_per_day / 2
                 else:  # Single-day leave
                     hours = employee.sudo().hours_per_day

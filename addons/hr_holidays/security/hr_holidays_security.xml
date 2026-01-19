@@ -155,7 +155,6 @@ A user without any rights on Time Off will be able to see the application, creat
             '|',
                 ('employee_id', '=', False),
                 ('employee_id.company_id', 'in', company_ids),
-            ('holiday_status_id.company_id', 'in', company_ids + [False])
         ]</field>
     </record>
 
@@ -263,19 +262,6 @@ A user without any rights on Time Off will be able to see the application, creat
         <field name="model_id" ref="model_resource_calendar_leaves"/>
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="groups" eval="[(4, ref('hr_holidays.group_hr_holidays_user'))]"/>
-    </record>
-
-    <record id="hr_holidays_status_rule_multi_company" model="ir.rule">
-        <field name="name">Time Off multi company rule</field>
-        <field name="model_id" ref="model_hr_leave_type"/>
-        <field name="domain_force">[
-            '|', 
-                ('company_id', 'in', company_ids),
-                '&amp;',
-                    ('company_id', '=', False),
-                    ('country_id', 'in', user.env.companies.country_id.ids + [False])
-        ]
-        </field>
     </record>
 
     <record id="hr_leave_accrual_plan_rule_multi_company" model="ir.rule">

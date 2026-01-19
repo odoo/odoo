@@ -34,11 +34,11 @@ class TestPartner(TransactionCase):
         cls.employees = cls.env['hr.employee'].create([{
             'user_id': user.id,
         } for user in cls.users])
-        cls.leave_type = cls.env['hr.leave.type'].create({
+        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
             'requires_allocation': False,
             'name': 'Legal Leaves',
-            'time_type': 'leave',
-            'responsible_ids': cls.users.ids,
+            'code': 'Legal Leaves',
+            'count_as': 'absence',
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
@@ -46,12 +46,12 @@ class TestPartner(TransactionCase):
             'request_date_from': "2024-06-03",
             'request_date_to': "2024-06-06",
             'employee_id': cls.employees[0].id,
-            'holiday_status_id': cls.leave_type.id,
+            'work_entry_type_id': cls.work_entry_type.id,
         }, {
             'request_date_from': "2024-06-02",
             'request_date_to': "2024-06-05",
             'employee_id': cls.employees[1].id,
-            'holiday_status_id': cls.leave_type.id,
+            'work_entry_type_id': cls.work_entry_type.id,
         }])
         cls.user_no_hr_access = new_test_user(
             cls.env, login="user_no_hr_access",

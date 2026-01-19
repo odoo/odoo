@@ -21,31 +21,31 @@ class HrLeave extends models.Model {
                       mode="year"
             >
                 <field name="name"/>
-                <field name="holiday_status_id" filters="1" invisible="1" color="color"/>
+                <field name="work_entry_type_id" filters="1" invisible="1" color="color"/>
                 <field name="state" invisible="1"/>
             </calendar>
         `,
     };
 
-    color = fields.Integer({ related: "holiday_status_id.color" });
+    color = fields.Integer({ related: "work_entry_type_id.color" });
     date_from = fields.Datetime();
     date_to = fields.Datetime();
     department_id = fields.Many2one({ relation: "hr.department" });
     employee_id =  fields.Many2one({ relation: "hr.employee" });
-    holiday_status_id = fields.Many2one({ relation: "hr.leave.type" });
+    work_entry_type_id = fields.Many2one({ relation: "hr.work.entry.type" });
     holiday_type = fields.Char();
     name = fields.Char();
     number_of_days = fields.Integer();
     state = fields.Char();
 }
 
-class HrLeaveType extends models.Model {
+class HrWorkEntryType extends models.Model {
     name = fields.Char();
     color = fields.Integer();
 }
 
 defineHrHolidaysModels();
-defineModels([HrLeave, HrLeaveType]);
+defineModels([HrLeave, HrWorkEntryType]);
 
 onRpc("hr.employee", "get_time_off_dashboard_data", () => (
     {has_accrual_allocation: true, allocation_data: {}, allocation_request_amount: 0}
@@ -54,7 +54,7 @@ onRpc("hr.employee", "get_mandatory_days", () => ({}));
 onRpc("hr.employee", "get_special_days_data", () => ({ mandatoryDays: [], bankHolidays: [] }));
 onRpc("hr.leave", "get_unusual_days", () => ({}));
 onRpc("hr.leave", "has_access", () => true);
-onRpc("hr.leave.type", "has_accrual_allocation", () => true);
+onRpc("hr.work.entry.type", "has_accrual_allocation", () => true);
 
 test(`test employee is passed to get_time_off_dashboard_data`, async () => {
     onRpc("hr.employee", "get_time_off_dashboard_data", ({ kwargs }) => {

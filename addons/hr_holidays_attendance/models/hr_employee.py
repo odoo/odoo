@@ -21,8 +21,8 @@ class HrEmployee(models.Model):
             diff_by_employee[employee] += hours
         for employee, hours in self.env['hr.leave']._read_group(
             domain=[
-                ('holiday_status_id.overtime_deductible', '=', True),
-                ('holiday_status_id.requires_allocation', '=', False),
+                ('work_entry_type_id.overtime_deductible', '=', True),
+                ('work_entry_type_id.requires_allocation', '=', False),
                 ('employee_id', 'in', self.ids),
                 ('state', 'not in', ['refuse', 'cancel']),
             ],
@@ -32,7 +32,7 @@ class HrEmployee(models.Model):
             diff_by_employee[employee] -= hours
         for employee, hours in self.env['hr.leave.allocation']._read_group(
             domain=[
-                ('holiday_status_id.overtime_deductible', '=', True),
+                ('work_entry_type_id.overtime_deductible', '=', True),
                 ('employee_id', 'in', self.ids),
                 ('state', 'in', ['confirm', 'validate', 'validate1']),
             ],

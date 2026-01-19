@@ -22,7 +22,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
             domain &= Domain(['|', ('leave_manager_id', '=', self.env.user.id), ('user_id', '=', self.env.user.id)])
         return domain
 
-    def _domain_holiday_status_id(self):
+    def _domain_work_entry_type_id(self):
         domain = [
             ('company_id', 'in', self.env.companies.ids + [False]),
             ('requires_allocation', '=', True),
@@ -33,10 +33,10 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
 
     name = fields.Char("Description", compute="_compute_name", store=True, readonly=False)
     duration = fields.Float(string="Allocation")
-    holiday_status_id = fields.Many2one(
-        "hr.leave.type", string="Time Off Type", required=True,
-        domain=_domain_holiday_status_id)
-    unit_of_measure = fields.Selection(related="holiday_status_id.unit_of_measure")
+    work_entry_type_id = fields.Many2one(
+        "hr.work.entry.type", string="Time Off Type", required=True,
+        domain=_domain_work_entry_type_id)
+    unit_of_measure = fields.Selection(related="work_entry_type_id.unit_of_measure")
     employee_ids = fields.Many2many('hr.employee', string='Employees', domain=lambda self: self._get_employee_domain())
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     allocation_type = fields.Selection([
@@ -48,18 +48,18 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
     date_to = fields.Date('End Date')
     notes = fields.Text('Reasons')
 
-    @api.depends('holiday_status_id', 'duration')
+    @api.depends('work_entry_type_id', 'duration')
     def _compute_name(self):
         for allocation_multi in self:
             allocation_multi.name = allocation_multi._get_title()
 
     def _get_title(self):
         self.ensure_one()
-        if not self.holiday_status_id:
+        if not self.work_entry_type_id:
             return self.env._("Allocation Request")
         return self.env._(
             '%(name)s (%(duration)s %(unit_of_measure)s(s))',
-            name=self.holiday_status_id.name,
+            name=self.work_entry_type_id.name,
             duration=float_round(self.duration, precision_digits=2),
             unit_of_measure=self.unit_of_measure
         )
@@ -72,7 +72,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
         }
         return [{
             'name': self.name,
-            'holiday_status_id': self.holiday_status_id.id,
+            'work_entry_type_id': self.work_entry_type_id.id,
             'number_of_days': self.duration if self.unit_of_measure != "hour" else self.duration / hours_per_day[employee.id],
             'employee_id': employee.id,
             'state': 'confirm',

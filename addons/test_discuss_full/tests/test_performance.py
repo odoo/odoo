@@ -195,10 +195,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         self.employees = self.env['hr.employee'].create([{
             'user_id': user.id,
         } for user in self.users])
-        self.leave_type = self.env['hr.leave.type'].create({
+        self.work_entry_type = self.env['hr.work.entry.type'].create({
             'requires_allocation': False,
             'name': 'Legal Leaves',
-            'time_type': 'leave',
+            'code': 'Legal Leaves',
+            'count_as': 'absence',
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
@@ -206,7 +207,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             'request_date_from': fields.Datetime.today() + relativedelta(days=-2),
             'request_date_to': fields.Datetime.today() + relativedelta(days=2),
             'employee_id': employee.id,
-            'holiday_status_id': self.leave_type.id,
+            'work_entry_type_id': self.work_entry_type.id,
         } for employee in self.employees])
         self.authenticate(self.users[0].login, self.password)
         Channel = self.env["discuss.channel"].with_user(self.users[0])

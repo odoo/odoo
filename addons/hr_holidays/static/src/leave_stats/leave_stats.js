@@ -105,7 +105,7 @@ export class LeaveStatsComponent extends Component {
                     date_to: {},
                     number_of_days: {},
                     number_of_hours: {},
-                    leave_type_request_unit: {},
+                    work_entry_type_request_unit: {},
                 },
             }
         );
@@ -130,12 +130,12 @@ export class LeaveStatsComponent extends Component {
             ],
             {
                 specification: {
-                    holiday_status_id: { fields: { display_name: {} } },
+                    work_entry_type_id: { fields: { display_name: {} } },
                     date_from: {},
                     date_to: {},
                     number_of_days: {},
                     number_of_hours: {},
-                    leave_type_request_unit: {},
+                    work_entry_type_request_unit: {},
                 },
             }
         );

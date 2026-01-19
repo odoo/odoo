@@ -8,9 +8,6 @@
 
         <strong class="o_timeoff_name cursor-pointer btn-link" t-on-click="navigateTimeOffType"><t t-esc="props.name"/></strong>
         <span class="o_timeoff_duration">
-            <t t-if="data and data.icon">
-                <img t-att-src="data.icon" />
-            </t>
             <span t-att-style="data.holds_changes ? 'color: #B6D369;' : ''">
                 <t t-esc="parsed_duration"/>
             </span>

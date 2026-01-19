@@ -29,7 +29,7 @@
         <field name="arch" type="xml">
             <search string="Search Time Off">
                 <field name="employee_id"/>
-                <field name="holiday_status_id"/>
+                <field name="work_entry_type_id"/>
                 <field name="description"/>
                 <filter domain="[
                         ('leave_id.state','in',['confirm']),
@@ -48,7 +48,7 @@
                             '|',
                                 '&amp;',
                                     ('leave_id.state','=','confirm'),
-                                    ('holiday_status_id.leave_validation_type','=','hr'),
+                                    ('work_entry_type_id.leave_validation_type','=','hr'),
                                 ('leave_id.state','=','validate1')]"
                     string="Waiting For Me"
                     name="waiting_for_me_manager"
@@ -69,7 +69,7 @@
                 <separator/>
                 <group name="group_by">
                     <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
-                    <filter name="group_type" string="Type" context="{'group_by': 'holiday_status_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by': 'work_entry_type_id'}"/>
                     <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
                     <separator/>
                     <filter name="group_date_from" string="Date" context="{'group_by': 'working_schedule_aligned_date_from'}"/>

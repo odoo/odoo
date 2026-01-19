@@ -15,9 +15,10 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
         super(TestAccrualAllocationsAttendance, cls).setUpClass()
-        cls.leave_type = cls.env['hr.leave.type'].create({
+        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
             'name': 'Paid Time Off',
-            'time_type': 'leave',
+            'code': 'Paid Time Off',
+            'count_as': 'absence',
             'requires_allocation': True,
             'allocation_validation_type': 'hr',
             'request_unit': 'day',
@@ -45,7 +46,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'holiday_status_id': self.leave_type.id,
+                'work_entry_type_id': self.work_entry_type.id,
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
             })
@@ -104,7 +105,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             allocation_form.allocation_type = 'accrual'
             allocation_form.employee_id = self.employee_emp
             allocation_form.accrual_plan_id = accrual_plan
-            allocation_form.holiday_status_id = self.leave_type
+            allocation_form.work_entry_type_id = self.work_entry_type
             allocation_form.date_from = datetime.date(2024, 3, 20)
             allocation_form.name = 'Accrual allocation for employee'
             self.assertEqual(allocation_form.number_of_hours_display, 8.0)
@@ -132,7 +133,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'holiday_status_id': self.leave_type.id,
+                'work_entry_type_id': self.work_entry_type.id,
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
             })
@@ -175,7 +176,7 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
                 'employee_id': self.employee_emp.id,
-                'holiday_status_id': self.leave_type.id,
+                'work_entry_type_id': self.work_entry_type.id,
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
             })

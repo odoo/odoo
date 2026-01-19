@@ -58,7 +58,7 @@
                     <widget name="web_ribbon" title="Approved" bg_color="bg-success" invisible="state != 'validate'"/>
                     <group class="py-0 pe-0 overflow-hidden">
                         <field name="employee_id" widget="many2one_avatar_employee"/>
-                        <field name="holiday_status_id"/>
+                        <field name="work_entry_type_id"/>
                         <label for="start_datetime" string="Dates" />
                         <div id="full_date" class="o_row">
                             <field
@@ -74,10 +74,10 @@
                         </div>
                     </group>
                     <field name="description"/>
-                    <footer class="d-flex justify-content-end gap-1">
+                    <div class="d-flex justify-content-end gap-1">
                         <button name="action_approve" string="Approve" type="object" close="1" invisible="state not in ['confirm', 'refuse'] or not is_manager"/>
                         <button name="action_refuse" string="Refuse" type="object" close="1" invisible="state == 'refuse' or not is_manager"/>
-                    </footer>
+                    </div>
                 </sheet>
             </form>
         </field>
@@ -102,7 +102,7 @@
                 <filter name="refused_leaves" string="Refused" domain="[('state', '=', 'refuse')]"/>
                 <filter string="Waiting for Approval" name="approve" domain="[('state','in',('confirm','validate1'))]"/>
                 <filter name="groupby_job_id" string="Job Position" context="{'group_by': 'job_id'}"/>
-                <filter name="groupby_time_off_type" string="Time Off Type" context="{'group_by': 'holiday_status_id'}"/>
+                <filter name="groupby_time_off_type" string="Time Off Type" context="{'group_by': 'work_entry_type_id'}"/>
                 <filter name="groupby_company_id" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                 <filter name="groupby_department_id" context="{'group_by': 'department_id'}"/>
             </search>

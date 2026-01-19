@@ -70,15 +70,15 @@ class ResourceCalendarLeaves(models.Model):
         leaves.sudo().write({
             'state': 'confirm',
         })
-        sick_time_status = self.env.ref('hr_holidays.leave_type_sick_time_off', raise_if_not_found=False)
+        sick_time_status = self.env['hr.work.entry.type'].search([('code', '=', 'LEAVE110')])
         leaves_to_recreate = self.env['hr.leave']
         for previous_duration, leave, state in zip(previous_durations, leaves, previous_states):
             duration_difference = previous_duration - leave.number_of_days
             message = False
-            if duration_difference > 0 and leave.holiday_status_id.requires_allocation:
+            if duration_difference > 0 and leave.work_entry_type_id.requires_allocation:
                 message = _("Due to a change in global time offs, you have been granted %s day(s) back.", duration_difference)
             if leave.number_of_days > previous_duration\
-                    and (not sick_time_status or leave.holiday_status_id not in sick_time_status):
+                    and (not sick_time_status or leave.work_entry_type_id not in sick_time_status):
                 message = _("Due to a change in global time offs, %s extra day(s) have been taken from your allocation. Please review this leave if you need it to be changed.", -1 * duration_difference)
             try:
                 leave.sudo().write({'state': state})  # sudo in order to skip _check_approval_update
@@ -178,7 +178,7 @@ class ResourceResource(models.Model):
         holiday_id = leave_record.holiday_id
         tz = ZoneInfo(self.tz or self.env.user.tz)
 
-        if holiday_id.leave_type_request_unit == 'half_day':
+        if holiday_id.work_entry_type_request_unit == 'half_day':
             # Half day leaves are limited to half a day within a single day
             leave_day = leave_start.date()
             half_start_datetime = datetime.combine(leave_day, datetime.min.time() if holiday_id.request_date_from_period == "am" else time(12), tzinfo=tz)
@@ -191,7 +191,7 @@ class ResourceResource(models.Model):
                     resource_hours_per_day[self.id][leave_day] -= holiday_id.number_of_hours
                 week = weeknumber(babel_locale_parse(locale), leave_day)
                 resource_hours_per_week[self.id][week] -= holiday_id.number_of_hours
-        elif holiday_id.leave_type_request_unit == 'hour':
+        elif holiday_id.work_entry_type_request_unit == 'hour':
             # Custom leaves are limited to a specific number of hours within a single day
             leave_day = leave_start.date()
             range_start_datetime = leave_record.date_from.replace(tzinfo=UTC).astimezone(tz)

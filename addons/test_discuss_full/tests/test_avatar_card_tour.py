@@ -62,14 +62,14 @@ class TestAvatarCardTour(MailCommon, HttpCase):
         )
 
         # hr_holidays setup for multi-company
-        leave_type = (
-            cls.env["hr.leave.type"]
+        work_entry_type = (
+            cls.env['hr.work.entry.type']
             .with_company(cls.company_2)
             .create(
                 {
                     "name": "Time Off multi company",
-                    "company_id": cls.company_2.id,
-                    "time_type": "leave",
+                    "code": "TOMULTI",
+                    "count_as": "absence",
                     "requires_allocation": False,
                     'request_unit': 'day',
                     'unit_of_measure': 'day',
@@ -82,7 +82,7 @@ class TestAvatarCardTour(MailCommon, HttpCase):
             {
                 "name": "Test Leave",
                 "company_id": cls.company_2.id,
-                "holiday_status_id": leave_type.id,
+                "work_entry_type_id": work_entry_type.id,
                 "employee_id": cls.test_employee.id,
                 "request_date_from": (date.today() - timedelta(days=1)),
                 "request_date_to": (date.today() + timedelta(days=1)),

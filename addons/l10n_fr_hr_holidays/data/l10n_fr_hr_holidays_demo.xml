@@ -39,10 +39,10 @@
         <field name="image_1920" eval="obj(ref('base.partner_admin')).image_1920" model="res.partner"/>
     </record>
 
-    <record id="hr_holidays.l10n_fr_leave_type_paid_time_off" model="hr.leave.type" forcecreate="1">
+    <record id="hr_holidays.l10n_fr_work_entry_type_paid_time_off" model="hr.work.entry.type" forcecreate="1">
         <field name="name">Paid Time Off</field>
+        <field name="code">FR Paid Time Off</field>
         <field name="name@fr">Congés payés</field>
-        <field name="company_id" ref="base.demo_company_fr"/>
         <field name="country_id" ref="base.fr"/>
         <field name="requires_allocation">True</field>
         <field name="request_unit">day</field>
@@ -50,8 +50,6 @@
         <field name="employee_requests">False</field>
         <field name="leave_validation_type">both</field>
         <field name="allocation_validation_type">hr</field>
-        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
-        <field name="icon_id" ref="hr_holidays.icon_14"/>
         <field name="color">2</field>
         <field name="has_valid_allocation">True</field>
     </record>
@@ -59,7 +57,7 @@
     <record id="l10n_fr_hr_holidays_allocation" model="hr.leave.allocation">
         <field name="name">Paid Time Off allocation</field>
         <field name="state">confirm</field>
-        <field name="holiday_status_id" ref="hr_holidays.l10n_fr_leave_type_paid_time_off"/>
+        <field name="work_entry_type_id" ref="hr_holidays.l10n_fr_work_entry_type_paid_time_off"/>
         <field name="number_of_days">20</field>
         <field name="date_from" eval="time.strftime('%Y-01-01')"/>
         <field name="date_to" eval="time.strftime('%Y-12-31')"/>
@@ -71,7 +69,7 @@
 
     <function model="res.company" name="write">
         <value eval="[ref('base.demo_company_fr')]"/>
-        <value eval="{'l10n_fr_reference_leave_type': ref('hr_holidays.l10n_fr_leave_type_paid_time_off')}"/>
+        <value eval="{'l10n_fr_reference_work_entry_type': ref('hr_holidays.l10n_fr_work_entry_type_paid_time_off')}"/>
     </function>
 
     <function model="res.users" name="write">

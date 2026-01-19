@@ -40,7 +40,7 @@ export class TimeOffCalendarModel extends CalendarModel {
             const dateTo = DateTime.fromSQL(rawRecord.date_to);
             result.sameDay = dateFrom.hasSame(dateTo, 'day');
         }
-        if (rawRecord.leave_type_request_unit === "half") {
+        if (rawRecord.work_entry_type_request_unit === "half") {
             result.requestDateFromPeriod = rawRecord.request_date_from_period;
             result.requestDateToPeriod = rawRecord.request_date_to_period;
         }
@@ -61,7 +61,7 @@ export class TimeOffCalendarModel extends CalendarModel {
             return str.length > 10 ? deserializeDateTime(str) : deserializeDate(str);
         }
         if (["week", "day"].includes(this.scale)) {
-            context["default_leave_type_request_unit"] = "hour";
+            context["default_work_entry_type_request_unit"] = "hour";
             const hour_from = deserialize(context['default_date_from']??this.date);
             const hour_to = deserialize(context['default_date_to']??this.date);
             context['default_request_hour_from'] = hour_from.hour + hour_from.minute / 60;
@@ -129,7 +129,7 @@ export class TimeOffCalendarModel extends CalendarModel {
         if (!this.employeeId) {
             context["short_name"] = 1;
         }
-        const fieldNamesToAdd = resModel === "hr.leave" ? ["leave_type_request_unit", "request_date_from_period", "request_date_to_period"] : [];
+        const fieldNamesToAdd = resModel === "hr.leave" ? ["work_entry_type_request_unit", "request_date_from_period", "request_date_to_period"] : [];
         return this.orm.searchRead(resModel, this.computeDomain(data), [...fieldNames, ...fieldNamesToAdd], { context });
     }
 

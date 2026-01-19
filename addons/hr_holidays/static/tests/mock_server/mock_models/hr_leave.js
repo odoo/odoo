@@ -15,13 +15,13 @@ export class HrLeave extends models.Model {
     });
     date_from = fields.Datetime();
     date_to = fields.Datetime();
-    holiday_status_id = fields.Many2one({
-        relation: "hr.leave.type",
+    work_entry_type_id = fields.Many2one({
+        relation: "hr.work.entry.type",
     });
     state = fields.Char();
     number_of_days = fields.Integer();
     number_of_hours = fields.Integer();
-    leave_type_request_unit = fields.Selection({
+    work_entry_type_request_unit = fields.Selection({
         string: "Leave Type Request Unit",
         type: "selection",
         selection: [

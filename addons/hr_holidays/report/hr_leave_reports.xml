@@ -20,10 +20,10 @@
                 <separator/>
                 <filter string="My Requests" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <field name="department_id" operator="child_of"/>
-                <field name="holiday_status_id"/>
+                <field name="work_entry_type_id"/>
                 <group>
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
-                    <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by':'work_entry_type_id'}"/>
                     <filter name="group_company" string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator/>
                     <filter name="group_date_from" string="Start Date" context="{'group_by':'date_from'}"/>

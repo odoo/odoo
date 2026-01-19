@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<template>
-    <t t-name="hr_work_entry.EmployeeErrorTag">
-        <AvatarTag cssClass="{'text-danger': this.props.inError}" imageUrl="this.props.imageUrl" onAvatarClick="this.props.onAvatarClick" onDelete="this.props.onDelete" tooltip="this.props.tooltip">
-            <div class="o_tag_badge_text position-relative ms-1" t-out="this.props.text"/>
-            <i t-if="this.props.inError" class="ms-1 fa fa-lock z-1"/>
-        </AvatarTag>
-    </t>
-</template>

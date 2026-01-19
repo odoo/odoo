@@ -22,16 +22,15 @@ class HrLeaveAllocation(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _mail_post_access = 'read'
 
-    def _default_holiday_status_id(self):
+    def _default_work_entry_type_id(self):
         if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', True)]
         else:
             domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', True), ('employee_requests', '=', True)]
-        return self.env['hr.leave.type'].search(domain, limit=1)
+        return self.env['hr.work.entry.type'].search(domain, limit=1)
 
-    def _domain_holiday_status_id(self):
+    def _domain_work_entry_type_id(self):
         domain = [
-            ('company_id', 'in', self.env.companies.ids + [False]),
             ('requires_allocation', '=', True),
         ]
         if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
@@ -66,10 +65,10 @@ class HrLeaveAllocation(models.Model):
     date_from = fields.Date('Start Date', index=True, copy=False, default=fields.Date.context_today,
         tracking=True, required=True)
     date_to = fields.Date('End Date', copy=False, tracking=True)
-    holiday_status_id = fields.Many2one(
-        "hr.leave.type", compute='_compute_holiday_status_id', store=True, string="Time Off Type", required=True, readonly=False,
-        domain=_domain_holiday_status_id,
-        default=_default_holiday_status_id)
+    work_entry_type_id = fields.Many2one(
+        "hr.work.entry.type", compute='_compute_work_entry_type_id', store=True, string="Time Off Type", required=True, readonly=False,
+        domain=_domain_work_entry_type_id,
+        default=_default_work_entry_type_id)
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', default=lambda self: self.env.user.employee_id,
         index=True, ondelete="restrict", required=True, tracking=True, domain=_domain_employee_id)
@@ -97,7 +96,7 @@ class HrLeaveAllocation(models.Model):
     second_approver_id = fields.Many2one(
         'hr.employee', string='Second Approval', readonly=True, copy=False,
         help='This area is automatically filled by the user who validates the allocation with second level (If time off type need second validation)')
-    validation_type = fields.Selection(string='Validation Type', related='holiday_status_id.allocation_validation_type', readonly=True)
+    validation_type = fields.Selection(string='Validation Type', related='work_entry_type_id.allocation_validation_type', readonly=True)
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
     can_validate = fields.Boolean('Can Validate', compute='_compute_can_validate')
     can_refuse = fields.Boolean('Can Refuse', compute='_compute_can_refuse')
@@ -146,17 +145,17 @@ class HrLeaveAllocation(models.Model):
 
     def _get_title(self):
         self.ensure_one()
-        if not self.holiday_status_id:
+        if not self.work_entry_type_id:
             return _("Allocation Request")
         if self.type_request_unit == 'hour':
             return _(
                 '%(name)s (%(duration)s hour(s))',
-                name=self.holiday_status_id.name,
+                name=self.work_entry_type_id.name,
                 duration=float_round(self.number_of_days * self.employee_id._get_hours_per_day(self.date_from), precision_digits=2),
             )
         return _(
             '%(name)s (%(duration)s day(s))',
-            name=self.holiday_status_id.name,
+            name=self.work_entry_type_id.name,
             duration=float_round(self.number_of_days, precision_digits=2),
         )
 
@@ -167,7 +166,7 @@ class HrLeaveAllocation(models.Model):
         elif self.name != self._get_title():
             self.is_name_custom = True
 
-    @api.depends('holiday_status_id', 'number_of_days')
+    @api.depends('work_entry_type_id', 'number_of_days')
     def _compute_description(self):
         for allocation in self:
             if not allocation.is_name_custom:
@@ -200,13 +199,13 @@ class HrLeaveAllocation(models.Model):
                 )
             allocation.name_validity = name_validity
 
-    @api.depends('employee_id', 'holiday_status_id')
+    @api.depends('employee_id', 'work_entry_type_id')
     def _compute_leaves(self):
         date_from = fields.Date.from_string(self.env.context['default_date_from']) if 'default_date_from' in self.env.context else fields.Date.today()
-        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.holiday_status_id, date_from)[0]
+        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, date_from)[0]
         for allocation in self:
             origin = allocation._origin
-            virtual_leave = employee_days_per_allocation[origin.employee_id][origin.holiday_status_id][origin]
+            virtual_leave = employee_days_per_allocation[origin.employee_id][origin.work_entry_type_id][origin]
             allocation.max_leaves = virtual_leave['max_leaves']
             allocation.leaves_taken = virtual_leave['leaves_taken']
             allocation.virtual_remaining_leaves = virtual_leave['virtual_remaining_leaves']
@@ -258,15 +257,15 @@ class HrLeaveAllocation(models.Model):
             allocation.manager_id = allocation.employee_id and allocation.employee_id.parent_id
 
     @api.depends('accrual_plan_id')
-    def _compute_holiday_status_id(self):
-        default_holiday_status_id = None
+    def _compute_work_entry_type_id(self):
+        default_work_entry_type_id = None
         for allocation in self:
-            if not allocation.holiday_status_id:
-                if not default_holiday_status_id:  # fetch when we need it
-                    default_holiday_status_id = self._default_holiday_status_id()
-                allocation.holiday_status_id = default_holiday_status_id
+            if not allocation.work_entry_type_id:
+                if not default_work_entry_type_id:  # fetch when we need it
+                    default_work_entry_type_id = self._default_work_entry_type_id()
+                allocation.work_entry_type_id = default_work_entry_type_id
 
-    @api.depends('holiday_status_id', 'number_of_hours_display', 'number_of_days_display', 'type_request_unit', 'employee_id')
+    @api.depends('work_entry_type_id', 'number_of_hours_display', 'number_of_days_display', 'type_request_unit', 'employee_id')
     def _compute_number_of_days(self):
         for allocation in self:
             allocation_unit = allocation.type_request_unit
@@ -290,11 +289,11 @@ class HrLeaveAllocation(models.Model):
         if self.allocation_type == "accrual" and self.accrual_plan_id:
             return self.accrual_plan_id.sudo().added_value_type
         elif self.allocation_type == "regular":
-            return self.holiday_status_id.unit_of_measure
+            return self.work_entry_type_id.unit_of_measure
         else:
             return "day"
 
-    @api.depends("allocation_type", "holiday_status_id", "accrual_plan_id")
+    @api.depends("allocation_type", "work_entry_type_id", "accrual_plan_id")
     def _compute_type_request_unit(self):
         for allocation in self:
             allocation.type_request_unit = allocation._get_request_unit()
@@ -369,7 +368,7 @@ class HrLeaveAllocation(models.Model):
         end_dt = datetime.combine(end_date, datetime_min_time)
         leaves_eligible = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt,
             calendar=self.employee_id._get_calendars(start_dt)[self.employee_id.id],
-            domain=[('time_type', '=', 'leave'), ('elligible_for_accrual_rate', '=', True)])[self.employee_id.id]['hours']
+            domain=[('count_as', '=', 'absence'), ('elligible_for_accrual_rate', '=', True)])[self.employee_id.id]['hours']
         worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt,
             calendar=self.employee_id.resource_calendar_id)[self.employee_id.id]['hours']
         worked += leaves_eligible
@@ -378,7 +377,7 @@ class HrLeaveAllocation(models.Model):
             end_dt = datetime.combine(end_period, datetime_min_time)
             leaves_eligible = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt,
                 calendar=self.employee_id._get_calendars(start_dt)[self.employee_id.id],
-                domain=[('time_type', '=', 'leave'), ('elligible_for_accrual_rate', '=', True)])[self.employee_id.id]['hours']
+                domain=[('count_as', '=', 'absence'), ('elligible_for_accrual_rate', '=', True)])[self.employee_id.id]['hours']
             planned_worked = self.employee_id._get_work_days_data_batch(start_dt, end_dt,
                 calendar=self.employee_id.resource_calendar_id)[self.employee_id.id]['hours']
             planned_worked += leaves_eligible
@@ -386,7 +385,7 @@ class HrLeaveAllocation(models.Model):
             planned_worked = worked
         left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt,
             calendar=self.employee_id._get_calendars(start_dt)[self.employee_id.id],
-            domain=[('time_type', '=', 'leave'), ('elligible_for_accrual_rate', '=', False)])[self.employee_id.id]['hours']
+            domain=[('count_as', '=', 'absence'), ('elligible_for_accrual_rate', '=', False)])[self.employee_id.id]['hours']
         if level.frequency in level._get_hourly_frequencies():
             if level.accrual_plan_id.is_based_on_worked_time:
                 work_entry_prorata = planned_worked
@@ -438,7 +437,7 @@ class HrLeaveAllocation(models.Model):
             # even if the value doesn't change. This is the best performance atm.
             first_level = level_ids[0]
             first_level_start_date = allocation.date_from + get_timedelta(first_level.start_count, first_level.start_type)
-            if allocation.holiday_status_id.request_unit in ["day", "half_day"]:
+            if allocation.work_entry_type_id.request_unit in ["day", "half_day"]:
                 leaves_taken = allocation.leaves_taken
             else:
                 leaves_taken = allocation.leaves_taken / allocation.employee_id._get_hours_per_day(allocation.date_from)
@@ -643,7 +642,7 @@ class HrLeaveAllocation(models.Model):
 
         fake_allocation = self.env['hr.leave.allocation'].with_context(default_date_from=accrual_date).new(origin=self)
         fake_allocation.sudo().with_context(default_date_from=accrual_date)._process_accrual_plans(accrual_date, log=False)
-        if self.holiday_status_id.unit_of_measure in ['hour']:
+        if self.work_entry_type_id.unit_of_measure in ['hour']:
             res = float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
         else:
             res = round((fake_allocation.number_of_days - self.number_of_days), 2)
@@ -691,7 +690,7 @@ class HrLeaveAllocation(models.Model):
     ####################################################
 
     def onchange(self, values, field_names, fields_spec):
-        # Try to force the leave_type display_name when creating new records
+        # Try to force the work_entry_type display_name when creating new records
         # This is called right after pressing create and returns the display_name for
         # most fields in the view.
         if values and 'employee_id' in fields_spec and 'employee_id' not in self.env.context:
@@ -699,11 +698,11 @@ class HrLeaveAllocation(models.Model):
             self = self.with_context(employee_id=employee_id)
         return super().onchange(values, field_names, fields_spec)
 
-    @api.depends('employee_id', 'holiday_status_id', 'type_request_unit', 'number_of_days')
+    @api.depends('employee_id', 'work_entry_type_id', 'type_request_unit', 'number_of_days')
     def _compute_display_name(self):
         for allocation in self:
-            allocation.display_name = _("Allocation of %(leave_type)s: %(amount).2f %(unit)s to %(target)s",
-                leave_type=allocation.holiday_status_id.sudo().name,
+            allocation.display_name = _("Allocation of %(work_entry_type)s: %(amount).2f %(unit)s to %(target)s",
+                work_entry_type=allocation.work_entry_type_id.sudo().name,
                 amount=allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days,
                 unit=_('hours') if allocation.type_request_unit == 'hour' else _('days'),
                 target=allocation.employee_id.name,
@@ -781,23 +780,23 @@ class HrLeaveAllocation(models.Model):
                 self._add_lastcalls()
             return res
 
-        previous_consumed_leaves = self.employee_id._get_consumed_leaves(leave_types=self.holiday_status_id)
+        previous_consumed_leaves = self.employee_id._get_consumed_leaves(work_entry_types=self.work_entry_type_id)
         result = super().write(values)
-        consumed_leaves = self.employee_id._get_consumed_leaves(leave_types=self.holiday_status_id)
+        consumed_leaves = self.employee_id._get_consumed_leaves(work_entry_types=self.work_entry_type_id)
 
         if 'allocation_type' in values:
             self._add_lastcalls()
         for allocation in self:
             current_excess = dict(consumed_leaves[1]).get(allocation.employee_id, {}) \
-                .get(allocation.holiday_status_id, {}).get('excess_days', {})
+                .get(allocation.work_entry_type_id, {}).get('excess_days', {})
             previous_excess = dict(previous_consumed_leaves[1]).get(allocation.employee_id, {}) \
-                .get(allocation.holiday_status_id, {}).get('excess_days', {})
+                .get(allocation.work_entry_type_id, {}).get('excess_days', {})
             total_current_excess = sum(leave_date['amount'] for leave_date in current_excess.values() if not leave_date['is_virtual'])
             total_previous_excess = sum(leave_date['amount'] for leave_date in previous_excess.values() if not leave_date['is_virtual'])
 
             if total_current_excess <= total_previous_excess:
                 continue
-            lt = allocation.holiday_status_id
+            lt = allocation.work_entry_type_id
             if lt.allows_negative and total_current_excess <= lt.max_allowed_negative:
                 continue
             raise ValidationError(
@@ -815,16 +814,13 @@ class HrLeaveAllocation(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_no_leaves(self):
-        if any(allocation.holiday_status_id.requires_allocation and allocation.leaves_taken > 0 for allocation in self):
+        if any(allocation.work_entry_type_id.requires_allocation and allocation.leaves_taken > 0 for allocation in self):
             raise UserError(_('You cannot delete an allocation request which has some validated leaves.'))
 
     def copy(self, default=None):
         new_allocations = super().copy(default)
         new_allocations.state = 'confirm'
         return new_allocations
-
-    def _get_redirect_suggested_company(self):
-        return self.holiday_status_id.company_id
 
     ####################################################
     # Business methods
@@ -882,7 +878,7 @@ class HrLeaveAllocation(models.Model):
             if allocation.state == state:
                 error_message = _('You can\'t do the same action twice.')
             elif allocation.employee_id == current_employee and \
-                allocation.holiday_status_id.allocation_validation_type != 'no_validation' and not is_administrator:
+                allocation.work_entry_type_id.allocation_validation_type != 'no_validation' and not is_administrator:
                 error_message = _('Only a time off Administrator can approve/refuse their own requests.')
             elif state not in dict_all_possible_state.get(allocation.state, {}):
                 if state == 'confirm':
@@ -961,8 +957,8 @@ class HrLeaveAllocation(models.Model):
             elif self.employee_id.parent_id.user_id:
                 responsible = self.employee_id.parent_id.user_id
         elif self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
-            if self.holiday_status_id.responsible_ids:
-                responsible = self.holiday_status_id.responsible_ids
+            if self.employee_id.hr_responsible_id:
+                responsible = self.employee_id.hr_responsible_id
 
         return responsible
 
@@ -974,20 +970,20 @@ class HrLeaveAllocation(models.Model):
         approval_activity = self.env.ref('hr_holidays.mail_act_leave_allocation_second_approval')
         for allocation in self:
             if allocation.state in ['confirm', 'validate1']:
-                if allocation.holiday_status_id.leave_validation_type != 'no_validation':
+                if allocation.work_entry_type_id.leave_validation_type != 'no_validation':
                     if allocation.state == 'confirm':
                         activity_type = confirm_activity
                         note = _(
                             'New Allocation Request created by %(user)s: %(count)s Days of %(allocation_type)s',
                             user=allocation.create_uid.name,
                             count=float_round(allocation.number_of_days, precision_digits=2),
-                            allocation_type=allocation.holiday_status_id.name,
+                            allocation_type=allocation.work_entry_type_id.name,
                         )
                     else:
                         activity_type = approval_activity
                         note = _(
                             'Second approval request for %(allocation_type)s',
-                            allocation_type=allocation.holiday_status_id.name,
+                            allocation_type=allocation.work_entry_type_id.name,
                         )
                         to_second_do |= allocation
                     user_ids = allocation.sudo()._get_responsible_for_approval().ids
@@ -1022,7 +1018,7 @@ class HrLeaveAllocation(models.Model):
 
     def _track_subtype(self, init_values):
         if 'state' in init_values and self.state == 'validate':
-            allocation_notif_subtype_id = self.holiday_status_id.allocation_notif_subtype_id
+            allocation_notif_subtype_id = self.work_entry_type_id.allocation_notif_subtype_id
             return allocation_notif_subtype_id or self.env.ref('hr_holidays.mt_leave_allocation')
         return super()._track_subtype(init_values)
 

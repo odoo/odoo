@@ -87,7 +87,7 @@ class TestResourceCalendar(TransactionCase):
             'date_from': datetime(2019, 5, 29, 0, 0, 0),
             'date_to': datetime(2019, 5, 30, 0, 0, 0),
             'resource_id': False,
-            'time_type': "leave",
+            'count_as': "absence",
         }])
         calendar = self.env['resource.calendar'].create({
             'name': '40 hours/week',

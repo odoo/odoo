@@ -885,7 +885,7 @@ class TestBoM(TestMrpCommon):
             'date_from': fields.Date.today(),
             'date_to': end_of_day - timedelta(minutes=15),
             'resource_id': workcenter.resource_id.id,
-            'time_type': 'other',
+            'count_as': 'working_time',
         })
 
         # Check that we still have one available slot of 15 minutes

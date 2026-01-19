@@ -26,7 +26,7 @@ class HrLeaveAttendanceReport(models.Model):
     leave_hours = fields.Float("Approved Time Off")
     difference_hours = fields.Float("Difference", help="Worked Hours - Expected Hours + Approved Time Off")
 
-    leave_type_names = fields.Char("Time Off Types", compute="_compute_leave_attendance_fields")
+    work_entry_type_names = fields.Char("Time Off Types", compute="_compute_leave_attendance_fields")
     leave_ids = fields.Many2many("hr.leave", string="Time Offs", compute="_compute_leave_attendance_fields")
     attendance_ids = fields.Many2many("hr.attendance", string="Attendances", compute="_compute_leave_attendance_fields")
 
@@ -62,8 +62,8 @@ class HrLeaveAttendanceReport(models.Model):
                 lambda lv: self._timestamped(lv.date_from) <= rec.date <= self._timestamped(lv.date_to),
             )
             rec.leave_ids = rec_date_leaves.ids
-            leave_type_ids = rec_date_leaves.mapped('holiday_status_id')
-            rec.leave_type_names = ', '.join(leave_type_ids.mapped('name'))
+            work_entry_type_ids = rec_date_leaves.mapped('work_entry_type_id')
+            rec.work_entry_type_names = ', '.join(work_entry_type_ids.mapped('name'))
 
             attendances = attendances_by_employees.get(rec.employee_id, self.env['hr.attendance'])
             rec.attendance_ids = attendances.filtered(

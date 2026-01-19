@@ -23,3 +23,22 @@ class TestWorkEntryTypeData(TransactionCase):
                     invalid_xmlids.append(xmlid)
         if invalid_xmlids:
             raise ValidationError("Some work entry types are defined outside of module hr_work_entry.\n%s" % '\n'.join(invalid_xmlids))
+
+    def test_ensure_global_work_entry_type_redifinition_by_country(self):
+        generic_codes = [
+            'WORK100',  # Attendance
+            'OVERTIME',  # Overtime
+            'OUT',  # Out of Contract
+            'LEAVE100',  # Generic Time Off
+            'LEAVE105',  # Compensatory Time Off
+            'WORK110',  # Home Working
+            'LEAVE90',  # Unpaid
+            'LEAVE110',  # Sick Time Off
+            'LEAVE120',  # Paid Time Off
+        ]
+        for module in self.env['ir.module.module'].search([('name', '=like', 'l10n____hr_payroll')]):
+            country_code = module.name.split('_')[1]
+            country = self.env.ref(f'base.{country_code}')
+            for code in generic_codes:
+                if not self.env['hr.work.entry.type'].search_count([('code', '=', code), ('country_id', '=', country.id)], limit=1):
+                    raise ValidationError("Missing generic work entry redefinition with code %s for %s" % (code, country.name))
