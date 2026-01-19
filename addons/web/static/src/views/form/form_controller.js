@@ -289,7 +289,7 @@ export class FormController extends Component {
         useSetupAction({
             rootRef: this.rootRef,
             beforeVisibilityChange: () => this.beforeVisibilityChange(),
-            beforeLeave: () => this.beforeLeave(),
+            beforeLeave: (options) => this.beforeLeave(options),
             beforeUnload: (ev) => this.beforeUnload(ev),
             getLocalState: () => {
                 return {
@@ -482,8 +482,8 @@ export class FormController extends Component {
         }
     }
 
-    async beforeLeave() {
-        if (this.model.root.dirty && !this.allowLeavingWithoutSaving) {
+    async beforeLeave({ forceLeave } = {}) {
+        if (this.model.root.dirty && !forceLeave && !this.allowLeavingWithoutSaving) {
             return this.save({
                 reload: false,
                 onError: this.onSaveError.bind(this),
@@ -666,9 +666,6 @@ export class FormController extends Component {
     }
 
     saveButtonClicked(params = {}) {
-        if (!("onError" in params)) {
-            params.onError = this.onSaveError.bind(this);
-        }
         return executeButtonCallback(this.ui.activeElement, () => this.save(params));
     }
 

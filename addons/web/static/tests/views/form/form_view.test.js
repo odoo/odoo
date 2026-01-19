@@ -9180,6 +9180,7 @@ test(`multiple clicks on save should reload only once`, async () => {
 });
 
 test(`form view is not broken if save operation fails`, async () => {
+    expect.errors(1);
     onRpc("web_save", ({ args }) => {
         if (args[1].foo === "incorrect value") {
             throw makeServerError();
@@ -9198,6 +9199,7 @@ test(`form view is not broken if save operation fails`, async () => {
     await contains(`.o_form_button_save`).click();
     await animationFrame();
     expect(`.o_dialog`).toHaveCount(1);
+    expect.verifyErrors(["RPC_ERROR: Odoo Server Error"]);
     expect.verifySteps(["web_save"]); // write on save (it fails, does not trigger a read)
 
     await contains(`.o_dialog .modal-footer .btn-primary`).click();
@@ -9256,6 +9258,7 @@ test(`form view is not broken if save operation fails with redirect warning`, as
 
 test.tags("desktop");
 test("Redirect Warning full feature: additional context, action_id, leaving while dirty", async function () {
+    expect.errors(1);
     defineActions([
         {
             id: 1,
@@ -9315,10 +9318,11 @@ test("Redirect Warning full feature: additional context, action_id, leaving whil
     expect.verifySteps(["web_save"]);
 
     await waitFor(".o_error_dialog");
+    expect.verifyErrors(["RPC_ERROR: Odoo Server Error"]);
     expect(".o_error_dialog .btn-primary").toHaveCount(1);
-    expect(".o_error_dialog .btn-secondary").toHaveCount(2);
+    expect(".o_error_dialog .btn-secondary").toHaveCount(1);
 
-    await contains(".o_error_dialog .btn-secondary").click();
+    await contains(".o_error_dialog .btn-primary").click();
     await waitFor(".o_list_view");
     expect.verifySteps(["web_search_read"]);
     expect(".o_breadcrumb").toHaveText("first record\nPartner List");
