@@ -263,13 +263,13 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             self._mock_create_user(),
             self._mock_lookup_participant(),
             self._mock_register_sender(),
-            self._mock_participant_status('sender'),
+            self._mock_participant_status('receiver'),
         ]):
             wizard.button_register_peppol_participant()
 
         settings = self.env['res.config.settings'].with_context(allowed_company_ids=self.env.company.ids).create({})
         self.assertRecordValues(settings, [{
-            'account_peppol_proxy_state': 'sender',
+            'account_peppol_proxy_state': 'receiver',
             'peppol_use_parent_company': False,
         }])
 
