@@ -4996,6 +4996,22 @@ test(`aggregates are formatted according to field widget`, async () => {
     });
 });
 
+test(`aggregates of monetary widget with no currency data in grouped list`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        groupBy: ["bar"],
+        arch: `
+            <list>
+                <field name="qux" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Sum"/>
+                <field name="currency_id" column_invisible="True"/>
+            </list>`,
+    });
+    expect(`tfoot`).toHaveText("19.40", {
+        message: "aggregates monetary should still be displayed without currency",
+    });
+});
+
 test(`aggregates of monetary field with no currency field`, async () => {
     await mountView({
         resModel: "foo",
