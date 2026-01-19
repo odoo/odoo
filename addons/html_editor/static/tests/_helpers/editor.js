@@ -14,6 +14,11 @@ export const Direction = {
     FORWARD: "FORWARD",
 };
 
+const defaultTestConfig = {
+    debouncePowerbuttons: false,
+    debounceHints: false,
+};
+
 // A generic base64 image for testing
 export const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -93,7 +98,10 @@ class TestEditor extends Component {
  */
 export async function setupEditor(content, options = {}) {
     const wysiwygProps = Object.assign({}, options.props);
-    wysiwygProps.config = options.config || {};
+    wysiwygProps.config = {
+        ...defaultTestConfig,
+        ...(options.config || {}),
+    };
     const attachedEditor = new Promise((resolve) => {
         wysiwygProps.onLoad = (editor) => {
             const oldAttachTo = editor.attachTo;

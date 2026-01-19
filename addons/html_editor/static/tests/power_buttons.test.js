@@ -9,7 +9,7 @@ import { PowerboxPlugin } from "../src/main/powerbox/powerbox_plugin";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { expectElementCount } from "./_helpers/ui_expectations";
-import { insertText } from "./_helpers/user_actions";
+import { insertText, simulateArrowKeyPress } from "./_helpers/user_actions";
 
 describe.tags("desktop");
 describe("visibility", () => {
@@ -111,10 +111,31 @@ describe("visibility", () => {
         el.appendChild(tempP);
         const placeholderWidth = tempP.getBoundingClientRect().width;
         el.removeChild(tempP);
-        const powerButtons = document.querySelector(
-            'div[data-oe-local-overlay-id="oe-power-buttons-overlay"]'
+        const powerButtons = document.querySelector(".o_we_power_buttons");
+        expect(Math.floor(powerButtons.getBoundingClientRect().left)).toEqual(
+            Math.floor(placeholderWidth + 30)
         );
-        expect(powerButtons.getBoundingClientRect().left).toEqual(placeholderWidth + 20);
+    });
+    test("should debounce powerButtons on selection change", async () => {
+        const { el, editor } = await setupEditor(
+            "<p>[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>",
+            {
+                config: { debouncePowerbuttons: true },
+            }
+        );
+        expect(getContent(el)).toBe(
+            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>`
+        );
+        await simulateArrowKeyPress(editor, "ArrowDown");
+        expect(".o_we_power_buttons").not.toBeVisible();
+        await simulateArrowKeyPress(editor, "ArrowDown");
+        expect(".o_we_power_buttons").not.toBeVisible();
+        await simulateArrowKeyPress(editor, "ArrowDown");
+        expect(".o_we_power_buttons").not.toBeVisible();
+        await simulateArrowKeyPress(editor, "ArrowDown");
+        await animationFrame();
+        await new Promise((resolve) => setTimeout(resolve, 30));
+        expect(".o_we_power_buttons").toBeVisible();
     });
 });
 

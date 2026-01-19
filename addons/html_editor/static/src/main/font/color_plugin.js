@@ -21,6 +21,7 @@ import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_edit
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { isBlock } from "@html_editor/utils/blocks";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { READ, withSequence } from "@html_editor/utils/resource";
 
 const COLOR_COMBINATION_CLASSES = [1, 2, 3, 4, 5].map((i) => `o_cc${i}`);
 const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`).join(", ");
@@ -65,7 +66,15 @@ export class ColorPlugin extends Plugin {
             },
         ],
         /** Handlers */
+<<<<<<< a220fb71c036c93fa1e75d4d37127e5eda0118f9
         remove_all_formats_handlers: this.removeAllColor.bind(this),
+||||||| 8b8abb0c39064b93badd7b78ed4c37c700b46cb3
+        selectionchange_handlers: this.updateSelectedColor.bind(this),
+        remove_format_handlers: this.removeAllColor.bind(this),
+=======
+        selectionchange_handlers: withSequence(READ, this.updateSelectedColor.bind(this)),
+        remove_format_handlers: this.removeAllColor.bind(this),
+>>>>>>> fbc19d9ad1273fef5fa8be000aba8d6011cbca95
         color_combination_getters: getColorCombinationFromClass,
 
         /** Predicates */
