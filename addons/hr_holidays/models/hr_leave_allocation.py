@@ -788,7 +788,8 @@ class HolidaysAllocation(models.Model):
             'holiday_type': 'employee',
             'holiday_status_id': self.holiday_status_id.id,
             'notes': self.notes,
-            'number_of_days': self.number_of_days,
+            'number_of_days': (self.number_of_hours_display / employee.resource_calendar_id.hours_per_day)
+                                if self.type_request_unit == 'hour' and employee.resource_calendar_id else self.number_of_days,
             'parent_id': self.id,
             'employee_id': employee.id,
             'employee_ids': [(6, 0, [employee.id])],

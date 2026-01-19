@@ -56,6 +56,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         }
 
     def _get_partner_party_tax_scheme_vals_list(self, partner, role):
+        if not partner.vat or partner.vat == '/':
+            return []
+
         # [BR-CO-09] if the PartyTaxScheme/TaxScheme/ID == 'VAT', CompanyID must start with a country code prefix.
         # In some countries however, the CompanyID can be with or without country code prefix and still be perfectly
         # valid (RO, HU, non-EU countries).

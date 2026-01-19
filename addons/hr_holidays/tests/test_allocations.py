@@ -38,6 +38,14 @@ class TestAllocations(TestHrHolidaysCommon):
             'allocation_validation_type': 'no',
         })
 
+        cls.leave_type_hour = cls.env['hr.leave.type'].create({
+            'name': 'Hourly Time Off',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'officer',
+            'request_unit': 'hour',
+        })
+
     def compare_values(self, allocations, expected_values):
         for allocation in allocations:
             for field, expected_value in expected_values.items():
@@ -442,3 +450,57 @@ class TestAllocations(TestHrHolidaysCommon):
         self.assertEqual(allocation_5_days.state, 'validate')
         allocation_3_days.action_refuse()
         self.assertEqual(allocation_3_days.state, 'refuse')
+
+    def test_hourly_allocation_multi_employee(self):
+
+        attendances = []
+        for index in range(5):
+            attendances.append((0, 0, {
+                'name': '%s_%d' % ('35 Hours', index),
+                'hour_from': 8,
+                'hour_to': 12,
+                'dayofweek': str(index),
+                'day_period': 'morning'
+            }))
+            attendances.append((0, 0, {
+                'name': '%s_%d' % ('35 Hours', index),
+                'hour_from': 12,
+                'hour_to': 13,
+                'dayofweek': str(index),
+                'day_period': 'lunch'
+            }))
+            attendances.append((0, 0, {
+                'name': '%s_%d' % ('35 Hours', index),
+                'hour_from': 13,
+                'hour_to': 16,
+                'dayofweek': str(index),
+                'day_period': 'afternoon'
+            }))
+        calendar_emp = self.env['resource.calendar'].create({
+            'name': '35 Hours',
+            'tz': self.employee_emp.tz,
+            'attendance_ids': attendances,
+        })
+
+        self.employee_emp.resource_calendar_id = calendar_emp.id
+
+        employees_allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Test time off',
+            'holiday_type': 'employee',
+            'employee_ids': [(4, self.employee.id), (4, self.employee_emp.id)],
+            'multi_employee': True,
+            'holiday_status_id': self.leave_type_hour.id,
+            'number_of_days': 5,
+            'number_of_hours_display': 40,
+            'allocation_type': 'regular',
+        })
+
+        employees_allocation.action_validate()
+
+        children_allocations = self.env['hr.leave.allocation'].search([
+            ('multi_employee', '=', False),
+            ('parent_id', '=', employees_allocation.id),
+        ])
+        self.assertEqual(len(children_allocations), 2)
+        self.assertEqual(children_allocations[0].number_of_hours_display, 40.0)
+        self.assertEqual(children_allocations[1].number_of_hours_display, 40.0)
