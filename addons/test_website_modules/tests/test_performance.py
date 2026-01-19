@@ -338,10 +338,11 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             queries['account_tax_repartition_line'] = 2
 
         if self._has_demo_data():
-            query_count += 5
+            query_count += 6
             queries['product_template'] += 1
             queries['product_product'] += 2
             queries['ir_attachment'] += 1
+            queries['product_ribbon'] += 1
             queries['res_company'] += 1
         else:
             query_count += 3
