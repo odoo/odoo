@@ -72,7 +72,22 @@ export function processModelDefs(modelDefs) {
                     relationModel[backRefName] = inverseField;
                 }
                 inverseMap.set(field, inverseField);
-                inverseMap.set(inverseField, field);
+                if (!inverseMap.has(inverseField)) {
+                    inverseMap.set(inverseField, field);
+                } else {
+                    const existing = inverseMap.get(inverseField);
+                    if (existing instanceof Set) {
+                        if (!field.dummy) {
+                            existing.add(field);
+                        }
+                    } else if (existing.dummy) {
+                        inverseMap.set(inverseField, field);
+                    } else {
+                        if (!field.dummy && existing !== field) {
+                            inverseMap.set(inverseField, new Set([existing, field]));
+                        }
+                    }
+                }
             } else if (field.type === "many2one") {
                 many2oneFields.push([model, field]);
             }

@@ -7,18 +7,48 @@ import * as EventTourUtils from "@pos_event/../tests/tours/utils/event_tour_util
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add("SellingEventInPos", {
+registry.category("web_tour.tours").add("SellingEventInPos1", {
     steps: () =>
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            EventTourUtils.answerGlobalQuestion("Text Box 1", "TB1-Answer"),
+            EventTourUtils.answerTicketQuestion("1", "Text Box 2", "T1-TB2-Answer"),
+            EventTourUtils.answerTicketQuestion("2", "Text Box 2", "T2-TB2-Answer"),
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("400.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("SellingEventInPos2", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
             // Confirm popup - There isn't enough tickets available
             ProductScreen.clickDisplayedProduct("My Awesome Event"),
             EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
             EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
             Dialog.confirm(),
             Dialog.confirm(),
-
+            ProductScreen.clickDisplayedProduct("Basic Event Ticket"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
+            Dialog.confirm(),
+            EventTourUtils.answerTicketQuestion("1", "Question1", "SHAG"),
+            EventTourUtils.answerTicketQuestion("1", "Question2", "demo@test.com"),
+            Dialog.confirm(),
+            ProductScreen.longPressOrderline("Event Ticket"),
+            EventTourUtils.answerTicketQuestion("1", "Question1", "DEMO"),
+            Dialog.confirm(),
+            ProductScreen.longPressOrderline("Event Ticket"),
+            Dialog.confirm(),
             // Buy a VIP Ticket
             ProductScreen.clickDisplayedProduct("My Awesome Event"),
             EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
@@ -30,7 +60,7 @@ registry.category("web_tour.tours").add("SellingEventInPos", {
             Dialog.confirm("Ok"),
             EventTourUtils.answerGlobalSelectQuestion("Question3", "Q3-Answer1"),
             Dialog.confirm(),
-            ProductScreen.totalAmountIs("200.00"),
+            ProductScreen.totalAmountIs("300.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),

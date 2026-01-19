@@ -67,6 +67,33 @@ class TestUi(TestPointOfSaleHttpCommon):
                 })
             ]
         })
+        # Basic Ticket
+        cls.test_event_basic = cls.env['event.event'].create({
+            'name': 'Basic Event Ticket',
+            'user_id': cls.pos_admin.id,
+            'date_begin': datetime.datetime.now() + datetime.timedelta(days=1),
+            'date_end': datetime.datetime.now() + datetime.timedelta(days=4),
+            'seats_limited': True,
+            'seats_max': 2,
+            'event_ticket_ids': [(0, 0, {
+                'name': 'Ticket Basic',
+                'product_id': cls.product_event.id,
+                'seats_max': 1,
+                'price': 100,
+            })],
+            'question_ids': [
+                (0, 0, {
+                    'title': 'Question1',
+                    'question_type': 'name',
+                    'once_per_order': False,
+                }),
+                (0, 0, {
+                    'title': 'Question2',
+                    'question_type': 'email',
+                    'once_per_order': False,
+                })
+            ]
+        })
 
     def test_selling_event_in_pos(self):
         self.pos_user.write({
@@ -78,6 +105,29 @@ class TestUi(TestPointOfSaleHttpCommon):
             "limit_categories": True,
             "iface_available_categ_ids": [(6, 0, [self.event_category.id])],
         })
+        basic_ticket = self.test_event.event_ticket_ids[1]
+        self.test_event.write({
+            'seats_max': 4,
+            'event_ticket_ids': [(1, basic_ticket.id, {
+                'seats_max': 3,
+            })],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.test_event.write({
+            'question_ids': [Command.create({
+                'title': 'Text Box 1',
+                'question_type': 'text_box',
+                'once_per_order': True,
+            }), Command.create({
+                'title': 'Text Box 2',
+                'question_type': 'text_box',
+            })],
+        })
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'SellingEventInPos1', login="pos_user")
+        order = self.env['pos.order'].search([], order='id desc', limit=1)
+        event_registration = order.lines[0].event_registration_ids
+        self.assertEqual(len(event_registration.registration_answer_ids), 4)
+        self.assertEqual(event_registration.registration_answer_ids.mapped("value_text_box"), ['TB1-Answer', 'T2-TB2-Answer', 'TB1-Answer', 'T1-TB2-Answer'])
         self.test_event.write({
             'question_ids': [Command.create({
                 'title': 'Question3',
@@ -91,10 +141,12 @@ class TestUi(TestPointOfSaleHttpCommon):
             })]
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'SellingEventInPos', login="pos_user")
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'SellingEventInPos2', login="pos_user")
 
         order = self.env['pos.order'].search([], order='id desc', limit=1)
-        event_registration = order.lines[0].event_registration_ids
+        basic_event_registration = order.lines[0].event_registration_ids
+        self.assertEqual(basic_event_registration.name, "DEMO")
+        event_registration = order.lines[1].event_registration_ids
         event_answer_name = event_registration.registration_answer_ids.value_answer_id.mapped('name')
         self.assertEqual(len(event_registration.registration_answer_ids), 3)
         self.assertEqual(event_answer_name, ['Q1-Answer1', 'Q2-Answer1', 'Q3-Answer1'])
