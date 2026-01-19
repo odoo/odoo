@@ -139,6 +139,8 @@
                 <field name="insurer_id" string="Vendor" filter_domain="[('insurer_id','child_of', self)]"/>
                 <filter string="In Progress" name="open" domain="[('state', '=', 'open')]"/>
                 <filter string="Expired" name="expired" domain="[('state', '=', 'expired')]"/>
+                <filter string="Start Date" name="start_date" date="start_date" default_period="month"/>
+                <filter string="Expiration Date" name="expiration_date" date="expiration_date" default_period="month"/>
                 <field name="activity_user_id" string="Activities of"/>
                 <field name="activity_type_id" string="Activity type"/>
                 <separator/>
