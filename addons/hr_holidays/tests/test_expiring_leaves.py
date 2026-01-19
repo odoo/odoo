@@ -635,6 +635,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         })
 
         logged_in_emp = self.env.user.employee_id
+        logged_in_emp.work_entry_source = 'planning'
         logged_in_emp.resource_calendar_id = None       # Set as Fully flexible resource
 
         allocation = self.env['hr.leave.allocation'].sudo().create({

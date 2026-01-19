@@ -4026,6 +4026,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             employee_without_calendar = self.env['hr.employee'].create({
                 'name': 'employee without calendar',
+                'work_entry_source': 'planning',
                 'resource_calendar_id': False,
             })
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({

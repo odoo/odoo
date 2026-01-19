@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _, SUPERUSER_ID
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import ormcache, float_is_zero
 from odoo.tools.intervals import Intervals
@@ -36,10 +36,16 @@ class HrVersion(models.Model):
         groups="hr.group_hr_manager",
     )
 
-    @api.depends('work_entry_source', 'resource_calendar_id')
+    @api.depends('work_entry_source', 'resource_calendar_id', 'employee_id')
     def _compute_work_entry_source_calendar_invalid(self):
         for version in self:
-            version.work_entry_source_calendar_invalid = version.work_entry_source == 'calendar' and not version.resource_calendar_id
+            version.work_entry_source_calendar_invalid = version.work_entry_source == 'calendar' and not version.resource_calendar_id and version.employee_id
+
+    @api.constrains('work_entry_source', 'resource_calendar_id', 'employee_id')
+    def _check_calendar_required(self):
+        for version in self:
+            if version.work_entry_source == 'calendar' and not version.resource_calendar_id and version.employee_id:
+                raise ValidationError(self.env._("A working schedule is required when the work entry source is set to 'Working Schedule'."))
 
     @ormcache()
     def _get_default_work_entry_type_id(self):
