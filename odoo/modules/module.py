@@ -579,7 +579,7 @@ def check_python_external_dependency(pydep: str) -> None:
         try:
             # keep compatibility with module name but log a warning instead of info
             importlib.import_module(pydep)
-            _logger.warning("python external dependency on '%s' does not appear o be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
+            _logger.warning("python external dependency on '%s' does not appear to be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
             return
         except ImportError:
             pass
