@@ -3284,6 +3284,19 @@ class BaseModel(metaclass=MetaModel):
         if not (regular_fields or property_fields):
             return
 
+        has_company_field = (
+            self._name == 'res.company'
+            or 'company_id' in self
+            or 'company_ids' in self
+        )
+        if regular_fields and not has_company_field:
+            _logger.warning(_(
+                "Skipping a company check for model %(model_name)s. Its fields %(field_names)s are set as company-dependent, "
+                "but the model doesn't have a `company_id` or `company_ids` field!",
+                model_name=self._name, field_names=regular_fields
+            ))
+            regular_fields = []
+
         inconsistencies = []
         for record in self:
             # The first part of the check verifies that all records linked via relation fields are compatible
@@ -3296,11 +3309,6 @@ class BaseModel(metaclass=MetaModel):
                 elif 'company_ids' in self:
                     companies = record.company_ids
                 else:
-                    _logger.warning(_(
-                        "Skipping a company check for model %(model_name)s. Its fields %(field_names)s are set as company-dependent, "
-                        "but the model doesn't have a `company_id` or `company_ids` field!",
-                        model_name=self._name, field_names=regular_fields
-                    ))
                     continue
                 for name in regular_fields:
                     corecords = record.sudo()[name]
