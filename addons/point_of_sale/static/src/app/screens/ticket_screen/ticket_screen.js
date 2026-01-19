@@ -315,7 +315,10 @@ export class TicketScreen extends Component {
 
         // First pass: add all products to the destination order
         for (const refundDetail of allToRefundDetails) {
-            const product = this.pos.db.get_product_by_id(refundDetail.orderline.productId);
+            const product = await this.pos.getProductById(refundDetail.orderline.productId);
+            if (!product) {
+                continue;
+            }
             const options = this._prepareRefundOrderlineOptions(refundDetail);
             const newOrderline = await destinationOrder.add_product(product, options);
             originalToDestinationLineMap.set(refundDetail.orderline.id, newOrderline);
