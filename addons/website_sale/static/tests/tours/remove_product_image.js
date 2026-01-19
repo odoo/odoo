@@ -30,7 +30,25 @@ const enterEditModeOfTestProduct = () => [
     ...clickOnEditAndWaitEditMode(),
 ];
 
+<<<<<<< 30ecdec8ab1c82778347a37f3e0c7d3c78e7ad86
 
+||||||| 50e09e4d4ea1a34b036b63168cf2d06b695aba30
+const removeImg = [
+    {
+        content: "Click on Remove",
+        trigger: ".o_customize_tab [data-container-title='Image'] button[data-action-id='removeMedia']",
+        run: "click",
+    },
+    // If the snippet editor is not visible, the remove process is considered as
+    // finished.
+    {
+        content: "Check that the snippet editor is not visible",
+        trigger: ".o_customize_tab:not(:has([data-container-title='Image']))",
+    },
+];
+
+=======
+>>>>>>> c91d11a2a911b290550bc6c7feb9dcd368cf8b9e
 registerWebsitePreviewTour(
     "website_sale.add_and_remove_main_product_image_no_variant",
     {
@@ -69,6 +87,7 @@ registerWebsitePreviewTour(
         },
     ]
 );
+
 registerWebsitePreviewTour(
     "website_sale.remove_main_product_image_with_variant",
     {
@@ -80,6 +99,7 @@ registerWebsitePreviewTour(
         ...clickOnSave(),
         ...clickOnEditAndWaitEditMode(),
         ...clickOnImgAndWaitForLoad,
+<<<<<<< 30ecdec8ab1c82778347a37f3e0c7d3c78e7ad86
         {
             content: "Ensure the image is really loaded in DOM before click on remove",
             trigger: `:iframe .o_product_detail_img_wrapper img`,
@@ -94,5 +114,19 @@ registerWebsitePreviewTour(
             content: "Check that the snippet editor is not visible",
             trigger: ".o_customize_tab:not(:has([data-container-title='Image']))",
         },
+||||||| 50e09e4d4ea1a34b036b63168cf2d06b695aba30
+        ...removeImg,
+=======
+        {
+            content: "Click on Remove",
+            trigger: ".o_customize_tab [data-container-title='Image']:has(.o-hb-image-size-info:contains(5.9 kB)) button[data-action-id='removeMedia']",
+            run: "click",
+        },
+        // If the snippet editor is not visible, the remove process is considered as finished.
+        {
+            content: "Check that the snippet editor is not visible",
+            trigger: ".o_customize_tab:not(:has([data-container-title='Image']))",
+        },
+>>>>>>> c91d11a2a911b290550bc6c7feb9dcd368cf8b9e
     ]
 );
