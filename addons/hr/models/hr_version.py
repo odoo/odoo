@@ -188,12 +188,9 @@ class HrVersion(models.Model):
                                        groups="hr.group_hr_manager")
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=1)
 
-    def _get_hr_responsible_domain(self):
-        return "[('share', '=', False), ('company_ids', 'in', company_id), ('all_group_ids', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
-
     hr_responsible_id = fields.Many2one(
         'res.users', 'HR Responsible', tracking=1,
-        help='Person responsible for validating the employee\'s contracts.', domain=_get_hr_responsible_domain,
+        help='Person responsible for validating the employee\'s contracts.', domain=[('share', '=', False)],
         default=lambda self: self.env.user, required=True, groups="hr.group_hr_user")
 
     _check_contract_start_date_defined = models.Constraint(
