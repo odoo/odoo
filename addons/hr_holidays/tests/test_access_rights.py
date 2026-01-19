@@ -5,6 +5,7 @@ import unittest
 
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 from odoo import tests
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
@@ -359,6 +360,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
             leave._force_cancel("Cancel the leave")
             leave.with_user(self.user_hrmanager.id).action_reset_confirm()
 
+    @freeze_time('2026-01-23 10:00:00')
     def test_holiday_responsible_refuse_leave(self):
         """
             The holiday responsible should be able to accept and refuse correct type leaves of users they are responsible for
