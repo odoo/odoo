@@ -119,9 +119,7 @@
                                     <t t-call="html_editor.HistoryDialog.LoadingSpinner"/>
                                 </t>
                                 <t t-elif="state.revisionContent?.length">
-                                    <div class="pe-none">
-                                        <HtmlViewer config="getConfig('revisionContent')"/>
-                                    </div>
+                                    <HtmlViewer config="getConfig('revisionContent')"/>
                                 </t>
                                 <t t-else="" t-out="props.noContentHelper" />
                             </div>
@@ -135,7 +133,7 @@
                                     <div t-attf-class="history-comparison-split position-relative h-100 #{!state.isComparisonSplit ? 'd-none' : ''}">
                                         <HtmlViewer config="getConfig('revisionComparisonSplit')"/>
                                     </div>
-                                    <div t-attf-class="pe-none history-comparison-unified #{state.isComparisonSplit ? 'd-none' : ''}">
+                                    <div t-attf-class="history-comparison-unified #{state.isComparisonSplit ? 'd-none' : ''}">
                                         <HtmlViewer config="getConfig('revisionComparison')"/>
                                     </div>
                                 </t>
