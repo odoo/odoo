@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="roc_registration_number_external_layout">
+        <li t-if="res_company.company_registry">
+            ROCBN No.: <span t-field="res_company.company_registry"/>
+        </li>
+    </template>
+
+    <!-- Add Company / Business Registration Number to layout -->
+    <template id="external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_bn.roc_registration_number_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="external_layout_bold" inherit_id="web.external_layout_bold">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_bn.roc_registration_number_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_bn.roc_registration_number_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="external_layout_striped" inherit_id="web.external_layout_striped">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_bn.roc_registration_number_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="external_layout_bubble" inherit_id="web.external_layout_bubble">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_bn.roc_registration_number_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="external_layout_wave" inherit_id="web.external_layout_wave">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_bn.roc_registration_number_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="external_layout_folder" inherit_id="web.external_layout_folder">
+        <xpath expr="//div[hasclass('o_folder_company_info')]//ul[@name='company_address_list']" position="inside">
+            <li t-if="res_company.company_registry">
+                ROCBN No.: <span t-field="res_company.company_registry"/>
+            </li>
+        </xpath>
+    </template>
+
+</odoo>
