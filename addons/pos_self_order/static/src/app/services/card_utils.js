@@ -34,6 +34,16 @@ export function computeTotalComboPrice(selfOrder, productTemplate, comboValues, 
     return selfOrder.isTaxesIncludedInPrice() ? taxDetails.total_amount : taxDetails.base_amount;
 }
 
+export function getProductVariantByAttributes(models, productTemplate, selectedAttributes) {
+    return models["product.product"].find(
+        (prd) =>
+            prd.product_tmpl_id.id === productTemplate.id &&
+            prd.product_template_variant_value_ids.every((ptav) =>
+                Object.values(selectedAttributes).some((value) => ptav.id == value)
+            )
+    );
+}
+
 export function getOrderLineValues(
     selfOrder,
     productTemplate,
@@ -59,18 +69,21 @@ export function getOrderLineValues(
     };
 
     if (Object.entries(selectedValues).length > 0) {
-        const productVariant = models["product.product"].find(
-            (prd) =>
-                prd.product_tmpl_id.id === productTemplate.id &&
-                prd.product_template_variant_value_ids.every((ptav) =>
-                    Object.values(selectedValues).some((value) => ptav.id == value)
-                )
+        const productVariant = getProductVariantByAttributes(
+            models,
+            productTemplate,
+            selectedValues
         );
 
         if (productVariant) {
+            const productVariantPrice = selfOrder.getProductPriceInfo(
+                productTemplate,
+                productVariant
+            );
+
             Object.assign(values, {
                 product_id: productVariant,
-                price_unit: productVariant.lst_price,
+                price_unit: productVariantPrice.pricelist_price,
                 tax_ids: [...productVariant.taxes_id],
             });
         }
