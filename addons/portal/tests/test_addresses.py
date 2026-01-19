@@ -126,7 +126,7 @@ class TestPortalAddresses(BaseCommon, HttpCase):
 
         internal_partner = self.internal_user.partner_id
         # Fill the incomplete address
-        internal_partner.write(self.default_address_values)
+        internal_partner.write(self.default_address_values.copy())
 
         # Try to update the account name
         res = self._submit_address_values({
@@ -143,7 +143,7 @@ class TestPortalAddresses(BaseCommon, HttpCase):
 
         internal_partner = self.internal_user.partner_id
         # Fill the incomplete address
-        internal_partner.write(self.default_address_values)
+        internal_partner.write(self.default_address_values.copy())
 
         # Try to update the account email
         res = self._submit_address_values({
