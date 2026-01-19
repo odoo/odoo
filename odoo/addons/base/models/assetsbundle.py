@@ -7,7 +7,6 @@ import re
 import textwrap
 import uuid
 from collections import OrderedDict, defaultdict
-from contextlib import closing
 from subprocess import Popen, PIPE
 
 from lxml import etree
@@ -829,15 +828,15 @@ class WebAsset(object):
         try:
             self.stat()
             if self._filename:
-                with closing(file_open(self._filename, 'rb', filter_ext=EXTENSIONS)) as fp:
-                    return fp.read().decode('utf-8')
+                with file_open(self._filename, 'r', filter_ext=EXTENSIONS) as fp:
+                    return fp.read()
             else:
                 return self._ir_attach.raw.decode()
         except UnicodeDecodeError:
             raise AssetError('%s is not utf-8 encoded.' % self.name)
-        except IOError:
+        except OSError:
             raise AssetNotFound('File %s does not exist.' % self.name)
-        except:
+        except Exception:  # noqa: BLE001
             raise AssetError('Could not get content for %s.' % self.name)
 
     def minify(self):

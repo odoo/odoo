@@ -8,7 +8,7 @@ import unicodedata
 from contextlib import nullcontext
 
 import odoo
-from odoo import SUPERUSER_ID, _, api
+from odoo import _, api
 from odoo.exceptions import AccessError, UserError
 from odoo.http import Controller, request, route
 from odoo.http.stream import STATIC_CACHE_LONG, Stream
@@ -99,7 +99,7 @@ class Binary(Controller):
                 ('url', '=like', url),
                 ('res_model', '=', 'ir.ui.view'),
                 ('res_id', '=', 0),
-                ('create_uid', '=', SUPERUSER_ID),
+                ('create_uid', '=', api.SUPERUSER_ID),
             ]
             attachment = env['ir.attachment'].sudo().search(domain, limit=1)
         if not attachment:
@@ -262,7 +262,7 @@ class Binary(Controller):
             response = Stream.from_path(file_path('web/static/img/logo.png')).get_response()
         else:
             try:
-                attachment = request.env(user=request.session.uid or odoo.api.SUPERUSER_ID, su=True)['ir.attachment']
+                attachment = request.env(user=request.session.uid or api.SUPERUSER_ID, su=True)['ir.attachment']
                 if company_id := (kw or {}).get('company'):
                     company_ids = [int(company_id)]
                 else:
