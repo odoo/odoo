@@ -1,3 +1,4 @@
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { DocumentFileUploader } from "../document_file_uploader/document_file_uploader";
@@ -16,6 +17,7 @@ export class BillGuide extends Component {
         this.action = useService("action");
         this.context = null;
         this.alias = null;
+        this.isMobile = isMobileOS();
         onWillStart(this.onWillStart);
     }
 
