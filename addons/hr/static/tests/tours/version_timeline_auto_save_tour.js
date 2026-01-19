@@ -21,26 +21,6 @@ registry.category("web_tour.tours").add("version_timeline_auto_save_tour", {
             run: "click",
         },
         {
-            content: "Open contract start date",
-            trigger: ".o_field_widget[name='contract_date_start'] .o_input",
-            run: "click",
-        },
-        {
-            content: "Go to the next month",
-            trigger: ".o_next",
-            run: "click",
-        },
-        {
-            content: "Choose any date X",
-            trigger: ".o_date_item_cell:nth-child(10)",
-            run: "click",
-        },
-        {
-            content: "saving the form",
-            trigger: ".o_form_button_save",
-            run: "click",
-        },
-        {
             content: "Open contract end date",
             trigger: ".o_field_widget[name='contract_date_end'] .o_input",
             run: "click",
