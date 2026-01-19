@@ -33,7 +33,7 @@ import {
     getBaseContainerSelector,
     SUPPORTED_BASE_CONTAINER_NAMES,
 } from "@html_editor/utils/base_container";
-import { withSequence } from "@html_editor/utils/resource";
+import { READ, withSequence } from "@html_editor/utils/resource";
 import { FontSizeSelector } from "./font_size_selector";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";
@@ -292,8 +292,8 @@ export class FontPlugin extends Plugin {
 
         /** Handlers */
         on_selectionchange_handlers: [
-            this.updateFontSelectorParams.bind(this),
-            this.updateFontSizeSelectorParams.bind(this),
+            withSequence(READ, this.updateFontSelectorParams.bind(this)),
+            withSequence(READ, this.updateFontSizeSelectorParams.bind(this)),
         ],
         on_undone_handlers: [
             this.updateFontSelectorParams.bind(this),

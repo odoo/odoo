@@ -6,6 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { AlignSelector } from "./align_selector";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";
+import { READ, withSequence } from "@html_editor/utils/resource";
 
 const alignmentItems = [
     // In RTL, left and right icons are reverted to represent start and end.
@@ -60,7 +61,7 @@ export class AlignPlugin extends Plugin {
         ],
 
         /** Handlers */
-        on_selectionchange_handlers: this.updateAlignmentParams.bind(this),
+        on_selectionchange_handlers: withSequence(READ, this.updateAlignmentParams.bind(this)),
         on_undone_handlers: this.updateAlignmentParams.bind(this),
         on_redone_handlers: this.updateAlignmentParams.bind(this),
         on_all_formats_removed_handlers: this.setAlignment.bind(this),

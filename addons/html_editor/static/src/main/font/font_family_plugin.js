@@ -3,7 +3,7 @@ import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { FontFamilySelector } from "@html_editor/main/font/font_family_selector";
 import { closestElement } from "../../utils/dom_traversal";
-import { withSequence } from "@html_editor/utils/resource";
+import { READ, withSequence } from "@html_editor/utils/resource";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { isStylable } from "@html_editor/utils/dom_info";
 
@@ -58,7 +58,7 @@ export class FontFamilyPlugin extends Plugin {
             }),
         ],
         /** Handlers */
-        on_selectionchange_handlers: this.updateCurrentFontFamily.bind(this),
+        on_selectionchange_handlers: withSequence(READ, this.updateCurrentFontFamily.bind(this)),
         on_undone_handlers: this.updateCurrentFontFamily.bind(this),
         on_redone_handlers: this.updateCurrentFontFamily.bind(this),
     };
