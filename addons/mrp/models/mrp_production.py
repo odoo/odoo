@@ -155,8 +155,8 @@ class MrpProduction(models.Model):
         'End', copy=False, default=_get_default_date_finished,
         compute='_compute_date_finished', store=True,
         help="Date you expect to finish production or actual date you finished production.")
-    duration_expected = fields.Float("Expected Duration", help="Total expected duration (in minutes)", compute='_compute_duration_expected')
-    duration = fields.Float("Real Duration", help="Total real duration (in minutes)", compute='_compute_duration')
+    duration_expected = fields.Float("Expected Duration", help="Total expected duration (in minutes)", compute='_compute_duration_expected', store=True)
+    duration = fields.Float("Real Duration", help="Total real duration (in minutes)", compute='_compute_duration', store=True)
 
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material', readonly=False,
