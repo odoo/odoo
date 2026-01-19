@@ -588,4 +588,33 @@ describe("helper hint", () => {
             /* eslint-enable */
         });
     });
+
+    test("should display hint in first block of each column after an undo operation", async () => {
+        await testEditor({
+            contentBefore: columnsContainer(
+                column(4, "<p>[]<br></p>") + column(4, "<p><br></p>") + column(4, "<p><br></p>")
+            ),
+            stepFunction: async (editor) => {
+                columnize(4)(editor);
+                undo(editor);
+            },
+            contentAfterEdit: unformat(
+                `<p data-selection-placeholder=""><br></p>
+                <div class="container o_text_columns o-contenteditable-false" contenteditable="false">
+                    <div class="row">
+                        <div class="o-contenteditable-true col-4" contenteditable="true">
+                            <p o-we-hint-text="Empty column" class="o-we-hint">[]<br></p>
+                        </div>
+                        <div class="o-contenteditable-true col-4" contenteditable="true">
+                            <p o-we-hint-text="Empty column" class="o-we-hint"><br></p>
+                        </div>
+                        <div class="o-contenteditable-true col-4" contenteditable="true">
+                            <p o-we-hint-text="Empty column" class="o-we-hint"><br></p>
+                        </div>
+                    </div>
+                </div>
+                <p data-selection-placeholder=""><br></p>`
+            ),
+        });
+    });
 });
