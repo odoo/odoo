@@ -30,47 +30,67 @@ const enterEditModeOfTestProduct = () => [
     ...clickOnEditAndWaitEditMode(),
 ];
 
-const removeImg = [
+registerWebsitePreviewTour(
+    "add_and_remove_main_product_image_no_variant",
     {
-        content: "Click on Remove",
-        trigger: ".o_customize_tab [data-container-title='Image'] button[data-action-id='removeMedia']",
-        run: "click",
+        url: "/shop?search=Test Remove Image",
     },
-    // If the snippet editor is not visible, the remove process is considered as
-    // finished.
+    () => [
+        ...enterEditModeOfTestProduct(),
+        {
+            content: "Double click on the product image",
+            trigger: ":iframe #o-carousel-product img[alt='Test Remove Image']",
+            run: "dblclick",
+        },
+        {
+            content: "Click on the new image",
+            trigger: ".o_select_media_dialog img[title='green.jpg']",
+            run: "click",
+        },
+        {
+            content: "Check that the snippet editor of the clicked image has been loaded",
+            trigger: ".o_customize_tab [data-container-title='Image']",
+        },
+        {
+            content: "Ensure the green screen image is really loaded in DOM before click on remove",
+            trigger: `:iframe .o_product_detail_img_wrapper img[src*='AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA']`,
+        },
+        {
+            content: "Click on Remove",
+            trigger: ".o_customize_tab [data-container-title='Image']:has(.o-hb-image-size-info:contains(1.0 kB)) button[data-action-id='removeMedia']",
+            run: "click",
+        },
+        // If the snippet editor is not visible, the remove process is considered as finished.
+        {
+            content: "Check that the snippet editor is not visible",
+            trigger: ".o_customize_tab:not(:has([data-container-title='Image']))",
+        },
+    ]
+);
+registerWebsitePreviewTour(
+    "remove_main_product_image_with_variant",
     {
-        content: "Check that the snippet editor is not visible",
-        trigger: ".o_customize_tab:not(:has([data-container-title='Image']))",
+        url: "/shop?search=Test Remove Image",
     },
-];
-
-registerWebsitePreviewTour("add_and_remove_main_product_image_no_variant", {
-    url: "/shop?search=Test Remove Image",
-}, () => [
-    ...enterEditModeOfTestProduct(),
-    {
-        content: "Double click on the product image",
-        trigger: ":iframe #o-carousel-product img[alt='Test Remove Image']",
-        run: "dblclick",
-    },
-    {
-        content: "Click on the new image",
-        trigger: ".o_select_media_dialog img[title='green.jpg']",
-        run: "click",
-    },
-    {
-        content: "Check that the snippet editor of the clicked image has been loaded",
-        trigger: ".o_customize_tab [data-container-title='Image']",
-    },
-    ...removeImg,
-]);
-registerWebsitePreviewTour("remove_main_product_image_with_variant", {
-    url: "/shop?search=Test Remove Image",
-}, () => [
-    ...enterEditModeOfTestProduct(),
-    ...clickOnImgAndWaitForLoad,
-    ...clickOnSave(),
-    ...clickOnEditAndWaitEditMode(),
-    ...clickOnImgAndWaitForLoad,
-    ...removeImg,
-]);
+    () => [
+        ...enterEditModeOfTestProduct(),
+        ...clickOnImgAndWaitForLoad,
+        ...clickOnSave(),
+        ...clickOnEditAndWaitEditMode(),
+        ...clickOnImgAndWaitForLoad,
+        {
+            content: "Ensure the image is really loaded in DOM before click on remove",
+            trigger: `:iframe .o_product_detail_img_wrapper img`,
+        },
+        {
+            content: "Click on Remove",
+            trigger: ".o_customize_tab [data-container-title='Image']:has(.o-hb-image-size-info:contains(5.9 kB)) button[data-action-id='removeMedia']",
+            run: "click",
+        },
+        // If the snippet editor is not visible, the remove process is considered as finished.
+        {
+            content: "Check that the snippet editor is not visible",
+            trigger: ".o_customize_tab:not(:has([data-container-title='Image']))",
+        },
+    ]
+);
