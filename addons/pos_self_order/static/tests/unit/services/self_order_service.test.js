@@ -228,6 +228,16 @@ describe("addToCart", () => {
         expect(store.currentOrder.lines[0].price_unit).toBe(15);
         expect(store.currentOrder.lines[1].price_unit).toBe(20);
     });
+
+    test("With price_extra for attribute create_variant='no_variant'", async () => {
+        const store = await setupSelfPosEnv();
+        const productTemplate = store.models["product.template"].get(20);
+
+        store.addToCart(productTemplate, 1, "", [3]);
+        store.addToCart(productTemplate, 1, "", [4]);
+        expect(store.currentOrder.lines[0].price_unit).toBe(200);
+        expect(store.currentOrder.lines[1].price_unit).toBe(210);
+    });
 });
 
 test("sendDraftOrderToServer", async () => {
