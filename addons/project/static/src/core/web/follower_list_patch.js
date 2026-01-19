@@ -22,7 +22,6 @@ const followerListPatch = {
                     "This follower is currently a project collaborator. Removing them will revoke their portal access to the project. Are you sure you want to proceed?"
                 ),
                 confirmLabel: _t("Remove Collaborator"),
-                cancelLabel: _t("Discard"),
                 confirm: () => super.onClickRemove(ev, follower),
                 cancel: () => {},
             });

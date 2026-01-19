@@ -643,7 +643,6 @@ export class PropertiesField extends Component {
             body: message,
             confirmLabel: _t("Delete Field"),
             confirmClass: "btn-danger",
-            cancelLabel: _t("Discard"),
             confirm: () => {
                 const propertiesDefinitions = this.propertiesList;
                 propertiesDefinitions.find(

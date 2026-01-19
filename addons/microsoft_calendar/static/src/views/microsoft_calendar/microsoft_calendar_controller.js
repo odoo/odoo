@@ -29,7 +29,6 @@ patch(AttendeeCalendarController.prototype, {
                     confirm: this.actionService.doAction.bind(this.actionService, syncResult.action),
                     confirmLabel: _t("Configure"),
                     cancel: () => {},
-                    cancelLabel: _t("Discard"),
                 });
             } else {
                 this.dialog.add(AlertDialog, {
