@@ -42,3 +42,30 @@ html {
     background-color: var(--o-view-background-color) !important;
     color: var(--o-main-text-color) !important;
 }
+
+/* --- Login & Database Selector Specific Overrides --- */
+
+/* Target the main body of the login/frontend pages */
+body {
+    background-color: var(--o-web-client-background-color) !important;
+    color: var(--o-main-text-color) !important;
+}
+
+/* Style the "Card" (The white box containing the login form or DB list) */
+.card, .o_card {
+    background-color: var(--o-component-background-color) !important;
+    border-color: var(--o-border-color) !important;
+    color: var(--o-main-text-color) !important;
+}
+
+/* Fix input fields on the login screen */
+.form-control {
+    background-color: var(--o-input-background-color) !important;
+    border-color: var(--o-input-border-color) !important;
+    color: var(--o-input-text-color) !important;
+}
+
+/* Fix links (e.g., "Reset Password", "Manage Databases") */
+a {
+    color: #64b5f6 !important; /* A lighter blue for better contrast on dark */
+}
