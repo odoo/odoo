@@ -453,6 +453,15 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
         z-index: $o-mega-menu-btn-close-zindex;
     }
 
+    // Fix menu alignment: Bootstrap's .accordion-button uses display:flex and text-align:left
+    // which prevents alignment utilities from working. Override when alignment class is present.
+    .top_menu.text-center, .top_menu.text-end {
+        > .accordion .accordion-button {
+            display: block;
+            text-align: inherit;
+        }
+    }
+
     @include accordion-style-vertical-menu;
 }
 
