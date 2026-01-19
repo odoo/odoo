@@ -680,16 +680,23 @@ class CustomerPortal(Controller):
             # commercial partner values, and would be reset if modified on the commercial partner.
             if not (is_commercial_address := partner_sudo == partner_sudo.commercial_partner_id):
                 for commercial_field_name in partner_sudo._commercial_fields():
+                    if not commercial_field_name in address_values:
+                        address_values.pop(commercial_field_name, None)
+                        continue
+                    partner_sudo_field = partner_sudo._fields[commercial_field_name]
+                    partner_sudo_value = partner_sudo_field.convert_to_cache(
+                        partner_sudo[commercial_field_name],
+                        partner_sudo,
+                    )
                     if (
-                        commercial_field_name in address_values
-                        and partner_sudo[commercial_field_name] != address_values[commercial_field_name]
+                        partner_sudo_value != address_values[commercial_field_name]
                         and (
-                            bool(partner_sudo[commercial_field_name])
+                            bool(partner_sudo_value)
                             or bool(address_values[commercial_field_name])
                         )
                     ):
                         invalid_fields.add(commercial_field_name)
-                        field_description = partner_sudo._fields[commercial_field_name]._description_string(request.env)
+                        field_description = partner_sudo_field._description_string(request.env)
                         if partner_sudo.commercial_partner_id.is_company:
                             error_messages.append(_(
                                 "The %(field_name)s is managed on your company account.",
