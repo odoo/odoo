@@ -64,7 +64,6 @@ export function showTemplateUndoConfirmationDialog(
                 );
             }
         },
-        cancelLabel: _t("Discard"),
         cancel: () => {},
     });
 }

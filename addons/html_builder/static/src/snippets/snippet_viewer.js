@@ -38,7 +38,6 @@ export class SnippetViewer extends Component {
             confirm: (inputValue) => {
                 this.props.snippetModel.renameCustomSnippet(snippet, inputValue);
             },
-            cancelLabel: _t("Discard"),
             cancel: () => {},
         });
     }

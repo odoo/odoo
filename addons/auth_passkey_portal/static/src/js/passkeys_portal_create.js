@@ -34,7 +34,6 @@ export class PortalPasskeyCreate extends Interaction {
                     this.createPasskey(serverOptions, name);
                 }
             },
-            cancelLabel: _t("Discard"),
             cancel: () => {},
         });
     }

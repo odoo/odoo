@@ -26,7 +26,6 @@ export class BusLogsMenuItem extends Component {
             confirm: () => this.env.services.bus_service.downloadLogs(),
             cancel() {},
             confirmLabel: _t("Download"),
-            cancelLabel: _t("Discard"),
         });
     }
 }

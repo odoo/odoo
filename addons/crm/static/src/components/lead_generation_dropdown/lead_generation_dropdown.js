@@ -210,7 +210,6 @@ export class LeadGenerationDropdown extends Component {
             },
             cancel: () => {},
             confirmLabel: "Install",
-            cancelLabel: "Cancel",
         };
         this.dialogs.add(ConfirmationDialog, dialogProps);
     }

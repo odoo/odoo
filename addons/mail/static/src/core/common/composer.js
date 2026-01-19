@@ -778,7 +778,6 @@ export class Composer extends Component {
                     }
                 ),
                 confirmLabel: _t("Send Message"),
-                cancelLabel: _t("Discard"),
                 confirm: () => confirmDef.resolve(true),
                 cancel: () => confirmDef.resolve(false),
             });
