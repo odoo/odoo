@@ -1076,7 +1076,8 @@ class Field(MetaField('DummyField', (object,), {})):
             """ UPDATE %(model_table)s AS x
                 SET %(model_field)s = y.%(comodel_field)s
                 FROM %(comodel_table)s AS y
-                WHERE x.%(join_field)s = y.id """,
+                WHERE x.%(join_field)s = y.id
+                AND y.%(comodel_field)s IS NOT NULL """,
             model_table=SQL.identifier(model._table),
             model_field=SQL.identifier(self.name),
             comodel_table=SQL.identifier(comodel._table),
