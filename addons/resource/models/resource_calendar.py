@@ -238,7 +238,7 @@ class ResourceCalendar(models.Model):
                     hour_from, hour_to = hours_per_attendance[att]
                     day_from = datetime.combine(day, float_to_time(hour_from))
                     day_to = datetime.combine(day, float_to_time(hour_to))
-                    base_result.append((day_from, day_to, attendance))
+                    base_result.append((day_from, day_to, att))
                 continue
 
             for attendance in attendances:
