@@ -141,6 +141,7 @@
             'website/static/src/js/utils.js',
             'web/static/src/core/autocomplete/*',
             'website/static/src/components/autocomplete_with_pages/*',
+            'website/static/src/components/googleplaces_autocomplete/*',
             'website/static/src/js/tours/tour_utils.js',
             'website/static/src/js/content/website_root.js',
             'website/static/src/js/widgets/dialog.js',
@@ -213,6 +214,7 @@
             'website/static/src/js/utils.js',
             'web/static/src/core/autocomplete/*',
             'website/static/src/components/autocomplete_with_pages/*',
+            'website/static/src/components/googleplaces_autocomplete/*',
             'website/static/src/xml/website.xml',
 
             # Don't include dark mode files in light mode

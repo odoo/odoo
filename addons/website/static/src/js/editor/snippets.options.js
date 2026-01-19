@@ -495,24 +495,19 @@ const GPSPicker = InputUserValueWidget.extend({
             return;
         }
 
-        await this.contentWindow.google.maps.importLibrary("places");
-        this._gmapAutocomplete = new this.contentWindow.google.maps.places.Autocomplete(this.inputEl, {types: ['geocode']});
-        this.contentWindow.google.maps.event.addListener(this._gmapAutocomplete, 'place_changed', this._onPlaceChanged.bind(this));
+        const options = {
+            contentWindow: this.contentWindow,
+            onPlaceSelected: this.onPlaceSelected.bind(this),
+            onError: this._notifyGMapError.bind(this),
+        };
+        this._gmapAutocomplete = wUtils.autocompleteWithGPS(this.inputEl, options);
     },
     /**
      * @override
      */
     destroy() {
         this._super(...arguments);
-
-        // Without this, the google library injects elements inside the backend
-        // DOM but do not remove them once the editor is left. Notice that
-        // this is also done when the widget is destroyed for another reason
-        // than leaving the editor, but if the google API needs that container
-        // again afterwards, it will simply recreate it.
-        for (const el of document.body.querySelectorAll('.pac-container')) {
-            el.remove();
-        }
+        this._gmapAutocomplete?.();
     },
 
     //--------------------------------------------------------------------------
@@ -546,6 +541,8 @@ const GPSPicker = InputUserValueWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Performs a nearby search for places around the given GPS coordinates.
+     *
      * @private
      * @param {string} gps
      * @param {boolean} [notify=true]
@@ -622,25 +619,15 @@ const GPSPicker = InputUserValueWidget.extend({
 
         setTimeout(() => this.trigger_up('user_value_widget_critical'));
     },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onPlaceChanged(ev) {
-        const gmapPlace = this._gmapAutocomplete.getPlace();
-        if (gmapPlace && gmapPlace.geometry) {
-            this._gmapPlace = gmapPlace;
+    onPlaceSelected(place) {
+        if (place && place.geometry) {
+            this._gmapPlace = place;
             const location = this._gmapPlace.geometry.location;
             const oldValue = this._value;
             this._value = `(${location.lat()},${location.lng()})`;
-            this._gmapCacheGPSToPlace[this._value] = gmapPlace;
+            this._gmapCacheGPSToPlace[this._value] = place;
             if (oldValue !== this._value) {
-                this._onUserValueChange(ev);
+                this._onUserValueChange();
             }
         }
     },
