@@ -58,7 +58,17 @@ class OAuthLogin(Home):
         except Exception:
             providers = []
         for provider in providers:
-            return_url = request.httprequest.url_root + 'auth_oauth/signin'
+            icp = request.env['ir.config_parameter'].sudo()
+            base_url = icp.get_param('web.base.url')
+            freeze = icp.get_param('web.base.url.freeze')
+            
+            if freeze and base_url:
+                # Honor frozen base URL
+                return_url = base_url.rstrip('/') + '/auth_oauth/signin'
+            else:
+                # Fall back to auto-detected scheme
+                return_url = request.httprequest.url_root + 'auth_oauth/signin'
+
             state = self.get_state(provider)
             params = dict(
                 response_type='token',
