@@ -14,6 +14,10 @@
                         <div class="mt16" invisible="not auth_totp_enforce">
                             <field name="auth_totp_policy" class="o_light_label" widget="radio"/>
                         </div>
+                        <div class="mt16" invisible="not auth_totp_enforce">
+                            <label for="auth_totp_grace_days" class="col-lg-3"/>
+                            <field name="auth_totp_grace_days"/>
+                        </div>
                     </setting>
                 </xpath>
             </field>
