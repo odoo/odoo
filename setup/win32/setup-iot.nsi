@@ -205,7 +205,9 @@ Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppDirectory "$\"$INSTDIR\python$\""'
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\odoo\odoo-bin\" -c "\"$INSTDIR\odoo.conf\"'
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} ObjectName "LOCALSERVICE"'
-    AccessControl::GrantOnFile  "$INSTDIR" "LOCALSERVICE" "FullAccess"
+    AccessControl::GrantOnFile "$INSTDIR" "LOCALSERVICE" "FullAccess"
+
+    nsExec::ExecToLog 'netsh advfirewall firewall add rule name="Odoo IoT Box ${VERSION}" dir=in action=allow protocol=TCP localport=80,443,8069,9000,9050,7784,33334 enable=yes profile=public,private'
 
     Call RestartOdooService
 SectionEnd
@@ -239,8 +241,8 @@ Section -$(TITLE_Nginx) Nginx
     CreateDirectory $INSTDIR\nginx\logs
     File "conf\nginx\nginx.conf"
     # Temporary certs for the first start
-    File "..\..\odoo\setup\iot_box_builder\overwrite_after_init\etc\ssl\certs\nginx-cert.crt"
-    File "..\..\odoo\setup\iot_box_builder\overwrite_after_init\etc\ssl\private\nginx-cert.key"
+    File "..\iot_box_builder\overwrite_before_init\etc\ssl\certs\nginx-cert.crt"
+    File "..\iot_box_builder\overwrite_before_init\etc\ssl\private\nginx-cert.key"
 SectionEnd
 
 Section -$(TITLE_Ghostscript) SectionGhostscript
@@ -306,6 +308,7 @@ Section "Uninstall"
     nginx_dir_not_found:
     FindClose $0
     DeleteRegKey HKLM "${UNINSTALL_REGISTRY_KEY}"
+    nsExec::ExecToLog 'netsh advfirewall firewall delete rule name="Odoo IoT Box ${VERSION}"'
 SectionEnd
 
 Function .onInit
@@ -333,8 +336,8 @@ FunctionEnd
 
 Function RestartOdooService
     DetailPrint "Restarting Odoo Service"
-    ExecWait "net stop ${SERVICENAME}"
-    ExecWait "net start ${SERVICENAME}"
+    nsExec::Exec "net stop ${SERVICENAME}"
+    nsExec::Exec "net start ${SERVICENAME}"
 FunctionEnd
 
 Function dir_leave
