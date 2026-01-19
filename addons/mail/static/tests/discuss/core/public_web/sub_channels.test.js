@@ -376,3 +376,49 @@ test("can mention all group chat members inside its sub-thread", async () => {
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion", { count: 2 });
 });
+
+test("should temporarily repin unpinned thread while it is being viewed", async () => {
+    mockDate("2023-06-07T06:07:00");
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Main Channel",
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+    });
+    const [subChannelId] = pyEnv["discuss.channel"].create([
+        {
+            name: "Sub Channel 1",
+            parent_channel_id: channelId,
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    unpin_dt: "2023-06-06 06:07:00",
+                    last_interest_dt: "2023-06-05 06:07:00",
+                }),
+            ],
+        },
+        {
+            name: "Sub Channel 2",
+            parent_channel_id: channelId,
+        },
+    ]);
+    await start();
+    await openDiscuss(subChannelId);
+    await contains(".o-mail-DiscussSidebarChannel-subChannel:eq(0):text('Sub Channel 2')");
+    await contains(".o-mail-DiscussSidebarChannel-subChannel:eq(1):text('Sub Channel 1').o-active");
+    await click(".o-mail-DiscussSidebarChannel-subChannel:text('Sub Channel 2')");
+    await contains(".o-mail-DiscussSidebarChannel-subChannel");
+    // Sub channel 1 is expired and disappears when its not active thread
+    await contains(".o-mail-DiscussSidebarChannel-subChannel:text('Sub Channel 2').o-active");
+    await click("button[title='Threads']");
+    await contains(".o-mail-SubChannelPreview-name:eq(0):text('Sub Channel 2')");
+    await contains(".o-mail-SubChannelPreview-name:eq(1):text('Sub Channel 1')");
+    await click(".o-mail-SubChannelPreview-name:text('Sub Channel 1')");
+    await contains(".o-mail-DiscussSidebarChannel-subChannel:eq(0):text('Sub Channel 2')");
+    await contains(".o-mail-DiscussSidebarChannel-subChannel:eq(1):text('Sub Channel 1').o-active");
+    // Sub channel 1 is persistently pinned when posting a message
+    await insertText(".o-mail-Composer-input", "Batman");
+    await click(".o-mail-Composer button[title='Send']:enabled");
+    await click(".o-mail-DiscussSidebarChannel-subChannel:text('Sub Channel 2')");
+    await contains(".o-mail-DiscussSidebarChannel-subChannel:eq(0):text('Sub Channel 1')");
+    await contains(".o-mail-DiscussSidebarChannel-subChannel:eq(1):text('Sub Channel 2').o-active");
+});
