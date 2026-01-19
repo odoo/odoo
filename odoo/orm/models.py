@@ -5728,6 +5728,7 @@ class BaseModel(metaclass=MetaModel):
         return {key: val[0] if val else ''
                 for key, val in results.items()}
 
+    @api.private
     @classmethod
     def is_transient(cls) -> bool:
         """ Return whether the model is transient.
