@@ -14,7 +14,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 
 import { advanceTime, describe, expect, test } from "@odoo/hoot";
-import { tick } from "@odoo/hoot-dom";
+import { tick, waitFor } from "@odoo/hoot-dom";
 
 import {
     Command,
@@ -270,4 +270,45 @@ test("Hide 'help already received' notification when channel is not visible", as
     canRespondDeferred.resolve();
     await tick();
     await expect.waitForSteps([]);
+});
+
+test("Expertise matching hint is shown in the sidebar when chat is looking for help", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    const bobPartnerId = pyEnv["res.partner"].create({
+        name: "bob",
+        user_ids: [Command.create({ name: "bob" })],
+    });
+    const janePartnerId = pyEnv["res.partner"].create({
+        name: "jane",
+        user_ids: [Command.create({ name: "jane" })],
+    });
+    const expertiseIds = pyEnv["im_livechat.expertise"].create([{ name: "pricing" }]);
+    pyEnv["res.users"].write([serverState.userId], { livechat_expertise_ids: expertiseIds });
+    pyEnv["discuss.channel"].create([
+        {
+            channel_type: "livechat",
+            channel_member_ids: [Command.create({ partner_id: bobPartnerId })],
+            livechat_status: "need_help",
+            livechat_expertise_ids: expertiseIds,
+        },
+        {
+            channel_type: "livechat",
+            channel_member_ids: [Command.create({ partner_id: janePartnerId })],
+            livechat_status: "need_help",
+        },
+    ]);
+    await start();
+    await openDiscuss();
+    await waitFor(
+        ".o-mail-DiscussSidebarChannel:text(bob):has([title='Relevant to your expertise'])"
+    );
+    await waitFor(".o-mail-DiscussSidebarChannel:text(jane)");
+    await waitFor(
+        ".o-mail-DiscussSidebarChannel:text(jane):not(:has([title='Relevant to your expertise']))"
+    );
 });
