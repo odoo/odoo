@@ -1,4 +1,4 @@
-import { test, expect } from "@odoo/hoot";
+import { test, expect, click } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ProductPage } from "@pos_self_order/app/pages/product_page/product_page";
 import { setupSelfPosEnv } from "../utils";
@@ -39,6 +39,24 @@ test("getProductPrice", async () => {
     expect(comp.getProductPrice()).toBe(100);
     comp.state.qty = 4;
     expect(comp.getProductPrice()).toBe(400);
+});
+
+test("getProductPrice with variants", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+
+    const productTemplate = models["product.template"].get(19);
+    const comp = await mountWithCleanup(ProductPage, { props: { productTemplate } });
+
+    expect(comp.getProductPrice()).toBe(10);
+
+    // select the second variant.
+    await click(".self_order_attribute_selection div:nth-child(2) button");
+    expect(comp.getProductPrice()).toBe(15);
+
+    // that variant price changes with a different pricelist.
+    comp.selfOrder.currentOrder.pricelist_id = models["product.pricelist"].get(4);
+    expect(comp.getProductPrice()).toBe(20);
 });
 
 test("isAddToCartEnabled", async () => {
