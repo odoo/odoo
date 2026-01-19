@@ -584,12 +584,6 @@ class Html(BaseString):
                 'sanitize_conditional_comments': False,
                 'sanitize_output_method': 'xml',
             }.items() if key not in attrs})
-        # Translated sanitized html fields must use html_translate or a callable.
-        # `elif` intended, because HTML fields with translate=True and sanitize=False
-        # where not using `html_translate` before and they must remain without `html_translate`.
-        # Otherwise, breaks `--test-tags .test_render_field`, for instance.
-        elif attrs.get('translate') is True and attrs.get('sanitize', True):
-            attrs['translate'] = html_translate
         return attrs
 
     _related_sanitize = property(attrgetter('sanitize'))
