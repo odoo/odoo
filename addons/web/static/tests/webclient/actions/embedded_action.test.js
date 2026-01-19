@@ -730,9 +730,8 @@ test("an action containing embedded actions should reload if the page is refresh
     await getService("action").doAction(1);
     // First, we create a new (custom) embedded action based on the current one
     await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
-    await contains(".o_embedded_actions .dropdown").click();
+    await waitFor(".o_popover.dropdown-menu");
     await contains(".o_save_current_view ").click();
-    await animationFrame();
     await contains(".o_save_favorite ").click();
     expect(".o_embedded_actions > button").toHaveCount(3, {
         message: "Should have 2 embedded actions in the embedded + the dropdown button",
