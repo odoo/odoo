@@ -66,7 +66,6 @@ class HrVersion(models.Model):
         help="Enter the employee's National Identification Number issued by the government (e.g., Aadhaar, SIN, NIN). This is used for official records and statutory compliance.",
         groups="hr.group_hr_user",
         tracking=1)
-    ssnid = fields.Char('Social Security No', groups="hr.group_hr_user", tracking=1)
     passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=1)
     passport_expiration_date = fields.Date('Passport Expiration Date', groups="hr.group_hr_user", tracking=1)
     sex = fields.Selection([
@@ -498,12 +497,6 @@ class HrVersion(models.Model):
             # the default company employee is most likely the correct one, but fallback to the first if not available
             employee = user_employees.filtered(lambda r: r.company_id == user.company_id) or user_employees[:1]
         return employee
-
-    @api.constrains('ssnid')
-    def _check_ssnid(self):
-        # By default, a Social Security Number is always valid, but each localization
-        # may want to add its own constraints
-        pass
 
     @api.depends_context('uid', 'company')
     @api.depends('department_id')
