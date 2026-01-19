@@ -129,6 +129,12 @@ class ResPartner(models.Model):
             "gstin_to_search": self.vat,
             "gstin": self.env.company.vat,
         }
+        self.env['ir.logging']._l10n_in_log_message(
+            name=f'{self._name}({self.id})',
+            path='/l10n_in_reports/1/public/search',
+            message='GST verification service triggered',
+            func='action_l10n_in_verify_gstin_status',
+        )
         try:
             response = self.env['iap.account']._l10n_in_connect_to_server(
                 is_production,

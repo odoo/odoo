@@ -463,15 +463,11 @@ class L10nInEwaybill(models.Model):
             blocking_level = 'warning'
         self._write_error(error_message, blocking_level)
 
-    def _create_and_post_response_attachment(self, ewb_name, response, is_cancel=False):
-        if not is_cancel:
-            name = f'ewaybill_{ewb_name}.json'
-        else:
-            name = f'ewaybill_{ewb_name}_cancel.json'
+    def _create_and_post_attachment(self, data, name):
         attachment = self.env['ir.attachment'].create({
             'name': name,
             'mimetype': 'application/json',
-            'raw': json.dumps(response),
+            'raw': json.dumps(data),
             'res_model': self._name,
             'res_id': self.id,
             'res_field': 'attachment_file',
@@ -488,6 +484,14 @@ class L10nInEwaybill(models.Model):
             'cancelRsnCode': int(self.cancel_reason),
             'cancelRmrk': self.cancel_remarks,
         }
+        cancel_request_json_name = f'ewaybill_{self.name}_cancel_request.json'
+        self._create_and_post_attachment(data=cancel_json, name=cancel_request_json_name)
+        self.env['ir.logging']._l10n_in_log_message(
+            name=f'{self._name}({self.id})',
+            path='/l10n_in_edi_ewaybill/1/cancel',
+            message='E-invoice cancellation request sent to Government',
+            func='_ewaybill_cancel',
+        )
         ewb_api = EWayBillApi(self.company_id)
         if self.error_message and self.blocking_level == 'error':
             self.message_post(body=_(
@@ -500,11 +504,9 @@ class L10nInEwaybill(models.Model):
             self._handle_error(error)
             return False
         self._handle_internal_warning_if_present(response)  # In case of error 312
-        self._create_and_post_response_attachment(
-            ewb_name=self.name,
-            response=response,
-            is_cancel=True
-        )
+        cancel_response_json_name = f'ewaybill_{self.name}_cancel.json'
+        response_data = response.get('data', {})
+        self._create_and_post_attachment(data=response_data, name=cancel_response_json_name)
         self._write_successfully_response({'state': 'cancel'})
         self.env.cr.commit()
 
@@ -518,16 +520,25 @@ class L10nInEwaybill(models.Model):
         self.ensure_one()
         self._log_retry_message_on_generate()
         ewb_api = EWayBillApi(self.company_id)
+        generate_json = self._ewaybill_generate_direct_json()
+        request_json_name = 'ewaybill_request.json'
+        self._create_and_post_attachment(data=generate_json, name=request_json_name)
+        self.env['ir.logging']._l10n_in_log_message(
+            name=f'{self._name}({self.id})',
+            path='/l10n_in_edi_ewaybill/1/generate',
+            message='E-invoice request sent to Government',
+            func='_generate_ewaybill',
+        )
         self._lock_ewaybill()
         try:
-            response = ewb_api._ewaybill_generate(self._ewaybill_generate_direct_json())
+            response = ewb_api._ewaybill_generate(generate_json)
         except EWayBillError as error:
             self._handle_error(error)
             return False
         self._handle_internal_warning_if_present(response)  # In case of error 604
         response_data = response.get('data', {})
         name = response_data.get('ewayBillNo')
-        self._create_and_post_response_attachment(name, response)
+        self._create_and_post_attachment(data=response_data, name=f'ewaybill_{name}.json')
         self._write_successfully_response({
             'name': name,
             'state': 'generated',

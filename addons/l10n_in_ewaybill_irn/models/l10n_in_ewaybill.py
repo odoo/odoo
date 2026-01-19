@@ -79,15 +79,18 @@ class L10nInEwaybill(models.Model):
         self.ensure_one()
         self._log_retry_message_on_generate()
         self._lock_ewaybill()
+        generate_json = self._ewaybill_generate_irn_json()
+        request_json_name = 'ewaybill_request.json'
+        self._create_and_post_attachment(data=generate_json, name=request_json_name)
         try:
-            response = self._ewaybill_generate_by_irn(self._ewaybill_generate_irn_json())
+            response = self._ewaybill_generate_by_irn(generate_json)
         except EWayBillError as error:
             self._handle_error(error)
             return False
         self._handle_internal_warning_if_present(response)  # In case of error 604
         response_data = response.get('data', {})
         name = response_data.get('EwbNo')
-        self._create_and_post_response_attachment(name, response)
+        self._create_and_post_attachment(data=response_data, name=name)
         # Note: response keys are different then the direct one
         self._write_successfully_response({
             'name': name,
@@ -128,6 +131,12 @@ class L10nInEwaybill(models.Model):
                     )
                 }]
             })
+        self.env['ir.logging']._l10n_in_log_message(
+            name=f'{self._name}({self.id})',
+            path='/l10n_in_edi/1/get_ewaybill_by_irn',
+            message='Get Ewaybill details using IRN',
+            func='_ewaybill_generate_by_irn',
+        )
         response = self.account_move_id._l10n_in_edi_connect_to_server(
             url_end_point='generate_ewaybill_by_irn',
             json_payload=json_payload
@@ -144,6 +153,12 @@ class L10nInEwaybill(models.Model):
                 response = self.account_move_id._l10n_in_edi_connect_to_server(
                     url_end_point='get_ewaybill_by_irn',
                     params={"irn": self._get_edi_irn_number()}
+                )
+                self.env['ir.logging']._l10n_in_log_message(
+                    name=f'{self._name}({self.id})',
+                    path='/l10n_in_edi/1/get_ewaybill_by_irn',
+                    message='Get Ewaybill details using IRN',
+                    func='_ewaybill_generate_by_irn',
                 )
                 response.update({
                     'odoo_warning': [{

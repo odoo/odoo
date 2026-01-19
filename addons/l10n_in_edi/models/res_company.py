@@ -50,6 +50,12 @@ class ResCompany(models.Model):
             "password": self_sudo.l10n_in_edi_password,
             "gstin": self_sudo.vat,
         }
+        self.env['ir.logging']._l10n_in_log_message(
+            name=f'{self._name}({self.id})',
+            path='/l10n_in_edi/1/authenticate',
+            message='E-invoice authentication request sent',
+            func='_l10n_in_edi_authenticate',
+        )
         try:
             response = self.env['iap.account']._l10n_in_connect_to_server(
                 self_sudo.l10n_in_edi_production_env,

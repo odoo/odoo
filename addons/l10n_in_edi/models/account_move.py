@@ -206,6 +206,13 @@ class AccountMove(models.Model):
                 return {'messages': partner_validation}
         self._l10n_in_lock_invoice()
         generate_json = self._l10n_in_edi_generate_invoice_json()
+        request_json_name = "%s_request_einvoice_.json" % (self.name.replace("/", "_"))
+        self.env['ir.logging']._l10n_in_log_message(
+            name=f'{self._name}({self.id})',
+            path='/l10n_in_edi/1/generate',
+            message='E-invoice request sent to Government',
+            func='_l10n_in_edi_send_invoice',
+        )
         response = self._l10n_in_edi_connect_to_server(
             url_end_point='generate',
             json_payload=generate_json
@@ -216,6 +223,12 @@ class AccountMove(models.Model):
             if '2150' in error_codes:
                 # Get IRN by details in case of IRN is already generated
                 # this happens when timeout from the Government portal but IRN is generated
+                self.env['ir.logging']._l10n_in_log_message(
+                    name=f'{self._name}({self.id})',
+                    path='/l10n_in_edi/1/getirnbydocdetails',
+                    message='Get E-invoice when duplicate IRN is generated',
+                    func='_l10n_in_edi_send_invoice',
+                )
                 response = self._l10n_in_edi_connect_to_server(
                     url_end_point='getirnbydocdetails',
                     params={
@@ -290,17 +303,11 @@ class AccountMove(models.Model):
                     'is_warning': is_warning
                 }
         data = response.get("data", {})
-        json_dump = json.dumps(data)
-        json_name = "%s_einvoice.json" % (self.name.replace("/", "_"))
-        attachment = self.env["ir.attachment"].create({
-            'name': json_name,
-            'raw': json_dump.encode(),
-            'res_model': self._name,
-            'res_field': 'l10n_in_edi_attachment_file',
-            'res_id': self.id,
-            'mimetype': 'application/json',
-            'company_id': self.company_id.id,
-        })
+        response_json_name = "%s_einvoice.json" % (self.name.replace("/", "_"))
+        # Response attachment
+        self._create_and_post_attachment(data=data, name=response_json_name)
+        # Request attachment
+        self._create_and_post_attachment(data=generate_json, name=request_json_name)
         self.l10n_in_edi_status = 'sent'
         message = []
         for partner in partners:
@@ -327,6 +334,14 @@ class AccountMove(models.Model):
             "CnlRsn": self.l10n_in_edi_cancel_reason,
             "CnlRem": self.l10n_in_edi_cancel_remarks,
         }
+        cancel_request_json_name = "%s_request_cancel_einvoice.json" % (self.name.replace("/", "_"))
+        self._create_and_post_attachment(data=cancel_json, name=cancel_request_json_name)
+        self.env['ir.logging']._l10n_in_log_message(
+            name=f'{self._name}({self.id})',
+            path='/l10n_in_edi/1/cancel',
+            message='E-invoice cancellation request sent to Government',
+            func='l10n_in_edi_cancel_invoice',
+        )
         response = self._l10n_in_edi_connect_to_server(url_end_point='cancel', json_payload=cancel_json)
         # Creating a lambda function so it fetches the odoobot id only when needed
         _get_odoobot_id = (
@@ -360,17 +375,10 @@ class AccountMove(models.Model):
                     )
                 )
         if "error" not in response:
-            json_dump = json.dumps(response.get('data', {}))
             json_name = "%s_cancel_einvoice.json" % (self.name.replace("/", "_"))
-            if json_dump:
-                attachment = self.env['ir.attachment'].create({
-                    'name': json_name,
-                    'raw': json_dump.encode(),
-                    'res_model': self._name,
-                    'res_field': 'l10n_in_edi_attachment_file',
-                    'res_id': self.id,
-                    'mimetype': 'application/json',
-                })
+            data = response.get('data', {})
+            if data:
+                self._create_and_post_attachment(data=data, name=json_name)
             self.message_post(author_id=_get_odoobot_id(self), body=_(
                 "E-Invoice has been cancelled successfully. "
                 "Cancellation Reason: %(reason)s and Cancellation Remark: %(remark)s",
@@ -790,3 +798,18 @@ class AccountMove(models.Model):
             else:
                 return authenticate_response
         return response
+
+    def _create_and_post_attachment(self, data, name):
+        attachment = self.env['ir.attachment'].create({
+            'name': name,
+            'mimetype': 'application/json',
+            'raw': json.dumps(data),
+            'res_model': self._name,
+            'res_id': self.id,
+            'res_field': 'l10n_in_edi_attachment_file',
+            'company_id': self.company_id.id
+        })
+        self.message_post(
+            author_id=self.env.ref('base.partner_root').id,
+            attachment_ids=attachment.ids
+        )
