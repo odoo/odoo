@@ -501,8 +501,14 @@ class AccountMove(models.Model):
 
             is_withholding = tax.amount < 0.0
             tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data({**values, 'grouping_key': tax})
-            invoice_values['TaxesWithheld' if is_withholding else 'TaxOutputs'].append(tax_data)
-            invoice_values['TotalTaxesWithheld' if is_withholding else 'TotalTaxOutputs'] += abs(values['tax_amount_currency'])
+            if is_withholding:
+                invoice_values['TaxesWithheld'].append(tax_data)
+                invoice_values['TotalTaxesWithheld'] -= values['tax_amount_currency']
+            else:
+                invoice_values['TaxOutputs'].append(tax_data)
+                invoice_values['TotalTaxOutputs'] += values['tax_amount_currency']
+
+        invoice_values['TotalTaxesWithheld'] = abs(invoice_values['TotalTaxesWithheld'])
 
         invoice_values['TotalGrossAmountBeforeTaxes'] = (
             invoice_values['TotalGrossAmount']
