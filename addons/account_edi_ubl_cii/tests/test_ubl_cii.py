@@ -777,6 +777,59 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         })
         self.assertEqual(node[0].text, self.company.vat, "Company VAT fallback")
 
+    def test_vehicle_import(self):
+        """
+        Test that vehicle id is set on invoice lines if fleet is installed
+        """
+        self.ensure_installed('fleet')
+        self.env.user.group_ids |= self.env.ref('fleet.fleet_group_manager')
+        # create car datas
+        brand = self.env['fleet.vehicle.model.brand'].create({
+            'name': 'Test Brand',
+        })
+        model = self.env['fleet.vehicle.model'].create({
+            'name': 'Test Model',
+            'brand_id': brand.id,
+        })
+        car = self.env['fleet.vehicle'].create({
+            'model_id': model.id,
+            'vin_sn': 'ABCDEF012345GHJKL',
+        })
+        car2 = self.env['fleet.vehicle'].create({
+            'model_id': model.id,
+            'vin_sn': 'ABCDEF012346GHJKL',
+        })
+        car3 = self.env['fleet.vehicle'].create({
+            'model_id': model.id,
+            'vin_sn': 'ABCDEF012347GHJKL',
+        })
+
+        self.env.ref('base.EUR').active = True  # EUR might not be active and is used in the xml testing file
+
+        def create_attachment(file_name):
+            file_path = f"{self.test_module}/tests/test_files/{file_name}"
+            with file_open(file_path, 'rb') as file:
+                xml_attachment = self.env['ir.attachment'].create({
+                    'mimetype': 'application/xml',
+                    'name': file_name,
+                    'raw': file.read(),
+                })
+            return xml_attachment
+
+        # One VIN SN for the move, all lines should link the vehicle
+        xml_attachment_invoice = create_attachment("bis3_bill_vehicle_invoice.xml")
+        bill_invoice = self._import_as_attachment_on(attachment=xml_attachment_invoice)
+        self.assertRecordValues(bill_invoice.invoice_line_ids, [{'vehicle_id': car.id} for _ in range(3)])
+
+        # Multiple VIN SN, every line should link its own vehicle
+        xml_attachment_line = create_attachment("bis3_bill_vehicle_line.xml")
+        bill_line = self._import_as_attachment_on(attachment=xml_attachment_line)
+        self.assertRecordValues(bill_line.invoice_line_ids, [
+            {'vehicle_id': car2.id},
+            {'vehicle_id': car3.id},
+            {'vehicle_id': False},
+        ])
+
     def test_partner_name_in_xml(self):
         """
         Test that invoice contacts without specific names use their parent partner's
