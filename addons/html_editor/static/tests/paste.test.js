@@ -4830,3 +4830,271 @@ describe("onDrop", () => {
         );
     });
 });
+
+describe("paste table cells into an existing table", () => {
+    test("should paste table content cell-by-cell when the selection is collapsed in a target cell", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><p>a1[]</p></td><td><p>a2</p></td></tr>
+                        <tr><td><p>b1</p></td><td><p>b2</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        pasteHtml(
+            editor,
+            unformat(`
+                <table>
+                    <tbody>
+                        <tr><td><p>x1</p></td><td><p><strong>x2</strong></p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="o_selected_td"><p>[x1</p></td>
+                            <td class="o_selected_td"><p><strong>x2]</strong></p></td>
+                        </tr>
+                        <tr>
+                            <td><p>b1</p></td>
+                            <td><p>b2</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `)
+        );
+    });
+
+    test("should paste table content cell-by-cell when the selection is a partial (non-collapsed) range inside a cell", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><p>[a]1</p></td><td><p>a2</p></td></tr>
+                        <tr><td><p>b1</p></td><td><p>b2</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        pasteHtml(
+            editor,
+            unformat(`
+                <table>
+                    <tbody>
+                        <tr><td><p><strong>x11</strong></p></td><td><ul><li>x12</li></ul></td></tr>
+                        <tr><td><p><a href="#">x21</a></p></td><td><p>x22</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="o_selected_td"><p><strong>[x11</strong></p></td>
+                            <td class="o_selected_td"><ul><li>x12</li></ul></td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td"><p>\ufeff<a href="#">\ufeffx21\ufeff</a>\ufeff</p></td>
+                            <td class="o_selected_td"><p>x22]</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `)
+        );
+    });
+
+    test("should fallback to default paste when the clipboard contains non-table siblings", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><p>[]a</p></td><td><p>b</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        pasteHtml(
+            editor,
+            unformat(`
+                <p>before</p>
+                <table>
+                    <tbody>
+                        <tr><td><p>x</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <p>before</p>
+                                <table class="table table-bordered o_table">
+                                    <tbody>
+                                        <tr><td><p>x</p></td></tr>
+                                    </tbody>
+                                </table>[]
+                                <p>a</p>
+                            </td>
+                            <td><p>b</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `)
+        );
+    });
+
+    test("should expand the paste range when the clipboard table is larger than the current cell selection", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><p>[a1</p></td><td><p>a2]</p></td></tr>
+                        <tr><td><p>b1</p></td><td><p>b2</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        pasteOdooEditorHtml(
+            editor,
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><p>x11</p></td><td><p>x12</p></td></tr>
+                        <tr><td><p>x21</p></td><td><p>x22</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="o_selected_td"><p>[x11</p></td>
+                            <td class="o_selected_td"><p>x12</p></td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td"><p>x21</p></td>
+                            <td class="o_selected_td"><p>x22]</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `)
+        );
+    });
+
+    test("should limit pasting to the clipboard table dimensions when selection is larger", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><p>[a1</p></td><td><p>a2</p></td></tr>
+                        <tr><td><p>b1</p></td><td><p>b2]</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        pasteHtml(
+            editor,
+            unformat(`
+                <table>
+                    <tbody>
+                        <tr><td><p>x1</p></td><td><p><em>x2</em></p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="o_selected_td"><p>[x1</p></td>
+                            <td class="o_selected_td"><p><em>x2]</em></p></td>
+                        </tr>
+                        <tr>
+                            <td><p>b1</p></td>
+                            <td><p>b2</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `)
+        );
+    });
+
+    test("should add rows and columns when the pasted table exceeds the remaining target table dimensions", async () => {
+        const { editor, el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><p>a1</p></td><td><p>a2</p></td></tr>
+                        <tr><td><p>[]b1</p></td><td><p>b2</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        pasteOdooEditorHtml(
+            editor,
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><p>x11</p></td><td><p>x12</p></td><td><p>x13</p></td></tr>
+                        <tr><td><p>x21</p></td><td><p>x22</p></td><td><p>x23</p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td><p>a1</p></td>
+                            <td><p>a2</p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td"><p>[x11</p></td>
+                            <td class="o_selected_td"><p>x12</p></td>
+                            <td class="o_selected_td"><p>x13</p></td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td"><p>x21</p></td>
+                            <td class="o_selected_td"><p>x22</p></td>
+                            <td class="o_selected_td"><p>x23]</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `)
+        );
+    });
+});

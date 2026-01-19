@@ -206,7 +206,7 @@ export class ClipboardPlugin extends Plugin {
         selection = this.dependencies.selection.getEditableSelection();
 
         this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
-            this.handlePasteOdooEditorHtml(ev.clipboardData) ||
+            this.handlePasteOdooEditorHtml(selection, ev.clipboardData) ||
             this.handlePasteHtml(selection, ev.clipboardData) ||
             this.handlePasteText(selection, ev.clipboardData);
 
@@ -230,7 +230,7 @@ export class ClipboardPlugin extends Plugin {
     /**
      * @param {DataTransfer} clipboardData
      */
-    handlePasteOdooEditorHtml(clipboardData) {
+    handlePasteOdooEditorHtml(selection, clipboardData) {
         const odooEditorHtml = clipboardData.getData("application/vnd.odoo.odoo-editor");
         const textContent = clipboardData.getData("text/plain");
         if (ONLY_LINK_REGEX.test(textContent)) {
@@ -239,6 +239,9 @@ export class ClipboardPlugin extends Plugin {
         if (odooEditorHtml) {
             const fragment = parseHTML(this.document, odooEditorHtml);
             this.dependencies.sanitize.sanitize(fragment);
+            if (this.delegateTo("paste_odoo_editor_html_overrides", selection, fragment)) {
+                return true;
+            }
             if (fragment.hasChildNodes()) {
                 this.dependencies.dom.insert(fragment);
             }
@@ -260,6 +263,9 @@ export class ClipboardPlugin extends Plugin {
         }
         if (files.length || clipboardHtml) {
             const clipboardElem = this.prepareClipboardData(clipboardHtml);
+            if (this.delegateTo("paste_html_overrides", selection, clipboardElem)) {
+                return true;
+            }
             // @phoenix @todo: should it be handled in table plugin?
             // When copy pasting a table from the outside, a picture of the
             // table can be included in the clipboard as an image file. In that

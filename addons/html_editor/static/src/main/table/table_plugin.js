@@ -1,7 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isBlock } from "@html_editor/utils/blocks";
-import { fillEmpty, fillShrunkPhrasingParent, removeClass } from "@html_editor/utils/dom";
+import {
+    fillEmpty,
+    fillShrunkPhrasingParent,
+    removeClass,
+    removeStyle,
+} from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isProtected,
@@ -28,6 +33,7 @@ import { getColumnIndex, getRowIndex, getTableCells } from "@html_editor/utils/t
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { BG_CLASSES_REGEX } from "@html_editor/utils/color";
 
 export const BORDER_SENSITIVITY = 5;
 
@@ -128,6 +134,8 @@ export class TablePlugin extends Plugin {
         shift_tab_overrides: withSequence(20, this.handleShiftTab.bind(this)),
         delete_range_overrides: this.handleDeleteRange.bind(this),
         color_apply_overrides: this.applyTableColor.bind(this),
+        paste_html_overrides: this.handlePasteTableIntoExistingTable.bind(this),
+        paste_odoo_editor_html_overrides: this.handlePasteTableIntoExistingTable.bind(this),
 
         unremovable_node_predicates: isUnremovableTableComponent,
         unsplittable_node_predicates: (node) =>
@@ -175,6 +183,107 @@ export class TablePlugin extends Plugin {
             }
         });
         this.onMousemove = this.onMousemove.bind(this);
+    }
+
+    handlePasteTableIntoExistingTable(selection, clipboardRoot) {
+        // Clipboard must contain exactly one table.
+        const sourceTable = clipboardRoot.firstChild;
+        if (clipboardRoot.childNodes.length !== 1 || sourceTable?.nodeName !== "TABLE") {
+            return false;
+        }
+
+        // Source table size.
+        const sourceRows = sourceTable.rows;
+        const sourceRowCount = sourceRows.length;
+        const sourceColumnCount = sourceRows[0]?.cells.length || 0;
+        if (!sourceRowCount || !sourceColumnCount) {
+            return false;
+        }
+
+        // Selection must be fully inside the same target table.
+        const targetTable = closestElement(selection.anchorNode, "table");
+        if (!targetTable || closestElement(selection.focusNode, "table") !== targetTable) {
+            return false;
+        }
+
+        const anchorCell =
+            targetTable.querySelector(".o_selected_td") ||
+            closestElement(selection.anchorNode, isTableCell);
+        const anchorRowIndex = getRowIndex(anchorCell);
+        const anchorColumnIndex = getColumnIndex(anchorCell);
+
+        // Ensure target table has enough rows.
+        const targetRows = targetTable.rows;
+        const rowsToAdd = anchorRowIndex + sourceRowCount - targetRows.length;
+
+        if (rowsToAdd > 0) {
+            this.addRow("after", targetRows[targetRows.length - 1], rowsToAdd);
+        }
+
+        // Ensure target table has enough columns.
+        const targetCells = targetRows[0].cells;
+        const columnsToAdd = anchorColumnIndex + sourceColumnCount - targetCells.length;
+
+        if (columnsToAdd > 0) {
+            this.addColumn("after", targetCells[targetCells.length - 1], columnsToAdd);
+        }
+
+        for (let sourceRowIndex = 0; sourceRowIndex < sourceRowCount; sourceRowIndex++) {
+            const sourceCells = sourceRows[sourceRowIndex].cells;
+            const targetCells = targetTable.rows[anchorRowIndex + sourceRowIndex].cells;
+            for (
+                let sourceColumnIndex = 0;
+                sourceColumnIndex < sourceColumnCount;
+                sourceColumnIndex++
+            ) {
+                const sourceCell = sourceCells[sourceColumnIndex];
+                const targetCell = targetCells[anchorColumnIndex + sourceColumnIndex];
+                const clonedCell = sourceCell.cloneNode(true);
+                targetCell.replaceChildren(...clonedCell.childNodes);
+                // Remove any existing bg-* classes on the target cell.
+                const targetBgClasses = [...targetCell.classList].filter((cls) =>
+                    BG_CLASSES_REGEX.test(cls)
+                );
+                if (targetBgClasses.length) {
+                    removeClass(targetCell, ...targetBgClasses);
+                }
+                // Apply bg-* classes from the source cell.
+                const sourceBgClasses = [...sourceCell.classList].filter((cls) =>
+                    BG_CLASSES_REGEX.test(cls)
+                );
+                if (sourceBgClasses.length) {
+                    targetCell.classList.add(...sourceBgClasses);
+                }
+                // Apply source background if any else remove target background
+                const { backgroundColor, backgroundImage } = sourceCell.style;
+                if (backgroundColor) {
+                    targetCell.style.backgroundColor = backgroundColor;
+                } else {
+                    removeStyle(targetCell, "background-color");
+                }
+                if (backgroundImage) {
+                    targetCell.style.backgroundImage = backgroundImage;
+                } else {
+                    removeStyle(targetCell, "background-image");
+                }
+            }
+        }
+
+        const selectionStartNode =
+            targetTable.rows[anchorRowIndex].cells[anchorColumnIndex].firstChild;
+        const selectionEndNode =
+            targetTable.rows[anchorRowIndex + sourceRowCount - 1].cells[
+                anchorColumnIndex + sourceColumnCount - 1
+            ].lastChild;
+        // Select from the first source cell to the last source cell.
+        this.dependencies.selection.setSelection({
+            anchorNode: selectionStartNode,
+            anchorOffset: 0,
+            focusNode: selectionEndNode,
+            focusOffset: nodeSize(selectionEndNode),
+        });
+
+        return true;
     }
 
     handleTab() {
