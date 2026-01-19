@@ -3,6 +3,12 @@
     <t t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
         <xpath expr="//t[@name='threads']/NotificationItem" position="attributes">
             <attribute name="rating">message?.rating_id</attribute>
+<<<<<<< 5c340e2dde31fb0fb3105d58c7c53164a9fb354a
+||||||| 2f25b2a70eca5b4f3c2e1d6c7003b1760afc0ba0
+            <attribute name="onClick">(isMarkAsRead) => message?.rating_id and !isMarkAsRead ? this.openThread(thread) : this.onClickThread(isMarkAsRead, thread)</attribute>
+=======
+            <attribute name="onClick">(isMarkAsRead) => message?.rating_id and !isMarkAsRead ? this.openThread(thread) : this.onClickThread(isMarkAsRead, thread, message)</attribute>
+>>>>>>> 8e0df04f2cec3e6347c1f1ba75a2360442221209
         </xpath>
     </t>
 </templates>
