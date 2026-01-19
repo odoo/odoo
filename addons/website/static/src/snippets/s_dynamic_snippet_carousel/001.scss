@@ -1,4 +1,4 @@
-.s_dynamic:not([data-vcss]) {
+.s_dynamic[data-vcss="001"] {
     .carousel {
         --o-carousel-item-padding-v: #{map-get($spacers, 3)};
         --o-carousel-item-width-percentage: calc(100% / var(--o-carousel-chunk-size) - (var(--o-carousel-gap, var(--gutter-x) * .5) * (var(--o-carousel-chunk-size) - 1) / var(--o-carousel-chunk-size)));
@@ -22,18 +22,6 @@
 
     .carousel-control-prev,	.carousel-control-next {
         width: auto;
-    }
-
-    &:where(:not(.o_carousel_multi_items)) {
-        .s_dynamic_snippet_title_aside + .s_dynamic_snippet_content {
-            .s_dynamic_snippet_arrows {
-                @include media-breakpoint-up(lg) {
-                    position: sticky;
-                    bottom: map-get($spacers, 3);
-                    transform: none;
-                }
-            }
-        }
     }
 
     @include media-breakpoint-up(md) {

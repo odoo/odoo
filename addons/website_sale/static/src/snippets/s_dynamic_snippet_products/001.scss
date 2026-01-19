@@ -1,4 +1,4 @@
-.s_dynamic_snippet_products:not([data-vcss]) {
+.s_dynamic_snippet_products[data-vcss="001"] {
     .s_dynamic_snippet_row.row {
         --gutter-x: var(--o-wsale-products-grid-gap, 16px);
     }
@@ -31,17 +31,9 @@
                 width: var(--o-carousel-item-width-percentage);
             }
         }
-
-        @include media-breakpoint-up(lg) {
-            &:where(:not(.o_carousel_multi_items):has(.s_dynamic_snippet_title_aside)) {
-                .o_carousel_arrow_wrap {
-                    --o-wsale-card-thumb-aspect-ratio: none;
-                }
-            }
-        }
     }
 }
-.s_dynamic_snippet_products .container-fluid .s_dynamic_snippet_content {
+.s_dynamic_snippet_products[data-vcss="001"] .container-fluid .s_dynamic_snippet_content {
     @include media-breakpoint-up(md) {
         // Prevented horizontal overflow of control buttons.
         .carousel-control-prev {
