@@ -942,6 +942,14 @@ registry.category("web_tour.tours").add("test_product_long_press", {
                 content: "Check On hand quantity is display on product info popup",
                 trigger: ".section-inventory-body div:contains('On hand: 0')",
             },
+            {
+                content: "Check that VAT label is present in the product details popup",
+                trigger: ".section-financials .vat-label:contains('TIN')",
+            },
+            {
+                content: "Check that VAT value is correct in the product details popup",
+                trigger: ".section-financials .vat-value:contains('$ 15.00 (Parent Tax)')",
+            },
             Chrome.endTour(),
         ].flat(),
 });
