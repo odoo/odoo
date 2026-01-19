@@ -19600,6 +19600,7 @@ test(`cache web_read_group (switch view, go back)`, async () => {
 test(`cache web_read_group: do not send opening_info if not necessary`, async () => {
     // This test ensures that the params of the web_read_group aren't polluted by the opening_info
     // kwargs when successively toggling different filters
+    expect.errors(2);
     const setOffline = mockOffline();
     onRpc("web_read_group", async () => {
         expect.step("web_read_group");
@@ -19647,7 +19648,11 @@ test(`cache web_read_group: do not send opening_info if not necessary`, async ()
     expect(`.o_group_header`).toHaveCount(1);
 
     // Do not follow the same steps as earlier, directly remove the filter
-    await removeFacet("First filter");
+    if (getMockEnv().isSmall) {
+        // Toggle searchbar in mobile
+        await contains(`.o_control_panel_navigation .fa-search`).click();
+    }
+    await contains(".o_searchview_facet .oi-close").click();
     expect(`.o_group_header`).toHaveCount(4);
 
     expect.verifyErrors([
@@ -19723,6 +19728,7 @@ test(`[Offline] cache web_search_read: enable filter online/offline`, async () =
             <search>
                 <filter string="My filter" name="my_filter" domain="[['foo', '=', 'blip']]"/>
             </search>`,
+        config: { actionId: 234 },
     });
 
     // put data in cache
@@ -19748,9 +19754,12 @@ test(`[Offline] cache web_search_read: enable filter online/offline`, async () =
     // switch offline => use data from cache
     await setOffline(true);
 
-    await toggleMenuItem("My filter");
+    expect(".o_offline_search_bar").toHaveCount(1);
+    await contains(".o_offline_search_bar .dropdown-toggle").click();
+    expect(".o_search_bar_menu_offline .o-dropdown-item").toHaveCount(1);
+    await contains(".o_search_bar_menu_offline .o-dropdown-item").click();
     expect(queryAllTexts(`.o_list_char`)).toEqual(["blip", "blip"]);
-    await toggleMenuItem("My filter");
+    await contains(".o_searchview_facet .oi-close").click();
     expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip", "gnap", "blip"]);
 
     expect.verifyErrors([

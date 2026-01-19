@@ -67,10 +67,14 @@
                     </CogMenu>
                 </t>
                 <t t-set-slot="control-panel-actions">
-                    <SearchBar toggler="searchBarToggler" autofocus="firstLoad"/>
+                    <SearchBar t-if="!offlineService.offline" toggler="searchBarToggler" autofocus="firstLoad"/>
+                    <OfflineSearchBar t-else="" toggler="searchBarToggler" autofocus="firstLoad"/>
                 </t>
                 <t t-set-slot="control-panel-navigation-additional">
-                    <t t-if="!hasSelectedRecords" t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                    <t t-if="!hasSelectedRecords">
+                        <t t-if="offlineService.offline" t-component="searchBarToggler.offlineComponent" t-props="searchBarToggler.props"/>
+                        <t t-else="" t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                    </t>
                 </t>
                 <t t-component="props.Renderer" t-if="model.isReady"
                     list="model.root"
@@ -86,6 +90,9 @@
                     quickCreateState="quickCreateState"
                     progressBarState="progressBarState"
                 />
+                <t t-elif="model.couldNotLoadRootOffline">
+                    <OfflineActionHelper/>
+                </t>
             </Layout>
         </div>
     </t>

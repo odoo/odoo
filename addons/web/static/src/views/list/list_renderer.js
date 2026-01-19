@@ -955,7 +955,7 @@ export class ListRenderer extends Component {
         if (this.canResequenceRows) {
             classNames.push("o_row_draggable");
         }
-        if (!this.isRecordAvailable(record)) {
+        if (!this.isRecordAvailable(record) && !this.props.list.model.useSampleModel) {
             classNames.push("o_disabled_offline");
         }
         return classNames.join(" ");

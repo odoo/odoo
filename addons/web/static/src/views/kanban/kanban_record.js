@@ -270,6 +270,7 @@ export class KanbanRecord extends Component {
         }
         if (
             this.offlineService.offline &&
+            !this.props.record.model.useSampleModel &&
             !this.offlineService.isAvailableOffline(this.env.config.actionId, "form", record.resId)
         ) {
             classes.push("o_disabled_offline");
