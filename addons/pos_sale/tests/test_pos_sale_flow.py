@@ -984,6 +984,66 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.user.group_ids = selected_groups
         self.assertEqual(downpayment_line.price_unit, 100)
 
+    def test_downpayment_invoice_link(self):
+        # Test to check if the final invoice generated from an SO is correctly linked to the downpayment invoice.
+
+        tax = self.env['account.tax'].create({
+            'name': 'Base Tax',
+            'amount': 15,
+        })
+        customer = self.env['res.partner'].create({'name': 'Test Partner A'})
+        sale_orders = self.env['sale.order'].create([{
+            'partner_id': customer.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'name': self.product_a.name,
+                'product_uom_qty': 1,
+                'price_unit': 100,
+                'tax_ids': [tax.id],
+            })],
+        } for _ in range(2)])
+
+        sale_orders.action_confirm()
+
+        # CASE 1: downpayment generated in POS, invoice settled in backend
+        sale_order = sale_orders[1]
+        self.main_pos_config.open_ui()
+        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.start_pos_tour('PoSApplyDownpaymentInvoice')
+
+        downpayment_invoice = sale_order.pos_order_line_ids.order_id.account_move
+        self.assertTrue(downpayment_invoice._is_downpayment())
+
+        self.env['sale.advance.payment.inv'].with_context({
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }).create({}).create_invoices()
+
+        final_invoice_downpayment_line = sale_order.invoice_ids.invoice_line_ids.filtered(lambda r: r.quantity < 0)
+
+        self.assertEqual(
+            final_invoice_downpayment_line._get_downpayment_lines(),
+            downpayment_invoice.invoice_line_ids,
+        )
+
+        # CASE 2: downpayment generated in POS, invoice settled in POS
+        sale_order = sale_orders[0]
+        self.start_pos_tour('PoSApplyDownpaymentInvoice2')
+
+        downpayment_invoice = sale_order.pos_order_line_ids.order_id.account_move
+        self.assertTrue(downpayment_invoice._is_downpayment())
+
+        self.start_pos_tour('PosSettleAndInvoiceOrder2')
+
+        final_invoice_downpayment_line = sale_order.pos_order_line_ids[-1].order_id.account_move.invoice_line_ids.filtered(lambda r: r.quantity < 0)
+
+        self.assertEqual(
+            final_invoice_downpayment_line._get_downpayment_lines(),
+            downpayment_invoice.invoice_line_ids,
+        )
+
     def test_settle_order_ship_later_effect_on_so(self):
         """This test create an order, settle it in the PoS and ship it later.
             We need to make sure that the quantity delivered on the original sale is updated correctly,
