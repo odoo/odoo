@@ -544,6 +544,7 @@ class MailActivity(models.Model):
         # marking as 'done'
         messages = self.env['mail.message']
         next_activities_values = []
+        ongoing_activities = self.filtered(lambda a: not a.date_done)
 
         # Search for all attachments linked to the activities we are about to archive. This way, we
         # can link them to the message posted and prevent their disparition. The move is done in
@@ -553,7 +554,7 @@ class MailActivity(models.Model):
             ('res_id', 'in', self.ids),
         ], ['res_id']).grouped('res_id')
 
-        for model, activity_data in self.filtered('res_model')._classify_by_model().items():
+        for model, activity_data in ongoing_activities.filtered('res_model')._classify_by_model().items():
             # Allow user without access to the record to "mark as done" activities assigned to them. At the end of the
             # method, the activity is archived which ensure the user has enough right on the activities.
             records_sudo = self.env[model].sudo().browse(activity_data['record_ids'])

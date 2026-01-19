@@ -1,4 +1,4 @@
-import { Component, onMounted, useExternalListener, useRef } from "@odoo/owl";
+import { Component, onMounted, useExternalListener, useRef, useState } from "@odoo/owl";
 
 export class ActivityMarkAsDone extends Component {
     static template = "mail.ActivityMarkAsDone";
@@ -20,6 +20,7 @@ export class ActivityMarkAsDone extends Component {
     setup() {
         super.setup();
         this.textArea = useRef("textarea");
+        this.state = useState({ disableDoneButton: false });
         onMounted(() => {
             this.textArea.el.focus();
         });
@@ -33,14 +34,22 @@ export class ActivityMarkAsDone extends Component {
     }
 
     async onClickDone() {
+        if (this.state.disableDoneButton) {
+            return;
+        }
         const { res_id, res_model } = this.props.activity;
         const thread = this.env.services["mail.store"]["mail.thread"].insert({
             model: res_model,
             id: res_id,
         });
-        await this.props.activity.markAsDone();
-        this.props.onActivityChanged(thread);
-        await thread.fetchNewMessages();
+        this.state.disableDoneButton = true;
+        try {
+            await this.props.activity.markAsDone();
+            this.props.onActivityChanged(thread);
+            await thread.fetchNewMessages();
+        } finally {
+            this.state.disableDoneButton = false;
+        }
     }
 
     async onClickDoneAndScheduleNext() {
