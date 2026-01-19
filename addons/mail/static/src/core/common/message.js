@@ -431,6 +431,15 @@ export class Message extends Component {
         return true;
     }
 
+    get showActions() {
+        return (
+            this.props.hasActions &&
+            this.message.hasActions &&
+            !this.isEditing &&
+            !this.env.inChatter?.disabled
+        );
+    }
+
     async onClickAttachmentUnlink(attachment) {
         await toRaw(attachment).remove();
     }

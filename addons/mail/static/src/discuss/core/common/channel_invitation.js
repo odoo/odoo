@@ -51,7 +51,7 @@ export class ChannelInvitation extends Component {
         });
         onMounted(() => {
             if (this.store.self_user && this.props.channel) {
-                this.inputRef.el.focus();
+                this.inputRef.el?.focus();
             }
         });
         useEffect(
@@ -115,6 +115,10 @@ export class ChannelInvitation extends Component {
             return _t("Invite people or email");
         }
         return _t("Search people to invite");
+    }
+
+    get showPartnersToInvite() {
+        return this.store.self_user;
     }
 
     async fetchPartnersToInvite() {

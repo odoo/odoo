@@ -157,7 +157,7 @@
 </t>
 
 <t t-name="mail.Message.actions">
-    <div t-if="props.hasActions and message.hasActions and !isEditing and !env.inChatter?.disabled" class="o-mail-Message-actions d-print-none d-flex align-items-start"
+    <div t-if="showActions" class="o-mail-Message-actions d-print-none d-flex align-items-start"
         t-att-class="{
             'start-0': isAlignedRight,
             'mt-1': message.bubbleColor and !props.asCard and !isMobileOS,
