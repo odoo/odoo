@@ -1,0 +1,132 @@
+.ethiopian-date-picker {
+  font-family: Arial, sans-serif;
+  position: relative;
+}
+
+.ethiopian-date-picker input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.calendar-popup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 300px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #ccc;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.current-month-year {
+  font-weight: bold;
+  padding: 5px;
+}
+
+.current-month-year:hover {
+  background-color: #e1d8d8d6;
+  cursor: pointer;
+}
+
+.calendar-body {
+  padding: 10px;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+.weekday {
+  text-align: center;
+  font-weight: bold;
+  white-space: nowrap;
+  color: #666;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.day {
+  text-align: center;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.day:hover {
+  background-color: #f0f0f0;
+}
+
+.day.today {
+  background-color: #e6f7ff;
+  font-weight: bold;
+}
+
+.day.selected {
+  background-color: #1890ff;
+  color: white;
+}
+.months,
+.years {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 10px;
+}
+
+.month,
+.year {
+  text-align: center;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+}
+
+.month:hover,
+.year:hover {
+  background-color: #e0e0e0;
+}
+.ethiopian-date-picker input {
+  border: none;
+  border-bottom: 2px solid #ccc;
+  padding: 1px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.ethiopian-date-picker input:focus {
+  border-bottom: 2px solid #ccc;
+  outline: none;
+}
+
+.ethiopian-date-picker input:hover {
+  outline: none;
+  cursor: pointer;
+}
