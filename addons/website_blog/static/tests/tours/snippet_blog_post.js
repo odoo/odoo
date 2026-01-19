@@ -6,7 +6,7 @@ import {
 } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
-    "snippet_blog_bost",
+    "snippet_blog_post",
     {
         url: "/",
         edition: true,

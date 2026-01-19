@@ -123,3 +123,6 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
 
     def test_blog_posts_dynamic_snippet_options(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_options', login='admin')
+
+    def test_snippet_blog_post(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_blog_post', login='admin')
