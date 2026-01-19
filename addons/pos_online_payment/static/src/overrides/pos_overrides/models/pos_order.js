@@ -11,4 +11,15 @@ patch(PosOrder.prototype, {
         }
         return super.canBeValidated();
     },
+    get isCustomerRequired() {
+        const online_payments_customer_required = this.paymentsRequireCustomer(this.payment_ids);
+        return super.isCustomerRequired || (!this.partner_id && online_payments_customer_required);
+    },
+    paymentsRequireCustomer(payments) {
+        return payments?.some(
+            (payment) =>
+                payment.payment_method_id.is_online_payment &&
+                payment.payment_method_id._customer_required
+        );
+    },
 });
