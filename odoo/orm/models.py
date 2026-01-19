@@ -3362,30 +3362,37 @@ class BaseModel(metaclass=MetaModel):
         if not (regular_fields or property_fields):
             return
 
+        if self._name == 'res.company':
+            def get_companies(rec):
+                return rec
+        elif 'company_id' in self:
+            def get_companies(rec):
+                return rec.company_id
+        elif 'company_ids' in self:
+            def get_companies(rec):
+                return rec.company_ids
+        else:
+            get_companies = None
+
+        if regular_fields and get_companies is None:
+            _logger.warning(_(
+                "Skipping a company check for model %(model_name)s. Its fields %(field_names)s are set as company-dependent, "
+                "but the model doesn't have a `company_id` or `company_ids` field!",
+                model_name=self._name, field_names=regular_fields
+            ))
+            regular_fields = []
+
         inconsistencies = []
         for record in self:
             # The first part of the check verifies that all records linked via relation fields are compatible
             # with the company of the origin document, i.e. `self.account_id.company_id == self.company_id`
-            if regular_fields:
-                if self._name == 'res.company':
-                    companies = record
-                elif 'company_id' in self:
-                    companies = record.company_id
-                elif 'company_ids' in self:
-                    companies = record.company_ids
-                else:
-                    _logger.warning(_(
-                        "Skipping a company check for model %(model_name)s. Its fields %(field_names)s are set as company-dependent, "
-                        "but the model doesn't have a `company_id` or `company_ids` field!",
-                        model_name=self._name, field_names=regular_fields
-                    ))
-                    continue
-                for name in regular_fields:
-                    corecords = record.sudo()[name]
-                    if corecords:
-                        domain = corecords._check_company_domain(companies)
-                        if domain and corecords != corecords.with_context(active_test=False).filtered_domain(domain):
-                            inconsistencies.append((record, name, corecords))
+            for name in regular_fields:
+                corecords = record.sudo()[name]
+                if corecords:
+                    companies = get_companies(record)
+                    domain = corecords._check_company_domain(companies)
+                    if domain and corecords != corecords.with_context(active_test=False).filtered_domain(domain):
+                        inconsistencies.append((record, name, corecords))
             # The second part of the check (for property / company-dependent fields) verifies that the records
             # linked via those relation fields are compatible with the company that owns the property value, i.e.
             # the company for which the value is being assigned, i.e:
