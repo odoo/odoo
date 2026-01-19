@@ -693,6 +693,158 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             [('product_id', '=', product.id)])
         self.assertEqual(orderpoint_product.route_id, manu_route, "The route manufacture should be set on the orderpoint")
 
+    # FIXME: At the moment this depends on sale, purchase and mrp
+    def test_no_variant_attribute_kit_procurement(self):
+        # Test procurement of a kit product with attributes
+        #  that don't create any variants
+
+        # 'kit' structure:
+        # ---------------------------
+        # kit product (color/finish) --|- component (color / manufactured)
+        #                              |- component (finish / purchased)
+        #
+        # Color is custom attribute that does not create variants
+        attribute_form = Form(self.env["product.attribute"])
+        attribute_form.name = "Custom color"
+        attribute_form.display_type = "color"
+        attribute_form.create_variant = "no_variant"
+        with attribute_form.value_ids.new() as value_line_form:
+            value_line_form.name = "Hexadecimal value"
+            value_line_form.is_custom = True
+        attribute_color = attribute_form.save()
+        # Color is attribute that does not create variants
+        attribute_form = Form(self.env["product.attribute"])
+        attribute_form.name = "Finish"
+        attribute_form.display_type = "radio"
+        attribute_form.create_variant = "no_variant"
+        with attribute_form.value_ids.new() as value_line_form:
+            value_line_form.name = "Flat"
+        with attribute_form.value_ids.new() as value_line_form:
+            value_line_form.name = "High Gloss"
+        attribute_finish = attribute_form.save()
+
+        mto_route = self.env.ref("stock.route_warehouse0_mto")
+        mto_route.active = True
+        buy_route = self.env.ref("purchase_stock.route_warehouse0_buy")
+        manufacture_route = self.env.ref("mrp.route_warehouse0_manufacture")
+
+        # Define kit product with both attribute and MTO route
+        kit_product = self._create_product('Kit color', self.uom_unit)
+        self.env["product.template.attribute.line"].create(
+            {
+                "product_tmpl_id": kit_product.product_tmpl_id.id,
+                "attribute_id": attribute_color.id,
+                "value_ids": [fields.Command.set(attribute_color.value_ids.ids)],
+            }
+        )
+        self.env["product.template.attribute.line"].create(
+            {
+                "product_tmpl_id": kit_product.product_tmpl_id.id,
+                "attribute_id": attribute_finish.id,
+                "value_ids": [fields.Command.set(attribute_finish.value_ids.ids)],
+            }
+        )
+        with Form(kit_product.product_tmpl_id) as product_tmpl_form:
+            product_tmpl_form.route_ids.clear()
+            product_tmpl_form.route_ids.add(mto_route)
+
+        # Define component with color attribute and MTO+manufacture routes
+        component_color = self._create_product('Comp color', self.uom_unit)
+        self.env["product.template.attribute.line"].create(
+            {
+                "product_tmpl_id": component_color.product_tmpl_id.id,
+                "attribute_id": attribute_color.id,
+                "value_ids": [fields.Command.set(attribute_color.value_ids.ids)],
+            }
+        )
+        with Form(component_color.product_tmpl_id) as product_tmpl_form:
+            product_tmpl_form.route_ids.clear()
+            product_tmpl_form.route_ids.add(manufacture_route)
+            product_tmpl_form.route_ids.add(mto_route)
+
+        # Define component with finish attribute and MTO+manufacture routes
+        vendor = self.env['res.partner'].create({'name': 'test vendor'})
+        component_finish = self._create_product('Comp no color', self.uom_unit)
+        self.env["product.template.attribute.line"].create(
+            {
+                "product_tmpl_id": component_finish.product_tmpl_id.id,
+                "attribute_id": attribute_finish.id,
+                "value_ids": [fields.Command.set(attribute_finish.value_ids.ids)],
+            }
+        )
+        with Form(component_finish.product_tmpl_id) as product_tmpl_form:
+            product_tmpl_form.route_ids.clear()
+            product_tmpl_form.route_ids.add(buy_route)
+            product_tmpl_form.route_ids.add(mto_route)
+            with product_tmpl_form.seller_ids.new() as supplierinfo_form:
+                supplierinfo_form.partner_id = vendor
+
+        bom_kit_1 = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom'})
+        BomLine = self.env['mrp.bom.line']
+        BomLine.create({
+            'product_id': component_color.id,
+            'product_qty': 1.0,
+            'bom_id': bom_kit_1.id})
+        BomLine.create({
+            'product_id': component_finish.id,
+            'product_qty': 1.0,
+            'bom_id': bom_kit_1.id})
+
+        customer = self.env["res.partner"].create({"name": "test customer"})
+
+        sale_order_form = Form(self.env["sale.order"])
+        sale_order_form.partner_id = customer
+        sale_order = sale_order_form.save()
+
+        ptav_color = self.env["product.template.attribute.value"].search(
+            [
+                ("product_tmpl_id", "=", kit_product.product_tmpl_id.id),
+                ("attribute_id", "=", attribute_color.id),
+            ],
+            limit=1,
+        )
+        ptav_finish = self.env["product.template.attribute.value"].search(
+            [
+                ("product_tmpl_id", "=", kit_product.product_tmpl_id.id),
+                ("attribute_id", "=", attribute_finish.id),
+            ],
+            limit=1,
+        )
+        with sale_order_form.order_line.new() as sale_order_line_form:
+            sale_order_line_form.product_id = kit_product
+            sale_order_line_form.product_no_variant_attribute_value_ids.add(ptav_color)
+            sale_order_line_form.product_no_variant_attribute_value_ids.add(ptav_finish)
+        # We need to save the sale order and its line before being able to define
+        #  the custom attribute values
+        sale_order = sale_order_form.save()
+        sale_order_form = Form(sale_order)
+        with sale_order_form.order_line.edit(0) as sale_order_line_form:
+            with sale_order_line_form.product_custom_attribute_value_ids.new() as pcav_form:
+                pcav_form.custom_product_template_attribute_value_id = ptav_color
+                pcav_form.custom_value = "#e03611"
+        sale_order_form.save()
+        sale_order_line = sale_order.order_line
+        # Explicitely call _compute_name to generate multiline variant description
+        sale_order_line._compute_name()
+        self.assertIn(ptav_color.display_name, sale_order_line.name)
+        self.assertIn("#e03611", sale_order_line.name)
+        self.assertIn(ptav_finish.display_name, sale_order_line.name)
+        sale_order.action_confirm()
+        manufacturing_order = sale_order.mrp_production_ids
+        self.assertEqual(manufacturing_order.product_id, component_color)
+        self.assertIn(ptav_color.display_name, manufacturing_order.product_description_variants)
+        self.assertIn("#e03611", manufacturing_order.product_description_variants)
+        self.assertNotIn(ptav_finish.display_name, manufacturing_order.product_description_variants)
+        purchase_order = sale_order._get_purchase_orders()
+        purchase_order_line = purchase_order.order_line
+        self.assertEqual(purchase_order_line.product_id, component_finish)
+        self.assertNotIn(ptav_color.display_name, purchase_order_line.name)
+        self.assertNotIn("#e03611", purchase_order_line.name)
+        self.assertIn(ptav_finish.display_name, purchase_order_line.name)
+
     def test_compute_bom_days_00(self):
         """Check Days to prepare Manufacturing Order are correctly computed when
         Security Lead Time and Days to Purchase are set.
