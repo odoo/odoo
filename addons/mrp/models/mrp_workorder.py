@@ -126,6 +126,9 @@ class MrpWorkorder(models.Model):
     # Technical field to store the cost_mode of a workorder in case it is changed on the operation_id later on.
     # This field should only be changed once at MO confirmation and should reflect the cost_mode of the operation_id.
 
+    cost = fields.Float(
+        string='Cost', compute='_compute_cost', store=True, aggregator="sum",
+        help="Total real cost of the work order based on duration and hourly cost.")
     production_date = fields.Datetime('Production Date', compute='_compute_production_date', store=True)
     json_popover = fields.Char('Popover Data JSON', compute='_compute_json_popover')
     show_json_popover = fields.Boolean('Show Popover?', compute='_compute_json_popover')
@@ -364,6 +367,11 @@ class MrpWorkorder(models.Model):
                 order.duration_percent = max(-2147483648, min(2147483647, 100 * (order.duration_expected - order.duration) / order.duration_expected))
             else:
                 order.duration_percent = 0
+
+    @api.depends('duration', 'costs_hour', 'workcenter_id.costs_hour')
+    def _compute_cost(self):
+        for order in self:
+            order.cost = order._compute_current_operation_cost()
 
     def _set_duration(self):
 

@@ -643,6 +643,13 @@
             <field name="arch" type="xml">
                 <pivot string="Manufacturing Orders" sample="1">
                     <field name="date_start" type="row"/>
+                    <field name="duration_expected" type="measure" groups="!mrp.group_mrp_routings" invisible="1"/>
+                    <field name="duration_expected" type="measure" string="Expected Duration (minutes)" groups="mrp.group_mrp_routings"/>
+                    <field name="duration" type="measure" groups="!mrp.group_mrp_routings" invisible="1"/>
+                    <field name="duration" type="measure" string="Real Duration (minutes)" groups="mrp.group_mrp_routings"/>
+                    <field name="qty_producing" type="measure" string="Quantity Produced"/>
+                    <field name="backorder_sequence" invisible="1"/>
+                    <field name="product_uom_qty" invisible="1"/>
                 </pivot>
             </field>
         </record>
@@ -653,10 +660,13 @@
             <field name="arch" type="xml">
                 <graph string="Manufacturing Orders" stacked="0" sample="1">
                     <field name="date_finished"/>
-                    <field name="product_uom_qty" type="measure"/>
-                    <field name="backorder_sequence" invisible="1"/>
+                    <field name="duration_expected" type="measure" groups="!mrp.group_mrp_routings" invisible="1"/>
+                    <field name="duration_expected" type="measure" string="Expected Duration (minutes)" groups="mrp.group_mrp_routings"/>
+                    <field name="duration" type="measure" groups="!mrp.group_mrp_routings" invisible="1"/>
+                    <field name="duration" type="measure" string="Real Duration (minutes)" groups="mrp.group_mrp_routings"/>
                     <field name="qty_producing" string="Quantity Produced"/>
-                    <field name="product_uom_qty" string= "Product Quantity"/>
+                    <field name="backorder_sequence" invisible="1"/>
+                    <field name="product_uom_qty" invisible="1"/>
                 </graph>
             </field>
         </record>

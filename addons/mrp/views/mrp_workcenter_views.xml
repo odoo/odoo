@@ -102,11 +102,6 @@
             <field name="res_model">mrp.workorder</field>
             <field name="domain">[('workcenter_id','=', active_id),('state','=','done')]</field>
             <field name="view_mode">graph,pivot,list,form</field>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new work orders performance
-              </p>
-            </field>
         </record>
 
         <record model="ir.actions.act_window" id="mrp_workorder_report">
@@ -120,11 +115,6 @@
                                    'search_default_progress': True,}</field>
             <field name="view_mode">graph,pivot,list,form</field>
             <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new work orders performance
-              </p>
-            </field>
         </record>
 
         <!-- Workcenter Kanban view-->

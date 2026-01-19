@@ -338,7 +338,11 @@
                 <field name="production_id"/>
                 <field name="duration" type="measure" string="Duration (minutes)"/>
                 <field name="duration_unit" type="measure"/>
-                <field name="duration_expected" type="measure"/>
+                <field name="cost" type="measure"/>
+                <field name="duration_expected" type="measure" string="Expected Duration (minutes)" widget="float_time"/>
+                <field name="qty_reported_from_previous_wo" invisible="1"/>
+                <field name="costs_hour" invisible="1"/>
+                <field name="qty_production" invisible="1"/>
             </graph>
         </field>
     </record>
@@ -352,7 +356,11 @@
                 <field name="operation_id"/>
                 <field name="duration" type="measure" string="Duration (minutes)" widget="float_time"/>
                 <field name="duration_unit" type="measure" widget="float_time"/>
-                <field name="duration_expected" type="measure" widget="float_time"/>
+                <field name="cost" type="measure"/>
+                <field name="duration_expected" type="measure" string="Expected Duration (minutes)" widget="float_time"/>
+                <field name="qty_reported_from_previous_wo" invisible="1"/>
+                <field name="costs_hour" invisible="1"/>
+                <field name="qty_production" invisible="1"/>
             </pivot>
         </field>
     </record>
