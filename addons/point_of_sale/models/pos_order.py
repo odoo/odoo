@@ -8,7 +8,6 @@ from uuid import uuid4
 from random import randrange
 from pprint import pformat
 
-import psycopg2
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools, _
@@ -122,15 +121,7 @@ class PosOrder(models.Model):
     def _process_saved_order(self, draft):
         self.ensure_one()
         if not draft and self.state != 'cancel':
-            try:
-                self.action_pos_order_paid()
-            except psycopg2.DatabaseError:
-                # do not hide transactional errors, the order(s) won't be saved!
-                raise
-            except UserError as e:
-                _logger.warning('Could not fully process the POS Order: %s', tools.exception_to_unicode(e))
-            except Exception as e:
-                _logger.error('Could not fully process the POS Order: %s', tools.exception_to_unicode(e), exc_info=True)
+            self.action_pos_order_paid()
             self._create_order_picking()
             self._compute_total_cost_in_real_time()
 
