@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 import re
 
 from collections import OrderedDict
@@ -113,6 +114,12 @@ class IrQweb(models.AbstractModel):
             return atts
 
         atts = super()._post_processing_att(tagName, atts)
+
+        if atts.get('data-reveal-me') and atts.get('href'):
+            # if this data is set, encode in b64 the url to avoid crawler to parse the url
+            if atts['href'] not in (False, None, ()):
+                atts['hideref'] = base64.b64encode(atts['href'].encode("utf-8")).decode("utf-8")
+                atts['href'] = "#"
 
         website = ir_http.get_request_website()
         if not website and self.env.context.get('website_id'):
