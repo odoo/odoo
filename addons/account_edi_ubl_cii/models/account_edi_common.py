@@ -897,9 +897,10 @@ class AccountEdiCommon(models.AbstractModel):
                     line=line_values['name']),
                 )
             else:
-                taxes.append(tax.id)
-                if tax.price_include:
-                    line_values['price_unit'] *= (1 + tax.amount / 100)
+                for t in tax:
+                    taxes.append(t.id)
+                    if t.price_include:
+                        line_values['price_unit'] *= (1 + t.amount / 100)
         return taxes, logs
 
     def _retrieve_line_charges(self, record, line_values, taxes):

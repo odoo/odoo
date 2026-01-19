@@ -1011,6 +1011,11 @@ class ResPartner(models.Model):
         :returns:       A partner or an empty recordset if not found.
         '''
 
+        def search_with_name_and_vat(extra_domain):
+            if not name or not vat:
+                return None
+            return self._retrieve_partner_with_name(name, extra_domain) & self._retrieve_partner_with_vat(vat, extra_domain)
+
         def search_with_vat(extra_domain):
             return self._retrieve_partner_with_vat(vat, extra_domain)
 
@@ -1025,14 +1030,18 @@ class ResPartner(models.Model):
                 return None
             return self.env['res.partner'].search(domain + extra_domain, limit=1)
 
-        for search_method in (search_with_vat, search_with_domain, search_with_phone_mail, search_with_name):
+        for search_method in (search_with_name_and_vat, search_with_vat, search_with_domain, search_with_phone_mail, search_with_name):
             for extra_domain in (
                 [*self.env['res.partner']._check_company_domain(company or self.env.company), ('company_id', '!=', False)],
                 [('company_id', '=', False)],
             ):
                 partner = search_method(extra_domain)
 
-                # The VAT should be a sufficiently distinctive criterion
+                # Highest priority: matching both VAT and name is considered a sufficiently distinctive criterion to identify a unique partner
+                if partner and search_method == search_with_name_and_vat:
+                    return partner[:1]
+
+                # Second priority: VAT alone is considered distinctive enough
                 if partner and search_method == search_with_vat:
                     return partner[:1]
                 if partner and len(partner) == 1:
