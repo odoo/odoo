@@ -62,7 +62,9 @@ export class Builder extends Component {
         this.state = useState({
             canUndo: false,
             canRedo: false,
-            activeTab: this.props.config.initialTab || "blocks",
+            activeTab: this.displayOnlyCustomizeTab
+                ? "customize"
+                : this.props.config.initialTab || "blocks",
             currentOptionsContainers: undefined,
         });
         this.invisibleElementsPanelState = useState({
