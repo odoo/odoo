@@ -191,6 +191,19 @@ registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder2", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            PosSale.settleNthOrder(1),
+            Order.hasLine({}),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosOrderDoesNotRemainInList", {
     steps: () =>
         [
@@ -292,6 +305,33 @@ registry.category("web_tour.tours").add("PoSApplyDownpayment", {
             PosSale.downPaymentFirstOrder("+10"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PoSApplyDownpaymentInvoice", {
+    undeterministicTour_doNotCopy: true,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.downPaymentFirstOrder("+10"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PoSApplyDownpaymentInvoice2", {
+    undeterministicTour_doNotCopy: true,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            PosSale.downPaymentFirstOrder("+10"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
         ].flat(),
 });
