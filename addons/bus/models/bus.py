@@ -8,6 +8,7 @@ import selectors
 import threading
 import time
 from psycopg2 import InterfaceError
+from psycopg2.pool import PoolError
 
 import odoo
 from odoo import api, fields, models
@@ -258,7 +259,7 @@ class ImDispatch(threading.Thread):
             try:
                 self.loop()
             except Exception as exc:
-                if isinstance(exc, InterfaceError) and stop_event.is_set():
+                if isinstance(exc, (InterfaceError, PoolError)) and stop_event.is_set():
                     continue
                 _logger.exception("Bus.loop error, sleep and retry")
                 time.sleep(TIMEOUT)
