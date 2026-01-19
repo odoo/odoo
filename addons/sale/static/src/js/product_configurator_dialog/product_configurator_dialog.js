@@ -178,8 +178,6 @@ export class ProductConfiguratorDialog extends Component {
     async _getOptionalProducts(product) {
         return rpc(this.getOptionalProductsUrl, {
             product_template_id: product.product_tmpl_id,
-            ptav_ids: this._getCombination(product),
-            parent_ptav_ids: this._getParentsCombination(product),
             currency_id: this.currency.id,
             so_date: this.props.soDate,
             company_id: this.props.companyId,

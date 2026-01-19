@@ -182,8 +182,6 @@ class SaleProductConfiguratorController(Controller):
     def sale_product_configurator_get_optional_products(
         self,
         product_template_id,
-        ptav_ids,
-        parent_ptav_ids,
         currency_id,
         so_date,
         company_id=None,
