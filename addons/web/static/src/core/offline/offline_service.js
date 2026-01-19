@@ -84,14 +84,15 @@ class OfflineManager extends Reactive {
             this._offlineUI();
             // Create an observer instance linked to the callback function to keep disabling
             // elements that would appear in the DOM while being offline.
-            this._observer = new MutationObserver((mutationList) => {
-                if (this._offline && mutationList.find((m) => m.addedNodes.length > 0)) {
+            this._observer = new MutationObserver(() => {
+                if (this._offline) {
                     this._offlineUI();
                 }
             });
             this._observer.observe(document.body, {
                 childList: true, // listen for direct children being added/removed
                 subtree: true, // also observe descendants (not just direct children)
+                attributeFilter: ["data-available-offline"], // listen for specific attribute change
             });
 
             // Repeatedly check if connection is back.
@@ -187,6 +188,11 @@ class OfflineManager extends Reactive {
      * @private
      */
     _offlineUI() {
+        // Re-enable elements that have been marked as available offline
+        document.querySelectorAll(".o_disabled_offline[data-available-offline]").forEach((el) => {
+            el.removeAttribute("disabled");
+            el.classList.remove("o_disabled_offline");
+        });
         document.querySelectorAll(OfflineManager.SELECTORS_TO_DISABLE.join(", ")).forEach((el) => {
             el.setAttribute("disabled", "");
             el.classList.add("o_disabled_offline");
