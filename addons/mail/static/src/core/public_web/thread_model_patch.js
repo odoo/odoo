@@ -14,7 +14,15 @@ const threadModelPatch = {
          * Inverse of discuss.thread, useful to efficiently check whether this thread is the one
          * currently displayed in discuss app.
          */
-        this.discussAppAsThread = fields.One("DiscussApp", { inverse: "thread" });
+        this.discussAppAsThread = fields.One("DiscussApp", {
+            inverse: "thread",
+            /** @this {import("models").Thread} */
+            onUpdate() {
+                if (!this.discussAppAsThread && this.channel?.parent_channel_id) {
+                    this.channel.isLocallyPinned = false;
+                }
+            },
+        });
     },
     /** Condition for whether the conversation should become present in chat hub on new message */
     get inChathubOnNewMessage() {
