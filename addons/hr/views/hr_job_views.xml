@@ -34,7 +34,7 @@
                                         <field name="department_id"/>
                                     </group>
                                     <group name="contract" string="Contract">
-                                        <field name="contract_type_id"/>
+                                        <field name="employee_type_id"/>
                                     </group>
                                 </group>
                             </page>
@@ -91,7 +91,7 @@
                     <group>
                         <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
                         <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Contract Type" name="contract_type" domain="[]" context="{'group_by': 'contract_type_id'}"/>
+                        <filter string="Employee Type" name="contract_type" domain="[]" context="{'group_by': 'employee_type_id'}"/>
                     </group>
                 </search>
             </field>

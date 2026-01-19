@@ -29,7 +29,7 @@ class WebsiteHrRecruitment(WebsiteForm):
         '/jobs',
         '/jobs/page/<int:page>',
     ], type='http', auth="public", website=True, sitemap=sitemap_jobs, list_as_website_content=_lt("Jobs"))
-    def jobs(self, country_id=None, all_countries=False, department_id=None, office_id=None, contract_type_id=None,
+    def jobs(self, country_id=None, all_countries=False, department_id=None, office_id=None, employee_type_id=None,
              is_remote=False, is_other_department=False, is_untyped=None,  industry_id=None, is_industry_untyped=False,
              noFuzzy=False, page=1, search=None, **kwargs):
         """ This method is returning the job page.
@@ -42,7 +42,7 @@ class WebsiteHrRecruitment(WebsiteForm):
                 'department_id': department.id,
                 'address_id': office.id,
                 'industry_id': industry.id,
-                'contract_type_id': contract_type.id,
+                'employee_type_id': contract_type.id,
             }
 
             all_fields = all(
@@ -61,7 +61,7 @@ class WebsiteHrRecruitment(WebsiteForm):
                 'department_id': is_other_department,
                 'address_id': is_remote and filter_to_disable != 'country_id',
                 'industry_id': is_industry_untyped,
-                'contract_type_id': is_untyped,
+                'employee_type_id': is_untyped,
             }
             return all(
                 not job[job_field]
@@ -92,7 +92,7 @@ class WebsiteHrRecruitment(WebsiteForm):
             fields_and_filters = {
                 ('address_id', 'count_per_office'),
                 ('department_id', 'count_per_department'),
-                ('contract_type_id', 'count_per_employment_type'),
+                ('employee_type_id', 'count_per_employment_type'),
                 ('industry_id', 'count_per_industry'),
             }
             for field, alias in fields_and_filters:
@@ -115,7 +115,7 @@ class WebsiteHrRecruitment(WebsiteForm):
         department = env['hr.department'].browse(to_int(department_id)).exists().sudo()
         country = env['res.country'].browse(to_int(country_id)).exists()
         office = env['res.partner'].browse(to_int(office_id)).exists()
-        contract_type = env['hr.contract.type'].browse(to_int(contract_type_id)).exists().sudo()
+        contract_type = env['hr.employee.type'].browse(to_int(employee_type_id)).exists().sudo()
         industry = env['res.partner.industry'].browse(to_int(industry_id)).exists().sudo()
 
         if not (country or department or office or contract_type or all_countries) \
@@ -156,7 +156,7 @@ class WebsiteHrRecruitment(WebsiteForm):
             'country_id': country,
             'department_id': department,
             'office_id': office,
-            'contract_type_id': contract_type,
+            'employee_type_id': contract_type,
             'industry_id': industry,
             'is_remote': is_remote,
             'is_other_department': is_other_department,

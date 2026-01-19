@@ -215,6 +215,7 @@ class HrEmployee(models.Model):
     # All version fields needing a specific group to be accessible should also have `inherited=True` set on its definition to make sure those fields are linked to `_inherits` on `hr.version`
     contract_date_start = fields.Date(readonly=False, related="version_id.contract_date_start", inherited=True, groups="hr.group_hr_manager")
     contract_date_end = fields.Date(readonly=False, related="version_id.contract_date_end", inherited=True, groups="hr.group_hr_manager")
+    fixed_term = fields.Boolean(readonly=False, related="version_id.fixed_term", inherited=True, groups="hr.group_hr_manager")
     trial_date_end = fields.Date(readonly=False, related="version_id.trial_date_end", inherited=True, groups="hr.group_hr_manager")
     date_start = fields.Date(related='version_id.date_start', inherited=True, groups="hr.group_hr_manager")
     date_end = fields.Date(related='version_id.date_end', inherited=True, groups="hr.group_hr_manager")
@@ -223,7 +224,7 @@ class HrEmployee(models.Model):
     is_future = fields.Boolean(related='version_id.is_future', inherited=True, groups="hr.group_hr_manager")
     is_in_contract = fields.Boolean(related='version_id.is_in_contract', inherited=True, groups="hr.group_hr_manager")
     structure_type_id = fields.Many2one(readonly=False, related='version_id.structure_type_id', inherited=True, groups="hr.group_hr_manager")
-    contract_type_id = fields.Many2one(readonly=False, related='version_id.contract_type_id', inherited=True, groups="hr.group_hr_manager")
+    employee_type_id = fields.Many2one(readonly=False, related='version_id.employee_type_id', inherited=True, groups="hr.group_hr_manager")
     hourly_cost = fields.Monetary('Hourly Cost', groups="hr.group_hr_user", tracking=True)
     nationality_country_code = fields.Char(
         string='Nationality',
@@ -346,8 +347,8 @@ class HrEmployee(models.Model):
         'A user cannot be linked to multiple employees in the same company.',
     )
 
-    has_country_contract_type = fields.Boolean(
-        compute='_compute_has_country_contract_type',
+    has_country_employee_type = fields.Boolean(
+        compute='_compute_has_country_employee_type',
         groups="hr.group_hr_user",
     )
 
@@ -701,14 +702,14 @@ class HrEmployee(models.Model):
                 employee.current_version_id = new_current_version
 
     @api.depends('company_country_id')
-    def _compute_has_country_contract_type(self):
-        count_contract_type_by_country = dict(self.env['hr.contract.type']._read_group(
+    def _compute_has_country_employee_type(self):
+        count_contract_type_by_country = dict(self.env['hr.employee.type']._read_group(
             domain=[],
             groupby=['country_id'],
             aggregates=['__count']
         ))
         for employee in self:
-            employee.has_country_contract_type = bool(
+            employee.has_country_employee_type = bool(
                 count_contract_type_by_country.get(employee.company_country_id)
             )
 

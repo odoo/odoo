@@ -25,12 +25,12 @@
                             <field name="currency_id" invisible="1"/> <!-- for monetary fields -->
                             <group name="salary_info">
                                 <group name="contract" string="Contract Overview" groups="hr.group_hr_user">
+                                    <field name="employee_type_id" string="Employee Type" placeholder="Select employee type"/>
                                     <label for="wage"/>
                                     <div class="o_row" name="wage">
                                         <field name="wage" class="o_hr_narrow_field"/>
                                         <div name="wage_period_label">/ month</div>
                                     </div>
-                                    <field name="contract_type_id" string="Contract Type" placeholder="Contract Type"/>
                                     <field name="structure_type_id" string="Pay Category" placeholder="Employee will be excluded from Pay Runs"
                                             domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
 
@@ -56,7 +56,7 @@
                 <field name="department_id" optional="show"/>
                 <field name="currency_id" column_invisible="1"/>
                 <field name="wage" widget="monetary" optional="show"/>
-                <field name="contract_type_id" optional="show"/>
+                <field name="employee_type_id" optional="show"/>
                 <field name="structure_type_id" optional="show"/>
                 <field name="resource_calendar_id" optional="show"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hidden"/>

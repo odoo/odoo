@@ -59,7 +59,7 @@
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
                         <filter name="group_job" string="Job Position" domain="[]" context="{'group_by': 'job_id'}"/>
                         <filter name="group_category_ids" string="Tags" domain="[]" context="{'group_by': 'category_ids'}"/>
-                        <filter name="group_employee_type" string="Employee Type" domain="[]" context="{'group_by': 'employee_type'}"/>
+                        <filter name="group_employee_type" string="Employee Type" domain="[]" context="{'group_by': 'employee_type_id'}"/>
                         <separator name="main_groupby_separator"/>
                         <filter name="_search_today_location" string="Work location" domain="[]" context="{'group_by':'today_location_name'}"/>
                         <filter name="group_birthday" domain="[]" context="{'group_by': 'birthday_month'}" invisible="1"/>
@@ -358,24 +358,23 @@
                                                 widget="contract_template_button"
                                                 class="btn btn-addr btn-link ms-auto text-end w-auto lh-1 h-100 p-0"
                                                 nolabel="1"/>
-                                        </div>
+                                            </div>
+                                        <field name="employee_type_id" string="Employee Type" placeholder="Select employee type"
+                                                invisible="not has_country_employee_type" domain="[('country_id', 'in', [company_country_id, False])]"
+                                                required="contract_date_start"/>
                                         <label for="contract_date_start" string="Contract"/>
                                         <div class="o_row" name="contract_dates">
                                             <field name="contract_date_start" string="Start Date" placeholder="Not Employed" class="o_hr_narrow_field me-3"/>
                                             <span invisible="not contract_date_start">to</span>
                                             <field name="contract_date_end" string="End Date" placeholder="Indefinite" widget="date_dynamic_min" options="{'min_date_field': 'contract_date_start'}"
-                                                class="o_hr_narrow_field ms-3" invisible="not contract_date_start"/>
+                                                class="o_hr_narrow_field ms-3" invisible="not contract_date_start" required="fixed_term"/>
                                             <widget name="button_new_contract"/>
                                         </div>
+                                        <field name="fixed_term" string="Fixed Term"/>
                                         <label for="wage"/>
                                         <div class="o_row" name="wage">
                                             <field name="wage" class="oe_inline o_hr_narrow_field" nolabel="1"/>
                                         </div>
-                                        <field name="employee_type"/>
-                                        <field name="contract_type_id" string="Contract Type" placeholder="Contract Type"
-                                               invisible="not has_country_contract_type" domain="[('country_id', '=', company_country_id)]"/>
-                                        <field name="contract_type_id" string="Contract Type" placeholder="Contract Type"
-                                               invisible="has_country_contract_type" domain="[('country_id', '=', False)]"/>
                                         <field name="structure_type_id" string="Pay Category" placeholder="Employee will be excluded from Pay Runs"
                                                 domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
 
@@ -584,8 +583,7 @@
                     <field name="contract_date_end" optional="hide"/>
                     <field name="currency_id" column_invisible="1"/>
                     <field name="wage" widget="monetary" optional="hide"/>
-                    <field name="employee_type" optional="hide"/>
-                    <field name="contract_type_id" optional="hide"/>
+                    <field name="employee_type_id" optional="hide"/>
                     <field name="activity_ids" widget="list_activity" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                     <field name="department_id" optional="show"/>
@@ -631,8 +629,7 @@
                     <field name="contract_date_end" optional="hide"/>
                     <field name="currency_id" column_invisible="1"/>
                     <field name="wage" widget="monetary" optional="hide"/>
-                    <field name="employee_type" optional="hide"/>
-                    <field name="contract_type_id" optional="hide"/>
+                    <field name="employee_type_id" optional="hide"/>
                     <field name="structure_type_id" optional="hide"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
