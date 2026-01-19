@@ -7,4 +7,9 @@ ProductTemplateAttributeLine._records = [
         attribute_id: 7,
         product_template_value_ids: [101, 102],
     },
+    {
+        id: 102,
+        attribute_id: 101,
+        product_template_value_ids: [103, 104],
+    },
 ];

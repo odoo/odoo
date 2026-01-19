@@ -751,8 +751,8 @@ function orderByField(model, orderBy, records) {
                 break;
             }
             case "many2one": {
-                v1 &&= valuesMap.get(v1[0]);
-                v2 &&= valuesMap.get(v2[0]);
+                v1 &&= valuesMap.get(v1[0] ?? v1);
+                v2 &&= valuesMap.get(v2[0] ?? v2);
                 break;
             }
             case "many2many":
