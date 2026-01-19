@@ -1548,6 +1548,11 @@ class AccountMove(models.Model):
             else:
                 move.invoice_payments_widget = False
 
+    def _get_product_base_line_currency_rate(self, product_line):
+        if self.is_invoice(include_receipts=True):
+            return self.invoice_currency_rate
+        return abs(product_line.amount_currency / product_line.balance) if product_line.balance else 0.0
+
     def _prepare_product_base_line_for_taxes_computation(self, product_line):
         """ Convert an account.move.line having display_type='product' into a base line for the taxes computation.
 
@@ -1557,17 +1562,13 @@ class AccountMove(models.Model):
         self.ensure_one()
         is_invoice = self.is_invoice(include_receipts=True)
         sign = self.direction_sign if is_invoice else 1
-        if is_invoice:
-            rate = self.invoice_currency_rate
-        else:
-            rate = (abs(product_line.amount_currency) / abs(product_line.balance)) if product_line.balance else 0.0
 
         return self.env['account.tax']._prepare_base_line_for_taxes_computation(
             product_line,
             price_unit=product_line.price_unit if is_invoice else product_line.amount_currency,
             quantity=product_line.quantity if is_invoice else 1.0,
             discount=product_line.discount if is_invoice else 0.0,
-            rate=rate,
+            rate=self._get_product_base_line_currency_rate(product_line),
             sign=sign,
             special_mode=False if is_invoice else 'total_excluded',
             name=product_line.name,
