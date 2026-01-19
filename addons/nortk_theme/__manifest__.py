@@ -11,6 +11,10 @@
         'web.assets_backend': [
             'nortk_theme/static/src/scss/nortk.scss',
         ],
+        # Frontend (Login, Database Selector, Website)
+        'web.assets_frontend': [
+            'nortk_theme/static/src/scss/dark_mode.scss',
+        ],
     },
     'installable': True,
     'application': False,
