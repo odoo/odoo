@@ -491,6 +491,11 @@ class IrCron(models.Model):
             loop_count = 0
             _logger.info('Job %r (%s) starting', job['cron_name'], job['id'])
 
+            if not env.user.active and env.user != env.ref('base.user_root'):
+                _logger.warning("Forbidden server action %r executed while the user %s is archived.", job['cron_name'], env.user.login)
+                done, remaining = 0, 0
+                status = CompletionStatus.FAILED
+
             # stop after MIN_RUNS_PER_JOB runs and MIN_TIME_PER_JOB seconds, or
             # upon full completion or failure
             while status is None and (
