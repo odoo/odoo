@@ -15,5 +15,23 @@ registry.category("web_tour.tours").add("customer_display_shows_qr_popup", {
             Chrome.CustomerDisplayHasQRButton(),
             Chrome.ClickCustomerDisplayQRButton(),
             Chrome.CustomerDisplayQRIsDisplayed(),
+            {
+                isActive: ["mobile"],
+                content: "Check that the Customer display url is valid",
+                trigger: ".o-overlay-item .modal .modal-body .small a",
+                run: function (el) {
+                    const url = el.anchor.href;
+                    if (!url || url.includes("undefined")) {
+                        throw new Error(
+                            `Invalid customer display URL (contains undefined): ${url}`
+                        );
+                    }
+                    try {
+                        new URL(url);
+                    } catch {
+                        throw new Error(`Invalid customer display URL: ${url}`);
+                    }
+                },
+            },
         ].flat(),
 });
