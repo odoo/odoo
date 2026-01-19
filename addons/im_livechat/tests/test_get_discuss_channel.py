@@ -25,6 +25,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
 
     def test_channel_get_livechat_visitor_info(self):
         self.maxDiff = None
+        self.partner_root.tz = "Europe/Brussels"
         belgium = self.env.ref('base.be')
         test_user = self.env['res.users'].create({'name': 'Roger', 'login': 'roger', 'password': self.password, 'country_id': belgium.id})
 
@@ -126,7 +127,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "is_company": False,
                     "main_user_id": self.user_root.id,
                     "name": "OdooBot",
-                    "tz": False,
+                    "tz": "Europe/Brussels",
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
@@ -241,7 +242,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "is_company": False,
                     "main_user_id": self.user_root.id,
                     "name": "OdooBot",
-                    "tz": False,
+                    "tz": "Europe/Brussels",
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
