@@ -46,8 +46,8 @@ patch(HrPresenceStatusPrivate.prototype, patchHrPresenceStatus());
 // Applies patch on one component and the other should be affected also, since it's extended from it.
 patch(HrPresenceStatusPrivate.prototype, {
     get label() {
-        if (this.props.record.data.current_leave_id){
-            let label = this.props.record.data.current_leave_id.display_name;
+        if (this.props.record.data.current_work_entry_type_id){
+            let label = this.props.record.data.current_work_entry_type_id.display_name;
             if (this.props.record.data.leave_date_to) {
                 label += _t(", back on ") + this.props.record.data['leave_date_to'].toLocaleString(
                     {
@@ -74,6 +74,6 @@ Object.assign(hrPresenceStatusPrivate, {
     fieldDependencies: [
         ...hrPresenceStatusPrivate.fieldDependencies,
         ...hrPresenceStatus.fieldDependencies,
-        { name: "current_leave_id", type:"many2one"},
+        { name: "current_work_entry_type_id", type:"many2one"},
     ],
 });

@@ -5,7 +5,7 @@
             <field name="name">New Time Off Request</field>
             <field name="model_id" ref="hr_holidays.model_hr_leave"/>
             <field name="partner_to" eval="False"/>
-            <field name="subject">I'm requesting {{ object.duration_display }} of {{ object.holiday_status_id.name }} from {{ object.request_date_from }} to {{ object.request_date_to }}</field>
+            <field name="subject">I'm requesting {{ object.duration_display }} of {{ object.work_entry_type_id.name }} from {{ object.request_date_from }} to {{ object.request_date_to }}</field>
             <field name="use_default_to" eval="True"/>
             <field name="description">Mail for new leave request</field>
             <field name="body_html" type="html">
@@ -14,7 +14,7 @@
                     <br/><br/>
                     <p>I'm requesting a Time Off. I would appreciate if you could approve it whenever possible!</p>
                     <ul>
-                        <li>Time Off Type: <t t-out="object.holiday_status_id.name"/></li>
+                        <li>Time Off Type: <t t-out="object.work_entry_type_id.name"/></li>
                         <li><t t-out="object.request_date_from"/> → <t t-out="object.request_date_to"/> (<t t-out="object.duration_display"/>)</li>
                         <li t-if="object.name">Reason: <t t-out="object.name"/></li>
                     </ul>

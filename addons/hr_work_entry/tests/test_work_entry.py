@@ -39,50 +39,7 @@ class TestWorkEntry(TestWorkEntryBase):
             'name': 'dodo',
             'resource_calendar_id': cls.resource_calendar_id.id,
             'wage': 1000,
-            'date_generated_from': cls.end.date() + relativedelta(days=5),
         })
-
-    def test_no_duplicate(self):
-        self.richard_emp.generate_work_entries(self.start, self.end)
-        pou1 = self.env['hr.work.entry'].search_count([])
-        self.richard_emp.generate_work_entries(self.start, self.end)
-        pou2 = self.env['hr.work.entry'].search_count([])
-        self.assertEqual(pou1, pou2, "Work entries should not be duplicated")
-
-    def test_work_entry(self):
-        self.richard_emp.generate_work_entries(self.start, self.end)
-        attendance_nb = len(self.resource_calendar_id._attendance_intervals_batch(self.start.replace(tzinfo=UTC), self.end.replace(tzinfo=UTC))[False])
-        work_entry_nb = self.env['hr.work.entry'].search_count([
-            ('employee_id', '=', self.richard_emp.id),
-            ('date', '>=', self.start),
-            ('date', '<=', self.end)])
-        self.assertEqual(attendance_nb / 2, work_entry_nb, "One work_entry should be generated for each pair of calendar attendance per day")
-
-    def test_validate_undefined_work_entry(self):
-        work_entry1 = self.env['hr.work.entry'].create({
-            'name': '1',
-            'employee_id': self.richard_emp.id,
-            'version_id': self.richard_emp.version_id.id,
-            'date': self.start.date(),
-            'duration': 4,
-        })
-        work_entry1.work_entry_type_id = False
-        self.assertFalse(work_entry1.action_validate(), "It should not validate work_entries without a type")
-        self.assertEqual(work_entry1.state, 'conflict', "It should change to conflict state")
-        work_entry1.work_entry_type_id = self.work_entry_type
-        self.assertTrue(work_entry1.action_validate(), "It should validate work_entries")
-
-    def test_outside_calendar(self):
-        """ Test leave work entries outside schedule are conflicting """
-        work_entries = self.create_work_entries([
-            # Outside but not a leave
-            (datetime(2018, 10, 13, 3, 0), datetime(2018, 10, 13, 4, 0)),
-            # Outside and a leave
-            (datetime(2018, 10, 13, 1, 0), datetime(2018, 10, 13, 2, 0), self.work_entry_type_leave),
-        ])
-        work_entries._mark_leaves_outside_schedule()
-        self.assertEqual(len(work_entries), 1, "The second work entry should not be generated. As it is a leave outside of the working schedule")
-        self.assertNotEqual(work_entries.state, 'conflict', "It should not conflict")
 
     def test_work_entry_timezone(self):
         """ Test work entries with different timezone """
@@ -118,13 +75,12 @@ class TestWorkEntry(TestWorkEntryBase):
             'work_entry_type_id': self.work_entry_type_leave.id,
         })
         self.env.company.resource_calendar_id = hk_resource_calendar_id
-        hk_employee.generate_work_entries(datetime(2023, 8, 1), datetime(2023, 8, 2))
-        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', hk_employee.id)])
-        self.assertEqual(len(work_entries), 2)
-        self.assertEqual(work_entries[0].date, date(2023, 8, 1))
-        self.assertEqual(work_entries[0].duration, 8)
-        self.assertEqual(work_entries[1].date, date(2023, 8, 2))
-        self.assertEqual(work_entries[1].duration, 8)
+        work_entries_vals = hk_employee.generate_work_entries(datetime(2023, 8, 1), datetime(2023, 8, 2))
+        self.assertEqual(len(work_entries_vals), 2)
+        self.assertEqual(work_entries_vals[0]['date'], date(2023, 8, 1))
+        self.assertEqual(work_entries_vals[0]['duration'], 8)
+        self.assertEqual(work_entries_vals[1]['date'], date(2023, 8, 2))
+        self.assertEqual(work_entries_vals[1]['duration'], 8)
 
     def test_separate_overlapping_work_entries_by_type(self):
         calendar = self.env['resource.calendar'].create({'name': 'Calendar'})
@@ -140,8 +96,8 @@ class TestWorkEntry(TestWorkEntryBase):
         calendar.attendance_ids -= calendar.attendance_ids.filtered(lambda attendance: attendance.dayofweek == '0')
 
         entry_type_1, entry_type_2 = self.env['hr.work.entry.type'].create([
-            {'name': 'Work type 1', 'category': 'working_time', 'code': 'ENTRY_TYPE1'},
-            {'name': 'Work type 2', 'category': 'working_time', 'code': 'ENTRY_TYPE2'},
+            {'name': 'Work type 1', 'count_as': 'working_time', 'code': 'ENTRY_TYPE1'},
+            {'name': 'Work type 2', 'count_as': 'working_time', 'code': 'ENTRY_TYPE2'},
         ])
 
         self.env['resource.calendar.attendance'].create([
@@ -175,25 +131,23 @@ class TestWorkEntry(TestWorkEntryBase):
             },
         ])
 
-        employee.generate_work_entries(datetime(2024, 9, 2), datetime(2024, 9, 2))
-        result_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
-        work_entry_types = [entry.work_entry_type_id for entry in result_entries]
-        self.assertEqual(len(result_entries), 2, 'A shift should be created for each pair of attendance by day')
-        self.assertEqual(work_entry_types, [entry_type_1, entry_type_2])
+        work_entries_vals = employee.generate_work_entries(datetime(2024, 9, 2), datetime(2024, 9, 2))
+        work_entry_types = [entry['work_entry_type_id'] for entry in work_entries_vals]
+        self.assertEqual(len(work_entries_vals), 2, 'A shift should be created for each pair of attendance by day')
+        self.assertEqual((work_entry_types[0] + work_entry_types[1]), (entry_type_1 + entry_type_2))
 
     def test_work_entry_duration(self):
         """ Test the duration of a work entry is rounded to the nearest minute and correctly calculated """
         vals_list = [{
             'name': 'Test Work Entry',
-            'employee_id': self.richard_emp.id,
-            'version_id': self.richard_emp.version_id.id,
+            'employee_id': self.richard_emp,
+            'version_id': self.richard_emp.version_id,
             'date_start': datetime(2023, 10, 1, 9, 0, 0),
             'date_stop': datetime(2023, 10, 1, 9, 59, 59, 999999),
-            'work_entry_type_id': self.work_entry_type.id,
+            'work_entry_type_id': self.work_entry_type,
         }]
         vals_list = self.env['hr.version']._generate_work_entries_postprocess(vals_list)
-        work_entry = self.env['hr.work.entry'].create(vals_list)
-        self.assertEqual(work_entry.duration, 1, "The duration should be 1 hour")
+        self.assertEqual(vals_list[0]['duration'], 1, "The duration should be 1 hour")
 
     def test_work_entry_different_calendars(self):
         """ Test work entries are correctly created for employees with versions that have different calendar types. """
@@ -307,66 +261,50 @@ class TestWorkEntry(TestWorkEntryBase):
         # generate work entries for the 4 employees between (2025, 9, 1) and (2025, 9, 30)
         # then split them into 2 halves (each half corresponding to the work entries generated by 1 contract)
         # the timezones are considered in the split
-        all_work_entries = (emp_flex_std + emp_std_flex + emp_fullyflex_std + emp_std_fullyflex).generate_work_entries(date(2025, 9, 1), date(2025, 9, 30))
-        flex_std_work_entries = all_work_entries.filtered(lambda e: e.employee_id == emp_flex_std)
-        self.assertEqual(len(flex_std_work_entries), 26)
-        half1_entries = flex_std_work_entries.filtered(lambda e:
-            e.date >= half1_date_start
-            and e.date <= half1_date_end)
-        half2_entries = flex_std_work_entries.filtered(lambda e:
-            e.date >= half2_date_start
-            and e.date <= half2_date_end)
+        all_work_entries_vals = (emp_flex_std + emp_std_flex + emp_fullyflex_std + emp_std_fullyflex).generate_work_entries(date(2025, 9, 1), date(2025, 9, 30))
+        flex_std_work_entries_vals = [vals for vals in all_work_entries_vals if vals['employee_id'] == emp_flex_std]
+        self.assertEqual(len(flex_std_work_entries_vals), 26)
+        half1_entries = [vals for vals in flex_std_work_entries_vals if vals['date'] >= half1_date_start and vals['date'] <= half1_date_end]
+        half2_entries = [vals for vals in flex_std_work_entries_vals if vals['date'] >= half2_date_start and vals['date'] <= half2_date_end]
         self.assertEqual(len(half1_entries), 15)  # 1 work entry per day (including weekend)
-        self.assertTrue(all(entry.duration == 3 for entry in half1_entries))
-        self.assertTrue(all(entry.version_id.name == 'Flex Contract' for entry in half1_entries))
+        self.assertTrue(all(entry['duration'] == 3 for entry in half1_entries))
+        self.assertTrue(all(entry['version_id'].name == 'Flex Contract' for entry in half1_entries))
         self.assertEqual(len(half2_entries), 11)  # 1 work entries per day, no work entries for weekend
-        self.assertTrue(all(entry.duration == 8 for entry in half2_entries))
-        self.assertTrue(all(entry.version_id.name == 'Std Contract' for entry in half2_entries))
+        self.assertTrue(all(entry['duration'] == 8 for entry in half2_entries))
+        self.assertTrue(all(entry['version_id'].name == 'Std Contract' for entry in half2_entries))
 
-        std_flex_work_entries = all_work_entries.filtered(lambda e: e.employee_id == emp_std_flex)
+        std_flex_work_entries = [vals for vals in all_work_entries_vals if vals['employee_id'] == emp_std_flex]
         self.assertEqual(len(std_flex_work_entries), 26)
-        half1_entries = std_flex_work_entries.filtered(lambda e:
-            e.date >= half1_date_start
-            and e.date <= half1_date_end)
-        half2_entries = std_flex_work_entries.filtered(lambda e:
-            e.date >= half2_date_start
-            and e.date <= half2_date_end)
+        half1_entries = [vals for vals in std_flex_work_entries if vals['date'] >= half1_date_start and vals['date'] <= half1_date_end]
+        half2_entries = [vals for vals in std_flex_work_entries if vals['date'] >= half2_date_start and vals['date'] <= half2_date_end]
         self.assertEqual(len(half1_entries), 11)  # 1 work entries per day, no work entries for weekend
-        self.assertTrue(all(entry.duration == 8 for entry in half1_entries))
-        self.assertTrue(all(entry.version_id.name == 'Std Contract' for entry in half1_entries))
+        self.assertTrue(all(entry['duration'] == 8 for entry in half1_entries))
+        self.assertTrue(all(entry['version_id'].name == 'Std Contract' for entry in half1_entries))
         self.assertEqual(len(half2_entries), 15)  # 1 work entry per day (including weekend)
-        self.assertTrue(all(entry.duration == 3 for entry in half2_entries))
-        self.assertTrue(all(entry.version_id.name == 'Flex Contract' for entry in half2_entries))
+        self.assertTrue(all(entry['duration'] == 3 for entry in half2_entries))
+        self.assertTrue(all(entry['version_id'].name == 'Flex Contract' for entry in half2_entries))
 
-        fullyflex_std_work_entries = all_work_entries.filtered(lambda e: e.employee_id == emp_fullyflex_std)
-        self.assertEqual(len(fullyflex_std_work_entries), 26)
-        half1_entries = fullyflex_std_work_entries.filtered(lambda e:
-            e.date >= half1_date_start
-            and e.date <= half1_date_end)
-        half2_entries = fullyflex_std_work_entries.filtered(lambda e:
-            e.date >= half2_date_start
-            and e.date <= half2_date_end)
+        fullyflex_std_work_entries_vals = [vals for vals in all_work_entries_vals if vals['employee_id'] == emp_fullyflex_std]
+        self.assertEqual(len(fullyflex_std_work_entries_vals), 26)
+        half1_entries = [vals for vals in fullyflex_std_work_entries_vals if vals['date'] >= half1_date_start and vals['date'] <= half1_date_end]
+        half2_entries = [vals for vals in fullyflex_std_work_entries_vals if vals['date'] >= half2_date_start and vals['date'] <= half2_date_end]
         self.assertEqual(len(half1_entries), 15)  # work entries cover the entire duration
-        self.assertTrue(all(entry.duration == 24 for entry in half1_entries))
-        self.assertTrue(all(entry.version_id.name == 'FullyFlex Contract' for entry in half1_entries))
+        self.assertTrue(all(entry['duration'] == 24 for entry in half1_entries))
+        self.assertTrue(all(entry['version_id'].name == 'FullyFlex Contract' for entry in half1_entries))
         self.assertEqual(len(half2_entries), 11)  # 1 work entries per day, no work entries for weekend
-        self.assertTrue(all(entry.duration == 8 for entry in half2_entries))
-        self.assertTrue(all(entry.version_id.name == 'Std Contract' for entry in half2_entries))
+        self.assertTrue(all(entry['duration'] == 8 for entry in half2_entries))
+        self.assertTrue(all(entry['version_id'].name == 'Std Contract' for entry in half2_entries))
 
-        std_fullyflex_work_entries = all_work_entries.filtered(lambda e: e.employee_id == emp_std_fullyflex)
+        std_fullyflex_work_entries = [vals for vals in all_work_entries_vals if vals['employee_id'] == emp_std_fullyflex]
         self.assertEqual(len(std_fullyflex_work_entries), 26)
-        half1_entries = std_fullyflex_work_entries.filtered(lambda e:
-            e.date >= half1_date_start
-            and e.date <= half1_date_end)
-        half2_entries = std_fullyflex_work_entries.filtered(lambda e:
-            e.date >= half2_date_start
-            and e.date <= half2_date_end)
+        half1_entries = [vals for vals in std_fullyflex_work_entries if vals['date'] >= half1_date_start and vals['date'] <= half1_date_end]
+        half2_entries = [vals for vals in std_fullyflex_work_entries if vals['date'] >= half2_date_start and vals['date'] <= half2_date_end]
         self.assertEqual(len(half1_entries), 11)  # 1 work entries per day, no work entries for weekend
-        self.assertTrue(all(entry.duration == 8 for entry in half1_entries))
-        self.assertTrue(all(entry.version_id.name == 'Std Contract' for entry in half1_entries))
+        self.assertTrue(all(entry['duration'] == 8 for entry in half1_entries))
+        self.assertTrue(all(entry['version_id'].name == 'Std Contract' for entry in half1_entries))
         self.assertEqual(len(half2_entries), 15)  # work entries cover the entire duration
-        self.assertTrue(all(entry.duration == 24 for entry in half2_entries))
-        self.assertTrue(all(entry.version_id.name == 'FullyFlex Contract' for entry in half2_entries))
+        self.assertTrue(all(entry['duration'] == 24 for entry in half2_entries))
+        self.assertTrue(all(entry['version_id'].name == 'FullyFlex Contract' for entry in half2_entries))
 
     def test_work_entry_version_changed_after_generation(self):
         """
@@ -414,30 +352,27 @@ class TestWorkEntry(TestWorkEntryBase):
             'date_version': datetime(2025, 1, 1),
             'contract_date_start': datetime(2025, 1, 1),
         })
-        employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
-        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
-        self.assertEqual(len(work_entries), 23, "23 attendance")
-        self.assertEqual(sum(work_entries.mapped("duration")), 184, "23 * 8h")
+        work_entries_vals = employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
+        self.assertEqual(len(work_entries_vals), 23, "23 attendance")
+        self.assertEqual(sum(vals['duration'] for vals in work_entries_vals), 184, "23 * 8h")
 
         # new version with a different calendar (35h) set in the tier of the month
         employee.create_version({
             'resource_calendar_id': calendar_35h.id,
             'date_version': datetime(2025, 1, 10),
         })
-        employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
-        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
-        self.assertEqual(len(work_entries), 23, "23 attendance")
-        self.assertEqual(sum(work_entries.mapped("duration")), 168, "7 * 8h + 16 * 7h")
+        work_entries_vals = employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
+        self.assertEqual(len(work_entries_vals), 23, "23 attendance")
+        self.assertEqual(sum(vals['duration'] for vals in work_entries_vals), 168, "7 * 8h + 16 * 7h")
 
         # new version with a different calendar (40h) set in the second tier of the month
         employee.create_version({
             'resource_calendar_id': calendar_40h.id,
             'date_version': datetime(2025, 1, 20),
         })
-        employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
-        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
-        self.assertEqual(len(work_entries), 23, "23 attendance")
-        self.assertEqual(sum(work_entries.mapped("duration")), 178, "7 * 8h + 6 * 7h + 10 * 8h")
+        work_entries_vals = employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
+        self.assertEqual(len(work_entries_vals), 23, "23 attendance")
+        self.assertEqual(sum(vals['duration'] for vals in work_entries_vals), 178, "7 * 8h + 6 * 7h + 10 * 8h")
 
     def test_work_entry_version_changed_after_generation2(self):
         """
@@ -485,27 +420,24 @@ class TestWorkEntry(TestWorkEntryBase):
             'date_version': datetime(2025, 1, 1),
             'contract_date_start': datetime(2025, 1, 1),
         })
-        employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
-        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
-        self.assertEqual(len(work_entries), 23, "23 attendance")
-        self.assertEqual(sum(work_entries.mapped("duration")), 184, "23 * 8h")
+        work_entries_vals = employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
+        self.assertEqual(len(work_entries_vals), 23, "23 attendance")
+        self.assertEqual(sum(vals['duration'] for vals in work_entries_vals), 184, "23 * 8h")
 
         # new version with a different calendar (40h) set in the tier of the month
         employee.create_version({
             'resource_calendar_id': calendar_40h.id,
             'date_version': datetime(2025, 1, 20),
         })
-        employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
-        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
-        self.assertEqual(len(work_entries), 23, "23 attendance")
-        self.assertEqual(sum(work_entries.mapped("duration")), 184, "13 * 8h + 10 * 8h")
+        work_entries_vals = employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
+        self.assertEqual(len(work_entries_vals), 23, "23 attendance")
+        self.assertEqual(sum(vals['duration'] for vals in work_entries_vals), 184, "13 * 8h + 10 * 8h")
 
         # new version with a different calendar (35h) set in the second tier of the month
         employee.create_version({
             'resource_calendar_id': calendar_35h.id,
             'date_version': datetime(2025, 1, 10),
         })
-        employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
-        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
-        self.assertEqual(len(work_entries), 23, "23 attendance")
-        self.assertEqual(sum(work_entries.mapped("duration")), 178, "7 * 8h + 6 * 7h + 10 * 8h")
+        work_entries_vals = employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
+        self.assertEqual(len(work_entries_vals), 23, "23 attendance")
+        self.assertEqual(sum(vals['duration'] for vals in work_entries_vals), 178, "7 * 8h + 6 * 7h + 10 * 8h")

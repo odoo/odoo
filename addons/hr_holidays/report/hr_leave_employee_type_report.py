@@ -15,7 +15,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
     number_of_days = fields.Float('Number of Days', readonly=True, aggregator="sum")
     number_of_hours = fields.Float('Number of Hours', readonly=True, aggregator="sum")
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
-    leave_type = fields.Many2one("hr.leave.type", string="Time Off Type", readonly=True)
+    work_entry_type_id = fields.Many2one("hr.work.entry.type", string="Time Off Type", readonly=True)
     holiday_status = fields.Selection([
         ('taken', 'Taken'), #taken = validated
         ('left', 'Left'),
@@ -43,7 +43,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
                 leaves.number_of_days as number_of_days,
                 leaves.number_of_hours as number_of_hours,
                 leaves.department_id as department_id,
-                leaves.leave_type as leave_type,
+                leaves.work_entry_type_id as work_entry_type_id,
                 leaves.holiday_status as holiday_status,
                 leaves.state as state,
                 leaves.date_from as date_from,
@@ -63,7 +63,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
                             ELSE 0
                     END as number_of_hours,
                     v.department_id as department_id,
-                    allocation.holiday_status_id as leave_type,
+                    allocation.work_entry_type_id as work_entry_type_id,
                     allocation.state as state,
                     allocation.date_from as date_from,
                     allocation.date_to as date_to,
@@ -75,28 +75,28 @@ class HrLeaveEmployeeTypeReport(models.Model):
 
                 /* Obtain the minimum id for a given employee and type of leave */
                 LEFT JOIN
-                    (SELECT employee_id, holiday_status_id, min(id) as min_id
-                    FROM hr_leave_allocation GROUP BY employee_id, holiday_status_id) min_allocation_id
-                on (allocation.employee_id=min_allocation_id.employee_id and allocation.holiday_status_id=min_allocation_id.holiday_status_id)
+                    (SELECT employee_id, work_entry_type_id, min(id) as min_id
+                    FROM hr_leave_allocation GROUP BY employee_id, work_entry_type_id) min_allocation_id
+                on (allocation.employee_id=min_allocation_id.employee_id and allocation.work_entry_type_id=min_allocation_id.work_entry_type_id)
 
                 /* Obtain the sum of allocations (validated) */
                 LEFT JOIN
-                    (SELECT employee_id, holiday_status_id,
+                    (SELECT employee_id, work_entry_type_id,
                         sum(CASE WHEN state = 'validate' THEN number_of_days ELSE 0 END) as number_of_days,
                         sum(CASE WHEN state = 'validate' THEN number_of_hours_display ELSE 0 END) as number_of_hours
                     FROM hr_leave_allocation
-                    GROUP BY employee_id, holiday_status_id) aggregate_allocation
-                on (allocation.employee_id=aggregate_allocation.employee_id and allocation.holiday_status_id=aggregate_allocation.holiday_status_id)
+                    GROUP BY employee_id, work_entry_type_id) aggregate_allocation
+                on (allocation.employee_id=aggregate_allocation.employee_id and allocation.work_entry_type_id=aggregate_allocation.work_entry_type_id)
 
                 /* Obtain the sum of requested leaves (validated) */
                 LEFT JOIN
-                    (SELECT employee_id, holiday_status_id,
+                    (SELECT employee_id, work_entry_type_id,
                         sum(CASE WHEN state IN ('validate', 'validate1') THEN number_of_days ELSE 0 END) as number_of_days,
                         sum(CASE WHEN state IN ('validate', 'validate1') THEN number_of_hours ELSE 0 END) as number_of_hours
                     FROM hr_leave
 
-                    GROUP BY employee_id, holiday_status_id) aggregate_leave
-                on (allocation.employee_id=aggregate_leave.employee_id and allocation.holiday_status_id = aggregate_leave.holiday_status_id)
+                    GROUP BY employee_id, work_entry_type_id) aggregate_leave
+                on (allocation.employee_id=aggregate_leave.employee_id and allocation.work_entry_type_id = aggregate_leave.work_entry_type_id)
 
                 UNION ALL SELECT
                     request.employee_id as employee_id,
@@ -104,7 +104,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
                     request.number_of_days as number_of_days,
                     request.number_of_hours as number_of_hours,
                     v.department_id as department_id,
-                    request.holiday_status_id as leave_type,
+                    request.work_entry_type_id as work_entry_type_id,
                     request.state as state,
                     request.date_from as date_from,
                     request.date_to as date_to,

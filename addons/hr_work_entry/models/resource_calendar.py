@@ -7,9 +7,9 @@ from odoo.fields import Domain
 class ResourceCalendar(models.Model):
     _inherit = 'resource.calendar'
 
-    # Override the method to add 'attendance_ids.work_entry_type_id.category' to
+    # Override the method to add 'attendance_ids.work_entry_type_id.count_as' to
     # the dependencies
-    @api.depends('attendance_ids.work_entry_type_id.category')
+    @api.depends('attendance_ids.work_entry_type_id.count_as')
     def _compute_hours_per_week(self):
         super()._compute_hours_per_week()
 
@@ -19,7 +19,7 @@ class ResourceCalendar(models.Model):
             Domain.OR(
                 [
                     Domain('work_entry_type_id', '=', False),
-                    Domain('work_entry_type_id.category', '=', 'working_time'),
+                    Domain('work_entry_type_id.count_as', '=', 'working_time'),
                 ],
             ),
         )

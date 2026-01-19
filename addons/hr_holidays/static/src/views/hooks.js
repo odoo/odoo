@@ -58,7 +58,7 @@ export function useNewAllocationRequest() {
                 "hr_holidays.hr_leave_allocation_view_form_manager_dashboard";
         }
         if (holidayStatusId) {
-            context["default_holiday_status_id"] = holidayStatusId;
+            context["default_work_entry_type_id"] = holidayStatusId;
         }
         addDialog(AllocationFormViewDialog, {
             resModel: "hr.leave.allocation",

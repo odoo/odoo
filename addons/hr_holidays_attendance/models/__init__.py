@@ -4,7 +4,7 @@ from . import hr_attendance_overtime_rule
 from . import hr_attendance_overtime
 from . import hr_leave_allocation
 from . import hr_leave_accrual_plan_level
-from . import hr_leave_type
+from . import hr_work_entry_type
 from . import hr_leave
 from . import ir_ui_menu
 from . import hr_employee

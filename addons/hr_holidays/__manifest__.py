@@ -23,19 +23,18 @@ You can keep track of time off in different ways by following reports:
 
 A synchronization with an internal agenda (Meetings of the CRM module) is also possible in order to automatically create a meeting when a time off request is accepted by setting up a type of meeting in time off Type.
 """,
-    'depends': ['hr', 'calendar', 'resource'],
+    'depends': ['hr_work_entry', 'calendar', 'resource'],
     'data': [
+        'security/hr_holidays_security.xml',
+        'security/ir.model.access.csv',
+
         'data/report_paperformat.xml',
         'data/mail_activity_type_data.xml',
         'data/mail_message_subtype_data.xml',
-        'data/ir_attachment_data.xml',
-        'data/hr_leave_type_data.xml',
+        'data/hr_work_entry_type_data.xml',
         'data/ir_cron_data.xml',
         'data/hr_holidays_tour.xml',
         'data/mail_template_data.xml',
-
-        'security/hr_holidays_security.xml',
-        'security/ir.model.access.csv',
 
         'wizard/hr_departure_wizard_views.xml',
         'wizard/hr_holidays_cancel_leave_views.xml',
@@ -46,7 +45,7 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'views/resource_views.xml',
         'views/hr_employee_departure_views.xml',
         'views/hr_leave_views.xml',
-        'views/hr_leave_type_views.xml',
+        'views/hr_work_entry_type_views.xml',
         'views/hr_leave_allocation_views.xml',
         'views/hr_leave_accrual_views.xml',
         'views/hr_leave_mandatory_day_views.xml',

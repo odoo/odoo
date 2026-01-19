@@ -10,10 +10,9 @@
                 <field name="company_country_code" invisible="1"/>
                 <block title="French Time Off Localization" invisible="company_country_code != 'FR'">
                     <setting company_dependent="1" help="Set the time off type used as the company Paid Time Off to compute part-timers leave duration">
-                        <field name="l10n_fr_reference_leave_type"
+                        <field name="l10n_fr_reference_work_entry_type"
                             class="o_light_label"
-                            domain="[('company_id', 'in', [company_id, False])]"
-                            context="{'default_company_id': company_id}" required="company_country_code == 'FR'"/>
+                            required="company_country_code == 'FR'"/>
                     </setting>
                 </block>
             </block>

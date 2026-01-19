@@ -24,16 +24,15 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
         return domain
 
     name = fields.Char("Description")
-    holiday_status_id = fields.Many2one(
-        "hr.leave.type", string="Time Off Type", required=True,
-        domain="[('company_id', 'in', [company_id, False])]")
+    work_entry_type_id = fields.Many2one(
+        "hr.work.entry.type", string="Time Off Type", required=True)
     employee_ids = fields.Many2many('hr.employee', string='Employees', domain=lambda self: self._get_employee_domain())
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     date_from = fields.Date('Start Date', required=True, default=lambda self: fields.Date.today())
     date_to = fields.Date('End Date', required=True, default=lambda self: fields.Date.today())
     hour_from = fields.Float(string='Hour from')
     hour_to = fields.Float(string='Hour to')
-    leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit')
+    work_entry_type_request_unit = fields.Selection(related='work_entry_type_id.request_unit')
     date_from_period = fields.Selection([
         ('am', 'Morning'), ('pm', 'Afternoon')],
         string="Date Period Start", default='am')
@@ -44,22 +43,22 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     def _prepare_employees_holiday_values(self, employees, date_from_tz, date_to_tz):
         self.ensure_one()
         work_days_data = employees.sudo()._get_work_days_data_batch(date_from_tz, date_to_tz)
-        validated = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.holiday_status_id.leave_validation_type == 'no_validation'
+        validated = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.work_entry_type_id.leave_validation_type == 'no_validation'
         values = []
         for employee in employees:
             if work_days_data[employee.id]['days'] > 0:
                 employee_values = {
                     'name': self.name,
-                    'holiday_status_id': self.holiday_status_id.id,
+                    'work_entry_type_id': self.work_entry_type_id.id,
                     'request_date_from': self.date_from,
                     'request_date_to': self.date_to,
                     'employee_id': employee.id,
                     'state': 'validate' if validated else 'confirm',
                 }
-                if self.leave_type_request_unit == 'hour':
+                if self.work_entry_type_request_unit == 'hour':
                     employee_values['request_hour_from'] = self.hour_from
                     employee_values['request_hour_to'] = self.hour_to
-                if self.leave_type_request_unit == 'half_day':
+                if self.work_entry_type_request_unit == 'half_day':
                     employee_values['request_date_from_period'] = self.date_from_period
                     employee_values['request_date_to_period'] = self.date_to_period
                 values.append(employee_values)
@@ -70,7 +69,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
         employees = self.employee_ids or self.env['hr.employee'].search(self._get_employee_domain())
 
         tz = ZoneInfo(self.company_id.tz or self.env.user.tz or 'UTC')
-        if self.leave_type_request_unit == 'hour':
+        if self.work_entry_type_request_unit == 'hour':
             date_from_tz = (datetime.combine(self.date_from, datetime.min.time(), tzinfo=tz) + timedelta(hours=self.hour_from)).astimezone(UTC).replace(tzinfo=None)
             date_to_tz = (datetime.combine(self.date_to, datetime.min.time(), tzinfo=tz) + timedelta(hours=self.hour_to)).astimezone(UTC).replace(tzinfo=None)
         else:
@@ -88,7 +87,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
 
         if conflicting_leaves:
             # YTI: More complex use cases could be managed later
-            invalid_time_off = conflicting_leaves.filtered(lambda leave: leave.leave_type_request_unit == 'hour')
+            invalid_time_off = conflicting_leaves.filtered(lambda leave: leave.work_entry_type_request_unit == 'hour')
             if invalid_time_off:
                 raise UserError(self.env._('Some employees already have time off requests in hours that overlap with the selected period, Odoo cannot automatically adjust or split hourly leaves during batch generation. Conflicting time off:\n%s', '\n'.join(f"- {l.display_name}" for l in invalid_time_off)))
             one_day_leaves = conflicting_leaves.filtered(lambda leave: leave.request_date_from == leave.request_date_to)

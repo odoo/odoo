@@ -51,13 +51,15 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'date_to': datetime(2025, 8, 1, 17),
         }])
 
-        custom_leave, half_day_leave = self.env['hr.leave.type'].create([{
+        custom_leave, half_day_leave = self.env['hr.work.entry.type'].create([{
             'name': 'Custom Leave',
+            'code': 'Custom Leave',
             'requires_allocation': False,
             'request_unit': 'hour',
             'unit_of_measure': 'hour',
         }, {
             'name': 'Half day',
+            'code': 'Half day',
             'requires_allocation': False,
             'request_unit': 'half_day',
             'unit_of_measure': 'day',
@@ -65,7 +67,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
 
         self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True).create([{
             'name': 'Half 1',
-            'holiday_status_id': half_day_leave.id,
+            'work_entry_type_id': half_day_leave.id,
             'employee_id': self.flex_employee.id,
             'request_date_from': date(2025, 7, 28),
             'request_date_to': date(2025, 7, 28),
@@ -73,7 +75,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'request_date_to_period': 'am',
         }, {
             'name': 'Half 2',
-            'holiday_status_id': half_day_leave.id,
+            'work_entry_type_id': half_day_leave.id,
             'employee_id': self.flex_employee.id,
             'request_date_from': date(2025, 7, 30),
             'request_date_to': date(2025, 7, 30),
@@ -81,7 +83,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'request_date_to_period': 'pm',
         }, {
             'name': 'Custom',
-            'holiday_status_id': custom_leave.id,
+            'work_entry_type_id': custom_leave.id,
             'employee_id': self.flex_employee.id,
             'request_date_from': date(2025, 7, 29),
             'request_date_to': date(2025, 7, 29),
@@ -89,7 +91,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'request_hour_to': 16.0,
         }, {
             'name': 'Half 1',
-            'holiday_status_id': half_day_leave.id,
+            'work_entry_type_id': half_day_leave.id,
             'employee_id': self.fully_flex_employee.id,
             'request_date_from': date(2025, 7, 28),
             'request_date_to': date(2025, 7, 28),
@@ -97,7 +99,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'request_date_to_period': 'am',
         }, {
             'name': 'Half 2',
-            'holiday_status_id': half_day_leave.id,
+            'work_entry_type_id': half_day_leave.id,
             'employee_id': self.fully_flex_employee.id,
             'request_date_from': date(2025, 7, 30),
             'request_date_to': date(2025, 7, 30),
@@ -105,7 +107,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'request_date_to_period': 'pm',
         }, {
             'name': 'Custom',
-            'holiday_status_id': custom_leave.id,
+            'work_entry_type_id': custom_leave.id,
             'employee_id': self.fully_flex_employee.id,
             'request_date_from': date(2025, 7, 29),
             'request_date_to': date(2025, 7, 29),
@@ -180,8 +182,9 @@ class TestFlexibleResourceCalendar(TransactionCase):
         """
         Test that creating a leave for a fully flexible employee works as expected.
         """
-        test_leave_type = self.env['hr.leave.type'].create({
+        test_leave_type = self.env['hr.work.entry.type'].create({
             'name': 'Test Leave Type',
+            'code': "FLEXITEST",
             'requires_allocation': False,
             'request_unit': 'day',
             'unit_of_measure': 'day',
@@ -189,7 +192,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
 
         self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True).create({
             'name': 'Test Leave',
-            'holiday_status_id': test_leave_type.id,
+            'work_entry_type_id': test_leave_type.id,
             'employee_id': self.fully_flex_employee.id,
             'request_date_from': date(2025, 2, 4),
             'request_date_to': date(2025, 2, 6),

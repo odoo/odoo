@@ -61,12 +61,12 @@ class TestHrHolidaysCommon(common.TransactionCase):
         # For example, the tour 'time_off_request_calendar_view' would succeed (false positive) without this leave type.
         # However, the tour won't create a time-off request (as expected)because no time-off type is available to be selected on the leave
         # This would cause the test case that uses the tour to fail.
-        cls.env['hr.leave.type'].create({
-            'name': 'Test Leave Type',
+        cls.env['hr.work.entry.type'].create({
+            'name': 'Test Work Entry Type',
+            'code': 'Test Work Entry Type',
             'requires_allocation': False,
             'request_unit': 'day',
             'unit_of_measure': 'day',
-            'company_id': cls.company.id,
         })
 
         cls.admin_employee = get_admin_employee(cls.env)
@@ -135,8 +135,8 @@ class TestHrHolidaysCommon(common.TransactionCase):
         cls.rd_dept.write({'manager_id': cls.employee_hruser_id})
         cls.hours_per_day = cls.employee_emp.resource_id.calendar_id.hours_per_day or 8
 
-    def assert_remaining_leaves_equal(self, leave_type, value, employee, date=None, digits=None):
-        allocation_data = leave_type.get_allocation_data(employee, date)
+    def assert_remaining_leaves_equal(self, work_entry_type, value, employee, date=None, digits=None):
+        allocation_data = work_entry_type.get_allocation_data(employee, date)
         if not date:
             date = fields.Date.today()
         if digits:
@@ -146,7 +146,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
             self.assertEqual(allocation_data[employee][0][1]['remaining_leaves'],
                 value, f"Remaining leaves for date '{date}' are incorrect.")
 
-    def _create_form_test_accrual_allocation(self, leave_type, date_from, employee, accrual_plan, date_to=None, creator_user=None):
+    def _create_form_test_accrual_allocation(self, work_entry_type, date_from, employee, accrual_plan, date_to=None, creator_user=None):
         allocation = self.env['hr.leave.allocation']
         if creator_user:
             allocation = allocation.with_user(creator_user)
@@ -155,7 +155,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
             form.allocation_type = 'accrual'
             form.accrual_plan_id = accrual_plan
             form.employee_id = employee
-            form.holiday_status_id = leave_type
+            form.work_entry_type_id = work_entry_type
             form.date_from = date_from
             if date_to:
                 form.date_to = date_to
@@ -182,13 +182,13 @@ class TestHolidayContract(TransactionCase):
             'name': 'Standard 40h/week',
         })
 
-        cls.leave_type = cls.env['hr.leave.type'].create({
+        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
             'name': 'Legal Leaves',
-            'time_type': 'leave',
+            'code': 'Legal Leaves',
+            'count_as': 'absence',
             'requires_allocation': False,
             'request_unit': 'day',
             'unit_of_measure': 'day',
-            'responsible_ids': [Command.link(cls.env.ref('base.user_admin').id)],
         })
         cls.env.ref('base.user_admin').notification_type = 'inbox'
 
@@ -248,7 +248,7 @@ class TestHolidayContract(TransactionCase):
         return cls.env['hr.leave'].create({
             'name': name or 'Holiday!!!',
             'employee_id': employee_id or cls.richard_emp.id,
-            'holiday_status_id': cls.leave_type.id,
+            'work_entry_type_id': cls.work_entry_type.id,
             'request_date_to': date_to or Datetime.today(),
             'request_date_from': date_from or Datetime.today(),
         })

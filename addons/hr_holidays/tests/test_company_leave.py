@@ -32,23 +32,20 @@ class TestCompanyLeave(TransactionCase):
             'name': 'Standard 40h/week',
         })
 
-
-
-        cls.bank_holiday = cls.env['hr.leave.type'].create({
+        cls.bank_holiday = cls.env['hr.work.entry.type'].create({
             'name': 'Bank Holiday',
-            'responsible_ids': [Command.link(cls.env.ref('base.user_admin').id)],
-            'company_id': cls.company.id,
+            'code': 'Bank Holiday',
             'requires_allocation': False,
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
 
-        cls.paid_time_off = cls.env['hr.leave.type'].create({
+        cls.paid_time_off = cls.env['hr.work.entry.type'].create({
             'name': 'Paid Time Off',
+            'code': 'Paid Time Off',
             'request_unit': 'day',
             'unit_of_measure': 'day',
             'leave_validation_type': 'both',
-            'company_id': cls.company.id,
             'requires_allocation': False,
         })
 
@@ -66,7 +63,7 @@ class TestCompanyLeave(TransactionCase):
         self.env['hr.leave'].create({
             'name': 'Hol11',
             'employee_id': self.employee.id,
-            'holiday_status_id': self.paid_time_off.id,
+            'work_entry_type_id': self.paid_time_off.id,
             'request_date_from': date(2020, 1, 7),
             'request_date_to': date(2020, 1, 9),
         })
@@ -74,7 +71,7 @@ class TestCompanyLeave(TransactionCase):
         company_leave = self.env['hr.leave.generate.multi.wizard'].create({
             'name': 'Bank Holiday',
             'company_id': self.company.id,
-            'holiday_status_id': self.bank_holiday.id,
+            'work_entry_type_id': self.bank_holiday.id,
             'date_from': date(2020, 1, 8),
             'date_to': date(2020, 1, 8),
         })
@@ -108,7 +105,7 @@ class TestCompanyLeave(TransactionCase):
         leave = self.env['hr.leave'].create({
             'name': 'Hol11',
             'employee_id': self.employee.id,
-            'holiday_status_id': self.paid_time_off.id,
+            'work_entry_type_id': self.paid_time_off.id,
             'request_date_from': date(2020, 1, 7),
             'request_date_to': date(2020, 1, 9),
         })
@@ -117,7 +114,7 @@ class TestCompanyLeave(TransactionCase):
         company_leave = self.env['hr.leave.generate.multi.wizard'].create({
             'name': 'Bank Holiday',
             'company_id': self.company.id,
-            'holiday_status_id': self.bank_holiday.id,
+            'work_entry_type_id': self.bank_holiday.id,
             'date_from': date(2020, 1, 8),
             'date_to': date(2020, 1, 8),
         })
@@ -152,7 +149,7 @@ class TestCompanyLeave(TransactionCase):
         leave = self.env['hr.leave'].create({
             'name': 'Hol11',
             'employee_id': self.employee.id,
-            'holiday_status_id': self.paid_time_off.id,
+            'work_entry_type_id': self.paid_time_off.id,
             'request_date_from': date(2020, 1, 7),
             'request_date_to': date(2020, 1, 7),
             'request_date_from_period': 'am',
@@ -163,7 +160,7 @@ class TestCompanyLeave(TransactionCase):
         company_leave = self.env['hr.leave.generate.multi.wizard'].create({
             'name': 'Bank Holiday',
             'company_id': self.company.id,
-            'holiday_status_id': self.bank_holiday.id,
+            'work_entry_type_id': self.bank_holiday.id,
             'date_from': date(2020, 1, 7),
             'date_to': date(2020, 1, 7),
         })
@@ -189,7 +186,7 @@ class TestCompanyLeave(TransactionCase):
         leave = self.env['hr.leave'].create({
             'name': 'Hol11',
             'employee_id': self.employee.id,
-            'holiday_status_id': self.paid_time_off.id,
+            'work_entry_type_id': self.paid_time_off.id,
             'request_date_from': date(2020, 1, 9),
             'request_date_to': date(2020, 1, 9),
 
@@ -199,7 +196,7 @@ class TestCompanyLeave(TransactionCase):
         company_leave = self.env['hr.leave.generate.multi.wizard'].create({
             'name': 'Bank Holiday',
             'company_id': self.company.id,
-            'holiday_status_id': self.bank_holiday.id,
+            'work_entry_type_id': self.bank_holiday.id,
             'date_from': date(2020, 1, 9),
             'date_to': date(2020, 1, 9),
         })
@@ -234,7 +231,7 @@ class TestCompanyLeave(TransactionCase):
         leave = self.env['hr.leave'].create({
             'name': 'Hol11',
             'employee_id': self.employee.id,
-            'holiday_status_id': self.paid_time_off.id,
+            'work_entry_type_id': self.paid_time_off.id,
             'request_date_from': date(2020, 1, 6),
             'request_date_to': date(2020, 1, 10),
         })
@@ -243,7 +240,7 @@ class TestCompanyLeave(TransactionCase):
         company_leave = self.env['hr.leave.generate.multi.wizard'].create({
             'name': 'Bank Holiday',
             'company_id': self.company.id,
-            'holiday_status_id': self.bank_holiday.id,
+            'work_entry_type_id': self.bank_holiday.id,
             'date_from': date(2020, 1, 10),
             'date_to': date(2020, 1, 10),
         })
@@ -276,7 +273,7 @@ class TestCompanyLeave(TransactionCase):
         leaves = self.env['hr.leave'].create([{
             'name': 'Holiday - %s' % employee.name,
             'employee_id': employee.id,
-            'holiday_status_id': self.paid_time_off.id,
+            'work_entry_type_id': self.paid_time_off.id,
             'request_date_from': date(2020, 3, 29),
             'request_date_to': date(2020, 4, 1),
         } for employee in employees[0:15]])
@@ -285,7 +282,7 @@ class TestCompanyLeave(TransactionCase):
         company_leave = self.env['hr.leave.generate.multi.wizard'].create({
             'name': 'Bank Holiday',
             'company_id': self.company.id,
-            'holiday_status_id': self.bank_holiday.id,
+            'work_entry_type_id': self.bank_holiday.id,
             'date_from': date(2020, 4, 2),
             'date_to': date(2020, 4, 2),
         })
@@ -295,5 +292,5 @@ class TestCompanyLeave(TransactionCase):
             # Without tracking/activity context keys: 5154
             company_leave.action_generate_time_off()
 
-        leaves = self.env['hr.leave'].search([('holiday_status_id', '=', self.bank_holiday.id)])
+        leaves = self.env['hr.leave'].search([('work_entry_type_id', '=', self.bank_holiday.id)])
         self.assertEqual(len(leaves), 101)

@@ -18,9 +18,10 @@ class TestOutOfOffice(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.leave_type = cls.env['hr.leave.type'].create({
+        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
             'name': 'Legal Leaves',
-            'time_type': 'leave',
+            'code': 'Legal Leaves',
+            'count_as': 'absence',
             'requires_allocation': False,
             'request_unit': 'day',
             'unit_of_measure': 'day',
@@ -33,7 +34,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         first_leave = self.env['hr.leave'].create({
             'name': 'Christmas',
             'employee_id': self.employee_hruser.id,
-            'holiday_status_id': self.leave_type.id,
+            'work_entry_type_id': self.work_entry_type.id,
             'request_date_from': "2024-06-05",
             'request_date_to': "2024-06-07",
         })
@@ -42,7 +43,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         second_leave = self.env['hr.leave'].create({
             'name': 'Christmas',
             'employee_id': self.employee_hruser.id,
-            'holiday_status_id': self.leave_type.id,
+            'work_entry_type_id': self.work_entry_type.id,
             'request_date_from': "2024-06-10",
             'request_date_to': "2024-06-11",
         })
@@ -87,9 +88,10 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
     @classmethod
     def setUpClass(cls):
         super(TestOutOfOfficePerformance, cls).setUpClass()
-        cls.leave_type = cls.env['hr.leave.type'].create({
+        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
             'name': 'Legal Leaves',
-            'time_type': 'leave',
+            'code': 'Legal Leaves',
+            'count_as': 'absence',
             'requires_allocation': False,
             'request_unit': 'day',
             'unit_of_measure': 'day',
@@ -98,7 +100,7 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
         cls.leave = cls.env['hr.leave'].create({
             'name': 'Christmas',
             'employee_id': cls.employee_hruser_id,
-            'holiday_status_id': cls.leave_type.id,
+            'work_entry_type_id': cls.work_entry_type.id,
             'request_date_from': (date.today() - relativedelta(days=1)),
             'request_date_to': cls.leave_date_end,
         })

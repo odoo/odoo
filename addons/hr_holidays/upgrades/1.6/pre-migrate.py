@@ -4,7 +4,7 @@
 def migrate(cr, version):
     cr.execute("""
       UPDATE ir_rule r
-        SET domain_force = '["|", ("employee_id", "=", False), ("employee_id.company_id", "in", company_ids), "|", ("holiday_status_id.company_id", "=", False), ("holiday_status_id.company_id", "in", company_ids)]'
+        SET domain_force = '["|", ("employee_id", "=", False), ("employee_id.company_id", "in", company_ids)]'
         FROM ir_model_data d
         WHERE d.res_id = r.id
           AND d.model = 'ir.rule'

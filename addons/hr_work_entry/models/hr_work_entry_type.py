@@ -6,11 +6,15 @@ from odoo.exceptions import UserError
 
 class HrWorkEntryType(models.Model):
     _name = 'hr.work.entry.type'
-    _description = 'HR Work Entry Type'
+    _description = 'Work Entry Type'
+    _order = 'sequence'
 
     name = fields.Char(required=True, translate=True)
     display_code = fields.Char(string="Display Code", size=3, translate=True, help="This code can be changed, it is only for a display purpose (3 letters max)")
-    code = fields.Char(string="Payroll Code", required=True, help="The code is used as a reference in salary rules. Careful, changing an existing code can lead to unwanted behaviors.")
+    code = fields.Char(
+        string="Payroll Code",
+        required=True,
+        help="The code is used as a reference in salary rules. Careful, changing an existing code can lead to unwanted behaviors.")
     external_code = fields.Char(help="Use this code to export your data to a third party")
     color = fields.Integer(default=0)
     sequence = fields.Integer(default=25)
@@ -23,7 +27,7 @@ class HrWorkEntryType(models.Model):
         domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)]
     )
     country_code = fields.Char(related='country_id.code')
-    category = fields.Selection(
+    count_as = fields.Selection(
         [("working_time", "Working Time"), ("absence", "Absence")],
         default="working_time",
         required=True,
@@ -44,24 +48,14 @@ class HrWorkEntryType(models.Model):
              "prompt a duration and will be added to the existing work entries while replace will simply replace all "
              "work entries of that day")
 
-    @api.constrains('country_id')
-    def _check_work_entry_type_country(self):
-        if self.env.ref('hr_work_entry.work_entry_type_attendance') in self:
-            raise UserError(_("You can't change the country of this specific work entry type."))
-        elif not self.env.context.get('install_mode') and self.env['hr.work.entry'].sudo().search_count([('work_entry_type_id', 'in', self.ids)], limit=1):
-            raise UserError(_("You can't change the Country of this work entry type cause it's currently used by the system. You need to delete related working entries first."))
-
     @api.constrains('code', 'country_id')
     def _check_code_unicity(self):
-        similar_work_entry_types = self.search([
+        similar_work_entry_types_by_code = self.search([
             ('code', 'in', self.mapped('code')),
             ('country_id', 'in', self.country_id.ids + [False]),
-            ('id', 'not in', self.ids)
-        ])
-        for work_entry_type in self:
-            invalid_work_entry_types = similar_work_entry_types.filtered_domain([
-                ('code', '=', work_entry_type.code),
-                ('country_id', 'in', self.country_id.ids + [False]),
-            ])
-            if invalid_work_entry_types:
-                raise UserError(_("The same code cannot be associated to multiple work entry types (%s)", ', '.join(list(set(invalid_work_entry_types.mapped('code'))))))
+        ]).grouped('code')
+        for code, similar_work_entry_types in similar_work_entry_types_by_code.items():
+            if len(similar_work_entry_types) == 1:
+                continue
+            if len(similar_work_entry_types) > 2 or (similar_work_entry_types.country_id and len(similar_work_entry_types.country_id.code) != 2):
+                UserError(_("The same code cannot be associated to multiple work entry types for the same company (%s)", code))

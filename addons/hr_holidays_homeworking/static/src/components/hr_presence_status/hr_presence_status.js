@@ -62,10 +62,10 @@ patch(HrPresenceStatusPrivate.prototype, patchHrPresenceStatus());
 
 const patchHrPresenceStatusPrivate = () => ({
     get label() {
-        return this.props.record.data.current_leave_id
+        return this.props.record.data.current_work_entry_type_id
             ? _t("%(label)s, back on %(date)s",
                 {
-                    label: this.props.record.data.current_leave_id.display_name,
+                    label: this.props.record.data.current_work_entry_type_id.display_name,
                     date: this.props.record.data['leave_date_to'].toLocaleString(
                         {
                             day: 'numeric',

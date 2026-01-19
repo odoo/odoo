@@ -23,9 +23,10 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'departure_date': cls.departure_date,
             'employee_ids': [Command.link(cls.employee.id)],
         })
-        cls.leave_type = cls.env['hr.leave.type'].create({
+        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
             'name': 'Paid Time Off',
-            'time_type': 'leave',
+            'code': 'Paid Time Off',
+            'count_as': 'absence',
             'requires_allocation': False,
             'request_unit': 'day',
             'unit_of_measure': 'day',
@@ -37,7 +38,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
     def test_departure_leave_before_departure_date(self):
         leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'employee_id': self.employee.id,
-            'holiday_status_id': self.leave_type.id,
+            'work_entry_type_id': self.work_entry_type.id,
             'request_date_from': self.departure_date + timedelta(days=-6),
             'request_date_to': self.departure_date,
         })
@@ -48,7 +49,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
     def test_departure_leave_after_departure_date(self):
         leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'employee_id': self.employee.id,
-            'holiday_status_id': self.leave_type.id,
+            'work_entry_type_id': self.work_entry_type.id,
             'request_date_from': self.departure_date + timedelta(days=6),
             'request_date_to': self.departure_date + timedelta(days=8),
         })
@@ -59,7 +60,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
     def test_departure_leave_with_departure_date(self):
         leave = self.env['hr.leave'].with_context(leave_fast_create=True).create({
             'employee_id': self.employee.id,
-            'holiday_status_id': self.leave_type.id,
+            'work_entry_type_id': self.work_entry_type.id,
             'request_date_from': self.departure_date + timedelta(days=-6),
             'request_date_to': self.departure_date + timedelta(days=8),
         })
@@ -82,7 +83,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
     def test_departure_allocation_before_departure_date(self):
         self.env['hr.leave.allocation'].create([{
             'name': 'allocation',
-            'holiday_status_id': self.leave_type.id,
+            'work_entry_type_id': self.work_entry_type.id,
             'number_of_days': 15,
             'employee_id': self.employee.id,
             'state': 'confirm',
@@ -94,7 +95,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
     def test_departure_allocation_after_departure_date(self):
         self.env['hr.leave.allocation'].create([{
             'name': 'allocation',
-            'holiday_status_id': self.leave_type.id,
+            'work_entry_type_id': self.work_entry_type.id,
             'number_of_days': 15,
             'employee_id': self.employee.id,
             'state': 'confirm',
@@ -106,7 +107,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
     def test_departure_allocation_with_departure_date(self):
         allocation = self.env['hr.leave.allocation'].create([{
             'name': 'allocation',
-            'holiday_status_id': self.leave_type.id,
+            'work_entry_type_id': self.work_entry_type.id,
             'number_of_days': 15,
             'employee_id': self.employee.id,
             'state': 'confirm',

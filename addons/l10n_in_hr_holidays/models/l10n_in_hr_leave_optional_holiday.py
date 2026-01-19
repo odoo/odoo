@@ -31,7 +31,7 @@ class L10nInHrLeaveOptionalHoliday(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_optional_holidays(self):
         domain = Domain([
-            ("holiday_status_id.l10n_in_is_limited_to_optional_days", '=', True),
+            ("work_entry_type_id.l10n_in_is_limited_to_optional_days", '=', True),
         ])
         dates_domain = Domain.OR([[
              '&',

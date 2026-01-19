@@ -31,7 +31,7 @@ MODELS = {
     'hr.contract.salary.benefit': ['name', 'description', 'fold_label'],
     'hr.contract.salary.benefit.value': ['name'],
     'hr.contract.salary.personal.info': ['name', 'helper', 'value', 'placeholder'],
-    'hr.leave.type': ['name'],
+    'hr.work.entry.type': ['name'],
     'hr.payroll.dashboard.warning': ['name'],
     'hr.payroll.structure': ['payslip_name'],
     'hr.salary.rule': ['name'],

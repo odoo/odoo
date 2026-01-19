@@ -12,7 +12,7 @@
                 <field name="expected_hours" widget="float_time"/>
                 <field name="worked_hours" widget="float_time"/>
                 <field name="leave_hours" widget="float_time"/>
-                <field name="leave_type_names" optional="hide" groups="hr_holidays.group_hr_holidays_user"/>
+                <field name="work_entry_type_names" optional="hide" groups="hr_holidays.group_hr_holidays_user"/>
                 <field name="difference_hours" widget="float_time" decoration-danger="difference_hours &lt; 0"
                     decoration-success="difference_hours &gt;= 0" decoration-bf="True"/>
             </list>
@@ -70,7 +70,7 @@
                         <page name="leaves" string="Approved Time Offs">
                             <field name="leave_ids">
                                 <list>
-                                    <field name="holiday_status_id"/>
+                                    <field name="work_entry_type_id"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
                                     <field name="duration_display" string="Duration"/>

@@ -7,7 +7,7 @@ from . import test_departure
 from . import test_holidays_flow
 from . import test_hr_holidays_cancel_leave
 from . import test_hr_holidays_tour
-from . import test_hr_leave_type
+from . import test_hr_work_entry_type
 from . import test_accrual_allocations
 from . import test_change_department
 from . import test_leave_requests
@@ -29,10 +29,9 @@ from . import test_dashboard
 from . import test_expiring_leaves
 from . import test_hr_departure_wizard
 from . import test_time_off_card_tour
-from . import test_hr_leave_type_tour
 from . import test_time_off_graph_view_tour
-from . import test_leave_type_data
 from . import test_multi_contract
 from . import test_time_off_allocation_tour
 from . import test_flexible_resource_calendar
 from . import test_calendar_leaves_count
+from . import test_work_entry_holidays

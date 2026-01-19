@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <graph string="Appraisal Analysis" sample="1">
                 <field name="employee_id"/>
-                <field name="holiday_status_id"/>
+                <field name="work_entry_type_id"/>
                 <field name="date_from"/>
                 <field name="number_of_days" type="measure"/>
             </graph>
@@ -20,7 +20,7 @@
         <field name="arch" type="xml">
             <search string="Search Time Off">
                 <field name="employee_id"/>
-                <field name="holiday_status_id"/>
+                <field name="work_entry_type_id"/>
                 <field name="name"/>
                 <field name="activity_user_id" string="Activities of"/>
                 <field name="activity_type_id" string="Activity type"/>
@@ -41,13 +41,13 @@
                             '|',
                                 '&amp;',
                                     ('state','=','confirm'),
-                                    ('holiday_status_id.leave_validation_type','=','hr'),
+                                    ('work_entry_type_id.leave_validation_type','=','hr'),
                                 ('state','=','validate1')]"
                     string="Waiting For Me"
                     name="waiting_for_me_manager"
                     groups="hr_holidays.group_hr_holidays_user"/>
                 <filter name="missing_document" string="Missing Document"
-                    domain="['&amp;', ('holiday_status_id.support_document', '=', True), ('attachment_ids', '=', False)]"/>
+                    domain="['&amp;', ('work_entry_type_id.support_document', '=', True), ('attachment_ids', '=', False)]"/>
                 <separator/>
                 <filter domain="[('state', '=', 'confirm')]" string="First Approval" name="approve"/>
                 <filter domain="[('state', '=', 'validate1')]" string="Second Approval" name="second_approval"/>
@@ -77,7 +77,7 @@
                         ]"/>
                 <group>
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
-                    <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by':'work_entry_type_id'}"/>
                     <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
                     <separator/>
                     <filter name="group_date_from" string="Date" context="{'group_by':'date_from'}"/>
@@ -105,7 +105,7 @@
                 <field name="supported_attachment_ids_count"/>
                 <field name="state"/>
                 <field name="employee_id"/>
-                <field name="leave_type_request_unit"/>
+                <field name="work_entry_type_request_unit"/>
                 <field name="request_date_from"/>
                 <field name="request_hour_from"/>
                 <field name="request_hour_to"/>
@@ -115,7 +115,7 @@
                 <field name="can_refuse"/>
                 <field name="request_date_from_period"/>
                 <field name="request_date_to_period"/>
-                <field name="holiday_status_requires_allocation"/>
+                <field name="work_entry_type_requires_allocation"/>
                 <templates>
                     <t t-name="card" class="g-0">
                         <div class="o_hr_holidays_kanban w-100">
@@ -136,10 +136,10 @@
                                                 <field class="fw-bold fs-3 mb-2" name="employee_id"/>
                                             </div>
                                             <div class="col-2 o_hr_holidays_name">
-                                                <field name="holiday_status_id" class="fw-bold"/>
+                                                <field name="work_entry_type_id" class="fw-bold"/>
                                                 <div class="d-flex flex-row">
                                                     <t t-set="same_day" t-value="record.request_date_from.raw_value == record.request_date_to.raw_value"/>
-                                                    <t t-set="leave_unit" t-value="record.leave_type_request_unit.raw_value"/>
+                                                    <t t-set="leave_unit" t-value="record.work_entry_type_request_unit.raw_value"/>
                                                     <t t-out="luxon.DateTime.fromISO(record.request_date_from.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
                                                     <t t-if="leave_unit == 'day'">
                                                         <t t-if="!same_day">
@@ -183,7 +183,7 @@
                                                 Amount
                                             </div>
                                             <div class="col-2 o_hr_holidays_card">
-                                                <div t-if="record.holiday_status_requires_allocation.raw_value"> <!-- To keep the same space-->
+                                                <div t-if="record.work_entry_type_requires_allocation.raw_value"> <!-- To keep the same space-->
                                                     <div class="fw-bold d-flex gap-1 me-1">
                                                         <field name="virtual_remaining_leaves" widget="float" digits="[3,2]"/>
                                                         /
@@ -233,7 +233,7 @@
                                     <div class="d-flex flex-row">
                                         <div id="date_part" class="d-flex flex-row"> <!-- To be override in my_kanban-->
                                                 <t t-set="same_day" t-value="record.request_date_from.raw_value == record.request_date_to.raw_value"/>
-                                                <t t-set="leave_unit" t-value="record.leave_type_request_unit.raw_value"/>
+                                                <t t-set="leave_unit" t-value="record.work_entry_type_request_unit.raw_value"/>
                                                 <t t-out="luxon.DateTime.fromISO(record.request_date_from.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
                                                 <t t-if="leave_unit == 'day'">
                                                     <t t-if="!same_day">
@@ -269,7 +269,7 @@
                                                 </t>
                                         </div>
                                     </div>
-                                    <field name="holiday_status_id" class="text-muted"/>
+                                    <field name="work_entry_type_id" class="text-muted"/>
                                     <span class="text-muted">
                                         (<field name="duration_display"/>)
                                     </span>
@@ -314,7 +314,7 @@
                                 <div class="text-muted text-nowrap">(<field name="number_of_days"/> days)</div>
                             </div>
                             <div class="text-muted">
-                                <field name="holiday_status_id" display="full"/>
+                                <field name="work_entry_type_id" display="full"/>
                                 <field name="date_from"/> <i class="fa fa-long-arrow-right" title="to" /> <field name="date_to"/>
                             </div>
                         </div>
@@ -343,15 +343,15 @@
             </header>
             <sheet>
                 <field name="dashboard_warning_message" class="alert alert-danger d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not dashboard_warning_message"/>
-                <field name="leave_type_increases_duration" class="alert alert-info d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not leave_type_increases_duration"/>
+                <field name="work_entry_type_increases_duration" class="alert alert-info d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not work_entry_type_increases_duration"/>
                 <div class="o_hr_leave_content row">
                     <div class="o_hr_leave_column col_left col-md-6 col-12">
                         <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
                         <div name="title" class="o_hr_leave_title" invisible="1">
-                            <field name="display_name" invisible="not holiday_status_id"/>
+                            <field name="display_name" invisible="not work_entry_type_id"/>
                         </div>
                         <group name="col_left" class="m-0">
-                            <field name="holiday_status_id" force_save="1"
+                            <field name="work_entry_type_id" force_save="1"
                                 domain="[
                                     '|',
                                         ('requires_allocation', '=', False),
@@ -366,8 +366,8 @@
                                 context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
                                 options="{'no_create': True, 'request_type': 'leave'}"
                                 readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
-                            <label for="request_date_from" invisible="leave_type_request_unit not in('hour', 'half_day')" string="Date" />
-                            <label for="request_date_from" invisible="leave_type_request_unit in ('half_day', 'hour')" string="Dates" />
+                            <label for="request_date_from" invisible="work_entry_type_request_unit not in('hour', 'half_day')" string="Date" />
+                            <label for="request_date_from" invisible="work_entry_type_request_unit in ('half_day', 'hour')" string="Dates" />
                             <div id="full_date" class="o_row">
                                 <field
                                     name="request_date_from"
@@ -381,23 +381,23 @@
                                 </div>
                             </div>
                             <!-- half day or custom hours-->
-                            <label for="request_date_from_period" invisible="leave_type_request_unit != 'half_day'" string="Day Period"/>
-                            <div class="o_row" invisible="leave_type_request_unit != 'half_day'">
-                                <field name="request_date_from_period" invisible="leave_type_request_unit != 'half_day'" required="leave_type_request_unit == 'half_day'" readonly="state != 'confirm'" class="o_hr_narrow_field me-2"/>
-                                <field name="request_date_to_period" invisible="leave_type_request_unit != 'half_day'" required="leave_type_request_unit == 'half_day'" readonly="state != 'confirm'" class="o_hr_narrow_field"/>
+                            <label for="request_date_from_period" invisible="work_entry_type_request_unit != 'half_day'" string="Day Period"/>
+                            <div class="o_row" invisible="work_entry_type_request_unit != 'half_day'">
+                                <field name="request_date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'" class="o_hr_narrow_field me-2"/>
+                                <field name="request_date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'" class="o_hr_narrow_field"/>
                             </div>
-                            <label for="request_hour_from" invisible="leave_type_request_unit != 'hour'" string="Hours"/>
-                            <div class="o_row" invisible="leave_type_request_unit != 'hour'">
-                                <field name="request_hour_from" readonly="state == 'validate'" required="leave_type_request_unit == 'hour'" widget="float_time_selection" class="o_hr_narrow_field me-2"/>
-                                <field name="request_hour_to" readonly="state == 'validate'" required="leave_type_request_unit == 'hour'" widget="float_time_selection" class="o_hr_narrow_field"/>
+                            <label for="request_hour_from" invisible="work_entry_type_request_unit != 'hour'" string="Hours"/>
+                            <div class="o_row" invisible="work_entry_type_request_unit != 'hour'">
+                                <field name="request_hour_from" readonly="state == 'validate'" required="work_entry_type_request_unit == 'hour'" widget="float_time_selection" class="o_hr_narrow_field me-2"/>
+                                <field name="request_hour_to" readonly="state == 'validate'" required="work_entry_type_request_unit == 'hour'" widget="float_time_selection" class="o_hr_narrow_field"/>
                             </div>
-                            <div colspan="2" class="alert alert-info" role="alert" invisible="leave_type_request_unit != 'hour' or not tz_mismatch or dashboard_warning_message">
+                            <div colspan="2" class="alert alert-info" role="alert" invisible="work_entry_type_request_unit != 'hour' or not tz_mismatch or dashboard_warning_message">
                                 <span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's work timezone</span>
                                 (<field name="tz" class="oe_inline fw-bold"/>).
                                 <div>For your reference, the equivalent times in your timezone are displayed below.</div>
                             </div>
-                            <label for="date_from" string="Your Timezone" invisible="leave_type_request_unit != 'hour' or not tz_mismatch"/>
-                            <div class="o_row o_row_readonly" invisible="leave_type_request_unit != 'hour' or not tz_mismatch">
+                            <label for="date_from" string="Your Timezone" invisible="work_entry_type_request_unit != 'hour' or not tz_mismatch"/>
+                            <div class="o_row o_row_readonly" invisible="work_entry_type_request_unit != 'hour' or not tz_mismatch">
                                 <label for="date_from" string="From" />
                                 <field name="date_from" readonly="1" widget="datetime"/>
                                 <label for="date_to" string="To" />
@@ -427,7 +427,7 @@
         <field name="mode">primary</field>
         <field name="priority">100</field>
         <field name="arch" type="xml">
-            <field name="holiday_status_id" position="before">
+            <field name="work_entry_type_id" position="before">
                 <field name="employee_id" widget="many2one_avatar_employee" readonly="1"/>
             </field>
             <xpath expr="//header" position="attributes">
@@ -476,7 +476,7 @@
             <xpath expr="//field[@widget='many2one_avatar_employee']" position="attributes"> 
                 <attribute name="readonly">0</attribute>
             </xpath>
-            <field name="holiday_status_id" position="before">
+            <field name="work_entry_type_id" position="before">
                 <field name="user_id" invisible="1"/> <!-- Used in HolidaysFormViewDialog -->
             </field>
         </field>
@@ -499,7 +499,7 @@
                     hide_time="True"
                     mode="year">
                 <field name="display_name" string=""/>
-                <field name="holiday_status_id" filters="1" invisible="1" color="color"/>
+                <field name="work_entry_type_id" filters="1" invisible="1" color="color"/>
                 <field name="state" invisible="1"/>
                 <field name="is_hatched" invisible="1" />
                 <field name="is_striked" invisible="1"/>
@@ -524,7 +524,7 @@
                     color="color"
                     hide_time="True">
                 <field name="display_name" string=""/>
-                <field name="holiday_status_id" filters="1" invisible="1" color="color"/>
+                <field name="work_entry_type_id" filters="1" invisible="1" color="color"/>
                 <field name="state" invisible="1"/>
                 <field name="is_hatched" invisible="1" />
                 <field name="is_striked" invisible="1"/>
@@ -542,7 +542,7 @@
             <xpath expr="//div[@name='title']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
-            <xpath expr="//field[@name='holiday_status_id']" position="before">
+            <xpath expr="//field[@name='work_entry_type_id']" position="before">
                 <field name="employee_id" groups="hr_holidays.group_hr_holidays_responsible" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" widget="many2one_avatar_employee"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="department_id" groups="hr_holidays.group_hr_holidays_responsible" readonly="1"/>
@@ -576,7 +576,7 @@
                 </header>
                 <field name="employee_id" widget="many2one_avatar_employee" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
                 <field name="department_id" optional="hidden" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
-                <field name="holiday_status_id" class="fw-bold" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+                <field name="work_entry_type_id" class="fw-bold" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="date_from" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="date_to" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="duration_display" string="Duration"/>

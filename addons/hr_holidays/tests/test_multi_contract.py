@@ -224,9 +224,10 @@ class TestHolidaysMultiContract(TestHolidayContract):
             'resource_calendar_id': calendar_partial.id,
             'wage': 1000.0,
         })
-        leave_type = self.env['hr.leave.type'].create({
+        work_entry_type = self.env['hr.work.entry.type'].create({
             'name': 'Leave Type',
-            'time_type': 'leave',
+            'code': 'Leave Type',
+            'count_as': 'absence',
             'requires_allocation': True,
             'leave_validation_type': 'hr',
             'request_unit': 'day',
@@ -235,7 +236,7 @@ class TestHolidaysMultiContract(TestHolidayContract):
         allocation = self.env['hr.leave.allocation'].create({
             'name': 'Allocation',
             'employee_id': employee.id,
-            'holiday_status_id': leave_type.id,
+            'work_entry_type_id': work_entry_type.id,
             'number_of_days': 10,
             'state': 'confirm',
             'date_from': datetime.strptime('2023-01-01', '%Y-%m-%d').date(),
@@ -245,13 +246,13 @@ class TestHolidaysMultiContract(TestHolidayContract):
         leave_during_full_time, leave_during_partial_time = self.env['hr.leave'].create([
             {
                 'employee_id': employee.id,
-                'holiday_status_id': leave_type.id,
+                'work_entry_type_id': work_entry_type.id,
                 'request_date_from': '2023-01-03',  # Tuesday
                 'request_date_to': '2023-01-05',  # Thursday
             },
             {
                 'employee_id': employee.id,
-                'holiday_status_id': leave_type.id,
+                'work_entry_type_id': work_entry_type.id,
                 'request_date_from': '2023-12-05',  # Tuesday
                 'request_date_to': '2023-12-07',  # Thursday
             },
@@ -319,9 +320,10 @@ class TestHolidaysMultiContract(TestHolidayContract):
             # 'state': 'draft',
         })
 
-        leave_type = self.env['hr.leave.type'].create({
+        work_entry_type = self.env['hr.work.entry.type'].create({
             'name': 'Leave Type',
-            'time_type': 'leave',
+            'code': 'Leave Type',
+            'count_as': 'absence',
             'requires_allocation': False,
             'leave_validation_type': 'hr',
             'request_unit': 'day',
@@ -330,14 +332,14 @@ class TestHolidaysMultiContract(TestHolidayContract):
 
         leave1 = self.env['hr.leave'].create({
             'employee_id': employee.id,
-            'holiday_status_id': leave_type.id,
+            'work_entry_type_id': work_entry_type.id,
             'request_date_from': '2024-01-01',
             'request_date_to': '2024-01-31',
         })
 
         leave2 = self.env['hr.leave'].create({
             'employee_id': employee.id,
-            'holiday_status_id': leave_type.id,
+            'work_entry_type_id': work_entry_type.id,
             'request_date_from': '2024-02-01',
             'request_date_to': '2024-02-29',
         })
@@ -406,16 +408,17 @@ class TestHolidaysMultiContract(TestHolidayContract):
             "wage": 1000.0,
         })
 
-        leave_type = self.env['hr.leave.type'].create({
+        work_entry_type = self.env['hr.work.entry.type'].create({
             'name': 'Leave Type',
-            'time_type': 'leave',
+            'code': 'Leave Type',
+            'count_as': 'absence',
             'requires_allocation': False,
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
 
         with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
-            leave_form.holiday_status_id = leave_type
+            leave_form.work_entry_type_id = work_entry_type
             leave_form.request_date_from = date(2023, 2, 14)  # full-time calendar
             leave_form.request_date_to = date(2023, 2, 14)
 

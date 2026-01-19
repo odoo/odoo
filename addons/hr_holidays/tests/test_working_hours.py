@@ -20,8 +20,9 @@ class TestWorkingHours(TestHrCalendarCommon):
                 "hr_contract module is installed. To test these features you need to install hr_holidays_contract"
             )
 
-        cls.leave_type = cls.env['hr.leave.type'].create({
+        cls.work_entry_type = cls.env['hr.work.entry.type'].create({
             'name': 'Unpaid Time Off',
+            'code': 'Unpaid Time Off',
             'requires_allocation': False,
             'leave_validation_type': 'no_validation',
             'request_unit': 'day',
@@ -46,7 +47,7 @@ class TestWorkingHours(TestHrCalendarCommon):
         self.env['hr.leave'].create({
             'name': 'holiday from monday to tuesday',
             'employee_id': self.employeeA.id,
-            'holiday_status_id': self.leave_type.id,
+            'work_entry_type_id': self.work_entry_type.id,
             'request_date_from': datetime(2023, 12, 25),
             'request_date_to': datetime(2023, 12, 26, 23, 59, 59),
         })
@@ -85,7 +86,7 @@ class TestWorkingHours(TestHrCalendarCommon):
         company_leave = self.env['hr.leave.generate.multi.wizard'].create({
             'name': 'holiday from monday to tuesday',
             'company_id': self.company_A.id,
-            'holiday_status_id': self.leave_type.id,
+            'work_entry_type_id': self.work_entry_type.id,
             'date_from': date(2023, 12, 25),
             'date_to': date(2023, 12, 26),
         })

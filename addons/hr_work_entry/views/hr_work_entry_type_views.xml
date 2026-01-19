@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_work_entry_type_view_search" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.view.search</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="arch" type="xml">
+            <search string="Search Work Entry Type">
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                <separator/>
+                <filter name="working_time" string="Working Time" domain="[('count_as', '=', 'working_time')]"/>
+                <filter name="absence_time" string="Absence Time" domain="[('count_as', '=', 'absence')]"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
+                <filter name="group_work_type" string="Type of Work" context="{'group_by': 'count_as'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_type_action" model="ir.actions.act_window">
+        <field name="name">Work Entry Types</field>
+        <field name="res_model">hr.work.entry.type</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="hr_work_entry_type_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new work entry type
+            </p>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_type_view_tree" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.list</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code" string="Code"/>
+                <field name="external_code" optional="hide"/>
+                <field name="display_code" string="Display"/>
+                <field name="country_id"/>
+                <field string="Type of Work" name="count_as" optional="hide"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_type_view_form" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.form</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="arch" type="xml">
+            <form string="Work Entry Type" >
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Work Entry Type Name"/>
+                        </h1>
+                    </div>
+                    <group name="main_group">
+                        <group name="identification" class="o_form_fw_labels">
+                            <field name="active" invisible="1"/>
+                            <field name="code" placeholder="e.g. WORK100, LEAVE210, OUT, ..."/>
+                        </group>
+                        <group>
+                            <field name="country_id" options="{'no_create': True, 'no_open': True}" placeholder="Available Everywhere"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Payroll">
+                            <group>
+                                <group name='computation' string="Computation">
+                                    <label for="amount_rate"/>
+                                    <div name="amount_rate">
+                                        <field style='width: 4em;' name="amount_rate" widget="percentage"/>
+                                    </div>
+                                    <field name="is_extra_hours"/>
+                                    <field name="shortcut_behavior" widget="radio" options="{'horizontal': True}"/>
+                                    <field string="Considered as" name="count_as" widget="radio" options="{'horizontal': True}" />
+                                </group>
+                                <group string="Display">
+                                    <field name="display_code" placeholder="e.g. ATT, PTO, STO, OT, RW, ..."/>
+                                    <field name="color" widget="color_picker"/>
+                                </group>
+                            </group>
+
+                            <group>
+                                <group name="exports_code" string="Exports Code">
+                                    <field name="external_code" string="External" placeholder="Code used in manual exports"/>
+                                </group>
+                            </group>
+
+                            <separator string="Description" />
+                            <field rows="5" nolabel="1" name="description" placeholder="Provide a description of the Work Entry Type, in which case should it be used"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_type_view_kanban" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.kanban.view</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="arch" type="xml">
+            <kanban highlight_color="color">
+                <templates>
+                    <t t-name="menu" t-if="!selection_mode">
+                        <field name="color" widget="kanban_color_picker"/>
+                    </t>
+                    <t t-name="card" t-attf-class="#{!selection_mode ? record.color.raw_value : ''}">
+                        <field class="fw-bold fs-5" name="name"/>
+                        <span class="text-muted">
+                            <field name="code"/>
+                            <t t-if="record.display_code.raw_value" class="text-muted">
+                                (<field name="display_code"/>)
+                            </t>
+                        </span>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

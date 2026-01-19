@@ -359,7 +359,7 @@ class MrpWorkcenter(models.Model):
         start_datetime = start_datetime.astimezone(ZoneInfo(resource.tz or self.env.company.tz))
         resources_per_tz = resource._get_resources_per_tz()
         get_available_intervals = partial(self.resource_calendar_id._work_intervals_batch, resources_per_tz=resources_per_tz)
-        workorder_intervals_leaves_domain = [('time_type', '=', 'other')]
+        workorder_intervals_leaves_domain = [('count_as', '=', 'working_time')]
         if leaves_to_ignore:
             workorder_intervals_leaves_domain.append(('id', 'not in', leaves_to_ignore.ids))
         get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals_batch, domain=workorder_intervals_leaves_domain, resources_per_tz=resources_per_tz)

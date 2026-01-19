@@ -4956,7 +4956,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'hr_skills_survey',
             'hr_timesheet',
             'hr_work_entry',
-            'hr_work_entry_holidays_enterprise',
             'iap',
             'im_livechat',
             'industry_fsm',

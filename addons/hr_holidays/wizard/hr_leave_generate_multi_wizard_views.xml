@@ -5,7 +5,7 @@
         <field name="arch" type="xml">
             <form string="Generate time off for multiple employees">
                 <group>
-                    <field name="holiday_status_id" class="w-100"/>
+                    <field name="work_entry_type_id" class="w-100"/>
                     <field name="employee_ids" widget="many2many_avatar_employee" placeholder="All Employees"/>
                     <label for="date_from" string="Dates"/>
                     <field
@@ -15,15 +15,15 @@
                         class="w-50" nolabel="1"/>
                     <field name="date_to" invisible="1" />
                     <!-- half day or custom hours-->
-                    <label for="date_from_period" invisible="leave_type_request_unit != 'half_day'" string="Day Period"/>
-                    <div class="o_row" invisible="leave_type_request_unit != 'half_day'">
-                        <field name="date_from_period" invisible="leave_type_request_unit != 'half_day'" required="leave_type_request_unit == 'half_day'" class="o_hr_narrow_field me-2"/>
-                        <field name="date_to_period" invisible="leave_type_request_unit != 'half_day'" required="leave_type_request_unit == 'half_day'" class="o_hr_narrow_field"/>
+                    <label for="date_from_period" invisible="work_entry_type_request_unit != 'half_day'" string="Day Period"/>
+                    <div class="o_row" invisible="work_entry_type_request_unit != 'half_day'">
+                        <field name="date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" class="o_hr_narrow_field me-2"/>
+                        <field name="date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" class="o_hr_narrow_field"/>
                     </div>
-                    <label for="hour_from" invisible="leave_type_request_unit != 'hour'" string="Hours"/>
-                    <div class="o_row" invisible="leave_type_request_unit != 'hour'">
-                        <field name="hour_from" required="leave_type_request_unit != 'hour'" widget="float_time_selection" class="o_hr_narrow_field me-2"/>
-                        <field name="hour_to" required="leave_type_request_unit != 'hour'" widget="float_time_selection" class="o_hr_narrow_field"/>
+                    <label for="hour_from" invisible="work_entry_type_request_unit != 'hour'" string="Hours"/>
+                    <div class="o_row" invisible="work_entry_type_request_unit != 'hour'">
+                        <field name="hour_from" required="work_entry_type_request_unit != 'hour'" widget="float_time_selection" class="o_hr_narrow_field me-2"/>
+                        <field name="hour_to" required="work_entry_type_request_unit != 'hour'" widget="float_time_selection" class="o_hr_narrow_field"/>
                     </div>
                 </group>
                 <field name="name" widget="text" placeholder="e.g. Extra recuperation, Company unavailability, ..."/>

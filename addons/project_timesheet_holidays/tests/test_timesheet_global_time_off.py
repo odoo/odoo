@@ -291,7 +291,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             'date_from': datetime(2022, 4, 18, 5, 0, 0),
             'date_to': datetime(2022, 4, 18, 18, 0, 0),
             'resource_id': False,
-            'time_type': "leave",
+            'count_as': "absence",
         }, {
             'name': "Ascension Day",
             'calendar_id': False,
@@ -426,14 +426,13 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
         self.env = self.env(context=dict(self.env.context, allowed_company_ids=self.test_company.ids))
 
-        internal_project = self.test_company.internal_project_id
-        internal_task_leaves = self.test_company.leave_timesheet_task_id
-
-        hr_leave_type_with_ts = self.env['hr.leave.type'].create({
+        hr_work_entry_type_with_ts = self.env['hr.work.entry.type'].create({
             'name': 'Leave Type with timesheet generation',
+            'code': 'Leave Type with timesheet generation',
             'requires_allocation': False,
             'request_unit': 'day',
             'unit_of_measure': 'day',
+            'count_as': 'absence',
         })
 
         # create and validate a leave for full time employee
@@ -441,7 +440,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         holiday = HrLeave.with_user(test_user).create({
             'name': 'Leave 1',
             'employee_id': test_user.employee_id.id,
-            'holiday_status_id': hr_leave_type_with_ts.id,
+            'work_entry_type_id': hr_work_entry_type_with_ts.id,
             'request_date_from': hr_leave_start_datetime,
             'request_date_to': hr_leave_end_datetime,
         })
@@ -484,7 +483,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         holiday2 = HrLeave.with_user(test_user).create({
             'name': 'Leave 2',
             'employee_id': test_user.employee_id.id,
-            'holiday_status_id': hr_leave_type_with_ts.id,
+            'work_entry_type_id': hr_work_entry_type_with_ts.id,
             'request_date_from': hr_leave_start_datetime,
             'request_date_to': hr_leave_end_datetime,
         })
@@ -518,7 +517,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         holiday3 = HrLeave.with_user(test_user).create({
             'name': 'Leave 3',
             'employee_id': test_user.employee_id.id,
-            'holiday_status_id': hr_leave_type_with_ts.id,
+            'work_entry_type_id': hr_work_entry_type_with_ts.id,
             'request_date_from': hr_leave_start_datetime,
             'request_date_to': hr_leave_end_datetime,
         })
