@@ -152,6 +152,8 @@ class IrAttachment(models.Model):
         try:
             with open(full_path, 'rb') as f:
                 return f.read(size)
+        except FileNotFoundError:
+            _logger.warning("File not found %s", full_path)
         except OSError:
             _logger.info("_read_file reading %s", full_path, exc_info=True)
         return b''
