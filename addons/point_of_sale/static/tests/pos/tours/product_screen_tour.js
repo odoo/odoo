@@ -1054,7 +1054,7 @@ registry.category("web_tour.tours").add("test_preset_timing_retail", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
-            ProductScreen.selectPreset("Dine in", "Delivery"),
+            ProductScreen.selectPreset("Dine in", "Delivery", false),
             PartnerList.clickPartner("A simple PoS man!"),
             Chrome.presetTimingSlotHourNotExists("09:00"),
             Chrome.selectPresetTimingSlotHour({ title: "delivery", hour: "15:00" }),

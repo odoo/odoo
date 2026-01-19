@@ -218,20 +218,23 @@ export function clickCustomer(name, pressEnter = false) {
         { ...back(), isActive: ["mobile"] },
     ];
 }
-export function selectPreset(selectedPreset, presetToSelect) {
-    return [
+export function selectPreset(selectedPreset, presetToSelect, presetPopup = true) {
+    const steps = [
         clickReview(),
         {
             content: "click preset button",
             trigger: `.product-screen button:contains("${selectedPreset}")`,
             run: "click",
         },
-        {
-            content: `click preset '${presetToSelect}' from preset modal`,
-            trigger: `.modal-body button:contains(${presetToSelect})`,
-            run: "click",
-        },
     ];
+    if (presetPopup) {
+        steps.push({
+            content: `click preset '${presetToSelect}' from preset modal`,
+            trigger: `.modal-body button:contains("${presetToSelect}")`,
+            run: "click",
+        });
+    }
+    return steps;
 }
 export function customerIsSelected(name) {
     return [

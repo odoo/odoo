@@ -2272,18 +2272,25 @@ export class PosStore extends WithLazyGetterTrap {
     }
     async selectPreset(preset = false, order = this.getOrder()) {
         if (!preset) {
-            const selectionList = this.models["pos.preset"].map((preset) => ({
+            const selectionList = this.config.available_preset_ids.map((preset) => ({
                 id: preset.id,
                 label: preset.name,
                 isSelected: order.preset_id && preset.id === order.preset_id.id,
                 item: preset,
             }));
 
-            preset = await makeAwaitable(this.dialog, SelectionPopup, {
-                title: _t("Select preset"),
-                list: selectionList,
-                size: "md",
-            });
+            if (selectionList.length <= 1) {
+                return;
+            }
+
+            preset =
+                selectionList.length === 2
+                    ? selectionList.find((preset) => !preset.isSelected).item
+                    : await makeAwaitable(this.dialog, SelectionPopup, {
+                          title: _t("Select preset"),
+                          list: selectionList,
+                          size: "md",
+                      });
         }
 
         if (preset) {
