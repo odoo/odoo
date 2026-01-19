@@ -233,6 +233,29 @@ describe("addToCart", () => {
         expect(child1.qty).toBe(2);
         expect(child2.qty).toBe(2);
     });
+
+    test("With pricelist acting on variants", async () => {
+        const store = await setupSelfPosEnv();
+        const productTemplate = store.models["product.template"].get(101);
+
+        store.addToCart(productTemplate, 1, "", [101]);
+        store.addToCart(productTemplate, 1, "", [102]);
+
+        expect(store.currentOrder.lines[0].price_unit).toBe(10);
+        expect(store.currentOrder.lines[1].price_unit).toBe(15);
+
+        store.currentOrder.removeOrderline(store.currentOrder.lines[0]);
+        store.currentOrder.removeOrderline(store.currentOrder.lines[0]);
+        expect(store.currentOrder.lines).toHaveLength(0);
+
+        const pricelist = store.models["product.pricelist"].get(101);
+        store.config.pricelist_id = pricelist;
+
+        store.addToCart(productTemplate, 1, "", [101]);
+        store.addToCart(productTemplate, 1, "", [102]);
+        expect(store.currentOrder.lines[0].price_unit).toBe(15);
+        expect(store.currentOrder.lines[1].price_unit).toBe(20);
+    });
 });
 
 test("sendDraftOrderToServer", async () => {
