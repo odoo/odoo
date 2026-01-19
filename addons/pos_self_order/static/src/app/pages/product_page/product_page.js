@@ -4,6 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
 import { useStickyTitleObserver } from "@pos_self_order/app/utils/sticky_title_observer";
+import { getProductVariantByAttributes } from "@pos_self_order/app/services/card_utils";
 
 export class ProductPage extends Component {
     static template = "pos_self_order.ProductPage";
@@ -106,10 +107,19 @@ export class ProductPage extends Component {
         const attributeIds = this.getSelectedAttributesValues();
         const attributes = productTmplAttrModel.readMany(attributeIds);
         const priceExtra = attributes.reduce((sum, attr) => sum + attr.price_extra, 0);
+
+        const productVariant = getProductVariantByAttributes(
+            this.selfOrder.models,
+            this.props.productTemplate,
+            attributeIds
+        );
+
         const price = this.props.productTemplate.getPrice(
             this.selfOrder.currentOrder.pricelist_id,
             1,
-            priceExtra
+            priceExtra,
+            false,
+            productVariant
         );
         const taxDetails = this.props.productTemplate.getTaxDetails({
             overridedValues: { price_unit: price, quantity: this.state.qty },
