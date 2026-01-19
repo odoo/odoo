@@ -17,12 +17,10 @@ This module contains all the common features of Sales Management and eCommerce.
         'security/ir.model.access.csv',
         'security/res_groups.xml',
         'security/ir_rules.xml',
-
         'report/account_invoice_report_views.xml',
         'report/ir_actions_report_templates.xml',
         'report/ir_actions_report.xml',
         'report/sale_report_views.xml',
-
         'data/analytic_plan_data.xml',
         'data/ir_cron.xml',
         'data/ir_sequence_data.xml',
@@ -30,18 +28,15 @@ This module contains all the common features of Sales Management and eCommerce.
         'data/mail_template_data.xml',
         'data/portal_entry_data.xml',
         'data/sale_tour.xml',
-        'data/ir_config_parameter.xml', # Needs mail_template_data
-
+        'data/ir_config_parameter.xml',  # Needs mail_template_data
         'wizard/account_accrued_orders_wizard_views.xml',
         'wizard/mass_cancel_orders_views.xml',
         'wizard/payment_link_wizard_views.xml',
         'wizard/res_config_settings_views.xml',
         'wizard/sale_make_invoice_advance_views.xml',
         'wizard/sale_order_discount_views.xml',
-
         # Define sale order views before their references
         'views/sale_order_views.xml',
-
         'views/account_views.xml',
         'views/account_analytic_line_views.xml',
         'views/crm_team_views.xml',
@@ -56,13 +51,9 @@ This module contains all the common features of Sales Management and eCommerce.
         'views/sale_order_line_views.xml',
         'views/sale_portal_templates.xml',
         'views/utm_campaign_views.xml',
-
         'views/sale_menus.xml',  # Last because referencing actions defined in previous files
     ],
-    'demo': [
-        'data/product_demo.xml',
-        'data/sale_demo.xml',
-    ],
+    'demo': ['data/product_demo.xml', 'data/sale_demo.xml'],
     'assets': {
         'web.assets_backend': [
             'sale/static/src/scss/sale_onboarding.scss',
@@ -102,9 +93,7 @@ This module contains all the common features of Sales Management and eCommerce.
             'sale/static/tests/sale_test_helpers.js',
             'sale/static/tests/**/*.test.js',
         ],
-        'web.report_assets_common': [
-            'sale/static/src/scss/sale_report.scss',
-        ],
+        'web.report_assets_common': ['sale/static/src/scss/sale_report.scss'],
     },
     'pre_init_hook': '_pre_init_sale',
     'post_init_hook': '_post_init_hook',

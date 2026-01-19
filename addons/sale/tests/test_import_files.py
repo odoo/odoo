@@ -5,9 +5,8 @@ from odoo.tests import TransactionCase, can_import, loaded_demo_data, tagged
 
 @tagged("post_install", "-at_install")
 class TestImportFiles(TransactionCase):
-
     @unittest.skipUnless(
-        can_import("xlrd.xlsx") or can_import("openpyxl"), "XLRD/XLSX not available",
+        can_import("xlrd.xlsx") or can_import("openpyxl"), "XLRD/XLSX not available"
     )
     def test_import_quotation_template_xls(self):
         if not loaded_demo_data(self.env):
@@ -16,19 +15,13 @@ class TestImportFiles(TransactionCase):
         filename = "quotations_import_template.xlsx"
 
         file_content = self.file_read(f"sale/static/xls/{filename}")
-        import_wizard = self.env["base_import.import"].create(
-            {
-                "res_model": model,
-                "file": file_content,
-                "file_type": "application/vnd.ms-excel",
-            },
-        )
+        import_wizard = self.env["base_import.import"].create({
+            "res_model": model,
+            "file": file_content,
+            "file_type": "application/vnd.ms-excel",
+        })
 
-        result = import_wizard.parse_preview(
-            {
-                "has_headers": True,
-            },
-        )
+        result = import_wizard.parse_preview({"has_headers": True})
         self.assertIsNone(result.get("error"))
         field_names = ['/'.join(v) for v in result["matches"].values()]
         results = import_wizard.execute_import(
@@ -54,7 +47,4 @@ class TestImportFiles(TransactionCase):
                 "tracking_disable": True,
             },
         )
-        self.assertFalse(
-            results["messages"],
-            "results should be empty on successful import of ",
-        )
+        self.assertFalse(results["messages"], "results should be empty on successful import of ")

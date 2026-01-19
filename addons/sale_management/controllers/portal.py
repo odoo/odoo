@@ -7,10 +7,19 @@ from odoo.addons.sale.controllers import portal
 
 
 class CustomerPortal(portal.CustomerPortal):
-
-    @route(['/my/orders/<int:order_id>/update_line_dict'], type='jsonrpc', auth="public", website=True)
-    def portal_quote_option_update(self, order_id, line_id, access_token=None, remove=False, input_quantity=False, **kwargs):
-        """ Update the quantity of an optional SOline from a SO.
+    @route(
+        ['/my/orders/<int:order_id>/update_line_dict'], type='jsonrpc', auth="public", website=True
+    )
+    def portal_quote_option_update(
+        self,
+        order_id,
+        line_id,
+        access_token=None,
+        remove=False,
+        input_quantity=False,
+        **kwargs,  # noqa: ARG002
+    ):
+        """Update the quantity of an optional SOline from a SO.
 
         :param int order_id: `sale.order` id
         :param int line_id: `sale.order.line` id
@@ -20,13 +29,15 @@ class CustomerPortal(portal.CustomerPortal):
         :param dict kwargs: unused parameters
         """
         try:
-            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
+            order_sudo = self._document_check_access(
+                'sale.order', order_id, access_token=access_token
+            )
         except (AccessError, MissingError):
             return request.redirect('/my')
 
         # Redundant with can be edited on portal for line, ask sales if can rbe removed
         if not order_sudo._can_be_edited_on_portal():
-            return
+            return None
 
         order_line = request.env['sale.order.line'].sudo().browse(int(line_id)).exists()
         if (
@@ -35,7 +46,7 @@ class CustomerPortal(portal.CustomerPortal):
             or not order_line._can_be_edited_on_portal()
         ):
             # Do not allow updating non-optional lines from a quotation
-            return
+            return None
 
         if input_quantity is not False:
             quantity = input_quantity

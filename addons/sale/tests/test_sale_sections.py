@@ -6,30 +6,16 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged('post_install', '-at_install')
 class TestSaleSections(SaleCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.tax_1 = cls.env['account.tax'].create({
-            'name': 'Tax 1',
-            'amount': 10,
-        })
-        cls.tax_2 = cls.env['account.tax'].create({
-            'name': 'Tax 2',
-            'amount': 20,
-        })
+        cls.tax_1 = cls.env['account.tax'].create({'name': 'Tax 1', 'amount': 10})
+        cls.tax_2 = cls.env['account.tax'].create({'name': 'Tax 2', 'amount': 20})
         cls.sections_sale_order = cls.env['sale.order'].create({
             'partner_id': cls.partner.id,
             'order_line': [
-                Command.create({
-                    'name': 'r1',
-                    'product_id': cls.product.id,
-                    'price_unit': 10,
-                }),
-                Command.create({
-                    'name': 'Sec1',
-                    'display_type': 'line_section',
-                }),
+                Command.create({'name': 'r1', 'product_id': cls.product.id, 'price_unit': 10}),
+                Command.create({'name': 'Sec1', 'display_type': 'line_section'}),
                 Command.create({
                     'name': 'Sec1-r1',
                     'product_id': cls.product.id,
@@ -80,7 +66,7 @@ class TestSaleSections(SaleCommon):
         })
 
     def test_sale_order_line_parent_id(self):
-        """Verify correct assignment of `parent_id`:
+        """Ensure correct assignment of `parent_id`.
 
         - Lines with no preceding section/subsection → no parent.
         - Section's children (lines + subsections) → parent is the section.
@@ -88,16 +74,13 @@ class TestSaleSections(SaleCommon):
         """
         self.assertFalse(self.sections_sale_order.order_line[0].parent_id)
         self.assertEqual(
-            self.sections_sale_order.order_line[2].parent_id,
-            self.sections_sale_order.order_line[1],
+            self.sections_sale_order.order_line[2].parent_id, self.sections_sale_order.order_line[1]
         )
         self.assertEqual(
-            self.sections_sale_order.order_line[3].parent_id,
-            self.sections_sale_order.order_line[1],
+            self.sections_sale_order.order_line[3].parent_id, self.sections_sale_order.order_line[1]
         )
         self.assertEqual(
-            self.sections_sale_order.order_line[4].parent_id,
-            self.sections_sale_order.order_line[3],
+            self.sections_sale_order.order_line[4].parent_id, self.sections_sale_order.order_line[3]
         )
 
     def test_sale_order_report_line_visibility_and_grouping(self):

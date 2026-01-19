@@ -35,15 +35,13 @@ class PaymentLinkWizard(models.TransientModel):
         super(PaymentLinkWizard, self - sale_wizards)._compute_warning_message()
 
     def _prepare_url(self, base_url, related_document):
-        """ Override of `payment` to use the portal page URL of sales orders. """
+        """Override of `payment` to use the portal page URL of sales orders."""
         if self.res_model == 'sale.order':
             return f'{base_url}{related_document.get_portal_url()}'
-        else:
-            return super()._prepare_url(base_url, related_document)
+        return super()._prepare_url(base_url, related_document)
 
     def _prepare_query_params(self, *args):
-        """ Override of `payment` to add SO-related values to the query params. """
+        """Override of `payment` to add SO-related values to the query params."""
         if self.res_model == 'sale.order':
             return {'payment_amount': self.amount}
-        else:
-            return super()._prepare_query_params(*args)
+        return super()._prepare_query_params(*args)

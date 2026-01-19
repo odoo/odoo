@@ -9,7 +9,6 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged('post_install', '-at_install')
 class TestAccessRightsControllers(HttpCase, SaleCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -30,27 +29,20 @@ class TestAccessRightsControllers(HttpCase, SaleCommon):
 
         # Test public user can't print an order without a token
         req = self.url_open(
-            url='/my/orders/%s?report_type=pdf' % portal_so.id,
-            allow_redirects=False,
+            url='/my/orders/%s?report_type=pdf' % portal_so.id, allow_redirects=False
         )
         self.assertEqual(req.status_code, 303)
 
         # or with a random token
         req = self.url_open(
-            url='/my/orders/%s?access_token=%s&report_type=pdf' % (
-                portal_so.id,
-                "foo",
-            ),
+            url='/my/orders/%s?access_token=%s&report_type=pdf' % (portal_so.id, "foo"),
             allow_redirects=False,
         )
         self.assertEqual(req.status_code, 303)
 
         # but works fine with the right token
         req = self.url_open(
-            url='/my/orders/%s?access_token=%s&report_type=pdf' % (
-                portal_so.id,
-                token,
-            ),
+            url='/my/orders/%s?access_token=%s&report_type=pdf' % (portal_so.id, token),
             allow_redirects=False,
         )
         self.assertEqual(req.status_code, 200)
@@ -59,22 +51,19 @@ class TestAccessRightsControllers(HttpCase, SaleCommon):
 
         # do not need the token when logged in
         req = self.url_open(
-            url='/my/orders/%s?report_type=pdf' % portal_so.id,
-            allow_redirects=False,
+            url='/my/orders/%s?report_type=pdf' % portal_so.id, allow_redirects=False
         )
         self.assertEqual(req.status_code, 200)
 
         # but still can't access another order
         req = self.url_open(
-            url='/my/orders/%s?report_type=pdf' % private_so.id,
-            allow_redirects=False,
+            url='/my/orders/%s?report_type=pdf' % private_so.id, allow_redirects=False
         )
         self.assertEqual(req.status_code, 303)
 
 
 @tagged('post_install', '-at_install')
 class TestSalesControllers(HttpCase, SaleCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -89,19 +78,25 @@ class TestSalesControllers(HttpCase, SaleCommon):
 
         req = self.url_open(portal_so.get_portal_url(report_type='pdf'), allow_redirects=False)
         self.assertEqual(req.status_code, 200)
-        self.assertEqual(req.headers['content-disposition'], f"inline; filename*=UTF-8''Quotation_{portal_so.name}.pdf")
+        self.assertEqual(
+            req.headers['content-disposition'],
+            f"inline; filename*=UTF-8''Quotation_{portal_so.name}.pdf",
+        )
 
-        req = self.url_open(portal_so.get_portal_url(report_type='pdf', download=True), allow_redirects=False)
+        req = self.url_open(
+            portal_so.get_portal_url(report_type='pdf', download=True), allow_redirects=False
+        )
         self.assertEqual(req.status_code, 200)
-        self.assertEqual(req.headers['content-disposition'], f"attachment; filename*=UTF-8''Quotation_{portal_so.name}.pdf")
+        self.assertEqual(
+            req.headers['content-disposition'],
+            f"attachment; filename*=UTF-8''Quotation_{portal_so.name}.pdf",
+        )
 
 
 @tagged('post_install', '-at_install', 'mail_flow')
 class TestSaleSignature(HttpCaseWithUserPortal):
-
     def test_01_portal_sale_signature_tour(self):
         """The goal of this test is to make sure the portal user can sign SO."""
-
         portal_user_partner = self.partner_portal
         # create a SO to be signed
         sales_order = self.env['sale.order'].create({
@@ -125,6 +120,7 @@ class TestSaleSignature(HttpCaseWithUserPortal):
         )
         self.assertFalse(
             sales_order.message_partner_ids,
-            'Do not automatically set customer as follower, will be suggested recipient')
+            'Do not automatically set customer as follower, will be suggested recipient',
+        )
 
         self.start_tour("/my/quotes", 'sale_signature', login="portal")

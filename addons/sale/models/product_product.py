@@ -5,7 +5,6 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import float_round
 
 
 class ProductProduct(models.Model):
@@ -13,14 +12,11 @@ class ProductProduct(models.Model):
 
     sales_count = fields.Float(compute='_compute_sales_count', string='Sold', digits='Product Unit')
 
-    # Catalog related fields
     product_catalog_product_is_in_sale_order = fields.Boolean(
-        compute='_compute_product_is_in_sale_order',
-        search='_search_product_is_in_sale_order',
+        compute='_compute_product_is_in_sale_order', search='_search_product_is_in_sale_order'
     )
     previously_bought_by_customer = fields.Boolean(
-        search='_search_previously_bought_by_customer',
-        store=False,
+        search='_search_previously_bought_by_customer', store=False
     )
 
     def _compute_sales_count(self):
@@ -37,7 +33,9 @@ class ProductProduct(models.Model):
             ('product_id', 'in', self.ids),
             ('date', '>=', date_from),
         ]
-        for product, product_uom_qty in self.env['sale.report']._read_group(domain, ['product_id'], ['product_uom_qty:sum']):
+        for product, product_uom_qty in self.env['sale.report']._read_group(
+            domain, ['product_id'], ['product_uom_qty:sum']
+        ):
             r[product.id] = product_uom_qty
         for product in self:
             if not product.id:
@@ -48,7 +46,7 @@ class ProductProduct(models.Model):
 
     @api.depends_context("to_date")
     def _compute_forecasted_without_stock(self):
-        """ Substract sales lines not delivered from forecasted tally """
+        """Substract sales lines not delivered from forecasted tally."""
         res = super()._compute_forecasted_without_stock()
         domain = Domain.AND([
             Domain('order_id.state', '=', 'sale'),
@@ -57,9 +55,11 @@ class ProductProduct(models.Model):
         if self.env.context.get("to_date"):
             domain = Domain.AND([
                 domain,
-                [('order_id.commitment_date', '<=', self.env.context.get("to_date").date())]
+                [('order_id.commitment_date', '<=', self.env.context.get("to_date").date())],
             ])
-        order_lines = self.env['sale.order.line']._read_group(domain, ['product_id', 'product_uom_id'], ['product_uom_qty:sum', 'qty_delivered:sum'])
+        order_lines = self.env['sale.order.line']._read_group(
+            domain, ['product_id', 'product_uom_id'], ['product_uom_qty:sum', 'qty_delivered:sum']
+        )
         for product, line_uom, qty_sold, qty_delivered in order_lines:
             to_deliver = (qty_sold - qty_delivered) * line_uom.factor / product.uom_id.factor
             res[product.id]['outgoing_qty'] += to_deliver
@@ -69,10 +69,15 @@ class ProductProduct(models.Model):
     @api.onchange('type')
     def _onchange_type(self):
         if self._origin and self.sales_count > 0:
-            return {'warning': {
-                'title': _("Warning"),
-                'message': _("You cannot change the product's type because it is already used in sales orders.")
-            }}
+            return {
+                'warning': {
+                    'title': _("Warning"),
+                    'message': _(
+                        "You cannot change the product's type because it is already used in sales"
+                        " orders."
+                    ),
+                }
+            }
 
     @api.depends_context('order_id')
     def _compute_product_is_in_sale_order(self):
@@ -82,23 +87,26 @@ class ProductProduct(models.Model):
             return
 
         read_group_data = self.env['sale.order.line']._read_group(
-            domain=[('order_id', '=', order_id)],
-            groupby=['product_id'],
-            aggregates=['__count'],
+            domain=[('order_id', '=', order_id)], groupby=['product_id'], aggregates=['__count']
         )
         data = {product.id: count for product, count in read_group_data}
         for product in self:
             product.product_catalog_product_is_in_sale_order = bool(data.get(product.id, 0))
 
-    def _search_product_is_in_sale_order(self, operator, value):
+    def _search_product_is_in_sale_order(self, operator, value):  # noqa: ARG002
         if operator != 'in':
             return NotImplemented
-        product_ids = self.env['sale.order.line'].search_fetch([
-            ('order_id', 'in', [self.env.context.get('order_id', '')]),
-        ], ['product_id']).product_id.ids
+        product_ids = (
+            self
+            .env['sale.order.line']
+            .search_fetch(
+                [('order_id', 'in', [self.env.context.get('order_id', '')])], ['product_id']
+            )
+            .product_id.ids
+        )
         return [('id', 'in', product_ids)]
 
-    def _search_previously_bought_by_customer(self, operator, value):
+    def _search_previously_bought_by_customer(self, operator, value):  # noqa: ARG002
         if operator != 'in':
             return NotImplemented
 
@@ -139,16 +147,19 @@ class ProductProduct(models.Model):
 
     def _update_uom(self, to_uom_id):
         for uom, product, so_lines in self.env['sale.order.line']._read_group(
-            [('product_id', 'in', self.ids)],
-            ['product_uom_id', 'product_id'],
-            ['id:recordset'],
+            [('product_id', 'in', self.ids)], ['product_uom_id', 'product_id'], ['id:recordset']
         ):
             if so_lines.product_uom_id != product.product_tmpl_id.uom_id:
-                raise UserError(_(
-                    'As other units of measure (ex : %(problem_uom)s) '
-                    'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
-                    'If you want to change it, please archive the product and create a new one.',
-                    problem_uom=uom.display_name, uom=product.product_tmpl_id.uom_id.display_name))
+                raise UserError(
+                    _(
+                        'As other units of measure (ex : %(problem_uom)s)'
+                        ' than %(uom)s have already been used for this product, the change of unit'
+                        ' of measure can not be done.\nIf you want to change it, please archive the'
+                        ' product and create a new one.',
+                        problem_uom=uom.display_name,
+                        uom=product.product_tmpl_id.uom_id.display_name,
+                    )
+                )
             so_lines.product_uom_id = to_uom_id
         return super()._update_uom(to_uom_id)
 
@@ -156,8 +167,11 @@ class ProductProduct(models.Model):
         res = super()._trigger_uom_warning()
         if res:
             return res
-        so_lines = self.env['sale.order.line'].sudo().search_count(
-            [('product_id', 'in', self.ids)], limit=1
+        so_lines = (
+            self
+            .env['sale.order.line']
+            .sudo()
+            .search_count([('product_id', 'in', self.ids)], limit=1)
         )
         return bool(so_lines)
 
@@ -165,7 +179,9 @@ class ProductProduct(models.Model):
 class ProductAttributeCustomValue(models.Model):
     _inherit = "product.attribute.custom.value"
 
-    sale_order_line_id = fields.Many2one('sale.order.line', string="Sales Order Line", index='btree_not_null', ondelete='cascade')
+    sale_order_line_id = fields.Many2one(
+        'sale.order.line', string="Sales Order Line", index='btree_not_null', ondelete='cascade'
+    )
 
     _sol_custom_value_unique = models.Constraint(
         'unique(custom_product_template_attribute_value_id, sale_order_line_id)',

@@ -8,10 +8,9 @@ from odoo.addons.sales_team.tests.common import SalesTeamCommon
 
 
 class SaleCommon(
-    ProductCommon, # BaseCommon, UomCommon
+    ProductCommon,  # BaseCommon, UomCommon
     SalesTeamCommon,
 ):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -52,7 +51,6 @@ class SaleCommon(
 
 
 class TestSaleCommon(AccountTestInvoicingCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -75,9 +73,11 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'company_ids': [(6, 0, company.ids)],
                 'company_id': company.id,
             }),
-
             # Products
-            'product_service_delivery': cls.env['product.product'].with_company(company).create({
+            'product_service_delivery': cls
+            .env['product.product']
+            .with_company(company)
+            .create({
                 'name': 'product_service_delivery',
                 'categ_id': cls.product_category.id,
                 'standard_price': 200.0,
@@ -90,7 +90,10 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'supplier_taxes_id': [(6, 0, [])],
                 'company_id': company.id,
             }),
-            'product_service_order': cls.env['product.product'].with_company(company).create({
+            'product_service_order': cls
+            .env['product.product']
+            .with_company(company)
+            .create({
                 'name': 'product_service_order',
                 'categ_id': cls.product_category.id,
                 'standard_price': 40.0,
@@ -104,7 +107,10 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'supplier_taxes_id': [(6, 0, [])],
                 'company_id': company.id,
             }),
-            'product_order_cost': cls.env['product.product'].with_company(company).create({
+            'product_order_cost': cls
+            .env['product.product']
+            .with_company(company)
+            .create({
                 'name': 'product_order_cost',
                 'categ_id': cls.product_category.id,
                 'standard_price': 235.0,
@@ -119,7 +125,10 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'supplier_taxes_id': [(6, 0, [])],
                 'company_id': company.id,
             }),
-            'product_delivery_cost': cls.env['product.product'].with_company(company).create({
+            'product_delivery_cost': cls
+            .env['product.product']
+            .with_company(company)
+            .create({
                 'name': 'product_delivery_cost',
                 'categ_id': cls.product_category.id,
                 'standard_price': 55.0,
@@ -134,7 +143,10 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'supplier_taxes_id': [(6, 0, [])],
                 'company_id': company.id,
             }),
-            'product_order_sales_price': cls.env['product.product'].with_company(company).create({
+            'product_order_sales_price': cls
+            .env['product.product']
+            .with_company(company)
+            .create({
                 'name': 'product_order_sales_price',
                 'categ_id': cls.product_category.id,
                 'standard_price': 235.0,
@@ -149,7 +161,10 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'supplier_taxes_id': [(6, 0, [])],
                 'company_id': company.id,
             }),
-            'product_delivery_sales_price': cls.env['product.product'].with_company(company).create({
+            'product_delivery_sales_price': cls
+            .env['product.product']
+            .with_company(company)
+            .create({
                 'name': 'product_delivery_sales_price',
                 'categ_id': cls.product_category.id,
                 'standard_price': 55.0,
@@ -164,7 +179,10 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'supplier_taxes_id': [(6, 0, [])],
                 'company_id': company.id,
             }),
-            'product_order_no': cls.env['product.product'].with_company(company).create({
+            'product_order_no': cls
+            .env['product.product']
+            .with_company(company)
+            .create({
                 'name': 'product_order_no',
                 'categ_id': cls.product_category.id,
                 'standard_price': 235.0,
@@ -179,7 +197,10 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                 'supplier_taxes_id': [(6, 0, [])],
                 'company_id': company.id,
             }),
-            'product_delivery_no': cls.env['product.product'].with_company(company).create({
+            'product_delivery_no': cls
+            .env['product.product']
+            .with_company(company)
+            .create({
                 'name': 'product_delivery_no',
                 'categ_id': cls.product_category.id,
                 'standard_price': 55.0,
@@ -205,7 +226,6 @@ class TestSaleCommon(AccountTestInvoicingCommon):
 
 
 class TestTaxCommonSale(TestSaleCommon, TestTaxCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -238,12 +258,20 @@ class TestTaxCommonSale(TestSaleCommon, TestTaxCommon):
             ],
         })
 
-    def assert_sale_order_tax_totals_summary(self, sale_order, expected_values, soft_checking=False):
-        self._assert_tax_totals_summary(sale_order.tax_totals, expected_values, soft_checking=soft_checking)
-        cash_rounding_base_amount_currency = sale_order.tax_totals.get('cash_rounding_base_amount_currency', 0.0)
+    def assert_sale_order_tax_totals_summary(
+        self, sale_order, expected_values, soft_checking=False
+    ):
+        self._assert_tax_totals_summary(
+            sale_order.tax_totals, expected_values, soft_checking=soft_checking
+        )
+        cash_rounding_base_amount_currency = sale_order.tax_totals.get(
+            'cash_rounding_base_amount_currency', 0.0
+        )
         expected_amounts = {}
         if 'base_amount_currency' in expected_values:
-            expected_amounts['amount_untaxed'] = expected_values['base_amount_currency'] + cash_rounding_base_amount_currency
+            expected_amounts['amount_untaxed'] = (
+                expected_values['base_amount_currency'] + cash_rounding_base_amount_currency
+            )
         if 'tax_amount_currency' in expected_values:
             expected_amounts['amount_tax'] = expected_values['tax_amount_currency']
         if 'total_amount_currency' in expected_values:

@@ -6,8 +6,9 @@ from odoo.http import Controller, request, route
 
 
 class SaleProductConfiguratorController(Controller):
-
-    @route(route='/sale/product_configurator/get_values', type='jsonrpc', auth='user', readonly=True)
+    @route(
+        route='/sale/product_configurator/get_values', type='jsonrpc', auth='user', readonly=True
+    )
     def sale_product_configurator_get_values(
         self,
         product_template_id,
@@ -45,13 +46,17 @@ class SaleProductConfiguratorController(Controller):
 
         combination = request.env['product.template.attribute.value']
         if ptav_ids:
-            combination = request.env['product.template.attribute.value'].browse(ptav_ids).filtered(
-                lambda ptav: ptav.product_tmpl_id.id == product_template_id
+            combination = (
+                request
+                .env['product.template.attribute.value']
+                .browse(ptav_ids)
+                .filtered(lambda ptav: ptav.product_tmpl_id.id == product_template_id)
             )
-            # Set missing attributes (unsaved no_variant attributes, or new attribute on existing product)
+            # Set missing attributes (unsaved no_variant attributes, or new attribute on existing
+            # product)
             unconfigured_ptals = (
-                product_template.attribute_line_ids - combination.attribute_line_id).filtered(
-                lambda ptal: ptal.attribute_id.display_type != 'multi')
+                product_template.attribute_line_ids - combination.attribute_line_id
+            ).filtered(lambda ptal: ptal.attribute_id.display_type != 'multi')
             combination += unconfigured_ptals.mapped(
                 lambda ptal: ptal.product_template_value_ids._only_active()[:1]
             )
@@ -73,7 +78,7 @@ class SaleProductConfiguratorController(Controller):
                         quantity=quantity,
                         product_uom_id=product_uom_id,
                         **kwargs,
-                    ),
+                    )
                 )
             ],
             'optional_products': [
@@ -87,9 +92,12 @@ class SaleProductConfiguratorController(Controller):
                         **kwargs,
                     ),
                     parent_product_tmpl_id=product_template.id,
-                ) for optional_product_template in product_template.optional_product_ids if
-                self._should_show_product(optional_product_template)
-            ] if not only_main_product else [],
+                )
+                for optional_product_template in product_template.optional_product_ids
+                if self._should_show_product(optional_product_template)
+            ]
+            if not only_main_product
+            else [],
             'currency_id': currency_id,
         }
 
@@ -221,8 +229,9 @@ class SaleProductConfiguratorController(Controller):
                     **kwargs,
                 ),
                 parent_product_tmpl_id=product_template.id,
-            ) for optional_product_template in product_template.optional_product_ids if
-            self._should_show_product(optional_product_template)
+            )
+            for optional_product_template in product_template.optional_product_ids
+            if self._should_show_product(optional_product_template)
         ]
 
     def _get_product_template(self, product_template_id):
@@ -283,12 +292,11 @@ class SaleProductConfiguratorController(Controller):
             }
         """
         uom = (
-            (product_uom_id and request.env['uom.uom'].browse(product_uom_id))
-            or product_template.uom_id
-        )
+            product_uom_id and request.env['uom.uom'].browse(product_uom_id)
+        ) or product_template.uom_id
         product = product_template._get_variant_for_combination(combination)
         attribute_exclusions = product_template._get_attribute_exclusions(
-            combination_ids=combination.ids,
+            combination_ids=combination.ids
         )
         product_or_template = product or product_template
         ptals = product_template.attribute_line_ids
@@ -296,7 +304,9 @@ class SaleProductConfiguratorController(Controller):
             attr_data['id']: attr_data
             for attr_data in ptals.attribute_id.read(['id', 'name', 'display_type'])
         }
-        ptavs = ptals.product_template_value_ids.filtered(lambda p: p.ptav_active or combination and p.id in combination.ids)
+        ptavs = ptals.product_template_value_ids.filtered(
+            lambda p: p.ptav_active or (combination and p.id in combination.ids)
+        )
         ptavs_map = dict(zip(ptavs.ids, ptavs.read(['name', 'html_color', 'image', 'is_custom'])))
 
         values = dict(
@@ -313,30 +323,35 @@ class SaleProductConfiguratorController(Controller):
             ),
             quantity=quantity,
             uom=uom.read(['id', 'display_name'])[0],
-            attribute_lines=[{
-                'id': ptal.id,
-                'attribute': dict(**attrs_map[ptal.attribute_id.id]),
-                'attribute_values': [
-                    dict(
-                        **ptavs_map[ptav.id],
-                        price_extra=self._get_ptav_price_extra(
-                            ptav, currency, so_date, product_or_template
-                        ),
-                    ) for ptav in ptal.product_template_value_ids
-                    if ptav.ptav_active or (combination and ptav.id in combination.ids)
-                ],
-                'selected_attribute_value_ids': combination.filtered(
-                    lambda c: ptal in c.attribute_line_id
-                ).ids,
-                'create_variant': ptal.attribute_id.create_variant,
-            } for ptal in product_template.attribute_line_ids],
+            attribute_lines=[
+                {
+                    'id': ptal.id,
+                    'attribute': dict(**attrs_map[ptal.attribute_id.id]),
+                    'attribute_values': [
+                        dict(
+                            **ptavs_map[ptav.id],
+                            price_extra=self._get_ptav_price_extra(
+                                ptav, currency, so_date, product_or_template
+                            ),
+                        )
+                        for ptav in ptal.product_template_value_ids
+                        if ptav.ptav_active or (combination and ptav.id in combination.ids)
+                    ],
+                    'selected_attribute_value_ids': combination.filtered(
+                        lambda c: ptal in c.attribute_line_id
+                    ).ids,
+                    'create_variant': ptal.attribute_id.create_variant,
+                }
+                for ptal in product_template.attribute_line_ids
+            ],
             exclusions=attribute_exclusions['exclusions'],
             archived_combinations=attribute_exclusions['archived_combinations'],
         )
         if show_packaging and product_template._has_multiple_uoms():
-            values['available_uoms'] = product_template._get_available_uoms().read(
-                ['id', 'display_name']
-            )
+            values['available_uoms'] = product_template._get_available_uoms().read([
+                'id',
+                'display_name',
+            ])
         # Shouldn't be sent client-side
         values.pop('pricelist_rule_id', None)
         return values
@@ -387,7 +402,7 @@ class SaleProductConfiguratorController(Controller):
             ),
         )
 
-    def _get_ptav_price_extra(self, ptav, currency, date, product_or_template):
+    def _get_ptav_price_extra(self, ptav, currency, date, product_or_template):  # noqa: ARG002
         """Return the extra price for a product template attribute value.
 
         :param product.template.attribute.value ptav: The product template attribute value for which
@@ -400,13 +415,10 @@ class SaleProductConfiguratorController(Controller):
         :return: The extra price for the product template attribute value.
         """
         return ptav.currency_id._convert(
-            ptav.price_extra,
-            currency,
-            request.env.company,
-            date.date(),
+            ptav.price_extra, currency, request.env.company, date.date()
         )
 
-    def _should_show_product(self, product_template):
+    def _should_show_product(self, product_template):  # noqa: ARG002
         """Decide whether a product should be shown in the configurator.
 
         :param product.template product_template: The product being checked.

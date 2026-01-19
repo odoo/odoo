@@ -63,9 +63,7 @@ class AccountAnalyticLine(models.Model):
             amount_changed_aals = self.env['account.analytic.line']
 
             if vals.get('order_id'):
-                order_changed_aals = self.filtered(
-                    lambda aal: aal.order_id.id != vals['order_id']
-                )
+                order_changed_aals = self.filtered(lambda aal: aal.order_id.id != vals['order_id'])
 
             if vals.get('product_id'):
                 product_changed_aals = self.filtered(
@@ -73,9 +71,7 @@ class AccountAnalyticLine(models.Model):
                 )
 
             if vals.get('amount'):
-                amount_changed_aals = self.filtered(
-                    lambda aal: aal.amount != vals['amount']
-                )
+                amount_changed_aals = self.filtered(lambda aal: aal.amount != vals['amount'])
 
             product_or_order_changed_aals = order_changed_aals | product_changed_aals
 
@@ -156,9 +152,11 @@ class AccountAnalyticLine(models.Model):
         """Retrieve the first matching sale order line from the related order, if any."""
         self.ensure_one()
         return self.order_id.order_line.filtered(
-            lambda line: line.product_id == self.product_id
-            and line.product_uom_id == self.product_uom_id
-            and line._is_analytic_reinvoice_line()
+            lambda line: (
+                line.product_id == self.product_id
+                and line.product_uom_id == self.product_uom_id
+                and line._is_analytic_reinvoice_line()
+            )
         )[:1]
 
     def _create_so_line(self):
@@ -193,11 +191,7 @@ class AccountAnalyticLine(models.Model):
         adjusted, ensuring the corresponding sale order line remains consistent.
         """
         for line in self:
-            if (
-                line.unit_amount
-                and line.so_line
-                and line.product_id.expense_policy == 'cost'
-            ):
+            if line.unit_amount and line.so_line and line.product_id.expense_policy == 'cost':
                 product = line.product_id.with_company(line.order_id.company_id)
                 unit_price = -line.amount / line.unit_amount
                 line.so_line.price_unit = product.currency_id._convert(

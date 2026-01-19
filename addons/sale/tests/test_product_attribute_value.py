@@ -8,7 +8,6 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged('post_install', '-at_install')
 class TestProductAttributeValue(HttpCase, SaleCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -17,42 +16,47 @@ class TestProductAttributeValue(HttpCase, SaleCommon):
             'sequence': 1,
             'create_variant': 'no_variant',
             'value_ids': [
-                Command.create({'name': f'pa_value_{i + 1}', 'sequence': i})
-                for i in range(3)
-            ]
+                Command.create({'name': f'pa_value_{i + 1}', 'sequence': i}) for i in range(3)
+            ],
         })
         cls.a1, cls.a2, cls.a3 = cls.product_attribute.value_ids
         cls.product_template, cls.archived_template = cls.env['product.template'].create([
             {
                 'name': 'P1',
                 'type': 'consu',
-                'attribute_line_ids': [Command.create({
-                    'attribute_id': cls.product_attribute.id,
-                    'value_ids': [Command.set([cls.a1.id, cls.a3.id])],
-                })],
+                'attribute_line_ids': [
+                    Command.create({
+                        'attribute_id': cls.product_attribute.id,
+                        'value_ids': [Command.set([cls.a1.id, cls.a3.id])],
+                    })
+                ],
             },
             {
                 'name': 'P2',
                 'type': 'consu',
-                'attribute_line_ids': [Command.create({
-                    'attribute_id': cls.product_attribute.id,
-                    'value_ids': [Command.set([cls.a1.id, cls.a2.id])],
-                })],
-            }
+                'attribute_line_ids': [
+                    Command.create({
+                        'attribute_id': cls.product_attribute.id,
+                        'value_ids': [Command.set([cls.a1.id, cls.a2.id])],
+                    })
+                ],
+            },
         ])
         cls.archived_template.action_archive()
-        order = cls._create_so(order_line=[
-            Command.create({
-                'product_id': cls.product_template.product_variant_id.id,
-                'product_no_variant_attribute_value_ids': [
-                    Command.set(
-                        cls.product_template.attribute_line_ids.product_template_value_ids.filtered(
-                            lambda ptav: ptav.product_attribute_value_id.id == cls.a3.id
-                        ).ids,
-                    ),
-                ],
-            }),
-        ])
+        order = cls._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': cls.product_template.product_variant_id.id,
+                    'product_no_variant_attribute_value_ids': [
+                        Command.set(
+                            cls.product_template.attribute_line_ids.product_template_value_ids.filtered(
+                                lambda ptav: ptav.product_attribute_value_id.id == cls.a3.id
+                            ).ids
+                        )
+                    ],
+                })
+            ]
+        )
         cls.order_line = order.order_line
 
     def test_attribute_values_deletion_or_archiving(self):

@@ -10,36 +10,38 @@ class SaleOrderTemplateLine(models.Model):
     _order = 'sale_order_template_id, sequence, id'
 
     _accountable_product_id_required = models.Constraint(
-        'CHECK(display_type IS NOT NULL OR (product_id IS NOT NULL AND product_uom_id IS NOT NULL))',
+        'CHECK(display_type IS NOT NULL OR (product_id IS NOT NULL AND product_uom_id IS NOT NULL))',  # noqa: E501
         'Missing required product and UoM on accountable sale quote line.',
     )
     _non_accountable_fields_null = models.Constraint(
-        'CHECK(display_type IS NULL OR (product_id IS NULL AND product_uom_qty = 0 AND product_uom_id IS NULL))',
+        'CHECK(display_type IS NULL OR (product_id IS NULL AND product_uom_qty = 0 AND product_uom_id IS NULL))',  # noqa: E501
         'Forbidden product, quantity and UoM on non-accountable sale quote line',
     )
 
     sale_order_template_id = fields.Many2one(
         comodel_name='sale.order.template',
         string='Quotation Template Reference',
-        index=True, required=True,
-        ondelete='cascade')
+        index=True,
+        required=True,
+        ondelete='cascade',
+    )
     sequence = fields.Integer(
         string="Sequence",
         help="Gives the sequence order when displaying a list of sale quote lines.",
-        default=10)
+        default=10,
+    )
 
     company_id = fields.Many2one(
-        related='sale_order_template_id.company_id', store=True, index=True)
+        related='sale_order_template_id.company_id', store=True, index=True
+    )
 
     product_id = fields.Many2one(
         comodel_name='product.product',
         check_company=True,
-        domain=lambda self: self._product_id_domain())
-
-    name = fields.Text(
-        string="Description",
-        translate=True,
+        domain=lambda self: self._product_id_domain(),
     )
+
+    name = fields.Text(string="Description", translate=True)
 
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom_id = fields.Many2one(
@@ -47,17 +49,18 @@ class SaleOrderTemplateLine(models.Model):
         string="Unit",
         domain="[('id', 'in', allowed_uom_ids)]",
         compute='_compute_product_uom_id',
-        store=True, readonly=False, precompute=True)
+        store=True,
+        readonly=False,
+        precompute=True,
+    )
     product_uom_qty = fields.Float(
-        string='Quantity',
-        required=True,
-        digits='Product Unit',
-        default=1)
+        string='Quantity', required=True, digits='Product Unit', default=1
+    )
 
-    display_type = fields.Selection([
-        ('line_section', "Section"),
-        ('line_subsection', "Subsection"),
-        ('line_note', "Note")], default=False)
+    display_type = fields.Selection(
+        [('line_section', "Section"), ('line_subsection', "Subsection"), ('line_note', "Note")],
+        default=False,
+    )
 
     # Section-related fields
     parent_id = fields.Many2one(
@@ -65,15 +68,11 @@ class SaleOrderTemplateLine(models.Model):
         comodel_name='sale.order.template.line',
         compute='_compute_parent_id',
     )
-    is_optional = fields.Boolean(
-        string="Optional Line",
-        copy=True,
-        default=False,
-    )
+    is_optional = fields.Boolean(string="Optional Line", copy=True, default=False)
     collapse_composition = fields.Boolean()
     collapse_prices = fields.Boolean()
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS ===#
 
     @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids')
     def _compute_allowed_uom_ids(self):
@@ -106,7 +105,7 @@ class SaleOrderTemplateLine(models.Model):
                 elif line in option_lines:
                     line.parent_id = last_sub or last_section
 
-    #=== CRUD METHODS ===#
+    # === CRUD METHODS ===#
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -116,19 +115,26 @@ class SaleOrderTemplateLine(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        if 'display_type' in vals and self.filtered(lambda line: line.display_type != vals.get('display_type')):
-            raise UserError(_("You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type."))
+        if 'display_type' in vals and self.filtered(
+            lambda line: line.display_type != vals.get('display_type')
+        ):
+            raise UserError(
+                _(
+                    "You cannot change the type of a sale quote line. Instead you should delete the"
+                    " current line and create a new line of the proper type."
+                )
+            )
         return super().write(vals)
 
-    #=== BUSINESS METHODS ===#
+    # === BUSINESS METHODS ===#
 
     @api.model
     def _product_id_domain(self):
-        """ Returns the domain of the products that can be added to the template. """
+        """Return the domain of the products that can be added to the template."""
         return [('sale_ok', '=', True), ('type', '!=', 'combo')]
 
     def _prepare_order_line_values(self):
-        """ Give the values to create the corresponding order line.
+        """Give the values to create the corresponding order line.
 
         :return: `sale.order.line` create values
         :rtype: dict

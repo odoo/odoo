@@ -8,8 +8,5 @@ class AccountAnalyticApplicability(models.Model):
     _description = "Analytic Plan's Applicabilities"
 
     business_domain = fields.Selection(
-        selection_add=[
-            ('sale_order', 'Sale Order'),
-        ],
-        ondelete={'sale_order': 'cascade'},
+        selection_add=[('sale_order', 'Sale Order')], ondelete={'sale_order': 'cascade'}
     )

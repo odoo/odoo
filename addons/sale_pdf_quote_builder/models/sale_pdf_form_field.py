@@ -32,7 +32,7 @@ class SalePdfFormField(models.Model):
     path = fields.Char(
         string="Path",
         help="The path to follow to dynamically fill the form field. \n"
-             "Leave empty to be able to customized it in the quotation form."
+        "Leave empty to be able to customized it in the quotation form.",
     )
     product_document_ids = fields.Many2many(
         string="Product Documents", comodel_name='product.document'
@@ -42,15 +42,14 @@ class SalePdfFormField(models.Model):
     )
 
     _unique_name_per_doc_type = models.Constraint(
-        'UNIQUE(name, document_type)',
-        'Form field name must be unique for a given document type.',
+        'UNIQUE(name, document_type)', 'Form field name must be unique for a given document type.'
     )
 
     # === CONSTRAINT METHODS ===#
 
     @api.constrains('name')
     def _check_form_field_name_follows_pattern(self):
-        """ Ensure the names only contains alphanumerics, hyphens and underscores.
+        """Ensure the names only contains alphanumerics, hyphens and underscores.
 
         :return: None
         :raises: ValidationError if the names aren't alphanumerics, hyphens and underscores.
@@ -58,21 +57,25 @@ class SalePdfFormField(models.Model):
         name_pattern = re.compile(r'^(\w|-)+$')
         for form_field in self:
             if not re.match(name_pattern, form_field.name):
-                raise ValidationError(_(
-                    "Invalid form field name %(field_name)s. It should only contain alphanumerics,"
-                    " hyphens or underscores.",
-                    field_name=form_field.name,
-                ))
+                raise ValidationError(
+                    _(
+                        "Invalid form field name %(field_name)s. It should only contain"
+                        " alphanumerics, hyphens or underscores.",
+                        field_name=form_field.name,
+                    )
+                )
             if form_field.name.startswith('sol_id_'):
-                raise ValidationError(_(
-                    "Invalid form field name %(field_name)s. A form field name in a header or a"
-                    " footer can not start with \"sol_id_\".",
-                    field_name=form_field.name,
-                ))
+                raise ValidationError(
+                    _(
+                        "Invalid form field name %(field_name)s. A form field name in a header or a"
+                        " footer can not start with \"sol_id_\".",
+                        field_name=form_field.name,
+                    )
+                )
 
     @api.constrains('path')
     def _check_valid_and_existing_paths(self):
-        """ Verify that the paths exist and are valid.
+        """Verify that the paths exist and are valid.
 
         :return: None
         :raises: ValidationError if at least one of the paths isn't valid.
@@ -80,11 +83,13 @@ class SalePdfFormField(models.Model):
         name_pattern = re.compile(r'^(\w|-|\.)+$')
         for form_field in self.filtered('path'):
             if not re.match(name_pattern, form_field.path):
-                raise ValidationError(_(
-                    "Invalid path %(path)s. It should only contain alphanumerics, hyphens,"
-                    " underscores or points.",
-                    path=form_field.path,
-                ))
+                raise ValidationError(
+                    _(
+                        "Invalid path %(path)s. It should only contain alphanumerics, hyphens,"
+                        " underscores or points.",
+                        path=form_field.path,
+                    )
+                )
 
             path = form_field.path.split('.')
             is_header_footer = form_field.document_type == 'quotation_document'
@@ -92,15 +97,17 @@ class SalePdfFormField(models.Model):
             for i in range(len(path)):
                 field_name = path[i]
                 if Model == []:
-                    raise ValidationError(_(
-                        "Please use only relational fields until the last value of your path."
-                    ))
+                    raise ValidationError(
+                        _("Please use only relational fields until the last value of your path.")
+                    )
                 if field_name not in Model._fields:
-                    raise ValidationError(_(
-                        "The field %(field_name)s doesn't exist on model %(model_name)s",
-                        field_name=field_name,
-                        model_name=Model._name
-                    ))
+                    raise ValidationError(
+                        _(
+                            "The field %(field_name)s doesn't exist on model %(model_name)s",
+                            field_name=field_name,
+                            model_name=Model._name,
+                        )
+                    )
                 if i != len(path) - 1:
                     Model = Model.mapped(field_name)
 
@@ -109,15 +116,19 @@ class SalePdfFormField(models.Model):
         for form_field in self:
             doc_type = form_field.document_type
             if doc_type == 'quotation_document' and form_field.product_document_ids:
-                raise ValidationError(_(
-                    "A form field set as used in product documents can't be linked to a quotation"
-                    " document."
-                ))
-            elif doc_type == 'product_document' and form_field.quotation_document_ids:
-                raise ValidationError(_(
-                    "A form field set as used in quotation documents can't be linked to a product"
-                    " document."
-                ))
+                raise ValidationError(
+                    _(
+                        "A form field set as used in product documents can't be linked to a"
+                        " quotation document."
+                    )
+                )
+            if doc_type == 'product_document' and form_field.quotation_document_ids:
+                raise ValidationError(
+                    _(
+                        "A form field set as used in quotation documents can't be linked to a"
+                        " product document."
+                    )
+                )
 
     # === BUSINESS METHODS ===#
 
@@ -160,17 +171,23 @@ class SalePdfFormField(models.Model):
         product_doc = list(mapped_form_fields['product_document'])
         existing_mapping = self.env['sale.pdf.form.field'].search([
             '|',
-            '&', ('document_type', '=', 'quotation_document'), ('name', 'in', quote_doc),
-            '&', ('document_type', '=', 'product_document'), ('name', 'in', product_doc)
+            '&',
+            ('document_type', '=', 'quotation_document'),
+            ('name', 'in', quote_doc),
+            '&',
+            ('document_type', '=', 'product_document'),
+            ('name', 'in', product_doc),
         ])
         if existing_mapping:
             form_fields_to_add = {
                 doc_type: {
-                    name: path for name, path in mapped_form_fields[doc_type].items()
+                    name: path
+                    for name, path in mapping.items()
                     if not existing_mapping.filtered(
                         lambda ff: ff.document_type == doc_type and ff.name == name
                     )
-                } for doc_type, mapping in mapped_form_fields.items()
+                }
+                for doc_type, mapping in mapped_form_fields.items()
             }
         else:
             form_fields_to_add = mapped_form_fields
@@ -183,9 +200,9 @@ class SalePdfFormField(models.Model):
     @api.model
     def _cron_post_upgrade_assign_missing_form_fields(self):
         # Called post-upgrade as we can't access the files during the upgrade process
-        product_documents = self.env['product.document'].search(
-            [('attached_on_sale', '=', 'inside')]
-        )
+        product_documents = self.env['product.document'].search([
+            ('attached_on_sale', '=', 'inside')
+        ])
         quote_documents = self.env['quotation.document'].search([])
         self._create_or_update_form_fields_on_pdf_records(product_documents, 'product_document')
         self._create_or_update_form_fields_on_pdf_records(quote_documents, 'quotation_document')
@@ -198,16 +215,18 @@ class SalePdfFormField(models.Model):
         except (pdf.DependencyError, pdf.PdfReadError):
             document_is_invalid = True
         if document_is_invalid:
-            raise ValidationError(_(
-                "It seems that we're not able to process this pdf inside a quotation. It is either"
-                " encrypted, or encoded in a format we do not support."
-            ))
+            raise ValidationError(
+                _(
+                    "It seems that we're not able to process this pdf inside a quotation. It is"
+                    " either encrypted, or encoded in a format we do not support."
+                )
+            )
 
     @api.model
     def _create_or_update_form_fields_on_pdf_records(self, records, doc_type):
-        existing_form_fields = self.env['sale.pdf.form.field'].search(
-            [('document_type', '=', doc_type)]
-        )
+        existing_form_fields = self.env['sale.pdf.form.field'].search([
+            ('document_type', '=', doc_type)
+        ])
         existing_form_fields_name = existing_form_fields.mapped('name')
 
         for document in records:
@@ -217,13 +236,15 @@ class SalePdfFormField(models.Model):
                 for field in unique(reader.get_form_text_fields()):
                     if field not in existing_form_fields_name:
                         document.form_field_ids = [
-                            Command.create({
-                                'name': field, 'document_type': doc_type
-                            })
+                            Command.create({'name': field, 'document_type': doc_type})
                         ]
                         existing_form_fields_name.append(field)
                         existing_form_fields += document.form_field_ids[-1]
                     else:
-                        document.form_field_ids = [Command.link(existing_form_fields.filtered(
-                            lambda form_field: form_field.name == field
-                        ).id)]
+                        document.form_field_ids = [
+                            Command.link(
+                                existing_form_fields.filtered(
+                                    lambda form_field: form_field.name == field
+                                ).id
+                            )
+                        ]

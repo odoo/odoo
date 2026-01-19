@@ -28,9 +28,8 @@ class IrActionsReport(models.Model):
         orders = self.env['sale.order'].browse(res_ids)
 
         for order in orders:
-            if (
-                (order.state != 'sale' or always_include)
-                and (initial_stream := result.get(order.id, {}).get('stream'))
+            if (order.state != 'sale' or always_include) and (
+                initial_stream := result.get(order.id, {}).get('stream')
             ):
                 quotation_documents = order.quotation_document_ids
                 headers = quotation_documents.filtered(lambda doc: doc.document_type == 'header')
@@ -81,7 +80,7 @@ class IrActionsReport(models.Model):
     def _update_mapping_and_add_pages_to_writer(
         self, writer, document, form_fields_values_mapping, prefix, order, order_line=None
     ):
-        """ Update the mapping with the field-value of the document, and add the doc to the writer.
+        """Update the mapping with the field-value of the document, and add the doc to the writer.
 
         Note: document.ensure_one(), order.ensure_one(), order_line and order_line.ensure_one()
 
@@ -118,7 +117,7 @@ class IrActionsReport(models.Model):
 
     @api.model
     def _get_value_from_path(self, form_field, order, order_line=None):
-        """ Get the string value by following the path indicated in the record form_field.
+        """Get the string value by following the path indicated in the record form_field.
 
         :param recordset form_field: sale.pdf.form.field that has a valid path.
         :param recordset order: sale.order from where the values and timezone need to be taken
@@ -169,7 +168,7 @@ class IrActionsReport(models.Model):
 
     @api.model
     def _get_custom_value_from_order(self, document, form_field_name, order, order_line):
-        """ Get the custom value of a form field directly from the order.
+        """Get the custom value of a form field directly from the order.
 
         :param recordset document: the document that needs to be added to the writer and get its
                                    form fields mapped. Either a quotation.document or a
@@ -218,7 +217,8 @@ class IrActionsReport(models.Model):
                         reader_annot = reader_annot['/Parent'].get_object()
                     if reader_annot.get('/T') in field_names:
                         # Prefix all form fields in the document with the document identifier.
-                        # This is necessary to know which value needs to be taken when filling the forms.
+                        # This is necessary to know which value needs to be taken when filling the
+                        # forms.
                         form_key = reader_annot.get('/T')
                         new_key = prefix + form_key
 

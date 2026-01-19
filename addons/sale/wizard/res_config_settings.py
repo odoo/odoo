@@ -8,33 +8,36 @@ class ResConfigSettings(models.TransientModel):
 
     # Defaults
     default_invoice_policy = fields.Selection(
-        selection=[
-            ('order', "Invoice what is ordered"),
-            ('delivery', "Invoice what is delivered")
-        ],
+        selection=[('order', "Invoice what is ordered"), ('delivery', "Invoice what is delivered")],
         string="Invoicing Policy",
         default='order',
-        default_model='product.template')
+        default_model='product.template',
+    )
 
     # Groups
     group_auto_done_setting = fields.Boolean(
-        string="Lock Confirmed Sales", implied_group='sale.group_auto_done_setting')
+        string="Lock Confirmed Sales", implied_group='sale.group_auto_done_setting'
+    )
     group_discount_per_so_line = fields.Boolean(
-        string="Discounts", implied_group='sale.group_discount_per_so_line')
+        string="Discounts", implied_group='sale.group_discount_per_so_line'
+    )
     group_proforma_sales = fields.Boolean(
-        string="Pro Forma Invoice", implied_group='sale.group_proforma_sales',
-        help="Allows you to send pro forma invoice.")
+        string="Pro Forma Invoice",
+        implied_group='sale.group_proforma_sales',
+        help="Allows you to send pro forma invoice.",
+    )
     group_warning_sale = fields.Boolean(
-        string="Sale Order Warnings", implied_group='sale.group_warning_sale')
+        string="Sale Order Warnings", implied_group='sale.group_warning_sale'
+    )
 
     # Config params
     automatic_invoice = fields.Boolean(
         string="Automatic Invoice",
         help="The invoice is generated automatically and available in the customer portal when the "
-             "transaction is confirmed by the payment provider.\nThe invoice is marked as paid and "
-             "the payment is registered in the payment journal defined in the configuration of the "
-             "payment provider.\nThis mode is advised if you issue the final invoice at the order "
-             "and not after the delivery.",
+        "transaction is confirmed by the payment provider.\nThe invoice is marked as paid and "
+        "the payment is registered in the payment journal defined in the configuration of the "
+        "payment provider.\nThis mode is advised if you issue the final invoice at the order "
+        "and not after the delivery.",
         config_parameter='sale.automatic_invoice',
     )
 
@@ -46,18 +49,18 @@ class ResConfigSettings(models.TransientModel):
         help="Email sent to the customer once the invoice is available.",
     )
     quotation_validity_days = fields.Integer(
-        related='company_id.quotation_validity_days',
-        readonly=False)
+        related='company_id.quotation_validity_days', readonly=False
+    )
     portal_confirmation_sign = fields.Boolean(
-        related='company_id.portal_confirmation_sign',
-        readonly=False)
+        related='company_id.portal_confirmation_sign', readonly=False
+    )
     portal_confirmation_pay = fields.Boolean(
-        related='company_id.portal_confirmation_pay',
-        readonly=False)
-    prepayment_percent = fields.Float(
-        related='company_id.prepayment_percent',
-        readonly=False)
-    downpayment_account_id = fields.Many2one(related='company_id.downpayment_account_id', readonly=False)
+        related='company_id.portal_confirmation_pay', readonly=False
+    )
+    prepayment_percent = fields.Float(related='company_id.prepayment_percent', readonly=False)
+    downpayment_account_id = fields.Many2one(
+        related='company_id.downpayment_account_id', readonly=False
+    )
 
     # Modules
     module_delivery = fields.Boolean("Delivery Methods")
@@ -82,7 +85,7 @@ class ResConfigSettings(models.TransientModel):
     module_sale_product_matrix = fields.Boolean("Sales Grid Entry")
     module_sale_shopee = fields.Boolean("Shopee Sync")
 
-    #=== ONCHANGE METHODS ===#
+    # === ONCHANGE METHODS ===#
 
     @api.depends('group_discount_per_so_line')
     def _onchange_group_discount_per_so_line(self):
@@ -91,8 +94,7 @@ class ResConfigSettings(models.TransientModel):
 
     @api.onchange('group_product_variant')
     def _onchange_group_product_variant(self):
-        """The product Configurator requires the product variants activated.
-        If the user disables the product variants -> disable the product configurator as well"""
+        """Disable the Product Grid module if variants are disabled."""
         if self.module_sale_product_matrix and not self.group_product_variant:
             self.module_sale_product_matrix = False
 
@@ -108,17 +110,19 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange('quotation_validity_days')
     def _onchange_quotation_validity_days(self):
         if self.quotation_validity_days < 0:
-            self.quotation_validity_days = self.env['res.company'].default_get(
-                ['quotation_validity_days']
-            )['quotation_validity_days']
+            self.quotation_validity_days = self.env['res.company'].default_get([
+                'quotation_validity_days'
+            ])['quotation_validity_days']
             return {
                 'warning': {
                     'title': _("Warning"),
-                    'message': _("Quotation Validity is required and must be greater or equal to 0."),
-                },
+                    'message': _(
+                        "Quotation Validity is required and must be greater or equal to 0."
+                    ),
+                }
             }
 
-    #=== CRUD METHODS ===#
+    # === CRUD METHODS ===#
 
     def set_values(self):
         super().set_values()

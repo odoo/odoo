@@ -9,7 +9,9 @@ class IrActionsReport(models.Model):
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         # EXTENDS base
-        collected_streams = super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
+        collected_streams = super()._render_qweb_pdf_prepare_streams(
+            report_ref, data, res_ids=res_ids
+        )
 
         if (
             collected_streams
@@ -37,7 +39,7 @@ class IrActionsReport(models.Model):
                 writer.add_attachment(
                     builder._export_invoice_filename(sale_order),  # works even if it's a SO or PO
                     xml_content,
-                    subtype='text/xml'
+                    subtype='text/xml',
                 )
 
             # Replace the current content.

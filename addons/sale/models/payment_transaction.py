@@ -10,9 +10,18 @@ from odoo import SUPERUSER_ID, Command, _, api, fields, models
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
-    sale_order_ids = fields.Many2many('sale.order', 'sale_order_transaction_rel', 'transaction_id', 'sale_order_id',
-                                      string='Sales Orders', copy=False, readonly=True)
-    sale_order_ids_nbr = fields.Integer(compute='_compute_sale_order_ids_nbr', string='# of Sales Orders')
+    sale_order_ids = fields.Many2many(
+        comodel_name='sale.order',
+        relation='sale_order_transaction_rel',
+        column1='transaction_id',
+        column2='sale_order_id',
+        string='Sales Orders',
+        copy=False,
+        readonly=True,
+    )
+    sale_order_ids_nbr = fields.Integer(
+        string='# of Sales Orders', compute='_compute_sale_order_ids_nbr'
+    )
 
     def _compute_sale_order_reference(self, order):
         self.ensure_one()
@@ -25,7 +34,9 @@ class PaymentTransaction(models.Model):
             # self.provider_id.so_reference_type is empty
             order_reference = False
 
-        invoice_journal = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
+        invoice_journal = self.env['account.journal'].search(
+            [('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1
+        )
         if invoice_journal:
             order_reference = invoice_journal._process_reference_for_sale_order(order_reference)
 
@@ -37,7 +48,7 @@ class PaymentTransaction(models.Model):
             trans.sale_order_ids_nbr = len(trans.sale_order_ids)
 
     def _post_process(self):
-        """ Override of `payment` to add Sales-specific logic to the post-processing.
+        """Override of `payment` to add Sales-specific logic to the post-processing.
 
         In particular, for pending transactions, we send the quotation by email; for authorized
         transactions, we confirm the quotation; for confirmed transactions, we automatically confirm
@@ -48,9 +59,9 @@ class PaymentTransaction(models.Model):
             sales_orders = pending_tx.sale_order_ids.filtered(
                 lambda so: so.state in ['draft', 'sent']
             )
-            sales_orders.filtered(
-                lambda so: so.state == 'draft'
-            ).with_context(tracking_disable=True).action_quotation_sent()
+            sales_orders.filtered(lambda so: so.state == 'draft').with_context(
+                tracking_disable=True
+            ).action_quotation_sent()
 
             if pending_tx.provider_id.code == 'custom':
                 for order in pending_tx.sale_order_ids:
@@ -78,8 +89,9 @@ class PaymentTransaction(models.Model):
             if remaining_orders := (authorized_tx.sale_order_ids - confirmed_orders):
                 remaining_orders._send_payment_succeeded_for_order_mail()
 
-        super(PaymentTransaction, self.filtered(
-            lambda tx: tx.state not in ['pending', 'authorized', 'done'])
+        super(
+            PaymentTransaction,
+            self.filtered(lambda tx: tx.state not in ['pending', 'authorized', 'done']),
         )._post_process()
 
         for done_tx in self.filtered(lambda tx: tx.state == 'done'):
@@ -94,16 +106,17 @@ class PaymentTransaction(models.Model):
                 done_tx._invoice_sale_orders()
             super(PaymentTransaction, done_tx)._post_process()  # Post the invoices.
             if auto_invoice and not self.env.context.get('skip_sale_auto_invoice_send'):
-                if (
-                    self.env['ir.config_parameter'].sudo().get_bool('sale.async_emails')
-                    and (send_invoice_cron := self.env.ref('sale.send_invoice_cron', raise_if_not_found=False))
+                if self.env['ir.config_parameter'].sudo().get_bool('sale.async_emails') and (
+                    send_invoice_cron := self.env.ref(
+                        'sale.send_invoice_cron', raise_if_not_found=False
+                    )
                 ):
                     send_invoice_cron._trigger()
                 else:
                     self._send_invoice()
 
     def _check_amount_and_confirm_order(self):
-        """ Confirm the sales order based on the amount of a transaction.
+        """Confirm the sales order based on the amount of a transaction.
 
         Confirm the sales orders only if the transaction amount (or the sum of the partial
         transaction amounts) is equal to or greater than the required amount for order confirmation
@@ -124,7 +137,7 @@ class PaymentTransaction(models.Model):
         return confirmed_orders
 
     def _log_message_on_linked_documents(self, message):
-        """ Override of payment to log a message on the sales orders linked to the transaction.
+        """Override of payment to log a message on the sales orders linked to the transaction.
 
         Note: self.ensure_one()
 
@@ -144,17 +157,16 @@ class PaymentTransaction(models.Model):
         #   * logged in users receive the invoice
         #   * the mail and notifications are not sent by the public user
         for tx in self.with_user(SUPERUSER_ID):
-            tx = tx.with_company(tx.company_id).with_context(
-                company_id=tx.company_id.id,
-            )
+            tx = tx.with_company(tx.company_id).with_context(company_id=tx.company_id.id)
             invoice_to_send = tx.invoice_ids.filtered(
                 lambda i: not i.is_move_sent and i.state == 'posted' and i._is_ready_to_be_sent()
             )
-            invoice_to_send.is_move_sent = True # Mark invoice as sent
+            invoice_to_send.is_move_sent = True  # Mark invoice as sent
 
             send_context = {'allow_raising': False, 'allow_fallback_pdf': True}
             default_template_param = (
-                self.env['ir.config_parameter']
+                self
+                .env['ir.config_parameter']
                 .sudo()
                 .get_int('sale.default_invoice_email_template')
             )
@@ -163,15 +175,10 @@ class PaymentTransaction(models.Model):
                 if mail_template.exists():
                     send_context['mail_template'] = mail_template
 
-            tx.env['account.move.send']._generate_and_send_invoices(
-                invoice_to_send,
-                **send_context,
-            )
+            tx.env['account.move.send']._generate_and_send_invoices(invoice_to_send, **send_context)
 
     def _cron_send_invoice(self):
-        """
-            Cron to send invoice that where not ready to be send directly after posting
-        """
+        """Send invoices that where not ready to be send directly after posting."""
         if not self.env['ir.config_parameter'].sudo().get_bool('sale.automatic_invoice'):
             return
 
@@ -181,10 +188,14 @@ class PaymentTransaction(models.Model):
         self.search([
             ('state', '=', 'done'),
             ('is_post_processed', '=', True),
-            ('invoice_ids', 'in', self.env['account.move']._search([
-                ('is_move_sent', '=', False),
-                ('state', '=', 'posted'),
-            ])),
+            (
+                'invoice_ids',
+                'in',
+                self.env['account.move']._search([
+                    ('is_move_sent', '=', False),
+                    ('state', '=', 'posted'),
+                ]),
+            ),
             ('sale_order_ids.state', '=', 'sale'),
             ('last_state_change', '>=', retry_limit_date),
         ])._send_invoice()
@@ -218,7 +229,7 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def _compute_reference_prefix(self, separator, **values):
-        """ Override of payment to compute the reference prefix based on Sales-specific values.
+        """Override of payment to compute the reference prefix based on Sales-specific values.
 
         If the `values` parameter has an entry with 'sale_order_ids' as key and a list of (4, id, O)
         or (6, 0, ids) X2M command as value, the prefix is computed based on the sales order name(s)

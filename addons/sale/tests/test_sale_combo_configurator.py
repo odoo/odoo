@@ -9,7 +9,6 @@ from odoo.addons.sale.tests.common import SaleCommon
 # TODO VFE move to test_sale_product_configurators
 @tagged('post_install', '-at_install')
 class TestSaleComboConfigurator(HttpCase, SaleCommon):
-
     def test_sale_combo_configurator(self):
         if self.env['ir.module.module']._get('sale_management').state != 'installed':
             self.skipTest("Sale App is not installed, Sale menu is not accessible.")
@@ -29,7 +28,7 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
                 Command.create({
                     'attribute_id': no_variant_attribute.id,
                     'value_ids': [Command.set(no_variant_attribute.value_ids.ids)],
-                }),
+                })
             ],
         })
         combo_a = self.env['product.combo'].create({
@@ -50,10 +49,7 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
             name="Combo product",
             list_price=25,
             type='combo',
-            combo_ids=[
-                Command.link(combo_a.id),
-                Command.link(combo_b.id),
-            ],
+            combo_ids=[Command.link(combo_a.id), Command.link(combo_b.id)],
         )
         self.start_tour('/odoo', 'sale_combo_configurator', login='salesman')
 
@@ -64,7 +60,7 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         combo_a = self.env['product.combo'].create({
             'name': "Combo A",
             'combo_item_ids': [
-                Command.create({'product_id': self._create_product(name="Product A1").id}),
+                Command.create({'product_id': self._create_product(name="Product A1").id})
             ],
         })
         combo_b = self.env['product.combo'].create({
@@ -74,17 +70,12 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
                 Command.create({'product_id': self._create_product(name="Product B2").id}),
             ],
         })
-        optional_product = self.env['product.template'].create({
-            'name': "Optional Product",
-        })
+        optional_product = self.env['product.template'].create({'name': "Optional Product"})
         combo_product = self.env['product.template'].create({
             'name': "Combo product",
             'list_price': 25,
             'type': 'combo',
-            'combo_ids': [
-                Command.link(combo_a.id),
-                Command.link(combo_b.id),
-            ],
+            'combo_ids': [Command.link(combo_a.id), Command.link(combo_b.id)],
             'optional_product_ids': [Command.link(optional_product.id)],
         })
         self.start_tour('/odoo', 'sale_combo_configurator_with_optional_products', login='salesman')
@@ -113,7 +104,9 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         )
 
     def test_sale_combo_configurator_preselect_single_unconfigurable_items(self):
-        self.env['res.users'].search([('login', '=', 'salesman')]).group_ids += self.env.ref("product.group_product_manager")
+        self.env['res.users'].search([('login', '=', 'salesman')]).group_ids += self.env.ref(
+            "product.group_product_manager"
+        )
         if self.env['ir.module.module']._get('sale_management').state != 'installed':
             self.skipTest("Sale App is not installed, Sale menu is not accessible.")
 
@@ -168,7 +161,11 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
                 Command.link(combo_with_multiple_unconfigurable_items.id),
             ],
         )
-        self.start_tour('/odoo', 'sale_combo_configurator_preselect_single_unconfigurable_items', login='salesman')
+        self.start_tour(
+            '/odoo',
+            'sale_combo_configurator_preselect_single_unconfigurable_items',
+            login='salesman',
+        )
 
     def test_sale_combo_configurator_preconfigure_unconfigurable_ptals(self):
         if self.env['ir.module.module']._get('sale_management').state != 'installed':
@@ -202,12 +199,9 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
             'name': "Test combo",
             'combo_item_ids': [Command.create({'product_id': product.product_variant_id.id})],
         })
-        self._create_product(
-            name="Combo product",
-            type='combo',
-            combo_ids=[Command.link(combo.id)],
-        )
-        self.start_tour('/odoo', 'sale_combo_configurator_preconfigure_unconfigurable_ptals', login='salesman'
+        self._create_product(name="Combo product", type='combo', combo_ids=[Command.link(combo.id)])
+        self.start_tour(
+            '/odoo', 'sale_combo_configurator_preconfigure_unconfigurable_ptals', login='salesman'
         )
 
     def _create_combo_from_attribute(self, attribute, product_name, combo_name):
@@ -217,7 +211,7 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
                 Command.create({
                     'attribute_id': attribute.id,
                     'value_ids': [Command.set(attribute.value_ids.ids)],
-                }),
+                })
             ],
         })
         return self.env['product.combo'].create({

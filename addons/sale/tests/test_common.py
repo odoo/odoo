@@ -7,7 +7,6 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged('post_install', '-at_install')
 class TestSaleCommon(SaleCommon):
-
     def test_common(self):
         empty_order = self._create_so(order_line=[])
         self.assertFalse(empty_order.order_line)

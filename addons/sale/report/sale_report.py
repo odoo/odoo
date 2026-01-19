@@ -20,8 +20,7 @@ class SaleReport(models.Model):
     def _selection_target_model(self):
         return [
             (model.model, model.name)
-            for model
-            in self.env['ir.model'].sudo().search([])
+            for model in self.env['ir.model'].sudo().search([])
             if not model.is_transient()
         ]
 
@@ -40,7 +39,10 @@ class SaleReport(models.Model):
             ('invoiced', "Fully Invoiced"),
             ('to invoice', "To Invoice"),
             ('no', "Nothing to Invoice"),
-        ], string="Order Invoice Status", readonly=True)
+        ],
+        string="Order Invoice Status",
+        readonly=True,
+    )
 
     campaign_id = fields.Many2one(comodel_name='utm.campaign', string="Campaign", readonly=True)
     medium_id = fields.Many2one(comodel_name='utm.medium', string="Medium", readonly=True)
@@ -49,28 +51,36 @@ class SaleReport(models.Model):
 
     # res.partner fields
     commercial_partner_id = fields.Many2one(
-        comodel_name='res.partner', string="Customer Entity", readonly=True)
+        comodel_name='res.partner', string="Customer Entity", readonly=True
+    )
     country_id = fields.Many2one(
-        comodel_name='res.country', string="Customer Country", readonly=True)
+        comodel_name='res.country', string="Customer Country", readonly=True
+    )
     industry_id = fields.Many2one(
-        comodel_name='res.partner.industry', string="Customer Industry", readonly=True)
+        comodel_name='res.partner.industry', string="Customer Industry", readonly=True
+    )
     partner_zip = fields.Char(string="Customer ZIP", readonly=True)
-    state_id = fields.Many2one(comodel_name='res.country.state', string="Customer State", readonly=True)
-    partner_tag_ids = fields.Many2many(string="Customer Tags", related='partner_id.category_id', readonly=True)
+    state_id = fields.Many2one(
+        comodel_name='res.country.state', string="Customer State", readonly=True
+    )
+    partner_tag_ids = fields.Many2many(
+        string="Customer Tags", related='partner_id.category_id', readonly=True
+    )
 
     # sale.order.line fields
     order_reference = fields.Reference(
-        string='Order',
-        selection=[('sale.order', 'Sales Order')],
-        aggregator="count_distinct",
+        string='Order', selection=[('sale.order', 'Sales Order')], aggregator="count_distinct"
     )
 
     categ_id = fields.Many2one(
-        comodel_name='product.category', string="Product Category", readonly=True)
+        comodel_name='product.category', string="Product Category", readonly=True
+    )
     product_id = fields.Many2one(
-        comodel_name='product.product', string="Product Variant", readonly=True)
+        comodel_name='product.product', string="Product Variant", readonly=True
+    )
     product_tmpl_id = fields.Many2one(
-        comodel_name='product.template', string="Product", readonly=True)
+        comodel_name='product.template', string="Product", readonly=True
+    )
     product_uom_id = fields.Many2one(comodel_name='uom.uom', string="Unit", readonly=True)
     product_uom_qty = fields.Float(string="Qty Ordered", readonly=True)
     qty_to_deliver = fields.Float(string="Qty To Deliver", readonly=True)
@@ -88,7 +98,10 @@ class SaleReport(models.Model):
             ('invoiced', "Fully Invoiced"),
             ('to invoice', "To Invoice"),
             ('no', "Nothing to Invoice"),
-        ], string="Invoice Status", readonly=True)
+        ],
+        string="Invoice Status",
+        readonly=True,
+    )
 
     weight = fields.Float(string="Gross Weight", readonly=True)
     volume = fields.Float(string="Volume", readonly=True)
@@ -174,7 +187,7 @@ class SaleReport(models.Model):
                 ) ELSE 0
             END AS discount_amount,
             {self.env.company.currency_id.id} AS currency_id,
-            concat('sale.order', ',', s.id) AS order_reference"""
+            concat('sale.order', ',', s.id) AS order_reference"""  # noqa: E501
 
         additional_fields_info = self._select_additional_fields()
         template = """,
@@ -188,9 +201,10 @@ class SaleReport(models.Model):
         return f"""CASE COALESCE({value}, 0) WHEN 0 THEN 1.0 ELSE {value} END"""
 
     def _select_additional_fields(self):
-        """Hook to return additional fields SQL specification for select part of the table query.
+        """Allow to return additional fields SQL specification for select part of the table query.
 
-        :returns: mapping field -> SQL computation of field, will be converted to '_ AS _field' in the final table definition
+        :returns: mapping field -> SQL computation of field, will be converted to '_ AS _field' in
+                  the final table definition
         :rtype: dict
         """
         return {}

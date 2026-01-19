@@ -8,7 +8,6 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged('post_install', '-at_install')
 class TestProductCatalog(HttpCase, SaleCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -35,8 +34,8 @@ class TestProductCatalog(HttpCase, SaleCommon):
                     'order_id': self.res_id,
                     'product_ids': products.ids,
                     **kwargs,
-                },
-            }
+                }
+            },
         )
         return response.json()['result']
 
@@ -50,8 +49,8 @@ class TestProductCatalog(HttpCase, SaleCommon):
                     'product_id': product.id,
                     'quantity': quantity,
                     **kwargs,
-                },
-            }
+                }
+            },
         )
         return response.json()['result']
 
@@ -74,10 +73,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
             }
             product_data = catalog_data[str(product.id)]
             for key, value in product_expected_data.items():
-                self.assertEqual(
-                    product_data[key],
-                    value,
-                )
+                self.assertEqual(product_data[key], value)
 
     def _create_pricelist_discount_rules(self):
         self.pricelist.item_ids = [
@@ -92,7 +88,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
                 'product_id': self.service_product.id,
                 'compute_price': 'percentage',
                 'percent_price': 50,
-            })
+            }),
         ]
 
     def test_catalog_context(self):
@@ -101,8 +97,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
         self.assertEqual(catalog_context['product_catalog_order_id'], self.empty_order.id)
         self.assertEqual(catalog_context['product_catalog_order_model'], self.res_model)
         self.assertEqual(
-            catalog_context['product_catalog_currency_id'],
-            self.empty_order.currency_id.id,
+            catalog_context['product_catalog_currency_id'], self.empty_order.currency_id.id
         )
         # Equal to false, as `price_unit` doesn't have a precision set.
         self.assertFalse(catalog_context['product_catalog_digits'])
@@ -115,36 +110,20 @@ class TestProductCatalog(HttpCase, SaleCommon):
         self.empty_order._action_cancel()
 
         # Readonly order because in cancelled state
-        self.check_catalog_data(
-            self.service_product,
-            {
-                self.service_product.id: {'readOnly': True},
-            }
-        )
+        self.check_catalog_data(self.service_product, {self.service_product.id: {'readOnly': True}})
 
     def test_data(self):
         self.empty_order.order_line = [
-            Command.create({
-                'product_id': self.service_product.id,
-                'product_uom_qty': 1.0,
-            })
+            Command.create({'product_id': self.service_product.id, 'product_uom_qty': 1.0})
         ]
 
-        self.check_catalog_data(
-            self.products,
-            {
-                self.service_product.id: {'quantity': 1.0},
-            }
-        )
+        self.check_catalog_data(self.products, {self.service_product.id: {'quantity': 1.0}})
 
     def test_data_with_pricelist_rules(self):
         self._create_pricelist_discount_rules()
         self.assertEqual(self.empty_order.pricelist_id, self.pricelist)
         self.check_catalog_data(
-            self.products,
-            {
-                self.product.id: {'price': self.product.lst_price / 2},
-            }
+            self.products, {self.product.id: {'price': self.product.lst_price / 2}}
         )
 
     def test_data_with_discounted_lines(self):
@@ -154,23 +133,13 @@ class TestProductCatalog(HttpCase, SaleCommon):
             'group_product_pricelist': True,
             'group_discount_per_so_line': True,
         }).execute()
-        self.empty_order.order_line = [
-            Command.create({
-                'product_id': self.product.id,
-            })
-        ]
+        self.empty_order.order_line = [Command.create({'product_id': self.product.id})]
         sol = self.empty_order.order_line
         self.assertEqual(sol.price_unit, self.product.lst_price)
         self.assertEqual(sol.discount, 50)
 
         self.check_catalog_data(
-            self.products,
-            {
-                self.product.id: {
-                    'quantity': 1.0,
-                    'price': self.product.lst_price / 2
-                },
-            }
+            self.products, {self.product.id: {'quantity': 1.0, 'price': self.product.lst_price / 2}}
         )
 
     def test_update(self):
@@ -194,12 +163,15 @@ class TestProductCatalog(HttpCase, SaleCommon):
         update_data = self.request_update_order_line_info(product=product)
         sol = self.empty_order.order_line
         self.assertRecordValues(
-            sol, [{
-                'product_id': product.id,
-                'product_uom_qty': 1.0,
-                'price_unit': product.lst_price,
-                'discount': 0.0,
-            }]
+            sol,
+            [
+                {
+                    'product_id': product.id,
+                    'product_uom_qty': 1.0,
+                    'price_unit': product.lst_price,
+                    'discount': 0.0,
+                }
+            ],
         )
         self.assertEqual(update_data, product.lst_price)
 
@@ -207,12 +179,15 @@ class TestProductCatalog(HttpCase, SaleCommon):
         update_data = self.request_update_order_line_info(product=product, quantity=2.0)
         self.assertEqual(update_data, product.lst_price / 2)
         self.assertRecordValues(
-            sol, [{
-                'product_id': product.id,
-                'product_uom_qty': 2.0,
-                'price_unit': product.lst_price / 2,
-                'discount': 0.0,
-            }]
+            sol,
+            [
+                {
+                    'product_id': product.id,
+                    'product_uom_qty': 2.0,
+                    'price_unit': product.lst_price / 2,
+                    'discount': 0.0,
+                }
+            ],
         )
 
         # Enable discounts, add item --> discount should be on discount field
@@ -224,16 +199,19 @@ class TestProductCatalog(HttpCase, SaleCommon):
         update_data = self.request_update_order_line_info(product=product, quantity=3.0)
         self.assertEqual(update_data, product.lst_price / 2)
         self.assertRecordValues(
-            sol, [{
-                'product_id': product.id,
-                'product_uom_qty': 3.0,
-                'price_unit': product.lst_price,
-                'discount': 50.0,
-            }]
+            sol,
+            [
+                {
+                    'product_id': product.id,
+                    'product_uom_qty': 3.0,
+                    'price_unit': product.lst_price,
+                    'discount': 50.0,
+                }
+            ],
         )
 
     def test_remove_product_from_catalog_without_sol(self):
-        """Test that removing a product from the catalog right after clicking Add button"""
+        """Test update line with zero quantity and no existing line."""
         product = self.service_product
         update_data = self.request_update_order_line_info(product=product, quantity=0.0)
 

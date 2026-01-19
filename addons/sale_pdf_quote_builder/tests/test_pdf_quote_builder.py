@@ -12,16 +12,15 @@ from odoo.http import Response
 from odoo.tests import Form, tagged
 from odoo.tools.misc import file_open
 
+from .files import forms_pdf, plain_pdf
 from odoo.addons.sale_management.tests.common import SaleManagementCommon
 from odoo.addons.sale_pdf_quote_builder.controllers.quotation_document import (
-    QuotationDocumentController
+    QuotationDocumentController,
 )
-from .files import forms_pdf, plain_pdf
 
 
 @tagged('-at_install', 'post_install')
 class TestPDFQuoteBuilder(SaleManagementCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -39,25 +38,15 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
         with file_open(plain_pdf, 'rb') as file:
             plain_pdf_data = file.read()
 
-        att_header, att_footer, att_prod_doc = cls.env['ir.attachment'].create([{
-            'name': "Header",
-            'raw': plain_pdf_data,
-        }, {
-            'name': "Footer",
-            'raw': forms_pdf_data,
-        }, {
-            'name': "Product Document",
-            'raw': forms_pdf_data,
-        }])
-        cls.header, cls.footer = cls.env['quotation.document'].create([{
-            'name': "Header",
-            'ir_attachment_id': att_header.id,
-            'document_type': 'header',
-        }, {
-            'name': "Footer",
-            'ir_attachment_id': att_footer.id,
-            'document_type': 'footer',
-        }])
+        att_header, att_footer, att_prod_doc = cls.env['ir.attachment'].create([
+            {'name': "Header", 'raw': plain_pdf_data},
+            {'name': "Footer", 'raw': forms_pdf_data},
+            {'name': "Product Document", 'raw': forms_pdf_data},
+        ])
+        cls.header, cls.footer = cls.env['quotation.document'].create([
+            {'name': "Header", 'ir_attachment_id': att_header.id, 'document_type': 'header'},
+            {'name': "Footer", 'ir_attachment_id': att_footer.id, 'document_type': 'footer'},
+        ])
         cls.product_document = cls.env['product.document'].create({
             'name': "Product Document",
             'ir_attachment_id': att_prod_doc.id,
@@ -65,11 +54,12 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             'res_model': 'product.product',
             'res_id': cls.product.id,
         })
-        cls.internal_user = cls._create_new_internal_user(login='internal.user@test.odoo.com', groups='sales_team.group_sale_salesman')
+        cls.internal_user = cls._create_new_internal_user(
+            login='internal.user@test.odoo.com', groups='sales_team.group_sale_salesman'
+        )
         cls.alt_company = cls.env['res.company'].create({'name': "Backup Company"})
 
     def _create_so_form(self, **values):
-        """Default values limited to preexisting ones. No Command"""
         SaleOrder = self.env['sale.order'].with_context(default_partner_id=self.partner.id)
         so_form = Form(SaleOrder)
         for field_name, value in values.items():
@@ -94,7 +84,6 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             new_form_field(name="integer_test", path='company_id.color'),
             new_form_field(name="selection_test", path='state'),
             new_form_field(name="monetary_test", path='amount_total'),
-
             new_form_field(name="one2many_test", path='order_line'),
             new_form_field(name="many2one_test", path='company_id'),
             new_form_field(name="many2many_test", path='company_id.parent_ids'),
@@ -107,16 +96,16 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             new_form_fields[3]: "",  # datetime missing
             new_form_fields[4]: "1.0",  # float
             new_form_fields[5]: "1",  # integer
-            new_form_fields[6]: dict(self.sale_order._fields['state'].selection)['draft'],  # selection
+            new_form_fields[6]: dict(self.sale_order._fields['state'].selection)[
+                'draft'
+            ],  # selection
             new_form_fields[7]: "$\xa0725.00",  # monetary
             new_form_fields[8]: f"{sol_1.display_name}, {sol_2.display_name}",  # one2many
             new_form_fields[9]: f"{self.sale_order.company_id.display_name}",  # many2one
             new_form_fields[10]: f"{self.sale_order.company_id.display_name}",  # many2many
         }
         for form_field, expected_value in form_field_expected_value_map.items():
-            result = self.env['ir.actions.report']._get_value_from_path(
-                form_field, self.sale_order
-            )
+            result = self.env['ir.actions.report']._get_value_from_path(form_field, self.sale_order)
             self.assertEqual(result, expected_value)
 
     def test_dynamic_fields_mapping_for_product_document(self):
@@ -140,7 +129,6 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             new_form_field(name="integer_test", path='sequence'),
             new_form_field(name="selection_test", path='order_id.state'),
             new_form_field(name="monetary_test", path='order_id.amount_total'),
-
             new_form_field(name="one2many_test", path='order_id.order_line'),
             new_form_field(name="many2one_test", path='order_id.company_id'),
             new_form_field(name="many2many_test", path='tax_ids'),
@@ -203,24 +191,19 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
 
         product_document = self.product_document
 
-        product_document.write({
-            'ir_attachment_id': non_pdf_att.id,
-        })
+        product_document.write({'ir_attachment_id': non_pdf_att.id})
         with self.assertRaises(ValidationError):
             with Form(product_document) as doc_form:
                 doc_form.attached_on_sale = 'inside'
 
     def test_onchange_product_removes_previously_selected_documents(self):
-        """ Check that changing a line that has a selected document unselect said document. """
-
+        """Check that changing a line that has a selected document unselect said document."""
         available_doc = self.sale_order.order_line[0].available_product_document_ids
         self.sale_order.order_line[0].product_document_ids = available_doc  # select the document
 
         self.assertTrue(available_doc, msg="Default order line should have an available document.")
         msg = "The available document should have been selected."
-        self.assertEqual(
-            self.sale_order.order_line[0].product_document_ids, available_doc, msg=msg
-        )
+        self.assertEqual(self.sale_order.order_line[0].product_document_ids, available_doc, msg=msg)
 
         so_form = Form(self.sale_order)
         with so_form.order_line.edit(0) as line:
@@ -237,26 +220,36 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
         product_document.sequence = self.product_document.sequence - 1
         docs = self.sale_order.order_line[0].available_product_document_ids
         self.assertEqual(len(docs), 2, "There should be 2 available documents.")
-        self.assertEqual(docs[0], product_document, "The first available document should be the one with the lowest sequence.")
         self.assertEqual(
-            docs[1], self.product_document, "The second available document should be the one with the highest sequence."
+            docs[0],
+            product_document,
+            "The first available document should be the one with the lowest sequence.",
+        )
+        self.assertEqual(
+            docs[1],
+            self.product_document,
+            "The second available document should be the one with the highest sequence.",
         )
 
     def test_available_documents_multiple_products(self):
         product_doc_copy = self.product_document.copy()
         product2 = self._create_product(name="Test Product 2")
-        product_template_document2 = self.product_document.copy(
-            {'res_model': 'product.template', 'res_id': product2.product_tmpl_id.id, 'sequence': 1}
-        )
-        product_document2 = self.product_document.copy({'res_model': 'product.product', 'res_id': product2.id, 'sequence': 99})
-        self.sale_order.write(
-            {
-                'order_line': [
-                    Command.create({'product_id': self.product.id}),
-                    Command.create({'product_id': product2.id}),
-                ]
-            }
-        )
+        product_template_document2 = self.product_document.copy({
+            'res_model': 'product.template',
+            'res_id': product2.product_tmpl_id.id,
+            'sequence': 1,
+        })
+        product_document2 = self.product_document.copy({
+            'res_model': 'product.product',
+            'res_id': product2.id,
+            'sequence': 99,
+        })
+        self.sale_order.write({
+            'order_line': [
+                Command.create({'product_id': self.product.id}),
+                Command.create({'product_id': product2.id}),
+            ]
+        })
         self.assertEqual(
             self.sale_order.order_line[0].available_product_document_ids,
             self.product_document | product_doc_copy,
@@ -276,8 +269,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             "Alphabetical order of res_model should be respected.",
         )
         self.assertEqual(
-            self.sale_order.order_line[3].available_product_document_ids[0],
-            product_document2,
+            self.sale_order.order_line[3].available_product_document_ids[0], product_document2
         )
         self.assertEqual(
             self.sale_order.order_line[3].available_product_document_ids[1],
@@ -296,12 +288,11 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             MockRequest(self.env) as request,
             file_open(plain_pdf, 'rb') as file,
             patch.object(request.httprequest.files, 'getlist', lambda _key: [FileStorage(file)]),
-            patch.object(request, 'make_json_response',
+            patch.object(
+                request,
+                'make_json_response',
                 lambda data, status=200, headers=None: Response(
-                    json.dumps(data),
-                    status=status,
-                    headers=headers,
-                    mimetype='application/json',
+                    json.dumps(data), status=status, headers=headers, mimetype='application/json'
                 ),
             ),
         ):
@@ -311,9 +302,9 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             )
             self.assertEqual(res.status_code, 200, "Upload should be successful")
 
-        quotation_document = self.env['quotation.document'].search([
-            ('name', '=', plain_pdf),
-        ], limit=1)
+        quotation_document = self.env['quotation.document'].search(
+            [('name', '=', plain_pdf)], limit=1
+        )
         self.assertTrue(quotation_document, "A new quotation document should be created")
         self.assertEqual(
             quotation_document.company_id,
@@ -334,12 +325,11 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             MockRequest(self.env) as request,
             file_open(forms_pdf, 'rb') as file,
             patch.object(request.httprequest.files, 'getlist', lambda _key: [FileStorage(file)]),
-            patch.object(request, 'make_json_response',
+            patch.object(
+                request,
+                'make_json_response',
                 lambda data, status=200, headers=None: Response(
-                    json.dumps(data),
-                    status=status,
-                    headers=headers,
-                    mimetype='application/json',
+                    json.dumps(data), status=status, headers=headers, mimetype='application/json'
                 ),
             ),
         ):
@@ -350,21 +340,18 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             )
             self.assertEqual(res.status_code, 200, "Upload should be successful")
 
-        quotation_document = self.env['quotation.document'].search([
-            ('name', '=', forms_pdf),
-        ], limit=1)
+        quotation_document = self.env['quotation.document'].search(
+            [('name', '=', forms_pdf)], limit=1
+        )
         self.assertTrue(quotation_document, "A new quotation document should be created")
         self.assertFalse(
-            quotation_document.company_id,
-            "Quotation document shouldn't have a company id",
+            quotation_document.company_id, "Quotation document shouldn't have a company id"
         )
 
     def _test_custom_content_kanban_like(self):
         # TODO VCR finish tour and uncomment
         self.start_tour(
-            f'/odoo/sales/{self.sale_order.id}',
-            'custom_content_kanban_like_tour',
-            login='admin',
+            f'/odoo/sales/{self.sale_order.id}', 'custom_content_kanban_like_tour', login='admin'
         )
         # Assert documents are selected
 

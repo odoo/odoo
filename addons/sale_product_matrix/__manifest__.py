@@ -14,14 +14,8 @@ by choosing product variants quantity through a Grid Entry.
         'views/sale_order_views.xml',
         'report/sale_report_templates.xml',
     ],
-    'demo': [
-        'data/product_matrix_demo.xml'
-    ],
-    'assets': {
-        'web.assets_backend': [
-            'sale_product_matrix/static/src/**/*',
-        ],
-    },
+    'demo': ['data/product_matrix_demo.xml'],
+    'assets': {'web.assets_backend': ['sale_product_matrix/static/src/**/*']},
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

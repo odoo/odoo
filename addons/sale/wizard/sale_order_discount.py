@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
@@ -13,7 +11,8 @@ class SaleOrderDiscount(models.TransientModel):
     _description = "Discount Wizard"
 
     sale_order_id = fields.Many2one(
-        'sale.order', default=lambda self: self.env.context.get('active_id'), required=True)
+        'sale.order', default=lambda self: self.env.context.get('active_id'), required=True
+    )
     company_id = fields.Many2one(related='sale_order_id.company_id')
     currency_id = fields.Many2one(related='sale_order_id.currency_id')
     discount_amount = fields.Monetary(string="Amount")
@@ -48,7 +47,9 @@ class SaleOrderDiscount(models.TransientModel):
             'company_id': self.company_id.id,
             'taxes_id': None,
         }
-        services_category = self.env.ref('product.product_category_services', raise_if_not_found=False)
+        services_category = self.env.ref(
+            'product.product_category_services', raise_if_not_found=False
+        )
         if services_category:
             values['categ_id'] = services_category.id
         return values
@@ -57,33 +58,31 @@ class SaleOrderDiscount(models.TransientModel):
         self.ensure_one()
         AccountTax = self.env['account.tax']
         discount_dp = self.env['decimal.precision'].precision_get('Discount')
-        has_multiple_tax_combinations = len(set(base_line['tax_ids'] for base_line in base_lines if base_line['tax_ids'])) > 1
+        has_multiple_tax_combinations = (
+            len({base_line['tax_ids'] for base_line in base_lines if base_line['tax_ids']}) > 1
+        )
         so_line_values_list = []
         for base_line in base_lines:
-
             # The name of the so line.
             if has_multiple_tax_combinations:
                 if self.discount_type == 'so_discount':
                     so_line_description = self.env._(
-                        "Discount %(percent)s%%"
-                        "- On products with the following taxes %(taxes)s",
+                        "Discount %(percent)s%%- On products with the following taxes %(taxes)s",
                         percent=float_repr(self.discount_percentage * 100.0, discount_dp),
                         taxes=", ".join(base_line['tax_ids'].mapped('name')),
                     )
                 else:
                     so_line_description = self.env._(
-                        "Discount"
-                        "- On products with the following taxes %(taxes)s",
+                        "Discount- On products with the following taxes %(taxes)s",
                         taxes=", ".join(base_line['tax_ids'].mapped('name')),
                     )
+            elif self.discount_type == 'so_discount':
+                so_line_description = self.env._(
+                    "Discount %(percent)s%%",
+                    percent=float_repr(self.discount_percentage * 100.0, discount_dp),
+                )
             else:
-                if self.discount_type == 'so_discount':
-                    so_line_description = self.env._(
-                        "Discount %(percent)s%%",
-                        percent=float_repr(self.discount_percentage * 100.0, discount_dp),
-                    )
-                else:
-                    so_line_description = self.env._("Discount")
+                so_line_description = self.env._("Discount")
 
             so_line_values_list.append({
                 'name': so_line_description,
@@ -99,7 +98,7 @@ class SaleOrderDiscount(models.TransientModel):
         return so_line_values_list
 
     def _get_discount_product(self):
-        """Return product.product used for discount line"""
+        """Return the `product.product` record used for discount line."""
         self.ensure_one()
         company = self.company_id
         discount_product = company.sale_discount_product_id
@@ -113,11 +112,13 @@ class SaleOrderDiscount(models.TransientModel):
                     self._prepare_discount_product_values()
                 )
             else:
-                raise ValidationError(_(
-                    "There does not seem to be any discount product configured for this company yet."
-                    " You can either use a per-line discount, or ask an administrator to grant the"
-                    " discount the first time."
-                ))
+                raise ValidationError(
+                    _(
+                        "There does not seem to be any discount product configured for this company"
+                        " yet. You can either use a per-line discount, or ask an administrator to"
+                        " grant the discount the first time."
+                    )
+                )
             discount_product = company.sale_discount_product_id
         return discount_product
 
@@ -141,7 +142,7 @@ class SaleOrderDiscount(models.TransientModel):
         AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
 
-        def grouping_function(base_line):
+        def grouping_function(base_line):  # noqa: ARG001
             return {'product_id': discount_product}
 
         global_discount_base_lines = AccountTax._prepare_global_discount_lines(

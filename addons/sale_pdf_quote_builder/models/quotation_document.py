@@ -8,17 +8,12 @@ from odoo.fields import Command
 class QuotationDocument(models.Model):
     _name = 'quotation.document'
     _description = "Quotation's Headers & Footers"
-    _inherits = {
-        'ir.attachment': 'ir_attachment_id',
-    }
+    _inherits = {'ir.attachment': 'ir_attachment_id'}
     _order = 'document_type desc, sequence, name'
     _check_company_auto = True
 
     ir_attachment_id = fields.Many2one(
-        string="Related attachment",
-        comodel_name='ir.attachment',
-        ondelete='cascade',
-        required=True,
+        string="Related attachment", comodel_name='ir.attachment', ondelete='cascade', required=True
     )
     document_type = fields.Selection(
         string="Document Type",

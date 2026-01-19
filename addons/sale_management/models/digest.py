@@ -22,6 +22,8 @@ class DigestDigest(models.Model):
     def _get_kpi_custom_settings(self, company, user):
         res = super()._get_kpi_custom_settings(company, user)
         menu_id = self.env.ref('sale.sale_menu_root').id
-        res['kpi_action']['kpi_all_sale_total'] = f'sale.report_all_channels_sales_action?menu_id={menu_id}'
+        res['kpi_action']['kpi_all_sale_total'] = (
+            f'sale.report_all_channels_sales_action?menu_id={menu_id}'
+        )
         res['kpi_sequence']['kpi_all_sale_total'] = 2500
         return res

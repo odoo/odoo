@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+
 from odoo import api, fields, models
 
 
@@ -12,7 +13,7 @@ class SaleOrderLine(models.Model):
         comodel_name='product.document',
         relation='available_sale_order_line_product_document_rel',
         compute='_compute_available_product_document_ids',
-        compute_sudo=True, # To access attached_on_sale
+        compute_sudo=True,  # To access attached_on_sale
     )
     product_document_ids = fields.Many2many(
         string="Product Documents",
@@ -41,12 +42,12 @@ class SaleOrderLine(models.Model):
             [
                 ('attached_on_sale', '=', 'inside'),
                 '|',
-                    '&',
-                        ('res_model', '=', 'product.product'),
-                        ('res_id', 'in', self.product_id.ids),
-                    '&',
-                        ('res_model', '=', 'product.template'),
-                        ('res_id', 'in', self.product_template_id.ids),
+                '&',
+                ('res_model', '=', 'product.product'),
+                ('res_id', 'in', self.product_id.ids),
+                '&',
+                ('res_model', '=', 'product.template'),
+                ('res_id', 'in', self.product_template_id.ids),
             ],
             ['res_model', 'res_id', 'sequence'],
             ['id:array_agg'],

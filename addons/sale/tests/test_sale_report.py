@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import tagged
@@ -9,16 +10,17 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged('-at_install', 'post_install')
 class TestSaleReportCurrencyRate(SaleCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
         cls.usd_cmp = cls.env['res.company'].create({
-            'name': 'USD Company', 'currency_id': cls.env.ref('base.USD').id,
+            'name': 'USD Company',
+            'currency_id': cls.env.ref('base.USD').id,
         })
         cls.eur_cmp = cls.env['res.company'].create({
-            'name': 'EUR Company', 'currency_id': cls.env.ref('base.EUR').id,
+            'name': 'EUR Company',
+            'currency_id': cls.env.ref('base.EUR').id,
         })
 
     def test_sale_report_foreign_currency(self):
@@ -29,7 +31,6 @@ class TestSaleReportCurrencyRate(SaleCommon):
         - currency of sale order company -> currency of the current user company
         Adjustment between past and present rates must also be taken into account.
         """
-
         companies = self.usd_cmp + self.eur_cmp
         today = fields.Date.today()
         past_day = fields.Date.to_date('2020-01-01')
@@ -68,7 +69,13 @@ class TestSaleReportCurrencyRate(SaleCommon):
         qty = 0  # to add variety to the data
 
         # Needed to get conversion rates between companies.
-        currency_rates = {k: v[0] for k, v in (companies + self.env.company).mapped('currency_id')._get_rates(self.env.company, today).items()}
+        currency_rates = {
+            k: v[0]
+            for k, v in (companies + self.env.company)
+            .mapped('currency_id')
+            ._get_rates(self.env.company, today)
+            .items()
+        }
 
         # Create sale orders
         for company in companies:
@@ -80,30 +87,42 @@ class TestSaleReportCurrencyRate(SaleCommon):
                         'partner_id': self.partner.id,
                         'pricelist_id': pricelist.id,
                         'date_order': date,
-                        'order_line': [Command.create(
-                            {'product_id': self.product.id, 'product_uom_qty': qty}
-                        )],
+                        'order_line': [
+                            Command.create({'product_id': self.product.id, 'product_uom_qty': qty})
+                        ],
                     })
                     sale_orders |= order
 
                     eff_date = fields.Date.subtract(date, days=1)
-                    expected_so_currency_rate = self.env['res.currency.rate'].search([
-                        ('name', '=', eff_date),
-                        ('currency_id', '=', pricelist.currency_id.id),
-                        ('company_id', '=', company.id),
-                    ]).rate
-                    expected_product_currency_rate = self.env['res.currency.rate'].search([
-                        ('name', '=', eff_date),
-                        ('currency_id', '=', self.product.currency_id.id),
-                        ('company_id', '=', company.id),
-                    ]).rate
+                    expected_so_currency_rate = (
+                        self
+                        .env['res.currency.rate']
+                        .search([
+                            ('name', '=', eff_date),
+                            ('currency_id', '=', pricelist.currency_id.id),
+                            ('company_id', '=', company.id),
+                        ])
+                        .rate
+                    )
+                    expected_product_currency_rate = (
+                        self
+                        .env['res.currency.rate']
+                        .search([
+                            ('name', '=', eff_date),
+                            ('currency_id', '=', self.product.currency_id.id),
+                            ('company_id', '=', company.id),
+                        ])
+                        .rate
+                    )
 
                     # To find the total amount we convert the price of the product from its currency
                     # to the currency of the so company and then from it to the currency of the so
                     # pricelist.
                     price_for_so_company = self.product.list_price / expected_product_currency_rate
 
-                    expected_amount_total = pricelist.currency_id.round(qty * price_for_so_company * expected_so_currency_rate)
+                    expected_amount_total = pricelist.currency_id.round(
+                        qty * price_for_so_company * expected_so_currency_rate
+                    )
                     self.assertAlmostEqual(order.currency_rate, expected_so_currency_rate)
                     self.assertAlmostEqual(order.amount_total, expected_amount_total)
 
@@ -111,34 +130,41 @@ class TestSaleReportCurrencyRate(SaleCommon):
                     # then to the currency of the current company (self.env.company).
                     current_company_rate = currency_rates[self.env.company.currency_id.id]
                     so_company_rate = currency_rates[company.currency_id.id]
-                    conversion_rate = (current_company_rate / so_company_rate)
+                    conversion_rate = current_company_rate / so_company_rate
 
                     expected_reported_amount += (
                         order.amount_total / order.currency_rate * conversion_rate
                     )
 
         # The report should show the amount in the current (in this case usd) company currency.
-        report_lines = self.env['sale.report'].sudo().with_context(
-            allow_company_ids=[self.usd_cmp.id, self.eur_cmp.id]
-        ).search([('order_reference', 'in', [f'sale.order,{so_id}' for so_id in sale_orders.ids])])
+        report_lines = (
+            self
+            .env['sale.report']
+            .sudo()
+            .with_context(allow_company_ids=[self.usd_cmp.id, self.eur_cmp.id])
+            .search([
+                ('order_reference', 'in', [f'sale.order,{so_id}' for so_id in sale_orders.ids])
+            ])
+        )
 
         price_total = sum(report_lines.mapped('price_total'))
         self.assertAlmostEqual(price_total, expected_reported_amount)
 
     def test_sale_report_with_downpayment(self):
-        """Checks that downpayment lines are used in the calculation of amounts invoiced and to invoice"""
+        """Check that downpayment lines are used in the calculation of amounts invoiced and to
+        invoice."""
         order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
-            'order_line': [Command.create({
-                'product_id': self.product.id,
-            })]
+            'order_line': [Command.create({'product_id': self.product.id})],
         })
         order.action_confirm()
 
-        downpayment = self.env['sale.advance.payment.inv'].with_context(active_ids=order.ids).create({
-            'advance_payment_method': 'fixed',
-            'fixed_amount': 200
-        })
+        downpayment = (
+            self
+            .env['sale.advance.payment.inv']
+            .with_context(active_ids=order.ids)
+            .create({'advance_payment_method': 'fixed', 'fixed_amount': 200})
+        )
         downpayment.create_invoices()
         order.invoice_ids.action_post()
         order.order_line.flush_recordset()
@@ -148,5 +174,19 @@ class TestSaleReportCurrencyRate(SaleCommon):
             aggregates=['untaxed_amount_to_invoice:sum', 'untaxed_amount_invoiced:sum'],
         )[0]
 
-        self.assertEqual(float_compare(amount_line['untaxed_amount_invoiced:sum'], 200, precision_rounding=order.currency_id.rounding), 0)
-        self.assertEqual(float_compare(amount_line['untaxed_amount_to_invoice:sum'], self.product.lst_price - 200, precision_rounding=order.currency_id.rounding), 0)
+        self.assertEqual(
+            float_compare(
+                amount_line['untaxed_amount_invoiced:sum'],
+                200,
+                precision_rounding=order.currency_id.rounding,
+            ),
+            0,
+        )
+        self.assertEqual(
+            float_compare(
+                amount_line['untaxed_amount_to_invoice:sum'],
+                self.product.lst_price - 200,
+                precision_rounding=order.currency_id.rounding,
+            ),
+            0,
+        )

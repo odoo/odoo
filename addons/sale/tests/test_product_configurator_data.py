@@ -10,7 +10,6 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 @tagged('post_install', '-at_install')
 class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, SaleCommon):
-
     def request_get_values(self, product_template, ptav_ids=None):
         base_url = product_template.get_base_url()
         response = self.url_open(
@@ -26,8 +25,8 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
                     'pricelist_id': None,
                     'ptav_ids': ptav_ids,
                     'only_main_product': False,
-                },
-            }
+                }
+            },
         )
         return response.json()['result']
 
@@ -39,19 +38,13 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
                 Command.create({
                     'attribute_id': self.size_attribute.id,
                     'value_ids': [
-                        Command.set([
-                            self.size_attribute_l.id,
-                            self.size_attribute_m.id,
-                        ]),
+                        Command.set([self.size_attribute_l.id, self.size_attribute_m.id])
                     ],
                 }),
                 Command.create({
                     'attribute_id': self.color_attribute.id,
                     'value_ids': [
-                        Command.set([
-                            self.color_attribute_red.id,
-                            self.color_attribute_blue.id,
-                        ])
+                        Command.set([self.color_attribute_red.id, self.color_attribute_blue.id])
                     ],
                 }),
             ],
@@ -64,19 +57,12 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
             'attribute_line_ids': [
                 Command.create({
                     'attribute_id': self.no_variant_attribute.id,
-                    'value_ids': [
-                        Command.set([
-                            self.no_variant_attribute_extra.id
-                        ]),
-                    ],
+                    'value_ids': [Command.set([self.no_variant_attribute_extra.id])],
                 }),
                 Command.create({
                     'attribute_id': self.color_attribute.id,
                     'value_ids': [
-                        Command.set([
-                            self.color_attribute_red.id,
-                            self.color_attribute_blue.id,
-                        ])
+                        Command.set([self.color_attribute_red.id, self.color_attribute_blue.id])
                     ],
                 }),
             ],
@@ -93,16 +79,13 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
                         Command.set([
                             self.no_variant_attribute_extra.id,
                             self.no_variant_attribute_second.id,
-                        ]),
+                        ])
                     ],
                 }),
                 Command.create({
                     'attribute_id': self.color_attribute.id,
                     'value_ids': [
-                        Command.set([
-                            self.color_attribute_red.id,
-                            self.color_attribute_blue.id,
-                        ])
+                        Command.set([self.color_attribute_red.id, self.color_attribute_blue.id])
                     ],
                 }),
             ],
@@ -169,9 +152,10 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
             lambda ptal: ptal.attribute_id == self.color_attribute
         ).value_ids = [Command.unlink(self.color_attribute_red.id)]
         self.assertEqual(len(product_template.product_variant_ids), 2)
-        archived_variants = product_template.with_context(
-            active_test=False
-        ).product_variant_ids - product_template.product_variant_ids
+        archived_variants = (
+            product_template.with_context(active_test=False).product_variant_ids
+            - product_template.product_variant_ids
+        )
         self.assertEqual(len(archived_variants), 2)
 
         archived_ptav = product_template.attribute_line_ids.product_template_value_ids.filtered(
@@ -192,10 +176,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
 
         # When requested combination contains inactive ptav
         # check that archived combinations are loaded
-        self.assertEqual(
-            len(result['products'][0]['archived_combinations']),
-            2
-        )
+        self.assertEqual(len(result['products'][0]['archived_combinations']), 2)
         for combination in result['products'][0]['archived_combinations']:
             self.assertIn(archived_ptav.id, combination)
 
@@ -210,20 +191,18 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         ptav_excluded = product_template.attribute_line_ids[1].product_template_value_ids[0]
 
         # Add an exclusion
-        ptav_with_exclusion.write({
-            'excluded_value_ids': [
-                Command.link(ptav_excluded.id),
-            ],
-        })
+        ptav_with_exclusion.write({'excluded_value_ids': [Command.link(ptav_excluded.id)]})
         self.assertEqual(len(product_template.product_variant_ids), 3)
 
         self.authenticate('demo', 'demo')
         result = self.request_get_values(product_template)
         # The PTAVs should be mutually excluded
-        self.assertEqual(result['products'][0]['exclusions']
-                         [str(ptav_with_exclusion.id)], [ptav_excluded.id])
-        self.assertEqual(result['products'][0]['exclusions']
-                         [str(ptav_excluded.id)], [ptav_with_exclusion.id])
+        self.assertEqual(
+            result['products'][0]['exclusions'][str(ptav_with_exclusion.id)], [ptav_excluded.id]
+        )
+        self.assertEqual(
+            result['products'][0]['exclusions'][str(ptav_excluded.id)], [ptav_with_exclusion.id]
+        )
 
         ptav_with_exclusion.write({'ptav_active': False})
         result = self.request_get_values(product_template)
@@ -249,10 +228,10 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         self.assertFalse(str(ptav_excluded.id) in result['products'][0]['exclusions'])
 
     def test_ptal_values_set_for_no_variant_atribute(self):
-        '''
+        """
         Test that selected_attribute_value_id is set for attribute with only one variant and
         `create_variant`: `no_variant`.
-        '''
+        """
         product_template = self.create_product_template_with_attribute_no_variant()
 
         self.authenticate('demo', 'demo')
@@ -272,7 +251,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
             order_line=[
                 Command.create({
                     'product_id': product.id,
-                    'product_no_variant_attribute_value_ids': product.attribute_line_ids.product_template_value_ids.filtered(
+                    'product_no_variant_attribute_value_ids': product.attribute_line_ids.product_template_value_ids.filtered(  # noqa: E501
                         lambda p: p.attribute_id.create_variant == 'no_variant'
                     ),
                 })
@@ -299,14 +278,15 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         variant_ptav_ids = [
             product_template.attribute_line_ids.product_template_value_ids.filtered(
                 lambda ptav: ptav.product_attribute_value_id == self.color_attribute_red
-            ).id,
+            ).id
         ]
         self.authenticate('demo', 'demo')
         result = self.request_get_values(product_template, variant_ptav_ids)
         selected_values = [
             selected_value
             for product in result['products'][0]['attribute_lines']
-            for selected_value in product['selected_attribute_value_ids']]
+            for selected_value in product['selected_attribute_value_ids']
+        ]
 
         # Make sure that deleted value is not selected
         self.assertNotIn(archived_ptav.id, selected_values)
@@ -319,19 +299,17 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
             'attribute_line_ids': [
                 Command.create({
                     'attribute_id': self.color_attribute.id,
-                    'value_ids': [Command.set([
-                        self.color_attribute_red.id,
-                        self.color_attribute_blue.id,
-                    ])],
+                    'value_ids': [
+                        Command.set([self.color_attribute_red.id, self.color_attribute_blue.id])
+                    ],
                 }),
                 Command.create({
                     'attribute_id': self.size_attribute.id,
-                    'value_ids': [Command.set([
-                        self.size_attribute_s.id,
-                        self.size_attribute_m.id,
-                    ])]
-                })
-            ]
+                    'value_ids': [
+                        Command.set([self.size_attribute_s.id, self.size_attribute_m.id])
+                    ],
+                }),
+            ],
         })
 
         # Sell all variants
@@ -357,9 +335,11 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
 
         self.assertEqual(len(_get_ptavs()), 4)
         product_template_2lines_2attributes.attribute_line_ids = [
-            Command.unlink(product_template_2lines_2attributes.attribute_line_ids.filtered(
-                lambda ptal: ptal.attribute_id.id == self.size_attribute.id
-            ).id)
+            Command.unlink(
+                product_template_2lines_2attributes.attribute_line_ids.filtered(
+                    lambda ptal: ptal.attribute_id.id == self.size_attribute.id
+                ).id
+            )
         ]
         self.assertEqual(len(_get_ptavs()), 4)
 
@@ -377,9 +357,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         product_template_2lines_2attributes.attribute_line_ids = [
             Command.create({
                 'attribute_id': self.size_attribute.id,
-                'value_ids': [Command.set([
-                    self.size_attribute_s.id,
-                ])]
+                'value_ids': [Command.set([self.size_attribute_s.id])],
             })
         ]
         self.assertEqual(len(_get_ptavs()), 4)
@@ -394,7 +372,8 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         exclusions_data = product_template_2lines_2attributes._get_attribute_exclusions()
         self.assertTrue(
             all(
-                tuple(product.product_template_attribute_value_ids.ids) not in exclusions_data['archived_combinations']
+                tuple(product.product_template_attribute_value_ids.ids)
+                not in exclusions_data['archived_combinations']
                 for product in _get_active_variants()
             )
         )
@@ -412,28 +391,17 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
             'attribute_line_ids': [
                 Command.create({
                     'attribute_id': self.size_attribute.id,
-                    'value_ids': [
-                        Command.set([
-                            self.size_attribute_l.id,
-                        ]),
-                    ],
+                    'value_ids': [Command.set([self.size_attribute_l.id])],
                 }),
                 Command.create({
                     'attribute_id': self.color_attribute.id,
                     'value_ids': [
-                        Command.set([
-                            self.color_attribute_red.id,
-                            self.color_attribute_blue.id,
-                        ])
+                        Command.set([self.color_attribute_red.id, self.color_attribute_blue.id])
                     ],
                 }),
                 Command.create({
                     'attribute_id': self.size_attribute.id,
-                    'value_ids': [
-                        Command.set([
-                            self.size_attribute_m.id,
-                        ]),
-                    ],
+                    'value_ids': [Command.set([self.size_attribute_m.id])],
                 }),
             ],
         })
@@ -446,8 +414,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         self.assertEqual(len(result['products'][0]['attribute_lines']), 3)
         # Verify that each attribute line has its attribute info correctly mapped
         attribute_names = [
-            line['attribute']['name']
-            for line in result['products'][0]['attribute_lines']
+            line['attribute']['name'] for line in result['products'][0]['attribute_lines']
         ]
         self.assertIn('Size', attribute_names)
         self.assertIn('Color', attribute_names)

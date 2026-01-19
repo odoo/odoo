@@ -7,7 +7,6 @@ from odoo.tools import groupby
 
 
 class SaleComboConfiguratorController(Controller):
-
     @route(route='/sale/combo_configurator/get_data', type='jsonrpc', auth='user', readonly=True)
     def sale_combo_configurator_get_data(
         self,
@@ -20,7 +19,7 @@ class SaleComboConfiguratorController(Controller):
         selected_combo_items=None,
         **kwargs,
     ):
-        """ Return data about the specified combo product.
+        """Return data about the specified combo product.
 
         :param int product_tmpl_id: The product for which to get data, as a `product.template` id.
         :param int quantity: The quantity of the product.
@@ -58,22 +57,27 @@ class SaleComboConfiguratorController(Controller):
             'price': product_template._get_configurator_display_price(
                 product_template, quantity, date, currency, pricelist, **kwargs
             )[0],
-            'combos': [{
-                'id': combo.id,
-                'name': combo.name,
-                'combo_items': [
-                   self._get_combo_item_data(
-                       combo,
-                       combo_item,
-                       selected_combo_item_dict.get(combo_item.id, {}),
-                       date,
-                       currency,
-                       pricelist,
-                       quantity=quantity,
-                       **kwargs,
-                   ) for combo_item in combo.combo_item_ids if combo_item.product_id.active
-                ],
-            } for combo in product_template.sudo().combo_ids],
+            'combos': [
+                {
+                    'id': combo.id,
+                    'name': combo.name,
+                    'combo_items': [
+                        self._get_combo_item_data(
+                            combo,
+                            combo_item,
+                            selected_combo_item_dict.get(combo_item.id, {}),
+                            date,
+                            currency,
+                            pricelist,
+                            quantity=quantity,
+                            **kwargs,
+                        )
+                        for combo_item in combo.combo_item_ids
+                        if combo_item.product_id.active
+                    ],
+                }
+                for combo in product_template.sudo().combo_ids
+            ],
             'currency_id': currency_id,
             **product_template._get_additional_configurator_data(
                 product_template, date, currency, pricelist, quantity=quantity, **kwargs
@@ -91,7 +95,7 @@ class SaleComboConfiguratorController(Controller):
         pricelist_id=None,
         **kwargs,
     ):
-        """ Return the price of the specified combo product.
+        """Return the price of the specified combo product.
 
         :param int product_tmpl_id: The product for which to get the price, as a `product.template`
             id.
@@ -120,7 +124,7 @@ class SaleComboConfiguratorController(Controller):
     def _get_combo_item_data(
         self, combo, combo_item, selected_combo_item, date, currency, pricelist, **kwargs
     ):
-        """ Return the price of the specified combo product.
+        """Return the price of the specified combo product.
 
         :param product.combo combo: The combo for which to get the data.
         :param product.combo.item combo_item: The combo for which to get the data.
@@ -162,7 +166,7 @@ class SaleComboConfiguratorController(Controller):
         }
 
     def _get_ptals_data(self, product, selected_combo_item):
-        """ Return data about the PTALs of the specified product.
+        """Return data about the PTALs of the specified product.
 
         :param product.product product: The product for which to get the PTALs.
         :param dict selected_combo_item: The selected combo item, in the following format:
@@ -185,34 +189,42 @@ class SaleComboConfiguratorController(Controller):
             lambda ptal: not ptal._is_configurable()
         ).product_template_value_ids
 
-        ptavs_by_ptal_id = dict(groupby(
-            variant_ptavs | no_variant_ptavs | preselected_ptavs,
-            lambda ptav: ptav.attribute_line_id.id,
-        ))
+        ptavs_by_ptal_id = dict(
+            groupby(
+                variant_ptavs | no_variant_ptavs | preselected_ptavs,
+                lambda ptav: ptav.attribute_line_id.id,
+            )
+        )
 
         custom_ptavs = selected_combo_item.get('custom_ptavs', [])
         custom_value_by_ptav_id = {ptav['id']: ptav['value'] for ptav in custom_ptavs}
 
-        return [{
-            'id': ptal.id,
-            'name': ptal.attribute_id.name,
-            'create_variant': ptal.attribute_id.create_variant,
-            'selected_ptavs': self._get_selected_ptavs_data(
-                ptavs_by_ptal_id.get(ptal.id, []), custom_value_by_ptav_id
-            ),
-        } for ptal in product.attribute_line_ids]
+        return [
+            {
+                'id': ptal.id,
+                'name': ptal.attribute_id.name,
+                'create_variant': ptal.attribute_id.create_variant,
+                'selected_ptavs': self._get_selected_ptavs_data(
+                    ptavs_by_ptal_id.get(ptal.id, []), custom_value_by_ptav_id
+                ),
+            }
+            for ptal in product.attribute_line_ids
+        ]
 
     def _get_selected_ptavs_data(self, selected_ptavs, custom_value_by_ptav_id):
-        """ Return data about the selected PTAVs of the specified product.
+        """Return data about the selected PTAVs of the specified product.
 
         :param list(product.template.attribute.value) selected_ptavs: The selected PTAVs.
         :param dict custom_value_by_ptav_id: A mapping from PTAV ids to custom values.
         :rtype: list(dict)
         :return: A list of dicts containing data about the specified PTAL's selected PTAVs.
         """
-        return [{
-            'id': ptav.id,
-            'name': ptav.name,
-            'price_extra': ptav.price_extra,
-            'custom_value': custom_value_by_ptav_id.get(ptav.id),
-        } for ptav in selected_ptavs]
+        return [
+            {
+                'id': ptav.id,
+                'name': ptav.name,
+                'price_extra': ptav.price_extra,
+                'custom_value': custom_value_by_ptav_id.get(ptav.id),
+            }
+            for ptav in selected_ptavs
+        ]

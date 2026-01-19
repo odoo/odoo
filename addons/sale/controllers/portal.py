@@ -7,31 +7,35 @@ from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 
 class CustomerPortal(payment_portal.PaymentPortal):
-
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
         partner = request.env.user.partner_id
 
         SaleOrder = request.env['sale.order']
         if 'quotation_count' in counters:
-            values['quotation_count'] = SaleOrder.search_count(self._prepare_quotations_domain(partner)) \
-                if SaleOrder.has_access('read') else 0
+            values['quotation_count'] = (
+                SaleOrder.search_count(self._prepare_quotations_domain(partner))
+                if SaleOrder.has_access('read')
+                else 0
+            )
         if 'order_count' in counters:
-            values['order_count'] = SaleOrder.search_count(self._prepare_orders_domain(partner), limit=1) \
-                if SaleOrder.has_access('read') else 0
+            values['order_count'] = (
+                SaleOrder.search_count(self._prepare_orders_domain(partner), limit=1)
+                if SaleOrder.has_access('read')
+                else 0
+            )
 
         return values
 
     def _prepare_quotations_domain(self, partner):
         return [
             ('partner_id', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', '=', 'sent')
+            ('state', '=', 'sent'),
         ]
 
     def _prepare_orders_domain(self, partner):
@@ -41,12 +45,16 @@ class CustomerPortal(payment_portal.PaymentPortal):
         ]
 
     def _get_sale_searchbar_sortings(self):
-        return {
-            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-        }
+        return {'date': {'label': _('Order Date'), 'order': 'date_order desc'}}
 
     def _prepare_sale_portal_rendering_values(
-        self, page=1, date_begin=None, date_end=None, sortby=None, quotation_page=False, **kwargs
+        self,
+        page=1,
+        date_begin=None,
+        date_end=None,
+        sortby=None,
+        quotation_page=False,
+        **kwargs,  # noqa: ARG002
     ):
         SaleOrder = request.env['sale.order']
 
@@ -82,7 +90,13 @@ class CustomerPortal(payment_portal.PaymentPortal):
             step=self._items_per_page,
             url_args=url_args,
         )
-        orders = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager_values['offset']) if SaleOrder.has_access('read') else SaleOrder
+        orders = (
+            SaleOrder.search(
+                domain, order=sort_order, limit=self._items_per_page, offset=pager_values['offset']
+            )
+            if SaleOrder.has_access('read')
+            else SaleOrder
+        )
 
         values.update({
             'date': date_begin,
@@ -94,22 +108,23 @@ class CustomerPortal(payment_portal.PaymentPortal):
         })
 
         if len(searchbar_sortings) > 1:
-            values.update({
-                'sortby': sortby,
-                'searchbar_sortings': searchbar_sortings,
-            })
+            values.update({'sortby': sortby, 'searchbar_sortings': searchbar_sortings})
 
         return values
 
     # Two following routes cannot be readonly because of the call to `_portal_ensure_token` on all
     # displayed orders, to assign an access token (triggering a sql update on flush)
-    @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
+    @http.route(
+        ['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True
+    )
     def portal_my_quotes(self, **kwargs):
         values = self._prepare_sale_portal_rendering_values(quotation_page=True, **kwargs)
         request.session['my_quotations_history'] = values['quotations'].ids[:100]
         return request.render("sale.portal_my_quotations", values)
 
-    @http.route(['/my/orders', '/my/orders/page/<int:page>'], type='http', auth="user", website=True)
+    @http.route(
+        ['/my/orders', '/my/orders/page/<int:page>'], type='http', auth="user", website=True
+    )
     def portal_my_orders(self, **kwargs):
         values = self._prepare_sale_portal_rendering_values(quotation_page=False, **kwargs)
         request.session['my_orders_history'] = values['orders'].ids[:100]
@@ -125,10 +140,12 @@ class CustomerPortal(payment_portal.PaymentPortal):
         download=False,
         payment_amount=None,
         amount_selection=None,
-        **kw
+        **kw,
     ):
         try:
-            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
+            order_sudo = self._document_check_access(
+                'sale.order', order_id, access_token=access_token
+            )
         except (AccessError, MissingError):
             return request.redirect('/my')
 
@@ -157,14 +174,19 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 request.session['view_quote_%s' % order_sudo.id] = today
                 # The "Quotation viewed by customer" log note is an information
                 # dedicated to the salesman and shouldn't be translated in the customer/website lgg
-                context = {'lang': order_sudo.user_id.partner_id.lang or order_sudo.company_id.partner_id.lang}
-                author = order_sudo.partner_id if request.env.user._is_public() else request.env.user.partner_id
+                context = {
+                    'lang': order_sudo.user_id.partner_id.lang
+                    or order_sudo.company_id.partner_id.lang
+                }
+                author = (
+                    order_sudo.partner_id
+                    if request.env.user._is_public()
+                    else request.env.user.partner_id
+                )
                 msg = _('Quotation viewed by customer %s', author.name)
                 del context
                 order_sudo.with_user(SUPERUSER_ID).message_post(
-                    body=msg,
-                    message_type="notification",
-                    subtype_xmlid="sale.mt_order_viewed",
+                    body=msg, message_type="notification", subtype_xmlid="sale.mt_order_viewed"
                 )
 
         backend_url = f'/odoo/action-{order_sudo._get_portal_return_action().id}/{order_sudo.id}'
@@ -180,13 +202,15 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         # Payment values
         if order_sudo._has_to_be_paid() or (payment_amount and not order_sudo.is_expired):
-            values.update(self._get_payment_values(
-                order_sudo,
-                is_down_payment=self._determine_is_down_payment(
-                    order_sudo, amount_selection, payment_amount
-                ),
-                payment_amount=payment_amount,
-            ))
+            values.update(
+                self._get_payment_values(
+                    order_sudo,
+                    is_down_payment=self._determine_is_down_payment(
+                        order_sudo, amount_selection, payment_amount
+                    ),
+                    payment_amount=payment_amount,
+                )
+            )
         else:
             values['payment_amount'] = None
 
@@ -196,12 +220,13 @@ class CustomerPortal(payment_portal.PaymentPortal):
             history_session_key = 'my_orders_history'
 
         values = self._get_page_view_values(
-            order_sudo, access_token, values, history_session_key, False, **kw)
+            order_sudo, access_token, values, history_session_key, False, **kw
+        )
 
         return request.render('sale.sale_order_portal_template', values)
 
     def _determine_is_down_payment(self, order_sudo, amount_selection, payment_amount):
-        """ Determine whether the current payment is a down payment.
+        """Determine whether the current payment is a down payment.
 
         :param sale.order order_sudo: The sales order being paid.
         :param str amount_selection: The amount selection specified in the payment link.
@@ -215,13 +240,14 @@ class CustomerPortal(payment_portal.PaymentPortal):
             is_down_payment = False
         else:  # No choice has been specified yet.
             is_down_payment = (
-                order_sudo.prepayment_percent < 1.0 if payment_amount is None
+                order_sudo.prepayment_percent < 1.0
+                if payment_amount is None
                 else payment_amount < order_sudo.amount_total
             )
         return is_down_payment
 
     def _get_payment_values(self, order_sudo, is_down_payment=False, payment_amount=None, **kwargs):
-        """ Return the payment-specific QWeb context values.
+        """Return the payment-specific QWeb context values.
 
         :param sale.order order_sudo: The sales order being paid.
         :param bool is_down_payment: Whether the current payment is a down payment.
@@ -248,25 +274,38 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         availability_report = {}
         # Select all the payment methods and tokens that match the payment context.
-        providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
-            company.id,
-            partner_sudo.id,
-            amount,
-            currency_id=currency.id,
-            sale_order_id=order_sudo.id,
-            report=availability_report,
-            **kwargs,
+        providers_sudo = (
+            request
+            .env['payment.provider']
+            .sudo()
+            ._get_compatible_providers(
+                company.id,
+                partner_sudo.id,
+                amount,
+                currency_id=currency.id,
+                sale_order_id=order_sudo.id,
+                report=availability_report,
+                **kwargs,
+            )
         )  # In sudo mode to read the fields of providers and partner (if logged out).
-        payment_methods_sudo = request.env['payment.method'].sudo()._get_compatible_payment_methods(
-            providers_sudo.ids,
-            partner_sudo.id,
-            currency_id=currency.id,
-            sale_order_id=order_sudo.id,
-            report=availability_report,
-            **kwargs,
+        payment_methods_sudo = (
+            request
+            .env['payment.method']
+            .sudo()
+            ._get_compatible_payment_methods(
+                providers_sudo.ids,
+                partner_sudo.id,
+                currency_id=currency.id,
+                sale_order_id=order_sudo.id,
+                report=availability_report,
+                **kwargs,
+            )
         )  # In sudo mode to read the fields of providers.
-        tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
-            providers_sudo.ids, partner_sudo.id, **kwargs
+        tokens_sudo = (
+            request
+            .env['payment.token']
+            .sudo()
+            ._get_available_tokens(providers_sudo.ids, partner_sudo.id, **kwargs)
         )  # In sudo mode to read the partner's tokens (if logged out) and provider fields.
 
         # Make sure that the partner's company matches the invoice's company.
@@ -282,7 +321,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         payment_form_values = {
             'show_tokenize_input_mapping': PaymentPortal._compute_show_tokenize_input_mapping(
                 providers_sudo, sale_order_id=order_sudo.id
-            ),
+            )
         }
         payment_context = {
             'amount': amount,
@@ -308,7 +347,9 @@ class CustomerPortal(payment_portal.PaymentPortal):
         # get from query string if not on json param
         access_token = access_token or request.httprequest.args.get('access_token')
         try:
-            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
+            order_sudo = self._document_check_access(
+                'sale.order', order_id, access_token=access_token
+            )
         except (AccessError, MissingError):
             return {'error': _('Invalid order.')}
 
@@ -325,13 +366,18 @@ class CustomerPortal(payment_portal.PaymentPortal):
             })
             # flush now to make signature data available to PDF render request
             request.env.cr.flush()
-        except (TypeError, binascii.Error) as e:
+        except (TypeError, binascii.Error):
             return {'error': _('Invalid signature data.')}
 
         if not order_sudo._has_to_be_paid():
             order_sudo._validate_order()
 
-        pdf = request.env['ir.actions.report'].sudo()._render_qweb_pdf('sale.action_report_saleorder', [order_sudo.id])[0]
+        pdf = (
+            request
+            .env['ir.actions.report']
+            .sudo()
+            ._render_qweb_pdf('sale.action_report_saleorder', [order_sudo.id])[0]
+        )
 
         order_sudo.message_post(
             attachments=[('%s.pdf' % order_sudo.name, pdf)],
@@ -353,10 +399,18 @@ class CustomerPortal(payment_portal.PaymentPortal):
             'redirect_url': order_sudo.get_portal_url(query_string=query_string),
         }
 
-    @http.route(['/my/orders/<int:order_id>/decline'], type='http', auth="public", methods=['POST'], website=True)
-    def portal_quote_decline(self, order_id, access_token=None, decline_message=None, **kwargs):
+    @http.route(
+        ['/my/orders/<int:order_id>/decline'],
+        type='http',
+        auth="public",
+        methods=['POST'],
+        website=True,
+    )
+    def portal_quote_decline(self, order_id, access_token=None, decline_message=None, **kwargs):  # noqa: ARG002
         try:
-            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
+            order_sudo = self._document_check_access(
+                'sale.order', order_id, access_token=access_token
+            )
         except (AccessError, MissingError):
             return request.redirect('/my')
 
@@ -367,7 +421,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             # `untaxed_amount_to_invoice`, which is a monetary field. They require the currency to
             # ensure the values are saved in the correct format. However, the currency cannot be
             # read directly during the flush due to access rights, necessitating manual caching.
-            order_sudo.order_line.currency_id
+            order_sudo.order_line.currency_id  # noqa: B018
 
             order_sudo.message_post(
                 author_id=(
@@ -385,10 +439,17 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         return request.redirect(redirect_url)
 
-    @http.route('/my/orders/<int:order_id>/document/<int:document_id>', type='http', auth='public', readonly=True)
+    @http.route(
+        '/my/orders/<int:order_id>/document/<int:document_id>',
+        type='http',
+        auth='public',
+        readonly=True,
+    )
     def portal_quote_document(self, order_id, document_id, access_token):
         try:
-            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
+            order_sudo = self._document_check_access(
+                'sale.order', order_id, access_token=access_token
+            )
         except (AccessError, MissingError):
             return request.redirect('/my')
 
@@ -399,15 +460,20 @@ class CustomerPortal(payment_portal.PaymentPortal):
         if document not in order_sudo._get_product_documents():
             return request.redirect('/my')
 
-        return request.env['ir.binary']._get_stream_from(
-            document.ir_attachment_id,
-        ).get_response(as_attachment=True)
+        return (
+            request
+            .env['ir.binary']
+            ._get_stream_from(document.ir_attachment_id)
+            .get_response(as_attachment=True)
+        )
 
     @http.route(['/my/orders/<int:order_id>/download_edi'], auth="public", website=True)
-    def portal_my_sale_order_download_edi(self, order_id=None, access_token=None, **kw):
-        """ An endpoint to download EDI file representation."""
+    def portal_my_sale_order_download_edi(self, order_id=None, access_token=None, **kwargs):  # noqa: ARG002
+        """Download EDI file representation."""
         try:
-            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
+            order_sudo = self._document_check_access(
+                'sale.order', order_id, access_token=access_token
+            )
         except (AccessError, MissingError):
             return request.redirect('/my')
 
@@ -421,21 +487,22 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         xml_content = builder._export_order(order_sudo)
 
-        download_name = builder._export_invoice_filename(order_sudo)  # works even if it's a SO or PO
+        download_name = builder._export_invoice_filename(
+            order_sudo
+        )  # works even if it's a SO or PO
 
         http_headers = [
             ('Content-Type', 'text/xml'),
             ('Content-Length', len(xml_content)),
-            ('Content-Disposition', f'attachment; filename={download_name}')
+            ('Content-Disposition', f'attachment; filename={download_name}'),
         ]
         return request.make_response(xml_content, headers=http_headers)
 
 
 class PaymentPortal(payment_portal.PaymentPortal):
-
     @http.route('/my/orders/<int:order_id>/transaction', type='jsonrpc', auth='public')
     def portal_order_transaction(self, order_id, access_token, **kwargs):
-        """ Create a draft transaction and return its processing values.
+        """Create a draft transaction and return its processing values.
 
         :param int order_id: The sales order to pay, as a `sale.order` id
         :param str access_token: The access token used to authenticate the request
@@ -447,10 +514,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
         # Check the order id and the access token
         try:
             order_sudo = self._document_check_access('sale.order', order_id, access_token)
-        except MissingError as error:
-            raise error
+        except MissingError:
+            raise
         except AccessError:
-            raise ValidationError(_("The access token is invalid."))
+            raise ValidationError(_("The access token is invalid.")) from None
 
         logged_in = not request.env.user._is_public()
         partner_sudo = request.env.user.partner_id if logged_in else order_sudo.partner_invoice_id
@@ -461,7 +528,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions tokenizing the tx
         })
         tx_sudo = self._create_transaction(
-            custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs,
+            custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs
         )
 
         return tx_sudo._get_processing_values()

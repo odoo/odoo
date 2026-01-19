@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
-from itertools import chain, starmap, zip_longest
+from itertools import starmap, zip_longest
 
-from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import api, fields, models
 from odoo.tools import is_html_empty
 
 
@@ -15,10 +14,14 @@ class SaleOrder(models.Model):
         comodel_name='sale.order.template',
         string="Quotation Template",
         compute='_compute_sale_order_template_id',
-        store=True, readonly=False, check_company=True, precompute=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        store=True,
+        readonly=False,
+        check_company=True,
+        precompute=True,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+    )
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS ===#
 
     # Do not make it depend on `company_id` field
     # It is triggered manually by the _onchange_company_id below iff the SO has not been saved.
@@ -71,11 +74,11 @@ class SaleOrder(models.Model):
         for order in self.filtered('sale_order_template_id'):
             order.journal_id = order.sale_order_template_id.journal_id
 
-    #=== ONCHANGE METHODS ===#
+    # === ONCHANGE METHODS ===#
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
-        """Trigger quotation template recomputation on unsaved records company change"""
+        """Trigger quotation template recomputation on unsaved records company change."""
         super()._onchange_company_id()
         if self._origin.id:
             return
@@ -108,9 +111,13 @@ class SaleOrder(models.Model):
             return
 
         def line_eqv(line, t_line):
-            return line and t_line and all(
-                line[fname] == t_line[fname]
-                for fname in ['product_id', 'product_uom_id', 'product_uom_qty', 'display_type']
+            return (
+                line
+                and t_line
+                and all(
+                    line[fname] == t_line[fname]
+                    for fname in ['product_id', 'product_uom_id', 'product_uom_qty', 'display_type']
+                )
             )
 
         lines = self.order_line
@@ -119,7 +126,7 @@ class SaleOrder(models.Model):
         if all(starmap(line_eqv, zip_longest(lines, t_lines))):
             self._onchange_sale_order_template_id()
 
-    #=== ACTION METHODS ===#
+    # === ACTION METHODS ===#
 
     def _get_confirmation_template(self):
         self.ensure_one()
