@@ -1,4 +1,4 @@
-import { destroy, expect, test } from "@odoo/hoot";
+import { destroy, expect, middleClick, test } from "@odoo/hoot";
 import { keyDown, keyUp, press, queryAllTexts, queryOne, resize } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, useState, xml } from "@odoo/owl";
@@ -34,6 +34,28 @@ test("simple rendering", async () => {
     expect("main").toHaveText("Hello!");
     expect(".o_dialog footer").toHaveCount(1, { message: "the footer is rendered by default" });
     expect(".o_dialog footer:visible").toHaveCount(0, { message: "the footer is hidden if empty" });
+});
+
+test("onExpand middleClick", async () => {
+    class Parent extends Component {
+        static components = { Dialog };
+        static template = xml`
+            <Dialog title="'Wow(l) Effect'" onExpand="onExpand">
+                Hello!
+            </Dialog>
+        `;
+        static props = ["*"];
+        onExpand(_ev, middleClick) {
+            expect.step("middleClick: " + middleClick);
+        }
+    }
+    await makeDialogMockEnv();
+    await mountWithCleanup(Parent);
+    expect(".o_dialog").toHaveCount(1);
+    expect(".o_expand_button").toHaveCount(1);
+    await middleClick(".o_expand_button");
+
+    expect.verifySteps(["middleClick: true"]);
 });
 
 test("hotkeys work on dialogs", async () => {
