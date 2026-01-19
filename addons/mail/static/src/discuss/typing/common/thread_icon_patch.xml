@@ -13,7 +13,7 @@
     <t t-name="mail.ThreadIcon.typing">
         <div t-if="channel.hasOtherMembersTyping" class="bg-inherit rounded-pill" style="padding: 1px;">
             <div class="bg-success rounded-pill" style="padding: 3px;">
-                <Typing channel="channel" size="props.size" displayText="false" />
+                <Typing channel="channel" size="['sm', 'smaller'].includes(props.size) ? 'sm' : 'md'" displayText="false" />
             </div>
         </div>
     </t>
