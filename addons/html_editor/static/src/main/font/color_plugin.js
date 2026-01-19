@@ -23,6 +23,7 @@ import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_edit
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { isBlock } from "@html_editor/utils/blocks";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { READ, withSequence } from "@html_editor/utils/resource";
 
 const RGBA_OPACITY = 0.6;
 const HEX_OPACITY = "99";
@@ -83,7 +84,7 @@ export class ColorPlugin extends Plugin {
         ],
 
         /** Handlers */
-        selectionchange_handlers: this.updateSelectedColor.bind(this),
+        selectionchange_handlers: withSequence(READ, this.updateSelectedColor.bind(this)),
         remove_format_handlers: this.removeAllColor.bind(this),
         color_combination_getters: getColorCombinationFromClass,
 

@@ -6,7 +6,7 @@ import { ImageToolbarDropdown } from "./image_toolbar_dropdown";
 import { createFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { boundariesOut } from "@html_editor/utils/position";
-import { withSequence } from "@html_editor/utils/resource";
+import { READ, withSequence } from "@html_editor/utils/resource";
 import { ImageTransformButton } from "./image_transform_button";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { closestBlock } from "@html_editor/utils/blocks";
@@ -214,7 +214,7 @@ export class ImagePlugin extends Plugin {
         ],
 
         /** Handlers */
-        selectionchange_handlers: this.updateImageParams.bind(this),
+        selectionchange_handlers: withSequence(READ, this.updateImageParams.bind(this)),
         post_undo_handlers: this.updateImageParams.bind(this),
         post_redo_handlers: this.updateImageParams.bind(this),
 
