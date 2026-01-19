@@ -81,8 +81,8 @@ export class ColumnPlugin extends Plugin {
         ],
         hints: [
             {
-                selector: `.odoo-editor-editable .o_text_columns div[class^='col-'],
-                            .odoo-editor-editable .o_text_columns div[class^='col-']>${baseContainerGlobalSelector}:first-child`,
+                selector: `.odoo-editor-editable .o_text_columns div[class*='col-'],
+                            .odoo-editor-editable .o_text_columns div[class*='col-']>${baseContainerGlobalSelector}:first-child`,
                 text: _t("Empty column"),
             },
         ],
@@ -100,9 +100,9 @@ export class ColumnPlugin extends Plugin {
             if (!columnContainer) {
                 return [];
             }
-            const closestColumn = closestElement(anchorNode, "div[class^='col-']");
+            const closestColumn = closestElement(anchorNode, "div[class*='col-']");
             const closestBlockEl = closestBlock(anchorNode);
-            return [...columnContainer.querySelectorAll("div[class^='col-']")]
+            return [...columnContainer.querySelectorAll("div[class*='col-']")]
                 .map((column) => {
                     const block = closestBlock(firstLeaf(column));
                     return column === closestColumn && block !== closestBlockEl ? null : block;
