@@ -2166,16 +2166,16 @@ test("Copy Message Link", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 2 });
     await click(".o-mail-Message:eq(0) [title='Expand']");
     await contains(".o-dropdown-item:contains('Copy Link'_", { count: 0 });
     await click(".o-mail-Message:eq(1) [title='Expand']");
     await click(".o-dropdown-item:contains('Copy Link')");
-    await expect.waitForSteps([url(`/mail/message/${messageId_2}`)]);
-    await press(["ctrl", "v"]);
-    await press("Enter");
-    await contains(
-        `.o-mail-Message a[href='${url(`/mail/message/${messageId_2}`)}']:text('channel1')`
-    );
+    const link = url(`/mail/message/${messageId_2}`);
+    await expect.waitForSteps([link]);
+    await insertText(".o-mail-Composer-input", link);
+    await click("button[title='Send']:enabled");
+    await contains(`.o-mail-Message a[href='${link}']:text('channel1')`);
 });
 
 test("deleted message should not have translate feature", async () => {
