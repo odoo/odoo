@@ -341,3 +341,54 @@ class TestReportSession(TestPoSCommon):
         self.config.current_session_id.action_pos_session_closing_control()
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
         self.assertEqual(report["taxes_info"]["base_amount"], 100, "Base amount should be equal to 100")
+
+    def test_session_report_with_fp_and_discount(self):
+        self.tax1 = self.env['account.tax'].create({
+            'name': 'Tax 1 - 10%',
+            'amount': 10,
+        })
+        self.tax2 = self.env['account.tax'].create({
+            'name': 'Tax 2 - 20%',
+            'amount': 20,
+        })
+        self.product1 = self.create_product('Vanela Gathiya', self.categ_basic, 100, self.tax1.id)
+        # create a fiscal position that map the tax
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'Fiscal Position 10% to 20%',
+            'tax_ids': [(0, 0, {
+                'tax_src_id': self.tax1.id,
+                'tax_dest_id': self.tax2.id,
+            })],
+        })
+
+        self.config.open_ui()
+        session_id = self.config.current_session_id
+        order_info = {
+            'company_id': self.env.company.id,
+            'session_id': session_id.id,
+            'fiscal_position_id': fiscal_position.id,
+            'partner_id': self.partner_a.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product1.id,
+                'price_unit': 100,
+                'discount': 10,
+                'qty': 1,
+                'tax_ids': [[6, False, [self.tax1.id]]],
+                'price_subtotal': 90,
+                'price_subtotal_incl': 108,
+            })],
+            'amount_paid': 108.0,
+            'amount_total': 108.0,
+            'amount_tax': 18.0,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}',
+            'to_invoice': False,
+        }
+        order = self.env['pos.order'].create(order_info)
+        self.assertEqual(order.lines[0].tax_ids_after_fiscal_position.id, self.tax2.id)
+        self.make_payment(order, self.bank_pm1, 108.0)
+        session_id.action_pos_session_closing_control()
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
+        self.assertEqual(report["discount_amount"], 12.0, "Discount amount should be equal to 12.0")
+        self.assertEqual(report["taxes_info"]["base_amount"], 90.0, "Base amount should be equal to 90.0")
