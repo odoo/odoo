@@ -3715,6 +3715,8 @@ class MailThread(models.AbstractModel):
 
         subtype_id = msg_vals['subtype_id'] if 'subtype_id' in msg_vals else message.subtype_id.id
         is_discussion = subtype_id == self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
+        subtitles = record_wlang._resolve_lazy_translations(
+            self.env.context.get('email_notification_subtitles', [record_name]))
 
         return {
             # message
@@ -3726,7 +3728,7 @@ class MailThread(models.AbstractModel):
             'model_description': model_description,
             'record': record_wlang,
             'record_name': record_name,
-            'subtitles': self.env.context.get('email_notification_subtitles', [record_name]),
+            'subtitles': subtitles,
             # user / environment
             'author_user': author_user,  # User who sends the message
             'company': company,
@@ -5181,3 +5183,17 @@ class MailThread(models.AbstractModel):
         if thread.exists() and thread.sudo(False).has_access(mode):
             return thread
         return self.browse()
+
+    # ------------------------------------------------------
+    # OTHER HELPERS
+    # ------------------------------------------------------
+
+    @api.model
+    def _resolve_lazy_translations(self, to_resolve):
+        """Resolve the translation(s) using the language from the context (simple strings are left as is).
+
+        :param list[str|LazyGettext]|str|LazyGettext to_resolve: translation(s) to resolve
+        """
+        if isinstance(to_resolve, list):
+            return [str(v) for v in to_resolve]
+        return str(to_resolve)
