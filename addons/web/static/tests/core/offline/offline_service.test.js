@@ -1,4 +1,4 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, useState, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 
@@ -145,6 +145,45 @@ test("offlineUI: don't disable already disabled elements", async () => {
     getService("offline").offline = false;
     expect(`.button`).toHaveAttribute("disabled");
     expect(`.checkbox`).toHaveAttribute("disabled");
+});
+
+test("offlineUI: react to [data-available-offline] attribute changes", async () => {
+    let state;
+    class Root extends Component {
+        static template = xml`
+            <div>
+                <button type="button" class="btn1" t-att="{ 'data-available-offline': state.btn1Available }">
+                    First
+                </button>
+                <button type="button" class="btn2" t-att="{ 'data-available-offline': state.btn2Available }">
+                    Second
+                </button>
+            </div>
+        `;
+        static props = ["*"];
+
+        setup() {
+            this.state = useState({
+                btn1Available: true,
+                btn2Available: false,
+            });
+            state = this.state;
+        }
+    }
+
+    await mountWithCleanup(Root);
+    expect(".btn1").not.toHaveAttribute("disabled");
+    expect(".btn2").not.toHaveAttribute("disabled");
+
+    getService("offline").offline = true;
+    expect(".btn1").not.toHaveAttribute("disabled");
+    expect(".btn2").toHaveAttribute("disabled");
+
+    state.btn1Available = false;
+    state.btn2Available = true;
+    await animationFrame();
+    expect(".btn1").toHaveAttribute("disabled");
+    expect(".btn2").not.toHaveAttribute("disabled");
 });
 
 test("Repeatedly check connection when going offline", async () => {
