@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from cups import Connection as CupsConnection
+import logging
 from re import sub
 from threading import Lock
 import time
@@ -11,6 +12,7 @@ from odoo.addons.hw_drivers.interface import Interface
 conn = CupsConnection()
 PPDs = conn.getPPDs()
 cups_lock = Lock()  # We can only make one call to Cups at a time
+_logger = logging.getLogger(__name__)
 
 
 class PrinterInterface(Interface):
@@ -20,6 +22,7 @@ class PrinterInterface(Interface):
     def __init__(self):
         super().__init__()
         self.start_time = time.time()
+        self.printer_devices = {}
 
     def get_devices(self):
         discovered_devices = {}
@@ -43,9 +46,11 @@ class PrinterInterface(Interface):
             device.update({
                 'identifier': identifier,
                 'url': path,
+                'disconnect_counter': 0,
             })
             discovered_devices.update({identifier: device})
 
+        self.printer_devices.update(discovered_devices)
         # Let get_devices be called again every 20 seconds (get_devices of PrinterInterface
         # takes between 4 and 15 seconds) but increase the delay to 2 minutes if it has been
         # running for more than 1 hour
@@ -53,7 +58,19 @@ class PrinterInterface(Interface):
             self._loop_delay = 120
             self.start_time = None  # Reset start_time to avoid changing the loop delay again
 
-        return discovered_devices
+        # Devices previously discovered but not found this call
+        # When the printer disconnects it can still be listed in cups and print after reconnecting
+        # Wait for 3 consecutive misses before removing it from the list allows us to avoid errors and unnecessary double prints
+        missing = set(self.printer_devices) - set(discovered_devices)
+        for identifier in missing:
+            printer = self.printer_devices[identifier]
+            if printer["disconnect_counter"] >= 2:
+                _logger.warning('Printer %s not found 3 times in a row, disconnecting.', identifier)
+                self.printer_devices.pop(identifier, None)
+            else:
+                printer["disconnect_counter"] += 1
+
+        return self.printer_devices.copy()
 
     def get_identifier(self, path):
         """
