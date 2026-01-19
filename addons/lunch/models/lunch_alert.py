@@ -10,6 +10,7 @@ from odoo.fields import Domain
 from .lunch_supplier import float_to_time
 
 from odoo.addons.base.models.res_partner import _tz_get
+from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
 WEEKDAY_TO_NAME = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
@@ -24,7 +25,7 @@ class LunchAlert(models.Model):
     _order = 'write_date desc, id'
 
     name = fields.Char('Alert Name', required=True, translate=True)
-    message = fields.Html('Message', required=True, translate=True)
+    message = fields.Html('Message', required=True, translate=html_translate)
 
     mode = fields.Selection([
         ('alert', 'Alert in app'),

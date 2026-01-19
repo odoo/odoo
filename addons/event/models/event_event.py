@@ -194,7 +194,7 @@ class EventEvent(models.Model):
             ('four_per_sheet', '4 per sheet'),
         ], default='A6', required=True)
     badge_image = fields.Image('Badge Background', max_width=1024, max_height=1024)
-    ticket_instructions = fields.Html('Ticket Instructions', translate=True,
+    ticket_instructions = fields.Html('Ticket Instructions', translate=html_translate,
         compute='_compute_ticket_instructions', store=True, readonly=False,
         help="This information will be printed on your tickets.")
     # questions

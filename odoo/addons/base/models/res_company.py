@@ -10,6 +10,7 @@ from odoo.fields import Command, Domain
 from odoo.tools import html2plaintext, file_open, ormcache
 from odoo.tools.image import image_process
 from odoo.tools.sql import table_columns
+from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
 
@@ -47,9 +48,9 @@ class ResCompany(models.CachedModel):
     parent_ids = fields.Many2many('res.company', compute='_compute_parent_ids', compute_sudo=True)
     root_id = fields.Many2one('res.company', compute='_compute_parent_ids', compute_sudo=True)
     partner_id = fields.Many2one('res.partner', string='Partner', required=True, index=True)
-    report_header = fields.Html(string='Company Tagline', translate=True, help="Company tagline, which is included in a printed document's header or footer (depending on the selected layout).")
-    report_footer = fields.Html(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
-    company_details = fields.Html(string='Company Details', translate=True, help="Header text displayed at the top of all reports.")
+    report_header = fields.Html(string='Company Tagline', translate=html_translate, help="Company tagline, which is included in a printed document's header or footer (depending on the selected layout).")
+    report_footer = fields.Html(string='Report Footer', translate=html_translate, help="Footer text displayed at the bottom of all reports.")
+    company_details = fields.Html(string='Company Details', translate=html_translate, help="Header text displayed at the top of all reports.")
     is_company_details_empty = fields.Boolean(compute='_compute_empty_company_details')
     logo = fields.Binary(related='partner_id.image_1920', default=_get_logo, string="Company Logo", readonly=False)
     logo_web = fields.Binary(compute='_compute_logo_web', store=True)

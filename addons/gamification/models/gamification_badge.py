@@ -6,6 +6,7 @@ from datetime import date
 
 from odoo import api, fields, models, _, exceptions
 from odoo.tools import SQL
+from odoo.tools.translate import html_translate
 
 
 _logger = logging.getLogger(__name__)
@@ -26,7 +27,7 @@ class GamificationBadge(models.Model):
 
     name = fields.Char('Badge', required=True, translate=True)
     active = fields.Boolean('Active', default=True)
-    description = fields.Html('Description', translate=True, sanitize_attributes=False)
+    description = fields.Html('Description', translate=html_translate, sanitize_attributes=False)
     level = fields.Selection([
         ('bronze', 'Bronze'), ('silver', 'Silver'), ('gold', 'Gold')],
         string='Forum Badge Level', default='bronze')

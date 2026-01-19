@@ -13,6 +13,7 @@ from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 from odoo.addons.account.models.product import ACCOUNT_DOMAIN
 from odoo.addons.base_vat.models.res_partner import _ref_vat
 from odoo.fields import Domain
+from odoo.tools.translate import html_translate
 
 
 MONTH_SELECTION = [
@@ -176,10 +177,10 @@ class ResCompany(models.Model):
     account_opening_journal_id = fields.Many2one(string='Opening Journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal where the opening entry of this company's accounting has been posted.", readonly=False)
     account_opening_date = fields.Date(string='Opening Entry', help="That is the date of the opening entry.")
 
-    invoice_terms = fields.Html(string='Default Terms and Conditions', translate=True)
+    invoice_terms = fields.Html(string='Default Terms and Conditions', translate=html_translate)
     terms_type = fields.Selection([('plain', 'Add a Note'), ('html', 'Add a link to a Web Page')],
                                   string='Terms & Conditions format', default='plain')
-    invoice_terms_html = fields.Html(string='Default Terms and Conditions as a Web page', translate=True,
+    invoice_terms_html = fields.Html(string='Default Terms and Conditions as a Web page', translate=html_translate,
                                      sanitize_attributes=False,
                                      compute='_compute_invoice_terms_html', store=True, readonly=False)
 

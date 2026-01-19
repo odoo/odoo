@@ -10,6 +10,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Domain
 from odoo.tools import is_html_empty, remove_accents
+from odoo.tools.translate import html_translate
 
 # see rfc5322 section 3.2.3
 atext = r"[a-zA-Z0-9!#$%&'*+\-/=?^_`{|}~]"
@@ -83,7 +84,7 @@ class MailAlias(models.Model):
              "- followers: only followers of the related document or members of following channels\n")
     alias_incoming_local = fields.Boolean('Local-part based incoming detection', default=False)
     alias_bounced_content = fields.Html(
-        "Custom Bounced Message", translate=True,
+        "Custom Bounced Message", translate=html_translate,
         help="If set, this content will automatically be sent out to unauthorized users instead of the default message.")
     alias_status = fields.Selection(
         [

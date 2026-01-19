@@ -4,6 +4,7 @@ from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import format_date, formatLang, frozendict, date_utils
 from odoo.tools.float_utils import float_round
+from odoo.tools.translate import html_translate
 
 from dateutil.relativedelta import relativedelta
 
@@ -22,7 +23,7 @@ class AccountPaymentTerm(models.Model):
 
     name = fields.Char(string='Payment Terms', translate=True, required=True)
     active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment terms without removing it.")
-    note = fields.Html(string='Description on the Invoice', translate=True)
+    note = fields.Html(string='Description on the Invoice', translate=html_translate)
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True, default=_default_line_ids)
     company_id = fields.Many2one('res.company', string='Company')
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')

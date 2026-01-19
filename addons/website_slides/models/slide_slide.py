@@ -16,6 +16,7 @@ from odoo.exceptions import RedirectWarning, UserError, AccessError
 from odoo.http import request
 from odoo.tools import html2plaintext, sql
 from odoo.tools.pdf import PdfFileReader
+from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
 
@@ -50,7 +51,7 @@ class SlideSlide(models.Model):
     active = fields.Boolean(default=True, tracking=100)
     sequence = fields.Integer('Sequence', default=0)
     user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
-    description = fields.Html('Description', translate=True, sanitize_attributes=False, sanitize_overridable=True)
+    description = fields.Html('Description', translate=html_translate, sanitize_attributes=False, sanitize_overridable=True)
     channel_id = fields.Many2one('slide.channel', string="Course", required=True, index=True, ondelete='cascade')
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
@@ -105,7 +106,7 @@ class SlideSlide(models.Model):
     google_drive_id = fields.Char('Google Drive ID of the external URL', compute='_compute_google_drive_id')
     # content - webpage
     html_content = fields.Html(
-        "HTML Content", translate=True,
+        "HTML Content", translate=html_translate,
         sanitize_attributes=False, sanitize_form=False, sanitize_overridable=True,
         help="Custom HTML content for slides of category 'Article'.")
     # content - images

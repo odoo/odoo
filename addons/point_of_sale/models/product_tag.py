@@ -1,13 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
 from odoo.tools import is_html_empty
+from odoo.tools.translate import html_translate
 
 
 class ProductTag(models.Model):
     _name = 'product.tag'
     _inherit = ['product.tag', 'pos.load.mixin']
 
-    pos_description = fields.Html(string='Description', translate=True)
+    pos_description = fields.Html(string='Description', translate=html_translate)
     has_image = fields.Boolean(compute='_compute_has_image')
 
     @api.model

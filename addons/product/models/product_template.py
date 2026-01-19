@@ -9,6 +9,7 @@ from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.image import is_image_size_above
+from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
 PRICE_CONTEXT_KEYS = ['pricelist', 'quantity', 'uom', 'date']
@@ -50,7 +51,7 @@ class ProductTemplate(models.Model):
     name = fields.Char('Name', index='trigram', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help='Gives the sequence order when displaying a product list')
     description = fields.Html(
-        'Description', translate=True)
+        'Description', translate=html_translate)
     description_purchase = fields.Text(
         'Purchase Description', translate=True)
     description_sale = fields.Text(

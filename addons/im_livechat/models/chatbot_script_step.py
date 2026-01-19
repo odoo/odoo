@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import html2plaintext, email_normalize
 from odoo.addons.mail.tools.discuss import Store
+from odoo.tools.translate import html_translate
 
 from collections import defaultdict
 from markupsafe import Markup
@@ -16,7 +17,7 @@ class ChatbotScriptStep(models.Model):
     _order = 'sequence, id'
 
     name = fields.Char(string="Name", compute="_compute_name")
-    message = fields.Html(string="Message", translate=True)
+    message = fields.Html(string="Message", translate=html_translate)
     sequence = fields.Integer(string='Sequence')
     chatbot_script_id = fields.Many2one(
         'chatbot.script', string='Chatbot', required=True, index=True, ondelete='cascade')

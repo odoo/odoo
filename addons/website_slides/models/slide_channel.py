@@ -12,6 +12,7 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import is_html_empty
+from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
 
@@ -60,8 +61,8 @@ class SlideChannel(models.Model):
     # description
     name = fields.Char('Name', translate=True, required=True)
     active = fields.Boolean(default=True, tracking=100)
-    description = fields.Html('Description', translate=True, sanitize_attributes=False, sanitize_form=False, help="The description that is displayed on top of the course page, just below the title")
-    description_short = fields.Html('Short Description', translate=True, sanitize_attributes=False, sanitize_form=False, help="The description that is displayed on the course card")
+    description = fields.Html('Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False, help="The description that is displayed on top of the course page, just below the title")
+    description_short = fields.Html('Short Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False, help="The description that is displayed on the course card")
     description_html = fields.Html('Detailed Description', translate=tools.html_translate, sanitize_attributes=False, sanitize_form=False)
     channel_type = fields.Selection([
         ('training', 'Training'), ('documentation', 'Documentation')],

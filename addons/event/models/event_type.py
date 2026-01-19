@@ -1,5 +1,6 @@
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
+from odoo.tools.translate import html_translate
 
 
 class EventType(models.Model):
@@ -49,7 +50,7 @@ class EventType(models.Model):
         'event.type.mail', 'event_type_id', string='Mail Schedule',
         default=_default_event_mail_type_ids)
     # ticket reports
-    ticket_instructions = fields.Html('Ticket Instructions', translate=True,
+    ticket_instructions = fields.Html('Ticket Instructions', translate=html_translate,
         help="This information will be printed on your tickets.")
     question_ids = fields.Many2many(
         'event.question', default=_default_question_ids,

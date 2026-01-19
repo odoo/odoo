@@ -3,6 +3,7 @@
 import re
 
 from odoo import api, fields, models
+from odoo.tools.translate import html_translate
 
 
 class HrResumeLine(models.Model):
@@ -18,7 +19,7 @@ class HrResumeLine(models.Model):
     date_start = fields.Date(required=True, default=fields.Date.context_today)
     date_end = fields.Date()
     duration = fields.Integer(string="Duration")
-    description = fields.Html(string="Description", translate=True)
+    description = fields.Html(string="Description", translate=html_translate)
     line_type_id = fields.Many2one('hr.resume.line.type', string="Type")
     is_course = fields.Boolean(related='line_type_id.is_course')
     course_type = fields.Selection(
