@@ -59,7 +59,6 @@ class TestPayrollFieldsAccess(TransactionCase):
             'resource_calendar_id',
             'hours_per_week',
             'hours_per_day',
-            'employee_type',
             'tz',
             'currency_id',
             'lang',

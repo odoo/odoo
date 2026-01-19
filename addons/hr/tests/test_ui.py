@@ -41,6 +41,7 @@ class TestEmployeeUi(HttpCase):
         bob_employee.write({
             'contract_date_start': '2024-01-01',
             'contract_date_end': False,
+            'employee_type_id': self.env.ref('hr.contract_type_employee').id,
         })
 
         self.start_tour("/odoo", 'version_timeline_auto_save_tour', login="alice")

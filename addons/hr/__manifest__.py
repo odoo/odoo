@@ -29,7 +29,7 @@
         'views/hr_version_views.xml',
         'views/hr_contract_template_views.xml',
         'views/hr_departure_reason_views.xml',
-        'views/hr_contract_type_views.xml',
+        'views/hr_employee_type_views.xml',
         'views/hr_job_views.xml',
         'views/hr_employee_category_views.xml',
         'views/hr_employee_public_views.xml',
@@ -49,6 +49,7 @@
         'data/hr_data.xml',
         'views/hr_export_mixin_views.xml',
         'data/ir_cron_data.xml',
+        'data/hr_employee_type_data.xml',
     ],
     'demo': [
         'data/hr_demo.xml',
