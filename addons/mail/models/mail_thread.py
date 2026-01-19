@@ -539,12 +539,14 @@ class MailThread(models.AbstractModel):
         prepared with ``_tracking_prepare``.
         """
         initial_values = self.env.cr.precommit.data.pop(f'mail.tracking.{self._name}', {})
+        mail_track_with_sudo = self.env.su
         ids = [id_ for id_, vals in initial_values.items() if vals]
         if not ids:
             return
         records = self.browse(ids).sudo()
         fnames = self._track_get_fields()
         context = clean_context(self._context)
+        context.setdefault('mail_track_with_sudo', mail_track_with_sudo)
         tracking = records.with_context(context)._message_track(fnames, initial_values)
         for record in records:
             changes, _tracking_value_ids = tracking.get(record.id, (None, None))
