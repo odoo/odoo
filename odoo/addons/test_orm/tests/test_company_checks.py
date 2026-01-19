@@ -146,6 +146,23 @@ class TestCompanyCheck(common.TransactionCase):
         with self.assertRaises(UserError):
             child.action_unarchive()
 
+    def test_company_check_on_unarchive_inverses(self):
+        child = self.env['test_orm.model_child'].create({
+            'name': 'M1',
+            'company_id': self.company_a.id,
+        })
+        self.env['test_orm.model_child_ref'].create({
+            'name': 'M2',
+            'company_id': self.company_a.id,
+            'child_id': child.id,
+        })
+
+        child.action_archive()
+        child.company_id = self.company_b.id
+
+        with self.assertRaises(UserError):
+            child.action_unarchive()
+
     def test_check_company_write_performance(self):
         child = self.env['test_orm.model_child'].create({
             'name': 'M1',
