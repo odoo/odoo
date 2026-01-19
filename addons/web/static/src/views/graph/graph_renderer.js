@@ -856,6 +856,7 @@ export class GraphRenderer extends Component {
                 domain,
                 name: this.model.metaData.title,
                 res_model: this.model.metaData.resModel,
+                search_view_id: this.env.config.views?.find((v) => v[1] === "search"),
                 target: "current",
                 type: "ir.actions.act_window",
                 views,
