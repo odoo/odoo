@@ -1882,6 +1882,7 @@ test("clicking on bar charts triggers a do_action", async () => {
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -1896,6 +1897,7 @@ test("clicking on bar charts triggers a do_action", async () => {
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis">
                 <field name="bar" />
@@ -1921,6 +1923,7 @@ test("middle click on bar charts triggers a do_action", async () => {
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -1935,6 +1938,7 @@ test("middle click on bar charts triggers a do_action", async () => {
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis">
                 <field name="bar" />
@@ -1960,6 +1964,7 @@ test("Clicking on bar charts removes group_by and search_default_* context keys"
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -1974,6 +1979,7 @@ test("Clicking on bar charts removes group_by and search_default_* context keys"
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis">
                 <field name="bar" />
@@ -2001,6 +2007,7 @@ test("clicking on a pie chart trigger a do_action with correct views", async () 
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -2015,6 +2022,7 @@ test("clicking on a pie chart trigger a do_action with correct views", async () 
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis" type="pie">
                 <field name="bar" />
@@ -2049,6 +2057,7 @@ test("middle click on a pie chart trigger a do_action with correct views", async
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -2063,6 +2072,7 @@ test("middle click on a pie chart trigger a do_action with correct views", async
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis" type="pie">
                 <field name="bar" />
