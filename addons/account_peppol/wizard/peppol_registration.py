@@ -61,7 +61,7 @@ class PeppolRegistration(models.TransientModel):
         string='EDI user',
         compute='_compute_edi_user_id',
     )
-    account_peppol_proxy_state = fields.Selection(related='selected_company_id.account_peppol_proxy_state')
+    account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state')
     peppol_warnings = fields.Json(
         string="Peppol warnings",
         compute="_compute_peppol_warnings",
