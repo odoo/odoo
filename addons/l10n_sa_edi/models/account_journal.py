@@ -1,4 +1,5 @@
 import json
+import logging
 import requests
 from markupsafe import Markup
 from lxml import etree
@@ -41,6 +42,9 @@ SANDBOX_AUTH = {
     'binarySecurityToken': "TUlJRDFEQ0NBM21nQXdJQkFnSVRid0FBZTNVQVlWVTM0SS8rNVFBQkFBQjdkVEFLQmdncWhrak9QUVFEQWpCak1SVXdFd1lLQ1pJbWlaUHlMR1FCR1JZRmJHOWpZV3d4RXpBUkJnb0praWFKay9Jc1pBRVpGZ05uYjNZeEZ6QVZCZ29Ka2lhSmsvSXNaQUVaRmdkbGVIUm5ZWHAwTVJ3d0dnWURWUVFERXhOVVUxcEZTVTVXVDBsRFJTMVRkV0pEUVMweE1CNFhEVEl5TURZeE1qRTNOREExTWxvWERUSTBNRFl4TVRFM05EQTFNbG93U1RFTE1Ba0dBMVVFQmhNQ1UwRXhEakFNQmdOVkJBb1RCV0ZuYVd4bE1SWXdGQVlEVlFRTEV3MW9ZWGxoSUhsaFoyaHRiM1Z5TVJJd0VBWURWUVFERXdreE1qY3VNQzR3TGpFd1ZqQVFCZ2NxaGtqT1BRSUJCZ1VyZ1FRQUNnTkNBQVRUQUs5bHJUVmtvOXJrcTZaWWNjOUhEUlpQNGI5UzR6QTRLbTdZWEorc25UVmhMa3pVMEhzbVNYOVVuOGpEaFJUT0hES2FmdDhDL3V1VVk5MzR2dU1ObzRJQ0p6Q0NBaU13Z1lnR0ExVWRFUVNCZ0RCK3BId3dlakViTUJrR0ExVUVCQXdTTVMxb1lYbGhmREl0TWpNMGZETXRNVEV5TVI4d0hRWUtDWkltaVpQeUxHUUJBUXdQTXpBd01EYzFOVGc0TnpBd01EQXpNUTB3Q3dZRFZRUU1EQVF4TVRBd01SRXdEd1lEVlFRYURBaGFZWFJqWVNBeE1qRVlNQllHQTFVRUR3d1BSbTl2WkNCQ2RYTnphVzVsYzNNek1CMEdBMVVkRGdRV0JCU2dtSVdENmJQZmJiS2ttVHdPSlJYdkliSDlIakFmQmdOVkhTTUVHREFXZ0JSMllJejdCcUNzWjFjMW5jK2FyS2NybVRXMUx6Qk9CZ05WSFI4RVJ6QkZNRU9nUWFBL2hqMW9kSFJ3T2k4dmRITjBZM0pzTG5waGRHTmhMbWR2ZGk1ellTOURaWEowUlc1eWIyeHNMMVJUV2tWSlRsWlBTVU5GTFZOMVlrTkJMVEV1WTNKc01JR3RCZ2dyQmdFRkJRY0JBUVNCb0RDQm5UQnVCZ2dyQmdFRkJRY3dBWVppYUhSMGNEb3ZMM1J6ZEdOeWJDNTZZWFJqWVM1bmIzWXVjMkV2UTJWeWRFVnVjbTlzYkM5VVUxcEZhVzUyYjJsalpWTkRRVEV1WlhoMFoyRjZkQzVuYjNZdWJHOWpZV3hmVkZOYVJVbE9WazlKUTBVdFUzVmlRMEV0TVNneEtTNWpjblF3S3dZSUt3WUJCUVVITUFHR0gyaDBkSEE2THk5MGMzUmpjbXd1ZW1GMFkyRXVaMjkyTG5OaEwyOWpjM0F3RGdZRFZSMFBBUUgvQkFRREFnZUFNQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01DQmdnckJnRUZCUWNEQXpBbkJna3JCZ0VFQVlJM0ZRb0VHakFZTUFvR0NDc0dBUVVGQndNQ01Bb0dDQ3NHQVFVRkJ3TURNQW9HQ0NxR1NNNDlCQU1DQTBrQU1FWUNJUUNWd0RNY3E2UE8rTWNtc0JYVXovdjFHZGhHcDdycVNhMkF4VEtTdjgzOElBSWhBT0JOREJ0OSszRFNsaWpvVmZ4enJkRGg1MjhXQzM3c21FZG9HV1ZyU3BHMQ==",
     'secret': "Xlj15LyMCgSC66ObnEO/qVPfhSbs3kDTjWnGheYhfSs="
 }
+MAX_ALLOWED_CSR_VALUE_LENGTH = 64
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountJournal(models.Model):
@@ -135,32 +139,102 @@ class AccountJournal(models.Model):
         """ Return the list of fields required to generate a valid CSR as per ZATCA requirements """
         return ['l10n_sa_private_key', 'vat', 'name', 'city', 'country_id', 'state_id']
 
+    def _l10n_sa_get_csr_vals(self):
+        self.ensure_one()
+        company_id = self.company_id
+        parent_company_id = self.company_id.parent_id
+        return {
+            "country_name": {
+                "value": company_id.country_id.code,
+                "name": _("Country Name"),
+            },
+            "org_unit_name": {
+                "value": company_id.name if parent_company_id else company_id.vat[:10],
+                "name": _("Company Name"),
+            },
+            "org_name": {
+                "value": parent_company_id.name if parent_company_id else company_id.name,
+                "name": _("Parent Company Name") if parent_company_id else _("Company Name"),
+            },
+            "common_name": {
+                "value": f"{self.code}-{self.name}-{company_id.name}",
+                "name": _("Common Name"),
+            },
+            "org_id": {
+                "value": parent_company_id.vat if parent_company_id else company_id.vat,
+                "name": _("Parent Company VAT") if parent_company_id else _("Company VAT"),
+            },
+            "state_name": {
+                "value": company_id.state_id.name,
+                "name": _("State/Province Name"),
+            },
+            "locality_name": {
+                "value": company_id.city,
+                "name": _("Locality Name"),
+            },
+            "egs_serial": {
+                "value": f"1-Odoo|2-{service.common.exp_version()['server_version_info'][0]}|3-{self.l10n_sa_serial_number}",
+                "name": _("Journal Serial Number"),
+            },
+            "org_uid": {
+                "value": company_id.vat,
+                "name": _("Company VAT"),
+            },
+            "invoice_type": {
+                "value": company_id._l10n_sa_get_csr_invoice_type(),
+                "name": _("Invoice Type"),
+            },
+            "location": {
+                "value": company_id.street,
+                "name": _("Street"),
+            },
+            "industry": {
+                "value": company_id.partner_id.industry_id.name or _("Other"),
+                "name": _("Partner Industry Name"),
+            },
+            "cert_tmp": {
+                "value": CERT_TEMPLATE_NAME[company_id.l10n_sa_api_mode],
+                "name": _("Certificate Template Name"),
+            },
+        }
+
+    def _l10n_sa_validate_csr_vals(self):
+        error_fields = set()
+        for data in self._l10n_sa_get_csr_vals().values():
+            if len(data['value']) > MAX_ALLOWED_CSR_VALUE_LENGTH:
+                error_fields.add(data['name'])
+        if error_fields:
+            company_fields = [_("Company Name"), _("Parent Company Name")]
+            company_msg = _("<br/><br/>Once the journal is onboarded, please update the company name to match the one listed on the VAT Registration Certificate.") if any(field in error_fields for field in company_fields) else ""
+            raise UserError(_("Please make sure the following fields are shorter than %(max_length)d characters: %(error_fields_msg)s",
+                max_length=MAX_ALLOWED_CSR_VALUE_LENGTH,
+                error_fields_msg=" <br/>- " + " <br/>- ".join(error_fields) + company_msg
+            ))
+
     def _l10n_sa_get_csr_str(self):
         """
             Return s string representation of a ZATCA compliant CSR that will be sent to the Compliance API in order to get back
             a signed X509 certificate
         """
         self.ensure_one()
-
-        company_id = self.company_id
-        parent_company_id = self.company_id.parent_id
-        version_info = service.common.exp_version()
         builder = x509.CertificateSigningRequestBuilder()
+        self._l10n_sa_validate_csr_vals()
+        csr_vals = {key: data['value'] for key, data in self._l10n_sa_get_csr_vals().items()}
         subject_names = (
             # Country Name
-            (NameOID.COUNTRY_NAME, company_id.country_id.code),
+            (NameOID.COUNTRY_NAME, csr_vals['country_name']),
             # Organization Unit Name
-            (NameOID.ORGANIZATIONAL_UNIT_NAME, company_id.name if parent_company_id else company_id.vat[:10]),
+            (NameOID.ORGANIZATIONAL_UNIT_NAME, csr_vals['org_unit_name']),
             # Organization Name
-            (NameOID.ORGANIZATION_NAME, parent_company_id.name if parent_company_id else company_id.name),
+            (NameOID.ORGANIZATION_NAME, csr_vals['org_name']),
             # Subject Common Name (Short Code - Journal Name - Company Name)
-            (NameOID.COMMON_NAME, "%s-%s-%s" % (self.code, self.name, company_id.name)),
+            (NameOID.COMMON_NAME, csr_vals['common_name']),
             # Organization Identifier
-            (ObjectIdentifier('2.5.4.97'), parent_company_id.vat if parent_company_id else company_id.vat),
+            (ObjectIdentifier('2.5.4.97'), csr_vals['org_id']),
             # State/Province Name
-            (NameOID.STATE_OR_PROVINCE_NAME, company_id.state_id.name),
+            (NameOID.STATE_OR_PROVINCE_NAME, csr_vals['state_name']),
             # Locality Name
-            (NameOID.LOCALITY_NAME, company_id.city),
+            (NameOID.LOCALITY_NAME, csr_vals['locality_name']),
         )
         # The CertificateSigningRequestBuilder instances are immutable, which is why everytime we modify one,
         # we have to assign it back to itself to keep track of the changes
@@ -172,23 +246,22 @@ class AccountJournal(models.Model):
             x509.DirectoryName(x509.Name([
                 # EGS Serial Number. Manufacturer or Solution Provider Name, Model or Version and Serial Number.
                 # To be written in the following format: "1-... |2-... |3-..."
-                x509.NameAttribute(ObjectIdentifier('2.5.4.4'), '1-Odoo|2-%s|3-%s' % (
-                    version_info['server_version_info'][0], self.l10n_sa_serial_number)),
+                x509.NameAttribute(ObjectIdentifier('2.5.4.4'), csr_vals['egs_serial']),
                 # Organisation Identifier (UID)
-                x509.NameAttribute(NameOID.USER_ID, company_id.vat),
+                x509.NameAttribute(NameOID.USER_ID, csr_vals['org_uid']),
                 # Invoice Type. 4-digit numerical input using 0 & 1
-                x509.NameAttribute(NameOID.TITLE, company_id._l10n_sa_get_csr_invoice_type()),
+                x509.NameAttribute(NameOID.TITLE, csr_vals['invoice_type']),
                 # Location
-                x509.NameAttribute(ObjectIdentifier('2.5.4.26'), company_id.street),
+                x509.NameAttribute(ObjectIdentifier('2.5.4.26'), csr_vals['location']),
                 # Industry
-                x509.NameAttribute(ObjectIdentifier('2.5.4.15'), company_id.partner_id.industry_id.name or 'Other'),
+                x509.NameAttribute(ObjectIdentifier('2.5.4.15'), csr_vals['industry']),
             ]))
         ])
 
         x509_extensions = (
             # Add Certificate template name extension
             (x509.UnrecognizedExtension(ObjectIdentifier('1.3.6.1.4.1.311.20.2'),
-                                        CERT_TEMPLATE_NAME[company_id.l10n_sa_api_mode]), False),
+                                        csr_vals['cert_tmp']), False),
             # Add alternative names extension
             (x509_alt_names_extension, False),
         )
@@ -196,7 +269,7 @@ class AccountJournal(models.Model):
         for ext in x509_extensions:
             builder = builder.add_extension(ext[0], critical=ext[1])
 
-        private_key = load_pem_private_key(company_id.l10n_sa_private_key, password=None, backend=default_backend())
+        private_key = load_pem_private_key(self.company_id.l10n_sa_private_key, password=None, backend=default_backend())
         request = builder.sign(private_key, hashes.SHA256(), default_backend())
 
         return b64encode(request.public_bytes(Encoding.PEM)).decode()
@@ -215,6 +288,27 @@ class AccountJournal(models.Model):
         self.l10n_sa_csr = self._l10n_sa_get_csr_str()
 
     # ====== Certificate Methods =======
+
+    def _l10n_sa_get_csid_error(self, csid):
+        """
+            Return a formatted error string if the CSID response has an 'error' or 'errors'
+            key or doesn't have a 'binarySecurityToken'
+        """
+        error_msg = ""
+        unknown_error_msg = _("Unknown response returned from ZATCA. Please check the logs.")
+        if error := csid.get('error'):
+            error_msg = error
+        elif errors := csid.get('errors'):
+            error_msg = " <br/>" + " <br/>- ".join([err['message'] if isinstance(err, dict) else err for err in errors])
+        elif 'error' in [csid.get('type', "").lower(), csid.get('status', "").lower()]:
+            error_msg = csid.get('message') or unknown_error_msg
+        elif not csid.get('binarySecurityToken'):
+            error_msg = unknown_error_msg
+
+        if error_msg:
+            _logger.warning("Failed to obtain CCSID: %s", csid)
+
+        return error_msg
 
     @api.depends('l10n_sa_production_csid_json')
     def _l10n_sa_compute_production_csid_validity(self):
@@ -278,9 +372,8 @@ class AccountJournal(models.Model):
             Request a Compliance Cryptographic Stamp Identifier (CCSID) from ZATCA
         """
         CCSID_data = self._l10n_sa_api_get_compliance_CSID(otp)
-        if CCSID_data.get('errors') or CCSID_data.get('error'):
-            raise UserError(_("Could not obtain Compliance CSID: %s",
-                              CCSID_data['errors'][0]['message'] if CCSID_data.get('errors') else CCSID_data['error']))
+        if error := self._l10n_sa_get_csid_error(CCSID_data):
+            raise UserError(_("Could not obtain Compliance CSID: %s", error))
         self.sudo().write({
             'l10n_sa_compliance_csid_json': json.dumps(CCSID_data),
             'l10n_sa_production_csid_json': False,
@@ -311,8 +404,8 @@ class AccountJournal(models.Model):
 
         CCSID_data = json.loads(self_sudo.l10n_sa_compliance_csid_json)
         PCSID_data = self_sudo._l10n_sa_request_production_csid(CCSID_data, renew, OTP)
-        if PCSID_data.get('error'):
-            raise UserError(_("Could not obtain Production CSID: %s", PCSID_data['error']))
+        if error := self._l10n_sa_get_csid_error(PCSID_data):
+            raise UserError(_("Could not obtain Production CSID: %s", error))
         self_sudo.l10n_sa_production_csid_json = json.dumps(PCSID_data)
 
     # ====== Compliance Checks =======
