@@ -78,3 +78,22 @@ registry.category("web_tour.tours").add("test_selected_customer_after_adding_pay
             Dialog.is("Scan to Pay"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_payment_method_customer_required", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Letter Tray", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.totalIs("4.80"),
+            PaymentScreen.clickPaymentMethod("Online payment"),
+            PaymentScreen.selectedPaymentlineHas("Online payment", "4.80"),
+            PaymentScreen.validateButtonIsHighlighted(false),
+            PaymentScreen.clickPartnerButton(),
+            PaymentScreen.clickCustomer("A Test Partner"),
+            PaymentScreen.validateButtonIsHighlighted(true),
+            PaymentScreen.clickValidate(),
+            Dialog.is({ title: "Payment provider requirement" }),
+        ].flat(),
+});

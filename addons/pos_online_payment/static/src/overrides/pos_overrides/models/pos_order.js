@@ -11,4 +11,20 @@ patch(PosOrder.prototype, {
         }
         return super.canBeValidated();
     },
+    get isCustomerRequired() {
+        if (this.partner_id) {
+            return false;
+        }
+        const online_payments_customer_required = this.payment_requires_customer(this.payment_ids);
+
+        const res = super.isCustomerRequired;
+        return res || online_payments_customer_required;
+    },
+    payment_requires_customer(payments) {
+        return payments?.some(
+            (payment) =>
+                payment.payment_method_id.is_online_payment &&
+                payment.payment_method_id._customer_required
+        );
+    },
 });
