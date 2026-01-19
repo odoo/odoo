@@ -81,6 +81,7 @@
                     <page string="Products" name="products">
                         <field name="line_ids" readonly="state == 'done'">
                             <list string="Products" editable="bottom">
+                                <field name="sequence" widget="handle"/>
                                 <field name="product_id"
                                        domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                 <field name="product_description_variants" invisible="product_description_variants == ''"/>

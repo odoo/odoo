@@ -165,7 +165,9 @@ class PurchaseRequisitionLine(models.Model):
     _inherit = ['analytic.mixin']
     _description = "Purchase Requisition Line"
     _rec_name = 'product_id'
+    _order = 'sequence, id'
 
+    sequence = fields.Integer(string='Sequence', default=10)
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], required=True)
     uom_id = fields.Many2one(
         'uom.uom', 'Unit',
