@@ -6,6 +6,7 @@ import { AlignSelector } from "./align_selector";
 import { reactive } from "@odoo/owl";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";
+import { READ, withSequence } from "@html_editor/utils/resource";
 
 const alignmentItems = [
     // In RTL, left and right icons are reverted to represent start and end.
@@ -60,7 +61,7 @@ export class AlignPlugin extends Plugin {
         ],
 
         /** Handlers */
-        selectionchange_handlers: this.updateAlignmentParams.bind(this),
+        selectionchange_handlers: withSequence(READ, this.updateAlignmentParams.bind(this)),
         post_undo_handlers: this.updateAlignmentParams.bind(this),
         post_redo_handlers: this.updateAlignmentParams.bind(this),
         remove_all_formats_handlers: this.setAlignment.bind(this),
