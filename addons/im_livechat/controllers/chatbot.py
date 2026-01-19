@@ -76,6 +76,13 @@ class LivechatChatbotScriptController(http.Controller):
         # sudo: discuss.channel - updating current step on the channel is allowed
         discuss_channel.sudo().chatbot_current_step_id = next_step.id
         posted_message = next_step._process_step(discuss_channel)
+        store.add(
+            discuss_channel,
+            lambda res: (
+                res.attr("chatbot_current_mail_message", posted_message.id),
+                res.attr("chatbot_current_step_id"),
+            ),
+        )
         store.add(posted_message, "_store_message_fields")
         store.add(next_step, "_store_script_step_fields")
         chatbot_next_step = {"scriptStep": next_step.id, "message": posted_message.id}
@@ -94,7 +101,6 @@ class LivechatChatbotScriptController(http.Controller):
         store.add_model_values(
             "Chatbot",
             lambda res: (
-                res.attr("currentStep", chatbot_next_step),
                 res.attr("id", (chatbot.id, discuss_channel.id)),
                 res.attr("script", chatbot.id),
                 res.attr("channel_id", discuss_channel.id),

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
@@ -48,7 +47,11 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
             'channel_type': 'livechat',
             'name': chatbot_script.title,
         }
-        discuss_channel = request.env['discuss.channel'].create(discuss_channel_values)
+        discuss_channel = (
+            request.env["discuss.channel"]
+            .with_context(discuss_channel_create_no_store=True)
+            .create(discuss_channel_values)
+        )
         chatbot_script._post_welcome_steps(discuss_channel)
         store.add(discuss_channel, "_store_open_chat_window_fields")
         store.add_global_values(request.env.user.sudo(False)._store_init_global_fields)

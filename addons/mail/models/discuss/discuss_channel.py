@@ -453,7 +453,11 @@ class DiscussChannel(models.Model):
         # pop the mail_create_bypass_create_check key to avoid leaking it outside of create)
         channels = channels.with_context(mail_create_bypass_create_check=None)
         channels._subscribe_users_automatically()
-        if not self.env.context.get("install_mode") and not self.env.user._is_public():
+        if (
+            not self.env.context.get("install_mode")
+            and not self.env.context.get("discuss_channel_create_no_store")
+            and not self.env.user._is_public()
+        ):
             Store(bus_channel=self.env.user).add(channels, "_store_channel_fields").bus_send()
         return channels
 

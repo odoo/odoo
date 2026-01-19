@@ -10,6 +10,8 @@ const discussChannelPatch = {
     setup() {
         super.setup(...arguments);
         this.chatbot = fields.One("Chatbot", { inverse: "channel_id" });
+        this.chatbot_current_step_id = fields.One("chatbot.script.step");
+        this.chatbot_current_mail_message = fields.One("mail.message");
         this.livechat_agent_history_ids = fields.Many("im_livechat.channel.member.history", {
             inverse: "channelAsAgentHistory",
         });
