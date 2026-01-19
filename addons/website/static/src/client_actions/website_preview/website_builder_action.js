@@ -224,7 +224,7 @@ export class WebsiteBuilderClientAction extends Component {
             isMobile: this.websiteContext.isMobile,
             config: {
                 initialTarget: this.target,
-                initialTab: this.initialTab || this.translation ? "customize" : "blocks",
+                initialTab: this.initialTab,
                 builderSidebar: {
                     withHiddenSidebar: async (cb) => {
                         try {
