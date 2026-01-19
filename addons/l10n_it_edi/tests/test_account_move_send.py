@@ -244,3 +244,21 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
             self.assertFalse(invoices[1].l10n_it_edi_state)
             self.assertFalse(invoices[1].l10n_it_edi_transaction)
             self.assertTrue(invoices[1].l10n_it_edi_header)
+
+    def test_l10n_it_edi_foreign_currency(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.italian_partner_a.id,
+            'company_id': self.company.id,
+            'currency_id': self.env.ref('base.USD').id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'Zero total line',
+                'quantity': 1.0,
+                'price_unit': 100.0,
+                'discount': 100.0,
+                'tax_ids': [(6, 0, self.default_tax.ids)],
+            })],
+        })
+        invoice.action_post()
+        self.generate_l10n_it_edi_send_attachments(invoice)
+        self.assertTrue(invoice.l10n_it_edi_attachment_id)
