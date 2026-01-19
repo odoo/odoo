@@ -766,7 +766,7 @@ class AccountMove(models.Model):
         # Reference line for finding the conversion rate used in the document
         conversion_rate = float_repr(
             abs(self.amount_total / self.amount_total_signed), precision_digits=5,
-        ) if convert_to_euros and self.invoice_line_ids else None
+        ) if convert_to_euros and self.invoice_line_ids and not self.currency_id.is_zero(self.amount_total_signed) else None
 
         # Aggregated linked invoices
         linked_moves = (self._get_reconciled_invoices() | self.reversed_entry_id).filtered(lambda move: move.date <= self.date)
