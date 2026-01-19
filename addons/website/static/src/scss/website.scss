@@ -453,6 +453,22 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
             }
         }
     }
+
+    .top_menu {
+        &.text-end > .accordion .accordion-button {
+            flex-direction: row-reverse;
+
+            &::after {
+                margin-left: 0;
+                margin-right: auto;
+            }
+        }
+
+        &.text-center > .accordion .accordion-button > span {
+            text-align: center;
+            flex-grow: 1;
+        }
+    }
 }
 
 // Apply background color to the offcanvas menu
