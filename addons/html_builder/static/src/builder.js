@@ -161,14 +161,13 @@ export class Builder extends Component {
                     },
                     change_current_options_containers_listeners: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
-                        if (!currentOptionsContainers.length) {
-                            // If there is no option, fallback on the current
-                            // fallback tab.
-                            this.setTab(this.noSelectionTab);
-                            return;
+                        if (currentOptionsContainers.length) {
+                            this.activeTargetEl = null;
+                            this.setTab("customize");
+                        } else if (this.state.activeTab === "customize") {
+                            // If there is no option, go to add blocks
+                            this.setTab("blocks");
                         }
-                        this.activeTargetEl = null;
-                        this.setTab("customize");
                     },
                     lower_panel_entries: withSequence(20, {
                         Component: InvisibleElementsPanel,
@@ -259,8 +258,6 @@ export class Builder extends Component {
                 );
             }
         });
-        // Fallback tab when no option is active.
-        this.noSelectionTab = "blocks";
     }
     async triggerDomUpdated() {
         this.lastTrigerUpdateId++;
@@ -313,8 +310,6 @@ export class Builder extends Component {
 
     setTab(tab) {
         this.state.activeTab = tab;
-        // Set the fallback tab on the "THEME" tab if it was selected.
-        this.noSelectionTab = tab === "theme" ? "theme" : "blocks";
     }
 
     undo() {
