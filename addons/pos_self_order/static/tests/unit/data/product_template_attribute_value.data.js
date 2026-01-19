@@ -11,5 +11,17 @@ ProductTemplateAttributeValue._records = [
         id: 2,
         name: "M",
         attribute_id: 7,
+        price_extra: 5,
+    },
+    {
+        id: 3,
+        name: "Standard",
+        attribute_id: 9,
+    },
+    {
+        id: 4,
+        name: "Gift",
+        attribute_id: 9,
+        price_extra: 10,
     },
 ];
