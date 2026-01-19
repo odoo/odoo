@@ -4,7 +4,7 @@ import { EventBus, markRaw, toRaw } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
-import { rpcBus } from "@web/core/network/rpc";
+import { ConnectionLostError, rpcBus } from "@web/core/network/rpc";
 import { shallowEqual } from "@web/core/utils/arrays";
 import { deepCopy, pick } from "@web/core/utils/objects";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
@@ -166,6 +166,7 @@ export class RelationalModel extends Model {
         this.initialSampleGroups = undefined; // real groups to populate with sample records
 
         this._urgentSave = false;
+        this.couldNotLoadRootOffline = false;
     }
 
     // -------------------------------------------------------------------------
@@ -210,7 +211,17 @@ export class RelationalModel extends Model {
         this.hooks.onWillLoadRoot(config);
         const { promise, resolve } = Promise.withResolvers();
         const cache = this._getCacheParams(config, promise);
-        const data = await this.keepLast.add(this._loadData(config, cache));
+        let data;
+        try {
+            data = await this.keepLast.add(this._loadData(config, cache));
+        } catch (e) {
+            if (e instanceof ConnectionLostError) {
+                this.couldNotLoadRootOffline = true;
+                this.notify();
+            }
+            throw e;
+        }
+        this.couldNotLoadRootOffline = false;
         this.root = this._createRoot(config, data);
         resolve({ root: this.root, loadId: config.loadId });
         this.config = config;
@@ -301,16 +312,7 @@ export class RelationalModel extends Model {
             update: "always",
             noCache,
             callback: async (result, hasChanged) => {
-                const { actionId, viewType } = this.env.config;
-                // TODO?: maybe mark available whatever result.length is, but store the length
-                // in the value, and when considering filters to display (other PR), filter out
-                // queries where result.length is 0
-                const markAsAvailableOffline =
-                    actionId && (config.isMonoRecord ? config.resId : result.length);
-                if (markAsAvailableOffline) {
-                    const params = config.isMonoRecord ? { resId: config.resId } : {};
-                    this.offline.setAvailableOffline(actionId, viewType, params);
-                }
+                this._setAvailableOffline(config, result);
                 if (!hasChanged) {
                     return;
                 }
@@ -702,6 +704,31 @@ export class RelationalModel extends Model {
         };
         const orm = cache ? this.orm.cache(cache) : this.orm;
         return orm.webSearchRead(config.resModel, config.domain, kwargs);
+    }
+
+    /**
+     * Marks the current config as available offline.
+     *
+     * @param {RelationalModelConfig} config
+     * @param {Object} result the data loaded with the given config (rpc result)
+     */
+    _setAvailableOffline(config, result) {
+        const { actionId, viewType } = this.env.config;
+        let markAsAvailableOffline = actionId;
+        if (config.isMonoRecord) {
+            markAsAvailableOffline = markAsAvailableOffline && config.resId;
+        } else {
+            const hasRecords = config.groupBy.length
+                ? result.groups.some((group) => group.__count > 0)
+                : result.length > 0;
+            markAsAvailableOffline = markAsAvailableOffline && hasRecords;
+        }
+        if (markAsAvailableOffline) {
+            const params = config.isMonoRecord
+                ? { resId: config.resId }
+                : { search: this.env.searchModel.getCurrentSearch() };
+            this.offline.setAvailableOffline(actionId, viewType, params);
+        }
     }
 
     /**

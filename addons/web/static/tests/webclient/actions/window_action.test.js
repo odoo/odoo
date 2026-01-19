@@ -2903,3 +2903,107 @@ test("[Offline] open the asked viewType", async () => {
         `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
     ]);
 });
+
+test.tags("desktop");
+test("[Offline] switch view with unavailable search", async () => {
+    expect.errors(3); // 3x ConnectionLostError
+    const setOffline = mockOffline();
+
+    Partner._views.search = `
+        <search>
+            <filter name="my_filter" string="My Filter" domain="[['id', '>', 3]]"/>
+        </search>`;
+    Partner._views.list = `<list><field name="display_name"/></list>`;
+
+    await mountWithCleanup(WebClient);
+
+    // Populate the caches
+    await getService("action").doAction(3);
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(5);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My Filter");
+    expect(".o_data_row").toHaveCount(2);
+
+    await switchView("kanban");
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
+
+    // Switch offline
+    await setOffline(true);
+    await getService("action").doAction(3);
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(5);
+
+    await switchView("kanban");
+    expect(".o_offline_search_bar .o_searchview_facet").toHaveCount(0);
+    expect(".o_kanban_record").toHaveCount(0);
+    expect(".o_view_nocontent").toHaveCount(1);
+    expect(".o_view_nocontent p:eq(1)").toHaveText(
+        "There is no data to display offline for the given filters"
+    );
+    expect(".o_view_nocontent button").toHaveCount(1);
+
+    await contains(".o_view_nocontent button").click();
+    expect(".o_offline_search_bar .o_searchview_facet").toHaveCount(2);
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
+
+    expect.waitForErrors([
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+    ]);
+});
+
+test.tags("mobile");
+test("[Offline] switch view with unavailable search (mobile)", async () => {
+    expect.errors(3); // 3x ConnectionLostError
+    const setOffline = mockOffline();
+
+    Partner._views.search = `
+        <search>
+            <filter name="my_filter" string="My Filter" domain="[['id', '>', 3]]"/>
+        </search>`;
+    Partner._views.list = `<list><field name="display_name"/></list>`;
+
+    await mountWithCleanup(WebClient);
+
+    // Populate the caches
+    await getService("action").doAction(3);
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My Filter");
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
+
+    await switchView("list");
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(2);
+
+    // Switch offline
+    await setOffline(true);
+    await getService("action").doAction(3);
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
+
+    await switchView("list");
+    expect(".o_data_row").toHaveCount(0);
+    expect(".o_view_nocontent").toHaveCount(1);
+    expect(".o_view_nocontent p:eq(1)").toHaveText(
+        "There is no data to display offline for the given filters"
+    );
+    expect(".o_view_nocontent button").toHaveCount(1);
+
+    await contains(".o_view_nocontent button").click();
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_row").toHaveCount(2);
+
+    expect.waitForErrors([
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+    ]);
+});

@@ -9848,3 +9848,80 @@ test(`[Offline] disable unavailable records when offline`, async () => {
     expect(".o_kanban_record:not(.o_kanban_ghost):eq(2)").not.toHaveClass("o_disabled_offline");
     expect(".o_kanban_record:not(.o_kanban_ghost):eq(3)").toHaveClass("o_disabled_offline");
 });
+
+test.tags("desktop");
+test(`[Offline] use offline searchbar`, async () => {
+    expect.errors(2);
+    const setOffline = mockOffline();
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        searchViewArch: `
+            <search>
+                <filter string="Filter Blip" name="blip" domain="[['foo', '=', 'blip']]"/>
+                <filter string="GroupBy Blip" name="groupby_blip" context="{'group_by': 'foo'}"/>
+                <filter string="Empty Filter" name="empty" domain="[['foo', '=', 'no record']]"/>
+            </search>`,
+        config: { actionId: 234 },
+    });
+
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
+
+    // Visit filters to put feed the cache
+    await toggleSearchBarMenu();
+    await toggleMenuItem("GroupBy Blip");
+    expect(".o_kanban_group").toHaveCount(3);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
+
+    await toggleMenuItem("Filter Blip");
+    expect(".o_kanban_group").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
+
+    await toggleMenuItem("Empty Filter"); // should not be available offline as no results
+    expect(".o_kanban_group").toHaveCount(0);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(0);
+
+    await removeFacet("Empty Filter");
+    expect(".o_kanban_group").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
+
+    // Switch offline and visit available filters
+    await setOffline(true);
+    expect(".o_offline_search_bar").toHaveCount(1);
+    expect(".o_offline_search_bar .o_searchview_facet").toHaveCount(3); // groupby, filter and close
+    expect(queryAllTexts(".o_offline_search_bar .o_facet_values")).toEqual([
+        "GroupBy Blip",
+        "Filter Blip",
+    ]);
+
+    await contains(".o_offline_search_bar .o_searchview_facet .oi-close").click(); // remove search
+    expect(".o_offline_search_bar .o_searchview_facet").toHaveCount(0);
+    expect(".o_kanban_group").toHaveCount(0);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
+
+    await toggleSearchBarMenu();
+    expect(".o_search_bar_menu_offline .o-dropdown-item").toHaveCount(2);
+    expect(queryAllTexts(".o_search_bar_menu_offline .o-dropdown-item")).toEqual([
+        "GroupBy Blip\nFilter Blip",
+        "GroupBy Blip",
+    ]);
+
+    await contains(".o_search_bar_menu_offline .o-dropdown-item:eq(1)").click();
+    expect(".o_offline_search_bar .o_searchview_facet").toHaveCount(2); // groupby and close
+    expect(queryAllTexts(".o_offline_search_bar .o_facet_values")).toEqual(["GroupBy Blip"]);
+    expect(".o_kanban_group").toHaveCount(3);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
+
+    expect.verifyErrors([
+        "/web/dataset/call_kw/partner/web_search_read",
+        "/web/dataset/call_kw/partner/web_read_group",
+    ]);
+});

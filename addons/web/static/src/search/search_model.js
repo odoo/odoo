@@ -23,6 +23,7 @@ import {
     yearSelected,
 } from "./utils/dates";
 import { FACET_COLORS, FACET_ICONS } from "./utils/misc";
+import { hashCode } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
 
@@ -56,9 +57,16 @@ const { DateTime } = luxon;
  *  resId?: number | false;
  *  useSampleModel?: boolean;
  * }} SearchParams
+ *
+ * @typedef {{
+ *  key: string,
+ *  facets: Object[];
+ *  domain: string;
+ *  groupBys: string[];
+ * }} Search
  */
 
-const SPECIAL = Symbol("special");
+const DEFAULT_GROUPBY_ID = -1;
 
 /** @todo rework doc */
 // interface SectionCommon { // check optional keys
@@ -137,12 +145,21 @@ function arraytoMap(array) {
  * @param {Object} target
  */
 function execute(op, source, target) {
-    const { query, nextId, nextGroupId, nextGroupNumber, searchItems, searchPanelInfo, sections } =
-        source;
+    const {
+        query,
+        nextId,
+        nextGroupId,
+        nextGroupNumber,
+        searchItems,
+        searchPanelInfo,
+        sections,
+        _appliedSearch,
+    } = source;
 
     target.nextGroupId = nextGroupId;
     target.nextGroupNumber = nextGroupNumber;
     target.nextId = nextId;
+    target._appliedSearch = _appliedSearch;
 
     target.query = query;
     target.searchItems = searchItems;
@@ -177,9 +194,10 @@ export class SearchModel extends EventBus {
 
     setup(services) {
         // services
-        const { field: fieldService, orm, view, dialog, treeProcessor } = services;
+        const { field: fieldService, offline, orm, view, dialog, treeProcessor } = services;
         this.orm = orm;
         this.fieldService = fieldService;
+        this.offlineService = toRaw(offline);
         this.viewService = view;
         this.treeProcessor = treeProcessor;
         this.dialog = dialog;
@@ -502,6 +520,24 @@ export class SearchModel extends EventBus {
     }
 
     /**
+     * Apply the given search. Typically called offline, with a Search that has
+     * been previously obtained through @getCurrentSearch.
+     *
+     * @param {Search} search
+     */
+    applySearch(search) {
+        this.query = []; // remove everything
+        this._appliedSearch = search;
+        const { domain, groupBys } = search;
+        if (domain !== "[]") {
+            const description = _t("Custom filter");
+            this.createNewFilters([{ description, domain, name: "custom filter", invisible: "True" }]);
+        }
+        this._toggleGroupBys(groupBys);
+        this._notify();
+    }
+
+    /**
      * Remove all the query elements from query.
      */
     clearQuery() {
@@ -631,7 +667,7 @@ export class SearchModel extends EventBus {
      * with given groupId.
      */
     deactivateGroup(groupId) {
-        if (groupId === SPECIAL) {
+        if (groupId === DEFAULT_GROUPBY_ID) {
             delete this.defaultGroupBy;
             this._notify();
             return;
@@ -651,6 +687,29 @@ export class SearchModel extends EventBus {
         const state = {};
         execute(mapToArray, this, state);
         return state;
+    }
+
+    /**
+     * Returns the current search, which can then be re-applied in the future,
+     * when being offline, with @applySearch.
+     *
+     * @returns Search
+     */
+    getCurrentSearch() {
+        if (!this.offlineService.offline) {
+            delete this._appliedSearch;
+        } else if (this._appliedSearch) {
+            return this._appliedSearch;
+        }
+        const { preFavorite } = this._getIrFilterDescription();
+        const { domain, groupBys } = preFavorite; // TODO: handle orderBy ?
+        const key = hashCode(`${JSON.stringify(domain)},${JSON.stringify(groupBys)}}`);
+        return {
+            key,
+            facets: this.facets,
+            domain,
+            groupBys,
+        };
     }
 
     getIrFilterValues(params) {
@@ -1226,17 +1285,7 @@ export class SearchModel extends EventBus {
             if (decodedGroupBys.length === 0) {
                 return;
             }
-            for (const raw of decodedGroupBys) {
-                const [field, sub] = raw.split(":"); // eg. grouping on "dateorder:quarter"
-                const found = Object.values(this.searchItems).find(
-                    (f) => ["groupBy", "dateGroupBy"].includes(f.type) && f.fieldName === field
-                );
-                if (found) {
-                    sub ? this.toggleDateGroupBy(found.id, sub) : this.toggleSearchItem(found.id);
-                } else {
-                    this.createNewGroupBy(field, sub ? { interval: sub, invisible: false } : {});
-                }
-            }
+            this._toggleGroupBys(decodedGroupBys);
             urlApplyStatus.anySuccess = true;
         } catch {
             urlApplyStatus.anyErrors = true; // Continue trying to parse other search param
@@ -1862,7 +1911,7 @@ export class SearchModel extends EventBus {
             this.env.config.viewType !== "kanban"
         ) {
             facets.unshift({
-                groupId: SPECIAL,
+                groupId: DEFAULT_GROUPBY_ID,
                 type: "groupBy",
                 values: this.defaultGroupBy.map((gb) => {
                     const [fieldName, interval] = gb.split(":");
@@ -2478,6 +2527,24 @@ export class SearchModel extends EventBus {
         return [...this.sections.values()].some(
             (section) => !section.expand && searchDomainChanged
         );
+    }
+
+    _toggleGroupBys(groupBys) {
+        for (const raw of groupBys) {
+            const [field, interval] = raw.split(":"); // eg. grouping on "dateorder:quarter"
+            const found = Object.values(this.searchItems).find(
+                (f) => ["groupBy", "dateGroupBy"].includes(f.type) && f.fieldName === field
+            );
+            if (found) {
+                if (interval) {
+                    this.toggleDateGroupBy(found.id, interval);
+                } else {
+                    this.toggleSearchItem(found.id);
+                }
+            } else {
+                this.createNewGroupBy(field, { interval });
+            }
+        }
     }
 
     /**

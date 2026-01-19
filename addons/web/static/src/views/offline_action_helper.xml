@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.OfflineActionHelper">
+        <div class="o_view_nocontent">
+            <div class="o_nocontent_help">
+                <p><i class="fa fa-4x fa-chain-broken opacity-75"/></p>
+                <p>There is no data to display offline for the given filters</p>
+                <button
+                    t-if="this.searches.length"
+                    class="btn btn-primary"
+                    data-available-offline=""
+                    t-on-click="onResetFilters">
+                    Reset Filters
+                </button>   
+            </div>
+        </div>
+    </t>
+
+</templates>

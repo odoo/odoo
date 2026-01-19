@@ -16,11 +16,13 @@ import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_
 import { ViewButton } from "@web/views/view_button/view_button";
 import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ListConfirmationDialog } from "./list_confirmation_dialog";
+import { OfflineSearchBar } from "@web/search/search_bar/offline_search_bar";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { session } from "@web/session";
 import { ListCogMenu } from "./list_cog_menu";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { OfflineActionHelper } from "@web/views/offline_action_helper";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 
@@ -40,11 +42,13 @@ import {
 export class ListController extends Component {
     static template = `web.ListView`;
     static components = {
+        OfflineActionHelper,
         ActionMenus,
         Layout,
         ViewButton,
         MultiRecordViewButton,
         SearchBar,
+        OfflineSearchBar,
         CogMenu: ListCogMenu,
         DropdownItem,
         SelectionBox,

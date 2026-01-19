@@ -217,3 +217,74 @@ test("Repeatedly check connection when going offline", async () => {
     expect(env.services.offline.offline).toBe(false);
     expect.verifySteps(["version_info", "version_info"]);
 });
+
+test("isAvailableOffline", async () => {
+    const env = await makeMockEnv();
+    expect(env.services.offline.offline).toBe(false);
+
+    await env.services.offline.setAvailableOffline(1, "list", { search: { key: 1 } });
+    await env.services.offline.setAvailableOffline(1, "form", { resId: 1 });
+
+    // go offline
+    env.services.offline.offline = true;
+    await tick();
+    expect(env.services.offline.offline).toBe(true);
+
+    expect(env.services.offline.isAvailableOffline(1)).toBe(true);
+    expect(env.services.offline.isAvailableOffline(4)).toBe(false);
+
+    expect(env.services.offline.isAvailableOffline(1, "list")).toBe(true);
+    expect(env.services.offline.isAvailableOffline(1, "kanban")).toBe(false);
+
+    expect(env.services.offline.isAvailableOffline(1, "list", 1)).toBe(true);
+    expect(env.services.offline.isAvailableOffline(1, "kanban", 3)).toBe(false);
+});
+
+test("getAvailableSearches", async () => {
+    const env = await makeMockEnv();
+    const offline = env.services.offline;
+    expect(offline.offline).toBe(false);
+
+    await offline.setAvailableOffline(1, "list", { search: { key: "1" } });
+    await offline.setAvailableOffline(1, "list", { search: { key: "2" } });
+    await offline.setAvailableOffline(1, "kanban", { search: { key: "oui" } });
+    await offline.setAvailableOffline(2, "kanban", { search: { key: "8" } });
+
+    // go offline
+    offline.offline = true;
+    await tick();
+    expect(offline.offline).toBe(true);
+
+    expect(await offline.getAvailableSearches(1, "list")).toEqual([{ key: "2" }, { key: "1" }]);
+    expect(await offline.getAvailableSearches(1, "kanban")).toEqual([{ key: "oui" }]);
+    expect(await offline.getAvailableSearches(2, "kanban")).toEqual([{ key: "8" }]);
+});
+
+test("getAvailableSearches (searches order)", async () => {
+    const env = await makeMockEnv();
+    const offline = env.services.offline;
+    expect(offline.offline).toBe(false);
+
+    await offline.setAvailableOffline(1, "list", { search: { key: "1" } });
+    await offline.setAvailableOffline(1, "list", { search: { key: "2" } });
+    await offline.setAvailableOffline(1, "list", { search: { key: "2" } });
+    await offline.setAvailableOffline(1, "list", { search: { key: "1" } });
+    await offline.setAvailableOffline(1, "list", { search: { key: "3" } });
+    await offline.setAvailableOffline(1, "list", { search: { key: "1" } });
+    await offline.setAvailableOffline(1, "list", { search: { key: "4" } });
+    await offline.setAvailableOffline(1, "list", { search: { key: "3" } });
+    await offline.setAvailableOffline(1, "list", { search: { key: "5" } });
+
+    // go offline
+    offline.offline = true;
+    await tick();
+    expect(offline.offline).toBe(true);
+
+    expect(await offline.getAvailableSearches(1, "list")).toEqual([
+        { key: "1" }, // accessed 3 times
+        { key: "3" }, // accessed twice
+        { key: "2" }, // accessed twice (less recently)
+        { key: "5" }, // accessed once
+        { key: "4" }, // accessed once (less recently)
+    ]);
+});

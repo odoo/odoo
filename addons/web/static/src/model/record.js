@@ -7,6 +7,7 @@ import { Component, xml, onWillStart, onWillUpdateProps, useState } from "@odoo/
 const defaultActiveField = { attrs: {}, options: {}, domain: "[]", string: "" };
 
 class StandaloneRelationalModel extends RelationalModel {
+    static withCache = false;
     load(params = {}) {
         if (params.values) {
             const data = params.values;

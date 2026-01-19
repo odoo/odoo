@@ -58,6 +58,7 @@ export class WithSearch extends Component {
                 field: useService("field"),
                 name: useService("name"),
                 dialog: useService("dialog"),
+                offline: useService("offline"),
                 treeProcessor: useService("tree_processor"),
             },
             this.props.searchModelArgs

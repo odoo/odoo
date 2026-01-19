@@ -8,10 +8,12 @@ import { useSetupAction } from "@web/search/action_hook";
 import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
+import { OfflineSearchBar } from "@web/search/search_bar/offline_search_bar";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { session } from "@web/session";
 import { useModelWithSampleData } from "@web/model/model";
+import { OfflineActionHelper } from "@web/views/offline_action_helper";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
@@ -41,11 +43,13 @@ const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "m
 export class KanbanController extends Component {
     static template = `web.KanbanView`;
     static components = {
+        OfflineActionHelper,
         ActionMenus,
         DropdownItem,
         Layout,
         KanbanRenderer,
         MultiRecordViewButton,
+        OfflineSearchBar,
         SearchBar,
         CogMenu: KanbanCogMenu,
         SelectionBox,

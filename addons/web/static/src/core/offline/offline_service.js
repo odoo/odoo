@@ -6,6 +6,8 @@ import { IndexedDB } from "@web/core/utils/indexed_db";
 import { Reactive } from "@web/core/utils/reactive";
 import { session } from "@web/session";
 
+const IS_READY = Symbol("ready");
+
 class OfflineManager extends Reactive {
     static TABLE_NAME = "visited-ui-items";
     static TABLE_NAME_DEBUG = "visited-ui-items-debug";
@@ -24,6 +26,7 @@ class OfflineManager extends Reactive {
             ? OfflineManager.TABLE_NAME_DEBUG
             : OfflineManager.TABLE_NAME;
         this._visited = {}; // stores items that are available offline (only populated when offline)
+        this._visited[IS_READY] = null;
         this._timeout = null; // used to repeatedly ping the server when offline
         this._observer = null; // used to detect DOM mutations and disable the UI when offline
         this._offline = false;
@@ -108,22 +111,7 @@ class OfflineManager extends Reactive {
             this._timeout = browser.setTimeout(_checkConnection, delay);
 
             // Retrieve the information about visited items from indexeddb.
-            this._idb.getAllKeys(this._idbTable).then((result) => {
-                if (offline !== this._offline) {
-                    return; // status changed again meanwhile
-                }
-                for (const r of result) {
-                    const value = JSON.parse(r);
-                    this._visited[value.action] = this._visited[value.action] || { views: {} };
-                    if (value.viewType === "form") {
-                        this._visited[value.action].views.form =
-                            this._visited[value.action].views.form || [];
-                        this._visited[value.action].views.form.push(value.resId);
-                    } else {
-                        this._visited[value.action].views[value.viewType] = true;
-                    }
-                }
-            });
+            this._visited[IS_READY] = this._populateVisited();
         } else {
             this._onlineUI();
             this._observer?.disconnect();
@@ -140,6 +128,33 @@ class OfflineManager extends Reactive {
         } catch {
             // just catch the error, the offline status will be updated with RPC:RESPONSE
         }
+    }
+
+    /**
+     * Returns search queries that are available offline, their facets and the number of times they
+     * have been accessed, given an action id and a view type.
+     *
+     * @param {number} actionId
+     * @param {"kanban"|"list"}
+     * @returns Promise<Object[]>
+     */
+    async getAvailableSearches(actionId, viewType) {
+        await this._visited[IS_READY];
+        if (!this._visited[actionId]?.views[viewType]) {
+            return [];
+        } else if (this._visited[actionId]?.views[viewType] === true) {
+            // Searches for that action/view type haven't been retrieve from idb yet
+            this._visited[actionId].views[viewType] = this._idb
+                .read(this._idbTable, this._generateKey(actionId, viewType))
+                .then((r) =>
+                    Object.values(r || {})
+                        .reverse() // last visited first
+                        .sort(({ count: c1 }, { count: c2 }) => c2 - c1)
+                        .map(({ search }) => search)
+                );
+        }
+        const searches = await this._visited[actionId]?.views[viewType];
+        return [...searches];
     }
 
     /**
@@ -170,17 +185,64 @@ class OfflineManager extends Reactive {
      * @param {"kanban"|"list"|"form"} viewType
      * @param {Object} params
      * @param {number} [params.resId] the record id, when viewType is "form"
+     * @param {Object} [params.search] the current search view state
      */
-    async setAvailableOffline(actionId, viewType, { resId }) {
+    async setAvailableOffline(actionId, viewType, { resId, search }) {
         if (!this.offline) {
-            const key = JSON.stringify({ action: actionId, viewType, resId });
-            this._idb.write(this._idbTable, key, true);
+            const key = this._generateKey(actionId, viewType, resId);
+            let value;
+            if (viewType === "form") {
+                value = true;
+            } else {
+                value = (await this._idb.read(this._idbTable, key)) || {};
+                let count = value[search.key]?.count || 0;
+                delete value[search.key]; // delete and re-add to mark it as "last visited"
+                value[search.key] = { count: ++count, search };
+            }
+            return this._idb.write(this._idbTable, key, value);
         }
     }
 
     // -------------------------------------------------------------------------
     // Private
     // -------------------------------------------------------------------------
+
+    /**
+     * Generates the key to identify an action, a viewType and optionally a record
+     * id, to use as key in the indexeddb table.
+     *
+     * @private
+     * @param {number} actionId
+     * @param {"kanban"|"list"|"form"} viewType
+     * @param {number} [params.resId] the record id, when viewType is "form"
+     * @returns string
+     */
+    _generateKey(actionId, viewType, resId) {
+        return JSON.stringify({ action: actionId, viewType, resId });
+    }
+
+    /**
+     * Populates the `_visited` structure with the information read from indexeddb.
+     *
+     * @private
+     */
+    async _populateVisited() {
+        return this._idb.getAllKeys(this._idbTable).then((keys) => {
+            if (!this._offline) {
+                return; // status changed again meanwhile
+            }
+            for (const key of keys) {
+                const { action, viewType, resId } = JSON.parse(key);
+                this._visited[action] = this._visited[action] || { views: {} };
+                if (viewType === "form") {
+                    this._visited[action].views.form = this._visited[action].views.form || [];
+                    this._visited[action].views.form.push(resId);
+                } else {
+                    this._visited[action].views[viewType] = true;
+                }
+            }
+        });
+    }
 
     /**
      * Disables interactive elements (e.g. buttons) that haven't been tagged as "available-offline".
