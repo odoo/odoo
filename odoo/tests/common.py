@@ -604,7 +604,9 @@ class BaseCase(case.TestCase):
     def assertQueries(self, expected, flush=True):
         """ Check the queries made by the current cursor. ``expected`` is a list
         of strings representing the expected queries being made. Query strings
-        are matched against each other, ignoring case and whitespaces.
+        are matched against each other, ignoring case and whitespaces. Moreover,
+        the substring ``"..."`` can be used as a wildcard to match anything in
+        the corresponding actual query.
         """
         actual_queries = []
 
@@ -987,12 +989,17 @@ class Like:
 
 
 class QueryLike(str):
-    """ Wrapper for comparing query strings. The comparison ignores case and spaces. """
-    __slots__ = ('_stripped',)
+    """ Wrapper for comparing query strings. The comparison ignores case and
+    spaces, and the substring ``"..."`` can match anything on the right-hand
+    side of operator `==`.
+    """
+    __slots__ = ('_regex', '_stripped')
 
     def __init__(self, value):
         # ignore case and spaces when comparing
         self._stripped = "".join(value.lower().split())
+        # "..." matches anything
+        self._regex = ".*".join(re.escape(part) for part in self._stripped.split('...'))
 
     def __hash__(self):
         return hash(self._stripped)
@@ -1000,7 +1007,7 @@ class QueryLike(str):
     def __eq__(self, other):
         if not isinstance(other, QueryLike):
             return NotImplemented
-        return self._stripped == other._stripped
+        return re.fullmatch(self._regex, other._stripped, re.DOTALL)
 
 
 class WhitespaceInsensitive(str):

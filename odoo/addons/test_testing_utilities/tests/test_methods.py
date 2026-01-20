@@ -189,7 +189,7 @@ First differing element 0:
             WHERE id = %s
             ORDER BY id
         """, """
-            SELECT f1 FROM "test_testing_utilities_a" WHERE id = %s ORDER BY id
+            SELECT ... FROM "test_testing_utilities_a" WHERE ... ORDER BY id
         """]):
             self.env.cr.execute(query, params)
             self.env.cr.execute(query, params)
@@ -220,13 +220,13 @@ First differing element 0:
         msg = (
             f"Not the expected queries : \n"
             f"=== {query}\n"
-            f'--- SELECT f1 FROM "test_testing_utilities_a" ORDER BY id\n'
+            f'--- SELECT ... FROM "test_testing_utilities_a" ORDER BY id\n'
             fr"\+\+\+ {query}"
         )
         with self.assertRaisesRegex(AssertionError, msg):
             with self.assertQueries([
-                'SELECT f1 FROM "test_testing_utilities_a" WHERE id = %s ORDER BY id',
-                'SELECT f1 FROM "test_testing_utilities_a" ORDER BY id',
+                'SELECT ... FROM "test_testing_utilities_a" WHERE id = %s ORDER BY id',
+                'SELECT ... FROM "test_testing_utilities_a" ORDER BY id',
             ]):
                 self.env.cr.execute(query, params)
                 self.env.cr.execute(query, params)
