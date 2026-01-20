@@ -34,6 +34,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         base_warehouse = self.picking_type_out.default_location_src_id.warehouse_id
         warehouse_id = (warehouse or base_warehouse).id
         suggest_context = {
+            "suggest_based_on": based_on,
             "order_id": po.id,
             "partner_id": po.partner_id.id,
             "warehouse_id": warehouse_id,
@@ -50,6 +51,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         base_warehouse = self.picking_type_out.default_location_src_id.warehouse_id
         warehouse_id = (warehouse or base_warehouse).id
         suggest_context = {
+            "suggest_based_on": based_on,
             "warehouse_id": warehouse_id,
             "suggest_based_on": based_on,
             "suggest_percent": factor,
