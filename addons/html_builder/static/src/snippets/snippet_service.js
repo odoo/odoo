@@ -202,7 +202,7 @@ export class SnippetModel extends Reactive {
                     imagePreviewSrc: snippetEl.dataset.oImagePreview,
                     dragImagePreviewSrc: snippetEl.dataset.oDragImagePreview || null,
                     isCustom: false,
-                    label: this.getSnippetLabel(snippetEl),
+                    label: "",
                     isDisabled: false,
                     forbidSanitize: false,
                     gridColumnSpan: 0,
@@ -234,6 +234,7 @@ export class SnippetModel extends Reactive {
                         snippet.isCustom = true;
                         break;
                 }
+                snippet.label = !snippet.isCustom ? this.getSnippetLabel(snippetEl) : "";
                 snippets.push(snippet);
             }
             this.snippetsByCategory[snippetCategory.id] = snippets;
@@ -244,6 +245,11 @@ export class SnippetModel extends Reactive {
             for (const snippet of this.snippetsByCategory[category]) {
                 this.originalSnippets[snippet.name] ??= snippet;
             }
+        }
+        // Compute custom labels after `this.originalSnippets` is populated.
+        // Website overrides use it to find the original snippet label.
+        for (const snippet of this.snippetsByCategory["snippet_custom"]) {
+            snippet.label = this.getSnippetLabel(snippet.content.parentElement, true);
         }
 
         // Extract the custom inner content from the custom snippets and remove
@@ -437,9 +443,10 @@ export class SnippetModel extends Reactive {
      * Gets the label of the snippet.
      *
      * @param {HTMLElement} snippetEl
+     * @param {boolean} [isCustom = false]
      * @returns {String}
      */
-    getSnippetLabel(snippetEl) {
+    getSnippetLabel(snippetEl, isCustom = false) {
         return snippetEl.dataset.oLabel;
     }
 }
