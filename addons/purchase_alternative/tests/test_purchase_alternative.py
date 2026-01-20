@@ -234,11 +234,11 @@ class TestPurchaseAlternative(TestPurchaseAlternativeCommon):
 
         # 1 USD = 0.5 EUR
         self.env['res.currency.rate'].create([{
-            'name': fields.Datetime.today(),
+            'name': fields.Date.today() - timedelta(days=1),
             'currency_id': self.env.ref('base.USD').id,
             'rate': 1,
         }, {
-            'name': fields.Datetime.today(),
+            'name': fields.Date.today() - timedelta(days=1),
             'currency_id': self.env.ref('base.EUR').id,
             'rate': 0.5,
         }])
