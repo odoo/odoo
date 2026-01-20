@@ -228,6 +228,20 @@ describe(parseUrl(import.meta.url), () => {
         expect(testResult.events.map(({ label }) => label)).toEqual(matchers.map(([name]) => name));
     });
 
+    test("'expect' error handling", async () => {
+        const [customExpect, hooks] = makeExpect({ headless: true });
+
+        hooks.before();
+
+        expect(() => customExpect(undefined).toInclude("3")).toThrow(
+            "expected received value to be of type string, any[] or object, got undefined"
+        );
+
+        const testResult = hooks.after();
+
+        expect(testResult.pass).toBe(false);
+    });
+
     test("assertions are prevented after an error", async () => {
         const [customExpect, hooks] = makeExpect({ headless: true });
 
