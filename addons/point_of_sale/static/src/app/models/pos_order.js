@@ -832,9 +832,13 @@ export class PosOrder extends Base {
         );
     }
 
+    shouldRoundChange() {
+        return this.config.cash_rounding;
+    }
+
     getChange() {
         let { order_sign, order_remaining: remaining } = this.taxTotals;
-        if (this.config.cash_rounding) {
+        if (this.shouldRoundChange()) {
             remaining = this.getRoundedRemaining(this.config.rounding_method, remaining);
         }
         return -order_sign * remaining;
