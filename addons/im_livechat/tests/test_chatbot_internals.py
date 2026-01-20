@@ -167,7 +167,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         member_bot_data = {
             "channel_role": False,
             "create_date": fields.Datetime.to_string(member_bot.create_date),
-            "fetched_message_id": False,
             "id": member_bot.id,
             "livechat_member_type": "bot",
             "last_seen_dt": False,
@@ -223,7 +222,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             channel_data_join["discuss.channel"][0]["member_count"] = 3
             channel_data_join["discuss.channel"][0]["name"] = "Testing Bot"
             channel_data_join["discuss.channel.member"].insert(0, member_bot_data)
-            channel_data_join["discuss.channel.member"][2]["fetched_message_id"] = False
             channel_data_join["discuss.channel.member"][2]["last_seen_dt"] = False
             channel_data_join["discuss.channel.member"][2]["seen_message_id"] = False
             channel_data_join["discuss.channel.member"][2]["unpin_dt"] = False
@@ -297,7 +295,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                     "create_date": fields.Datetime.to_string(
                                         member_emp.create_date
                                     ),
-                                    "fetched_message_id": False,
                                     "id": member_emp.id,
                                     "livechat_member_type": "agent",
                                     "last_seen_dt": fields.Datetime.to_string(
