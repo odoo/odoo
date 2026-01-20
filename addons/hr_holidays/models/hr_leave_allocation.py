@@ -129,14 +129,37 @@ class HrLeaveAllocation(models.Model):
     expiring_carryover_days = fields.Float("The number of carried over days that will expire on carried_over_days_expiration_date")
     carried_over_days_expiration_date = fields.Date("Carried over days expiration date")
     _duration_check = models.Constraint(
-        "CHECK( ( number_of_days > 0 AND allocation_type='regular') or (allocation_type != 'regular'))",
-        'The duration must be greater than 0.',
+        "CHECK( (allocation_type != 'regular') OR (number_of_days IS NOT NULL))",
+        'The duration must be specified for regular allocations.',
     )
 
     @api.constrains('date_from', 'date_to')
     def _check_date_from_date_to(self):
         if any(allocation.date_to and allocation.date_from > allocation.date_to for allocation in self):
             raise UserError(_("The Start Date of the Validity Period must be anterior to the End Date."))
+
+    @api.constrains('number_of_days', 'holiday_status_id', 'allocation_type')
+    def _check_negative_allocation(self):
+        if self.env.context.get('import_file'):
+            for allocation in self.filtered(lambda al: al.allocation_type == 'regular' and al.number_of_days < 0):
+                if not allocation.holiday_status_id.allows_negative:
+                    raise ValidationError(self.env._(
+                        'You cannot import an allocation with a negative value for time off type "%s" '
+                        'as it does not allow negative values.',
+                        allocation.holiday_status_id.name
+                    ))
+                if abs(allocation.number_of_days) > allocation.holiday_status_id.max_allowed_negative:
+                    raise ValidationError(self.env._(
+                        'You cannot import an allocation with a negative value of %(days)s for time off type "%(type)s". '
+                        'The maximum allowed negative value is %(max)s.',
+                        days=abs(allocation.number_of_days),
+                        type=allocation.holiday_status_id.name,
+                        max=allocation.holiday_status_id.max_allowed_negative
+                    ))
+        else:
+            for allocation in self.filtered(lambda al: al.allocation_type == 'regular' and al.number_of_days < 0):
+                raise ValidationError(self.env._('You cannot create or edit an allocation with a negative value directly in the form. '
+                                        'Please use import if you need to create negative allocations.'))
 
     # The compute does not get triggered without a depends on record creation
     # aka keep the 'useless' depends
