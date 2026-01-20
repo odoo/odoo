@@ -162,7 +162,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "channel_id": test_group.id,
                                     "channel_role": False,
                                     "create_date": fields.Datetime.to_string(member.create_date),
-                                    "fetched_message_id": False,
                                     "id": member.id,
                                     "last_seen_dt": False,
                                     "partner_id": self.test_partner.id,
@@ -209,7 +208,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 {
                                     "channel_role": False,
                                     "create_date": fields.Datetime.to_string(member.create_date),
-                                    "fetched_message_id": False,
                                     "id": member.id,
                                     "last_seen_dt": False,
                                     "partner_id": self.test_partner.id,

@@ -210,7 +210,6 @@ export class DiscussChannelMember extends models.ServerModel {
         return [
             "channel_id",
             "create_date",
-            "fetched_message_id",
             "seen_message_id",
             "last_interest_dt",
             "last_seen_dt",
@@ -319,7 +318,6 @@ export class DiscussChannelMember extends models.ServerModel {
             return;
         }
         DiscussChannelMember.write([member.id], {
-            fetched_message_id: message_id,
             seen_message_id: message_id,
             message_unread_counter: DiscussChannelMember._compute_message_unread_counter([
                 member.id,

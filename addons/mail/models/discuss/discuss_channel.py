@@ -1365,39 +1365,6 @@ class DiscussChannel(models.Model):
         """ Return the channel types that load members lazily. """
         return ["channel", "group"]
 
-    def channel_fetched(self):
-        """ Broadcast the channel_fetched notification to channel members
-        """
-        # Avoid serialization error when multiple tabs are opened.
-        # In order to completely avoid any issues with concurrency, the very first thing we do on
-        # the cursor needs to be a SELECT FOR UPDATE
-        fetchable = self.filtered(lambda c: c.channel_type in ('chat', 'whatsapp'))
-        member_query = self.env['discuss.channel.member']._search([('channel_id', 'in', fetchable.ids), ('is_self', '=', True)]).subselect()
-        with self.env.registry.cursor() as cr:
-            cursor_self = self.with_env(self.env(cr=cr))
-            to_update = cursor_self.env.execute_query(SQL("""
-                SELECT id
-                  FROM discuss_channel_member
-                 WHERE id IN (%s)
-                   FOR NO KEY UPDATE SKIP LOCKED
-            """, member_query))
-            members = cursor_self.env['discuss.channel.member'].browse([r[0] for r in to_update])
-            channel2message = members.channel_id._get_last_messages().grouped('channel_id')
-            updated_members_by_channel = defaultdict(cursor_self.env["discuss.channel.member"].browse)
-            for member in members:
-                last_message = channel2message[member.channel_id]
-                if member.fetched_message_id != last_message:
-                    member.fetched_message_id = last_message
-                    updated_members_by_channel[member.channel_id] |= member
-            for channel in updated_members_by_channel:
-                Store(bus_channel=channel).add(
-                    updated_members_by_channel[channel],
-                    lambda res: (
-                        res.attr("fetched_message_id"),
-                        res.from_method("_store_identifying_fields"),
-                    ),
-                ).bus_send()
-
     def channel_set_custom_name(self, name):
         self.ensure_one()
         self.self_member_id.custom_channel_name = name

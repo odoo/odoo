@@ -3,19 +3,15 @@ import {
     contains,
     defineMailModels,
     dragenterFiles,
-    focus,
     insertText,
     isInViewportOf,
-    listenStoreFetch,
     onRpcBefore,
     openDiscuss,
     openFormView,
     scroll,
-    setupChatHub,
     start,
     startServer,
     triggerEvents,
-    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
@@ -270,94 +266,6 @@ test('mention a channel with "&" in the name', async () => {
     await contains(".o-mail-Composer-input", { value: "#General & good " });
     await press("Enter");
     await contains(".o-mail-Message-body .o_channel_redirect:text('General & good')");
-});
-
-test("mark channel as fetched when a new message is loaded", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({
-        email: "fred@example.com",
-        name: "Fred",
-    });
-    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-        channel_type: "chat",
-    });
-    onRpcBefore("/discuss/channel/mark_as_read", (args) => {
-        expect(args.channel_id).toBe(channelId);
-        expect.step("rpc:mark_as_read");
-    });
-    onRpc("discuss.channel", "channel_fetched", ({ args }) => {
-        expect(args[0][0]).toBe(channelId);
-        expect.step("rpc:channel_fetch");
-    });
-    setupChatHub({ opened: [channelId] });
-    listenStoreFetch(["init_messaging", "discuss.channel"]);
-    await start();
-    await waitStoreFetch(["init_messaging", "discuss.channel"]);
-    await contains(".o_menu_systray i[aria-label='Messages']");
-    // send after init_messaging because bus subscription is done after init_messaging
-    withUser(userId, () =>
-        rpc("/mail/message/post", {
-            post_data: { body: "Hello!", message_type: "comment" },
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-        })
-    );
-    await contains(".o-mail-Message");
-    await expect.waitForSteps(["rpc:channel_fetch"]);
-    await contains(".o-mail-ChatWindow .badge:contains(1)");
-    await contains(".o-mail-Message:contains('Hello!')");
-    await focus(".o-mail-Composer-input");
-    await expect.waitForSteps(["rpc:mark_as_read"]);
-});
-
-test.tags("focus required");
-test("mark channel as fetched when a new message is loaded and thread is focused", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-    });
-    let hasMarkAsRead = false;
-    onRpc("/discuss/channel/messages", () => expect.step("/discuss/channel/messages"));
-    onRpcBefore("/discuss/channel/mark_as_read", (args) => {
-        expect(args.channel_id).toBe(channelId);
-        if (!hasMarkAsRead) {
-            expect.step("rpc:mark_as_read");
-            hasMarkAsRead = true;
-        }
-    });
-    onRpc("discuss.channel", "channel_fetched", ({ args }) => {
-        if (args[0] === channelId) {
-            throw new Error(
-                "'channel_fetched' RPC must not be called for created channel as message is directly seen"
-            );
-        }
-    });
-    await start();
-    await openDiscuss(channelId);
-    await expect.waitForSteps(["/discuss/channel/messages"]);
-    await click(".o-mail-Composer");
-    // simulate receiving a message
-    await withUser(userId, () =>
-        rpc("/mail/message/post", {
-            post_data: { body: "<p>Some new message</p>", message_type: "comment" },
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-        })
-    );
-    await contains(".o-mail-Message");
-    await expect.waitForSteps(["rpc:mark_as_read"]);
 });
 
 test("should scroll to bottom on receiving new message if the list is initially scrolled to bottom (asc order)", async () => {

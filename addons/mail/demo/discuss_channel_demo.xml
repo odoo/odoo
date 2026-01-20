@@ -223,14 +223,12 @@
             <field name="partner_id" ref="base.partner_admin"/>
             <field name="channel_id" ref="mail.troubleshooting_sub"/>
             <field name="channel_role" eval="'owner'"/>
-            <field name="fetched_message_id" ref="mail.troubleshooting_message_2"/>
             <field name="seen_message_id" ref="mail.troubleshooting_message_2"/>
             <field name="new_message_separator" eval="ref('mail.troubleshooting_message_2') + 1"/>
         </record>
         <record model="discuss.channel.member" id="mail.demo_member_troubleshooting">
             <field name="partner_id" ref="base.partner_demo"/>
             <field name="channel_id" ref="mail.troubleshooting_sub"/>
-            <field name="fetched_message_id" ref="mail.troubleshooting_message_2"/>
             <field name="seen_message_id" ref="mail.troubleshooting_message_2"/>
             <field name="new_message_separator" eval="ref('mail.troubleshooting_message_2') + 1"/>
         </record>
