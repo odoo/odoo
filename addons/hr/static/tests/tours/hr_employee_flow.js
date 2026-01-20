@@ -27,3 +27,33 @@ registry.category("web_tour.tours").add("hr_employee_tour", {
         },
     ],
 });
+
+registry.category("web_tour.tours").add("hr_officer_create_employee_tour", {
+    url: "/odoo",
+    steps: () => [
+        stepUtils.showAppsMenuItem(),
+        {
+            content: "Open Employees app",
+            trigger: ".o_app[data-menu-xmlid='hr.menu_hr_root']",
+            run: "click",
+        },
+        {
+            trigger: "button.o-kanban-button-new",
+            content: "Create a new employee",
+            run: "click",
+        },
+        {
+            trigger: '.o_field_widget[name="name"] input',
+            content: "Set a Name",
+            run: "edit My Employee",
+        },
+        {
+            content: "Save Employee",
+            trigger: ".o_form_button_save",
+            run: "click",
+        },
+        {
+            trigger: ".o_form_saved",
+        },
+    ],
+});
