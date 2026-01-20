@@ -135,6 +135,7 @@ const {
     Array: { isArray: $isArray },
     clearTimeout,
     Error,
+    Intl: { ListFormat },
     Math: { abs: $abs, floor: $floor },
     Object: { assign: $assign, create: $create, entries: $entries, keys: $keys },
     parseFloat,
@@ -178,7 +179,7 @@ function detailsFromValues(...args) {
  * @param {...unknown} args
  */
 function detailsFromValuesWithDiff(...args) {
-    return [...detailsFromValues(...args), Markup.diff(...args)];
+    return detailsFromValues(...args).concat(Markup.diff(...args));
 }
 
 /**
@@ -2227,10 +2228,17 @@ export class Matcher {
 
         const types = ensureArray(acceptedType);
         if (!types.some((type) => isOfType(this._received, type))) {
+            const joinedTypes =
+                types.length > 1
+                    ? new ListFormat("en-GB", {
+                          type: "disjunction",
+                          style: "long",
+                      }).format(types)
+                    : types[0];
             throw new TypeError(
-                `expected received value to be of type ${listJoin(types, ",", "or").join(
-                    " "
-                )}, got ${formatHumanReadable(this._received)}`
+                `expected received value to be of type ${joinedTypes}, got ${formatHumanReadable(
+                    this._received
+                )}`
             );
         }
 
