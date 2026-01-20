@@ -209,6 +209,7 @@ export class DiscussChannelMember extends models.ServerModel {
     get _to_store_defaults() {
         return [
             "channel_id",
+            "channel_role",
             "create_date",
             "fetched_message_id",
             "seen_message_id",
