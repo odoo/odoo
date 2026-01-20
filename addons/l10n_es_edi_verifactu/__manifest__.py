@@ -9,6 +9,7 @@
     'depends': ['l10n_es'],
     'data': [
         'security/ir.model.access.csv',
+        'security/l10n_es_edi_verifactu_security.xml',
         'wizard/account_move_reversal_views.xml',
         'wizard/account_move_send_views.xml',
         'views/account_move_views.xml',

@@ -257,11 +257,9 @@
                 </cac:Address>
             </cac:DeliveryLocation>
             <cac:DeliveryParty>
-                <cac:Party>
-                    <t t-call="{{PartyType_template}}">
-                        <t t-set="vals" t-value="vals.get('delivery_party_vals', {}).get('party_vals', {})"/>
-                    </t>
-                </cac:Party>
+                <cac:PartyName t-foreach="vals.get('delivery_party_vals', {}).get('party_name_vals')" t-as="party_vals">
+                    <cbc:Name t-out="party_vals.get('name')"/>
+                </cac:PartyName>
             </cac:DeliveryParty>
         </t>
     </template>

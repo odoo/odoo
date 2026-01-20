@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="verifactu_digital_certificate" model="ir.rule">
+        <field name="name">verifactu Digital Certificate</field>
+        <field name="model_id" ref="l10n_es_edi_verifactu.model_l10n_es_edi_verifactu_certificate"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+</odoo>
