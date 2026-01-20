@@ -782,57 +782,41 @@ class HrEmployee(models.Model):
             version = self._get_version(target_date)
             if version.is_fully_flexible:
                 return (0, 24)
-            if version.is_flexible or version.resource_calendar_id._is_duration_based_on_date(target_date) or count_non_working_days:
+            calendar = version.resource_calendar_id
+            duration_based_attendances = calendar.attendance_ids.filtered('duration_based')._filter_by_date(target_date)
+            if version.is_flexible or duration_based_attendances or count_non_working_days:
                 # Quick calculation to center flexible hours around 12PM midday
                 if version.is_flexible:
                     hours_day = version.hours_per_day
                 elif count_non_working_days:
-                    hours_day = version.resource_calendar_id.hours_per_day
+                    hours_day = calendar.hours_per_day
                 else:
-                    hours_day = self.resource_calendar_id._get_duration_based_work_hours_on_date(target_date)
+                    hours_day = sum(duration_based_attendances.mapped('duration_hours'))
                 datetimes = [12.0 - hours_day / 2.0, 12.0, 12.0 + hours_day / 2.0]
                 if day_period:
                     return (datetimes[0], datetimes[1]) if day_period == 'morning' else (datetimes[1], datetimes[2])
                 return (datetimes[0], datetimes[2])
-            calendar = version.resource_calendar_id
 
-        domain = [
-            ('calendar_id', '=', calendar.id),
-        ]
-
-        init_attendances = self.env['resource.calendar.attendance']._read_group(
-            domain=domain,
-            groupby=['dayofweek', 'day_period'],
-            aggregates=['hour_from:min', 'hour_to:max'],
-            order='dayofweek,hour_from:min'
-        )
-
-        init_attendances = [
-            {
-                'hour_from': hour_from,
-                'hour_to': hour_to,
-                'dayofweek': dayofweek,
-                'day_period': day_period,
-            } for dayofweek, day_period, hour_from, hour_to in init_attendances
-        ]
-
-        if day_period:
-            attendances = [att for att in init_attendances if att['day_period'] == day_period]
-            for attendance in filter(lambda att: att['day_period'] == 'full_day', init_attendances):
+        def _filter_by_period(att_list):
+            if not day_period:
+                return list(att_list)
+            result = [att for att in att_list if att['day_period'] == day_period]
+            for attendance in filter(lambda att: att['day_period'] == 'full_day', att_list):
                 attendance.update({
-                    'hour_from': min(attendance['hour_from'], 12) if day_period == 'morning' else 12,
-                    'hour_to': max(attendance['hour_to'], 12) if day_period == 'afternoon' else 12,
+                    'hour_from': min(attendance['hour_from'], 12) if day_period == 'morning' else max(12, attendance['hour_from']),
+                    'hour_to': max(attendance['hour_to'], 12) if day_period == 'afternoon' else min(12, attendance['hour_to']),
                 })
-                attendances.append(attendance)
+                result.append(attendance)
+            return result
 
-        else:
-            attendances = init_attendances
+        fields_needed = ['hour_from', 'hour_to', 'day_period']
+        attendances = _filter_by_period(calendar.attendance_ids._filter_by_date(target_date).read(fields_needed))
+        default_attendances = _filter_by_period(calendar.attendance_ids.read(fields_needed))
 
-        default_start = min((att['hour_from'] for att in attendances), default=0.0)
-        default_end = max((att['hour_to'] for att in attendances), default=0.0)
+        default_start = min((att['hour_from'] for att in default_attendances), default=0.0)
+        default_end = max((att['hour_to'] for att in default_attendances), default=0.0)
 
-        filtered_attendances = [att for att in attendances if int(att['dayofweek']) == target_date.weekday()]
-        hour_from = min((att['hour_from'] for att in filtered_attendances), default=default_start)
-        hour_to = max((att['hour_to'] for att in filtered_attendances), default=default_end)
+        hour_from = min((att['hour_from'] for att in attendances), default=default_start)
+        hour_to = max((att['hour_to'] for att in attendances), default=default_end)
 
         return (hour_from, hour_to)

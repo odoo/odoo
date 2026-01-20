@@ -15,6 +15,7 @@ associated to every resource. It also manages the leaves of every resource.
     'depends': ['base', 'web'],
     'data': [
         'data/resource_data.xml',
+        'data/ir_cron.xml',
         'views/resource_resource_views.xml',
         'views/resource_calendar_leaves_views.xml',
         'views/resource_calendar_attendance_views.xml',

@@ -126,6 +126,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         cls.irregular_calendar = cls.env['resource.calendar'].create({
             'name': 'Irregular Calendar With Gaps',
             'company_id': False,
+            'hours_per_day': 6.6,
+            'hours_per_week': 33,
             'attendance_ids': [(5, 0, 0),
                 ## Hours Per Week: 33, Avg hours_per_day = 6.6, 75% = 4.95
                 (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),

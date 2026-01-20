@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="resource.ResourceCalendarAttendancePopover">
+        <div t-ref="this.popoverRef">
+            <Record t-props="this.currentRecordProps" t-slot-scope="currentRecord">
+                <t t-set="record" t-value="currentRecord.record"/>
+                <div class="o_cw_popover card w-auto">
+                    <div class="card-header popover-header d-flex align-items-baseline py-1 px-2">
+                        <h4 class="m-0 me-auto" t-out="record.data.display_name"/>
+                        <span class="cursor-pointer" t-on-click.stop="this.props.close">
+                            <i class="fa fa-close" />
+                        </span>
+                    </div>
+                    <div class="popover-body o_form_view o_form_nosheet py-0">
+                        <FormRenderer record="record" archInfo="this.props.archInfo" class="'p-0 pt-3'"/>
+                    </div>
+                    <div class="popover-footer d-flex justify-content-between">
+                        <div class="p-3 pt-0 d-flex gap-1 w-100 o_form_nosheet">
+                            <Dropdown t-if="record._values.recurrency">
+                                <button class="o-dropdown-caret btn btn-sm btn-primary">
+                                    Save
+                                </button>
+                                <t t-set-slot="content">
+                                    <DropdownItem
+                                            t-if="!this.hasRecurrencyChanged()"
+                                            tag="'button'"
+                                            class="'btn btn-sm btn-link'"
+                                            onSelected="this.onSave.bind(this, record, 'one')">
+                                        This event
+                                    </DropdownItem>
+                                    <DropdownItem
+                                            t-if="this.isFakeRecord(record)"
+                                            tag="'button'"
+                                            class="'btn btn-sm btn-link'"
+                                            onSelected="this.onSave.bind(this, record, 'following')">
+                                        This and following events
+                                    </DropdownItem>
+                                    <DropdownItem
+                                            t-if="!this.props.delta || !this.isFakeRecord(record)"
+                                            tag="'button'"
+                                            class="'btn btn-sm btn-link'"
+                                            onSelected="this.onSave.bind(this, record)">
+                                        All events
+                                    </DropdownItem>
+                                </t>
+                            </Dropdown>
+                            <button class="btn btn-sm btn-primary"
+                                    t-else=""
+                                    t-on-click="this.onSave.bind(this, record)">
+                                Save
+                            </button>
+                            <button class="btn btn-sm btn-secondary ms-auto"
+                                    t-if="record.dirty || !record.resId"
+                                    t-on-click="this.onDiscard.bind(this, record)">
+                                Discard
+                            </button>
+                            <t t-else="">
+                                <Dropdown t-if="record._values.recurrency">
+                                    <button class="o-dropdown-caret btn btn-sm btn-danger ms-auto">
+                                        Delete
+                                    </button>
+                                    <t t-set-slot="content">
+                                        <DropdownItem
+                                                tag="'button'"
+                                                class="'btn btn-sm btn-link'"
+                                                onSelected="this.onDelete.bind(this, record, 'one')">
+                                            This event
+                                        </DropdownItem>
+                                        <DropdownItem
+                                                t-if="this.isFakeRecord(record)"
+                                                tag="'button'"
+                                                class="'btn btn-sm btn-link'"
+                                                onSelected="this.onDelete.bind(this, record, 'following')">
+                                            This and following events
+                                        </DropdownItem>
+                                        <DropdownItem
+                                                tag="'button'"
+                                                class="'btn btn-sm btn-link'"
+                                                onSelected="this.onDelete.bind(this, record)">
+                                            All events
+                                        </DropdownItem>
+                                    </t>
+                                </Dropdown>
+                                <button class="btn btn-sm ms-auto btn-danger"
+                                        t-else=""
+                                        t-on-click="this.onDelete.bind(this, record)">
+                                    Delete
+                                </button>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </Record>
+        </div>
+    </t>
+</templates>

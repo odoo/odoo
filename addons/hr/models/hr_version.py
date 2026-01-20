@@ -737,7 +737,7 @@ class HrVersion(models.Model):
     def _get_days_per_week(self):
         self.ensure_one()
         if self.resource_calendar_id:
-            return self.resource_calendar_id._get_days_per_week()
+            return self.resource_calendar_id.days_per_week
         if not self.hours_per_day:
             return 0
         return self.hours_per_week / self.hours_per_day
@@ -745,18 +745,18 @@ class HrVersion(models.Model):
     def _get_hours_per_week(self):
         self.ensure_one()
         if self.resource_calendar_id:
-            return self.resource_calendar_id._get_hours_per_week()
+            return self.resource_calendar_id.hours_per_week
         elif self.is_flexible:
             return self.hours_per_week
-        return self.company_id.resource_calendar_id._get_hours_per_week()
+        return self.company_id.resource_calendar_id.hours_per_week
 
     def _get_hours_per_day(self):
         self.ensure_one()
         if self.resource_calendar_id:
-            return self.resource_calendar_id._get_hours_per_day()
+            return self.resource_calendar_id.hours_per_day
         if self.is_flexible:
             return self.hours_per_day
-        return self.company_id.resource_calendar_id._get_hours_per_day()
+        return self.company_id.resource_calendar_id.hours_per_day
 
     def _get_field_block_start_date(self, field_name):
         """
