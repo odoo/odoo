@@ -843,11 +843,16 @@ export class FormOptionPlugin extends Plugin {
      * @returns {string} The default error message.
      */
     defaultMessage(comparator, condition, between, type) {
+        if (["substring", "!substring"].includes(comparator)) {
+            condition = JSON.parse(condition)
+                .map(({ requirement_text }) => requirement_text.trim())
+                .filter(Boolean);
+        }
         const textMessages = {
             contains: _t("This field must include keyword %s.", condition),
             "!contains": _t("This field must not include keyword %s.", condition),
-            substring: _t("This field must include keyword %s.", condition),
-            "!substring": _t("This field must not include keyword %s.", condition),
+            substring: _t("This field must contain one of the keyword(s): '%s'", condition),
+            "!substring": _t("This field must not include the keyword(s): '%s'", condition),
             greater: _t("Invalid: field is not greater than %s.", condition),
             less: _t("Invalid: field is not less than %s.", condition),
             "greater or equal": _t("Invalid: field is not greater than or equal to %s.", condition),

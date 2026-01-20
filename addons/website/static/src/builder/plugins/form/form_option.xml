@@ -315,6 +315,20 @@
             action="'setDefaultErrorMessage'"
             type="'date'"/>
     </BuilderRow>
+    <BuilderRow t-if="isMultipleTextConditionForRequirementOptionVisible">
+        <div class="d-flex flex-column w-100">
+            <p class="hb-row-label mb-0 flex-basis-auto">
+                <t t-out="'Enter words'"/>
+            </p>
+            <BuilderList
+                dataAttributeAction="'requirementCondition'"
+                action="'setDefaultErrorMessage'"
+                addItemTitle.translate="Add"
+                itemShape="{ requirement_text: 'text'}"
+                defaultNewValue="{ requirement_text: 'example' }"
+            />
+        </div>
+    </BuilderRow>
     <BuilderRow label.translate="Error Message" level="1" t-if="isActiveItem('error_message_opt')">
         <BuilderTextInput placeholder.translate="Write custom error message" id="'error_message_input_opt'" dataAttributeAction="'errorMessage'"/>
     </BuilderRow>

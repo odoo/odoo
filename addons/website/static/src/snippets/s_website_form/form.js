@@ -804,9 +804,21 @@ export class Form extends Interaction {
             case "!contains":
                 return !isContains(comparable, value);
             case "substring":
-                return value.includes(comparable);
-            case "!substring":
-                return !value.includes(comparable);
+            case "!substring": {
+                // Parse words from comparable; empty list means no restriction
+                const words = JSON.parse(comparable)
+                    .map(({ requirement_text }) => requirement_text.trim())
+                    .filter(Boolean);
+                // Pass if no words.
+                if (!words.length) {
+                    return true;
+                }
+                // substring: at least one word must be included.
+                // !substring: no word must be included.
+                return comparator === "substring"
+                    ? words.some((w) => value.includes(w))
+                    : words.every((w) => !value.includes(w));
+            }
             case "equal":
             case "selected":
                 return value === comparable;
