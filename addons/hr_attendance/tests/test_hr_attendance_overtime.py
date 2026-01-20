@@ -793,6 +793,38 @@ class TestHrAttendanceOvertime(HttpCase):
         ])
         self.assertAlmostEqual(overtime.duration, 0.1)
 
+    def test_auto_check_out_two_weeks_calendar(self):
+        """Test case: two weeks calendar with different attendances depending on the week. No morning attendance on
+        wednesday of the first week."""
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 0
+        })
+        self.employee.resource_calendar_id.write({
+            'calendar_type': 'variable',
+            'attendance_ids': [(5, 0, 0),
+                               (0, 0, {'date': datetime(2025, 3, 5), 'hour_from': 12, 'hour_to': 16}),
+                               (0, 0, {'date': datetime(2025, 3, 12), 'hour_from': 8, 'hour_to': 16})],
+        })
+
+        with freeze_time("2025-03-05 22:00:00"):
+            att = self.env['hr.attendance'].create({
+                'employee_id': self.employee.id,
+                'check_in': datetime(2025, 3, 5, 8, 0)
+            })
+            self.env['hr.attendance']._cron_auto_check_out()
+            self.assertEqual(att.worked_hours, 4)
+            self.assertEqual(att.check_out, datetime(2025, 3, 5, 12, 0))
+
+        with freeze_time("2025-03-12 22:00:00"):
+            att = self.env['hr.attendance'].create({
+                'employee_id': self.employee.id,
+                'check_in': datetime(2025, 3, 12, 8, 0),
+            })
+            self.env['hr.attendance']._cron_auto_check_out()
+            self.assertEqual(att.worked_hours, 8)
+            self.assertEqual(att.check_out, datetime(2025, 3, 12, 16, 0))
+
     def test_overtime_hours_flexible_resource(self):
         """ Test the computation of overtime hours for a single flexible resource with 8 hours_per_day.
         =========

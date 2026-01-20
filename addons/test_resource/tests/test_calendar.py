@@ -152,6 +152,7 @@ class TestCalendar(TestResourceCommon):
         self.assertEqual(res, 5.0)
 
     def test_calendar_working_hours_24(self):
+        self.calendar_jean.attendance_ids.filtered(lambda a: a.dayofweek == '2').unlink()
         self.att_4 = self.env['resource.calendar.attendance'].create({
             'calendar_id': self.calendar_jean.id,
             'dayofweek': '2',

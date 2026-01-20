@@ -136,6 +136,24 @@ class TestWorkEntryType(TransactionCase):
         self.assertTrue(copies.code.startswith("MYTEST_"))
         self.assertEqual(self.env['hr.work.entry.type'].search_count([('code', '=', copies.code)]), 1)
 
+    def test_get_default_attendance_ids_transfers_work_entry_type(self):
+        """ Calendar copies built from a company's calendar must carry over the
+        attendances' work_entry_type_id, not just their hours. """
+        company = self.env['res.company'].create({'name': 'Test Co'})
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'code': 'TESTATT',
+            'name': 'Test Attendance',
+        })
+        company.resource_calendar_id.attendance_ids.write({'work_entry_type_id': work_entry_type.id})
+
+        new_calendar = self.env['resource.calendar'].create({
+            'name': 'Copied Calendar',
+            'company_id': company.id,
+            'attendance_ids': self.env['resource.calendar']._get_default_attendance_ids(company),
+        })
+        self.assertTrue(new_calendar.attendance_ids)
+        self.assertEqual(set(new_calendar.attendance_ids.mapped('work_entry_type_id')), {work_entry_type}, "All copied attendances should reference the source work_entry_type_id")
+
     def test_copy_work_entry_type_different_countries(self):
         """
         Test that copying work entry types with different countries generates unique codes

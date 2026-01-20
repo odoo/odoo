@@ -270,7 +270,7 @@ class HrLeaveAccrualLevel(models.Model):
     def _compute_yearly_gain(self):
         company_calendar = self.env.company.resource_calendar_id
         hours_per_week = company_calendar.hours_per_week
-        days_per_week = company_calendar._get_days_per_week()
+        days_per_week = company_calendar.days_per_week
         for level in self:
             yearly_gain = 0
             if level.frequency == 'hourly':

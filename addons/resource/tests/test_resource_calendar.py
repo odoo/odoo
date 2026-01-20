@@ -15,17 +15,16 @@ class TestResourceCalendar(TransactionCase):
         """
         calendar = self.env['resource.calendar'].create({
             'name': 'Standard Calendar',
+            'attendance_ids': [(0, 0, {
+                'dayofweek': '2',  # Wednesday
+                'hour_from': 14,   # 18:00 UTC
+                'hour_to': 17,     # 21:00 UTC
+            })],
         })
         resource = self.env['resource.resource'].create({
             'name': 'Wade Wilson',
             'calendar_id': False,  # Fully-flexible because no calendar is set
             'tz': 'America/New_York',  # -04:00 UTC offset in the summer
-        })
-        self.env['resource.calendar.attendance'].create({
-            'calendar_id': calendar.id,
-            'dayofweek': '2',  # Wednesday
-            'hour_from': 14,   # 18:00 UTC
-            'hour_to': 17,     # 21:00 UTC
         })
         start_dt = datetime(2025, 6, 4, 18, 0, 0).astimezone(UTC)
         end_dt = datetime(2025, 6, 4, 21, 0, 0).astimezone(UTC)
