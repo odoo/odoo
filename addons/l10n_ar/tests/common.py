@@ -594,11 +594,30 @@ class TestArCommon(AccountTestInvoicingCommon):
             }
         }
 
-        for invoice_key, invoice_values in test_invoices_map.items():
-            invoice_values.setdefault('invoice_payment_term_id', cls.env.ref("account.account_payment_term_end_following_month"))
-            if use_current_date:
+        if use_current_date:
+            for invoice_key, invoice_values in test_invoices_map.items():
                 invoice_values.pop('invoice_date')
-            cls.demo_invoices[invoice_key] = cls._create_invoice_ar(**invoice_values)
+                cls.demo_invoices[invoice_key] = cls._create_invoice_ar(**invoice_values)
+        else:
+            for key, values in test_invoices_map.items():
+                values['invoice_line_ids'] = [line_data for _, _, line_data in values['invoice_line_ids']]
+                with Form(cls.env['account.move'].with_context(default_move_type=values['move_type'])) as invoice_form:
+                    invoice_form.ref = values['ref']
+                    invoice_form.partner_id = values['partner_id']
+                    invoice_form.invoice_payment_term_id = values['invoice_payment_term_id']
+                    invoice_form.invoice_date = values['invoice_date']
+                    if values.get('invoice_incoterm_id'):
+                        invoice_form.invoice_incoterm_id = values['invoice_incoterm_id']
+                    for line in values['invoice_line_ids']:
+                        with invoice_form.invoice_line_ids.new() as line_form:
+                            line_form.product_id = cls.env['product.product'].browse(line.get('product_id'))
+                            line_form.price_unit = line.get('price_unit')
+                            line_form.quantity = line.get('quantity')
+                            if line.get('tax_ids'):
+                                line_form.tax_ids = cls.env['account.tax'].browse(line.get('tax_ids'))
+                            line_form.name = 'xxxx'
+                            line_form.account_id = cls.company_data['default_account_revenue']
+                cls.demo_invoices[key] = invoice_form.save()
 
     # -------------------------------------------------------------------------
     # Helpers
