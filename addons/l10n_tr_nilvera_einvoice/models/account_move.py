@@ -1,6 +1,5 @@
 import base64
 import uuid
-from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 from urllib.parse import quote, urlencode, urlparse
 
@@ -285,25 +284,11 @@ class AccountMove(models.Model):
                     else:
                         invoice.message_post(body=_("The invoice status couldn't be retrieved from Nilvera."))
 
-    def _get_nilvera_last_fetch_date(self, invoice_channel, journal_type):
-        """
-        Fetches the last fetched date for Nilvera e-invoice synchronization specific to the
-        current company. If no value exists, it sets a default date of one month prior to
-        the current date, stores it, and returns it.
-        """
-        # A config param is used to be able to store the date in stable. One for einvoice and one for earchive.
-        # Should be removed in master and replaced with two date fields on the company.
-        param_key = f"l10n_tr_nilvera_{invoice_channel}_{journal_type}.last_fetched_date.{self.env.company.id}"
-        last_fetched_date = self.env['ir.config_parameter'].sudo().get_param(param_key)
-        if not last_fetched_date:
-            last_fetched_date = (fields.Date.today() - relativedelta(months=1)).strftime("%Y-%m-%d")
-            self.env['ir.config_parameter'].sudo().set_param(param_key, last_fetched_date)
-        return last_fetched_date
-
     def _l10n_tr_nilvera_get_documents(self, invoice_channel="einvoice", document_category="Purchase", journal_type="purchase"):
         with _get_nilvera_client(self.env.company) as client:
             endpoint = f"/{invoice_channel}/{quote(document_category)}"
-            start_date = self._get_nilvera_last_fetch_date(invoice_channel, journal_type)
+            last_fetched_date_field_name = f"l10n_tr_{invoice_channel}_{journal_type}_last_fetched_date"
+            start_date = self.env.company[last_fetched_date_field_name]
             end_date = fields.Datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
             page = 1
 
@@ -327,7 +312,6 @@ class AccountMove(models.Model):
 
             moves = self.env['account.move']
             journal = self._l10n_tr_get_nilvera_invoice_journal(journal_type)
-            date_param_key = f"l10n_tr_nilvera_{invoice_channel}_{journal_type}.last_fetched_date.{self.env.company.id}"
             while page <= total_pages:
                 # Reuse first response, fetch subsequent pages.
                 if page > 1:
@@ -351,7 +335,7 @@ class AccountMove(models.Model):
                     self._l10n_tr_nilvera_add_pdf_to_invoice(client, move, document_uuid, document_category, invoice_channel)
                     moves |= move
                     # Update the last fetched date.
-                    self.env['ir.config_parameter'].sudo().set_param(date_param_key, created_date)
+                    self.env.company.write({last_fetched_date_field_name: created_date[:19].replace('T', ' ')})
                     self.env.cr.commit()
                 page += 1
             journal._notify_einvoices_received(moves)
