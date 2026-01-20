@@ -261,6 +261,10 @@ export class AddSnippetDialog extends Component {
                         || !!snippet.baseBody.querySelector(".parallax");
                     snippetLabel = hasParallax ? _t("Parallax") : "";
                 }
+                if (snippet.isCustom && !snippetLabel && originalSnippet?.label
+                    && originalSnippet.label !== "Parallax") {
+                    snippetLabel = originalSnippet.label;
+                }
                 if (snippetLabel) {
                     snippetPreviewWrapEl.dataset.label = snippetLabel;
                 }
