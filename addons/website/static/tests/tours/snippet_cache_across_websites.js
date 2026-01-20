@@ -16,7 +16,11 @@ registerWebsitePreviewTour('snippet_cache_across_websites', {
     },
     {
         content: "Ensure custom snippet preview appeared in the dialog",
-        trigger: ":iframe .o_snippet_preview_wrap[data-snippet-id^='s_text_block_'] section[data-name='custom_snippet_test']",
+        trigger: ":iframe .o_snippet_preview_wrap[data-snippet-id^='s_carousel_'] section[data-name='custom_snippet_test']",
+    },
+    {
+        content: "Ensure custom snippet preview shows the base label",
+        trigger: ":iframe .o_snippet_preview_wrap[data-snippet-id^='s_carousel_'][data-label='Carousel']",
     },
     {
         content: "Close the 'add snippet' dialog",
