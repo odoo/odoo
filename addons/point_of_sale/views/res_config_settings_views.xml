@@ -405,11 +405,11 @@
                                     <div class="content-group" invisible="not pos_other_devices">
                                         <div class="mt16 mb-1">
                                             <label string="Printers" for="pos_receipt_printer_ids" class="o_light_label me-2"/>
-                                            <field name="pos_receipt_printer_ids" widget="many2many_tags"/>
+                                            <field name="pos_receipt_printer_ids" widget="many2many_tags" context="{'default_use_type': 'receipt'}"/>
                                         </div>
                                         <div class="mt16 mb-1">
                                             <label string="Default" for="pos_default_receipt_printer_id" class="o_light_label me-2"/>
-                                            <field name="pos_default_receipt_printer_id" domain="[('id', 'in', pos_receipt_printer_ids)]"/>
+                                            <field name="pos_default_receipt_printer_id" domain="[('id', 'in', pos_receipt_printer_ids)]" required="pos_other_devices"/>
                                         </div>
                                         <div class="mt16 mb-1">
                                             <label string="Link Cashdrawer" for="pos_iface_cashdrawer" class="o_light_label me-2"/>
@@ -440,7 +440,8 @@
                                             <div class="col-lg-5">
                                                 <field name="pos_preparation_printer_ids"
                                                     class="w-100 pt-1"
-                                                    widget="many2many_tags"/>
+                                                    widget="many2many_tags"
+                                                    context="{'default_use_type': 'preparation'}"/>
                                             </div>
                                             <div>
                                                 <button name="action_pos_printer_dialog"
