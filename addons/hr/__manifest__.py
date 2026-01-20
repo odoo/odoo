@@ -11,6 +11,7 @@
         'static/src/img/default_image.png',
     ],
     'depends': [
+        'base_geolocalize',
         'base_setup',
         'digest',
         'phone_validation',
