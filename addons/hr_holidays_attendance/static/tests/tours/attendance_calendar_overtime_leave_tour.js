@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add("request_overtime_leave_from_attendance_
             run: "click",
         },
         {
-            isActive: ['hr_attendance_gantt'],
+            isActive: ['hr_attendance_enterprise'],
             content: "Switch to Calendar View",
             trigger: ".o_switch_view.o_calendar",
             run: "click",
