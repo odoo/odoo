@@ -721,8 +721,16 @@ test("[text composer] Opening thread with needaction messages should mark all me
             ["res_id", "=", channelId],
         ]);
     });
+    pyEnv["mail.message"].create({
+        body: "Hello there!",
+        model: "discuss.channel",
+        res_id: channelId,
+        author_id: partnerId,
+    });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-mail-Message:contains('Hello there!)");
+    await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-Composer-input");
     await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]);
     await click("button:text('Inbox')");
