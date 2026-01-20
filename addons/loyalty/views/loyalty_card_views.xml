@@ -91,7 +91,11 @@
         <field name="name">Coupons</field>
         <field name="res_model">loyalty.card</field>
         <field name="view_mode">list,form</field>
-        <field name="domain">[('program_id', '=', active_id)]</field>
+        <field name="domain">[
+            '&amp;', ('program_id', '=', active_id),
+            '|', ('program_id.program_type', '=', 'coupons'),
+            '|', ('program_id.applies_on', '!=', 'current'), ('use_count', '&gt;', 0),
+        ]</field>
         <field name="context">{'create': False}</field>
         <field name="help" type="html">
             <h1>No Coupons Found.</h1>
