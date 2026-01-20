@@ -9,6 +9,12 @@ import {
 } from "@website/../tests/builder/website_helpers";
 import { patchDragImage } from "@website/../tests/builder/image_test_helpers";
 
+const RGB_RED = "rgb(255, 0, 0)";
+const RGB_BLUE = "rgb(0, 0, 255)";
+const RGB_GREEN = "rgb(0, 255, 0)";
+const HEX_BLUE = "#0000ff";
+const HEX_GREEN = "#00ff00";
+
 defineWebsiteModels();
 
 test("change the background shape of elements", async () => {
@@ -34,9 +40,11 @@ test("change the background shape of elements", async () => {
     await setupWebsiteBuilder(`
         <div class="selector">
             <div id="first" class="applyTo" data-oe-shape-data='{"shape":"html_builder/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>
+                <div class="o_we_shape o_html_builder_Connections_01"></div>
                 AAAA
             </div>
             <div id="second" class="applyTo" data-oe-shape-data='{"shape":"html_builder/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>
+                <div class="o_we_shape o_html_builder_Connections_01"></div>
                 BBBB
             </div>
         </div>`);
@@ -50,17 +58,18 @@ test("change the background shape of elements", async () => {
     ).click();
     expect(":iframe .selector div#first").toHaveAttribute(
         "data-oe-shape-data",
-        '{"shape":"html_builder/Connections/02","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'
+        '{"shape":"html_builder/Connections/02","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0","selectedColor":true}'
     );
     expect(":iframe .selector div#second").toHaveAttribute(
         "data-oe-shape-data",
-        '{"shape":"html_builder/Connections/02","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'
+        '{"shape":"html_builder/Connections/02","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0","selectedColor":true}'
     );
 });
 
 test("remove background shape", async () => {
     await setupWebsiteBuilder(`
         <section data-oe-shape-data='{"shape":"html_builder/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>
+            <div class="o_we_shape o_html_builder_Connections_01"></div>
             AAAA
         </section>`);
     await contains(":iframe section").click();
@@ -438,6 +447,7 @@ test("change background size", async () => {
 test("background shape detection is compatible with previous ones (web_editor)", async () => {
     await setupWebsiteBuilder(`
         <section data-oe-shape-data='{"shape":"web_editor/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>
+            <div class="o_we_shape o_html_builder_Connections_01"></div>
             AAAA
         </section>`);
     await contains(":iframe section").click();
@@ -447,4 +457,201 @@ test("background shape detection is compatible with previous ones (web_editor)",
         "data-action-value",
         "html_builder/Connections/01"
     );
+});
+
+test("Connections shape updates when neighbor snippet visibility updates", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `
+        <main>
+            <section id="section1" data-snippet="s_snippet"
+                    data-oe-shape-data='{"shape":"html_builder/Connections/01","colors":{"c5":"${RGB_RED}"},"flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0", "selectedColor":false}'>
+                <div class="o_we_shape o_html_builder_Connections_01"></div>
+                Section 1
+            </section>
+            <section id="section2" style="background-color: ${RGB_BLUE};" data-snippet="s_snippet">
+                Section 2
+            </section>
+            <section id="section3" style="background-color: ${RGB_GREEN};" data-snippet="s_snippet">
+                Section 3
+            </section>
+        </main>
+    `,
+        {
+            loadIframeBundles: true,
+        }
+    );
+    await contains(":iframe #section2").click();
+    await contains(
+        "[data-action-id='toggleDeviceVisibility'][data-action-param='no_desktop']"
+    ).click();
+    await waitSidebarUpdated();
+    const shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
+    expect(shapeData.colors.c5).toBe(HEX_GREEN);
+});
+
+test("Connections shape updates when switching to mobile view", async () => {
+    await setupWebsiteBuilder(
+        `
+        <main>
+            <section id="section1" data-snippet="s_snippet"
+                    data-oe-shape-data='{"shape":"html_builder/Connections/01","colors":{"c5":"${RGB_RED}"},"flip":[],"showOnMobile":true,"shapeAnimationSpeed":"0", "selectedColor":false}'>
+                <div class="o_we_shape o_html_builder_Connections_01"></div>
+                Section 1
+            </section>
+            <section id="section2" class="d-none o_snippet_mobile_invisible d-lg-block" style="background-color: ${RGB_BLUE};" data-snippet="s_snippet">
+                Section 2
+            </section>
+            <section id="section3" class="d-lg-none o_snippet_desktop_invisible" style="background-color: ${RGB_GREEN};" data-snippet="s_snippet">
+                Section 3
+            </section>
+        </main>
+    `,
+        {
+            loadIframeBundles: true,
+        }
+    );
+    await contains("[data-action='mobile']").click();
+    const shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
+    expect(shapeData.colors.c5).toBe(HEX_GREEN);
+});
+
+test("Connections shape do not update when switching to mobile view if background shape is not visible in mobile", async () => {
+    await setupWebsiteBuilder(
+        `
+        <main>
+            <section id="section1" data-snippet="s_snippet"
+                    data-oe-shape-data='{"shape":"html_builder/Connections/01","colors":{"c5":"${RGB_RED}"},"flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0", "selectedColor":false}'>
+                <div class="o_we_shape o_html_builder_Connections_01"></div>
+                Section 1
+            </section>
+            <section id="section2" class="d-none o_snippet_mobile_invisible d-lg-block" style="background-color: ${RGB_BLUE};" data-snippet="s_snippet">
+                Section 2
+            </section>
+            <section id="section3" class="d-lg-none o_snippet_desktop_invisible" style="background-color: ${RGB_GREEN};" data-snippet="s_snippet">
+                Section 3
+            </section>
+        </main>
+    `,
+        {
+            loadIframeBundles: true,
+        }
+    );
+    await contains(":iframe #section1").click();
+    let shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
+    expect(shapeData.colors.c5).toBe(HEX_BLUE);
+    await contains("[data-action='mobile']").click();
+    shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
+    expect(shapeData.colors.c5).toBe(HEX_BLUE);
+});
+
+test("Connections shape do not update when switching background color of neighbor invisible element", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `
+        <main>
+            <section id="section1" data-snippet="s_snippet"
+                    data-oe-shape-data='{"shape":"html_builder/Connections/01","colors":{"c5":"${RGB_BLUE}"},"flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0", "selectedColor":false}'>
+                <div class="o_we_shape o_html_builder_Connections_01"></div>
+                Section 1
+            </section>
+            <section id="section2" class="d-lg-none o_snippet_desktop_invisible o_snippet_override_invisible" style="background-color: ${RGB_BLUE};" data-snippet="s_snippet">
+                Section 2
+            </section>
+            <section id="section3" style="background-color: ${RGB_BLUE};" data-snippet="s_snippet">
+                Section 3
+            </section>
+        </main>
+    `,
+        {
+            loadIframeBundles: true,
+        }
+    );
+    await contains(":iframe #section2").click();
+    await contains(".o_we_color_preview").click();
+    await contains(`[data-color='o_cc4']`).click();
+    await waitSidebarUpdated();
+    const shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
+    expect(shapeData.colors.c5).toBe(HEX_BLUE);
+});
+
+test("Connections shape do not update if it is inside an invisible element", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `
+        <main>
+            <section id="section1" data-snippet="s_snippet"
+                    data-oe-shape-data='{"shape":"html_builder/Connections/01","colors":{"c5":"${RGB_BLUE}"},"flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0", "selectedColor":false}'>
+                <div class="o_we_shape o_html_builder_Connections_01"></div>
+                Section 1
+            </section>
+            <section id="section2" style="background-color: ${RGB_BLUE};" data-snippet="s_snippet">
+                Section 2
+            </section>
+            <section id="section3" style="background-color: ${RGB_GREEN};" data-snippet="s_snippet">
+                Section 3
+            </section>
+        </main>
+    `,
+        {
+            loadIframeBundles: true,
+        }
+    );
+    await contains(":iframe #section1").click();
+    await contains(".overlay .fa-angle-down").click();
+    let shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
+    expect(shapeData.colors.c5).toBe(HEX_GREEN);
+    await contains(
+        "[data-action-id='toggleDeviceVisibility'][data-action-param='no_desktop']"
+    ).click();
+    await waitSidebarUpdated();
+    await contains(".o_we_invisible_entry").click();
+    await contains(".overlay .fa-angle-up").click();
+    shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
+    expect(shapeData.colors.c5).toBe(HEX_GREEN);
+});
+
+test("Previewed shape has the correct color when no shape is applied", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `
+        <section id="section1" data-snippet="s_snippet">
+            Section 1
+        </section>
+        <section id="section2" style="background-color: ${RGB_BLUE};" data-snippet="s_snippet">
+            Section 2
+        </section>
+    `,
+        {
+            loadIframeBundles: true,
+        }
+    );
+    await contains(":iframe #section1").click();
+    await contains("[data-label='Shape'] button").click();
+    await waitSidebarUpdated();
+    expect(getComputedStyle(queryOne(".o_html_builder_Connections_01")).backgroundImage).toInclude(
+        encodeURIComponent(HEX_BLUE)
+    );
+});
+
+test("Previewed shape has the correct color and flip when a shape is applied", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `
+        <section id="section1" style="background-color: ${RGB_BLUE};" data-snippet="s_snippet">
+                Section 1
+            </section>
+        <section id="section2" data-snippet="s_snippet"
+                    data-oe-shape-data='{"shape":"html_builder/Connections/01","colors":{"c5":"${RGB_BLUE}"},"flip":["x", "y"],"showOnMobile":false,"shapeAnimationSpeed":"0", "selectedColor":false}'>
+                <div class="o_we_shape o_html_builder_Connections_01"></div>
+            Section 2
+        </section>
+    `,
+        {
+            loadIframeBundles: true,
+        }
+    );
+    await contains(":iframe #section2").click();
+    await contains("[data-label='Shape'] button").click();
+    await waitSidebarUpdated();
+    const shapePreviewStyle = getComputedStyle(
+        queryOne(".o_html_builder_Connections_01")
+    ).backgroundImage;
+    expect(shapePreviewStyle).toInclude(encodeURIComponent(HEX_BLUE));
+    expect(shapePreviewStyle).toInclude("flip=xy");
 });

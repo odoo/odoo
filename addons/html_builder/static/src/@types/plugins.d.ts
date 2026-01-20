@@ -31,6 +31,7 @@ declare module "plugins" {
     import { so_content_addition_selector, so_snippet_addition_selector } from "@html_builder/core/dropzone_selector_plugin";
     import { fontCssVariables } from "@html_builder/plugins/font/font_plugin";
     import { apply_custom_css_style } from "@html_builder/core/core_builder_action_plugin";
+    import { on_bg_color_updated_handlers } from "@html_builder/plugins/background/background_color_option_plugin";
 
     interface SharedMethods {
         // Main
@@ -69,6 +70,7 @@ declare module "plugins" {
         before_setup_editor_handlers: before_setup_editor_handlers;
         change_current_options_containers_listeners: change_current_options_containers_listeners;
         default_shape_handlers: default_shape_handlers;
+        on_bg_color_updated_handlers: on_bg_color_updated_handlers;
         on_bg_image_hide_handlers: on_bg_image_hide_handlers;
         on_cloned_handlers: on_cloned_handlers;
         on_element_dragged_handlers: on_element_dragged_handlers;

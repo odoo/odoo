@@ -2,12 +2,12 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { toRatio } from "@html_builder/utils/utils";
 import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
 import { _t } from "@web/core/l10n/translation";
-import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
+import { BackgroundShapeSelector } from "./background_shape_selector";
 
 export class BackgroundShapeOption extends BaseOptionComponent {
     static template = "html_builder.BackgroundShapeOption";
     static dependencies = ["backgroundShapeOption"];
-    static components = { ShapeSelector };
+    static components = { BackgroundShapeSelector };
     setup() {
         super.setup();
         this.backgroundShapePlugin = this.dependencies.backgroundShapeOption;
