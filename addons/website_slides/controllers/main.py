@@ -996,13 +996,8 @@ class WebsiteSlides(WebsiteProfile):
         if slide.is_category:
             return request.redirect(slide.channel_id.website_absolute_url)
 
-        if slide.can_self_mark_completed and not slide.user_has_completed \
-           and slide.channel_id.channel_type == 'training' and slide.slide_category != 'video':
-            self._slide_mark_completed(slide)
-            next_category_to_open = slide._get_next_category()
-        else:
-            self._set_viewed_slide(slide)
-            next_category_to_open = False
+        self._set_viewed_slide(slide)
+        next_category_to_open = False
 
         values = self._get_slide_detail(slide)
         # quiz-specific: update with karma and quiz information

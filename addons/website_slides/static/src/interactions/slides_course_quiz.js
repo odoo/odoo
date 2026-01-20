@@ -134,8 +134,8 @@ export class WebsiteSlidesQuiz extends Interaction {
         for (const el of this.el.querySelectorAll(".o_wslides_js_lesson_quiz_question")) {
             el.classList.add("completed-disabled");
         }
-        for (const el of this.el.querySelectorAll("input[type='radio'")) {
-            el.disabled = this.slide.completed;
+        for (const el of this.el.querySelectorAll("input[type='radio']:not(:checked)")) {
+            el.disabled = true;
         }
     }
 
@@ -147,24 +147,24 @@ export class WebsiteSlidesQuiz extends Interaction {
         for (const questionEl of this.el.querySelectorAll(".o_wslides_js_lesson_quiz_question")) {
             const questionId = Number(questionEl.dataset.questionId);
             const isCorrect = this.quiz.answers[questionId].is_correct;
-            for (const answerEl of questionEl.querySelectorAll("a.o_wslides_quiz_answer")) {
+            for (const answerEl of questionEl.querySelectorAll(".o_wslides_quiz_answer")) {
                 for (const iconEl of answerEl.querySelectorAll("i.fa")) {
                     iconEl.classList.add("d-none");
                 }
-                if (answerEl.querySelector("input[type=radio]").checked) {
+                const labelEl = answerEl.querySelector("label");
+                const inputEl = answerEl.querySelector("input[type=radio]");
+                labelEl.classList.remove("bg-success-subtle", "bg-danger-subtle");
+                inputEl.classList.remove("bg-success", "bg-danger", "border-success", "border-danger");
+                if (inputEl.checked) {
                     if (isCorrect) {
-                        answerEl.classList.remove("list-group-item-danger");
-                        answerEl.classList.add("list-group-item-success");
-                        answerEl.querySelector("i.fa-check-circle").classList.remove("d-none");
+                        labelEl.classList.add("bg-success-subtle");
+                        inputEl.classList.add("bg-success", "border-success");
+                        answerEl.querySelector("i.fa-check").classList.remove("d-none");
                     } else {
-                        answerEl.classList.remove("list-group-item-success");
-                        answerEl.classList.add("list-group-item-danger");
-                        answerEl.querySelector("i.fa-times-circle").classList.remove("d-none");
-                        answerEl.querySelector("label input").checked = false;
+                        labelEl.classList.add("bg-danger-subtle");
+                        inputEl.classList.add("bg-danger", "border-danger");
+                        answerEl.querySelector("i.fa-times").classList.remove("d-none");
                     }
-                } else {
-                    answerEl.classList.remove("list-group-item-danger", "list-group-item-success");
-                    answerEl.querySelector("i.fa-circle").classList.remove("d-none");
                 }
             }
             const comment = this.quiz.answers[questionId].comment;
@@ -225,8 +225,8 @@ export class WebsiteSlidesQuiz extends Interaction {
             rankProgress: rankProgress,
         });
 
+        this.disableAnswers();
         if (this.slide.completed) {
-            this.disableAnswers();
             this.dialog.add(SlideQuizFinishDialog, {
                 quiz: this.quiz,
                 hasNext: this.slide.hasNext,
@@ -248,8 +248,9 @@ export class WebsiteSlidesQuiz extends Interaction {
      * When clicking on an answer, this one should be marked as "checked".
      */
     onAnswerClick(event) {
-        if (!this.slide.completed) {
-            event.currentTarget.querySelector("input[type=radio]").checked = true;
+        const input = event.currentTarget.querySelector("input[type=radio]");
+        if (!input.disabled && !this.slide.completed) {
+            input.checked = true;
         }
 
         // uncomment this to make answers persistent between reloads
@@ -297,7 +298,7 @@ export class WebsiteSlidesQuiz extends Interaction {
             return;
         }
         for (const questionEl of this.el.querySelectorAll(".o_wslides_js_lesson_quiz_question")) {
-            for (const answerEl of questionEl.querySelectorAll("a.o_wslides_quiz_answer")) {
+            for (const answerEl of questionEl.querySelectorAll(".o_wslides_quiz_answer")) {
                 if (
                     !answerEl.querySelector("input[type=radio]").checked &&
                     this.quiz.sessionAnswers.includes(Number(answerEl.dataset.answerId))

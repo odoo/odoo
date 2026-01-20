@@ -36,8 +36,8 @@
                                 <span t-out="slide_categories.get('search_slide_category', '-')" t-att-title="slide_categories.get('search_slide_category', '-')"/>
                             </a>
                         </li>
-                        <li t-if="slide" class="breadcrumb-item active d-none d-md-block">
-                            <a t-att-href="'/slides/slide/%s' % slug(slide)"><span t-out="slide.name" t-att-title="slide.name"/></a>
+                        <li t-if="slide" class="breadcrumb-item active d-none d-md-block" aria-current="page">
+                            <span t-out="slide.name" t-att-title="slide.name"/>
                         </li>
                     </ol>
                 </nav>
