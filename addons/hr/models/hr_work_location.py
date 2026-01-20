@@ -13,7 +13,7 @@ class HrWorkLocation(models.Model):
 
     active = fields.Boolean(default=True)
     name = fields.Char(string="Work Location", required=True)
-    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company, index=True)
     location_type = fields.Selection([
         ('home', 'Home'),
         ('office', 'Office'),
@@ -21,6 +21,8 @@ class HrWorkLocation(models.Model):
     icon = fields.Char(compute='_compute_icon')
     address_id = fields.Many2one('res.partner', string="Work Address", check_company=True)
     location_number = fields.Char()
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
+    country_code = fields.Char(related='company_id.country_id.code', depends=['company_id'])
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used_by_employee(self):
