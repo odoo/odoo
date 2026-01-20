@@ -16,10 +16,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     carrier_id = fields.Many2one(
         'delivery.carrier',
         string="Shipping Method",
-        compute='_compute_carrier_id',
-        store=True,
         required=True,
-        readonly=False,
         domain="[('id', 'in', available_carrier_ids)]",
     )
     delivery_type = fields.Selection(related='carrier_id.delivery_type')
@@ -67,18 +64,6 @@ class ChooseDeliveryCarrier(models.TransientModel):
         for rec in self:
             carriers = self.env['delivery.carrier'].search(self.env['delivery.carrier']._check_company_domain(rec.order_id.company_id))
             rec.available_carrier_ids = carriers.available_carriers(rec.order_id.partner_shipping_id, rec.order_id) if rec.partner_id else carriers
-
-    @api.depends('partner_id', 'available_carrier_ids', 'company_id')
-    def _compute_carrier_id(self):
-        for rec in self:
-            if not rec.partner_id or not rec.company_id:
-                rec.carrier_id = False
-                continue
-            partner_carrier = (
-                rec.with_company(rec.company_id).partner_id.property_delivery_carrier_id
-                or rec.with_company(rec.company_id).partner_id.commercial_partner_id.property_delivery_carrier_id
-            )
-            rec.carrier_id = partner_carrier if partner_carrier and partner_carrier.id in rec.available_carrier_ids.ids else False
 
     def _get_delivery_rate(self):
         vals = self.carrier_id.with_context(order_weight=self.total_weight).rate_shipment(self.order_id)
