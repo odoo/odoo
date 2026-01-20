@@ -51,7 +51,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             'company_id': cls.company_data['company'].id,
             'country_id': cls.env.ref('base.lu').id,
             'peppol_eas': '9938',
-            'peppol_endpoint': '00005000041',
+            'peppol_endpoint': 'LU05000041',
             **kwargs,
         })
 
