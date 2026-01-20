@@ -1102,13 +1102,23 @@ class ProjectTask(models.Model):
                 self.env[field.comodel_name].browse(value).check_access('read')
 
     def _set_stage_on_project_from_task(self):
-        stage_ids_per_project = defaultdict(list)
-        for task in self:
-            if task.stage_id and task.stage_id not in task.project_id.type_ids and task.stage_id.id not in stage_ids_per_project[task.project_id]:
-                stage_ids_per_project[task.project_id].append(task.stage_id.id)
+        tasks_with_stage = self.filtered(lambda t: t.stage_id and t.project_id)
+        if not tasks_with_stage:
+            return
 
-        for project, stage_ids in stage_ids_per_project.items():
-            project.write({'type_ids': [Command.link(stage_id) for stage_id in stage_ids]})
+        missing_stages_per_project = {
+            project: tasks.stage_id - project.type_ids
+            for project, tasks in tasks_with_stage.grouped('project_id').items()
+        }
+        project_ids_per_missing_stage_ids = defaultdict(set)
+        for project, missing_stages in missing_stages_per_project.items():
+            if missing_stages:
+                project_ids_per_missing_stage_ids[frozenset(missing_stages.ids)].add(project.id)
+
+        for stage_ids, project_ids in project_ids_per_missing_stage_ids.items():
+            self.env['project.project'].browse(project_ids).write({
+                'type_ids': [Command.link(stage_id) for stage_id in stage_ids],
+            })
 
     def _load_records_create(self, vals_list):
         for vals in vals_list:
