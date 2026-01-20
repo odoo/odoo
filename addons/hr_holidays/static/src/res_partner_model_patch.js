@@ -9,7 +9,7 @@ const { DateTime } = luxon;
 export function getOutOfOfficeDateEndText(datetime) {
     const foptions = { ...DateTime.DATE_MED };
     const dt = typeof datetime === "string" ? deserializeDateTime(datetime) : datetime;
-    if (dt.year === DateTime.now().year) {
+    if (DateTime.now().hasSame(dt, "year")) {
         foptions.year = undefined;
     }
     const fdate = dt.toLocaleString(foptions);
