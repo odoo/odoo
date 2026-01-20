@@ -61,6 +61,12 @@ export class AddSnippetDialog extends Component {
                     this.iframeRef.el.addEventListener("load", resolve, { once: true });
                 });
             }
+
+            // Ensure preview styles are applied before mounting the snippets.
+            // Otherwise layout-dependent measurements (e.g., carousel height in
+            // preview) can be wrong.
+            await this.insertStyle();
+
             this.renderIframeHead();
             const iframeDocument = this.iframeRef.el.contentDocument;
             iframeDocument.body.parentElement.classList.add("o_add_snippets_preview");
@@ -73,7 +79,6 @@ export class AddSnippetDialog extends Component {
             });
             root.mount(iframeDocument.body);
 
-            await this.insertStyle();
             this.insertColorScheme();
             this.state.showIframe = true;
         });
