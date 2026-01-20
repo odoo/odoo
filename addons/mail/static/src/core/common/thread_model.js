@@ -382,7 +382,7 @@ export class Thread extends Record {
         let res;
         try {
             res = await this.fetchMessagesData({ after, around, before });
-            this.hasLoadingFailedCause = undefined;
+            this.hasLoadingFailedError = undefined;
             this.hasLoadingFailed = false;
         } catch (e) {
             this.hasLoadingFailed = true;
