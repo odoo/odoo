@@ -180,3 +180,10 @@ export function checkProductOutOfStock(productName) {
         trigger: `.o_self_product_box:has(span:contains('${productName}')):has(div:contains('Out of stock'))`,
     };
 }
+
+export function isShown() {
+    return {
+        content: "Check whether the Product List page is displayed",
+        trigger: ".o_self_product_list_page",
+    };
+}

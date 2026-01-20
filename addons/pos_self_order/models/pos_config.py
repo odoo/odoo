@@ -154,7 +154,13 @@ class PosConfig(models.Model):
             if (not vals.get('module_pos_restaurant') and not record.module_pos_restaurant) and vals.get('self_ordering_mode') == 'mobile':
                 vals['self_ordering_pay_after'] = 'each'
 
-            if (vals.get('self_ordering_service_mode') == 'counter' or record.self_ordering_service_mode == 'counter') and vals.get('self_ordering_mode') == 'mobile':
+            if (
+                vals.get('self_ordering_mode') == 'mobile'
+                and (
+                    vals.get('self_ordering_service_mode') == 'counter'
+                    or (record.self_ordering_service_mode == 'counter' and vals.get('self_ordering_service_mode') != 'table')
+                )
+            ):
                 vals['self_ordering_pay_after'] = 'each'
 
             if vals.get('self_ordering_mode') == 'mobile' and vals.get('self_ordering_pay_after') == 'meal':
