@@ -1677,6 +1677,15 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_customer_display_with_qr(self):
         self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}", 'CustomerDisplayTourWithQr', login="pos_user")
 
+    def test_combo_refund_different_qty(self):
+        setup_product_combo_items(self)
+        self.desks_combo.write({
+            'qty_free': 2,
+            'qty_max': 2,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_combo_refund_different_qty')
+
     def test_order_refund_flow(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_order_refund_flow')
