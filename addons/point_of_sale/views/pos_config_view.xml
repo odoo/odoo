@@ -59,7 +59,8 @@
                                     <div class="col-lg-5">
                                         <field name="receipt_printer_ids"
                                             class="w-100 pt-1"
-                                            widget="many2many_tags"/>
+                                            widget="many2many_tags"
+                                            context="{'default_use_type': 'receipt'}"/>
                                     </div>
                                     <div class="col-lg-5">
                                         <widget name="point_of_sale_test_epos"/>
@@ -89,7 +90,8 @@
                                     <div class="col-lg-5">
                                         <field name="preparation_printer_ids"
                                             class="w-100 pt-1"
-                                            widget="many2many_tags"/>
+                                            widget="many2many_tags"
+                                            context="{'default_use_type': 'preparation'}"/>
                                     </div>
                                 </div>
                             </div>
