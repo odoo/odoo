@@ -182,7 +182,7 @@ export class SnippetModel extends Reactive {
                     thumbnailSrc: escape(snippetEl.dataset.oeThumbnail),
                     imagePreviewSrc: snippetEl.dataset.oImagePreview,
                     isCustom: false,
-                    label: this.getSnippetLabel(snippetEl),
+                    label: "",
                     isDisabled: false,
                     forbidSanitize: false,
                 };
@@ -210,6 +210,7 @@ export class SnippetModel extends Reactive {
                         snippet.isCustom = true;
                         break;
                 }
+                snippet.label = this.getSnippetLabel(snippetEl, snippet.isCustom);
                 if (["snippet_structure", "snippet_content"].includes(snippetCategory.id)) {
                     this.originalSnippets[snippet.name] ??= snippet;
                 }
@@ -419,10 +420,11 @@ export class SnippetModel extends Reactive {
      * Gets the label of the snippet.
      *
      * @param {HTMLElement} snippetEl
+     * @param {boolean} [isCustom = false]
      * @returns {String}
      */
-    getSnippetLabel(snippetEl) {
-        const label = snippetEl.dataset.oLabel;
+    getSnippetLabel(snippetEl, isCustom = false) {
+        let label = snippetEl.dataset.oLabel;
         // Check if any element in the snippet has the "parallax" class to show
         // the "Parallax" label. This must be done this way because a theme or
         // custom snippet may add or remove parallax elements. Note that if a
@@ -434,7 +436,15 @@ export class SnippetModel extends Reactive {
             const contentEl = snippetEl.children[0];
             const hasParallax =
                 contentEl.matches(".parallax") || !!contentEl.querySelector(".parallax");
-            return hasParallax ? _t("Parallax") : "";
+            label = hasParallax ? _t("Parallax") : "";
+        }
+        if (isCustom && !label) {
+            const originalSnippetlabel = this.getOriginalSnippet(
+                snippetEl.children[0].dataset.snippet
+            )?.label;
+            if (originalSnippetlabel && originalSnippetlabel !== "Parallax") {
+                label = originalSnippetlabel;
+            }
         }
         return label;
     }
