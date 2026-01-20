@@ -129,4 +129,7 @@
         groups="sales_team.group_sale_manager"
         sequence="30"/>
 
+    <record id="website.menu_website_dashboard" model="ir.ui.menu">
+        <field name="group_ids" eval="[Command.link(ref('sales_team.group_sale_salesman'))]"/>
+    </record>
 </odoo>
