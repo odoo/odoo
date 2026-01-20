@@ -751,7 +751,7 @@ export class ListRenderer extends Component {
                                 }
                                 if (currency !== currencyId) {
                                     fieldValues[i] *= currency
-                                        ? this.currencyRates[currency].rate
+                                        ? this.currencyRates[currency]?.rate
                                         : 1;
                                 }
                             }
