@@ -193,6 +193,10 @@ class PosOrder(models.Model):
             vals['crm_team_id'] = vals['crm_team_id'] if vals.get('crm_team_id') else self.session_id.crm_team_id.id
         return super().write(vals)
 
+    def _force_create_picking_real_time(self):
+        result = super()._force_create_picking_real_time()
+        return result or any(self.lines.mapped('sale_order_origin_id'))
+
 
 class PosOrderLine(models.Model):
     _inherit = 'pos.order.line'
