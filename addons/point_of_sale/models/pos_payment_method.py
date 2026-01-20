@@ -11,6 +11,9 @@ class PosPaymentMethod(models.Model):
     _order = "sequence, id"
     _inherit = ['pos.load.mixin']
 
+    def _default_sequence(self):
+        return (self.search([], order="sequence desc", limit=1).sequence or 0) + 1
+
     def _get_terminal_provider_selection(self):
         return []
 
@@ -34,7 +37,7 @@ class PosPaymentMethod(models.Model):
         return False
 
     name = fields.Char(string="Method", required=True, translate=True, help='Defines the name of the payment method that will be displayed in the Point of Sale when the payments are selected.')
-    sequence = fields.Integer(copy=False)
+    sequence = fields.Integer(copy=False, default=_default_sequence)
     outstanding_account_id = fields.Many2one('account.account',
         string='Outstanding Account',
         ondelete='restrict',

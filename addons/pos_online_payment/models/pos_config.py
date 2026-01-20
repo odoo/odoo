@@ -34,8 +34,12 @@ class PosConfig(models.Model):
             new_online_pm = self.env['pos.payment.method'].sudo()._get_or_create_online_payment_method(self.env.company.id, False)
             if demo_provider := self.env.ref('payment.payment_provider_demo', raise_if_not_found=False):
                 new_online_pm.write({'online_payment_provider_ids': [(6, 0, demo_provider.ids)]})
+            return new_online_pm
 
     @api.model
     def _create_journal_and_payment_methods(self, cash_ref=None, cash_journal_vals=None):
-        self._create_online_payment_demo()
-        return super()._create_journal_and_payment_methods(cash_ref, cash_journal_vals)
+        online_pm = self._create_online_payment_demo()
+        journal, payment_method_ids = super()._create_journal_and_payment_methods(cash_ref, cash_journal_vals)
+        if online_pm:
+            payment_method_ids.append(online_pm.id)
+        return journal, payment_method_ids
