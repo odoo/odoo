@@ -1,6 +1,7 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
+import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
@@ -155,6 +156,39 @@ registry.category("web_tour.tours").add("ProductComboChangeFP", {
             ProductScreen.totalAmountIs("50.00"),
             inLeftSide(Order.hasTax("2.38")),
             ProductScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_refund_different_qty", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // Desk accessories combo
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 3"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 4"),
+            combo.checkProductQty("Combo Product 4", "2"),
+            combo.select("Combo Product 6"),
+
+            Dialog.confirm(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
+            // First refund order
+            ProductScreen.clickRefund(),
+            TicketScreen.selectOrder("001"),
+            ProductScreen.clickNumpad("1"),
+            TicketScreen.toRefundLineContains("Office Combo", "To Refund: 1.00"),
+            TicketScreen.toRefundLineContains("Combo Product 4", "To Refund: 2.00"),
+            TicketScreen.toRefundLineContains("Combo Product 3", "To Refund: 1.00"),
+            TicketScreen.toRefundLineContains("Combo Product 6", "To Refund: 1.00"),
+            TicketScreen.confirmRefund(),
+            PaymentScreen.isShown(),
         ].flat(),
 });
 

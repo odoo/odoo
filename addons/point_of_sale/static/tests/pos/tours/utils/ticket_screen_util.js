@@ -220,6 +220,11 @@ export function toRefundTextContains(text) {
         trigger: `.ticket-screen .qty .refund:contains("${text}")`,
     });
 }
+export function toRefundLineContains(product, text) {
+    return inLeftSide({
+        trigger: `.ticket-screen div:has(.product-name:contains("${product}")):has(.to-refund-highlight:contains("${text}"))`,
+    });
+}
 export function refundedNoteContains(text) {
     return inLeftSide({
         trigger: `.ticket-screen .refund-note:contains("${text}")`,
