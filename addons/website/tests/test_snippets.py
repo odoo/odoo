@@ -159,3 +159,6 @@ class TestSnippets(HttpCase):
         website.google_analytics_key = 'G-XXXXXXXXXXX'
         website.cookies_bar = True
         self.start_tour(website.get_client_action_url('/'), 'cookie_bar_updates_gtag_consent')
+
+    def test_shape_image_snippet(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_shape_image', login='admin')
