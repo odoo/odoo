@@ -224,3 +224,12 @@ class AccountAnalyticLine(models.Model):
 
     def _is_updatable_timesheet(self):
         return super()._is_updatable_timesheet and self._is_not_billed()
+
+    def _sale_order_portal_domain(self, order_lines):
+        """Return domain for timesheets linked to the given sale order line."""
+        domain = self._timesheet_get_portal_domain()
+        domain = expression.AND([
+            domain,
+            [('so_line', 'in', order_lines.ids)]
+        ])
+        return domain
