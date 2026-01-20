@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="purchase_order_form_inherit_purchase_edi_ubl_bis3_advanced_order" model="ir.ui.view">
+            <field name="name">purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form" />
+            <field name="arch" type="xml">
+                <header position="inside">
+                    <button name="action_send_advanced_order" string="Send Order" type="object" class="oe_highlight" invisible="not l10n_sg_peppol_can_send_order" groups="purchase.group_purchase_user,account.group_account_invoice"/>
+                    <button name="action_send_order_change" string="Send Order Change" type="object" class="oe_highlight" invisible="not l10n_sg_peppol_can_send_order_change" groups="purchase.group_purchase_user,account.group_account_invoice"/>
+                    <button name="action_send_order_cancel" string="Send Order Cancellation" type="object" class="oe_highlight" invisible="not l10n_sg_peppol_can_send_order_cancel" groups="purchase.group_purchase_user,account.group_account_invoice"/>
+                    <button name="action_send_order_balance" string="Send Order Balance" type="object" class="oe_highlight" invisible="not l10n_sg_peppol_can_send_order_balance" groups="purchase.group_purchase_user,account.group_account_invoice"/>
+                </header>
+                <xpath expr="//notebook" position="inside">
+                    <page string="EDI Trackers" name="order_lines" groups="base.group_no_one,purchase.group_purchase_manager">
+                        <field
+                            name="l10n_sg_peppol_order_tx_ids"
+                            mode="list"
+                        >
+                            <list
+                                string="EDI Trackers"
+                                editable="bottom"
+                                limit="200"
+                            >
+                                <field name="sequence"/>
+                                <field name="document_type"/>
+                                <field name="state"/>
+                                <field name="attachment_id"/>
+                            </list>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
