@@ -7,6 +7,10 @@ from odoo.addons.spreadsheet.utils.formatting import (
     datetime_to_spreadsheet_date_number,
 )
 from odoo.addons.spreadsheet.utils.json import extend_serialized_json
+from odoo.addons.spreadsheet.utils.helpers import (
+    index_to_column_letter,
+    to_cell_reference
+)
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -65,3 +69,21 @@ class TestSpreadsheetUtils(TransactionCase):
 
         dt = datetime.datetime(2023, 10, 1, 12, 0, 0)
         self.assertEqual(datetime_to_spreadsheet_date_number(dt, 'Etc/GMT-8'), 45200.5 + test_tz_offset)
+
+    def test_index_to_column_letter(self):
+        self.assertEqual(index_to_column_letter(0), "A")
+        self.assertEqual(index_to_column_letter(25), "Z")
+        self.assertEqual(index_to_column_letter(26), "AA")
+        self.assertEqual(index_to_column_letter(27), "AB")
+        self.assertEqual(index_to_column_letter(701), "ZZ")
+        self.assertEqual(index_to_column_letter(702), "AAA")
+
+    def test_index_to_column_letter_negative(self):
+        with self.assertRaises(ValueError):
+            index_to_column_letter(-1)
+
+    def test_to_cell_reference(self):
+        self.assertEqual(to_cell_reference(0, 0), "A1")
+        self.assertEqual(to_cell_reference(0, 1), "A2")
+        self.assertEqual(to_cell_reference(1, 1), "B2")
+        self.assertEqual(to_cell_reference(26, 9), "AA10")
