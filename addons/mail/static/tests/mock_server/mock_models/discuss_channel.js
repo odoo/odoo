@@ -42,6 +42,9 @@ export class DiscussChannel extends models.ServerModel {
         relation: "discuss.category",
         string: "Discuss Category",
     });
+    display_name_mode = fields.Selection({
+        selection: [["meeting_channel", "Meeting channel name"]],
+    });
     group_public_id = fields.Generic({
         default: () => serverState.groupId,
     });
@@ -258,8 +261,10 @@ export class DiscussChannel extends models.ServerModel {
         return [
             "avatar_cache_key",
             "channel_type",
+            "create_date",
             "create_uid",
             "default_display_mode",
+            "display_name_mode",
             "description",
             "group_public_id",
             "last_interest_dt",
@@ -527,6 +532,8 @@ export class DiscussChannel extends models.ServerModel {
                 Command.create({ partner_id: partner.id })
             ),
             default_display_mode,
+            display_name_mode:
+                default_display_mode === "video_full_screen" && !name ? "meeting_channel" : false,
             name,
         });
         this._broadcast(

@@ -644,6 +644,24 @@ class TestChannelInternals(MailCommon, HttpCase):
         test_channel.image_128 = base64.b64encode(("<svg/>").encode())
         self.assertEqual(test_channel.avatar_128, test_channel.image_128)
 
+    def test_create_group_display_name_mode(self):
+        unnamed_group = self.env["discuss.channel"]._create_group(
+            partners_to=self.user_employee.partner_id.ids
+        )
+        unnamed_meeting_group = self.env["discuss.channel"]._create_group(
+            partners_to=self.user_employee.partner_id.ids,
+            default_display_mode="video_full_screen",
+        )
+        named_meeting_group = self.env["discuss.channel"]._create_group(
+            partners_to=self.user_employee.partner_id.ids,
+            default_display_mode="video_full_screen",
+            name="Standup",
+        )
+
+        self.assertFalse(unnamed_group.display_name_mode)
+        self.assertEqual(unnamed_meeting_group.display_name_mode, "meeting_date")
+        self.assertFalse(named_meeting_group.display_name_mode)
+
     def test_channel_write_should_send_notification(self):
         channel = self.env['discuss.channel'].create({"name": "test", "description": "test"})
         with self.assertBus(

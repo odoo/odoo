@@ -2,6 +2,7 @@ import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { fields, Record } from "@mail/model/export";
 
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import {
@@ -116,6 +117,8 @@ export class DiscussChannel extends Record {
     }
     /** @type {"video_full_screen"|undefined} */
     default_display_mode;
+    /** @type {"meeting_channel"|undefined} */
+    display_name_mode;
     get typesAllowingCalls() {
         return ["chat", "channel", "group"];
     }
@@ -194,6 +197,20 @@ export class DiscussChannel extends Record {
         return this.channel_member_ids.filter(({ persona }) => persona?.notEq(this.store.self));
     }
     get displayName() {
+        if (this.display_name_mode === "meeting_channel" && this.create_date) {
+            const baseName = _t("Meeting");
+            const tz = user?.tz;
+            const localizedDatetime = tz
+                ? this.create_date.setZone(tz)
+                : this.create_date.toLocal();
+            if (!localizedDatetime.isValid) {
+                return baseName;
+            }
+            const formatDate = localizedDatetime.toLocaleString(luxon.DateTime.DATE_MED, {
+                locale: user.lang,
+            });
+            return _t("%(meeting)s - %(date)s", { meeting: baseName, date: formatDate });
+        }
         if (this.supportsCustomChannelName && this.self_member_id?.custom_channel_name) {
             return this.self_member_id.custom_channel_name;
         }
@@ -213,6 +230,7 @@ export class DiscussChannel extends Record {
         }
         return this.name;
     }
+    create_date = fields.Datetime();
     /** @type {"not_fetched"|"pending"|"fetched"} */
     fetchMembersState = "not_fetched";
     /** @type {"not_fetched"|"fetching"|"fetched"} */

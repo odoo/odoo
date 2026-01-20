@@ -76,6 +76,7 @@ class DiscussChannel(models.Model):
         string='Channel Type', required=True, default='channel', readonly=True, help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration).")
     is_editable = fields.Boolean('Is Editable', compute='_compute_is_editable')
     default_display_mode = fields.Selection(string="Default Display Mode", selection=[('video_full_screen', "Full screen video")], help="Determines how the channel will be displayed by default when opening it from its invitation link. No value means display text (no voice/video).")
+    display_name_mode = fields.Selection(string="Display Name Mode", selection=[("meeting_channel", "Meeting channel name")], help="Determines how the display name is computed when the channel name is empty.")
     description = fields.Text('Description')
     image_128 = fields.Image("Image", max_width=128, max_height=128)
     avatar_128 = fields.Image("Avatar", max_width=128, max_height=128, compute='_compute_avatar_128')
@@ -515,7 +516,7 @@ class DiscussChannel(models.Model):
         res[None].attr("avatar_cache_key", predicate=is_channel_or_group)
         # sudo: discuss.category - guests can read categories of accessible channels
         res[None].one("discuss_category_id", "_store_category_fields", sudo=True)
-        res[None].extend(["channel_type", "create_uid", "default_display_mode"])
+        res[None].extend(["channel_type", "create_uid", "default_display_mode", "display_name_mode"])
         res[None].attr("description", predicate=is_channel_or_group)
         res[None].many("group_ids", [], predicate=is_channel)
         res[None].one("group_public_id", ["full_name"], predicate=is_channel)
@@ -1212,6 +1213,7 @@ class DiscussChannel(models.Model):
         res.one("discuss_category_id", "_store_category_fields", sudo=True)
         res.attr("channel_type")
         res.attr("create_uid")
+        res.attr("create_date", predicate=lambda channel: channel.default_display_mode == "video_full_screen" and channel.channel_type == "group")
         res.many(
             "channel_member_ids",
             "_store_member_fields",
@@ -1220,6 +1222,7 @@ class DiscussChannel(models.Model):
             predicate=lambda channel: channel in channels_with_all_members,
         )
         res.attr("default_display_mode")
+        res.attr("display_name_mode")
         res.attr("description", predicate=is_channel_or_group)
         res.one("from_message_id", "_store_message_fields", predicate=is_channel_or_group)
         # sudo: we are reading only the ids (comodel is inaccessible)
@@ -1441,6 +1444,11 @@ class DiscussChannel(models.Model):
                 ],
                 "channel_type": "group",
                 "default_display_mode": default_display_mode,
+                "display_name_mode": (
+                    "meeting_channel"
+                    if default_display_mode == "video_full_screen" and not name
+                    else False
+                ),
                 "name": name,
             }
         )
