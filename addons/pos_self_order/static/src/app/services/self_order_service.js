@@ -122,6 +122,9 @@ export class SelfOrder extends Reactive {
                 }
             });
         }
+        this.data.connectWebSocket("REMOVE_ORDERS", (data) => {
+            this.removeOrdersByAccessTokens(data.deleted_order_tokens);
+        });
         barcode.bus.addEventListener("barcode_scanned", (ev) => {
             if (!this.ordering) {
                 this.notification.add(_t("We're currently closed"), {
@@ -570,6 +573,13 @@ export class SelfOrder extends Reactive {
         }
     }
 
+    removeOrdersByAccessTokens(orderAccessTokens = []) {
+        // Remove orders and their dependent records locally and from IndexedDB
+        this.models["pos.order"]
+            .filter((o) => orderAccessTokens.includes(o.access_token))
+            .forEach((o) => this.data.localDeleteCascade(o));
+    }
+
     cancelOrder() {
         if (
             this.config.self_ordering_mode === "kiosk" &&
@@ -686,12 +696,12 @@ export class SelfOrder extends Reactive {
     async getUserDataFromServer(tokens = []) {
         const tableIdentifier = this.router.getTableIdentifier([]);
         const dbAccessToken = this.models["pos.order"]
-            .filter((o) => o.state === "draft" && typeof o.id === "number")
+            .filter((o) => o.state === "draft" && typeof o.id === "number" && o.access_token)
             .map((order) => ({
                 access_token: order.access_token,
+                state: order.state,
                 write_date: serializeDateTime(order.write_date.plus({ seconds: 1 })),
-            }))
-            .filter((order) => order.access_token);
+            }));
 
         // Token given in argument are probably not in the local database
         // so write_date is set to 1970-01-01 00:00:00
