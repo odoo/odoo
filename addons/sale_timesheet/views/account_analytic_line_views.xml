@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_analytic_lines_service_search" model="ir.ui.view">
+        <field name="name">account.analytic.line.services.search.inherit.sale.project</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="sale.view_analytic_lines_service_search"/>
+        <field name="arch" type="xml">
+            <filter name="my_orders" position="after">
+                <filter name="my_team" string="My Team" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
+                <filter
+                    name="my_department"
+                    string="My Department"
+                    domain="[('employee_id.member_of_department', '=', True)]"
+                    help="My Department"
+                />
+                <filter
+                    name="my_projects"
+                    string="My Projects"
+                    domain="[('project_id.user_id', '=', uid)]"
+                />
+            </filter>
+            <filter name="group_date" position="after">
+                <filter name="group_project" string="Project" context="{'group_by':'project_id'}"/>
+                <filter name="group_task" string="Task" context="{'group_by':'task_id'}"/>
+                <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

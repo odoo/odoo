@@ -52,6 +52,15 @@
                         invisible="sale_order_count == 0 or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')">
                     <field string="Sale Orders" name="sale_order_count" widget="statinfo"/>
                 </button>
+                <button
+                    name="action_view_services_analytic_lines"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-bars"
+                    invisible="service_line_count == 0"
+                >
+                    <field name="service_line_count" string="Services" widget="statinfo"/>
+                </button>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/list" position="inside">
                 <field name="is_downpayment" column_invisible="1"/>

@@ -160,7 +160,6 @@ class AccountAnalyticLine(models.Model):
 
     name = fields.Char(
         'Description',
-        required=True,
     )
     date = fields.Date(
         'Date',
@@ -227,7 +226,10 @@ class AccountAnalyticLine(models.Model):
 
     def _compute_analytic_distribution(self):
         for line in self:
-            line.analytic_distribution = {line._get_distribution_key(): 100}
+            distribution_key = line._get_distribution_key()
+            line.analytic_distribution = (
+                {line._get_distribution_key(): 100} if distribution_key else {}
+            )
 
     def _inverse_analytic_distribution(self):
         empty_account = dict.fromkeys(self._get_plan_fnames(), False)

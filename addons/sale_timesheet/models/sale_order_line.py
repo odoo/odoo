@@ -163,9 +163,9 @@ class SaleOrderLine(models.Model):
         lines_by_timesheet = self.filtered(lambda sol: sol.product_id and sol.product_id._is_delivered_timesheet())
         domain = Domain(lines_by_timesheet._timesheet_compute_delivered_quantity_domain())
         refund_account_moves = self.order_id.invoice_ids.filtered(lambda am: am.state == 'posted' and am.move_type == 'out_refund').reversed_entry_id
-        timesheet_domain = Domain('timesheet_invoice_id', '=', False) | Domain('timesheet_invoice_id.state', '=', 'cancel')
+        timesheet_domain = Domain('reinvoice_id', '=', False) | Domain('reinvoice_id.state', '=', 'cancel')
         if refund_account_moves:
-            credited_timesheet_domain = Domain('timesheet_invoice_id.state', '=', 'posted') & Domain('timesheet_invoice_id', 'in', refund_account_moves.ids)
+            credited_timesheet_domain = Domain('reinvoice_id.state', '=', 'posted') & Domain('reinvoice_id', 'in', refund_account_moves.ids)
             timesheet_domain |= credited_timesheet_domain
         domain &= timesheet_domain
         if start_date:

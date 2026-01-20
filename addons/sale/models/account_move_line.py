@@ -2,11 +2,28 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.tools import float_compare, float_is_zero
 
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
+
+    @api.model
+    def _analytic_line_domain_get_invoiced_lines(self, sale_line):
+        """ Get the domain for the analytic lines to link to the created invoice
+            :param sale_line: recordset of sale.order.line to invoice
+            :return a normalized domain
+        """
+        return Domain([
+            ('so_line', 'in', sale_line.ids),
+            '|', '|',
+                ('reinvoice_id', '=', False),
+                '&',
+                    ('reinvoice_id.state', '=', 'cancel'),
+                    ('reinvoice_id.payment_state', '!=', 'invoicing_legacy'),
+                ('reinvoice_id.payment_state', '=', 'reversed')
+        ])
 
     is_downpayment = fields.Boolean()
     sale_line_ids = fields.Many2many(

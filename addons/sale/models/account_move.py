@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import _, api, fields, models
+from odoo.fields import Domain
 from odoo.tools import groupby, OrderedSet
 
 
@@ -22,6 +23,7 @@ class AccountMove(models.Model):
         "Sale Warning",
         help="Internal warning for the partner or the products as set by the user.",
         compute="_compute_sale_warning_text")
+    service_line_count = fields.Integer(compute="_compute_service_line_count")
 
     def unlink(self):
         downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('line_ids'))
@@ -47,6 +49,16 @@ class AccountMove(models.Model):
     def _compute_origin_so_count(self):
         for move in self:
             move.sale_order_count = len(move.line_ids.sale_line_ids.order_id)
+
+    def _domain_services_analytic_line(self):
+        return Domain('reinvoice_id', 'in', self.ids)
+
+    @api.depends('line_ids.sale_line_ids')
+    def _compute_service_line_count(self):
+        for move in self:
+            move.service_line_count = self.env['account.analytic.line'].search_count(
+                self._domain_services_analytic_line(),
+            )
 
     @api.depends('partner_id.name', 'partner_id.sale_warn_msg', 'invoice_line_ids.product_id.sale_line_warn_msg', 'invoice_line_ids.product_id.display_name')
     def _compute_sale_warning_text(self):
@@ -161,6 +173,12 @@ class AccountMove(models.Model):
             result = {'type': 'ir.actions.act_window_close'}
         return result
 
+    def action_view_services_analytic_lines(self):
+        self.ensure_one()
+        result = self.env['ir.actions.act_window']._for_xml_id('sale.action_service_material')
+        result['domain'] = self._domain_services_analytic_line()
+        return result
+
     def _is_downpayment(self):
         # OVERRIDE
         self.ensure_one()
@@ -204,3 +222,20 @@ class AccountMove(models.Model):
             )
             exclude_amount += order_amount_company
         return exclude_amount
+
+    def _link_analytic_lines_to_invoice(self):
+        """When we create an invoice from a sale order, we need to
+            link the analytic lines in this sale order to the invoice.
+            Then, we can know which analytic lines are invoiced in the sale order.
+        """
+        for line in self.filtered(lambda i: i.move_type == 'out_invoice' and i.state == 'draft').invoice_line_ids:
+            sale_line = line.sale_line_ids.filtered(self._filter_sale_lines_to_reinvoice)
+            if sale_line:
+                domain = line._analytic_line_domain_get_invoiced_lines(sale_line)
+
+                analytic_lines = self.env['account.analytic.line'].sudo().search(domain)
+                analytic_lines.write({'reinvoice_id': line.move_id.id})
+
+    def _filter_sale_lines_to_reinvoice(self, sale_line):
+        """Filter hook to get sale lines that should be re-invoiced."""
+        return not sale_line.is_expense and sale_line.product_id.invoice_policy == 'delivery'
