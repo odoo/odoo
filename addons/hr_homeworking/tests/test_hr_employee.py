@@ -11,21 +11,16 @@ class TestHrHomeworkingCommon(common.TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        main_partner_id = cls.env.ref('base.main_partner')
-
         cls.work_office_1, cls.work_office_2, cls.work_home = cls.env['hr.work.location'].create([
             {
                 'name': "Office 1",
                 'location_type': "office",
-                'address_id': main_partner_id.id,
             }, {
                 'name': "Office 2",
                 'location_type': "office",
-                'address_id': main_partner_id.id,
             }, {
                 'name': "Home",
                 'location_type': "home",
-                'address_id': main_partner_id.id,
             },
         ])
 

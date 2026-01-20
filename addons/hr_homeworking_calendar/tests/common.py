@@ -16,7 +16,6 @@ class TestHrHomeworkingCommon(common.TransactionCase):
         # Hr Data
         Department = cls.env['hr.department'].with_context(tracking_disable=True)
         WorkLocation = cls.env['hr.work.location'].with_context(tracking_disable=True)
-        main_partner_id = cls.env.ref('base.main_partner')
 
         cls.rd_dept = Department.create({
             'name': 'Research and devlopment',
@@ -25,19 +24,16 @@ class TestHrHomeworkingCommon(common.TransactionCase):
         cls.work_office_1 = WorkLocation.create({
             'name': "Bureau 1",
             'location_type': "office",
-            'address_id': main_partner_id.id,
         })
 
         cls.work_office_2 = WorkLocation.create({
             'name': "Bureau 2",
             'location_type': "office",
-            'address_id': main_partner_id.id,
         })
 
         cls.work_home = WorkLocation.create({
             'name': "Maison",
             'location_type': "home",
-            'address_id': main_partner_id.id,
         })
 
         cls.employee_emp = cls.env['hr.employee'].create({
