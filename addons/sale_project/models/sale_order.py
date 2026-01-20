@@ -304,3 +304,11 @@ class SaleOrder(models.Model):
         if not line:
             raise UserError(self.env._('The Sales Order must contain at least one service product.'))
         return line
+
+    def _get_or_create_analytic_account(self, plan_id):
+        self.ensure_one()
+
+        if self.project_id.account_id:
+            return self.project_id.account_id
+
+        return super()._get_or_create_analytic_account(plan_id)

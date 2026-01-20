@@ -23,6 +23,7 @@ This module contains all the common features of Sales Management and eCommerce.
         'report/ir_actions_report.xml',
         'report/sale_report_views.xml',
 
+        'data/analytic_plan_data.xml',
         'data/ir_cron.xml',
         'data/ir_sequence_data.xml',
         'data/mail_message_subtype_data.xml',
@@ -42,6 +43,7 @@ This module contains all the common features of Sales Management and eCommerce.
         'views/sale_order_views.xml',
 
         'views/account_views.xml',
+        'views/account_analytic_line_views.xml',
         'views/crm_team_views.xml',
         'views/mail_activity_views.xml',
         'views/mail_activity_plan_views.xml',
@@ -104,6 +106,7 @@ This module contains all the common features of Sales Management and eCommerce.
             'sale/static/src/scss/sale_report.scss',
         ],
     },
+    'pre_init_hook': '_pre_init_sale',
     'post_init_hook': '_post_init_hook',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

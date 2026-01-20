@@ -25,7 +25,7 @@
                 <xpath expr="//filter[@name='groupby_employee']" position="after">
                     <filter string="Sales Order Item" name="groupby_sale_order_item" domain="[]" context="{'group_by': 'so_line'}"
                         groups="sales_team.group_sale_salesman"/>
-                    <filter string="Invoice" name="groupby_invoice" domain="[]" context="{'group_by': 'timesheet_invoice_id'}"
+                    <filter string="Invoice" name="groupby_invoice" domain="[]" context="{'group_by': 'reinvoice_move_id'}"
                         groups="sales_team.group_sale_salesman"/>
                     <filter string="Billing Type" name="groupby_timesheet_invoice_type" domain="[]"
                         context="{'group_by': 'timesheet_invoice_type'}" groups="sales_team.group_sale_salesman"/>
@@ -70,14 +70,14 @@
             <xpath expr="//group" position="before">
                 <t groups="sales_team.group_sale_salesman">
                     <field name="order_id" invisible="1"/>
-                    <field name="timesheet_invoice_id" invisible="1"/>
+                    <field name="reinvoice_move_id" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_sale_order_from_timesheet" type="object" class="oe_stat_button" icon="fa-dollar" invisible="not order_id">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Sales Order</span>
                             </div>
                         </button>
-                        <button name="action_invoice_from_timesheet" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="not timesheet_invoice_id">
+                        <button name="action_invoice_from_timesheet" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="not reinvoice_move_id">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Invoice</span>
                             </div>
@@ -121,7 +121,7 @@
         <field name="inherit_id" ref="view_hr_timesheet_line_graph_employee_per_date"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date']" position="replace">
-                <field name="timesheet_invoice_id"/>
+                <field name="reinvoice_move_id"/>
             </xpath>
         </field>
     </record>

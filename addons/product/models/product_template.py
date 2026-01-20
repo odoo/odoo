@@ -1614,6 +1614,8 @@ class ProductTemplate(models.Model):
         ) > 1
 
     def _get_available_uoms(self):
+        if not self:
+            return self.env['uom.uom']
         self.ensure_one()
         return self.uom_id | self.uom_ids
 

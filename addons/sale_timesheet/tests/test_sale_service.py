@@ -650,11 +650,11 @@ class TestSaleService(TestCommonSaleTimesheet):
             'employee_id': self.employee_manager.id,
         })
 
-        self.assertFalse(timesheet.timesheet_invoice_id)
+        self.assertFalse(timesheet.reinvoice_move_id)
         invoice = self.sale_order._create_invoices()
         invoice.action_post()
 
-        self.assertEqual(invoice, timesheet.timesheet_invoice_id)
+        self.assertEqual(invoice, timesheet.reinvoice_move_id)
 
     def test_prevent_update_project_allocated_hours_after_confirming_quotation(self):
         """ Test allocated hours in the project linked to a SO is not automatically updated

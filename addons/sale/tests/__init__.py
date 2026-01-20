@@ -2,6 +2,7 @@
 
 from . import test_access_rights
 from . import test_accrued_sale_orders
+from . import test_analytic_to_sale_to_invoice
 from . import test_common
 from . import test_controllers
 from . import test_credit_limit
