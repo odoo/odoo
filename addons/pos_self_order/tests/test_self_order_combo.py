@@ -67,3 +67,120 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         self_route = self.pos_config._get_self_order_route()
 
         self.start_tour(self_route, "self_combo_selector_category")
+
+    def test_product_dont_display_all_variants(self):
+        """
+        Tests that when a variant is in a combo, clicking the variant
+        will only select it and not display every variant available
+        for that product. It still displays them if the template is given.
+        """
+        size_attribute, color_attribute = self.env['product.attribute'].create([
+            {
+                'name': 'Size',
+                'display_type': 'radio',
+                'create_variant': 'always',
+            },
+            {
+                'name': 'Color',
+                'display_type': 'radio',
+                'create_variant': 'no_variant',
+            },
+        ])
+        attribute_values = self.env['product.attribute.value'].create([
+            {
+                'name': 'M',
+                'attribute_id': size_attribute.id,
+            },
+            {
+                'name': 'L',
+                'attribute_id': size_attribute.id,
+            },
+            {
+                'name': 'Red',
+                'attribute_id': color_attribute.id,
+            },
+            {
+                'name': 'Blue',
+                'attribute_id': color_attribute.id,
+            },
+        ])
+        # With an never and always attribute
+        coke_template_never_always, coke_template_always, coke_template_never = self.env['product.template'].create([
+            {
+                'name': 'Coke always never',
+                'available_in_pos': True,
+                'list_price': 3.0,
+                'attribute_line_ids': [
+                    Command.create({
+                        'attribute_id': size_attribute.id,
+                        'value_ids': [Command.set([attribute_values[0].id, attribute_values[1].id])],
+                    }),
+                    Command.create({
+                        'attribute_id': color_attribute.id,
+                        'value_ids': [Command.set([attribute_values[2].id, attribute_values[3].id])],
+                    })
+                ],
+            }, {
+                'name': 'Coke always only',
+                'available_in_pos': True,
+                'list_price': 3.0,
+                'attribute_line_ids': [
+                    Command.create({
+                        'attribute_id': size_attribute.id,
+                        'value_ids': [Command.set([attribute_values[0].id, attribute_values[1].id])],
+                    }),
+                ],
+            }, {
+                'name': 'Coke never only',
+                'available_in_pos': True,
+                'list_price': 3.0,
+                'attribute_line_ids': [
+                    Command.create({
+                        'attribute_id': color_attribute.id,
+                        'value_ids': [Command.set([attribute_values[2].id, attribute_values[3].id])],
+                    })
+                ],
+            },
+        ])
+        coke_large_always_never = coke_template_never_always.product_variant_ids[1]
+        coke_large_always = coke_template_always.product_variant_ids[1]
+        coke_large_never = coke_template_never.product_variant_ids[0]
+
+        combo = self.env['product.combo'].create([{
+                'name': 'Drink Combo Both',
+                'combo_item_ids': [
+                    Command.create({
+                        'product_id': coke_large_always_never.id,
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': coke_large_always.id,
+                        'extra_price': 0,
+                    }),
+                    Command.create({
+                        'product_id': coke_large_never.id,
+                        'extra_price': 0,
+                    }),
+                ],
+            }
+        ])
+
+        self.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'name': 'Meal Combo',
+            'type': 'combo',
+            'combo_ids': [
+                Command.set([combo.id])
+            ],
+        })
+
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'table',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "test_product_dont_display_all_variants")
