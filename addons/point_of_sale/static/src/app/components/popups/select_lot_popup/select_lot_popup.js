@@ -42,6 +42,13 @@ export class SelectLotPopup extends Component {
     _nextId() {
         return this._id++;
     }
+    _getOnSelectVals(option) {
+        return {
+            create: true,
+            id: option.id,
+            label: option.name,
+        };
+    }
     getSources() {
         return [
             {
@@ -52,16 +59,13 @@ export class SelectLotPopup extends Component {
                             !this.state.values.some((value) => value.text === option.name)
                     );
                     if (filteredOptions.length) {
-                        return filteredOptions.map((option) => ({
-                            label: option.name,
-                            onSelect: () =>
-                                this.onSelect({
-                                    create: true,
-                                    id: option.id,
-                                    label: option.name,
-                                    expiration_date: option.expiration_date,
-                                }),
-                        }));
+                        return filteredOptions.map((option) => {
+                            const vals = this._getOnSelectVals(option);
+                            return {
+                                label: option.name,
+                                onSelect: () => this.onSelect(vals),
+                            };
+                        });
                     } else if (this.props.customInput && currentInput) {
                         const label = _t("Create Lot/Serial number...");
                         return [
@@ -103,7 +107,7 @@ export class SelectLotPopup extends Component {
         }
         const newItem = lot.currentInput
             ? { text: lot.currentInput, id: lot.id }
-            : { text: lot.label, id: lot.id, expiration_date: lot.expiration_date };
+            : { text: lot.label, id: lot.id };
         this.state.values = this.props.isSingleItem ? [newItem] : [...this.state.values, newItem];
         this.state.value = this.props.isSingleItem ? newItem.text : "";
     }
@@ -127,9 +131,9 @@ export class SelectLotPopup extends Component {
         const result = filteredValues.map((item) => {
             const matchingLot = this.props.array.find((lot) => lot.text === item.text);
             return {
+                item: item,
                 text: item.text,
                 _id: this._nextId(),
-                expiration_date: item.expiration_date,
                 ...(matchingLot ? { id: matchingLot.id } : {}),
             };
         });

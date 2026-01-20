@@ -1634,7 +1634,6 @@ class PosOrderLine(models.Model):
                     'id': lot_recordset.id,
                     'name': lot_recordset.name,
                     'product_qty': total_quantity,
-                    'expiration_date': lot_recordset.expiration_date,
                 })
 
         return result
