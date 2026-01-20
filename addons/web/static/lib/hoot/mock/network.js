@@ -63,6 +63,7 @@ const {
     Uint8Array,
     URL,
     WebSocket,
+    XMLHttpRequest,
 } = globalThis;
 const { parse: $parse, stringify: $stringify } = globalThis.JSON;
 
@@ -1086,11 +1087,11 @@ export class MockWorker extends MockEventTarget {
 
 export class MockXMLHttpRequest extends MockEventTarget {
     static publicListeners = ["error", "load"];
+    static {
+        // Assign status codes
+        Object.assign(this, XMLHttpRequest);
+    }
 
-    /**
-     * @private
-     */
-    _headers = {};
     /**
      * @private
      */
@@ -1098,32 +1099,72 @@ export class MockXMLHttpRequest extends MockEventTarget {
     /**
      * @private
      */
+    _readyState = XMLHttpRequest.UNSENT;
+    /**
+     * @type {Record<string, string>}
+     * @private
+     */
+    _requestHeaders = Object.create(null);
+    /**
+     * @private
+     */
+    _requestUrl = "";
+    /**
+     * @type {Response | null}
+     * @private
+     */
     _response = null;
     /**
      * @private
      */
-    _status = XMLHttpRequest.UNSENT;
+    _responseMimeType = "";
     /**
      * @private
      */
-    _url = "";
+    _responseValue = null;
 
-    abort() {
-        markClosed(this);
+    get readyState() {
+        return this._readyState;
     }
 
-    upload = new MockXMLHttpRequestUpload();
+    get response() {
+        return this._responseValue;
+    }
+
+    get responseText() {
+        return String(this._responseValue);
+    }
+
+    get responseURL() {
+        return this._response.url;
+    }
+
+    get responseXML() {
+        const parser = new DOMParser();
+        try {
+            return parser.parseFromString(this._responseValue, this._responseMimeType);
+        } catch {
+            return null;
+        }
+    }
+
+    get status() {
+        return this._response?.status || 0;
+    }
+
+    get statusText() {
+        return this._readyState >= XMLHttpRequest.LOADING ? "OK" : "";
+    }
+
     /**
      * @type {XMLHttpRequestResponseType}
      */
     responseType = "";
+    upload = new MockXMLHttpRequestUpload();
 
-    get response() {
-        return this._response;
-    }
-
-    get status() {
-        return this._status;
+    abort() {
+        this._setReadyState(XMLHttpRequest.DONE);
+        markClosed(this);
     }
 
     /** @type {XMLHttpRequest["dispatchEvent"]} */
@@ -1134,12 +1175,31 @@ export class MockXMLHttpRequest extends MockEventTarget {
         return super.dispatchEvent(event);
     }
 
+    getAllResponseHeaders() {
+        let result = "";
+        for (const [key, value] of this._response?.headers || []) {
+            result += `${key}: ${value}\r\n`;
+        }
+        return result;
+    }
+
+    /** @type {XMLHttpRequest["getResponseHeader"]} */
+    getResponseHeader(name) {
+        return this._response?.headers.get(name) || "";
+    }
+
     /** @type {XMLHttpRequest["open"]} */
     open(method, url) {
         markOpen(this);
 
         this._method = method;
-        this._url = url;
+        this._requestUrl = url;
+        this._setReadyState(XMLHttpRequest.OPENED);
+    }
+
+    /** @type {XMLHttpRequest["overrideMimeType"]} */
+    overrideMimeType(mime) {
+        this._responseMimeType = mime;
     }
 
     /** @type {XMLHttpRequest["send"]} */
@@ -1147,40 +1207,56 @@ export class MockXMLHttpRequest extends MockEventTarget {
         if (!isOpen(this)) {
             return ENDLESS_PROMISE;
         }
+        this._setReadyState(XMLHttpRequest.HEADERS_RECEIVED);
 
         try {
-            const response = await window.fetch(this._url, {
+            this._response = await window.fetch(this._requestUrl, {
                 method: this._method,
                 body,
-                headers: this._headers,
+                headers: this._requestHeaders,
             });
-            this._status = response.status;
-            if (response instanceof MockResponse) {
+            this._setReadyState(XMLHttpRequest.LOADING);
+            if (!this._responseMimeType) {
+                if (this._response.url.startsWith("blob:")) {
+                    this._responseMimeType = MIME_TYPE.blob;
+                } else {
+                    this._responseMimeType = this._response.headers.get(HEADER.contentType);
+                }
+            }
+            if (this._response instanceof MockResponse) {
                 // Mock response: get bound value (synchronously)
-                this._response = getSyncValue(response, false);
-            } else if (response.url.startsWith("blob:")) {
+                this._responseValue = getSyncValue(this._response, false);
+            } else if (this._responseMimeType === MIME_TYPE.blob) {
                 // Actual "blob:" response: get array buffer
-                this._response = await response.arrayBuffer();
+                this._responseValue = await this._response.arrayBuffer();
+            } else if (this._responseMimeType === MIME_TYPE.json) {
+                // JSON response: get parsed JSON value
+                this._responseValue = await this._response.json();
             } else {
                 // Anything else: parse response body as text
-                this._response = await response.text();
+                this._responseValue = await this._response.text();
             }
             this.dispatchEvent(new ProgressEvent("load"));
         } catch {
             this.dispatchEvent(new ProgressEvent("error"));
         }
 
+        this._setReadyState(XMLHttpRequest.DONE);
         markClosed(this);
     }
 
     /** @type {XMLHttpRequest["setRequestHeader"]} */
     setRequestHeader(name, value) {
-        this._headers[name] = value;
+        this._requestHeaders[name] = value;
     }
 
-    /** @type {XMLHttpRequest["getResponseHeader"]} */
-    getResponseHeader(name) {
-        return this._headers[name];
+    /**
+     * @private
+     * @param {number} readyState
+     */
+    _setReadyState(readyState) {
+        this._readyState = readyState;
+        this.dispatchEvent(new Event("readystatechange"));
     }
 }
 
