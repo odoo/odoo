@@ -132,6 +132,11 @@ export class PosOrderlineAccounting extends Base {
         return allLines.reduce((total, line) => total + line.displayPriceUnitExcl, 0);
     }
 
+    get comboTotalBasePrice() {
+        const allLines = this.getAllLinesInCombo();
+        return allLines.reduce((total, line) => total + line.basePriceUnit, 0);
+    }
+
     get taxGroupLabels() {
         return this.tax_ids
             ?.map((tax) => tax.tax_group_id?.pos_receipt_label)
@@ -147,7 +152,11 @@ export class PosOrderlineAccounting extends Base {
     }
 
     get basePrice() {
-        return this.qty * this.price_unit * (1 - this.getDiscount() / 100);
+        return this.qty * this.basePriceUnit;
+    }
+
+    get basePriceUnit() {
+        return this.price_unit * (1 - this.getDiscount() / 100);
     }
 
     /**
