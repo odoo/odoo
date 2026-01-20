@@ -24,12 +24,14 @@ export class OdooPieChart extends OdooChart {
     constructor(definition, sheetId, getters) {
         super(definition, sheetId, getters);
         this.isDoughnut = definition.isDoughnut;
+        this.slicesColors = definition.slicesColors;
     }
 
     getDefinition() {
         return {
             ...super.getDefinition(),
             isDoughnut: this.isDoughnut,
+            slicesColors: this.slicesColors,
         };
     }
 }
