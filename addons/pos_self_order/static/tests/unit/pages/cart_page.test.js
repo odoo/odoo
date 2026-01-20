@@ -1,4 +1,5 @@
 import { test, expect } from "@odoo/hoot";
+import { queryFirst } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { CartPage } from "@pos_self_order/app/pages/cart_page/cart_page";
 import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
@@ -77,4 +78,13 @@ test("getPrice", async () => {
     // For combo parent line
     const parentLine = await addComboProduct(store);
     expect(comp.getPrice(parentLine)).toBe(500);
+});
+
+test("add note button is not shown in kiosk mode", async () => {
+    const store = await setupSelfPosEnv("kiosk");
+    await getFilledSelfOrder(store);
+    await mountWithCleanup(CartPage, {});
+
+    const orderNoteContainer = queryFirst(".order-note");
+    expect(orderNoteContainer).toBe(null);
 });
