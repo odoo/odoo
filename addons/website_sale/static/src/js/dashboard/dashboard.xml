@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="website_sale.Dashboard">
+        <div class="o_website_sale_dashboard container-fluid d-flex flex-column-reverse flex-lg-row justify-content-between align-items-center gap-3 p-3 pt-0 pt-md-3">
+
+            <!-- Left Section -->
+            <div class="d-flex justify-content-lg-start justify-content-md-center gap-1 gap-md-3 gap-lg-2 px-md-5 px-lg-0 w-100 w-lg-auto">
+                <t t-foreach="dashboardCards" t-as="card" t-key="card.key">
+                    <button
+                        t-if="card.alwaysVisible || state.dashboardData[card.key] > 0"
+                        t-att-title="card.title"
+                        class="o_dashboard_card btn flex-grow-1 d-md-flex d-lg-block align-items-md-baseline justify-content-md-center gap-md-1 py-2 px-4 lh-sm"
+                        t-att-class="this.getDashboardCardAdditionalClass(card.key)"
+                        t-on-click="state.dashboardData[card.key] > 0 ? handleCardClick : () => {}"
+                        t-att-card_name="card.key"
+                    >
+                        <span
+                            class="o_dashboard_card_data fs-4 fw-bolder"
+                            t-out="state.dashboardData[card.key]"
+                        />
+                        <span class="d-block" t-out="card.label"/>
+                    </button>
+                </t>
+            </div>
+
+            <!-- Right Section -->
+            <div class="d-flex flex-column flex-md-row border rounded-3 pb-2 py-md-2 w-100 w-md-auto gap-2 gap-md-0">
+                <div class="o_date_filter_wrapper d-flex align-items-center py-2 px-3 bg-200 bg-opacity-75">
+                    <DateFilterButton update.bind="loadDashboardData" selectedDateFilter="state.selectedDateFilter"/>
+                </div>
+
+                <div class="o_cards_container d-flex align-items-center gap-4 border-md-start px-3 px-md-4">
+                    <t t-foreach="dashboardPeriodCards" t-as="dashboardPeriodCard" t-key="dashboardPeriodCard.key">
+                        <div class="d-flex flex-column px-1 lh-sm">
+                            <span class="text-body fw-bold"><t t-out="dashboardPeriodCard.title"/></span>
+                            <div class="d-flex align-items-baseline gap-1">
+                                <span class="fs-4 fw-bold">
+                                    <t t-out="dashboardPeriodCard.monetary ? formatCurrency(state.dashboardData[dashboardPeriodCard.key]['total']) : state.dashboardData[dashboardPeriodCard.key]['total']"/>
+                                </span>
+                                <span
+                                    t-if="state.dashboardData[dashboardPeriodCard.key]['gain'] !== null"
+                                    class="o_dashboard_card_evolution"
+                                    t-att-class="this.getPeriodCardClass(dashboardPeriodCard.key)"
+                                >
+                                    <t
+                                        t-out="state.dashboardData[dashboardPeriodCard.key]['gain']"
+                                    />%
+                                </span>
+                                <span
+                                    t-else=""
+                                    class="o_dashboard_card_evolution"
+                                    t-att-class="this.getPeriodCardClass(dashboardPeriodCard.key)"
+                                >
+                                    N/A
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

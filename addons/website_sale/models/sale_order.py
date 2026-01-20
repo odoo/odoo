@@ -9,7 +9,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request
-from odoo.tools import float_is_zero
+from odoo.tools import SQL, float_is_zero, float_round
 
 from odoo.addons.website_sale.models.website import (
     FISCAL_POSITION_SESSION_CACHE_KEY,
@@ -45,6 +45,10 @@ class SaleOrder(models.Model):
     only_services = fields.Boolean(string="Only Services", compute='_compute_cart_info')
     is_abandoned_cart = fields.Boolean(
         string="Abandoned Cart", compute='_compute_abandoned_cart', search='_search_abandoned_cart',
+    )
+    # filter related fields
+    is_unfulfilled = fields.Boolean(
+        string="Unfulfilled Orders", search='_search_is_unfulfilled', store=False
     )
 
     #=== COMPUTE METHODS ===#
@@ -163,6 +167,20 @@ class SaleOrder(models.Model):
 
     def _default_team_id(self):
         return super()._default_team_id() or self.website_id.salesteam_id.id
+
+    def _search_is_unfulfilled(self, operator, value):
+        if operator not in ('=', '!='):
+            return NotImplemented
+
+        if (operator == '=' and value) or (operator == '!=' and not value):
+            effective_operator = 'any'
+        else:
+            effective_operator = 'not any'
+
+        line_domain = Domain.custom(
+            to_sql=lambda table: SQL('%s < %s', table.qty_delivered, table.product_uom_qty),
+        )
+        return Domain('state', '=', 'sale') & Domain('order_line', effective_operator, line_domain)
 
     #=== CRUD METHODS ===#
 
@@ -924,3 +942,111 @@ class SaleOrder(models.Model):
                 partners_to_archive |= commercial_partner + commercial_partner.child_ids
 
         partners_to_archive.active = False
+
+    @api.model
+    def retrieve_ecommerce_dashboard(self, period_days):
+        """Retrieve statistics for the eCommerce dashboard for a given period(number of days).
+
+        This includes:
+        - Current period metrics: total visitors, total sales, and total orders.
+        - Period-over-period gains: comparison with the previous equivalent period.
+        - Overall global counts: orders to fulfill, to confirm, and to invoice.
+
+        :param int period_days: The selected days used to filter orders and visitors.
+        :return: A dictionary containing all computed dashboard statistics.
+        :rtype: dict
+        """
+        # Shape of the return value
+        dashboard_data = {
+            'visitors': {'total': 0, 'gain': None},
+            'sales': {'total': 0, 'gain': None},
+            'orders': {'total': 0, 'gain': None},
+            'to_fulfill': 0,
+            'to_confirm': 0,
+            'to_invoice': 0,
+            'currency_id': self.env.company.currency_id.id,
+        }
+
+        # Build domain for the given period
+        ecommerce_orders_domain = Domain('website_id', '!=', False) & Domain('state', '=', 'sale')
+
+        sale_report_period_domain = (
+            self._get_period_domain('date', period_days) & ecommerce_orders_domain
+        )
+        sale_report_previous_period_domain = (
+            self._get_period_domain('date', period_days, previous=True)
+            & ecommerce_orders_domain
+        )
+
+        visitor_period_domain = self._get_period_domain('last_connection_datetime', period_days)
+        visitor_previous_period_domain = self._get_period_domain(
+            'last_connection_datetime', period_days, previous=True,
+        )
+
+        current_period_totals = self._get_period_totals(sale_report_period_domain, visitor_period_domain)
+        previous_period_totals = self._get_period_totals(
+            sale_report_previous_period_domain,
+            visitor_previous_period_domain,
+        )
+
+        # update totals + compute gain
+        for key in current_period_totals:
+            current_total = current_period_totals[key]
+            previous_total = previous_period_totals[key]
+
+            dashboard_data[key]['total'] = current_total
+            dashboard_data[key]['gain'] = (
+                round(((current_total - previous_total) / previous_total) * 100)
+                if previous_total
+                else None
+            )
+
+        dashboard_data.update({
+            'to_fulfill': self.search_count(
+                Domain('is_unfulfilled', '=', True) & ecommerce_orders_domain,
+            ),
+            'to_confirm': self.search_count(
+                Domain('state', '=', 'sent') & Domain('website_id', '!=', False),
+            ),
+            'to_invoice': self.search_count(
+                Domain('invoice_status', '=', 'to invoice') & ecommerce_orders_domain,
+            ),
+        })
+
+        return dashboard_data
+
+    def _get_period_domain(self, field, period_days, previous=False):
+        """Build a domain to filter records for a given time period.
+
+        :param str field: The datetime field used for date filtering.
+        :param int period_days: Number of days representing the target period.
+        :param bool previous: When True, returns a domain for the previous equivalent period.
+        :return: Domain used to filter records by date range.
+        """
+        if not previous:
+            return Domain(field, '>', f'today -{period_days}d +1d')
+        return (
+            Domain(field, '>', f'today -{period_days * 2}d +1d')
+            & Domain(field, '<', f'today -{period_days}d +1d')
+        )
+
+    def _get_period_totals(self, report_period_domain, visitor_period_domain):
+        """Calculate aggregated statistics for orders and visitors for a given period.
+
+        :param Domain report_period_domain: Domain used to filter sale orders.
+        :param Domain visitor_period_domain: Domain used to filter website visitors.
+        :return: A dictionary containing total orders, total sales, and total visitors for
+                the given period.
+        :rtype: dict
+        """
+        aggregated_order_data = self.env['sale.report']._read_group(
+            domain=report_period_domain,
+            aggregates=['price_total:sum', '__count'],
+        )
+        visitor_count = self.env['website.visitor'].sudo().search_count(visitor_period_domain)
+        total_sales, total_orders = aggregated_order_data[0]
+        return {
+            'orders': total_orders,
+            'sales': float_round(total_sales, precision_rounding=0.01),
+            'visitors': visitor_count,
+        }
