@@ -18,21 +18,37 @@ export class WebsiteSnippetModel extends SnippetModel {
     /**
      * @override
      */
-    getSnippetLabel(snippetEl) {
-        const label = super.getSnippetLabel(snippetEl);
+    getSnippetLabel(snippetEl, isCustom = false) {
+        let label = super.getSnippetLabel(snippetEl);
+        if (label) {
+            return label;
+        }
+
+        const contentEl = snippetEl.children[0];
+        const parallaxLabel = _t("Parallax");
+        const fullScreenHeightLabel = _t("Full-Screen");
+
+        // Retrieve the original snippet label when a snippet is a custom
+        // snippet.
+        if (isCustom) {
+            const originalSnippetLabel = this.getOriginalSnippet(contentEl.dataset.snippet)?.label;
+            if (
+                originalSnippetLabel &&
+                ![parallaxLabel, fullScreenHeightLabel].includes(originalSnippetLabel)
+            ) {
+                return originalSnippetLabel;
+            }
+        }
+
         // In the following test, we check whether labels should be displayed
         // depending on whether an option was applied or not. For example, a
         // snippet will have a “parallax” label if it was saved with the
         // parallax option enabled. On the other hand, it will not have this
         // label if the option was disabled before the snippet was saved.
-        if (!label) {
-            const contentEl = snippetEl.children[0];
-            if (contentEl.matches(".parallax") || !!contentEl.querySelector(".parallax")) {
-                return _t("Parallax");
-            }
-            if (contentEl.matches(".o_full_screen_height")) {
-                return _t("Full-Screen");
-            }
+        if (contentEl.matches(".parallax") || contentEl.querySelector(".parallax")) {
+            label = parallaxLabel;
+        } else if (contentEl.matches(".o_full_screen_height")) {
+            label = fullScreenHeightLabel;
         }
         return label;
     }
