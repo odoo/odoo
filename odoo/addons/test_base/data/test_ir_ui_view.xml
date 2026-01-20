@@ -1,0 +1,33 @@
+<odoo>
+    <data>
+        <record id="view_model_all_access" model="ir.ui.view">
+            <field name="name">Test attrs and groups</field>
+            <field name="model">test_orm.model.all_access</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="ab" readony="cd" groups="base.group_system"/>
+                    <field name="cd" readonly="ab"/>
+                    <field name="cd" readonly="ab" groups="base.group_system"/>
+                    <field name="cd" readonly="ab" groups="!base.group_system"/>
+                    <div invisible="ef">stuff</div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_model_some_access_tree" model="ir.ui.view">
+            <field name="name">Test attrs and groups list</field>
+            <field name="model">test_orm.model.some_access</field>
+            <field name="arch" type="xml">
+                <list string="Test python expression in list" decoration-muted="a == 1">
+                    <field name="b"/>
+                    <field name="c"/>
+                    <field name="d" decoration-warning="c"/>
+                    <groupby name="g_id">
+                        <button string="Action" type="object" name="action_full" invisible="ab != 1"/>
+                    </groupby>
+                </list>
+            </field>
+        </record>
+    </data>
+</odoo>
