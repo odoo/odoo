@@ -20,6 +20,7 @@ export class ProfileEditor extends Interaction {
                 this.el.dataset.focusWebsiteDescription &&
                 this.el.dataset.focusWebsiteDescription === "true",
             userId: parseInt(this.el.dataset.userId),
+            canEditCountry: this.el.dataset.canEditCountry === "true",
         });
     }
 }
