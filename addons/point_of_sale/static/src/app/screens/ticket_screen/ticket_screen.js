@@ -224,43 +224,24 @@ export class TicketScreen extends Component {
         const order = this.pos.models["pos.order"].get(orderId);
         this.setSelectedOrder(order);
     }
-    getRefundableQty(orderline) {
-        const toRefundDetails = orderline
-            .getAllLinesInCombo()
-            .map((line) => this.getToRefundDetail(line));
-        for (const toRefundDetail of toRefundDetails) {
-            toRefundDetail.refundableQty = 0;
-            if (toRefundDetail.destination_order_id) {
-                this.numberBuffer.reset();
-                continue;
-            }
-            const refundableQty = toRefundDetail.line.qty - toRefundDetail.line.refundedQty;
-            if (refundableQty <= 0 || refundableQty <= toRefundDetail.qty) {
-                this.numberBuffer.reset();
-                continue;
-            }
-            toRefundDetail.refundableQty = refundableQty;
-        }
-        return toRefundDetails;
-    }
     onClickOrderline(orderline) {
         const order = this.getSelectedOrder();
         if (order?.finalized) {
             if (this.state.selectedOrderlineIds[order.id] == orderline.id) {
-                const toRefundDetails = this.getRefundableQty(orderline);
-                for (const toRefundDetail of toRefundDetails) {
-                    if (
-                        Object.values(toRefundDetails).some(
-                            (detail) => detail.destination_order_uuid
-                        )
-                    ) {
-                        continue;
-                    }
-                    toRefundDetail.qty = Math.min(
-                        toRefundDetail.qty + 1,
-                        toRefundDetail.refundableQty
-                    );
+                const toRefundDetail = this.getToRefundDetail(orderline);
+                if (Object.values(toRefundDetail).some((detail) => detail.destination_order_uuid)) {
+                    return;
                 }
+                if (toRefundDetail.qty == toRefundDetail.refundableQty) {
+                    toRefundDetail.qty = 0;
+                } else {
+                    toRefundDetail.qty += 1;
+                }
+                this._onUpdateSelectedOrderline({
+                    key: undefined,
+                    buffer: `${toRefundDetail.qty}`,
+                });
+                return;
             }
             this.state.selectedOrderlineIds[order.id] = orderline.id;
             this.numberBuffer.reset();
@@ -273,6 +254,38 @@ export class TicketScreen extends Component {
             this.setOrder(refundOrder);
         }
     }
+    _setToRefundDetail(toRefundDetail, buffer) {
+        // When already linked to an order, do not modify the to refund quantity.
+        if (toRefundDetail.destionation_order_id) {
+            return this.numberBuffer.reset();
+        }
+
+        toRefundDetail.refundableQty = toRefundDetail.line.qty - toRefundDetail.line.refundedQty;
+        if (toRefundDetail.refundableQty <= 0) {
+            return this.numberBuffer.reset();
+        }
+
+        if (buffer == null || buffer == "") {
+            toRefundDetail.qty = 0;
+        } else {
+            const quantity = Math.abs(parseFloat(buffer));
+            if (quantity > toRefundDetail.refundableQty) {
+                this.numberBuffer.reset();
+                if (!toRefundDetail.line.combo_parent_id) {
+                    this.dialog.add(AlertDialog, {
+                        title: _t("Maximum Exceeded"),
+                        body: _t(
+                            "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
+                            quantity,
+                            toRefundDetail.refundableQty
+                        ),
+                    });
+                }
+            } else {
+                toRefundDetail.qty = quantity;
+            }
+        }
+    }
     _onUpdateSelectedOrderline({ key, buffer }) {
         const order = this.getSelectedOrder();
         if (!order) {
@@ -280,48 +293,37 @@ export class TicketScreen extends Component {
         }
 
         const selectedOrderlineId = this.getSelectedOrderlineId();
-        const orderline = order.lines.find((line) => line.id == selectedOrderlineId);
+        let orderline = order.lines.find((line) => line.id == selectedOrderlineId);
         if (!orderline) {
             return this.numberBuffer.reset();
         }
 
-        const toRefundDetails = this.getRefundableQty(orderline);
-        for (const toRefundDetail of toRefundDetails) {
-            if (buffer == null || buffer == "") {
-                toRefundDetail.qty = 0;
-            } else {
-                const quantity = Math.abs(parseFloat(buffer));
-                if (quantity > toRefundDetail.refundableQty) {
-                    this.numberBuffer.reset();
-                    if (!toRefundDetail.line.combo_parent_id) {
-                        this.dialog.add(AlertDialog, {
-                            title: _t("Maximum Exceeded"),
-                            body: _t(
-                                "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
-                                quantity,
-                                toRefundDetail.refundableQty
-                            ),
-                        });
-                    }
-                } else {
-                    toRefundDetail.qty = quantity;
-                    // Automatically select the next orderline if the refund quantity equals the refundable quantity
-                    if (quantity === toRefundDetail.refundableQty) {
-                        const orderlines = order.getOrderlines();
-                        const currentIndex = orderlines.findIndex(
-                            (line) => line.id === selectedOrderlineId
-                        );
-                        if (currentIndex !== -1) {
-                            const nextLine = orderlines
-                                .slice(currentIndex + 1)
-                                .find((line) => line.isValidForRefund);
-                            if (nextLine) {
-                                this.state.selectedOrderlineIds[order.id] = nextLine.id;
-                                this.numberBuffer.reset();
-                            }
-                        }
-                    }
-                }
+        if (orderline.combo_parent_id) {
+            orderline = orderline.combo_parent_id;
+        }
+
+        const parentToRefundDetail = this.getToRefundDetail(orderline);
+        this._setToRefundDetail(parentToRefundDetail, buffer);
+
+        for (const comboLine of orderline.combo_line_ids) {
+            const toRefundDetail = this.getToRefundDetail(comboLine);
+            toRefundDetail.qty = (comboLine.qty / orderline.qty) * parentToRefundDetail.qty;
+        }
+
+        if (parentToRefundDetail.qty === parentToRefundDetail.refundableQty) {
+            this._selectNextOrderline(order, selectedOrderlineId);
+        }
+    }
+    _selectNextOrderline(order, selectedOrderlineId) {
+        const orderlines = order.getOrderlines();
+        const currentIndex = orderlines.findIndex((line) => line.id === selectedOrderlineId);
+        if (currentIndex !== -1) {
+            const nextLine = orderlines
+                .slice(currentIndex + 1)
+                .find((line) => line.isValidForRefund);
+            if (nextLine) {
+                this.state.selectedOrderlineIds[order.id] = nextLine.id;
+                this.numberBuffer.reset();
             }
         }
     }
