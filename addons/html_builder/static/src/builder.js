@@ -46,29 +46,30 @@ export class Builder extends Component {
         iframeLoaded: { type: Object },
         isMobile: { type: Boolean },
         Plugins: { type: Array, optional: true },
+        // This fragment of config will be passed to the Editor and be
+        // available to the plugins in `config`
         config: { type: Object, optional: true },
         getThemeTab: { type: Function, optional: true },
         editableSelector: { type: String },
         themeTabDisplayName: { type: String, optional: true },
         slots: { type: Object, optional: true },
-        getCustomizeTranslationTab: { type: Function, optional: true },
+        initialTab: { type: String, optional: true },
+        onlyCustomizeTab: { type: Boolean, optional: true },
     };
     static defaultProps = {
         config: {},
         themeTabDisplayName: _t("Theme"),
+        initialTab: "blocks",
+        onlyCustomizeTab: false,
     };
 
     setup() {
         this.ThemeTab = this.props.getThemeTab?.();
-        this.CustomizeTranslationTab = this.props.getCustomizeTranslationTab?.();
-        // const actionService = useService("action");
         this.builder_sidebarRef = useRef("builder_sidebar");
         this.state = useState({
             canUndo: false,
             canRedo: false,
-            activeTab: this.displayOnlyCustomizeTab
-                ? "customize"
-                : this.props.config.initialTab || "blocks",
+            activeTab: this.props.onlyCustomizeTab ? "customize" : this.props.initialTab,
             currentOptionsContainers: undefined,
         });
         this.invisibleElementsPanelState = useState({
@@ -268,10 +269,6 @@ export class Builder extends Component {
         await Promise.all(getStatePromises);
         const isLastTriggerId = this.lastTrigerUpdateId === currentTriggerId;
         resolve(isLastTriggerId);
-    }
-
-    get displayOnlyCustomizeTab() {
-        return this.props.config.isTranslationMode;
     }
 
     getInvisibleSelector(isMobile = this.props.isMobile) {

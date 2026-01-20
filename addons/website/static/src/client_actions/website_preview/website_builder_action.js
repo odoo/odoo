@@ -222,9 +222,10 @@ export class WebsiteBuilderClientAction extends Component {
             overlayRef: this.overlayRef,
             iframeLoaded: iframeLoaded,
             isMobile: this.websiteContext.isMobile,
+            initialTab: this.initialTab,
+            onlyCustomizeTab: this.translation,
             config: {
                 initialTarget: this.target,
-                initialTab: this.initialTab,
                 builderSidebar: {
                     withHiddenSidebar: async (cb) => {
                         try {
@@ -234,12 +235,7 @@ export class WebsiteBuilderClientAction extends Component {
                             this.state.showSidebar = true;
                         }
                     },
-                    // TODO: remove `toggle` in master
-                    toggle: (show) => {
-                        this.state.showSidebar = show ?? !this.state.showSidebar;
-                    },
                 },
-                isTranslationMode: this.translation,
             },
         };
         return { translation: this.translation, builderProps };
@@ -552,7 +548,7 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     async reloadIframeAndCloseEditor() {
-        this.initialTab = null;
+        delete this.initialTab;
         this.target = null;
         const isEditing = false;
         this.state.isEditing = isEditing;

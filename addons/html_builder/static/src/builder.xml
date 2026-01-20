@@ -13,7 +13,7 @@
                 <t t-if="props.slots?.extraActions" t-slot="extraActions"/>
             </div>
         </div>
-        <div t-if="!props.config.isTranslationMode" class="o-snippets-tabs position-relative">
+        <div t-if="!props.onlyCustomizeTab" class="o-snippets-tabs position-relative">
             <div
                 class="o-snippets-tabs-highlighter position-absolute start-50 h-100 pe-none"
                 t-att-class="{
@@ -23,7 +23,7 @@
             />
             <ul class="nav nav-underline" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button id="blocks-tab" data-name="blocks" data-hotkey="1" class="o-hb-tab nav-link position-relative w-100" t-att-class="{'active cursor-default': state.activeTab === 'blocks'}" t-on-click="() => this.onTabClick('blocks')" t-att-disabled="displayOnlyCustomizeTab" role="tab" t-att-aria-selected="state.activeTab === 'blocks' ? 'true' : 'false'">
+                    <button id="blocks-tab" data-name="blocks" data-hotkey="1" class="o-hb-tab nav-link position-relative w-100" t-att-class="{'active cursor-default': state.activeTab === 'blocks'}" t-on-click="() => this.onTabClick('blocks')" t-att-disabled="props.onlyCustomizeTab" role="tab" t-att-aria-selected="state.activeTab === 'blocks' ? 'true' : 'false'">
                         <i class="fa fa-plus me-2" role="none"/>Blocks
                     </button>
                 </li>
@@ -33,7 +33,7 @@
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button id="theme-tab" data-name="theme" data-hotkey="2" t-if="ThemeTab" class="o-hb-tab nav-link position-relative w-100" t-att-class="{'active cursor-default': state.activeTab === 'theme'}" t-on-click="() => this.onTabClick('theme')" t-att-disabled="displayOnlyCustomizeTab" role="tab" t-att-aria-selected="state.activeTab === 'theme' ? 'true' : 'false'">
+                    <button id="theme-tab" data-name="theme" data-hotkey="2" t-if="ThemeTab" class="o-hb-tab nav-link position-relative w-100" t-att-class="{'active cursor-default': state.activeTab === 'theme'}" t-on-click="() => this.onTabClick('theme')" t-att-disabled="props.onlyCustomizeTab" role="tab" t-att-aria-selected="state.activeTab === 'theme' ? 'true' : 'false'">
                         <i class="fa fa-cog me-2" role="none"/><t t-out="props.themeTabDisplayName"/>
                     </button>
                 </li>
