@@ -84,6 +84,11 @@ class HrEmployee(models.Model):
         groups="hr.group_hr_user,hr_payroll.group_hr_payroll_user",
     )
 
+    def _get_hr_responsible_domain(self):
+        return "[('share', '=', False), ('company_ids', 'in', company_id), ('all_group_ids', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
+
+    hr_responsible_id = fields.Many2one(related='version_id.hr_responsible_id', readonly=False, inherited=True, domain=_get_hr_responsible_domain, groups="hr.group_hr_user")
+
     @api.model
     def _lang_get(self):
         return self.env['res.lang'].get_installed()
