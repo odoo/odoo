@@ -997,10 +997,8 @@ patch(PosOrder.prototype, {
         }
         const taxKey = cheapestLine.tax_ids.map((t) => t.id);
         return {
-            discountable: cheapestLine.comboTotalPriceWithoutTax,
-            discountablePerTax: Object.fromEntries([
-                [taxKey, cheapestLine.comboTotalPriceWithoutTax],
-            ]),
+            discountable: cheapestLine.comboTotalBasePrice,
+            discountablePerTax: Object.fromEntries([[taxKey, cheapestLine.comboTotalBasePrice]]),
         };
     },
     /**
