@@ -9,13 +9,13 @@
 # Martin Trigaux, 2024
 # Wil Odoo, 2025
 # Sanne Kristensen <sanne@vkdata.dk>, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-12-31 16:31+0000\n"
+"POT-Creation-Date: 2026-01-15 18:38+0000\n"
+"PO-Revision-Date: 2026-01-17 12:46+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/"
 "account_peppol/da/>\n"
@@ -121,6 +121,12 @@ msgstr "Konto bevægelse send batch wizard"
 #: model:ir.model,name:account_peppol.model_account_move_send_wizard
 msgid "Account Move Send Wizard"
 msgstr "Konto bevægelse send wizard"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_edi_user
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_user
+msgid "Account Peppol Edi User"
+msgstr "Brugere af Peppol EDI-kontoen"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__is_peppol_journal
@@ -271,6 +277,11 @@ msgid "Company"
 msgstr "Virksomhed"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_name
+msgid "Company Name"
+msgstr "Virksomhedsnavn"
+
+#. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_config_settings
 msgid "Config Settings"
 msgstr "Konfigurer opsætning"
@@ -349,9 +360,26 @@ msgstr "Demo"
 
 #. module: account_peppol
 #. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+msgid "Disable the reception."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 msgid "Discard"
 msgstr "Kassér"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Disconnect"
+msgstr "Afbryd forbindelsen"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid "Disconnected this branch company peppol configuration from %s."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__display_name
@@ -394,7 +422,6 @@ msgstr "EDI-driftstilstand"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__edi_user_id
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__edi_user_id
-#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_user
 msgid "EDI user"
 msgstr "EDI-bruger"
 
@@ -497,7 +524,8 @@ msgstr "Indgående fakturakladde"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Invoice %s is too big to send via peppol (64MB limit)"
-msgstr "Fakturaen på %s er for stor til at blive sendt via Peppol (maks. 64 MB)"
+msgstr ""
+"Fakturaen på %s er for stor til at blive sendt via Peppol (maks. 64 MB)"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -638,6 +666,11 @@ msgid "PEPPOL: update participant status"
 msgstr "PEPPOL: Opdatér deltagerstatus"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_id
+msgid "Parent Company"
+msgstr "Moder firma"
+
+#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
 msgid "Partner cannot receive format"
 msgstr "Partner kan ikke modtage format"
@@ -664,6 +697,17 @@ msgid "Pending Reception"
 msgstr "Afventer modtagelse"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Peppol Address should be provided."
+msgstr "Peppol-adresse skal angives."
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_can_send
+msgid "Peppol Can Send"
+msgstr "Peppol kan sende"
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_endpoint
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_endpoint
@@ -675,6 +719,22 @@ msgstr "Peppol-slutpunkt"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Peppol ID"
 msgstr "Peppol-ID"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Peppol ID should be different from main company."
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_parent_company_id
+msgid "Peppol Parent Company"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_parent_company_name
+msgid "Peppol Parent Company Name"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
@@ -700,6 +760,11 @@ msgstr "Peppol-tjeneste"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_peppol_service_wizard
 msgid "Peppol Services Wizard"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_use_parent_company
+msgid "Peppol Use Parent Company"
 msgstr ""
 
 #. module: account_peppol
@@ -830,6 +895,16 @@ msgid "Register as a receiver"
 msgstr "Registrér dig som modtager"
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_self
+msgid "Register using the current company"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_parent
+msgid "Register using the parent company by setting the same EAS/Endpoint"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/tools/demo_utils.py:0
 msgid "Registered as a sender (demo)."
@@ -859,10 +934,23 @@ msgid "Remove from Peppol"
 msgstr "Fjern fra Peppol"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+msgid ""
+"Route your vendor bills elsewhere while maintaining the ability to send "
+"customer invoices."
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__peppol_verification_code
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__verification_code
 msgid "SMS verification code"
 msgstr "SMS bekræftelseskode"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
+msgid "Selected Company"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-javascript
@@ -872,8 +960,8 @@ msgstr "Send igen"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "Send electronic invoices, and receive bills automatically via Peppol"
-msgstr "Send elektroniske fakturaer, og modtag regninger automatisk via Peppol"
+msgid "Send electronic invoices, and receive bills automatically via Peppol."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__service_ids
@@ -972,6 +1060,14 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
+msgid ""
+"The partner has indicated it does not accept this document type, so you "
+"cannot send this invoice via Peppol."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
 msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
 msgstr ""
 
@@ -993,6 +1089,11 @@ msgstr "Den unikke ID, der identificerer denne bruger, typisk momsnummeret"
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "The verification code is not correct"
 msgstr "Verifikationskoden er ikke korrekt"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "This branch company will use the active Peppol connection found on"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1058,6 +1159,16 @@ msgstr ""
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 msgid "Update"
 msgstr "Opdater"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection
+msgid "Use Parent Connection"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection_selection
+msgid "Use Parent Connection Selection"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__edi_mode_constraint
@@ -1130,6 +1241,11 @@ msgid ""
 msgstr ""
 "Du er ved at registrere dig med dit momsnummer. Sørg for først at være "
 "registreret i dit handelsregister (BCE/KBO) for at overholde de nye regler."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "You are sending from"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1225,6 +1341,11 @@ msgid "Your registration should be activated within a day."
 msgstr "Din registrering bør være aktiveret inden for en dag."
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "and send invoices via Peppol on their behalf."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__invoice_sending_method__peppol
@@ -1255,6 +1376,10 @@ msgstr "for at sende fakturaer, men denne"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "bruger"
+
+#~ msgid "Send electronic invoices, and receive bills automatically via Peppol"
+#~ msgstr ""
+#~ "Send elektroniske fakturaer, og modtag regninger automatisk via Peppol"
 
 #~ msgid "Cannot receive this format"
 #~ msgstr "Dette format kan ikke anvendes"

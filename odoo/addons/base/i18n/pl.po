@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-13 15:13+0000\n"
-"PO-Revision-Date: 2026-01-10 09:10+0000\n"
+"PO-Revision-Date: 2026-01-17 09:09+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/base/pl/>"
 "\n"
@@ -1122,12 +1122,12 @@ msgstr ""
 "\n"
 "**BSB** - wymagane, 6 cyfr, które zostaną automatycznie sformatowane.\n"
 "\n"
-"**Kod instytucji finansowej** - wymagany (podany przez bank lub dostępny w "
-"Google).\n"
-"w Google). Składa się z trzech wielkich liter.\n"
+"**Kod instytucji finansowej** - wymagany "
+"(podany przez bank lub dostępny w Google) składa się z trzech wielkich liter."
+"\n"
 "\n"
 "**Nazwa użytkownika** - niektóre banki zezwalają na podanie jej w dowolnej "
-"formie.\n"
+"formie, \n"
 "mogą odrzucić plik ABA, jeśli nazwa użytkownika dostarczającego nie jest "
 "zgodna z oczekiwaniami. Nazwa\n"
 "nie może być dłuższa niż 26 znaków.\n"
@@ -1136,7 +1136,7 @@ msgstr ""
 "przydzielany przez bank.\n"
 "alokacją banku. Składa się z 6 cyfr.\n"
 "\n"
-"**Include Self Balancing Transaction** - niektóre instytucje wymagają, aby\n"
+"**Include Self Balancing Transaction** - niektóre instytucje wymagają,\n"
 "aby ostatnią transakcją była transakcja samobilansująca, która jest używana "
 "jako weryfikacja.\n"
 "\n"
@@ -1144,8 +1144,8 @@ msgstr ""
 "\n"
 "Konto pojawi się na liście jako nazwa dziennika.\n"
 "\n"
-"Edycja pokaże **Numer konta**. Jest to ważne, ponieważ jest używane przez\n"
-"przez proces ABA.\n"
+"Edycja pokaże **Numer konta**. Jest to ważne, ponieważ jest używane przez "
+"proces ABA.\n"
 "\n"
 "**Bank** jest opcjonalny.\n"
 "\n"
@@ -1154,10 +1154,8 @@ msgstr ""
 "Konto płatnicze pojawi się na liście jako numer konta.\n"
 "\n"
 "**Account Holder Name** - można wprowadzić w tym miejscu, jeśli jest to "
-"wymagane. Generalnie nie\n"
-"weryfikowana przez banki w przelewach ABA, ale może pojawić się na wyciągu "
-"bankowym odbiorcy płatności.\n"
-"na wyciągu bankowym odbiorcy płatności.\n"
+"wymagane. Generalnie nie jest weryfikowan przez banki w przelewach ABA, ale "
+"może pojawić się na wyciągu bankowym odbiorcy płatności.\n"
 "\n"
 "- Konta bankowe dostawców można skonfigurować w tym samym miejscu, jednak "
 "zazwyczaj\n"
@@ -1177,7 +1175,7 @@ msgstr ""
 "Użyj\n"
 "---\n"
 "\n"
-"- Utwórz płatność dostawcy w normalny sposób.\n"
+"- Utwórz płatność dostawcy jak zazwyczaj.\n"
 "\n"
 "Upewnij się, że **Dostawca** posiada ważny rachunek płatniczy ABA.\n"
 "\n"
@@ -1187,9 +1185,8 @@ msgstr ""
 "Wybierz przycisk opcji **Przelew ABA**.\n"
 "\n"
 "Jeśli dostawca ma wiele kont bankowych, może być konieczne wybranie\n"
-"prawidłowe **Konto bankowe odbiorcy**. Lub, jeśli płacisz rachunek dostawcy, "
-"może być\n"
-"może wymagać powiązania z prawidłowym rachunkiem bankowym.\n"
+"prawidłowego **Konta bankowego odbiorcy**. Lub, jeśli płacisz na rachunek "
+"dostawcy, może być wymagane powiązanie z prawidłowym rachunkiem bankowym.\n"
 "\n"
 "Wprowadź kwotę płatności itp.\n"
 "\n"
@@ -1199,13 +1196,13 @@ msgstr ""
 "\n"
 "Korzystając z filtrów lub sortowania, wybierz płatności, które mają zostać "
 "uwzględnione. W sekcji\n"
-"*Actions* wybierz *Create batch payment* (Utwórz płatność zbiorczą).\n"
+"*Akcje* wybierz *Utwórz płatność zbiorczą*.\n"
 "\n"
-"- *Vendors > Batch Payments* (Sprzedawcy > Płatności zbiorcze).\n"
+"- *Dostawcy > Płatności zbiorcze*.\n"
 "\n"
 "Podczas zatwierdzania płatności zbiorczej zostanie wygenerowany plik ABA. "
-"Można go\n"
-"zostać ponownie wygenerowany. Plik ten można następnie przesłać do banku.\n"
+"Można go generować wielokrotnie. Plik ten można następnie przesłać do banku."
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec_reports_ats
@@ -16272,7 +16269,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_flutterwave
 msgid "A Nigerian payment provider covering several African countries."
-msgstr "Nigeryjski dostawca płatności obejmujący kilka krajów afrykańskich."
+msgstr "Nigeryjski operator płatności obejmujący kilka krajów afrykańskich."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides_forum
@@ -16441,20 +16438,20 @@ msgstr "Operator płatności dla Indonezji i Filipin."
 #: model:ir.module.module,summary:base.module_payment_custom
 msgid "A payment provider for custom flows like wire transfers."
 msgstr ""
-"Dostawca płatności dla niestandardowych przepływów, takich jak przelewy "
+"Operator płatności dla niestandardowych przepływów, takich jak przelewy "
 "bankowe."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_sepa_direct_debit
 msgid "A payment provider for enabling Sepa Direct Debit in the EU."
 msgstr ""
-"Dostawca płatności umożliwiający realizację polecenia zapłaty Sepa w UE."
+"Operator płatności umożliwiający realizację polecenia zapłaty Sepa w UE."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_demo
 msgid "A payment provider for running fake payment flows for demo purposes."
 msgstr ""
-"Dostawca płatności do uruchamiania fałszywych przepływów płatności w celach "
+"Operator płatności do uruchamiania fałszywych przepływów płatności w celach "
 "demonstracyjnych."
 
 #. module: base
@@ -19101,18 +19098,18 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_aps
 msgid "An Amazon payment provider covering the MENA region."
-msgstr "Dostawca płatności Amazon obejmujący region MENA."
+msgstr "Operator płatności Amazon obejmujący region MENA."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_paypal
 msgid "An American payment provider for online payments all over the world."
-msgstr "Amerykański dostawca płatności internetowych na całym świecie."
+msgstr "Amerykański operator płatności internetowych na całym świecie."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_stripe
 msgid "An Irish-American payment provider covering the US and many others."
 msgstr ""
-"Irlandzko-amerykański dostawca płatności obejmujący swoim zasięgiem Stany "
+"Irlandzko-amerykański operator płatności obejmujący swoim zasięgiem Stany "
 "Zjednoczone i wiele innych krajów."
 
 #. module: base
@@ -19182,7 +19179,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_authorize
 msgid "An payment provider covering the US, Australia, and Canada."
-msgstr "Dostawca płatności obejmujący Stany Zjednoczone, Australię i Kanadę."
+msgstr "Operator płatności obejmujący Stany Zjednoczone, Australię i Kanadę."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
@@ -39075,87 +39072,87 @@ msgstr "Windykacja"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_adyen
 msgid "Payment Provider: Adyen"
-msgstr "Dostawca płatności: Adyen"
+msgstr "Operator płatności: Adyen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_aps
 msgid "Payment Provider: Amazon Payment Services"
-msgstr "Dostawca płatności: Amazon Payment Services"
+msgstr "Operator płatności: Amazon Payment Services"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_asiapay
 msgid "Payment Provider: AsiaPay"
-msgstr "Dostawca płatności: AsiaPay"
+msgstr "Operator płatności: AsiaPay"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_authorize
 msgid "Payment Provider: Authorize.Net"
-msgstr "Dostawca płatności: Authorize.Net"
+msgstr "Operator płatności: Authorize.Net"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_buckaroo
 msgid "Payment Provider: Buckaroo"
-msgstr "Dostawca płatności: Buckaroo"
+msgstr "Operator płatności: Buckaroo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_custom
 msgid "Payment Provider: Custom Payment Modes"
-msgstr "Dostawca płatności: Niestandardowe tryby płatności"
+msgstr "Operator płatności: Niestandardowe tryby płatności"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_demo
 msgid "Payment Provider: Demo"
-msgstr "Dostawca płatności: Demo"
+msgstr "Operator płatności: Demo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_flutterwave
 msgid "Payment Provider: Flutterwave"
-msgstr "Dostawca płatności: Flutterwave"
+msgstr "Operator płatności: Flutterwave"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_mercado_pago
 msgid "Payment Provider: Mercado Pago"
-msgstr "Dostawca płatności: Mercado Pago"
+msgstr "Operator płatności: Mercado Pago"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_mollie
 msgid "Payment Provider: Mollie"
-msgstr "Dostawca płatności: Mollie"
+msgstr "Operator płatności: Mollie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_nuvei
 msgid "Payment Provider: Nuvei"
-msgstr "Dostawca płatności: Nuvei"
+msgstr "Operator płatności: Nuvei"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_paypal
 msgid "Payment Provider: Paypal"
-msgstr "Dostawca płatności: Paypal"
+msgstr "Operator płatności: Paypal"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_razorpay
 msgid "Payment Provider: Razorpay"
-msgstr "Dostawca płatności: Razorpay"
+msgstr "Operator płatności: Razorpay"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sepa_direct_debit
 msgid "Payment Provider: Sepa Direct Debit"
-msgstr "Dostawca płatności: Sepa Direct Debit"
+msgstr "Operator płatności: Sepa Direct Debit"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_stripe
 msgid "Payment Provider: Stripe"
-msgstr "Dostawca płatności: Stripe"
+msgstr "Operator płatności: Stripe"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_worldline
 msgid "Payment Provider: Worldline"
-msgstr "Dostawca płatności: Worldline"
+msgstr "Operator płatności: Worldline"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_xendit
 msgid "Payment Provider: Xendit"
-msgstr "Dostawca płatności: Xendit"
+msgstr "Operator płatności: Xendit"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_providers
@@ -39465,7 +39462,7 @@ msgstr "Wyświetlacz klienta śledzenia zamówień PoS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_preparation_display
 msgid "PoS Preparation Display"
-msgstr "PoS Wyświetlacz przygotowania"
+msgstr "Ekran przygotowawczy PoS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_hr_preparation_display
@@ -39475,7 +39472,7 @@ msgstr "Ekran przygotowawczy PoS HR"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_preparation_display
 msgid "PoS Preparation Display Restaurant"
-msgstr "PoS Przygotowanie Wyświetlacz Restauracja"
+msgstr "Ekran przygotowawczy PoS Restauracja"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_point_of_sale

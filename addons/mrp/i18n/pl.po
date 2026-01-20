@@ -7,13 +7,13 @@
 # Wil Odoo, 2025
 # Marta Wacławek, 2025
 # Marcin Lewandowski <email.marcina.lewandowskiego@gmail.com>, 2025
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2025-08-12 22:21+0000\n"
+"PO-Revision-Date: 2026-01-17 09:07+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/mrp/pl/>\n"
 "Language: pl\n"
@@ -21,9 +21,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -197,7 +197,7 @@ msgstr "+ %ddni"
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid "+ %s day(s)"
-msgstr ""
+msgstr "+ %s dzień(dni)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
@@ -296,6 +296,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-play fs-6\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
 msgstr ""
+"<i class=\"fa fa-play fs-6\" role=\"img\" aria-label=\"Uruchom\" title="
+"\"Uruchom\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
@@ -2635,7 +2637,7 @@ msgstr "Posiada linie routingu"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__has_worksheet
 msgid "Has Worksheet"
-msgstr ""
+msgstr "Ma arkusz roboczy"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__product_document__attached_on_mrp__hidden
@@ -3698,7 +3700,7 @@ msgstr "Bez pobrania częściowego"
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid "No BoM Found"
-msgstr ""
+msgstr "Nie znaleziono zestawienia materiałów"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -6871,6 +6873,7 @@ msgstr "Można połączyć produkcję tylko z tym samym stanem."
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "You cannot cancel a manufacturing order that is already done."
 msgstr ""
+"Nie można anulować zlecenia produkcyjnego, które zostało już zrealizowane."
 
 #. module: mrp
 #. odoo-python
@@ -6898,6 +6901,7 @@ msgstr "Nie można tworzyć zależności cyklicznych."
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "You cannot delete a manufacturing order that is already done."
 msgstr ""
+"Nie można usunąć zlecenia produkcyjnego, które zostało już zrealizowane."
 
 #. module: mrp
 #. odoo-python

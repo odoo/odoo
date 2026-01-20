@@ -258,6 +258,9 @@ function makeDOMHelpers(cleanup) {
             return {};
         }
         const rect = el.getBoundingClientRect();
+
+        rect.height = el.offsetHeight;
+
         if (options.adjust) {
             const style = getComputedStyle(el);
             const [pl, pr, pt, pb] = [

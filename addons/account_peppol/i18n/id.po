@@ -6,13 +6,13 @@
 # Wil Odoo, 2025
 # Abe Manyo, 2025
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-12-31 16:31+0000\n"
+"POT-Creation-Date: 2026-01-15 18:38+0000\n"
+"PO-Revision-Date: 2026-01-17 12:47+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-18/"
 "account_peppol/id/>\n"
@@ -123,6 +123,12 @@ msgstr "Pergerakkan Akun Kirim Batch Wizard"
 #: model:ir.model,name:account_peppol.model_account_move_send_wizard
 msgid "Account Move Send Wizard"
 msgstr "Pergerakkan Akun Kirim Wizard"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_edi_user
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_user
+msgid "Account Peppol Edi User"
+msgstr "Account Peppol Edi User"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__is_peppol_journal
@@ -271,6 +277,11 @@ msgid "Company"
 msgstr "Perusahaan"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_name
+msgid "Company Name"
+msgstr "Nama Perusahaan"
+
+#. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_config_settings
 msgid "Config Settings"
 msgstr "Pengaturan Konfigurasi"
@@ -348,9 +359,26 @@ msgstr "Demo"
 
 #. module: account_peppol
 #. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+msgid "Disable the reception."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 msgid "Discard"
 msgstr "Buang"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Disconnect"
+msgstr "Disconnect"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid "Disconnected this branch company peppol configuration from %s."
+msgstr "Konfigurasi peppol cabang perusahaan ini telah di-disconnect dari %s."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__display_name
@@ -393,7 +421,6 @@ msgstr "Mode pengoperasian EDI"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__edi_user_id
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__edi_user_id
-#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_user
 msgid "EDI user"
 msgstr "User EDI"
 
@@ -636,6 +663,11 @@ msgid "PEPPOL: update participant status"
 msgstr "PEPPOL: update status peserta"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_id
+msgid "Parent Company"
+msgstr "Perusahaan Induk"
+
+#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
 msgid "Partner cannot receive format"
 msgstr ""
@@ -654,12 +686,23 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
 msgid "Partner is on Peppol"
-msgstr ""
+msgstr "Partner ada di Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
 msgid "Pending Reception"
 msgstr "Pending Reception"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Peppol Address should be provided."
+msgstr "Alamat Peppol harus disediakan."
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_can_send
+msgid "Peppol Can Send"
+msgstr "Peppol Dapat Mengirim"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -673,6 +716,22 @@ msgstr "Peppol Endpoint"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Peppol ID"
 msgstr "Peppol ID"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Peppol ID should be different from main company."
+msgstr "ID Peppol harus berbeda dari perusahaan utama."
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_parent_company_id
+msgid "Peppol Parent Company"
+msgstr "Induk Perusahaan Peppol"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_parent_company_name
+msgid "Peppol Parent Company Name"
+msgstr "Nama Induk Perusahaan Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
@@ -699,6 +758,11 @@ msgstr "Layanan Peppol"
 #: model:ir.model,name:account_peppol.model_account_peppol_service_wizard
 msgid "Peppol Services Wizard"
 msgstr "Alat Bantu Layanan Peppol"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_use_parent_company
+msgid "Peppol Use Parent Company"
+msgstr "Peppol Menggunakan Induk Perusahaan"
 
 #. module: account_peppol
 #. odoo-python
@@ -828,6 +892,16 @@ msgid "Register as a receiver"
 msgstr "Daftar sebagai penerima"
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_self
+msgid "Register using the current company"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_parent
+msgid "Register using the parent company by setting the same EAS/Endpoint"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/tools/demo_utils.py:0
 msgid "Registered as a sender (demo)."
@@ -857,10 +931,23 @@ msgid "Remove from Peppol"
 msgstr "Hapus dari Peppol"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+msgid ""
+"Route your vendor bills elsewhere while maintaining the ability to send "
+"customer invoices."
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__peppol_verification_code
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__verification_code
 msgid "SMS verification code"
 msgstr "Kode verifikasi SMS"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
+msgid "Selected Company"
+msgstr "Perusahaan Terpilih"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -870,8 +957,8 @@ msgstr "Kirim lagi"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "Send electronic invoices, and receive bills automatically via Peppol"
-msgstr "Kirim faktur elektronik, dan terima tagihan otomatis melalui Peppol"
+msgid "Send electronic invoices, and receive bills automatically via Peppol."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__service_ids
@@ -969,6 +1056,14 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
+msgid ""
+"The partner has indicated it does not accept this document type, so you "
+"cannot send this invoice via Peppol."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
 msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
 msgstr "Mitra ini kekurangan PEPPOL EAS dan/atau pengidentifikasi Endpoint."
 
@@ -991,6 +1086,11 @@ msgstr "Id unik yang mengidentifikasi user ini, biasanya ppn"
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "The verification code is not correct"
 msgstr "Kode verifikasi tidak benar"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "This branch company will use the active Peppol connection found on"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1035,7 +1135,7 @@ msgstr "Terlalu banyak permintaan kode SMS. Silakan coba lagi nanti."
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
 msgid "Unchecked"
-msgstr ""
+msgstr "Tidak dicentang"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1053,6 +1153,16 @@ msgstr ""
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 msgid "Update"
 msgstr "Perbarui"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection
+msgid "Use Parent Connection"
+msgstr "Gunakan Koneksi Induk"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection_selection
+msgid "Use Parent Connection Selection"
+msgstr "Gunakan Pilihan Koneksi Induk"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__edi_mode_constraint
@@ -1127,6 +1237,11 @@ msgid ""
 msgstr ""
 "Anda akan mendaftar nomor PPN Anda. Pastikan Anda mendaftar dengan Company "
 "Registry Anda (BCE/KBO) agar mematuhi peraturan baru."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "You are sending from"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1226,6 +1341,11 @@ msgid "Your registration should be activated within a day."
 msgstr "Pendaftaran Anda harusnya diaktifkan dalam waktu satu hari."
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "and send invoices via Peppol on their behalf."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__invoice_sending_method__peppol
@@ -1256,6 +1376,9 @@ msgstr "untuk mengirim faktur, tapi yang ini"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "user-user"
+
+#~ msgid "Send electronic invoices, and receive bills automatically via Peppol"
+#~ msgstr "Kirim faktur elektronik, dan terima tagihan otomatis melalui Peppol"
 
 #~ msgid "Cannot receive this format"
 #~ msgstr "Tidak dapat menerima format ini"

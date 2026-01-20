@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.l10n_ar.tests.common import TestAr
+from odoo.addons.l10n_ar.tests.common import TestArCommon
 from odoo.tests import tagged
 from odoo import Command
 from datetime import datetime
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestL10nArWithholdingArRi(TestAr):
+class TestArWithholdingArRi(TestArCommon):
 
     @classmethod
     def setUpClass(cls):

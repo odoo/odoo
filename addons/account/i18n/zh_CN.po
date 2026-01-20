@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-08 18:36+0000\n"
+"POT-Creation-Date: 2026-01-15 18:38+0000\n"
 "PO-Revision-Date: 2025-12-06 17:08+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -15723,14 +15723,6 @@ msgid "The entry %(name)s (id %(id)s) must be in draft."
 msgstr "记项%(name)s（识别码%(id)s）必须为草稿。"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"The entry '%(move_name)s (id %(move_id)s) is using accounts from a different "
-"company."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
@@ -18800,6 +18792,12 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
 msgstr "不能在已归档日记账（%(journal)s）中过账分录"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
 
 #. module: account
 #. odoo-python
