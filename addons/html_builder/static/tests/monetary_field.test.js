@@ -1,8 +1,9 @@
 import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { expect, test, describe, animationFrame } from "@odoo/hoot";
 import { click, manuallyDispatchProgrammaticEvent, queryOne } from "@odoo/hoot-dom";
-import { pasteText } from "@html_editor/../tests/_helpers/user_actions";
+import { deleteBackward, pasteText } from "@html_editor/../tests/_helpers/user_actions";
 import { nodeSize } from "@html_editor/utils/position";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
 
 describe.current.tags("desktop");
 
@@ -29,6 +30,23 @@ test("clicking on the monetary field should select the amount", async () => {
             queryOne(":iframe span.oe_currency_value")
         )
     ).toBe(true, { message: "value of monetary field is selected" });
+});
+
+test("should make a span inside a monetary field be unremovable", async () => {
+    const { getEditor } = await setupHTMLBuilder("", {
+        headerContent: `
+            <p>
+                <span data-oe-model="product.template" data-oe-id="27" data-oe-field="list_price" data-oe-type="monetary" data-oe-expression="product.list_price" data-oe-xpath="/t[1]/div[1]/h3[2]/span[1]">
+                    $&nbsp;
+                    <span class="oe_currency_value"></span>
+                </span>
+            </p>
+        `,
+    });
+    const currencyNode = queryOne(":iframe span.oe_currency_value");
+    setSelection({ anchorNode: currencyNode, anchorOffset: 0 });
+    deleteBackward(getEditor());
+    expect(":iframe span.oe_currency_value").toHaveCount(1);
 });
 
 test("should restrict the monetary field to digits, dot, and comma only", async () => {
