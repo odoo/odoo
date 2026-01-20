@@ -15,5 +15,6 @@ registry.category("web_tour.tours").add("customer_display_shows_qr_popup", {
             Chrome.CustomerDisplayHasQRButton(),
             Chrome.ClickCustomerDisplayQRButton(),
             Chrome.CustomerDisplayQRIsDisplayed(),
+            Chrome.checkCustomerDisplayQRPopupMobile(),
         ].flat(),
 });
