@@ -506,6 +506,39 @@ class TestQwebDataSnippet(TransactionCase):
         rendered = self._render_snippet('website.s_c')
         self.assertEqual(self._normalize_xml(rendered), self._normalize_xml(expected_output))
 
+        # test that they are no wrong information in cache
+        rendered = self._render_snippet('website.s_c')
+        self.assertEqual(self._normalize_xml(rendered), self._normalize_xml(expected_output))
+
+    def test_t_snippet_call_root_unalter_cache(self):
+        noise = self.env['ir.ui.view'].create({
+            'name': 't-snippet-call_website.s_c',
+            'type': 'qweb',
+            'arch': '''
+                <t t-snippet-call="website.s_c"/>
+            '''
+        })
+        template = self.env['ir.ui.view'].create({
+            'name': 't-snippet-call_website.s_b',
+            'type': 'qweb',
+            'arch': '''
+                <t t-snippet-call="website.s_b"/>
+            '''
+        })
+
+        expected_output = '''
+            <section class="foo" data-snippet="s_b">
+                <section class="hello" data-snippet="s_a">
+                    <article>
+                        <span>Hello</span>
+                    </article>
+                </section>
+            </section>
+        '''
+        self.env['ir.qweb']._render(noise.id)
+        rendered = self.env['ir.qweb']._render(template.id)
+        self.assertEqual(self._normalize_xml(rendered), self._normalize_xml(expected_output))
+
     def test_t_snippet_call_as_snippet_root(self):
         expected_output = '''
             <section class="hello" data-snippet="s_a">
