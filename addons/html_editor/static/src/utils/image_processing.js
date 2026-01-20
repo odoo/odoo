@@ -207,7 +207,7 @@ export async function loadImageInfo(el, attachmentSrc = "") {
     // URLs too). Capture the filename part until a slash, query or hash so we
     // can replace only that segment and preserve the rest of the URL (host,
     // querystring, hash...).
-    const m = realSrc.match(/\/(?:web_editor|html_editor)\/image_shape\/([^/?#]+)/);
+    const m = realSrc.match(/\/(?:web_editor|html_editor)\/image_shape\/([^/?#]+)[^?#]*/);
     if (el.dataset.shape && m) {
         let filename = m[1];
         if (filename.endsWith("_perspective")) {
