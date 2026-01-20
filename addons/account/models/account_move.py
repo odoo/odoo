@@ -6178,6 +6178,10 @@ class AccountMove(models.Model):
 
     def action_activate_currency(self):
         self.currency_id.filtered(lambda currency: not currency.active).write({'active': True})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
 
     def action_delete_duplicates(self):
         for move in self:
