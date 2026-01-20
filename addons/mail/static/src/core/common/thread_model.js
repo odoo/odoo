@@ -215,6 +215,8 @@ export class Thread extends Record {
     /** @type {String|undefined} */
     primary_email_field;
     hasLoadingFailed = false;
+    /** @type {Error} */
+    hasLoadingFailedError;
     canPostOnReadonly;
     /** @type {Boolean} */
     is_editable;
@@ -409,9 +411,11 @@ export class Thread extends Record {
         let res;
         try {
             res = await this.fetchMessagesData({ after, around, before });
+            this.hasLoadingFailedError = undefined;
             this.hasLoadingFailed = false;
         } catch (e) {
             this.hasLoadingFailed = true;
+            this.hasLoadingFailedError = e;
             this.isLoaded = true;
             this.status = "ready";
             throw e;
