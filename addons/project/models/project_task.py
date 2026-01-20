@@ -13,7 +13,6 @@ from odoo.addons.rating.models import rating_data
 from odoo.addons.html_editor.tools import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import format_list, SQL, LazyTranslate, html_sanitize
-from odoo.addons.resource.models.utils import filter_map_domain
 from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
 from odoo.addons.mail.tools.discuss import Store
 
@@ -1371,57 +1370,6 @@ class ProjectTask(models.Model):
         if project_task_type.fold:
             return {'date_end': fields.Datetime.now()}
         return {'date_end': False}
-
-    def _search_on_comodel(self, domain, field, comodel, additional_domain=None):
-        """ This method is called by `group_expand` methods, whose purpose is to add empty groups to the `read_group`
-            (which otherwise returns groups containing records that match the domain).
-            When specifically filtering on a comodel's field, the result of the `read_group` should contain all matching groups.
-            However, if the search isn't filtered on any comodel's field, the result shouldn't be affected,
-            which explains why we return `False` if `filtered_domain` is empty.
-            TODO This function can be replaced by extract_comodel_domain() in its entirety.
-
-            Returns:
-                False or recordset of the comodel given in parameter.
-        """
-        def _change_operator(domain):
-            new_domain = []
-            for dom in domain:
-                if len(dom) == 3:
-                    _, op, value = dom
-                    if op in ("any", "not any"):
-                        new_op = "in" if op == "any" else "not in"
-                        ids = [val[2] for val in value if isinstance(val, (tuple, list)) and isinstance(val[2], int)]
-                        new_domain.append(("id", new_op, ids))
-                        continue
-                    op = "ilike" if op == "child_of" else op
-                    if isinstance(value, list) and all(isinstance(val, int) for val in value):
-                        new_domain.append(("id", op, value))
-                    elif isinstance(value, str) or (isinstance(value, list) and not all(isinstance(val, str) for val in value)):
-                        new_domain.append(("name", op, value))
-                    if isinstance(value, int):
-                        if op == "=":
-                            op = "in"
-                        if op == "!=":
-                            op = "not in"
-                        new_domain.append(("id", op, [value]))
-                else:
-                    new_domain.append(dom)
-            return Domain(new_domain)
-
-        def _map_condition(condition):
-            if condition.field_expr in [field, f'{field}.name']:
-                return Domain('name', condition.operator, condition.value)
-            if condition.field_expr == f'{field}.id':
-                return Domain('id', condition.operator, condition.value)
-            return None
-
-        filtered_domain = filter_map_domain(domain, _map_condition)
-        if filtered_domain.is_true():
-            return self.env[comodel]
-        filtered_domain = _change_operator(filtered_domain)
-        if additional_domain:
-            filtered_domain &= Domain(additional_domain)
-        return self.env[comodel].search(filtered_domain)
 
     # ---------------------------------------------------
     # Subtasks
