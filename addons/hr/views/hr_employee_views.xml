@@ -617,8 +617,8 @@
             </field>
         </record>
 
-        <record id="hr_employee_list_activites_view" model="ir.ui.view">
-            <field name="name">hr.employee.list.activites.view</field>
+        <record id="hr_employee_list_activities_view" model="ir.ui.view">
+            <field name="name">hr.employee.list.activities.view</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <list string="Employees" expand="context.get('expand', False)" multi_edit="1" sample="1">
@@ -985,7 +985,7 @@
             <field name="view_mode">activity,list,kanban,form,graph,pivot</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'list', 'view_id': ref('hr_employee_list_activites_view')})]"/>
+                          (0, 0, {'view_mode': 'list', 'view_id': ref('hr_employee_list_activities_view')})]"/>
             <field name="search_view_id" ref="view_employee_filter"/>
         </record>
 
