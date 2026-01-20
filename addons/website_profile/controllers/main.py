@@ -131,7 +131,7 @@ class WebsiteProfile(http.Controller):
             user = request.env.user
         values = self._profile_edition_preprocess_values(user, **kwargs)
         whitelisted_values = {key: values[key] for key in sorted(user._self_accessible_fields()[1]) if key in values}
-        if not user.partner_id.can_edit_vat() and whitelisted_values.get('country_id') != user.partner_id.country_id.id:
+        if not user.partner_id._can_edit_country() and whitelisted_values.get('country_id') != user.partner_id.country_id.id:
             raise UserError(_("Changing the country is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."))
         user.write(whitelisted_values)
 
