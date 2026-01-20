@@ -84,24 +84,21 @@
                 transform: translateY(.5px);
             }
         }
-        &.o-dropdown-item {
 
-            &.btn-success:not(.o-tag-JOIN_LEAVE_CALL) {
+        @each $status, $color in (danger: $danger, success: $success) {
+            &.o-dropdown-item.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL) {
                 &.focus {
-                    background-color: rgba($success, 0.75);
+                    background-color: rgba($color, 0.75);
                     color: white;
                 }
                 &:not(.focus) {
-                    color: var(--o-mail-ActionList-dropdownSuccessUnfocusedColor, #{$success});
+                    color: var(--o-mail-ActionList-#{$status}NoBgColor, #{$color});
                 }
             }
-            &.btn-danger:not(.o-tag-JOIN_LEAVE_CALL) {
-                &.focus {
-                    background-color: rgba($danger, 0.75);
-                    color: white;
-                }
-                &:not(.focus) {
-                    color: var(--o-mail-ActionList-dropdownDangerUnfocusedColor, #{$danger});
+            &.o-inline.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL):not(.o-hasBtnBg) {
+                color: var(--o-mail-ActionList-#{$status}NoBgColor, #{$color});
+                &:active {
+                    background-color: inherit;
                 }
             }
         }
