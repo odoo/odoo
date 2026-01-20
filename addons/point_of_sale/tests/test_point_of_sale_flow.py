@@ -2136,6 +2136,16 @@ class TestPointOfSaleFlow(CommonPosTest):
         order = self.env['pos.order'].search([])
         self.assertEqual(order.name, f"/AA - {order.pos_reference.split('-')[-1]} - 1.B")
 
+    def test_payment_method_sequence(self):
+        self.env['pos.payment.method'].search([]).write({'active': False})
+        _, pm_ids = self.pos_config_usd._create_journal_and_payment_methods()
+        # The 4th one is the online payment method, which is not created without demo data,
+        methods = self.env['pos.payment.method'].browse(pm_ids)[:3]
+        self.assertEqual(methods.mapped('name'), ['Cash', 'Card', 'Customer Account'])
+        self.assertEqual(methods.mapped('sequence'), [1, 2, 4])
+        new_pm = self.env['pos.payment.method'].create({'name': 'Quick Pay'})
+        self.assertEqual(new_pm.sequence, 5)
+
     def test_order_invoiced_customer_account_after_session_closed(self):
         """Test that an order paid via customer account can be invoiced after its session is closed.
            Then make sure that the reversal move is reconciled with the PoS session account move line so that only the invoice remains open.
