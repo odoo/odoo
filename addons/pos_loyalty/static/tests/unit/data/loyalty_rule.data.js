@@ -81,6 +81,19 @@ export class LoyaltyRule extends models.ServerModel {
             minimum_amount_tax_mode: "incl",
             mode: "auto",
         },
+        {
+            id: 5,
+            program_id: 8,
+            any_product: true,
+            currency_id: 1,
+            reward_point_amount: 1,
+            reward_point_split: false,
+            reward_point_mode: "unit",
+            minimum_qty: 1,
+            minimum_amount: 0,
+            minimum_amount_tax_mode: "incl",
+            mode: "auto",
+        },
     ];
 }
 
