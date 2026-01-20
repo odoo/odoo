@@ -47,10 +47,12 @@ class BillToPoWizard(models.TransientModel):
             )
             new_po_lines = self.purchase_order_id.line_ids
 
-        self.purchase_order_id.action_confirm()
+        # Only confirm if the PO is still in draft state (not already confirmed)
+        if self.purchase_order_id.state == 'draft':
+            self.purchase_order_id.action_confirm()
         for aml, pol in zip(lines_to_add, new_po_lines):
             if aml.product_id == pol.product_id:
-                aml.purchase_line_id = pol.id
+                aml.purchase_line_ids = [Command.link(pol.id)]
         return {
             "type": "ir.actions.act_window",
             "res_model": "purchase.order",
@@ -95,7 +97,7 @@ class BillToPoWizard(models.TransientModel):
 
         downpayment_lines = self.purchase_order_id._create_downpayments(line_vals)
         for aml, dpl in zip(lines_to_convert, downpayment_lines):
-            aml.purchase_line_id = dpl.id
+            aml.purchase_line_ids = [Command.link(dpl.id)]
 
         return {
             "type": "ir.actions.act_window",

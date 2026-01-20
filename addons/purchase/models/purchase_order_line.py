@@ -382,10 +382,10 @@ class PurchaseOrderLine(models.Model):
             display_type IS NULL
             OR (
                 product_id IS NULL
-                AND price_unit IS NULL
+                AND (price_unit IS NULL OR price_unit = 0)
                 AND product_uom_id IS NULL
-                AND product_qty IS NULL
-                AND product_uom_qty IS NULL
+                AND (product_qty IS NULL OR product_qty = 0)
+                AND (product_uom_qty IS NULL OR product_uom_qty = 0)
             )
         )""",
         "Forbidden values on non-accountable purchase order line",
@@ -601,7 +601,9 @@ class PurchaseOrderLine(models.Model):
 
     @api.depends("partner_id", "product_id")
     def _compute_analytic_distribution(self):
-        for line in self.filtered(lambda x: not x.display_type):
+        for line in self:
+            if line.display_type:
+                continue
             distribution = line.env[
                 "account.analytic.distribution.model"
             ]._get_distribution(
@@ -635,7 +637,11 @@ class PurchaseOrderLine(models.Model):
         - Product/Partner change: Reset to new suggested quantity
         - Manual override: User can change after initial set (readonly=False)
         """
-        for line in self.filtered(lambda x: not x.display_type):
+        for line in self:
+            # Non-accountable lines (sections, notes) must have NULL for constraint
+            if line.display_type:
+                line.product_qty = False
+                continue
             if not line.product_id:
                 line.product_qty = False
                 continue
@@ -679,7 +685,11 @@ class PurchaseOrderLine(models.Model):
             - product_qty = 2 (in Cases)
             - product_uom_qty = 24 (in Units - base UOM)
         """
-        for line in self.filtered(lambda x: not x.display_type):
+        for line in self:
+            # Non-accountable lines (sections, notes) must have NULL for constraint
+            if line.display_type:
+                line.product_uom_qty = False
+                continue
             if line.product_id and line.product_id.uom_id != line.product_uom_id:
                 line.product_uom_qty = line.product_uom_id._compute_quantity(
                     line.product_qty,
@@ -697,7 +707,10 @@ class PurchaseOrderLine(models.Model):
         "product_qty",
     )
     def _compute_selected_seller_id(self):
-        for line in self.filtered(lambda x: not x.display_type):
+        for line in self:
+            if line.display_type:
+                line.selected_seller_id = False
+                continue
             if line.product_id:
                 params = line._get_select_sellers_params()
                 seller = line.product_id._select_seller(
@@ -735,6 +748,10 @@ class PurchaseOrderLine(models.Model):
         All fields are computed together since they depend on the same seller context.
         """
         for line in self:
+            # Non-accountable lines (sections, notes) must have NULL for constraint
+            if line.display_type:
+                line.price_unit = False
+                continue
             if (
                 not line.product_id
                 or line.invoice_line_ids
@@ -777,7 +794,10 @@ class PurchaseOrderLine(models.Model):
 
     @api.depends("price_unit", "discount")
     def _compute_price_unit_discounted_taxexc(self):
-        for line in self.filtered(lambda x: not x.display_type):
+        for line in self:
+            if line.display_type:
+                line.price_unit_discounted_taxexc = False
+                continue
             line.price_unit_discounted_taxexc = line.price_unit * (
                 1 - (line.discount or 0.0) / 100.0
             )
@@ -785,7 +805,12 @@ class PurchaseOrderLine(models.Model):
     @api.depends("product_qty", "price_unit", "discount", "tax_ids")
     def _compute_amounts(self):
         AccountTax = self.env["account.tax"]
-        for line in self.filtered(lambda x: not x.display_type):
+        for line in self:
+            if line.display_type:
+                line.price_subtotal = False
+                line.price_total = False
+                line.price_tax = False
+                continue
             company = line.company_id or self.env.company
             base_line = line._prepare_base_line_for_taxes_computation()
             AccountTax._add_tax_details_in_base_line(base_line, company)
@@ -846,7 +871,15 @@ class PurchaseOrderLine(models.Model):
         - amount_taxexc_invoiced, amount_taxexc_to_invoice
         - amount_taxinc_invoiced, amount_taxinc_to_invoice
         """
-        for line in self.filtered(lambda x: not x.display_type):
+        for line in self:
+            if line.display_type:
+                line.qty_invoiced = False
+                line.qty_to_invoice = False
+                line.amount_taxexc_invoiced = False
+                line.amount_taxexc_to_invoice = False
+                line.amount_taxinc_invoiced = False
+                line.amount_taxinc_to_invoice = False
+                continue
             qty_to_consider = (
                 line.qty_transferred
                 if line.product_id.bill_policy == "transferred"
@@ -1030,6 +1063,11 @@ class PurchaseOrderLine(models.Model):
                     if line.product_id.bill_policy == "transferred"
                     else line.product_qty
                 )
+                # If nothing to consider (e.g., nothing received yet for 'transferred' policy),
+                # there's nothing to invoice
+                if float_is_zero(qty_to_consider, precision_digits=precision):
+                    line.invoice_state = "no"
+                    continue
                 compare = float_compare(
                     line.qty_invoiced,
                     qty_to_consider,
@@ -1476,8 +1514,8 @@ class PurchaseOrderLine(models.Model):
     def _prepare_qty_transferred(self):
         received_qties = defaultdict(float)
         for line in self:
-            if line.qty_received_method == "manual":
-                received_qties[line] = line.qty_received_manual or 0.0
+            if line.qty_transferred_method == "manual":
+                received_qties[line] = line.qty_transferred or 0.0
             else:
                 received_qties[line] = 0.0
         return received_qties

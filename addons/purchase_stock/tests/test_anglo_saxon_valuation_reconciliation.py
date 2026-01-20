@@ -42,7 +42,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             rslt = self.env['purchase.order'].create({
                 'partner_id': self.partner_a.id,
                 'currency_id': currency.id,
-                'order_line': [
+                'line_ids': [
                     (0, 0, {
                         'name': product.name,
                         'product_id': product.id,
@@ -54,7 +54,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
                     })],
                 'date_order': date,
             })
-            rslt.button_confirm()
+            rslt.action_confirm()
             return rslt
 
     def _create_invoice_for_po(self, purchase_order, date):
@@ -80,7 +80,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         picking = self.env['stock.picking'].search([('purchase_id','=',purchase_order.id)])
         self.check_reconciliation(invoice, picking)
         # cancel the invoice
-        invoice.button_cancel()
+        invoice.action_cancel()
 
     def test_invoice_shipment(self):
         """ Tests the case into which we make the invoice first, and then receive the goods.
@@ -423,7 +423,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         })
         purchase_order = self.env['purchase.order'].create({
             'currency_id': self.other_currency.id,
-                'order_line': [
+                'line_ids': [
                     Command.create({
                         'name': self.product_a.name,
                         'product_id': self.product_a.id,
@@ -437,7 +437,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
                 ],
                 'partner_id': self.partner_a.id,
             })
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
         self._process_pickings(purchase_order.picking_ids, date=date_po_and_delivery)
 
         bill_1 = self._create_invoice_for_po(purchase_order, date_po_and_delivery)
@@ -449,8 +449,8 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         bill_2 = self._create_invoice_for_po(purchase_order, date=date_po_and_delivery)
         bill_2.action_post()
         aml = bill_2.line_ids.filtered(lambda line: line.display_type == "product")
-        pol = purchase_order.order_line
-        self.assertRecordValues(pol, [{'qty_invoiced': line.qty_received} for line in pol])
+        pol = purchase_order.line_ids
+        self.assertRecordValues(pol, [{'qty_invoiced': line.qty_transferred} for line in pol])
         self.assertRecordValues(aml, [{'reconciled': True} for line in aml])
 
     def test_create_fifo_vacuum_anglo_saxon_expense_entry(self):
@@ -504,7 +504,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         purchase_order2 = self.env['purchase.order'].create({
                 'partner_id': self.partner_a.id,
                 'currency_id': self.env.company.currency_id.id,
-                'order_line': [
+                'line_ids': [
                     (0, 0, {
                         'name': self.product_a.name,
                         'product_id': self.product_a.id,
@@ -516,7 +516,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
                 'date_order': date_po_and_delivery,
             })
         # confirm PO
-        purchase_order2.button_confirm()
+        purchase_order2.action_confirm()
         # process pickings
         self._process_pickings(purchase_order2.picking_ids, date_po_and_delivery)
 
@@ -541,17 +541,17 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'currency_id': self.env.ref('base.USD').id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'product_id': product.id,
                 'product_qty': 13,
                 'discount': 1,
             })],
         })
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
         receipt = purchase_order.picking_ids
         receipt.button_validate()
         pre_bill_remaining_value = purchase_order.picking_ids.move_ids.stock_valuation_layer_ids.remaining_value
-        purchase_order.action_create_invoice()
+        purchase_order.create_invoice()
         purchase_order.invoice_ids.invoice_date = fields.Date.today()
         purchase_order.invoice_ids.action_post()
         post_bill_remaining_value = purchase_order.picking_ids.move_ids.stock_valuation_layer_ids.remaining_value
@@ -580,7 +580,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         # FIXME: when rounding method is `round_per_line` ?
         self.env.company.tax_calculation_rounding_method = 'round_globally'
         product = self.test_product_order
-        product.write({'purchase_method': 'purchase', 'standard_price': 500})
+        product.write({'bill_policy': 'ordered', 'standard_price': 500})
         self.env['res.currency.rate'].create({
             'name': fields.Date.today(),
             'company_rate': .00756,
@@ -590,14 +590,14 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'currency_id': self.env.ref('base.USD').id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'product_id': product.id,
                 'product_qty': 13,
                 'discount': 1,
             })],
         })
-        purchase_order.button_confirm()
-        purchase_order.action_create_invoice()
+        purchase_order.action_confirm()
+        purchase_order.create_invoice()
         purchase_order.invoice_ids.invoice_date = fields.Date.today()
         purchase_order.invoice_ids.action_post()
         receipt = purchase_order.picking_ids
@@ -632,13 +632,13 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
 
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'product_id': self.product_a.id,
                 'product_uom_qty': 5,
                 'price_unit': 4,
             })],
         })
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
         purchase_order.picking_ids.move_line_ids.quantity = 5
         purchase_order.picking_ids.button_validate()
         with Form(self.product_a) as product_form:
@@ -672,7 +672,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             receipt = purchase_order.picking_ids
             receipt.move_ids.quantity = 1
             receipt.button_validate()
-            purchase_order.action_create_invoice()
+            purchase_order.create_invoice()
             bill = purchase_order.invoice_ids
             with Form(bill) as bill_form:
                 bill_form.invoice_date = date
@@ -724,7 +724,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         (as opposed to the regular exchange account)
         """
         avco_prod = self.test_product_order
-        avco_prod.purchase_method = 'purchase'
+        avco_prod.purchase_method = 'ordered'
         tomorrow = fields.Date.today() + timedelta(days=1)
         self.env.ref('base.EUR').active = True
         self.env['res.currency.rate'].create([
@@ -734,13 +734,13 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'currency_id': self.ref('base.EUR'),
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'product_id': avco_prod.id,
                 'product_qty': 10,
             })],
         })
-        purchase_order.button_confirm()
-        purchase_order.action_create_invoice()
+        purchase_order.action_confirm()
+        purchase_order.create_invoice()
         bill = purchase_order.invoice_ids
         bill.invoice_date = fields.Date.today()
         bill.action_post()
@@ -783,16 +783,16 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'currency_id': euro.id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'product_id': avco_product.id,
                 'price_unit': 0.237,
                 'product_qty': 5500,
             })],
         })
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
         receipt = purchase_order.picking_ids
         receipt.button_validate()
-        purchase_order.action_create_invoice()
+        purchase_order.create_invoice()
         bill = purchase_order.invoice_ids
         bill.invoice_date = fields.Date.today()
         bill.action_post()

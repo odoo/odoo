@@ -37,7 +37,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         # I create a draft Purchase Order for first incoming shipment for 10 pieces at 60€
         purchase_order_1 = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'name': 'Average Ice Cream',
                 'product_id': product_cable_management_box.id,
                 'product_qty': 10.0,
@@ -48,7 +48,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         })
 
         # Confirm the first purchase order
-        purchase_order_1.button_confirm()
+        purchase_order_1.action_confirm()
 
         # Check the "Approved" status of purchase order 1
         self.assertEqual(purchase_order_1.state, 'done', "Wrong state of purchase order!")
@@ -64,7 +64,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         # I create a draft Purchase Order for second incoming shipment for 30 pieces at 80€
         purchase_order_2 = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_qty': 30.0,
@@ -75,7 +75,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         })
 
         # Confirm the second purchase order
-        purchase_order_2.button_confirm()
+        purchase_order_2.action_confirm()
         # Process the reception of purchase order 2
         picking = purchase_order_2.picking_ids[0]
         picking.button_validate()
@@ -107,7 +107,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         # Make a new purchase order with 500 g Average Ice Cream at a price of 0.2€/g
         purchase_order_3 = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_qty': 500.0,
@@ -118,7 +118,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         })
 
         # Confirm the first purchase order
-        purchase_order_3.button_confirm()
+        purchase_order_3.action_confirm()
         # Process the reception of purchase order 3 in grams
 
         picking = purchase_order_3.picking_ids[0]
@@ -137,27 +137,27 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
             'name': 'Average Ice Cream',
             'is_storable': True,
             'categ_id': self.stock_account_product_categ.id,
-            'purchase_method': 'purchase',
+            'bill_policy': 'ordered',
         })
         avco_product.categ_id.property_cost_method = 'average'
 
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'product_id': avco_product.id,
                 'product_qty': 1.0,
             })]
         })
 
-        purchase_order.button_confirm()
-        purchase_order.action_create_invoice()
+        purchase_order.action_confirm()
+        purchase_order.create_invoice()
         bill = purchase_order.invoice_ids[0]
 
         bill.invoice_date = time.strftime('%Y-%m-%d')
         bill.invoice_line_ids[0].quantity = 1.0
         bill.action_post()
 
-        self.assertEqual(purchase_order.order_line[0].qty_invoiced, 1.0, 'QTY invoiced should have been set to 1 on the purchase order line')
+        self.assertEqual(purchase_order.line_ids[0].qty_invoiced, 1.0, 'QTY invoiced should have been set to 1 on the purchase order line')
 
         picking = purchase_order.picking_ids[0]
         picking.move_ids.picked = True
@@ -174,27 +174,27 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
             'name': 'Average Ice Cream',
             'is_storable': True,
             'categ_id': self.stock_account_product_categ.id,
-            'purchase_method': 'purchase',
+            'bill_policy': 'ordered',
         })
         avco_product.categ_id.property_cost_method = 'average'
 
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'product_id': avco_product.id,
                 'product_qty': 1.0,
             })]
         })
 
-        purchase_order.button_confirm()
-        purchase_order.action_create_invoice()
+        purchase_order.action_confirm()
+        purchase_order.create_invoice()
         bill = purchase_order.invoice_ids[0]
 
         bill.invoice_date = time.strftime('%Y-%m-%d')
         bill.invoice_line_ids[0].price_unit = 100.0
-        bill.button_cancel()
+        bill.action_cancel()
 
-        purchase_order.action_create_invoice()
+        purchase_order.create_invoice()
         bill = purchase_order.invoice_ids[1]
 
         bill.invoice_date = time.strftime('%Y-%m-%d')
@@ -218,13 +218,13 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
             'name': 'Average Ice Cream',
             'type': 'consu',
             'categ_id': self.stock_account_product_categ.id,
-            'purchase_method': 'purchase',
+            'bill_policy': 'ordered',
         })
         avco_product.categ_id.property_cost_method = 'average'
 
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'product_id': avco_product.id,
                 'product_qty': 10.0,
                 'price_unit': 10.0,
@@ -232,8 +232,8 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
             })]
         })
 
-        purchase_order.button_confirm()
-        purchase_order.action_create_invoice()
+        purchase_order.action_confirm()
+        purchase_order.create_invoice()
         bill = purchase_order.invoice_ids[0]
 
         bill.invoice_date = time.strftime('%Y-%m-%d')
@@ -254,7 +254,7 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
             'name': 'test_rounding_in_valuation product',
             'is_storable': True,
             'categ_id': self.stock_account_product_categ.id,
-            'purchase_method': 'purchase',
+            'bill_policy': 'ordered',
             'standard_price': 2.0,
         })
 
@@ -277,17 +277,17 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
 
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'product_id': avco_product.id,
                 'product_qty': 999,
                 'tax_ids': [(6, 0, [incl_tax.id])],
             })],
         })
-        po.button_confirm()
+        po.action_confirm()
 
         po.picking_ids.move_ids.quantity = 999
         po.picking_ids.button_validate()
-        po.action_create_invoice()
+        po.create_invoice()
         po.invoice_ids[0].invoice_date = time.strftime('%Y-%m-%d')
         po.invoice_ids[0].action_post()
 
@@ -326,13 +326,13 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
             'partner_id': self.partner.id,
             'currency_id': eur.id,
             'date_order': '2025-12-15',
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'product_id': product.id,
                 'product_qty': 1.0,
                 'price_unit': 10.0,
             })],
         })
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
         with freeze_time('2025-12-23'):
             purchase_order.picking_ids.button_validate()
         self.assertEqual(purchase_order.picking_ids.state, 'done')

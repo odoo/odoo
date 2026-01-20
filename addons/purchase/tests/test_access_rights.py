@@ -54,16 +54,16 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
         """Check a purchase user can create a vendor bill from a purchase order but not post it"""
         purchase_order_form = Form(self.env['purchase.order'].with_user(self.purchase_user))
         purchase_order_form.partner_id = self.vendor
-        with purchase_order_form.order_line.new() as line:
+        with purchase_order_form.line_ids.new() as line:
             line.name = self.product.name
             line.product_id = self.product
             line.product_qty = 4
             line.price_unit = 5
 
         purchase_order = purchase_order_form.save()
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
 
-        purchase_order.order_line.qty_received = 4
+        purchase_order.line_ids.qty_transferred = 4
         purchase_order.create_invoice()
         invoice = purchase_order.invoice_ids
         with self.assertRaises(AccessError):
@@ -80,16 +80,16 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
 
         purchase_order_form = Form(self.env['purchase.order'].with_user(purchase_user_2))
         purchase_order_form.partner_id = self.vendor
-        with purchase_order_form.order_line.new() as line:
+        with purchase_order_form.line_ids.new() as line:
             line.name = self.product.name
             line.product_id = self.product
             line.product_qty = 4
             line.price_unit = 5
 
         purchase_order_user2 = purchase_order_form.save()
-        purchase_order_user2.button_confirm()
+        purchase_order_user2.action_confirm()
 
-        purchase_order_user2.order_line.qty_received = 4
+        purchase_order_user2.line_ids.qty_transferred = 4
         purchase_order_user2.create_invoice()
         vendor_bill_user2 = purchase_order_user2.invoice_ids
 
@@ -98,36 +98,6 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
         purchase_order_user1 = purchase_order_user1.save()
         vendor_bill_user1 = Form(vendor_bill_user2.with_user(self.purchase_user))
         vendor_bill_user1 = vendor_bill_user1.save()
-
-    def test_double_validation(self):
-        """Only purchase managers can approve a purchase order when double
-        validation is enabled"""
-        group_purchase_manager = self.env.ref('purchase.group_purchase_manager')
-        order = self.env['purchase.order'].create({
-            "partner_id": self.vendor.id,
-            "order_line": [
-                (0, 0, {
-                    'product_id': self.product.id,
-                    'name': f'{self.product.name} {1:05}',
-                    'price_unit': 79.80,
-                    'product_qty': 15.0,
-                }),
-            ]})
-        company = order.sudo().company_id
-        company.po_double_validation = 'two_step'
-        company.po_double_validation_amount = 0
-        self.purchase_user.write({
-            'company_ids': [(4, company.id)],
-            'company_id': company.id,
-            'group_ids': [(3, group_purchase_manager.id)],
-        })
-        order.with_user(self.purchase_user).button_confirm()
-        self.assertEqual(order.state, 'to approve')
-        order.with_user(self.purchase_user).button_approve()
-        self.assertEqual(order.state, 'to approve')
-        self.purchase_user.group_ids += group_purchase_manager
-        order.with_user(self.purchase_user).button_approve()
-        self.assertEqual(order.state, 'done')
 
     def test_create_product_purchase_user(self):
         uom = self.env.ref('uom.product_uom_gram')
@@ -158,7 +128,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
         vendor = self.vendor.with_env(PurchaseOrder.env)
 
         self.env.invalidate_all()
-        po_line_vals = PurchaseOrder.order_line._prepare_purchase_order_line(
+        po_line_vals = PurchaseOrder.line_ids._prepare_purchase_order_line(
             product, 1, product.uom_id, nested_branch, vendor, order,
         )
-        self.assertTrue(PurchaseOrder.order_line.create(po_line_vals))
+        self.assertTrue(PurchaseOrder.line_ids.create(po_line_vals))

@@ -111,7 +111,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         # Check status of Purchase Order
         self.assertEqual(purchase_order.state, 'draft', "Purchase order should be in 'draft' state.")
         # Cancel Purchase order.
-        purchase_order.button_cancel()
+        purchase_order.action_cancel()
 
         # Check the status of picking after canceling po.
         for res in storage:
@@ -143,10 +143,10 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         # Check status of Purchase Order
         self.assertEqual(purchase_order.state, 'draft', "Purchase order should be in 'draft' state.")
 
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
         picking_in = purchase_order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_2_steps.in_type_id)
         # Cancel Purchase order.
-        purchase_order.button_cancel()
+        purchase_order.action_cancel()
 
         # Check the status of picking after canceling po.
         self.assertEqual(picking_in.state, 'cancel')
@@ -179,7 +179,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         # Check status of Purchase Order
         self.assertEqual(purchase_order.state, 'draft', "Purchase order should be in 'draft' state.")
         # Cancel Purchase order.
-        purchase_order.button_cancel()
+        purchase_order.action_cancel()
 
         # Check the status of picking after canceling po.
         for res in internal:
@@ -213,10 +213,10 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         # Check status of Purchase Order
         self.assertEqual(purchase_order.state, 'draft', "Purchase order should be in 'draft' state.")
 
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
         picking_in = purchase_order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_3_steps.in_type_id)
         # Cancel Purchase order.
-        purchase_order.button_cancel()
+        purchase_order.action_cancel()
 
         # Check the status of picking after canceling po.
         self.assertEqual(picking_in.state, 'cancel')
@@ -251,7 +251,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
 
         # Confirm purchase order
         purchase = self.env['purchase.order.line'].search([('product_id', '=', self.product_1.id)], limit=1).order_id
-        purchase.button_confirm()
+        purchase.action_confirm()
         # Check order date of purchase order
         order_date = date_planned - timedelta(days=self.product_1.seller_ids.delay + rule_delay)
         self.assertEqual(purchase.date_order, order_date, 'Order date should be equal to: Date of the procurement order - Delivery Lead Time(supplier and pull rules).')

@@ -12,14 +12,21 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
         """ Test cancel purchase order with group user."""
 
         # In order to test the cancel flow,start it from canceling confirmed purchase order.
-        purchase_order = self.env['purchase.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'My Partner'}).id,
+        # Create PO with purchase user context so they have access rights to it
+        partner = self.env['res.partner'].create({'name': 'My Partner'})
+        po_edit_with_user = self.env['purchase.order'].with_user(self.res_users_purchase_user).create({
+            'partner_id': partner.id,
             'state': 'draft',
+            'line_ids': [
+                Command.create({
+                    'product_id': self.product_1.id,
+                    'product_qty': 1.0,
+                }),
+            ],
         })
-        po_edit_with_user = purchase_order.with_user(self.res_users_purchase_user)
 
         # Confirm the purchase order.
-        po_edit_with_user.button_confirm()
+        po_edit_with_user.action_confirm()
 
         # Check the "Approved" status  after confirmed RFQ.
         self.assertEqual(po_edit_with_user.state, 'done', 'Purchase: PO state should be "Purchase')
@@ -28,7 +35,7 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
         po_edit_with_user.picking_ids.action_cancel()
 
         # Able to cancel purchase order.
-        po_edit_with_user.button_cancel()
+        po_edit_with_user.action_cancel()
 
         # Check that order is cancelled.
         self.assertEqual(po_edit_with_user.state, 'cancel', 'Purchase: PO state should be "Cancel')
@@ -38,7 +45,7 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
         partner = self.partner_1
         purchase_order = self.env['purchase.order'].create({
             'partner_id': partner.id,
-            'order_line': [
+            'line_ids': [
                 Command.create({
                     'product_id': self.product_1.id,
                     'product_qty': 2.0,
@@ -50,20 +57,20 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
                     'product_uom_id': self.product_2.uom_id.id,
                 })],
         })
-        purchase_order.button_confirm()
-        purchase_order.order_line.flush_recordset()
+        purchase_order.action_confirm()
+        purchase_order.line_ids.flush_recordset()
         purchase_order.picking_ids.move_ids.flush_recordset()
         delay_reports = self.env['vendor.delay.report']._read_group([('partner_id', '=', partner.id)], ['product_id'], ['on_time_rate:sum'])
         self.assertEqual([rec[1] for rec in delay_reports], [0.0, 0.0])
         # cancel the first part of the PO
-        purchase_order.order_line.filtered(lambda l: l.product_id == self.product_1).product_qty = 0
+        purchase_order.line_ids.filtered(lambda l: l.product_id == self.product_1).product_qty = 0
         self.assertEqual(partner.purchase_order_count, 1)
         self.assertTrue(float_compare(partner.on_time_rate, 0.0, precision_rounding=0.01) <= 0, "negative number indicates no data")
         self.assertEqual(purchase_order.picking_ids.move_ids.filtered(lambda l: l.product_id == self.product_1).state, 'cancel')
         purchase_order.picking_ids.move_ids.filtered(lambda l: l.product_id == self.product_2).quantity = 3.0
         purchase_order.picking_ids.button_validate()
         self.assertEqual(purchase_order.picking_ids.move_ids.filtered(lambda l: l.product_id == self.product_2).state, 'done')
-        self.assertEqual(partner.purchase_line_ids.mapped('qty_received'), [0.0, 3.0])
+        self.assertEqual(partner.purchase_line_ids.mapped('qty_transferred'), [0.0, 3.0])
         partner.invalidate_recordset(fnames=['on_time_rate'])
         self.assertEqual(partner.on_time_rate, 100.0)
         purchase_order.picking_ids.move_ids.flush_recordset()
@@ -76,27 +83,27 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
            picking."""
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_1.id,
-            'order_line': [
+            'line_ids': [
                 Command.create({
                     'product_id': self.product_1.id,
                     'product_qty': 2.0,
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
 
         picking = po.picking_ids[0]
         picking.button_validate()
 
-        po.button_cancel()
+        po.action_cancel()
         self.assertEqual(po.state, 'cancel')
         self.assertEqual(picking.state, 'done', "Done pickings should not change state.")
 
-        po.button_draft()
+        po.action_draft()
         self.assertEqual(po.state, 'draft', "The PO should gracefully return to draft state.")
         self.assertEqual(picking.state, 'done', "Done pickings should not change state.")
 
-        po.button_confirm()
+        po.action_confirm()
         self.assertEqual(po.state, 'done')
         self.assertEqual(len(po.picking_ids), 1, "No new pickings should be created for a fulfilled PO.")
 
@@ -108,14 +115,14 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
            new picking to compensate for the quantity left undelivered."""
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_1.id,
-            'order_line': [
+            'line_ids': [
                 Command.create({
                     'product_id': self.product_1.id,
                     'product_qty': 5.0,
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
 
         # Receive less than the expected amount.
         picking = po.picking_ids[0]
@@ -125,20 +132,20 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
 
         # Create a backorder for the rest.
         Form(self.env['stock.backorder.confirmation'].with_context(action['context'])).save().process()
-        remainder_qty = po.order_line.product_qty - move.quantity
+        remainder_qty = po.line_ids.product_qty - move.quantity
         backorder = picking.backorder_ids[0]
-        self.assertEqual(po.order_line.qty_received, move.quantity, "Only the quantity set in the picking should be received.")
+        self.assertEqual(po.line_ids.qty_transferred, move.quantity, "Only the quantity set in the picking should be received.")
         self.assertEqual(backorder.move_ids.quantity, remainder_qty, "The backorder should contain the unreceived quantity.")
 
-        po.button_cancel()
+        po.action_cancel()
         self.assertEqual(po.state, 'cancel')
         self.assertEqual(picking.state, 'done', "Done pickings should not change state.")
         self.assertEqual(backorder.state, 'cancel', "The backorder should be cancelled with the PO, as it was not validated.")
 
-        po.button_draft()
+        po.action_draft()
         self.assertEqual(po.state, 'draft', "The PO should gracefully return to draft state.")
 
-        po.button_confirm()
+        po.action_confirm()
         self.assertEqual(po.state, 'done')
         self.assertEqual(len(po.picking_ids), 3, "A new picking should be created to compensate for the cancelled backorder.")
 
@@ -147,4 +154,4 @@ class TestPurchaseOrderProcess(PurchaseTestCommon):
 
         new_picking.move_ids.picked = True
         new_picking.button_validate()
-        self.assertEqual(po.order_line.qty_received, po.order_line.product_qty, "We should have received the entire quantity specified in the PO.")
+        self.assertEqual(po.line_ids.qty_transferred, po.line_ids.product_qty, "We should have received the entire quantity specified in the PO.")

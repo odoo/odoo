@@ -63,7 +63,7 @@ class TestOnchangeProductId(TransactionCase):
         po_vals = {
             'partner_id': partner_id.id,
             'fiscal_position_id': fp_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': product_id.name,
                     'product_id': product_id.id,
@@ -75,8 +75,8 @@ class TestOnchangeProductId(TransactionCase):
         }
         po = self.po_model.create(po_vals)
 
-        po_line = po.order_line[0]
-        po_line.onchange_product_id()
+        po_line = po.line_ids[0]
+        # Computed fields should handle the tax-inclusive price conversion automatically
         self.assertEqual(100, po_line.price_unit, "The included tax must be subtracted to the price")
 
         supplierinfo.write({'min_qty': 24})
@@ -107,11 +107,11 @@ class TestOnchangeProductId(TransactionCase):
             'date_planned': fields.Date().today()
         })
 
-        po_line2.onchange_product_id()
+        # Computed fields should set price_unit from standard_price when no supplier info exists
         self.assertEqual(100, po_line2.price_unit, "No vendor supplies this product, hence unit price should be set to 100")
 
         po_form = Form(po)
-        with po_form.order_line.edit(1) as order_line:
+        with po_form.line_ids.edit(1) as order_line:
             order_line.product_uom_id = ipad_lot_10
         po_form.save()
         self.assertEqual(1000, po_line2.price_unit, "The product_uom is multiplied by 10, hence unit price should be set to 1000")

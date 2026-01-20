@@ -29,37 +29,37 @@ class TestPurchase(AccountTestInvoicingCommon):
         """
         po = Form(self.env['purchase.order'])
         po.partner_id = self.partner_a
-        with po.order_line.new() as po_line:
+        with po.line_ids.new() as po_line:
             po_line.product_id = self.product_a
             po_line.product_qty = 1
             po_line.price_unit = 100
-        with po.order_line.new() as po_line:
+        with po.line_ids.new() as po_line:
             po_line.product_id = self.product_b
             po_line.product_qty = 10
             po_line.price_unit = 200
         po = po.save()
 
         # Check that the same date is planned on both PO lines.
-        self.assertNotEqual(po.order_line[0].date_planned, False)
-        self.assertAlmostEqual(po.order_line[0].date_planned, po.order_line[1].date_planned, delta=timedelta(seconds=10))
-        self.assertAlmostEqual(po.order_line[0].date_planned, po.date_planned, delta=timedelta(seconds=10))
+        self.assertNotEqual(po.line_ids[0].date_planned, False)
+        self.assertAlmostEqual(po.line_ids[0].date_planned, po.line_ids[1].date_planned, delta=timedelta(seconds=10))
+        self.assertAlmostEqual(po.line_ids[0].date_planned, po.date_planned, delta=timedelta(seconds=10))
 
-        orig_date_planned = po.order_line[0].date_planned
+        orig_date_planned = po.line_ids[0].date_planned
 
         # Set an earlier date planned on a PO line and check that the PO expected date matches it.
         new_date_planned = orig_date_planned - timedelta(hours=1)
-        po.order_line[0].date_planned = new_date_planned
-        self.assertAlmostEqual(po.order_line[0].date_planned, po.date_planned, delta=timedelta(seconds=10))
+        po.line_ids[0].date_planned = new_date_planned
+        self.assertAlmostEqual(po.line_ids[0].date_planned, po.date_planned, delta=timedelta(seconds=10))
 
         # Set an even earlier date planned on the other PO line and check that the PO expected date matches it.
         # Also check that the other PO line's date planned is not modified.
         new_date_planned_2 = orig_date_planned - timedelta(hours=72)
         po_form = Form(po)
-        with po_form.order_line.edit(1) as po_line:
+        with po_form.line_ids.edit(1) as po_line:
             po_line.date_planned = new_date_planned_2
         po = po_form.save()
-        self.assertAlmostEqual(po.order_line[1].date_planned, po.date_planned, delta=timedelta(seconds=10))
-        self.assertAlmostEqual(po.order_line[0].date_planned, new_date_planned, delta=timedelta(seconds=10))
+        self.assertAlmostEqual(po.line_ids[1].date_planned, po.date_planned, delta=timedelta(seconds=10))
+        self.assertAlmostEqual(po.line_ids[0].date_planned, new_date_planned, delta=timedelta(seconds=10))
 
     def test_date_planned_2(self):
         """
@@ -70,7 +70,7 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'name': self.product_a.name,
                 'product_id': self.product_a.id,
                 'product_uom_qty': 10,
@@ -80,15 +80,15 @@ class TestPurchase(AccountTestInvoicingCommon):
         })
         with Form(po) as po_form:
             po_form.date_planned = fields.Datetime.now() + timedelta(days=1)
-        self.assertEqual(po.order_line.date_planned, po.date_planned)
+        self.assertEqual(po.line_ids.date_planned, po.date_planned)
 
         with Form(po) as po_form:
-            with po_form.order_line.new() as new_line:
+            with po_form.line_ids.new() as new_line:
                 new_line.product_id = self.product_b
                 new_line.product_qty = 10
                 new_line.price_unit = 200
-        self.assertEqual(po.order_line[1].date_planned, po.date_planned)
-        self.assertNotEqual(po.order_line[0].date_planned, po.date_planned)
+        self.assertEqual(po.line_ids[1].date_planned, po.date_planned)
+        self.assertNotEqual(po.line_ids[0].date_planned, po.date_planned)
 
     def test_purchase_order_sequence(self):
         PurchaseOrder = self.env['purchase.order'].with_context(tracking_disable=True)
@@ -125,11 +125,11 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.env.user.tz = 'Europe/Brussels'
         po = Form(self.env['purchase.order'])
         po.partner_id = self.partner_a
-        with po.order_line.new() as po_line:
+        with po.line_ids.new() as po_line:
             po_line.product_id = self.product_a
             po_line.product_qty = 1
             po_line.price_unit = 100
-        with po.order_line.new() as po_line:
+        with po.line_ids.new() as po_line:
             po_line.product_id = self.product_b
             po_line.product_qty = 10
             po_line.price_unit = 200
@@ -137,7 +137,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         date_planned = fields.Datetime.now().replace(hour=23, minute=0) + timedelta(days=2)
         po.date_planned = date_planned
         po = po.save()
-        po.button_confirm()
+        po.action_confirm()
         # Check that reminder is not set in Company 1 and the mail will not be sent
         self.assertEqual(po.company_id, self.company)
         self.assertFalse(po.receipt_reminder_email)
@@ -180,11 +180,11 @@ class TestPurchase(AccountTestInvoicingCommon):
         """
         po = Form(self.env['purchase.order'])
         po.partner_id = self.partner_a
-        with po.order_line.new() as po_line:
+        with po.line_ids.new() as po_line:
             po_line.product_id = self.product_a
             po_line.product_qty = 1
             po_line.price_unit = 100
-        with po.order_line.new() as po_line:
+        with po.line_ids.new() as po_line:
             po_line.product_id = self.product_b
             po_line.product_qty = 10
             po_line.price_unit = 200
@@ -193,7 +193,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         po = po.save()
         self.partner_a.receipt_reminder_email = True
         self.partner_a.reminder_date_before_receipt = 1
-        po.button_confirm()
+        po.action_confirm()
 
         # check vendor is a message recipient
         self.assertFalse(po.partner_id in po.message_partner_ids, 'Customer should not automatically be added in followers')
@@ -207,22 +207,22 @@ class TestPurchase(AccountTestInvoicingCommon):
     def test_update_date_planned(self):
         po = Form(self.env['purchase.order'])
         po.partner_id = self.partner_a
-        with po.order_line.new() as po_line:
+        with po.line_ids.new() as po_line:
             po_line.product_id = self.product_a
             po_line.product_qty = 1
             po_line.price_unit = 100
             po_line.date_planned = '2020-06-06 00:00:00'
-        with po.order_line.new() as po_line:
+        with po.line_ids.new() as po_line:
             po_line.product_id = self.product_b
             po_line.product_qty = 10
             po_line.price_unit = 200
             po_line.date_planned = '2020-06-06 00:00:00'
         po = po.save()
-        po.button_confirm()
+        po.action_confirm()
 
         # update first line
-        po._update_date_planned_for_lines([(po.order_line[0], fields.Datetime.today())])
-        self.assertEqual(po.order_line[0].date_planned, fields.Datetime.today())
+        po._update_order_lines_date_planned([(po.line_ids[0], fields.Datetime.today())])
+        self.assertEqual(po.line_ids[0].date_planned, fields.Datetime.today())
         activity = self.env['mail.activity'].search([
             ('summary', '=', 'Date Updated'),
             ('res_model_id', '=', 'purchase.order'),
@@ -236,8 +236,8 @@ class TestPurchase(AccountTestInvoicingCommon):
         )
 
         # update second line
-        po._update_date_planned_for_lines([(po.order_line[1], fields.Datetime.today())])
-        self.assertEqual(po.order_line[1].date_planned, fields.Datetime.today())
+        po._update_order_lines_date_planned([(po.line_ids[1], fields.Datetime.today())])
+        self.assertEqual(po.line_ids[1].date_planned, fields.Datetime.today())
         self.assertIn(
             '<p>partner_a modified receipt dates for the following products:</p>\n'
             '<p> - product_a from 2020-06-06 to %(today)s</p>\n'
@@ -271,15 +271,15 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_a
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = product_01
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = product_02
             po_line.product_uom_id = uom_dozens
         po = po_form.save()
 
-        self.assertEqual(po.order_line[0].price_unit, 200)
-        self.assertEqual(po.order_line[1].price_unit, 0, "No vendor with matching UoM is found, so price should be 0")
+        self.assertEqual(po.line_ids[0].price_unit, 200)
+        self.assertEqual(po.line_ids[1].price_unit, 0, "No vendor with matching UoM is found, so price should be 0")
 
     def test_on_change_quantity_description(self):
         """
@@ -291,7 +291,7 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         po = Form(self.env['purchase.order'])
         po.partner_id = self.partner_a
-        with po.order_line.new() as pol:
+        with po.line_ids.new() as pol:
             pol.product_id = self.product_a
             pol.product_qty = 1
 
@@ -332,21 +332,18 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_a
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = product
         purchase_order_usd = po_form.save()
-        self.assertEqual(purchase_order_usd.order_line.price_unit, product.standard_price, "Value shouldn't be rounded $")
-        self.assertEqual(purchase_order_usd.amount_total_cc, purchase_order_usd.amount_total, "Company Total should be 0.14$")
+        self.assertEqual(purchase_order_usd.line_ids.price_unit, product.standard_price, "Value shouldn't be rounded $")
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_a
         po_form.currency_id = currency
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = product
         purchase_order_coco = po_form.save()
-        self.assertEqual(purchase_order_coco.order_line.price_unit, currency_rate.rate * product.standard_price, "Value shouldn't be rounded 🍫")
-        self.assertEqual(purchase_order_coco.amount_total_cc, round(purchase_order_coco.amount_total / currency_rate.rate, 2), "Company Total should be 0.14$, since 1$ = 0.5🍫")
-        self.assertEqual(purchase_order_coco.tax_totals['amount_total_cc'], "($\xa00.14)")
+        self.assertEqual(purchase_order_coco.line_ids.price_unit, currency_rate.rate * product.standard_price, "Value shouldn't be rounded 🍫")
         #check if the correct currency is set on the purchase order by comparing the expected price and actual price
 
         company_a = self.company_data['company']
@@ -381,19 +378,14 @@ class TestPurchase(AccountTestInvoicingCommon):
         #create a purchase order with the product from company B
         order_b = self.env['purchase.order'].with_company(company_b).create({
             'partner_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'product_id': product_b.id,
                 'product_qty': 1,
                 'product_uom_id': self.env.ref('uom.product_uom_unit').id,
             })],
         })
 
-        self.assertEqual(order_b.order_line.price_unit, 10.0, 'The price unit should be 10.0')
-        self.assertEqual(order_b.amount_total_cc, order_b.amount_total, 'Company Total should be 10.0$')
-
-        # since the order currency matches the company currency we don't want to redisplay the total amount
-        with self.assertRaises(KeyError):
-            order_b.tax_totals['amount_total_cc']
+        self.assertEqual(order_b.line_ids.price_unit, 10.0, 'The price unit should be 10.0')
 
     def test_discount_and_price_update_on_quantity_change(self):
         """ Purchase order line price and discount should update accordingly based on quantity
@@ -419,12 +411,12 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         purchase_order = self.env['purchase.order'].with_company(self.company_data['company']).create({
             'partner_id': self.partner_a.id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'product_id': product.id,
                 'product_uom_id': product.uom_id.id,
             })],
         })
-        po_line = purchase_order.order_line
+        po_line = purchase_order.line_ids
 
         po_line.product_qty = 10
         self.assertEqual(po_line.discount, 10, "first seller should be selected so discount should be 10")
@@ -469,13 +461,13 @@ class TestPurchase(AccountTestInvoicingCommon):
         #create a purchase order with the delivery address as partner
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = delivery_address
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = product
             po_line.product_qty = 1.0
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
-        self.assertEqual(po.order_line.product_id.seller_ids.mapped('partner_id'), delivery_address)
+        self.assertEqual(po.line_ids.product_id.seller_ids.mapped('partner_id'), delivery_address)
 
     def test_supplier_list_in_product_with_multicompany(self):
         """
@@ -489,13 +481,13 @@ class TestPurchase(AccountTestInvoicingCommon):
         # create a purchase order in the company A
         self.env['purchase.order'].with_company(company_a).create({
             'partner_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'product_id': product.id,
                 'product_qty': 1,
                 'product_uom_id': self.env.ref('uom.product_uom_unit').id,
                 'price_unit': 1,
             })],
-        }).button_confirm()
+        }).action_confirm()
 
         self.assertEqual(product.seller_ids[0].partner_id, self.partner_a)
         self.assertEqual(product.seller_ids[0].company_id, company_a)
@@ -503,13 +495,13 @@ class TestPurchase(AccountTestInvoicingCommon):
         # switch to the company B
         self.env['purchase.order'].with_company(company_b).create({
             'partner_id': self.partner_b.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'product_id': product.id,
                 'product_qty': 1,
                 'product_uom_id': self.env.ref('uom.product_uom_unit').id,
                 'price_unit': 2,
             })],
-        }).button_confirm()
+        }).action_confirm()
         product = product.with_company(company_b)
         self.assertEqual(product.seller_ids[0].partner_id, self.partner_b)
         self.assertEqual(product.seller_ids[0].company_id, company_b)
@@ -529,13 +521,13 @@ class TestPurchase(AccountTestInvoicingCommon):
         """
         po = Form(self.env['purchase.order'])
         po.partner_id = self.partner_a
-        with po.order_line.new() as po_line:
+        with po.line_ids.new() as po_line:
             po_line.product_id = self.product_a
             po_line.product_qty = 1
             po_line.price_unit = 100
             po_line.discount = 20
         po = po.save()
-        po.button_confirm()
+        po.action_confirm()
 
         supplierinfo_id = self.env['product.supplierinfo'].search([
             ('partner_id', '=', self.partner_a.id),
@@ -556,13 +548,13 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         po1 = Form(self.env['purchase.order'])
         po1.partner_id = self.partner_b
-        with po1.order_line.new() as po_line:
+        with po1.line_ids.new() as po_line:
             po_line.product_id = self.product_a
             po_line.product_qty = 1
         po1 = po1.save()
 
-        self.assertEqual(po1.order_line[0].price_unit, 100)
-        self.assertEqual(po1.order_line[0].discount, 30)
+        self.assertEqual(po1.line_ids[0].price_unit, 100)
+        self.assertEqual(po1.line_ids[0].discount, 30)
 
     def test_orderline_supplierinfo_description(self):
         supplierinfo_vals = {
@@ -598,16 +590,16 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_a
-        with po_form.order_line.new() as line:
+        with po_form.line_ids.new() as line:
             line.product_id = self.product_a
             line.product_qty = 1
         po = po_form.save()
-        self.assertEqual(po.order_line.name, '[Code 1] Name 1')
+        self.assertEqual(po.line_ids.name, '[Code 1] Name 1')
 
-        with po_form.order_line.edit(0) as line:
+        with po_form.line_ids.edit(0) as line:
             line.product_id = self.product_b
         po = po_form.save()
-        self.assertEqual(po.order_line.name, '[Code 3] Name 3')
+        self.assertEqual(po.line_ids.name, '[Code 3] Name 3')
 
     def test_purchase_order_line_product_taxes_on_branch(self):
         """ Check taxes populated on PO lines from product on branch company.
@@ -696,16 +688,16 @@ class TestPurchase(AccountTestInvoicingCommon):
         # - Product no tax from XX      => tax from Branch X should be set
         # - Product no tax from branch  => 2 taxes from parent company should be set
         # - Product no tax              => no tax should be set
-        with po_form.order_line.new() as line:
+        with po_form.line_ids.new() as line:
             line.product_id = product_all_taxes
-        with po_form.order_line.new() as line:
+        with po_form.line_ids.new() as line:
             line.product_id = product_no_xx_tax
-        with po_form.order_line.new() as line:
+        with po_form.line_ids.new() as line:
             line.product_id = product_no_branch_tax
-        with po_form.order_line.new() as line:
+        with po_form.line_ids.new() as line:
             line.product_id = product_no_tax
         po = po_form.save()
-        self.assertRecordValues(po.order_line, [
+        self.assertRecordValues(po.line_ids, [
             {'product_id': product_all_taxes.id, 'tax_ids': tax_xx.ids},
             {'product_id': product_no_xx_tax.id, 'tax_ids': tax_x.ids},
             {'product_id': product_no_branch_tax.id, 'tax_ids': (tax_a + tax_b).ids},
@@ -737,19 +729,19 @@ class TestPurchase(AccountTestInvoicingCommon):
         # Create PO and set vendor A
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_a
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product_a
             po_line.product_qty = 10
         po = po_form.save()
-        self.assertEqual(po.order_line.price_unit, 5)
-        self.assertEqual(po.order_line.name, '[Vendor A] product_a')
-        self.assertEqual(po.order_line.product_qty, 10)
-        self.assertEqual(po.order_line.date_planned, fields.Datetime.now() + timedelta(days=5))
+        self.assertEqual(po.line_ids.price_unit, 5)
+        self.assertEqual(po.line_ids.name, '[Vendor A] product_a')
+        self.assertEqual(po.line_ids.product_qty, 10)
+        self.assertEqual(po.line_ids.date_planned, fields.Datetime.now() + timedelta(days=5))
         po.partner_id = self.partner_b
-        self.assertEqual(po.order_line.price_unit, 10)
-        self.assertEqual(po.order_line.name, '[Vendor B] product_a')
-        self.assertEqual(po.order_line.product_qty, 10)
-        self.assertEqual(po.order_line.date_planned, fields.Datetime.now() + timedelta(days=6))
+        self.assertEqual(po.line_ids.price_unit, 10)
+        self.assertEqual(po.line_ids.name, '[Vendor B] product_a')
+        self.assertEqual(po.line_ids.product_qty, 10)
+        self.assertEqual(po.line_ids.date_planned, fields.Datetime.now() + timedelta(days=6))
 
     def test_merge_purchase_order(self):
         PurchaseOrder = self.env['purchase.order']
@@ -766,11 +758,11 @@ class TestPurchase(AccountTestInvoicingCommon):
         po_1.origin = "s0003"
         po_1.user_id = user_1
         po_1.payment_term_id = payment_term_id_1
-        with po_1.order_line.new() as po_line:
+        with po_1.line_ids.new() as po_line:
             po_line.product_id = self.product_a
             po_line.product_qty = 1
             po_line.price_unit = 100
-        with po_1.order_line.new() as po_line:
+        with po_1.line_ids.new() as po_line:
             po_line.display_type = 'line_note'
             po_line.name = 'Test Note'
         po_1 = po_1.save()
@@ -783,15 +775,15 @@ class TestPurchase(AccountTestInvoicingCommon):
         po_2.user_id = user_2
         po_2.payment_term_id = payment_term_id_2
 
-        with po_2.order_line.new() as po_line_1:
+        with po_2.line_ids.new() as po_line_1:
             po_line_1.product_id = self.product_a
             po_line_1.product_qty = 5
             po_line_1.price_unit = 100
-        with po_2.order_line.new() as po_line_2:
+        with po_2.line_ids.new() as po_line_2:
             po_line_2.product_id = self.product_b
             po_line_2.product_qty = 5
             po_line_2.price_unit = 500
-        with po_2.order_line.new() as po_line:
+        with po_2.line_ids.new() as po_line:
             po_line.display_type = 'line_section'
             po_line.name = 'Test section'
         po_2 = po_2.save()
@@ -804,7 +796,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         selected_purchase_orders = po_1 | po_2
         selected_purchase_orders.action_merge()
         self.assertTrue(po_2.state == 'cancel')
-        self.assertEqual(po_1.order_line[0].product_qty, 6)
+        self.assertEqual(po_1.line_ids[0].product_qty, 6)
         self.assertEqual(po_1.partner_ref, "azure, wood corner")
         self.assertEqual(po_1.origin, "s0003, s0004")
         self.assertEqual(po_1.user_id, user_1)
@@ -841,7 +833,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         po = self.env['purchase.order'].with_context(allowed_company_ids=[company_a.id, company_b.id]).with_company(company_b).create({
             'partner_id': self.partner_a.id,
             'company_id': company_b.id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'name': self.product_a.name,
                 'product_id': self.product_a.id,
             })],
@@ -858,17 +850,17 @@ class TestPurchase(AccountTestInvoicingCommon):
         """
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_a
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product
             po_line.product_qty = 1.0
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
         self.assertEqual(po.state, 'done')
-        po.print_quotation()
+        po.action_print_quotation()
         self.assertEqual(po.state, 'done')
-        po.button_cancel()
+        po.action_cancel()
         self.assertEqual(po.state, 'cancel')
-        po.print_quotation()
+        po.action_print_quotation()
         self.assertEqual(po.state, 'cancel')
 
     def test_purchase_warnings(self):
@@ -905,7 +897,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         ])
         group_warning_purchase = self.env.ref('purchase.group_warning_purchase')
         self.env.user.group_ids.implied_ids = [Command.link(group_warning_purchase.id)]
-        purchase_order2.button_confirm()
+        purchase_order2.action_confirm()
         purchase_order2.create_invoice()
         invoice = Form(purchase_order2.invoice_ids[0])
 
@@ -938,13 +930,13 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.partner_a.parent_id = company_partner
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'product_id': self.product_a.id,
                 'product_qty': 1,
                 'price_unit': 100,
             })]
         })
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
         vendor_bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
             'partner_id': self.partner_a.id,
@@ -1009,11 +1001,11 @@ class TestPurchase(AccountTestInvoicingCommon):
         ])
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_a
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product_a
         po = po_form.save()
-        self.assertEqual(po.order_line.product_qty, 10.0)
-        self.assertEqual(po.order_line.name, '[HHH] product_a')
+        self.assertEqual(po.line_ids.product_qty, 10.0)
+        self.assertEqual(po.line_ids.name, '[HHH] product_a')
 
     def test_purchase_order_uom(self):
         fuzzy_drink = self.env['product.product'].create({
@@ -1034,18 +1026,18 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'product_id': fuzzy_drink.id,
                 'product_qty': 15,
                 'product_uom_id': self.env.ref('uom.product_uom_unit').id,
             })],
         })
-        self.assertEqual(po.order_line.price_unit, 1)
-        po.order_line.product_qty = 1
-        po.order_line.product_uom_id = self.env.ref('uom.product_uom_pack_6')
-        self.assertEqual(po.order_line.price_unit, 6)
-        po.order_line.product_qty = 2
-        self.assertEqual(po.order_line.price_unit, 5)
+        self.assertEqual(po.line_ids.price_unit, 1)
+        po.line_ids.product_qty = 1
+        po.line_ids.product_uom_id = self.env.ref('uom.product_uom_pack_6')
+        self.assertEqual(po.line_ids.price_unit, 6)
+        po.line_ids.product_qty = 2
+        self.assertEqual(po.line_ids.price_unit, 5)
 
     def test_purchase_order_lock(self):
         """
@@ -1053,24 +1045,24 @@ class TestPurchase(AccountTestInvoicingCommon):
         """
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'product_id': self.product_a.id,
             })],
         })
-        po.button_confirm()
+        po.action_confirm()
         self.assertFalse(po.locked)
         # Lock the purchase order
-        po.button_lock()
+        po.action_lock()
         self.assertTrue(po.locked)
         # Unlocking should not raise an error regardless of the 'Lock Confirmed Orders' setting.
-        self.assertNotEqual(po.lock_confirmed_po, 'lock')
-        po.button_unlock()
+        self.assertNotEqual(po.company_id.order_lock_po, 'lock')
+        po.action_unlock()
         self.assertFalse(po.locked)
 
-        po.button_lock()
+        po.action_lock()
         self.assertTrue(po.locked)
-        po.lock_confirmed_po = 'lock'
-        po.button_unlock()
+        po.company_id.order_lock_po = 'lock'
+        po.action_unlock()
         self.assertFalse(po.locked)
 
     def test_purchase_order_mail_links_to_correct_website(self):
@@ -1092,7 +1084,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         rfq = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'company_id': company2.id,
-            'order_line': [Command.create({'product_id': self.product_a.id})],
+            'line_ids': [Command.create({'product_id': self.product_a.id})],
         })
 
         email_ctx = rfq.action_rfq_send().get('context', {})
@@ -1123,7 +1115,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         """
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [
+            'line_ids': [
                 Command.create({
                     'product_id': self.product_a.id,
                     'product_qty': 10,
@@ -1131,7 +1123,7 @@ class TestPurchase(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
         product_tmpl = self.product_a.product_tmpl_id
         self.assertEqual(product_tmpl.purchased_product_qty, 10)
 
@@ -1143,7 +1135,7 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         action = product_tmpl.action_view_po()
         action_record = self.env[action['res_model']].search(action['domain'])
-        self.assertEqual(action_record, po.order_line)
+        self.assertEqual(action_record, po.line_ids)
 
     def test_currency_computed_from_partner(self):
         """Test that the currency of the purchase order is computed from the partner
@@ -1171,16 +1163,16 @@ class TestPurchase(AccountTestInvoicingCommon):
         })]
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_a
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product_a
             po_line.product_qty = 1
         po = po_form.save()
-        self.assertEqual(po.order_line.price_unit, 5)
+        self.assertEqual(po.line_ids.price_unit, 5)
         # Update the price manually and then change the quantity
-        with Form(po.order_line) as line:
+        with Form(po.line_ids) as line:
             line.price_unit = 100.0
-        po.order_line.product_qty = 10
-        self.assertEqual(po.order_line.price_unit, 100.0, "Price should remain 100.0 after changing the quantity")
+        po.line_ids.product_qty = 10
+        self.assertEqual(po.line_ids.price_unit, 100.0, "Price should remain 100.0 after changing the quantity")
 
     def test_purchase_order_line_without_uom(self):
         uom_test = self.env['uom.uom'].create({
@@ -1190,7 +1182,7 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'product_id': self.product_a.id,
                     'product_qty': 1.0,
@@ -1201,7 +1193,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         with (self.assertRaises(IntegrityError), self.cr.savepoint(), mute_logger("odoo.sql_db")):
             uom_test.unlink()
 
-        self.assertEqual(po.order_line[0].product_uom_id, uom_test)
+        self.assertEqual(po.line_ids[0].product_uom_id, uom_test)
 
     def test_locked_purchase_order_cannot_cancel(self):
         """Test that a locked purchase order cannot be cancelled.
@@ -1209,18 +1201,24 @@ class TestPurchase(AccountTestInvoicingCommon):
         """
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
+            'line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_qty': 1.0,
+                }),
+            ],
         })
-        po.button_confirm()
+        po.action_confirm()
         self.assertFalse(po.locked)
         # Lock the purchase order.
-        po.button_lock()
+        po.action_lock()
         self.assertTrue(po.locked, "The purchase order should be locked.")
 
         # Try to cancel the locked PO, should raise a UserError.
         with self.assertRaises(UserError):
-            po.button_cancel()
+            po.action_cancel()
 
         # Unlock the PO and then cancel it, should succeed.
-        po.button_unlock()
-        po.button_cancel()
+        po.action_unlock()
+        po.action_cancel()
         self.assertEqual(po.state, 'cancel', "The purchase order should be cancelled.")

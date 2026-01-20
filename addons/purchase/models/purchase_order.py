@@ -848,7 +848,7 @@ class PurchaseOrder(models.Model):
                     model._field_to_sql(alias, "product_qty", query),
                 ),
             )
-            return Domain("order_line", "any", purchase_lines_late)
+            return Domain("line_ids", "any", purchase_lines_late)
         else:
             purchase_lines_on_time = Domain(
                 "order_id", "any", purchase_domain
@@ -859,7 +859,7 @@ class PurchaseOrder(models.Model):
                     model._field_to_sql(alias, "product_qty", query),
                 ),
             )
-            return Domain("order_line", "any", purchase_lines_on_time)
+            return Domain("line_ids", "any", purchase_lines_on_time)
 
     # ------------------------------------------------------------
     # ONCHANGE METHODS
@@ -2000,7 +2000,6 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         context = {"lang": self.partner_id.lang}
         res = {
-            "product_qty": 0.0,
             "order_id": self.id,
             "display_type": "line_section",
             "is_downpayment": True,

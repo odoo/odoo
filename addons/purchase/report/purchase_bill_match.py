@@ -257,6 +257,6 @@ class PurchaseBillUnion(models.Model):
         return SQL(
             """
             po.state = 'done'
-            AND po.invoice_status IN ('to invoice', 'no')
+            AND po.invoice_state IN ('to do', 'no')
             """,
         )

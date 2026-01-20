@@ -22,7 +22,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
 
         cls.purchase_order = cls.env['purchase.order'].create({
             'partner_id': cls.partner_a.id,
-            'order_line': [
+            'line_ids': [
                 Command.create({
                     'name': product.name,
                     'product_id': product.id,
@@ -33,7 +33,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
                 }),
             ]
         })
-        cls.purchase_order.button_confirm()
+        cls.purchase_order.action_confirm()
         cls.account_expense = cls.company_data['default_account_expense']
         cls.account_revenue = cls.company_data['default_account_revenue']
 
@@ -96,7 +96,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         pick.move_ids.write({'date': fields.Date.to_date('2020-01-02')})
 
         # invoice on 2020-01-04
-        move = self.env['account.move'].browse(self.purchase_order.action_create_invoice()['res_id'])
+        move = self.purchase_order.create_invoice()
         move.invoice_date = fields.Date.to_date('2020-01-04')
         move.action_post()
 
@@ -107,7 +107,7 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         pick.move_ids.write({'date': fields.Date.to_date('2020-01-06')})
 
         # invoice on 2020-01-08
-        move = self.env['account.move'].browse(self.purchase_order.action_create_invoice()['res_id'])
+        move = self.purchase_order.create_invoice()
         move.invoice_date = fields.Date.to_date('2020-01-08')
         move.action_post()
 

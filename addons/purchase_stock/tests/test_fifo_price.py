@@ -34,7 +34,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         # I create a draft Purchase Order for first in move for 10 kg at 50 euro
         purchase_order_1 = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_cable_management_box.id,
                 'product_qty': 10.0,
@@ -44,7 +44,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         })
 
         # Confirm the first purchase order
-        purchase_order_1.button_confirm()
+        purchase_order_1.action_confirm()
 
         # Check the "Purchase" status of purchase order 1
         self.assertEqual(purchase_order_1.state, 'done')
@@ -61,7 +61,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         # I create a draft Purchase Order for second shipment for 30 kg at 80 euro
         purchase_order_2 = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_cable_management_box.id,
                 'product_qty': 30.0,
@@ -71,7 +71,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             })
 
         # Confirm the second purchase order
-        purchase_order_2.button_confirm()
+        purchase_order_2.action_confirm()
 
         # Process the reception of purchase order 2
         picking = purchase_order_2.picking_ids[0]
@@ -140,7 +140,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         purchase_order_usd = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
             'currency_id': NewUSD.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                     'name': 'FIFO Ice Cream',
                     'product_id': product_cable_management_box.id,
                     'product_qty': 30,
@@ -157,7 +157,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
                 })
 
         # Confirm the purchase order in USD
-        purchase_order_usd.button_confirm()
+        purchase_order_usd.action_confirm()
         # Process the reception of purchase order with USD
         picking = purchase_order_usd.picking_ids[0]
         picking.button_validate()
@@ -268,7 +268,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         # Receive purchase order with 50 kg Ice Cream at 50€/kg
         purchase_order_neg = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_fifo_negative.id,
                 'product_qty': 50.0,
@@ -278,7 +278,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         })
 
         # I confirm the first purchase order
-        purchase_order_neg.button_confirm()
+        purchase_order_neg.action_confirm()
 
         # Process the reception of purchase order neg
         picking = purchase_order_neg.picking_ids[0]
@@ -287,7 +287,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         # Receive purchase order with 600 kg FIFO Ice Cream at 80 euro/kg
         purchase_order_neg2 = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_fifo_negative.id,
                 'product_qty': 600.0,
@@ -297,7 +297,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
         })
 
         # I confirm the second negative purchase order
-        purchase_order_neg2.button_confirm()
+        purchase_order_neg2.action_confirm()
 
         # Process the reception of purchase order neg2
         picking = purchase_order_neg2.picking_ids[0]
@@ -330,7 +330,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
 
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'name': super_product.name,
                 'product_id': super_product.id,
                 'product_qty': 1000,
@@ -341,7 +341,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             })],
         })
 
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
         self.assertEqual(purchase_order.state, 'done')
 
         picking = purchase_order.picking_ids[0]

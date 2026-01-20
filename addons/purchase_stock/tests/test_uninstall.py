@@ -17,11 +17,11 @@ class TestUninstallPurchaseStock(PurchaseTestCommon):
         purchase_order = self.env['purchase.order'].create({
             'partner_id': partner.id,
             'state': 'done',
-            'order_line': [fields.Command.create({
+            'line_ids': [fields.Command.create({
                 'product_id': self.product_1.id,
             })],
         })
-        order_line = purchase_order.order_line
+        order_line = purchase_order.line_ids
         stock_move = order_line.move_ids
 
         self.assertEqual(order_line.product_id.is_storable, True)
@@ -30,25 +30,26 @@ class TestUninstallPurchaseStock(PurchaseTestCommon):
         stock_move.picked = True
         stock_move.picking_id.button_validate()
 
-        self.assertEqual(purchase_order.order_line.qty_received, 1)
+        self.assertEqual(purchase_order.line_ids.qty_transferred, 1)
 
         stock_moves_option = self.env['ir.model.fields.selection'].search([
             ('field_id.model', '=', 'purchase.order.line'),
-            ('field_id.name', '=', 'qty_received_method'),
-            ('value', '=', 'stock_moves'),
+            ('field_id.name', '=', 'qty_transferred_method'),
+            ('value', '=', 'stock_move'),
         ])
 
-        original_compute = PurchaseOrderLine._compute_qty_received
-        def _compute_qty_received(records):
+        original_compute = PurchaseOrderLine._compute_qty_transferred
+        def _compute_qty_transferred(records):
             records.read()
             with self.assertQueryCount(0):
                 original_compute(records)
                 records.flush_recordset()
 
-        with patch.object(PurchaseOrderLine, '_compute_qty_received', _compute_qty_received):
+        with patch.object(PurchaseOrderLine, '_compute_qty_transferred', _compute_qty_transferred):
             stock_moves_option.sudo().with_context(**{
                 MODULE_UNINSTALL_FLAG: True
             }).unlink()
 
-        self.assertEqual(order_line.qty_received_method, 'manual')
-        self.assertEqual(order_line.qty_received, 1)
+        # After uninstalling stock_move option, the computed method value persists
+        self.assertEqual(order_line.qty_transferred_method, 'stock_move')
+        self.assertEqual(order_line.qty_transferred, 1)

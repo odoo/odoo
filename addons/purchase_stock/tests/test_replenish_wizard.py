@@ -59,7 +59,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         if purchase_order_id and model_name:
             last_po_id = self.env[model_name].browse(int(purchase_order_id))
         self.assertTrue(last_po_id, 'Purchase Order not found')
-        order_line = last_po_id.order_line.search([('product_id', '=', self.product1.id)])
+        order_line = last_po_id.line_ids.search([('product_id', '=', self.product1.id)])
         self.assertTrue(order_line, 'The product is not in the Purchase Order')
         self.assertEqual(order_line.product_qty, self.product_uom_qty, 'Quantities does not match')
         self.assertEqual(order_line.price_unit, self.product1_price, 'Prices does not match')
@@ -111,7 +111,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         if purchase_order_id and model_name:
             last_po_id = self.env[model_name].browse(int(purchase_order_id))
         self.assertEqual(last_po_id.partner_id, vendor1)
-        self.assertEqual(last_po_id.order_line.price_unit, 100)
+        self.assertEqual(last_po_id.line_ids.price_unit, 100)
 
     def test_chose_supplier_2(self):
         """ Choose supplier based on the ordered quantity and minimum price
@@ -169,7 +169,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         if purchase_order_id and model_name:
             last_po_id = self.env[model_name].browse(int(purchase_order_id))
         self.assertEqual(last_po_id.partner_id, vendor1)
-        self.assertEqual(last_po_id.order_line.price_unit, 100)
+        self.assertEqual(last_po_id.line_ids.price_unit, 100)
 
     def test_chose_supplier_3(self):
         """ Choose supplier based on the ordered quantity and minimum price
@@ -270,7 +270,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             last_po_id = self.env[model_name].browse(int(purchase_order_id))
 
         self.assertEqual(last_po_id.partner_id, vendor1)
-        self.assertEqual(last_po_id.order_line.price_unit, 60)
+        self.assertEqual(last_po_id.line_ids.price_unit, 60)
 
     def test_chose_supplier_5(self):
         """ Choose supplier based on discounted price
@@ -307,8 +307,8 @@ class TestReplenishWizard(PurchaseTestCommon):
         if purchase_order_id and model_name:
             last_po_id = self.env[model_name].browse(int(purchase_order_id))
         self.assertEqual(last_po_id.partner_id, self.vendor)
-        self.assertEqual(last_po_id.order_line.price_unit, 110)
-        self.assertEqual(last_po_id.order_line.discount, 20.0)
+        self.assertEqual(last_po_id.line_ids.price_unit, 110)
+        self.assertEqual(last_po_id.line_ids.discount, 20.0)
 
     def test_supplier_delay(self):
         product_to_buy = self.env['product.product'].create({
@@ -442,7 +442,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         ])[-1]
 
         self.assertEqual(last_po_id.partner_id, vendor)
-        self.assertEqual(last_po_id.order_line.price_unit, 0)
+        self.assertEqual(last_po_id.line_ids.price_unit, 0)
 
     def test_correct_supplier(self):
         self.env['stock.warehouse'].search([], limit=1).reception_steps = 'two_steps'
@@ -536,10 +536,10 @@ class TestReplenishWizard(PurchaseTestCommon):
         po = self.env['purchase.order'].search([
             ('partner_id', '=', self.fuzzy_drink.seller_ids[1].partner_id.id)
         ], order='id DESC', limit=1)
-        self.assertEqual(po.order_line.product_qty, 10, 'Generated PO line must respect the requested quantity from the wizard')
-        self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
-        self.assertEqual(po.order_line.price_unit, 1, 'Generated PO line must respect the supplier price of UoM "Unit"')
-        po.button_cancel()
+        self.assertEqual(po.line_ids.product_qty, 10, 'Generated PO line must respect the requested quantity from the wizard')
+        self.assertEqual(po.line_ids.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
+        self.assertEqual(po.line_ids.price_unit, 1, 'Generated PO line must respect the supplier price of UoM "Unit"')
+        po.action_cancel()
 
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': self.fuzzy_drink.id,
@@ -554,10 +554,10 @@ class TestReplenishWizard(PurchaseTestCommon):
         po = self.env['purchase.order'].search([
             ('partner_id', '=', self.fuzzy_drink.seller_ids[1].partner_id.id)
         ], order='id DESC', limit=1)
-        self.assertEqual(po.order_line.product_qty, 15, 'Generated PO line must respect the requested quantity from the wizard')
-        self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
-        self.assertEqual(po.order_line.price_unit, 1, 'Generated PO line must respect the supplier price of UoM "Unit"')
-        po.button_cancel()
+        self.assertEqual(po.line_ids.product_qty, 15, 'Generated PO line must respect the requested quantity from the wizard')
+        self.assertEqual(po.line_ids.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
+        self.assertEqual(po.line_ids.price_unit, 1, 'Generated PO line must respect the supplier price of UoM "Unit"')
+        po.action_cancel()
 
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': self.fuzzy_drink.id,
@@ -572,10 +572,10 @@ class TestReplenishWizard(PurchaseTestCommon):
         po = self.env['purchase.order'].search([
             ('partner_id', '=', self.fuzzy_drink.seller_ids[1].partner_id.id)
         ], order='id DESC', limit=1)
-        self.assertEqual(po.order_line.product_qty, 1, 'Generated PO line must respect the requested quantity from the wizard')
-        self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
-        self.assertEqual(po.order_line.price_unit, 6, 'Generated PO line must respect the supplier price of UoM "Unit" because the quantity doesn\'t match the "Pack of 6" pricelist')
-        po.button_cancel()
+        self.assertEqual(po.line_ids.product_qty, 1, 'Generated PO line must respect the requested quantity from the wizard')
+        self.assertEqual(po.line_ids.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
+        self.assertEqual(po.line_ids.price_unit, 6, 'Generated PO line must respect the supplier price of UoM "Unit" because the quantity doesn\'t match the "Pack of 6" pricelist')
+        po.action_cancel()
 
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': self.fuzzy_drink.id,
@@ -590,7 +590,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         po = self.env['purchase.order'].search([
             ('partner_id', '=', self.fuzzy_drink.seller_ids[0].partner_id.id)
         ], order='id DESC', limit=1)
-        self.assertEqual(po.order_line.product_qty, 2, 'Generated PO line must respect the requested quantity from the wizard')
-        self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
-        self.assertEqual(po.order_line.price_unit, 5, 'Generated PO line must respect the supplier price of UoM "Pack of 6" because the quantity matches the "Pack of 6" pricelist')
-        po.button_cancel()
+        self.assertEqual(po.line_ids.product_qty, 2, 'Generated PO line must respect the requested quantity from the wizard')
+        self.assertEqual(po.line_ids.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
+        self.assertEqual(po.line_ids.price_unit, 5, 'Generated PO line must respect the supplier price of UoM "Pack of 6" because the quantity matches the "Pack of 6" pricelist')
+        po.action_cancel()

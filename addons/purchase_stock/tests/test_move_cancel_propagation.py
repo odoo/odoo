@@ -61,7 +61,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.assertEqual(purchase_order.state, 'draft', "Purchase order should be in 'draft' state.")
 
         # Cancel Purchase order.
-        purchase_order.button_cancel()
+        purchase_order.action_cancel()
 
         # Check the status of picking after canceling po.
         self.assertNotEqual(self.picking_out.state, 'cancel')
@@ -88,10 +88,10 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
 
         # Check status of Purchase Order
         self.assertEqual(purchase_order.state, 'draft', "Purchase order should be in 'draft' state.")
-        purchase_order .button_confirm()
+        purchase_order .action_confirm()
         picking_in = purchase_order.picking_ids.filtered(lambda r: r.picking_type_id == self.picking_type_in)
         # Cancel Purchase order.
-        purchase_order .button_cancel()
+        purchase_order .action_cancel()
 
         # Check the status of picking after canceling po.
         self.assertEqual(picking_in.state, 'cancel')
@@ -123,7 +123,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         # Check status of Purchase Order
         self.assertEqual(purchase_order.state, 'draft', "Purchase order should be in 'draft' state.")
         # Cancel Purchase order.
-        purchase_order.button_cancel()
+        purchase_order.action_cancel()
 
         # Check the status of picking after canceling po.
         self.assertNotEqual(self.move.picking_id.state, 'cancel')
@@ -155,10 +155,10 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         # Check status of Purchase Order
         self.assertEqual(purchase_order.state, 'draft', "Purchase order should be in 'draft' state.")
 
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
         picking_in = purchase_order.picking_ids.filtered(lambda r: r.picking_type_id == self.picking_type_in)
         # Cancel Purchase order.
-        purchase_order.button_cancel()
+        purchase_order.action_cancel()
 
         # Check the status of picking after canceling po.
         self.assertEqual(picking_in.state, 'cancel')
@@ -190,7 +190,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         # Check status of Purchase Order
         self.assertEqual(purchase_order.state, 'draft', "Purchase order should be in 'draft' state.")
         # Cancel Purchase order.
-        purchase_order.button_cancel()
+        purchase_order.action_cancel()
 
         self.assertNotEqual(self.move.picking_id.state, 'cancel')
         self.assertEqual(self.move.procure_method, 'make_to_stock')
@@ -221,10 +221,10 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         # Check status of Purchase Order
         self.assertEqual(purchase_order.state, 'draft', "Purchase order should be in 'draft' state.")
 
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
         picking_in = purchase_order.picking_ids.filtered(lambda r: r.picking_type_id == self.picking_type_in)
         # Cancel Purchase order.
-        purchase_order.button_cancel()
+        purchase_order.action_cancel()
 
         # Check the status of picking after canceling po.
         self.assertEqual(picking_in.state, 'cancel')
@@ -269,5 +269,5 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
         customer_move._action_cancel()
         self.assertEqual(customer_move.state, 'cancel', 'Move should be cancelled')
-        purchase_order.button_cancel()
+        purchase_order.action_cancel()
         self.assertEqual(customer_move.state, 'cancel', 'State of cancelled and done moves should not change.')

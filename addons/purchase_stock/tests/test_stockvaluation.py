@@ -103,13 +103,13 @@ class TestStockValuation(TransactionCase):
         if purchase_order_id and model_name:
             last_po_id = self.env[model_name].browse(int(purchase_order_id))
 
-        order_line = last_po_id.order_line.search([('product_id', '=', self.product1.id)])
+        order_line = last_po_id.line_ids.search([('product_id', '=', self.product1.id)])
         self.assertEqual(order_line.product_uom_qty,
             ap._compute_quantity(replenishment_uom_qty, kgm, rounding_method='HALF-UP'),
             'Quantities does not match')
 
         # Receive products
-        last_po_id.button_confirm()
+        last_po_id.action_confirm()
         picking = last_po_id.picking_ids[0]
         move = picking.move_ids[0]
         move.quantity = move.product_uom_qty
@@ -128,7 +128,7 @@ class TestStockValuation(TransactionCase):
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -139,7 +139,7 @@ class TestStockValuation(TransactionCase):
                 }),
             ],
         })
-        po1.button_confirm()
+        po1.action_confirm()
 
         picking1 = po1.picking_ids[0]
         move1 = picking1.move_ids[0]
@@ -148,7 +148,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move1.price_unit, 100)
 
         # update the unit price on the purchase order line
-        po1.order_line.price_unit = 200
+        po1.line_ids.price_unit = 200
 
 
         # validate the receipt
@@ -171,7 +171,7 @@ class TestStockValuation(TransactionCase):
 
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -182,7 +182,7 @@ class TestStockValuation(TransactionCase):
                 }),
             ],
         })
-        po1.button_confirm()
+        po1.action_confirm()
 
         picking1 = po1.picking_ids[0]
         move1 = picking1.move_ids[0]
@@ -212,7 +212,7 @@ class TestStockValuation(TransactionCase):
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -223,7 +223,7 @@ class TestStockValuation(TransactionCase):
                 }),
             ],
         })
-        po1.button_confirm()
+        po1.action_confirm()
 
         picking1 = po1.picking_ids[0]
         move1 = picking1.move_ids[0]
@@ -246,7 +246,7 @@ class TestStockValuation(TransactionCase):
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -257,7 +257,7 @@ class TestStockValuation(TransactionCase):
                 }),
             ],
         })
-        po1.button_confirm()
+        po1.action_confirm()
 
         picking1 = po1.picking_ids[0]
         move1 = picking1.move_ids[0]
@@ -373,7 +373,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         return {}
 
     def _bill(self, po, qty=None, price=None):
-        action = po.action_create_invoice()
+        invoice = po.create_invoice()
         bill = self.env["account.move"].browse(action["res_id"])
         bill.invoice_date = fields.Date.today()
         if qty is not None:
@@ -424,7 +424,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'currency_id': eur_currency.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -435,14 +435,14 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po1.button_confirm()
+        po1.action_confirm()
 
         picking1 = po1.picking_ids[0]
         move1 = picking1.move_ids[0]
 
         # convert the price unit in the company currency
         price_unit_usd = po1.currency_id._convert(
-            po1.order_line.price_unit, po1.company_id.currency_id,
+            po1.line_ids.price_unit, po1.company_id.currency_id,
             self.env.company, fields.Date.today(), round=False)
 
         # the unit price of the move is the unit price of the purchase order line converted in
@@ -458,7 +458,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         })
         eur_currency._compute_current_rate()
         price_unit_usd_new_rate = po1.currency_id._convert(
-            po1.order_line.price_unit, po1.company_id.currency_id,
+            po1.line_ids.price_unit, po1.company_id.currency_id,
             self.env.company, fields.Date.today(), round=False)
 
         # the new price_unit is lower than th initial because of the rate's change
@@ -483,7 +483,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # Receive 10@10 ; create the vendor bill
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -494,7 +494,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po1.button_confirm()
+        po1.action_confirm()
         receipt_po1 = po1.picking_ids[0]
         receipt_po1.move_ids.quantity = 10
         receipt_po1.move_ids.picked = True
@@ -510,7 +510,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # Receive 10@20 ; create the vendor bill
         po2 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -521,7 +521,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po2.button_confirm()
+        po2.action_confirm()
         receipt_po2 = po2.picking_ids[0]
         receipt_po2.move_ids.quantity = 10
         receipt_po2.move_ids.picked = True
@@ -582,12 +582,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # Create PO
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product1
             po_line.product_qty = 1
             po_line.price_unit = 10.0
         order = po_form.save()
-        order.button_confirm()
+        order.action_confirm()
 
         # Receive the goods
         receipt = order.picking_ids[0]
@@ -645,7 +645,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # Receive 10@10 ; create the vendor bill
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -657,7 +657,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po1.button_confirm()
+        po1.action_confirm()
         receipt_po1 = po1.picking_ids[0]
         receipt_po1.move_ids.quantity = 10
         receipt_po1.move_ids.picked = True
@@ -699,7 +699,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         po = self.env['purchase.order'].create({
             'currency_id': self.eur_currency.id,
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -710,7 +710,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
 
         # Receive the goods
         receipt = po.picking_ids[0]
@@ -729,7 +729,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 'name': 'Test',
                 'price_unit': 100.0,
                 'product_id': self.product1.id,
-                'purchase_line_id': po.order_line.id,
+                'purchase_line_id': po.line_ids.id,
                 'quantity': 1.0,
                 'account_id': self.stock_input_account.id,
             })]
@@ -768,7 +768,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        self.product1.purchase_method = 'purchase'
+        self.product1.purchase_method = 'ordered'
 
         self.env['res.currency.rate'].create([{
             'name': date_po,
@@ -781,7 +781,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         po = self.env['purchase.order'].create({
             'currency_id': self.eur_currency.id,
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -792,7 +792,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
 
         # Create and post the vendor bill before recieving the product
         self.env['account.move'].with_context(default_move_type='in_invoice').create({
@@ -805,7 +805,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 'name': 'Test',
                 'price_unit': 100.0,  # 100$
                 'product_id': self.product1.id,
-                'purchase_line_id': po.order_line.id,
+                'purchase_line_id': po.line_ids.id,
                 'quantity': 1.0,
                 'account_id': self.stock_input_account.id,
             })]
@@ -832,7 +832,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -842,7 +842,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
 
         # Receive the goods
         receipt = po.picking_ids
@@ -866,7 +866,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -876,7 +876,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
 
         # Receive the goods
         receipt = po.picking_ids
@@ -939,7 +939,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         po = self.env['purchase.order'].create({
             'currency_id': self.eur_currency.id,
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -952,7 +952,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             ],
         })
 
-        po.button_confirm()
+        po.action_confirm()
 
         # Receive the goods
         receipt = po.picking_ids[0]
@@ -979,7 +979,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 'name': 'Test',
                 'price_unit': 105.0,
                 'product_id': self.product1.id,
-                'purchase_line_id': po.order_line.id,
+                'purchase_line_id': po.line_ids.id,
                 'tax_ids': [(4, tax.id)],
                 'quantity': 1.0,
                 'account_id': self.stock_input_account.id,
@@ -1025,7 +1025,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         po = self.env['purchase.order'].create({
             'currency_id': self.eur_currency.id,
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -1037,7 +1037,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             ],
         })
 
-        po.button_confirm()
+        po.action_confirm()
 
         # Receive the goods
         receipt = po.picking_ids[0]
@@ -1065,7 +1065,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # SetUp product
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        self.product1.product_tmpl_id.purchase_method = 'purchase'
+        self.product1.product_tmpl_id.purchase_method = 'ordered'
 
         # SetUp currency and rates
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
@@ -1088,7 +1088,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         po = self.env['purchase.order'].create({
             'currency_id': self.eur_currency.id,
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -1099,7 +1099,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
 
         inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
             'move_type': 'in_invoice',
@@ -1111,7 +1111,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 'name': 'Test',
                 'price_unit': 100.0,
                 'product_id': self.product1.id,
-                'purchase_line_id': po.order_line.id,
+                'purchase_line_id': po.line_ids.id,
                 'quantity': 1.0,
                 'account_id': self.stock_input_account.id,
                 'tax_ids': [],
@@ -1149,7 +1149,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         date_invoice = '2019-01-16'
 
         # SetUp product Average
-        self.product1.product_tmpl_id.purchase_method = 'purchase'
+        self.product1.product_tmpl_id.purchase_method = 'ordered'
 
         # SetUp product Standard
         # should have bought at 60 USD
@@ -1167,7 +1167,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'name': 'Standard Val',
             'standard_price': 60,
         })
-        product_standard.product_tmpl_id.purchase_method = 'purchase'
+        product_standard.product_tmpl_id.purchase_method = 'ordered'
 
         # SetUp currency and rates
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
@@ -1207,7 +1207,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         po = self.env['purchase.order'].create({
             'currency_id': self.eur_currency.id,
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -1226,10 +1226,10 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
 
-        line_product_average = po.order_line.filtered(lambda l: l.product_id == self.product1)
-        line_product_standard = po.order_line.filtered(lambda l: l.product_id == product_standard)
+        line_product_average = po.line_ids.filtered(lambda l: l.product_id == self.product1)
+        line_product_standard = po.line_ids.filtered(lambda l: l.product_id == product_standard)
 
         inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
             'move_type': 'in_invoice',
@@ -1322,7 +1322,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         product_avg = self.product1_copy
         product_avg.write({
-            'purchase_method': 'purchase',
+            'bill_policy': 'ordered',
             'name': 'AVG',
             'standard_price': 60,
         })
@@ -1379,7 +1379,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         po = self.env['purchase.order'].create({
             'currency_id': self.eur_currency.id,
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': product_avg.name,
                     'product_id': product_avg.id,
@@ -1390,9 +1390,9 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 })
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
 
-        line_product_avg = po.order_line.filtered(lambda l: l.product_id == product_avg)
+        line_product_avg = po.line_ids.filtered(lambda l: l.product_id == product_avg)
 
         today = date_delivery
         picking = po.picking_ids
@@ -1454,7 +1454,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         product_avg = self.product1_copy
         product_avg.write({
-            'purchase_method': 'purchase',
+            'bill_policy': 'ordered',
             'name': 'AVG',
             'standard_price': 60,
         })
@@ -1480,7 +1480,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         po = self.env['purchase.order'].create({
             'currency_id': self.eur_currency.id,
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': product_avg.name,
                     'product_id': product_avg.id,
@@ -1491,9 +1491,9 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 })
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
 
-        line_product_avg = po.order_line.filtered(lambda l: l.product_id == product_avg)
+        line_product_avg = po.line_ids.filtered(lambda l: l.product_id == product_avg)
         picking = po.picking_ids
         (picking.move_ids
             .filtered(lambda l: l.purchase_line_id == line_product_avg)
@@ -1560,7 +1560,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.product1.categ_id.property_cost_method = 'average'
         product_avg = self.product1_copy
         product_avg.write({
-            'purchase_method': 'purchase',
+            'bill_policy': 'ordered',
             'name': 'AVG',
             'standard_price': 0,
         })
@@ -1606,7 +1606,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 'currency_id': self.eur_currency.id,
                 'partner_id': self.partner_id.id,
                 'date_order': date_po,
-                'order_line': [
+                'line_ids': [
                     (0, 0, {
                         'name': product_avg.name,
                         'product_id': product_avg.id,
@@ -1617,9 +1617,9 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     })
                 ],
             })
-            po.button_confirm()
+            po.action_confirm()
 
-        line_product_avg = po.order_line.filtered(lambda l: l.product_id == product_avg)
+        line_product_avg = po.line_ids.filtered(lambda l: l.product_id == product_avg)
 
         with freeze_time(date_delivery):
             picking = po.picking_ids
@@ -1739,12 +1739,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # Create PO
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product1
             po_line.product_qty = 1
             po_line.price_unit = 110.0
         order = po_form.save()
-        order.button_confirm()
+        order.action_confirm()
 
         # Receive the goods
         receipt = order.picking_ids[0]
@@ -1789,12 +1789,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # Create PO
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product1
             po_line.product_qty = 1
             po_line.price_unit = 100.0
         order = po_form.save()
-        order.button_confirm()
+        order.action_confirm()
 
         # Receive the goods
         receipt = order.picking_ids[0]
@@ -1837,12 +1837,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # Create PO
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product1
             po_line.product_qty = 1
             po_line.price_unit = 90.0
         order = po_form.save()
-        order.button_confirm()
+        order.action_confirm()
 
         # Receive the goods
         receipt = order.picking_ids[0]
@@ -1950,13 +1950,13 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product1
             po_line.product_qty = 10
             po_line.product_uom_id = uom_hundred
             po_line.price_unit = 50.0
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         # Receive 7 Hundred
         receipt01 = po.picking_ids[0]
@@ -2092,12 +2092,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product1
             po_line.product_qty = 5
             po_line.price_unit = 50.0
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         receipt = po.picking_ids[0]
         receipt.move_ids.picked = True
@@ -2164,12 +2164,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product1
             po_line.product_qty = 12
             po_line.price_unit = 10.0
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         receipt01 = po.picking_ids
         receipt01.move_ids.move_line_ids.quantity = 4
@@ -2315,12 +2315,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product1
             po_line.product_qty = 10
             po_line.price_unit = 10.0
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         receipt = po.picking_ids
         receipt.move_ids.move_line_ids.quantity = 10
@@ -2469,12 +2469,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product1
             po_line.product_qty = 10
             po_line.price_unit = 10.0
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         receipt = po.picking_ids
         receipt.move_ids.move_line_ids.quantity = 10
@@ -2563,12 +2563,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product1
             po_line.product_qty = 2
             po_line.price_unit = 10.0
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         receipt01 = po.picking_ids
         receipt01.move_ids.move_line_ids.quantity = 1
@@ -2590,7 +2590,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         })
         refund = self.env['account.move'].browse(credit_note_wizard.refund_moves()['res_id'])
 
-        action = po.action_create_invoice()
+        invoice = po.create_invoice()
         bill02 = self.env["account.move"].browse(action["res_id"])
         bill02.invoice_date = fields.Date.today()
         bill02.invoice_line_ids.quantity = 1.0
@@ -2609,22 +2609,22 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product1
             po_line.product_qty = 1
             po_line.price_unit = 10.0
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product_b
             po_line.product_qty = 1
             po_line.price_unit = 10.0
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         receipt01 = po.picking_ids
         receipt01.move_ids.move_line_ids.quantity = 1
         receipt01.button_validate()
 
-        action = po.action_create_invoice()
+        invoice = po.create_invoice()
         bill = self.env["account.move"].browse(action["res_id"])
         bill.invoice_date = fields.Date.today()
         label01, label02 = bill.invoice_line_ids.mapped('name')
@@ -2721,7 +2721,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'currency_id': eur_currency.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -2732,7 +2732,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
 
         receipt = po.picking_ids
         receipt.move_ids.move_line_ids.quantity = 1.0
@@ -2741,7 +2741,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         layer = receipt.move_ids.stock_valuation_layer_ids
         self.assertEqual(layer.value, 150)
 
-        action = po.action_create_invoice()
+        invoice = po.create_invoice()
         bill = self.env["account.move"].browse(action["res_id"])
         bill.invoice_date = two_days_ago
         bill.date = one_day_ago
@@ -2781,7 +2781,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': product.name,
                     'product_id': product.id,
@@ -2792,7 +2792,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
 
         receipt = po.picking_ids
         i = 1
@@ -2813,7 +2813,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         layers = receipt.move_ids.stock_valuation_layer_ids
         self.assertEqual(layers.mapped('value'), [100, 100, 100])
 
-        action = po.action_create_invoice()
+        invoice = po.create_invoice()
         bill = self.env["account.move"].browse(action["res_id"])
         bill.line_ids.price_unit = 150
         bill.invoice_date = fields.Date.today()
@@ -2837,21 +2837,21 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         However, if we create a return for a portion of a receipt,
             the invoiced_qty will be higher than the received_qty. This could be iterpreted has the bill
             being done before the receipt, which is not the case.
-        In this test, we ensure that if the Control Policy is 'On received quantities' (procure_method = 'receive'),
+        In this test, we ensure that if the Control Policy is 'On received quantities' (procure_method = 'transferred'),
             we keep using the purchase price for the svl unit_cost even when invoiced_qty > received_qty.
         """
         self.product1.categ_id.property_cost_method = 'average'
         self.product1.categ_id.property_valuation = 'real_time'
-        self.product1.purchase_method = 'receive'  # ControlPolicy
+        self.product1.purchase_method = 'transferred'  # ControlPolicy
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product1
             po_line.product_qty = 100
             po_line.price_unit = 10.0
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         def _validate_backorder(po, qty):
             picking = po.picking_ids.filtered(lambda p: p.state not in ['done', 'draft', 'cancel']).ensure_one()
@@ -2875,7 +2875,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.assertEqual(bill02.invoice_line_ids.stock_valuation_layer_ids.ensure_one().value, 90.0)
 
         # With the return, the invoiced qty > received qty,
-        # this must NOT be interpreted as the invoice done before the picking (purchase_method = 'purchase')
+        # this must NOT be interpreted as the invoice done before the picking (purchase_method = 'ordered')
         self._return(receipt02, qty=10)
 
         receipt03 = _validate_backorder(po, 30)
@@ -2892,14 +2892,14 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.env.company.currency_id = usd_currency.id
         self.product1.categ_id.property_cost_method = 'fifo'
         self.product1.categ_id.property_valuation = 'real_time'
-        self.product1.purchase_method = 'purchase'
+        self.product1.purchase_method = 'ordered'
 
         price_unit_EUR = 100
         price_unit_USD = self.env.ref('base.EUR')._convert(price_unit_EUR, usd_currency, self.env.company, fields.Date.today(), round=False)
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'currency_id': self.env.ref('base.EUR').id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -2910,7 +2910,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
         picking = po.picking_ids[0]
         move = picking.move_ids[0]
         move.quantity = 10
@@ -2921,7 +2921,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         wizard.process()
         self.assertAlmostEqual(move.stock_valuation_layer_ids.unit_cost, price_unit_USD)
 
-        po.action_create_invoice()
+        po.create_invoice()
 
         picking2 = po.picking_ids.filtered(lambda p: p.backorder_id)
         move2 = picking2.move_ids[0]
@@ -2938,14 +2938,14 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.env.company.currency_id = usd_currency.id
         self.product1.categ_id.property_cost_method = 'fifo'
         self.product1.categ_id.property_valuation = 'periodic'
-        self.product1.purchase_method = 'purchase'
+        self.product1.purchase_method = 'ordered'
 
         price_unit_EUR = 100
         price_unit_USD = self.env.ref('base.EUR')._convert(price_unit_EUR, usd_currency, self.env.company, fields.Date.today(), round=False)
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'currency_id': self.env.ref('base.EUR').id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -2956,7 +2956,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
         picking = po.picking_ids[0]
         move = picking.move_ids[0]
         move.quantity = 10
@@ -2967,7 +2967,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         wizard.process()
         self.assertAlmostEqual(move.stock_valuation_layer_ids.unit_cost, price_unit_USD)
 
-        po.action_create_invoice()
+        po.create_invoice()
 
         picking2 = po.picking_ids.filtered(lambda p: p.backorder_id)
         move2 = picking2.move_ids[0]
@@ -2985,7 +2985,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -2996,13 +2996,13 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
 
         receipt = po.picking_ids
         receipt.move_ids.move_line_ids.quantity = 1.0
         receipt.button_validate()
 
-        action = po.action_create_invoice()
+        invoice = po.create_invoice()
         bill = self.env["account.move"].browse(action["res_id"])
         bill.action_post()
         self.assertEqual(bill.invoice_date, fields.Date.context_today(bill))
@@ -3053,7 +3053,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             po = self.env['purchase.order'].create({
                 'partner_id': self.partner_id.id,
                 'currency_id': self.eur_currency.id,
-                'order_line': [
+                'line_ids': [
                     Command.create({
                         'product_id': self.product1.id,
                         'product_qty': 1.0,
@@ -3062,7 +3062,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     }),
                 ]
             })
-            po.button_confirm()
+            po.action_confirm()
 
             receipt = po.picking_ids
             receipt.move_line_ids.quantity = 1
@@ -3088,7 +3088,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         delivery.move_ids.quantity = 1.0
         delivery.button_validate()
 
-        po.action_create_invoice()
+        po.create_invoice()
         bill = po.invoice_ids
         bill.invoice_date = bill_date
         bill.action_post()
@@ -3120,7 +3120,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         company.currency_id = self.usd_currency
 
         self.product1.is_storable = True
-        self.product1.purchase_method = 'purchase'
+        self.product1.purchase_method = 'ordered'
 
         self.product1.with_company(company).categ_id.property_cost_method = 'fifo'
         self.product1.with_company(company).categ_id.property_valuation = 'real_time'
@@ -3160,7 +3160,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             po = self.env['purchase.order'].create({
                 'partner_id': self.partner_id.id,
                 'currency_id': self.eur_currency.id,
-                'order_line': [
+                'line_ids': [
                     Command.create({
                         'product_id': self.product1.id,
                         'product_qty': 1.0,
@@ -3169,10 +3169,10 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     }),
                 ]
             })
-            po.button_confirm()
+            po.action_confirm()
 
         with freeze_time(bill_date):
-            po.action_create_invoice()
+            po.create_invoice()
             bill = po.invoice_ids
             bill.invoice_date = bill_date
             bill.action_post()
@@ -3245,7 +3245,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'date_order': fields.Date.from_string('2023-12-04'),
             'currency_id': eur.id,
             'partner_id': self.partner_a.id,
-            'order_line': [
+            'line_ids': [
                 Command.create({
                     'product_id': analytic_product.id,
                     'product_qty': 10.0,
@@ -3253,7 +3253,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
 
         # Make sure a stock move has been created to replenish the product.
         self.assertEqual(len(purchase_order.picking_ids.move_ids), 1)
@@ -3262,7 +3262,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         stock_move.quantity = stock_move.product_uom_qty
 
         purchase_order.picking_ids.button_validate()
-        purchase_order.action_create_invoice()
+        purchase_order.create_invoice()
 
         # Make sure a first Journal Entry has been created (to account for the stock move).
         self.assertEqual(len(stock_move.account_move_ids), 1)
@@ -3328,7 +3328,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             po = self.env['purchase.order'].create({
                 'partner_id': self.partner_id.id,
                 'currency_id': eur_currency.id,
-                'order_line': [
+                'line_ids': [
                     (0, 0, {
                         'name': self.product1.name,
                         'product_id': self.product1.id,
@@ -3339,7 +3339,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                     }),
                 ],
             })
-            po.button_confirm()
+            po.action_confirm()
 
             receipt = po.picking_ids
             receipt.move_ids.move_line_ids.quantity = 1.0
@@ -3360,7 +3360,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         delivery.move_ids.quantity = 1.0
         delivery.button_validate()
 
-        action = po.action_create_invoice()
+        invoice = po.create_invoice()
         bill = self.env["account.move"].browse(action["res_id"])
         bill.invoice_date = bill.date = today
         bill.action_post()
@@ -3388,36 +3388,36 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = product1
             po_line.product_qty = 1
             po_line.price_unit = 10.0
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = product2
             po_line.product_qty = 1
             po_line.price_unit = 20.0
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         receipt = po.picking_ids
         receipt.move_ids.move_line_ids.quantity = 1
         receipt.button_validate()
 
-        action = po.action_create_invoice()
+        invoice = po.create_invoice()
         bill01 = self.env["account.move"].browse(action["res_id"])
         bill01.invoice_date = fields.Date.today()
         bill01.invoice_line_ids.filtered(lambda l: l.product_id == product2).quantity = 0
         bill01.action_post()
 
         self.assertEqual(bill01.state, 'posted')
-        self.assertRecordValues(po.order_line, [
+        self.assertRecordValues(po.line_ids, [
             {'product_id': product1.id, 'qty_invoiced': 1.0},
             {'product_id': product2.id, 'qty_invoiced': 0.0},
         ])
 
         bill02 = self._bill(po)
         self.assertEqual(bill02.state, 'posted')
-        self.assertRecordValues(po.order_line, [
+        self.assertRecordValues(po.line_ids, [
             {'product_id': product1.id, 'qty_invoiced': 1.0},
             {'product_id': product2.id, 'qty_invoiced': 1.0},
         ])
@@ -3441,12 +3441,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product1
             po_line.product_qty = 1
             po_line.price_unit = 10.0
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         receipt = po.picking_ids
         receipt.move_ids.move_line_ids.quantity = 1
@@ -3468,12 +3468,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product1
             po_line.product_qty = 4
             po_line.price_unit = 25.0
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         receipt01 = po.picking_ids
         receipt01.move_ids.quantity = 1
@@ -3519,12 +3519,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product1
             po_line.product_qty = 1
             po_line.price_unit = 25.0
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         receipt01 = po.picking_ids
         receipt01.move_ids.quantity = 1
@@ -3567,12 +3567,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = self.product1
             po_line.product_qty = 1
             po_line.price_unit = 25.0
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
 
         receipt01 = po.picking_ids
         receipt01.move_ids.quantity = 1
@@ -3619,12 +3619,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         })
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
-        with po_form.order_line.new() as po_line:
+        with po_form.line_ids.new() as po_line:
             po_line.product_id = product1
             po_line.product_qty = -2
             po_line.price_unit = 10.0
         po = po_form.save()
-        po.button_confirm()
+        po.action_confirm()
         delivery = po.picking_ids
         # it is negative qty transfer so Odoo will create delivery instead of receipt.
         delivery.partner_id = shipping_partner
@@ -3652,25 +3652,25 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'currency_id': euro_id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'product_id': avco_prod.id,
                 'product_uom_qty': 5,
                 'price_unit': 10,
             })],
         })
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
         receipt1 = purchase_order.picking_ids
         receipt1.button_validate()
 
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_b.id,
             'currency_id': franc_id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'product_id': avco_prod.id,
                 'product_uom_qty': 5,
             })],
         })
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
         receipt2 = purchase_order.picking_ids
         receipt2.button_validate()
 
@@ -3678,7 +3678,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # return the initial return
         self._return(receipt2_return1)
         pre_bill_cost = avco_prod.standard_price
-        purchase_order.action_create_invoice()
+        purchase_order.create_invoice()
         bill = purchase_order.invoice_ids
         bill.invoice_date = fields.Date.today()
         bill.action_post()
@@ -3697,20 +3697,20 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         product = self.product1
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'product_id': product.id,
                 'product_qty': 10,
                 'price_unit': 100,
             })],
         })
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
         purchase_order.picking_ids.button_validate()
         with Form(self.env['stock.scrap']) as scrap_form:
             scrap_form.product_id = product
             scrap_form.scrap_qty = 10
             scrap = scrap_form.save()
         scrap.action_validate()
-        purchase_order.action_create_invoice()
+        purchase_order.create_invoice()
         bill = purchase_order.invoice_ids
         bill.invoice_line_ids.price_unit = 120
         bill.invoice_date = fields.Date.today()
@@ -3734,16 +3734,16 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         product.categ_id.write({'property_cost_method': 'average', 'property_valuation': 'real_time'})
         purchase_order = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [Command.create({
+            'line_ids': [Command.create({
                 'product_id': product.id,
                 'product_qty': 2,
                 'discount': 100,
             })],
         })
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
         receipt = purchase_order.picking_ids
         receipt.button_validate()
-        purchase_order.action_create_invoice()
+        purchase_order.create_invoice()
         bill = purchase_order.invoice_ids
         bill.invoice_date = fields.Date.today()
         bill.action_post()
@@ -3757,7 +3757,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
-            'order_line': [
+            'line_ids': [
                 Command.create({
                     'name': self.product1.name,
                     'product_id': self.product1.id,
@@ -3767,7 +3767,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
         receipt_po = po.picking_ids[0]
         receipt_po.button_validate()
 

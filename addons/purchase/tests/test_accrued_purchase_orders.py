@@ -14,8 +14,8 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         cls.other_currency = cls.setup_other_currency('XAF')
         cls.alt_exp_account = cls.company_data['default_account_expense'].copy()
         # set 'type' to 'service' to allow manualy set 'qty_delivered' even with purchase_stock installed
-        cls.product_a.update({'type': 'service', 'purchase_method': 'receive'})
-        cls.product_b.update({'type': 'service', 'purchase_method': 'receive'})
+        cls.product_a.update({'type': 'service', 'bill_policy': 'transferred'})
+        cls.product_b.update({'type': 'service', 'bill_policy': 'transferred'})
         #analytic distribution
         cls.default_plan = cls.env['account.analytic.plan'].create({'name': 'Default'})
         cls.analytic_account_a = cls.env['account.analytic.account'].create({
@@ -31,7 +31,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         cls.product_b.property_account_expense_id = cls.alt_exp_account
         cls.purchase_order = cls.env['purchase.order'].with_context(tracking_disable=True).create({
             'partner_id': cls.partner_a.id,
-            'order_line': [
+            'line_ids': [
                 Command.create({
                     'name': cls.product_a.name,
                     'product_id': cls.product_a.id,
@@ -57,7 +57,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        cls.purchase_order.button_confirm()
+        cls.purchase_order.action_confirm()
         cls.account_revenue = cls.company_data['default_account_revenue']
         cls.account_expense = cls.company_data['default_account_expense']
         cls.wizard = cls.env['account.accrued.orders.wizard'].with_context({
@@ -73,7 +73,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             self.wizard.create_entries()
 
         # 5 qty of each product billeable
-        self.purchase_order.order_line.qty_received = 5
+        self.purchase_order.line_ids.qty_transferred = 5
         self.assertRecordValues(self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids, [
             # reverse move lines
             {'account_id': self.account_expense.id, 'debit': 0, 'credit': 5000},
@@ -86,7 +86,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         ])
 
         # received products billed, nothing to bill left
-        move = self.env['account.move'].browse(self.purchase_order.create_invoice()['res_id'])
+        move = self.purchase_order.create_invoice()
         move.invoice_date = '2020-01-01'
         move.action_post()
 
@@ -95,7 +95,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
 
     def test_multi_currency_accrued_order(self):
         # 5 qty of each product billeable
-        self.purchase_order.order_line.qty_received = 5
+        self.purchase_order.line_ids.qty_transferred = 5
         # set currency != company currency
         self.purchase_order.currency_id = self.other_currency
         moves = self.env['account.move'].search(self.wizard.create_entries()['domain'])
@@ -113,7 +113,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         ])
 
     def test_analytic_account_accrued_order(self):
-        self.purchase_order.order_line.qty_received = 10
+        self.purchase_order.line_ids.qty_transferred = 10
 
         self.assertRecordValues(self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids, [
             # reverse move lines
@@ -133,8 +133,8 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             'type_tax_use': 'purchase',
             'price_include_override': 'tax_included',
         })
-        self.purchase_order.order_line.tax_ids = tax_10_included
-        self.purchase_order.order_line.qty_received = 5
+        self.purchase_order.line_ids.tax_ids = tax_10_included
+        self.purchase_order.line_ids.qty_transferred = 5
         self.assertRecordValues(self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids, [
             # reverse move lines
             {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 4545.45},
@@ -147,16 +147,16 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         ])
 
     def test_accrued_order_returned(self):
-        self.purchase_order.order_line.qty_received = 10
+        self.purchase_order.line_ids.qty_transferred = 10
         # received products billed, nothing to bill left
-        move = self.env['account.move'].browse(self.purchase_order.create_invoice()['res_id'])
+        move = self.purchase_order.create_invoice()
         move.invoice_date = '2020-01-01'
         move.action_post()
 
         with self.assertRaises(UserError):
             self.wizard.create_entries()
 
-        self.purchase_order.order_line.qty_received = 5
+        self.purchase_order.line_ids.qty_transferred = 5
         res = self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids
         self.assertRecordValues(res, [
             # reverse move lines
@@ -169,7 +169,7 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             {'account_id': self.account_revenue.id, 'debit': 6000.0, 'credit': 0.0},
         ])
 
-        self.purchase_order.order_line.qty_received = 0
+        self.purchase_order.line_ids.qty_transferred = 0
         res = self.env['account.move'].search(self.wizard.create_entries()['domain']).line_ids
         self.assertRecordValues(res, [
             # reverse move lines
@@ -184,20 +184,32 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
 
     def test_error_when_different_currencies_accrued(self):
         """
-        Tests that if two Purchase Orders with different currencies are selected for Accrued Expense Entry, 
+        Tests that if two Purchase Orders with different currencies are selected for Accrued Expense Entry,
         a UserError is raised.
         """
         purchase_orders = self.env['purchase.order'].create([
             {
                 'partner_id': self.partner_a.id,
                 'currency_id': self.company_data['currency'].id,
-            }, 
+                'line_ids': [
+                    Command.create({
+                        'product_id': self.product_a.id,
+                        'product_qty': 1.0,
+                    }),
+                ],
+            },
             {
                 'partner_id': self.partner_a.id,
                 'currency_id': self.other_currency.id,
+                'line_ids': [
+                    Command.create({
+                        'product_id': self.product_a.id,
+                        'product_qty': 1.0,
+                    }),
+                ],
             }
         ])
-        purchase_orders.button_confirm()
+        purchase_orders.action_confirm()
         accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
             active_model='purchase.order',
             active_ids=purchase_orders.ids,

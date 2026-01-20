@@ -28,7 +28,7 @@ class TestDeleteOrder(PurchaseTestCommon):
             'state': 'done',
         })
         purchase_order_2 = purchase_order.with_user(self.res_users_purchase_user)
-        purchase_order_2.button_cancel()
+        purchase_order_2.action_cancel()
         self.assertEqual(purchase_order_2.state, 'cancel', 'PO is cancelled!')
         purchase_order_2.unlink()
 
@@ -38,7 +38,7 @@ class TestDeleteOrder(PurchaseTestCommon):
             'state': 'draft',
         })
         purchase_order_3 = purchase_order.with_user(self.res_users_purchase_user)
-        purchase_order_3.button_cancel()
+        purchase_order_3.action_cancel()
         self.assertEqual(purchase_order_3.state, 'cancel', 'PO is cancelled!')
         purchase_order_3.unlink()
 
@@ -60,7 +60,7 @@ class TestDeleteOrder(PurchaseTestCommon):
 
         purchase_order = self.env['purchase.order'].create({
             'partner_id': partner.id,
-            'order_line': [
+            'line_ids': [
                 Command.create({
                     'product_id': self.product_2.id,
                     'product_qty': 1.0,
@@ -68,12 +68,12 @@ class TestDeleteOrder(PurchaseTestCommon):
                     'propagate_cancel': False,
                 })],
         })
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
 
-        self.env['report.stock.report_reception'].action_assign(move.ids, [1], purchase_order.order_line.move_ids.ids)
+        self.env['report.stock.report_reception'].action_assign(move.ids, [1], purchase_order.line_ids.move_ids.ids)
         self.assertEqual(move.state, 'waiting', 'Move should be waiting for the linked purchase')
-        purchase_order.button_cancel()
+        purchase_order.action_cancel()
         # Check purchase order and related move are canceled while linked move state is not
         self.assertEqual(purchase_order.state, 'cancel', 'Purchase Order should be canceled')
-        self.assertEqual(purchase_order.order_line.move_ids.state, 'cancel', 'Purchase order move should be canceled')
+        self.assertEqual(purchase_order.line_ids.move_ids.state, 'cancel', 'Purchase order move should be canceled')
         self.assertEqual(move.state, 'confirmed', 'Move state should be recomputed to confimed')

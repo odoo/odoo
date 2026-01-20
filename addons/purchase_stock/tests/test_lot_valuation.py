@@ -14,7 +14,7 @@ class TestLotValuationPurchase(TestLotValuation):
         self._make_in_move(self.product1, 10, 7, lot_ids=[self.lot3])
         po = self.env['purchase.order'].create({
             'partner_id': partner.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'product_id': self.product1.id,
                     'product_qty': 10,
@@ -22,4 +22,4 @@ class TestLotValuationPurchase(TestLotValuation):
                 }),
             ],
         })
-        self.assertEqual(po.order_line[0].price_unit, 6.0)
+        self.assertEqual(po.line_ids[0].price_unit, 6.0)

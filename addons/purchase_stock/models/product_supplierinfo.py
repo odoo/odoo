@@ -29,7 +29,7 @@ class ProductSupplierinfo(models.Model):
             [
                 ("state", "=", "done"),
                 (
-                    "order_line.product_id",
+                    "line_ids.product_id",
                     "in",
                     self.product_tmpl_id.product_variant_ids.ids,
                 ),

@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import SQL
 
@@ -220,7 +220,7 @@ class PurchaseBillLineMatch(models.Model):
             ]  # in case of multiple POL with same product, only match the first one
             matching_bill_lines = aml_by_product.get(product)
             if matching_bill_lines:
-                matching_bill_lines.purchase_line_id = po_line.id
+                matching_bill_lines.purchase_line_ids = [Command.link(po_line.id)]
                 residual_purchase_order_lines -= po_line
                 residual_account_move_lines -= matching_bill_lines
 
@@ -443,6 +443,9 @@ class PurchaseBillLineMatch(models.Model):
             aml.display_type = 'product'
             AND am.move_type IN ('in_invoice', 'in_refund')
             AND aml.parent_state IN ('draft', 'posted')
-            AND aml.purchase_line_id IS NULL
+            AND NOT EXISTS (
+                SELECT 1 FROM account_move_line_purchase_order_line_rel rel
+                WHERE rel.move_line_id = aml.id
+            )
             """,
         )

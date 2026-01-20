@@ -31,7 +31,7 @@ class TestFifoReturns(ValuationReconciliationTestCommon):
         # I create a draft Purchase Order for first in move for 10 kg at 50 euro
         purchase_order_1 = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_fiforet_icecream.id,
                 'product_qty': 10.0,
@@ -44,7 +44,7 @@ class TestFifoReturns(ValuationReconciliationTestCommon):
         # Create a draft Purchase Order for second shipment for 30kg at 80€/kg
         purchase_order_2 = self.env['purchase.order'].create({
             'partner_id': res_partner_3.id,
-            'order_line': [(0, 0, {
+            'line_ids': [(0, 0, {
                 'name': 'FIFO Ice Cream',
                 'product_id': product_fiforet_icecream.id,
                 'product_qty': 30.0,
@@ -55,7 +55,7 @@ class TestFifoReturns(ValuationReconciliationTestCommon):
         })
 
         # Confirm the first purchase order
-        purchase_order_1.button_confirm()
+        purchase_order_1.action_confirm()
 
         # Process the reception of purchase order 1
         picking = purchase_order_1.picking_ids[0]
@@ -65,7 +65,7 @@ class TestFifoReturns(ValuationReconciliationTestCommon):
         self.assertAlmostEqual(product_fiforet_icecream.standard_price, 50)
 
         # Confirm the second purchase order
-        purchase_order_2.button_confirm()
+        purchase_order_2.action_confirm()
         picking = purchase_order_2.picking_ids[0]
         picking.button_validate()
 

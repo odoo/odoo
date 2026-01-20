@@ -45,10 +45,10 @@ class TestPurchaseDashboard(AccountTestInvoicingCommon, MailCase):
         } for i in range(3)])
         for rfq, qty in zip(rfqs, [1, 2, 3]):
             rfq_form = Form(rfq)
-            with rfq_form.order_line.new() as line_1:
+            with rfq_form.line_ids.new() as line_1:
                 line_1.product_id = self.product_100
                 line_1.product_qty = qty
-            with rfq_form.order_line.new() as line_2:
+            with rfq_form.line_ids.new() as line_2:
                 line_2.product_id = self.product_250
                 line_2.product_qty = qty
             rfq_form.save()
@@ -82,7 +82,7 @@ class TestPurchaseDashboard(AccountTestInvoicingCommon, MailCase):
         self.assertEqual(rfqs[1].state, 'sent')
 
         # Confirm Orders with lines.
-        rfqs.button_confirm()
+        rfqs.action_confirm()
         # Retrieve dashboard as User A to check 'my_{to_send, waiting, late}' values.
         dashboard_result = rfqs.with_user(self.user_a).prepare_dashboard()
 

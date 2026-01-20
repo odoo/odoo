@@ -300,7 +300,7 @@ class PurchaseOrderLine(models.Model):
     def _get_price_unit(self):
         self.ensure_one()
         order = self.order_id
-        price_unit = self.price_unit_discounted
+        price_unit = self.price_unit_discounted_taxexc
         price_unit_prec = self.env["decimal.precision"].precision_get("Product Price")
 
         if self.tax_ids:
@@ -519,13 +519,13 @@ class PurchaseOrderLine(models.Model):
 
     def _prepare_qty_transferred(self):
         from_stock_lines = self.filtered(
-            lambda order_line: order_line.qty_received_method == "stock_move",
+            lambda order_line: order_line.qty_transferred_method == "stock_move",
         )
         received_qties = super(
             PurchaseOrderLine, self - from_stock_lines
         )._prepare_qty_transferred()
         for line in self:
-            if line.qty_received_method == "stock_move":
+            if line.qty_transferred_method == "stock_move":
                 total = 0.0
                 # In case of a BOM in kit, the products delivered do not correspond to the products in
                 # the PO. Therefore, we can skip them since they will be handled later on.
@@ -560,7 +560,6 @@ class PurchaseOrderLine(models.Model):
                                 line.product_uom_id,
                                 rounding_method="HALF-UP",
                             )
-                line._track_qty_received(total)
                 received_qties[line] = total
         return received_qties
 

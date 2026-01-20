@@ -21,7 +21,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'currency_id': self.other_currency.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': self.product_a.name,
                     'product_id': self.product_a.id,
@@ -42,7 +42,8 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
+        po.flush_model()
 
         f = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         f.invoice_date = f.date
@@ -85,7 +86,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         po.flush_model()
 
         res_product1 = self.env['purchase.report'].search([
-            ('order_id', '=', po.id),
+            ('order_reference', '=', f'purchase.order,{po.id}'),
             ('product_id', '=', self.product_a.id),
             ('company_id', '=', self.company_data['company'].id),
         ])
@@ -96,7 +97,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         self.assertEqual(res_product1.price_total, 50.0, 'Currency conversion is not working')
 
         res_product2 = self.env['purchase.report'].search([
-            ('order_id', '=', po.id),
+            ('order_reference', '=', f'purchase.order,{po.id}'),
             ('product_id', '=', self.product_b.id),
             ('company_id', '=', self.company_data['company'].id),
         ])
@@ -109,19 +110,19 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_a
         po_form.date_order = datetime.now() + timedelta(days=10)
-        with po_form.order_line.new() as line:
+        with po_form.line_ids.new() as line:
             line.product_id = self.product_a
-        with po_form.order_line.new() as line:
+        with po_form.line_ids.new() as line:
             line.product_id = self.product_b
         po_form.date_planned = datetime.now() + timedelta(days=15)
         po = po_form.save()
 
-        po.button_confirm()
+        po.action_confirm()
 
         po.flush_model()
         report = self.env['purchase.report'].formatted_read_group(
-            [('order_id', '=', po.id)],
-            ['order_id'],
+            [('order_reference', '=', f'purchase.order,{po.id}')],
+            ['order_reference'],
             ['delay:avg', 'delay_pass:avg'],
         )
         self.assertEqual(round(report[0]['delay:avg']), -10, msg="The PO has been confirmed 10 days in advance")
@@ -131,31 +132,28 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'currency_id': self.other_currency.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'name': 'This is a note',
                     'display_type': 'line_note',
-                    'product_id': False,
-                    'product_qty': 0.0,
-                    'product_uom_id': False,
-                    'price_unit': 0.0,
-                    'tax_ids': False,
                 }),
                 (0, 0, {
                     'name': 'This is a section',
                     'display_type': 'line_section',
-                    'product_id': False,
-                    'product_qty': 0.0,
-                    'product_uom_id': False,
-                    'price_unit': 0.0,
-                    'tax_ids': False,
+                }),
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'product_qty': 1,
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
 
-        result_po = self.env['purchase.report'].search([('order_id', '=', po.id)])
-        self.assertFalse(result_po, "The report should ignore the notes and sections")
+        # Get the note/section line ids to exclude from the check
+        non_product_lines = po.line_ids.filtered(lambda l: l.display_type)
+        result_po = self.env['purchase.report'].search([('order_reference', '=', f'purchase.order,{po.id}')])
+        # The report should include the product line but not the notes/sections
+        self.assertEqual(len(result_po), 1, "The report should include only the product line")
 
     def test_po_report_currency(self):
         """
@@ -164,7 +162,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'currency_id': self.other_currency.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'product_id': self.product_a.id,
                     'product_qty': 10.0,
@@ -177,7 +175,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         po_2 = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
             'currency_id': currency_eur_id.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'product_id': self.product_a.id,
                     'product_qty': 10.0,
@@ -202,7 +200,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         """
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'order_line': [
+            'line_ids': [
                 (0, 0, {
                     'product_id': self.product_a.id,
                     'product_qty': 10.0,
@@ -215,7 +213,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        po.button_confirm()
+        po.action_confirm()
         po.flush_model()
         report = self.env['purchase.report'].formatted_read_group(
             [('product_id', '=', self.product_a.id)],
@@ -247,12 +245,12 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
             'weight': 10,
             'standard_price': 200,
             'uom_id': uom_pairs.id,
-            'purchase_method': 'purchase',
+            'bill_policy': 'ordered',
         } for name in ['SuperProduct 01', 'SuperProduct 02']])
 
         po = self.env['purchase.order'].create([{
             'partner_id': self.partner_a.id,
-            'order_line': [
+            'line_ids': [
                 Command.create({
                     'product_id': product_01.id,
                     'product_qty': 2.0,
@@ -267,7 +265,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
                 }),
             ],
         }])
-        po.button_confirm()
+        po.action_confirm()
 
         self.env['uom.uom'].flush_model()
         self.env['purchase.order.line'].flush_model()

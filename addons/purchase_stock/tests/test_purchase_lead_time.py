@@ -21,7 +21,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         purchase = self.env['purchase.order.line'].search([('product_id', '=', self.product_1.id)], limit=1).order_id
 
         # Confirm purchase order
-        purchase.button_confirm()
+        purchase.action_confirm()
 
         # Check order date of purchase order
         order_date = fields.Datetime.from_string(date_planned) - timedelta(days=self.product_1.seller_ids.delay)
@@ -29,7 +29,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
         # Check scheduled date of purchase order
         schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay)
-        self.assertEqual(purchase.order_line.date_planned, schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time.')
+        self.assertEqual(purchase.line_ids.date_planned, schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time.')
 
         # check the picking created or not
         self.assertTrue(purchase.picking_ids, "Picking should be created.")
@@ -57,11 +57,11 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(purchase1, purchase2, 'Purchase orders should be same for the two different product with same vendor.')
 
         # Confirm purchase order
-        purchase1.button_confirm()
+        purchase1.action_confirm()
 
         # Check order date of purchase order
-        order_line_pro_1 = purchase2.order_line.filtered(lambda r: r.product_id == self.product_1)
-        order_line_pro_2 = purchase2.order_line.filtered(lambda r: r.product_id == self.product_2)
+        order_line_pro_1 = purchase2.line_ids.filtered(lambda r: r.product_id == self.product_1)
+        order_line_pro_2 = purchase2.line_ids.filtered(lambda r: r.product_id == self.product_2)
         order_date = date_planned1 - timedelta(days=self.product_1.seller_ids.delay)
         self.assertEqual(purchase2.date_order, order_date, 'Order date should be equal to: Date of the procurement order - Delivery Lead Time.')
 
@@ -109,11 +109,11 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(purchase1, purchase2, 'Purchase orders should be same for the two different product with same vendor.')
 
         # Confirm purchase order
-        purchase1.button_confirm()
+        purchase1.action_confirm()
 
         # Check order date of purchase order
-        order_line_pro_1 = purchase1.order_line.filtered(lambda r: r.product_id == self.product_1)
-        order_line_pro_2 = purchase2.order_line.filtered(lambda r: r.product_id == self.product_2)
+        order_line_pro_1 = purchase1.line_ids.filtered(lambda r: r.product_id == self.product_1)
+        order_line_pro_2 = purchase2.line_ids.filtered(lambda r: r.product_id == self.product_2)
         self.assertEqual(purchase2.date_planned, date_planned, 'planned date should be equal to procurement date')
         deadline = date_planned - timedelta(days=max((self.product_1 | self.product_2).seller_ids.mapped('delay')))
         self.assertEqual(purchase2.date_order, deadline, 'Deadline date should be equal to: Date of the procurement order - max Lead Time.')
@@ -157,7 +157,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
         self.assertEqual(purchase1, purchase2, 'Purchase orders should be same for the two different product with same vendor.')
 
-        purchase1.button_confirm()
+        purchase1.action_confirm()
 
         # Check date deadline and date planned of purchase order. Supplier of product 2 has a delay of 2 days.
         # The purchase order is planned on Tuesday 16th, so the date deadline is 2 days before, on Sunday 14th.
@@ -166,7 +166,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertRecordValues(purchase1, [{
             'date_planned': date_p, 'date_order': date_d,
         }])
-        self.assertRecordValues(purchase1.order_line, [
+        self.assertRecordValues(purchase1.line_ids, [
             {'date_planned': date_p},
             {'date_planned': date_p},
         ])
@@ -247,8 +247,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             self.t_shirt.name, '/', self.env.company, order_1_values)
         ])
         purchase_order = self.env['purchase.order.line'].search([('product_id', '=', self.t_shirt.id)], limit=1).order_id
-        self.assertEqual(len(purchase_order.order_line), 1, 'wrong number of order line is created')
-        self.assertEqual(purchase_order.order_line.name, t_shirt.display_name + "\n" + "Color (Red)", 'wrong description in po lines')
+        self.assertEqual(len(purchase_order.line_ids), 1, 'wrong number of order line is created')
+        self.assertEqual(purchase_order.line_ids.name, t_shirt.display_name + "\n" + "Color (Red)", 'wrong description in po lines')
 
         procurement_values['product_description_variants'] = 'Color (Red)'
         order_2_values = procurement_values
@@ -257,8 +257,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             self.t_shirt.name, '/', self.env.company, order_2_values)
         ])
         self.env['stock.rule'].run_scheduler()
-        self.assertEqual(len(purchase_order.order_line), 1, 'line with same custom value should be merged')
-        self.assertEqual(purchase_order.order_line[0].product_qty, 15, 'line with same custom value should be merged and qty should be update')
+        self.assertEqual(len(purchase_order.line_ids), 1, 'line with same custom value should be merged')
+        self.assertEqual(purchase_order.line_ids[0].product_qty, 15, 'line with same custom value should be merged and qty should be update')
 
         procurement_values['product_description_variants'] = 'Color (Green)'
 
@@ -267,11 +267,11 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             self.t_shirt, 10, self.uom_unit, self.warehouse_1.lot_stock_id,
             self.t_shirt.name, '/', self.env.company, order_3_values)
         ])
-        self.assertEqual(len(purchase_order.order_line), 2, 'line with different custom value should not be merged')
-        self.assertEqual(purchase_order.order_line.filtered(lambda x: x.product_qty == 15).name, t_shirt.display_name + "\n" + "Color (Red)", 'wrong description in po lines')
-        self.assertEqual(purchase_order.order_line.filtered(lambda x: x.product_qty == 10).name, t_shirt.display_name + "\n" + "Color (Green)", 'wrong description in po lines')
+        self.assertEqual(len(purchase_order.line_ids), 2, 'line with different custom value should not be merged')
+        self.assertEqual(purchase_order.line_ids.filtered(lambda x: x.product_qty == 15).name, t_shirt.display_name + "\n" + "Color (Red)", 'wrong description in po lines')
+        self.assertEqual(purchase_order.line_ids.filtered(lambda x: x.product_qty == 10).name, t_shirt.display_name + "\n" + "Color (Green)", 'wrong description in po lines')
 
-        purchase_order.button_confirm()
+        purchase_order.action_confirm()
         self.assertEqual(purchase_order.picking_ids[0].move_ids.filtered(lambda x: x.product_uom_qty == 15).description_picking, t_shirt.display_name + "\n" + "Receive with care", 'wrong description in picking')
         self.assertEqual(purchase_order.picking_ids[0].move_ids.filtered(lambda x: x.product_uom_qty == 10).description_picking, t_shirt.display_name + "\n" + "Receive with care", 'wrong description in picking')
 

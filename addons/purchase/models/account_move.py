@@ -367,8 +367,8 @@ class AccountMove(models.Model):
 
             with self._get_edi_creation() as invoice:
                 unmatched_lines = invoice.invoice_line_ids.filtered(
-                    lambda l: l.purchase_line_id
-                    and l.purchase_line_id not in matched_po_lines,
+                    lambda l: l.purchase_line_ids
+                    and l.purchase_line_ids not in matched_po_lines,
                 )
                 invoice.invoice_line_ids = [
                     Command.update(line.id, {"quantity": 0}) for line in unmatched_lines
@@ -382,8 +382,8 @@ class AccountMove(models.Model):
 
             with self._get_edi_creation() as invoice:
                 unmatched_lines = invoice.invoice_line_ids.filtered(
-                    lambda l: l.purchase_line_id
-                    and l.purchase_line_id not in matched_po_lines,
+                    lambda l: l.purchase_line_ids
+                    and l.purchase_line_ids not in matched_po_lines,
                 )
                 invoice.invoice_line_ids = [
                     Command.delete(line.id) for line in unmatched_lines
@@ -395,7 +395,7 @@ class AccountMove(models.Model):
                     map(
                         lambda line: (
                             invoice.invoice_line_ids.filtered(
-                                lambda l: l.purchase_line_id
+                                lambda l: l.purchase_line_ids
                                 and l.purchase_line_ids.id == line[0],
                             ),
                             invoice.invoice_line_ids.filtered(lambda l: l in line[1]),
@@ -416,7 +416,7 @@ class AccountMove(models.Model):
 
                 # If there are lines left not linked to a purchase order, we add a header
                 unmatched_lines = invoice.invoice_line_ids.filtered(
-                    lambda l: not l.purchase_line_id,
+                    lambda l: not l.purchase_line_ids,
                 )
                 if len(unmatched_lines) > 0:
                     invoice.invoice_line_ids = [
@@ -429,7 +429,7 @@ class AccountMove(models.Model):
                         ),
                     ]
 
-        if not any(line.purchase_order_id for line in self.line_ids):
+        if not any(line.purchase_line_ids.order_id for line in self.line_ids):
             self.invoice_origin = False
 
     def _find_matching_po_and_inv_lines(self, po_lines, inv_lines, timeout):

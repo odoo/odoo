@@ -55,7 +55,7 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
             url='/product/catalog/order_lines_info',
             data=json.dumps({
                 'params': {
-                    'child_field': 'order_line',
+                    'child_field': 'line_ids',
                     'order_id': purchase_order.id,
                     'product_ids': other_product.ids + company_product.ids,
                     'res_model': 'purchase.order'
@@ -74,7 +74,7 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
             url='/product/catalog/update_order_line_info',
             data=json.dumps({
                 'params': {
-                    'child_field': 'order_line',
+                    'child_field': 'line_ids',
                     'order_id': purchase_order.id,
                     'product_id': other_product.id,
                     'quantity': 1,
@@ -90,7 +90,7 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
             url='/product/catalog/update_order_line_info',
             data=json.dumps({
                 'params': {
-                    'child_field': 'order_line',
+                    'child_field': 'line_ids',
                     'order_id': purchase_order.id,
                     'product_id': company_product.id,
                     'quantity': 1,
