@@ -33,6 +33,29 @@
         </field>
     </record>
 
+    <record id="view_resource_calendar_multi_create_form" model="ir.ui.view">
+        <field name="name">resource.calendar.multi.create.form.inherit.hr.work.entry</field>
+        <field name="model">resource.calendar.attendance</field>
+        <field name="inherit_id" ref="resource.view_resource_calendar_multi_create_form"/>
+        <field name="arch" type="xml">
+            <group position="inside">
+                <field name="work_entry_type_id" widget="many2one_work_entry_type"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_resource_calendar_attendance_calendar" model="ir.ui.view">
+        <field name="name">resource.calendar.attendance.calendar.inherit.hr.work.entry</field>
+        <field name="model">resource.calendar.attendance</field>
+        <field name="inherit_id" ref="resource.view_resource_calendar_attendance_calendar"/>
+        <field name="arch" type="xml">
+            <calendar position="attributes">
+                <attribute name="multi_create_view">hr_work_entry.view_resource_calendar_multi_create_form</attribute>
+                <attribute name="color">color</attribute>
+            </calendar>
+        </field>
+    </record>
+
     <record id="resource_calendar_leave_view_form" model="ir.ui.view">
         <field name="name">resource.calendar.leaves.form.inherit.hr.work.entry</field>
         <field name="model">resource.calendar.leaves</field>

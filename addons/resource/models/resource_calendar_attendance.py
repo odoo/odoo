@@ -1,8 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import math
+from collections import defaultdict
+from datetime import date, datetime, timedelta
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
+from odoo.tools import format_time
+from odoo.tools.date_utils import float_to_time
+from odoo.tools.intervals import Intervals
 
 
 class ResourceCalendarAttendance(models.Model):
@@ -18,7 +22,8 @@ class ResourceCalendarAttendance(models.Model):
         ('4', 'Friday'),
         ('5', 'Saturday'),
         ('6', 'Sunday')
-        ], 'Day of Week', required=True, index=True, default='0')
+        ], 'Day of Week', required=True, index=True, precompute=True,
+        compute="_compute_dayofweek", store=True, readonly=False)
     hour_from = fields.Float(string='Work from', default=0, required=True, index=True,
         help="Start and End time of working.\n"
              "A specific value of 24:00 is interpreted as 23:59:59.999999.")
@@ -40,6 +45,63 @@ class ResourceCalendarAttendance(models.Model):
     two_weeks_calendar = fields.Boolean("Calendar in 2 weeks mode", related='calendar_id.two_weeks_calendar')
     sequence = fields.Integer(default=10,
         help="Gives the sequence of this line when displaying the resource calendar.")
+
+    # Variable
+    date = fields.Date()
+
+    @api.constrains('calendar_id', 'date', 'duration_hours', 'dayofweek')
+    def _check_attendance(self):
+        # will check for each day of week that there are no superimpose.
+        target_calendars = self.mapped("calendar_id")
+        target_dates = list(set(self.mapped("date")))
+        target_dayofweeks = list(set(self.mapped("dayofweek")))
+
+        domain = [
+            ('calendar_id', 'in', target_calendars.ids),
+            '|',
+                ('date', 'in', target_dates),
+                '&',
+                    ('date', '=', False),
+                    ('dayofweek', 'in', target_dayofweeks)
+        ]
+
+        attendances_overlappable = self.search(domain)
+
+        att_by_date_overlappable = defaultdict(list)
+        att_by_weekday_overlappable = defaultdict(list)
+
+        for attendance in attendances_overlappable:
+            if attendance.date:
+                att_by_date_overlappable[attendance.calendar_id, attendance.date].append(attendance)
+            else:
+                att_by_weekday_overlappable[attendance.calendar_id, attendance.dayofweek].append(attendance)
+
+        for (att_calendar, att_date, att_dayofweek), attendances in self.grouped(lambda a: (a.calendar_id, a.date, a.dayofweek)).items():
+            intervals_attendances = []
+            duration_per_date = defaultdict(float)
+            if att_calendar.schedule_type == 'fixed' and att_date:
+                raise ValidationError(self.env._("You cannot set a date specific attendance on a fixed schedule type calendar."))
+            if att_calendar.schedule_type == 'variable' and not att_date:
+                raise ValidationError(self.env._("You cannot set a weekday specific attendance on a variable schedule type calendar."))
+            for attendance in att_by_date_overlappable[att_calendar, att_date] or att_by_weekday_overlappable[att_calendar, att_dayofweek]:
+                if attendance.duration_hours <= 0 or attendance.duration_hours > 24:
+                    raise ValidationError(self.env._("Attendance duration must be between 0 and 24 hours"))
+                if attendance.date:
+                    date_to_combine = attendance.date
+                else:
+                    date_to_combine = date.min + timedelta(days=int(attendance.dayofweek))
+                if not attendance.duration_based:
+                    intervals_attendances.append((
+                        datetime.combine(date_to_combine, float_to_time(attendance.hour_from)) + timedelta(
+                            microseconds=1),
+                        datetime.combine(date_to_combine, float_to_time(attendance.hour_to)),
+                        attendance
+                    ))
+                duration_per_date[date_to_combine] += attendance.duration_hours
+                if duration_per_date[date_to_combine] > 24:
+                    raise ValidationError(self.env._("Attendance durations can't exceed 24 hours in the day."))
+            if len(Intervals(intervals_attendances)) != len(intervals_attendances):
+                raise ValidationError(self.env._("Attendances can't overlap."))
 
     @api.onchange('hour_from')
     def _onchange_hour_from(self):
@@ -87,6 +149,14 @@ class ResourceCalendarAttendance(models.Model):
             else:
                 attendance.day_period = 'morning'
 
+    @api.depends('date')
+    def _compute_dayofweek(self):
+        for attendance in self:
+            if attendance.date:
+                attendance.dayofweek = str(attendance.date.weekday())
+            elif not attendance.dayofweek:  # default value
+                attendance.dayofweek = '0'
+
     @api.depends('hour_from', 'hour_to')
     def _compute_duration_hours(self):
         for attendance in self.filtered(lambda att: att.hour_from or att.hour_to):
@@ -94,29 +164,20 @@ class ResourceCalendarAttendance(models.Model):
 
     @api.depends('week_type')
     def _compute_display_name(self):
-        super()._compute_display_name()
-        section_names = {'0': self.env._('First week'), '1': self.env._('Second week')}
-        dayofweek_selection = dict(self._fields['dayofweek']._description_selection(self.env))
-        day_period_selection = dict(self._fields['day_period']._description_selection(self.env))
-        for record in self:
-            record.display_name = f"{dayofweek_selection[record.dayofweek]} ({day_period_selection[record.day_period]})"
-            if record.two_weeks_calendar:
-                record.display_name = section_names[record.weektype] + ' - ' + record.display_name
-
-    @api.model
-    def get_week_type(self, date):
-        # week_type is defined by
-        #  * counting the number of days from January 1 of year 1
-        #    (extrapolated to dates prior to the first adoption of the Gregorian calendar)
-        #  * converted to week numbers and then the parity of this number is asserted.
-        # It ensures that an even week number always follows an odd week number. With classical week number,
-        # some years have 53 weeks. Therefore, two consecutive odd week number follow each other (53 --> 1).
-        return int(math.floor((date.toordinal() - 1) / 7) % 2)
+        for attendance in self:
+            if attendance.duration_based:
+                attendance.display_name = self.env._("%(duration)s hours Attendance", duration=format_time(self.env, float_to_time(attendance.duration_hours), time_format="HH:mm"))
+            else:
+                attendance.display_name = self.env._("%(hour_from)s - %(hour_to)s Attendance",
+                                                     hour_from=format_time(self.env, float_to_time(attendance.hour_from), time_format="short"),
+                                                     hour_to=format_time(self.env, float_to_time(attendance.hour_to), time_format="short"))
 
     def _copy_attendance_vals(self):
         self.ensure_one()
         return {
+            'date': self.date,
             'dayofweek': self.dayofweek,
+            'day_period': self.day_period,
             'duration_hours': self.duration_hours,
             'hour_from': self.hour_from,
             'hour_to': self.hour_to,
@@ -126,3 +187,7 @@ class ResourceCalendarAttendance(models.Model):
 
     def _is_work_period(self):
         return True
+
+    def _get_attendances_on_date(self, date_obj):
+        assert isinstance(date_obj, date), "date_obj should be of type date"
+        return self.filtered(lambda a: (a.date == date_obj) if a.calendar_id.schedule_type == 'variable' else (a.dayofweek == str(date_obj.weekday())))

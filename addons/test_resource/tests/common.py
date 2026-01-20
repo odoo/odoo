@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime, UTC
+from datetime import date, datetime, UTC, timedelta
 from zoneinfo import ZoneInfo
 
 from odoo import fields
@@ -42,6 +42,19 @@ class TestResourceCommon(TransactionCase):
         )
 
     @classmethod
+    def _define_calendar_2_weeks(cls, name, attendances):
+        return cls.env["resource.calendar"].create(
+            {
+                "name": name,
+                'schedule_type': 'variable',
+                "attendance_ids": [
+                    (5, 0, 0),
+                    *[(0, 0, {"hour_from": att[0], "hour_to": att[1], "date": att[2]}) for att in attendances],
+                ],
+            },
+        )
+
+    @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.env.company.tz = "Europe/Brussels"
@@ -55,6 +68,23 @@ class TestResourceCommon(TransactionCase):
             "38 Hours",
             sum((((9, 12, i), (13, 17, i)) for i in range(5)), ()),
         )
+
+        cls.calendar_jules = cls._define_calendar_2_weeks(
+            "Week 1: 30 Hours - Week 2: 16 Hours",
+            [
+                *[(8, 16, date(2018, 3, 26) + timedelta(weeks=w)) for w in range(6)],  # Monday Always
+                *[(9, 17, date(2018, 3, 27) + timedelta(weeks=w)) for w in range(6) if not w % 2],
+                *[(7, 15, date(2018, 3, 28) + timedelta(weeks=w)) for w in range(6) if w % 2],  # Wednesday Week 1
+                *[(8, 16, date(2018, 3, 29) + timedelta(weeks=w)) for w in range(6) if w % 2],  # Thursday Week 1
+                *[(10, 16, date(2018, 3, 30) + timedelta(weeks=w)) for w in range(6) if w % 2],  # Friday Week 1
+                *[(8, 16, date(2021, 6, 28) + timedelta(weeks=w)) for w in range(6)],  # Monday Always
+                *[(9, 17, date(2021, 6, 29) + timedelta(weeks=w)) for w in range(6) if not w % 2],  # Tuesday Week 0
+                *[(7, 15, date(2021, 6, 30) + timedelta(weeks=w)) for w in range(6) if w % 2],  # Wednesday Week 1
+                *[(8, 16, date(2021, 7, 1) + timedelta(weeks=w)) for w in range(6) if w % 2],  # Thursday Week 1
+                *[(10, 16, date(2021, 7, 2) + timedelta(weeks=w)) for w in range(6) if w % 2],  # Friday Week 1
+            ],
+        )
+
         # UTC-8 winter, UTC-7 summer
         cls.calendar_john = cls._define_calendar(
             "8+12 Hours",
@@ -104,6 +134,13 @@ class TestResourceCommon(TransactionCase):
             },
         )
 
+        cls.jules = cls.env["resource.test"].create(
+            {
+                "name": "Jules",
+                "resource_calendar_id": cls.calendar_jules.id,
+            },
+        )
+
         cls.paul = cls.env["resource.test"].create(
             {
                 "name": "Paul",
@@ -118,4 +155,9 @@ class TestResourceCommon(TransactionCase):
                 "tz": "Europe/Brussels",
                 "resource_calendar_id": cls.calendar_bob.id,
             },
+        )
+
+        cls.two_weeks_resource = cls._define_calendar_2_weeks(
+            "Two weeks resource",
+            [],
         )

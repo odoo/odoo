@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <t t-name="resource.ResourceCalendarAttendanceCalendarController" t-inherit="web.CalendarController" t-inherit-mode="primary">
+        <xpath expr="//button[hasclass('o_calendar_button_today')]" position="after">
+            <Dropdown t-if="this.model.scale === 'week'">
+                <button class="o-dropdown-caret btn btn-primary">
+                    Copy From
+                </button>
+                <t t-set-slot="content">
+                    <DropdownItem
+                            t-foreach="state.lastPeriods"
+                            t-as="period"
+                            t-key="period_index"
+                            tag="'button'"
+                            class="'btn btn-link'"
+                            onSelected="onCopyFrom.bind(this, period.date)"
+                            t-esc="period.string"
+                    />
+                </t>
+            </Dropdown>
+        </xpath>
+    </t>
+</odoo>

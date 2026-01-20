@@ -37,18 +37,8 @@ class HrLeave(models.Model):
         if self.work_entry_type_request_unit != 'hour':
             # Use company's working schedule hours for the leave to avoid duration calculation issues.
             def adjust_date_range(date_from, date_to, from_period, to_period, attendance_ids, employee_id):
-                weektype = False
-                if self.resource_calendar_id.two_weeks_calendar:
-                    weektype = str(self.env['resource.calendar.attendance'].get_week_type(date_from))
-                period_ids_from = attendance_ids.filtered(lambda a: a.day_period in from_period
-                                                                    and a.week_type == weektype
-                                                                    and int(a.dayofweek) == date_from.weekday())
-                weektype = False
-                if self.resource_calendar_id.two_weeks_calendar:
-                    weektype = str(self.env['resource.calendar.attendance'].get_week_type(date_to))
-                period_ids_to = attendance_ids.filtered(lambda a: a.day_period in to_period
-                                                                    and a.week_type == weektype
-                                                                    and int(a.dayofweek) == date_to.weekday())
+                period_ids_from = attendance_ids._get_attendances_on_date(date_from).filtered(lambda a: a.day_period in from_period)
+                period_ids_to = attendance_ids._get_attendances_on_date(date_to).filtered(lambda a: a.day_period in to_period)
                 if period_ids_from:
                     min_hour = min(attendance.hour_from for attendance in period_ids_from)
                     date_from = self._to_utc(date_from, min_hour, employee_id)

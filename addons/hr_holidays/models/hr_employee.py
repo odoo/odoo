@@ -743,25 +743,8 @@ class HrEmployee(models.Model):
                 return (datetimes[0], datetimes[2])
             calendar = version.resource_calendar_id
 
-        domain = [
-            ('calendar_id', '=', calendar.id),
-        ]
-
-        init_attendances = self.env['resource.calendar.attendance']._read_group(
-            domain=domain,
-            groupby=['dayofweek', 'day_period'],
-            aggregates=['hour_from:min', 'hour_to:max'],
-            order='dayofweek,hour_from:min'
-        )
-
-        init_attendances = [
-            {
-                'hour_from': hour_from,
-                'hour_to': hour_to,
-                'dayofweek': dayofweek,
-                'day_period': day_period,
-            } for dayofweek, day_period, hour_from, hour_to in init_attendances
-        ]
+        calendar_attendances = calendar.attendance_ids
+        init_attendances = [att._copy_attendance_vals() for att in calendar_attendances._get_attendances_on_date(target_date)]
 
         if day_period:
             attendances = [att for att in init_attendances if att['day_period'] == day_period]
@@ -775,11 +758,9 @@ class HrEmployee(models.Model):
         else:
             attendances = init_attendances
 
-        default_start = min((att['hour_from'] for att in attendances), default=0.0)
-        default_end = max((att['hour_to'] for att in attendances), default=0.0)
-
-        filtered_attendances = [att for att in attendances if int(att['dayofweek']) == target_date.weekday()]
-        hour_from = min((att['hour_from'] for att in filtered_attendances), default=default_start)
-        hour_to = max((att['hour_to'] for att in filtered_attendances), default=default_end)
+        default_start = min((att.hour_from for att in calendar_attendances), default=0.0)
+        default_end = max((att.hour_to for att in calendar_attendances), default=0.0)
+        hour_from = min((att['hour_from'] for att in attendances), default=default_start)
+        hour_to = max((att['hour_to'] for att in attendances), default=default_end)
 
         return (hour_from, hour_to)

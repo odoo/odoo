@@ -4,7 +4,7 @@ import { shallowEqual } from "@web/core/utils/objects";
 import { closest } from "@web/core/utils/ui";
 import { useCallbackRecorder } from "@web/search/action_hook";
 
-const CELL_SELECTOR = `.fc-day:not(.fc-col-header-cell)`;
+const CELL_SELECTOR = `.fc-day:not(.fc-col-header-cell, .fc-timegrid-col)`;
 const ROW_SELECTOR = `tr[role="row"]`;
 const EVENT_CONTAINER_SELECTOR = ".fc-daygrid-event-harness";
 const IGNORE_SELECTOR = [".fc-event", ".fc-more-cell", ".fc-more-popover"].join(",");
@@ -34,7 +34,7 @@ function getSelectedCellsInBlock(ctx) {
     const { current, ref } = ctx;
     const { startColIndex, endColIndex, startRowIndex, endRowIndex } = getBlockBounds(current);
     const selectedCells = [];
-    for (const cell of ref.el.querySelectorAll(`tbody tr[role="row"] .fc-day`)) {
+    for (const cell of ref.el.querySelectorAll(`tbody ${ROW_SELECTOR} ${CELL_SELECTOR}`)) {
         const { colIndex, rowIndex } = getCoordinates(cell);
         if (
             startColIndex <= colIndex &&
@@ -50,7 +50,7 @@ function getSelectedCellsInBlock(ctx) {
 
 function getSelectedCellsBetween2Cells(ctx, prevCell, cellClicked) {
     const { ref } = ctx;
-    const cells = [...ref.el.querySelectorAll(`tbody tr[role="row"] .fc-day`)];
+    const cells = [...ref.el.querySelectorAll(`tbody ${ROW_SELECTOR} ${CELL_SELECTOR}`)];
     const index1 = cells.indexOf(prevCell);
     if (index1 === -1) {
         return new Set([cellClicked]);
@@ -144,7 +144,7 @@ export function useSquareSelection() {
 
     const selectState = useBlockSelection({
         enable: () => component.props.model.hasMultiCreate,
-        ignore: EVENT_CONTAINER_SELECTOR,
+        ignore: IGNORE_SELECTOR,
         elements: CELL_SELECTOR,
         ref,
         edgeScrolling: { speed: 40, threshold: 150 },
