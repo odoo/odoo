@@ -411,7 +411,7 @@ class ProjectProject(models.Model):
             return profitability_items
         aa_line_read_group = self.env['account.analytic.line'].sudo()._read_group(
             self.sudo()._get_profitability_aal_domain(),
-            ['timesheet_invoice_type', 'timesheet_invoice_id', 'currency_id', 'category'],
+            ['timesheet_invoice_type', 'reinvoice_move_id', 'currency_id', 'category'],
             ['amount:sum', 'id:array_agg'],
         )
         can_see_timesheets = with_action and len(self) == 1 and self.env.user.has_group('hr_timesheet.group_hr_timesheet_approver')

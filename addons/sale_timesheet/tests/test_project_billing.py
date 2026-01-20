@@ -347,7 +347,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         invoice1.action_post()
 
         self.assertEqual(self.so1_line_deliver_no_task.qty_invoiced, 1)
-        self.assertEqual(timesheet1.timesheet_invoice_id, invoice1)
+        self.assertEqual(timesheet1.reinvoice_move_id, invoice1)
 
         timesheet2 = self.env['account.analytic.line'].create({
             'project_id': self.project_task_rate.id,
@@ -362,5 +362,5 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         invoice2 = self.sale_order_1._create_invoices()[0]
         invoice2.action_post()
         self.assertEqual(self.so1_line_deliver_no_task.qty_invoiced, timesheet1.unit_amount + timesheet2.unit_amount)
-        self.assertEqual(timesheet1.timesheet_invoice_id, invoice1)
-        self.assertEqual(timesheet2.timesheet_invoice_id, invoice2)
+        self.assertEqual(timesheet1.reinvoice_move_id, invoice1)
+        self.assertEqual(timesheet2.reinvoice_move_id, invoice2)

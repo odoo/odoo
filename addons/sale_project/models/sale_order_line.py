@@ -68,16 +68,6 @@ class SaleOrderLine(models.Model):
             if line.product_id.type == 'service' and line.state == 'sale':
                 line.product_updatable = False
 
-    @api.depends('product_id')
-    def _compute_qty_delivered_method(self):
-        milestones_lines = self.filtered(lambda sol:
-            not sol.is_expense
-            and sol.product_id.type == 'service'
-            and sol.product_id.service_type == 'milestones'
-        )
-        milestones_lines.qty_delivered_method = 'milestones'
-        super(SaleOrderLine, self - milestones_lines)._compute_qty_delivered_method()
-
     @api.depends('product_uom_qty', 'reached_milestones_ids.quantity_percentage')
     def _compute_qty_delivered(self):
         super()._compute_qty_delivered()

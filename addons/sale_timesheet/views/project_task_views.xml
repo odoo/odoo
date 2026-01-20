@@ -182,7 +182,7 @@
                 </xpath>
                 <xpath expr="//field[@name='timesheet_ids']/list/field[@name='unit_amount']" position="before">
                     <!-- <field name="timesheet_ids"/> is already inside a block groups="hr_timesheet.group_hr_timesheet_user"  -->
-                    <field name="timesheet_invoice_id" column_invisible="True"/>
+                    <field name="reinvoice_move_id" column_invisible="True"/>
                     <field name="so_line" widget="so_line_field" groups="!sales_team.group_sale_salesman"
                         column_invisible="not parent.allow_billable"
                         readonly="readonly_timesheet"
@@ -197,7 +197,7 @@
                         optional="hide"/>
                 </xpath>
                 <xpath expr="//field[@name='timesheet_ids']/form//field[@name='unit_amount']" position="after">
-                    <field name="timesheet_invoice_id" invisible="1"/>
+                    <field name="reinvoice_move_id" invisible="1"/>
                     <field name="so_line" widget="so_line_field" groups="!sales_team.group_sale_salesman"
                         invisible="not parent.allow_billable"
                         readonly="readonly_timesheet"

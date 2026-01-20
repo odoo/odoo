@@ -176,21 +176,12 @@ class SaleOrderLine(models.Model):
             else:
                 line.is_mto = False
 
-    @api.depends('product_id')
-    def _compute_qty_delivered_method(self):
-        """ Stock module compute delivered qty for product [('type', '=', 'consu')]
-            For SO line coming from expense, no picking should be generate: we don't manage stock for
-            those lines, even if the product is a storable.
-        """
-        super(SaleOrderLine, self)._compute_qty_delivered_method()
-
-        for line in self:
-            if not line.is_expense and line.product_id.type == 'consu':
-                line.qty_delivered_method = 'stock_move'
+    def _get_consu_qty_delivered_method(self):
+        return 'stock_move'
 
     @api.depends('move_ids.state', 'move_ids.location_dest_usage', 'move_ids.quantity', 'move_ids.uom_id')
     def _compute_qty_delivered(self):
-        super(SaleOrderLine, self)._compute_qty_delivered()
+        super()._compute_qty_delivered()
 
     def _prepare_qty_delivered(self):
         delivered_qties = super()._prepare_qty_delivered()
@@ -206,7 +197,8 @@ class SaleOrderLine(models.Model):
                     if move.state != 'done':
                         continue
                     qty -= move.uom_id._compute_quantity(move.quantity, line.product_uom_id, rounding_method='HALF-UP')
-                delivered_qties[line] = qty
+
+                delivered_qties[line] += qty
         return delivered_qties
 
     def _compute_invoice_status(self):

@@ -43,6 +43,20 @@ class AccountAnalyticLine(models.Model):
     code = fields.Char(size=8)
     ref = fields.Char(string='Ref.')
     category = fields.Selection(selection_add=[('invoice', 'Customer Invoice'), ('vendor_bill', 'Vendor Bill')])
+    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
+
+    @api.depends('product_id')
+    def _compute_product_uom_id(self):
+        super()._compute_product_uom_id()
+        for line in self:
+            if (
+                line.product_id
+                and (
+                    not line.product_uom_id
+                    or line.product_uom_id not in line.allowed_uom_ids
+                )
+            ):
+                line.product_uom_id = line.product_id.uom_id
 
     @api.depends('move_line_id')
     def _compute_general_account_id(self):
@@ -59,6 +73,11 @@ class AccountAnalyticLine(models.Model):
     def _compute_partner_id(self):
         for line in self:
             line.partner_id = line.move_line_id.partner_id or line.partner_id
+
+    @api.depends('product_id')
+    def _compute_allowed_uom_ids(self):
+        for line in self:
+            line.allowed_uom_ids = line.product_id.product_tmpl_id._get_available_uoms()
 
     @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
     def on_change_unit_amount(self):

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_analytic_lines_service_search" model="ir.ui.view">
+        <field name="name">account.analytic.line.services.search</field>
+        <field name="model">account.analytic.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="my_orders" string="My" domain="[('user_id','=',uid)]" />
+                <separator/>
+                <filter name="today" string="Today" domain="[('create_date', '&gt;=', 'today')]" />
+                <separator/>
+                <filter name="month" string="Date" date="date"/>
+                <group>
+                    <filter name="group_date" string="Date" context="{'group_by': 'date'}"/>
+                    <filter name="group_order" string="Sale Order" context="{'group_by':'order_id'}"/>
+                    <filter name="group_invoice" string="Invoice" context="{'group_by':'reinvoice_move_id'}"/>
+                </group>
+                <separator/>
+                <filter string="Financial Account" name="group_by_financial_account" context="{'group_by':'general_account_id'}"/>
+                <filter string="Product" name="product" context="{'group_by':'product_id'}"/>
+                <filter string="Category" name='category' context="{'group_by': 'category'}"/>
+                <filter string="Partner" name="partner" context="{'group_by':'partner_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_analytic_lines_service_list" model="ir.ui.view">
+        <field name="name">account.analytic.line.service.list</field>
+        <field name="model">account.analytic.line</field>
+        <field name="arch" type="xml">
+            <list string="Services &amp; Material" editable="top" multi_edit="1">
+                <field name="date" string="Date"/>
+                <field
+                    name="order_id"
+                    string="Customer Order"
+                    context="{'sale_show_partner_name': True}"
+                    domain="[('company_id', '=', company_id), ('locked', '=', False)]"
+                    required="True"
+                    width="250px"
+                />
+                <field
+                    name="product_id"
+                    domain="[('expense_policy', '!=', 'no')]"
+                    required="True"
+                    width="350px"
+                />
+                <field name="unit_amount" string="Quantity" optional="show"/>
+                <field
+                    name="product_uom_id"
+                    widget="many2one_uom"
+                    domain="[('id', 'in', allowed_uom_ids)]"
+                    required="True"
+                    groups="uom.group_uom"
+                    width="150px"
+                />
+                <field
+                    name="so_line"
+                    string="Sales Order Line"
+                    optional="hide"
+                    domain="[
+                        ('qty_delivered_method', 'in', ('analytic', 'timesheet', 'stock_move')),
+                        ('product_id.expense_policy', '!=', 'no')
+                    ]"
+                />
+                <field name="ref" optional="hide"/>
+                <field name="partner_id" optional="hide"/>
+                <field name="amount" optional="hide"/>
+                <field name="name" string="Description"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_service_material" model="ir.actions.act_window">
+        <field name="name">Services &amp; Material</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_analytic_lines_service_list"/>
+        <field name="search_view_id" ref="view_analytic_lines_service_search"/>
+        <field name="context">{
+            'search_default_my_orders': 1,
+            'search_default_today': 1,
+            'from_services_and_material': 1,
+            'default_unit_amount': 1,
+        }</field>
+        <field name="domain">[('product_id.expense_policy', '!=', 'no'), ('order_id', '!=', False)]</field>
+    </record>
+
+</odoo>

@@ -361,6 +361,8 @@ class SaleOrder(models.Model):
     show_update_pricelist = fields.Boolean(
         string="Has Pricelist Changed", store=False)  # True if the pricelist was changed
 
+    analytic_account_id = fields.Many2one(string="Analytic Account", comodel_name='account.analytic.account')
+
     _date_order_id_idx = models.Index("(date_order desc, id desc)")
 
     #=== COMPUTE METHODS ===#
@@ -1804,6 +1806,8 @@ class SaleOrder(models.Model):
                 moves_to_switch.action_switch_move_type()
                 self.invoice_ids._set_reversed_entry(moves_to_switch)
 
+        moves._link_analytic_lines_to_invoice()
+
         for move in moves:
             move.message_post_with_source(
                 'mail.message_origin_link',
@@ -2098,7 +2102,7 @@ class SaleOrder(models.Model):
                 user_id=order.user_id.id or order.partner_id.user_id.id,
                 note=_("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
 
-    def _prepare_analytic_account_data(self, prefix=None):
+    def _prepare_analytic_account_data(self, prefix=None, plan_id=None):
         """ Prepare SO analytic account creation values.
 
         :return: `account.analytic.account` creation values
@@ -2108,12 +2112,13 @@ class SaleOrder(models.Model):
         name = self.name
         if prefix:
             name = prefix + ": " + self.name
-        project_plan, _other_plans = self.env['account.analytic.plan']._get_all_plans()
+        if not plan_id:
+            plan_id, _other_plans = self.env['account.analytic.plan']._get_all_plans()
         return {
             'name': name,
             'code': self.client_order_ref,
             'company_id': self.company_id.id,
-            'plan_id': project_plan.id,
+            'plan_id': plan_id.id,
             'partner_id': self.partner_id.id,
         }
 
@@ -2268,6 +2273,15 @@ class SaleOrder(models.Model):
         for order in self:
             for line in order.order_line:
                 line.qty_delivered = line.product_uom_qty
+
+    def _get_or_create_analytic_account(self, plan_id):
+        self.ensure_one()
+
+        if not self.analytic_account_id:
+            self.analytic_account_id = self.env['account.analytic.account'].create(
+                self._prepare_analytic_account_data(plan_id=plan_id)
+            )
+        return self.analytic_account_id
 
     # === CATALOG === #
 
