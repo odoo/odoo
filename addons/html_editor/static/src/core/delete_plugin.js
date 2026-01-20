@@ -90,11 +90,7 @@ import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils
  */
 
 // @todo @phoenix: move these predicates to different plugins
-export const unremovableNodePredicates = [
-    (node) => node.classList?.contains("oe_unremovable"),
-    // Monetary field
-    (node) => node.matches?.("[data-oe-type='monetary'] > span"),
-];
+export const unremovableNodePredicates = [(node) => node.classList?.contains("oe_unremovable")];
 
 export class DeletePlugin extends Plugin {
     static dependencies = ["baseContainer", "selection", "history", "input", "userCommand"];
