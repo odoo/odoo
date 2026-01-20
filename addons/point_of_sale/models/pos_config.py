@@ -207,6 +207,12 @@ class PosConfig(models.Model):
 
     pos_snooze_ids = fields.One2many('pos.product.template.snooze', 'pos_config_id', string='Snoozed Products')
 
+    @api.onchange('receipt_printer_ids')
+    def _onchange_receipt_printer_ids(self):
+        """Clear default_receipt_printer_id if it's removed from receipt_printer_ids"""
+        if self.default_receipt_printer_id.id not in self.receipt_printer_ids.ids:
+            self.default_receipt_printer_id = False
+
     def _get_next_order_refs(self, device_identifier='0'):
         next_number = self.order_backend_seq_id._next()
         year_2_digits = str(datetime.now().year)[-2:]

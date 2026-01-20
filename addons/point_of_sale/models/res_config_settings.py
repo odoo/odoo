@@ -321,3 +321,9 @@ class ResConfigSettings(models.TransientModel):
                     old._add_trusted_config_id(config.pos_config_id)
                 if old.id in removed_trusted_configs:
                     old._remove_trusted_config_id(config.pos_config_id)
+
+    @api.onchange('pos_receipt_printer_ids')
+    def _onchange_pos_receipt_printer_ids(self):
+        """Clear pos_default_receipt_printer_id if it's removed from pos_receipt_printer_ids"""
+        if self.pos_default_receipt_printer_id.id not in self.pos_receipt_printer_ids.ids:
+            self.pos_default_receipt_printer_id = False
