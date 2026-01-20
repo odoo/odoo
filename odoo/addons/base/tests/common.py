@@ -161,29 +161,6 @@ class TransactionCaseWithUserDemo(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.env.ref('base.partner_admin').write({'name': 'Mitchell Admin'})
-        cls.user_demo = cls.env['res.users'].search([('login', '=', 'demo')])
-        cls.partner_demo = cls.user_demo.partner_id
-
-        if not cls.user_demo:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
-            cls.partner_demo = cls.env['res.partner'].create({
-                'name': 'Marc Demo',
-                'email': 'mark.brown23@example.com',
-            })
-            cls.user_demo = cls.env['res.users'].create({
-                'login': 'demo',
-                'password': 'demo',
-                'partner_id': cls.partner_demo.id,
-                'group_ids': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
-            })
-
-
-class HttpCaseWithUserDemo(HttpCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
         cls.user_admin = cls.env.ref('base.user_admin')
         cls.user_admin.write({'name': 'Mitchell Admin'})
         cls.partner_admin = cls.user_admin.partner_id
@@ -201,31 +178,43 @@ class HttpCaseWithUserDemo(HttpCase):
                 'login': 'demo',
                 'password': 'demo',
                 'partner_id': cls.partner_demo.id,
-                'group_ids': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
+                'group_ids': [Command.set(cls._get_user_demo_access_groups())],
             })
-
-
-class SavepointCaseWithUserDemo(TransactionCase):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def _get_user_demo_access_groups(cls):
+        group_xml_ids = [
+            'account.group_account_user',
+            'base.group_allow_export',
+            'base.group_multi_company',
+            'base.group_partner_manager',
+            'base.group_user',
+            'event.group_event_user',
+            'helpdesk.group_helpdesk_user',
+            'hr_attendance.group_hr_attendance_officer',
+            'hr_holidays.group_hr_holidays_responsible',
+            'hr_referral.group_hr_recruitment_referral_user',
+            'hr_timesheet.group_hr_timesheet_user',
+            'im_livechat.im_livechat_group_user',
+            'industry_fsm.group_fsm_user',
+            'mrp.group_mrp_user',
+            'mrp_plm.group_plm_user',
+            'planning.group_planning_user',
+            'project.group_project_user',
+            'sales_team.group_sale_salesman',
+            'sign.group_sign_user',
+            'stock.group_stock_user',
+            'survey.group_survey_user',
+            'website_slides.group_website_slides_officer',
+        ]
+        return [group.id for group in (cls.env.ref(g, raise_if_not_found=False) for g in group_xml_ids) if group]
 
-        cls.user_demo = cls.env['res.users'].search([('login', '=', 'demo')])
-        cls.partner_demo = cls.user_demo.partner_id
 
-        if not cls.user_demo:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
-            cls.partner_demo = cls.env['res.partner'].create({
-                'name': 'Marc Demo',
-                'email': 'mark.brown23@example.com',
-            })
-            cls.user_demo = cls.env['res.users'].create({
-                'login': 'demo',
-                'password': 'demo',
-                'partner_id': cls.partner_demo.id,
-                'group_ids': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
-            })
+class HttpCaseWithUserDemo(TransactionCaseWithUserDemo, HttpCase):
+    pass
+
+
+class SavepointCaseWithUserDemo(TransactionCaseWithUserDemo):
 
     @classmethod
     def _load_partners_set(cls):
@@ -353,26 +342,8 @@ class TransactionCaseWithUserPortal(TransactionCase):
             })
 
 
-class HttpCaseWithUserPortal(HttpCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.user_portal = cls.env['res.users'].sudo().search([('login', '=', 'portal')])
-        cls.partner_portal = cls.user_portal.partner_id
-
-        if not cls.user_portal:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
-            cls.partner_portal = cls.env['res.partner'].create({
-                'name': 'Joel Willis',
-                'email': 'joel.willis63@example.com',
-            })
-            cls.user_portal = cls.env['res.users'].with_context(no_reset_password=True).create({
-                'login': 'portal',
-                'password': 'portal',
-                'partner_id': cls.partner_portal.id,
-                'group_ids': [Command.set([cls.env.ref('base.group_portal').id])],
-            })
+class HttpCaseWithUserPortal(TransactionCaseWithUserPortal, HttpCase):
+    pass
 
 
 class MockSmtplibCase:
