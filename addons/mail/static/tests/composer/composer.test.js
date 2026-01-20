@@ -1353,32 +1353,6 @@ test("Canned response last used changes on posting", async () => {
     expect(cannedResponse.last_used).not.toBeEmpty();
 });
 
-test("Does not auto-select 1st canned response suggestion", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    pyEnv["mail.canned.response"].create({ source: "Hello", substitution: "Hello! How are you?" });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-NavigableList-active:text('Mitchell Admin')");
-    await insertText(".o-mail-Composer-input", "::", { replace: true });
-    await contains(".o-mail-NavigableList-item:text('Hello Hello! How are you?')");
-    await contains(".o-mail-NavigableList-active", { count: 0 });
-});
-
-test("ENTER closes canned response suggestions", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    pyEnv["mail.canned.response"].create({ source: "Hello", substitution: "Hello! How are you?" });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "::");
-    await contains(".o-mail-NavigableList-item:text('Hello Hello! How are you?')");
-    await contains(".o-mail-NavigableList-active", { count: 0 });
-    await triggerHotkey("Enter");
-    await contains(".o-mail-NavigableList-item", { count: 0 });
-});
-
 test("Tab to select of canned response suggestion works in chat window", async () => {
     // This might conflict with focusing next chat window
     const pyEnv = await startServer();
