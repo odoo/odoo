@@ -1,4 +1,4 @@
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "@im_livechat/../tests/livechat_test_helpers";
 import {
     click,
@@ -9,7 +9,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 import { rpc } from "@web/core/network/rpc";
 import { serializeDate, today } from "@web/core/l10n/dates";
@@ -141,8 +141,19 @@ test("visitor leaving ends the livechat conversation", async () => {
         create_uid: serverState.publicUserId,
     });
     setupChatHub({ opened: [channel_id] });
+    onRpc("/mail/data", async (req) => {
+        const { params } = await req.json();
+        if (params.fetch_params.includes("channels_as_member")) {
+            expect.step("fetch channels_as_member");
+        }
+    });
     await start();
     await contains(".o-mail-ChatWindow");
+    // The first message received will trigger the fetch of
+    // `channels_as_member` which can conflict with the rest of the
+    // test. Open the messaging menu to do it beforehand.
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await expect.waitForSteps(["fetch channels_as_member"], { timeout: 3000 });
     // simulate visitor leaving
     await withGuest(guestId, () => rpc("/im_livechat/visitor_leave_session", { channel_id }));
     await contains("span", { text: "This livechat conversation has ended" });
