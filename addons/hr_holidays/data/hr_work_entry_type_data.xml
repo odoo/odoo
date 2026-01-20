@@ -1037,6 +1037,99 @@
         <field name="country_id" ref="base.tr"/>
     </record>
 
+<!-- PH : Philippines -->
+    <!-- Batch update the work entry types that should be set up in the same way (attendance, night shifts, overtimes) -->
+    <function model="hr.work.entry.type" name="write">
+        <value model="hr.work.entry.type" eval="obj().with_context(active_test=False).sudo().search([
+            ('code', '=like', 'WORK100%'),
+            ('code', 'not like', 'WORK100_NS%'),
+            ('country_id', '=', obj().env.ref('base.ph').id),
+        ]).ids"/>
+        <value eval="{'request_unit': 'half_day', 'time_off_selectable': False, 'requires_allocation': False}"/>
+    </function>
+    <function model="hr.work.entry.type" name="write">
+        <value model="hr.work.entry.type" eval="obj().with_context(active_test=False).sudo().search([
+            ('code', '=like', 'WORK100_NS%'),
+            ('country_id', '=', obj().env.ref('base.ph').id),
+        ]).ids"/>
+        <value eval="{'request_unit': 'hour', 'time_off_selectable': False, 'requires_allocation': False}"/>
+    </function>
+    <function model="hr.work.entry.type" name="write">
+        <value model="hr.work.entry.type" eval="obj().with_context(active_test=False).sudo().search([
+            ('code', '=like', 'OVERTIME%'),
+            ('country_id', '=', obj().env.ref('base.ph').id),
+        ]).ids"/>
+        <value eval="{'request_unit': 'hour', 'time_off_selectable': False, 'requires_allocation': False, 'leave_validation_type': 'manager'}"/>
+    </function>
+
+    <record id="hr_work_entry.l10n_ph_hr_payroll_sil_leave" model="hr.work.entry.type">
+        <field name="employee_requests">yes</field>
+        <field name="requires_allocation">yes</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+    </record>
+    <record id="hr_work_entry.l10n_ph_hr_payroll_mat_leave" model="hr.work.entry.type">
+        <field name="employee_requests">yes</field>
+        <field name="requires_allocation">yes</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">day</field>
+        <field name="count_days_as">calendar</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+    </record>
+    <record id="hr_work_entry.l10n_ph_hr_payroll_pat_leave" model="hr.work.entry.type">
+        <field name="employee_requests">yes</field>
+        <field name="requires_allocation">yes</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+    </record>
+    <record id="hr_work_entry.l10n_ph_hr_payroll_spl_leave" model="hr.work.entry.type">
+        <field name="employee_requests">yes</field>
+        <field name="requires_allocation">yes</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+    </record>
+    <record id="hr_work_entry.l10n_ph_hr_payroll_slfw_leave" model="hr.work.entry.type">
+        <field name="employee_requests">yes</field>
+        <field name="requires_allocation">yes</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+    </record>
+    <record id="hr_work_entry.l10n_ph_hr_payroll_dvl_leave" model="hr.work.entry.type">
+        <field name="employee_requests">yes</field>
+        <field name="requires_allocation">yes</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+    </record>
+    <record id="hr_work_entry.l10n_ph_hr_payroll_tardiness" model="hr.work.entry.type">
+        <field name="requires_allocation" eval="False"/>
+        <field name="leave_validation_type">manager</field>
+        <field name="request_unit">hour</field>
+        <field name="unit_of_measure">hour</field>
+    </record>
+
+    <!-- Should only be used through public holidays -->
+    <record id="hr_work_entry.l10n_ph_hr_payroll_rh_leave" model="hr.work.entry.type">
+        <field name="time_off_selectable" eval="False"/>
+    </record>
+    <record id="hr_work_entry.l10n_ph_hr_payroll_dh_leave" model="hr.work.entry.type">
+        <field name="time_off_selectable" eval="False"/>
+    </record>
+    <record id="hr_work_entry.l10n_ph_hr_payroll_snwh_leave" model="hr.work.entry.type">
+        <field name="time_off_selectable" eval="False"/>
+    </record>
+<!-- PH : Philippines END-->
+
     <function model="hr.work.entry.type" name="write">
         <value model="hr.work.entry.type" eval="obj().sudo().search([('code', 'in', ['LEAVE100', 'LEAVE105', 'WORK110', 'LEAVE90', 'LEAVE110', 'LEAVE120', 'OUT'])]).ids"/>
         <value eval="{'request_unit': 'half_day'}"/>

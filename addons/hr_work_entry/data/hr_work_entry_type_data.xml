@@ -4373,5 +4373,397 @@
         <field name="code">USRETROREGULAR</field>
         <field name="country_id" ref="base.us"/>
     </record>
+<!-- PH : Philippines -->
+<record id="l10n_ph_hr_payroll_unpaid_leave" model="hr.work.entry.type">
+        <field name="name">Unpaid</field>
+        <field name="color">5</field>
+        <field name="display_code">UN</field>
+        <field name="code">LEAVE90</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.ph"/>
+    </record>
+    <record id="ph_work_entry_type_leave" model="hr.work.entry.type">
+        <field name="name">Generic Time Off</field>
+        <field name="display_code">GTO</field>
+        <field name="code">LEAVE100</field>
+        <field name="color">3</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.ph"/>
+    </record>
+    <record id="ph_work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="name">Compensatory Time Off</field>
+        <field name="display_code">CTO</field>
+        <field name="code">LEAVE105</field>
+        <field name="color">3</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.ph"/>
+    </record>
+    <record id="ph_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="name">Sick Time Off</field>
+        <field name="display_code">STO</field>
+        <field name="code">LEAVE110</field>
+        <field name="color">5</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.ph"/>
+    </record>
+    <record id="ph_work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="name">Paid Time Off</field>
+        <field name="display_code">PTO</field>
+        <field name="code">LEAVE120</field>
+        <field name="color">5</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.ph"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_sil_leave" model="hr.work.entry.type">
+        <field name="name">Service Incentive Leave</field>
+        <field name="color">5</field>
+        <field name="code">SIL_LEAVE</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">absence</field>
+    </record>
+    <record id="l10n_ph_hr_payroll_mat_leave" model="hr.work.entry.type">
+        <field name="name">Maternity Leave</field>
+        <field name="color">5</field>
+        <field name="code">MAT_LEAVE</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">absence</field>
+    </record>
+    <record id="l10n_ph_hr_payroll_pat_leave" model="hr.work.entry.type">
+        <field name="name">Paternity Leave</field>
+        <field name="color">5</field>
+        <field name="code">PAT_LEAVE</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">absence</field>
+    </record>
+    <record id="l10n_ph_hr_payroll_spl_leave" model="hr.work.entry.type">
+        <field name="name">Solo-Parent Leave</field>
+        <field name="color">5</field>
+        <field name="code">SPL_LEAVE</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">absence</field>
+    </record>
+    <record id="l10n_ph_hr_payroll_slfw_leave" model="hr.work.entry.type">
+        <field name="name">Special Leave For Women</field>
+        <field name="color">5</field>
+        <field name="code">SLFW_LEAVE</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">absence</field>
+    </record>
+    <record id="l10n_ph_hr_payroll_dvl_leave" model="hr.work.entry.type">
+        <field name="name">Domestic Violence Leave</field>
+        <field name="color">5</field>
+        <field name="code">DVL_LEAVE</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">absence</field>
+    </record>
+    <record id="l10n_ph_hr_payroll_rh_leave" model="hr.work.entry.type">
+        <field name="name">Regular Holiday</field>
+        <field name="color">5</field>
+        <field name="code">RH_LEAVE</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">absence</field>
+    </record>
+    <record id="l10n_ph_hr_payroll_dh_leave" model="hr.work.entry.type">
+        <field name="name">Double Holiday</field>
+        <field name="color">5</field>
+        <field name="code">DH_LEAVE</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">absence</field>
+    </record>
+    <record id="l10n_ph_hr_payroll_snwh_leave" model="hr.work.entry.type">
+        <field name="name">Special Non-Working Holiday</field>
+        <field name="color">5</field>
+        <field name="code">SNWH_LEAVE</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">absence</field>
+    </record>
 
+    <record id="ph_work_entry_type_attendance" model="hr.work.entry.type">
+        <field name="name">Attendance</field>
+        <field name="color">0</field>
+        <field name="display_code">A</field>
+        <field name="code">WORK100</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.ph"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_overtime" model="hr.work.entry.type">
+        <field name="name">Overtime Hours</field>
+        <field name="color">4</field>
+        <field name="display_code">OT</field>
+        <field name="code">OVERTIME</field>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="country_id" ref="base.ph"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_ns" model="hr.work.entry.type">
+        <field name="name">Night Shift</field>
+        <field name="color">9</field>
+        <field name="code">WORK100_NS</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+    </record>
+    <record id="l10n_ph_hr_payroll_ns_overtime" model="hr.work.entry.type">
+        <field name="name">Night Shift - Overtime</field>
+        <field name="color">9</field>
+        <field name="code">OVERTIME_NS</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="count_as">working_time</field>
+    </record>
+
+    <record id="ph_work_entry_type_home_working" model="hr.work.entry.type">
+        <field name="name">Home Working</field>
+        <field name="display_code">HW</field>
+        <field name="code">WORK110</field>
+        <field name="color">2</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.ph"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_tardiness" model="hr.work.entry.type">
+        <field name="name">Tardiness</field>
+        <field name="color">9</field>
+        <field name="code">TARD</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">-1</field>
+    </record>
+
+    <record id="work_entry_type_attendance_rest" model="hr.work.entry.type">
+        <field name="name">Attendance - Rest Day</field>
+        <field name="color">0</field>
+        <field name="code">WORK100_REST</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_overtime_rest" model="hr.work.entry.type">
+        <field name="name">Overtime Hours - Rest Day</field>
+        <field name="color">4</field>
+        <field name="code">OVERTIME_REST</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_ns_rest" model="hr.work.entry.type">
+        <field name="name">Night Shift - Rest Day</field>
+        <field name="color">9</field>
+        <field name="code">WORK100_NS_REST</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_ns_overtime_rest" model="hr.work.entry.type">
+        <field name="name">Night Shift - Overtime - Rest Day</field>
+        <field name="color">9</field>
+        <field name="code">OVERTIME_NS_REST</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="work_entry_type_attendance_snw" model="hr.work.entry.type">
+        <field name="name">Attendance - Special Non-Working Holiday</field>
+        <field name="code">WORK100_SNW</field>
+        <field name="color">0</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_overtime_snw" model="hr.work.entry.type">
+        <field name="name">Overtime Hours - Special Non-Working Holiday</field>
+        <field name="code">OVERTIME_SNW</field>
+        <field name="color">4</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_ns_snw" model="hr.work.entry.type">
+        <field name="name">Night Shift - Special Non-Working Holiday</field>
+        <field name="code">WORK100_NS_SNW</field>
+        <field name="color">9</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_ns_overtime_snw" model="hr.work.entry.type">
+        <field name="name">Night Shift - Overtime - Special Non-Working Holiday</field>
+        <field name="code">OVERTIME_NS_SNW</field>
+        <field name="color">9</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="work_entry_type_attendance_snw_rest" model="hr.work.entry.type">
+        <field name="name">Attendance - Special Non-Working Holiday (Rest Day)</field>
+        <field name="code">WORK100_SNW_REST</field>
+        <field name="color">0</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_overtime_snw_rest" model="hr.work.entry.type">
+        <field name="name">Overtime Hours - Special Non-Working Holiday (Rest Day)</field>
+        <field name="code">OVERTIME_SNW_REST</field>
+        <field name="color">4</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_ns_snw_rest" model="hr.work.entry.type">
+        <field name="name">Night Shift - Special Non-Working Holiday (Rest Day)</field>
+        <field name="code">WORK100_NS_SNW_REST</field>
+        <field name="color">9</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_ns_overtime_snw_rest" model="hr.work.entry.type">
+        <field name="name">Night Shift - Overtime - Special Non-Working Holiday (Rest Day)</field>
+        <field name="code">OVERTIME_NS_SNW_REST</field>
+        <field name="color">9</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="work_entry_type_attendance_rh" model="hr.work.entry.type">
+        <field name="name">Attendance - Regular Holiday</field>
+        <field name="code">WORK100_RH</field>
+        <field name="color">0</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_overtime_rh" model="hr.work.entry.type">
+        <field name="name">Overtime Hours - Regular Holiday</field>
+        <field name="code">OVERTIME_RH</field>
+        <field name="color">4</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_ns_rh" model="hr.work.entry.type">
+        <field name="name">Night Shift - Regular Holiday</field>
+        <field name="code">WORK100_NS_RH</field>
+        <field name="color">9</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_ns_overtime_rh" model="hr.work.entry.type">
+        <field name="name">Night Shift - Overtime - Regular Holiday</field>
+        <field name="code">OVERTIME_NS_RH</field>
+        <field name="color">9</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="work_entry_type_attendance_rh_rest" model="hr.work.entry.type">
+        <field name="name">Attendance - Regular Holiday (Rest Day)</field>
+        <field name="code">WORK100_RH_REST</field>
+        <field name="color">0</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_overtime_rh_rest" model="hr.work.entry.type">
+        <field name="name">Overtime Hours - Regular Holiday (Rest Day)</field>
+        <field name="code">OVERTIME_RH_REST</field>
+        <field name="color">4</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_ns_rh_rest" model="hr.work.entry.type">
+        <field name="name">Night Shift - Regular Holiday (Rest Day)</field>
+        <field name="code">WORK100_NS_RH_REST</field>
+        <field name="color">9</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_ns_overtime_rh_rest" model="hr.work.entry.type">
+        <field name="name">Night Shift - Overtime - Regular Holiday (Rest Day)</field>
+        <field name="code">OVERTIME_NS_RH_REST</field>
+        <field name="color">9</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="work_entry_type_attendance_dbl_hol" model="hr.work.entry.type">
+        <field name="name">Attendance - Double Holiday</field>
+        <field name="code">WORK100_DH</field>
+        <field name="color">0</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_overtime_dbl_hol" model="hr.work.entry.type">
+        <field name="name">Overtime Hours - Double Holiday</field>
+        <field name="code">OVERTIME_DH</field>
+        <field name="color">4</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_ns_dbl_hol" model="hr.work.entry.type">
+        <field name="name">Night Shift - Double Holiday</field>
+        <field name="code">WORK100_NS_DH</field>
+        <field name="color">9</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_ns_overtime_dbl_hol" model="hr.work.entry.type">
+        <field name="name">Night Shift - Overtime - Double Holiday</field>
+        <field name="code">OVERTIME_NS_DH</field>
+        <field name="color">9</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="work_entry_type_attendance_dbl_hol_rest" model="hr.work.entry.type">
+        <field name="name">Attendance - Double Holiday (Rest Day)</field>
+        <field name="code">WORK100_DH_REST</field>
+        <field name="color">0</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_overtime_dbl_hol_rest" model="hr.work.entry.type">
+        <field name="name">Overtime Hours - Double Holiday (Rest Day)</field>
+        <field name="code">OVERTIME_DH_REST</field>
+        <field name="color">4</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_ns_dbl_hol_rest" model="hr.work.entry.type">
+        <field name="name">Night Shift - Double Holiday (Rest Day)</field>
+        <field name="code">WORK100_NS_DH_REST</field>
+        <field name="color">9</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="l10n_ph_hr_payroll_ns_overtime_dbl_hol_rest" model="hr.work.entry.type">
+        <field name="name">Night Shift - Overtime - Double Holiday (Rest Day)</field>
+        <field name="code">OVERTIME_NS_DH_REST</field>
+        <field name="color">9</field>
+        <field name="country_id" ref="base.ph"/>
+        <field name="count_as">working_time</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="l10n_ph_hr_payroll_out_of_contract" model="hr.work.entry.type">
+        <field name="name">Out of Contract</field>
+        <field name="color">0</field>
+        <field name="display_code">OoC</field>
+        <field name="code">OUT</field>
+        <field name="country_id" ref="base.ph"/>
+    </record>
 </data></odoo>
