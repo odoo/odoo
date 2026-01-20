@@ -1400,14 +1400,25 @@ async function _keyDown(target, eventInit) {
                 if (isNil(selectionStart) || isNil(selectionEnd)) {
                     break;
                 }
-                const start = key === "ArrowLeft" || key === "ArrowUp";
                 let selectionTarget;
-                if (ctrlKey) {
-                    // Move to the start/end of the line
-                    selectionTarget = start ? 0 : value.length;
+                if (key === "ArrowUp" || (ctrlKey && key === "ArrowLeft")) {
+                    // Move to the beginning.
+                    // Note that this wrong in multiple situations:
+                    // - ArrowUp in textarea is only correct if on first line.
+                    // - CTRL+ArrowLeft is only correct if no whitespace in all
+                    //   the chars before.
+                    selectionTarget = 0;
+                } else if (key === "ArrowDown" || (ctrlKey && key === "ArrowRight")) {
+                    // Move to the end.
+                    // Note that this wrong in multiple situations:
+                    // - ArrowDown in textarea is only correct if on last line.
+                    // - CTRL+ArrowRight is only correct if no whitespace in all
+                    //   the chars after.
+                    selectionTarget = value.length;
+                } else if (key === "ArrowLeft") {
+                    selectionTarget = selectionStart - 1;
                 } else {
-                    // Move the cursor left or right
-                    selectionTarget = start ? selectionStart - 1 : selectionEnd + 1;
+                    selectionTarget = selectionEnd + 1;
                 }
                 nextSelectionStart = nextSelectionEnd = $max(
                     $min(selectionTarget, value.length),
