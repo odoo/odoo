@@ -80,6 +80,32 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'formatted display name should show the "Back on" formatted date'
         )
 
+    @freeze_time('2026-01-30')
+    def test_next_working_day_on_leave(self):
+        leave = self.env['hr.leave'].create({
+            'name': 'test_leave',
+            'employee_id': self.employee_hruser.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': "2026-02-02",
+            'request_date_to': "2026-02-04",
+        })
+        leave.write({'state': 'validate'})
+        # next working day is a leave, so next_working_day_on_leave is filled
+        self.assertEqual(self.employee_hruser.next_working_day_on_leave, date(2026, 2, 2))
+
+    @freeze_time('2026-01-30')
+    def test_next_working_day_not_on_leave(self):
+        leave = self.env['hr.leave'].create({
+            'name': 'test_leave',
+            'employee_id': self.employee_hruser.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': "2026-02-03",
+            'request_date_to': "2026-02-04",
+        })
+        leave.write({'state': 'validate'})
+        # next working day is not on leave, so next_working_day_on_leave is None
+        self.assertFalse(self.employee_hruser.next_working_day_on_leave)
+
 
 @tagged('out_of_office')
 @tagged('at_install', '-post_install')  # LEGACY at_install
