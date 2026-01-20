@@ -2423,7 +2423,7 @@ class Website(models.CachedModel):
         Returns:
             SchemaBuilder: The structured data schema builder for the organization.
         """
-        company = company.sudo() if company else self.company_id.sudo()
+        company = company or self.company_id
         if not company:
             return False
         company_name = company.name
@@ -2473,7 +2473,7 @@ class Website(models.CachedModel):
         Returns:
             SchemaBuilder: The structured data schema builder for the contact point.
         """
-        company = company.sudo() if company else self.company_id.sudo()
+        company = company or self.company_id
         if not company:
             return False
         telephone = company.phone.strip() if company.phone else None
@@ -2496,7 +2496,7 @@ class Website(models.CachedModel):
         Returns:
             SchemaBuilder: The structured data schema builder for the postal address.
         """
-        company = company.sudo() if company else self.company_id.sudo()
+        company = company or self.company_id
         if not company:
             return False
         street = company.street.strip() if company.street else None

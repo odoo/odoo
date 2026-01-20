@@ -9,6 +9,8 @@ import werkzeug.urls
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
+from odoo.addons.website.structure_data_defination import SchemaBuilder
+from odoo.addons.website.tools import text_from_html, truncate_text
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
@@ -661,3 +663,93 @@ class EventEvent(models.Model):
                 )
             data['tag_ids'] = event.tag_ids.read(['name'])
         return results_data
+
+    def _to_structured_data(self, website=None):
+        """ Generate structured data for the event. """
+        self.ensure_one()
+        website = website or self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        event_url = self.website_url or ''
+        if event_url:
+            event_url = f'{base_url}{event_url}'
+        else:
+            event_url = f'{base_url}/event/{self.id}'
+
+        image_url = website.image_url(self, 'image_1920')
+        if image_url:
+            image_url = f'{base_url}{image_url}'
+
+        name = self.name
+        location = SchemaBuilder("Place")
+        address = None
+
+        if self.address_id:
+            # address_id is a many2one to res.partner, so we can use
+            # website's postal_address_structured_data method which accepts
+            # company or partner id, as res.partner has the same address fields
+            address_id_sudo = self.address_id.sudo()
+            address = website.postal_address_structured_data(address_id_sudo)
+            location.set(name=self.address_name)
+            location.add_nested(address=address)
+
+        start_date = SchemaBuilder.datetime(self.date_begin)
+        end_date = SchemaBuilder.datetime(self.date_end)
+        description = self.subtitle or ''
+
+        if not description and self.description:
+            # fallback on description if no subtitle
+            description = text_from_html(self.description, True)
+            description = truncate_text(description, 300)
+
+        organizer = None
+        if self.organizer_id:
+            organizer = SchemaBuilder("Organization")
+            organizer_sudo = self.organizer_id.sudo()
+            organizer.set(name=organizer_sudo.name or None)
+            if organizer_sudo.website:
+                organizer.set(url=organizer_sudo.website)
+
+        event_status = "EventScheduled"
+        if self.is_ongoing:
+            event_status = "EventOngoing"
+        elif self.kanban_state == 'cancel':
+            event_status = "EventCancelled"
+
+        tickets = []
+        for ticket in self.event_ticket_ids:
+            ticket_schema = SchemaBuilder("Offer")
+            name = ticket.name
+            price = ticket.total_price_reduce
+            currency = self.company_id.currency_id.name
+            ticket_schema.set(price=price, price_currency=currency)
+            if name:
+                ticket_schema.set(name=name)
+            if not ticket.is_sold_out:
+                ticket_schema.set(url=f"{event_url}/register")
+                ticket_schema.set(availability="https://schema.org/InStock")
+            else:
+                ticket_schema.set(availability="https://schema.org/SoldOut")
+            valid_from = ticket.start_sale_datetime
+            if valid_from:
+                ticket_schema.set(valid_from=SchemaBuilder.datetime(valid_from))
+            valid_through = ticket.end_sale_datetime
+            if valid_through:
+                ticket_schema.set(valid_through=SchemaBuilder.datetime(valid_through))
+            ticket_schema.set(name=ticket.name or None)
+
+            tickets.append(ticket_schema)
+        # We have to take care of elements active in sidebar (website) remove them
+        # If view if inactive.
+        return SchemaBuilder("Event").set(
+            name=name,
+            start_date=start_date,
+            end_date=end_date,
+            url=event_url,
+            image=image_url or None,
+            description=description or None,
+            event_status=f"https://schema.org/{event_status}",
+        ).add_nested(
+            location=location,
+            organizer=organizer,
+            offers=tickets,
+        )

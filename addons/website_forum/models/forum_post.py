@@ -820,11 +820,11 @@ class ForumPost(models.Model):
 
     def _to_question_structured_data(self):
         self.ensure_one()
-
-        author = SchemaBuilder("Person", name=self.create_uid.sudo().name)
+        create_uid = self.create_uid
+        author = SchemaBuilder("Person", name=create_uid.name)
         base_url = self.get_base_url()
-        if self.create_uid.sudo().website_published:
-            author.set(url=f"{base_url}/profile/user/{self.create_uid.sudo().id}")
+        if create_uid.website_published:
+            author.set(url=f"{base_url}/web/image/res.users/{create_uid.id}/avatar_128/")
 
         question = SchemaBuilder(
             "Question",
@@ -840,12 +840,11 @@ class ForumPost(models.Model):
 
     def _to_answer_structured_data(self):
         self.ensure_one()
-
-        author = SchemaBuilder("Person", name=self.create_uid.sudo().name)
+        create_uid = self.create_uid
+        author = SchemaBuilder("Person", name=create_uid.name)
         base_url = self.get_base_url()
-        if self.create_uid.sudo().website_published:
-            author.set(url=f"{base_url}/profile/user/{self.create_uid.sudo().id}")
-
+        if create_uid.website_published:
+            author.set(url=f"{base_url}/web/image/res.users/{create_uid.id}/avatar_128/")
         answer = SchemaBuilder(
             "Answer",
             text=self.plain_content,

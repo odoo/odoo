@@ -186,10 +186,10 @@ class WebsiteBlog(http.Controller):
             return []
 
         for post_sd in posts_sd:
-            post_sd.values['publisher'] = SchemaBuilder.create_id_reference("Organization", org_id)
+            post_sd.add_nested(publisher=SchemaBuilder.create_id_reference("Organization", org_id))
             if blog:
                 blog_id = f"{base_url}/blog/{blog.id}#primary_blog"
-                post_sd.values['isPartOf'] = SchemaBuilder.create_id_reference("Blog", blog_id)
+                post_sd.add_nested(is_part_of=SchemaBuilder.create_id_reference("Blog", blog_id))
 
         result = []
 
@@ -203,8 +203,7 @@ class WebsiteBlog(http.Controller):
             blog_sd.values["@id"] = f"{base_url}/blog/{blog.id}#primary_blog"
             organization = SchemaBuilder.create_id_reference("Organization", org_id)
             blog_sd.add_nested(publisher=organization, has_part=posts_sd)
-            result.append(blog_sd)
-            result.append(self._get_blog_breadcrumb_structured_data(website, blog=blog))
+            result.extend([blog_sd, self._get_blog_breadcrumb_structured_data(website, blog=blog)])
         else:
             collection = SchemaBuilder(
                 "CollectionPage",
@@ -212,8 +211,7 @@ class WebsiteBlog(http.Controller):
                 url=f"{base_url}{request.httprequest.path}",
             )
             collection.add_nested(has_part=posts_sd)
-            result.append(collection)
-            result.append(self._get_blog_breadcrumb_structured_data(website))
+            result.extend([collection, self._get_blog_breadcrumb_structured_data(website)])
 
         return result
 
