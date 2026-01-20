@@ -68,7 +68,7 @@
                         </t>
                     </div>
                 </div>
-                <div class="container o_self_container">
+                <div class="container o_self_container" t-if="!selfOrder.kioskMode">
                     <hr/>
                     <div class="d-flex justify-content-between order-note"
                         t-on-click="() => (display_change_quantity and (this.state.showOrderNote = !this.state.showOrderNote))">
