@@ -51,11 +51,12 @@
                         <div class="mb-3 col-6">
                             <label class="mb-1 text-primary fw-bold" for="website_profile_profile_dialog_user_country">Country</label>
                             <div>
-                                <select name="country" class="form-control" id="website_profile_profile_dialog_user_country" t-model="user.country_id">
+                                <select name="country" class="form-control" id="website_profile_profile_dialog_user_country" t-model="user.country_id" t-att-disabled="!props.canEditCountry">
                                     <option>Country...</option>
                                     <option t-foreach="countries" t-as="country"
                                         t-key="country.id" t-att-value="country.id" t-out="country.name"/>
                                 </select>
+                                <p t-if="props.canEditCountry === false" class="form-text text-muted">Changing the country is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</p>
                             </div>
                         </div>
                         <div class="mb-3 col-12">

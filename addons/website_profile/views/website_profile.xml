@@ -115,7 +115,7 @@
                                 <span t-field="user.name"/><small t-if="user.karma == 0"> (not verified)</small>
                             </h1>
                             <a class="btn o_wprofile_editor btn-primary d-none d-md-inline-block" t-if="(request.env.user == user and user.karma != 0) or request.env.user._is_admin()"
-                                t-att-data-user-id="user.id">
+                                t-att-data-user-id="user.id" t-att-data-can-edit-country="'true' if user.partner_id._can_edit_country() else None">
                                 <i class="fa fa-pencil me-2"/>EDIT PROFILE
                             </a>
                         </div>
@@ -196,7 +196,7 @@
                             <div t-if="user.partner_id.website_description" class="mb32">
                                 <t t-if="request.env.user == user and user.karma != 0 or request.env.user._is_admin()">
                                     <a href="#" class="o_wprofile_editor btn btn-link float-end"
-                                        t-att-data-user-id="user.id" data-focus-website-description="true">
+                                        t-att-data-user-id="user.id" t-att-data-can-edit-country="'true' if user.partner_id._can_edit_country() else None" data-focus-website-description="true">
                                         <i class="fa fa-pencil me-1"/>Edit
                                     </a>
                                 </t>
