@@ -98,7 +98,7 @@ QUnit.test("Search highlight", async (assert) => {
     }
 });
 
-QUnit.test("Display highligthed search in chatter", async () => {
+QUnit.test("Display highlighted search in chatter", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -115,7 +115,7 @@ QUnit.test("Display highligthed search in chatter", async () => {
     await contains(`.o-mail-Chatter-search .o-mail-Message span.${HIGHLIGHT_CLASS}`);
 });
 
-QUnit.test("Display multiple highligthed search in chatter", async () => {
+QUnit.test("Display multiple highlighted search in chatter", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
@@ -132,7 +132,7 @@ QUnit.test("Display multiple highligthed search in chatter", async () => {
     await contains(`.o-mail-Chatter-search .o-mail-Message span.${HIGHLIGHT_CLASS}`, { count: 2 });
 });
 
-QUnit.test("Display highligthed search in Discuss", async () => {
+QUnit.test("Display highlighted search in Discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -151,7 +151,7 @@ QUnit.test("Display highligthed search in Discuss", async () => {
     await contains(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}`);
 });
 
-QUnit.test("Display multiple highligthed search in Discuss", async () => {
+QUnit.test("Display multiple highlighted search in Discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
@@ -172,7 +172,7 @@ QUnit.test("Display multiple highligthed search in Discuss", async () => {
     });
 });
 
-QUnit.test("Display highligthed with escaped character must ignore them", async () => {
+QUnit.test("Display highlighted with escaped character must ignore them", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
