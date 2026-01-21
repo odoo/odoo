@@ -1,19 +1,24 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import base64
 import io
 import json
 import re
 import zipfile
-from hashlib import sha256
 
-from odoo import api, fields, models, release
+from odoo import Command, api, fields, models, release
+
+from .website_transfer_utils import (
+    ATTACHMENT_PAYLOAD_FIELDS,
+    MENU_PAYLOAD_FIELDS,
+    PAGE_PAYLOAD_FIELDS,
+    VIEW_PAYLOAD_FIELDS,
+    compute_payload_checksum,
+    serialize_record,
+)
 
 
 class WebsiteExportWizard(models.TransientModel):
     _name = "website.export.wizard"
     _description = "Website Export Wizard"
-
 
     def _get_page_domain(self):
         website_id = self.website_id.id if self.website_id else False
@@ -37,79 +42,36 @@ class WebsiteExportWizard(models.TransientModel):
         required=True,
         default="all",
     )
-    page_ids = fields.Many2many(
-        "website.page",
-        string="Pages",
-        domain="[('website_id', 'in', [website_id, False]), ('key', 'not ilike', '%_debug_page_view%')]",
-    )
+    page_ids = fields.Many2many("website.page", string="Pages")
     include_assets = fields.Boolean(string="Include Assets", default=True)
     export_file = fields.Binary(string="Export File", readonly=True)
     export_filename = fields.Char(string="Export Filename", readonly=True)
 
     @api.onchange("page_scope", "website_id")
     def _onchange_page_ids(self):
+        domain = self._get_page_domain()
         if self.page_scope == "all":
-            self.page_ids = self.env["website.page"].search(self._get_page_domain())
+            self.page_ids = self.env["website.page"].search(domain)
         else:
-            self.page_ids = False
+            self.page_ids = [Command.clear()]
 
     def _get_pages_to_export(self):
+        if self.page_scope == "all":
+            return self.env["website.page"].search(self._get_page_domain())
         return self.page_ids
 
     def _collect_pages(self, pages):
         data = []
         for page in pages:
-            data.append({
-                "id": page.id,
-                "name": page.name,
-                "url": page.url,
-                "website_id": page.website_id.id,
-                "view_id": page.view_id.id,
-                "is_published": page.is_published,
-                "publish_on": page.publish_on,
-                "website_indexed": page.website_indexed,
-                "is_new_page_template": page.is_new_page_template,
-                "parent_id": page.parent_id.id,
-                "header_visible": page.header_visible,
-                "footer_visible": page.footer_visible,
-                "breadcrumb_visible": page.breadcrumb_visible,
-                "header_overlay": page.header_overlay,
-                "header_color": page.header_color,
-                "header_text_color": page.header_text_color,
-                "breadcrumb_overlay": page.breadcrumb_overlay,
-                "breadcrumb_color": page.breadcrumb_color,
-                "breadcrumb_text_color": page.breadcrumb_text_color,
-            })
+            data.append(serialize_record(page, PAGE_PAYLOAD_FIELDS))
         return data
 
     def _collect_views(self, views):
         data = []
         for view in views:
-            group_external_ids = view.group_ids.get_external_id()
-            data.append({
-                "id": view.id,
-                "key": view.key,
-                "name": view.name,
-                "type": view.type,
-                "arch_db": view.arch_db,
-                "inherit_id": view.inherit_id.id,
-                "inherit_key": view.inherit_id.key,
-                "website_id": view.website_id.id,
-                "active": view.active,
-                "track": view.track,
-                "visibility": view.visibility,
-                "visibility_password": view.visibility_password,
-                "group_ids": [
-                    group_external_ids[group.id]
-                    for group in view.group_ids
-                    if group_external_ids.get(group.id)
-                ],
-                "website_meta_title": view.website_meta_title,
-                "website_meta_description": view.website_meta_description,
-                "website_meta_keywords": view.website_meta_keywords,
-                "website_meta_og_img": view.website_meta_og_img,
-                "seo_name": view.seo_name,
-            })
+            values = serialize_record(view, VIEW_PAYLOAD_FIELDS)
+            values["inherit_key"] = view.inherit_id.key
+            data.append(values)
         return data
 
     def _collect_menus(self, pages):
@@ -130,25 +92,8 @@ class WebsiteExportWizard(models.TransientModel):
 
         data = []
         for menu in menus:
-            group_external_ids = menu.group_ids.get_external_id()
-            data.append({
-                "id": menu.id,
-                "name": menu.name,
-                "url": menu.url,
-                "page_id": menu.page_id.id,
-                "parent_id": menu.parent_id.id,
-                "website_id": menu.website_id.id,
-                "sequence": menu.sequence,
-                "new_window": menu.new_window,
-                "is_mega_menu": menu.is_mega_menu,
-                "mega_menu_content": menu.mega_menu_content,
-                "mega_menu_classes": menu.mega_menu_classes,
-                "group_ids": [
-                    group_external_ids[group.id]
-                    for group in menu.group_ids
-                    if group_external_ids.get(group.id)
-                ],
-            })
+            values = serialize_record(menu, MENU_PAYLOAD_FIELDS)
+            data.append(values)
         return data
 
     def _extract_attachment_ids(self, arch):
@@ -156,7 +101,9 @@ class WebsiteExportWizard(models.TransientModel):
         if not arch:
             return ids
 
-        for match in re.findall(r"/web/image/(\d+)(?:[-/]|\\b)", arch):
+        for match in re.findall(r"/web/image/(\d+)(?:[-/]|\b)", arch):
+            ids.add(int(match))
+        for match in re.findall(r"/web/content/(\d+)(?:[-/?#]|\b)", arch):
             ids.add(int(match))
         for match in re.findall(r'data-attachment-id="(\d+)"', arch):
             ids.add(int(match))
@@ -164,10 +111,13 @@ class WebsiteExportWizard(models.TransientModel):
             ids.add(int(match))
         return ids
 
-    def _collect_attachments(self, views):
+    def _collect_attachments(self, views, menus=None):
         attachment_ids = set()
         for view in views:
             attachment_ids |= self._extract_attachment_ids(view.arch_db)
+        if menus:
+            for menu in menus:
+                attachment_ids |= self._extract_attachment_ids(menu.get("mega_menu_content"))
 
         if not attachment_ids:
             return []
@@ -175,18 +125,7 @@ class WebsiteExportWizard(models.TransientModel):
         attachments = self.env["ir.attachment"].browse(sorted(attachment_ids))
         data = []
         for attachment in attachments:
-            data.append({
-                "id": attachment.id,
-                "name": attachment.name,
-                "mimetype": attachment.mimetype,
-                "checksum": attachment.checksum,
-                "type": attachment.type,
-                "url": attachment.url,
-                "public": attachment.public,
-                "res_model": attachment.res_model,
-                "res_id": attachment.res_id,
-                "website_id": attachment.website_id.id,
-            })
+            data.append(serialize_record(attachment, ATTACHMENT_PAYLOAD_FIELDS))
         return data
 
     def _sanitize_filename(self, name):
@@ -204,15 +143,17 @@ class WebsiteExportWizard(models.TransientModel):
         self.ensure_one()
         pages = self._get_pages_to_export()
         views = pages.mapped("view_id")
-        attachments = self._collect_attachments(views) if self.include_assets else []
+        menus = self._collect_menus(pages)
+        attachments = self._collect_attachments(views, menus) if self.include_assets else []
         return {
             "website": {
                 "id": self.website_id.id,
                 "name": self.website_id.name,
+                "homepage_url": self.website_id.homepage_url,
             },
             "pages": self._collect_pages(pages),
             "views": self._collect_views(views),
-            "menus": self._collect_menus(pages),
+            "menus": menus,
             "attachments": attachments,
         }
 
@@ -237,8 +178,8 @@ class WebsiteExportWizard(models.TransientModel):
             attachment_ids = [item["id"] for item in attachments if item.get("id")]
             attachment_map = {att.id: att for att in self.env["ir.attachment"].browse(attachment_ids)}
 
-        with io.BytesIO() as buf:
-            with zipfile.ZipFile(buf, mode="w", compression=zipfile.ZIP_DEFLATED, allowZip64=False) as zf:
+        with io.BytesIO() as buffer:
+            with zipfile.ZipFile(buffer, mode="w", compression=zipfile.ZIP_DEFLATED, allowZip64=False) as archive:
                 if attachments:
                     for item in attachments:
                         record = attachment_map.get(item["id"])
@@ -247,24 +188,23 @@ class WebsiteExportWizard(models.TransientModel):
                             continue
                         filename = f"{record.id}_{self._sanitize_filename(record.name)}"
                         file_path = f"attachments/{filename}"
-                        zf.writestr(file_path, base64.b64decode(record.datas))
+                        archive.writestr(file_path, base64.b64decode(record.datas))
                         item["file_path"] = file_path
 
                 payload_files = {
-                    "website.json": payload["website"],
                     "pages.json": payload["pages"],
                     "views.json": payload["views"],
                     "menus.json": payload["menus"],
                     "attachments.json": attachments,
                 }
                 for filename, content in payload_files.items():
-                    zf.writestr(filename, json.dumps(content, ensure_ascii=True, sort_keys=True))
+                    archive.writestr(filename, json.dumps(content, ensure_ascii=True, sort_keys=True))
 
-                checksum_source = json.dumps(payload_files, ensure_ascii=True, sort_keys=True).encode()
-                manifest = self._build_manifest(payload, sha256(checksum_source).hexdigest())
-                zf.writestr("manifest.json", json.dumps(manifest, ensure_ascii=True, sort_keys=True))
+                checksum = compute_payload_checksum(payload_files)
+                manifest = self._build_manifest(payload, checksum)
+                archive.writestr("manifest.json", json.dumps(manifest, ensure_ascii=True, sort_keys=True))
 
-            return buf.getvalue()
+            return buffer.getvalue()
 
     def action_export(self):
         self.ensure_one()

@@ -93,7 +93,15 @@ export class PageSearchModel extends SearchModel {
      *
      * @returns {Object} The current website.
      */
+    // TODO DUAU: when on export wizard, choosing another website wasn't working, I didn't find a better workaround
     async getCurrentWebsite() {
+        const contextWebsiteId = this.globalContext && this.globalContext.website_id;
+        if (contextWebsiteId) {
+            const contextWebsite = this.website.websites.find((w) => w.id === contextWebsiteId);
+            if (contextWebsite) {
+                return contextWebsite;
+            }
+        }
         const currentWebsite = await this.orm.call("website", "get_current_website");
         if (currentWebsite) {
             return this.website.websites.find((w) => w.id === currentWebsite[0]);
