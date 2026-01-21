@@ -2,14 +2,13 @@
 
 from odoo import fields
 from odoo.fields import Command
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo.tools import format_date
-from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+from odoo.addons.pos_stock.tests.test_frontend import TestPosStockHttpCommon
 import uuid
 
 
-@tagged('post_install', '-at_install')
-class TestPoSSale(TestPointOfSaleHttpCommon):
+class TestPoSSale(TestPosStockHttpCommon):
     @classmethod
     def get_default_groups(cls):
         groups = super().get_default_groups()

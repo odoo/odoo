@@ -96,16 +96,6 @@ class TestPointOfSale(TransactionCase):
         })
         self.assertEqual(coin.value, 0.005)
 
-    def test_pos_config_creates_warehouse(self):
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)])
-        if warehouse:
-            warehouse.write({'active': False, 'name': 'Archived ' + warehouse[0].name})
-        pos_config = self.env['pos.config'].create({
-            'name': 'Shop',
-            'module_pos_restaurant': False,
-        })
-        self.assertEqual(pos_config.warehouse_id.code, 'Sho')
-
     def test_session_filter_local_data(self):
         product1 = self.env['product.template'].create({
             'name': 'product1'

@@ -29,11 +29,6 @@ export class DecimalPrecision extends models.ServerModel {
             digits: 2,
         },
         {
-            id: 5,
-            name: "Stock Weight",
-            digits: 2,
-        },
-        {
             id: 6,
             name: "Volume",
             digits: 2,

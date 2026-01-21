@@ -32,6 +32,13 @@
         'web.assets_tests': [
             'pos_stock/static/tests/pos/tours/**/*',
         ],
+        'web.assets_unit_tests_setup': [
+            # we don't need css as we aren't testing the UI with hoot
+            ('remove', 'pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.scss'),
+        ],
+        'web.assets_unit_tests': [
+            'pos_stock/static/tests/unit/**/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

@@ -183,23 +183,6 @@ export function checkTicketData(data, basic = false) {
             }
         }
 
-        if (data.is_shipping_date || data.is_shipping_date_today) {
-            if (!ticket.querySelector(".shipping-date")) {
-                throw new Error("No shipping date has been found in receipt.");
-            }
-            if (data.is_shipping_date_today) {
-                const expectedDelivery = new Date().toLocaleString(
-                    "en-US",
-                    luxon.DateTime.DATE_SHORT
-                );
-                ticket.querySelector(".shipping-date").innerHTML.includes(expectedDelivery);
-            }
-        } else if (data.is_shipping_date === false) {
-            if (ticket.querySelector(".shipping-date")) {
-                throw new Error("A shipping date has been found in receipt.");
-            }
-        }
-
         if (data.is_cashier || data.cashier_name) {
             if (!ticket.querySelector(".cashier-name")) {
                 throw new Error("No cashier name has been found in receipt.");
@@ -360,19 +343,6 @@ export function checkTicketData(data, basic = false) {
         {
             trigger: "body",
             run: async () => await check(data, basic),
-        },
-    ];
-}
-export function trackingMethodIsLot(lot) {
-    return [
-        {
-            content: `tracking method is Lot`,
-            trigger: `li.lot-number:contains("Lot Number ${lot}")`,
-            run: function () {
-                if (document.querySelectorAll("li.lot-number").length !== 1) {
-                    throw new Error(`Expected exactly one 'Lot Number ${lot}' element.`);
-                }
-            },
         },
     ];
 }

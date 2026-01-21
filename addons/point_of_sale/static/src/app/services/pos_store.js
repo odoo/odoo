@@ -278,6 +278,9 @@ export class PosStore extends WithLazyGetterTrap {
                 this.setCashier(this.user);
             }
         } else {
+            if (this.config.module_pos_hr) {
+                return this.defaultPage; // Keep the same user for pos_hr after reloading
+            }
             this.resetCashier();
         }
 

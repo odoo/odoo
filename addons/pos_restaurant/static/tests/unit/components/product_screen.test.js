@@ -1,10 +1,10 @@
 import { test, expect } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
-import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
+import { definePosStockModels } from "@pos_stock/../tests/unit/data/generate_model_definitions";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 
-definePosModels();
+definePosStockModels();
 
 test("addProductToOrder", async () => {
     const store = await setupPosEnv();

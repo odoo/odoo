@@ -9,8 +9,8 @@ from odoo.exceptions import ValidationError
 from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta
-from pprint import pformat
 import unittest.mock
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSBasicConfig(TestPoSCommon):
@@ -30,7 +30,6 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.product4 = self.create_product('Product_4', self.categ_basic, 9.96, 4.98)
         self.product99 = self.create_product('Product_99', self.categ_basic, 99, 50)
         self.product_multi_tax = self.create_product('Multi-tax product', self.categ_basic, 100, 100, (self.taxes['tax8'] | self.taxes['tax9']).ids)
-        self.adjust_inventory([self.product1, self.product2, self.product3], [100, 50, 50])
         self.company_data_2 = self.setup_other_company()
 
     def test_orders_no_invoiced(self):
@@ -93,20 +92,6 @@ class TestPoSBasicConfig(TestPoSCommon):
                 self.product3.qty_available + 6,
                 start_qty_available[self.product3],
             )
-
-            # picking and stock moves should be in done state
-            for order in self.pos_session.order_ids:
-                self.assertEqual(
-                    order.picking_ids[0].state,
-                    'done',
-                    'Picking should be in done state.'
-                )
-                move_ids = order.picking_ids[0].move_ids
-                self.assertEqual(
-                    move_ids.mapped('state'),
-                    ['done'] * len(move_ids),
-                    'Move Lines should be in done state.'
-                )
 
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
@@ -206,21 +191,6 @@ class TestPoSBasicConfig(TestPoSCommon):
                 self.product3.qty_available + 2,
                 start_qty_available[self.product3],
             )
-
-            # picking and stock moves should be in done state
-            # no exception for invoiced orders
-            for order in self.pos_session.order_ids:
-                self.assertEqual(
-                    order.picking_ids[0].state,
-                    'done',
-                    'Picking should be in done state.'
-                )
-                move_ids = order.picking_ids[0].move_ids
-                self.assertEqual(
-                    move_ids.mapped('state'),
-                    ['done'] * len(move_ids),
-                    'Move Lines should be in done state.'
-                )
 
             # check account move in the invoiced order
             invoiced_order = self.pos_session.order_ids.filtered(lambda order: order.account_move)
@@ -458,21 +428,6 @@ class TestPoSBasicConfig(TestPoSCommon):
                 self.product3.qty_available,
                 start_qty_available[self.product3],
             )
-
-            # picking and stock moves should be in done state
-            # no exception of return orders
-            for order in self.pos_session.order_ids:
-                self.assertEqual(
-                    order.picking_ids[0].state,
-                    'done',
-                    'Picking should be in done state.'
-                )
-                move_ids = order.picking_ids[0].move_ids
-                self.assertEqual(
-                    move_ids.mapped('state'),
-                    ['done'] * len(move_ids),
-                    'Move Lines should be in done state.'
-                )
 
         self._run_test({
             'payment_methods': self.cash_pm1 | self.bank_pm1,
@@ -1333,7 +1288,6 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertEqual(res['pos.order'][0]['id'], order_id, 'Syncing the same order should not create a new one')
 
         order = self.env['pos.order'].browse(order_id)
-        self.assertEqual(order.picking_count, 1, 'Order should have one picking')
         self.assertEqual(len(order.payment_ids), 1, 'Order should have one payment')
         self.assertEqual(self.env['account.move'].search_count([('pos_order_ids', 'in', order.ids)]), 1, 'Order should have one invoice')
 

@@ -20,22 +20,13 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         self.product1 = self.create_product('Product 1', self.categ_basic, 10.0, 5)
         self.product2 = self.create_product('Product 2', self.categ_basic, 20.0, 10)
         self.product3 = self.create_product('Product 3', self.categ_basic, 30.0, 15)
-        self.product4 = self.create_product('Product 4', self.categ_anglo, 100, 50)
-        self.product5 = self.create_product('Product 5', self.categ_anglo, 200, 70)
-        self.product6 = self.create_product('Product 6', self.categ_anglo, 45.3, 10.73)
         self.product7 = self.create_product('Product 7', self.categ_basic, 7, 7, tax_ids=self.taxes['tax7'].ids)
-        self.adjust_inventory(
-            [self.product1, self.product2, self.product3, self.product4, self.product5, self.product6, self.product7],
-            [100, 50, 50, 100, 100, 100, 100]
-        )
         # change the price of product2 to 12.99 fixed. No need to convert.
         pricelist_item = self.env['product.pricelist.item'].create({
             'product_tmpl_id': self.product2.product_tmpl_id.id,
             'fixed_price': 12.99,
         })
         self.config.pricelist_id.write({'item_ids': [(6, 0, (self.config.pricelist_id.item_ids | pricelist_item).ids)]})
-
-        self.expense_account = self.categ_anglo.property_account_expense_categ_id
 
     def test_01_check_product_cost(self):
         # Product price should be half of the original price because currency rate is 0.5.
@@ -45,9 +36,6 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product1, 1), 5.00)
         self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product2, 1), 12.99)
         self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product3, 1), 15.00)
-        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product4, 1), 50)
-        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product5, 1), 100)
-        self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product6, 1), 22.65)
         self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product7, 1), 3.50)
 
     def test_02_orders_without_invoice(self):
@@ -223,74 +211,6 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
             },
         })
 
-    @skip('Temporary to fast merge new valuation')
-    def test_04_anglo_saxon_products(self):
-        """
-        ======
-        Orders
-        ======
-        +---------+----------+-----------+----------+-----+----------+------------+
-        | order   | payments | invoiced? | product  | qty |    total | total cost |
-        |         |          |           |          |     |          |            |
-        +---------+----------+-----------+----------+-----+----------+------------+
-        | order 1 | cash     | no        | product4 |   7 |      700 |        350 |
-        |         |          |           | product5 |   7 |     1400 |        490 |
-        +---------+----------+-----------+----------+-----+----------+------------+
-        | order 2 | cash     | no        | product5 |   6 |     1200 |        420 |
-        |         |          |           | product4 |   6 |      600 |        300 |
-        |         |          |           | product6 |  49 |   2219.7 |     525.77 |
-        +---------+----------+-----------+----------+-----+----------+------------+
-        | order 3 | cash     | no        | product5 |   2 |      400 |        140 |
-        |         |          |           | product6 |  13 |    588.9 |     139.49 |
-        +---------+----------+-----------+----------+-----+----------+------------+
-        | order 4 | cash     | no        | product6 |   1 |     45.3 |      10.73 |
-        +---------+----------+-----------+----------+-----+----------+------------+
-
-        ===============
-        Expected Result
-        ===============
-        +---------------------+------------+-----------------+
-        | account             |    balance | amount_currency |
-        +---------------------+------------+-----------------+
-        | sale_account        |   -7153.90 |        -3576.95 |
-        | pos_receivable-cash |    7153.90 |         3576.95 |
-        | expense_account     |    2375.99 |         2375.99 |
-        | output_account      |   -2375.99 |        -2375.99 |
-        +---------------------+------------+-----------------+
-        | Total balance       |       0.00 |            0.00 |
-        +---------------------+------------+-----------------+
-        """
-
-        self._run_test({
-            'payment_methods': self.cash_pm2,
-            'orders': [
-                {'pos_order_lines_ui_args': [(self.product4, 7), (self.product5, 7)], 'uuid': '00100-010-0001'},
-                {'pos_order_lines_ui_args': [(self.product5, 6), (self.product4, 6), (self.product6, 49)], 'uuid': '00100-010-0002'},
-                {'pos_order_lines_ui_args': [(self.product5, 2), (self.product6, 13)], 'uuid': '00100-010-0003'},
-                {'pos_order_lines_ui_args': [(self.product6, 1)], 'uuid': '00100-010-0004'},
-            ],
-            'journal_entries_before_closing': {},
-            'journal_entries_after_closing': {
-                'session_journal_entry': {
-                    'line_ids': [
-                        {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 7153.90, 'reconciled': False, 'amount_currency': -3576.95},
-                        {'account_id': self.expense_account.id, 'partner_id': False, 'debit': 2375.99, 'credit': 0, 'reconciled': False, 'amount_currency': 2375.99},
-                        {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 7153.90, 'credit': 0, 'reconciled': True, 'amount_currency': 3576.95},
-                        {'account_id': self.output_account.id, 'partner_id': False, 'debit': 0, 'credit': 2375.99, 'reconciled': True, 'amount_currency': -2375.99},
-                    ],
-                },
-                'cash_statement': [
-                    ((3576.95, ), {
-                        'line_ids': [
-                            {'account_id': self.cash_pm2.journal_id.default_account_id.id, 'partner_id': False, 'debit': 7153.90, 'credit': 0, 'reconciled': False, 'amount_currency': 3576.95},
-                            {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 0, 'credit': 7153.90, 'reconciled': True, 'amount_currency': -3576.95},
-                        ]
-                    }),
-                ],
-                'bank_payments': [],
-            },
-        })
-
     def test_05_tax_base_amount(self):
         self._run_test({
             'payment_methods': self.cash_pm2,
@@ -375,9 +295,6 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         self.assertAlmostEqual(find_by(product, 'id', self.product1.id)['lst_price'], 5.00)
         self.assertAlmostEqual(find_by(product, 'id', self.product2.id)['lst_price'], 10.00)
         self.assertAlmostEqual(find_by(product, 'id', self.product3.id)['lst_price'], 15.00)
-        self.assertAlmostEqual(find_by(product, 'id', self.product4.id)['lst_price'], 50.00)
-        self.assertAlmostEqual(find_by(product, 'id', self.product5.id)['lst_price'], 100.00)
-        self.assertAlmostEqual(find_by(product, 'id', self.product6.id)['lst_price'], 22.65)
         self.assertAlmostEqual(find_by(product, 'id', self.product7.id)['lst_price'], 3.50)
 
     def test_pos_data_standard_price_converted(self):

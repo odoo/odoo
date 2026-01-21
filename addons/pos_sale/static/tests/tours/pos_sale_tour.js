@@ -1,5 +1,6 @@
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
+import * as StockPaymentScreen from "@pos_stock/../tests/pos/tours/utils/payment_screen_util";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
@@ -344,7 +345,7 @@ registry.category("web_tour.tours").add("PosShipLaterNoDefault", {
             PosSale.settleNthOrder(1),
             ProductScreen.clickPayButton(),
             PaymentScreen.isShown(),
-            Utils.negateStep(PaymentScreen.shippingLaterHighlighted()),
+            Utils.negateStep(StockPaymentScreen.shippingLaterHighlighted()),
         ].flat(),
 });
 
@@ -402,7 +403,7 @@ registry.category("web_tour.tours").add("PosSettleOrder4", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.remainingIs("0.0"),
-            PaymentScreen.clickShipLaterButton(),
+            StockPaymentScreen.clickShipLaterButton(),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
         ].flat(),
@@ -415,8 +416,8 @@ registry.category("web_tour.tours").add("PosSettleOrderShipLater", {
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(2),
             ProductScreen.clickPayButton(),
-            PaymentScreen.clickShipLaterButton(),
-            PaymentScreen.shippingLaterHighlighted(),
+            StockPaymentScreen.clickShipLaterButton(),
+            StockPaymentScreen.shippingLaterHighlighted(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.remainingIs("0.0"),
             PaymentScreen.clickValidate(),
@@ -424,8 +425,8 @@ registry.category("web_tour.tours").add("PosSettleOrderShipLater", {
             FeedbackScreen.clickNextOrder(),
             PosSale.settleNthOrder(1),
             ProductScreen.clickPayButton(),
-            PaymentScreen.clickShipLaterButton(),
-            PaymentScreen.shippingLaterHighlighted(),
+            StockPaymentScreen.clickShipLaterButton(),
+            StockPaymentScreen.shippingLaterHighlighted(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.remainingIs("0.0"),
             PaymentScreen.clickValidate(),

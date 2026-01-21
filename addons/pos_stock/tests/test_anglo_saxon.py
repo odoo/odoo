@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest import skip
@@ -21,7 +20,7 @@ class TestAngloSaxonCommon(AccountTestInvoicingCommon):
         cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.company.id)], limit=1)
         cls.partner = cls.env['res.partner'].create({'name': 'Partner 1'})
         cls.category = cls.env.ref('product.product_category_services')
-        cls.category = cls.category.copy({'name': 'New category','property_valuation': 'real_time'})
+        cls.category = cls.category.copy({'name': 'New category', 'property_valuation': 'real_time'})
         cls.account = cls.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00', 'account_type': 'asset_receivable', 'reconcile': True})
         account_expense = cls.env['account.account'].create({'name': 'Expense', 'code': 'EXP00', 'account_type': 'expense', 'reconcile': True})
         account_income = cls.env['account.account'].create({'name': 'Income', 'code': 'INC00', 'account_type': 'income', 'reconcile': True})
@@ -153,8 +152,6 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         }).action_apply_inventory()
         self.assertEqual(self.product.total_value, 30, "Value should be (5*5 + 5*1) = 30")
         self.assertEqual(self.product.virtual_available, 10)
-
-
         self.pos_config.open_ui()
         pos_session = self.pos_config.current_session_id
         pos_session.set_opening_control(0, None)
@@ -303,12 +300,12 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(len(aml_output.move_id.filtered(lambda l: l.journal_id == self.pos_config.journal_id)), 1)
         # 1 move in stock journal (delivery from stock layers)
         self.assertEqual(len(aml_output.move_id.filtered(lambda l: l.journal_id == self.category.property_stock_journal)), 1)
-        #Check the lines created after the picking validation
+        # Check the lines created after the picking validation
         self.assertEqual(aml_output[1].credit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_output[1].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_expense[0].debit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_expense[0].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
-        #Check the lines created by the PoS session
+        # Check the lines created by the PoS session
         self.assertEqual(aml_output[0].debit, 100.0, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_output[0].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
 

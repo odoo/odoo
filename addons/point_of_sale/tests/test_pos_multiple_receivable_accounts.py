@@ -45,7 +45,7 @@ class TestPoSMultipleReceivableAccounts(TestPoSCommon):
             standard_price=15.0,
             tax_ids=self.taxes['tax_group_7_10'].ids,
         )
-        self.adjust_inventory([self.product1, self.product2, self.product3], [100, 50, 50])
+        # self.adjust_inventory([self.product1, self.product2, self.product3], [100, 50, 50])
 
     def test_01_invoiced_order_from_other_customer(self):
         """

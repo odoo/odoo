@@ -2,11 +2,11 @@
 
 import odoo
 from odoo import fields
-from odoo.addons.point_of_sale.tests.common import CommonPosTest
+from odoo.addons.pos_stock.tests.common import CommonPosStockTest
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestPointOfSaleFlow(CommonPosTest):
+class TestPointOfSaleFlow(CommonPosStockTest):
     def test_ship_later_lots(self):
         self.env.user.group_ids += self.env.ref('account.group_account_manager')
         self.stock_location = self.company_data['default_warehouse'].lot_stock_id

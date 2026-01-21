@@ -26,15 +26,11 @@ registry.category("web_tour.tours").add("FeedbackScreenTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.validateButtonIsHighlighted(true),
-            PaymentScreen.clickShipLaterButton(),
-            PaymentScreen.shippingLaterHighlighted(),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "55.00", // letter tray has 10% tax (search SRC)
                 cashier_name: "A", // A simple PoS man! (Take the first word)
-                is_shipping_date: true,
-                is_shipping_date_today: true, //receipt had expected delivery printed
             }),
             Dialog.confirm("Continue with limited functionality"),
             FeedbackScreen.clickNextOrder(),
@@ -259,25 +255,6 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
                 trigger: "body",
                 expectUnloadPage: true,
             },
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("ReceiptTrackingMethodTour", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Product A"),
-            ProductScreen.enterLotNumber("123456789", "lot"),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
-            FeedbackScreen.checkTicketData({
-                orderlines: [
-                    { name: "Product A", cssRules: [{ css: ".lot-number", text: "123456789" }] },
-                ],
-            }),
         ].flat(),
 });
 

@@ -12,7 +12,6 @@ export class PosSession extends models.ServerModel {
             "resource.calendar.attendance",
             "pos.order",
             "pos.order.line",
-            "pos.pack.operation.lot",
             "pos.payment",
             "pos.payment.method",
             "pos.printer",
@@ -42,7 +41,6 @@ export class PosSession extends models.ServerModel {
             "product.pricelist.item",
             "account.cash.rounding",
             "account.fiscal.position",
-            "stock.picking.type",
             "res.currency",
             "pos.note",
             "product.tag",
@@ -60,7 +58,6 @@ export class PosSession extends models.ServerModel {
             "stop_at",
             "payment_method_ids",
             "state",
-            "update_stock_at_closing",
             "cash_register_balance_start",
             "access_token",
         ];

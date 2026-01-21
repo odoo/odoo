@@ -22,9 +22,9 @@ class TestReportSession(TestPoSCommon):
         product_to_archive = self.create_product('Product to archive', self.categ_basic, 100, self.tax1.id)
 
         self.config.open_ui()
-        # check that an unsed product can be archived by any user with archive rights
-        self.res_users_stock_user.group_ids |= self.env.ref('product.group_product_manager')
-        product_to_archive.with_user(self.res_users_stock_user).action_archive()
+        # # check that an unsed product can be archived by any user with archive rights
+        # self.res_users_stock_user.group_ids |= self.env.ref('product.group_product_manager')
+        product_to_archive.action_archive()
 
         session_id = self.config.current_session_id.id
         order = self.env['pos.order'].create({
@@ -51,7 +51,7 @@ class TestReportSession(TestPoSCommon):
         })
         # check that an used product can not be archived
         with self.assertRaisesRegex(UserError, "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\nMake sure to close all sessions first to avoid any issues."):
-            self.product1.with_user(self.res_users_stock_user).action_archive()
+            self.product1.action_archive()
 
         self.make_payment(order, self.bank_split_pm1, 60)
         self.make_payment(order, self.bank_pm1, 50)

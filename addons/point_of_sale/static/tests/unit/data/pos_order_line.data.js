@@ -18,7 +18,6 @@ export class PosOrderLine extends models.ServerModel {
             "product_id",
             "discount",
             "tax_ids",
-            "pack_lot_ids",
             "customer_note",
             "refunded_qty",
             "price_extra",

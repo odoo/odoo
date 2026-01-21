@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest import skip
 
-from odoo import tools
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
@@ -14,7 +12,7 @@ class TestPoSStock(TestPoSCommon):
     """ Tests for anglo saxon accounting scenario.
     """
     def setUp(self):
-        super(TestPoSStock, self).setUp()
+        super().setUp()
 
         self.config = self.basic_config
         self.product1 = self.create_product('Product 1', self.categ_anglo, 10.0, 5.0)
@@ -205,7 +203,6 @@ class TestPoSStock(TestPoSCommon):
                 'bank_payments': [],
             },
         })
-
 
     def test_03_order_product_w_owner(self):
         """

@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import * as StockProductScreen from "@pos_stock/../tests/pos/tours/utils/product_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
@@ -13,7 +14,7 @@ registry.category("web_tour.tours").add("test_03_pos_with_lots", {
             Dialog.confirm("Open Register"),
 
             ProductScreen.clickDisplayedProduct("Monitor Stand"),
-            ProductScreen.enterLotNumber("1", "lot"),
+            StockProductScreen.enterLotNumber("1", "lot"),
             ProductScreen.selectedOrderlineHas("Monitor Stand", "1"),
             ProductScreen.clickReview(),
             { ...ProductScreen.clickLine("Monitor Stand")[0], isActive: ["mobile"] },
@@ -21,7 +22,7 @@ registry.category("web_tour.tours").add("test_03_pos_with_lots", {
             { ...ProductScreen.back(), isActive: ["mobile"] },
             ProductScreen.totalAmountIs("6.38"),
             ProductScreen.clickDisplayedProduct("Monitor Stand"),
-            ProductScreen.enterLotNumber("2", "lot"),
+            StockProductScreen.enterLotNumber("2", "lot"),
             ProductScreen.clickReview(),
             { ...ProductScreen.clickLine("Monitor Stand")[0], isActive: ["mobile"] },
             Numpad.click("3"),

@@ -1,8 +1,8 @@
 import { test, expect } from "@odoo/hoot";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
-import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
+import { definePosStockModels } from "@pos_stock/../tests/unit/data/generate_model_definitions";
 
-definePosModels();
+definePosStockModels();
 
 test("getOrders", async () => {
     const store = await setupPosEnv();
