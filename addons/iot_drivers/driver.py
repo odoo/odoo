@@ -51,9 +51,11 @@ class Driver(Thread):
         """
         action = data.get('action', '')
         action_unique_id = data.get('action_unique_id')
-        if action_unique_id and action_unique_id in self._recent_action_ids:
-            _logger.warning("Duplicate action %s id %s received, ignoring", action, action_unique_id)
-            return {'status': 'duplicate'}
+        if action_unique_id:
+            if action_unique_id in self._recent_action_ids:
+                _logger.warning("Duplicate action %s id %s received, ignoring", action, action_unique_id)
+                return {'status': 'duplicate'}
+            self._recent_action_ids[action_unique_id] = action_unique_id
 
         session_id = data.get('session_id')
         if session_id:
@@ -65,9 +67,9 @@ class Driver(Thread):
             # we don't return `True` for them not to trigger `onSuccess` on the db: to let it wait for events
             if self.device_type in ["printer", "payment"]:
                 response['result'] = "pending"
-            if action_unique_id:
-                self._recent_action_ids[action_unique_id] = action_unique_id
         except Exception as e:
+            if action_unique_id:
+                self._recent_action_ids.pop(action_unique_id, None)
             _logger.exception("Error while executing action %s with params %s", action, data)
             response = {'status': 'error', 'result': str(e), 'session_id': session_id}
 
