@@ -22,7 +22,7 @@ class PurchaseOrder(models.Model):
             purchase.sale_order_count = len(purchase._get_sale_orders())
             purchase.has_sale_order = bool(purchase.sale_order_count)
 
-    @api.depends('order_line.sale_order_id.partner_shipping_id')
+    @api.depends('line_ids.sale_order_id.partner_shipping_id')
     def _compute_dest_address_id(self):
         super()._compute_dest_address_id()
         po_with_address = self.filtered(lambda po: po.dest_address_id and len(po._get_sale_orders().partner_shipping_id) == 1)
