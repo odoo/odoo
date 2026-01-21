@@ -10,7 +10,6 @@
                 <field name="mail_template_id" optional="hide" context="{'default_model': 'project.project'}"/>
                 <field name="rotting_threshold_days" optional="hide"/>
                 <field name="company_id" optional="hide" groups="base.group_multi_company" options="{'no_create': True}"/>
-                <field name="color" optional="hide" widget="color_picker"/>
                 <field name="fold" optional="show"/>
             </list>
         </field>
@@ -55,7 +54,6 @@
                             <field name="company_id" groups="base.group_multi_company"
                                 placeholder="Show to all companies" options="{'no_create': True}"/>
                             <field name="fold" string="Fold by Default"/>
-                            <field name="color" widget="color_picker"/>
                         </group>
                     </group>
                 </sheet>
@@ -70,7 +68,6 @@
             <kanban highlight_color="color" class="o_kanban_mobile" sample="1" quick_create_view="project.project_project_stage_view_form_quick_create">
                 <templates>
                     <t t-name="menu" t-if="!selection_mode" groups="base.group_user">
-                        <field name="color" widget="kanban_color_picker"/>
                     </t>
                     <t t-name="card">
                         <field name="name" class="fw-bolder mb-4"/>
