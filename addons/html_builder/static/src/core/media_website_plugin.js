@@ -115,7 +115,7 @@ export class MediaWebsitePlugin extends Plugin {
         setTimeout(this.removeCurrentTooltip, 1500);
     }
 
-    async onSnippetDropped({ snippetEl }) {
+    async onSnippetDropped({ snippetEl, dragState }) {
         if (!snippetEl.matches(".media_iframe_video")) {
             return;
         }
@@ -127,6 +127,7 @@ export class MediaWebsitePlugin extends Plugin {
                     isVideoSelected = true;
                     snippetEl.insertAdjacentElement("afterend", selectedVideoEl);
                     snippetEl.remove();
+                    dragState.replacedSnippetEl = selectedVideoEl;
                 },
             });
             onClose.then(() => {
