@@ -220,7 +220,8 @@ class BlackBoxDriver(SerialDriver):
         return self._parse_blackbox_response(blackbox_response)
 
     def _register_pin(self, data):
-        data = data.get('high_level_message', data)
+        if isinstance(data, dict):
+            data = data.get('high_level_message', data)  # from batch action, data is only a string (the pincode)
 
         blackbox_response = self._send_to_blackbox("P", data, self._connection)
         return self._parse_blackbox_response(blackbox_response)
