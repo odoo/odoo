@@ -3,16 +3,19 @@ import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
-import { after, before, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
+import { after, SNIPPET_SPECIFIC, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { WEBSITE_BACKGROUND_OPTIONS } from "@website/builder/option_sequence";
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BuilderAction } from "@html_builder/core/builder_action";
+import { renderToElement } from "@web/core/utils/render";
 
-export const TIMELINE = before(WEBSITE_BACKGROUND_OPTIONS);
-export const DOT_LINES_COLOR = SNIPPET_SPECIFIC_END;
-export const DOT_COLOR = after(DOT_LINES_COLOR);
+export const TIMELINE = after(WEBSITE_BACKGROUND_OPTIONS);
 
 function isTimelineCard(el) {
     return el.matches(".s_timeline_card");
+}
+function isTimelineRow(el) {
+    return el.matches(".s_timeline_row");
 }
 
 export class TimelineOption extends BaseOptionComponent {
@@ -30,15 +33,46 @@ export class DotColorOption extends BaseOptionComponent {
     static selector = ".s_timeline .s_timeline_row";
 }
 
+export class AddMilestoneAction extends BuilderAction {
+    static id = "addMilestone";
+    static dependencies = ["selection", "builderOptions"];
+    apply({ editingElement, value: position }) {
+        const rowContainerEl = editingElement.querySelector(".s_timeline_row_container");
+        // Clone dot Element to preserve same styling of the last element.
+        const dotElements = rowContainerEl.querySelectorAll(".o_dot");
+        const newDotEL = dotElements[dotElements.length - 1]?.cloneNode();
+        // Clone line ELement to preserve same styling.
+        const newDotLineEl = rowContainerEl.querySelector(".o_dot_line")?.cloneNode();
+        const newRowEl = renderToElement("website.s_timeline_row_additional", {
+            position,
+        });
+
+        newRowEl.prepend(newDotEL);
+        newRowEl.prepend(newDotLineEl);
+        rowContainerEl.append(newRowEl);
+        this.dependencies.builderOptions.setNextTarget(newRowEl);
+    }
+}
+
 class TimelineOptionPlugin extends Plugin {
     static id = "timelineOption";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        remove_disabled_reason_providers: ({ el, reasons }) => {
+            if (this.isLastTimelineItem(el)) {
+                reasons.push(_t("You can't remove the last item."));
+            }
+        },
+        on_will_remove_handlers: this.onWillRemove.bind(this),
+        on_removed_handlers: this.onRemoved.bind(this),
         builder_options: [
             withSequence(TIMELINE, TimelineOption),
-            withSequence(DOT_LINES_COLOR, DotLinesColorOption),
-            withSequence(DOT_COLOR, DotColorOption),
+            withSequence(SNIPPET_SPECIFIC_END, DotLinesColorOption),
+            withSequence(SNIPPET_SPECIFIC, DotColorOption),
         ],
+        builder_actions: {
+            AddMilestoneAction,
+        },
         dropzone_selector: {
             selector: ".s_timeline_row",
             dropNear: ".s_timeline_row",
@@ -53,6 +87,37 @@ class TimelineOptionPlugin extends Plugin {
     setup() {
         this.isEditableRTL = this.config.isEditableRTL;
         this.isBackendRTL = localization.direction === "rtl";
+        this.upgradeSnippet();
+    }
+
+    // TODO: Remove this method when data-vxml is reintroduced.
+    upgradeSnippet() {
+        // This is for pages which already existed before the plugin was
+        // created.
+        const timelineEls = this.document.querySelectorAll(".s_timeline");
+        timelineEls.forEach((timelineEl) => {
+            timelineEl
+                .querySelector(".o_container_small div")
+                ?.classList.add("s_timeline_row_container");
+        });
+    }
+
+    onWillRemove(toRemoveEl) {
+        // If the removed element is last Milestone Event Element, store the
+        // parent row element (Milestone) for `onRemoved`.
+        if (isTimelineCard(toRemoveEl)) {
+            const parentRowEl = toRemoveEl.closest(".s_timeline_row");
+            if (parentRowEl && parentRowEl.querySelectorAll(".s_timeline_card").length === 1) {
+                this.removableRow = parentRowEl;
+            }
+        }
+    }
+
+    onRemoved() {
+        // If the removed element is last Milestone Event Element, remove empty
+        // parent row element (Milestone).
+        this.removableRow?.remove();
+        delete this.removableRow;
     }
 
     getActiveOverlayButtons(target) {
@@ -82,6 +147,21 @@ class TimelineOptionPlugin extends Plugin {
         const firstContentEl = timelineRowEl.querySelector(".s_timeline_content");
         timelineRowEl.append(firstContentEl);
         timelineCardEls.forEach((card) => card.classList.toggle("text-md-end"));
+    }
+
+    isLastTimelineItem(el) {
+        const timelineEl = el.closest(".s_timeline");
+        if (timelineEl) {
+            // Check if it's the last row
+            if (isTimelineRow(el)) {
+                return timelineEl.querySelectorAll(".s_timeline_row").length === 1;
+            }
+            // Check if it's the last card
+            if (isTimelineCard(el)) {
+                return timelineEl.querySelectorAll(".s_timeline_card").length === 1;
+            }
+        }
+        return false;
     }
 }
 

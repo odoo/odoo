@@ -6,13 +6,14 @@
         <BuilderButton
             type="'success'"
             action="'addItem'"
-            actionParam="'.s_timeline_list_row'"
-            actionValue="'beforebegin'"
+            actionParam="'.s_timeline_list_row:last-of-type'"
             preview="false">
             Add Milestone
         </BuilderButton>
     </BuilderRow>
+</t>
 
+<t t-name="website.TimelineListAlignmentOption">
     <BuilderRow label.translate="Alignment">
         <BuilderButtonGroup applyTo="'.s_timeline_list_wrapper'">
             <BuilderButton icon="'fa-align-left'" title.translate="Align Left" classAction="'justify-content-start'"/>

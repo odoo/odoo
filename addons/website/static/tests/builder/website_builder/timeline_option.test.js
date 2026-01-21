@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAll, queryAllTexts } from "@odoo/hoot-dom";
+import { queryAllTexts } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -8,7 +8,7 @@ import {
 
 defineWebsiteModels();
 
-test("add a date in timeline", async () => {
+test("add milestones in timeline", async () => {
     await setupWebsiteBuilderWithSnippet("s_timeline");
     expect(queryAllTexts(":iframe .s_timeline_row h3")).toEqual([
         "First Feature",
@@ -17,16 +17,34 @@ test("add a date in timeline", async () => {
         "Latest Feature",
     ]);
     await contains(":iframe .s_timeline").click();
-    await contains("[data-action-id='addItem']").click();
+    await contains("[data-action-id='addMilestone'][data-action-value='left']").click();
     expect(queryAllTexts(":iframe .s_timeline_row h3")).toEqual([
-        "First Feature",
         "First Feature",
         "Second Feature",
         "Third Feature",
         "Latest Feature",
+        "First Feature",
     ]);
-    const timelineRow = queryAll(":iframe .s_timeline_row");
-    expect(timelineRow[0].textContent).toBe(timelineRow[1].textContent);
+    await contains("[data-action-id='addMilestone'][data-action-value='right']").click();
+    expect(queryAllTexts(":iframe .s_timeline_row h3")).toEqual([
+        "First Feature",
+        "Second Feature",
+        "Third Feature",
+        "Latest Feature",
+        "First Feature",
+        "Latest Feature",
+    ]);
+    await contains("[data-action-id='addMilestone'][data-action-value='both']").click();
+    expect(queryAllTexts(":iframe .s_timeline_row h3")).toEqual([
+        "First Feature",
+        "Second Feature",
+        "Third Feature",
+        "Latest Feature",
+        "First Feature",
+        "Latest Feature",
+        "First Feature",
+        "Latest Feature",
+    ]);
 });
 
 test("Use the overlay buttons of a timeline card", async () => {
