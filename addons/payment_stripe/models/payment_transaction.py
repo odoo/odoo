@@ -7,6 +7,7 @@ from odoo.exceptions import ValidationError
 from odoo.tools.urls import urljoin as url_join
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_stripe import const
 from odoo.addons.payment_stripe import utils as stripe_utils
@@ -316,9 +317,13 @@ class PaymentTransaction(models.Model):
             arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
         )
         currency_code = payment_data.get('currency', '').upper()
+        precision_digits = CURRENCY_MINOR_UNITS.get(
+            self.currency_id.name, self.currency_id.decimal_places
+        )
         return {
             'amount': amount,
             'currency_code': currency_code,
+            'precision_digits': precision_digits,
         }
 
     def _apply_updates(self, payment_data):
