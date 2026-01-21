@@ -710,6 +710,7 @@ class HrExpense(models.Model):
 
         expenses_groupby_checksum = dict(self.env['ir.attachment']._read_group(domain=[
             ('res_model', '=', 'hr.expense'),
+            ('res_id', '!=', False),
             ('checksum', 'in', expenses_with_attachments.attachment_ids.mapped('checksum'))],
             groupby=['checksum'],
             aggregates=['res_id:array_agg'],
