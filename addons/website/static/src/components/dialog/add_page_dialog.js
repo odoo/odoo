@@ -14,7 +14,7 @@ import {
 import { useRef, useState, useSubEnv, Component, onWillStart, onMounted, status } from "@odoo/owl";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
-const NO_OP = () => { };
+const NO_OP = () => {};
 
 export class AddPageConfirmDialog extends Component {
     static template = "website.AddPageConfirmDialog";
@@ -317,13 +317,6 @@ class AddPageTemplates extends Component {
     static template = "website.AddPageTemplates";
     static props = {
         onTemplatePageChanged: Function,
-        showBlankPage: {
-            type: Boolean,
-            optional: true,
-        },
-    };
-    static defaultProps = {
-        showBlankPage: true,
     };
     static components = {
         AddPageTemplatePreviews,
@@ -346,14 +339,7 @@ class AddPageTemplates extends Component {
                         id: "basic",
                         title: _t("Basic"),
                         // Blank and 5 preloading boxes.
-                        templates: [
-                            this.props.showBlankPage ? { isBlank: true } : {},
-                            {},
-                            {},
-                            {},
-                            {},
-                            {}
-                        ],
+                        templates: [{ isBlank: true }, {}, {}, {}, {}, {}],
                     },
                 },
             ],
@@ -389,11 +375,9 @@ class AddPageTemplates extends Component {
         }
 
         const newPageTemplates = await loadTemplates;
-        if (this.props.showBlankPage) {
-            newPageTemplates[0].templates.unshift({
-                isBlank: true,
-            });
-        }
+        newPageTemplates[0].templates.unshift({
+            isBlank: true,
+        });
         const pages = [];
         for (const template of newPageTemplates) {
             pages.push({
@@ -508,13 +492,17 @@ export class AddPageDialog extends Component {
             // create its menu afterwards if needed.
             await this.createPage(sectionsArch, this.props.forcedURL, false, this.props.pageTitle);
         } else {
-            this.dialogs.add(AddPageConfirmDialog, {
-                createPage: (...args) => this.createPage(...args),
-                name: name || this.lastTabName,
-                sectionsArch: sectionsArch || "",
-                templateId: templateId || "",
-            });
+            this.openAddPageConfirmDialog(sectionsArch, name || this.lastTabName, templateId);
         }
+    }
+
+    openAddPageConfirmDialog(sectionsArch, name, templateId) {
+        this.dialogs.add(AddPageConfirmDialog, {
+            createPage: (...args) => this.createPage(...args),
+            name: name,
+            sectionsArch: sectionsArch || "",
+            templateId: templateId || "",
+        });
     }
 
     async createPage(sectionsArch, name = "", addMenu = false, pageTitle = "") {
