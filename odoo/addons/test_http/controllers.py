@@ -69,6 +69,16 @@ class TestHttp(http.Controller):
             headers=list(CT_JSON.items())
         )
 
+    @http.route('/test_http/raise-exception', type='http', auth='public')
+    def raise_exception(self):
+        raise Exception('Exception in logic')  # noqa: TRY002, EM101
+
+    @http.route('/test_http/trigger-retrying', type='http', auth='public')
+    def trigger_retrying(self):
+        sf = SerializationFailure()
+        sf.__setstate__({'pgcode': SERIALIZATION_FAILURE})
+        raise sf
+
     # =====================================================
     # Echo-Reply
     # =====================================================
@@ -184,6 +194,11 @@ class TestHttp(http.Controller):
 
     @http.route('/test_http/save_session', type='http', auth='none')
     def touch(self):
+        request.session.touch()
+        return ''
+
+    @http.route('/test_http/no_save_session', type='http', auth='none', save_session=False)
+    def no_touch(self):
         request.session.touch()
         return ''
 

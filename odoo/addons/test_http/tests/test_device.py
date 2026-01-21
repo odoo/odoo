@@ -1,14 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 from freezegun import freeze_time
 
 from odoo import Command
-from odoo.http.router import root
+from odoo.http.router import Application, root
+from odoo.http.session import Session, SessionStore
 from odoo.tests import tagged
-from odoo.tools import config
+from odoo.tools import config, mute_logger, reset_cached_properties
 
 from .test_common import TestHttpBase
 from odoo.addons.test_http.utils import (
@@ -22,23 +24,26 @@ from odoo.addons.test_http.utils import (
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDevice(TestHttpBase):
 
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.Session = self.env['res.session']
-        self.DeviceLine = self.env['res.device']
-        self.DeviceLog = self.env['res.device.log']
+        cls.Session = cls.env['res.session']
+        cls.Device = cls.env['res.device']
+        cls.DeviceLog = cls.env['res.device.log']
 
-        self.DeviceLog.search([]).unlink()
-
-        self.user_admin = self.env.ref('base.user_admin')
-        self.user_internal = self.env['res.users'].create({
+        cls.user_admin = cls.env.ref('base.user_admin')
+        cls.user_internal = cls.env['res.users'].create({
             'login': 'internal',
             'password': 'internal',
             'name': 'Internal',
             'email': 'internal@example.com',
-            'group_ids': [Command.set([self.env.ref('base.group_user').id])],
+            'group_ids': [Command.set([cls.env.ref('base.group_user').id])],
         })
+
+    def setUp(self):
+        super().setUp()
+        self.DeviceLog.search([]).unlink()
 
     def hit(self, time, endpoint, headers=None, ip=None):
         if ip:
@@ -63,7 +68,7 @@ class TestDevice(TestHttpBase):
 
     def get_devices(self, user=None):
         self.DeviceLog.flush_model()
-        self.DeviceLine.invalidate_model()
+        self.Device.invalidate_model()
         self.Session.invalidate_model()
 
         domain = [('user_id', '=', user.id)] if user else []
@@ -459,3 +464,48 @@ class TestDevice(TestHttpBase):
         self.user_internal.unlink()
 
         self.assertEqual(logs.user_id, self.user_internal.id)
+
+    @mute_logger('odoo.http')
+    def test_ensure_log_if_exception(self):
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        self.hit('2026-01-01 08:00:00', '/test_http/raise-exception')
+        # Ensure log is inserted even if an exception is raised
+        sessions, devices, logs = self.get_devices(self.user_admin)
+        self.assertEqual(len(sessions), 1)
+        self.assertEqual(len(devices), 1)
+        self.assertEqual(len(logs), 1)
+
+    @mute_logger('odoo.http')
+    def test_ensure_single_log_if_retrying(self):
+        tmpdir = TemporaryDirectory()
+        self.addCleanup(tmpdir.cleanup)
+
+        session_store = SessionStore(path=tmpdir.name, session_cls=Session)
+        reset_cached_properties(root)
+
+        with patch.object(Application, 'session_store', session_store), \
+            patch('time.sleep', return_value=None):
+            self.authenticate(self.user_admin.login, self.user_admin.login)
+            self.hit('2026-01-01 08:00:00', '/test_http/trigger-retrying')
+            # Ensure log is inserted only once if retrying is triggered
+            sessions, devices, logs = self.get_devices(self.user_admin)
+            self.assertEqual(len(sessions), 1)
+            self.assertEqual(len(devices), 1)
+            self.assertEqual(len(logs), 1)
+
+    def test_ensure_single_log_if_no_save_session(self):
+        tmpdir = TemporaryDirectory()
+        self.addCleanup(tmpdir.cleanup)
+
+        session_store = SessionStore(path=tmpdir.name, session_cls=Session)
+        reset_cached_properties(root)
+
+        with patch.object(Application, 'session_store', session_store):
+            self.authenticate(self.user_admin.login, self.user_admin.login)
+            self.hit('2026-01-01 08:00:00', '/test_http/no_save_session')
+            self.hit('2026-01-01 08:00:00', '/test_http/no_save_session')
+            # Ensure log is inserted only once if we hit a route with `save_session=False`
+            sessions, devices, logs = self.get_devices(self.user_admin)
+            self.assertEqual(len(sessions), 1)
+            self.assertEqual(len(devices), 1)
+            self.assertEqual(len(logs), 1)
