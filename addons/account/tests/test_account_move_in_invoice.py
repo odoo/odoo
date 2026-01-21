@@ -2410,7 +2410,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 })
             reversal = move_reversal.refund_moves()
             reverse_move = self.env['account.move'].browse(reversal['res_id'])
-            if reverse_move.move_type in ('out_refund', 'in_refund'):
+            if reverse_move.is_refund():
                 reverse_move.write({
                     'invoice_line_ids': [
                         Command.update(reverse_move.invoice_line_ids.id, {'price_unit': amount}),

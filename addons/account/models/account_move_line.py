@@ -1185,7 +1185,7 @@ class AccountMoveLine(models.Model):
     def _compute_is_refund(self):
         for line in self:
             is_refund = False
-            if line.move_id.move_type in ('out_refund', 'in_refund'):
+            if line.move_id.is_refund():
                 is_refund = True
             elif line.move_id.move_type == 'entry':
                 if line.tax_repartition_line_id:

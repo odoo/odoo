@@ -1043,7 +1043,7 @@ class AccountMove(models.Model):
             'cash_rounding_base_amount_currency', 'cash_rounding_base_amount',
         )
 
-        if self.move_type in ('out_refund', 'in_refund'):
+        if self.is_refund():
             invert_dict(tax_totals, fields_to_reverse)
             for subtotal in tax_totals['subtotals']:
                 invert_dict(subtotal, fields_to_reverse)

@@ -51,7 +51,7 @@ class AccountEdiFormat(models.Model):
             filter_invl_to_apply=full_filter_invl_to_apply,
             filter_to_apply=filter_to_apply,
         )
-        sign = -1 if invoice.move_type in ('out_refund', 'in_refund') else 1
+        sign = -1 if invoice.is_refund() else 1
 
         tax_details_info = defaultdict(dict)
 
@@ -294,7 +294,7 @@ class AccountEdiFormat(models.Model):
 
             # === Taxes ===
 
-            sign = -1 if invoice.move_type in ('out_refund', 'in_refund') else 1
+            sign = -1 if invoice.is_refund() else 1
 
             if invoice.is_sale_document():
                 # Customer invoices

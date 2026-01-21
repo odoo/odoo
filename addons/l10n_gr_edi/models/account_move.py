@@ -194,7 +194,7 @@ class AccountMove(models.Model):
                     # If we have previously calculated the inv_type, reuse it here.
                     # For entry moves, we want the inv_type to be False. (we don't send anything to myDATA on entry moves)
                     move.l10n_gr_edi_inv_type = move.l10n_gr_edi_inv_type
-                elif move.move_type in ('out_refund', 'in_refund'):
+                elif move.is_refund():
                     # inv_type specific for credit notes
                     if move.l10n_gr_edi_correlation_id:
                         # when possible, we must add the associate invoice/bill mark (id)

@@ -732,7 +732,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             if self.env['myinvois.document']._myinvois_is_debit_notes_used() and ref_invoice.debit_origin_id:
                 document_type_code = '03' if ref_invoice.move_type == 'out_invoice' else '13'
                 original_documents = invoices.debit_origin_id._get_active_myinvois_document()
-            elif ref_invoice.move_type in ('out_refund', 'in_refund'):
+            elif ref_invoice.is_refund():
                 is_refund, refunded_document = self._l10n_my_edi_get_refund_details(invoices)
                 if is_refund:
                     document_type_code = '04' if ref_invoice.move_type == 'out_refund' else '14'
