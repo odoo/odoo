@@ -50,18 +50,20 @@ class Driver(Thread):
         """
         action = data.get('action', '')
         action_unique_id = data.get('action_unique_id')
-        if action_unique_id and action_unique_id in self._recent_action_ids:
-            _logger.warning("Duplicate action %s id %s received, ignoring", action, action_unique_id)
-            return
+        if action_unique_id:
+            if action_unique_id in self._recent_action_ids:
+                _logger.warning("Duplicate action %s id %s received, ignoring", action, action_unique_id)
+                return
+            self._recent_action_ids[action_unique_id] = action_unique_id
 
         self.data["owner"] = data.get('session_id')
 
         base_response = {'action_args': {**data}, 'session_id': data.get('session_id')}
         try:
             response = {'status': 'success', 'result': self._actions[action](data), **base_response}
-            if action_unique_id:
-                self._recent_action_ids[action_unique_id] = action_unique_id
         except Exception as e:
+            if action_unique_id:
+                self._recent_action_ids.pop(action_unique_id, None)
             _logger.exception("Error while executing action %s with params %s", action, data)
             response = {'status': 'error', 'result': str(e), **base_response}
 
