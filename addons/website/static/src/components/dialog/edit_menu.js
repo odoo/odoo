@@ -400,11 +400,11 @@ export class EditMenuDialog extends Component {
         }
     }
 
-    async createPage(id) {
+    getCreatePageParams(id) {
         const menu = this.map.get(id);
         let url = menu.fields["url"];
         url = url.startsWith("/") ? url : "/" + url;
-        this.dialogs.add(AddPageDialog, {
+        return {
             onAddPage: ({ createdUrl }) => {
                 if (createdUrl) {
                     menu.fields["url"] = createdUrl;
@@ -415,6 +415,10 @@ export class EditMenuDialog extends Component {
             forcedURL: url,
             goToPage: !this.props.save,
             pageTitle: menu.fields["name"],
-        });
+        };
+    }
+
+    async createPage(id) {
+        this.dialogs.add(AddPageDialog, this.getCreatePageParams(id));
     }
 }

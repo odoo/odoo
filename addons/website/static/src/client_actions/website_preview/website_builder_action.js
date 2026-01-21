@@ -269,10 +269,14 @@ export class WebsiteBuilderClientAction extends Component {
         }
     }
 
-    onNewPage(keepUrl = false) {
-        const params = {
+    get newPageParams() {
+        return {
             websiteId: this.websiteService.currentWebsite.id,
         };
+    }
+
+    onNewPage(keepUrl = false) {
+        const params = { ...this.newPageParams };
         if (keepUrl) {
             params.forcedURL = this.websiteService.currentLocation;
         }
