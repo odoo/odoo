@@ -1,6 +1,8 @@
+import { SnippetModel } from "@html_builder/snippets/snippet_service";
 import { AddSnippetDialogSandboxed } from "./snippet_viewer/add_snippet_dialog";
+import { registry } from "@web/core/registry";
 
-export const massMailingSnippetModelPatch = {
+export class MassMailingSnippetModel extends SnippetModel {
     cleanSnippetForSave(snippetCopyEl, cleanForSaveHandlers) {
         super.cleanSnippetForSave(snippetCopyEl, cleanForSaveHandlers);
         const dynamicPlaceholders = snippetCopyEl.querySelectorAll("t[t-out]");
@@ -11,11 +13,15 @@ export const massMailingSnippetModelPatch = {
             placeholderEl.remove();
         });
         snippetCopyEl.removeAttribute("data-filter-domain");
-    },
+    }
     getTechnicalUsage() {
         return "mass_mailing";
-    },
+    }
     getAddSnippetDialogClass() {
         return AddSnippetDialogSandboxed;
-    },
-};
+    }
+}
+
+registry
+    .category("html_builder.snippetsModel")
+    .add("mass_mailing.email_designer_snippets", MassMailingSnippetModel);
