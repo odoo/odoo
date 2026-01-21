@@ -143,3 +143,24 @@ def invert_intervals[T](intervals: Iterable[tuple[T, T]], first_start: T, last_s
         items.append((prev_stop, last_stop))
     # abuse Intervals to merge contiguous intervals
     return [(start, stop) for start, stop, _ in Intervals([(start, stop, set()) for start, stop in items])]
+
+
+def intervals_duration(intervals: Intervals, unit: str = 'hours') -> float:
+    """
+    Returns the total sum of duration of the intervals contained in the given Interval object.
+
+    :param Intervals intervals: the Intervals object for which the total duration is to be computed
+    :param str unit: the unit used for the duration returned
+    :returns: The total duration given the unit parameter
+    :rtype: float
+    """
+    duration_seconds = sum((stop - start).total_seconds() for start, stop, _ in intervals)
+    if unit == 'seconds':
+        return duration_seconds
+    if unit == 'minutes':
+        return duration_seconds / 60
+    if unit == 'hours':
+        return duration_seconds / 3600
+    if unit == 'days':
+        return duration_seconds / 86400
+    raise NotImplementedError()

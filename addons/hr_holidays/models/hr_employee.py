@@ -644,11 +644,12 @@ class HrEmployee(models.Model):
         super()._store_avatar_card_fields(res)
         res.attr("leave_date_to")
 
-    def _get_hours_for_date(self, target_date, day_period=None):
+    def _get_hours_for_date(self, target_date, day_period=None, count_non_working_days=False):
         """
         An instance method on a calendar to get the start and end float hours for a given date.
         :param target_date: The date to find working hours.
         :param day_period: Optional string ('morning', 'afternoon') to filter for half-days.
+        :param count_non_working_days: Optional Boolean to treat non-working days as full working days
         :return: A tuple of floats (hour_from, hour_to).
         """
         if self:
@@ -661,10 +662,12 @@ class HrEmployee(models.Model):
             version = self._get_version(target_date)
             if version.is_fully_flexible:
                 return (0, 24)
-            if version.is_flexible or version.resource_calendar_id._is_duration_based_on_date(target_date):
+            if version.is_flexible or version.resource_calendar_id._is_duration_based_on_date(target_date) or count_non_working_days:
                 # Quick calculation to center flexible hours around 12PM midday
                 if version.is_flexible:
                     hours_day = version.hours_per_day
+                elif count_non_working_days:
+                    hours_day = self.resource_calendar_id.hours_per_day
                 else:
                     hours_day = self.resource_calendar_id._get_duration_based_work_hours_on_date(target_date)
                 datetimes = [12.0 - hours_day / 2.0, 12.0, 12.0 + hours_day / 2.0]

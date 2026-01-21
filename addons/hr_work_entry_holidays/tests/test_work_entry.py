@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import datetime, date
 from zoneinfo import ZoneInfo
 
@@ -30,6 +31,17 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'resource_calendar_id': cls.resource_calendar_id.id,
             'wage': 1000,
             'date_generated_from': cls.end.date() + relativedelta(days=5),
+        })
+        cls.calendar_leave_type = cls.env['hr.leave.type'].create({
+            'name': 'Calendar Type Time Off',
+            'requires_allocation': False,
+            'count_days_as': 'calendar',
+            'work_entry_type_id': cls.work_entry_type_leave.id,
+        })
+        cls.public_leave_work_entry_type = cls.env['hr.work.entry.type'].create({
+            'name': 'Public Leave Work Entry',
+            'category': 'absence',
+            'code': 'PUBLICLEAVE100',
         })
 
         cls.work_entry_type_remote = cls.env['hr.work.entry.type'].create({
@@ -64,6 +76,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'requires_allocation': False,
         })
 
+        cls.default_work_entry_type = cls.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
         cls.external_company = cls.env['res.company'].create({'name': 'External Test company'})
         cls.external_user_employee = mail_new_test_user(cls.env, login='external', password='external', groups='base.group_user')
         cls.employee_external = cls.env['hr.employee'].create({
@@ -74,6 +87,43 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'contract_date_start': cls.start.date() - relativedelta(days=5),
             'date_generated_from': cls.end.date() + relativedelta(days=5),
         })
+
+    def assert_work_entry_type(self, work_entry_create_vals, work_entry_type, expected_count=None):
+        """
+        Assert that all work entries have the given work_entry_type.
+        Optionally checks for an expected count of such entries.
+        """
+        actual_count = sum(work_entry['work_entry_type_id'] == work_entry_type.id
+                        for work_entry in work_entry_create_vals)
+
+        if expected_count is None:
+            self.assertEqual(
+                actual_count, len(work_entry_create_vals),
+                f"All work entries should be of type {work_entry_type.name}."
+            )
+        else:
+            self.assertEqual(
+                actual_count, expected_count,
+                f"Expected {expected_count} work entries of type {work_entry_type.name}, "
+                f"but got {actual_count}."
+            )
+
+    def get_total_hours_by_work_entry_type(self, work_entries):
+        """
+        Calculate total hours per work entry type from given work entries.
+        """
+
+        durations = defaultdict(float)
+
+        for entry in work_entries:
+            start = entry["date_start"]
+            stop = entry["date_stop"]
+            work_type = entry["work_entry_type_id"]
+
+            duration_hours = (stop - start).total_seconds() / 3600
+            durations[work_type] += duration_hours
+
+        return dict(durations)
 
     def test_time_week_leave_work_entry(self):
         # /!\ this is a week day => it exists an calendar attendance at this time
@@ -314,3 +364,240 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         self.assertEqual(1, len(leave_work_entry))
         self.assertTrue(leave_work_entry.work_entry_type_id == self.work_entry_type_leave)
         self.assertEqual(2.0, leave_work_entry.duration)
+
+    def test_work_entries_with_calendar_duration_type_leave(self):
+        """
+        Test Case:
+        Verify that when an employee takes a leave of type 'calendar duration',
+        work entries are generated for both working and non-working days.
+
+        Expected Behavior:
+        - Leave duration: 2nd Oct to 5th Oct (4 days).
+        - Since it's calendar-based, entries should include:
+            * 4 entries for working days.
+            * 2 entries for non-working days (weekend).
+        - Total = 6 work entries, all of type 'leave'.
+        """
+        leave = self.env['hr.leave'].create({
+            'name': 'Calendar type leave',
+            'employee_id': self.richard_emp.id,
+            'holiday_status_id': self.calendar_leave_type.id,
+            'request_date_from': date(2015, 10, 2),
+            'request_date_to': date(2015, 10, 5),
+        })
+
+        leave.action_approve()
+        work_entry_create_vals = self.richard_emp.version_id._get_version_work_entries_values(
+            datetime(2015, 10, 2),
+            datetime(2015, 10, 5, 23, 59, 59),
+        )
+        self.assertEqual(len(work_entry_create_vals), 6, 'Should have generated 6 work entries.')
+        self.assert_work_entry_type(work_entry_create_vals, self.work_entry_type_leave)
+
+    def test_work_entries_with_working_duration_type_leave(self):
+        """
+        Test Case:
+        Verify that when an employee takes a leave of type 'working duration',
+        work entries are only created for actual working days, excluding weekends.
+
+        Expected Behavior:
+        - Leave duration: 2nd Oct to 5th Oct (4 days).
+        - Since it's working-days only:
+            * 4 entries should be generated (working days only).
+        - Total = 4 work entries, all of type 'leave'.
+        """
+        self.calendar_leave_type.count_days_as = 'working'
+        leave = self.env['hr.leave'].create({
+            'name': 'Working type leave',
+            'employee_id': self.richard_emp.id,
+            'holiday_status_id': self.calendar_leave_type.id,
+            'request_date_from': date(2015, 10, 2),
+            'request_date_to': date(2015, 10, 5),
+        })
+
+        leave.action_approve()
+        work_entry_create_vals = self.richard_emp.version_id._get_version_work_entries_values(
+            datetime(2015, 10, 2),
+            datetime(2015, 10, 5, 23, 59, 59),
+        )
+        self.assertEqual(len(work_entry_create_vals), 4, 'Should have generated 4 work entries.')
+        self.assert_work_entry_type(work_entry_create_vals, self.work_entry_type_leave)
+
+    def test_work_entry_with_calendar_type_leave_excludes_public_holidays(self):
+        """
+        Test Case:
+        Verify that when calendar-type leave excludes public holidays
+        (`include_public_holidays_in_duration=False`), the public holiday is
+        skipped in duration calculation but still generates public holiday
+        work entries.
+
+        Scenario:
+        - Leave requested: 13th Oct to 15th Oct (3 calendar days).
+        - 14th Oct is a public holiday.
+        - Expected Behavior:
+            * Work entries should still generate for 13th, 14th, and 15th.
+            * On the public holiday (14th), entries should be created with the
+            `public_leave_work_entry_type`.
+            * Total = 6 work entries (4 for 13th & 15th, 2 for 14th public holiday).
+        """
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2015, 10, 14, 0, 0, 0),
+            'date_to': datetime(2015, 10, 14, 23, 59, 59),
+            'work_entry_type_id': self.public_leave_work_entry_type.id,
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Calendar type leave (exclude PH)',
+            'employee_id': self.richard_emp.id,
+            'holiday_status_id': self.calendar_leave_type.id,
+            'request_date_from': date(2015, 10, 13),
+            'request_date_to': date(2015, 10, 15),
+        })
+
+        leave.action_approve()
+        self.assertEqual(leave.number_of_days, 2, 'Leave should be 2 days long (excluding PH).')
+
+        work_entry_create_vals = self.richard_emp.version_id._get_version_work_entries_values(
+            datetime(2015, 10, 13),
+            datetime(2015, 10, 15, 23, 59, 59),
+        )
+
+        self.assertEqual(len(work_entry_create_vals), 6, 'Should have generated 4 work entries.')
+        self.assert_work_entry_type(work_entry_create_vals, self.public_leave_work_entry_type, 2)
+        self.assert_work_entry_type(work_entry_create_vals, self.work_entry_type_leave, 4)
+
+    def test_work_entry_with_calendar_type_leave_includes_public_holidays(self):
+        """
+        Test Case:
+        Verify that when calendar-type leave includes public holidays
+        (`include_public_holidays_in_duration=True`), the holiday is included
+        in duration calculation and work entries.
+
+        Scenario:
+        - Leave requested: 13th Oct to 15th Oct (3 calendar days).
+        - 14th Oct is a public holiday.
+        - Expected Behavior:
+            * Leave duration should be counted as 3 days (13th, 14th, 15th).
+            * Work entries should generate:
+                - 4 entries for working days (13th, 15th).
+                - 2 entries for public holiday (14th), marked with PH type.
+            * Total = 6 work entries.
+        """
+
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2015, 10, 14, 0, 0, 0),
+            'date_to': datetime(2015, 10, 14, 23, 59, 59),
+            'work_entry_type_id': self.public_leave_work_entry_type.id,
+        })
+
+        self.calendar_leave_type.include_public_holidays_in_duration = True
+        leave = self.env['hr.leave'].create({
+            'name': 'Calendar type leave (include PH)',
+            'employee_id': self.richard_emp.id,
+            'holiday_status_id': self.calendar_leave_type.id,
+            'request_date_from': date(2015, 10, 13),
+            'request_date_to': date(2015, 10, 15),
+        })
+
+        leave.action_approve()
+        self.assertEqual(leave.number_of_days, 3, 'Leave should be 3 days long (including PH).')
+
+        work_entry_create_vals = self.richard_emp.version_id._get_version_work_entries_values(
+            datetime(2015, 10, 13),
+            datetime(2015, 10, 15, 23, 59, 59),
+        )
+
+        self.assertEqual(len(work_entry_create_vals), 6, 'Should have generated 6 work entries.')
+        self.assert_work_entry_type(work_entry_create_vals, self.public_leave_work_entry_type, 0)
+        self.assert_work_entry_type(work_entry_create_vals, self.work_entry_type_leave, 6)
+
+    def test_leave_work_entry_with_ph_and_weekend_included(self):
+        """
+        Test Case:
+        Verify behavior when calendar-type leave includes public holidays
+        (`include_public_holidays_in_duration=True`).
+
+        Scenario:
+        - Leave requested: 1st Oct to 5th Oct (5 calendar days).
+        - 2nd Oct is a public holiday.
+        - 3rd and 4th Oct are weekends (non-working).
+        - Expected:
+            * Leave duration should count as 5 days.
+            * Work entries:
+                - 4 for working days (1st, 5th).
+                - 2 for weekend (3rd, 4th).
+                - 2 for public holiday (2nd).
+            * Total = 8 work entries.
+        """
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2015, 10, 2, 0, 0, 0),
+            'date_to': datetime(2015, 10, 2, 23, 59, 59),
+            'work_entry_type_id': self.public_leave_work_entry_type.id,
+        })
+
+        self.calendar_leave_type.include_public_holidays_in_duration = True
+        leave = self.env['hr.leave'].create({
+            'name': 'Calendar type leave (include PH)',
+            'employee_id': self.richard_emp.id,
+            'holiday_status_id': self.calendar_leave_type.id,
+            'request_date_from': date(2015, 10, 1),
+            'request_date_to': date(2015, 10, 5),
+        })
+
+        leave.action_approve()
+        self.assertEqual(leave.number_of_days, 5, 'Leave should count full 5 days (including PH).')
+
+        work_entry_create_vals = self.richard_emp.version_id._get_version_work_entries_values(
+            datetime(2015, 10, 1),
+            datetime(2015, 10, 5, 23, 59, 59),
+        )
+        self.assertEqual(len(work_entry_create_vals), 8, 'Should have generated 8 work entries.')
+        self.assert_work_entry_type(work_entry_create_vals, self.public_leave_work_entry_type, 0)
+        self.assert_work_entry_type(work_entry_create_vals, self.work_entry_type_leave, 8)
+
+    def test_leave_work_entry_with_exclude_ph_and_include_weekend(self):
+        """
+        Test Case:
+        Verify behavior when calendar-type leave excludes public holidays
+        (`include_public_holidays_in_duration=False`).
+
+        Scenario:
+        - Leave requested: 1st Oct to 5th Oct (5 calendar days).
+        - 2nd Oct is a public holiday.
+        - 3rd and 4th Oct are weekends (non-working).
+        - Expected:
+            * Leave duration should count as 4 days (excluding the public holiday).
+            * Work entries:
+                - 4 for working days (1st, 5th).
+                - 2 for weekend (3rd, 4th).
+                - 2 for public holiday (2nd), but **not linked to leave**.
+            * Total = 8 work entries.
+        """
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2015, 10, 2, 0, 0, 0),
+            'date_to': datetime(2015, 10, 2, 23, 59, 59),
+            'work_entry_type_id': self.public_leave_work_entry_type.id,
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Calendar type leave (exclude PH)',
+            'employee_id': self.richard_emp.id,
+            'holiday_status_id': self.calendar_leave_type.id,
+            'request_date_from': date(2015, 10, 1),
+            'request_date_to': date(2015, 10, 5),
+        })
+
+        leave.action_approve()
+        self.assertEqual(leave.number_of_days, 4, 'Leave should exclude the PH and count 4 days only.')
+
+        work_entry_create_vals = self.richard_emp.version_id._get_version_work_entries_values(
+            datetime(2015, 10, 1),
+            datetime(2015, 10, 5, 23, 59, 59),
+        )
+        self.assertEqual(len(work_entry_create_vals), 8, 'Should have generated 8 work entries.')
+        self.assert_work_entry_type(work_entry_create_vals, self.public_leave_work_entry_type, 2)
+        self.assert_work_entry_type(work_entry_create_vals, self.work_entry_type_leave, 6)

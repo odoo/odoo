@@ -120,6 +120,11 @@ class HrLeaveType(models.Model):
         help="If checked, users can request another leave on top of the ones of this type.")
     elligible_for_accrual_rate = fields.Boolean(string='Eligible for Accrual Rate', compute="_compute_eligible_for_accrual_rate", store=True, readonly=False,
         help="If checked, this time off type will be taken into account for accruals computation.")
+    count_days_as = fields.Selection([
+        ('working', 'Working Days'),
+        ('calendar', 'Calendar Days'),
+        ], string='Count Days as', default='working',
+        help="If you take a leave on the whole week, worked days will result in a various number based on the working hours of the employee, calendar days will result in 7 in every case.")
     # negative time off
     allows_negative = fields.Boolean(string='Allow Negative Cap',
         help="If checked, users request can exceed the allocated days and balance can go in negative.")
@@ -209,6 +214,16 @@ class HrLeaveType(models.Model):
                 if leave_from_date <= public_holiday_to_date and leave_to_date >= public_holiday_from_date:
                     raise ValidationError(_("You cannot modify the 'Public Holiday Included' setting since one or more leaves for that \
                         time off type are overlapping with public holidays, meaning that the balance of those employees would be affected by this change."))
+
+    @api.constrains('count_days_as')
+    def _check_leaves_for_count_days_as(self):
+        leave_count = self.env['hr.leave'].search_count([
+            ('holiday_status_id', 'in', self.ids),
+            ('state', 'in', ('validate', 'validate1', 'confirm')),
+        ], limit=1)
+        if leave_count:
+            raise ValidationError(self.env._("You cannot modify the 'Duration Count' setting because one or more leaves have already \
+                been taken for this time off type. Changing it now would affect existing employee balances."))
 
     @api.depends('requires_allocation', 'max_leaves', 'virtual_remaining_leaves')
     def _compute_valid(self):
