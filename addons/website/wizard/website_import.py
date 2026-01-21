@@ -116,6 +116,19 @@ class WebsiteImportWizard(models.TransientModel):
         if extra_page:
             raise UserError(_("Target website must be empty before import."))
 
+    def _resolve_group_ids(self, group_xmlids):
+        if not group_xmlids or not isinstance(group_xmlids, (list, tuple)):
+            return []
+        model_data = self.env["ir.model.data"]
+        group_ids = []
+        for xmlid in group_xmlids:
+            if not isinstance(xmlid, str):
+                continue
+            group_id = model_data._xmlid_to_res_id(xmlid, raise_if_not_found=False)
+            if group_id:
+                group_ids.append(group_id)
+        return group_ids
+
     def _prepare_target_website(self, website):
         self.env["website.menu"].search([
             ("website_id", "=", website.id),
@@ -153,7 +166,7 @@ class WebsiteImportWizard(models.TransientModel):
                     "track": view.get("track"),
                     "visibility": view.get("visibility"),
                     "visibility_password": view.get("visibility_password"),
-                    "group_ids": [(6, 0, view.get("group_ids", []))],
+                    "group_ids": [(6, 0, self._resolve_group_ids(view.get("group_ids")))],
                     "website_meta_title": view.get("website_meta_title"),
                     "website_meta_description": view.get("website_meta_description"),
                     "website_meta_keywords": view.get("website_meta_keywords"),
@@ -248,7 +261,7 @@ class WebsiteImportWizard(models.TransientModel):
                     "is_mega_menu": menu.get("is_mega_menu"),
                     "mega_menu_content": menu.get("mega_menu_content"),
                     "mega_menu_classes": menu.get("mega_menu_classes"),
-                    "group_ids": [(6, 0, menu.get("group_ids", []))],
+                    "group_ids": [(6, 0, self._resolve_group_ids(menu.get("group_ids")))],
                 }
                 new_menu = menu_model.create(values)
                 menu_map[menu_id] = new_menu.id

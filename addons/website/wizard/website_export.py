@@ -85,6 +85,7 @@ class WebsiteExportWizard(models.TransientModel):
     def _collect_views(self, views):
         data = []
         for view in views:
+            group_external_ids = view.group_ids.get_external_id()
             data.append({
                 "id": view.id,
                 "key": view.key,
@@ -98,7 +99,11 @@ class WebsiteExportWizard(models.TransientModel):
                 "track": view.track,
                 "visibility": view.visibility,
                 "visibility_password": view.visibility_password,
-                "group_ids": view.group_ids.ids,
+                "group_ids": [
+                    group_external_ids[group.id]
+                    for group in view.group_ids
+                    if group_external_ids.get(group.id)
+                ],
                 "website_meta_title": view.website_meta_title,
                 "website_meta_description": view.website_meta_description,
                 "website_meta_keywords": view.website_meta_keywords,
@@ -108,7 +113,13 @@ class WebsiteExportWizard(models.TransientModel):
         return data
 
     def _collect_menus(self, pages):
-        menus = self.env["website.menu"].search([("page_id", "in", pages.ids)])
+        menus = self.env["website.menu"].search([
+            "|",
+            ("page_id", "in", pages.ids),
+            "&",
+            ("page_id", "=", False),
+            ("website_id", "in", [self.website_id.id, False]),
+        ])
         parents = menus.mapped("parent_id")
         while parents:
             new_parents = parents - menus
@@ -119,6 +130,7 @@ class WebsiteExportWizard(models.TransientModel):
 
         data = []
         for menu in menus:
+            group_external_ids = menu.group_ids.get_external_id()
             data.append({
                 "id": menu.id,
                 "name": menu.name,
@@ -131,7 +143,11 @@ class WebsiteExportWizard(models.TransientModel):
                 "is_mega_menu": menu.is_mega_menu,
                 "mega_menu_content": menu.mega_menu_content,
                 "mega_menu_classes": menu.mega_menu_classes,
-                "group_ids": menu.group_ids.ids,
+                "group_ids": [
+                    group_external_ids[group.id]
+                    for group in menu.group_ids
+                    if group_external_ids.get(group.id)
+                ],
             })
         return data
 
