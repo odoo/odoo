@@ -152,7 +152,8 @@ class AlarmManager(models.AbstractModel):
         already.
         """
         lastcall = self.env.context.get('lastcall', False) or fields.date.today() - relativedelta(weeks=1)
-        extra_conditions = self._get_notify_alert_extra_conditions()
+        # TODO MASTER: remove context and add a proper parameter
+        extra_conditions = self.with_context(alarm_type=alarm_type)._get_notify_alert_extra_conditions()
         now = fields.Datetime.now()
         self.env.cr.execute(SQL("""
             SELECT alarm.id, event.id
