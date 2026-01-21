@@ -132,9 +132,16 @@ class WebsiteImportWizard(models.TransientModel):
             progress = False
             for view_id, view in list(pending.items()):
                 inherit_id = view.get("inherit_id")
+                inherit_key = view.get("inherit_key")
                 if inherit_id and inherit_id in pending:
                     continue
-                new_inherit_id = view_map.get(inherit_id, inherit_id or False)
+                new_inherit_id = view_map.get(inherit_id)
+                if not new_inherit_id and inherit_key:
+                    new_inherit_id = self.env["website"].with_context(
+                        website_id=website.id,
+                    ).viewref(inherit_key, raise_if_not_found=False).id or False
+                if new_inherit_id is None:
+                    new_inherit_id = inherit_id or False
                 values = {
                     "name": view.get("name"),
                     "key": view.get("key"),

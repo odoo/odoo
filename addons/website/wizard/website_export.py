@@ -92,6 +92,7 @@ class WebsiteExportWizard(models.TransientModel):
                 "type": view.type,
                 "arch_db": view.arch_db,
                 "inherit_id": view.inherit_id.id,
+                "inherit_key": view.inherit_id.key,
                 "website_id": view.website_id.id,
                 "active": view.active,
                 "track": view.track,
