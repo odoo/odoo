@@ -81,3 +81,9 @@ class TestAuthLDAP(BaseCase):
                 "SELECT id FROM res_users WHERE login = %s and id = %s",
                 ("test_ldap_user", session.uid))
             self.assertTrue(cr.rowcount, "User should be present")
+
+            # Verify that login_date (via res.users.log) was updated
+            cr.execute(
+                "SELECT id FROM res_users_log WHERE create_uid = %s",
+                (session.uid,))
+            self.assertTrue(cr.rowcount, "User login should be logged (login_date should be updated)")
