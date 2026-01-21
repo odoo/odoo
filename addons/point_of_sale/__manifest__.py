@@ -6,7 +6,7 @@
     'category': 'Sales/Point of Sale',
     'sequence': 40,
     'summary': 'Handle checkouts and payments for shops and restaurants.',
-    'depends': ['resource', 'stock_account', 'barcodes', 'html_editor', 'digest', 'phone_validation', 'google_address_autocomplete'],
+    'depends': ['resource', 'stock_account', 'barcodes', 'html_editor', 'digest', 'phone_validation', 'google_address_autocomplete', 'product_expiry'],
     'uninstall_hook': 'uninstall_hook',
     'data': [
         'security/point_of_sale_security.xml',
