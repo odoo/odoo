@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { BasePlugin } from "@html_editor/base_plugin";
 import { registry } from "@web/core/registry";
 
 /**
@@ -9,7 +9,7 @@ import { registry } from "@web/core/registry";
  * TODO EGGMAIL: warn the user if content deemed "important" is discarded? Only
  * enable in debug? Only use in tests?
  */
-export class EmailDiscardedContentPlugin extends Plugin {
+export class EmailDiscardedContentPlugin extends BasePlugin {
     static id = "trash";
     static shared = ["add"];
 

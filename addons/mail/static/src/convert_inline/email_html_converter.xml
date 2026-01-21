@@ -5,20 +5,20 @@
         <iframe t-att-sandbox="isBrowserSafari() ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
             aria-hidden="true"
             style="
+                visibility: hidden !important;
                 display: block !important;
+                pointer-events: none !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: -9999px !important;
                 width: 1320px !important;
                 min-width: 1320px !important;
                 height: 1000px !important;
                 min-height: 1000px !important;
-                z-index: 999999 !important;
             "/>
     </t>
     <t t-name="mail.EmailHtmlConverterReference">
         <div style="width: 100% !important"/>
-    </t>
-    <t t-name="mail.EmailHtmlConverterPreviewIframe">
-        <iframe t-att-sandbox="isBrowserSafari() ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
-            style="width: 100% !important; height: 1000px !important"/>
     </t>
     <t t-name="mail.EmailHtmlConverterHead">
         <meta http-equiv="Content-Security-Policy" content="script-src 'none';"/>
@@ -37,4 +37,11 @@
                 min-width: 1320px !important;
                 height: 1000px !important;
                 min-height: 1000px !important;
+
+                display: block !important;
+                width: 1320px !important;
+                min-width: 1320px !important;
+                height: 1000px !important;
+                min-height: 1000px !important;
+                z-index: 999999 !important;
 -->

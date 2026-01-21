@@ -1,3 +1,4 @@
+import { BasePlugin } from "@html_editor/base_plugin";
 import { isProtected, isProtecting, isUnprotecting } from "./utils/dom_info";
 
 export const isValidTargetForDomListener = (target) =>
@@ -8,42 +9,14 @@ export const isValidTargetForDomListener = (target) =>
  * @typedef { import("./editor").EditorContext } EditorContext
  */
 
-export class Plugin {
-    static id = "";
-    static dependencies = [];
-    static shared = [];
-    static defaultConfig = {};
-
-    /** @type {Partial<import("plugins").Resources>} */
-    resources;
-
-    /**
-     * @param { EditorContext } context
-     */
+export class Plugin extends BasePlugin {
     constructor(context) {
-        /** @type { EditorContext['document'] } **/
-        this.document = context.document;
-        this.window = context.document.defaultView;
+        super(context);
         /** @type { EditorContext['editable'] } **/
         this.editable = context.editable;
-        /** @type { EditorContext['config'] } **/
-        this.config = context.config;
-        /** @type { EditorContext['services'] } **/
-        this.services = context.services;
-        /** @type { EditorContext['dependencies'] } **/
-        this.dependencies = context.dependencies;
-        /** @type { EditorContext['getResource'] } **/
-        this.getResource = context.getResource;
-        /** @type { EditorContext['dispatchTo'] } **/
-        this.dispatchTo = context.dispatchTo;
-        /** @type { EditorContext['delegateTo'] } **/
-        this.delegateTo = context.delegateTo;
-
-        this._cleanups = [];
-        this.isDestroyed = false;
+        /** @type { EditorContext['document'] } **/
+        this.document = context.document;
     }
-
-    setup() {}
 
     isValidTargetForDomListener(ev) {
         return isValidTargetForDomListener(ev.target);
@@ -82,12 +55,5 @@ export class Plugin {
      */
     addGlobalDomListener(eventName, fn, capture = false) {
         this.addDomListener(this.document, eventName, fn, capture, true);
-    }
-
-    destroy() {
-        for (const cleanup of this._cleanups) {
-            cleanup();
-        }
-        this.isDestroyed = true;
     }
 }

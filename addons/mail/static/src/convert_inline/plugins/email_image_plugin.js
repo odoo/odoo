@@ -1,10 +1,10 @@
-import { Plugin } from "@html_editor/plugin";
+import { BasePlugin } from "@html_editor/base_plugin";
 import { registry } from "@web/core/registry";
 import { getImageSrc } from "@html_editor/utils/image";
 import { loadImage } from "@html_editor/utils/image_processing";
 import { useShorthands } from "@mail/convert_inline/plugins/hooks";
 
-export class EmailImagePlugin extends Plugin {
+export class EmailImagePlugin extends BasePlugin {
     static id = "image";
     static dependencies = ["computeStyle"];
     resources = {

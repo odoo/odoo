@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { BasePlugin } from "@html_editor/base_plugin";
 import { registry } from "@web/core/registry";
 import { generateLonghands } from "@mail/convert_inline/style_utils";
 
@@ -7,7 +7,7 @@ const CONTOUR_VARIANTS = ["width", "style", "color"];
 const DIRECTION_VARIANTS = ["top", "right", "bottom", "left"];
 const FONT_VARIANTS = ["family", "size", "style", "weight"];
 
-export class EmailComputeStylePlugin extends Plugin {
+export class EmailComputeStylePlugin extends BasePlugin {
     static id = "computeStyle";
     static shared = [
         "getComputedStyle",

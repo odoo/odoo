@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { BasePlugin } from "@html_editor/base_plugin";
 import { parseSelector } from "@mail/convert_inline/css_selector_parser";
 import { splitSelectorList } from "@mail/convert_inline/style_utils";
 import { registry } from "@web/core/registry";
@@ -19,7 +19,7 @@ export class StyleInfo extends Map {
     }
 }
 
-export class EmailClassToStylePlugin extends Plugin {
+export class EmailClassToStylePlugin extends BasePlugin {
     static id = "classToStyle";
     static dependencies = ["computeStyle"];
     static shared = ["getStyleInfo"];

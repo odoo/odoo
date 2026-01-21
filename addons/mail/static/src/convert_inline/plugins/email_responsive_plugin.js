@@ -1,7 +1,7 @@
-import { Plugin } from "@html_editor/plugin";
+import { BasePlugin } from "@html_editor/base_plugin";
 import { registry } from "@web/core/registry";
 
-export class ResponsivePlugin extends Plugin {
+export class ResponsivePlugin extends BasePlugin {
     static id = "ResponsivePlugin";
 
     // handle main container (layout) to table to center elements

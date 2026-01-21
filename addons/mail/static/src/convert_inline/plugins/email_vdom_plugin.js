@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { BasePlugin } from "@html_editor/base_plugin";
 import { childNodes } from "@html_editor/utils/dom_traversal";
 import { registry } from "@web/core/registry";
 import { uuid } from "@web/core/utils/strings";
@@ -13,7 +13,7 @@ import { uuid } from "@web/core/utils/strings";
  *           representation of the reference node, and other vNode
  */
 
-export class VDomPlugin extends Plugin {
+export class VDomPlugin extends BasePlugin {
     static id = "vDomPlugin";
     static shared = ["getNodeInfo", "renderEmailHtml"];
     resources = {

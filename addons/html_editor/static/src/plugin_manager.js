@@ -1,7 +1,7 @@
 import { resourceSequenceSymbol, withSequence } from "./utils/resource";
 
 /**
- * @typedef {typeof import("./plugin").Plugin} PluginConstructor
+ * @typedef {typeof import("./base_plugin").BasePlugin} PluginConstructor
  **/
 
 /**
@@ -83,12 +83,12 @@ export class PluginManager {
      */
     getPluginContext(dependencies = []) {
         return {
-            dependencies: this.getDependencies(dependencies),
             config: this.config,
-            services: this.services,
-            getResource: this.getResource.bind(this),
-            dispatchTo: this.dispatchTo.bind(this),
             delegateTo: this.delegateTo.bind(this),
+            dependencies: this.getDependencies(dependencies),
+            dispatchTo: this.dispatchTo.bind(this),
+            getResource: this.getResource.bind(this),
+            services: this.services,
         };
     }
 
