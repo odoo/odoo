@@ -685,10 +685,18 @@ test("Opening thread with needaction messages should mark all messages of thread
             ["res_id", "=", channelId],
         ]);
     });
+    pyEnv["mail.message"].create({
+        body: "Hello there!",
+        model: "discuss.channel",
+        res_id: channelId,
+        author_id: partnerId,
+    });
     await start();
     const composerService = getService("mail.composer");
     composerService.setHtmlComposer();
     await openDiscuss(channelId);
+    await contains(".o-mail-Message:contains('Hello there!)");
+    await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
     await contains(".o-mail-Composer-html.odoo-editor-editable");
     await triggerEvents(".o-mail-Composer-html.odoo-editor-editable", ["blur", "focusout"]);
     await click("button:text('Inbox')");
