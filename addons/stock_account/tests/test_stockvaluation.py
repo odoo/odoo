@@ -3007,3 +3007,25 @@ class TestStockValuation(TestStockValuationCommon):
         self._make_dropship_move(self.product_avco, 15, unit_cost=15)
         self.assertEqual(self.product_avco.qty_available, -10)
         self.assertEqual(self.product_avco.standard_price, 10)
+
+    def test_avco_adjusted_valuation_updates_unit_cost_correctly(self):
+        """Ensure that for AVCO products, adjusting the total valuation recomputes
+        the unit cost correctly.
+
+        Scenario:
+        - Receive 100 units with an initial total value of 1000$ (unit cost = 10$)
+        - Adjust the move valuation to 2000$
+        - Expected unit cost = 2000 / 100 = 20$
+        """
+        move = self._make_in_move(self.product_avco, 100, 10)
+        self.assertEqual(move.quantity, 100.0)
+        self.assertEqual(self.product_avco.total_value, 1000)
+        self.assertEqual(self.product_avco.standard_price, 10)
+
+        self.env['product.value'].create({
+            'product_id': self.product_avco.id,
+            'move_id': move.id,
+            'value': 2000,
+        })
+        self.assertEqual(self.product_avco.total_value, 2000)
+        self.assertEqual(self.product_avco.standard_price, 20)
