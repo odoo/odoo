@@ -51,10 +51,14 @@ function fromField(f, record) {
             copyButton.setAttribute("class", "btn btn-sm btn-primary o_clipboard_button o_btn_char_copy py-0 px-2");
             copyButton.onclick = async function (event) {
                 event.preventDefault();
-                $(copyButton).tooltip({ title: _t("Copied!"), trigger: "manual", placement: "bottom" });
-                await browser.navigator.clipboard.writeText($(secretSpan)[0].innerText);
-                $(copyButton).tooltip("show");
-                setTimeout(() => $(copyButton).tooltip("hide"), 800);
+                const copyBtnPopover = window.Tooltip.getOrCreateInstance(copyButton, {
+                    title: _t("Copied!"),
+                    trigger: "manual",
+                    placement: "bottom",
+                });
+                await browser.navigator.clipboard.writeText(secretSpan.textContent);
+                copyBtnPopover.show();
+                setTimeout(() => copyBtnPopover.hide(), 800);
             };
 
             copyButton.appendChild(copySpanIcon);

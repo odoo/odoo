@@ -18,7 +18,12 @@
     </xpath>
     <xpath expr="//div[hasclass('o_we_track_reminder_button')]" position="before">
         <div class="o_we_track_quiz_button me-2 my-1" t-if="track.quiz_id and not track.is_quiz_completed and not track.is_track_upcoming">
-            <a class="btn btn-primary" href="#we_track_quiz_container" onclick="$('.o_quiz_js_quiz_container').removeClass('d-none'); ">
+            <a class="btn btn-primary" href="#we_track_quiz_container" t-on-click="() => {
+                const containerEls = document.querySelectorAll('.o_quiz_js_quiz_container');
+                for (const containerEl of containerEls) {
+                    containerEl.classList.remove('d-none');
+                }
+            }">
                 Take the Quiz
             </a>
         </div>

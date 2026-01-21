@@ -156,9 +156,6 @@ export class Form extends Interaction {
     }
 
     destroy() {
-        // TODO Find out which event this is about.
-        // this.$el.find("button").off("click");
-
         // Empty inputs
         this.resetForm();
 

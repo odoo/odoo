@@ -496,7 +496,7 @@ export function cardToTable(element) {
  * Convert CSS style to inline style (leave the classes on elements but forces
  * the style they give as inline style).
  *
- * @param {HTMLElement} $element
+ * @param {HTMLElement} element
  * @param {Object} cssRules
  */
 export function classToStyle(element, cssRules) {
@@ -1404,7 +1404,7 @@ export function normalizeColors(element) {
 /**
  * Convert all css values that use the rem unit to px.
  *
- * @param {HTMLElement} $element
+ * @param {HTMLElement} element
  * @param {Number} rootFontSize=16 The font size of the root element, in pixels
  */
 export function normalizeRem(element, rootFontSize = 16) {
