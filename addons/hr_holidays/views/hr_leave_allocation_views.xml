@@ -143,7 +143,6 @@
                                     invisible="not accrual_plan_id"/>
                                 <field name="date_to" nolabel="1"
                                     placeholder="No Limit"
-                                    readonly="state == 'refuse' or (accrual_plan_id and state != 'confirm')"
                                     invisible="not accrual_plan_id and state != 'confirm'"/>
                                 <div id="no_limit_label" class="oe_read_only"
                                     invisible="not id or date_to or state != 'confirm'">No limit</div>
