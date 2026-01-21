@@ -2066,6 +2066,14 @@ describe("Selection not collapsed", () => {
         });
     });
 
+    test("should not remove blockquote when it contains content on Backspace", async () => {
+        await testEditor({
+            contentBefore: `<blockquote><img>[]</blockquote>`,
+            stepFunction: deleteBackward,
+            contentAfter: `<blockquote>[]<br></blockquote>`,
+        });
+    });
+
     test("should delete if first element and append in paragraph (1)", async () => {
         await testEditor({
             contentBefore: `<h1><br>[]</h1>`,
