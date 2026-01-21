@@ -10,7 +10,7 @@ class ImageSnippetOptionPlugin extends Plugin {
         so_content_addition_selector: [".s_image"],
     };
 
-    async onSnippetDropped({ snippetEl }) {
+    async onSnippetDropped({ snippetEl, dragState }) {
         if (!snippetEl.matches(".s_image")) {
             return;
         }
@@ -24,6 +24,7 @@ class ImageSnippetOptionPlugin extends Plugin {
                 save: async (selectedImageEl) => {
                     isImageSelected = true;
                     snippetEl.replaceWith(selectedImageEl);
+                    dragState.replacedSnippetEl = selectedImageEl;
                 },
             });
             onClose.then(() => {
