@@ -306,7 +306,7 @@ Display a sidebar beside the post content.
 <!-- (Option) Post Sidebar: Share Links Display -->
 <template id="opt_blog_post_share_links_display" name="Share Links" inherit_id="website_blog.blog_post_sidebar" active="True" priority="2">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div class="o_wblog_sidebar_block pb-5">
+        <div class="o_wblog_sidebar_block pb-5" t-ignore="true">
             <div>
                 <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Share this post</h6>
             </div>
