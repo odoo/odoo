@@ -1,8 +1,25 @@
 import { DynamicSnippetCarousel } from "@website/snippets/s_dynamic_snippet_carousel/dynamic_snippet_carousel";
 import { registry } from "@web/core/registry";
+import { markup } from "@odoo/owl";
 
 export class DynamicSnippetProducts extends DynamicSnippetCarousel {
     static selector = ".s_dynamic_snippet_products";
+
+    /**
+     * @override
+     */
+    async fetchData() {
+        if (this.el.dataset.ssrRendered === "true") {
+            const templateArea = this.el.querySelector(".dynamic_snippet_template");
+            if (templateArea && templateArea.children.length > 0) {
+                this.data = [...templateArea.children].map((el) => el.innerHTML).map(markup);
+                templateArea.classList.remove("d-none");
+                delete this.el.dataset.ssrRendered;
+                return;
+            }
+        }
+        return super.fetchData();
+    }
 
     /**
      * Gets the category search domain
