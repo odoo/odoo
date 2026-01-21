@@ -325,6 +325,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
 
     @freeze_time('2021-10-15')
     def test_multiple_employees_mandatory_days(self):
+        self.company.tz = 'Europe/Brussels'
         production_department = self.env['hr.department'].create({
             'name': 'Production Department',
             'company_id': self.company.id,
@@ -344,10 +345,12 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'company_id': self.company.id,
             'resource_calendar_id': self.default_calendar.id,
             'department_id': deployment_department.id,
+            'tz': 'Asia/Tokyo',
         })
 
         self.employee_emp.write({
-            'department_id': post_production_department.id
+            'department_id': post_production_department.id,
+            'tz': 'Pacific/Honolulu',
         })
 
         self.env['hr.leave.mandatory.day'].create([{
