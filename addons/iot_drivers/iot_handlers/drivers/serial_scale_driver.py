@@ -126,10 +126,10 @@ class ScaleDriver(SerialDriver):
         answer = self._get_raw_response(self._connection)
         match = re.search(self._protocol.measureRegexp, answer)
         if match:
-            self.data = {
+            self.data.update({
                 'result': float(match.group(1)),
-                'status': self._status
-            }
+                'status': self._status,
+            })
         else:
             self._read_status(answer)
 
@@ -212,8 +212,8 @@ class Toledo8217Driver(ScaleDriver):
             for index, bit in enumerate(binary_status_char[1:][::-1]):  # Read the bits in reverse order (LSB is at the last char) + ignore the first "parity" bit
                 if int(bit):
                     _logger.debug("Scale error: %s. Status string: %s. Scale answer: %s.", status_char_error_bits[index], binary_status_char, answer)
-                    self.data = {
+                    self.data.update({
                         'result': 0,
                         'status': self._status,
-                    }
+                    })
                     break
