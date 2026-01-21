@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.ActionDialog.header" t-inherit-mode="extension">
+        <xpath expr="//h4[hasclass('modal-title')]" position="after">
+            <button t-if="canExpand and !props.onExpand" type="button" class="fa btn me-2 opacity-50 opacity-100-hover" t-att-class="expanded.value ? 'fa-compress' : 'fa-expand'" t-att-title="toggleSizeTitle" t-on-click="toggleExpand" />
+        </xpath>
+    </t>
+</templates>
