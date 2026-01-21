@@ -2,3 +2,4 @@ from . import test_account_move_send
 from . import test_xml_ubl_tr
 from . import test_xml_ubl_tr_common
 from . import test_tr_nilvera_mocked_requests
+from . import test_ubl_tr_xml_decode

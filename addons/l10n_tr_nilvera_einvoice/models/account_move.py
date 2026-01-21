@@ -622,3 +622,19 @@ class AccountMove(models.Model):
             )
 
         return super()._reverse_moves(default_values_list, cancel=cancel)
+
+    def _compute_partner_bank_id(self):
+        # Extend account
+        # On currency change partner_bank_id is recomputed
+        # For UBL TR imports we want to keep the one in the xml
+
+        ubl_tr_moves_with_bank = self.filtered(lambda move: move.country_code == 'TR' and move.partner_bank_id and move.l10n_tr_nilvera_uuid)
+        # Don't want to block recompute as there might be other logics related to it. So will reassign it after super.
+        ubl_tr_move_bank_map = {
+            move.id: move.partner_bank_id
+            for move in ubl_tr_moves_with_bank
+        }
+        res = super()._compute_partner_bank_id()
+        for move in ubl_tr_moves_with_bank:
+            move.partner_bank_id = ubl_tr_move_bank_map[move.id]
+        return res
