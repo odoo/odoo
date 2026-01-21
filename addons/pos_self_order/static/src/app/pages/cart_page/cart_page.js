@@ -7,6 +7,7 @@ import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popu
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
 import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
 import { _t } from "@web/core/l10n/translation";
+import { formatProductName } from "../../utils";
 
 export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
@@ -243,6 +244,10 @@ export class CartPage extends Component {
     }
     get displayTaxes() {
         return !this.selfOrder.isTaxesIncludedInPrice();
+    }
+
+    formatProductName(product) {
+        return formatProductName(product);
     }
 
     /*
