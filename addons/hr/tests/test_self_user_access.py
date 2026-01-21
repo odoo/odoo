@@ -184,8 +184,45 @@ class TestSelfAccessRights(TestHrCommon):
         # Searching user based on employee_id field should not raise bad query error
         self.env['res.users'].with_user(self.richard).search([('employee_id', 'ilike', 'Hubert')])
 
-    # Write hr.department
-    def testWriteDepartmentEmployee(self):
+    def test_user_can_edit_department_they_manage(self):
+        dept = self.env['hr.department'].create({
+            'name': 'Managed Dept',
+            'manager_id': self.richard_emp.id,
+        })
+
+        dept.with_user(self.richard).write({
+            'name': 'Renamed Managed Dept'
+        })
+
+        self.assertEqual(dept.name, 'Renamed Managed Dept')
+
+    def test_user_can_edit_department_managed_by_subordinate(self):
+        # Subordinate user
+        alice = new_test_user(
+            self.env,
+            login='alice',
+            groups='base.group_user',
+            name='Alice User',
+            email='alice@example.com'
+        )
+
+        alice_emp = self.env['hr.employee'].create({
+            'name': 'Alice',
+            'user_id': alice.id,
+            'parent_id': self.richard_emp.id,
+        })
+        dept = self.env['hr.department'].create({
+            'name': 'Subordinate Dept',
+            'manager_id': alice_emp.id,
+        })
+
+        dept.with_user(self.richard).write({
+            'name': 'Renamed Subordinate Dept'
+        })
+
+        self.assertEqual(dept.name, 'Renamed Subordinate Dept')
+
+    def test_user_cannot_create_nor_edit_random_department(self):
         with self.assertRaises(AccessError):
             self.env['hr.department'].with_user(self.richard).create({'name': 'New Dept'})
         dept = self.env['hr.department'].create({'name': 'New Dept'})
