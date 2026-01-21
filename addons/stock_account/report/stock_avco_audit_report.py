@@ -1,4 +1,5 @@
 from odoo import fields, models, tools
+from odoo.tools import float_is_zero
 
 
 class StockAverageCostReport(models.AbstractModel):
@@ -99,20 +100,28 @@ WHERE
             total_quantity = 0.0
             avco = 0.0
             for record in total_records:
+                in_qty = record.quantity
+                in_value = record.value
                 if record.res_model_name == 'stock.move':
-                    if record.quantity > 0:
-                        added_value = record.value
-                    elif record.quantity < 0:
-                        added_value = avco * record.quantity
-                    total_value += added_value
-                    total_quantity += record.quantity
+                    previous_qty = total_quantity
+                    total_quantity += in_qty
+
+                    # Regular case, value from accumulation
+                    if previous_qty > 0:
+                        total_value += in_value
+                        avco = total_value / total_quantity if not float_is_zero(total_quantity, precision_digits=self.env['decimal.precision'].precision_get('Product Unit')) else avco
+                    # From negative quantity case, value from last_in
+                    elif previous_qty <= 0:
+                        avco = in_value / in_qty if in_qty else avco
+                        total_value = avco * total_quantity
+
+                    added_value = avco * in_qty
 
                 elif record.res_model_name == 'product.value':
-                    added_value = (record.value * total_quantity) - total_value
-                    total_value = record.value * total_quantity
+                    avco = in_value
+                    added_value = (avco * total_quantity) - total_value
+                    total_value = avco * total_quantity
 
-                if total_quantity:
-                    avco = total_value / total_quantity
                 if record in current_page_records:
                     record.added_value = added_value
                     record.total_value = total_value
