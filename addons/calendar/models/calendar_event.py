@@ -3,9 +3,10 @@
 import itertools
 import logging
 import math
+import re
 import uuid
+from babel.dates import parse_time
 from datetime import datetime, timedelta, UTC
-from itertools import repeat
 from zoneinfo import ZoneInfo
 
 from markupsafe import Markup
@@ -27,7 +28,7 @@ from odoo.addons.calendar.models.calendar_recurrence import (
 from odoo.addons.calendar.models.utils import interval_from_events
 from odoo.tools.intervals import intervals_overlap
 from odoo.tools.translate import _
-from odoo.tools.misc import get_lang
+from odoo.tools.misc import get_lang, babel_locale_parse
 from odoo.tools import html2plaintext, html_sanitize, is_html_empty, single_email_re
 from odoo.exceptions import UserError, ValidationError
 
@@ -51,6 +52,29 @@ RRULE_TYPE_SELECTION_UI = [
     ('yearly', 'Yearly'),
     ('custom', 'Custom')
 ]
+
+# regex to match common ways to represent time
+# (9h, 9H, 9:00, 09:00, 9 am, 9am, 9a.m. 21h, 21:30, 9-10, 9-11h...)
+HOUR = r'(?:[01]?\d|2[0-3])'  # 0-23
+MINUTES = r'(?:[0-5]\d)'  # :00-:59
+SUFFIX = r'(?:h|hr|am|pm|a\.m\.?|p\.m\.?)'
+RANGE_DELIM = r'(?:-|–|to)'
+HOUR_WITH_MINUTES = rf'{HOUR}:{MINUTES}\s*{SUFFIX}?'
+HOUR_WITH_SUFFIX = rf'{HOUR}\s*{SUFFIX}'
+LOOSE_TIME = rf'(?:{HOUR_WITH_MINUTES}|{HOUR_WITH_SUFFIX}|{HOUR})'
+# Hour range uses lookahead, to make sure that a delimiter and a time follow.
+# Needed to disallow single hours 'meeting 5', but match ranges like '5-7pm'
+HOUR_RANGE = rf'{HOUR}(?=\s*{RANGE_DELIM}\s*{LOOSE_TIME})'
+TIME_REGEX = re.compile(
+    rf'''
+    (?:^|\s) # start of string or space
+    ({HOUR_WITH_MINUTES}|{HOUR_WITH_SUFFIX}|{HOUR_RANGE})  # Valid start times, with an optional range lookahead
+    (?:\s*{RANGE_DELIM}\s*({LOOSE_TIME}))? # Optional end time
+    (?:$|\s) # end of string or space
+    ''',
+    re.IGNORECASE | re.VERBOSE,
+)
+
 
 def get_weekday_occurence(date):
     """
@@ -590,6 +614,58 @@ class CalendarEvent(models.Model):
     def get_discuss_videocall_location(self):
         access_token = uuid.uuid4().hex
         return f"{self.get_base_url()}/{self.DISCUSS_ROUTE}/{access_token}"
+
+    @api.onchange('name')
+    def _onchange_name_extract_time(self):
+        for event in self:
+            if not event.env.context.get("is_quick_create_form") or not event.name or not event.allday:
+                continue
+
+            parsed_time = event._parse_time_from_title()
+            if not parsed_time:
+                continue
+
+            event.update({
+                'allday': False,
+                'start': parsed_time[0],
+                'stop': parsed_time[1],
+            })
+
+    def _parse_time_from_title(self):
+        """Extract datetime information from an event title.
+        Returns a tuple of (start_datetime_utc, end_datetime_utc) or None if no time is found."""
+        match = TIME_REGEX.search(self.name)
+        if not match:
+            return None
+
+        start_raw, end_raw = match.groups()
+
+        locale = babel_locale_parse(get_lang(self.env).code)
+        start_time = parse_time(start_raw, locale=locale)
+        end_time = parse_time(end_raw, locale=locale) if end_raw else None
+
+        # The user enters the meeting time in their own timezone, but we store it as UTC
+        tz_name = self.env.context.get('tz') or self.env.user.tz or 'UTC'
+        tz = ZoneInfo(tz_name)
+
+        # Combine event date and parsed time, using the user's timezone
+        start_local_dt = datetime.combine(self.start.date(), start_time, tzinfo=tz)
+        if end_time:
+            end_local_dt = datetime.combine(self.start.date(), end_time, tzinfo=tz)
+        else:
+            end_local_dt = start_local_dt + timedelta(hours=1)
+
+        # 9 to 5 should assume 9am to 5pm
+        if start_local_dt > end_local_dt and start_local_dt.hour <= 12:
+            end_local_dt += timedelta(hours=12)
+
+        # Handle overnight events edge case (e.g. 23:00 - 01:00)
+        if end_local_dt <= start_local_dt:
+            end_local_dt += timedelta(days=1)
+
+        start_utc = start_local_dt.astimezone(UTC).replace(tzinfo=None)
+        end_utc = end_local_dt.astimezone(UTC).replace(tzinfo=None)
+        return start_utc, end_utc
 
     # ------------------------------------------------------------
     # CRUD
