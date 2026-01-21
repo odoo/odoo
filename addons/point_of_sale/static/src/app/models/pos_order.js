@@ -403,10 +403,20 @@ export class PosOrder extends PosOrderAccounting {
         const parentQty = pLine.getQuantity() || 1;
 
         for (const cLine of pLine.combo_line_ids) {
+<<<<<<< 7f7a7c858a69ed1cbddca4bb509b5f705a27c0d6
             const comboId = cLine.combo_item_id.combo_id.id;
 
             if (!(comboId in comboRemainingFree)) {
                 comboRemainingFree[comboId] = cLine.combo_item_id.combo_id.qty_free * parentQty;
+||||||| 892b15963625acc89b7ed7b1c6f94392111df6be
+            if (!(cLine.combo_item_id.combo_id.id in comboRemainingFree)) {
+                comboRemainingFree[cLine.combo_item_id.combo_id.id] =
+                    cLine.combo_item_id.combo_id.qty_free;
+=======
+            if (!(cLine.combo_item_id.combo_id.id in comboRemainingFree)) {
+                comboRemainingFree[cLine.combo_item_id.combo_id.id] =
+                    cLine.combo_item_id.combo_id.qty_free * pLine.qty;
+>>>>>>> d99c07a594263c40f8838f2bdf63b1d8a6c60cb1
             }
 
             const childQty = cLine.getQuantity();
@@ -420,12 +430,30 @@ export class PosOrder extends PosOrderAccounting {
             if (cLine.attribute_value_ids) {
                 baseData.configuration = { attribute_value_ids: cLine.attribute_value_ids };
             }
+<<<<<<< 7f7a7c858a69ed1cbddca4bb509b5f705a27c0d6
 
             if (newQty >= 0) {
                 comboRemainingFree[comboId] = newQty;
                 childLineFree.push({ ...baseData, qty: childQty / parentQty });
             } else {
                 childLineExtra.push({ ...baseData, qty: childQty / parentQty });
+||||||| 892b15963625acc89b7ed7b1c6f94392111df6be
+            if (cLine.qty) {
+                if (newQty >= 0) {
+                    comboRemainingFree[cLine.combo_item_id.combo_id.id] = newQty;
+                    childLineFree.push({ ...baseData, qty: cLine.qty });
+                } else {
+                    childLineExtra.push({ ...baseData, qty: cLine.qty });
+                }
+=======
+            if (cLine.qty) {
+                if (newQty >= 0) {
+                    comboRemainingFree[cLine.combo_item_id.combo_id.id] = newQty;
+                    childLineFree.push({ ...baseData, qty: cLine.qty, parentQty: pLine.qty });
+                } else {
+                    childLineExtra.push({ ...baseData, qty: cLine.qty });
+                }
+>>>>>>> d99c07a594263c40f8838f2bdf63b1d8a6c60cb1
             }
         }
         return { childLineFree, childLineExtra };
