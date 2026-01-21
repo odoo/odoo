@@ -17,7 +17,7 @@
     </t>
 
     <t t-name="web.Many2One">
-        <div class="o_many2one" t-att-class="props.cssClass">
+        <div class="o_many2one" t-att-class="props.cssClass" t-attf-class="{{ this.state.recordActive ? '' : 'text-muted' }}">
             <t t-if="props.readonly">
                 <t t-if="props.value">
                     <t t-if="props.canOpen">

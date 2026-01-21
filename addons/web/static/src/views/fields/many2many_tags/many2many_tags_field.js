@@ -18,7 +18,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 
-import { Component, useRef } from "@odoo/owl";
+import { Component, useRef, onWillStart } from "@odoo/owl";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 
 class Many2ManyTagsFieldColorListPopover extends Component {
@@ -80,6 +80,7 @@ export class Many2ManyTagsField extends Component {
     setup() {
         this.orm = useService("orm");
         this.previousColorsMap = {};
+        this.activeTags = [];
         this.popover = usePopover(this.constructor.components.Popover);
         this.dialog = useService("dialog");
         this.dialogClose = [];
@@ -142,6 +143,24 @@ export class Many2ManyTagsField extends Component {
                 return saveRecord([created[0]]);
             };
         }
+        const fieldService = useService("field");
+        onWillStart(async () => {
+            try {
+                const fieldsInfo = await fieldService.loadFields(this.relation, {
+                    fieldNames: ["active", "x_active"],
+                });
+                if (fieldsInfo.active) {
+                    this.activeFieldName = "active";
+                } else if (fieldsInfo.x_active) {
+                    this.activeFieldName = "x_active";
+                } else {
+                    this.activeFieldName = null;
+                }
+            } finally {
+                await this.isRecordActive();
+            }
+        });
+        // onWillUpdateProps(this.isRecordActive);
     }
 
     get relation() {
@@ -216,11 +235,35 @@ export class Many2ManyTagsField extends Component {
         this.popover.close();
     }
 
+    async isRecordActive() {
+        if (this.activeFieldName) {
+            const m2mIds = this.props.record.data[this.props.name].resIds;
+            if (Array.isArray(m2mIds) && m2mIds.length) {
+                const records = await this.orm.searchRead(
+                    this.relation,
+                    [["id", "in", m2mIds]],
+                    ["id", "display_name", this.activeFieldName],
+                    {
+                        context: { active_test: false },
+                    }
+                );
+                this.activeTags = records;
+            }
+        }
+    }
+
     get tags() {
-        return this.props.record.data[this.props.name].records.map((record) => ({
-            id: record.id,
-            props: this.getTagProps(record),
-        }));
+        return this.props.record.data[this.props.name].records.map((record) => {
+            const activeTag = this.activeTags?.find((tag) => tag.id === record.resId);
+            const isActive =
+                activeTag && this.activeFieldName ? activeTag[this.activeFieldName] : true;
+
+            return {
+                id: record.id,
+                props: this.getTagProps(record),
+                className: !isActive ? "opacity-50" : "",
+            };
+        });
     }
 
     get showM2OSelectionField() {

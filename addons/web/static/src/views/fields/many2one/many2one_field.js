@@ -5,6 +5,7 @@ import { computeM2OProps, Many2One } from "./many2one";
 import { standardFieldProps } from "../standard_field_props";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 
+// HERE
 /** @type {import("registries").FieldsRegistryItemShape["supportedOptions"]} */
 export const m2oSupportedOptions = [
     {

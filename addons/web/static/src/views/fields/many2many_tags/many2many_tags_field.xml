@@ -8,7 +8,9 @@
             t-ref="many2ManyTagsField"
         >
             <TagsList t-props="this.tagsListProps" t-slot-scope="tag">
-                <Tag t-props="tag.props"/>
+                <span t-att-class="tag.className" class="d-inline-flex">
+                    <Tag t-props="tag.props"/>
+                </span>
             </TagsList>
             <div t-if="showM2OSelectionField" class="o_field_many2many_selection d-inline-flex w-100" t-ref="autoComplete">
                 <Many2XAutocomplete

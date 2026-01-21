@@ -1,4 +1,4 @@
-import { Component, toRaw, useRef, useState } from "@odoo/owl";
+import { Component, toRaw, useRef, useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import * as BarcodeScanner from "@web/core/barcode/barcode_dialog";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -125,7 +125,27 @@ export class Many2One extends Component {
         this.notification = useService("notification");
         this.orm = useService("orm");
 
-        this.state = useState({ isFloating: false });
+        this.state = useState({ isFloating: false, recordActive: true });
+
+        const fieldService = useService("field");
+        onWillStart(async () => {
+            try {
+                const fieldsInfo = await fieldService.loadFields(this.props.relation, {
+                    fieldNames: ["active", "x_active"],
+                });
+
+                if (fieldsInfo.active) {
+                    this.activeFieldName = "active";
+                } else if (fieldsInfo.x_active) {
+                    this.activeFieldName = "x_active";
+                } else {
+                    this.activeFieldName = null;
+                }
+            } finally {
+                await this.isRecordActive();
+            }
+        });
+        onWillUpdateProps(this.isRecordActive);
 
         this.recordDialog = {
             open: useOpenMany2XRecord({
@@ -148,6 +168,24 @@ export class Many2One extends Component {
                 resModel: this.props.relation,
             }),
         };
+    }
+
+    async isRecordActive() {
+        if (this.activeFieldName) {
+            const records = await this.orm.call(
+                this.props.relation,
+                "search_read",
+                [[["id", "=", this.props.value.id]]],
+                {
+                    fields: [this.activeFieldName],
+                    limit: 1,
+                    context: { active_test: false },
+                }
+            );
+            if (Array.isArray(records) && records.length) {
+                this.state.recordActive = records[0][this.activeFieldName];
+            }
+        }
     }
 
     get activeActions() {

@@ -656,6 +656,7 @@ export class RelationalModel extends Model {
                 specification: fieldSpec,
             };
             const orm = cache ? this.orm.cache(cache) : this.orm;
+            // HERE
             const records = await orm.webRead(resModel, resIds, kwargs);
             if (!records.length) {
                 throw new FetchRecordError(resIds);
