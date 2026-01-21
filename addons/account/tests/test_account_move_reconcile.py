@@ -5942,51 +5942,35 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         """
         self.env.company.tax_exigibility = True
 
-        # Create payment term: 30% now, balance 60 days
-        payment_term = self.env['account.payment.term'].create({
-            'name': '30% now, balance 60 days',
-            'line_ids': [
-                Command.create({
-                    'value': 'percent',
-                    'value_amount': 50.0,
-                    'nb_days': 0,
-                }),
-                Command.create({
-                    'value': 'percent',
-                    'value_amount': 50.0,
-                    'nb_days': 60,
-                }),
-            ],
-        })
-
         # Create invoice with cash basis tax and payment term
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'partner_id': self.partner_a.id,
-            'invoice_date': '2016-01-01',
-            'date': '2016-01-01',
-            'invoice_payment_term_id': payment_term.id,
-            'invoice_line_ids': [Command.create({
-                'product_id': self.product_a.id,
-                'price_unit': 99.99,
-                'tax_ids': [Command.set(self.cash_basis_tax_a_third_amount.ids)],
-            })],
-        })
-        invoice.action_post()
+        product = self._create_product(
+            lst_price=100.0,
+            taxes_id=self.cash_basis_tax_a_third_amount,
+        )
+        invoice = self._create_invoice_one_line(
+            product_id=product,
+            invoice_payment_term_id=self.pay_terms_b,
+            post=True,
+        )
 
         # Pay full amount instead of just the first 30%
-        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
-                'payment_date': '2016-01-01',
-                'amount': 133.32,  # Full amount instead of 30%
-            })._create_payments()
+        payments = self._register_payment(invoice, payment_date='2016-01-01', amount=invoice.amount_total, group_payment=False)
+        self.assertEqual(len(payments), 1)
 
         tax_cash_basis_moves = self._get_caba_moves(invoice)
-        tax_lines = tax_cash_basis_moves.line_ids.filtered(
-            lambda l: l.account_id == self.tax_account_1 and l.credit > 0
-        ).sorted('id')
-        self.assertRecordValues(tax_lines, [
-            {'credit': 16.67, 'name': 'tax_1'},
-            {'credit': 16.66, 'name': 'tax_1'},
+        self.assertEqual(len(tax_cash_basis_moves), 2)
+        self.assertRecordValues(tax_cash_basis_moves.line_ids.sorted(), [
+            # Invoice - 70%
+            {'balance': 70.0},
+            {'balance': -70.0},
+            {'balance': 23.33},
+            {'balance': -23.33},
+
+            # Invoice - 30%
+            {'balance': 30.0},
+            {'balance': -30.0},
+            {'balance': 10.0},
+            {'balance': -10.0},
         ])
 
     def test_reconcile_cash_basis_payment_term_full_amount_two_invoices(self):
@@ -5995,65 +5979,52 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         """
         self.env.company.tax_exigibility = True
 
-        # Create payment term: 30% now, balance 60 days
-        payment_term = self.env['account.payment.term'].create({
-            'name': '30% now, balance 60 days',
-            'line_ids': [
-                Command.create({
-                    'value': 'percent',
-                    'value_amount': 50.0,
-                    'nb_days': 0,
-                }),
-                Command.create({
-                    'value': 'percent',
-                    'value_amount': 50.0,
-                    'nb_days': 60,
-                }),
-            ],
-        })
-
         # Create invoice with cash basis tax and payment term
-        invoices = self.env['account.move'].create([
-            {
-                'move_type': 'out_invoice',
-                'partner_id': self.partner_a.id,
-                'invoice_date': '2016-01-01',
-                'date': '2016-01-01',
-                'invoice_payment_term_id': payment_term.id,
-                'invoice_line_ids': [Command.create({
-                    'product_id': self.product_a.id,
-                    'price_unit': 99.99,
-                    'tax_ids': [Command.set(self.cash_basis_tax_a_third_amount.ids)],
-                })],
-            },
-            {
-                'move_type': 'out_invoice',
-                'partner_id': self.partner_a.id,
-                'invoice_date': '2016-01-01',
-                'date': '2016-01-01',
-                'invoice_payment_term_id': payment_term.id,
-                'invoice_line_ids': [Command.create({
-                    'product_id': self.product_a.id,
-                    'price_unit': 99.99,
-                    'tax_ids': [Command.set(self.cash_basis_tax_a_third_amount.ids)],
-                })],
-            },
-        ])
-        invoices.action_post()
+        product = self._create_product(
+            lst_price=100.0,
+            taxes_id=self.cash_basis_tax_a_third_amount,
+        )
+        invoices = (
+            self._create_invoice_one_line(
+                product_id=product,
+                invoice_payment_term_id=self.pay_terms_b,
+                post=True,
+            )
+            | self._create_invoice_one_line(
+                product_id=product,
+                invoice_payment_term_id=self.pay_terms_b,
+                post=True,
+            )
+        )
 
         # Pay full amount instead of just the first 30%
-        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoices.ids).create({
-                'payment_date': '2016-01-01',
-                'amount': 266.64,  # Full amount of both invoices
-            })._create_payments()
+        payments = self._register_payment(invoices, payment_date='2016-01-01', amount=sum(invoices.mapped('amount_total')), group_payment=False)
+        self.assertEqual(len(payments), 2)
 
         tax_cash_basis_moves = self._get_caba_moves(invoices)
-        tax_lines = tax_cash_basis_moves.line_ids.filtered(
-            lambda l: l.account_id == self.tax_account_1 and l.credit > 0
-        ).sorted('id')
-        self.assertRecordValues(tax_lines, [
-            {'credit': 16.67, 'name': 'tax_1'},
-            {'credit': 16.66, 'name': 'tax_1'},
-            {'credit': 16.67, 'name': 'tax_1'},
-            {'credit': 16.66, 'name': 'tax_1'},
+        self.assertEqual(len(tax_cash_basis_moves), 4)
+        self.assertRecordValues(tax_cash_basis_moves.line_ids.sorted(), [
+            # Invoice 1 - 70%
+            {'balance': 70.0},
+            {'balance': -70.0},
+            {'balance': 23.33},
+            {'balance': -23.33},
+
+            # Invoice 1 - 30%
+            {'balance': 30.0},
+            {'balance': -30.0},
+            {'balance': 10.0},
+            {'balance': -10.0},
+
+            # Invoice 2 - 70%
+            {'balance': 70.0},
+            {'balance': -70.0},
+            {'balance': 23.33},
+            {'balance': -23.33},
+
+            # Invoice 2 - 30%
+            {'balance': 30.0},
+            {'balance': -30.0},
+            {'balance': 10.0},
+            {'balance': -10.0},
         ])
