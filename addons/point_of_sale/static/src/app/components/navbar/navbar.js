@@ -180,6 +180,10 @@ export class Navbar extends Component {
         return this.hasProductCreationAccess;
     }
 
+    get showPrinterButton() {
+        return this.pos.config.receipt_printer_ids.length > 1;
+    }
+
     get shouldDisplayPresetTime() {
         return this.pos.getOrder()?.preset_id?.use_timing;
     }

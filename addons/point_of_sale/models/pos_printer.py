@@ -53,6 +53,8 @@ class PosPrinter(models.Model):
         ),
     )
     use_lna = fields.Boolean(string="Use Local Network Access")
+    sequence = fields.Integer(default=1)
+    iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer.")
 
     def copy_data(self, default=None):
         default = dict(default or {}, pos_config_ids=[(5, 0, 0)], printer_ip="0.0.0.0")
@@ -68,7 +70,7 @@ class PosPrinter(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'product_categories_ids', 'printer_type', 'use_type', 'use_lna', 'printer_ip']
+        return ['id', 'name', 'product_categories_ids', 'printer_type', 'use_type', 'use_lna', 'printer_ip', 'iface_cashdrawer'']
 
     @api.constrains('printer_ip')
     def _constrains_printer_ip(self):

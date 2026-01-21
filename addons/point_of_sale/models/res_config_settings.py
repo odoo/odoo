@@ -83,7 +83,6 @@ class ResConfigSettings(models.TransientModel):
     pos_iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories', compute='_compute_pos_iface_available_categ_ids', readonly=False, store=True)
     pos_iface_big_scrollbars = fields.Boolean(related='pos_config_id.iface_big_scrollbars', readonly=False)
     pos_iface_group_by_categ = fields.Boolean(related='pos_config_id.iface_group_by_categ', readonly=False)
-    pos_iface_cashdrawer = fields.Boolean(string='Cashdrawer', compute='_compute_pos_iface_cashdrawer', readonly=False, store=True)
     pos_iface_print_auto = fields.Boolean(related='pos_config_id.iface_print_auto', readonly=False)
     pos_iface_print_skip_screen = fields.Boolean(related='pos_config_id.iface_print_skip_screen', readonly=False)
     pos_iface_tax_included = fields.Selection(related='pos_config_id.iface_tax_included', readonly=False)
@@ -268,14 +267,6 @@ class ResConfigSettings(models.TransientModel):
                 res_config.pos_selectable_categ_ids = res_config.pos_iface_available_categ_ids
             else:
                 res_config.pos_selectable_categ_ids = self.env['pos.category'].search([])
-
-    @api.depends('pos_config_id', 'pos_default_receipt_printer_id', 'pos_other_devices')
-    def _compute_pos_iface_cashdrawer(self):
-        for res_config in self:
-            if self._is_cashdrawer_displayed(res_config):
-                res_config.pos_iface_cashdrawer = res_config.pos_config_id.iface_cashdrawer
-            else:
-                res_config.pos_iface_cashdrawer = False
 
     @api.depends('pos_use_header_or_footer', 'pos_config_id')
     def _compute_pos_receipt_header_footer(self):

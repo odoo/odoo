@@ -119,11 +119,19 @@ export class PosTicketPrinterService {
         return status;
     }
 
+    get defaultPrinter() {
+        const DEFAULT_PRINTER_STORAGE_KEY = "pos.default_printer_id";
+        const printer_id = Number(
+            localStorage.getItem(DEFAULT_PRINTER_STORAGE_KEY + this.config.id)
+        );
+        return this.receiptPrinters.find((printer) => printer.id === printer_id);
+    }
+
     async printWithFallback({
         iframe,
         image = null,
         webFallback = true,
-        printer = this.config.default_receipt_printer_id,
+        printer = this.defaultPrinter,
         fallbacks = this.config.receipt_printer_ids,
     } = {}) {
         if (!printer) {

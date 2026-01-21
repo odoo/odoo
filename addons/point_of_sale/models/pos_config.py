@@ -100,7 +100,6 @@ class PosConfig(models.Model):
     order_backend_seq_id = fields.Many2one('ir.sequence', string='Order Backend Sequence', readonly=True, copy=False)
     order_line_seq_id = fields.Many2one('ir.sequence', string='Order Line Sequence', readonly=True, copy=False)
     device_seq_id = fields.Many2one('ir.sequence', string='Device Sequence', readonly=True, copy=False)
-    iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer.")
     iface_big_scrollbars = fields.Boolean('Large Scrollbars', help='For imprecise industrial touchscreens.')
     iface_group_by_categ = fields.Boolean("Group products by categories", help='Display products grouped by categories.')
     iface_print_auto = fields.Boolean(string='Automatic Receipt Printing', default=False,
@@ -222,7 +221,7 @@ class PosConfig(models.Model):
     @api.onchange('receipt_printer_ids')
     def _onchange_receipt_printer_ids(self):
         """Clear default_receipt_printer_id if it's removed from receipt_printer_ids"""
-        if self.default_receipt_printer_id.id not in self.receipt_printer_ids.ids:
+        if self.default_receipt_printer_id not in self.receipt_printer_ids:
             self.default_receipt_printer_id = False
 
     def _get_next_order_refs(self, device_identifier='0'):

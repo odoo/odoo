@@ -117,7 +117,7 @@
         <div class="payment-buttons d-flex flex-column gap-1">
         <!-- To make Customer and Invoice button align on a single row -->
             <div class="d-flex gap-2 w-100">
-                <t t-set="hasOptionalButtons" t-value="pos.config.iface_tipproduct and pos.config.tip_product_id or pos.config.iface_cashdrawer or pos.config.ship_later" />
+                <t t-set="hasOptionalButtons" t-value="pos.config.iface_tipproduct and pos.config.tip_product_id or (pos.config.receipt_printer_ids.length and pos.active_printer.iface_cashdrawer) or pos.config.ship_later" />
                 <button class="button partner-button btn btn-lg w-100 w-md-50 lh-lg text-truncate"
                     t-att-class="{ 'highlight text-action': currentOrder.getPartner() }"
                     t-attf-class="{{ currentOrder.isCustomerRequired ? 'btn-primary' : 'btn-secondary' }}"
@@ -139,7 +139,7 @@
                     <i class="fa me-2" t-attf-class="{{ currentOrder.isToInvoice() ? 'fa-check-square text-action' : 'fa-square-o' }}" />
                 </button>
             </div>
-            <div t-if="(pos.config.iface_tipproduct and pos.config.tip_product_id) or pos.config.iface_cashdrawer or pos.config.ship_later" class="d-flex flex-column gap-1 w-100">
+            <div t-if="(pos.config.iface_tipproduct and pos.config.tip_product_id) or (pos.config.receipt_printer_ids.length and pos.active_printer.iface_cashdrawer) or pos.config.ship_later" class="d-flex flex-column gap-1 w-100">
                 <button t-if="pos.config.iface_tipproduct and pos.config.tip_product_id" class="button btn btn-secondary btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.getTip() }"
                     t-on-click="addTip">
                     <span t-attf-class="{{currentOrder.getTip() ? 'me-auto' : 'mx-auto' }}"><i class="fa fa-heart me-2" />Tip</span>
@@ -147,7 +147,7 @@
                         <t t-esc="env.utils.formatCurrency(currentOrder.getTip())" />
                     </t>
                 </button>
-                <button t-if="pos.config.iface_cashdrawer" class="button js_cashdrawer btn btn-secondary btn-lg py-3 rounded"
+                <button t-if="pos.config.receipt_printer_ids.length and pos.active_printer.iface_cashdrawer" class="button js_cashdrawer btn btn-secondary btn-lg py-3 rounded"
                     t-on-click="() => this.pos.openCashbox()">
                     <i class="fa fa-archive me-2" />Open Cashbox
                 </button>

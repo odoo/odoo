@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.SelectDefaultPrinterPopup" owl="1">
-        <Dialog size="'sm'" title.translate="Several printers are available">
-            <t t-esc="'Choose another printer'"/>
+        <Dialog size="'sm'" title="props.title">
+            <t t-esc="props.header"/>
             <t t-foreach="props.receipt_printers" t-as="p" t-key="p.id">
                 <div class="my-2">
                     <label class="d-flex align-items-center">
@@ -17,6 +17,9 @@
                     </label>
                 </div>
             </t>
+            <div t-if="props.note" class="text-warning">
+                <t t-esc="props.note" />
+            </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="confirmSelection" t-att-disabled="!state.selectedId">
                     Confirm

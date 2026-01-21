@@ -19,6 +19,7 @@
                             <field name="printer_ip" invisible="printer_type != 'epson_epos'" placeholder="10.100.50.87" required="printer_type == 'epson_epos'"/>
                             <field name="use_lna"/>
                             <field name="product_categories_ids" invisible="use_type != 'preparation'" widget="many2many_tags" required="use_type == 'preparation'"/>
+                            <field name="iface_cashdrawer" string="Link Cashdrawer" invisible="use_type != 'receipt'"/>
                         </group>
                     </group>
                 </sheet>
@@ -45,10 +46,23 @@
         <field name="model">pos.printer</field>
         <field name="arch" type="xml">
             <list string="Printers">
+            <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="use_type"/>
                 <field name="printer_type"/>
             </list>
+        </field>
+    </record>
+
+    <record id="view_pos_printer_search" model="ir.ui.view">
+        <field name="name">Printers</field>
+        <field name="model">pos.printer</field>
+        <field name="arch" type="xml">
+            <search string="Printers">
+                <group>
+                    <filter string="Type" name="group_by_type" context="{'group_by':'use_type'}"/>
+                </group>
+            </search>
         </field>
     </record>
 
