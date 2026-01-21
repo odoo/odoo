@@ -181,10 +181,15 @@ test("empty placeholder selection input for selection field", async () => {
     );
     getEditor();
     expect(":iframe select option").toHaveCount(3);
-    await contains(":iframe .s_website_form_field[data-type='many2one'").click();
-    await contains(".o_we_table_wrapper input[type='checkbox']").click();
+
+    await contains(":iframe .s_website_form_field[data-type='many2one']").click();
+    await contains("div[data-action-id='toggleAllowEmpty'] .form-switch").click();
     expect(":iframe select option").toHaveCount(4);
-    expect(":iframe select option:eq(0)").toHaveText("");
+    expect(".o_we_table_wrapper tr").toHaveCount(3);
+    expect(":iframe select option:eq(0)").toHaveText("Please choose any one option");
+
+    await contains("div[data-action-id='setEmptyPlaceholder'] input").edit("test");
+    expect(":iframe select option:eq(0)").toHaveText("test");
 });
 
 test("Set 'Message' as form success action and show/hide the message preview", async () => {
@@ -674,7 +679,7 @@ describe("Many2one Field", () => {
         expect(":iframe select option").toHaveCount(2, {
             message: "Disabling Belgium as selected item should add an empty item selected",
         });
-        expect(":iframe select option[selected]").toHaveText("");
+        expect(":iframe select option[selected]").toHaveText("Please choose any one option");
 
         // Select it back
         await contains(".o_we_table_wrapper table tr input[type=checkbox]").click();

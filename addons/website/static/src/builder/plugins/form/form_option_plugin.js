@@ -181,6 +181,8 @@ export class FormOptionPlugin extends Plugin {
             SetDefaultErrorMessageAction,
             SetRequirementComparatorAction,
             SetMultipleFilesAction,
+            ToggleAllowEmptyAction,
+            SetEmptyPlaceholderAction,
         },
         content_not_editable_selectors: ".s_website_form form",
         content_editable_selectors: [
@@ -1313,6 +1315,37 @@ export class ToggleDescriptionAction extends BuilderAction {
         return !!description;
     }
 }
+export class ToggleAllowEmptyAction extends BuilderAction {
+    static id = "toggleAllowEmpty";
+    static dependencies = ["websiteFormOption"];
+    load(context) {
+        return this.dependencies.websiteFormOption.prepareFields(context);
+    }
+    apply({ editingElement: fieldEl, loadResult: fields }) {
+        const field = getActiveField(fieldEl, { fields });
+        field.allowEmpty = !field.allowEmpty;
+        field.records.forEach((rec) => (rec.selected = false));
+        this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+    }
+    isApplied({ editingElement: fieldEl }) {
+        return !!fieldEl.querySelector(".s_website_form_empty_option");
+    }
+}
+export class SetEmptyPlaceholderAction extends BuilderAction {
+    static id = "setEmptyPlaceholder";
+    static dependencies = ["websiteFormOption"];
+    load(context) {
+        return this.dependencies.websiteFormOption.prepareFields(context);
+    }
+    apply({ editingElement: fieldEl, loadResult: fields, value }) {
+        const field = getActiveField(fieldEl, { fields });
+        field.placeholder = value;
+        this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+    }
+    getValue({ editingElement: fieldEl }) {
+        return fieldEl.querySelector(".s_website_form_empty_option")?.textContent;
+    }
+}
 export class SelectTextareaValueAction extends BuilderAction {
     static id = "selectTextareaValue";
     apply({ editingElement: fieldEl, value }) {
@@ -1443,18 +1476,13 @@ export class SetFormCustomFieldValueListAction extends BuilderAction {
         const valueList = JSON.parse(value);
         const field = getActiveField(fieldEl, { fields });
         field.records = valueList;
+        // add an empty option, if no option is selected
+        field.allowEmpty = !field.records.some((value) => value.selected);
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
     }
     getValue({ editingElement: fieldEl }) {
         const fields = [];
         const field = getActiveField(fieldEl, { fields });
-        if (
-            field.records.length &&
-            field.records[0].display_name === "" &&
-            field.records[0].selected === true
-        ) {
-            field.records.shift();
-        }
         return JSON.stringify(field.records);
     }
 }

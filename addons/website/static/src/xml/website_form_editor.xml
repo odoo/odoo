@@ -292,6 +292,7 @@
                 <select t-else="" class="form-select s_website_form_input" t-att-name="field.name"
                     t-att-required="field.required || field.modelRequired || None" t-att-id="field.id"
                     t-attf-data-link-state-to-country="{{ field.name == 'state_id' and field.linkStateToCountry ? 'true' : 'false' }}">
+                    <option t-if="field.allowEmpty" t-out="field.placeholder" class="s_website_form_empty_option" value="" selected="selected"/>
                     <t t-foreach="field.records" t-as="record" t-key="record_index">
                         <option t-out="record.display_name" t-att-id="field.id + record_index" t-att-value="record.id"
                             t-att="{

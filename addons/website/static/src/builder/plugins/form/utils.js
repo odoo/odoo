@@ -95,18 +95,6 @@ export function renderField(field, resetId = false) {
     if (!field.id) {
         field.id = generateHTMLId();
     }
-    if (field.records && (field.type === "many2one" || field.type === "selection")) {
-        const hasDefault =
-            field.records[0]?.["display_name"] === "" ||
-            field.records.some((value) => value.selected);
-        if (!hasDefault) {
-            field.records.unshift({
-                id: "",
-                display_name: "",
-                selected: true,
-            });
-        }
-    }
     const params = { field: { ...field }, defaultName: field.string || _t("Field") };
     if (["url", "email", "tel"].includes(field.type)) {
         params.field.inputType = field.type;
@@ -250,6 +238,7 @@ export function setActiveProperties(fieldEl, field) {
         'input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="url"], textarea'
     );
     const fileInputEl = fieldEl.querySelector("input[type=file]");
+    const selectInputEl = fieldEl.querySelector("select");
     const description = fieldEl.querySelector(".s_website_form_field_description");
     field.placeholder = input?.placeholder || "";
     if (input) {
@@ -260,6 +249,10 @@ export function setActiveProperties(fieldEl, field) {
     } else if (fileInputEl) {
         field.maxFilesNumber = fileInputEl.dataset.maxFilesNumber;
         field.maxFileSize = fileInputEl.dataset.maxFileSize;
+    } else if (selectInputEl) {
+        const emptyOptionEl = selectInputEl.querySelector(".s_website_form_empty_option");
+        field.allowEmpty = !!emptyOptionEl;
+        field.placeholder = emptyOptionEl?.textContent || _t("Please choose any one option");
     }
     // property value is needed for date/datetime (formated date).
     field.propertyValue = input && input.value;
@@ -514,7 +507,7 @@ export function getListItems(fieldEl) {
     const multipleInputsEl = getMultipleInputs(fieldEl);
     let options = [];
     if (selectEl) {
-        options = [...selectEl.querySelectorAll("option")];
+        options = [...selectEl.querySelectorAll("option:not(.s_website_form_empty_option)")];
     } else if (multipleInputsEl) {
         options = [...multipleInputsEl.querySelectorAll(".checkbox input, .radio input")];
     }

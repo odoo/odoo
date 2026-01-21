@@ -195,6 +195,14 @@
             action="'toggleRequired'" actionParam="'s_website_form_required'"
         />
     </BuilderRow>
+    <BuilderRow label.translate="Allow Empty">
+        <BuilderCheckbox t-if="domStateCurrentFieldInput.nodeName === 'SELECT'"
+            id="'allow_empty_opt'" preview="false"
+            action="'toggleAllowEmpty'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Placeholder" level="1">
+        <BuilderTextInput t-if="isActiveItem('allow_empty_opt')" action="'setEmptyPlaceholder'" placeholder.translate="Please choose any one option"/>
+    </BuilderRow>
     <BuilderRow label.translate="Max # of Files">
         <BuilderNumberInput id="'max_files_number_opt'" t-if="isMaxFilesVisible"
             title.translate="The maximum number of files that can be uploaded."
