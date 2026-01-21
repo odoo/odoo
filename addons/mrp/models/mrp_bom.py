@@ -4,7 +4,7 @@
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv.expression import AND, OR
-from odoo.tools import float_round
+from odoo.tools import float_compare, float_is_zero, float_round
 from odoo.tools.misc import clean_context
 
 from collections import defaultdict
@@ -198,8 +198,10 @@ class MrpBom(models.Model):
                     raise ValidationError(_("By-product %s should not be the same as BoM product.", bom.display_name))
                 if byproduct.cost_share < 0:
                     raise ValidationError(_("By-products cost shares must be positive."))
-            if sum(bom.byproduct_ids.mapped('cost_share')) > 100:
-                raise ValidationError(_("The total cost share for a BoM's by-products cannot exceed 100."))
+            for product in bom.product_tmpl_id.product_variant_ids:
+                total_variant_cost_share = sum(bom.byproduct_ids.filtered(lambda bp: not bp._skip_byproduct_line(product) and not float_is_zero(bp.product_qty, precision_rounding=bp.product_uom_id.rounding)).mapped('cost_share'))
+                if float_compare(total_variant_cost_share, 100, precision_digits=2) > 0:
+                    raise ValidationError(_("The total cost share for a BoM's by-products cannot exceed 100."))
 
     @api.onchange('bom_line_ids', 'product_qty', 'product_id', 'product_tmpl_id')
     def onchange_bom_structure(self):
