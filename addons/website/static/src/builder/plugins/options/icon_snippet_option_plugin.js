@@ -11,7 +11,7 @@ export class IconSnippetOptionPlugin extends Plugin {
         so_content_addition_selector: [".s_icon"],
     };
 
-    async onSnippetDropped({ snippetEl }) {
+    async onSnippetDropped({ snippetEl, dragState }) {
         if (!snippetEl.matches(".s_icon")) {
             return;
         }
@@ -22,6 +22,7 @@ export class IconSnippetOptionPlugin extends Plugin {
                 iconInserted = true;
                 snippetEl.insertAdjacentElement("afterend", selectedIconEl);
                 snippetEl.remove();
+                dragState.replacedSnippetEl = selectedIconEl;
                 // ensure the icon is wrapped in a block("P") element to allow
                 // line breaks
                 wrapInlinesInBlocks(selectedIconEl.parentElement);
