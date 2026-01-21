@@ -215,6 +215,7 @@
         'wizard/base_language_install_views.xml',
         'wizard/blocked_third_party_domains.xml',
         'wizard/website_export_views.xml',
+        'wizard/website_import_views.xml',
         'wizard/website_robots.xml',
         # Replaces a post_init_hook that should be run on upgrade too.
         'data/update_theme_images.xml',

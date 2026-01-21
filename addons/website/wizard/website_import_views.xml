@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_website_import_wizard" model="ir.ui.view">
+        <field name="name">website.import.wizard.form</field>
+        <field name="model">website.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Website">
+                <group>
+                    <field name="import_file" filename="import_filename" required="1"/>
+                    <field name="import_filename" invisible="1"/>
+                </group>
+                <group string="New Website">
+                    <field name="website_name" required="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </group>
+                <footer>
+                    <button string="Import" type="object" name="action_import"
+                        class="btn-primary" groups="website.group_website_designer"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_website_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import Website</field>
+        <field name="res_model">website.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_website_import_wizard"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_website_import_wizard"
+        name="Import Website"
+        parent="website.menu_website_global_configuration"
+        action="action_website_import_wizard"
+        groups="website.group_website_designer,base.group_system"
+        sequence="51"/>
+
+</odoo>
