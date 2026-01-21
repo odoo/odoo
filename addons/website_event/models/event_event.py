@@ -498,7 +498,7 @@ class EventEvent(models.Model):
             'details': self._get_external_description(),
         }
         if self.address_id:
-            params.update(location=self.address_inline)
+            params.update(location=self.contact_address_inline)
         encoded_params = werkzeug.urls.url_encode(params)
         google_url = GOOGLE_CALENDAR_URL + encoded_params
         iCal_url = f'/event/{self.id:d}/ics'

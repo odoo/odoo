@@ -97,7 +97,7 @@
                     <br/>
                 </t>
                 <strong>Address:</strong>
-                <span t-out="o.partner_id._display_address(without_company=True)"/>
+                <span t-out="o.partner_id.address"/>
             </div>
             <div class="col-6">
                 <strong>Due Date:</strong>
@@ -113,7 +113,7 @@
                 <t t-if="o.partner_shipping_id and o.partner_id not in o.partner_shipping_id" >
                     <br/>
                     <strong>Delivery Address:</strong>
-                    <span t-out="o.partner_shipping_id._display_address(without_company=True)"/>
+                    <span t-out="o.partner_shipping_id.address"/>
                 </t>
                 <br/>
                 <strong>GIRO:</strong>

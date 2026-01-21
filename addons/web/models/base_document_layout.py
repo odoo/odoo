@@ -33,16 +33,7 @@ class BaseDocumentLayout(models.TransientModel):
     @api.model
     def _default_company_details(self):
         company = self.env.company
-        address_format, company_data = company.partner_id._prepare_display_address()
-        address_format = self._clean_address_format(address_format, company_data)
-        return nl2br_enclose(address_format, 'div') % company_data
-
-    def _clean_address_format(self, address_format, company_data):
-        missing_company_data = [k for k, v in company_data.items() if not v]
-        for key in missing_company_data:
-            if key in address_format:
-                address_format = address_format.replace(f'%({key})s\n', '')
-        return address_format
+        return nl2br_enclose(company.partner_id.contact_address, 'div')
 
     company_id = fields.Many2one(
         'res.company', default=lambda self: self.env.company, required=True)

@@ -13,7 +13,6 @@ class ResPartner(models.Model):
         groups="point_of_sale.group_pos_user",
     )
     pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
-    pos_contact_address = fields.Char('PoS Address', compute='_compute_pos_contact_address')
     invoice_emails = fields.Char(compute='_compute_invoice_emails', readonly=True)
     fiscal_position_id = fields.Many2one(
         'account.fiscal.position',
@@ -22,11 +21,6 @@ class ResPartner(models.Model):
         help="Fiscal positions are used to adapt taxes and accounts for particular "
              "customers or sales orders/invoices. The default value comes from the customer.",
     )
-
-    @api.depends(lambda self: self._display_address_depends())
-    def _compute_pos_contact_address(self):
-        for partner in self:
-            partner.pos_contact_address = partner._display_address(without_company=True)
 
     def _compute_application_statistics_hook(self):
         data_list = super()._compute_application_statistics_hook()
@@ -81,7 +75,7 @@ class ResPartner(models.Model):
     def _load_pos_data_fields(self, config):
         return [
             'id', 'name', 'street', 'street2', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'email',
-            'barcode', 'write_date', 'property_product_pricelist', 'parent_name', 'pos_contact_address',
+            'barcode', 'write_date', 'property_product_pricelist', 'parent_name', 'address',
             'invoice_emails', 'fiscal_position_id', 'is_company', 'property_account_receivable_id',
         ]
 

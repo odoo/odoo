@@ -79,7 +79,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12 col-12">
-                    <p><t t-if="company_id"><strong>© <t t-out="company_id.partner_id.name"/></strong><br/><t t-out="company_id.partner_id._display_address()"/><br/></t>You're seeing this because you've shopped with us or joined our mailing list. <a class="btn btn-link" role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>
+                    <p><t t-if="company_id"><strong>© <t t-out="company_id.partner_id.name"/></strong><br/><t t-out="company_id.partner_id.contact_address"/><br/></t>You're seeing this because you've shopped with us or joined our mailing list. <a class="btn btn-link" role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>
                 </div>
             </div>
         </div>

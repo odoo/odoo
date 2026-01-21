@@ -25,15 +25,19 @@ class ResPartner(models.Model):
 
         return super(ResPartner, self).write(vals)
 
-    def _get_country_name(self):
+    @api.depends('country_id')
+    @api.depends_context('snailmail_layout')
+    def _compute_country_name(self):
         # when sending a letter, thus rendering the report with the snailmail_layout,
         # we need to override the country name to its english version following the
         # dictionary imported in country_utils.py
-        country_code = self.country_id.code
-        if self.env.context.get('snailmail_layout') and country_code in SNAILMAIL_COUNTRIES:
-            return SNAILMAIL_COUNTRIES.get(country_code)
-
-        return super(ResPartner, self)._get_country_name()
+        super()._compute_country_name()
+        if not self.env.context.get('snailmail_layout'):
+            return
+        for partner in self:
+            code = partner.country_id.code
+            if code in SNAILMAIL_COUNTRIES:
+                partner.country_name = SNAILMAIL_COUNTRIES[code]
 
     @api.model
     def _get_address_format(self):
