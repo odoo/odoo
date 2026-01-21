@@ -148,7 +148,7 @@ class WebsiteProfile(http.Controller):
         user_id = int(kwargs.get('user_id', 0))
         user = request.env['res.users'].browse(user_id or request.env.uid)
         values = self._profile_edition_preprocess_values(user, **kwargs)
-        if not user.partner_id.can_edit_vat() and values.get('country_id') != user.partner_id.country_id.id:
+        if not user.partner_id._can_edit_country() and values.get('country_id') != user.partner_id.country_id.id:
             raise UserError(_("Changing the country is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."))
         user.write(values)
 
