@@ -51,7 +51,6 @@ class IrActionsReport(models.Model):
         :param is_main_pdf: Is the extra attachments list containing ONLY the Invoice PDF
         :param check_for_additionnal_document_elements: flag to not embed extra attachments if any document is already embedded into the xml
         """
-        # [{'name': '', 'raw_b64': '', 'mimetype': ''}, {'name': '', 'raw_b64': '', 'mimetype': ''}]
         old_xml = base64.b64decode(xml_attachment.with_context(bin_size=False).datas, validate=True)
         tree = etree.fromstring(old_xml)
         anchor_elements = tree.xpath("//*[local-name()='AccountingSupplierParty']")
