@@ -493,20 +493,21 @@ class HrLeave(models.Model):
         for holiday in self:
             holiday.department_id = holiday.employee_id.department_id
 
-    @api.depends('date_from', 'date_to', 'holiday_status_id')
+    @api.depends('request_date_from', 'request_date_to', 'holiday_status_id')
     def _compute_has_mandatory_day(self):
-        date_from, date_to = min(self.mapped('date_from')), max(self.mapped('date_to'))
+        date_from, date_to = min(self.mapped('request_date_from')), max(self.mapped('request_date_to'))
         if date_from and date_to:
             # Sudo to get access to version fields on employee (job_id)
             mandatory_days = self.employee_id.sudo()._get_mandatory_days(
-                date_from.date(),
-                date_to.date())
+                date_from,
+                date_to,
+            )
 
             for leave in self:
                 department_ids = leave.employee_id.department_id.ids
                 domain = [
-                    ('start_date', '<=', leave.date_to.date()),
-                    ('end_date', '>=', leave.date_from.date()),
+                    ('start_date', '<=', leave.request_date_to),
+                    ('end_date', '>=', leave.request_date_from),
                     '|',
                         ('resource_calendar_id', '=', False),
                         ('resource_calendar_id', '=', leave.resource_calendar_id.id),
@@ -522,7 +523,7 @@ class HrLeave(models.Model):
 
                 if leave.holiday_status_id.company_id:
                     domain += [('company_id', '=', leave.holiday_status_id.company_id.id)]
-                leave.has_mandatory_day = leave.date_from and leave.date_to and mandatory_days.filtered_domain(domain)
+                leave.has_mandatory_day = leave.request_date_from and leave.request_date_to and mandatory_days.filtered_domain(domain)
         else:
             self.has_mandatory_day = False
 
