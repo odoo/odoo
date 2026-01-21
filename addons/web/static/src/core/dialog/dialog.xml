@@ -9,7 +9,7 @@
                 t-attf-class="o_modal_design_{{ design }} {{ !props.withBodyPadding ? 'o_modal_no_body_padding': 'o_modal_body_padding' }}"
                 t-ref="modalRef"
                 >
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" t-attf-class="modal-{{props.size}}">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" t-attf-class="modal-{{ size }}">
                     <div class="modal-content" t-att-class="props.contentClass" t-att-style="contentStyle">
                         <header t-if="props.header" class="modal-header">
                             <t t-slot="header" close="data.close" isFullscreen="isFullscreen">
