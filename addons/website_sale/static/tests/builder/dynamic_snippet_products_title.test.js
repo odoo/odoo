@@ -52,6 +52,9 @@ test("for dynamic snippet products, the numberOfElements should be 2 when title 
     expect(snippetSelector).toHaveCount(1);
     await clickAndWait(snippetSelector);
     const snippetEl = queryOne(snippetSelector);
+    expect(
+        "[data-container-title='Products'] [data-label='Section Title'] button[data-action-param='top']"
+    ).toHaveClass("active");
     await checkNumberOfElements("left", "Section Title", 2, snippetEl);
     await checkNumberOfElements("container-fluid", "Content Width", 4, snippetEl);
     const carouselEl = getEditableContent().querySelector(".carousel");
