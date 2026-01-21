@@ -354,8 +354,17 @@ export class MassMailingHtmlField extends HtmlField {
         const valueFragment = parseHTML(document, value);
 
         const resId = this.props.record.resId;
-        const inlineValue = await this.convertToEmailHtml(valueFragment);
-        if (resId !== this.props.record.resId) {
+        let inlineValue;
+        try {
+            inlineValue = await this.convertToEmailHtml(valueFragment);
+        } catch {
+            inlineValue = null;
+        }
+        if (
+            status(this) === "destroyed" ||
+            resId !== this.props.record.resId ||
+            inlineValue === null
+        ) {
             return;
         }
 

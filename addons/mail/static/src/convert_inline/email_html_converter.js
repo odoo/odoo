@@ -18,6 +18,9 @@ export class EmailHtmlConverter extends PluginManager {
         this.isReady = true;
 
         const inlineTemplate = await this.htmlConversion();
+        if (!inlineTemplate) {
+            return null;
+        }
 
         // Old toInline
         // TODO EGGMAIL: adapt usage, use plugin instead of old method
@@ -41,6 +44,9 @@ export class EmailHtmlConverter extends PluginManager {
                 .map((job) => job())
                 .flat()
         );
+        if (this.isDestroyed) {
+            return null;
+        }
         // 2 notify plugins that the reference is ready to be used as such (e.g. for style computations)
         this.dispatchTo("reference_content_loaded_handlers");
 
