@@ -771,7 +771,9 @@ function orderByField(model, orderBy, records) {
             }
         }
         let result;
-        if (v1 === false) {
+        if (v1 === v2) {
+            result = 0;
+        } else if (v1 === false) {
             result = 1;
         } else if (v2 === false) {
             result = -1;
@@ -783,7 +785,7 @@ function orderByField(model, orderBy, records) {
                     }": values must be of the same primitive type (got ${typeof v1} and ${typeof v2})`
                 );
             }
-            result = v1 > v2 ? 1 : v1 < v2 ? -1 : 0;
+            result = v1 > v2 ? 1 : -1;
         }
         return direction === "DESC" ? -result : result;
     });
