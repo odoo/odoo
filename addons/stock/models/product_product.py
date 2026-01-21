@@ -290,7 +290,7 @@ class ProductProduct(models.Model):
             .filtered(lambda p: p.type != "service")
             .with_context(prefetch_fields=True)
         )
-        res = products._compute_quantities_dict(
+        res = products._prepare_quantities_vals(
             self.env.context.get("lot_id"),
             self.env.context.get("owner_id"),
             self.env.context.get("package_id"),
