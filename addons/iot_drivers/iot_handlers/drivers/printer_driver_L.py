@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from base64 import b64decode
-from cups import IPPError, IPP_JOB_COMPLETED, IPP_JOB_PROCESSING, IPP_JOB_PENDING, CUPS_FORMAT_AUTO
+from threading import Lock
+from cups import IPPError, IPP_JOB_COMPLETED, IPP_JOB_PROCESSING, IPP_JOB_PENDING, CUPS_FORMAT_AUTO, Connection
 from escpos import printer
 from escpos.escpos import EscposIO
 import escpos.exceptions
@@ -13,7 +14,6 @@ from odoo import http
 from odoo.addons.iot_drivers.connection_manager import connection_manager
 from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import EscposNotAvailableError, PrinterDriverBase
-from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_L import conn, cups_lock
 from odoo.addons.iot_drivers.main import iot_devices
 from odoo.addons.iot_drivers.tools import helpers, route, system, wifi
 from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
@@ -25,6 +25,8 @@ class PrinterDriver(PrinterDriverBase):
 
     def __init__(self, identifier, device):
         super().__init__(identifier, device)
+        self.conn = Connection()
+        self.cups_lock = Lock()
         self.device_connection = device['device-class'].lower()
         self.receipt_protocol = 'star' if 'STR_T' in device['device-id'] else 'escpos'
         self.connected_by_usb = self.device_connection == 'direct'
@@ -85,11 +87,11 @@ class PrinterDriver(PrinterDriverBase):
                 _logger.warning("Failed to print via python-escpos, falling back to CUPS")
 
         try:
-            with cups_lock:
-                job_id = conn.createJob(self.device_identifier, 'Odoo print job', {'document-format': CUPS_FORMAT_AUTO})
-                conn.startDocument(self.device_identifier, job_id, 'Odoo print job', CUPS_FORMAT_AUTO, 1)
-                conn.writeRequestData(data, len(data))
-                conn.finishDocument(self.device_identifier)
+            with self.cups_lock:
+                job_id = self.conn.createJob(self.device_identifier, 'Odoo print job', {'document-format': CUPS_FORMAT_AUTO})
+                self.conn.startDocument(self.device_identifier, job_id, 'Odoo print job', CUPS_FORMAT_AUTO, 1)
+                self.conn.writeRequestData(data, len(data))
+                self.conn.finishDocument(self.device_identifier)
             self.job_ids.append(job_id)
             if action_unique_id:
                 self.job_action_ids[job_id] = action_unique_id
@@ -263,15 +265,15 @@ class PrinterDriver(PrinterDriverBase):
 
     def _cancel_job_with_error(self, job_id, error_message):
         self.job_ids.remove(job_id)
-        conn.cancelJob(job_id)
+        self.conn.cancelJob(job_id)
         self.send_status(
             status='error', message=error_message, action_unique_id=self.job_action_ids.pop(job_id, None)
         )
 
     def _check_job_status(self, job_id):
         try:
-            with cups_lock:
-                job = conn.getJobAttributes(job_id, requested_attributes=['job-state', 'job-state-reasons', 'job-printer-state-message', 'time-at-creation'])
+            with self.cups_lock:
+                job = self.conn.getJobAttributes(job_id, requested_attributes=['job-state', 'job-state-reasons', 'job-printer-state-message', 'time-at-creation'])
                 _logger.debug("job details for job id #%d: %s", job_id, job)
                 job_state = job['job-state']
                 if job_state == IPP_JOB_COMPLETED:
