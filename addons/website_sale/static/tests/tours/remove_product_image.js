@@ -30,19 +30,6 @@ const enterEditModeOfTestProduct = () => [
     ...clickOnEditAndWaitEditMode(),
 ];
 
-const removeImg = [
-    {
-        content: "Click on Remove",
-        trigger: ".o_customize_tab [data-container-title='Image'] button[data-action-id='removeMedia']",
-        run: "click",
-    },
-    // If the snippet editor is not visible, the remove process is considered as
-    // finished.
-    {
-        content: "Check that the snippet editor is not visible",
-        trigger: ".o_customize_tab:not(:has([data-container-title='Image']))",
-    },
-];
 
 registerWebsitePreviewTour(
     "website_sale.add_and_remove_main_product_image_no_variant",
@@ -65,7 +52,21 @@ registerWebsitePreviewTour(
             content: "Check that the snippet editor of the clicked image has been loaded",
             trigger: ".o_customize_tab [data-container-title='Image']",
         },
-        ...removeImg,
+        {
+            content: "Ensure the new image is really loaded in DOM before click on remove",
+            trigger: `:iframe .o_product_detail_img_wrapper img:not([alt='Test Remove Image'])`,
+        },
+        // Double check not placeholder image is loaded with :not(:contains(5.9 kB)
+        {
+            content: "Click on Remove",
+            trigger: ".o_customize_tab [data-container-title='Image']:has(.o-hb-image-size-info:not(:contains(5.9 kB))) button[data-action-id='removeMedia']",
+            run: "click",
+        },
+        // If the snippet editor is not visible, the remove process is considered as finished.
+        {
+            content: "Check that the snippet editor is not visible",
+            trigger: ".o_customize_tab:not(:has([data-container-title='Image']))",
+        },
     ]
 );
 registerWebsitePreviewTour(
@@ -79,6 +80,19 @@ registerWebsitePreviewTour(
         ...clickOnSave(),
         ...clickOnEditAndWaitEditMode(),
         ...clickOnImgAndWaitForLoad,
-        ...removeImg,
+        {
+            content: "Ensure the image is really loaded in DOM before click on remove",
+            trigger: `:iframe .o_product_detail_img_wrapper img`,
+        },
+        {
+            content: "Click on Remove",
+            trigger: ".o_customize_tab [data-container-title='Image']:has(.o-hb-image-size-info) button[data-action-id='removeMedia']",
+            run: "click",
+        },
+        // If the snippet editor is not visible, the remove process is considered as finished.
+        {
+            content: "Check that the snippet editor is not visible",
+            trigger: ".o_customize_tab:not(:has([data-container-title='Image']))",
+        },
     ]
 );
