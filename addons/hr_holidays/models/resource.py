@@ -131,7 +131,7 @@ class ResourceCalendarLeaves(models.Model):
     @api.depends('calendar_id')
     def _compute_company_id(self):
         for leave in self:
-            leave.company_id = leave.holiday_id.employee_id.company_id or leave.calendar_id.company_id or self.env.company
+            leave.company_id = leave.holiday_id.employee_id.company_id or leave.calendar_id.company_id or leave.company_id or self.env.company
 
 
 class ResourceCalendar(models.Model):
