@@ -751,6 +751,89 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         })
         self.assertEqual(node[0].text, company.vat, "Company VAT fallback")
 
+    def test_import_and_group_lines_by_tax(self):
+        """
+        Test the group/ungroup lines action on account.move
+        """
+        self.env.ref('base.EUR').active = True
+        tax_16 = self.env["account.tax"].create({
+            'name': '16 %',
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'amount': 16.0,
+        })
+        tax_21 = self.env["account.tax"].create({
+            'name': '21 %',
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'amount': 21.0,
+        })
+
+        file_path = "bis3_bill_group_by_tax.xml"
+        file_path = f"{self.test_module}/tests/test_files/{file_path}"
+        with file_open(file_path, 'rb') as file:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'bis3_bill_group_by_tax.xml',
+                'raw': file.read(),
+            })
+        bill = self.import_attachment(xml_attachment)
+
+        # Should group lines by tax
+        bill.action_group_ungroup_lines_by_tax()
+        self.assertRecordValues(bill.invoice_line_ids, [
+            {
+                'quantity': 1.0,
+                'price_unit': 600.0,
+                'price_subtotal': 600.0,
+                'price_total': 696.00,
+                'tax_ids': tax_16.ids,
+            },
+            {
+                'quantity': 1.0,
+                'price_unit': 1300.0,
+                'price_subtotal': 1300.0,
+                'price_total': 1573.00,
+                'tax_ids': tax_21.ids,
+            },
+        ])
+        self.assertRecordValues(bill, [{
+            'amount_untaxed': 1900.0,
+            'amount_tax': 369,
+            'amount_total': 2269.00,
+        }])
+
+        # Should ungroup lines from xml
+        bill.action_group_ungroup_lines_by_tax()
+        self.assertRecordValues(bill.invoice_line_ids, [
+            {
+                'quantity': 1.0,
+                'price_unit': 600.0,
+                'price_subtotal': 600.0,
+                'price_total': 696.00,
+                'tax_ids': tax_16.ids,
+            },
+            {
+                'quantity': 1.0,
+                'price_unit': 300.0,
+                'price_subtotal': 300.0,
+                'price_total': 363.00,
+                'tax_ids': tax_21.ids,
+            },
+            {
+                'quantity': 2.0,
+                'price_unit': 500.0,
+                'price_subtotal': 1000.0,
+                'price_total': 1210.00,
+                'tax_ids': tax_21.ids,
+            },
+        ])
+        self.assertRecordValues(bill, [{
+            'amount_untaxed': 1900.0,
+            'amount_tax': 369,
+            'amount_total': 2269.00,
+        }])
+
     def test_ubl_split_fixed_taxes_into_allowance_charges_or_extra_invoice_lines(self):
         """Test that fixed taxes are split correctly:
         - fixed taxes that affect the base are exported as AllowanceCharge.
