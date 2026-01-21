@@ -8,7 +8,12 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
+import { serializeDateTime } from "@web/core/l10n/dates";
+import { clickEvent } from "@web/../tests/views/calendar/calendar_test_helpers";
 import { preloadBundle } from "@web/../tests/web_test_helpers";
+
+const { DateTime } = luxon;
 
 defineCalendarModels();
 preloadBundle("web.fullcalendar_lib");
@@ -44,7 +49,8 @@ test("activity click on Reschedule", async () => {
     await contains(".o_calendar_view");
 });
 
-test("Can cancel activity linked to an event", async () => {
+test("Can delete activity linked to an event", async () => {
+    registerArchs({ "calendar.event,false,calendar": `<calendar date_start="start"/>` });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Milan Kundera" });
     const activityTypeId = pyEnv["mail.activity.type"].create({
@@ -57,7 +63,7 @@ test("Can cancel activity linked to an event", async () => {
     const calendaMeetingId = pyEnv["calendar.event"].create({
         res_model: "calendar.event",
         name: "meeting1",
-        start: "2022-07-06 06:30:00",
+        start: serializeDateTime(DateTime.now().plus({ days: 1 })),
         attendee_ids: [attendeeId],
     });
     pyEnv["mail.activity"].create({
@@ -70,6 +76,11 @@ test("Can cancel activity linked to an event", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Activity .btn", { text: "Cancel" });
-    await contains(".o-mail-Activity", { count: 0 });
+    await click(".o-mail-Activity .btn", { text: "Reschedule" });
+    await contains(".o_calendar_view");
+    await animationFrame();
+    await clickEvent(calendaMeetingId);
+    await click(".o-overlay-container .o_cw_popover_delete");
+    await click(".o_dialog .modal-footer button.btn.btn-danger");
+    await contains(`.o_event[data-event-id="${calendaMeetingId}"]`, { count: 0 });
 });

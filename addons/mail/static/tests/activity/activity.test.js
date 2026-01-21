@@ -4,6 +4,7 @@ import {
     click,
     contains,
     defineMailModels,
+    mailModels,
     inputFiles,
     openFormView,
     start,
@@ -16,6 +17,14 @@ import { deserializeDateTime, serializeDate, today } from "@web/core/l10n/dates"
 import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
+mailModels.MailActivity._views = {
+    form: `
+        <form>
+            <footer>
+                <button string="Delete" type="object" name="unlink" icon="fa-trash" class="btn-danger ms-auto"/>
+            </footer>
+        </form>`,
+};
 defineMailModels();
 
 test("activity upload document is available", async () => {
@@ -422,7 +431,7 @@ test("activity click on edit should pass correct context", async () => {
     await expect.waitForSteps(["do_action"]);
 });
 
-test("activity click on cancel", async () => {
+test("activity click on edit then delete", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
@@ -439,7 +448,8 @@ test("activity click on cancel", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Activity .btn:text('Cancel')");
+    await click(".o-mail-Activity .btn:text('Edit')");
+    await click(".modal-dialog .btn:text('Delete')");
     await contains(".o-mail-Activity", { count: 0 });
     await expect.waitForSteps(["unlink"]);
 });

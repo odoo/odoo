@@ -421,7 +421,7 @@ class FleetVehicle(models.Model):
                 ('res_id', 'in', self.ids),
                 ('note', 'ilike', _('Review driver change')),
                 ('user_id', 'in', self.manager_id.ids or [self.env.user.id])
-            ]).action_cancel()
+            ]).unlink()
 
             cleanup = set()
             for vehicle in self:
