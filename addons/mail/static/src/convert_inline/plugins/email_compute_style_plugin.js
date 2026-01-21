@@ -44,11 +44,14 @@ export class EmailComputeStylePlugin extends BasePlugin {
             "vertical-align",
             "width",
         ],
+        update_layout_dimensions_handlers: this.updateLayoutDimensions.bind(this),
     };
 
     setup() {
         this.properties = new Set(); // properties to register in a snapshot
-        this.computedStyles = new WeakMap(); // element to computed snapshot proxy
+        this.computedStylesMap = new Map(); // dimensions to WeakMap of element to computed snapshot proxy
+        this.dimensionsKey = "undefined";
+        this.computedStylesMap.set(this.dimensionsKey, new WeakMap());
         this.setupShorthandToLonghand();
         this.setupProperties();
     }
@@ -75,6 +78,11 @@ export class EmailComputeStylePlugin extends BasePlugin {
         for (const propertyName of longhandProperties) {
             this.registerStyleProperty(propertyName);
         }
+    }
+
+    updateLayoutDimensions({ width, height }) {
+        this.dimensionsKey = `${width}x${height}`;
+        this.computedStylesMap.add(this.dimensionsKey, new WeakMap());
     }
 
     cachedComputedStyleProxyHandler(element) {
@@ -115,8 +123,9 @@ export class EmailComputeStylePlugin extends BasePlugin {
 
     /**
      * Returns a cached view of `getComputedStyle`. The cache is long-lived if the element is in
-     * the reference HTML, because the reference does not change during conversion, and the cache
-     * can be reused if this function is called on the same element.
+     * the reference HTML (associated with a given dimensionsKey), because the reference dimensions
+     * are fixed relative to that dimensionsKey, and the cache can be reused if
+     * this function is called on the same element.
      * The cache is short-lived otherwise (it has its own scope), and a new call to this function
      * will essentially generate a call to `getComputedStyle`.
      *
@@ -128,9 +137,9 @@ export class EmailComputeStylePlugin extends BasePlugin {
             // Only the style of an element inside the referenceDocument can be cached, as
             // the HTML and CSS content inside that document are fixed during conversion.
             const cachedStyle =
-                this.computedStyles.get(element) ??
+                this.computedStylesMap.get(this.dimensionsKey).get(element) ??
                 new Proxy({}, this.cachedComputedStyleProxyHandler(element));
-            this.computedStyles.set(element, cachedStyle);
+            this.computedStylesMap.get(this.dimensionsKey).set(element, cachedStyle);
             return cachedStyle;
         }
         return new Proxy({}, this.cachedComputedStyleProxyHandler(element));

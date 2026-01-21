@@ -6,15 +6,13 @@
             aria-hidden="true"
             t-attf-style="
                 display: block !important;
-                {{ isVisible ? `` : `visibility: hidden !important;` }}
-                {{ isVisible ? `` : `pointer-events: none !important;` }}
-                {{ isVisible ? `` : `position: absolute !important;` }}
-                top: {{ top or `0` }} !important;
-                left: {{ left or `-9999px` }} !important;
-                width: {{ width or `1320px` }} !important;
-                min-width: {{ width or `1320px` }} !important;
-                height: {{ height or `1000px` }} !important;
-                min-height: {{ height or `1000px` }} !important;
+                {{ isVisible ? `` : 
+                    `visibility: hidden !important;
+                    pointer-events: none !important;
+                    position: absolute !important;
+                    top: 0 !important;
+                    left: -9999px !important;`
+                }}
             "/>
     </t>
     <t t-name="mail.EmailHtmlConverterReference">

@@ -14,6 +14,7 @@ export class EmailHtmlConverter extends PluginManager {
 
         this.preparePlugins();
         this.startPlugins();
+        this.config.updateLayoutDimensions();
         this.isReady = true;
 
         const inlineTemplate = await this.htmlConversion();
@@ -46,5 +47,9 @@ export class EmailHtmlConverter extends PluginManager {
         const emailTemplate = this.getEmailTemplate();
 
         return emailTemplate;
+    }
+
+    updateLayoutDimensions({ width, height }) {
+        this.dispatchTo("update_layout_dimensions_handlers", { width, height });
     }
 }
