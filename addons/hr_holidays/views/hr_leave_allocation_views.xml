@@ -142,7 +142,7 @@
                                     invisible="allocation_type == 'regular'"/>
                                 <field name="date_to" nolabel="1"
                                     placeholder="No Limit"
-                                    readonly="state == 'refuse' or (allocation_type == 'accrual' and state != 'confirm')"
+                                    readonly="state == 'refuse'"
                                     invisible="allocation_type == 'regular' and state != 'confirm'"/>
                                 <div id="no_limit_label" class="oe_read_only"
                                     invisible="not id or date_to or state != 'confirm'">No limit</div>

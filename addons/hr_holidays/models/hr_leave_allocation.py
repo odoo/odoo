@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.tools import format_date
 from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.float_utils import float_round
 from odoo.tools.date_utils import get_timedelta
@@ -774,7 +774,9 @@ class HrLeaveAllocation(models.Model):
 
         self.add_follower(employee_id)
 
-        if 'number_of_days_display' not in values and 'number_of_hours_display' not in values and 'state' not in values:
+        tracked_fields = {'number_of_days_display', 'number_of_hours_display', 'state', 'date_to'}
+
+        if not tracked_fields.intersection(vals):
             res = super().write(values)
             if 'allocation_type' in values:
                 self._add_lastcalls()
@@ -799,8 +801,53 @@ class HrLeaveAllocation(models.Model):
             lt = allocation.work_entry_type_id
             if lt.allows_negative and total_current_excess <= lt.max_allowed_negative:
                 continue
-            raise ValidationError(
-                _('You cannot reduce the duration below the duration of leaves already taken by the employee.'))
+
+            if values.get('state') == 'refuse':
+                msg = self.env._(
+                    "You cannot refuse an allocation already used in approved time off requests. "
+                    "Cancel or adjust the related requests first."
+                )
+            elif 'date_to' in values:
+                msg = self.env._(
+                    "You cannot set this end date because it would make approved "
+                    "time off requests exceed the available allocation."
+                )
+            else:
+                raise ValidationError(
+                    self.env._('You cannot reduce the duration below the duration of leaves already taken by the employee.')
+                )
+
+            conflicting_leave_ids = list({
+                leave_date['leave_id']
+                for leave_date in current_excess.values()
+                if not leave_date['is_virtual']
+            })
+            action_domain = [('id', 'in', conflicting_leave_ids)]
+            if not conflicting_leave_ids:
+                action_domain = [
+                    ('employee_id', '=', allocation.employee_id.id),
+                    ('work_entry_type_id', '=', lt.id),
+                    ('state', '=', 'validate'),
+                    ('request_date_to', '>=', allocation.date_from),
+                ]
+                if allocation.date_to:
+                    action_domain.append(('request_date_from', '<=', allocation.date_to))
+
+            if msg:
+                action = {
+                    'type': 'ir.actions.act_window',
+                    'name': self.env._('Conflicting Time Off Requests'),
+                    'res_model': 'hr.leave',
+                    'view_mode': 'list',
+                    'views': [(False, 'list')],
+                    'domain': action_domain,
+                    'target': 'current',
+                }
+                raise RedirectWarning(
+                    msg,
+                    action,
+                    self.env._('Time Off Requests'),
+                )
 
         return result
 
