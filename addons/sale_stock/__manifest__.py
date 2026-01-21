@@ -37,7 +37,6 @@ Preferences
         'report/return_reason_report.xml',
         'report/return_slip_report.xml',
 
-        'data/ir_sequence_data.xml',
         'data/mail_templates.xml',
         'data/return_reason_data.xml',
         'data/sale_stock_data.xml',

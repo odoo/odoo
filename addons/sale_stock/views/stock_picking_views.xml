@@ -27,12 +27,8 @@
             </xpath>
             <field name="origin" position="after">
                 <field
-                    name="return_reason"
-                    invisible="return_reason_id or picking_type_code != 'incoming'"
-                />
-                <field
                     name="return_reason_id"
-                    invisible="not return_reason_id or picking_type_code != 'incoming'"
+                    invisible="picking_type_code != 'incoming'"
                 />
             </field>
             <xpath expr="//button[@name='%(stock.act_stock_return_picking)d']" position="attributes">

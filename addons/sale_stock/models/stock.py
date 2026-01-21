@@ -180,7 +180,6 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     sale_id = fields.Many2one('sale.order', compute="_compute_sale_id", inverse="_set_sale_id", string="Sales Order", store=True, index='btree_not_null')
-    return_reason = fields.Char("Return Reason Barcode")
     return_reason_id = fields.Many2one('return.reason')
 
     @api.depends('reference_ids.sale_ids', 'move_ids.sale_line_id.order_id')
@@ -201,16 +200,6 @@ class StockPicking(models.Model):
                     picking.move_type = "direct"
                 else:
                     picking.move_type = "one"
-
-    @api.onchange('return_reason')
-    def _onchange_return_reason(self):
-        if self.return_reason:
-            return_reason = self.env['return.reason'].search(
-                [('barcode', '=', self.return_reason)], limit=1
-            )
-            if return_reason:
-                self.return_reason_id = return_reason.id
-                self.return_reason = False
 
     def _set_sale_id(self):
         if self.reference_ids:

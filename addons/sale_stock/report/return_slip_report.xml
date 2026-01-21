@@ -50,8 +50,12 @@
                                 <div t-out="return_reason.name"/>
                             </div>
                             <div class="col-4 text-center mt-4">
+                                <t
+                                    t-set="return_barcode"
+                                    t-value="'OBTRETU:%s' % (return_reason.id)"
+                                />
                                 <div
-                                    t-field="return_reason.barcode"
+                                    t-out="return_barcode"
                                     t-options="{
                                         'widget': 'barcode',
                                         'width': 200,
@@ -79,7 +83,8 @@
                                     style="width: 64px; height: 64px; object-fit: contain;"
                                 />
                                 <div class="ms-2">
-                                    <strong t-out="move.product_id.display_name"/><br/>
+                                    <strong t-out="move.product_id.with_context(display_default_code=False).display_name"/>
+                                    <br/>
                                     Quantity:
                                     <span
                                         t-out="selected_products_per_delivery[picking.id][move.product_id.id]"
