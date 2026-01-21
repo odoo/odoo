@@ -442,7 +442,7 @@ class AccountMove(models.Model):
             'invoice_record': self,
             'invoice_currency': inv_curr,
             'InvoiceDocumentType': 'FA' if self.l10n_es_is_simplified else 'FC',
-            'InvoiceClass': 'OR' if self.move_type in ['out_refund', 'in_refund'] else 'OO',
+            'InvoiceClass': 'OR' if self.is_refund() else 'OO',
             'Corrective': self._l10n_es_edi_facturae_get_corrective_data(),
             'InvoiceIssueData': {
                 'OperationDate': operation_date,
@@ -509,7 +509,7 @@ class AccountMove(models.Model):
             - invoice_values['TotalGeneralDiscounts']
             + invoice_values['TotalGeneralSurcharges']
         )
-        refund_multiplier = -1 if self.move_type in ('out_refund', 'in_refund') else 1
+        refund_multiplier = -1 if self.is_refund() else 1
 
         template_values = {
             'self_party': company.partner_id,

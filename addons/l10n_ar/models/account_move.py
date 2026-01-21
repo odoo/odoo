@@ -66,7 +66,7 @@ class AccountMove(models.Model):
         docs_used_for_inv_and_ref = self.filtered(
             lambda x: x.country_code == 'AR' and
             x.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() and
-            x.move_type in ['out_refund', 'in_refund'])
+            x.is_refund())
 
         super(AccountMove, self - docs_used_for_inv_and_ref)._check_invoice_type_document_type()
 
@@ -127,7 +127,7 @@ class AccountMove(models.Model):
             domain = Domain(domain)
             domain &= Domain('l10n_ar_letter', '=', False) | Domain('l10n_ar_letter', 'in', letters)
             domain &= Domain(self.journal_id._get_journal_codes_domain())
-            if self.move_type in ['out_refund', 'in_refund']:
+            if self.is_refund():
                 domain = Domain('code', 'in', self._get_l10n_ar_codes_used_for_inv_and_ref()) | domain
         return domain
 
@@ -290,7 +290,7 @@ class AccountMove(models.Model):
         sign = -1 if self.is_inbound() else 1
 
         # if we are on a document that works invoice and refund and it's a refund, we need to export it as negative
-        sign = -sign if self.move_type in ('out_refund', 'in_refund') and\
+        sign = -sign if self.is_refund() and\
             self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() else sign
 
         tax_lines = self.line_ids.filtered('tax_line_id')
@@ -337,7 +337,7 @@ class AccountMove(models.Model):
     def _get_vat(self):
         """ Applies on wsfe web service and in the VAT digital books """
         # if we are on a document that works invoice and refund and it's a refund, we need to export it as negative
-        sign = -1 if self.move_type in ('out_refund', 'in_refund') and\
+        sign = -1 if self.is_refund() and\
             self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() else 1
 
         res = []

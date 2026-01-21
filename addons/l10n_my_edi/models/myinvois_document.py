@@ -622,7 +622,7 @@ class MyInvoisDocument(models.Model):
         :return: True if this document is linked to a single refund invoice.
         """
         has_single_document = self.invoice_ids and len(self.invoice_ids) == 1
-        return has_single_document and self.invoice_ids[0].move_type in ('out_refund', 'in_refund')
+        return has_single_document and self.invoice_ids[0].is_refund()
 
     def _get_rounded_base_lines(self):
         """
