@@ -511,6 +511,15 @@ export class BlockTab extends Component {
                 this.cancelDragAndDrop();
                 return;
             }
+            // Update `snippetEl` (and `draggedEl` of `dragState`) if it was
+            // replaced in the handler.
+            if (this.dragState.replacedSnippetEl) {
+                if (this.dragState.draggedEl === snippetEl) {
+                    this.dragState.draggedEl = this.dragState.replacedSnippetEl;
+                }
+                snippetEl = this.dragState.replacedSnippetEl;
+                delete this.dragState.replacedSnippetEl;
+            }
         }
         this.env.editor.config.updateInvisibleElementsPanel();
         this.shared.disableSnippets.disableUndroppableSnippets();
