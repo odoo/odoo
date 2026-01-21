@@ -69,7 +69,7 @@ class PollController(ThreadController):
             return
         user, guest = self.env["res.users"]._get_current_persona()
         # sudo - mail.poll.vote: user can create vote on poll of accessible thread.
-        self.env["mail.poll.vote"].sudo().create(
+        vote = self.env["mail.poll.vote"].sudo().create(
             [
                 {
                     "option_id": option.id,
@@ -83,6 +83,7 @@ class PollController(ThreadController):
         Store(bus_channel=self_bus_channel).add(options_sudo, ["selected_by_self"]).bus_send()
         store = Store(**thread._store_target())
         store.add(options_sudo.poll_id.option_ids, ["number_of_votes", "vote_percentage"])
+        store.add(vote, "_store_vote_fields")
         store.bus_send()
 
     @route("/mail/poll/remove_vote", type="jsonrpc", auth="public", methods=["POST"])
@@ -109,4 +110,5 @@ class PollController(ThreadController):
         )
         store = Store(**thread._store_target())
         store.add(poll_sudo.option_ids, ["number_of_votes", "vote_percentage"])
+        store.add(options_sudo, [Store.Many("vote_ids", [], mode="DELETE", value=votes_sudo)])
         store.bus_send()

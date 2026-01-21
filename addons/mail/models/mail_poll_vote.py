@@ -75,3 +75,23 @@ class MailPollVote(models.Model):
         domain_user = Domain("user_id", "=", user.id) if user else Domain.FALSE
         domain_guest = Domain("guest_id", "=", guest.id) if guest else Domain.FALSE
         return domain_user | domain_guest
+
+    def _store_vote_fields(self, res):
+        res.one("option_id", [])
+        res.one(
+            "user_id",
+            lambda res: res.one(
+                "partner_id",
+                lambda res: (
+                    res.from_method("_store_avatar_fields"),
+                    res.attr("name"),
+                ),
+            ),
+        )
+        res.one(
+            "guest_id",
+            lambda res: (
+                res.from_method("_store_avatar_fields"),
+                res.attr("name"),
+            ),
+        )

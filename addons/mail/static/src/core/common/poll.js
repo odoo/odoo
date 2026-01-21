@@ -1,4 +1,6 @@
+import { PollVotesPanel } from "@mail/core/common/poll_votes_panel";
 import { useDynamicInterval } from "@mail/utils/common/misc";
+
 import { Component, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -76,6 +78,10 @@ export class Poll extends Component {
         }
     }
 
+    onClickNumberOfVotes() {
+        this.env.services.dialog.add(PollVotesPanel, { poll: this.props.poll });
+    }
+
     onOptionCheckboxToggle(optionId, checked) {
         if (!this.props.poll.allow_multiple_options) {
             this.state.selectedOptionIds.clear();
@@ -93,16 +99,5 @@ export class Poll extends Component {
 
     percentageAttStyle(option) {
         return this.isShowingResults ? `background-size: ${option.vote_percentage}%;` : "";
-    }
-
-    voteCountText(numberOfVotes) {
-        switch (numberOfVotes) {
-            case 0:
-                return _t("0 votes");
-            case 1:
-                return _t("1 vote");
-            default:
-                return _t("%(count)s votes", { count: numberOfVotes });
-        }
     }
 }
