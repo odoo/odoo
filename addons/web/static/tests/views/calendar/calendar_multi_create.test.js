@@ -37,9 +37,6 @@ class Event extends models.Model {
     user_id = fields.Many2one({ relation: "calendar.user" });
     user_ids = fields.Many2many({ relation: "calendar.user" });
 
-    // FIXME: needed for the filter to work
-    filter_user_id = fields.Many2one({ relation: "calendar.user" });
-
     _records = [
         {
             id: 1,
@@ -136,7 +133,6 @@ class Event extends models.Model {
             
                 <!-- For filter to work -->
                 <field name="date_start" invisible="1"/>
-                <field name="filter_user_id" invisible="1"/>
             </calendar>
         `,
         "calendar,calendar_state": `
