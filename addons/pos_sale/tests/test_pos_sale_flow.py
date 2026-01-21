@@ -3,13 +3,14 @@
 import odoo
 from uuid import uuid4
 
+from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.tests import Form
 from odoo import fields, Command
 from odoo.tools import format_date
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestPoSSale(TestPointOfSaleHttpCommon):
+class TestPoSSale(TestPointOfSaleHttpCommon, PaymentCommon):
     def test_settle_order_with_kit(self):
         if not self.env["ir.module.module"].search([("name", "=", "mrp"), ("state", "=", "installed")]):
             self.skipTest("mrp module is required for this test")
@@ -1853,6 +1854,44 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         )
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_ecommerce_paid_order_is_hidden_in_pos', login="accountman")
+
+    def test_ecommerce_prepaid_order_updates_amount_unpaid_correctly(self):
+        """
+        Ensure that `amount_unpaid` is correctly updated for a partially paid
+        eCommerce Sale Order when automatic invoicing is enabled.
+        """
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product.id,
+                'product_uom_qty': 5,
+                'price_unit': self.product.lst_price,
+                'tax_id': False,
+            })],
+            'require_payment': True,
+            'prepayment_percent': 0.2,
+        })
+        # Manual downpayment invoice
+        down_payment = self.env['sale.advance.payment.inv'].create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 20.00,
+            'sale_order_ids': sale_order.ids,
+        })
+        down_payment.create_invoices()
+        down_payment_invoices = sale_order.invoice_ids
+        down_payment_invoices.action_post()
+        # online payment transaction for the prepayment
+        tx = self._create_transaction(
+                flow='direct',
+                amount=sale_order.amount_total * sale_order.prepayment_percent,
+                sale_order_ids=[sale_order.id],
+                state='done',
+                reference='Test Transaction',
+            )
+        tx._set_done()
+        tx._post_process()
+        self.assertAlmostEqual(sale_order.amount_unpaid, (sale_order.amount_total - down_payment.fixed_amount - tx.amount))
 
     def test_ecommerce_unpaid_order_is_shown_in_pos(self):
         """
