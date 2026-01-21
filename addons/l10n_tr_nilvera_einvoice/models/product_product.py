@@ -1,6 +1,7 @@
 from odoo import _, api, fields, models
 
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 
 
 class ProductProduct(models.Model):
@@ -15,3 +16,10 @@ class ProductProduct(models.Model):
         for record in self:
             if record.l10n_tr_ctsp_number and len(record.l10n_tr_ctsp_number) > 12:
                 raise ValidationError(_("CTSP Number must be 12 digits or fewer."))
+
+    def _get_product_domain_search_order(self, **vals):
+        sorted_domains = super()._get_product_domain_search_order(**vals)
+        if self.env.context.get("parse_for_ubl_tr"):
+            if ctsp_number := vals.get("ctsp_number"):
+                sorted_domains.append((13, Domain("l10n_tr_ctsp_number", "=", ctsp_number)))
+        return sorted_domains
