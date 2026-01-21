@@ -3,8 +3,9 @@
 import itertools
 import logging
 import math
+import re
 import uuid
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta, UTC, time
 from itertools import repeat
 from zoneinfo import ZoneInfo
 
@@ -51,6 +52,29 @@ RRULE_TYPE_SELECTION_UI = [
     ('yearly', 'Yearly'),
     ('custom', 'Custom')
 ]
+
+# regex to match common ways to represent time
+# (9h, 9H, 9:00, 09:00, 9 am, 9am, 9a.m. 21h, 21:30, 9-10, 9-11h...)
+HOUR = r'(?:[01]?\d|2[0-3])'  # 0-23
+MINUTES = r'(?:[0-5]\d)'  # :00-:59
+SUFFIX = r'(?:h|hr|am|pm|a\.m\.?|p\.m\.?)'
+RANGE_DELIM = r'(?:-|–|to)'
+HOUR_WITH_MINUTES = rf'{HOUR}:{MINUTES}\s*{SUFFIX}?'
+HOUR_WITH_SUFFIX = rf'{HOUR}\s*{SUFFIX}'
+LOOSE_TIME = rf'(?:{HOUR_WITH_MINUTES}|{HOUR_WITH_SUFFIX}|{HOUR})'
+# Hour range uses lookahead, to make sure that a delimiter and a time follow.
+# Needed to disallow single hours 'meeting 5', but match ranges like '5-7pm'
+HOUR_RANGE = rf'{HOUR}(?=\s*{RANGE_DELIM}\s*{LOOSE_TIME})'
+TIME_REGEX = re.compile(
+    rf'''
+    (?:^|\s) # start of string or space
+    ({HOUR_WITH_MINUTES}|{HOUR_WITH_SUFFIX}|{HOUR_RANGE})  # Valid start times, with an optional range lookahead
+    (?:\s*{RANGE_DELIM}\s*({LOOSE_TIME}))? # Optional end time
+    (?:$|\s) # end of string or space
+    ''',
+    re.IGNORECASE | re.VERBOSE,
+)
+
 
 def get_weekday_occurence(date):
     """
@@ -582,6 +606,132 @@ class CalendarEvent(models.Model):
     def get_discuss_videocall_location(self):
         access_token = uuid.uuid4().hex
         return f"{self.get_base_url()}/{self.DISCUSS_ROUTE}/{access_token}"
+
+    @api.onchange('name')
+    def _onchange_name_extract_time(self):
+        for event in self:
+            if not event.env.context.get("is_quick_create_form") or not event.name or not event.allday:
+                return
+
+            time_info = event._parse_time_from_title(event.name)
+            if not time_info:
+                return
+
+            event.allday = False
+
+            tz_name = self.env.context.get('tz') or self.env.user.partner_id.tz or 'UTC'
+            self_tz = event.with_context(tz=tz_name)
+
+            # Get the event date in the user's timezone
+            start_local = end_local = fields.Datetime.context_timestamp(self_tz, fields.Datetime.from_string(event.start))
+
+            # handle day overflow like 11pm - 1am
+            if time_info['start_time'].hour > time_info['end_time'].hour or \
+                (
+                    time_info['start_time'].hour == time_info['end_time'].hour and
+                    time_info['start_time'].minute > time_info['end_time'].minute
+                ):
+                end_local += timedelta(days=1)
+
+            new_start_utc = self._apply_time_in_tz(start_local, time_info['start_time'])
+            new_stop_utc = self._apply_time_in_tz(end_local, time_info['end_time'])
+
+            # Adjust for leading whitespace if not start of string
+            start_index = time_info['start_index'] + (1 if time_info['start_index'] > 0 else 0)
+            # Remove the time from the title
+            event_title = (
+                    event.name[:start_index] +
+                    event.name[time_info['end_index']:]
+            )
+
+            event.update({
+                'start': new_start_utc,
+                'stop': new_stop_utc,
+                'name': event_title
+            })
+
+    @staticmethod
+    def _apply_time_in_tz(dt_local, new_time):
+        """Update local time with new time and return UTC datetime."""
+        new_local = dt_local.replace(
+            hour=new_time.hour,
+            minute=new_time.minute,
+            second=0,
+            microsecond=0,
+        )
+        return new_local.astimezone(UTC).replace(tzinfo=None)
+
+    def _parse_time_from_title(self, title):
+        """Extract time information from an event title.
+        Returns a tuple of start/end times or None if no time is found."""
+        match = TIME_REGEX.search(title)
+        if not match:
+            return None
+
+        start_raw, end_raw = match.groups()
+
+        def parse_time_string(part):
+            """Parse a single time fragment like: '9', '9am', '21:30', '9 h', '9:30pm'"""
+            part = part.replace(" ", "").lower()
+
+            suffix = None
+            for s in ("am", "pm", "a.m.", "a.m", "p.m.", "p.m", "h", "hr"):
+                if part.endswith(s):
+                    suffix = s
+                    part = part[: -len(s)]
+                    break
+
+            if ":" in part:
+                hour, minute = map(int, part.split(":", 1))
+            else:
+                hour, minute = int(part), 0
+
+            return hour, minute, suffix
+
+        start_hour, start_min, start_suffix = parse_time_string(start_raw)
+        if end_raw:
+            end_hour, end_min, end_suffix = parse_time_string(end_raw)
+        else:
+            end_hour, end_min, end_suffix = start_hour, start_min, start_suffix
+
+        # Use suffix from second part if missing (9-11h, 9-11pm)
+        start_suffix = start_suffix or end_suffix
+
+        if not end_suffix and 12 >= start_hour > end_hour:
+            # `9-5` -> assume this means 9am-5pm
+            if not start_suffix or start_suffix in ['a.m.', 'a.m', 'am', 'h', 'hr']:
+                end_suffix = "pm"
+            # 10pm-4 -> assume this means 10pm-4am
+            else:
+                end_suffix = "am"
+        else:
+            end_suffix = end_suffix or start_suffix
+
+        start_24_notation = self._convert_to_24h(start_hour, start_suffix)
+        end_24_notation = self._convert_to_24h(end_hour, end_suffix)
+
+        # If the user didn't provide an end time, the meeting should last one hour
+        if not end_raw:
+            end_24_notation += 1
+            if end_24_notation >= 24:
+                end_24_notation -= 24
+
+        return {
+            "start_time": time(start_24_notation, start_min),
+            "end_time": time(end_24_notation, end_min),
+            "start_index": match.start(),
+            "end_index": match.end(),
+        }
+
+    @staticmethod
+    def _convert_to_24h(hour, suffix):
+        """Convert hour to 24-hour format based on suffix (am/pm/h)."""
+        if suffix and 'p' in suffix and hour != 12:
+            return hour + 12
+        elif suffix and 'a' in suffix and hour == 12:
+            return 0
+        # If suffix is 'h', 'hr' or None, assume 24-hour format if >= 12
+        return hour
 
     # ------------------------------------------------------------
     # CRUD
