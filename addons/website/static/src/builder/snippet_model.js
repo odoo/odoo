@@ -1,8 +1,9 @@
 import { applyTextHighlight } from "@website/js/highlight_utils";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
+import { SnippetModel } from "@html_builder/snippets/snippet_service";
 
-export const websiteSnippetModelPatch = {
+export class WebsiteSnippetModel extends SnippetModel {
     /**
      * @override
      */
@@ -12,31 +13,37 @@ export const websiteSnippetModelPatch = {
         for (const textEl of snippetEl?.querySelectorAll(".o_text_highlight") || []) {
             applyTextHighlight(textEl);
         }
-    },
+    }
 
     /**
      * @override
      */
     getSnippetLabel(snippetEl) {
-        const label = super.getSnippetLabel(snippetEl);
+        let label = super.getSnippetLabel(snippetEl);
         // Check if any element in the snippet has the "parallax" class to show
         // the "Parallax" label. This must be done this way because a theme or
         // custom snippet may add or remove parallax elements. Note that if a
         // label is already set, we do not change it.
-        if (!label) {
+        // TODO In master, remove the "|| label === 'Parallax'" part from the
+        // condition, as the label="Parallax" will be removed from the snippet
+        // definition.
+        if (!label || label === "Parallax") {
+            label = "";
             const contentEl = snippetEl.children[0];
             if (contentEl.matches(".parallax") || !!contentEl.querySelector(".parallax")) {
                 return _t("Parallax");
             }
         }
         return label;
-    },
+    }
+
     cleanSnippetForSave(snippetCopyEl, cleanForSaveHandlers) {
         const rootEl = snippetCopyEl.matches(".s_popup")
             ? snippetCopyEl.firstElementChild
             : snippetCopyEl;
         super.cleanSnippetForSave(rootEl, cleanForSaveHandlers);
-    },
+    }
+
     getContext(snippetEl) {
         const context = super.getContext(...arguments);
         const editableParentEl = snippetEl.closest("[data-oe-model][data-oe-field][data-oe-id]");
@@ -45,8 +52,10 @@ export const websiteSnippetModelPatch = {
             field: editableParentEl.dataset.oeField,
             resId: editableParentEl.dataset.oeId,
         });
-    },
-};
+    }
+}
+
+registry.category("html_builder.snippetsModel").add("website.snippets", WebsiteSnippetModel);
 
 registry
     .category("html_builder.snippetsPreprocessor")

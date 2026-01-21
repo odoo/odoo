@@ -459,9 +459,12 @@ export const snippetService = {
             if (snippetModelsMap.has(snippetsName)) {
                 return snippetModelsMap.get(snippetsName);
             }
+            const Model = registry
+                .category("html_builder.snippetsModel")
+                .get(snippetsName, SnippetModel);
             snippetModelsMap.set(
                 snippetsName,
-                new SnippetModel(services, {
+                new Model(services, {
                     snippetsName,
                     context,
                 })
