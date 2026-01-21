@@ -222,7 +222,7 @@ export class EmailClassToStylePlugin extends BasePlugin {
      * - associate relevant rules with every reference node
      */
     registerCSSRule(selector, rawRule) {
-        const reference = this.config.desktop.reference;
+        const reference = this.config.reference;
         const nodes = reference.querySelectorAll(selector);
         const ruleInfo = {
             selector,
@@ -258,7 +258,7 @@ export class EmailClassToStylePlugin extends BasePlugin {
      *                            specificity: Array<Number>;}>
      */
     registerCSSRules() {
-        const doc = this.config.desktop.document;
+        const doc = this.config.referenceDocument;
         for (const sheet of [...doc.styleSheets, ...doc.adoptedStyleSheets]) {
             let rules;
             try {

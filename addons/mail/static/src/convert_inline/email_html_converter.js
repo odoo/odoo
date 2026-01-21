@@ -20,14 +20,14 @@ export class EmailHtmlConverter extends PluginManager {
 
         // Old toInline
         // TODO EGGMAIL: adapt usage, use plugin instead of old method
-        // const cssRules = getCSSRules(this.config.desktop.document);
-        // await toInline(this.config.desktop.reference, cssRules);
+        // const cssRules = getCSSRules(this.config.referenceDocument);
+        // await toInline(this.config.reference, cssRules);
 
         return inlineTemplate.innerHTML;
     }
 
     getEmailTemplate() {
-        const template = this.config.desktop.document.createElement("TEMPLATE");
+        const template = this.config.referenceDocument.createElement("TEMPLATE");
         this.dispatchTo("render_email_html_handlers", template);
         // TODO EGGMAIL: post-process the template, or try to keep all the work before template generation?
         return template;
