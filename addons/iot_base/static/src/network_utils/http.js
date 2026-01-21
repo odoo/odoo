@@ -11,7 +11,8 @@ import { browser } from "@web/core/browser/browser";
  */
 export function formatEndpoint(ip, route, forceHttp = false) {
     const protocol = forceHttp ? "http:" : window.location.protocol;
-    const url = new URL(`${protocol}//${ip}`);
+    const rawIp = forceHttp ? ip.replace(/^(\d+)-(\d+)-(\d+)-(\d+).*/, "$1.$2.$3.$4") : ip;
+    const url = new URL(`${protocol}//${rawIp}`);
     url.pathname = route;
     return url.toString();
 }
