@@ -666,7 +666,7 @@ test("placeholder_field shows as placeholder (datetime)", async () => {
             </form>`,
     });
     await contains("div[name='datetime'] button").click();
-    expect("div[name='datetime'] input").toHaveAttribute("placeholder", "Apr 1, 2025, 9:11 AM", {
+    expect("div[name='datetime'] input").toHaveAttribute("placeholder", /Apr 1, 2025, 9:11\sAM/, {
         message: "placeholder_field should be the placeholder",
     });
 });
