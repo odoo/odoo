@@ -767,7 +767,7 @@ class HrAttendanceOvertimeRule(models.Model):
                     vals.append({
                         'time_start': attendance.check_in,
                         'time_stop': attendance.check_out,
-                        'duration': round(duration, 2),
+                        'duration': round(duration, 3),
                         'employee_id': employee.id,
                         'date': day,
                         'rule_ids': rules.ids,
