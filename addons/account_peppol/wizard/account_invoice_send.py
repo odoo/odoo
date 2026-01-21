@@ -232,11 +232,12 @@ class AccountInvoiceSend(models.TransientModel):
             self._cr.commit()
 
     def _embed_extra_attachments(self, invoice, xml_attachment, extra_attachments):
-        pdf_name = f'{invoice.name.replace("/", "_")}.pdf'
+        pdf_names = (f'{invoice._get_report_mail_attachment_filename()}.pdf', invoice._get_report_attachment_filename())
         attachments_to_embed, _not_supported_attachments = self._get_peppol_available_attachments(
             invoice,
             extra_attachments.filtered(
-                lambda attachment: attachment.name not in (xml_attachment.name, pdf_name, f'Invoice_{pdf_name}')
+                # We make sure not to embed the xml or the pdf that was already embed in the xml
+                lambda attachment: attachment.name not in (xml_attachment.name, *pdf_names)
             ),
         )
         self.env['ir.actions.report']._add_attachments_into_invoice_xml(
