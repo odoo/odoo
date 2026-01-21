@@ -109,7 +109,7 @@ class StockMove(models.Model):
                 production.qty_producing = 1
                 if not production.lot_producing_id:
                     production.action_generate_serial()
-                production.with_context(cancel_backorder=False).subcontracting_record_component()
+                production.with_context(cancel_backorder=False, skip_consumption=True).subcontracting_record_component()
         else:
             production.qty_producing = qty
             if float_compare(production.qty_producing, production.product_qty, precision_rounding=production.product_uom_id.rounding) > 0:
@@ -120,7 +120,7 @@ class StockMove(models.Model):
             if production.product_tracking == 'lot' and not production.lot_producing_id:
                 production.action_generate_serial()
             production._set_qty_producing()
-            production.with_context(cancel_backorder=False).subcontracting_record_component()
+            production.with_context(cancel_backorder=False, skip_consumption=True).subcontracting_record_component()
 
     def copy_data(self, default=None):
         default = dict(default or {})
