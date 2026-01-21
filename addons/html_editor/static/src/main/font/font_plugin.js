@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
-import { isRedundantElement, isVisibleTextNode } from "@html_editor/utils/dom_info";
+import { isEmptyBlock, isRedundantElement, isVisibleTextNode } from "@html_editor/utils/dom_info";
 import {
     closestElement,
     createDOMPathGenerator,
@@ -473,7 +473,7 @@ export class FontPlugin extends Plugin {
             return;
         }
         // Check if cursor is inside an empty heading, blockquote or pre.
-        if (!closestHandledElement || closestHandledElement.textContent.length) {
+        if (!closestHandledElement || !isEmptyBlock(closestHandledElement)) {
             return;
         }
         // Check if unremovable.
