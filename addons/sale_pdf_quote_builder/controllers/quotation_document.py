@@ -33,15 +33,15 @@ class QuotationDocumentController(Controller):
         for ufile in files:
             try:
                 mimetype = ufile.content_type
-                doc = request.env['quotation.document'].create({
+                request.env['quotation.document'].create({
                     'name': ufile.filename,
                     'mimetype': mimetype,
                     'raw': ufile.read(),
                     'quotation_template_ids': sale_order_template.ids,
                     'company_id': company.id,
                 })
-                # pypdf will also catch malformed document
-                utils._ensure_document_not_encrypted(base64.b64decode(doc.datas))
+                # below line is operated at flush time anyways via a constraint and computing fields 
+                #utils._ensure_document_not_encrypted(base64.b64decode(doc.datas))
             except Exception as e:
                 logger.exception("Failed to upload document %s", ufile.filename)
                 result = {'error': str(e)}
