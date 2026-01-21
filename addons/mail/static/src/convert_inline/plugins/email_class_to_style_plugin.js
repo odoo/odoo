@@ -1,4 +1,5 @@
 import { BasePlugin } from "@html_editor/base_plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { parseSelector } from "@mail/convert_inline/css_selector_parser";
 import { splitSelectorList } from "@mail/convert_inline/style_utils";
 import { registry } from "@web/core/registry";
@@ -31,7 +32,10 @@ export class EmailClassToStylePlugin extends BasePlugin {
             propertyName.includes("-webkit") ||
             typeof value !== "string",
         reference_content_loaded_handlers: this.classToStyle.bind(this),
-        template_node_created_handlers: this.applyStyleInfoOnTemplateNode.bind(this),
+        template_node_created_handlers: withSequence(
+            1,
+            this.applyStyleInfoOnTemplateNode.bind(this)
+        ),
     };
 
     setup() {
@@ -313,7 +317,8 @@ export class EmailClassToStylePlugin extends BasePlugin {
             referenceNode === this.config.reference
         ) {
             // The reference element itself is not part of the email, so its
-            // style is irrelevant.
+            // style is irrelevant. Non-element nodes don't have a style
+            // attribute.
             return;
         }
         const styleInfo = this.getStyleInfo(referenceNode);

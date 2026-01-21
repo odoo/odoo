@@ -18,6 +18,7 @@ export class VDomPlugin extends BasePlugin {
     static shared = ["getNodeInfo", "renderEmailHtml"];
     resources = {
         render_email_html_handlers: this.renderEmailHtml.bind(this),
+        template_node_created_handlers: this.emptyDesignElementFragment.bind(this),
     };
 
     setup() {
@@ -50,7 +51,7 @@ export class VDomPlugin extends BasePlugin {
                     // Allow other plugins to process the template node
                     // (e.g. add inline style)
                     this.dispatchTo("template_node_created_handlers", {
-                        nodeInfo: target,
+                        nodeInfo: receiver,
                         templateNode,
                     });
                 }
@@ -130,15 +131,7 @@ export class VDomPlugin extends BasePlugin {
             return;
         }
         const renderFragment = this.cloneReferenceFragment(nodeInfo, options);
-        if (nodeInfo.referenceNode.nodeName === "STYLE") {
-            // TODO EGGMAIL: do something more specific for the `id="design-element"`
-            // Allow plugins to remove any element from the final rendering
-            // instead of adding their fragment.
-            renderNode.remove();
-            return;
-        } else {
-            renderNode.replaceWith(renderFragment);
-        }
+        renderNode.replaceWith(renderFragment);
         for (const descendant of childNodes(nodeInfo.referenceNode)) {
             const descendantInfo = this.getNodeInfo(descendant);
             this.renderReferenceFragment(descendantInfo, options);
@@ -155,6 +148,20 @@ export class VDomPlugin extends BasePlugin {
         template.content.appendChild(renderNode);
         this.renderReferenceFragment(referenceInfo, options);
         this.vNodeToRenderNode = undefined;
+    }
+
+    /**
+     The `<style id="design-element">` should not be sent by email, as all
+     relevant style is inlined, and the variables it contains are not used
+     in the final rendering. Its fragment is therefore emptied.
+     */
+    emptyDesignElementFragment({ nodeInfo, templateNode }) {
+        if (
+            templateNode.nodeType === Node.ELEMENT_NODE &&
+            templateNode.matches("#design-element")
+        ) {
+            nodeInfo.fragment.replaceChildren();
+        }
     }
 }
 
