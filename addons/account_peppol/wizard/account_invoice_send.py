@@ -244,7 +244,7 @@ class AccountInvoiceSend(models.TransientModel):
             xml_attachment,
             [{
                 'name': attachment.name,
-                'raw_b64': attachment.datas,
+                'raw_b64': attachment.datas.decode(),
                 'mimetype': attachment.mimetype,
             } for attachment in attachments_to_embed],
         )
