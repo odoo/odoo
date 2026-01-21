@@ -306,6 +306,8 @@ export class Thread extends Record {
     /** @type {SuggestedRecipient[]} */
     suggestedRecipients = [];
     hasLoadingFailed = false;
+    /** @type {Error} */
+    hasLoadingFailedError;
     canPostOnReadonly;
     /** @type {String} */
     last_interest_dt;
