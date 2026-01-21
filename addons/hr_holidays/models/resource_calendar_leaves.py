@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import UTC, datetime
+from datetime import datetime
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
@@ -133,3 +133,12 @@ class ResourceCalendarLeaves(models.Model):
     def _compute_company_id(self):
         for leave in self:
             leave.company_id = leave.holiday_id.employee_id.company_id or leave.calendar_id.company_id or leave.company_id or self.env.company
+
+    def load_public_holidays(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._('Load Public Holidays'),
+            'res_model': 'load.public.holiday.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+        }
