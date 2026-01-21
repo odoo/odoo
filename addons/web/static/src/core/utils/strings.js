@@ -264,5 +264,9 @@ export function sprintf(str, ...substitutions) {
  * @returns {string}
  */
 export function uuid() {
-    return crypto.randomUUID().split("-").slice(0, 3).join("");
+    let id = "";
+    for (const b of crypto.getRandomValues(new Uint8Array(8))) {
+        id += b.toString(16).padStart(2, "0");
+    }
+    return id;
 }
