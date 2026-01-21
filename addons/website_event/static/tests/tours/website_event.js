@@ -69,13 +69,13 @@ function websiteCreateEventTourSteps() {
         }),
         ...clickOnSave(),
         {
-            trigger: ".o_menu_systray_item.o_website_publish_container a",
+            trigger: ".o_menu_systray_item.o_website_publish_container button",
             content: "Click to publish your event.",
             tooltipPosition: "top",
             run: "click",
         },
         {
-            trigger: ".o_website_edit_in_backend > a",
+            trigger: ".o_website_edit_in_backend > button",
             content: "Click here to customize your event further.",
             tooltipPosition: "bottom",
         },

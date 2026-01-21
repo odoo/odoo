@@ -98,7 +98,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Toggle the mobile view",
-            trigger: ".o_mobile_preview > a",
+            trigger: ".o_mobile_preview > button",
             run: "click",
         },
         {

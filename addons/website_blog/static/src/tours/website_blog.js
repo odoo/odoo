@@ -85,7 +85,7 @@ registerWebsitePreviewTour(
         },
         ...clickOnSave(),
         {
-            trigger: ".o_menu_systray_item.o_mobile_preview > a",
+            trigger: ".o_menu_systray_item.o_mobile_preview > button",
             content: markup(
                 _t("Use this icon to preview your blog post on <b>mobile devices</b>.")
             ),
@@ -96,7 +96,7 @@ registerWebsitePreviewTour(
             trigger: ".o_website_preview.o_is_mobile",
         },
         {
-            trigger: ".o_menu_systray_item.o_mobile_preview > a",
+            trigger: ".o_menu_systray_item.o_mobile_preview > button",
             content: _t(
                 "Once you have reviewed the content on mobile, you can switch back to the normal view by clicking here again"
             ),
@@ -107,7 +107,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe body:not(.editor_enable)",
         },
         {
-            trigger: '.o_menu_systray_item a:contains("Unpublished")',
+            trigger: '.o_menu_systray_item button:contains("Unpublished")',
             tooltipPosition: "bottom",
             content: markup(
                 _t("<b>Publish your blog post</b> to make it visible to your visitors.")
@@ -115,7 +115,7 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            trigger: '.o_menu_systray_item a:contains("Published")',
+            trigger: '.o_menu_systray_item button:contains("Published")',
         },
     ]
 );

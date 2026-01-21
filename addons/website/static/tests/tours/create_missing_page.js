@@ -16,7 +16,7 @@ registerWebsitePreviewTour(
         changeOption("Header", "[aria-label='Open menu editor']"),
         {
             content: "Open the link dialog (click 'Add Menu Item')",
-            trigger: ".modal-body a:eq(0)",
+            trigger: ".modal-body button:contains(Add Menu Item)",
             run: "click",
         },
         {
@@ -130,7 +130,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Open the link dialog (click 'Add Menu Item')",
-            trigger: ".modal-body a:eq(0)",
+            trigger: ".modal-body button:contains(Add Menu Item)",
             run: "click",
         },
         {

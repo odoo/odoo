@@ -71,12 +71,12 @@
         </ul>
         <div class="d-flex mt-4 justify-content-between align-items-end">
             <div class="d-flex flex-column">
-                <a href="#" t-on-click="() => this.addMenu(false)">
+                <button class="btn btn-link p-0 fw-normal text-start" t-on-click="() => this.addMenu(false)">
                     <i class="fa fa-plus-circle me-1"/> Add Menu Item
-                </a>
-                <a href="#" t-on-click="() => this.addMenu(true)">
+                </button>
+                <button class="btn btn-link p-0 fw-normal" t-on-click="() => this.addMenu(true)">
                     <i class="fa fa-plus-circle me-1"/> Add Mega Menu Item
-                </a>
+                </button>
             </div>
             <small class="text-muted">
                 <i class="fa fa-info-circle me-1"/> Drag to the right to get a submenu

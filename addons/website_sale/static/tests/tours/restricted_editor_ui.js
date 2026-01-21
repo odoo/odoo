@@ -36,7 +36,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on publish/unpublish",
-            trigger: '.o_website_publish_container a:has(input:checked)',
+            trigger: '.o_website_publish_container button:has(input:checked)',
             run: "click",
         },
         {
@@ -45,7 +45,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on edit-in-backend",
-            trigger: '.o_menu_systray .o_website_edit_in_backend a',
+            trigger: '.o_menu_systray .o_website_edit_in_backend button',
             run: "click",
         },
         {
