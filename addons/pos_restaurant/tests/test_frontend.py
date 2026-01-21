@@ -633,6 +633,10 @@ class TestFrontend(TestFrontendCommon):
         self.main_pos_config.write({'default_preset_id': self.preset_takeaway.id})
         self.start_pos_tour('test_open_register_with_preset_takeaway')
         self.main_pos_config.write({'default_preset_id': self.preset_eat_in.id})
+        cancelled_orders = self.env['pos.order'].search([('state', '=', 'cancel')], limit=3)
+        self.assertEqual(len(cancelled_orders), 1)
+        orders = self.env['pos.order'].search([('state', '!=', 'cancel')], limit=3)
+        self.assertEqual(len(orders), 0)
         self.start_pos_tour('test_preset_timing_restaurant')
         self.preset_eat_in.write({
             'use_guest': True,
