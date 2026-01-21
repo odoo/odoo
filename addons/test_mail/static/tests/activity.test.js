@@ -17,7 +17,7 @@ import { keyDown, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, disableAnimations, mockDate } from "@odoo/hoot-mock";
 import { onMounted, onWillUnmount } from "@odoo/owl";
 import { MailTestActivity } from "@test_mail/../tests/mock_server/models/mail_test_activity";
-import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
+import { defineTestMailModels, testMailModels } from "@test_mail/../tests/test_mail_test_helpers";
 import {
     mockService,
     onRpc,
@@ -57,6 +57,14 @@ const archs = {
 };
 
 describe.current.tags("desktop");
+testMailModels.MailActivity._views = {
+    form: `
+        <form>
+            <footer>
+                <button string="Delete" type="object" name="unlink" icon="fa-trash" class="btn-danger ms-auto"/>
+            </footer>
+        </form>`,
+};
 defineTestMailModels();
 beforeEach(async () => {
     // Because tests implicitly use Popover
@@ -536,7 +544,7 @@ test("activity view: activity widget", async () => {
     await expect.waitForSteps(["action_feedback_schedule_next", "serverGeneratedAction"]);
 });
 
-test("activity widget: cancel an activity from the widget", async () => {
+test("activity widget: delete an activity from the widget", async () => {
     const [mailActivityId] = pyEnv["mail.activity"].search([["state", "=", "planned"]]);
     const [mailActivityTypeId] = pyEnv["mail.activity.type"].search([["name", "=", "Email"]]);
     pyEnv["res.users"].write([serverState.userId], {
@@ -566,10 +574,10 @@ test("activity widget: cancel an activity from the widget", async () => {
     // ensure the buttons are in the same order as in the chatter.
     expect(activityListPopoverButtons[0]).toHaveClass("o-mail-ActivityListPopoverItem-markAsDone");
     expect(activityListPopoverButtons[1]).toHaveClass("o-mail-ActivityListPopoverItem-editbtn");
-    expect(activityListPopoverButtons[2]).toHaveClass("o-mail-ActivityListPopoverItem-cancel btn");
 
-    // Cancel the activity
-    await click(".o-mail-ActivityListPopoverItem .o-mail-ActivityListPopoverItem-cancel");
+    // Delete the activity
+    await click(".o-mail-ActivityListPopoverItem .o-mail-ActivityListPopoverItem-editbtn");
+    await click(".modal-dialog .btn:text('Delete')");
     await expect.waitForSteps(["unlink"]);
 
     // Verify no activity is scheduled
@@ -808,7 +816,7 @@ test("Activity view: discard an activity creation dialog", async () => {
         ".o_activity_view  :nth-child(1 of .o_data_row) :nth-child(1 of .o_activity_empty_cell)"
     );
     await contains(".modal.o_technical_modal");
-    await click(".modal.o_technical_modal .o_form_button_cancel");
+    await click(".modal.o_technical_modal .btn-close");
     await contains(".modal.o_technical_modal", { count: 0 });
 });
 
