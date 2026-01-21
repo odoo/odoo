@@ -329,6 +329,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         attribute_value_ids = set(itertools.chain.from_iterable(attribute_value_dict.values()))
         if attribute_values:
             request.session['attribute_values'] = attribute_values
+            post['attribute_values'] = attribute_values
         else:
             request.session.pop('attribute_values', None)
 
