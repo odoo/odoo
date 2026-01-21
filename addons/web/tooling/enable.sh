@@ -10,7 +10,7 @@ fi
 enableInDir () {
     cd "$1" || exit
     hooksPath="$(realpath --relative-to=. "$tooling/hooks")"
-    git config core.hooksPath "$hooksPath"
+    # git config core.hooksPath "$hooksPath"
     cp "$tooling/_eslintignore" .eslintignore
     cp "$tooling/_eslintrc.json" .eslintrc.json
     cp "$tooling/_jsconfig.json" jsconfig.json

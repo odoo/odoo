@@ -1846,7 +1846,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         return this.sendOrderInPreparation(order, opts);
     }
-    // Used to override inside `pos_blackbox_be`
+    // Used to override inside `l10n_be_pos_blackbox`
     async getSelfOrderToPrint(orderId) {
         const result = await this.data.callRelated("pos.order", "get_order_to_print", [orderId]);
         return result["pos.order"][0];
