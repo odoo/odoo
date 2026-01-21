@@ -1808,23 +1808,44 @@ class AccountTax(models.Model):
             self._add_tax_details_in_base_line(base_line, company)
 
     @api.model
-    def _normalize_target_factors(self, target_factors):
+    def _normalize_target_factors(self, target_factors, allow_negative_factors=False):
         """ Normalize the factors passed as parameter to have a distribution having a sum of 1.
 
         [!] Mirror of the same method in account_tax.js.
         PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
 
-        :param target_factors:      A list of dictionary containing at least 'factor' being the weight
-                                    defining how much delta will be allocated to this factor.
-        :return:                    A list of tuple <index, normalized_factor> for each 'target_factors' passed as parameter.
+        :param target_factors:          A list of dictionary containing at least 'factor' being the weight
+                                        defining how much delta will be allocated to this factor.
+        :param allow_negative_factors:  Allow negative factors.
+        :return:                        A list of tuple <index, normalized_factor> for each 'target_factors' passed as parameter.
         """
-        factors = [(i, abs(target_factor['factor'])) for i, target_factor in enumerate(target_factors)]
-        factors.sort(key=lambda x: x[1], reverse=True)
+        factors = [
+            (i, target_factor['factor'] if allow_negative_factors else abs(target_factor['factor']))
+            for i, target_factor in enumerate(target_factors)
+        ]
+        plus_factors = [x for x in factors if x[1] >= 0]
+        neg_factors = [x for x in factors if x[1] < 0]
+        plus_factors.sort(key=lambda x: x[1], reverse=True)
+        neg_factors.sort(key=lambda x: x[1])
         sum_of_factors = sum(x[1] for x in factors)
-        return [(i, factor / sum_of_factors if sum_of_factors else 1 / len(factors)) for i, factor in factors]
+        plus_sum_of_factors = sum(x[1] for x in plus_factors)
+        neg_sum_of_factors = sum(-x[1] for x in neg_factors)
+        return {
+            'plus_factors': [
+                (i, factor / plus_sum_of_factors if plus_sum_of_factors else 1 / len(plus_factors))
+                for i, factor in plus_factors
+            ],
+            'neg_factors': [
+                (i, factor / neg_sum_of_factors if neg_sum_of_factors else 1 / len(neg_factors))
+                for i, factor in neg_factors
+            ],
+            'sum_of_factors': sum_of_factors,
+            'plus_sum_of_factors': plus_sum_of_factors,
+            'neg_sum_of_factors': neg_sum_of_factors,
+        }
 
     @api.model
-    def _distribute_delta_amount_smoothly(self, precision_digits, delta_amount, target_factors):
+    def _distribute_delta_amount_smoothly(self, precision_digits, delta_amount, target_factors, allow_negative_factors=False):
         """ Distribute 'delta_amount' across the factors passed as parameter.
 
         For example, if 'delta_amount' = 0.03 and precision_digits is 3 and target factors is a list of 3 factors:
@@ -1840,40 +1861,50 @@ class AccountTax(models.Model):
         [!] Mirror of the same method in account_tax.js.
         PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
 
-        :param precision_digits:    The decimal places of the delta.
-        :param delta_amount:        The delta amount to be distributed.
-        :param target_factors:      A list of dictionary containing at least 'factor' being the weight
-                                    defining how much delta will be allocated to this factor.
-        :return:                    A list of floats, one per element in 'target_factors'.
+        :param precision_digits:        The decimal places of the delta.
+        :param delta_amount:            The delta amount to be distributed.
+        :param target_factors:          A list of dictionary containing at least 'factor' being the weight
+                                        defining how much delta will be allocated to this factor.
+        :param allow_negative_factors:  Allow negative factors.
+        :return:                        A list of floats, one per element in 'target_factors'.
         """
+        if not target_factors:
+            return []
+
         precision_rounding = float(f"1e-{precision_digits}")
         amounts_to_distribute = [0.0] * len(target_factors)
         if float_is_zero(delta_amount, precision_digits=precision_digits):
             return amounts_to_distribute
 
         sign = -1 if delta_amount < 0.0 else 1
-        nb_of_errors = round(abs(delta_amount / precision_rounding))
-        remaining_errors = nb_of_errors
 
         # Distribute using the factor first.
-        factors = self._normalize_target_factors(target_factors)
-        for i, factor in factors:
-            if not remaining_errors:
-                break
+        normalize_results = self._normalize_target_factors(target_factors, allow_negative_factors=allow_negative_factors)
+        for sign_factor, signed_factors, delta_factor in (
+            (1, normalize_results['plus_factors'], normalize_results['plus_sum_of_factors'] / normalize_results['sum_of_factors']),
+            (-1, normalize_results['neg_factors'], normalize_results['neg_sum_of_factors'] / normalize_results['sum_of_factors']),
+        ):
+            nb_of_errors = round(abs(delta_amount * delta_factor / precision_rounding))
+            remaining_errors = nb_of_errors
 
-            nb_of_amount_to_distribute = min(
-                round(factor * nb_of_errors),
-                remaining_errors,
-            )
-            remaining_errors -= nb_of_amount_to_distribute
-            amount_to_distribute = sign * nb_of_amount_to_distribute * precision_rounding
-            amounts_to_distribute[i] += amount_to_distribute
+            for index, factor in signed_factors:
+                if not remaining_errors:
+                    break
 
-        # Distribute the remaining cents across the factors.
-        # There are sorted by the biggest first.
-        # Since the factors are normalized, the residual number of cents can't be higher than the number of factors.
-        for i in range(remaining_errors):
-            amounts_to_distribute[factors[i][0]] += sign * precision_rounding
+                nb_of_amount_to_distribute = min(
+                    round(sign_factor * factor * nb_of_errors),
+                    remaining_errors,
+                )
+
+                remaining_errors -= nb_of_amount_to_distribute
+                amount_to_distribute = sign_factor * sign * nb_of_amount_to_distribute * precision_rounding
+                amounts_to_distribute[index] += amount_to_distribute
+
+            # Distribute the remaining cents across the factors.
+            # There are sorted by the biggest first.
+            # Since the factors are normalized, the residual number of cents can't be higher than the number of factors.
+            for index in range(remaining_errors):
+                amounts_to_distribute[signed_factors[index][0]] += sign_factor * sign * precision_rounding
 
         return amounts_to_distribute
 
@@ -3237,7 +3268,7 @@ class AccountTax(models.Model):
         """
         currency = base_line['currency_id']
 
-        factors = self._normalize_target_factors(target_factors)
+        factors = self._normalize_target_factors(target_factors)['plus_factors']
 
         new_taxes_data = []
 
@@ -3293,7 +3324,7 @@ class AccountTax(models.Model):
         currency = base_line['currency_id']
         tax_details = base_line['tax_details']
 
-        factors = self._normalize_target_factors(target_factors)
+        factors = self._normalize_target_factors(target_factors)['plus_factors']
 
         new_tax_details_list = []
 
@@ -3367,7 +3398,7 @@ class AccountTax(models.Model):
                                     the same parameter as '_prepare_base_line_for_taxes_computation'.
         :return:                    A list of base lines.
         """
-        factors = self._normalize_target_factors(target_factors)
+        factors = self._normalize_target_factors(target_factors)['plus_factors']
 
         # Split 'tax_details'.
         new_tax_details_list = self._split_tax_details(base_line, company, target_factors)

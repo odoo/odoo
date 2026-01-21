@@ -469,7 +469,13 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-    adapt_price_unit_to_another_taxes(price_unit, product, original_taxes, new_taxes, { product_uom = null } = {}) {
+    adapt_price_unit_to_another_taxes(
+        price_unit,
+        product,
+        original_taxes,
+        new_taxes,
+        { product_uom = null } = {}
+    ) {
         const original_tax_ids = new Set(original_taxes.map((x) => x.id));
         const new_tax_ids = new Set(new_taxes.map((x) => x.id));
         if (
@@ -766,18 +772,47 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-    normalize_target_factors(target_factors) {
-        const factors = target_factors.map((x, i) => [i, Math.abs(x.factor)]);
-        factors.sort((a, b) => b[1] - a[1]);
+    normalize_target_factors(target_factors, { allow_negative_factors = false } = {}) {
+        const factors = target_factors.map((x, i) => [
+            i,
+            allow_negative_factors ? x.factor : Math.abs(x.factor),
+        ]);
+        const plus_factors = factors.filter((x) => x[1] >= 0);
+        const neg_factors = factors.filter((x) => x[1] < 0);
+        plus_factors.sort((a, b) => b[1] - a[1]);
+        neg_factors.sort((a, b) => a[1] - b[1]);
         const sum_of_factors = factors.reduce((sum, x) => sum + x[1], 0.0);
-        return factors.map((x) => [x[0], sum_of_factors ? x[1] / sum_of_factors : 1 / factors.length]);
+        const plus_sum_of_factors = plus_factors.reduce((sum, x) => sum + x[1], 0.0);
+        const neg_sum_of_factors = neg_factors.reduce((sum, x) => sum - x[1], 0.0);
+        return {
+            plus_factors: plus_factors.map((x) => [
+                x[0],
+                plus_sum_of_factors ? x[1] / plus_sum_of_factors : 1 / plus_factors.length,
+            ]),
+            neg_factors: neg_factors.map((x) => [
+                x[0],
+                neg_sum_of_factors ? x[1] / neg_sum_of_factors : 1 / neg_factors.length,
+            ]),
+            sum_of_factors: sum_of_factors,
+            plus_sum_of_factors: plus_sum_of_factors,
+            neg_sum_of_factors: neg_sum_of_factors,
+        };
     },
 
     /**
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-    distribute_delta_amount_smoothly(precision_digits, delta_amount, target_factors) {
+    distribute_delta_amount_smoothly(
+        precision_digits,
+        delta_amount,
+        target_factors,
+        { allow_negative_factors = false } = {}
+    ) {
+        if (!target_factors.length) {
+            return [];
+        }
+
         const precision_rounding = Number(`1e-${precision_digits}`);
         const amounts_to_distribute = target_factors.map((x) => 0.0);
         if (floatIsZero(delta_amount, precision_digits)) {
@@ -785,30 +820,53 @@ export const accountTaxHelpers = {
         }
 
         const sign = delta_amount < 0.0 ? -1 : 1;
-        const nb_of_errors = Math.round(Math.abs(delta_amount / precision_rounding));
-        let remaining_errors = nb_of_errors;
 
         // Distribute using the factor first.
-        const factors = this.normalize_target_factors(target_factors);
-        for (const [i, factor] of factors) {
-            if (!remaining_errors) {
-                break;
+        const normalize_results = this.normalize_target_factors(target_factors, {
+            allow_negative_factors: allow_negative_factors,
+        });
+        const factor_groups = [
+            [
+                1,
+                normalize_results.plus_factors,
+                normalize_results.plus_sum_of_factors / normalize_results.sum_of_factors,
+            ],
+            [
+                -1,
+                normalize_results.neg_factors,
+                normalize_results.neg_sum_of_factors / normalize_results.sum_of_factors,
+            ],
+        ];
+
+        for (const [sign_factor, signed_factors, delta_factor] of factor_groups) {
+            const nb_of_errors = Math.round(
+                Math.abs((delta_amount * delta_factor) / precision_rounding)
+            );
+            let remaining_errors = nb_of_errors;
+
+            for (const [i, factor] of signed_factors) {
+                if (!remaining_errors) {
+                    break;
+                }
+
+                const nb_of_amount_to_distribute = Math.min(
+                    Math.round(sign_factor * factor * nb_of_errors),
+                    remaining_errors
+                );
+
+                remaining_errors -= nb_of_amount_to_distribute;
+                const amount_to_distribute =
+                    sign_factor * sign * nb_of_amount_to_distribute * precision_rounding;
+                amounts_to_distribute[i] += amount_to_distribute;
             }
 
-            const nb_of_amount_to_distribute = Math.min(
-                Math.round(factor * nb_of_errors),
-                remaining_errors
-            );
-            remaining_errors -= nb_of_amount_to_distribute;
-            const amount_to_distribute = sign * nb_of_amount_to_distribute * precision_rounding;
-            amounts_to_distribute[i] += amount_to_distribute;
-        }
-
-        // Distribute the remaining cents across the factors.
-        // There are sorted by the biggest first.
-        // Since the factors are normalized, the residual number of cents can't be higher than the number of factors.
-        for (let i = 0; i < remaining_errors; i++) {
-            amounts_to_distribute[factors[i][0]] += sign * precision_rounding;
+            // Distribute the remaining cents across the factors.
+            // When forcing factors is possible that there are negative factors included, thus we need to specify
+            // if we need to remove or add from what we have remaining.
+            for (let i = 0; i < remaining_errors; i++) {
+                amounts_to_distribute[signed_factors[i][0]] +=
+                    sign_factor * sign * precision_rounding;
+            }
         }
 
         return amounts_to_distribute;
@@ -1729,7 +1787,7 @@ export const accountTaxHelpers = {
     split_tax_data(base_line, tax_data, company, target_factors) {
         const currency = base_line.currency_id;
 
-        const factors = this.normalize_target_factors(target_factors);
+        const factors = this.normalize_target_factors(target_factors).plus_factors;
 
         const new_taxes_data = [];
 
@@ -1781,7 +1839,7 @@ export const accountTaxHelpers = {
         const currency = base_line.currency_id;
         const tax_details = base_line.tax_details;
 
-        const factors = this._normalize_target_factors(target_factors);
+        const factors = this.normalize_target_factors(target_factors).plus_factors;
 
         const new_tax_details_list = [];
 
@@ -1858,7 +1916,7 @@ export const accountTaxHelpers = {
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
     split_base_line(base_line, company, target_factors, { populate_function = null } = {}) {
-        const factors = this.normalize_target_factors(target_factors);
+        const factors = this.normalize_target_factors(target_factors).plus_factors;
 
         // Split 'tax_details'.
         const new_tax_details_list = this.split_tax_details(base_line, company, target_factors);
