@@ -565,7 +565,7 @@ export class FontPlugin extends Plugin {
             return;
         }
         // Check if cursor is inside an empty heading, blockquote or pre.
-        if (!closestHandledElement || closestHandledElement.textContent.length) {
+        if (!closestHandledElement || !isEmptyBlock(closestHandledElement)) {
             return;
         }
         // Check if unremovable.
