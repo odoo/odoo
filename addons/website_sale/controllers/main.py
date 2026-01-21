@@ -1983,7 +1983,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: A dict grouping attribute value ids by attribute id.
         :rtype: dict(int, list(int))
         """
-        attribute_value_pairs = [value.split('-') for value in attribute_values if value]
+        attribute_value_pairs = [value.split('-', maxsplit=1) for value in attribute_values if value]
         return {
             int(pair[0]): [int(value_id) for value_id in pair[1].split(',')]
             for pair in attribute_value_pairs
