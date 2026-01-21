@@ -4,17 +4,17 @@
          for the "desktop" version of the email -->
         <iframe t-att-sandbox="isBrowserSafari() ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
             aria-hidden="true"
-            style="
-                visibility: hidden !important;
+            t-attf-style="
                 display: block !important;
-                pointer-events: none !important;
-                position: absolute !important;
-                top: 0 !important;
-                left: -9999px !important;
-                width: 1320px !important;
-                min-width: 1320px !important;
-                height: 1000px !important;
-                min-height: 1000px !important;
+                {{ isVisible ? `` : `visibility: hidden !important;` }}
+                {{ isVisible ? `` : `pointer-events: none !important;` }}
+                {{ isVisible ? `` : `position: absolute !important;` }}
+                top: {{ top or `0` }} !important;
+                left: {{ left or `-9999px` }} !important;
+                width: {{ width or `1320px` }} !important;
+                min-width: {{ width or `1320px` }} !important;
+                height: {{ height or `1000px` }} !important;
+                min-height: {{ height or `1000px` }} !important;
             "/>
     </t>
     <t t-name="mail.EmailHtmlConverterReference">
@@ -26,22 +26,3 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     </t>
 </templates>
-<!-- 
-                visibility: hidden !important;
-                display: block !important;
-                pointer-events: none !important;
-                position: absolute !important;
-                top: 0 !important;
-                left: -9999px !important;
-                width: 1320px !important;
-                min-width: 1320px !important;
-                height: 1000px !important;
-                min-height: 1000px !important;
-
-                display: block !important;
-                width: 1320px !important;
-                min-width: 1320px !important;
-                height: 1000px !important;
-                min-height: 1000px !important;
-                z-index: 999999 !important;
--->

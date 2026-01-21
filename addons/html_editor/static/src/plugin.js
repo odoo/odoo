@@ -12,6 +12,7 @@ export const isValidTargetForDomListener = (target) =>
 export class Plugin extends BasePlugin {
     constructor(context) {
         super(context);
+        this.window = context.document.defaultView;
         /** @type { EditorContext['editable'] } **/
         this.editable = context.editable;
         /** @type { EditorContext['document'] } **/

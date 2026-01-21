@@ -48,6 +48,7 @@ export class MassMailingHtmlField extends HtmlField {
                 "mass_mailing.assets_iframe_style",
                 "mass_mailing.assets_email_html_conversion",
             ],
+            target: document.body,
         });
         this.convertToEmailHtml = convertToEmailHtml;
         this.themeService = useService("mass_mailing.themes");

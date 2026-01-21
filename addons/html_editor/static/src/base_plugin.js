@@ -16,7 +16,6 @@ export class BasePlugin {
      * @param { EditorContext } context
      */
     constructor(context) {
-        this.window = context.document.defaultView;
         /** @type { EditorContext['config'] } **/
         this.config = context.config;
         /** @type { EditorContext['services'] } **/

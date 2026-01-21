@@ -1,5 +1,4 @@
 import { loadBundle } from "@web/core/assets";
-import { Deferred } from "@web/core/utils/concurrency";
 
 /**
  * Execute a callback once an iframe is ready/loaded in the DOM. The iframe must
@@ -11,9 +10,12 @@ import { Deferred } from "@web/core/utils/concurrency";
  * @returns {Promise}
  */
 export function loadIframe(iframe, callback = () => {}) {
-    const iframeLoaded = new Deferred();
+    const { promise: iframeLoaded, resolve } = Promise.withResolvers();
     const onIframeLoaded = () => {
-        iframeLoaded.resolve(callback(iframe));
+        if (iframe.isConnected) {
+            resolve(callback(iframe));
+        }
+        resolve(null);
     };
     if (iframe.contentDocument?.readyState === "complete") {
         // Browsers like Chrome don't make use of the load event for iframes without `src`

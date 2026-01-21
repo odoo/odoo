@@ -11,6 +11,12 @@ import { uuid } from "@web/core/utils/strings";
  *           the final rendering)
  * @property { DocumentFragment } fragment fragment containing the final
  *           representation of the reference node, and other vNode
+ *
+ * TODO EGGMAIL better documentation for:
+ * renderNode: clone of a vNode during one rendering phase (temporary, disposable)
+ * renderFragment: clone of a fragment during one rendering phase (temporary, disposable)
+ * templateNode: clone of a referenceNode in its nodeInfo.fragment
+ *   (permanent but it may be replaced by something else in the fragment)
  */
 
 export class VDomPlugin extends BasePlugin {
@@ -82,6 +88,8 @@ export class VDomPlugin extends BasePlugin {
                     this.lazyNodeInfoProxyHandler(node)
                 );
                 this.vNodeToInfo.set(vNode, nodeInfo);
+                // TODO EGGMAIL: maybe agglomerate multiple nodes to a single
+                // "nodeInfo", maybe reword this a `nodePattern`
                 this.referenceToInfo.set(node, nodeInfo);
             }
         } else if (this.vNodeToInfo.has(node)) {
@@ -126,19 +134,24 @@ export class VDomPlugin extends BasePlugin {
     renderReferenceFragment(nodeInfo, options = {}) {
         const renderNode = this.vNodeToRenderNode.get(nodeInfo.vNode);
         if (!renderNode) {
-            // TODO EGGMAIL: error management, a node in reference was not
-            // planned to be rendered
+            // TODO EGGMAIL: error management, the associated vNode
+            // has no position in the current rendering.
             return;
         }
         const renderFragment = this.cloneReferenceFragment(nodeInfo, options);
         renderNode.replaceWith(renderFragment);
         for (const descendant of childNodes(nodeInfo.referenceNode)) {
+            // TODO EGGMAIL: rendering is currently based on `referenceNode`
+            // it should be changed to use the "pattern model" -> create a
+            // tree of "patterns" and render their fragments
             const descendantInfo = this.getNodeInfo(descendant);
             this.renderReferenceFragment(descendantInfo, options);
         }
     }
 
     renderEmailHtml(template, options = {}) {
+        // TODO EGGMAIL: give the `reference` as an argument, to be able to
+        // start from any point in the rendering tree (render partial tree).
         this.lastRenderTemplate = template;
         this.renderIdToInfo = new Map();
         this.vNodeToRenderNode = new WeakMap();

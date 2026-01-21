@@ -11,26 +11,48 @@ import { isBrowserSafari } from "@web/core/browser/feature_detection";
  *          the conversion iframe, and convertToEmailHtml, a function to convert
  *          a reference fragment (field value inside a DIV) to mail compliant HTML.
  */
-export function useEmailHtmlConverter({ Plugins, bundles }) {
+export function useEmailHtmlConverter({ Plugins, bundles, target, debug }) {
     const cmp = useComponent();
     const converter = new EmailHtmlConverter(undefined, cmp.env.services);
-    const referenceIframe = renderToElement("mail.EmailHtmlConverterReferenceIframe", {
-        isBrowserSafari,
-    });
-    document.body.append(referenceIframe);
-    const onAssetsLoaded = loadIframeBundles(referenceIframe, bundles);
-    loadIframe(referenceIframe, () => {
-        referenceIframe.contentDocument.head.append(
-            renderToFragment("mail.EmailHtmlConverterHead")
+    const layouts = {
+        desktop: {
+            document: undefined,
+            reference: undefined,
+            iframe: renderToElement("mail.EmailHtmlConverterReferenceIframe", {
+                isBrowserSafari,
+                isVisible: debug,
+            }),
+        },
+        mobile: {
+            document: undefined,
+            reference: undefined,
+            iframe: renderToElement("mail.EmailHtmlConverterReferenceIframe", {
+                isBrowserSafari,
+                isVisible: debug,
+                width: "367px", // value used in the editor "mobile" mode
+            }),
+        },
+    };
+    target.append(layouts.desktop.iframe, layouts.mobile.iframe);
+    const iframes = Object.values(layouts).map((layout) => layout.iframe);
+    const assetsPromises = iframes.map((iframe) => loadIframeBundles(iframe, bundles));
+    const contentPromises = [];
+    for (const layout of Object.values(layouts)) {
+        contentPromises.push(
+            loadIframe(layout.iframe, () => {
+                layout.document = layout.iframe.contentDocument;
+                layout.document.head.append(renderToFragment("mail.EmailHtmlConverterHead"));
+                // The iframe body must exactly have the iframe horizontal dimensions.
+                layout.document.body.setAttribute(
+                    "style",
+                    `margin: 0 !important;
+                    padding: 0 !important;`
+                );
+            })
         );
-        // The iframe body must exactly have the iframe horizontal dimensions.
-        referenceIframe.contentDocument.body.setAttribute(
-            "style",
-            `margin: 0 !important;
-            padding: 0 !important;`
-        );
-    });
-    onAssetsLoaded.catch((error) => {
+    }
+    const iframesLoaded = Promise.all(contentPromises.concat(assetsPromises));
+    iframesLoaded.catch((error) => {
         if (status(cmp) === "destroyed") {
             // Ignore loading errors if the Component was destroyed, since the
             // iframe was removed, there is nothing to load for.
@@ -40,11 +62,27 @@ export function useEmailHtmlConverter({ Plugins, bundles }) {
     });
     onWillDestroy(() => {
         converter.destroy();
-        referenceIframe.remove();
+        for (const iframe of iframes) {
+            iframe.remove();
+        }
     });
     return {
-        // TODO EGGMAIL: return the function directly if there are other
-        // tools needed.
+        cleanupEmailHtmlConversion: () => {
+            for (const layout of Object.values(layouts)) {
+                if (layout.reference?.isConnected) {
+                    layout.reference.remove();
+                }
+            }
+        },
+        prepareEmailHtmlConversion: async (fragment) => {
+            await iframesLoaded;
+            this.cleanupEmailHtmlConversion();
+            for (const layout of Object.values(layouts)) {
+                layout.reference = renderToElement("mail.EmailHtmlConverterReference");
+                layout.reference.append(fragment);
+                layout.document.body.append(layout.reference);
+            }
+        },
         /**
          * @param {DocumentFragment} fragment reference content to convert as
          *        mail compliant HTML.
@@ -52,20 +90,15 @@ export function useEmailHtmlConverter({ Plugins, bundles }) {
          * @returns {string} mail compliant HTML.
          */
         convertToEmailHtml: async (fragment, config = {}) => {
-            await onAssetsLoaded;
-            const reference = renderToElement("mail.EmailHtmlConverterReference");
-            reference.append(fragment);
-            const referenceDocument = referenceIframe.contentDocument;
-            referenceDocument.body.append(reference);
+            await this.prepareEmailHtmlConversion(fragment);
             return converter
                 .convertToEmailHtml({
                     Plugins: Plugins ?? registry.category("mail-html-conversion-plugins").getAll(),
                     ...config,
-                    reference,
-                    referenceDocument,
+                    ...layouts,
                 })
                 .then((emailHtml) => {
-                    reference.remove();
+                    this.cleanupEmailHtmlConversion();
                     return emailHtml;
                 });
         },
