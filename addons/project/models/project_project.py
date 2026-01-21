@@ -216,7 +216,7 @@ class ProjectProject(models.Model):
     @api.depends('partner_id')
     def _compute_google_map_iframe(self):
         for project in self:
-            address = project.partner_id._display_address(without_company=True).replace('\n', ' ').strip()
+            address = project.partner_id._display_address(without_name=True, separator=' ')
             if not address:
                 project.google_map_iframe = False
                 continue

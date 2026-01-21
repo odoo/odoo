@@ -173,9 +173,10 @@ class EventEvent(models.Model):
     )
     address_search = fields.Many2one(
         'res.partner', string='Address', compute='_compute_address_search', search='_search_address_search')
-    address_inline = fields.Char(
-        string='Venue (formatted for one line uses)', compute='_compute_address_inline',
-        compute_sudo=True)
+    contact_address_inline = fields.Char(
+        string="Venue (formatted for one line uses)",
+        related='address_id.contact_address_inline',
+    )
     country_id = fields.Many2one(
         'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
     event_url = fields.Char(
@@ -564,18 +565,6 @@ class EventEvent(models.Model):
                 event.ticket_instructions = event.event_type_id.ticket_instructions
 
     @api.depends('address_id')
-    def _compute_address_inline(self):
-        """Use venue address if available, otherwise its name, finally ''. """
-        for event in self:
-            if (event.address_id.contact_address or '').strip():
-                event.address_inline = ', '.join(
-                    frag.strip()
-                    for frag in event.address_id.contact_address.split('\n') if frag.strip()
-                )
-            else:
-                event.address_inline = event.address_id.name or ''
-
-    @api.depends('address_id')
     def _compute_event_url(self):
         """Reset url field as it should only be used for events with no physical location."""
         self.filtered('address_id').event_url = ''
@@ -852,7 +841,7 @@ class EventEvent(models.Model):
             cal_event.add('summary').value = event.name
             cal_event.add('description').value = event._get_external_description()
             if event.address_id:
-                cal_event.add('location').value = event.address_inline
+                cal_event.add('location').value = event.contact_address_inline or event.address_id.name
 
             result[event.id] = cal.serialize().encode('utf-8')
         return result
