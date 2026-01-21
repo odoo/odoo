@@ -4,7 +4,7 @@ import json
 import logging
 from contextlib import ExitStack
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 import odoo
 import odoo.modules.registry
@@ -68,7 +68,7 @@ class Session(Controller):
             'state': json.dumps({'d': request.db, 'u': ICP.get_str('web.base.url')}),
             'scope': 'userinfo',
         }
-        return 'https://accounts.odoo.com/oauth2/auth?' + url_encode(params)
+        return 'https://accounts.odoo.com/oauth2/auth?' + urlencode(params)
 
     @route('/web/session/destroy', type='jsonrpc', auth='user', readonly=True)
     def destroy(self):

@@ -15,12 +15,12 @@ import os
 import re
 from datetime import datetime, UTC
 from zoneinfo import ZoneInfo
+from urllib.parse import urlparse, parse_qs
 
 import babel
 import requests
 from lxml import etree, html
 from PIL import Image as I
-from werkzeug import urls
 
 from odoo import _, api, models, fields
 from odoo.exceptions import UserError, ValidationError
@@ -370,10 +370,10 @@ class IrQwebFieldImage(models.AbstractModel):
             return False
         url = element.find('img').get('src')
 
-        url_object = urls.url_parse(url)
+        url_object = urlparse(url)
         if url_object.path.startswith('/web/image'):
             fragments = url_object.path.split('/')
-            query = url_object.decode_query()
+            query = parse_qs(url_object.query)
             url_id = fragments[3].split('-')[0]
             # ir.attachment image urls: /web/image/<id>[-<checksum>][/...]
             if url_id.isdigit():
@@ -382,9 +382,9 @@ class IrQwebFieldImage(models.AbstractModel):
                 field = 'datas'
             # url of binary field on model: /web/image/<model>/<id>/<field>[/...]
             else:
-                model = query.get('model', fragments[3])
-                oid = query.get('id', fragments[4])
-                field = query.get('field', fragments[5])
+                model = query.get('model', [fragments[3]])[0]
+                oid = query.get('id', [fragments[4]])[0]
+                field = query.get('field', [fragments[5]])[0]
             item = self.env[model].browse(int(oid))
             if self.redirect_url_re.match(url_object.path):
                 return self.load_remote_url(item.url)
@@ -396,7 +396,7 @@ class IrQwebFieldImage(models.AbstractModel):
         return self.load_remote_url(url)
 
     def load_local_url(self, url):
-        match = self.local_url_re.match(urls.url_parse(url).path)
+        match = self.local_url_re.match(urlparse(url).path)
         rest = match.group('rest')
 
         path = os.path.join(

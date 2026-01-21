@@ -19,6 +19,7 @@ import warnings
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from inspect import currentframe
+from urllib.parse import urlparse
 
 import psycopg2
 import psycopg2.errorcodes
@@ -28,7 +29,6 @@ import psycopg2.extras
 from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
 from psycopg2.sql import Composable
-from werkzeug import urls
 
 import odoo
 
@@ -779,7 +779,7 @@ def connection_info_for(db_or_uri: str, readonly=False) -> tuple[str, dict]:
     app_name = app_name.replace('{pid}', str(os.getpid()))[:63]
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
         # extract db from uri
-        us = urls.url_parse(db_or_uri)  # type: ignore
+        us = urlparse(db_or_uri)  # type: ignore
         if len(us.path) > 1:
             db_name = us.path[1:]
         elif us.username:

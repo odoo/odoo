@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug.urls
+import urllib.parse
 
 from odoo import http
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
@@ -153,7 +153,7 @@ class WebsiteCustomer(GoogleMap):
             'partners': partners,
             'pager': pager,
             'post': post,
-            'search_path': "?%s" % werkzeug.urls.url_encode(post),
+            'search_path': "?%s" % urllib.parse.urlencode(post),
             'tag': tag,
             'tags': tags,
             'google_maps_api_key': google_maps_api_key,

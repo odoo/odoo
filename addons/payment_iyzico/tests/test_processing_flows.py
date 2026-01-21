@@ -2,7 +2,7 @@
 
 from unittest.mock import patch
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -21,7 +21,7 @@ class TestProcessingFlows(IyzicoCommon, PaymentHttpCommon):
         payment data."""
         tx = self._create_transaction('redirect')
         url = self._build_url(
-            f"{const.PAYMENT_RETURN_ROUTE}?{url_encode({'tx_ref': tx.reference})}"
+            f"{const.PAYMENT_RETURN_ROUTE}?{urlencode({'tx_ref': tx.reference})}"
         )
         with patch(
             'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',

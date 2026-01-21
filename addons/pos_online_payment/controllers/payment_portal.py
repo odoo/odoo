@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import _, http, tools
 from odoo.http import request
@@ -32,7 +32,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         return user_sudo.partner_id
 
     def _redirect_login(self):
-        return request.redirect('/web/login?' + url_encode({'redirect': request.httprequest.full_path}))
+        return request.redirect('/web/login?' + urlencode({'redirect': request.httprequest.full_path}))
 
     @staticmethod
     def _get_amount_to_pay(order_to_pay_sudo):
@@ -69,14 +69,14 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
     @staticmethod
     def _get_pay_route(pos_order_id, access_token, exit_route=None):
-        return f'/pos/pay/{pos_order_id}?' + url_encode(PaymentPortal._new_url_params(access_token, exit_route))
+        return f'/pos/pay/{pos_order_id}?' + urlencode(PaymentPortal._new_url_params(access_token, exit_route))
 
     @staticmethod
     def _get_landing_route(pos_order_id, access_token, exit_route=None, tx_id=None):
         url_params = PaymentPortal._new_url_params(access_token, exit_route)
         if tx_id:
             url_params['tx_id'] = tx_id
-        return f'/pos/pay/confirmation/{pos_order_id}?' + url_encode(url_params)
+        return f'/pos/pay/confirmation/{pos_order_id}?' + urlencode(url_params)
 
     @http.route('/pos/pay/<int:pos_order_id>', type='http', methods=['GET'], auth='public', website=True, sitemap=False)
     def pos_order_pay(self, pos_order_id, access_token=None, exit_route=None):
@@ -111,7 +111,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             'reference_prefix': request.env['payment.transaction'].sudo()._compute_reference_prefix(provider_code=None, separator='-', **kwargs),
             'partner_id': partner_sudo.id,
             'access_token': access_token,
-            'transaction_route': f'/pos/pay/transaction/{pos_order_sudo.id}?' + url_encode(PaymentPortal._new_url_params(access_token, exit_route)),
+            'transaction_route': f'/pos/pay/transaction/{pos_order_sudo.id}?' + urlencode(PaymentPortal._new_url_params(access_token, exit_route)),
             'landing_route': self._get_landing_route(pos_order_sudo.id, access_token, exit_route=exit_route),
             **self._get_extra_payment_form_values(**kwargs),
         }

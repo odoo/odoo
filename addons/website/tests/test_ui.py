@@ -2,7 +2,7 @@
 
 import json
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 import odoo.tests
 from odoo import http
@@ -356,7 +356,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.assertEqual(new_website_bundle_modified.get_version('css'), base_website_css_version)
         self.assertNotEqual(new_website_bundle_modified.get_version('js'), base_website_js_version, "js version for new website should now have been changed")
 
-        url_params = url_encode({'path': '/@/'})
+        url_params = urlencode({'path': '/@/'})
         self.start_tour(f'/website/force/{website_default.id}?{url_params}', "generic_website_editor", login="website_user")
         self.start_tour(f'/website/force/{new_website.id}?{url_params}', "specific_website_editor", login="website_user")
 

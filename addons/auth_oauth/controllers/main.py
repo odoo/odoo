@@ -3,7 +3,7 @@ import functools
 import json
 import logging
 
-import werkzeug.urls
+import urllib.parse
 from werkzeug.exceptions import BadRequest
 
 from odoo import SUPERUSER_ID, _, api
@@ -64,7 +64,7 @@ class OAuthLogin(Home):
                 state=json.dumps(state),
                 # nonce=base64.urlsafe_b64encode(os.urandom(16)),
             )
-            provider['auth_link'] = "%s?%s" % (provider['auth_endpoint'], werkzeug.urls.url_encode(params))
+            provider['auth_link'] = "%s?%s" % (provider['auth_endpoint'], urllib.parse.urlencode(params))
         return providers
 
     def get_state(self, provider):
@@ -74,7 +74,7 @@ class OAuthLogin(Home):
         state = dict(
             d=request.session.db,
             p=provider['id'],
-            r=werkzeug.urls.url_quote_plus(redirect),
+            r=urllib.parse.quote_plus(redirect),
         )
         token = request.params.get('token')
         if token:
@@ -137,7 +137,7 @@ class OAuthController(Controller):
 
             action = state.get('a')
             menu = state.get('m')
-            redirect = werkzeug.urls.url_unquote_plus(state['r']) if state.get('r') else False
+            redirect = urllib.parse.unquote_plus(state['r']) if state.get('r') else False
             url = '/odoo'
             if redirect:
                 url = redirect
@@ -152,7 +152,7 @@ class OAuthController(Controller):
             resp.autocorrect_location_header = False
 
             # Since /web is hardcoded, verify user has right to land on it
-            if werkzeug.urls.url_parse(resp.location).path == '/web' and not request.env.user._is_internal():
+            if urllib.parse.urlparse(resp.location).path == '/web' and not request.env.user._is_internal():
                 resp.location = '/'
             return resp
         except AttributeError:  # TODO juc master: useless since ensure_db()

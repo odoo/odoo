@@ -3,8 +3,9 @@
 import json
 import math
 import re
+import urllib.parse
+from urllib.parse import urlencode, urlparse, parse_qsl
 
-from werkzeug import urls
 from werkzeug.exceptions import Forbidden
 
 from odoo import SUPERUSER_ID, _, http
@@ -53,10 +54,10 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
     page_next = min(page_count, page + 1)
 
     def get_url(page):
-        _url = "%s/page/%s" % (url, page) if page > 1 else url
+        new_url = "%s/page/%s" % (url, page) if page > 1 else url
         if url_args:
-            _url = "%s?%s" % (_url, urls.url_encode(url_args))
-        return _url
+            new_url = "%s?%s" % (new_url, urlencode(url_args))
+        return new_url
 
     # Build page list based on conditions
     if page_count <= 5:
@@ -138,12 +139,12 @@ def _build_url_w_params(url_string, query_params, remove_duplicates=True):
      * if remove duplicates: result = '/my?foo=bar2&error=pay&alice=bob'
      * else: result = '/my?foo=bar&foo=bar2&error=pay&alice=bob'
     """
-    url = urls.url_parse(url_string)
-    url_params = url.decode_query()
-    if remove_duplicates:  # convert to standard dict instead of werkzeug multidict to remove duplicates automatically
-        url_params = url_params.to_dict()
-    url_params.update(query_params)
-    return url.replace(query=urls.url_encode(url_params)).to_url()
+    url = urlparse(url_string)
+    url_params = parse_qsl(url.query)
+    url_params.extend(query_params.items())
+    if remove_duplicates:
+        url_params = dict(url_params)  # convert to dict to remove duplicates (keep last value)
+    return url._replace(query=urlencode(url_params)).geturl()
 
 
 class CustomerPortal(Controller):
@@ -934,7 +935,7 @@ class CustomerPortal(Controller):
                 request.env['res.users']._check_credentials(credential, {'interactive': True})
                 request.env.user.sudo()._deactivate_portal_user(**post)
                 request.session.logout()
-                return request.redirect('/web/login?message=%s' % urls.url_quote(_('Account deleted!')))
+                return request.redirect('/web/login?message=%s' % urllib.parse.quote(_('Account deleted!')))
             except AccessDenied:
                 values['errors'] = {'deactivate': 'password'}
             except UserError as e:

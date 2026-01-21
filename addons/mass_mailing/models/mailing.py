@@ -10,7 +10,7 @@ import lxml
 import random
 import re
 import requests
-import werkzeug.urls
+import urllib.parse
 from ast import literal_eval
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
@@ -1022,7 +1022,7 @@ class MailingMailing(models.Model):
         url = tools.urls.urljoin(
             self.get_base_url(), 'mailing/%(mailing_id)s/unsubscribe_oneclick?%(params)s' % {
                 'mailing_id': self.id,
-                'params': werkzeug.urls.url_encode({
+                'params': urllib.parse.urlencode({
                     'document_id': res_id,
                     'email': email_to,
                     'hash_token': self._generate_mailing_recipient_token(res_id, email_to),
@@ -1035,7 +1035,7 @@ class MailingMailing(models.Model):
         url = tools.urls.urljoin(
             self.get_base_url(), 'mailing/%(mailing_id)s/confirm_unsubscribe?%(params)s' % {
                 'mailing_id': self.id,
-                'params': werkzeug.urls.url_encode({
+                'params': urllib.parse.urlencode({
                     'document_id': res_id,
                     'email': email_to,
                     'hash_token': self._generate_mailing_recipient_token(res_id, email_to),
@@ -1048,7 +1048,7 @@ class MailingMailing(models.Model):
         url = tools.urls.urljoin(
             self.get_base_url(), 'mailing/%(mailing_id)s/view?%(params)s' % {
                 'mailing_id': self.id,
-                'params': werkzeug.urls.url_encode({
+                'params': urllib.parse.urlencode({
                     'document_id': res_id,
                     'email': email_to,
                     'hash_token': self._generate_mailing_recipient_token(res_id, email_to),

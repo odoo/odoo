@@ -2,7 +2,7 @@
 
 import json
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from unittest.mock import patch, Mock
 from odoo import tests
@@ -66,7 +66,7 @@ class TestControllers(tests.HttpCase):
         self.authenticate("admin", "admin")
         for url in urls:
             resp = self.url_open(f'/@{url}')
-            backend_params = url_encode(dict(path=url))
+            backend_params = urlencode(dict(path=url))
             self.assertURLEqual(
                 resp.url, f'/odoo/action-website.website_preview?{backend_params}',
                 "Internal user should have landed in the backend")

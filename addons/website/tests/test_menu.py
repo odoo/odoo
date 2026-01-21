@@ -3,7 +3,7 @@ import json
 from hashlib import sha256
 from lxml import html
 from unittest.mock import Mock, patch
-from werkzeug.urls import url_parse
+from urllib.parse import urlparse
 
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.tests import tagged, common
@@ -137,12 +137,12 @@ class TestMenu(common.TransactionCase):
 
         def url_parse_mock(s):
             if isinstance(s, Mock):
-                # We end up in this case when `url_parse` is actually called on
+                # We end up in this case when `urlparse` is actually called on
                 # `request.httprequest.url`. This is simulating as if we were
                 # really calling the `_is_active()` method from this endpoint
                 # url.
-                return url_parse(self.request_url_mock)
-            return url_parse(s)
+                return urlparse(self.request_url_mock)
+            return urlparse(s)
 
         def test_full_case(a_menu):
             """ This method is testing all the possible flows about URL
@@ -165,7 +165,7 @@ class TestMenu(common.TransactionCase):
             url = a_menu.url
             self.request_url_mock = 'http://localhost:8069' + url
             with MockRequest(self.env, website=website_1), \
-                 patch('odoo.addons.website.models.website_menu.url_parse', new=url_parse_mock):
+                 patch('odoo.addons.website.models.website_menu.urlparse', new=url_parse_mock):
                 self.assertTrue(a_menu._is_active(), "Same path, no domain, no qs, should match")
                 a_menu.url = f'{url}#anchor'
                 self.assertTrue(a_menu._is_active(), "Same path, no domain, no qs, should match (anchor should be ignored)")
@@ -207,7 +207,7 @@ class TestMenu(common.TransactionCase):
         # Second, test a nested menu configuration (simple URL, no qs/anchor)
         self.request_url_mock = 'http://localhost:8069/'
         with MockRequest(self.env, website=website_1), \
-             patch('odoo.addons.website.models.website_menu.url_parse', new=url_parse_mock):
+             patch('odoo.addons.website.models.website_menu.urlparse', new=url_parse_mock):
             self.assertFalse(menu._is_active(), "Same path but it's a container menu, its URL shouldn't be considered")
             self.assertTrue(menu2._is_active(), "Same path and no child -> Should be active")
             self.assertFalse(menu3._is_active(), "Not same path + children")
@@ -250,7 +250,7 @@ class TestMenu(common.TransactionCase):
         test_full_case(menu.copy())
 
         with MockRequest(self.env, website=website_1), \
-             patch('odoo.addons.website.models.website_menu.url_parse', new=url_parse_mock):
+             patch('odoo.addons.website.models.website_menu.urlparse', new=url_parse_mock):
 
             self.request_url_mock = 'http://localhost:8069/sub/slug-3'
             self.assertFalse(menu._is_active(), "Page linked, same unslug, should not match")

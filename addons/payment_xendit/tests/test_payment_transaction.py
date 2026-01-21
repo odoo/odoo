@@ -2,7 +2,7 @@
 
 from unittest.mock import patch
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -67,7 +67,7 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         tx = self._create_transaction(flow='redirect')
         return_url = self._build_url(XenditController._return_url)
         access_token = self._generate_test_access_token(tx.reference, tx.amount)
-        success_url_params = url_encode({
+        success_url_params = urlencode({
             'tx_ref': tx.reference,
             'access_token': access_token,
             'success': 'true',

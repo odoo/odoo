@@ -365,6 +365,7 @@ import time
 import token
 import tokenize
 import traceback
+import urllib.parse
 import warnings
 import werkzeug
 
@@ -513,7 +514,7 @@ def keep_query(*keep_params, **additional_params):
         for param in fnmatch.filter(qs_keys, keep_param):
             if param not in additional_params and param in qs_keys:
                 params[param] = request.httprequest.args.getlist(param)
-    return werkzeug.urls.url_encode(params)
+    return urllib.parse.urlencode(params, doseq=True)
 
 
 ####################################
@@ -1307,7 +1308,7 @@ class IrQweb(models.AbstractModel):
                 request=request,  # might be unbound if we're not in an httprequest context
                 test_mode_enabled=config['test_enable'],
                 json=qwebJSON,
-                quote_plus=werkzeug.urls.url_quote_plus,
+                quote_plus=urllib.parse.quote_plus,
                 time=safe_eval.time,
                 datetime=safe_eval.datetime,
                 relativedelta=relativedelta,

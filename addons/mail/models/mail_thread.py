@@ -16,12 +16,12 @@ from collections import defaultdict, namedtuple
 from collections.abc import Iterable
 from email import message_from_string
 from email.message import EmailMessage
+from urllib.parse import urlencode
 from xmlrpc import client as xmlrpclib
 
 from lxml import etree, html
 from markupsafe import Markup, escape
 from requests import Session
-from werkzeug import urls
 
 from odoo import _, api, exceptions, fields, models, tools
 from odoo.addons.mail.tools.discuss import Store
@@ -4386,7 +4386,7 @@ class MailThread(models.AbstractModel):
             token = self._encode_link(base_link, params)
             params['token'] = token
 
-        link = '%s?%s' % (base_link, urls.url_encode(params, sort=True))
+        link = '%s?%s' % (base_link, urlencode(sorted(params.items()), doseq=True))
         if self:
             link = self[0].get_base_url() + link
 

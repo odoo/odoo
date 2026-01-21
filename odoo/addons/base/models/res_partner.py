@@ -8,9 +8,8 @@ import re
 import typing
 from collections import defaultdict
 from random import randint
+from urllib.parse import urlparse
 from zoneinfo import ZoneInfo
-
-from werkzeug import urls
 
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
@@ -799,11 +798,11 @@ class ResPartner(models.Model):
             parent._update_address(addr_vals)
 
     def _clean_website(self, website):
-        url = urls.url_parse(website)
+        url = urlparse(website)
         if not url.scheme:
             if not url.netloc:
-                url = url.replace(netloc=url.path, path='')
-            website = url.replace(scheme='http').to_url()
+                url = url._replace(netloc=url.path, path='')
+            website = url._replace(scheme='http').geturl()
         return website
 
     @api.depends('vat', 'commercial_partner_id')

@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import urllib.parse
 from datetime import timedelta, UTC
 from random import randint
 from textwrap import shorten
 from zoneinfo import ZoneInfo
 
-import werkzeug.urls
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools
@@ -753,6 +753,6 @@ class EventTrack(models.Model):
         }
 
         return {
-            'google_url': GOOGLE_CALENDAR_URL + werkzeug.urls.url_encode(google_params),
+            'google_url': GOOGLE_CALENDAR_URL + urllib.parse.urlencode(google_params),
             'iCal_url': f'{self.get_base_url()}/event/{self.event_id.id}/track/{self.id}/ics',
         }

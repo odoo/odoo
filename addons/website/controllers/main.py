@@ -13,7 +13,6 @@ from textwrap import shorten
 from xml.etree import ElementTree as ET
 
 import requests
-import werkzeug.urls
 import werkzeug.wrappers
 from lxml import etree, html
 from markupsafe import escape as markup_escape
@@ -193,7 +192,7 @@ class Website(Home):
         mode_edit = bool(kw.pop('enable_editor', False))
         mode_debug = kw.get('debug', 0)
         if kw:
-            path += '?' + werkzeug.urls.url_encode(kw)
+            path += '?' + urllib.parse.urlencode(kw)
 
         if request.env.user._is_internal():
             path = request.website.get_client_action_url(path, mode_edit, mode_debug)

@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -51,7 +51,7 @@ class PaymentTransaction(models.Model):
         if self.payment_method_id.code in const.REDIRECT_PAYMENT_METHOD_CODES:
             processing_values['callback_url'] = url_join(
                 self.provider_id.get_base_url(),
-                f'{RazorpayController._return_url}?{url_encode({"reference": self.reference})}'
+                f'{RazorpayController._return_url}?{urlencode({"reference": self.reference})}'
             )
 
         return processing_values

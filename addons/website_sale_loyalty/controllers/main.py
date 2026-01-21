@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.urls import url_encode, url_parse
+from urllib.parse import urlencode, urlparse, parse_qs
 
 from odoo import _
 from odoo.exceptions import UserError
@@ -37,8 +37,8 @@ class WebsiteSale(main.WebsiteSale):
 
     @route(['/coupon/<string:code>'], type='http', auth='public', website=True, sitemap=False)
     def activate_coupon(self, code, r='/shop', **kw):
-        url_parts = url_parse(r)
-        url_query = url_parts.decode_query()
+        url_parts = urlparse(r)
+        url_query = parse_qs(url_parts.query)
         url_query.pop('coupon_error', False)  # trust only Odoo error message
         url_query.pop('coupon_error_type', False)
         code = code.strip()
@@ -53,8 +53,8 @@ class WebsiteSale(main.WebsiteSale):
         else:
             url_query['coupon_error'] = _("The coupon will be automatically applied when you add something in your cart.")
             url_query['coupon_error_type'] = 'warning'
-        redirect = url_parts.replace(query=url_encode(url_query))
-        return request.redirect(redirect.to_url())
+        redirect = url_parts._replace(query=urlencode(url_query, doseq=True))
+        return request.redirect(redirect.geturl())
 
     @route('/shop/claimreward', type='http', auth='public', website=True, sitemap=False)
     def claim_reward(self, reward_id, code=None, **post):

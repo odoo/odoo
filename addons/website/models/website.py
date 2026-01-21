@@ -15,8 +15,7 @@ import werkzeug.routing
 
 from collections import defaultdict
 from lxml import etree, html
-from urllib.parse import urlparse
-from werkzeug import urls
+from urllib.parse import urlparse, urlencode
 
 from odoo import api, fields, models, tools, release
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
@@ -1462,7 +1461,7 @@ class Website(models.CachedModel):
         False depending on the `fallback` parameter.
 
         :param domain_name: the domain for which we want the website.
-            In regard to the `url_parse` method, only the `netloc` part should
+            In regard to the `urlparse` method, only the `netloc` part should
             be given here, no `scheme`.
         :type domain_name: string
 
@@ -1481,7 +1480,7 @@ class Website(models.CachedModel):
 
         def _filter_domain(website, domain_name, ignore_port=False):
             """Ignore `scheme` from the `domain`, just match the `netloc` which
-            is host:port in the version of `url_parse` we use."""
+            is host:port in the version of `urlparse` we use."""
             website_domain = get_base_domain(website.domain_punycode)
             if ignore_port:
                 website_domain = _remove_port(website_domain)
@@ -1873,7 +1872,7 @@ class Website(models.CachedModel):
             action_params["enable_editor"] = 1
         if mode_debug:
             action_params["debug"] = mode_debug
-        return "/odoo/action-website.website_preview?" + urls.url_encode(action_params)
+        return "/odoo/action-website.website_preview?" + urlencode(action_params)
 
     def get_client_action(self, url, mode_edit=False, website_id=False):
         action = self.env["ir.actions.actions"]._for_xml_id("website.website_preview")

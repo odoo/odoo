@@ -6,7 +6,7 @@ import logging
 import time
 import requests
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import _, api, fields, models, release
 from odoo.exceptions import AccessError, UserError
@@ -51,7 +51,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
                 record.microsoft_outlook_uri = False
                 continue
 
-            record.microsoft_outlook_uri = url_join(self._get_microsoft_endpoint(), 'authorize?%s' % url_encode({
+            record.microsoft_outlook_uri = url_join(self._get_microsoft_endpoint(), 'authorize?%s' % urlencode({
                 'client_id': microsoft_outlook_client_id,
                 'response_type': 'code',
                 'redirect_uri': url_join(base_url, '/microsoft_outlook/confirm'),
@@ -98,7 +98,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
             db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
 
             # final callback URL that will receive the token from IAP
-            callback_params = url_encode({
+            callback_params = urlencode({
                 'model': self._name,
                 'rec_id': self.id,
                 'csrf_token': self._get_outlook_csrf_token(),

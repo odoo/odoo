@@ -3,7 +3,7 @@
 from unittest.mock import patch
 
 from werkzeug.exceptions import Forbidden
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -77,7 +77,7 @@ class TestProcessingFlow(XenditCommon, PaymentHttpCommon):
 
     def test_set_xendit_transactions_to_pending_on_return(self):
         def build_return_url(**kwargs):
-            url_params = url_encode(dict(kwargs, tx_ref=self.reference))
+            url_params = urlencode(dict(kwargs, tx_ref=self.reference))
             return self._build_url(f'{XenditController._return_url}?{url_params}')
 
         self.reference = "xendit_tx1"

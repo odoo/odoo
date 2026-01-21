@@ -2,7 +2,7 @@
 
 from unittest.mock import patch
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -35,7 +35,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
 
         base_url = self.provider.get_base_url()
         return_url = url_join(
-            base_url, f'{StripeController._return_url}?{url_encode({"reference": tx.reference})}'
+            base_url, f'{StripeController._return_url}?{urlencode({"reference": tx.reference})}'
         )
         self.assertEqual(processing_values['return_url'], return_url)
 

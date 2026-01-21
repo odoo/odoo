@@ -2,7 +2,7 @@
 
 import json
 
-from werkzeug.urls import url_encode, url_parse
+from urllib.parse import urlencode, urlparse
 
 from odoo import _, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
@@ -248,7 +248,7 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
 
-        web_domain = url_parse(self.get_base_url()).netloc
+        web_domain = urlparse(self.get_base_url()).netloc
         response_content = self._send_api_request('POST', 'apple_pay/domains', data={
             'domain_name': web_domain
         })
@@ -418,8 +418,8 @@ class PaymentProvider(models.Model):
 
         payload = {
             'account': connected_account_id,
-            'return_url': f'{url_join(base_url, return_url)}?{url_encode(return_params)}',
-            'refresh_url': f'{url_join(base_url, refresh_url)}?{url_encode(refresh_params)}',
+            'return_url': f'{url_join(base_url, return_url)}?{urlencode(return_params)}',
+            'refresh_url': f'{url_join(base_url, refresh_url)}?{urlencode(refresh_params)}',
             'type': 'account_onboarding',
         }
         proxy_payload = self._prepare_json_rpc_payload(payload)

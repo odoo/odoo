@@ -3,11 +3,10 @@ import logging
 import re
 import threading
 from os.path import join as opj
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlencode
 
 import werkzeug
 from psycopg2 import OperationalError
-from werkzeug.urls import url_encode  # TODO: use urllib
 
 # TODO: drop the fallback
 try:
@@ -262,7 +261,7 @@ class Application:
                             # ensure_db() protected routes, remove ?db= from the query string
                             args_nodb = request.httprequest.args.copy()
                             args_nodb.pop('db', None)
-                            request.reroute(httprequest.path, url_encode(args_nodb))
+                            request.reroute(httprequest.path, urlencode(args_nodb))
                         response = request._serve_nodb()
                 else:
                     response = request._serve_nodb()

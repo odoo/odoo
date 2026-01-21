@@ -8,7 +8,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from lxml import html
 from unittest.mock import patch
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import SUPERUSER_ID
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
@@ -389,5 +389,5 @@ class TestUnsubscribe(MailCommon, HttpCaseWithUserDemo):
         else:
             unsubscribe_route = "unsubscribe"
 
-        url = urls.urljoin(self.base_url, f'digest/{self.test_digest.id}/{unsubscribe_route}?{url_encode(url_params)}')
+        url = urls.urljoin(self.base_url, f'digest/{self.test_digest.id}/{unsubscribe_route}?{urlencode(url_params)}')
         return self.url_open(url, timeout=10, allow_redirects=True, method=method)

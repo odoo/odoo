@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-import werkzeug.urls
+import urllib.parse
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -41,7 +41,7 @@ class MailMail(models.Model):
                 href = match[0]
                 url = match[1]
 
-                parsed = werkzeug.urls.url_parse(url, scheme='http')
+                parsed = urllib.parse.urlparse(url, scheme='http')
 
                 if parsed.scheme.startswith('http') and parsed.path.startswith('/r/'):
                     new_href = href.replace(url, f"{url}/m/{self.mailing_trace_ids[0].id}")

@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
-
-from werkzeug import urls
+from urllib.parse import urlencode
 
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -26,7 +25,7 @@ class TestPaymentTransaction(NuveiCommon):
             'tx_ref': tx.reference,
             'error_access_token': self._generate_test_access_token(tx.reference),
         }
-        cancel_url = f'{return_url}?{urls.url_encode(cancel_url_params)}'
+        cancel_url = f'{return_url}?{urlencode(cancel_url_params)}'
         first_name, last_name = " ".join(tx.partner_name.split()[:-1]), tx.partner_name.split()[-1]
         expected_values = {
             'api_url': 'https://ppp-test.safecharge.com/ppp/purchase.do',

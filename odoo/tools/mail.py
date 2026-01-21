@@ -28,7 +28,6 @@ from lxml.html import (
     document_fromstring,
     html_parser,
 )
-from werkzeug import urls
 
 from odoo.tools import misc
 
@@ -485,7 +484,7 @@ HTML_NEWLINES_REGEX = re.compile('<(div|p|br|tr)[^>]*>|\n')
 
 
 def validate_url(url):
-    if urls.url_parse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
+    if urlparse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
         return 'http://' + url
 
     return url

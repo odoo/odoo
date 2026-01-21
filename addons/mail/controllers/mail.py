@@ -4,9 +4,8 @@ import time
 
 from math import floor
 from PIL import Image, ImageFont, ImageDraw
-from werkzeug.urls import url_encode
-from werkzeug.exceptions import NotFound
 from urllib.parse import parse_qsl, urlencode, urlparse
+from werkzeug.exceptions import NotFound
 
 from odoo import _, http
 from odoo.exceptions import AccessError
@@ -36,17 +35,13 @@ class MailController(http.Controller):
 
     @classmethod
     def _redirect_to_login_with_mail_view(cls, model, res_id, access_token=None, **kwargs):
+        if access_token:
+            kwargs['access_token'] = access_token
+
         url_base = '/mail/view'
-        url_params = request.env['mail.thread']._get_action_link_params(
-            'view', **{
-                'model': model,
-                'res_id': res_id,
-                'access_token': access_token,
-                **kwargs,
-            }
-        )
-        mail_view_url = f'{url_base}?{url_encode(url_params, sort=True)}'
-        return request.redirect(f'/web/login?{url_encode({"redirect": mail_view_url})}')
+        url_params = request.env['mail.thread']._get_action_link_params('view', model=model, res_id=res_id, **kwargs)
+        mail_view_url = f'{url_base}?{urlencode(sorted(url_params.items()))}'
+        return request.redirect(f'/web/login?{urlencode({"redirect": mail_view_url})}')
 
     @classmethod
     def _check_token(cls, token):
@@ -179,7 +174,7 @@ class MailController(http.Controller):
         # @see router.js: heuristics to discrimate a model name from an action path
         # is the presence of dots, or the prefix m- for models
         model_in_url = model if "." in model else "m-" + model
-        url = f'/odoo/{model_in_url}/{res_id}?{url_encode(url_params, sort=True)}'
+        url = f'/odoo/{model_in_url}/{res_id}?{urlencode(sorted(url_params.items()))}'
         return request.redirect(url)
 
     @http.route('/mail/view', type='http', auth='public')

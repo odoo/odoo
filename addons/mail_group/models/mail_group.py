@@ -4,12 +4,13 @@
 import json
 import logging
 import lxml
+import urllib.parse
+from urllib.parse import urlencode
 
 from ast import literal_eval
 from datetime import datetime
 from dateutil import relativedelta
 from markupsafe import Markup
-from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
 from odoo.addons.mail.tools.alias_error import AliasError
@@ -435,7 +436,7 @@ class MailGroup(models.Model):
                     continue
 
                 # SMTP headers related to the subscription
-                email_url_encoded = urls.url_quote(email_member)
+                email_url_encoded = urllib.parse.quote(email_member)
                 unsubscribe_url = self._get_email_unsubscribe_url(email_member_normalized)
 
                 headers = {
@@ -666,7 +667,7 @@ class MailGroup(models.Model):
 
         confirm_action_url = '/group/%s-confirm?%s' % (
             action,
-            urls.url_encode({
+            urlencode({
                 'group_id': self.id,
                 'email': email,
                 'token': self._generate_action_token(email, action),
@@ -703,7 +704,7 @@ class MailGroup(models.Model):
         return hmac(self.env(su=True), 'mail_group-access-token-portal', self.id)
 
     def _get_email_unsubscribe_url(self, email_to):
-        params = urls.url_encode({
+        params = urlencode({
             'email': email_to,
             'token': self._generate_email_access_token(email_to),
         })

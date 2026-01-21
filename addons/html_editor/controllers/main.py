@@ -1,5 +1,6 @@
 import contextlib
 import re
+import urllib.parse
 import uuid
 from base64 import b64decode, b64encode
 from datetime import datetime
@@ -8,7 +9,6 @@ from urllib.parse import urlparse, urljoin
 
 import requests
 import werkzeug.exceptions
-import werkzeug.urls
 from lxml import etree, html
 
 from odoo import SUPERUSER_ID, _, tools
@@ -606,7 +606,7 @@ class HTML_Editor(Controller):
             if not attachment:
                 attachment = IrAttachment.with_user(SUPERUSER_ID).create(attachment_data)
             if media[id]['is_dynamic_svg']:
-                colorParams = werkzeug.urls.url_encode(media[id]['dynamic_colors'])
+                colorParams = urllib.parse.urlencode(media[id]['dynamic_colors'])
                 attachment['url'] = '/html_editor/shape/illustration/%s?%s' % (slug(attachment), colorParams)
             attachments.append(attachment._get_media_info())
 

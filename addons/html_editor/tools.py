@@ -7,7 +7,7 @@ import requests
 
 from markupsafe import Markup
 from urllib.parse import parse_qs, urlparse
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import _
 from odoo.exceptions import ValidationError
@@ -93,7 +93,7 @@ def get_video_url_data(video_url, autoplay=False, loop=False,
         if hide_fullscreen:
             params['fs'] = 0
         yt_extra = platform_match[1] or ''
-        embed_url = f"//www.youtube{yt_extra}.com/embed/{video_id}?{url_encode(params)}"
+        embed_url = f"//www.youtube{yt_extra}.com/embed/{video_id}?{urlencode(params)}"
     elif platform == 'vimeo':
         params['autoplay'] = autoplay and 1 or 0
         # Always enable "do not track" parameter.
@@ -112,13 +112,13 @@ def get_video_url_data(video_url, autoplay=False, loop=False,
             url_params = parse_qs(groups['params'])
             if 'h' in url_params:
                 params['h'] = url_params['h'][0]
-        embed_url = f"//player.vimeo.com/video/{video_id}?{url_encode(params)}"
+        embed_url = f"//player.vimeo.com/video/{video_id}?{urlencode(params)}"
         if start_from:
             embed_url = f"{embed_url}#t={start_from}"
     elif platform == 'dailymotion':
         if start_from:
             params["startTime"] = start_from.rstrip("s")
-        embed_url = f"//geo.dailymotion.com/player.html?video={video_id}&{url_encode(params)}"
+        embed_url = f"//geo.dailymotion.com/player.html?video={video_id}&{urlencode(params)}"
     elif platform == 'instagram':
         embed_url = f'//www.instagram.com/p/{video_id}/embed/'
     elif platform == "facebook":

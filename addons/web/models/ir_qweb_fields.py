@@ -4,7 +4,7 @@
 import hashlib
 import re
 from collections import OrderedDict
-from werkzeug.urls import url_quote
+from urllib.parse import quote as url_quote
 from markupsafe import Markup
 
 from odoo import api, models, fields

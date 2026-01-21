@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import _, api, fields, models
 
@@ -33,7 +33,7 @@ class HrEmployeeCvWizard(models.TransientModel):
         return {
             'name': _('Print Resume'),
             'type': 'ir.actions.act_url',
-            'url': '/print/cv?' + url_encode({
+            'url': '/print/cv?' + urlencode({
                 'employee_ids': ','.join(str(x) for x in self.employee_ids.ids),
                 'color_primary': self.color_primary,
                 'color_secondary': self.color_secondary,

@@ -4,9 +4,9 @@ import base64
 import gzip
 import uuid
 from datetime import UTC
+from urllib.parse import parse_qs, urlencode, urlparse
 
 from dateutil.relativedelta import relativedelta
-from werkzeug.urls import url_encode, url_parse
 
 from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import ValidationError
@@ -198,10 +198,10 @@ class ProductFeed(models.Model):
 
         def format_product_link(url_):
             if self.pricelist_id:
-                parsed_url = url_parse(url_)
-                query = parsed_url.decode_query()
+                parsed_url = urlparse(url_)
+                query = parse_qs(parsed_url.query)
                 query['pricelist'] = self.pricelist_id.id
-                url_ = parsed_url._replace(query=url_encode(query)).to_url()
+                url_ = parsed_url._replace(query=urlencode(query, doseq=True)).geturl()
             return urls.urljoin(
                 base_url, self.env['ir.http']._url_lang(url_, lang_code=self.lang_id.code)
             )

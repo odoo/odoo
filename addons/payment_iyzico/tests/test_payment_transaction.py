@@ -2,7 +2,7 @@
 
 from unittest.mock import patch
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -22,7 +22,7 @@ class TestPaymentTransaction(IyzicoCommon, PaymentHttpCommon):
         request_payload = tx._iyzico_prepare_cf_initialize_payload()
         first_name, last_name = payment_utils.split_partner_name(tx.partner_name)
         return_url = self._build_url(
-            f'{const.PAYMENT_RETURN_ROUTE}?{url_encode({"tx_ref": tx.reference})}'
+            f'{const.PAYMENT_RETURN_ROUTE}?{urlencode({"tx_ref": tx.reference})}'
         )
         self.assertDictEqual(request_payload, {
             'basketItems': [{

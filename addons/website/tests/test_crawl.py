@@ -3,9 +3,9 @@
 import logging
 import re
 import time
+from urllib.parse import urlparse, urlunparse
 
 import lxml.html
-from werkzeug import urls
 
 import odoo
 
@@ -79,7 +79,7 @@ class Crawler(HttpCaseWithUserDemo):
             # check local redirect to avoid fetch externals pages
             new_url = r.headers.get('Location')
             current_url = r.url
-            if urls.url_parse(new_url).netloc != urls.url_parse(current_url).netloc:
+            if urlparse(new_url).netloc != urlparse(current_url).netloc:
                 return seen
             r = self.url_open(new_url)
 
@@ -91,9 +91,9 @@ class Crawler(HttpCaseWithUserDemo):
             for link in doc.xpath('//a[@href]'):
                 href = link.get('href')
 
-                parts = urls.url_parse(href)
+                parts = urlparse(href)
                 # href with any fragment removed
-                href = parts.replace(fragment='').to_url()
+                href = urlunparse(parts._replace(fragment=''))
 
                 # FIXME: handle relative link (not parts.path.startswith /)
                 if parts.netloc or \

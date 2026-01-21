@@ -2,7 +2,7 @@
 import os
 from glob import glob
 from logging import getLogger
-from werkzeug import urls
+from urllib.parse import urlparse
 
 from odoo import api, fields, models, tools
 from odoo.modules import Manifest
@@ -33,7 +33,7 @@ def fs2web(path):
 
 
 def can_aggregate(url):
-    parsed = urls.url_parse(url)
+    parsed = urlparse(url)
     return not parsed.scheme and not parsed.netloc and not url.startswith('/web/content')
 
 

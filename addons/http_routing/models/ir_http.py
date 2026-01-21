@@ -8,7 +8,6 @@ import urllib.parse
 
 import werkzeug.exceptions
 import werkzeug.routing
-import werkzeug.urls
 from werkzeug.exceptions import HTTPException, NotFound
 
 from odoo import api, exceptions, models, tools
@@ -151,7 +150,7 @@ class IrHttp(models.AbstractModel):
             path = router.build(rule.endpoint, args)
         except (NotFound, AccessError, MissingError):
             # The build method returns a quoted URL so convert in this case for consistency.
-            path = werkzeug.urls.url_quote_plus(url, safe='/')
+            path = urllib.parse.quote_plus(url, safe='/')
         if force_default_lang or lang != request.env['ir.http']._get_default_lang():
             path = f'/{lang.url_code}{path if path != "/" else ""}'
 
@@ -182,7 +181,7 @@ class IrHttp(models.AbstractModel):
             url = False
         # relative URL with either a path or a force_lang
         if url and not url.netloc and not url.scheme and (url.path or force_lang):
-            location = werkzeug.urls.url_join(request.httprequest.path, location)
+            location = urllib.parse.urljoin(request.httprequest.path, location)
             lang_url_codes = [info.url_code for info in Lang._get_frontend().values()]
             lang_code = lang_code or request.env.context['lang']
             lang_url_code = Lang._get_data(code=lang_code).url_code
@@ -505,8 +504,8 @@ class IrHttp(models.AbstractModel):
             if request.httprequest.method in ('GET', 'HEAD'):
                 _, path = rule.build(args)
                 assert path is not None
-                generated_path = werkzeug.urls.url_unquote_plus(path)
-                current_path = werkzeug.urls.url_unquote_plus(request.httprequest.path)
+                generated_path = urllib.parse.unquote_plus(path)
+                current_path = urllib.parse.unquote_plus(request.httprequest.path)
                 if generated_path != current_path:
                     if request.lang != cls._get_default_lang():
                         path = f'/{request.lang.url_code}{path}'

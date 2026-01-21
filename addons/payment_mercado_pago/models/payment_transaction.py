@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from urllib.parse import parse_qs, urlparse
 from urllib.parse import quote as url_quote
-
-from werkzeug.urls import url_decode, url_parse
 
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
@@ -45,8 +44,8 @@ class PaymentTransaction(models.Model):
         ]
 
         # Extract the payment link URL and params and embed them in the redirect form.
-        parsed_url = url_parse(api_url)
-        url_params = url_decode(parsed_url.query)
+        parsed_url = urlparse(api_url)
+        url_params = parse_qs(parsed_url.query)
         rendering_values = {
             'api_url': api_url,
             'url_params': url_params,  # Encore the params as inputs to preserve them.

@@ -8,6 +8,7 @@ import time
 import warnings
 from contextlib import contextmanager, nullcontext
 from datetime import datetime
+from urllib.parse import urlencode, urlparse
 
 import babel.core
 import psycopg2
@@ -25,7 +26,6 @@ from werkzeug.exceptions import (
 )
 from werkzeug.local import LocalStack
 from werkzeug.security import safe_join
-from werkzeug.urls import URL, url_encode, url_parse
 from werkzeug.utils import redirect
 
 import odoo
@@ -384,18 +384,15 @@ class Request:
         return NotFound(description)
 
     def redirect(self, location, code=303, local=True):
-        # compatibility, Werkzeug support URL as location
-        if isinstance(location, URL):
-            location = location.to_url()
         if local:
-            location = '/' + url_parse(location).replace(scheme='', netloc='').to_url().lstrip('/\\')
+            location = '/' + urlparse(location)._replace(scheme='', netloc='').geturl().lstrip('/\\')
         if self.db:
             return self.env['ir.http']._redirect(location, code)
         return redirect(location, code, Response=Response)
 
     def redirect_query(self, location, query=None, code=303, local=True):
         if query:
-            location += '?' + url_encode(query)
+            location += '?' + urlencode(query)
         return self.redirect(location, code=code, local=local)
 
     def render(self, template, qcontext=None, lazy=True, **kw):

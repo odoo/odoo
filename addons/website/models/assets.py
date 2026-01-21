@@ -4,7 +4,7 @@ import base64
 import re
 import requests
 
-from werkzeug.urls import url_parse
+from urllib.parse import urlparse
 
 from odoo import api, models
 from odoo.tools import misc
@@ -259,7 +259,7 @@ class WebsiteAssets(models.AbstractModel):
                         req = requests.get(url, timeout=5, headers=headers_woff2)
                         # https://fonts.gstatic.com/s/modak/v18/EJRYQgs1XtIEskMB-hRp7w.woff2
                         # -> s-modak-v18-EJRYQgs1XtIEskMB-hRp7w.woff2
-                        name = url_parse(url).path.lstrip('/').replace('/', '-')
+                        name = urlparse(url).path.lstrip('/').replace('/', '-')
                         attachment = IrAttachment.create({
                             'name': f'google-font-{name}',
                             'type': 'binary',

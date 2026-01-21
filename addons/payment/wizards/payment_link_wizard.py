@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from werkzeug import urls
+from urllib.parse import urlencode
 
 from odoo import _, api, fields, models
 
@@ -60,9 +59,9 @@ class PaymentLinkWizard(models.TransientModel):
             query_params = self._prepare_query_params(related_document)
             anchor = self._prepare_anchor()
             if '?' in url:
-                payment_link.link = f'{url}&{urls.url_encode(query_params)}{anchor}'
+                payment_link.link = f'{url}&{urlencode(query_params)}{anchor}'
             else:
-                payment_link.link = f'{url}?{urls.url_encode(query_params)}{anchor}'
+                payment_link.link = f'{url}?{urlencode(query_params)}{anchor}'
 
     def _prepare_url(self, base_url, related_document):
         """ Build the URL of the payment link with the website's base URL and return it.
