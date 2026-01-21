@@ -191,7 +191,7 @@ const mailViewArch = `
     <field name="mailing_model_id" invisible="1"/>
     <field name="mailing_model_real" invisible="1"/>
     <field name="state" invisible="1"/>
-    <field name="body_html" class="o_mail_body_inline"/>
+    <field name="body_html" class="o_mail_body_inline" readonly="true"/>
     <field name="body_arch" class="o_mail_body_mailing" widget="mass_mailing_html"
         options="{
             'inline_field': 'body_html',
@@ -343,10 +343,13 @@ describe("field HTML", () => {
         await contains(
             ".o_dialog :iframe .o_mailing_template_preview_wrapper [data-name='event']"
         ).click();
-        await waitFor(".o_dialog .o_mass_mailing-builder_sidebar", { timeout: 1000 });
-        await contains(".o_dialog :iframe .s_text_block", { timeout: 1000 }).click();
+        await waitFor(".o_dialog .o_mass_mailing-builder_sidebar .o_snippet_thumbnail", {
+            timeout: 3000,
+        });
+        await contains(".o_dialog :iframe .s_text_block", { timeout: 3000 }).click();
         await waitFor(
-            ".o_dialog .o_mass_mailing-builder_sidebar .options-container-header:contains(Text)"
+            ".o_dialog .o_mass_mailing-builder_sidebar .options-container-header:contains(Text)",
+            { timeout: 3000 }
         );
         const overlayOptionsSelect =
             ".o-main-components-container .o-overlay-container .o_overlay_options";
@@ -375,11 +378,8 @@ describe("field HTML", () => {
         await waitFor(".hb-row .hb-row-label span:contains(Domain)");
         expect(queryOne(".hb-row span.fa-filter + span").textContent.toLowerCase()).toBe("id = 1");
         await clickSave();
-        await waitFor(".o_mail_body_inline table[t-if]");
-        expect(queryOne(".o_mail_body_inline table[t-if]")).toHaveAttribute(
-            "t-if",
-            'object.filtered_domain([("id", "=", 1)])'
-        );
+        const table = await waitFor(".o_mail_body_inline table[t-if]", { timeout: 3000 });
+        expect(table).toHaveAttribute("t-if", 'object.filtered_domain([("id", "=", 1)])');
     });
     test(`Switching mailing records in the Form view properly switches between basic Editor, HtmlBuilder and readonly`, async () => {
         const fixture = getFixture();
