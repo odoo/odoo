@@ -63,7 +63,7 @@ class ProjectProject(models.Model):
             'context': {
                 'default_project_id': self.id,
             },
-            'help': "<p class='o_view_nocontent_smiling_face'>%s</p><p>%s</p>" % (
+            'help': "<p class='o_view_nocontent_img_smiling_face'>%s</p><p>%s</p>" % (
                 _("No purchase order found. Let's create one."),
                 _("Once you ordered your products from your supplier, confirm your request for quotation and it will turn "
                     "into a purchase order."),

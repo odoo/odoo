@@ -346,7 +346,7 @@
             'delete': false,
         }</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocontent_img_smiling_face">
                 No tasks found. Let's create one!
             </p>
             <p>
@@ -384,7 +384,7 @@
         <field name="domain">[('depend_on_ids', '=', active_id), ('id', '!=', active_id)]</field>
         <field name="context">{'default_dependent_ids': active_id}</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocontent_img_smiling_face">
                 No tasks found. Let's create one!
             </p><p>
                 To get things done, use activities and status on tasks.<br/>
@@ -419,7 +419,7 @@
         <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
         <field name="context">{'default_parent_id': active_id}</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocontent_img_smiling_face">
                 No tasks found. Let's create one!
             </p><p>
                 To get things done, use activities and status on tasks.<br/>
@@ -452,7 +452,7 @@
         <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="project.project_sharing_project_task_view_search"/>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocontent_img_smiling_face">
                 No tasks found. Let's create one!
             </p>
             <p>
