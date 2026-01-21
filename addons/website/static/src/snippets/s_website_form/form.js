@@ -779,7 +779,7 @@ export class Form extends Interaction {
      *      is between or !between
      * @returns {boolean}
      */
-    compareTo(comparator, value = "", comparable, between) {
+    compareTo(comparator, value = "", comparable = "", between) {
         // Value can be null when the compared field is supposed to be
         // visible, but is not yet retrievable from the FormData() because
         // the field was conditionally hidden. It can be considered empty.
