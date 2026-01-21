@@ -309,6 +309,45 @@ class TestAccountTax(AccountTestInvoicingCommon):
             {'display_type': 'payment_term',    'tax_ids': [],          'balance': 100.0,   'account_id': self.company_data['default_account_receivable'].id},
         ])
 
+    def test_cannot_delete_group_tax_in_use(self):
+        """ Test that a group of taxes (parent tax) cannot be deleted when it's used. """
+
+        sales_10_perc = self.env['account.tax'].create({
+            'name': '10% Sales tax',
+            'amount': 10.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        sales_5_perc = self.env['account.tax'].create({
+            'name': '5% Sales tax',
+            'amount': 5.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        # Group of taxes
+        sales_15_perc = self.env['account.tax'].create({
+            'name': '15% Sales tax',
+            'amount': 15.0,
+            'amount_type': 'group',
+            'type_tax_use': 'sale',
+            'children_tax_ids': [Command.set([sales_10_perc.id, sales_5_perc.id])],
+        })
+        self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2025-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'invoice_line',
+                    'quantity': 1.0,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(sales_15_perc.ids)],
+                }),
+            ],
+        })
+        self.assertTrue(sales_15_perc.is_used)
+        with self.assertRaisesRegex(ValidationError, "delete taxes that are currently in use"):
+            sales_15_perc.unlink()
+
     def test_negative_factor_percent(self):
         account_1 = self.company_data['default_account_tax_sale'].copy()
         with self.assertRaisesRegex(ValidationError, r"Invoice and credit note distribution should have a total factor \(\+\) equals to 100\."):
