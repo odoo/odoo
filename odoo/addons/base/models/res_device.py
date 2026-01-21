@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from contextlib import nullcontext
 from datetime import datetime, timedelta
 
 from odoo import api, fields, models, tools
@@ -62,10 +61,8 @@ class ResDeviceLog(models.Model):
 
         if self.env.cr.readonly:
             self.env.cr.rollback()
-            cursor = self.env.registry.cursor(readonly=False)
-        else:
-            cursor = nullcontext(self.env.cr)
-        with cursor as cr:
+
+        with self.env.registry.cursor() as cr:
             cr.execute(SQL("""
                 INSERT INTO res_device_log (session_identifier, user_id, ip_address, user_agent, country, city, first_activity, last_activity, revoked)
                 VALUES (%(session_identifier)s, %(user_id)s, %(ip_address)s, %(user_agent)s, %(country)s, %(city)s, %(first_activity)s, %(last_activity)s, %(revoked)s)
@@ -80,7 +77,8 @@ class ResDeviceLog(models.Model):
                 last_activity=datetime.fromtimestamp(device['last_activity']),
                 revoked=False,
             ))
-        _logger.info('User %d inserts device log (%s)', user_id, session_identifier)
+            _logger.info('User %d inserts device log (%s)', user_id, session_identifier)
+            root.session_store.save(request.session)
 
     @api.autovacuum
     def _gc_device_log(self):
