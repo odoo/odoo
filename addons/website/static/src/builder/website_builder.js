@@ -11,7 +11,6 @@ import { useSetupAction } from "@web/search/action_hook";
 import { ThemeTab } from "./plugins/theme/theme_tab";
 import { Plugin } from "@html_editor/plugin";
 import { revertPreview } from "@html_builder/core/utils";
-import { websiteSnippetModelPatch } from "./snippet_model";
 import { rpc } from "@web/core/network/rpc";
 import { redirect } from "@web/core/utils/urls";
 import { browser } from "@web/core/browser/browser";
@@ -41,11 +40,6 @@ export class WebsiteBuilder extends Component {
     setup() {
         this.websiteService = useService("website");
         this.dialog = useService("dialog");
-        this.snippetsService = useService("html_builder.snippets");
-        this.snippetsService.patchSnippetModel(
-            this.props.builderProps.snippetsName,
-            websiteSnippetModelPatch
-        );
         useSetupAction({
             beforeUnload: (ev) => this.onBeforeUnload(ev),
             beforeLeave: () => this.onBeforeLeave(),
