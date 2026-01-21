@@ -69,6 +69,7 @@ export class BlockTab extends Component {
         this.shared.operation.next(
             async () => {
                 this.cancelDragAndDrop = this.shared.history.makeSavePoint();
+                this.dragState = {};
                 let snippetEl;
                 const baseSectionEl = snippet.content.cloneNode(true);
                 this.state.ongoingInsertion = true;
@@ -446,6 +447,11 @@ export class BlockTab extends Component {
             if (cancel) {
                 this.cancelDragAndDrop();
                 return;
+            }
+            // Update `snippetEl` if it was replaced in the handler
+            if (this.dragState.replacedSnippetEl) {
+                snippetEl = this.dragState.replacedSnippetEl;
+                delete this.dragState.replacedSnippetEl;
             }
         }
         this.env.editor.config.updateInvisibleElementsPanel();
