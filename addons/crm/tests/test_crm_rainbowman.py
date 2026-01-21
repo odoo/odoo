@@ -325,6 +325,22 @@ class TestCrmLeadRainbowmanMessages(TestCrmCommon):
             self.assertEqual(msg_later_record, 'Boom! Team record for the past 30 days.', 'Once a month has passed, \
                 monthly team records may be set even if the amount was lower than the alltime max.')
 
+        # cross-year case
+        current_dt = datetime(2026, 1, 5, 12, 0)
+        past_dt = datetime(2025, 12, 1, 12, 0)
+
+        with self.mock_datetime_and_now(past_dt):
+            lead_cross_year = self.env['crm.lead'].create({
+                'name': 'lead_future_create',
+                'type': 'opportunity',
+                'stage_id': self.stage_team1_won.id,
+                'user_id': self.user_sales_manager.id,
+                'expected_revenue': 500.0,
+            })
+        with self.mock_datetime_and_now(current_dt):
+            msg = self._set_won_get_rainbowman_message(lead_cross_year, self.sales_manager_casey)
+            self.assertFalse(msg)
+
     @users('user_sales_manager')
     def test_leads_rainbowman_timezones(self):
         """
