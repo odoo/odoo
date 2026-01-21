@@ -1227,15 +1227,18 @@ class CrmLead(models.Model):
         })
         query_result = self.env.cr.dictfetchone()
 
+        def _is_lower_than_expected_revenue(value):
+            return self.expected_revenue and value is not None and value < self.expected_revenue
+
         if query_result['count_user_closed_year'] == 1:
             return _('Go, go, go! Congrats for your first deal.')
-        elif self.expected_revenue and query_result['max_team_31'] < self.expected_revenue:
+        elif _is_lower_than_expected_revenue(query_result['max_team_31']):
             return _('Boom! Team record for the past 30 days.')
-        elif self.expected_revenue and query_result['max_team_7'] < self.expected_revenue:
+        elif _is_lower_than_expected_revenue(query_result['max_team_7']):
             return _('Yeah! Best deal out of the last 7 days for the team.')
-        elif self.expected_revenue and query_result['max_user_31'] < self.expected_revenue:
+        elif _is_lower_than_expected_revenue(query_result['max_user_31']):
             return _('You just beat your personal record for the past 30 days.')
-        elif self.expected_revenue and query_result['max_user_7'] < self.expected_revenue:
+        elif _is_lower_than_expected_revenue(query_result['max_user_7']):
             return _('You just beat your personal record for the past 7 days.')
         elif query_result['count_user_closed_today'] == 5:
             return _('You\'re on fire! Fifth deal won today 🔥')
