@@ -2,7 +2,12 @@ import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
-import { isEmptyBlock, isRedundantElement, isVisibleTextNode, isZWS } from "@html_editor/utils/dom_info";
+import {
+    isEmptyBlock,
+    isRedundantElement,
+    isVisibleTextNode,
+    isZWS,
+} from "@html_editor/utils/dom_info";
 import {
     closestElement,
     createDOMPathGenerator,
@@ -304,9 +309,9 @@ export class FontPlugin extends Plugin {
         const block = closestBlock(anchorNode);
         const tagName = block.tagName.toLowerCase();
 
-        const matchingItems = fontItems.filter((item) => {
-            return item.selector ? block.matches(item.selector) : item.tagName === tagName;
-        });
+        const matchingItems = fontItems.filter((item) =>
+            item.selector ? block.matches(item.selector) : item.tagName === tagName
+        );
 
         const matchingItemsWitoutExtraClass = matchingItems.filter((item) => !item.extraClass);
 
@@ -413,7 +418,7 @@ export class FontPlugin extends Plugin {
             !closestQuote ||
             (closestBlockNode.nodeName !== "BLOCKQUOTE" &&
                 ((closestBlockNode.textContent && !isZWS(closestBlockNode)) ||
-                closestBlockNode.nextSibling))
+                    closestBlockNode.nextSibling))
         ) {
             return;
         }
@@ -497,7 +502,7 @@ export class FontPlugin extends Plugin {
             return;
         }
         // Check if cursor is inside an empty heading, blockquote or pre.
-        if (!closestHandledElement || closestHandledElement.textContent.length) {
+        if (!closestHandledElement || !isEmptyBlock(closestHandledElement)) {
             return;
         }
         // Check if unremovable.
