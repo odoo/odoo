@@ -156,6 +156,15 @@ migrationStepRegistry.add("18.5.10", {
                 }
             }
         }
+        const re = /ODOO\.FILTER\.VALUE/gi
+        for (const sheet of data.sheets || []) {
+            for (const xc in sheet.cells || {}) {
+                const content = sheet.cells[xc];
+                if (re.test(content)) {
+                    sheet.cells[xc] = content.replaceAll(re, "ODOO.FILTER.VALUE.V18");
+                }
+            }
+        }
         return data;
     },
 });
