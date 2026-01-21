@@ -1,15 +1,25 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import base64
 import io
 import json
 import re
 import zipfile
-from hashlib import sha256
 
 from odoo import _, api, fields, models, release
 from odoo.exceptions import UserError
 from odoo.tools.urls import urljoin as url_join
+
+from .website_transfer_utils import (
+    ATTACHMENT_PAYLOAD_FIELDS,
+    MENU_PAYLOAD_FIELDS,
+    PAGE_PAYLOAD_FIELDS,
+    VIEW_PAYLOAD_FIELDS,
+    compute_payload_checksum,
+    extract_payload_values,
+)
+
+MAX_IMPORT_FILE_SIZE = 100 * 1024 * 1024
+MAX_IMPORT_TOTAL_SIZE = 200 * 1024 * 1024
+MAX_IMPORT_FILES = 2000
 
 
 class WebsiteImportWizard(models.TransientModel):
@@ -19,7 +29,6 @@ class WebsiteImportWizard(models.TransientModel):
     import_file = fields.Binary(string="Import File", required=True)
     import_filename = fields.Char(string="Import Filename")
     website_name = fields.Char(string="New Website Name", required=True)
-    website_domain = fields.Char(string="Website Domain")
     company_id = fields.Many2one(
         "res.company",
         string="Company",
@@ -45,50 +54,62 @@ class WebsiteImportWizard(models.TransientModel):
             raise UserError(_("Please upload an export file."))
         try:
             data = base64.b64decode(self.import_file)
-        except Exception as exc:
-            raise UserError(_("The uploaded file could not be decoded.")) from exc
+        except Exception as e:
+            raise UserError(_("The uploaded file could not be decoded.")) from e
         try:
-            return zipfile.ZipFile(io.BytesIO(data))
-        except zipfile.BadZipFile as exc:
-            raise UserError(_("The uploaded file is not a valid zip archive.")) from exc
+            archive = zipfile.ZipFile(io.BytesIO(data))
+        except zipfile.BadZipFile as e:
+            raise UserError(_("The uploaded file is not a valid zip archive.")) from e
+        self._validate_archive(archive)
+        return archive
+
+    def _validate_archive(self, archive):
+        entries = archive.infolist()
+        if len(entries) > MAX_IMPORT_FILES:
+            raise UserError(_("Import archive contains too many files."))
+        total_size = 0
+        for entry in entries:
+            if entry.file_size > MAX_IMPORT_FILE_SIZE:
+                raise UserError(_("File '%s' exceeds maximum allowed size.", entry.filename))
+            total_size += entry.file_size
+            if total_size > MAX_IMPORT_TOTAL_SIZE:
+                raise UserError(_("Import archive exceeds maximum allowed size."))
 
     def _read_archive_json(self, archive, filename):
         try:
             content = archive.read(filename)
-        except KeyError as exc:
-            raise UserError(_("Missing required file: %s") % filename) from exc
+        except KeyError as e:
+            raise UserError(_("Missing required file: %s", filename)) from e
         try:
             return json.loads(content)
-        except json.JSONDecodeError as exc:
-            raise UserError(_("Invalid JSON in %s") % filename) from exc
+        except json.JSONDecodeError as e:
+            raise UserError(_("Invalid JSON in %s", filename)) from e
 
     def _validate_manifest(self, manifest):
         version = manifest.get("odoo_version")
         if version != release.version:
             raise UserError(_(
-                "Version mismatch: expected %s, got %s."
-            ) % (release.version, version))
+                "Version mismatch: expected %(odoo_version)s, got %(archive_version)s.",
+                odoo_version=release.version,
+                archive_version=version,
+            ))
+            #TODO DUAU: do we add a dialog: "Do you want to continue? You may experience some errors etc" 
 
-        modules = manifest.get("modules")
-        if not isinstance(modules, list):
-            raise UserError(_("Invalid manifest modules list."))
+        modules = manifest.get("modules", [])
 
         installed = set(self.env["ir.module.module"].search([
             ("state", "=", "installed"),
             ("name", "in", modules),
         ]).mapped("name"))
-        missing = sorted(set(modules) - installed)
-        if missing:
-            raise UserError(_("Missing required modules: %s") % ", ".join(missing))
-
-        if not manifest.get("payload_checksum"):
-            raise UserError(_("Missing payload checksum in manifest."))
+        missing_modules = sorted(set(modules) - installed)
+        if missing_modules:
+            raise UserError(_("Missing required modules: %s", ", ".join(missing_modules)))
 
     def _validate_payload_checksum(self, manifest, payload_files):
-        checksum_source = json.dumps(payload_files, ensure_ascii=True, sort_keys=True).encode()
-        checksum = sha256(checksum_source).hexdigest()
-        if checksum != manifest.get("payload_checksum"):
-            raise UserError(_("Payload checksum mismatch."))
+        manifest_checksum = manifest.get("payload_checksum")
+        checksum = compute_payload_checksum(payload_files)
+        if not manifest_checksum or checksum != manifest_checksum:
+            raise UserError(_("Invalid payload checksum."))
 
     def _validate_attachments(self, archive, attachments):
         if not attachments:
@@ -100,36 +121,14 @@ class WebsiteImportWizard(models.TransientModel):
                 continue
             try:
                 content = archive.read(file_path)
-            except KeyError as exc:
-                raise UserError(_("Missing attachment file: %s") % file_path) from exc
+            except KeyError as e:
+                raise UserError(_("Missing attachment file: %s", file_path)) from e
             checksum = item.get("checksum")
-            if not checksum:
-                raise UserError(_("Missing attachment checksum for: %s") % file_path)
-            if attachment_model._compute_checksum(content) != checksum:
-                raise UserError(_("Attachment checksum mismatch: %s") % file_path)
-
-    def _validate_target_website(self, website):
-        extra_page = self.env["website.page"].search([
-            ("website_id", "=", website.id),
-            ("url", "!=", "/"),
-        ], limit=1)
-        if extra_page:
-            raise UserError(_("Target website must be empty before import."))
-
-    def _resolve_group_ids(self, group_xmlids):
-        if not group_xmlids or not isinstance(group_xmlids, (list, tuple)):
-            return []
-        model_data = self.env["ir.model.data"]
-        group_ids = []
-        for xmlid in group_xmlids:
-            if not isinstance(xmlid, str):
-                continue
-            group_id = model_data._xmlid_to_res_id(xmlid, raise_if_not_found=False)
-            if group_id:
-                group_ids.append(group_id)
-        return group_ids
+            if not checksum or attachment_model._compute_checksum(content) != checksum:
+                raise UserError(_("Invalid attachment checksum: %s", file_path))
 
     def _prepare_target_website(self, website):
+        # Clear homepage/menu created at website creation in _bootstrap_homepage()
         self.env["website.menu"].search([
             ("website_id", "=", website.id),
         ]).unlink()
@@ -146,33 +145,29 @@ class WebsiteImportWizard(models.TransientModel):
             for view_id, view in list(pending.items()):
                 inherit_id = view.get("inherit_id")
                 inherit_key = view.get("inherit_key")
+
                 if inherit_id and inherit_id in pending:
                     continue
                 new_inherit_id = view_map.get(inherit_id)
+
                 if not new_inherit_id and inherit_key:
-                    new_inherit_id = self.env["website"].with_context(
+                    inherit_view = self.env["website"].with_context(
                         website_id=website.id,
-                    ).viewref(inherit_key, raise_if_not_found=False).id or False
-                if new_inherit_id is None:
-                    new_inherit_id = inherit_id or False
-                values = {
-                    "name": view.get("name"),
-                    "key": view.get("key"),
-                    "type": view.get("type"),
-                    "arch_db": view.get("arch_db"),
+                    ).viewref(inherit_key)
+                    new_inherit_id = inherit_view.id
+                elif inherit_id and inherit_id not in view_map:
+                    raise UserError(_("Missing inherited view mapping for: %s", view.get("name")))
+
+                values = extract_payload_values(
+                    view,
+                    VIEW_PAYLOAD_FIELDS,
+                    skip=("inherit_id", "website_id"),
+                )
+                values.update({
                     "inherit_id": new_inherit_id,
                     "website_id": website.id,
-                    "active": view.get("active"),
-                    "track": view.get("track"),
-                    "visibility": view.get("visibility"),
-                    "visibility_password": view.get("visibility_password"),
-                    "group_ids": [(6, 0, self._resolve_group_ids(view.get("group_ids")))],
-                    "website_meta_title": view.get("website_meta_title"),
-                    "website_meta_description": view.get("website_meta_description"),
-                    "website_meta_keywords": view.get("website_meta_keywords"),
-                    "website_meta_og_img": view.get("website_meta_og_img"),
-                    "seo_name": view.get("seo_name"),
-                }
+                })
+
                 new_view = view_model.create(values)
                 view_map[view_id] = new_view.id
                 pending.pop(view_id)
@@ -181,7 +176,7 @@ class WebsiteImportWizard(models.TransientModel):
                 raise UserError(_("Failed to resolve view inheritance during import."))
         return view_map
 
-    def _select_pages(self, pages, preferred_website_id):
+    def _select_pages(self, pages, source_website_id):
         pages_by_url = {}
         for page in pages:
             url = page.get("url")
@@ -189,38 +184,25 @@ class WebsiteImportWizard(models.TransientModel):
             if not existing:
                 pages_by_url[url] = page
                 continue
-            existing_is_preferred = existing.get("website_id") == preferred_website_id
-            page_is_preferred = page.get("website_id") == preferred_website_id
-            if page_is_preferred and not existing_is_preferred:
+            if page.get("website_id") == source_website_id and not existing.get("website_id") == source_website_id:
                 pages_by_url[url] = page
         return pages_by_url
 
-    def _import_pages(self, pages, view_map, preferred_website_id):
+    def _import_pages(self, pages, view_map, source_website_id):
         page_model = self.env["website.page"]
-        pages_by_url = self._select_pages(pages, preferred_website_id)
+        pages_by_url = self._select_pages(pages, source_website_id)
         created_by_url = {}
         page_map = {}
         for page in pages_by_url.values():
             new_view_id = view_map.get(page.get("view_id"))
             if not new_view_id:
-                raise UserError(_("Missing view mapping for page %s.") % page.get("name"))
-            values = {
-                "view_id": new_view_id,
-                "url": page.get("url"),
-                "is_published": page.get("is_published"),
-                "publish_on": page.get("publish_on"),
-                "website_indexed": page.get("website_indexed"),
-                "is_new_page_template": page.get("is_new_page_template"),
-                "header_visible": page.get("header_visible"),
-                "footer_visible": page.get("footer_visible"),
-                "breadcrumb_visible": page.get("breadcrumb_visible"),
-                "header_overlay": page.get("header_overlay"),
-                "header_color": page.get("header_color"),
-                "header_text_color": page.get("header_text_color"),
-                "breadcrumb_overlay": page.get("breadcrumb_overlay"),
-                "breadcrumb_color": page.get("breadcrumb_color"),
-                "breadcrumb_text_color": page.get("breadcrumb_text_color"),
-            }
+                raise UserError(_("Missing view mapping for page %s.", page.get("name")))
+            values = extract_payload_values(
+                page,
+                PAGE_PAYLOAD_FIELDS,
+                skip=("parent_id", "view_id", "website_id"),
+            )
+            values["view_id"] = new_view_id
             new_page = page_model.create(values)
             created_by_url[page.get("url")] = new_page.id
         for page in pages:
@@ -232,16 +214,16 @@ class WebsiteImportWizard(models.TransientModel):
                     page_model.browse(created_by_url.get(page.get("url"))).parent_id = new_parent
         return page_map
 
-    def _select_menus(self, menus, preferred_website_id):
-        preferred = [menu for menu in menus if menu.get("website_id") == preferred_website_id]
+    def _select_menus(self, menus, source_website_id):
+        preferred = [menu for menu in menus if menu.get("website_id") == source_website_id]
         if preferred:
             return preferred
         fallback = [menu for menu in menus if not menu.get("website_id")]
         return fallback or menus
 
-    def _import_menus(self, menus, website, page_map, preferred_website_id):
+    def _import_menus(self, menus, website, page_map, source_website_id):
         menu_model = self.env["website.menu"]
-        menus = self._select_menus(menus, preferred_website_id)
+        menus = self._select_menus(menus, source_website_id)
         menu_map = {}
         pending = {menu["id"]: menu for menu in menus}
         while pending:
@@ -250,36 +232,42 @@ class WebsiteImportWizard(models.TransientModel):
                 parent_id = menu.get("parent_id")
                 if parent_id and parent_id not in menu_map:
                     continue
-                values = {
-                    "name": menu.get("name"),
-                    "url": menu.get("url"),
-                    "page_id": page_map.get(menu.get("page_id")) or False,
-                    "parent_id": menu_map.get(parent_id) or False,
+                values = extract_payload_values(
+                    menu,
+                    MENU_PAYLOAD_FIELDS,
+                    skip=("page_id", "parent_id", "website_id"),
+                )
+                values.update({
+                    "page_id": page_map.get(menu.get("page_id"), False),
+                    "parent_id": menu_map.get(parent_id, False),
                     "website_id": website.id,
-                    "sequence": menu.get("sequence"),
-                    "new_window": menu.get("new_window"),
-                    "is_mega_menu": menu.get("is_mega_menu"),
-                    "mega_menu_content": menu.get("mega_menu_content"),
-                    "mega_menu_classes": menu.get("mega_menu_classes"),
-                    "group_ids": [(6, 0, self._resolve_group_ids(menu.get("group_ids")))],
-                }
+                })
                 new_menu = menu_model.create(values)
                 menu_map[menu_id] = new_menu.id
                 pending.pop(menu_id)
                 progress = True
             if not progress:
                 raise UserError(_("Failed to resolve menu hierarchy during import."))
+        created_menus = menu_model.browse(menu_map.values())
+        top_menus = created_menus.filtered(lambda menu: not menu.parent_id)
+        if len(top_menus) > 1:
+            root_menu = top_menus.filtered(
+                lambda menu: not menu.page_id and (menu.url in ("#", False))
+            )[:1] or top_menus[:1]
+            (top_menus - root_menu).write({"parent_id": root_menu.id})
         return menu_map
 
     def _replace_attachment_ids(self, arch, attachment_map):
         if not arch:
             return arch
+
         def replace_web_image(match):
             old_id = int(match.group(1))
             new_id = attachment_map.get(old_id, old_id)
             return match.group(0).replace(match.group(1), str(new_id), 1)
 
         arch = re.sub(r"/web/image/(\d+)(?:[-/]|\b)", replace_web_image, arch)
+        arch = re.sub(r"/web/content/(\d+)(?:[-/?#]|\b)", replace_web_image, arch)
         arch = re.sub(
             r'data-attachment-id="(\d+)"',
             lambda m: f'data-attachment-id="{attachment_map.get(int(m.group(1)), int(m.group(1)))}"',
@@ -292,54 +280,84 @@ class WebsiteImportWizard(models.TransientModel):
         )
         return arch
 
-    def _import_attachments(self, archive, attachments, website, view_map, page_map):
+    def _import_attachments(self, archive, attachments, website, view_map, page_map, menu_map):
         attachment_model = self.env["ir.attachment"]
         attachment_map = {}
+        dedupe_map = {}
         for item in attachments:
             file_path = item.get("file_path")
             datas = False
             if file_path:
                 content = archive.read(file_path)
                 datas = base64.b64encode(content)
+            checksum = item.get("checksum")
+            name = item.get("name")
+            if checksum and name:
+                dedupe_key = (checksum, name)
+                existing_id = dedupe_map.get(dedupe_key)
+                if existing_id:
+                    attachment_map[item["id"]] = existing_id
+                    continue
             res_model = item.get("res_model")
             res_id = item.get("res_id")
             if res_model == "ir.ui.view":
                 res_id = view_map.get(res_id)
             elif res_model == "website.page":
                 res_id = page_map.get(res_id)
-            values = {
-                "name": item.get("name"),
-                "mimetype": item.get("mimetype"),
-                "type": item.get("type"),
-                "url": item.get("url"),
-                "public": item.get("public"),
+            elif res_model == "website.menu":
+                res_id = menu_map.get(res_id)
+            values = extract_payload_values(
+                item,
+                ATTACHMENT_PAYLOAD_FIELDS,
+                skip=("res_id", "website_id"),
+            )
+            values.update({
                 "res_model": res_model,
                 "res_id": res_id or False,
                 "website_id": website.id,
                 "datas": datas or False,
-            }
+            })
             attachment = attachment_model.create(values)
             attachment_map[item["id"]] = attachment.id
+            if checksum and name:
+                dedupe_map[dedupe_key] = attachment.id
         if attachment_map:
             views = self.env["ir.ui.view"].browse(view_map.values())
             for view in views:
                 new_arch = self._replace_attachment_ids(view.arch_db, attachment_map)
                 if new_arch != view.arch_db:
                     view.arch_db = new_arch
+            menus = self.env["website.menu"].browse(menu_map.values())
+            for menu in menus:
+                new_content = self._replace_attachment_ids(menu.mega_menu_content, attachment_map)
+                if new_content != menu.mega_menu_content:
+                    menu.mega_menu_content = new_content
         return attachment_map
+
+    def _finalize_import(self):
+        self.env.registry.clear_cache('templates')
+        self.env.registry.clear_cache('routing')
+
+    def _build_import_summary(self, website, view_map, page_map, menu_map, attachment_map):
+        return {
+            "website_id": website.id,
+            "website_name": website.name,
+            "views": len(view_map),
+            "pages": len(page_map),
+            "menus": len(menu_map),
+            "attachments": len(attachment_map),
+        }
 
     def action_import(self):
         self.ensure_one()
         with self._open_import_archive() as archive:
             manifest = self._read_archive_json(archive, "manifest.json")
-            website_payload = self._read_archive_json(archive, "website.json")
             pages_payload = self._read_archive_json(archive, "pages.json")
             views_payload = self._read_archive_json(archive, "views.json")
             menus_payload = self._read_archive_json(archive, "menus.json")
             attachments = self._read_archive_json(archive, "attachments.json")
             self._validate_manifest(manifest)
             self._validate_payload_checksum(manifest, {
-                "website.json": website_payload,
                 "pages.json": pages_payload,
                 "views.json": views_payload,
                 "menus.json": menus_payload,
@@ -347,18 +365,58 @@ class WebsiteImportWizard(models.TransientModel):
             })
             self._validate_attachments(archive, attachments)
 
-            website = self.env["website"].create({
+            manifest_website = manifest.get("website", {})
+            existing = self.env["website"].search([
+                ("name", "=", self.website_name),
+                ("company_id", "=", self.company_id.id),
+            ], limit=1)
+            if existing:
+                raise UserError(_("Website '%s' already exists.", self.website_name))
+            website_values = {
                 "name": self.website_name,
-                "domain": self.website_domain or False,
                 "company_id": self.company_id.id,
-            })
-            self._validate_target_website(website)
+            }
+            if "homepage_url" in manifest_website:
+                website_values["homepage_url"] = manifest_website.get("homepage_url", False)
+            website = self.env["website"].create(website_values)
             self._prepare_target_website(website)
             view_map = self._import_views(views_payload, website)
-            page_map = self._import_pages(pages_payload, view_map, manifest["website"]["id"])
-            self._import_menus(menus_payload, website, page_map, manifest["website"]["id"])
-            self._import_attachments(archive, attachments, website, view_map, page_map)
+            page_map = self._import_pages(pages_payload, view_map, manifest_website.get("id"))
+            menu_map = self._import_menus(menus_payload, website, page_map, manifest_website.get("id"))
+            attachment_map = self._import_attachments(archive, attachments, website, view_map, page_map, menu_map)
+            self._finalize_import()
+            summary = self._build_import_summary(website, view_map, page_map, menu_map, attachment_map)
+            summary_wizard = self.env["website.import.summary.wizard"].create({
+                "website_id": website.id,
+                "website_name": summary["website_name"],
+                "pages_count": summary["pages"],
+                "menus_count": summary["menus"],
+                "attachments_count": summary["attachments"],
+            })
 
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "website.import.summary.wizard",
+            "view_mode": "form",
+            "view_id": self.env.ref("website.view_website_import_summary_wizard").id,
+            "res_id": summary_wizard.id,
+            "target": "new",
+        }
+
+
+class WebsiteImportSummaryWizard(models.TransientModel):
+    _name = "website.import.summary.wizard"
+    _description = "Website Import Summary"
+
+    website_id = fields.Many2one("website", string="Website", readonly=True)
+    website_name = fields.Char(string="Website Name", readonly=True)
+    pages_count = fields.Integer(string="Pages", readonly=True)
+    menus_count = fields.Integer(string="Menus", readonly=True)
+    attachments_count = fields.Integer(string="Attachments", readonly=True)
+
+    def action_go_homepage(self):
+        self.ensure_one()
+        website = self.website_id
         return {
             "type": "ir.actions.act_url",
             "url": url_join(
@@ -366,5 +424,4 @@ class WebsiteImportWizard(models.TransientModel):
                 f"/website/force/{website.id}?path=/",
             ),
             "target": "self",
-            # TODO DUAU: could not show success notification after redirect
         }

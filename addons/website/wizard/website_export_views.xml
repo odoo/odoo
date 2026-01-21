@@ -5,16 +5,14 @@
         <field name="name">website.export.wizard.form</field>
         <field name="model">website.export.wizard</field>
         <field name="arch" type="xml">
-            <form string="Export Website">
+            <form string="Export Website" groups="base.group_system">
                 <group>
-                    <field name="website_id" groups="website.group_website_designer"
-                        options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                    <field name="website_id" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
                     <field name="page_scope" widget="radio"
                         options="{'horizontal': true}"
-                        groups="website.group_website_designer"
                         required="1"/>
-                    <field name="page_ids" groups="website.group_website_designer"
-                        invisible="page_scope != 'selection'"
+                    <field name="page_ids" invisible="page_scope != 'selection'"
+                        context="{'website_id': website_id}"
                         domain="[('website_id', 'in', [website_id, False]), ('key', 'not ilike', '%_debug_page_view%')]"
                         options="{'no_create': True, 'no_create_edit': True}">
                         <list create="0" edit="0" delete="0">
@@ -22,14 +20,13 @@
                             <field name="url" string="Page URL"/>
                         </list>
                     </field>
-                    <field name="include_assets" groups="website.group_website_designer"/>
+                    <field name="include_assets"/>
                 </group>
                 <div invisible="not export_file">
                     <field name="export_file" widget="binary" filename="export_filename" readonly="1"/>
-                    <field name="export_filename" invisible="1"/>
                 </div>
                 <footer>
-                    <button string="Export" type="object" name="action_export" class="btn-primary" groups="website.group_website_designer"/>
+                    <button string="Export" type="object" name="action_export" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
@@ -48,7 +45,7 @@
         name="Export Website"
         parent="website.menu_website_global_configuration"
         action="action_website_export_wizard"
-        groups="website.group_website_designer,base.group_system"
+        groups="base.group_system"
         sequence="50"/>
 
 </odoo>
