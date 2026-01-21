@@ -106,7 +106,7 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
         }
     }
 
-    adaptRanges(applyChange) {
+    adaptRanges({ applyChange }) {
         for (const filterIndex in this.globalFilters) {
             const filter = this.globalFilters[filterIndex];
             if (filter.type === "text" && filter.rangesOfAllowedValues) {
