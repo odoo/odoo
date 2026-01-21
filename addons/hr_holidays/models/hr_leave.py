@@ -1149,8 +1149,20 @@ class HrLeave(models.Model):
         self._post_leave_cancel()
 
     def _get_leaves_on_public_holiday(self):
+        bypass_work_entry_types = [
+            'LEAVE110',  # Sick Time Off
+            'LEAVE210',  # Maternity Time Off
+            'LEAVE280',  # Long Term Sick
+            'LEAVE264',  # Incapacity for work with guaranteed salary - 1st week
+            'LEAVE218',  # Incapacity for work with guaranteed salary system for workers - 2nd week
+            'LEAVE219',  # Incapacity for work with salary supplement for workers - after the 2nd week CCT 12bis/13bis
+            'LEAVE214',  # Sick Time Off (Without Guaranteed Salary)
+            'LEAVE227',  # Work accident or occupational illness with normal daily pay at 100% for the first week
+            'LEAVE229',  # Work accident or occupational illness with employer supplement from the 2nd week of CCT 12bis/13bis
+            'LEAVE117',  # Work Accident (Unpaid)
+        ]
         return self.filtered(
-            lambda l: l.employee_id and not l.number_of_days and l.work_entry_type_id.count_as == 'absence' and l.work_entry_type_id.code not in ['LEAVE110', 'LEAVE210', 'LEAVE280'])
+            lambda l: l.employee_id and not l.number_of_days and l.work_entry_type_id.count_as == 'absence' and l.work_entry_type_id.code not in bypass_work_entry_types)
 
     def _split_leaves(self, split_date_from, split_date_to=False):
         """
