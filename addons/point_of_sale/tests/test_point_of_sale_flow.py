@@ -482,7 +482,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         })
 
         untax, atax = self.compute_tax(self.ten_dollars_with_10_excl.product_variant_id, 10.0)
-        self.ten_dollars_with_10_excl.taxes_id.unlink()
+        self.ten_dollars_with_10_excl.taxes_id.active = False
         current_session = self.pos_config_usd.current_session_id
         payment = self.env['pos.make.payment'].create({
             'config_id': self.pos_config_usd.id,
