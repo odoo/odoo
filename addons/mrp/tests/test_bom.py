@@ -2,6 +2,7 @@
 from datetime import timedelta
 
 from odoo import exceptions, fields
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import Form, HttpCase, freeze_time, tagged
 from odoo.tools import float_compare, float_repr, float_round
@@ -2942,3 +2943,98 @@ class TestTourBoM(HttpCase):
         self.env['stock.quant']._update_available_quantity(comp, location, 3.0)
         # With 3 components on hand, 1.5 products could be created, rounded down to 1.0 due to the integer uom
         self.assertEqual(prod.qty_available, 1.0)
+
+    def test_byproduct_bom_cost_share_constraint_with_variants(self):
+        """
+        Check that the cost share constraint is well behaved with respect to product attribute values:
+        the sum of the cost share's of the bom of any product variant should can not exceed 100%
+        """
+        attributes = self.env['product.attribute'].create([
+            {'name': name} for name in ('Size', 'Color')
+        ])
+        attributes_values = ((attributes[0], ('S', 'M')), (attributes[1], ('Blue', 'Red')))
+        self.env['product.attribute.value'].create([{
+            'name': name,
+            'attribute_id': attribute.id
+        } for attribute, names in attributes_values for name in names])
+        product_template = self.env['product.template'].create({
+            'name': "lovely product",
+            'is_storable': True,
+        })
+        size_attribute_lines, color_attribute_lines = self.env['product.template.attribute.line'].create([{
+            'product_tmpl_id': product_template.id,
+            'attribute_id': attribute.id,
+            'value_ids': [Command.set(attribute.value_ids.ids)]
+        } for attribute in attributes])
+        self.assertEqual(product_template.product_variant_count, 4)
+        c1, c2, c3 = self.env['product.product'].create([
+            {'name': f'Comp {i}'} for i in range(1, 4)
+        ])
+
+        # Check that optional lines (with a product_qty of 0) are ignored -> Valid
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_template.id,
+            'uom_id': product_template.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'byproduct_ids': [
+                Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 100}),
+                Command.create({'product_id': c2.id, 'product_qty': 0, 'cost_share': 100}),
+            ],
+        })
+
+        # All possible variant combination sum up to 100 cost_share -> Valid
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_template.id,
+            'uom_id': product_template.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'byproduct_ids': [
+                Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 30, 'bom_product_template_attribute_value_ids': [
+                    Command.link(size_attribute_lines.product_template_value_ids[0].id)
+                ]}),  # S
+                Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 15, 'bom_product_template_attribute_value_ids': [
+                    Command.link(size_attribute_lines.product_template_value_ids[1].id)
+                ]}),  # M
+                Command.create({'product_id': c2.id, 'product_qty': 1, 'cost_share': 15, 'bom_product_template_attribute_value_ids': [
+                    Command.link(size_attribute_lines.product_template_value_ids[1].id)
+                ]}),  # M
+                Command.create({'product_id': c2.id, 'product_qty': 1, 'cost_share': 70}),  # All attributes
+            ],
+        })
+
+        # Set up fails for M, Blue only (total cost_share of 130) -> only valid if this variants do not exist
+        with self.assertRaises(UserError):
+            self.env['mrp.bom'].create({
+                'product_tmpl_id': product_template.id,
+                'uom_id': product_template.uom_id.id,
+                'product_qty': 1.0,
+                'type': 'normal',
+                'byproduct_ids': [
+                    Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 30, 'bom_product_template_attribute_value_ids': [
+                        Command.link(size_attribute_lines.product_template_value_ids[1].id),
+                    ]}),  # M
+                    Command.create({'product_id': c2.id, 'product_qty': 1, 'cost_share': 30, 'bom_product_template_attribute_value_ids': [
+                        Command.link(color_attribute_lines.product_template_value_ids[0].id),
+                    ]}),  # Blue
+                    Command.create({'product_id': c3.id, 'product_qty': 1, 'cost_share': 70}),  # All attributes
+                ],
+            })
+        # Keep only the S Blue and the M Red variant
+        product_template.product_variant_ids[1:3].action_archive()
+        self.assertEqual(product_template.product_variant_count, 2)
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_template.id,
+            'uom_id': product_template.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'byproduct_ids': [
+                    Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 30, 'bom_product_template_attribute_value_ids': [
+                        Command.link(size_attribute_lines.product_template_value_ids[1].id),
+                    ]}),  # M
+                    Command.create({'product_id': c2.id, 'product_qty': 1, 'cost_share': 30, 'bom_product_template_attribute_value_ids': [
+                        Command.link(color_attribute_lines.product_template_value_ids[0].id),
+                    ]}),  # Blue
+                    Command.create({'product_id': c3.id, 'product_qty': 1, 'cost_share': 70}),  # All attributes
+            ],
+        })
