@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from werkzeug.urls import url_encode, url_join
 
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -200,3 +201,18 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             call_args = mock.call_args.kwargs['payload'].keys()
             for payload_param in ('account', 'return_url', 'refresh_url', 'type'):
                 self.assertIn(payload_param, call_args)
+
+    def test_compare_notification_data_uses_payment_minor_unit(self):
+        """
+        Test that the payment's minor unit precision is used to validate the amount, not the custom
+        currency rounding that customers may have configured.
+        """
+        self.amount = 20076
+        self.currency.rounding = 0.001
+        tx = self._create_transaction(
+            'dummy', operation='online_direct', tokenize=True, amount=200.769
+        )
+        data = self.notification_data['data']
+        data['payment_intent'] = self._mock_payment_intent_request()
+        tx._compare_notification_data(data)
+        self._assert_does_not_raise(ValidationError, tx._compare_notification_data, data)

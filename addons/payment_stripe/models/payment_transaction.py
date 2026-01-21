@@ -9,6 +9,7 @@ from odoo import _, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 from odoo.addons.payment_stripe import const
 from odoo.addons.payment_stripe import utils as stripe_utils
 from odoo.addons.payment_stripe.controllers.main import StripeController
@@ -393,7 +394,10 @@ class PaymentTransaction(models.Model):
             payment_data.get('amount', 0), self.currency_id
         )
         currency_code = payment_data.get('currency', '').upper()
-        self._validate_amount_and_currency(amount, currency_code)
+        precision_digits = CURRENCY_MINOR_UNITS.get(
+            self.currency_id.name, self.currency_id.decimal_places
+        )
+        self._validate_amount_and_currency(amount, currency_code, precision_digits=precision_digits)
 
     def _process_notification_data(self, notification_data):
         """ Override of `payment` to process the transaction based on Stripe data.
