@@ -202,6 +202,9 @@ class AccountEdiCommon(models.AbstractModel):
             if val:
                 return val
 
+    def _can_export_selfbilling(self):
+        return False
+
     # -------------------------------------------------------------------------
     # TAXES
     # -------------------------------------------------------------------------
