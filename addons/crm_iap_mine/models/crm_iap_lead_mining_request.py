@@ -55,7 +55,7 @@ class CrmIapLeadMiningRequest(models.Model):
     # Company Criteria Filter
     filter_on_size = fields.Boolean(string='Filter on Size', default=False)
     company_size_min = fields.Integer(string='Size', default=1)
-    company_size_max = fields.Integer(default=1000)
+    company_size_max = fields.Integer(default=100)
     country_ids = fields.Many2many('res.country', string='Countries', default=_default_country_ids)
     state_ids = fields.Many2many('res.country.state', string='States')
     available_state_ids = fields.One2many('res.country.state', compute='_compute_available_state_ids')
@@ -182,15 +182,10 @@ class CrmIapLeadMiningRequest(models.Model):
             payload.update({'company_size_min': self.company_size_min,
                             'company_size_max': self.company_size_max})
         if self.industry_ids:
-            # accumulate all reveal_ids (separated by ',') into one list
-            # eg: 3 records with values: "175,176", "177" and "190,191"
-            # will become ['175','176','177','190','191']
-            all_industry_ids = [
-                reveal_id.strip()
-                for reveal_ids in self.mapped('industry_ids.reveal_ids')
-                for reveal_id in reveal_ids.split(',')
-            ]
-            payload['industry_ids'] = all_industry_ids
+            # accumulate all sic_group into one list
+            # eg: 3 records with values: 42, 54 and 1
+            # will become [42,54,1]
+            payload['sic_groups'] = self.industry_ids.mapped('sic_group')
         return payload
 
     def _perform_request(self):
