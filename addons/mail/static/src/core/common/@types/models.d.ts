@@ -16,6 +16,7 @@ declare module "models" {
     import { MailMessageSubtype as MailMessageSubtypeClass } from "@mail/core/common/mail_message_subtype_model";
     import { MailPollModel as MailPollModelClass } from "@mail/core/common/mail_poll_model";
     import { MailPollOptionModel as MailPollOptionModelClass } from "@mail/core/common/mail_poll_option_model";
+    import { MailPollVote as MailPollVoteClass } from "@mail/core/common/mail_poll_vote_model";
     import { MailTemplate as MailTemplateClass } from "@mail/core/common/mail_template_model";
     import { Message as MessageClass } from "@mail/core/common/message_model";
     import { MessageLinkPreview as MessageLinkPreviewClass } from "@mail/core/common/message_link_preview_model";
@@ -50,6 +51,7 @@ declare module "models" {
     export interface MailMessageSubtype extends MailMessageSubtypeClass {}
     export interface MailPollModel extends MailPollModelClass {}
     export interface MailPollOptionModel extends MailPollOptionModelClass {}
+    export interface MailPollVote extends MailPollVoteClass {}
     export interface MailTemplate extends MailTemplateClass {}
     export interface Message extends MessageClass {}
     export interface MessageLinkPreview extends MessageLinkPreviewClass {}
@@ -93,6 +95,7 @@ declare module "models" {
         "mail.notification": StaticMailRecord<Notification, typeof NotificationClass>;
         "mail.poll": StaticMailRecord<MailPollModel, typeof MailPollModelClass>;
         "mail.poll.option": StaticMailRecord<MailPollOptionModel, typeof MailPollOptionModelClass>;
+        "mail.poll.vote": StaticMailRecord<MailPollVote, typeof MailPollVoteClass>;
         "mail.template": StaticMailRecord<MailTemplate, typeof MailTemplateClass>;
         "mail.thread": StaticMailRecord<Thread, typeof ThreadClass>;
         MessageReactions: StaticMailRecord<MessageReactions, typeof MessageReactionsClass>;
@@ -129,6 +132,7 @@ declare module "models" {
         "mail.notification": Notification;
         "mail.poll": MailPollModel;
         "mail.poll.option": MailPollOptionModel;
+        "mail.poll.vote": MailPollVote;
         "mail.template": MailTemplate;
         "mail.thread": Thread;
         MessageReactions: MessageReactions;

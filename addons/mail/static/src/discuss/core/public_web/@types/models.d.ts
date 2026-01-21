@@ -1,8 +1,7 @@
 declare module "models" {
-    import { DiscussCategory as DiscussCategoryClass } from "@mail/discuss/core/public_web/discuss_category_model";
-
-    export interface DiscussCategory extends DiscussCategoryClass {}
-
+    export interface DiscussCategory {
+        appCategory: DiscussAppCategory;
+    }
     export interface DiscussChannel {
         _computeDiscussAppCategory: () => unknown;
         _computeIsDisplayInSidebar: () => boolean;
@@ -24,13 +23,8 @@ declare module "models" {
     }
     export interface Store {
         channels: ReturnType<Store['makeCachedFetchData']>;
-        "discuss.category": StaticMailRecord<DiscussCategory, typeof DiscussCategoryClass>;
         fetchSsearchConversationsSequential: () => Promise<any>;
         has_unpinned_channels: boolean;
         searchConversations: (searchValue: string) => Promise<void>;
-    }
-
-    export interface Models {
-        "discuss.category": DiscussCategory;
     }
 }

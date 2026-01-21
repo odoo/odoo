@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 <t t-name="mail.Tabs">
-    <div t-attf-class="o-mail-Tabs d-flex border rounded shadow-sm bg-view h-100 w-100" t-ref="ref" t-att-class="{'o-mail-Tabs-vertical': props.direction === 'v', 'flex-column o-mail-Tabs-horizontal': props.direction === 'h'}">
+    <div t-attf-class="o-mail-Tabs d-flex border-top bg-view h-100 w-100" t-ref="ref" t-att-class="{'o-mail-Tabs-vertical': props.direction === 'v', 'flex-column o-mail-Tabs-horizontal': props.direction === 'h'}">
         <div class="position-relative d-flex bg-100 flex-shrink-0" t-att-class="{'border-bottom flex-row mh-25': props.direction === 'h', 'border-end flex-column mw-25': props.direction === 'v'}">
             <button t-if="scrollState.hasScrollbar" t-att-disabled="!scrollState.canScrollBefore" class="btn border-transparent o-mail-Tabs-scroller flex-shrink-0 bg-100 rounded-0" t-on-click="() => this.scroll(-1)"><i class="oi smaller" t-att-class="{'oi-chevron-up': props.direction === 'v', 'oi-chevron-left': props.direction === 'h'}"/></button>
             <nav class="o-mail-Tabs-scrollContainer d-flex flex-grow-1 overflow-auto gap-2 p-1" t-att-class="{'flex-row': props.direction === 'h', 'flex-column': props.direction === 'v'}" t-ref="nav">

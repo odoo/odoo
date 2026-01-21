@@ -15,7 +15,7 @@ export class Tabs extends Component {
     static template = "mail.Tabs";
     static props = {
         direction: { type: String, optional: true, validate: (d) => ["v", "h"].includes(d) },
-        initialTabId: { type: String, optional: true },
+        initialTabId: { optional: true },
         ref: { type: Function, optional: true },
         slots: { type: Object, optional: true },
     };
@@ -36,7 +36,7 @@ export class Tabs extends Component {
         });
         useEffect(
             (refs, headerEls, activeHeaderId) => {
-                if (!refs.has(activeHeaderId) && headerEls) {
+                if (!refs.has(activeHeaderId) && headerEls?.length) {
                     this.state.activeHeaderId = headerEls[0].dataset.headerId;
                 }
             },
@@ -99,5 +99,17 @@ export class TabHeader extends Component {
 
 export class TabPanel extends Component {
     static template = "mail.TabPanel";
-    static props = ["id", "slots?"];
+    static props = ["id", "slots?", "onBecameVisible?"];
+
+    setup() {
+        super.setup(...arguments);
+        useEffect(
+            (active) => {
+                if (active) {
+                    this.props.onBecameVisible?.();
+                }
+            },
+            () => [this.env.tabsContext.isActive(this.props.id)]
+        );
+    }
 }
