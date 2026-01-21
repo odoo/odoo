@@ -1598,8 +1598,19 @@ def preload_registries(dbnames):
 
                 registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])
 
-                # run post-install tests
                 if config['test_enable']:
+                    # run at-install tests if not update_module from config
+                    if not update_module:
+                        _logger.info("Starting at-install tests after registry loaded")
+                        module_names = sorted(registry._init_modules)
+                        test_time, test_count, test_queries, _ = test_modules(registry, module_names, 'at_install', registry._assertion_report)
+                        if test_count:
+                            _logger.info("%d at-install tests after registry loaded in %.2fs, %s queries",
+                                        test_count,
+                                        test_time,
+                                        test_queries)
+
+                    # run post-install tests
                     module_names = sorted(registry.updated_modules if update_module else
                                     registry._init_modules)
                     _logger.info("Starting post tests")

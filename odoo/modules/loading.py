@@ -270,9 +270,8 @@ def load_module_graph(
         test_queries = 0
         test_results = None
 
-        update_from_config = tools.config['update'] or tools.config['init'] or tools.config['reinit']
-        if tools.config['test_enable'] and (update_operation or not update_from_config):
-            test_time, _, test_queries, test_results = test_modules(registry, env.cr, [module_name], 'at_install', report)
+        if tools.config['test_enable'] and update_operation:
+            test_time, _, test_queries, test_results = test_modules(registry, [module_name], 'at_install', report)
             # tests may have reset the environment
             module = env['ir.module.module'].browse(module_id)
 
@@ -597,7 +596,7 @@ def test_modules(
 ) -> tuple[float, int, int, OdooTestResult | None]:
     from odoo.tests import loader  # noqa: PLC0415
     suite = loader.make_suite(module_names, position)
-    test_time, test_queries, test_results = 0.0, 0, None
+    test_time, test_count, test_queries, test_results = 0.0, 0, 0, None
     if suite.countTestCases():
         assert report is not None, "Missing report during tests"
         tests_before = report.testsRun
