@@ -198,21 +198,8 @@ class HrApplicant(models.Model):
         if not indirectly_linked:
             return
 
-        all_emails = {a.email_normalized for a in indirectly_linked if a.email_normalized}
-        all_phones = {a.partner_phone_sanitized for a in indirectly_linked if a.partner_phone_sanitized}
-        all_linkedins = {a.linkedin_profile for a in indirectly_linked if a.linkedin_profile}
-
-        epl_domain = Domain.FALSE
-        if all_emails:
-            epl_domain |= Domain("email_normalized", "in", list(all_emails))
-        if all_phones:
-            epl_domain |= Domain("partner_phone_sanitized", "in", list(all_phones))
-        if all_linkedins:
-            epl_domain |= Domain("linkedin_profile", "in", list(all_linkedins))
-
-        pool_domain = Domain(["|", ("talent_pool_ids", "!=", False), ("pool_applicant_id", "!=", False)])
-        domain = pool_domain & epl_domain
-        in_pool_applicants = self.env["hr.applicant"].with_context(active_test=True).search(domain)
+        domain = self._get_similar_applicants_domain() & Domain(["|", ("talent_pool_ids", "!=", False), ("pool_applicant_id", "!=", False)])
+        in_pool_applicants = self.env["hr.applicant"].with_context(active_test=False).search(domain)
 
         in_pool_emails = defaultdict(int)
         in_pool_phones = defaultdict(int)
@@ -316,9 +303,7 @@ class HrApplicant(models.Model):
             if applicant.pool_applicant_id:
                 related_ids.update(pool_applicant_map.get(applicant.pool_applicant_id, set()))
 
-            count = len(related_ids)
-
-            applicant.application_count = max(0, count)
+            applicant.application_count = len(related_ids)
 
     @api.depends("talent_pool_ids")
     def _compute_is_pool(self):
@@ -327,7 +312,7 @@ class HrApplicant(models.Model):
 
     def _get_similar_applicants_domain(self, ignore_talent=False, only_talent=False):
         """
-        This method returns a domain for the applicants whitch match with the
+        This method returns a domain for the applicants which match with the
         current applicant according to email_from, partner_phone or linkedin_profile.
         Thus, search on the domain will return the current applicant as well
         if any of the following fields are filled.
@@ -380,21 +365,8 @@ class HrApplicant(models.Model):
         if not indirect:
             return
 
-        all_emails = {a.email_normalized for a in indirect if a.email_normalized}
-        all_phones = {a.partner_phone_sanitized for a in indirect if a.partner_phone_sanitized}
-        all_linkedins = {a.linkedin_profile for a in indirect if a.linkedin_profile}
-
-        epl_domain = Domain.FALSE
-        if all_emails:
-            epl_domain |= Domain("email_normalized", "in", list(all_emails))
-        if all_phones:
-            epl_domain |= Domain("partner_phone_sanitized", "in", list(all_phones))
-        if all_linkedins:
-            epl_domain |= Domain("linkedin_profile", "in", list(all_linkedins))
-
-        pool_domain = Domain(["|", ("talent_pool_ids", "!=", False), ("pool_applicant_id", "!=", False)])
-        domain = pool_domain & epl_domain
-        in_pool_applicants = self.env["hr.applicant"].with_context(active_test=True).search(domain)
+        domain = self._get_similar_applicants_domain() & Domain(["|", ("talent_pool_ids", "!=", False), ("pool_applicant_id", "!=", False)])
+        in_pool_applicants = self.env["hr.applicant"].with_context(active_test=False).search(domain)
         in_pool_data = {"emails": set(), "phones": set(), "linkedins": set()}
 
         for applicant in in_pool_applicants:
@@ -881,18 +853,30 @@ class HrApplicant(models.Model):
         }
 
     def action_job_add_applicants(self):
+        context = {
+            "is_modal": True,
+            "default_applicant_ids": self.ids
+            or self.env.context.get("default_applicant_ids"),
+        }
+        if len(self.ids) == 1:
+            context["active_applicant_id"] = self.id
+            context["active_applicant_skill_ids"] = self.skill_ids.ids
+            applicant_job_ids = self.job_id.ids
+            if self.is_pool_applicant or self.pool_applicant_id:
+                applicant_job_ids += self.env['hr.applicant'].search([('pool_applicant_id', 'in', [self.id, self.pool_applicant_id.id])]).job_id.ids
+            else:
+                applicant_job_ids += self._get_matching_applicants().job_id.ids
+            context["active_applicant_job_ids"] = applicant_job_ids
+            jobs = self.env['hr.job'].search([('id', 'not in', applicant_job_ids)]).with_context(context)
+            jobs._compute_applicant_matching_score()
+            jobs.sort_by_applicant_matching_score()
         return {
-            "name": _("Create Applications"),
+            "name": _("Apply to Jobs"),
             "type": "ir.actions.act_window",
             "res_model": "job.add.applicants",
             "target": "new",
             "views": [[False, "form"]],
-            "context": {
-                "is_modal": True,
-                "dialog_size": "medium",
-                "default_applicant_ids": self.ids
-                or self.env.context.get("default_applicant_ids"),
-            },
+            "context": context,
         }
 
     def _track_template(self, changes):

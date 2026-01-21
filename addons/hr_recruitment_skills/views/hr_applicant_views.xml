@@ -33,24 +33,14 @@
                                 <!-- empty group to align matching and missing skills below the job position matching widget -->
                             </group>
                             <group>
-                                <field name="matching_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                <field name="missing_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field name="matching_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="is_pool_applicant"/>
+                                <field name="missing_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="is_pool_applicant"/>
                             </group>
                         </group>
                     </div>
                 </page>
             </notebook>
         </field>
-    </record>
-
-    <record id="action_find_matching_job" model="ir.actions.act_window">
-        <field name="name">Matching Positions</field>
-        <field name="res_model">hr.job</field>
-        <field name="view_mode">list</field>
-        <field name="target">current</field>
-        <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant"/>
-        <field name="binding_view_types">form</field>
-        <field name="context">{'active_applicant_id': active_id,}</field>
     </record>
 
     <record id="hr_applicant_view_search_bis" model="ir.ui.view">
