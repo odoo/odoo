@@ -457,6 +457,7 @@
                                     options="{'no_quick_create': True, 'on_tag_click': 'open_form'}"
                                     groups="uom.group_uom"
                                     force_save="1"
+                                    readonly="1"
                                     context="{'product_id': id}"/>
                                 <field name="product_tag_ids" widget="many2many_tags" readonly="1"/>
                                 <field name="additional_product_tag_ids" widget="many2many_tags" context="{'product_variant_id': id}"/>
