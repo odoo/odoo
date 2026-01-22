@@ -128,10 +128,12 @@
                     </span>
                 </td>
                 <td t-if="data['forecast_mode']">
-                    <span t-if="l.get('route_name')" t-attf-class="{{'text-danger' if l.get('route_alert') else ''}}"><t t-out="l['route_name']"/>: <t t-out="l['route_detail']"/></span>
+                    <span t-if="l.get('route_name') and l.get('route_detail')" t-attf-class="{{'text-danger' if l.get('route_alert') else ''}}">
+                        <t t-out="l['route_name']"/>: <t t-out="l['route_detail']"/>
+                    </span>
                 </td>
-                <td t-else=""/>
-                <td t-attf-class="text-end {{ 'text-muted' if l['type'] == 'component' else '' }}" t-out="l['bom_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                <td t-if="not l['uom'] and (l['type'] == 'byproduct' or l['type'] == 'subcontract')" groups="uom.group_uom"/>
+                <td t-attf-class="text-end {{ 'text-muted' if l['type'] == 'component' else '' }}" t-attf-colspan="{{ 1 if data['forecast_mode'] else 2 }}" t-out="l['bom_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
             </tr>
         </t>
     </template>

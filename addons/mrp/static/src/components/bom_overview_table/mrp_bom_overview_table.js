@@ -63,7 +63,7 @@ export class BomOverviewTable extends Component {
     }
 
     get showUnitCosts() {
-        return this.props.bomQuantity > 1;
+        return this.props.bomQuantity > 0;
     }
 
     get showUom() {

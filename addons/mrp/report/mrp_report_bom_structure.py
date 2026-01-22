@@ -435,7 +435,8 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             line_quantity = (bom_quantity / (bom.product_qty or 1.0)) * byproduct.product_qty
             cost_share = byproduct.cost_share / 100 if byproduct.product_qty > 0 else 0
             byproduct_cost_portion += cost_share
-            price = byproduct.product_id.uom_id._compute_price(byproduct.product_id.with_company(company).standard_price, byproduct.product_uom_id) * line_quantity
+            bom_cost = company.currency_id.round(total * cost_share)
+            bom_unit_cost = byproduct.product_uom_id._compute_price(bom_cost, byproduct.product_id.uom_id)
             byproducts.append({
                 'id': byproduct.id,
                 'index': f"{index}{byproduct_index}",
@@ -446,9 +447,11 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 'name': byproduct.product_id.display_name,
                 'quantity': line_quantity,
                 'uom_name': byproduct.product_uom_id.name,
+                'product_uom_name': byproduct.product_id.uom_id.name,
                 'parent_id': bom.id,
                 'level': level or 0,
-                'bom_cost': company.currency_id.round(total * cost_share),
+                'bom_cost': bom_cost,
+                'bom_unit_cost': bom_unit_cost,
                 'cost_share': cost_share,
             })
             byproduct_index += 1
@@ -528,6 +531,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         pdf_lines = self._get_bom_array_lines(data, level, unfolded_ids, unfolded, True)
 
         data['lines'] = pdf_lines
+        data['show_uom'] = self.env.user.has_group('uom.group_uom')
         return data
 
     @api.model
