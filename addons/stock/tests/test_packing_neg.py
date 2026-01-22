@@ -8,8 +8,8 @@ class TestPackingNeg(TransactionCase):
 
     def test_packing_neg(self):
         res_partner_2 = self.env['res.partner'].create({
-            'name': 'Deco Addict',
-            'email': 'deco.addict82@example.com',
+            'name': 'Acme Corporation',
+            'email': 'acme.corportation82@example.com',
         })
 
         res_partner_4 = self.env['res.partner'].create({

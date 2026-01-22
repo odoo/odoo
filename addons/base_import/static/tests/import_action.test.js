@@ -31,7 +31,7 @@ import { ImportDataProgress } from "../src/import_data_progress/import_data_prog
 
 const FAKE_PREVIEW_HEADERS = ["Foo", "Bar", "Display name"];
 const FAKE_PREVIEW_DATA = [
-    ["Deco addict", "Azure Interior", "Brandon Freeman"],
+    ["Acme Corporation", "Azure Interior", "Brandon Freeman"],
     ["1", "1", "0"],
     ["Azure Interior"],
 ];
@@ -401,12 +401,12 @@ describe("Import view", () => {
         ).toHaveText("Foo");
         expect(
             ".o_import_data_content tr:eq(1) .o_import_file_column_cell > span:eq(1)"
-        ).toHaveText("Deco addict");
+        ).toHaveText("Acme Corporation");
         expect(
             ".o_import_data_content tr:eq(1) .o_import_file_column_cell > span:eq(1)"
         ).toHaveAttribute(
             "data-tooltip-info",
-            '{"lines":["Deco addict","Azure Interior","Brandon Freeman"]}'
+            '{"lines":["Acme Corporation","Azure Interior","Brandon Freeman"]}'
         );
         expect(".o_import_data_content tbody td:nth-child(3) .alert-info").toHaveCount(0);
 
@@ -770,7 +770,7 @@ describe("Import view", () => {
         expect.verifySteps(["/web/dataset/call_kw/base_import.import/parse_preview"]);
         expect(
             ".o_import_data_content tr:eq(1) .o_import_file_column_cell > span:eq(0)"
-        ).toHaveText("Foo, Deco addict, Azure Interior, Brandon Freeman");
+        ).toHaveText("Foo, Acme Corporation, Azure Interior, Brandon Freeman");
         expect(".o_import_data_content .o_select_menu").toHaveText("To import, select a field...", {
             message: "as the column couldn't match with the database, user must make a choice",
         });
