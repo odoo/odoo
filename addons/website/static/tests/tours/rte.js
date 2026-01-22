@@ -173,9 +173,15 @@ registerWebsitePreviewTour(
             trigger: ':iframe html[lang*="en"]',
         },
         {
+            trigger: ':iframe .js_language_selector > button:contains(English)',
+        },
+        {
             content: "click on Parseltongue version",
             trigger: ':iframe .js_language_selector a[data-url_code="pa_GB"]',
             run: "click",
+        },
+        {
+            trigger: ':iframe .js_language_selector > button:contains(Parseltongue)',
         },
         {
             content: "edit",
@@ -205,6 +211,9 @@ registerWebsitePreviewTour(
         {
             content: "Check that the generic 'Translation' option is always visible",
             trigger: ".o_customize_tab .options-container [data-label='Translate to']",
+        },
+        {
+            trigger: ':iframe .js_language_selector > button:contains(Parseltongue)',
         },
         {
             content: "translate text",
@@ -290,9 +299,28 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
+            trigger: ':iframe .js_language_selector > button:contains(English)',
+        },
+        {
+            content: "check: default value translation",
+            trigger: ':iframe input[placeholder="test translate placeholder"]',
+        },
+        {
             content: "Check body",
             trigger:
                 ":iframe body:not(:has(#wrap p font:first:text(paragraphs <b>describing</b>)))",
+        },
+        {
+            content: "return to Parseltongue version",
+            trigger: ':iframe .js_language_selector a[data-url_code="pa_GB"]',
+            run: "click",
+        },
+        {
+            content: "check: placeholder translation",
+            trigger: ':iframe input[placeholder="test Parseltongue placeholder"]',
+        },
+        {
+            trigger: ':iframe .js_language_selector > button:contains(Parseltongue)',
         },
         ...clickOnEditAndWaitEditModeInTranslatedPage(),
         {
