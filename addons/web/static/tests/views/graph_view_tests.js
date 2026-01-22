@@ -4764,4 +4764,25 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(graph.model.data.datasets.length, 600);
         assert.strictEqual(graph.model.data.labels.length, 600);
     });
+
+    QUnit.test("graph view reserved word", async function (assert) {
+        // Check that the use of reserved words does not interfere with the view.
+        assert.expect(2);
+
+        serverData.models.product.records.push({ id: 38, display_name: "constructor" });
+        serverData.models.foo.records[7].product_id = 38;
+
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph order="DESC">
+                    <field name="product_id"/>
+                </graph>
+            `,
+        });
+        checkLabels(assert, graph, ["xphone", "xpad", "constructor"]);
+        checkDatasets(assert, graph, ["data", "label"], [{ data: [4, 3, 1], label: "Count" }]);
+    });
 });
