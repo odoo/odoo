@@ -56,7 +56,7 @@ export class OperationPlugin extends Plugin {
 
         this.services.notification.add(
             _t(
-                "A technical issue occured in the builder, you should save or discard your changes."
+                "A technical issue occurred in the builder, you should save or discard your changes."
             ),
             {
                 type: "danger",
