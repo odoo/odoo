@@ -1024,7 +1024,17 @@ class MrpProduction(models.Model):
         if vals.get('state') == 'progress' and 'date_start' not in vals:
             vals['date_start'] = fields.Datetime.now()
 
+        initial_date_finished_mo_values = {}
+        if 'date_finished' in vals and 'state' not in vals:
+            date_finished_field_definition = self.fields_get(['date_finished'])
+            for production in self.filtered(lambda p: p.state == 'done'):
+                initial_date_finished_mo_values[production] = {'date_finished': production.date_finished}
+
         res = super(MrpProduction, self).write(vals)
+
+        for production, initial_value in initial_date_finished_mo_values.items():
+            if tracking_values := production._mail_track(date_finished_field_definition, initial_value)[1]:
+                production._message_log(tracking_value_ids=tracking_values)
 
         for production in self:
             if 'date_start' in vals and not self.env.context.get('force_date', False):
