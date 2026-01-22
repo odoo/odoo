@@ -11,12 +11,12 @@ patch(CustomerAddress.prototype, {
 
     async onChangeZip() {
         await super.onChangeZip();
-        if (this.countryCode !== 'BR' || this._getSelectedCountryCode() !== 'BR') return;
+        if (this._getSelectedCountryCode() !== 'BR') return;
 
         const newZip = this.addressForm.zip.value.padEnd(5, '0');
 
-        for (const option of this.addressForm.querySelectorAll('select[name="city_id"] option')) {
-            const ranges = option.getAttribute('zip-ranges');
+        for (const option of this.elementCities.options) {
+            const ranges = option.dataset.l10n_br_zip_ranges;
             if (ranges) {
                 // Parse the l10n_br_zip_ranges field (e.g. "[01000-001 05999-999] [08000-000 08499-999]").
                 // Loop over each range that is enclosed in [] (e.g. "[01000-001 05999-999]" followed by "[08000-000 08499-999]").
@@ -32,7 +32,7 @@ patch(CustomerAddress.prototype, {
                             new CustomEvent('select', { detail: { value: option.value } })
                         );
                         option.selected = 'selected';
-                        this._selectState(option.getAttribute('state-id'));
+                        this._selectState(option.dataset.state_id);
                         return;
                     }
                 }
@@ -42,13 +42,11 @@ patch(CustomerAddress.prototype, {
 
     async onChangeCity() {
         await super.onChangeCity();
-        if (this.countryCode !== 'BR' || this._getSelectedCountryCode() !== 'BR') return;
+        if (this._getSelectedCountryCode() !== 'BR') return;
 
         if (this.elementCities.value) {
             this._selectState(
-                this.elementCities
-                    .querySelector(`option[value='${this.elementCities.value}']`)
-                    .getAttribute('state-id')
+                this.elementCities.selectedOptions[0].dataset.state_id
             );
         }
     },
@@ -73,7 +71,7 @@ patch(CustomerAddress.prototype, {
 
     async onChangeState() {
         // For BR: don't want the standard behavior of reloading cities based on state
-        if (this.countryCode == 'BR' && this._getSelectedCountryCode() == 'BR') {
+        if (this._getSelectedCountryCode() == 'BR') {
             this.elementCities.value = '';
             return;
         }
@@ -82,7 +80,6 @@ patch(CustomerAddress.prototype, {
 
     async _onChangeCountry(init=false) {
         await this.waitFor(super._onChangeCountry(...arguments));
-        if (this.countryCode !== 'BR') return;
 
         if (this._getSelectedCountryCode() === 'BR') {
             this._setVisibility('.o_standard_address', false); // hide

@@ -2,27 +2,25 @@
 <odoo>
     <template id="address_extended_form_fields" inherit_id="portal.address_form_fields">
         <div id="div_state" position="after">
-            <input type="hidden" name="enforce_cities"
-                t-att-value="res_company.country_id.enforce_cities"/>
-            <div t-if="res_company.country_id.enforce_cities"
-                 id="div_city_id"
-                 class="col-lg-6 mb-2"
-                 t-att-style="not country and 'display:none;'" >
+            <div
+                id="div_city_id"
+                class="col-lg-6 mb-2"
+                t-att-style="not country._enforce_city_choice() and 'display:none;'"
+            >
                 <label class="col-form-label label-optional" for="city_id">City</label>
                 <select id="o_city_id" name="city_id" class="form-select">
                     <option value="">City...</option>
                     <option t-foreach="state_cities"
                             t-as="c"
                             t-att-value="c.id"
-                            t-att-selected="c.id == (city.id if city else partner_sudo.city_id.id)"
-                            t-att-state-id="c.state_id.id"
+                            t-att-selected="c.id == city.id"
+                            t-att-data-state_id="c.state_id.id"
                             t-out="c.name"/>
                 </select>
             </div>
         </div>
         <xpath expr="//select[@name='country_id']/option[not(@value='')]" position="attributes">
-            <attribute name="t-att-enforce-cities"
-                add="c.enforce_cities" />
+            <attribute name="t-att-enforce-cities" add="c._enforce_city_choice()" />
         </xpath>
     </template>
 </odoo>

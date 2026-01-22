@@ -13,7 +13,6 @@ patch(CustomerAddress.prototype, {
         });
         this.elementState = this.addressForm.state_id;
         this.elementCities = this.addressForm.city_id;
-        this.countryEnforceCities = this.addressForm['enforce_cities'].value === "True";
     },
 
     /**
@@ -25,7 +24,7 @@ patch(CustomerAddress.prototype, {
 
     async onChangeState() {
         await this.waitFor(super.onChangeState());
-        if (!this.countryEnforceCities || !this._getSelectedCountryEnforceCities()) return;
+        if (!this._getSelectedCountryEnforceCities()) return;
 
         const stateId = this.elementState.value;
         let choices = [];
@@ -37,26 +36,32 @@ patch(CustomerAddress.prototype, {
     },
 
     async _onChangeCountry(init=false) {
-        await this.waitFor(super._onChangeCountry(...arguments));
-        if(!this.countryEnforceCities) return;
+        const data = await this.waitFor(super._onChangeCountry(...arguments));
 
+        let choices = [];
         if (this._getSelectedCountryEnforceCities()) {
             const cityInput = this.addressForm.city;
             cityInput.value = '';
             this._hideInput('city');
             this._showInput('city_id');
+            choices = data.cities || [];
         } else {
             this._hideInput('city_id');
             this._showInput('city');
-            this.elementCities.value = '';
         }
+        this._changeOption(this.elementCities, choices);
     },
 
     _changeOption(selectElement, choices) {
         selectElement.options.length = 1;
         if (choices.length) {
-            choices.forEach((item) => {
-                const option = new Option(item[1], item[0]);
+            choices.forEach((choice) => {
+                const option = new Option(choice.name, choice.id);
+                Object.keys(choice).forEach((key) => {
+                    if (!['name', 'id'].includes(key) && choice[key]) {
+                        option.dataset[key] = choice[key];
+                    }
+                });
                 selectElement.appendChild(option);
             });
         }
