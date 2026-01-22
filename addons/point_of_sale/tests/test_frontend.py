@@ -50,7 +50,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         })
 
         env['res.partner'].create({
-            'name': 'Deco Addict',
+            'name': 'Acme Corporation',
         })
 
         env['res.partner'].create([{

@@ -55,7 +55,7 @@ odoo.define('web.control_panel_tests', function (require) {
                 env: {
                     session: {
                         async rpc() {
-                            return [[10, "Deco Addict"]];
+                            return [[10, "Acme Corporation"]];
                         },
                     },
                 },
@@ -65,8 +65,8 @@ odoo.define('web.control_panel_tests', function (require) {
             assert.deepEqual(
                 cpHelpers.getFacetTexts(controlPanel).map(t => t.replace(/\s/g, "")),
                 [
-                    "BarDecoAddict",
-                    "BarOpDecoAddict",
+                    "BarAcmeCorporation",
+                    "BarOpAcmeCorporation",
                     "Foofoo",
                     "FooOpfoo_op",
                     "SelecRed"

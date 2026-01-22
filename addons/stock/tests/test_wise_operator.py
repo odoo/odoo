@@ -17,7 +17,7 @@ class TestWiseOperator(TransactionCase):
             'uom_po_id': self.ref('uom.product_uom_unit'),
         })
 
-        self.partner = self.env['res.partner'].create({'name': 'Deco Addict'})
+        self.partner = self.env['res.partner'].create({'name': 'Acme Corporation'})
 
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         self.shelf2 = self.env['stock.location'].create({
