@@ -83,9 +83,17 @@ class TestSurveyController(common.TestSurveyCommon, HttpCase):
                 if layout == 'page_per_section':
                     page0, _ = self.env['survey.question'].create(pages)
 
+                cookie_key = f'survey_{survey.access_token}'
+                # clear the cookie to start a new survey
+                self.opener.cookies.pop(cookie_key, None)
+
                 response = self._access_start(survey)
-                user_input = self.env['survey.user_input'].search([('access_token', '=', response.url.split('/')[-1])])
+                self.assertTrue(response.history, "Survey start should redirect")
+                cookie_token = response.history[0].cookies.get(cookie_key)
+                user_input = self.env['survey.user_input'].search([('access_token', '=', cookie_token)])
                 answer_token = user_input.access_token
+                self.assertTrue(cookie_token)
+                self.assertTrue(user_input)
 
                 r = self._access_page(survey, answer_token)
                 self.assertResponse(r, 200)
@@ -163,7 +171,8 @@ class TestSurveyController(common.TestSurveyCommon, HttpCase):
         self.authenticate(None, None)
         res = self.url_open(survey.get_start_url())
         self.assertEqual(res.status_code, 200)
-        answer_token = res.url.split('/')[-1]
+        self.assertTrue(res.history, "Survey start should redirect")
+        answer_token = res.history[0].cookies.get(f'survey_{survey.access_token}')
         csrf_token = self._find_csrf_token(res.text)
         self.assertIn('Question1', res.text)
         post_data = self._format_submission_data(
@@ -192,7 +201,8 @@ class TestSurveyController(common.TestSurveyCommon, HttpCase):
         res = self.url_open(survey.get_start_url())
         self.assertEqual(res.status_code, 200)
         self.assertIn('Question2', res.text)
-        answer_token = res.url.split('/')[-1]
+        self.assertTrue(res.history, "Survey start should redirect")
+        answer_token = res.history[0].cookies.get(f'survey_{survey.access_token}')
         csrf_token = self._find_csrf_token(res.text)
         post_data = self._format_submission_data(
             survey.question_ids[1], [questions[1].suggested_answer_ids[0].id],
