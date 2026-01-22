@@ -112,7 +112,7 @@ export class BomOverviewLine extends Component {
     }
 
     get hasQuantity() {
-        return this.data.is_storable && this.data.hasOwnProperty('quantity_available') && this.data.quantity_available !== false;
+        return (this.data.is_storable || this.data.phantom_bom) && this.data.hasOwnProperty('quantity_available') && this.data.quantity_available !== false;
     }
 
     get hasLeadTime() {

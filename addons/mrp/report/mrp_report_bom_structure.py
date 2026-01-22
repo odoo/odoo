@@ -123,7 +123,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         for line in lines:
             product = line.product_id
             line_quantity = line_quantities.get(line.id, 0.0)
-            quantities_info = self._get_quantities_info(product, line.product_uom_id, product_info, parent_bom, parent_product)
+            quantities_info = self._get_quantities_info(product, line.product_uom_id, product_info, line.bom_id, parent_bom, parent_product)
             stock_loc = quantities_info['stock_loc']
             product_info[product.id]['consumptions'][stock_loc] += line_quantity
             product_quantities_info[product.id][line.id] = product_info[product.id]['consumptions'][stock_loc]
@@ -204,7 +204,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         quantities_info = {}
         if not ignore_stock:
             # Useless to compute quantities_info if it's not going to be used later on
-            quantities_info = self._get_quantities_info(product, bom.product_uom_id, product_info, parent_bom, parent_product)
+            quantities_info = self._get_quantities_info(product, bom.product_uom_id, product_info, bom, parent_bom, parent_product)
 
         bom_report_line = {
             'index': index,
@@ -387,20 +387,25 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'manufacture_delay': route_info.get('manufacture_delay', False),
             'stock_avail_state': availabilities['stock_avail_state'],
             'resupply_avail_delay': availabilities['resupply_avail_delay'],
-            'availability_display': availabilities['availability_display'],
+            'status': availabilities['status'],
             'availability_state': availabilities['availability_state'],
             'availability_delay': availabilities['availability_delay'],
             'parent_id': parent_bom.id,
             'level': level or 0,
             'has_attachments': has_attachments,
         }
+        if component['is_storable'] and (missing_qty := max(component['quantity'] - component['quantity_forecasted'], 0)) and component['route_name']:
+            component['status'] = self.env._("%(qty)s To %(route)s", qty=self._format_number_display(missing_qty), route=component['route_name'])
+            component['availability_state'] = "unavailable"
+        return component
 
     @api.model
-    def _get_quantities_info(self, product, bom_uom, product_info, parent_bom=False, parent_product=False):
+    def _get_quantities_info(self, product, bom_uom, product_info, bom, parent_bom=False, parent_product=False):
+        calculate_quantity = product.is_storable or (bom != parent_bom and bom.type == 'phantom' and any(comp.product_id.is_storable for comp in bom.bom_line_ids))
         quantities_info = {
-            'free_qty': max(product.uom_id._compute_quantity(product.free_qty, bom_uom), 0) if product.is_storable else 0,
-            'on_hand_qty': product.uom_id._compute_quantity(product.qty_available, bom_uom) if product.is_storable else 0,
-            'forecasted_qty': product.uom_id._compute_quantity(product.virtual_available, bom_uom) if product.is_storable else 0,
+            'free_qty': max(product.uom_id._compute_quantity(product.free_qty, bom_uom), 0) if calculate_quantity else 0,
+            'on_hand_qty': product.uom_id._compute_quantity(product.qty_available, bom_uom) if calculate_quantity else 0,
+            'forecasted_qty': product.uom_id._compute_quantity(product.virtual_available, bom_uom) if calculate_quantity else 0,
             'stock_loc': 'in_stock',
         }
         quantities_info['free_to_manufacture_qty'] = quantities_info['free_qty']
