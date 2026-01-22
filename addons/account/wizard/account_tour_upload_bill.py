@@ -17,7 +17,7 @@ class AccountTourUploadBill(models.TransientModel):
 
     selection = fields.Selection(
         selection=lambda self: self._selection_values(),
-        default="sample"
+        default=lambda self: 'sample' if self.env.ref('base.res_partner_2', raise_if_not_found=False) else 'upload'
     )
 
     preview_invoice = fields.Html(
@@ -50,7 +50,9 @@ class AccountTourUploadBill(models.TransientModel):
         journal_alias = self.env['account.journal'] \
             .search([('type', '=', 'purchase'), ('company_id', '=', self.env.company.id)], limit=1)
 
-        values = [('sample', _('Try a sample vendor bill')), ('upload', _('Upload your own bill'))]
+        # We don't want people putting demo data in their database if they didn't launch it in demo mode
+        values = [('sample', _('Try a sample vendor bill'))] if self.env.ref('base.res_partner_2', raise_if_not_found=False) else []
+        values.append(('upload', _('Upload your own bill')))
         if journal_alias.alias_name and journal_alias.alias_domain:
             values.append(('email', _('Or send a bill to %s@%s', journal_alias.alias_name, journal_alias.alias_domain)))
         return values
@@ -78,12 +80,7 @@ class AccountTourUploadBill(models.TransientModel):
             return purchase_journal.with_context(default_journal_id=purchase_journal.id, default_move_type='in_invoice').create_document_from_attachment(attachment_ids=self.attachment_ids.ids)
         elif self.selection == 'sample':
             invoice_date = fields.Date.today() - timedelta(days=12)
-            partner = self.env['res.partner'].search([('name', '=', 'Acme Corporation')], limit=1)
-            if not partner:
-                partner = self.env['res.partner'].create({
-                    'name': 'Acme Corporation',
-                    'is_company': True,
-                })
+            partner = self.env.ref('base.res_partner_2')
             bill = self.env['account.move'].create({
                 'move_type': 'in_invoice',
                 'partner_id': partner.id,
