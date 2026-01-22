@@ -98,6 +98,8 @@ export class CustomerAddress extends Interaction {
         data.required_fields.forEach((fieldName) => {
             this._markRequired(fieldName, true);
         })
+
+        return data;
     }
 
     _getInputDiv(name) {

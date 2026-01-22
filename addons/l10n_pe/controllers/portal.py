@@ -40,7 +40,8 @@ class L10nPEPortalAccount(L10nLatamBasePortalAccount):
         website=True,
     )
     def city_infos(self, city, **kw):
-        districts = request.env['l10n_pe.res.city.district'].sudo().search(
-            [('city_id', '=', city.id)],
-        )
-        return {'districts': [(d.id, d.name, d.code) for d in districts]}
+        return {
+            'districts': request.env['l10n_pe.res.city.district'].sudo().search_read(
+                [('city_id', '=', city.id)], ['id', 'name', 'code']
+            )
+        }
