@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
-
 from collections import defaultdict, OrderedDict
 from datetime import date, datetime, time, timedelta
 import json
 
 from odoo import api, fields, models, _
-from odoo.tools import float_compare, float_round, format_date, float_is_zero, float_repr
+from odoo.tools import float_round, format_date, float_repr
 from odoo.exceptions import UserError
 
 
@@ -762,6 +760,12 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
     @api.model
     def _has_attachments(self, data):
         return data['has_attachments'] or any(self._has_attachments(component) for component in data.get('components', []))
+
+    @api.model
+    def _format_number_display(self, number):
+        number = float_repr(number, self.env['decimal.precision'].precision_get('Product Unit'))
+        formatted_string = str(number).strip("0").strip(".")
+        return formatted_string
 
     def _merge_components(self, component_1, component_2):
         qty = component_2['quantity']
