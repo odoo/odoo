@@ -132,8 +132,8 @@ steps = steps.concat([
         trigger: "button.set-partner",
     },
     {
-        content: "select Deco Addict",
-        trigger: ".partner-line:contains('Deco Addict')",
+        content: "select Acme Corporation",
+        trigger: ".partner-line:contains('Acme Corporation')",
     },
     {
         content: "click more button",
