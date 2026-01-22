@@ -1007,8 +1007,8 @@ class TestSalePrices(SaleCommon):
         self.assertEqual(line.price_subtotal, 17527.41)
         self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)
 
-    def test_discount_and_amount_undiscounted(self):
-        """When adding a discount on a SO line, this test ensures that amount undiscounted is
+    def test_amount_undiscounted_with_incl_excl_taxes(self):
+        """When adding a discount on a SO line, this test ensures that amount_undiscounted is
         consistent with the used tax."""
         order = self._create_so(
             order_line=[
@@ -1053,10 +1053,45 @@ class TestSalePrices(SaleCommon):
         line.discount = 50.0
         order.action_confirm()
 
-        # 300 with 10% incl tax -> 272.72 total tax excluded without discount
+        # 300 with 10% incl tax -> 272.727272... total tax excluded without discount
         # 136.36 price tax excluded with discount applied
-        self.assertEqual(order.amount_undiscounted, 272.72)
+        self.assertAlmostEqual(order.amount_undiscounted, 272.73, places=2)
         self.assertEqual(line.price_subtotal, 136.36)
+
+    def test_amount_undiscounted_with_global_discounts(self):
+        """This test ensures amount_undiscounted remains intact with global discounts."""
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    "product_id": self.product.id,
+                    "product_uom_qty": 1,
+                    "price_unit": 100.0,
+                })
+            ]
+        )
+        wizard = self.env["sale.order.discount"].create({
+            "sale_order_id": order.id,
+            "discount_type": "so_discount",  # global discount
+            "discount_percentage": 0.10,  # 10%
+        })
+        wizard.action_apply_discount()
+        self.assertEqual(order.amount_untaxed, 90)  # global discount applied
+        self.assertEqual(order.amount_undiscounted, 100)
+
+    def test_amount_undiscounted_with_decimal_numbers(self):
+        """This test ensures amount_undiscounted remains intact with decimal numbers."""
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    "product_id": self.product.id,
+                    "product_uom_qty": 1,
+                    "price_unit": 100.11,
+                    "discount": 50.00,
+                })
+            ]
+        )
+        self.assertEqual(order.order_line.price_subtotal, 50.06)  # sol discount applied
+        self.assertEqual(order.amount_undiscounted, 100.11)
 
     def test_product_quantity_rounding(self):
         """When adding a sale order line, product quantity should be rounded

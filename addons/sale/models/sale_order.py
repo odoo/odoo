@@ -894,15 +894,16 @@ class SaleOrder(models.Model):
             )
 
     def _compute_amount_undiscounted(self):
+        AccountTax = self.env["account.tax"]
         for order in self:
-            total = 0.0
+            subtotal = 0
             for line in order.order_line:
-                total += (
-                    (line.price_subtotal * 100) / (100 - line.discount)
-                    if line.discount != 100
-                    else (line.price_unit * line.product_uom_qty)
-                )
-            order.amount_undiscounted = total
+                base_line = line._prepare_base_line_for_taxes_computation(discount=0)
+                # Exclude global discounts and down payments
+                if not base_line.get("special_type"):
+                    AccountTax._add_tax_details_in_base_line(base_line, order.company_id)
+                    subtotal += base_line["tax_details"]["raw_total_excluded_currency"]
+            order.amount_undiscounted = subtotal
 
     @api.depends("order_line.qty_delivered", "order_line.product_uom_qty", "state")
     def _compute_delivery_status(self):
