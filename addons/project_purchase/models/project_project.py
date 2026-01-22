@@ -171,9 +171,8 @@ class ProjectProject(models.Model):
                         )
                     )
                     if invoice_lines:
-                        invoiced_qty = sum(invoice_lines.filtered(lambda l: not l.is_refund).mapped('quantity'))
-                        if invoiced_qty < purchase_line.product_qty:
-                            amount_to_invoice -= purchase_line_amount_to_invoice * ((purchase_line.product_qty - invoiced_qty) / purchase_line.product_qty)
+                        # Calculate total invoiced amount (posted + draft, excluding refunds for unbilled calculation)
+                        total_invoiced_amount = 0.0
                         for line in invoice_lines:
                             price_subtotal = line.currency_id._convert(line.price_subtotal, self.currency_id, self.company_id)
                             if not line.analytic_distribution:
@@ -184,10 +183,15 @@ class ProjectProject(models.Model):
                                 if str(self.account_id.id) in ids.split(',')
                             ) / 100.
                             cost = price_subtotal * analytic_contribution * (-1 if line.is_refund else 1)
+                            # Only count non-refund invoices for unbilled calculation
+                            if not line.is_refund:
+                                total_invoiced_amount += cost
                             if line.parent_state == 'posted':
                                 amount_invoiced -= cost
                             else:
                                 amount_to_invoice -= cost
+                        # Calculate the unbilled portion: PO amount - total invoiced amount (non-refunds only)
+                        amount_to_invoice -= purchase_line_amount_to_invoice - total_invoiced_amount
                     else:
                         amount_to_invoice -= purchase_line_amount_to_invoice
 
