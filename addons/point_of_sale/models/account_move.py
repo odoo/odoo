@@ -123,7 +123,7 @@ class AccountMoveLine(models.Model):
         price_unit = super()._get_cogs_value()
         sudo_order = self.move_id.sudo().pos_order_ids
         if sudo_order:
-            price_unit = sudo_order._get_pos_anglo_saxon_price_unit(self.product_id, self.move_id.partner_id.id, self.quantity)
+            price_unit = sudo_order._get_pos_anglo_saxon_price_unit(self.product_id, self.quantity)
         return price_unit
 
     def _compute_name(self):
