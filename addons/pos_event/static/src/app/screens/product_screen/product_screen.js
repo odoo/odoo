@@ -125,8 +125,8 @@ patch(ProductScreen.prototype, {
             slotSelected = this.pos.models["event.slot"].get(slotResult.slotId);
         } else {
             avaibilityByTicket = tickets.reduce((acc, ticket) => {
-                if (ticket.seats_max === 0 && !event.seats_limited) {
-                    acc[ticket.id] = "unlimited";
+                if (ticket.seats_max === 0) {
+                    acc[ticket.id] = event.seats_limited ? event.seats_available : "unlimited";
                 } else {
                     acc[ticket.id] = ticket.seats_available;
                 }
