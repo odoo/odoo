@@ -57,6 +57,7 @@ const tourSchema = {
     steps: Function,
     url: { type: String, optional: true },
     wait_for: { type: [Function, Object], optional: true },
+    undeterministicTour_doNotCopy: { type: Boolean, optional: true },
 };
 
 const tourRegistry = registry.category("web_tour.tours");
@@ -302,6 +303,7 @@ export class TourService {
             debug: false,
             redirect: true,
             observeDelay: 3000,
+            allowDelayToRemove: tour.undeterministicTour_doNotCopy,
             ...options,
         };
 

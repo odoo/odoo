@@ -570,6 +570,9 @@ test("check not possible to click below modal", async () => {
                 run: "click",
             },
             {
+                trigger: ".modal",
+            },
+            {
                 trigger: ".button1",
                 run: "click",
             },
@@ -578,9 +581,10 @@ test("check not possible to click below modal", async () => {
     await odoo.startTour("tour_check_modal", { mode: "auto" });
     await waitForMacro();
     expect.verifySteps([
-        "log: [1/2] Tour tour_check_modal → Step .button0",
-        "log: [2/2] Tour tour_check_modal → Step .button1",
-        `error: FAILED: [2/2] Tour tour_check_modal → Step .button1.
+        "log: [1/3] Tour tour_check_modal → Step .button0",
+        "log: [2/3] Tour tour_check_modal → Step .modal",
+        "log: [3/3] Tour tour_check_modal → Step .button1",
+        `error: FAILED: [3/3] Tour tour_check_modal → Step .button1.
 Element has been found.
 BUT: It is not allowed to do action on an element that's below a modal.
 TIMEOUT step failed to complete within 888 ms.`,

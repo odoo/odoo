@@ -5,6 +5,7 @@ import { validate } from "@odoo/owl";
 const macroSchema = {
     name: { type: String, optional: true },
     timeout: { type: Number, optional: true },
+    allowDelayToRemove: { type: Boolean, optional: true },
     steps: {
         type: Array,
         element: {
@@ -39,17 +40,19 @@ async function performAction(trigger, action) {
         throw new MacroError(
             "Action",
             error.stack || `ERROR during perform action: ${error.message}`,
-            {cause: error}
+            { cause: error }
         );
     }
 }
 
-async function waitForTrigger(trigger) {
+async function waitForTrigger(trigger, waitDelay = false) {
     if (!trigger) {
         return;
     }
     try {
-        await delay(50);
+        if (waitDelay) {
+            await delay(50);
+        }
         return await waitUntil(() => {
             if (typeof trigger === "function") {
                 return trigger();
@@ -119,7 +122,8 @@ export class Macro {
             const step = this.steps[this.currentIndex];
             const timeoutDelay = step.timeout || this.timeout || 10000;
             const executeStep = async () => {
-                const trigger = await waitForTrigger(step.trigger);
+                // To be remove ASAP because it allows non deterministic behaviors.
+                const trigger = await waitForTrigger(step.trigger, this.allowDelayToRemove);
                 const result = await performAction(trigger, step.action);
                 await this.onStep({ step, trigger, index: this.currentIndex });
                 return result;
