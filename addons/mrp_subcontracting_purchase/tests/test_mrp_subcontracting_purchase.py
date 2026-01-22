@@ -87,7 +87,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         self.assertFalse(bom_data['lines']['components_available'])
         for component in bom_data['lines']['components']:
             self.assertEqual(component['quantity_on_hand'], 4)
-            self.assertEqual(component['availability_state'], 'estimated')
+            self.assertEqual(component['availability_state'], 'unavailable')
 
     def test_count_smart_buttons(self):
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
@@ -791,7 +791,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         self.assertFalse(bom_data['lines']['components_available'])
         for component in bom_data['lines']['components']:
             self.assertEqual(component['quantity_on_hand'], 4)
-            self.assertEqual(component['availability_state'], 'estimated')
+            self.assertEqual(component['availability_state'], 'unavailable')
 
     def test_location_after_dest_location_update_backorder_production(self):
         """

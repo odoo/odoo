@@ -55,6 +55,9 @@ export class BomOverviewLine extends Component {
     }
 
     async goToForecast() {
+        if (this.data.type == "operation") {
+            return;
+        }
         const action = await this.ormService.call(
             this.data.link_model,
             this.forecastAction,
@@ -112,7 +115,12 @@ export class BomOverviewLine extends Component {
     }
 
     get hasQuantity() {
-        return this.data.is_storable && this.data.hasOwnProperty('quantity_available') && this.data.quantity_available !== false;
+        const is_storable =
+            this.data.is_storable ||
+            (this.data.phantom_bom &&
+                this.data.components &&
+                this.data.components.some((comp) => comp.is_storable));
+        return is_storable && this.data?.quantity_available !== false;
     }
 
     get hasLeadTime() {
