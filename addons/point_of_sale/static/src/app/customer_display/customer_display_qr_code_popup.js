@@ -27,6 +27,7 @@ export class QrCodeCustomerDisplay extends Component {
             "width=800,height=600,left=200,top=200"
         );
         this.notification.add(_t("PoS Customer Display opened in a new window"));
+        this.props.close();
     }
 
     showQr() {
