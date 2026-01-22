@@ -312,3 +312,15 @@ Price = {
 ItemPriceExtension = {
     'cbc:Amount': {},
 }
+
+ContractDocumentReference = {
+    'cbc:ID': {},
+}
+
+DespatchDocumentReference = {
+    'cbc:ID': {},
+}
+
+ProjectReference = {
+    'cbc:ID': {},
+}
