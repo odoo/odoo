@@ -12,6 +12,7 @@ export class AttachDocumentWidget extends Component {
     };
     static props = {
         ...standardWidgetProps,
+        acceptedFileExtensions: { type: String, optional: true },
         string: { type: String },
         action: { type: String, optional: true },
         highlight: { type: Boolean },
@@ -22,7 +23,7 @@ export class AttachDocumentWidget extends Component {
         this.notification = useService("notification");
         this.fileInput = document.createElement("input");
         this.fileInput.type = "file";
-        this.fileInput.accept = "*";
+        this.fileInput.accept = this.props.acceptedFileExtensions || "*";
         this.fileInput.multiple = true;
         this.fileInput.onchange = this.onInputChange.bind(this);
     }
@@ -75,12 +76,13 @@ export class AttachDocumentWidget extends Component {
 
 export const attachDocumentWidget = {
     component: AttachDocumentWidget,
-    extractProps: ({ attrs }) => {
+    extractProps: ({ attrs, options }) => {
         const { action, highlight, string } = attrs;
         return {
             action,
             highlight: !!highlight,
             string,
+            acceptedFileExtensions: options.accepted_file_extensions,
         };
     },
 };
