@@ -10,16 +10,21 @@ export class BillGuide extends Component {
         DocumentFileUploader,
     };
     static props = ["*"];  // could contain view_widget props
+    static showSampleAction; // this is always the same value until the database is reinstalled
 
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
         this.context = null;
         this.alias = null;
+        this.showSampleAction = false;
         onWillStart(this.onWillStart);
     }
 
     async onWillStart() {
+        if (!BillGuide.showSampleAction) {
+            BillGuide.showSampleAction = this.orm.call("account.journal", "is_sample_action_available");
+        }
         const rec = this.props.record;
         const ctx = this.env.searchModel.context;
         if (rec) {
@@ -36,6 +41,7 @@ export class BillGuide extends Component {
                 default_journal_id: ctx.active_id,
             }
         }
+        this.showSampleAction = await BillGuide.showSampleAction;
     }
 
     handleButtonClick(action, model="account.journal") {
