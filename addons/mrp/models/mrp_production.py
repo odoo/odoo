@@ -2294,11 +2294,6 @@ class MrpProduction(models.Model):
         production_auto_ids = set()
         production_missing_lot_ids = set()
         for production in self:
-            if not production.product_uom_id.is_zero(production.qty_producing):
-                production.move_raw_ids.filtered(
-                    lambda move: move.manual_consumption and not move.picked
-                ).picked = True
-                continue
             if production._auto_production_checks():
                 production_auto_ids.add(production.id)
             elif not production.lot_producing_ids:
@@ -2312,6 +2307,14 @@ class MrpProduction(models.Model):
         productions_auto = self.env['mrp.production'].browse(production_auto_ids)
         for production in productions_auto:
             production._set_quantities()
+
+        for production in self:
+            if not production.product_uom_id.is_zero(production.qty_producing):
+                production.move_raw_ids.filtered(
+                    lambda move: move.manual_consumption and not move.picked
+                ).picked = True
+                continue
+
         # Produce by-products also for not auto productions.
         (self - productions_auto)._mark_byproducts_as_produced()
 
@@ -2888,8 +2891,11 @@ class MrpProduction(models.Model):
         missing_lot_id_products = ""
         if self.product_tracking in ('lot', 'serial') and not self.lot_producing_ids:
             self.action_generate_serial()
-        self.qty_producing = self.product_qty - self.qty_produced
-        self._set_qty_producing()
+
+        if not self.qty_producing:
+            self.qty_producing = self.product_qty - self.qty_produced
+            self._set_qty_producing()
+
         self._mark_byproducts_as_produced()
 
         for move in self.move_raw_ids:
