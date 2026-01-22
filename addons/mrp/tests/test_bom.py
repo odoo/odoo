@@ -4,7 +4,7 @@ from datetime import timedelta
 from odoo import exceptions, fields
 from odoo.fields import Command
 from odoo.tests import Form, HttpCase, freeze_time, tagged
-from odoo.tools import float_compare, float_repr, float_round
+from odoo.tools import float_compare, float_repr, float_round, format_date
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
