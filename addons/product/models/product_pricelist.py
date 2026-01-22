@@ -234,18 +234,38 @@ class Pricelist(models.Model):
 
         return results
 
-    # Split methods to ease (community) overrides
     def _get_applicable_rules(self, products, date, **kwargs):
         self and self.ensure_one()  # self is at most one record
         if not self:
             return self.env['product.pricelist.item']
 
+        def is_applicable(rule):
+            if rule.categ_id and not any(categ.parent_path.startswith(rule.categ_id.parent_path) for categ in products.categ_id):
+                return False
+
+            if products._name == 'product.template':
+                if rule.product_tmpl_id and rule.product_tmpl_id not in products:
+                    return False
+                if rule.product_id and rule.product_id.product_tmpl_id not in products:
+                    return False
+            else:
+                if rule.product_tmpl_id and rule.product_tmpl_id not in products.product_tmpl_id:
+                    return False
+                if rule.product_id and rule.product_id not in products:
+                    return False
+
+            date_val = fields.Datetime.to_datetime(date)
+            if rule.date_start and rule.date_start > date_val:
+                return False
+            if rule.date_end and rule.date_end < date_val:
+                return False
+
+            return True
+
         # Do not filter out archived pricelist items, since it means current pricelist is also archived
         # We do not want the computation of prices for archived pricelist to always fallback on the Sales price
         # because no rule was found (thanks to the automatic orm filtering on active field)
-        return self.env['product.pricelist.item'].with_context(active_test=False).search(
-            self._get_applicable_rules_domain(products=products, date=date, **kwargs)
-        ).with_context(self.env.context)
+        return self.with_context(active_test=False).item_ids.filtered(is_applicable).with_context(self.env.context)
 
     def _get_applicable_rules_domain(self, products, date, **kwargs):
         self and self.ensure_one()  # self is at most one record
