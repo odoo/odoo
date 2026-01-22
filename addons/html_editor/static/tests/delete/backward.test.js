@@ -2008,7 +2008,7 @@ describe("Selection not collapsed", () => {
             stepFunction: deleteBackward,
             contentAfter: unformat(
                 `<table><tbody>
-                    <tr><td>[]ef</td><td>gh</td></tr>
+                    <tr><td>ef[]</td><td>gh</td></tr>
                 </tbody></table>`
             ),
         });
@@ -2025,7 +2025,7 @@ describe("Selection not collapsed", () => {
             stepFunction: deleteBackward,
             contentAfter: unformat(
                 `<table><tbody>
-                    <tr><td>[]cd</td></tr>
+                    <tr><td>cd[]</td></tr>
                     <tr><td>gh</td></tr>
                 </tbody></table>`
             ),
