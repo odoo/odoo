@@ -119,6 +119,7 @@ export class TourAutomatic {
         this.macro = new Macro({
             name: this.name,
             steps: macroSteps,
+            allowDelayToRemove: this.config.allowDelayToRemove,
             onError: ({ error }) => {
                 if (error.type === "Timeout") {
                     this.throwError(...this.currentStep.describeWhyIFailed, error.message);
