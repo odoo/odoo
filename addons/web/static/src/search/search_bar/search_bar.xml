@@ -47,7 +47,6 @@
                         <small class="o_facet_value text-truncate" t-esc="facetValue" t-att-title="facet.tooltip or facetValue"/>
                     </t>
                     <button class="o_facet_remove oi oi-close btn btn-link py-0 px-2 text-danger d-print-none"
-                        role="button"
                         aria-label="Remove"
                         title="Remove"
                         t-on-click="() => this.onFacetRemove(facet)"
@@ -102,7 +101,6 @@
                 <div class="o_searchview form-control d-print-contents d-flex align-items-center py-1 border-end-0"
                     role="search" aria-autocomplete="list">
                     <button class="d-print-none btn border-0 p-0"
-                        role="button"
                         aria-label="Search..."
                         title="Search..."
                         t-on-click="this.onClickSearchIcon"

@@ -3482,11 +3482,11 @@ class TestViews(ViewCase):
 
     def test_valid_focusable_button(self):
         self.assertValid('<form><a class="btn" role="button"/></form>')
-        self.assertValid('<form><button class="btn" role="button"/></form>')
+        self.assertValid('<form><button class="btn"/></form>')
         self.assertValid('<form><select class="btn" role="button"/></form>')
-        self.assertValid('<form><input type="button" class="btn" role="button"/></form>')
-        self.assertValid('<form><input type="submit" class="btn" role="button"/></form>')
-        self.assertValid('<form><input type="reset" class="btn" role="button"/></form>')
+        self.assertValid('<form><input type="button" class="btn"/></form>')
+        self.assertValid('<form><input type="submit" class="btn"/></form>')
+        self.assertValid('<form><input type="reset" class="btn"/></form>')
         self.assertValid('<form><div type="reset" class="btn btn-group" role="button"/></form>')
         self.assertValid('<form><div type="reset" class="btn btn-toolbar" role="button"/></form>')
         self.assertValid('<form><div type="reset" class="btn btn-addr" role="button"/></form>')
