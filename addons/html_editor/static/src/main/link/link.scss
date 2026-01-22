@@ -20,10 +20,14 @@
     // Unset the font size and family applied by `.btn` 
     // if inside `FONT_SIZE_CLASSES`.
     span[class$="-fs"],
-    span.small {
-        .btn:not(:has(span[class$="-fs"], span.small)) {
+    span.small,
+    span[style*="font-size"] {
+        .btn:not(:has(span[class$="-fs"], span.small, span[style*="font-size"])) {
             font-family: unset;
             font-size: unset;
+        }
+        a:not(.btn) {
+            font-size: inherit !important;
         }
     }
     font[class^="text-o-"] a,
