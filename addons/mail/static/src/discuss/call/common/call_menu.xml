@@ -3,7 +3,7 @@
 
     <t t-name="discuss.CallMenu">
         <div class="dropdown" t-attf-class="{{ className }}" t-ref="root">
-            <button t-if="rtc.channel" class="user-select-none dropdown-toggle o-no-caret o-dropdown--narrow px-0 rounded-2" t-att-title="buttonTitle" role="button" t-on-click="rtc.channel.open">
+            <button t-if="rtc.channel" class="user-select-none dropdown-toggle o-no-caret o-dropdown--narrow px-0 rounded-2" t-att-title="buttonTitle" t-on-click="rtc.channel.open">
                 <div class="o-discuss-CallMenu-buttonContent d-flex align-items-center btn-group rounded-2" t-att-class="{ 'o-is-talking': rtc.selfSession?.isActuallyTalking, 'o-isOdooCommunity': !isEnterprise }">
                     <small class="o-discuss-CallMenu-animationContainer d-flex position-absolute o-xsmaller bg-inherit o-p-0_5 rounded-circle m-n2 z-2">
                         <i class="fa fa-volume-up o-discuss-inCallIconColor bg-inherit rounded-circle o-discuss-CallMenu-animation" t-att-class="{ 'o-isOdooCommunity': !isEnterprise }"/>
