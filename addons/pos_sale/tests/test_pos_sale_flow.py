@@ -988,8 +988,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'name': 'Base Tax',
             'amount': 15,
         })
+        customer = self.env['res.partner'].create({'name': 'Test Partner A'})
         sale_orders = self.env['sale.order'].create([{
-            'partner_id': self.env['res.partner'].create({'name': 'Test Partner A'}).id,
+            'partner_id': customer.id,
             'order_line': [Command.create({
                 'product_id': self.product_a.id,
                 'name': self.product_a.name,
