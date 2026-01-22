@@ -194,7 +194,7 @@ registry.category("web_tour.tours").add("InvoiceShipLaterAccessRight", {
             ProductScreen.clickHomeCategory(),
             ProductScreen.addOrderline("Whiteboard Pen", "1"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickCustomer("Acme Corporation"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.clickPaymentMethod("Cash"),

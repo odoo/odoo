@@ -257,7 +257,7 @@ class SavepointCaseWithUserDemo(TransactionCase):
                     'name': 'Austin Kennedy', # Tom Ruiz
                 })],
             }, {
-                'name': 'Pepper Street', # 'Deco Addict',
+                'name': 'Pepper Street',  # 'Acme Corporation',
                 'state_id': cls.env.ref('base.state_us_2').id,
                 'child_ids': [Command.create({
                     'name': 'Liam King', # 'Douglas Fletcher',

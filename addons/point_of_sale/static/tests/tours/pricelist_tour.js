@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             Dialog.confirm("Open Register"),
             ProductScreen.clickPriceList("Fixed", true, "Public Pricelist"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickCustomer("Acme Corporation"),
             ProductScreen.clickPriceList("Public Pricelist", true),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Lumber Inc"),
