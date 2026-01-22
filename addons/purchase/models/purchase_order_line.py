@@ -109,7 +109,8 @@ class PurchaseOrderLine(models.Model):
         string="Parent Section Line",
         compute='_compute_parent_id',
     )
-    technical_price_unit = fields.Float(help="Technical field for price computation")
+    technical_price_unit = fields.Float(help="Technical field for price computation", readonly=False, store=True,
+                                        compute='_compute_price_unit_and_date_planned_and_name')
 
     @api.depends('product_qty', 'price_unit', 'tax_ids', 'discount')
     def _compute_amount(self):
