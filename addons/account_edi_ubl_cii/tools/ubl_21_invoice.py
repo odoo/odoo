@@ -39,6 +39,7 @@ Invoice = {
     'cbc:DueDate': {},
     'cbc:InvoiceTypeCode': {},
     'cbc:Note': {},
+    'cbc:TaxPointDate': {},
     'cbc:DocumentCurrencyCode': {},
     'cbc:TaxCurrencyCode': {},
     'cbc:PricingCurrencyCode': {},

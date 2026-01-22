@@ -34,6 +34,7 @@ CreditNote = {
     'cbc:CopyIndicator': {},
     'cbc:UUID': {},
     'cbc:IssueDate': {},
+    'cbc:TaxPointDate': {},
     'cbc:IssueTime': {},
     'cbc:CreditNoteTypeCode': {},
     'cbc:Note': {},
