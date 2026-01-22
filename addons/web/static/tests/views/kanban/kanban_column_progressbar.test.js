@@ -29,6 +29,7 @@ import {
     getKanbanRecordTexts,
     getMockEnv,
     getService,
+    mockOffline,
     models,
     mountView,
     mountWithCleanup,
@@ -2305,4 +2306,67 @@ test("Correct values for progress bar with toggling filter and slow RPC", async 
     expect(".o_kanban_record").toHaveCount(2);
     // abc: 1
     expect(getKanbanProgressBars(1).map((pb) => pb.style.width)).toEqual(["100%"]);
+});
+
+test.tags("desktop");
+test("[Offline] search in kanban with progressbar", async () => {
+    expect.errors(2);
+    const setOffline = mockOffline();
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        searchViewArch: `
+            <search>
+                <filter name="filter_1" string="First filter" domain="[('foo', '=', 'blip')]"/>
+                <filter name="filter_2" string="Second filter" domain="[('int_field', '>', 0)]"/>
+            </search>`,
+        groupBy: ["bar"],
+        config: { actionId: 234 },
+    });
+
+    expect(".o_kanban_group").toHaveCount(2);
+    expect(queryAllTexts(".o_kanban_counter")).toEqual(["-4", "36"]);
+    expect(queryAllTexts(".o_kanban_record")).toEqual(["blip", "yop", "blip", "gnap"]);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("First filter");
+    expect(".o_kanban_group").toHaveCount(2);
+    expect(queryAllTexts(".o_kanban_counter")).toEqual(["-4", "9"]);
+    expect(queryAllTexts(".o_kanban_record")).toEqual(["blip", "blip"]);
+
+    // switch offline and remove/re-add the filter => should retrieve and display data from cache
+    await setOffline(true);
+    expect(".o_kanban_group").toHaveCount(2);
+    expect(queryAllTexts(".o_kanban_counter")).toEqual(["-4", "9"]);
+    expect(queryAllTexts(".o_kanban_record")).toEqual(["blip", "blip"]);
+    expect(".o_kanban_record.o_disabled_offline").toHaveCount(2);
+
+    await contains(".o_searchview_facet .oi-close").click();
+    expect(".o_kanban_group").toHaveCount(2);
+    expect(queryAllTexts(".o_kanban_counter")).toEqual(["", ""]);
+    expect(".o_column_progress").toHaveClass("opacity-50 pe-none");
+    expect(queryAllTexts(".o_kanban_record")).toEqual(["blip", "yop", "blip", "gnap"]);
+    expect(".o_kanban_record.o_disabled_offline").toHaveCount(4);
+
+    await toggleSearchBarMenu();
+    await contains(".o_search_bar_menu_offline .o-dropdown-item").click();
+    expect(".o_kanban_group").toHaveCount(2);
+    expect(queryAllTexts(".o_kanban_counter")).toEqual(["", ""]);
+    expect(".o_column_progress").toHaveClass("opacity-50 pe-none");
+    expect(queryAllTexts(".o_kanban_record")).toEqual(["blip", "blip"]);
+
+    expect.verifyErrors([
+        `Connection to "/web/dataset/call_kw/partner/web_read_group" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/partner/web_read_group" couldn't be established`,
+    ]);
 });
