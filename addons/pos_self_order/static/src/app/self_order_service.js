@@ -319,7 +319,7 @@ export class SelfOrder extends Reactive {
             const orderlines = this._getKioskPrintingCategoriesChanges(
                 Object.values(printer.config.product_categories_ids)
             );
-            if (orderlines) {
+            if (orderlines.length > 0) {
                 const printingChanges = {
                     new: orderlines,
                     tracker: this.currentOrder.table_stand_number,
