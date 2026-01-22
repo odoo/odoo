@@ -575,3 +575,28 @@ class TestDropshipPostInstall(common.TransactionCase):
             default_product_tmpl_id=self.dropship_product.product_tmpl_id.id
         ))
         self.assertNotEqual(replenish_wizard.route_id, self.env.ref('stock_dropshipping.route_drop_shipping'))
+
+    def test_dest_address_when_changing_po_to_dropship(self):
+        """
+        Check that the destination address is set on the purchase order when
+        its picking type is manually changed to the dropshipping picking type.
+        """
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.action_unarchive()
+        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
+        self.dropship_product.route_ids += buy_route
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': self.dropship_product.id,
+                'product_uom_qty': 1.00,
+                'price_unit': 1,
+            })],
+        })
+        so.action_confirm()
+        po = so.order_line.purchase_line_ids.order_id
+        po.picking_type_id = buy_route.rule_ids.picking_type_id[-1]
+        self.assertFalse(po.dest_address_id)
+        po.picking_type_id = self.env['stock.picking.type'].search([('name', '=', 'Dropship'), ('company_id', '=', self.env.company.id)], limit=1)
+        self.assertEqual(po.dest_address_id, self.customer)
