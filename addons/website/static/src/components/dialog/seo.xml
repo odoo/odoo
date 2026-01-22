@@ -74,34 +74,64 @@
     </tr>
 </t>
 
-<t t-name="website.SeoChecks">
-    <section class="mt-3 o_seo_images_check">
-        <h4 class="border-bottom pb-2">
-            Images Optimization
-        </h4>
-        <t t-if="!state.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length > 0">
-            <p><i class="fa fa-check text-success me-2"></i>No warning on images</p>
-        </t>
-        <div class="row">
-            <t t-foreach="state.altAttributes" t-as="img" t-key="img.id">
-                <div class="col-lg-6 col-sm-12 d-flex mb-3">
-                    <div class="me-3">
-                        <img class="o-img-thumbnail" alt="Preview image" t-att-src="img.src"></img>
+<t t-name="website.MediaSection">
+    <h4 class="border-bottom pb-2" t-esc="title"/>
+    <t t-if="!items.filter(i => !i.decorative and i[textProperty] == '').length">
+        <p><i class="fa fa-check text-success me-2"></i>No warning on <t t-esc="type+'s'"/></p>
+    </t>
+    <div class="row">
+        <t t-foreach="items" t-as="item" t-key="item.id">
+            <div class="col-lg-6 col-sm-12 d-flex mb-3">
+                <div class="me-3">
+                    <img class="o-img-thumbnail"
+                         t-att-alt="'Preview ' + type"
+                         t-att-src="item.thumbnail_url || item.src"/>
+                </div>
+                <div role="form" class="flex-grow-1">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox"
+                               t-att-id="'decorative-' + type + '-' + item.id"
+                               t-model="item.decorative"
+                               t-on-change="() => updateFn(item)"/>
+                        <label t-att-for="'decorative-' + type + '-' + item.id">
+                            Mark as decorative
+                            <i class="fa fa-question-circle text-primary"
+                               data-tooltip-position="right"
+                               t-att-data-tooltip="tooltipText"/>
+                        </label>
                     </div>
-                    <div role="form" class="flex-grow-1">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" t-att-id="'decorative-' + img.id" t-model="img.decorative" t-on-change="() => imgUpdated(img)"/>
-                            <label t-att-for="'decorative-' + img.id">Mark as decorative
-                                <i class="fa fa-question-circle text-primary" data-tooltip-position="right" data-tooltip="The alt attribute is used to describe the image, optimizing both accessibility and SEO. If you select this option, the image will be hidden from screen readers and not considered for your SEO."/>
-                            </label>
-                        </div>
-                        <div t-if="!img.decorative" class="input-group mt-2">
-                            <input placeholder="Describe the image..." t-model="img.alt" type="text" t-att-class="'form-control ' + (img.alt.trim().length ? 'is-valid' : 'is-invalid')" t-on-change="() => imgUpdated(img)"/>
-                        </div>
+                    <div t-if="!item.decorative" class="input-group mt-2">
+                        <input t-att-placeholder="'Describe the ' + type + '...'"
+                               t-model="item[textProperty]"
+                               type="text"
+                               t-att-class="'form-control ' + (item[textProperty].trim().length ? 'is-valid' : 'is-invalid')"
+                               t-on-change="() => updateFn(item)"/>
                     </div>
                 </div>
-            </t>
-        </div>
+            </div>
+        </t>
+    </div>
+</t>
+
+<t t-name="website.SeoChecks">
+    <section class="mt-3 o_seo_images_check">
+        <t t-call="website.MediaSection">
+            <t t-set="title" t-value="'Images Optimization'"/>
+            <t t-set="type" t-value="'image'"/>
+            <t t-set="items" t-value="state.altAttributes"/>
+            <t t-set="textProperty" t-value="'alt'"/>
+            <t t-set="updateFn" t-value="imgUpdated"/>
+            <t t-set="tooltipText" t-value="'The alt attribute is used to describe the image, optimizing both accessibility and SEO. If you select this option, the image will be hidden from screen readers and not considered for your SEO.'"/>
+        </t>
+
+        <t t-call="website.MediaSection">
+            <t t-set="title" t-value="'Videos Optimization'"/>
+            <t t-set="type" t-value="'video'"/>
+            <t t-set="items" t-value="state.titleAttributes"/>
+            <t t-set="textProperty" t-value="'title'"/>
+            <t t-set="updateFn" t-value="videoUpdated"/>
+            <t t-set="tooltipText" t-value="'The description attribute is used to describe the video which helps screen readers and improves SEO, Removing it will make the video less accessible, but it will still be visible and may still be considered for your SEO.'"/>
+        </t>
 
         <h4 class="border-bottom pb-2">
             Broken Links

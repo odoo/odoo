@@ -216,7 +216,7 @@ class TestControllers(tests.HttpCase):
         models = [{"model": "ir.ui.view", "id": test_view.id, "field": "arch"}]
 
         with MockRequest(self.env, website=self.env.ref('website.default_website')):
-            result = Website().get_alt_images(models)
+            result = Website().get_media_elements(models)
             parsed_result = json.loads(result)
 
             expected_srcs = ["/static/image1.jpg", "/static/image3.png", "/static/image4.png"]

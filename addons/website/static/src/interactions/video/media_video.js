@@ -55,6 +55,7 @@ export class MediaVideo extends Interaction {
         const description = this.el.dataset.description?.trim();
         if (iframeEl && description && !iframeEl.hasAttribute("title")) {
             iframeEl.setAttribute("title", description);
+            delete this.el.dataset.decorative;
         }
 
         if (iframeEl?.hasAttribute("src")) {
