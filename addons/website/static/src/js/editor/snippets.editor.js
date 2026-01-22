@@ -338,7 +338,12 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                             }
                         }
                         invalidated = true;
-                        if (close) {
+                        if (apiKey) {
+                            this.notification.add(
+                                _t("API key updated! Please reload the page."),
+                                { type: 'warning', sticky: true }
+                            );
+                        } else if (close) {
                             close();
                         } else {
                             resolve(true);
