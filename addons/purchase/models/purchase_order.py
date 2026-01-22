@@ -709,17 +709,20 @@ class PurchaseOrder(models.Model):
             'price': price,
             'currency_id': currency.id,
             'discount': line.discount,
-            'delay': 0,
+            'delay': (line.date_planned.date() - datetime.today().date()).days,
+            'product_id': line.product_id.id,
         }
 
     def _add_supplier_to_product(self):
         # Add the partner in the supplier list of the product if the supplier is not registered for
         # this product. We limit to 10 the number of suppliers for a product to avoid the mess that
         # could be caused for some generic products ("Miscellaneous").
+        vals_by_template = {}
         for line in self.order_line:
             # Do not add a contact as a supplier
             partner = self.partner_id if not self.partner_id.parent_id else self.partner_id.parent_id
-            already_seller = (partner | self.partner_id) & line.product_id.seller_ids.mapped('partner_id')
+            already_seller = line.product_id.seller_ids.filtered(
+                lambda s: s.partner_id in (partner | self.partner_id) and s.product_id and s.product_id == line.product_id)
             if line.product_id and not already_seller and len(line.product_id.seller_ids) <= 10:
                 price = line.price_unit
                 # Compute the price for the template's UoM, because the supplier's UoM is related to that UoM.
@@ -733,12 +736,28 @@ class PurchaseOrder(models.Model):
                 if line.selected_seller_id:
                     supplierinfo['product_name'] = line.selected_seller_id.product_name
                     supplierinfo['product_code'] = line.selected_seller_id.product_code
-                    supplierinfo['product_uom_id'] = line.product_uom.id
-                vals = {
-                    'seller_ids': [(0, 0, supplierinfo)],
-                }
-                # supplier info should be added regardless of the user access rights
-                line.product_id.product_tmpl_id.sudo().write(vals)
+                    supplierinfo['product_uom_id'] = line.product_uom_id.id
+                vals = vals_by_template.setdefault(line.product_id.product_tmpl_id, {'seller_ids': []})
+                seller_vals = vals['seller_ids']
+                if not seller_vals:
+                    seller_vals.append(supplierinfo)
+                else:
+                    same_supplier = (
+                        len(seller_vals) == 1 and
+                        all(seller_vals[0].get(k) == supplierinfo.get(k) for k in ('price', 'delay', 'product_uom_id'))
+                    )
+                    if same_supplier:
+                        seller_vals[0].pop('product_id', None)
+                    else:
+                        seller_vals.append(supplierinfo)
+        for template_id, vals in vals_by_template.items():
+            # supplier info should be added regardless of the user access rights
+            template_id.sudo().write({
+                'seller_ids': [
+                    Command.create(seller)
+                    for seller in vals['seller_ids']
+                ],
+            })
 
     def action_bill_matching(self):
         self.ensure_one()
