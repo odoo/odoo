@@ -895,7 +895,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'country_id': self.env.ref('base.nl').id,
             'zip': '1105AA',
             'state_id': False,
-            'email': 'deco.addict82@example.com',
+            'email': 'acme.corp82@example.com',
             'phone': '(603)-996-3829',
         })
 
