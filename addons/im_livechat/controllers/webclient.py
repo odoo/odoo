@@ -38,6 +38,8 @@ class WebClient(WebclientController):
             if not channel:
                 return
             store.add(channel, "_store_livechat_extra_fields")
+        if name == "/im_livechat/fetch_self_expertise":
+            store.add(request.env.user, lambda res: res.many("livechat_expertise_ids", ["name"]))
 
     @classmethod
     def _process_request_for_all(cls, store: Store, name, params):
