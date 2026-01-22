@@ -143,6 +143,7 @@ test("remove text from single selected cell", async () => {
     });
     await animationFrame();
     deleteBackward(editor);
-
-    expect(queryFirst("td p")).toHaveOuterHTML("<p><br></p>");
+    expect(queryFirst("td p")).toHaveOuterHTML(
+        '<p o-we-hint-text="Type &quot;/&quot; for commands" class="o-we-hint"><br></p>'
+    );
 });
