@@ -1473,7 +1473,7 @@ class SaleOrder(models.Model):
         # i.e. to make sure the discount is correctly reset
         # if pricelist rule is different than when the price was first computed.
         lines_to_recompute.discount = 0.0
-        lines_to_recompute._compute_discount()
+        lines_to_recompute.with_context(force_discount_recomputation=True)._compute_discount()
         self.show_update_pricelist = False
 
     def _default_order_line_values(self, child_field=False):
