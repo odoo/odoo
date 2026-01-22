@@ -64,6 +64,7 @@ registry.category("web_tour.tours").add("PosSettleOrder2", {
 });
 
 registry.category("web_tour.tours").add("PosRefundDownpayment", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -253,6 +254,7 @@ registry.category("web_tour.tours").add("test_settle_so_with_non_pos_groupable_u
 });
 
 registry.category("web_tour.tours").add("PoSDownPaymentLinesPerTax", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -282,6 +284,7 @@ registry.category("web_tour.tours").add("PoSDownPaymentLinesPerTax", {
 });
 
 registry.category("web_tour.tours").add("PoSApplyDownpayment", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -332,6 +335,7 @@ registry.category("web_tour.tours").add("PosOrdersListDifferentCurrency", {
 });
 
 registry.category("web_tour.tours").add("PoSDownPaymentAmount", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -480,6 +484,7 @@ registry.category("web_tour.tours").add("test_settle_order_with_lot", {
 });
 
 registry.category("web_tour.tours").add("test_down_payment_displayed", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),

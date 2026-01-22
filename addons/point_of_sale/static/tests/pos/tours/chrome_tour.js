@@ -146,6 +146,7 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
 });
 
 registry.category("web_tour.tours").add("test_tracking_number_closing_session", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -267,6 +268,7 @@ registry.category("web_tour.tours").add("test_edit_paid_order", {
 });
 
 registry.category("web_tour.tours").add("test_cash_in_out", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -309,6 +311,7 @@ registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
 });
 
 registry.category("web_tour.tours").add("SessionStatisticsDisplay", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),

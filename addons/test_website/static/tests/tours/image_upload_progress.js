@@ -81,6 +81,7 @@ const formatErrorMsg =
 registerWebsitePreviewTour(
     "test_image_upload_progress",
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         url: "/test_image_progress",
         edition: true,
     },

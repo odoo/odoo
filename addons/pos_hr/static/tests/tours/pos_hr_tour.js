@@ -13,6 +13,7 @@ import { registry } from "@web/core/registry";
 import { negate, scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("PosHrTour", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.clickBtn("Open Register"),
@@ -128,6 +129,7 @@ registry.category("web_tour.tours").add("CashierCanSeeProductInfo", {
 });
 
 registry.category("web_tour.tours").add("CashierCannotClose", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.clickBtn("Open Register"),
@@ -265,6 +267,7 @@ registry.category("web_tour.tours").add("test_cost_and_margin_visibility", {
 });
 
 registry.category("web_tour.tours").add("pos_hr_go_backend_closed_registered", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             // Admin --> 403: not the one that opened the session
@@ -372,6 +375,7 @@ registry
     });
 
 registry.category("web_tour.tours").add("test_maximum_closing_difference", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.clickBtn("Open Register"),

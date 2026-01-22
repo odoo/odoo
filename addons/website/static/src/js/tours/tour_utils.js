@@ -599,7 +599,7 @@ export function registerBackendAndFrontendTour(name, options, steps) {
     }
 
     return registry.category("web_tour.tours").add(name, {
-        url: options.url,
+        ...options,
         steps: () => steps(),
     });
 }

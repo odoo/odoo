@@ -191,6 +191,7 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_mobile_order_with_drag_and_drop",
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         url: "/",
         edition: true,
     },

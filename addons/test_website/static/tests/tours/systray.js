@@ -208,42 +208,55 @@ const ensureWebsiteSwitcherIsVisible = [
     },
 ];
 
-const register = (title, steps) => {
+const register = (title, steps, undeterministicTour_doNotCopy) => {
     registerWebsitePreviewTour(
         title,
         {
             url: "/test_model/1",
+            undeterministicTour_doNotCopy,
         },
         steps
     );
 };
 
-register("test_systray_admin", () => [
-    ...canPublish(),
-    ...canToggleMobilePreview(),
-    ...canSwitchWebsite(),
-    ...canAddNewContent(),
-    ...canEditInBackEnd(),
-    ...canEdit(),
-]);
+register(
+    "test_systray_admin",
+    () => [
+        ...canPublish(),
+        ...canToggleMobilePreview(),
+        ...canSwitchWebsite(),
+        ...canAddNewContent(),
+        ...canEditInBackEnd(),
+        ...canEdit(),
+    ],
+    true
+);
 
-register("test_systray_reditor_tester", () => [
-    ...canPublish(),
-    ...canToggleMobilePreview(),
-    ...canSwitchWebsite(),
-    ...canAddNewContent(),
-    ...canEditInBackEnd(),
-    ...canEdit(),
-]);
+register(
+    "test_systray_reditor_tester",
+    () => [
+        ...canPublish(),
+        ...canToggleMobilePreview(),
+        ...canSwitchWebsite(),
+        ...canAddNewContent(),
+        ...canEditInBackEnd(),
+        ...canEdit(),
+    ],
+    true
+);
 
-register("test_systray_reditor_not_tester", () => [
-    ...cannotPublish(),
-    ...canToggleMobilePreview(),
-    ...canSwitchWebsite(),
-    ...canAddNewContent(),
-    ...canViewInBackEnd(),
-    ...canEditButCannotChange(),
-]);
+register(
+    "test_systray_reditor_not_tester",
+    () => [
+        ...cannotPublish(),
+        ...canToggleMobilePreview(),
+        ...canSwitchWebsite(),
+        ...canAddNewContent(),
+        ...canViewInBackEnd(),
+        ...canEditButCannotChange(),
+    ],
+    true
+);
 
 register("test_systray_not_reditor_tester", () => [
     ...canPublish(),

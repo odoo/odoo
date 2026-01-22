@@ -47,6 +47,7 @@ const removeImg = [
 registerWebsitePreviewTour(
     "website_sale.add_and_remove_main_product_image_no_variant",
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         url: "/shop?search=Test Remove Image",
     },
     () => [

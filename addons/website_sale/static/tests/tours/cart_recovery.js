@@ -8,6 +8,7 @@ var orderIdKey = 'website_sale.tour_shop_cart_recovery.orderId';
 var recoveryLinkKey = 'website_sale.tour_shop_cart_recovery.recoveryLink';
 
 registry.category("web_tour.tours").add('website_sale.cart_recovery', {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     url: '/shop',
     steps: () => [
         ...tourUtils.addToCart({ productName: "Acoustic Bloc Screens", expectUnloadPage: true }),

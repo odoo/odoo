@@ -24,6 +24,7 @@ registry.category("web_tour.tours").add("test_stock_route_diagram_report", {
 });
 
 registry.category("web_tour.tours").add("test_context_from_warehouse_filter", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         // Add "foo" to the warehouse context key
         {

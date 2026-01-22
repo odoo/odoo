@@ -35,6 +35,7 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
 });
 
 registry.category("web_tour.tours").add("test_cancel_order_from_ui", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),

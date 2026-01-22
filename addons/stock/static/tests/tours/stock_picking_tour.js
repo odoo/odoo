@@ -293,6 +293,7 @@ registry.category('web_tour.tours').add('test_inventory_adjustment_apply_all', {
 });
 
 registry.category("web_tour.tours").add("test_add_new_line_in_detailled_op", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             trigger: ".o_list_view.o_field_x2many .o_data_row button[name='action_show_details']",

@@ -7,6 +7,7 @@ import { registry } from "@web/core/registry";
  * @see mail/tests/test_mail_composer.py
  */
 registry.category("web_tour.tours").add("mail/static/tests/tours/mail_html_composer_test_tour.js", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             content: "Wait for the chatter to be fully loaded",

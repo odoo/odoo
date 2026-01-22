@@ -14,6 +14,7 @@ const VIDEO_URL = "https://www.youtube.com/watch?v=Dpq87YCHmJc";
 registerWebsitePreviewTour(
     "test_replace_media",
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         url: "/",
         edition: true,
     },

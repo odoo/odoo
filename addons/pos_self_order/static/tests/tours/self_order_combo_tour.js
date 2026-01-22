@@ -5,6 +5,7 @@ import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_
 import * as ConfirmationPage from "@pos_self_order/../tests/tours/utils/confirmation_page_util";
 
 registry.category("web_tour.tours").add("self_combo_selector", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         Utils.clickBtn("Order Now"),
         ProductPage.clickProduct("Office Combo"),

@@ -11,6 +11,7 @@ import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 import { inLeftSide } from "./utils/common";
 
 registry.category("web_tour.tours").add("PaymentScreenTour", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -156,6 +157,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
 });
 
 registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -206,6 +208,7 @@ registry.category("web_tour.tours").add("PaymentScreenInvoiceOrder", {
 });
 
 registry.category("web_tour.tours").add("test_pos_large_amount_confirmation_dialog", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -224,6 +227,7 @@ registry.category("web_tour.tours").add("test_pos_large_amount_confirmation_dial
 });
 
 registry.category("web_tour.tours").add("test_add_money_button_with_different_decimal_separator", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),

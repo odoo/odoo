@@ -13,6 +13,7 @@ const oldWriteText = browser.navigator.clipboard.writeText;
 registerWebsitePreviewTour(
     "snippet_popup_display_on_click",
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         url: "/",
         edition: true,
     },

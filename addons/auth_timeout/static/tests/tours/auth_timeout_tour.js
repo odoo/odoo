@@ -75,6 +75,7 @@ const assertNoRPC = {
 
 registry.category("web_tour.tours").add("auth_timeout_tour_lock_timeout_inactivity", {
     url: "/odoo",
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             trigger: "body",
@@ -147,6 +148,7 @@ registry.category("web_tour.tours").add("auth_timeout_tour_lock_timeout_inactivi
 
 registry.category("web_tour.tours").add("auth_timeout_tour_lock_timeout_inactivity_2fa", {
     url: "/odoo",
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         // Check identity using a passkey, which is 2FA by itself, and check an RPC call works
         assertCheckIdentityForm,

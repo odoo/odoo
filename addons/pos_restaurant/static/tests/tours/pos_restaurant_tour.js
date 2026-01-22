@@ -23,6 +23,7 @@ import { negateStep, assertCurrentOrderDirty } from "@point_of_sale/../tests/gen
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
 registry.category("web_tour.tours").add("pos_restaurant_sync", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -133,6 +134,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
  * This tour should be run after the first tour is done.
  */
 registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             // There is one draft synced order from the previous tour
@@ -330,7 +332,8 @@ registry.category("web_tour.tours").add("CategLabelCheck", {
             ProductScreen.OrderButtonNotContain("Drinks"),
         ].flat(),
 });
-registry.category("web_tour.tours").add("OrderChange", {
+registry.category("web_tour.tours").add("OrderChangeTour", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -640,6 +643,7 @@ registry.category("web_tour.tours").add("test_multiple_preparation_printer_diffe
         ].flat(),
 });
 registry.category("web_tour.tours").add("test_preset_delivery_restaurant", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -657,6 +661,7 @@ registry.category("web_tour.tours").add("test_preset_delivery_restaurant", {
 });
 
 registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.freezeDateTime(1749981600000), // June 15, 2025 - 10:00
@@ -691,6 +696,7 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
 });
 
 registry.category("web_tour.tours").add("test_open_register_with_preset_takeaway", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.freezeDateTime(1749981600000), // June 15, 2025 - 10:00
@@ -766,6 +772,7 @@ registry.category("web_tour.tours").add("test_customer_alone_saved", {
 });
 
 registry.category("web_tour.tours").add("test_no_kitchen_confirmation_for_deposit_money", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -912,6 +919,7 @@ registry
     );
 
 registry.category("web_tour.tours").add("test_transfering_orders", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),

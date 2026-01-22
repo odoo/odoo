@@ -218,6 +218,7 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "conditional_visibility_5",
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
         url: "/",
     },
