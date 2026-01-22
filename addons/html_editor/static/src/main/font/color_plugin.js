@@ -222,6 +222,7 @@ export class ColorPlugin extends Plugin {
         const alreadyWithinFont = new Set();
         const getFonts = (selectedNodes) =>
             selectedNodes.flatMap((node) => {
+<<<<<<< 3656171994450d11151565efdb4b9dd0468cefa8
                 // The node is already within a newly created font so we filter
                 // it out.
                 if (alreadyWithinFont.has(node)) {
@@ -248,9 +249,83 @@ export class ColorPlugin extends Plugin {
                     )
                 ) {
                     font = null;
+||||||| 6e2195934ba1357b8ef21bedfbc5ee971db9c0fe
+                let font =
+                    closestElement(node, "font") ||
+                    closestElement(
+                        node,
+                        '[style*="color"]:not(li), [style*="background-color"]:not(li), [style*="background-image"]:not(li)'
+                    ) ||
+                    closestElement(node, "span") ||
+                    closestElement(
+                        node,
+                        (node) => node.nodeName !== "LI" && hasTextColorClass(node, mode)
+                    );
+
+                const faNodes = font?.querySelectorAll(".fa");
+                if (faNodes && Array.from(faNodes).some((faNode) => faNode.contains(node))) {
+                    return font;
+=======
+                let font =
+                    closestElement(node, "font") ||
+                    closestElement(
+                        node,
+                        '[style*="color"]:not(li), [style*="background-color"]:not(li), [style*="background-image"]:not(li)'
+                    ) ||
+                    closestElement(node, "span");
+
+                const faNodes = font?.querySelectorAll(".fa");
+                if (faNodes && Array.from(faNodes).some((faNode) => faNode.contains(node))) {
+                    return font;
+>>>>>>> c057ea3027e85c18d5fc60fc2e23a911a1a4bacc
                 }
                 const children = font && descendants(font);
+<<<<<<< 3656171994450d11151565efdb4b9dd0468cefa8
                 if (font && !this.dependencies.split.isUnsplittable(font)) {
+||||||| 6e2195934ba1357b8ef21bedfbc5ee971db9c0fe
+                const hasInlineGradient = font && isColorGradient(font.style["background-image"]);
+                const isFullySelected =
+                    children && children.every((child) => selectedNodes.includes(child));
+                const isTextGradient =
+                    hasInlineGradient && font.classList.contains("text-gradient");
+                const shouldReplaceExistingGradient =
+                    isFullySelected &&
+                    ((mode === "color" && isTextGradient) ||
+                        (mode === "backgroundColor" && !isTextGradient));
+                if (
+                    font &&
+                    font.nodeName !== "T" &&
+                    (font.nodeName !== "SPAN" ||
+                        font.style[mode] ||
+                        font.style.backgroundImage ||
+                        hasTextColorClass(font, mode)) &&
+                    (isColorGradient(color) ||
+                        color === "" ||
+                        !hasInlineGradient ||
+                        shouldReplaceExistingGradient) &&
+                    !this.dependencies.split.isUnsplittable(font)
+                ) {
+=======
+                const hasInlineGradient = font && isColorGradient(font.style["background-image"]);
+                const isFullySelected =
+                    children && children.every((child) => selectedNodes.includes(child));
+                const isTextGradient =
+                    hasInlineGradient && font.classList.contains("text-gradient");
+                const shouldReplaceExistingGradient =
+                    isFullySelected &&
+                    ((mode === "color" && isTextGradient) ||
+                        (mode === "backgroundColor" && !isTextGradient));
+                if (
+                    font &&
+                    font.nodeName !== "T" &&
+                    (font.nodeName !== "SPAN" || font.style[mode] || font.style.backgroundImage) &&
+                    (isColorGradient(color) ||
+                        color === "" ||
+                        !hasInlineGradient ||
+                        shouldReplaceExistingGradient) &&
+                    !this.dependencies.split.isUnsplittable(font)
+                ) {
+>>>>>>> c057ea3027e85c18d5fc60fc2e23a911a1a4bacc
                     // Partially selected <font>: split it.
                     const selectedChildren = children.filter(
                         (child) => child.isConnected && selectedNodes.includes(child)
