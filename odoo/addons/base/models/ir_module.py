@@ -651,6 +651,12 @@ class IrModuleModule(models.Model):
         self.env.transaction.reset()
         assert self.env.registry is registry
 
+        if self.env.context.get('force_refresh_only', False):
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'reload',
+            }
+
         # pylint: disable=next-method-called
         config = self.env['ir.module.module'].next() or {}
         if config.get('type') not in ('ir.actions.act_window_close',):
