@@ -387,6 +387,7 @@ class ResConfigSettings(models.TransientModel):
                 'view_mode': 'form',
                 'res_model': 'base.module.uninstall',
                 'context': {
+                    'force_refresh_only': True,
                     'default_module_ids': to_uninstall.ids,
                 },
             }
