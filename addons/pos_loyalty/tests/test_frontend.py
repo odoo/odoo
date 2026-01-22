@@ -2940,6 +2940,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
 
     def test_scan_loyalty_card_select_customer(self):
+        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_customer_count', 0)
         self.env['loyalty.program'].search([]).write({'active': False})
         self.test_partner = self.env['res.partner'].create({'name': 'A Test Partner'})
 
