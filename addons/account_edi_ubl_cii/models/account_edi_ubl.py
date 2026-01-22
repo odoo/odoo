@@ -549,7 +549,7 @@ class AccountEdiUBL(models.AbstractModel):
         base_line = vals['line_vals']['base_line']
         product = base_line['product_id']
 
-        item_node['cac:BuyersItemIdentification'] = None
+        item_node['cac:BuyersItemIdentification'] = {}
 
         if product.default_code:
             item_node['cac:SellersItemIdentification'] = {
