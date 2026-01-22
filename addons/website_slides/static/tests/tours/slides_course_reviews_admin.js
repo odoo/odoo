@@ -51,9 +51,9 @@ registry.category("web_tour.tours").add("course_reviews_admin", {
             trigger: "#review-tab:contains('Reviews (2)')",
         },
         {
-            content: 'Click on the "edit review" button to edit the logged user review',
-            trigger: ".o_rating_popup_composer_text:contains(Edit Review)",
-            run: "click",
+            content: 'Click on "edit" action of the contextual menu of the "Admin" rating message',
+            trigger: "#chatterRoot:shadow .o-mail-Message:contains(Admin review)",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message:contains(Admin review) [title='Edit']",
         },
         {
             content:

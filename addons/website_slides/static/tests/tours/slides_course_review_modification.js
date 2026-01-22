@@ -17,7 +17,13 @@ registry.category("web_tour.tours").add("course_review_modification", {
             trigger: '.o_wslides_js_course_join:contains("You\'re enrolled")',
         },
         {
-            trigger: "span:contains(Add Review)",
+            content: 'Show the review tab to reveal the "Add Review" button',
+            trigger: "a[id=review-tab]",
+            run: "click",
+        },
+        {
+            content: "Open modal to add the first review",
+            trigger: ".o_rating_popup_composer_btn:contains(Add Review)",
             run: "click",
         },
         {
@@ -25,225 +31,109 @@ registry.category("web_tour.tours").add("course_review_modification", {
             run: "edit First review",
         },
         {
+            content: "Post the review (4 stars as it is the default)",
             trigger:
                 ".modal.modal_shown.show button.o_portal_chatter_composer_btn:contains(Post review)",
             run: "click",
         },
         {
+            content: "Check the average stars",
             trigger: ".o_wslides_course_header .o_website_rating_static[title='4 stars on 5']",
         },
         {
+            content: 'Check that the message is not tagged as "edited"',
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message .o-mail-Message-body:not(:has(Fill the message body)):not(:contains( (edited)))",
+        },
+        {
+            content: "Check the number of review displayed on the tab",
             trigger: "a[id=review-tab]:contains(Reviews (1))",
-            run: "click",
         },
         {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .o_website_rating_table_row[data-star='4']:contains(100%)",
+            content:
+                "Check that the review button is not present anymore (edit is done through contextual menu)",
+            trigger: ":not(.o_rating_popup_composer_btn)",
         },
         {
+            content: 'Click on "edit" action of the contextual menu of the rating message',
             trigger: "#chatterRoot:shadow .o-mail-Message:contains(First review)",
-            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Edit']",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
-            run: "click #chatterRoot:shadow button[name='delete']",
-        },
-        {
-            trigger: "#chatterRoot:shadow button:contains(Delete)",
-            run: "click",
-        },
-        {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Chatter:not(:has(.o_website_rating_card_container))",
-        },
-        {
-            trigger: "#chatterRoot:shadow .o-mail-Thread:contains(The conversation is empty.)",
-        },
-        {
-            trigger: ".o_wslides_course_header .o_website_rating_static[title='0 stars on 5']",
-        },
-        {
-            trigger: "a[id=review-tab]:contains(Reviews):not(:contains(1))",
-            run: "click",
-        },
-        {
-            trigger: "span:contains(Add Review)",
-            run: "click",
-        },
-        {
-            trigger: ".modal.modal_shown.show div.o_portal_chatter_composer textarea",
+            content: "The modal is opened with the posted message",
+            trigger: "div.o_portal_chatter_composer textarea:value(First review)",
             run: "edit Second review",
         },
         {
-            trigger: ".modal.modal_shown .modal-body i.fa.fa-star:eq(2)",
-            run: "click",
-        },
-        {
-            trigger:
-                ".modal.modal_shown.show button.o_portal_chatter_composer_btn:contains(Post review)",
-            run: "click",
-        },
-        {
-            trigger: ".o_wslides_course_header .o_website_rating_static[title='3 stars on 5']",
-        },
-        {
-            trigger: "a[id=review-tab]:contains(Reviews (1))",
-            run: "click",
-        },
-        {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .o_website_rating_table_row[data-star='3']:contains(100%)",
-        },
-        {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Message:contains(Second review) .o_website_rating_static[title='3 stars on 5']",
-        },
-        {
-            trigger: "span:contains(Edit Review)",
-            run: "click",
-        },
-        {
-            trigger: "div.o_portal_chatter_composer textarea:value(Second review)",
-            run: "edit Second review is edited in rating composer",
-        },
-        {
+            content: "Modify the number of stars to 2",
             trigger: ".modal.modal_shown .modal-body i.fa.fa-star:eq(1)",
             run: "click",
         },
         {
+            content: "Add an attachment to the post",
+            trigger:
+                ".modal.modal_shown.show div.o_portal_chatter_composer button.o_portal_chatter_attachment_btn",
+            async run({ inputFiles }) {
+                const text = new File(["test"], "test.txt", { type: "text/plain" });
+                await inputFiles(".o_portal_chatter_composer .o_portal_chatter_file_input", [text]);
+            },
+        },
+        {
+            content: "Check that the attachment is displayed in the modal",
+            trigger:
+                ".o_portal_chatter_composer .o_portal_chatter_attachment_name:contains('test.txt')",
+        },
+        {
             trigger:
                 ".modal.modal_shown.show button.o_portal_chatter_composer_btn:contains(Update review)",
             run: "click",
         },
         {
+            content: 'Check that the message is tagged as "edited"',
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message .o-mail-Message-body:not(:has(Fill the message body)):contains( (edited))",
+        },
+        {
+            content: "Check the average stars",
             trigger: ".o_wslides_course_header .o_website_rating_static[title='2 stars on 5']",
         },
         {
+            content: "Check the number of review displayed on the tab",
             trigger: "a[id=review-tab]:contains(Reviews (1))",
             run: "click",
         },
         {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Chatter .o_website_rating_card_container .o_website_rating_table_row[data-star='2']:contains(100%)",
+            content: "Check that the attachment is displayed on the posted review",
+            trigger: "#chatterRoot:shadow .o-mail-AttachmentCard-info:contains('test.txt')",
         },
         {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Message:contains(Second review is edited in rating composer) .o_website_rating_static[title='2 stars on 5']",
-            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Edit']",
-        },
-        {
-            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
-            run: "edit Second review is edited in message composer",
-        },
-        {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-mainActions button[title='More Actions']",
-            run: "click",
-        },
-        {
-            trigger: "#chatterRoot:shadow .dropdown-item:contains('Attach Files')",
-            async run({ queryFirst }) {
-                //FIXME: Would prefer to use setInputFiles(), but it doesn't work at the moment because of the Shadow DOM (:shadow).
-                const file = new File(["test"], "test.txt", { type: "text/plain" });
-                const dataTransfer = new window.DataTransfer();
-                dataTransfer.items.add(file);
-                const el = queryFirst("#chatterRoot:shadow .o-mail-Composer .o_input_file");
-                el.files = dataTransfer.files;
-                el.dispatchEvent(new Event("change"));
-            },
-        },
-        {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading):contains(test.txt)",
-        },
-        {
-            trigger: "#chatterRoot:shadow .o-mail-Message button:contains(save)",
-            run: "click",
-        },
-        {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Message:contains('Second review is edited in message composer')",
-        },
-        {
-            trigger: "span:contains(Edit Review)",
-            run: "click",
-        },
-        {
-            trigger:
-                "div.o_portal_chatter_composer textarea:value(Second review is edited in message composer)",
-            run: "edit Second review is editable in rating composer after editing in message composer.",
-        },
-        {
-            trigger:
-                "div.o_portal_chatter_composer .o_portal_chatter_attachment a:contains(test.txt)",
-        },
-        {
-            trigger:
-                ".modal.modal_shown.show button.o_portal_chatter_composer_btn:contains(Update review)",
-            run: "click",
-        },
-        {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Message:contains(Second review is editable in rating composer after editing in message composer)",
+            content: "Open the contextual menu on the posted message",
+            trigger: '#chatterRoot:shadow .o-mail-Message:contains("Second review")',
             run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']",
         },
         {
+            content: 'Click on the "Delete" button of the contextual menu of the message',
             trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
             run: "click #chatterRoot:shadow button[name='delete']",
         },
         {
+            content: "Confirm the deletion (in a modal)",
             trigger: "#chatterRoot:shadow button:contains(Delete)",
             run: "click",
         },
         {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Chatter:not(:has(.o_website_rating_card_container))",
-        },
-        {
-            trigger: "span:contains(Add Review)",
+            content: "Check the number of review displayed on the tab (no number as no review)",
+            trigger: "a[id=review-tab]:contains(Reviews):not(:contains(1))",
             run: "click",
         },
         {
-            trigger: ".modal.modal_shown.show .o-mail-Composer-starCard:has(input[value='4'])",
-        },
-        {
+            content: "Check that the message has been deleted",
             trigger:
-                ".modal.modal_shown.show button.o_portal_chatter_composer_btn:contains(Post review)",
-            run: "click",
+                "#chatterRoot:shadow .o-mail-Thread-empty:contains(The conversation is empty.)",
         },
         {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Message:not(:has(.o-mail-Message-body)) .o_website_rating_static[title='4 stars on 5']",
-            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Edit']",
-        },
-        {
-            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
-            run: "edit Fill the message body",
-        },
-        {
-            trigger: "#chatterRoot:shadow .o-mail-Message button:contains(save)",
-            run: "click",
-        },
-        {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Message[data-persistent] .o-mail-Message-body:contains(Fill the message body)",
-        },
-        {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Message .o-mail-Message-body:contains(Fill the message body)",
-            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Edit']",
-        },
-        {
-            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
-            run: "edit",
-        },
-        {
-            trigger: "#chatterRoot:shadow .o-mail-Message button:contains(save)",
-            run: "click",
-        },
-        {
-            trigger:
-                "#chatterRoot:shadow .o-mail-Message .o-mail-Message-body:not(:has(Fill the message body)):contains( (edited))",
+            content: "Add review button is re-displayed as the user has no rating anymore",
+            trigger: ".o_rating_popup_composer_btn:contains(Add Review)",
         },
     ],
 });
