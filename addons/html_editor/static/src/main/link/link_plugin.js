@@ -272,6 +272,11 @@ export class LinkPlugin extends Plugin {
         ],
         legit_empty_link_predicates: (linkEl) => linkEl.hasAttribute("data-mimetype"),
         unsplittable_node_predicates: (node) => node.nodeName === "A",
+        // When the selection fully covers a link, we consider that the link is selected.
+        fully_selected_node_predicates: (node, selection) =>
+            node.nodeName === "A" &&
+            !node.classList.contains("btn") &&
+            cleanZWChars(selection.textContent()) === cleanZWChars(node.innerText),
 
         /** Handlers */
         beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
