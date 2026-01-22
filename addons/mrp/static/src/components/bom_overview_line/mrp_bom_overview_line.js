@@ -39,6 +39,7 @@ export class BomOverviewLine extends Component {
         if (routeType == "manufacture") {
             return this.goToAction(this.data.bom_id, "mrp.bom");
         }
+        return this.goToAction(this.data.link_id, this.data.link_model);
     }
 
     async goToAction(id, model) {
