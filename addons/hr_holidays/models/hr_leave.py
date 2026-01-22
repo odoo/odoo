@@ -375,6 +375,10 @@ class HrLeave(models.Model):
 
     @api.depends('employee_id', 'request_date_from', 'request_date_to')
     def _compute_resource_calendar_id(self):
+        # Avoid recomputing the calendar in `_check_contracts`
+        # before the correct calendar is written to the version
+        if self.env.context.get('leave_skip_calendar_recompute', False):
+            return
         leaves_without_emp_or_date = self.filtered(
             lambda leave: not (leave.employee_id and leave.request_date_from and leave.request_date_to)
         )
