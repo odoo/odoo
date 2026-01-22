@@ -795,7 +795,7 @@
                     <record id="tax_report_line_l10n_at_tva_line_7_total" model="account.report.expression">
                         <field name="label">vat</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">AT_0004.vat - AT_0005.vat + AT_090.vat</field>
+                        <field name="formula">AT_0004.vat + AT_0005.vat + AT_090.vat</field>
                     </record>
                 </field>
                 <field name="hierarchy_level">0</field>
