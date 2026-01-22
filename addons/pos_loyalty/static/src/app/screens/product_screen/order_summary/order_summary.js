@@ -110,40 +110,9 @@ patch(OrderSummary.prototype, {
      * 2. Add a new order line with updated gift card code and points, removing any existing related couponPointChanges.
      */
     async _updateGiftCardOrderline(code, points) {
-        let selectedLine = this.currentOrder.getSelectedOrderline();
-        const product = selectedLine.product_id;
-
-        if (selectedLine.getQuantity() > 1) {
-            selectedLine.setQuantity(selectedLine.getQuantity() - 1);
-        } else {
-            this.currentOrder.removeOrderline(selectedLine);
-        }
-
-        const program = this.pos.models["loyalty.program"].find(
-            (p) => p.program_type === "gift_card"
-        );
-        const existingCouponIds = Object.keys(this.currentOrder.uiState.couponPointChanges).filter(
-            (key) => {
-                const change = this.currentOrder.uiState.couponPointChanges[key];
-                return (
-                    change.points === product.lst_price &&
-                    change.program_id === program.id &&
-                    change.product_id === product.id &&
-                    !change.manual
-                );
-            }
-        );
-        if (existingCouponIds.length) {
-            const couponId = existingCouponIds.shift();
-            delete this.currentOrder.uiState.couponPointChanges[couponId];
-        }
-
-        await this.pos.addLineToCurrentOrder(
-            { product_id: product, product_tmpl_id: product.product_tmpl_id },
-            { price_unit: points }
-        );
-        selectedLine = this.currentOrder.getSelectedOrderline();
+        const selectedLine = this.currentOrder.getSelectedOrderline();
         selectedLine.gift_code = code;
+        selectedLine.price_unit = points;
     },
 
     manageGiftCard(line) {
@@ -173,8 +142,8 @@ patch(OrderSummary.prototype, {
                     return;
                 }
 
-                await this._updateGiftCardOrderline(code, points);
                 this.currentOrder.processGiftCard(code, points, expirationDate);
+                await this._updateGiftCardOrderline(code, points);
             },
         });
     },

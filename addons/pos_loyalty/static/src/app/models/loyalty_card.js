@@ -5,7 +5,20 @@ const { DateTime } = luxon;
 
 export class LoyaltyCard extends Base {
     static pythonModel = "loyalty.card";
-
+    static extraFields = {
+        _temp_points: {
+            model: "loyalty.card",
+            name: "_temp_points",
+            type: "float",
+            local: true,
+        },
+        _barcode_base64: {
+            model: "loyalty.card",
+            name: "_barcode_base64",
+            type: "string",
+            local: true,
+        },
+    };
     isExpired() {
         // If no expiration date is set, the card is not expired
         if (!this.expiration_date) {

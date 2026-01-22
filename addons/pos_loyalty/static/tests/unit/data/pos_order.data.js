@@ -45,66 +45,50 @@ patch(PosOrder.prototype, {
         };
     },
 
-    confirm_coupon_programs(self, coupon_data) {
-        const couponNewIdMap = {};
-        for (const k of Object.keys(coupon_data)) {
-            const id = parseInt(k);
-            if (id > 0) {
-                couponNewIdMap[id] = id;
+    sync_from_ui(data) {
+        for (const order of data) {
+            for (const sell_loyalty_card of order["loyalty_card_ids"]) {
+                sell_loyalty_card[2]["code"] =
+                    sell_loyalty_card[2]["code"] || this.env["loyalty.card"]._generate_code();
             }
         }
+        const records = super.sync_from_ui(data);
 
-        const couponsToCreate = Object.fromEntries(
-            Object.entries(coupon_data).filter(([k]) => parseInt(k) < 0)
+        const rewardLines = records["pos.order.line"].filter((line) => line.is_reward_line);
+        for (const line of rewardLines) {
+            const coupon = this.env["loyalty.card"].browse(line.coupon_id);
+            if (coupon) {
+                this.env["loyalty.card"].write([coupon[0]["id"]], {
+                    points: coupon[0]["points"] - line.points_cost,
+                });
+            }
+        }
+        const couponIds = new Set();
+        const config_id = records["pos.order"][0]?.config_id;
+        for (const order of this.env["pos.order"].browse(records["pos.order"].map((o) => o.id))) {
+            for (const line of this.env["pos.order.line"].browse(order["lines"])) {
+                if (line.is_reward_line && line.coupon_id) {
+                    couponIds.add(line.coupon_id);
+                }
+            }
+            for (const couponId of order["loyalty_card_ids"]) {
+                couponIds.add(couponId);
+            }
+        }
+        const coupons = this.env["loyalty.card"].read(
+            couponIds,
+            this.env["loyalty.card"]._load_pos_data_fields(config_id),
+            false
+        );
+        const programIds = new Set(coupons.map((c) => c.program_id));
+        const programs = this.env["loyalty.program"].read(
+            programIds,
+            this.env["loyalty.program"]._load_pos_data_fields(config_id),
+            false
         );
 
-        const couponCreateVals = Object.values(couponsToCreate).map((p) => ({
-            program_id: p.program_id,
-            partner_id: p.partner_id || false,
-            code: p.code || p.barcode || `CODE${Math.floor(Math.random() * 10000)}`,
-            points: p.points || 0,
-        }));
-
-        const newCouponIds = this.env["loyalty.card"].create(couponCreateVals);
-        const newCoupons = this.env["loyalty.card"].browse(newCouponIds);
-
-        for (let i = 0; i < Object.keys(couponsToCreate).length; i++) {
-            const oldId = parseInt(Object.keys(couponsToCreate)[i], 10);
-            const newCoupon = newCouponIds[i];
-            couponNewIdMap[oldId] = newCoupon.id;
-        }
-
-        const allCoupons = this.env["loyalty.card"].browse(Object.keys(couponNewIdMap).map(Number));
-        for (const coupon of allCoupons) {
-            const oldId = couponNewIdMap[coupon.id];
-            if (oldId && coupon_data[oldId]) {
-                coupon.points += coupon_data[oldId].points;
-            }
-        }
-
-        return {
-            coupon_updates: allCoupons.map((coupon) => ({
-                old_id: couponNewIdMap[coupon.id],
-                id: coupon.id,
-                points: coupon.points,
-                code: coupon.code,
-                program_id: coupon.program_id,
-                partner_id: coupon.partner_id,
-            })),
-            program_updates: [...new Set(allCoupons.map((c) => c.program_id))].map((program) => ({
-                program_id: program,
-                usages: this.env["loyalty.program"].browse(program)?.[0]?.total_order_count,
-            })),
-            new_coupon_info: newCoupons.map((c) => ({
-                program_name: this.env["loyalty.program"].browse(c.program_id)?.[0]?.name || "",
-                expiration_date: c.expiration_date || false,
-                code: c.code,
-            })),
-            coupon_report: {},
-        };
-    },
-
-    add_loyalty_history_lines() {
-        return true;
+        records["loyalty.card"] = coupons;
+        records["loyalty.program"] = programs;
+        return records;
     },
 });

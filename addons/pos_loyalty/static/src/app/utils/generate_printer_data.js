@@ -14,8 +14,13 @@ patch(GeneratePrinterData.prototype, {
         for (const coupon of points) {
             data.extra_data.loyalties.push({
                 name: coupon.program.name,
-                type: coupon.points.won >= 0 ? _t("Won:") : _t("Spent:"),
-                points: coupon.points.won || coupon.points.spent,
+                type: _t("Won:"),
+                points: coupon.points.won,
+            });
+            data.extra_data.loyalties.push({
+                name: coupon.program.name,
+                type: _t("Spent:"),
+                points: coupon.points.spent,
             });
             data.extra_data.loyalties.push({
                 name: coupon.program.name,

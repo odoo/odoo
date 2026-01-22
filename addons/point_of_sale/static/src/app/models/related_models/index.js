@@ -755,7 +755,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 }
             } else if (field.type === "many2many") {
                 this._addItem(ownerRecord, field, recordToConnect, aggregatedUpdates);
-                this._addItem(recordToConnect, inverse, ownerRecord, aggregatedUpdates);
+                // this._addItem(recordToConnect, inverse, ownerRecord, aggregatedUpdates);
             }
         }
 
@@ -786,7 +786,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 }
             } else if (field.type === "many2many") {
                 this._removeItem(ownerRecord, field, recordToDisconnect, aggregatedUpdates);
-                this._removeItem(recordToDisconnect, inverse, ownerRecord, aggregatedUpdates);
+                // this._removeItem(recordToDisconnect, inverse, ownerRecord, aggregatedUpdates);
             }
         }
 
