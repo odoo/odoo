@@ -172,15 +172,16 @@ class IrUiView(models.Model):
 
         # 1. Get translations
         records_from.flush_model([name_field_from])
+        stored_translation = field_to._get_stored_translations(record_to)
         existing_translation_dictionary = field_to.get_translation_dictionary(
-            record_to[name_field_to],
-            {lang: record_to.with_context(prefetch_langs=True, lang=lang)[name_field_to] for lang in langs if lang != lang_env}
+            record_to.with_context(check_translations=True)[name_field_to],
+            {lang: record_to.with_context(check_translations=True, prefetch_langs=True, lang=lang)[name_field_to] for lang in langs if lang != lang_env}
         )
         extra_translation_dictionary = {}
         for record_from in records_from:
             extra_translation_dictionary.update(field_from.get_translation_dictionary(
-                record_from[name_field_from],
-                {lang: record_from.with_context(prefetch_langs=True, lang=lang)[name_field_from] for lang in langs if lang != lang_env}
+                record_from.with_context(check_translations=True)[name_field_from],
+                {lang: record_from.with_context(check_translations=True, prefetch_langs=True, lang=lang)[name_field_from] for lang in langs if lang != lang_env}
             ))
         for term, extra_translation_values in extra_translation_dictionary.items():
             existing_translation_values = existing_translation_dictionary.setdefault(term, {})
@@ -196,13 +197,14 @@ class IrUiView(models.Model):
         langs.add('en_US')
 
         # 2. Set translations
-        new_value = {
-            lang: field_to.translate(lambda term: translation_dictionary.get(term, {}).get(lang), record_to[name_field_to])
-            for lang in langs
-        }
-        record_to.env.cache.update_raw(record_to, field_to, [new_value], dirty=True)
+        for lang in langs:
+            stored_translation[('_' + lang) if ('_' + lang) in stored_translation else lang] = field_to.translate(
+                lambda term: translation_dictionary.get(term, {}).get(lang),
+                record_to.with_context(check_translations=True)[name_field_to]
+            )
+        record_to.env.cache.update_raw(record_to, field_to, [stored_translation], dirty=True)
         # Call `write` to trigger compute etc (`modified()`)
-        record_to[name_field_to] = new_value[lang_env]
+        record_to.with_context(check_translations=True)[name_field_to] = stored_translation[('_' + lang_env) if ('_' + lang_env) in stored_translation else lang_env]
 
     @api.model
     def _save_oe_structure_hook(self):
