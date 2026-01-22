@@ -125,6 +125,7 @@ This module provides the core of the Odoo Web Client.
 
             # Don't include dark mode files in light mode
             ('remove', 'web/static/src/**/*.dark.scss'),
+            ('remove', 'web/static/lib/odoo_nocontent_icons/style.dark.css'),
         ],
         'web.assets_backend_lazy': [
             ('include', 'web._assets_helpers'),
@@ -339,6 +340,7 @@ This module provides the core of the Odoo Web Client.
         "web.assets_web_dark": [
             ('include', 'web.assets_web'),
             'web/static/src/**/*.dark.scss',
+            'web/static/lib/odoo_nocontent_icons/style.dark.css',
         ],
 
         # ---------------------------------------------------------------------
@@ -559,9 +561,16 @@ This module provides the core of the Odoo Web Client.
             '/web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff',
             '/web/static/lib/odoo_ui_icons/style.css',
         ],
+        'web.odoo_nocontent_icons': [
+            '/web/static/lib/odoo_nocontent_icons/fonts/odoo_nocontent_icons.woff2',
+            '/web/static/lib/odoo_nocontent_icons/fonts/odoo_nocontent_icons.woff',
+            '/web/static/lib/odoo_nocontent_icons/style.css',
+            '/web/static/lib/odoo_nocontent_icons/style.dark.css',
+        ],
         'web.icons_fonts': [
             ('include', 'web.fontawesome'),
             ('include', 'web.odoo_ui_icons'),
+            ('include', 'web.odoo_nocontent_icons'),
             'web/static/src/scss/fontawesome_overridden.scss',  # some are fa classes... but using odoo_ui_icons font
         ],
     },
