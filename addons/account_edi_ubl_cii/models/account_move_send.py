@@ -216,7 +216,8 @@ class AccountMoveSend(models.AbstractModel):
     def _postprocess_invoice_ubl_xml(self, invoice, invoice_data):
         # Adding the PDF to the XML
         tree = etree.fromstring(invoice_data['ubl_cii_xml_attachment_values']['raw'])
-        anchor_elements = tree.xpath("//*[local-name()='AccountingSupplierParty']")
+        project_refs = tree.xpath("//*[local-name()='ProjectReference']")
+        anchor_elements = project_refs if project_refs else tree.xpath("//*[local-name()='AccountingSupplierParty']")
         if not anchor_elements:
             return
 
