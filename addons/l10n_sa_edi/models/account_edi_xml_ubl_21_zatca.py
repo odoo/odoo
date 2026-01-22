@@ -76,7 +76,8 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
 
         # Always ignore withholding taxes in the UBL
         def total_grouping_function(base_line, tax_data):
-            if tax_data and tax_data['tax'].l10n_sa_is_retention:
+            tax = tax_data and tax_data['tax']
+            if tax and tax.amount < 0:
                 return None
             return True
 
@@ -84,7 +85,7 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
             tax = tax_data and tax_data['tax']
 
             # Ignore withholding taxes
-            if tax and tax.l10n_sa_is_retention:
+            if tax and tax.amount < 0:
                 return None
             return {
                 'tax_category_code': self._get_tax_category_code(vals['customer'].commercial_partner_id, vals['supplier'], tax),

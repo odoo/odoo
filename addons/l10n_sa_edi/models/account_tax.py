@@ -1,6 +1,4 @@
-from odoo import fields, models, api, _
-from odoo.exceptions import UserError
-
+from odoo import fields, models
 
 EXEMPTION_REASON_CODES = [
     ('VATEX-SA-29', 'VATEX-SA-29 Financial services mentioned in Article 29 of the VAT Regulations.'),
@@ -24,19 +22,5 @@ EXEMPTION_REASON_CODES = [
 class AccountTax(models.Model):
     _inherit = 'account.tax'
 
-    l10n_sa_is_retention = fields.Boolean("Is Retention", default=False,
-                                          help="Determines whether or not a tax counts as a Withholding Tax")
-
     l10n_sa_exemption_reason_code = fields.Selection(string="Exemption Reason Code",
                                                      selection=EXEMPTION_REASON_CODES, help="Tax Exemption Reason Code (ZATCA)")
-
-    @api.onchange('amount')
-    def onchange_amount(self):
-        super().onchange_amount()
-        self.l10n_sa_is_retention = False
-
-    @api.constrains("l10n_sa_is_retention", "amount", "type_tax_use")
-    def _l10n_sa_constrain_is_retention(self):
-        for tax in self:
-            if tax.amount >= 0 and tax.l10n_sa_is_retention and tax.type_tax_use == 'sale':
-                raise UserError(_("The tax is unable to be set as Retention as the Amount is greater than or equal to 0."))

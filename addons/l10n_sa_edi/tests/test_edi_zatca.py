@@ -302,7 +302,6 @@ class TestEdiZatca(TestSaEdiCommon):
         """Test standard invoice generation."""
 
         retention_tax = self.env['account.tax'].create({
-            'l10n_sa_is_retention': True,
             'name': 'Retention Tax',
             'amount_type': 'percent',
             'amount': -10.0,

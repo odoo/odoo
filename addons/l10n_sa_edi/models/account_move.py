@@ -333,7 +333,7 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     def _apply_retention_tax_filter(self, tax_values):
-        return not tax_values['tax_id'].l10n_sa_is_retention
+        return tax_values['tax_id'].amount < 0
 
     def _is_global_discount_line(self):
         """
@@ -359,5 +359,5 @@ class AccountMoveLine(models.Model):
                 line.l10n_gcc_invoice_tax_amount = sum(
                     tax_data['tax_amount_currency']
                     for tax_data in base_line['tax_details']['taxes_data']
-                    if not tax_data['tax'].l10n_sa_is_retention
+                    if tax_data['tax'].amount > 0
                 )
