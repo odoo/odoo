@@ -16,7 +16,7 @@ SylvacSCalProProtocol = SerialProtocol(
     bytesize=serial.SEVENBITS,
     stopbits=serial.STOPBITS_TWO,
     parity=serial.PARITY_EVEN,
-    timeout=0.2,
+    timeout=1,
     writeTimeout=0.2,
     measureRegexp=b'\\+|-\\d+\\.\\d+\r',
     statusRegexp=None,
@@ -36,10 +36,10 @@ class SylvacSCalProDriver(SerialDriver):
 
     def __init__(self, identifier, device):
         super().__init__(identifier, device)
-        self.device_type = 'device'
-        self._actions['read_once'] = self._action_read_once
+        self.device_type = "device"
+        self._actions['read_once'] = self._read_once
 
-    def _action_read_once(self, _data):
+    def _read_once(self, _):
         """Make value available to the longpolling event route"""
         event_manager.device_changed(self)
 
@@ -48,49 +48,20 @@ class SylvacSCalProDriver(SerialDriver):
 
         with self._device_lock:
             self._connection.write(self._protocol.measureCommand + self._protocol.commandTerminator)
-            measure = self._get_raw_response(self._connection)
+            measure = self._connection.read_until(b"\r").decode()
             if measure and measure != self.data['value']:
                 self.data['value'] = measure
                 event_manager.device_changed(self)
 
-    @staticmethod
-    def _get_raw_response(connection):
-        """Gets a raw, unparsed string containing the updated value of the device.
-
-        :param connection: connection to the device's serial port
-        :type connection: pyserial.Serial
-        """
-
-        TIMEOUT = 1
-        answer = []
-        t0 = time.time()
-        while True:
-            char = connection.read()
-            if char:
-                if ord(char) == 13:
-                    return b''.join(answer[:-1]).decode('utf-8')
-                answer.append(char)
-                t0 = time.time()
-            elif time.time() - t0 > TIMEOUT:
-                return ""
-
     @classmethod
-    def supported(cls, device):
-        """Checks whether the device at path `device` is supported by the driver.
-
-        :param device: path to the device
-        :type device: str
-        :return: whether the device is supported by the driver
-        :rtype: bool
-        """
-
+    def supported(cls, device: dict) -> bool:
         protocol = cls._protocol
 
         try:
             with serial_connection(device['identifier'], protocol, is_probing=True) as connection:
                 connection.write(protocol.measureCommand + protocol.commandTerminator)
                 time.sleep(protocol.commandDelay)
-                measure = cls._get_raw_response(connection)
+                measure = connection.read_until(b"\r").decode()
                 float(measure)
                 return True
 

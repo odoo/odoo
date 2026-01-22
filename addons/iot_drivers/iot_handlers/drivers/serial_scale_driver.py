@@ -37,101 +37,42 @@ Toledo8217Protocol = SerialProtocol(
 
 
 class ScaleDriver(SerialDriver):
-    """Abstract base class for scale drivers."""
-    last_sent_value = None
+    """Driver for the Toldedo 8217 serial scale."""
+    _protocol = Toledo8217Protocol
+    last_sent_value: float = None
 
-    def __init__(self, identifier, device):
+    def __init__(self, identifier: str, device: dict):
         super().__init__(identifier, device)
-        self.device_type = 'scale'
-        self._set_actions()
-        self._is_reading = True
+        self.device_type = "scale"
+        self.device_manufacturer = "Toledo"
+        self._actions["read_once"] = self._read_once
 
-    def _set_actions(self):
-        """Initializes `self._actions`, a map of action keys sent by the frontend to backend action methods."""
-
-        self._actions.update({
-            'read_once': self._read_once_action,
-            'start_reading': self._start_reading_action,
-            'stop_reading': self._stop_reading_action,
-        })
-
-    def _start_reading_action(self, data):
-        """Starts asking for the scale value."""
-        self._is_reading = True
-
-    def _stop_reading_action(self, data):
-        """Stops asking for the scale value."""
-        self._is_reading = False
-
-    def _read_once_action(self, data):
+    def _read_once(self, _):
         """Reads the scale current weight value and pushes it to the frontend."""
+        self.last_sent_value = self._read_weight()
+        return self.last_sent_value
 
-        self._read_weight()
-        self.last_sent_value = self.data['result']
-        return self.data['result']
-
-    @staticmethod
-    def _get_raw_response(connection):
-        """Gets raw bytes containing the updated value of the device.
-
-        :param connection: a connection to the device's serial port
-        :type connection: pyserial.Serial
-        :return: the raw response to a weight request
-        :rtype: str
-        """
-
-        answer = []
-        while True:
-            char = connection.read(1)
-            if not char:
-                break
-            else:
-                answer.append(bytes(char))
-        return b''.join(answer)
-
-    def _read_weight(self):
-        """Asks for a new weight from the scale, checks if it is valid and, if it is, makes it the current value."""
-
-        protocol = self._protocol
-        self._connection.write(protocol.measureCommand + protocol.commandTerminator)
-        answer = self._get_raw_response(self._connection)
+    def _read_weight(self) -> float:
+        """Asks for a new weight from the scale, checks if it is valid
+        and, if it is, makes it the current value."""
+        self._connection.write(self._protocol.measureCommand + self._protocol.commandTerminator)
+        answer = self._get_raw_response()
         match = re.search(self._protocol.measureRegexp, answer)
         if match:
-            self.data.update({
-                'result': float(match.group(1)),
-                'status': self._status,
-            })
-        else:
-            self._read_status(answer)
+            return float(match.group(1))
+        return self._read_status(answer)
 
     def _take_measure(self):
         """Reads the device's weight value, and pushes that value to the frontend."""
-
         with self._device_lock:
-            self._read_weight()
-            if self.data['result'] != self.last_sent_value or self._status['status'] == self.STATUS_ERROR:
-                self.last_sent_value = self.data['result']
+            weight = self._read_weight()
+            if weight != self.last_sent_value or self.data["status"] == "error":
+                self.last_sent_value = weight
+                self.data.update({"status": "success", "result": weight})
                 event_manager.device_changed(self)
 
-
-class Toledo8217Driver(ScaleDriver):
-    """Driver for the Toldedo 8217 serial scale."""
-    _protocol = Toledo8217Protocol
-
-    def __init__(self, identifier, device):
-        super().__init__(identifier, device)
-        self.device_manufacturer = 'Toledo'
-
     @classmethod
-    def supported(cls, device):
-        """Checks whether the device, which port info is passed as argument, is supported by the driver.
-
-        :param device: path to the device
-        :type device: str
-        :return: whether the device is supported by the driver
-        :rtype: bool
-        """
-
+    def supported(cls, device: dict) -> bool:
         protocol = cls._protocol
 
         try:
@@ -155,13 +96,15 @@ class Toledo8217Driver(ScaleDriver):
     def _get_raw_response(connection):
         return connection.read_until(b"\r")
 
-    def _read_status(self, answer):
-        """
-        Status byte in form of an ascii character (Ex: 'D') is sent if scale is in motion, or is net/gross weight is negative or over capacity.
-        Convert the status byte to a binary string, and check its bits to see if there is an error.
-        LSB is the last char so the binary string is read in reverse and the first char is a parity bit, so we ignore it.
-        :param answer: scale answer (Example: b'\x02?D\r')
-        :type answer: bytestring
+    def _read_status(self, answer: bytes) -> float:
+        """Status byte in form of an ascii character (Ex: 'D') is sent if scale
+        is in motion, or is net/gross weight is negative or over capacity.
+        Convert the status byte to a binary string, and check its bits to see if
+        there is an error.
+        LSB is the last char so the binary string is read in reverse and the first
+        char is a parity bit, so we ignore it.
+
+        :param answer: scale answer (Example: b"\x02?D\r")
         """
         status_char_error_bits = (
             'Scale in motion',  # 0
@@ -179,9 +122,10 @@ class Toledo8217Driver(ScaleDriver):
             binary_status_char = format(ord(status_char), '08b')  # Example: '00001101'
             for index, bit in enumerate(binary_status_char[1:][::-1]):  # Read the bits in reverse order (LSB is at the last char) + ignore the first "parity" bit
                 if int(bit):
-                    _logger.debug("Scale error: %s. Status string: %s. Scale answer: %s.", status_char_error_bits[index], binary_status_char, answer)
-                    self.data.update({
-                        'result': 0,
-                        'status': self._status,
-                    })
-                    break
+                    _logger.debug(
+                        "Scale error: %s. Status string: %s. Scale answer: %s.",
+                        status_char_error_bits[index], binary_status_char, answer
+                    )
+                    self.data.update({"status": "error", "result": 0})
+                    return 0.0
+        return self.data.get("result", 0.0)

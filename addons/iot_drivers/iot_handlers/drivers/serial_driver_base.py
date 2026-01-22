@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from abc import ABC, abstractmethod
 from typing import NamedTuple
 from contextlib import contextmanager
 import logging
 import serial
 from threading import Lock
 import time
-import traceback
 
 from odoo.addons.iot_drivers.driver import Driver
 
@@ -57,45 +57,27 @@ def serial_connection(path, protocol, is_probing=False):
     connection.close()
 
 
-class SerialDriver(Driver):
+class SerialDriver(Driver, ABC):
     """Abstract base class for serial drivers."""
 
     _protocol = None
     connection_type = 'serial'
 
-    STATUS_CONNECTED = 'connected'
-    STATUS_ERROR = 'error'
-    STATUS_CONNECTING = 'connecting'
-    STATUS_DISCONNECTED = 'disconnected'
-
-    def __init__(self, identifier, device):
+    def __init__(self, identifier: str, device: dict):
         """ Attributes initialization method for `SerialDriver`.
 
         :param device: path to the device
-        :type device: str
         """
 
         super().__init__(identifier, device)
-        self._actions.update({
-            'get_status': self._push_status,
-        })
         self.device_connection = 'serial'
         self._connection = None
         self._device_lock = Lock()
-        self._status = {'status': self.STATUS_CONNECTING, 'message_title': '', 'message_body': ''}
         self._set_name()
 
-    @staticmethod
-    def _get_raw_response(connection):
-        pass
-
-    def _push_status(self):
-        """Updates the current status and pushes it to the frontend."""
-
-        self.data['status'] = self._status
-
     def _set_name(self):
-        """Tries to build the device's name based on its type and protocol name but falls back on a default name if that doesn't work."""
+        """Tries to build the device's name based on its type and
+        protocol name but falls back on a default name if that doesn't work."""
 
         try:
             name = ('%s serial %s' % (self._protocol.name, self.device_type)).title()
@@ -103,12 +85,15 @@ class SerialDriver(Driver):
             name = 'Unknown Serial Device'
         self.device_name = name
 
+    @abstractmethod
     def _take_measure(self):
+        """Reads the device's value, and pushes that value to the frontend."""
         pass
 
     def action(self, data):
-        """Override to lock the serial connection during action execution."""
-
+        """Override to add lock to the serial connection during
+        action execution.
+        """
         if not self._connection or not self._connection.is_open:
             with serial_connection(self.device_identifier, self._protocol) as connection:
                 self._connection = connection
@@ -124,15 +109,9 @@ class SerialDriver(Driver):
         try:
             with serial_connection(self.device_identifier, self._protocol) as connection:
                 self._connection = connection
-                self._status['status'] = self.STATUS_CONNECTED
-                self._push_status()
                 while not self._stopped.is_set():
                     self._take_measure()
                     time.sleep(self._protocol.newMeasureDelay)
-                self._status['status'] = self.STATUS_DISCONNECTED
-                self._push_status()
-        except Exception:
-            msg = 'Error while reading %s' % self.device_name
-            _logger.exception(msg)
-            self._status = {'status': self.STATUS_ERROR, 'message_title': msg, 'message_body': traceback.format_exc()}
-            self._push_status()
+        except Exception:  # noqa: BLE001
+            _logger.exception('Error while reading %s', self.device_name)
+            self.data["status"] = "error"

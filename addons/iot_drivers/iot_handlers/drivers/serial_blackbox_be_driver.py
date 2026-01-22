@@ -320,8 +320,5 @@ class BlackBoxDriver(SerialDriver):
     def run(self):
         with serial_connection(self.device_identifier, self._protocol) as connection:
             self._connection = connection
-            self.data['status'] = self.STATUS_CONNECTED
             while not self._stopped.is_set():
                 time.sleep(self._protocol.newMeasureDelay)
-
-            self.data['status'] = self.STATUS_DISCONNECTED
