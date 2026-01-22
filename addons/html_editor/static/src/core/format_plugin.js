@@ -374,6 +374,17 @@ export class FormatPlugin extends Plugin {
                         this.checkPredicates("is_format_class_predicates", className) ?? false
                 );
 
+            // Special case: if the parent node is unsplittable and fully selected,
+            // we should make sure the span is applied outside of it.
+            if (
+                parentNode &&
+                !isBlock(parentNode) &&
+                this.dependencies.split.isUnsplittable(parentNode) &&
+                this.dependencies.selection.areNodeContentsFullySelected(parentNode)
+            ) {
+                inlineAncestors.push(parentNode);
+            }
+
             while (
                 parentNode &&
                 !isBlock(parentNode) &&

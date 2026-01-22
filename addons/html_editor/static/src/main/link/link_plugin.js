@@ -301,6 +301,16 @@ export class LinkPlugin extends Plugin {
                 return false;
             }
         },
+        // When the selection fully covers a link, we consider that the link is selected.
+        is_node_fully_selected_predicates: (node, selection) => {
+            if (
+                node.nodeName === "A" &&
+                !node.classList.contains("btn") &&
+                cleanZWChars(selection.textContent()) === cleanZWChars(node.innerText)
+            ) {
+                return true;
+            }
+        },
 
         /** Handlers */
         on_beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
