@@ -248,97 +248,99 @@ export class TablePlugin extends Plugin {
     /**
      * @param {'before'|'after'} position
      * @param {HTMLTableCellElement} reference
+     * @param {number} [columnsToAdd=1]
      */
-    addColumn(position, reference) {
-        const columnIndex = getColumnIndex(reference);
+    addColumn(position, reference, columnsToAdd = 1) {
         const table = closestElement(reference, "table");
         const tableWidth = table.style.width && parseFloat(table.style.width);
-        const referenceColumn = table.querySelectorAll(
-            `tr :is(td, th):nth-of-type(${columnIndex + 1})`
-        );
-        const referenceCellWidth = reference.style.width
-            ? parseFloat(reference.style.width)
-            : reference.clientWidth;
-        // Temporarily set widths so proportions are respected.
-        const firstRow = table.querySelector("tr");
-        const firstRowCells = [...firstRow.children].filter(
-            (child) => child.nodeName === "TD" || child.nodeName === "TH"
-        );
-        let totalWidth = 0;
-        if (tableWidth) {
-            for (const cell of firstRowCells) {
-                const width = parseFloat(cell.style.width);
-                cell.style.width = width + "px";
-                // Spread the widths to preserve proportions.
-                // -1 for the width of the border of the new column.
-                const newWidth = Math.max(
-                    Math.round((width * tableWidth) / (tableWidth + referenceCellWidth - 1)),
-                    13
-                );
-                cell.style.width = newWidth + "px";
-                totalWidth += newWidth;
+        for (let columnOffset = 0; columnOffset < columnsToAdd; columnOffset++) {
+            const columnIndex = getColumnIndex(reference);
+            const referenceCellWidth = reference.style.width
+                ? parseFloat(reference.style.width)
+                : reference.clientWidth;
+
+            // Temporarily set widths so proportions are respected.
+            const firstRowCells = [...table.rows[0].cells];
+            let totalWidth = 0;
+            if (tableWidth) {
+                for (const cell of firstRowCells) {
+                    const width = parseFloat(cell.style.width);
+                    cell.style.width = width + "px";
+                    // Spread the widths to preserve proportions.
+                    // -1 for the width of the border of the new column.
+                    const newWidth = Math.max(
+                        Math.round((width * tableWidth) / (tableWidth + referenceCellWidth - 1)),
+                        13
+                    );
+                    cell.style.width = newWidth + "px";
+                    totalWidth += newWidth;
+                }
             }
-        }
-        referenceColumn.forEach((cell, rowIndex) => {
-            const newCell = this.document.createElement(cell.tagName);
-            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            baseContainer.append(this.document.createElement("br"));
-            newCell.append(baseContainer);
-            cell[position](newCell);
-            // If the first row is a header, ensure the new column's
-            // first cell is also marked as a header (<th>).
-            if (rowIndex === 0 && cell.classList.contains("o_table_header")) {
-                newCell.classList.add("o_table_header");
+
+            for (let rowIndex = 0; rowIndex < table.rows.length; rowIndex++) {
+                const row = table.rows[rowIndex];
+                const cell = row.cells[columnIndex];
+                const newCell = this.document.createElement(cell.tagName);
+                const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                fillEmpty(baseContainer);
+                newCell.append(baseContainer);
+                cell[position](newCell);
+
+                if (rowIndex === 0) {
+                    // If the first row is a header, ensure the new column's
+                    // first cell is also marked as a header (<th>).
+                    if (cell.classList.contains("o_table_header")) {
+                        newCell.classList.add("o_table_header");
+                    }
+                    if (tableWidth) {
+                        newCell.style.width = cell.style.width;
+                        totalWidth += parseFloat(cell.style.width);
+                    }
+                }
             }
-            if (rowIndex === 0 && tableWidth) {
-                newCell.style.width = cell.style.width;
-                totalWidth += parseFloat(cell.style.width);
+
+            if (tableWidth) {
+                if (totalWidth !== tableWidth - 1) {
+                    // -1 for the width of the border of the new column.
+                    firstRowCells[firstRowCells.length - 1].style.width =
+                        parseFloat(firstRowCells[firstRowCells.length - 1].style.width) +
+                        (tableWidth - totalWidth - 1) +
+                        "px";
+                }
+                // Fix the table and row's width so it doesn't change.
+                table.style.width = tableWidth + "px";
             }
-        });
-        if (tableWidth) {
-            if (totalWidth !== tableWidth - 1) {
-                // -1 for the width of the border of the new column.
-                firstRowCells[firstRowCells.length - 1].style.width =
-                    parseFloat(firstRowCells[firstRowCells.length - 1].style.width) +
-                    (tableWidth - totalWidth - 1) +
-                    "px";
-            }
-            // Fix the table and row's width so it doesn't change.
-            table.style.width = tableWidth + "px";
         }
     }
     /**
      * @param {'before'|'after'} position
      * @param {HTMLTableRowElement} reference
+     * @param {number} [rowsToAdd=1]
      */
-    addRow(position, reference) {
+    addRow(position, reference, rowsToAdd = 1) {
         const referenceRowHeight = reference.style.height && parseFloat(reference.style.height);
-        const newRow = this.document.createElement("tr");
-        if (referenceRowHeight) {
-            newRow.style.height = referenceRowHeight + "px";
-        }
-        const cells = reference.querySelectorAll("td, th");
-        const referenceRowWidths = [...cells].map((cell) => cell.style.width);
-        newRow.append(
-            ...Array.from(cells).map(() => {
+        for (let rowOffset = 0; rowOffset < rowsToAdd; rowOffset++) {
+            const newRow = this.document.createElement("tr");
+            if (referenceRowHeight) {
+                newRow.style.height = referenceRowHeight + "px";
+            }
+
+            for (let columnIndex = 0; columnIndex < reference.cells.length; columnIndex++) {
                 const td = this.document.createElement("td");
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                baseContainer.append(this.document.createElement("br"));
+                fillEmpty(baseContainer);
                 td.append(baseContainer);
-                return td;
-            })
-        );
-        reference[position](newRow);
-        if (referenceRowHeight) {
-            newRow.style.height = referenceRowHeight + "px";
-        }
-        // Preserve the width of the columns (applied only on the first row).
-        if (getRowIndex(newRow) === 0) {
-            let columnIndex = 0;
-            for (const column of newRow.children) {
-                column.style.width = referenceRowWidths[columnIndex];
-                cells[columnIndex].style.width = "";
-                columnIndex++;
+                newRow.append(td);
+            }
+            reference[position](newRow);
+
+            // Preserve the width of the columns (applied only on the first row).
+            if (getRowIndex(newRow) === 0) {
+                for (let columnIndex = 0; columnIndex < reference.cells.length; columnIndex++) {
+                    newRow.cells[columnIndex].style.width =
+                        reference.cells[columnIndex].style.width;
+                    reference.cells[columnIndex].style.width = "";
+                }
             }
         }
     }
