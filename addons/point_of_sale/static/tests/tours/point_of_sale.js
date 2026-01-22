@@ -98,8 +98,8 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "open partner list",
         trigger: "button.set-partner",
     }, {
-        content: "select Deco Addict",
-        trigger: ".partner-line:contains('Deco Addict')",
+        content: "select Acme Corporation",
+        trigger: ".partner-line:contains('Acme Corporation')",
     }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",
