@@ -1,11 +1,11 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
-import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onWillStart, useState } from "@odoo/owl";
 
 import { useSequential } from "@mail/utils/common/hooks";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
 export class ChannelInvitation extends Component {
@@ -28,8 +28,6 @@ export class ChannelInvitation extends Component {
         this.rtc = useService("discuss.rtc");
         this.notification = useService("notification");
         this.suggestionService = useService("mail.suggestion");
-        this.ui = useService("ui");
-        this.inputRef = useRef("input");
         this.sequential = useSequential();
         this.state = useState({
             searchResultCount: 0,
@@ -44,24 +42,12 @@ export class ChannelInvitation extends Component {
             this.fetchPartnersToInvite.bind(this),
             250
         );
+        this.inputRef = useAutofocus({ refName: "input" });
         onWillStart(() => {
             if (this.store.self_user) {
                 this.fetchPartnersToInvite();
             }
         });
-        onMounted(() => {
-            if (this.store.self_user && this.props.channel) {
-                this.inputRef.el.focus();
-            }
-        });
-        useEffect(
-            () => {
-                if (this.props.autofocus) {
-                    this.inputRef.el?.focus();
-                }
-            },
-            () => [this.props.autofocus]
-        );
     }
 
     get selectablePartners() {
