@@ -174,13 +174,23 @@ class IrUiView(models.Model):
         langs.add('en_US')
 
         # 2. Set translations
-        new_value = {
-            lang: field_to.translate(lambda term: translation_dictionary.get(term, {}).get(lang), record_to[name_field_to])
-            for lang in langs
-        }
-        field_to._update_cache(record_to.with_context(prefetch_langs=True), new_value, dirty=True)
+        # The orm layer currently does not offer a way to keep the delayed
+        # translations when changing translations, so we craft the desired
+        # dict of translations and directly write it to the cache
+        stored_translation = field_to._get_stored_translations(record_to)
+        for lang in langs:
+            lang_ = ('_' + lang) if ('_' + lang) in stored_translation else lang
+            stored_translation[lang_] = field_to.translate(
+                lambda term: translation_dictionary.get(term, {}).get(lang),
+                record_to[name_field_to]
+            )
+            if not self.env.context.get('delay_translations') and lang_.startswith('_'):
+                stored_translation[lang] = stored_translation.pop(lang_)
+
+        field_to._update_cache(record_to.with_context(prefetch_langs=True), stored_translation, dirty=True)
         # Call `write` to trigger compute etc (`modified()`)
-        record_to.with_context(check_translations=False)[name_field_to] = new_value[lang_env]
+        record_to = record_to.with_context(check_translations=False)
+        record_to[name_field_to] = record_to[name_field_to]
 
     @api.model
     def _find_available_name(self, name, used_names):
