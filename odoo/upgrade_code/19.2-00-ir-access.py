@@ -74,13 +74,159 @@ class upgrade:
         self.file_manager = file_manager
 
         _logger.info(WELCOME_MESSAGE)
-        self.check()
 
-        modules = file_manager.get_modules()
+        modules = self.file_manager.get_modules()
+
+        # determine which modules have a security directory before removing files
+        has_security = {
+            module
+            for module in modules
+            if any(fname.startswith('security/') for fname in self.get_manifest(module)['data'])
+        }
+
+        group_defs = self.get_group_definitions()
+
+        # extract ir.model.access (ir_perms) and ir.rule (ir_rules)
+        ir_perms = defaultdict(list)
+        ir_rules = defaultdict(list)
         file_manager.print_progress(0, len(modules))
         for count, module in enumerate(modules, start=1):
-            self.generate(module)
+            for perm in self.extract_accesses(module, remove=True):
+                if perm.group and perm.operations:
+                    ir_perms[perm.model].append(perm)
+            for rule in self.extract_rules(module, remove=True):
+                if rule.operations:
+                    ir_rules[rule.model].append(rule)
             file_manager.print_progress(count, len(modules))
+
+        # detect misconfigurations
+        ignored_groups = {None, *group_defs.implied('base.group_public', 'base.group_portal')}
+
+        for model, perms in sorted(ir_perms.items()):
+            perms = [perm for perm in perms if perm.group not in ignored_groups]
+            rules = [rule for rule in ir_rules[model] if rule.group not in ignored_groups]
+            if not (perms and rules):
+                continue
+            for operation in MODES:
+                perms_without_rule = [
+                    perm
+                    for perm in perms
+                    if operation in perm.operations and not any(
+                        operation in rule.operations and rule.group in group_defs.implied(perm.group)
+                        for rule in rules
+                    )
+                ]
+                if not perms_without_rule:
+                    continue
+                rules_with_domain = [
+                    rule for rule in rules if operation in rule.operations and rule.domain
+                ]
+                if not rules_with_domain:
+                    continue
+                # Those perms give some permission to all records in the model,
+                # but when combined with another group with rules, those
+                # permissions are granted to less records.
+                groups_with_perm = {
+                    perm.group for perm in perms if operation in perm.operations
+                }
+                lines = [f"/!\\ {model=}, {operation=}"]
+                lines.append("    acl groups without rules, giving access to ALL records:")
+                for perm in sorted(perms_without_rule, key=lambda perm: perm.group):
+                    lines.append(f"     - {perm.group}: acl {perm.id}")
+                lines.append("    may interact with rules in groups, giving access to LESS records:")
+                for rule in sorted(rules_with_domain, key=lambda rule: rule.group):
+                    has_perm = any(group in groups_with_perm for group in group_defs.implied(rule.group))
+                    extra = " (with acl)" if has_perm else ""
+                    lines.append(f"     - {rule.group}: rule {rule.id}{extra}")
+                lines.append("")
+                _logger.warning("\n".join(lines))
+
+        # generate ir.access (grouped by module, model and group)
+        ir_accesses = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+
+        # determine the operations permitted with no corresponding ir.rule; for
+        # those operations, add an ir.access without domain
+        for perm in (x for xs in ir_perms.values() for x in xs):
+            # prepare entries in the same order as permissions
+            accesses = ir_accesses[perm.module][perm.model][perm.group]
+            groups = set(group_defs.implied(perm.group))
+            if unrestricted_operations := {
+                op for op in perm.operations if not any(
+                    rule.group in groups and op in rule.operations
+                    for rule in ir_rules[perm.model]
+                )
+            }:
+                accesses.append(replace(perm, operations=unrestricted_operations))
+
+        # now map ir.rules to corresponding ir.access for the permitted operations
+        for rule in (x for xs in ir_rules.values() for x in xs):
+            if rule.group is None:
+                ir_accesses[rule.module][rule.model][rule.group].append(rule)
+                continue
+
+            # add rule in all subgroups that have a corresponding ir.model.access
+            added = False
+
+            for subgroup in group_defs.implying(rule.group):
+                groups = set(group_defs.implied(rule.group)) if subgroup == rule.group else {subgroup}
+                operations = {
+                    op for op in rule.operations if any(
+                        perm.group in groups and op in perm.operations
+                        for perm in ir_perms[rule.model]
+                    )
+                }
+                if not operations:
+                    continue
+
+                added = True
+                ir_accesses[rule.module][rule.model][subgroup].append(
+                    replace(rule, group=subgroup, operations=operations))
+
+            if not added and not FALSE_DOMAIN_RE.match(rule.domain):
+                # ir.rules with a non-falsy domain that never apply look like a
+                # configuration bug; mention alternative groups that provide
+                # access and could be implied
+                groups_with_permission = sorted({
+                    perm.group
+                    for perm in ir_perms[rule.model]
+                    if perm.group is not None and not operations.isdisjoint(perm.operations)
+                }) or ["none!"]
+                _logger.warning(
+                    "WARNING %s: ir.rule(%s) without effective operations for group(%s)\n"
+                    "    compatible ir.model.access found in groups: %s",
+                    rule.module, rule.id, rule.group, ", ".join(groups_with_permission),
+                )
+
+        # create ir.access.csv files
+        xids = set()
+
+        def uniquify(xid):
+            if xid not in xids:
+                return xids.add(xid) or xid
+            for index in range(1, 100):
+                xid2 = f"{xid}_{index}"
+                if xid2 not in xids:
+                    return xids.add(xid2) or xid2
+            raise Exception(f"Too many occurrences of {xid}")
+
+        for module, bymodule in ir_accesses.items():
+            with io.StringIO(newline='') as output:
+                writer = csv.writer(output, lineterminator='\n')
+                writer.writerow(["id", "name", "model_id", "group_id/id", "operation", "domain"])
+                for access in (y for xs in bymodule.values() for ys in xs.values() for y in ys):
+                    writer.writerow([
+                        uniquify(access.id).removeprefix(f"{module}."),
+                        access.name,
+                        access.model,
+                        access.group,
+                        "".join(op for op in MODES if op in access.operations),
+                        access.domain,
+                    ])
+                content = output.getvalue()
+
+            file_name = 'security/ir.access.csv' if module in has_security else 'ir.access.csv'
+            self.file_manager.get_file(module, file_name).content = content
+            self.add_to_manifest(module, file_name)
 
     def generate(self, module: str):
         """ Generate a file ``ir.access.csv`` for the given module. """
