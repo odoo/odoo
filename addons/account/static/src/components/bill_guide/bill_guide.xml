@@ -9,7 +9,7 @@
                     </div>
                     <div class="text-center mt-2">
                         <span class="btn account_drag_drop_btn pe-none" t-att-class="{ 'btn-lg': props.largeIcons }">Drag &amp; drop</span>
-                        <div>
+                        <div t-if="showSampleAction">
                             <span class="btn pe-none px-1 fw-normal">or</span>
                             <a class="btn btn-link px-0 fw-normal"
                                 t-att-class="{ 'btn-lg': props.largeIcons }"
