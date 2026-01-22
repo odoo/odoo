@@ -275,9 +275,8 @@ export class TablePlugin extends Plugin {
         const index = cells.findIndex((td) => td === cell);
         const siblingCell = cells[index - 1] || cells[index + 1];
         table.querySelectorAll(`tr td:nth-of-type(${index + 1})`).forEach((td) => td.remove());
-        // not sure we should move the cursor?
         siblingCell
-            ? this.dependencies.selection.setCursorStart(siblingCell)
+            ? this.dependencies.selection.setCursorEnd(lastLeaf(siblingCell))
             : this.deleteTable(table);
     }
     /**
@@ -287,9 +286,8 @@ export class TablePlugin extends Plugin {
         const table = closestElement(row, "table");
         const siblingRow = row.previousElementSibling || row.nextElementSibling;
         row.remove();
-        // not sure we should move the cursor?
         siblingRow
-            ? this.dependencies.selection.setCursorStart(siblingRow.querySelector("td"))
+            ? this.dependencies.selection.setCursorEnd(lastLeaf(siblingRow.cells[0]))
             : this.deleteTable(table);
     }
     /**
