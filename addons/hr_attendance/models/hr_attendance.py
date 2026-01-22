@@ -266,8 +266,8 @@ class HrAttendance(models.Model):
             return Domain.FALSE
         domain_list = [Domain.AND([
             Domain('employee_id', '=', employee.id),
-            Domain('date', '<=', max(attendances.mapped('check_out')).date() + relativedelta(SU)),
-            Domain('date', '>=', min(attendances.mapped('check_in')).date() + relativedelta(MO(-1))),
+            Domain('date', '<=', max(attendances.mapped('check_out')).date() + relativedelta(weekday=SU(1))),
+            Domain('date', '>=', min(attendances.mapped('check_in')).date() + relativedelta(weekday=MO(-1))),
         ]) for employee, attendances in self.filtered(lambda att: att.check_out).grouped('employee_id').items()]
         if not domain_list:
             return Domain.FALSE
@@ -276,7 +276,11 @@ class HrAttendance(models.Model):
     def _update_overtime(self, attendance_domain=None):
         if not attendance_domain:
             attendance_domain = self._get_overtimes_to_update_domain()
-        self.env['hr.attendance.overtime.line'].search(attendance_domain).unlink()
+        all_overtime_lines = self.env['hr.attendance.overtime.line'].search(attendance_domain)
+        manual_overtimes = set(all_overtime_lines.filtered(
+            lambda l: l.manual_duration != l.duration or l.status == 'to_approve'
+        ).mapped(lambda l: (l.employee_id.id, l.date)))
+        all_overtime_lines.unlink()
         all_attendances = (self | self.env['hr.attendance'].search(attendance_domain)).filtered_domain([('check_out', '!=', False)])
         if not all_attendances:
             return
@@ -292,7 +296,7 @@ class HrAttendance(models.Model):
             emp: [
                 (
                     datetime.combine(p_start, time.min).replace(tzinfo=UTC),
-                    datetime.combine(p_stop, time.min).replace(tzinfo=UTC),
+                    datetime.combine(p_stop, time.max).replace(tzinfo=UTC),
                     v)
                 for p_start, p_stop, v in periods
             ]
@@ -320,9 +324,13 @@ class HrAttendance(models.Model):
         overtime_vals_list = []
         for ruleset, ruleset_attendances in attendances_by_ruleset.items():
             attendances_dates = list(chain(*ruleset_attendances._get_dates().values()))
-            overtime_vals_list.extend(
-                ruleset.rule_ids._generate_overtime_vals_v2(min(attendances_dates), max(attendances_dates), ruleset_attendances, schedules_intervals_by_employee)
-            )
+            overtime_vals_list.extend([
+                {
+                    **val,
+                    'status': 'to_approve'
+                } if (val['employee_id'], val['date']) in manual_overtimes else val
+                for val in ruleset.rule_ids._generate_overtime_vals_v2(min(attendances_dates), max(attendances_dates), ruleset_attendances, schedules_intervals_by_employee)
+            ])
         self.env['hr.attendance.overtime.line'].create(overtime_vals_list)
         self.env.add_to_compute(self._fields['overtime_hours'], all_attendances)
         self.env.add_to_compute(self._fields['validated_overtime_hours'], all_attendances)
