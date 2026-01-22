@@ -214,8 +214,8 @@ patch(PosStore.prototype, {
             }
         }
 
+        await this.syncAllOrders({ orders: [destOrder] });
         await this.deleteOrders([sourceOrder], [], true);
-        this.syncAllOrders({ orders: [destOrder] });
         return destOrder;
     },
     mergeCourses(sourceOrder, destOrder) {
