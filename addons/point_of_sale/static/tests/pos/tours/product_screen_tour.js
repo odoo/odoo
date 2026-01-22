@@ -869,7 +869,7 @@ registry.category("web_tour.tours").add("test_draft_orders_not_syncing", {
             ProductScreen.orderIsEmpty(),
             ProductScreen.clickDisplayedProduct("Desk Pad"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickCustomer("Acme Corporation"),
             Chrome.createFloatingOrder(),
             ProductScreen.clickDisplayedProduct("Desk Pad"),
             ProductScreen.clickPayButton(),
