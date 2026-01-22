@@ -55,6 +55,15 @@ class TestUBLTR(TestUBLTRCommon):
 
         self.assertXmlTreeEqual(self.get_xml_tree_from_string(generated_xml), self.get_xml_tree_from_string(expected_xml))
 
+    def test_xml_invoice_basic_return_einvoice(self):
+        with freeze_time('2025-03-05'):
+            generated_xml = self._generate_return_invoice_xml(self.einvoice_partner)
+
+        with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_basic_return_einvoice.xml', 'rb') as expected_xml_file:
+            expected_xml = expected_xml_file.read()
+
+        self.assertXmlTreeEqual(self.get_xml_tree_from_string(generated_xml), self.get_xml_tree_from_string(expected_xml))
+
     def test_xml_invoice_basic_tax_exempt_einvoice(self):
         with freeze_time('2025-03-05'):
             generated_xml = self._generate_invoice_xml(self.einvoice_partner, l10n_tr_gib_invoice_type="ISTISNA", l10n_tr_exemption_code_id=self.reason_212.id)
@@ -69,6 +78,15 @@ class TestUBLTR(TestUBLTRCommon):
             generated_xml = self._generate_invoice_xml(self.einvoice_partner, self.tax_20_withholding, l10n_tr_gib_invoice_type="TEVKIFAT")
 
         with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_basic_withholding_einvoice.xml', 'rb') as expected_xml_file:
+            expected_xml = expected_xml_file.read()
+
+        self.assertXmlTreeEqual(self.get_xml_tree_from_string(generated_xml), self.get_xml_tree_from_string(expected_xml))
+
+    def test_xml_invoice_basic_withholding_return_einvoice(self):
+        with freeze_time('2025-03-05'):
+            generated_xml = self._generate_return_invoice_xml(self.einvoice_partner, self.tax_20_withholding, l10n_tr_gib_invoice_type="TEVKIFAT")
+
+        with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_return_basic_withholding_einvoice.xml', 'rb') as expected_xml_file:
             expected_xml = expected_xml_file.read()
 
         self.assertXmlTreeEqual(self.get_xml_tree_from_string(generated_xml), self.get_xml_tree_from_string(expected_xml))

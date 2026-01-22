@@ -55,6 +55,10 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     def _add_invoice_header_nodes(self, document_node, vals):
         super()._add_invoice_header_nodes(document_node, vals)
+        # The Nilvera Extended flow is only for out_invoice and out_refund type
+        if vals['document_type'] not in {'invoice', 'credit_note'}:
+            return
+
         invoice = vals['invoice']
 
         # Check the customer status if it hasn't been done before as it's needed for profile_id
@@ -78,7 +82,6 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             'cbc:UUID': {'_text': invoice.l10n_tr_nilvera_uuid},
             'cbc:DueDate': None,
             'cbc:InvoiceTypeCode': {'_text': 'ISTISNA' if invoice.l10n_tr_is_export_invoice else invoice.l10n_tr_gib_invoice_type},
-            'cbc:CreditNoteTypeCode': {'_text': 'IADE'} if vals['document_type'] == 'credit_note' else None,
             'cbc:PricingCurrencyCode': {'_text': invoice.currency_id.name.upper()}
                 if vals['currency_id'] != vals['company_currency_id'] else None,
             'cbc:LineCountNumeric': {'_text': len(invoice.line_ids)},
@@ -103,6 +106,31 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         if vals['invoice'].currency_id.name != 'TRY':
             document_node['cbc:Note'].append({'_text': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_residual, vals['invoice'].currency_id), 'note_attrs': {}})
             document_node['cbc:Note'].append({'_text': self._l10n_tr_get_invoice_currency_exchange_rate(invoice)})
+
+        if invoice.move_type == "out_refund":
+            # For credit notes, we need to add cac:BillingReference (i.e. reference to the original invoice)
+            self._l10n_tr_add_billing_reference_node(document_node, vals)
+
+    @api.model
+    def _l10n_tr_add_billing_reference_node(self, document_node, vals):
+        invoice = vals['invoice']
+        if not invoice.reversed_entry_id and not invoice.ref:
+            raise UserError(
+                self.env._(
+                    "The credit note must be linked to the original invoice, or include the invoice reference in the reference field."
+                )
+            )
+        _, parts = invoice._get_sequence_format_param(invoice.reversed_entry_id.name or invoice.ref)
+        prefix, year, number = parts['prefix1'][:3], parts['year'], str(parts['seq']).zfill(9)
+        reverese_entry_id = f"{prefix.upper()}{year}{number}"
+        document_node['cac:BillingReference'] = {
+            "cac:InvoiceDocumentReference": {
+                'cbc:ID': {'_text': reverese_entry_id},
+                'cbc:IssueDate': {'_text': invoice.reversed_entry_id.invoice_date or invoice.l10n_tr_original_invoice_date},
+                'cbc:DocumentTypeCode': {'_text': "İADE"},
+                'cbc:DocumentDescription': {'_text': "İade Edilen Fatura"},
+            },
+        }
 
     @api.model
     def _l10n_tr_get_amount_integer_partn_text_note(self, amount, currency):
@@ -167,6 +195,8 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         # EXTENDS account.edi.xml.ubl_21
+        if vals["document_type"] == "credit_note":
+            return
         super()._add_invoice_payment_means_nodes(document_node, vals)
         payment_means_node = document_node['cac:PaymentMeans']
         payment_means_node['cbc:InstructionID'] = None
@@ -219,6 +249,8 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         """
         if vals['invoice'].l10n_tr_gib_invoice_type == 'TEVKIFAT':
             return self._add_withholding_document_line_tax_total_nodes(line_node, vals)
+        if vals['invoice'].l10n_tr_gib_invoice_type == 'TEVKIFATIADE':
+            return self._add_withholding_return_document_line_tax_total_nodes(line_node, vals)
         return super()._add_document_line_tax_total_nodes(line_node, vals)
 
     def _l10n_tr_get_issuer_party_line_codes(self, move_line):
@@ -298,6 +330,8 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         """
         if vals['invoice'].l10n_tr_gib_invoice_type == 'TEVKIFAT':
             return self._add_withholding_document_tax_total_nodes(document_node, vals)
+        if vals['invoice'].l10n_tr_gib_invoice_type == 'TEVKIFATIADE':
+            return self._add_withholding_return_document_tax_total_nodes(document_node, vals)
         return super()._add_document_tax_total_nodes(document_node, vals)
 
     def _add_withholding_document_tax_total_nodes(self, line_node, vals):
@@ -361,6 +395,73 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 for tax_details in aggregated_tax_details_by_l10n_tr_tax_withholding_code_id['withholding_tax'].values()
             ]
 
+    def _add_withholding_return_document_tax_total_nodes(self, document_node, vals):
+        tax_subtotals_per_currency = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0)))
+        for base_line in vals["base_lines"]:
+            line = base_line["record"]
+            taxes_data = base_line.get("tax_details", {}).get("taxes_data", [])
+            total_taxed_amount = sum(tax_line["tax_amount"] for tax_line in taxes_data)
+
+            percent_return = (
+                line.l10n_tr_original_quantity
+                and line.quantity * 100 / line.l10n_tr_original_quantity
+            ) or 0
+            tax_subtotals_per_currency[line.currency_id][percent_return][
+                "taxable_amount"
+            ] += line.l10n_tr_original_tax_without_withholding
+            tax_subtotals_per_currency[line.currency_id][percent_return][
+                "tax_amount"
+            ] += total_taxed_amount
+
+        tax_totals = []
+        for currency_id, subtotal_aggregates in tax_subtotals_per_currency.items():
+            currency_name = currency_id.name
+            precision = currency_id.decimal_places
+            tax_amount = 0
+            tax_subtotals = []
+            for percent_return, subtotal in subtotal_aggregates.items():
+                tax_amount += subtotal["tax_amount"]
+                tax_subtotals.append(
+                    {
+                        "cbc:TaxableAmount": {
+                            "_text": self.format_float(
+                                subtotal["taxable_amount"],
+                                precision,
+                            ),
+                            "currencyID": currency_name,
+                        },
+                        "cbc:TaxAmount": {
+                            "_text": self.format_float(
+                                subtotal["tax_amount"],
+                                precision,
+                            ),
+                            "currencyID": currency_name,
+                        },
+                        "cbc:Percent": {
+                            "_text": percent_return,
+                        },
+                        "cac:TaxCategory": {
+                            "cac:TaxScheme": {
+                                "cbc:Name": {
+                                    "_text": "Gerçek Usulde KDV",
+                                },
+                                "cbc:TaxTypeCode": {
+                                    "_text": "0015",
+                                },
+                            },
+                        },
+                    },
+                )
+            tax_totals.append({
+                "cbc:TaxAmount": {
+                    '_text': self.format_float(tax_amount, precision),
+                    'currencyID': currency_name,
+                },
+                "cac:TaxSubtotal": tax_subtotals,
+            })
+
+        document_node["cac:TaxTotal"] = tax_totals
+
     def _add_withholding_document_line_tax_total_nodes(self, line_node, vals):
         """Extend aggregation of line tax details to include Turkish (TR) withholding-specific amounts.
 
@@ -415,6 +516,56 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 for tax_details in aggregated_tax_details_by_l10n_tr_tax_withholding_code_id['withholding_tax'].values()
             ]
 
+    def _add_withholding_return_document_line_tax_total_nodes(self, line_node, vals):
+        base_line = vals["base_line"]
+        line = base_line["record"]
+        currency_name = line.currency_id.name
+        precision = line.currency_id.decimal_places
+        percent_return = (
+            line.l10n_tr_original_quantity
+            and line.quantity * 100 / line.l10n_tr_original_quantity
+        ) or 0
+
+        taxes_data = base_line.get("tax_details", {}).get("taxes_data", [])
+        total_taxed_amount = sum(tax_line["tax_amount"] for tax_line in taxes_data)
+        line_node["cac:TaxTotal"] = [
+            {
+                "cbc:TaxAmount": {
+                    "_text": self.format_float(total_taxed_amount, precision),
+                    "currencyID": currency_name,
+                },
+                "cac:TaxSubtotal": {
+                    "cbc:TaxableAmount": {
+                        "_text": self.format_float(
+                            line.l10n_tr_original_tax_without_withholding,
+                            precision,
+                        ),
+                        "currencyID": currency_name,
+                    },
+                    "cbc:TaxAmount": {
+                        "_text": self.format_float(
+                            total_taxed_amount,
+                            precision,
+                        ),
+                        "currencyID": currency_name,
+                    },
+                    "cbc:Percent": {
+                        "_text": percent_return,
+                    },
+                    "cac:TaxCategory": {
+                        "cac:TaxScheme": {
+                            "cbc:Name": {
+                                "_text": "Gerçek Usulde KDV",
+                            },
+                            "cbc:TaxTypeCode": {
+                                "_text": "0015",
+                            },
+                        },
+                    },
+                },
+            },
+        ]
+
     def _get_address_node(self, vals):
         partner = vals['partner']
 
@@ -464,9 +615,25 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         :param vals: Dictionary containing document data, including 'document_node' and 'document_type'.
         :return: Document template class to be used for generating the document.
         """
-        if vals['document_node']['cbc:CustomizationID']['_text'] == 'TR1.2' and vals['document_type'] == 'invoice':
+        if vals['document_node']['cbc:CustomizationID']['_text'] == 'TR1.2' and vals['document_type'] in {'invoice', 'credit_note'}:
             return TrInvoice
         return super()._get_document_template(vals)
+
+    def _get_document_nsmap(self, vals):
+        res = super()._get_document_nsmap(vals)
+        if vals["document_type"] == "credit_note":
+            res[None] = "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+        return res
+
+    def _get_tags_for_document_type(self, vals):
+        res = super()._get_tags_for_document_type(vals)
+        if vals["document_type"] == "credit_note":
+            res.update({
+                "document_type_code": 'cbc:InvoiceTypeCode',
+                "document_line": 'cac:InvoiceLine',
+                "line_quantity": 'cbc:InvoicedQuantity',
+            })
+        return res
 
     @api.model
     def _get_ministry_party_node(self):
