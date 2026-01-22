@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.FontAwesomeIconField">
+        <t t-if="props.readonly" t-out="iconValue" />
+        <t t-else="">
+            <SelectMenu
+                autoSort="false"
+                class="'border-0'"
+                menuClass="'o_fa_icon_field_selector_menu'"
+                value="this.iconValue"
+                choices="this.choices"
+                onSelect.bind="this.onSelect"
+                placeholder.translate="Select icon"
+                searchable="!this.isBottomSheet">
+
+                <t t-set-slot="choice" t-slot-scope="choice">
+                    <i t-att-class="'o_font_awesome_icon_selector_value  d-inline-flex justify-content-center align-items-center fs-3 ' + choice.data.value" t-att-data-tooltip="this.getIconTooltip(choice.data.value)" />
+                </t>
+            </SelectMenu>
+        </t>
+    </t>
+</templates>
