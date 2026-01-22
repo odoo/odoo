@@ -707,10 +707,10 @@ registry.category("web_tour.tours").add("test_customer_alone_saved", {
             Chrome.clickOrders(),
             Chrome.clickRegister(),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickCustomer("Acme Corporation"),
             Chrome.clickOrders(),
             Chrome.clickRegister(),
-            ProductScreen.customerIsSelected("Deco Addict"),
+            ProductScreen.customerIsSelected("Acme Corporation"),
         ].flat(),
 });
 
@@ -915,7 +915,7 @@ registry.category("web_tour.tours").add("test_sync_set_partner", {
             Chrome.waitRequest(), // Wait for sync request
             assertCurrentOrderDirty(false),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickCustomer("Acme Corporation"),
             assertCurrentOrderDirty(true),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
@@ -1057,7 +1057,7 @@ registry.category("web_tour.tours").add("test_name_preset_skip_screen", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickCustomer("Acme Corporation"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
