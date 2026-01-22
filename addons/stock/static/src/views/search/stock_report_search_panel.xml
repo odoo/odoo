@@ -24,9 +24,43 @@
     </xpath>
 </t>
 
+<t t-name="stock.StockReportSearchPanel.Small" t-inherit="web.SearchPanel.Small" t-inherit-mode="primary">
+    <xpath expr="//Dropdown" position="before">
+        <Dropdown t-if="warehouses.length > 1" menuClass="'my-2 mx-1'">
+            <span class="btn btn-secondary my-2 mx-1 o-dropdown-caret">
+                <i class="fa fa-filter o_search_panel_section_icon text-warning me-2"/>
+                <b class="pe-2">Warehouses</b>
+            </span>
+            <t t-set-slot="content">
+                <div class="o_search_panel_section o_search_panel_warehouse p-2">
+                    <ul class="list-group d-block o_search_panel_field">
+                        <li class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 o_cursor_pointer">
+                            <span class="d-block p-1" 
+                                    t-on-click="ev => this.clearWarehouseContext(ev)"
+                                    t-att-class="{'fw-bolder': !selectedWarehouse}">
+                                All Warehouses
+                            </span>
+                        </li>
+                        <li class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 o_cursor_pointer"
+                            t-foreach="warehouses" t-as="warehouse" t-key="warehouse.id">
+                            <div t-out="warehouse.name"
+                                t-on-click="ev => this.applyWarehouseContext(warehouse.id, ev)"
+                                t-att-class="{'fw-bolder': selectedWarehouse === warehouse.id, 
+                                                'bg-info-subtle': selectedWarehouse === warehouse.id}"/>
+                        </li>
+                    </ul>
+                </div>
+            </t>
+        </Dropdown>
+    </xpath>
+</t>
+
 <t t-name="stock.StockReportSearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
     <xpath expr="//t[@t-call='web.SearchPanel.Regular']" position="attributes">
         <attribute name="t-call">stock.StockReportSearchPanel.Regular</attribute>
+    </xpath>
+    <xpath expr="//t[@t-call='web.SearchPanel.Small']" position="attributes">
+        <attribute name="t-call">stock.StockReportSearchPanel.Small</attribute>
     </xpath>
 </t>
 
