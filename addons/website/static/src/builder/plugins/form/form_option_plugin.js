@@ -994,6 +994,9 @@ export class AddActionFieldAction extends BuilderAction {
 export class PromptSaveRedirectAction extends BuilderAction {
     static id = "promptSaveRedirect";
     static dependencies = ["savePlugin"];
+    setup() {
+        this.canTimeout = false;
+    }
     apply({ params: { mainParam } }) {
         const redirectToAction = (action) => {
             redirect(`/odoo/action-${encodeURIComponent(action)}`);
