@@ -61,6 +61,7 @@
                         <filter name="group_category_ids" string="Tags" domain="[]" context="{'group_by': 'category_ids'}"/>
                         <filter name="group_employee_type" string="Employee Type" domain="[]" context="{'group_by': 'employee_type'}"/>
                         <separator name="main_groupby_separator"/>
+                        <filter name="_search_today_location" string="Work location" domain="[]" context="{'group_by':'today_location_name'}"/>
                         <filter name="group_birthday" domain="[]" context="{'group_by': 'birthday_month'}" invisible="1"/>
                         <filter name="group_start" string="Contract Start" domain="[]" context="{'group_by': 'contract_date_start'}" groups="hr.group_hr_manager"/>
                         <separator name="secondary_groupby_separator"/>
@@ -177,6 +178,15 @@
                                             <field name="work_location_id"
                                                 context="{'default_address_id': address_id}"
                                                 placeholder="e.g. Building 2, Remote, etc."/>
+                                        </group>
+                                        <group string="Usual Work Location">
+                                            <field name="monday_location_id" placeholder="Unspecified" force_save="1"/>
+                                            <field name="tuesday_location_id" placeholder="Unspecified" force_save="1"/>
+                                            <field name="wednesday_location_id" placeholder="Unspecified" force_save="1"/>
+                                            <field name="thursday_location_id" placeholder="Unspecified" force_save="1"/>
+                                            <field name="friday_location_id" placeholder="Unspecified" force_save="1"/>
+                                            <field name="saturday_location_id" placeholder="Unspecified" force_save="1"/>
+                                            <field name="sunday_location_id" placeholder="Unspecified" force_save="1"/>
                                         </group>
                                         <group string="Note" name="note" groups="hr.group_hr_user">
                                             <field name="additional_note" placeholder="Provide additional information about this version..." colspan="2" nolabel="1"/>
@@ -568,6 +578,7 @@
                     <field name="name" string="Name" readonly="1"/>
                     <field name="work_phone" class="o_force_ltr" readonly="1" optional="show"/>
                     <field name="work_email" optional="hide"/>
+                    <field name="work_location_name" readonly="0" string="Work Location" optional="hide"/>
                     <field name="contract_date_start" optional="hide"/>
                     <field name="contract_date_end" optional="hide"/>
                     <field name="currency_id" column_invisible="1"/>
@@ -582,7 +593,7 @@
                     <field name="address_id" column_invisible="True"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="birthday" optional="hide"/>
-                    <field name="work_location_id" optional="hide"/>
+                    <field name="work_location_id" column_invisible="True"/>
                     <field name="active" column_invisible="True"/>
                     <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
                     <field name="country_id" optional="hide"/>

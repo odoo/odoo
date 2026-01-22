@@ -10,6 +10,8 @@ from odoo.fields import Domain
 from odoo.tools.misc import clean_context
 from odoo.addons.mail.tools.discuss import Store
 
+from .hr_employee_location import DAYS
+
 
 def field_employee(field_type: type[fields.Field], name: str, *, field_name='', user_writeable=False, **kw):
     """Simulating a related field "employee_id.{name}".
@@ -120,6 +122,14 @@ class ResUsers(models.Model):
     is_system = fields.Boolean(compute="_compute_is_system")
     is_hr_user = fields.Boolean(compute='_compute_is_hr_user')
 
+    monday_location_id = fields.Many2one("hr.work.location", related="employee_id.monday_location_id", readonly=False, string='Mondays', user_writeable=True)
+    tuesday_location_id = fields.Many2one("hr.work.location", related="employee_id.tuesday_location_id", readonly=False, string='Tuesdays', user_writeable=True)
+    wednesday_location_id = fields.Many2one("hr.work.location", related="employee_id.wednesday_location_id", readonly=False, string='Wednesdays', user_writeable=True)
+    thursday_location_id = fields.Many2one("hr.work.location", related="employee_id.thursday_location_id", readonly=False, string='Thursdays', user_writeable=True)
+    friday_location_id = fields.Many2one("hr.work.location", related="employee_id.friday_location_id", readonly=False, string='Fridays', user_writeable=True)
+    saturday_location_id = fields.Many2one("hr.work.location", related="employee_id.saturday_location_id", readonly=False, string='Saturdays', user_writeable=True)
+    sunday_location_id = fields.Many2one("hr.work.location", related="employee_id.sunday_location_id", readonly=False, string='Sundays', user_writeable=True)
+
     @api.depends_context('uid')
     def _compute_is_system(self):
         self.is_system = self.env.user._is_system()
@@ -161,7 +171,7 @@ class ResUsers(models.Model):
     def _get_employee_fields_to_sync(self):
         """Get values to sync to the related employee when the User is changed.
         """
-        return ['name', 'email', 'image_1920', 'tz']
+        return ['name', 'email', 'image_1920', 'tz'] + DAYS
 
     def _get_personal_info_partner_ids_to_notify(self, employee):
         if employee.version_id.hr_responsible_id:

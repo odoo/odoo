@@ -10,7 +10,9 @@ const patchHrPresenceStatus = () => ({
         if (this.value.includes("holiday")) {
             return _t("%(label)s, back on %(date)s",
                 {
-                    label: super.label,
+                    label: this.value !== false
+                        ? this.options.find(([value, label]) => value === this.value)[1]
+                        : "",
                     date: this.props.record.data['leave_date_to'].toLocaleString(
                         {
                             day: 'numeric',
@@ -20,20 +22,37 @@ const patchHrPresenceStatus = () => ({
                     )
                 }
             )
+        } else if (this.location) {
+            return this.props.record.data.work_location_name || _t("Unspecified")
         }
         return super.label
     },
 
     get icon() {
-        if (this.value.startsWith("presence_holiday")) {
+        if (this.value?.includes("holiday")) {
             return "fa-plane";
+        } else if (this.location) {
+            switch (this.location) {
+                case "home":
+                    return "fa-home";
+                case "office":
+                    return "fa-building";
+                case "other":
+                    return "fa-map-marker";
+            }
         }
         return super.icon;
     },
 
     get color() {
-        if (this.value.startsWith("presence_holiday")) {
+        if (this.value?.includes("holiday")) {
             return `${this.value === "presence_holiday_present" ? "text-success" : "o_icon_employee_absent"}`;
+        } else if (this.location) {
+            let color = "text-muted";
+            if (this.props.record.data.hr_presence_state !== "out_of_working_hour") {
+                color = this.props.record.data.hr_presence_state === "present" ?  "text-success" : "o_icon_employee_absent";
+            }
+            return color;
         }
         return super.color;
     },
