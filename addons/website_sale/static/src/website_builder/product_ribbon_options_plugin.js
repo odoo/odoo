@@ -393,6 +393,9 @@ class ModifyRibbonAction extends BuilderAction {
 class DeleteRibbonAction extends BuilderAction {
     static id = 'deleteRibbon';
     static dependencies = ['productsRibbonOptionPlugin'];
+    setup() {
+        this.canTimeout = false;
+    }
     async apply({ editingElement }) {
         const save = await new Promise((resolve) => {
             this.services.dialog.add(ConfirmationDialog, {
