@@ -18,6 +18,13 @@ class PurchaseOrder(models.Model):
             order.incoming_picking_count -= dropship_count
             order.dropship_picking_count = dropship_count
 
+    @api.depends('order_line.sale_order_id.partner_shipping_id', 'picking_type_id')
+    def _compute_dest_address_id(self):
+        dropshipped_po = self.filtered(lambda po: po._is_dropshipped() and len(po._get_sale_orders()) == 1)
+        for order in dropshipped_po:
+            order.dest_address_id = self._get_sale_orders().partner_shipping_id
+        super(PurchaseOrder, self - dropshipped_po)._compute_dest_address_id()
+
     def action_view_picking(self):
         return self._get_action_view_picking(self.picking_ids.filtered(lambda p: not p.is_dropship))
 
