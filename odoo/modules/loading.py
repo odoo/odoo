@@ -611,7 +611,17 @@ def test_modules(
 
         # Python tests
         tests_t0, tests_q0 = time.time(), odoo.sql_db.sql_counter
-        test_results = loader.run_suite(suite, global_report=report)
+        loaded_before = registry.loaded
+        ready_before = registry.ready
+        try:
+            if ready_before and position == 'at_install':
+                # best effort to restore the test environment
+                registry.ready = registry.loaded = False
+            test_results = loader.run_suite(suite, global_report=report)
+        finally:
+            registry.loaded = loaded_before
+            registry.ready = ready_before
+
         report.update(test_results)
         test_time = time.time() - tests_t0
         test_queries = odoo.sql_db.sql_counter - tests_q0
