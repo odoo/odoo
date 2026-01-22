@@ -1154,3 +1154,26 @@ class TestPurchase(AccountTestInvoicingCommon):
             uom_test.unlink()
 
         self.assertEqual(po.order_line[0].product_uom, uom_test)
+
+    def test_product_price_on_purchase_order_view_catalog(self):
+        """
+        Ensure vendor price & discount from supplierinfo are applied
+        properly when using the vendor catalog popup.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'seller_ids': [
+                Command.create({
+                    'partner_id': self.partner_a.id,
+                    'price': 100,
+                    'discount': 10,
+                })
+            ]
+        })
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        purchase_order._update_order_line_info(product.id, 1)
+        self.assertRecordValues(purchase_order.order_line, [
+            {'price_unit': 100, 'discount': 10, 'price_unit_discounted': 90},
+        ])

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import _, api, models
-from odoo.tools.misc import str2bool
+from odoo.tools.misc import formatLang, str2bool, NON_BREAKING_SPACE
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
@@ -550,6 +550,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # Call the parent method from UBL 2.1
         super()._add_invoice_header_nodes(document_node, vals)
         invoice = vals['invoice']
+        ubl_values = vals['_ubl_values']
 
         # Override specific BIS3 values
         document_node.update({
@@ -558,6 +559,16 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'cbc:ProfileID': {'_text': 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0'},
             'cbc:TaxCurrencyCode': {'_text': vals['tax_currency_code']},
         })
+
+        if tax_withholding_amount := ubl_values['payable_amount_tax_withholding_currency']:
+            note = _(
+                "The prepaid amount of %s corresponds to the withholding tax applied.",
+                formatLang(self.env, tax_withholding_amount, currency_obj=vals['currency_id']).replace(NON_BREAKING_SPACE, ''),
+            )
+            narration_note = document_node['cbc:Note']['_text']
+            if narration_note:
+                note = f'{note} {narration_note}'
+            document_node['cbc:Note']['_text'] = note
 
         # [NL-R-001] For suppliers in the Netherlands, if the document is a creditnote, the document MUST
         # contain an invoice reference (cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID)
@@ -792,7 +803,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 break
 
         for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')):
-            if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type not in ('fixed', 'code'))) != 1:
+            if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type not in ('fixed', 'code') and t.amount >= 0.0)) != 1:
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
                 # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax
                 constraints.update({'cen_en16931_tax_line': _("Each invoice line shall have one and only one tax.")})
@@ -903,24 +914,13 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     # EXPORT: Gathering data
     # -------------------------------------------------------------------------
 
-    def _ubl_default_tax_subtotal_tax_category_grouping_key(self, tax_grouping_key, vals):
-        # EXTENDS
-        return {
-            **super()._ubl_default_tax_subtotal_tax_category_grouping_key(tax_grouping_key, vals),
-            # Temporary solution to have withholding taxes merged with others until we know how to manage them.
-            'is_withholding': False,
-        }
-
     def _setup_base_lines(self, vals):
         # OVERRIDE
         AccountTax = self.env['account.tax']
         company = vals['company']
 
         # Avoid negative unit price.
-        for base_line in vals['base_lines']:
-            if base_line['price_unit'] < 0.0:
-                base_line['quantity'] *= -1
-                base_line['price_unit'] *= -1
+        self._ubl_turn_base_lines_price_unit_as_always_positive(vals)
 
         # Manage taxes for emptying.
         vals['base_lines'] = self._ubl_turn_emptying_taxes_as_new_base_lines(vals['base_lines'], company, vals)
@@ -969,6 +969,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # Add 'tax_totals'.
         self._ubl_add_values_tax_totals(vals)
 
+        # Add 'payable_amount' to manage withholding taxes.
+        self._ubl_add_values_payable_amount_tax_withholding(vals)
+
         # Add 'allowance_charge_early_payment' to manage the early payment discount.
         self._ubl_add_values_allowance_charge_early_payment(vals)
 
@@ -996,7 +999,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
             },
             'cbc:LineExtensionAmount': {
-                '_text': FloatFmt(base_line['_ubl_values']['line_extension_amount'], min_dp=currency.decimal_places),
+                '_text': FloatFmt(base_line['_ubl_values']['line_extension_amount_currency'], min_dp=currency.decimal_places),
                 'currencyID': currency.name,
             },
         })
@@ -1102,6 +1105,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             if allowance_charge['cbc:ChargeIndicator']['_text'] == 'true'
         )
         payable_rounding_amount = ubl_values['payable_rounding_amount_currency']
+        payable_amount_tax_withholding_currency = ubl_values['payable_amount_tax_withholding_currency']
 
         document_node[monetary_total_tag] = {
             'cbc:LineExtensionAmount': {
@@ -1125,7 +1129,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 'currencyID': vals['currency_name'],
             } if total_charge else None,
             'cbc:PrepaidAmount': {
-                '_text': FloatFmt(invoice.amount_total - invoice.amount_residual, min_dp=vals['currency_dp']),
+                '_text': FloatFmt(payable_amount_tax_withholding_currency + invoice.amount_total - invoice.amount_residual, min_dp=vals['currency_dp']),
                 'currencyID': vals['currency_name'],
             },
             'cbc:PayableRoundingAmount': {

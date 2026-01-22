@@ -354,8 +354,6 @@ class Company(models.Model):
             and self.filtered(lambda company: not company.country_id)
             or self.browse()
         )
-        if not invalidation_fields.isdisjoint(values):
-            self.env.registry.clear_cache()
 
         if not asset_invalidation_fields.isdisjoint(values):
             # this is used in the content of an asset (see asset_styles_company_report)
@@ -371,6 +369,10 @@ class Company(models.Model):
                 currency.write({'active': True})
 
         res = super(Company, self).write(values)
+
+        # Must be done after call to super
+        if not invalidation_fields.isdisjoint(values):
+            self.env.registry.clear_cache()
 
         # Archiving a company should also archive all of its branches
         if values.get('active') is False:

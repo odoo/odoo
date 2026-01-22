@@ -3,6 +3,7 @@
 import base64
 import io
 import re
+import textwrap
 import time
 import uuid
 import zipfile
@@ -694,9 +695,10 @@ class AccountMove(models.Model):
         for line in self.invoice_line_ids.filtered(lambda ln: ln.display_type == 'product'):
             # For credit notes amount, we send negative values (reduces the amount of the original invoice)
             sign = 1 if self.move_type == 'out_invoice' else -1
+            item_name = line.name.replace('\n', ' ')
             item_information = {
                 'itemCode': line.product_id.code or '',
-                'itemName': line.name,
+                'itemName': textwrap.shorten(item_name, width=500, placeholder='...'),
                 'unitName': line.product_uom_id.name or 'Units',
                 'unitPrice': line.price_unit * sign,
                 'quantity': line.quantity,
@@ -706,7 +708,7 @@ class AccountMove(models.Model):
                 # Values are either: -2 (no tax), -1 (not declaring/paying taxes), 0,5,8,10 (the tax %)
                 # Most use cases will be -2 or a tax percentage, so we limit the support to these.
                 'taxPercentage': line.tax_ids and line.tax_ids[0].amount or -2,
-                'taxAmount': (line.price_total - line.price_subtotal),
+                'taxAmount': line.currency_id.round(line.price_total - line.price_subtotal),
                 'discount': line.discount,
                 'itemTotalAmountAfterDiscount': line.price_subtotal,
                 'itemTotalAmountWithTax': line.price_total,

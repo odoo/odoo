@@ -213,10 +213,12 @@ registry.category("web_tour.tours").add("test_coupon_code_stays_set", {
             ProductScreen.clickDisplayedProduct("Gift Card"),
             PosLoyalty.createManualGiftCard("Card Name", 20),
             ProductScreen.clickDisplayedProduct("Gift Card"),
+            ProductScreen.selectedOrderlineHas("Gift Card", "1.00", "50"),
             Utils.refresh(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.clickNextOrder(),
+            Chrome.endTour(),
         ].flat(),
 });

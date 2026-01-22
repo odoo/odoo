@@ -909,8 +909,8 @@ class ResPartner(models.Model):
         if not vat:
             return None
 
-        # Sometimes, the vat is specified with some whitespaces.
-        normalized_vat = vat.replace(' ', '')
+        # Sometimes, the vat is specified with some whitespaces or dots.
+        normalized_vat = vat.replace(' ', '').replace('.', '')
         country_prefix = re.match('^[a-zA-Z]{2}|^', vat).group()
 
         partner = self.env['res.partner'].search(extra_domain + [('vat', 'in', (normalized_vat, vat))], limit=2)
