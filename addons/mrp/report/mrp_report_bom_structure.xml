@@ -30,16 +30,16 @@
                             <td name="td_mrp_bom" t-out="data['name']"/>
                             <td class="text-end" t-out="data['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/>
                             <td class="text-start" groups="uom.group_uom" t-out="data['uom_name']"/>
-                            <td t-if="data['forecast_mode']" class="text-end">
+                            <td t-if="data['forecast_mode']" class="text-center">
                                 <t t-out="data['quantity_available']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/> /
                                 <t t-out="data['quantity_on_hand']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/>
                             </td>
                             <td t-if="data['forecast_mode']" class="text-center">
-                                <t t-if="data['status']" t-out="data['status']"/>
-                            </td>
-                            <td t-if="data['forecast_mode']" class="text-center">
-                                <t t-if="data.get('components_available', None) != None">
-                                    <span t-attf-class="{{'text-success' if data['components_available'] and data['availability_state'] != 'unavailable' else 'text-danger' }}" t-out="data['availability_display']"/>
+                                <t t-if="data['status']">
+                                    <span t-attf-class="{{'text-danger' if data.get('availability_state') == 'unavailable' else ''}}
+                                                        {{'text-success' if data.get('producible_qty') else ''}}"
+                                                        t-out="data['status']">
+                                    </span>
                                 </t>
                             </td>
                             <td t-if="data['forecast_mode']" class="text-end">
@@ -105,21 +105,18 @@
                     <t t-if="l['type'] == 'operation'" t-out="l['quantity']" t-options='{"widget": "float_time"}'/>
                     <t t-else="" t-out="l['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/>
                 </td>
-                <td class="text-start" groups="uom.group_uom">
-                    <t t-out="l['uom']"/>
-                </td>
-                <td t-if="data['forecast_mode']" class="text-end">
+                <td class="text-start" groups="uom.group_uom" t-out="l['uom']"/>
+                <td t-if="data['forecast_mode']" class="text-center">
                     <t t-if="l.get('is_storable', False)">
                         <t t-out="l['quantity_available']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/> /
                         <t t-out="l['quantity_on_hand']" t-options='{"widget": "float", "decimal_precision": "Product Unit"}'/>
                     </t>
                 </td>
                 <td t-if="data['forecast_mode']" class="text-center">
-                    <t t-if="l.get('status', '') != ''" t-out="l['status']"/>
-                </td>
-                <td t-if="data['forecast_mode']" class="text-center">
-                    <t t-if="l.get('availability_state', None) != None">
-                        <span t-attf-class="{{'text-success' if l['availability_state'] == 'available' else ''}}{{'text-warning' if l['availability_state'] == 'expected' else ''}}{{'text-danger' if l['availability_state'] == 'unavailable' else ''}}" t-out="l['availability_display']"/>
+                    <t t-if="l.get('status', '') != '' and l.get('availability_state', '') != ''">
+                    <span t-attf-class="{{'text-success' if l['availability_state'] == 'available' else ''}}
+                                        {{'text-warning' if l['availability_state'] == 'expected' else ''}}
+                                        {{'text-danger' if (l['availability_state'] == 'unavailable') else ''}}" t-out="l['status']"/>
                     </t>
                 </td>
                 <td t-if="data['forecast_mode']" class="text-end">

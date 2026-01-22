@@ -5,7 +5,7 @@ from odoo import exceptions, fields
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import Form, HttpCase, freeze_time, tagged
-from odoo.tools import float_compare, float_repr, float_round
+from odoo.tools import float_compare, float_repr, float_round, format_date
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
@@ -2761,8 +2761,7 @@ class TestBoM(TestMrpCommon):
 
     def test_bom_overview_forecasted_component_status(self):
         """This test case is for verifying that BoM overview availability respects forecasted stock and future
-        replenishments, and ensures that when the availability state is 'expected', the status column remains empty
-        (not 'To Order').
+        replenishments, and ensures that when the availability state is 'expected', the status column shows "Expected + date".
         """
         main_bom = self.make_bom(self.productA, self.productB)
         self.env['mrp.production'].create({
@@ -2775,11 +2774,12 @@ class TestBoM(TestMrpCommon):
 
         comp_line = self._get_component_line(main_bom, self.productB)
         self.assertEqual(comp_line['availability_state'], 'expected')
-        self.assertFalse(comp_line.get('status'))  # Empty status when availability is 'expected'
+        expected_date = f"Expected {format_date(self.env, fields.Date.today() + timedelta(days=comp_line['availability_delay']))}"
+        self.assertEqual(comp_line.get('status'), expected_date)  # Status = "Expected" + today's date + delay
 
         comp_line = self._get_component_line(main_bom, self.productB, qty=2)
         self.assertEqual(comp_line['availability_state'], 'unavailable')  # Reserved for the MO
-        self.assertEqual(comp_line.get('status'), '1.00 To Order')
+        self.assertEqual(comp_line.get('status'), 'Not Available')
 
     def test_bom_with_operations_for_kit_variant(self):
         """
