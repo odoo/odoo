@@ -505,12 +505,26 @@ export class SelfOrder extends Reactive {
         const orderData = order.getOrderData();
         const changes = changesToOrder(order, this.config.preparationCategories);
         for (const printer of this.kitchenPrinters) {
+<<<<<<< 4b2e89e8961f0de34fe23d0d8ff829764633cdfe
             const orderlines = filterChangeByCategories(
                 printer.config.product_categories_ids.map((c) => c.id),
                 changes,
                 this.models
             ).new;
             if (orderlines.length > 0) {
+||||||| 110cf64817471bdec8b814e411f3166370c941b8
+            const orderlines = this._getKioskPrintingCategoriesChanges(
+                order,
+                Object.values(printer.config.product_categories_ids)
+            );
+            if (orderlines) {
+=======
+            const orderlines = this._getKioskPrintingCategoriesChanges(
+                order,
+                Object.values(printer.config.product_categories_ids)
+            );
+            if (orderlines.length > 0) {
+>>>>>>> 29eb2bb75f9caae9a79c520a11f471f3c83a53f5
                 const printingChanges = {
                     ...orderData,
                     changes: {
