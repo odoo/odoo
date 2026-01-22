@@ -310,8 +310,8 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
 
         bom_report_line['product_uom_name'] = product.uom_id.name
         bom_report_line['bom_unit_cost'] = bom_report_line['bom_cost']
-        if product and not parent_product and bom.product_uom_id != product.uom_id:
-            bom_report_line['bom_unit_cost'] = bom.product_uom_id._compute_price(bom_report_line['bom_cost'], product.uom_id)
+        if product and not parent_product and bom.uom_id != product.uom_id:
+            bom_report_line['bom_unit_cost'] = bom.uom_id._compute_price(bom_report_line['bom_cost'], product.uom_id)
         bom_report_line['foldable'] = len(bom.operation_ids) > 0 or (len(bom_report_line['components']) > 0 and level > 0) or any(component.get('foldable', False) for component in bom_report_line['components'])
 
         available_components = unavail_component_has_route = True
@@ -436,6 +436,8 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             line_quantity = (bom_quantity / (bom.product_qty or 1.0)) * byproduct.product_qty
             cost_share = byproduct.cost_share / 100 if byproduct.product_qty > 0 else 0
             byproduct_cost_portion += cost_share
+            bom_cost = company.currency_id.round(total * cost_share)
+            bom_unit_cost = byproduct.uom_id._compute_price(bom_cost, byproduct.product_id.uom_id)
             byproducts.append({
                 'id': byproduct.id,
                 'index': f"{index}{byproduct_index}",
@@ -446,9 +448,11 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 'name': byproduct.product_id.display_name,
                 'quantity': line_quantity,
                 'uom_name': byproduct.uom_id.name,
+                'product_uom_name': byproduct.product_id.uom_id.name,
                 'parent_id': bom.id,
                 'level': level or 0,
-                'bom_cost': company.currency_id.round(total * cost_share),
+                'bom_cost': bom_cost,
+                'bom_unit_cost': bom_unit_cost,
                 'cost_share': cost_share,
             })
             byproduct_index += 1
@@ -528,6 +532,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         pdf_lines = self._get_bom_array_lines(data, level, unfolded_ids, unfolded, True)
 
         data['lines'] = pdf_lines
+        data['show_uom'] = self.env.user.has_group('uom.group_uom')
         return data
 
     @api.model

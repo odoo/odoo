@@ -11,7 +11,7 @@
         </xpath>
 
         <xpath expr="//td[@name='uom']" position="inside">
-            <span t-if="props.type == 'subcontracting'" t-esc="subcontracting.uom"/>
+            <span t-if="showUom &amp;&amp; props.type == 'subcontracting'" t-esc="subcontracting.uom"/>
         </xpath>
 
         <xpath expr="//td[@name='bom_cost']" position="inside">
