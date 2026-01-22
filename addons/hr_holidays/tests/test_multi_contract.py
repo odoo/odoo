@@ -132,6 +132,8 @@ class TestHolidaysMultiContract(TestHolidayContract):
         self.assertEqual(leave.state, 'validate')
 
         self.contract_cdi.contract_date_end = date(2022, 6, 15)
+        no_overlap_leave = self.create_leave(date(2022, 7, 5), date(2022, 7, 10), name="Doctor Appointment", employee_id=self.jules_emp.id)
+        no_overlap_leave.action_approve()
         self.jules_emp.create_version({
             'date_version': date(2022, 6, 16),
             'contract_date_start': date(2022, 6, 16),
@@ -140,9 +142,8 @@ class TestHolidaysMultiContract(TestHolidayContract):
             'resource_calendar_id': self.calendar_40h.id,
             'wage': 5000.0,
         })
-
         leaves = self.env['hr.leave'].search([('employee_id', '=', self.jules_emp.id)])
-        self.assertEqual(len(leaves), 3)
+        self.assertEqual(len(leaves), 4)
         self.assertEqual(leave.state, 'refuse')
 
         first_leave = leaves.filtered(lambda l: l.date_from.day == 1 and l.date_to.day == 15)
