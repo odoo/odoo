@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="report_mrp_bom">
-        <div class="o_mrp_bom_report_page container py-3 py-lg-5 px-0 bg-view">
+        <div class="o_mrp_bom_report_page px-0 overflow-auto bg-view">
             <div t-if="data.get('lines')">
-                <div class="px-3 mb-5">
+                <div>
                     <h1>BoM Overview</h1>
                     <h3 t-out="data['name']"/>
                     <hr t-if="data['bom_code']"/>
@@ -16,13 +16,11 @@
                             <th name="th_mrp_bom_h">Product</th>
                             <th class="text-end">Quantity</th>
                             <th class="text-end" groups="uom.group_uom"/>
-                            <th t-if="data['forecast_mode']" class="text-end">Free to Use / On Hand</th>
+                            <th t-if="data['forecast_mode']" class="text-center">Free to Use / On Hand</th>
                             <th t-if="data['forecast_mode']" class="text-center">Status</th>
-                            <th t-if="data['forecast_mode']" class="text-center">Availability</th>
-                            <th t-if="data['forecast_mode']" class="text-end">Lead Time</th>
+                            <th t-if="data['forecast_mode']" class="text-center">Lead Time</th>
                             <th t-if="data['forecast_mode']">Route</th>
-                            <th t-else=""/>
-                            <th class="text-end">BoM Cost</th>
+                            <th class="text-end" t-attf-colspan="{{ 1 if data['forecast_mode'] else 2 }}">Cost</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,39 +47,43 @@
                                 </span>
                             </td>
                             <td t-if="data['forecast_mode']">
-                                <span t-if="data['route_name']" t-attf-class="{{'text-danger' if data.get('route_alert') else ''}}"><t t-out="data['route_name']"/>: </span>
+                                <span t-if="data['route_name'] and data['route_detail']" t-attf-class="{{'text-danger' if data.get('route_alert') else ''}}">
+                                    <t t-out="data['route_name']"/>:</span>
                                 <span t-out="data['route_detail']"/>
                             </td>
-                            <td t-else=""/>
-                            <td class="text-end" t-out="data['bom_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            <td class="text-end"
+                                t-out="data['bom_cost']"
+                                t-attf-colspan="{{ 1 if data['forecast_mode'] else 2 }}" t-options='{"widget": "monetary", "display_currency": currency}'/>
                         </tr>
                         <t t-call="mrp.report_mrp_bom_pdf_line"/>
                     </tbody>
-                    <tfoot t-if="data['quantity'] &gt; 1">
+                    <tfoot t-if="data['quantity'] &gt; 0">
                         <tr>
-                            <td name="td_mrp_bom_f" class="text-end">
-                                <span t-if="data['byproducts']" t-out="data['name']"/>
+                            <td name="td_mrp_bom_f" class="text-end" t-attf-colspan="2">
+                                <t t-if="data['byproducts']" t-out="data['name']"/>
                             </td>
-                            <td/>
-                            <td class="text-start" groups="uom.group_uom" t-out="data['uom_name']"/>
-                            <td t-if="data['forecast_mode']"/>
-                            <td t-if="data['forecast_mode']"/>
-                            <td t-if="data['forecast_mode']"/>
-                            <td t-if="data['forecast_mode']"/>
-                            <td class="text-end"><strong>Unit Cost</strong></td>
-                            <td class="text-end"><t t-out="data['bom_cost'] / data['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                            <td t-if="(data['byproducts'] or data['product_uom_name'] != data['uom_name'])" groups="uom.group_uom" t-out="data['product_uom_name']"/>
+                            <td name="free_to_use" t-if="data['forecast_mode']"/>
+                            <td name="status" t-if="data['forecast_mode']"/>
+                            <td name="lead_time" t-if="data['forecast_mode']"/>
+                            <td name="route_column" class="text-end" t-attf-colspan="{{ 1 if len(data['byproducts']) or not data['show_uom'] or data['show_uom'] and data['product_uom_name'] != data['uom_name'] else 2 }}">
+                                <strong>Unit Cost</strong>
+                            </td>
+                            <td name="cost" class="text-end" width="5rem">
+                                <t t-out="data['bom_unit_cost'] / data['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            </td>
                         </tr>
                         <t t-if="data['byproducts']" t-foreach="data['byproducts']" t-as="byproduct">
                             <tr t-if="byproduct['quantity'] &gt; 0">
-                                <td name="td_mrp_bom_byproducts_f" class="text-end" t-out="byproduct['name']"/>
-                                <td/>
-                                <td class="text-start" groups="uom.group_uom" t-out="byproduct['uom_name']"/>
-                                <td t-if="data['forecast_mode']"/>
-                                <td t-if="data['forecast_mode']"/>
-                                <td t-if="data['forecast_mode']"/>
-                                <td t-if="data['forecast_mode']"/>
-                                <td class="text-end"><strong>Unit Cost</strong></td>
-                                <td class="text-end"><t t-out="byproduct['bom_cost'] / byproduct['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                                <td name="td_mrp_bom_byproducts_f" class="text-end" colspan="2" t-out="byproduct['name']"/>
+                                <td class="text-start" groups="uom.group_uom" t-out="byproduct['product_uom_name']"/>
+                                <td name="free_to_use" t-if="data['forecast_mode']"/>
+                                <td name="status" t-if="data['forecast_mode']"/>
+                                <td name="lead_time" t-if="data['forecast_mode']"/>
+                                <td name="route_column" class="text-end"><strong>Unit Cost</strong></td>
+                                <td class="text-end" width="5rem">
+                                    <t t-out="byproduct['bom_unit_cost'] / byproduct['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                </td>
                             </tr>
                         </t>
                     </tfoot>
@@ -126,10 +128,12 @@
                     </span>
                 </td>
                 <td t-if="data['forecast_mode']">
-                    <span t-if="l.get('route_name')" t-attf-class="{{'text-danger' if l.get('route_alert') else ''}}"><t t-out="l['route_name']"/>: <t t-out="l['route_detail']"/></span>
+                    <span t-if="l.get('route_name') and l.get('route_detail')" t-attf-class="{{'text-danger' if l.get('route_alert') else ''}}">
+                        <t t-out="l['route_name']"/>: <t t-out="l['route_detail']"/>
+                    </span>
                 </td>
-                <td t-else=""/>
-                <td t-attf-class="text-end {{ 'text-muted' if l['type'] == 'component' else '' }}" t-out="l['bom_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                <td t-if="not l['uom'] and (l['type'] == 'byproduct' or l['type'] == 'subcontract')" groups="uom.group_uom"/>
+                <td t-attf-class="text-end {{ 'text-muted' if l['type'] == 'component' else '' }}" t-attf-colspan="{{ 1 if data['forecast_mode'] else 2 }}" t-out="l['bom_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
             </tr>
         </t>
     </template>

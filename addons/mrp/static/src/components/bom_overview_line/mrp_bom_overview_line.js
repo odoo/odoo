@@ -148,27 +148,6 @@ export class BomOverviewLine extends Component {
         return this.props.showOptions.attachments;
     }
 
-    get availabilityColorClass() {
-        // For first line, another rule applies : green if doable now, red otherwise.
-        if (this.data.hasOwnProperty('components_available')) {
-            if (this.data.components_available && this.data.availability_state != 'unavailable') {
-                return "text-success";
-            } else {
-                return "text-danger";
-            }
-        }
-        switch (this.data.availability_state) {
-            case "available":
-                return "text-success";
-            case "expected":
-                return "text-warning";
-            case "unavailable":
-                return "text-danger";
-            default:
-                return "";
-        }
-    }
-
     get forecastAction() {
         switch (this.data.link_model) {
             case "product.product":
@@ -179,8 +158,14 @@ export class BomOverviewLine extends Component {
     }
 
     get statusBackgroundClass() {
-        if(this.data.index == "0") {
-            return "text-bg-info";
+        if(this.data.availability_state == "available" || this.data.components_available && this.data.producible_qty){
+            return "text-bg-success";
+        }
+        if(this.data.availability_state == "estimated") {
+            return "text-bg-dark";
+        }
+        if(this.data.availability_state == "expected") {
+            return "text-bg-warning";
         }
         return "text-bg-danger";
     }
