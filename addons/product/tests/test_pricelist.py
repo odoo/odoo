@@ -4,13 +4,13 @@ from unittest.mock import patch
 
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tests import tagged, Form
+from odoo.tests import Form, tagged
 
-from odoo.addons.product.tests.common import ProductCommon
+from odoo.addons.product.tests.common import ProductVariantsCommon
 
 
 @tagged('post_install', '-at_install')
-class TestPricelist(ProductCommon):
+class TestPricelist(ProductVariantsCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -318,3 +318,36 @@ class TestPricelist(ProductCommon):
             company_2_b2b_pl,
             "Assigning pricelists in one company shouldn't impact pricelists in other companies",
         )
+
+    def test_pricelist_applied_on_product_variant(self):
+        # product template with variants
+        sofa_1 = self.product_template_sofa.product_variant_ids[0]
+        # create pricelist with rule on template
+        pricelist = self.env["product.pricelist"].create(
+            {
+                "name": "Pricelist for Acoustic Bloc Screens",
+                "item_ids": [
+                    Command.create(
+                        {
+                            "compute_price": "fixed",
+                            "fixed_price": 123,
+                            "base": "list_price",
+                            "applied_on": "1_product",
+                            "product_tmpl_id": self.product_template_sofa.id,
+                        }
+                    ),
+                ],
+            }
+        )
+        # open rule form and change rule to apply on variant instead of template
+        with Form(pricelist.item_ids) as item_form:
+            item_form.product_id = sofa_1
+        # check that `applied_on` changed to variant
+        self.assertEqual(pricelist.item_ids.applied_on, "0_product_variant")
+        # re-edit rule to apply on template again by clearing `product_id`
+        with Form(pricelist.item_ids) as item_form:
+            item_form.product_id = self.env["product.product"]
+        # check that `applied_on` changed to template
+        self.assertEqual(pricelist.item_ids.applied_on, "1_product")
+        # check that product_id is cleared
+        self.assertFalse(pricelist.item_ids.product_id)
