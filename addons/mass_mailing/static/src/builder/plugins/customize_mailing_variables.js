@@ -87,7 +87,7 @@ export const CUSTOMIZE_MAILING_VARIABLES = Object.assign(
     generateSimpleMailingVariables(
         "link",
         ["a:not(.btn):not(:has(.fa, img))", "a.btn.btn-link"],
-        textProperties
+        textProperties.filter((prop) => prop !== "font-size")
     ),
     generateSimpleMailingVariables(
         "btn-primary",
@@ -189,9 +189,6 @@ export const CUSTOMIZE_MAILING_VARIABLES_DEFAULTS = {
     },
     "--text-container-margin-bottom": {
         "margin-bottom": "16px",
-    },
-    "--link-font-size": {
-        "font-size": "16px",
     },
     "--link-font-weight": {
         "font-weight": "400",
