@@ -10,4 +10,21 @@ patch(PosOrder.prototype, {
         // Override to ensure orderline price of event tickets are not recomputed
         return super.getLinesToCompute().filter((line) => !line.event_ticket_id);
     },
+    setPricelist(pricelist) {
+        super.setPricelist(...arguments);
+
+        const eventTicketLines = this.lines.filter((line) => line.event_ticket_id);
+
+        for (const line of eventTicketLines) {
+            const newPrice = line.product_id.product_tmpl_id.getPrice(
+                pricelist,
+                line.getQuantity(),
+                line.getPriceExtra(),
+                false,
+                line.product_id,
+                line
+            );
+            line.setUnitPrice(newPrice);
+        }
+    },
 });
