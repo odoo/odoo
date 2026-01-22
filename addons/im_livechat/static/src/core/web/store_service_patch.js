@@ -9,6 +9,7 @@ const storePatch = {
     setup() {
         super.setup(...arguments);
         this.livechatChannels = this.makeCachedFetchData("im_livechat.channel");
+        this.livechatSelfExpertises = this.makeCachedFetchData("/im_livechat/fetch_self_expertise");
         this.has_access_livechat = false;
     },
     /**
@@ -18,6 +19,7 @@ const storePatch = {
         super.onStarted(...arguments);
         if (this.discuss.isActive && this.has_access_livechat) {
             this.livechatChannels.fetch();
+            this.livechatSelfExpertises.fetch();
         }
     },
     goToOldestUnreadLivechatThread() {
