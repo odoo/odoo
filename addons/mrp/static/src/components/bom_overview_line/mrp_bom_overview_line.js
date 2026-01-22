@@ -56,6 +56,9 @@ export class BomOverviewLine extends Component {
     }
 
     async goToForecast() {
+        if (this.data.type == 'operation'){
+            return;
+        }
         const action = await this.ormService.call(
             this.data.link_model,
             this.forecastAction,

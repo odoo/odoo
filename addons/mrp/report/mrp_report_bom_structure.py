@@ -223,7 +223,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'uom': bom.product_uom_id if bom else product.uom_id,
             'uom_name': bom.product_uom_id.name if bom else product.uom_id.name,
             'route_type': route_info.get('route_type', ''),
-            'route_name': route_info.get('route_name', ''),
+            'route_name': self.env._('Order') if bom.type == 'phantom' else route_info.get('route_name', ''),
             'route_detail': route_info.get('route_detail', ''),
             'route_alert': route_info.get('route_alert', False),
             'currency': company.currency_id,
