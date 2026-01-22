@@ -143,7 +143,7 @@ test("Avatar card shows local timezone", async () => {
     await click(".o-discuss-ChannelMember:has(:text('Demo'))");
     await waitStoreFetch(["avatar_card"]);
     await contains(".o-mail-avatar-card-name:text('Demo')");
-    await contains(".o-mail-avatar-card-localtime", { text: "" });
+    await contains(".o-mail-avatar-card-localtime", { count: 0 });
 });
 
 test("should show a button to load more members if they are not all loaded", async () => {
