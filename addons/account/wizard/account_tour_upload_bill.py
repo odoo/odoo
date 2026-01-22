@@ -82,10 +82,10 @@ class AccountTourUploadBill(models.TransientModel):
             return purchase_journal.with_context(default_journal_id=purchase_journal.id, default_move_type='in_invoice').create_document_from_attachment(attachment_ids=self.attachment_ids.ids)
         elif self.selection == 'sample':
             invoice_date = fields.Date.today() - timedelta(days=12)
-            partner = self.env['res.partner'].search([('name', '=', 'Deco Addict')], limit=1)
+            partner = self.env['res.partner'].search([('name', '=', 'Acme Corporation')], limit=1)
             if not partner:
                 partner = self.env['res.partner'].create({
-                    'name': 'Deco Addict',
+                    'name': 'Acme Corporation',
                     'is_company': True,
                 })
             bill = self.env['account.move'].create({
