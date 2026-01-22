@@ -354,6 +354,7 @@
                                 <field name="delay_alert_date" invisible="1"/>
                                 <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover"/>
                             </div>
+                            <field name="date_finished" string="End Date" readonly="is_locked" invisible="state != 'done'"/>
                             <field name="components_availability_state" invisible="1"/>
                             <field name="components_availability" invisible="state not in ['confirmed', 'progress']"
                                 decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'"
