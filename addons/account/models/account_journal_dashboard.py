@@ -927,11 +927,11 @@ class AccountJournal(models.Model):
             raise UserError(self._build_no_journal_error_msg(self.env.company.display_name, ['purchase']))
         context['default_move_type'] = 'in_invoice'
         invoice_date = fields.Date.today() - timedelta(days=12)
-        partner = self.env['res.partner'].search([('name', '=', 'Deco Addict')], limit=1)
+        partner = self.env['res.partner'].search([('name', '=', 'Acme Corporation')], limit=1)
         company = purchase_journal.company_id
         if not partner:
             partner = self.env['res.partner'].create({
-                'name': 'Deco Addict',
+                'name': 'Acme Corporation',
                 'is_company': True,
             })
         default_expense_account = company.expense_account_id

@@ -105,7 +105,7 @@ async function executeImport(data, shouldWait = false) {
 
 function parsePreview(opts) {
     const fakePreviewData = [
-        ["Foo", "Deco addict", "Azure Interior", "Brandon Freeman"],
+        ["Foo", "Acme Corporation", "Azure Interior", "Brandon Freeman"],
         ["Bar", "1", "1", "0"],
         ["Display name", "Azure Interior"],
     ];
@@ -468,13 +468,13 @@ QUnit.module("Base Import Tests", (hooks) => {
         assert.strictEqual(
             target.querySelector(".o_import_data_content tr:first-child td span:nth-child(2)")
                 .textContent,
-            "Deco addict",
+            "Acme Corporation",
             "first example is shown"
         );
         assert.strictEqual(
             target.querySelector(".o_import_data_content tr:first-child td span:nth-child(2)")
                 .dataset.tooltipInfo,
-            '{"lines":["Deco addict","Azure Interior","Brandon Freeman"]}',
+            '{"lines":["Acme Corporation","Azure Interior","Brandon Freeman"]}',
             "tooltip contains other examples"
         );
         assert.containsNone(
@@ -543,12 +543,12 @@ QUnit.module("Base Import Tests", (hooks) => {
                 const fakePreviewData =
                     currentSheet === "Template"
                         ? [
-                              ["Foo", "Deco addict", "Azure Interior", "Brandon Freeman"],
+                              ["Foo", "Acme Corporation", "Azure Interior", "Brandon Freeman"],
                               ["Bar", "1", "1", "0"],
                               ["Display name", "Azure Interior"],
                           ]
                         : [
-                              ["Foo", "Deco addict", "Azure Interior", "Brandon Freeman"],
+                              ["Foo", "Acme Corporation", "Azure Interior", "Brandon Freeman"],
                               ["Bar", "1", "1", "0"],
                               ["Display name", "#N/A"],
                           ];
@@ -905,7 +905,7 @@ QUnit.module("Base Import Tests", (hooks) => {
             assert.strictEqual(
                 target.querySelector(".o_import_data_content tr:first-child td span:first-child")
                     .textContent,
-                "Foo, Deco addict, Azure Interior, Brandon Freeman",
+                "Foo, Acme Corporation, Azure Interior, Brandon Freeman",
                 "column title is shown as a list of rows elements"
             );
             assert.strictEqual(
