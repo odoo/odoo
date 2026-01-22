@@ -5843,7 +5843,7 @@ test(`duplicate all records`, async () => {
     // A confirmation dialog should appear when duplicating multiple records.
     expect(`.modal`).toHaveCount(1);
     expect(`.modal-body`).toHaveText(
-        "Are you sure that you want to duplicate all the selected records?"
+        "You are about to create a copy of every selected record.\nAre you sure you want to proceed?"
     );
     await contains(`.modal footer button.btn-primary`).click();
 
