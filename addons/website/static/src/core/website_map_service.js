@@ -82,7 +82,7 @@ registry.category("services").add("website_map", {
                 // Note: only need refetch to reload a configured key and load the
                 // library. If the library was loaded with a correct key and that the
                 // key changes meanwhile... it will not work but we can agree the user
-                // can bother to reload the page at that moment.
+                // can bother to reload the page when they are notified.
                 if (refetch || !gmapAPILoading) {
                     gmapAPILoading = new Promise(async resolve => {
                         const key = await this.getGMapAPIKey(refetch);
