@@ -206,7 +206,7 @@ class EventMailScheduler(models.Model):
         self.ensure_one()
         context_registrations = self.env.context.get('event_mail_registration_ids')
 
-        auto_commit = not getattr(threading.current_thread(), 'testing', False)
+        auto_commit = not getattr(threading.current_thread(), 'testing', False) and not context_registrations
         batch_size = int(
             self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
         ) or 50  # be sure to not have 0, as otherwise no iteration is done
