@@ -629,13 +629,6 @@ class AccountMove(models.Model):
     reversal_move_ids = fields.One2many('account.move', 'reversed_entry_id')
 
     # === Vendor bill fields === #
-    invoice_vendor_bill_id = fields.Many2one(
-        'account.move',
-        store=False,
-        check_company=True,
-        string='Vendor Bill',
-        help="Auto-complete from a previous bill or refund.",
-    )
     invoice_source_email = fields.Char(string='Source Email', tracking=True)
     invoice_partner_display_name = fields.Char(compute='_compute_invoice_partner_display_info', store=True)
     is_manually_modified = fields.Boolean()
@@ -1477,7 +1470,7 @@ class AccountMove(models.Model):
                     continue
 
                 payments_widget_vals['content'].append({
-                    'move_name': line.ref or line.move_id.name,
+                    'move_name': line.move_id.name,
                     'amount': amount,
                     'currency_id': move.currency_id.id,
                     'id': line.id,
@@ -2605,20 +2598,6 @@ class AccountMove(models.Model):
     def _onchange_date(self):
         if not self.is_invoice(True):
             self.line_ids._inverse_amount_currency()
-
-    @api.onchange('invoice_vendor_bill_id')
-    def _onchange_invoice_vendor_bill(self):
-        if self.invoice_vendor_bill_id:
-            # Copy invoice lines.
-            for line in self.invoice_vendor_bill_id.invoice_line_ids:
-                copied_vals = line.copy_data()[0]
-                self.invoice_line_ids += self.env['account.move.line'].new(copied_vals)
-
-            self.currency_id = self.invoice_vendor_bill_id.currency_id
-            self.fiscal_position_id = self.invoice_vendor_bill_id.fiscal_position_id
-
-            # Reset
-            self.invoice_vendor_bill_id = False
 
     @api.onchange('fiscal_position_id')
     def _onchange_fpos_id_show_update_fpos(self):

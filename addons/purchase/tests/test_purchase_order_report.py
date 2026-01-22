@@ -79,7 +79,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         #                 ...
         #             )""")
         #     ...
-        f.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po.id)
+        f.purchase_id = po
         invoice = f.save()
         invoice.action_post()
         po.flush_model()

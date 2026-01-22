@@ -1081,13 +1081,6 @@
                                 <field name="ref" default_focus="1" nolabel="1" invisible="move_type not in ('in_invoice', 'in_receipt', 'in_refund')"/>
                                 <field name="ref" default_focus="1" invisible="move_type != 'entry'"/>
                                 <field name="tax_cash_basis_origin_move_id" invisible="not tax_cash_basis_origin_move_id"/>
-                                <label name="invoice_vendor_bill_id_label" for="invoice_vendor_bill_id" string="Auto-Complete" class="oe_edit_only"
-                                       invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund') or not partner_id"/>
-                                <field name="invoice_vendor_bill_id" nolabel="1" class="oe_edit_only"
-                                       invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund') or not partner_id"
-                                       domain="[('company_id', '=', company_id), ('partner_id', 'child_of', [partner_id]), ('move_type', '=', move_type)]"
-                                       placeholder="Select an old purchase document"
-                                       options="{'no_create': True}" context="{'show_total_amount': True}"/>
                             </group>
                             <group id="header_right_group">
                                 <label for="invoice_date" string="Invoice Date" style="font-weight:bold;"

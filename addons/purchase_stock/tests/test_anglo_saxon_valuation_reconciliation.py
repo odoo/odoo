@@ -63,7 +63,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             move_form.invoice_date = date
             move_form.partner_id = self.partner_a
             move_form.currency_id = self.other_currency
-            move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-purchase_order.id)
+            move_form.purchase_id = purchase_order
             return move_form.save()
 
     def test_shipment_invoice(self):
