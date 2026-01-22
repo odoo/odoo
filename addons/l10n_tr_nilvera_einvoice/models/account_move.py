@@ -3,7 +3,7 @@ import uuid
 from markupsafe import Markup
 from urllib.parse import quote, urlencode, urlparse
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.addons.l10n_tr_nilvera.const import NILVERA_ERROR_CODE_MESSAGES
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
@@ -70,6 +70,8 @@ class AccountMove(models.Model):
             ('TEVKIFAT', "Withholding"),
             ('IHRACKAYITLI', "Registered for Export"),
             ('ISTISNA', "Tax Exempt"),
+            ('IADE', "Return"),
+            ('TEVKIFATIADE', "Withholding Return"),
         ],
         help="The type of invoice to be sent to GİB.",
     )
@@ -113,6 +115,7 @@ class AccountMove(models.Model):
         compute=lambda self: self._compute_linked_attachment_id('l10n_tr_nilvera_pdf_id', 'l10n_tr_nilvera_pdf_file'),
         depends=['l10n_tr_nilvera_pdf_file'],
     )
+    l10n_tr_original_invoice_date = fields.Date(string="Original Invoice Date")
 
     @api.depends("l10n_tr_gib_invoice_scenario", "l10n_tr_gib_invoice_type", "l10n_tr_is_export_invoice")
     def _compute_l10n_tr_exemption_code_domain_list(self):
@@ -176,6 +179,25 @@ class AccountMove(models.Model):
             elif move.l10n_tr_nilvera_send_status != 'not_sent':
                 raise UserError(_("You cannot reset to draft an entry that has been sent to Nilvera."))
         super().button_draft()
+
+    def _l10n_tr_nilvera_einvoice_check_invalid_invoice_reference(self):
+        invalid_moves = self.env["account.move"]
+        for record in self:
+            _, parts = record._get_sequence_format_param(record.ref or "")
+            if (
+                record.move_type == "out_refund"
+                and not record.reversed_entry_id
+                and not (parts["prefix1"][:3] and parts["year"] and parts["seq"])
+            ):
+                invalid_moves |= record
+        return invalid_moves
+
+    def _l10n_tr_nilvera_check_invalid_type(self):
+        invalid_invoices = self.env["account.move"]
+        for record in self:
+            if record.l10n_tr_gib_invoice_type in {"IADE", "TEVKIFATIADE"} ^ record.move_type == "out_refund":
+                invalid_invoices |= record
+        return invalid_invoices
 
     def _post(self, soft=True):
         for move in self:
@@ -529,3 +551,53 @@ class AccountMove(models.Model):
                         document_category="Sale",
                         invoice_channel=invoice.l10n_tr_nilvera_customer_status,
                     )
+
+    def _get_starting_sequence(self):
+        """
+        Generate a valid name for credit notes.
+
+        Nilvera requires invoice names in the format:
+        <3 alphanumeric characters>/<year>/<sequence number>.
+
+        When creating a credit note, an R is added by standard, so
+        we remove the first letter of the journal prefix to make sure it
+        remains 3 characters (e.g., RINV → RNV).
+        """
+        starting_sequence = super()._get_starting_sequence()
+        if (
+            self.company_id.country_id.code == "TR"
+            and self.journal_id.refund_sequence
+            and self.move_type in {"out_refund", "in_refund"}
+        ):
+            starting_sequence = starting_sequence[0] + starting_sequence[2:]
+        return starting_sequence
+
+    def _reverse_moves(self, default_values_list=None, cancel=False):
+        if all(move.country_code != 'TR' or move.move_type != "out_invoice" for move in self):
+            return super()._reverse_moves(default_values_list, cancel=cancel)
+
+        if not default_values_list:
+            default_values_list = [{}] * len(self)
+
+        for default_vals, move in zip(default_values_list, self):
+            if move.country_code != 'TR' or move.move_type != "out_invoice":
+                continue
+            line_vals = move.line_ids.copy_data()
+            for line, vals in zip(move.line_ids, line_vals):
+                vals.update(
+                    {
+                        "l10n_tr_original_line_id": line.id,
+                        "l10n_tr_original_quantity": line.quantity,
+                        "l10n_tr_original_tax_without_withholding": line.price_total - line.price_subtotal,
+                    },
+                )
+            default_vals.update(
+                {
+                    'ref': move.name,
+                    'l10n_tr_gib_invoice_scenario': 'TEMELFATURA',
+                    'l10n_tr_gib_invoice_type': 'TEVKIFATIADE' if move.l10n_tr_gib_invoice_type == "TEVKIFAT" else "IADE",
+                    'line_ids': [Command.create(vals) for vals in line_vals],
+                },
+            )
+
+        return super()._reverse_moves(default_values_list, cancel=cancel)

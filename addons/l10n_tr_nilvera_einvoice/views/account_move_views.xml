@@ -17,10 +17,10 @@
                 <attribute name="invisible" separator=" or " add="l10n_tr_nilvera_send_status == 'error' and l10n_tr_nilvera_uuid"/>
             </xpath>
             <xpath expr="//div[@name='journal_div']" position="after">
-                <label for="l10n_tr_nilvera_send_status" invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'in_invoice']"/>
+                <label for="l10n_tr_nilvera_send_status" invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'out_refund', 'in_invoice']"/>
                 <div name="nilvera_div"
                      class="d-flex"
-                     invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'in_invoice']">
+                     invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'out_refund', 'in_invoice']">
                     <field name="l10n_tr_nilvera_send_status" class="oe_inline"/>
                 </div>
                 <field name="l10n_tr_is_export_invoice"
@@ -29,7 +29,7 @@
                 <div class="o_td_label"
                      invisible="l10n_tr_is_export_invoice
                                 or country_code != 'TR'
-                                or move_type != 'out_invoice'
+                                or move_type not in ['out_invoice', 'out_refund']
                                 or l10n_tr_nilvera_customer_status not in ['einvoice', 'earchive']">
                     <label for="l10n_tr_gib_invoice_scenario" invisible="l10n_tr_nilvera_customer_status != 'einvoice'" />
                     <label string="Invoice Type"
@@ -39,7 +39,7 @@
                 <div class="d-flex"
                      invisible="l10n_tr_is_export_invoice
                                 or country_code != 'TR'
-                                or move_type != 'out_invoice'
+                                or move_type not in ['out_invoice', 'out_refund']
                                 or l10n_tr_nilvera_customer_status not in ['einvoice', 'earchive']">
                     <field name="l10n_tr_gib_invoice_scenario"
                            invisible="l10n_tr_nilvera_customer_status != 'einvoice'"
@@ -65,12 +65,24 @@
                 <field name="l10n_tr_ctsp_number" optional="hide"/>
                 <field name="l10n_tr_seller_line_code" optional="hide"/>
                 <field name="l10n_tr_customer_line_code" optional="hide"/>
+                <field name="l10n_tr_original_quantity"
+                       required="parent.l10n_tr_gib_invoice_type == 'TEVKIFATIADE'"
+                       column_invisible="parent.l10n_tr_gib_invoice_type != 'TEVKIFATIADE'"/>
+                <field name="l10n_tr_original_tax_without_withholding"
+                       required="parent.l10n_tr_gib_invoice_type == 'TEVKIFATIADE'"
+                       column_invisible="parent.l10n_tr_gib_invoice_type != 'TEVKIFATIADE'"/>
             </xpath>
             <xpath expr="//header/field[@name='state']" position="before">
                 <button name="l10n_tr_nilvera_get_pdf"
                         string="Fetch Nilvera PDF"
                         type="object"
-                        invisible="move_type != 'out_invoice' or l10n_tr_nilvera_send_status != 'succeed'"/>
+                        invisible="move_type not in ['out_invoice', 'out_refund'] or l10n_tr_nilvera_send_status != 'succeed'"/>
+            </xpath>
+            <xpath expr="//group[@name='sale_info_group']/field[@name='ref']" position="attributes">
+                <attribute name="required">country_code == 'TR' and not reversed_entry_id and move_type == 'out_refund'</attribute>
+            </xpath>
+            <xpath expr="//group[@name='sale_info_group']/field[@name='ref']" position="after">
+                <field name="l10n_tr_original_invoice_date" string="Original Invoice Date" invisible="country_code != 'TR' or move_type != 'out_refund' or reversed_entry_id" required="country_code == 'TR' and not reversed_entry_id and move_type == 'out_refund'"/>
             </xpath>
         </field>
     </record>

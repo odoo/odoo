@@ -71,9 +71,8 @@ class TestUBLTRCommon(AccountTestInvoicingCommon):
             'company_id': cls.company_data['company'].id,
         })
 
-    def _generate_invoice_xml(self, partner_id, tax=None, include_invoice=False, **kwargs):
+    def _generate_invoice(self, partner_id, tax=None, **kwargs):
         invoice_tax = (tax and tax.ids) or self.tax_20.ids
-
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'company_id': self.company_data['company'].id,
@@ -94,7 +93,16 @@ class TestUBLTRCommon(AccountTestInvoicingCommon):
             **kwargs,
         })
         invoice.action_post()
+        return invoice
 
+    def _generate_invoice_xml(self, partner_id, tax=None, include_invoice=False, **kwargs):
+        invoice = self._generate_invoice(partner_id, tax, **kwargs)
         if include_invoice:
             return self.env['account.edi.xml.ubl.tr']._export_invoice(invoice)[0], invoice
         return self.env['account.edi.xml.ubl.tr']._export_invoice(invoice)[0]
+
+    def _generate_return_invoice_xml(self, partner_id, tax=None, **kwargs):
+        invoice = self._generate_invoice(partner_id, tax, **kwargs)
+        credit_note = invoice._reverse_moves()
+        credit_note.action_post()
+        return self.env['account.edi.xml.ubl.tr']._export_invoice(credit_note)[0]
