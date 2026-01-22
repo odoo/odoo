@@ -248,8 +248,9 @@ class Survey(http.Controller):
 
         # When resuming survey, restore language  + always enforce that the language is supported by the survey
         lang = self._get_lang_with_fallback(answer_sudo.sudo(False))
-        url_from = f'/survey/{survey_sudo.access_token}/{answer_sudo.access_token}'
-        return request.redirect(self.env['ir.http']._url_for(url_from, lang.code))
+        response = request.redirect(self.env['ir.http']._url_for(f'/survey/{survey_sudo.access_token}', lang.code))
+        response.set_cookie(f'survey_{survey_sudo.access_token}', answer_sudo.access_token, max_age=60 * 60 * 24)
+        return response
 
     def _prepare_survey_data(self, survey_sudo, answer_sudo, **post):
         """ This method prepares all the data needed for template rendering, in function of the survey user input state.
@@ -402,8 +403,13 @@ class Survey(http.Controller):
             'background_image_url': background_image_url
         }
 
-    @http.route('/survey/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
-    def survey_display_page(self, survey_token, answer_token, **post):
+    @http.route([
+        '/survey/<string:survey_token>',
+        '/survey/<string:survey_token>/<string:answer_token>',
+    ], type='http', auth='public', website=True)
+    def survey_display_page(self, survey_token, answer_token=None, **post):
+        if not answer_token:
+            answer_token = request.httprequest.cookies.get('survey_%s' % survey_token)
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=True)
         if access_data['validity_code'] is not True:
             return self._redirect_with_error(access_data, access_data['validity_code'])
