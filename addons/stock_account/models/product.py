@@ -3,10 +3,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import float_is_zero, float_repr, float_round, float_compare
 from odoo.exceptions import ValidationError
-from collections import defaultdict
-from datetime import datetime
 
 
 class ProductTemplate(models.Model):
@@ -143,6 +140,28 @@ class ProductProduct(models.Model):
         company_id = self.env.company
         self.company_currency_id = company_id.currency_id
 
+        # PERF: Pre-compute:the sum of 'total_value' of lots per product in go
+        total_value_by_product_id = {}
+        lot_valuated_products = self.filtered('lot_valuated')
+        if lot_valuated_products:
+            lots_by_product = self.env['stock.lot']._read_group(
+                domain=[
+                    ('product_id', 'in', lot_valuated_products.ids),
+                    ('product_qty', '!=', 0),
+                ],
+                groupby=['product_id'],
+                aggregates=['id:recordset']
+            )
+            # Collect all lots and trigger batch computation of total_value
+            self.env['stock.lot'].browse(
+                    lot.id
+                    for _, lots in lots_by_product
+                    for lot in lots
+            ).mapped('total_value')
+
+            for product, lots in lots_by_product:
+                total_value_by_product_id[product.id] = sum(lots.mapped('total_value'))
+
         for product in self:
             at_date = fields.Datetime.to_datetime(product.env.context.get('to_date'))
             if at_date:
@@ -152,7 +171,7 @@ class ProductProduct(models.Model):
             qty_valued = valuated_product.qty_available
             qty_available = valuated_product.with_context(warehouse_id=False).qty_available if self.env.context.get('warehouse_id') else qty_valued
             if product.lot_valuated:
-                product.total_value = product._get_value_from_lots()
+                product.total_value = total_value_by_product_id.get(product.id, 0)
             elif product.uom_id.is_zero(qty_valued):
                 product.total_value = 0
             elif product.uom_id.is_zero(qty_available):
