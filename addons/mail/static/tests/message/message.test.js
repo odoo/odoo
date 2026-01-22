@@ -2048,6 +2048,8 @@ test("Click on view reactions shows the reactions on the message", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('View Reactions')");
     await contains(".o-mail-MessageReactionMenu:has(:text('😅 1'))");
+    await click(".o-mail-MessageReactionMenu-persona button[title=Remove]");
+    await contains(".o-mail-MessageReactionMenu", { count: 0 });
 });
 
 test("Click on view reactions from right-click on message shows the reactions", async () => {
