@@ -1401,6 +1401,21 @@ class TestStockQuant(TestStockCommon):
             'lot_id': False,
         }])
 
+    def test_set_inventory_quantity_zero(self):
+        """
+        test that the quant is set to 0 from forecasted report.
+        """
+        quant = self.env['stock.quant'].create([{
+            'location_id': self.stock_location.id,
+            'product_id': self.productA.id,
+            'inventory_quantity': 10,
+        }])
+
+        self.productA.property_stock_inventory = False
+
+        quant.with_context(inventory_report_mode=True).action_set_inventory_quantity_zero()
+        self.assertEqual(quant.inventory_quantity, 0)
+
 
 class TestStockQuantRemovalStrategy(TestStockCommon):
 

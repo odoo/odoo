@@ -1001,17 +1001,20 @@ class StockQuant(models.Model):
             # we skip creating a move with 0 quantity.
             if quant.env.context.get('from_inverse_qty') and quant.product_uom_id.compare(quant.inventory_diff_quantity, 0) == 0:
                 continue
+            loss_location_id = self.env['ir.default'].with_company(quant.company_id)._get_model_defaults('product.template').get('property_stock_inventory')
+            inventory_location = quant.product_id.with_company(quant.company_id).property_stock_inventory or\
+                self.env['stock.location'].browse(loss_location_id)
             # Create and validate a move so that the quant matches its `inventory_quantity`.
             if quant.product_uom_id.compare(quant.inventory_diff_quantity, 0) > 0:
                 move_vals.append(
                     quant._get_inventory_move_values(quant.inventory_diff_quantity,
-                                                     quant.product_id.with_company(quant.company_id).property_stock_inventory,
+                                                     inventory_location,
                                                      quant.location_id, package_dest_id=quant.package_id))
             else:
                 move_vals.append(
                     quant._get_inventory_move_values(-quant.inventory_diff_quantity,
                                                      quant.location_id,
-                                                     quant.product_id.with_company(quant.company_id).property_stock_inventory,
+                                                     inventory_location,
                                                      package_id=quant.package_id))
         moves = self.env['stock.move'].with_context(inventory_mode=False).create(move_vals)
         moves.with_context(ignore_dest_packages=True)._action_done()
