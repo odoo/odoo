@@ -22,7 +22,6 @@ CreditNoteLine = {
     'cac:Price': cac.Price,
     'cac:ItemPriceExtension': cac.ItemPriceExtension,
 }
-
 CreditNote = {
     '_tag': 'CreditNote',
     'ext:UBLExtensions': {},
@@ -34,11 +33,13 @@ CreditNote = {
     'cbc:CopyIndicator': {},
     'cbc:UUID': {},
     'cbc:IssueDate': {},
+    'cbc:TaxPointDate': {},
     'cbc:IssueTime': {},
     'cbc:CreditNoteTypeCode': {},
     'cbc:Note': {},
     'cbc:DocumentCurrencyCode': {},
     'cbc:TaxCurrencyCode': {},
+    'cbc:AccountingCost': {},
     'cbc:PricingCurrencyCode': {},
     'cbc:LineCountNumeric': {},
     'cbc:BuyerReference': {},
@@ -46,6 +47,8 @@ CreditNote = {
     'cac:DiscrepancyResponse': cac.DiscrepancyResponse,
     'cac:OrderReference': cac.OrderReference,
     'cac:BillingReference': cac.BillingReference,
+    'cac:DespatchDocumentReference': cac.DespatchDocumentReference,
+    'cac:ContractDocumentReference': cac.ContractDocumentReference,
     'cac:AdditionalDocumentReference': cac.DocumentReference,
     'cac:Signature': cac.Signature,
     'cac:AccountingSupplierParty': cac.SupplierParty,
