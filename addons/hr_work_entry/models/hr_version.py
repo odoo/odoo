@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
-from odoo.fields import Command, Domain
+from odoo.fields import Domain
 from odoo.tools import ormcache, float_is_zero
 from odoo.tools.intervals import Intervals
 
@@ -410,7 +410,7 @@ class HrVersion(models.Model):
             'date_generated_to': date_start,
         })
         domain_to_nullify = Domain(False)
-        work_entry_null_vals = {field: False for field in self.env["hr.work.entry.regeneration.wizard"]._work_entry_fields_to_nullify()}
+        work_entry_null_vals = {field: False for field in self.env["hr.work.entry"]._work_entry_fields_to_nullify()}
 
         for tz, versions in self.grouped("tz").items():
             tz = ZoneInfo(tz) if tz else UTC
@@ -677,13 +677,11 @@ class HrVersion(models.Model):
 
     def _recompute_work_entries(self, date_from, date_to):
         self.ensure_one()
-        if self.employee_id:
-            wizard = self.env['hr.work.entry.regeneration.wizard'].create({
-                'employee_ids': [Command.set(self.employee_id.ids)],
-                'date_from': date_from,
-                'date_to': date_to,
-            })
-            wizard.with_context(work_entry_skip_validation=True, active_test=False).regenerate_work_entries()
+        if not self.employee_id:
+            return
+        self.employee_id.with_context(
+            active_test=False,
+        ).regenerate_work_entries(date_from, date_to)
 
     def _get_fields_that_recompute_we(self):
         # Returns the fields that should recompute the work entries
