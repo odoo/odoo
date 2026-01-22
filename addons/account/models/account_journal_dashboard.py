@@ -532,12 +532,17 @@ class AccountJournal(models.Model):
                 or journal.last_statement_id.date
                 and journal.company_id.fiscalyear_lock_date < journal.last_statement_id.date
             )
+            gl_balance = sum(self.env['account.move.line'].search([
+                ('account_id', '=', journal.default_account_id.id),
+                ('parent_state', '=', 'posted'),
+                ('company_id', 'in', self.env.companies.ids),
+            ]).mapped('balance'))
 
             dashboard_data[journal.id].update({
                 'number_to_check': number_to_check,
                 'to_check_balance': currency.format(to_check_balance),
                 'number_to_reconcile': number_to_reconcile.get(journal.id, 0),
-                'account_balance': currency.format(journal.current_statement_balance + direct_payments_balance),
+                'account_balance': currency.format(gl_balance),
                 'has_at_least_one_statement': bool(journal.last_statement_id),
                 'nb_lines_bank_account_balance': (bool(journal.has_statement_lines) or bool(nb_direct_payments)) and accessible,
                 'outstanding_pay_account_balance': currency.format(outstanding_pay_account_balance),
@@ -548,7 +553,7 @@ class AccountJournal(models.Model):
                 'has_invalid_statements': journal.has_invalid_statements,
                 'bank_statements_source': journal.bank_statements_source,
                 'is_sample_data': journal.has_statement_lines,
-                'nb_misc_operations': number_misc,
+                'nb_misc_operations': 0,  # Hidden: misc operations not shown in dashboard
                 'misc_class': 'text-warning' if not currency_consistent else '',
                 'misc_operations_balance': currency.format(misc_balance) if currency_consistent else None,
                 'drag_drop_settings': drag_drop_settings,
