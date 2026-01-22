@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, markRaw } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { cookie } from "@web/core/browser/cookie";
@@ -14,9 +14,12 @@ export class AccountReviewStateSelectionBadge extends Component {
         options: { type: Object, optional: true },
         class: { type: String, optional: true },
         size: { type: String, optional: true },
+        onChange: { type: Function, optional: true },
     };
 
     setup() {
+        this.selection_map = markRaw(new Map(this.props.record.fields[this.props.name].selection));
+
         onWillStart(async () => {
             this.editableOptions = await this.getEditableOptions();
         });
@@ -44,9 +47,9 @@ export class AccountReviewStateSelectionBadge extends Component {
     }
 
     get display() {
-        const result = this.options.filter((val) => val[0] === this.value)[0];
-        if(result) {
-            return result[1];
+        const value = this.value;
+        if (this.selection_map.has(value)) {
+            return this.selection_map.get(value);
         }
         return null;
     }
@@ -71,8 +74,8 @@ export class AccountReviewStateSelectionBadge extends Component {
         return editableOptions;
     }
 
-    getDropdownButtonDecoration(value) {
-        const decoration = this.props.options[value]?.decoration
+    get dropdownButtonDecoration() {
+        const decoration = this.props.options[this.value]?.decoration
         if (!decoration || decoration === 'muted') {
             return 'btn-outline-secondary'
         }
@@ -107,6 +110,9 @@ export class AccountReviewStateSelectionBadge extends Component {
             { [this.props.name]: value },
             { save: true }
         );
+        if (this.props.onChange) {
+            await this.props.onChange(value);
+        }
         this.env.reload?.()
     }
 }
