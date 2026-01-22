@@ -11,6 +11,7 @@ export const websiteMapService = {
         const notification = deps["notification"];
         let gmapAPIKeyProm;
         let gmapAPILoading;
+        let bootstrapLoadedKey;
         return {
             /**
              * @param {boolean} [refetch=false]
@@ -81,13 +82,29 @@ export const websiteMapService = {
                 // Note: only need refetch to reload a configured key and load the
                 // library. If the library was loaded with a correct key and that the
                 // key changes meanwhile... it will not work but we can agree the user
-                // can bother to reload the page at that moment.
+                // can bother to reload the page when they are notified.
                 if (refetch || !gmapAPILoading) {
                     gmapAPILoading = new Promise(async resolve => {
                         const key = await this.getGMapAPIKey(refetch);
 
                         if (key) {
-                            this.initGoogleMapAPI(key);
+                            if (bootstrapLoadedKey && bootstrapLoadedKey !== key) {
+                                notification.add(
+                                    _t(
+                                        "Google Maps configuration has changed. Please reload the page for changes to take effect."
+                                    ),
+                                    {
+                                        type: "warning",
+                                        sticky: true,
+                                    }
+                                );
+                                resolve(false);
+                                return;
+                            }
+                            if (!bootstrapLoadedKey) {
+                                this.initGoogleMapAPI(key);
+                                bootstrapLoadedKey = key;
+                            }
                             resolve(key);
                         } else {
                             if (!editableMode && user.isAdmin) {
