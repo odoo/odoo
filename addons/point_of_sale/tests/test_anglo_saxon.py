@@ -229,6 +229,38 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(pos_order_pos0.account_move.journal_id, self.pos_config.invoice_journal_id)
         self.assertEqual(line.debit, 27, 'As it is a fifo product, the move\'s value should be 5*5 + 2*1')
 
+    def test_fifo_valuation_with_invoice_when_pos_customer_is_delivery_type(self):
+        """Register a payment and validate a session after selling a fifo
+        product and make an invoice for the customer when a delivery address
+        has been set as the customer on the POS order"""
+        delivery_address = self.partner.copy({
+            'type': 'delivery',
+            'parent_id': self.partner.id,
+        })
+        pos_order_pos0 = self._prepare_pos_order()
+        pos_order_pos0.partner_id = delivery_address.id
+
+        context_make_payment = {"active_ids": [pos_order_pos0.id], "active_id": pos_order_pos0.id}
+        self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 7 * 450.0,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+
+        # register the payment
+        context_payment = {'active_id': pos_order_pos0.id}
+        self.pos_make_payment_0.with_context(context_payment).check()
+
+        # Create the customer invoice
+        pos_order_pos0.action_pos_order_invoice()
+
+        # check that the invoice address on the invoice is the parent_id of the delivery address
+        self.assertEqual(pos_order_pos0.partner_id.parent_id, pos_order_pos0.account_move.partner_id)
+
+        # check the anglo saxon move lines
+        line = pos_order_pos0.account_move.line_ids.filtered(lambda l: l.debit and l.account_id == self.category.property_account_expense_categ_id)
+        self.assertEqual(pos_order_pos0.account_move.journal_id, self.pos_config.invoice_journal_id)
+        self.assertEqual(line.debit, 27, 'As it is a fifo product, the move\'s value should be 5*5 + 2*1')
+
     def test_cogs_with_ship_later_no_invoicing(self):
         # This test will check that the correct journal entries are created when a product in real time valuation
         # is sold using the ship later option and no invoice is created in a company using anglo-saxon
