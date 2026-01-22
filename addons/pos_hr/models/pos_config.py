@@ -25,10 +25,11 @@ class PosConfig(models.Model):
 
         # write employees in sudo, because we have no access to these corecords
         sudo_vals = {
-            field_name: value
+            field_name: vals.pop(field_name)
             for field_name in ('minimal_employee_ids', 'basic_employee_ids', 'advanced_employee_ids')
             if not self.env.su
-            if (value := vals.pop(field_name, ()))
+            if isinstance(vals.get(field_name), list)
+            if all(isinstance(cmd, (list, tuple)) for cmd in vals[field_name])
         }
 
         res = super().write(vals)
