@@ -823,7 +823,7 @@ class ProductTemplate(models.Model):
             'domain': self._get_product_document_domain(),
             'target': 'current',
             'help': """
-                <p class="o_view_nocontent_smiling_face">
+                <p class="o_nc_icon_smiling">
                     %s
                 </p>
                 <p>

@@ -172,7 +172,7 @@ class AccountReconcileModel(models.Model):
         action.update({
             'context': {},
             'domain': [('id', 'in', self.env.cr.fetchone()[0])],
-            'help': """<p class="o_view_nocontent_empty_folder">{}</p>""".format(_('This reconciliation model has created no entry so far')),
+            'help': """<p class="o_nc_icon_folder">{}</p>""".format(_('This reconciliation model has created no entry so far')),
         })
         return action
 

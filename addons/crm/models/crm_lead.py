@@ -1353,7 +1353,7 @@ class CrmLead(models.Model):
             help_title = _('Create a new lead')
         else:
             help_title = _('Create an opportunity to start playing with your pipeline.')
-        new_help_message = f"<p class='o_view_nocontent_smiling_face'>{help_title}</p>"
+        new_help_message = f"<p class='o_nc_icon_smiling'>{help_title}</p>"
         message_empty = is_html_empty(help_message)
         if (
             not self.env.user.sale_team_id

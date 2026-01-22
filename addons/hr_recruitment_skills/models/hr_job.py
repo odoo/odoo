@@ -61,6 +61,6 @@ class HrJob(models.Model):
                 ('job_id', '!=', self.id),
                 ('skill_ids', 'in', self.job_skill_ids.skill_id.ids),
             ],
-            'help': Markup("<p class='o_view_nocontent_empty_folder'>%s</p><p>%s</p>") % (help_message_1, help_message_2),
+            'help': Markup("<p class='o_nc_icon_folder'>%s</p><p>%s</p>") % (help_message_1, help_message_2),
         })
         return action

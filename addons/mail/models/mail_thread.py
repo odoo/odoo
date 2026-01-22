@@ -460,7 +460,7 @@ class MailThread(models.AbstractModel):
                              document=html_escape(document_name),
                              email_link=email_link,
                             )
-                return super().get_empty_list_help(f"<p class='o_view_nocontent_smiling_face'>{dyn_help}</p>")
+                return super().get_empty_list_help(f"<p class='o_nc_icon_smiling'>{dyn_help}</p>")
             # do not add alias two times if it was added previously
             if "oe_view_nocontent_alias" not in help_message:
                 dyn_help = _("Create new %(document)s by sending an email to %(email_link)s",
@@ -471,7 +471,7 @@ class MailThread(models.AbstractModel):
 
         if nothing_here:
             dyn_help = _("Create new %(document)s", document=html_escape(document_name))
-            return super().get_empty_list_help(f"<p class='o_view_nocontent_smiling_face'>{dyn_help}</p>")
+            return super().get_empty_list_help(f"<p class='o_nc_icon_smiling'>{dyn_help}</p>")
 
         return super().get_empty_list_help(help_message)
 

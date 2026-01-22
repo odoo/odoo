@@ -49,7 +49,7 @@
         <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1, 'search_default_from_website': 1}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
         <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
+            <p class="o_nc_icon_folder">
                 There is no confirmed order from the website
             </p>
         </field>
@@ -64,7 +64,7 @@
         <field name="context">{'show_sale': True, 'create': False}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
         <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
+            <p class="o_nc_icon_folder">
                 There is no unpaid order from the website yet
             </p><p>
                 Process the order once the payment is received.
@@ -103,7 +103,7 @@
         <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1, 'create': False}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
         <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
+            <p class="o_nc_icon_folder">
                 You don't have any order to invoice from the website
             </p>
         </field>
@@ -121,7 +121,7 @@
         <field name="view_id" ref="sale.view_quotation_tree"/>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce_abondand"/>
         <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
+            <p class="o_nc_icon_folder">
                 No abandoned carts found
             </p><p>
                 You'll find here all the carts abandoned by your visitors.

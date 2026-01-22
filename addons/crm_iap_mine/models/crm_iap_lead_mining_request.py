@@ -188,7 +188,7 @@ class CrmIapLeadMiningRequest(models.Model):
         help_title = _('Create a Lead Mining Request')
         sub_title = _('Generate new leads based on their country, industry, size, etc.')
         return super().get_empty_list_help(
-            f'<p class="o_view_nocontent_smiling_face">{help_title}</p><p class="oe_view_nocontent_alias">{sub_title}</p>'
+            f'<p class="o_nc_icon_smiling">{help_title}</p><p class="oe_view_nocontent_alias">{sub_title}</p>'
         )
 
     def _prepare_iap_payload(self):
