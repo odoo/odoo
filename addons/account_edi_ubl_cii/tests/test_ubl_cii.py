@@ -68,6 +68,11 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             'ubl_cii_tax_exemption_reason_code': 'VATEX-EU-132-1G'
         })
 
+    def setUp(self):
+        self.addCleanup(self.registry.reset_changes)
+        self.addCleanup(self.registry.clear_all_caches)
+        super().setUp()
+
     def test_export_import_product(self):
         products = self.env['product.product'].create([{
             'name': 'XYZ',
@@ -983,3 +988,202 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             'amount_tax': 369,
             'amount_total': 2269.00,
         }])
+
+    def test_invoice_optional_fields(self):
+        """Test that optional invoice and invoice lines custom fields added by the user are exported correctly"""
+        model_id = self.env["ir.model"]._get_id("account.move")
+        invoice_fields = [
+            ("x_studio_peppol_tax_point_date", "date"),
+            ("x_studio_peppol_contract_document_reference_id", "char"),
+            ("x_studio_peppol_despatch_document_reference_id", "char"),
+            ("x_studio_peppol_accounting_cost", "char"),
+            ("x_studio_peppol_project_reference_id", "char"),
+            ("x_studio_peppol_order_reference_id", "char"),
+            ("x_studio_peppol_invoice_period_start_date", "date"),
+            ("x_studio_peppol_invoice_period_end_date", "date"),
+        ]
+
+        self.env["ir.model.fields"].create([{
+                "name": name,
+                "model": "account.move",
+                "model_id": model_id,
+                "ttype": ttype,
+                "state": "manual",
+            }
+            for name, ttype in invoice_fields
+        ])
+
+        model_id = self.env["ir.model"]._get_id("account.move.line")
+        invoice_line_fields = [
+            ("x_studio_peppol_order_line_reference_id", "char"),
+            ("x_studio_peppol_buyers_item_id", "char"),
+        ]
+
+        self.env["ir.model.fields"].create([{
+                "name": name,
+                "model": "account.move.line",
+                "model_id": model_id,
+                "ttype": ttype,
+                "state": "manual",
+            }
+            for name, ttype in invoice_line_fields
+        ])
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'x_studio_peppol_order_line_reference_id': "order_line1-1234",
+                    'x_studio_peppol_buyers_item_id': "item1-1234",
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'x_studio_peppol_order_line_reference_id': "order_line2-1234",
+                    'x_studio_peppol_buyers_item_id': "item2-1234",
+                })
+            ],
+            'x_studio_peppol_tax_point_date': "2028-01-01",
+            'x_studio_peppol_contract_document_reference_id': "contract-1234",
+            'x_studio_peppol_despatch_document_reference_id': "despatch-1234",
+            'x_studio_peppol_accounting_cost': "88.5",
+            'x_studio_peppol_project_reference_id': "project-1234",
+            'x_studio_peppol_order_reference_id': "order-1234",
+            'x_studio_peppol_invoice_period_start_date': "2028-01-01",
+            'x_studio_peppol_invoice_period_end_date': "2028-02-01",
+        })
+
+        invoice.action_post()
+
+        xml_content = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        xml_tree = etree.fromstring(xml_content)
+
+        tax_point_date = xml_tree.find('.//cbc:TaxPointDate', self.ubl_namespaces)
+        self.assertEqual(tax_point_date.text, '2028-01-01')
+
+        contract_document_reference_id = xml_tree.find('.//cac:ContractDocumentReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(contract_document_reference_id.text, 'contract-1234')
+
+        despatch_document_reference_id = xml_tree.find('.//cac:DespatchDocumentReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(despatch_document_reference_id.text, 'despatch-1234')
+
+        accounting_cost = xml_tree.find('.//cbc:AccountingCost', self.ubl_namespaces)
+        self.assertEqual(accounting_cost.text, '88.5')
+
+        project_reference_id = xml_tree.find('.//cac:ProjectReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(project_reference_id.text, 'project-1234')
+
+        order_reference_id = xml_tree.find('.//cac:OrderReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(order_reference_id.text, 'order-1234')
+
+        invoice_period_start_date = xml_tree.find('.//cac:InvoicePeriod/cbc:StartDate', self.ubl_namespaces)
+        self.assertEqual(invoice_period_start_date.text, '2028-01-01')
+
+        invoice_period_end_date = xml_tree.find('.//cac:InvoicePeriod/cbc:EndDate', self.ubl_namespaces)
+        self.assertEqual(invoice_period_end_date.text, '2028-02-01')
+
+        order_line_reference_id = xml_tree.findall('.//cac:InvoiceLine/cac:OrderLineReference/cbc:LineID', self.ubl_namespaces)
+        self.assertEqual(order_line_reference_id[0].text, 'order_line1-1234')
+        self.assertEqual(order_line_reference_id[1].text, 'order_line2-1234')
+
+        buyers_item_id = xml_tree.findall('.//cac:InvoiceLine/cac:Item/cac:BuyersItemIdentification/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(buyers_item_id[0].text, 'item1-1234')
+        self.assertEqual(buyers_item_id[1].text, 'item2-1234')
+
+    def test_credit_note_optional_fields(self):
+        """Test that optional credit note and credit note lines custom fields added by the user are exported correctly"""
+        model_id = self.env["ir.model"]._get_id("account.move")
+
+        credit_note_fields = [
+            ("x_studio_peppol_tax_point_date", "date"),
+            ("x_studio_peppol_contract_document_reference_id", "char"),
+            ("x_studio_peppol_despatch_document_reference_id", "char"),
+            ("x_studio_peppol_accounting_cost", "char"),
+            ("x_studio_peppol_order_reference_id", "char"),
+            ("x_studio_peppol_invoice_period_start_date", "date"),
+            ("x_studio_peppol_invoice_period_end_date", "date"),
+        ]
+
+        self.env["ir.model.fields"].create([{
+                "name": name,
+                "model": "account.move",
+                "model_id": model_id,
+                "ttype": ttype,
+                "state": "manual",
+            }
+            for name, ttype in credit_note_fields
+        ])
+
+        model_id = self.env["ir.model"]._get_id("account.move.line")
+        credit_note_line_fields = [
+            ("x_studio_peppol_order_line_reference_id", "char"),
+            ("x_studio_peppol_buyers_item_id", "char"),
+        ]
+
+        self.env["ir.model.fields"].create([{
+                "name": name,
+                "model": "account.move",
+                "model_id": model_id,
+                "ttype": ttype,
+                "state": "manual",
+            }
+            for name, ttype in credit_note_line_fields
+        ])
+
+        credit_note = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_refund',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'x_studio_peppol_order_line_reference_id': "order_line1-1234",
+                'x_studio_peppol_buyers_item_id': "item1-1234",
+            }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'x_studio_peppol_order_line_reference_id': "order_line2-1234",
+                    'x_studio_peppol_buyers_item_id': "item2-1234",
+                })
+            ],
+            'x_studio_peppol_tax_point_date': "2028-01-01",
+            'x_studio_peppol_contract_document_reference_id': "contract-1234",
+            'x_studio_peppol_despatch_document_reference_id': "despatch-1234",
+            'x_studio_peppol_accounting_cost': "88.5",
+            'x_studio_peppol_order_reference_id': "order-1234",
+            'x_studio_peppol_invoice_period_start_date': "2028-01-01",
+            'x_studio_peppol_invoice_period_end_date': "2028-02-01",
+        })
+
+        credit_note.action_post()
+
+        xml_content = self.env['account.edi.xml.ubl_bis3']._export_invoice(credit_note)[0]
+        xml_tree = etree.fromstring(xml_content)
+
+        tax_point_date = xml_tree.find('.//cbc:TaxPointDate', self.ubl_namespaces)
+        self.assertEqual(tax_point_date.text, '2028-01-01')
+
+        contract_document_reference_id = xml_tree.find('.//cac:ContractDocumentReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(contract_document_reference_id.text, 'contract-1234')
+
+        despatch_document_reference_id = xml_tree.find('.//cac:DespatchDocumentReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(despatch_document_reference_id.text, 'despatch-1234')
+
+        accounting_cost = xml_tree.find('.//cbc:AccountingCost', self.ubl_namespaces)
+        self.assertEqual(accounting_cost.text, '88.5')
+
+        order_reference_id = xml_tree.find('.//cac:OrderReference/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(order_reference_id.text, 'order-1234')
+
+        invoice_period_start_date = xml_tree.find('.//cac:InvoicePeriod/cbc:StartDate', self.ubl_namespaces)
+        self.assertEqual(invoice_period_start_date.text, '2028-01-01')
+
+        invoice_period_end_date = xml_tree.find('.//cac:InvoicePeriod/cbc:EndDate', self.ubl_namespaces)
+        self.assertEqual(invoice_period_end_date.text, '2028-02-01')
+
+        order_line_reference_id = xml_tree.findall('.//cac:CreditNoteLine/cac:OrderLineReference/cbc:LineID', self.ubl_namespaces)
+        self.assertEqual(order_line_reference_id[0].text, 'order_line1-1234')
+        self.assertEqual(order_line_reference_id[1].text, 'order_line2-1234')
+
+        buyers_item_id = xml_tree.findall('.//cac:CreditNoteLine/cac:Item/cac:BuyersItemIdentification/cbc:ID', self.ubl_namespaces)
+        self.assertEqual(buyers_item_id[0].text, 'item1-1234')
+        self.assertEqual(buyers_item_id[1].text, 'item2-1234')

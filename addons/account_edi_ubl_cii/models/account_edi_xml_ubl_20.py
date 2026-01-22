@@ -6,6 +6,7 @@ from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
+from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
 
 
 UBL_NAMESPACES = {
@@ -144,6 +145,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         self._add_invoice_exchange_rate_nodes(document_node, vals)
         self._add_invoice_tax_total_nodes(document_node, vals)
         self._add_invoice_monetary_total_nodes(document_node, vals)
+        self._add_invoice_optional_nodes(document_node, vals)
         return document_node
 
     def _add_invoice_config_vals(self, vals):
@@ -382,6 +384,25 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             },
         })
 
+    def _add_invoice_optional_nodes(self, document_node, vals):
+        if (vals['document_type'] == 'invoice'):
+            self.add_invoice_optional_nodes(document_node, vals, PEPPOL_INVOICE_OPTIONAL_FIELDS)
+        elif (vals['document_type'] == 'credit_note'):
+            self.add_invoice_optional_nodes(document_node, vals, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS)
+
+    def add_invoice_optional_nodes(self, document_node, vals, optional_fields):
+        move = vals['invoice']
+        invoice_optional_fields = {key: move[key] for key in move._fields if key.startswith("x_studio_peppol") and move[key] and key in optional_fields}
+        for field in invoice_optional_fields:
+            path = optional_fields[field]["path"]
+            attrs = optional_fields[field]["attrs"](move)
+            node = document_node
+            for tag in path:
+                if tag not in node:
+                    node[tag] = {}
+                node = node[tag]
+            node.update(attrs)
+
     def _get_invoice_line_node(self, vals):
         self._add_invoice_line_vals(vals)
 
@@ -396,6 +417,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         self._add_invoice_line_tax_category_nodes(line_node, vals)
         self._add_invoice_line_price_nodes(line_node, vals)
         self._add_invoice_line_pricing_reference_nodes(line_node, vals)
+        self._add_invoice_line_optional_nodes(line_node, vals)
         return line_node
 
     def _add_invoice_line_nodes(self, document_node, vals):
@@ -454,6 +476,23 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _add_invoice_line_pricing_reference_nodes(self, line_node, vals):
         pass
+
+    def _add_invoice_line_optional_nodes(self, line_node, vals):
+        if (vals['document_type'] == 'invoice'):
+            self.add_invoice_line_optional_nodes(line_node, vals, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS)
+        elif (vals['document_type'] == 'credit_note'):
+            self.add_invoice_line_optional_nodes(line_node, vals, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS)
+
+    def add_invoice_line_optional_nodes(self, line_node, vals, optional_line_fields):
+        move_line = self.env['account.move.line'].browse(vals['base_line']['id'])
+        move_line_optional_fields = {key: move_line[key] for key in move_line._fields if key.startswith("x_studio_peppol") and move_line[key] and key in optional_line_fields}
+        for field in move_line_optional_fields:
+            node = line_node
+            for tag in optional_line_fields[field]["path"]:
+                if tag not in node:
+                    node[tag] = {}
+                node = node[tag]
+            node.update(optional_line_fields[field]["attrs"](move_line))
 
     # -------------------------------------------------------------------------
     # EXPORT: Generic templates
