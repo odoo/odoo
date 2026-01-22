@@ -832,7 +832,7 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_sync_set_partner')
         order = self.pos_config.current_session_id.order_ids[0]
-        self.assertEqual(order.partner_id.name, "Deco Addict")
+        self.assertEqual(order.partner_id.name, "Acme Corporation")
 
     def test_sync_set_note(self):
         self.pos_config.with_user(self.pos_user).open_ui()

@@ -56,16 +56,16 @@
             <field name="vat">US12345672</field>
         </record>
         <record id="res_partner_2" model="res.partner">
-            <field name="name">Deco Addict</field>
+            <field name="name">Acme Corporation</field>
             <field eval="[Command.set([ref('base.res_partner_category_14')])]" name="category_id"/>
             <field name="street">77 Santa Barbara Rd</field>
             <field name="city">Pleasant Hill</field>
             <field name="state_id" ref='state_us_5'/>
             <field name="zip">94523</field>
             <field name="country_id" ref="base.us"/>
-            <field name="email">deco_addict@yourcompany.example.com</field>
+            <field name="email">acme_corp@yourcompany.example.com</field>
             <field name="phone">(603)-996-3829</field>
-            <field name="website">http://www.deco-addict.com</field>
+            <field name="website">http://www.acme-example-company.com</field>
             <field name="image_1920" type="base64" file="base/static/img/res_partner_2-image.png"/>
             <field name="vat">US12345673</field>
         </record>

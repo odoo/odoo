@@ -12,7 +12,7 @@ class TestWarehouse(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.partner = cls.env['res.partner'].create({'name': 'Deco Addict'})
+        cls.partner = cls.env['res.partner'].create({'name': 'Acme Corporation'})
 
     def test_inventory_product(self):
         self.product_1.is_storable = True
