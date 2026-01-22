@@ -27,4 +27,5 @@
         ],
     },
     "auto_install": True,
+    'post_init_hook': '_post_init_hook',
 }
