@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { DocumentFileUploader } from "../document_file_uploader/document_file_uploader";
 
 import { Component, onWillStart } from "@odoo/owl";
@@ -14,6 +15,7 @@ export class BillGuide extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
+        this.dialog = useService("dialog");
         this.context = null;
         this.alias = null;
         onWillStart(this.onWillStart);
@@ -38,13 +40,23 @@ export class BillGuide extends Component {
         }
     }
 
-    handleButtonClick(action, model="account.journal") {
-        this.action.doActionButton({
-            resModel: model,
-            name: action,
-            context: this.context || this.env.searchModel.context,
-            type: 'object',
+    handleButtonClick(action, model = "account.journal") {
+        // Prevent accidental data pollution with confirmation window
+        this.dialog.add(ConfirmationDialog, {
+            body: "Creating a sample bill will add demo data to your database. Are you sure you wish to proceed?",
+
+            confirm: () => {
+                this.action.doActionButton({
+                    resModel: model,
+                    name: action,
+                    context: this.context || this.env.searchModel.context,
+                    type: 'object',
+                });
+            },
+
+            cancel: () => { },
         });
+
     }
 }
 
