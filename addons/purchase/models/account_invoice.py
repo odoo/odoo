@@ -6,7 +6,7 @@ import time
 from markupsafe import Markup
 
 from odoo import api, fields, models, Command, _
-from odoo.tools import OrderedSet
+from odoo.tools import OrderedSet, SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -16,13 +16,11 @@ TOLERANCE = 0.02  # tolerance applied to the total when searching for a matching
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    purchase_vendor_bill_id = fields.Many2one('purchase.bill.union', store=False, readonly=False,
-        string='Auto-complete',
-        help="Auto-complete from a previous bill, refund, or purchase order.")
     purchase_id = fields.Many2one('purchase.order', store=False, readonly=False,
         string='Purchase Order',
         help="Auto-complete from a past purchase order.")
     purchase_order_count = fields.Integer(compute="_compute_origin_po_count", string='Purchase Order Count')
+    display_auto_complete_field = fields.Boolean(compute="_compute_display_auto_complete", groups='purchase.group_purchase_user')
     purchase_order_name = fields.Char(compute='_compute_purchase_order_name')
     is_purchase_matched = fields.Boolean(compute='_compute_is_purchase_matched')  # 0: PO not required or partially linked. 1: All lines linked
     purchase_warning_text = fields.Text(
@@ -30,22 +28,8 @@ class AccountMove(models.Model):
         help="Internal warning for the partner or the products as set by the user.",
         compute='_compute_purchase_warning_text')
 
-    @api.onchange('purchase_vendor_bill_id', 'purchase_id')
+    @api.onchange('purchase_id')
     def _onchange_purchase_auto_complete(self):
-        r''' Load from either an old purchase order, either an old vendor bill.
-
-        When setting a 'purchase.bill.union' in 'purchase_vendor_bill_id':
-        * If it's a vendor bill, 'invoice_vendor_bill_id' is set and the loading is done by '_onchange_invoice_vendor_bill'.
-        * If it's a purchase order, 'purchase_id' is set and this method will load lines.
-
-        /!\ All this not-stored fields must be empty at the end of this function.
-        '''
-        if self.purchase_vendor_bill_id.vendor_bill_id:
-            self.invoice_vendor_bill_id = self.purchase_vendor_bill_id.vendor_bill_id
-            self._onchange_invoice_vendor_bill()
-        elif self.purchase_vendor_bill_id.purchase_order_id:
-            self.purchase_id = self.purchase_vendor_bill_id.purchase_order_id
-        self.purchase_vendor_bill_id = False
 
         if not self.purchase_id:
             return
@@ -98,6 +82,24 @@ class AccountMove(models.Model):
             self.currency_id = currency_id
 
         return res
+
+    @api.depends('partner_id')
+    def _compute_display_auto_complete(self):
+        partner_ids = self.mapped('partner_id').ids
+        purchase_orders = self.env['purchase.order']._search([
+            ('state', '=', 'purchase'),
+            ('invoice_status', 'in', ('to invoice', 'no'))
+        ], limit=1)
+
+        purchase_orders.add_where('purchase_order.partner_id = res_partner.id')
+        partners = self.env['res.partner']._search([
+            ('id', 'in', partner_ids),
+        ])
+        partners.add_where(SQL('EXISTS(%s)', purchase_orders.select()))
+        valid_partner_ids = {partner[0] for partner in self.env.execute_query(partners.select())}
+
+        for move in self:
+            move.display_auto_complete_field = move.partner_id.id in valid_partner_ids
 
     @api.depends('line_ids.purchase_line_id')
     def _compute_is_purchase_matched(self):

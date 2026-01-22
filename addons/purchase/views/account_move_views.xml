@@ -5,31 +5,25 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <!-- Auto-complete could be done from either a bill either a purchase order -->
-            <field name="invoice_vendor_bill_id" position="after">
+            <!-- Auto-complete could be done from a purchase order -->
+            <field name="tax_cash_basis_origin_move_id" position="before">
                 <t groups="purchase.group_purchase_user">
                     <field name="purchase_id" invisible="1" readonly="state != 'draft'"/>
-                    <label for="purchase_vendor_bill_id" string="Auto-Complete" class="oe_edit_only"
-                        invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund')" />
-                    <field name="purchase_vendor_bill_id" nolabel="1"
-                        invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund')"
+                    <label for="purchase_id" string="Auto-Complete" class="oe_edit_only"
+                        invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund') or not display_auto_complete_field" />
+                    <field name="purchase_id" nolabel="1"
+                        invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund') or not display_auto_complete_field"
                         readonly="state != 'draft'"
                         class="oe_edit_only"
-                        domain = "[('partner_id.commercial_partner_id', '=', commercial_partner_id)] if partner_id else [] + [
-                            	'|',
-    	                    		('vendor_bill_id', '=', False),
-                            		('vendor_bill_id.move_type', '=', move_type)
+                        domain = "[
+                            ('partner_id.commercial_partner_id', '=', commercial_partner_id),
+                            ('state','=','purchase'),
+                            ('invoice_status','in',('to invoice','no'))
                         ]"
                         placeholder="Select a purchase document"
                         context="{'show_total_amount': True}"
                         options="{'no_create': True, 'no_open': True}"/>
                 </t>
-            </field>
-            <label name="invoice_vendor_bill_id_label" position="attributes">
-                <attribute name="groups">!purchase.group_purchase_user</attribute>
-            </label>
-            <field name="invoice_vendor_bill_id" position="attributes">
-                <attribute name="groups">!purchase.group_purchase_user</attribute>
             </field>
             <!-- Add link to purchase_line_id to account.move.line -->
             <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='company_id']" position="after">
