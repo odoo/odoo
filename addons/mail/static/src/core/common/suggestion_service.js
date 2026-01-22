@@ -287,6 +287,7 @@ export class SuggestionService {
             for (const fn of compareFunctions) {
                 const result = fn(p1, p2, {
                     env: this.env,
+                    store: this.store,
                     searchTerm: cleanedSearchTerm,
                     thread,
                     context,
