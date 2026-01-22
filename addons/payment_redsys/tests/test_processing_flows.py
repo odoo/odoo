@@ -76,14 +76,14 @@ class TestProcessingFlows(RedsysCommon, PaymentHttpCommon):
             Forbidden, RedsysController._verify_signature, self.payment_data, tx
         )
 
-    @mute_logger('odoo.addons.payment_redsys.controllers.main')
+    @mute_logger('odoo.addons.payment_redsys.controllers.main', 'odoo.addons.payment.utils')
     def test_reject_notification_with_missing_signature(self):
         """Test the verification of a notification with a missing signature."""
         tx = self._create_transaction('redirect')
         payload = dict(self.payment_data, Ds_Signature=None)
         self.assertRaises(Forbidden, RedsysController._verify_signature, payload, tx)
 
-    @mute_logger('odoo.addons.payment_redsys.controllers.main')
+    @mute_logger('odoo.addons.payment_redsys.controllers.main', 'odoo.addons.payment.utils')
     def test_reject_notification_with_invalid_signature(self):
         """Test the verification of a notification with an invalid signature."""
         tx = self._create_transaction('redirect')

@@ -2,3 +2,4 @@
 
 from . import common
 from . import test_buckaroo
+from . import test_processing_flows

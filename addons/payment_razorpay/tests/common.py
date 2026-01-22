@@ -25,6 +25,7 @@ class RazorpayCommon(PaymentCommon):
         cls.refund_id = 'rfd_456'
         cls.order_id = 'order_789'
         cls.redirect_payment_data = {
+            'reference': cls.reference,
             'razorpay_payment_id': cls.payment_id,
             'razorpay_order_id': cls.order_id,
             'razorpay_signature': 'dummy',
