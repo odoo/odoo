@@ -76,6 +76,13 @@
                 </xpath>
                 <xpath expr="//group[@name='other_calendar_preferences']" position="inside">
                     <field name="work_location_id" string="Main Work Location" options="{'no_create': True}"/>
+                    <field name="monday_location_id"  placeholder="Unspecified"/>
+                    <field name="tuesday_location_id"  placeholder="Unspecified"/>
+                    <field name="wednesday_location_id" placeholder="Unspecified"/>
+                    <field name="thursday_location_id"  placeholder="Unspecified"/>
+                    <field name="friday_location_id"  placeholder="Unspecified"/>
+                    <field name="saturday_location_id"  placeholder="Unspecified"/>
+                    <field name="sunday_location_id"  placeholder="Unspecified"/>
                 </xpath>
                 <xpath expr="//page[@name='calendar']" position="after">
                     <page name="private_information" string="Private">
@@ -229,6 +236,13 @@
                 </xpath>
                 <xpath expr="//group[@name='other_calendar_preferences']" position="inside">
                     <field name="work_location_id" string="Main Work Location" invisible="not employee_id or share"/>
+                    <field name="monday_location_id"  placeholder="Unspecified" invisible="not employee_id or share"/>
+                    <field name="tuesday_location_id"  placeholder="Unspecified" invisible="not employee_id or share"/>
+                    <field name="wednesday_location_id" placeholder="Unspecified" invisible="not employee_id or share"/>
+                    <field name="thursday_location_id"  placeholder="Unspecified" invisible="not employee_id or share"/>
+                    <field name="friday_location_id"  placeholder="Unspecified" invisible="not employee_id or share"/>
+                    <field name="saturday_location_id"  placeholder="Unspecified" invisible="not employee_id or share"/>
+                    <field name="sunday_location_id"  placeholder="Unspecified" invisible="not employee_id or share"/>
                 </xpath>
                 <xpath expr="//page[@name='calendar']" position="attributes">
                     <attribute name="groups">hr.group_hr_user</attribute>

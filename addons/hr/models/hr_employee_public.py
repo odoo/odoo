@@ -86,6 +86,15 @@ class HrEmployeePublic(models.Model):
 
     newly_hired = fields.Boolean('Newly Hired', compute='_compute_newly_hired', search='_search_newly_hired')
 
+    monday_location_id = fields.Many2one('hr.work.location', string='Monday')
+    tuesday_location_id = fields.Many2one('hr.work.location', string='Tuesday')
+    wednesday_location_id = fields.Many2one('hr.work.location', string='Wednesday')
+    thursday_location_id = fields.Many2one('hr.work.location', string='Thursday')
+    friday_location_id = fields.Many2one('hr.work.location', string='Friday')
+    saturday_location_id = fields.Many2one('hr.work.location', string='Saturday')
+    sunday_location_id = fields.Many2one('hr.work.location', string='Sunday')
+    today_location_name = fields.Char()
+
     def _get_selection_hr_icon_display(self):
         return self.env['hr.employee']._fields['hr_icon_display']._description_selection(self.env)
 

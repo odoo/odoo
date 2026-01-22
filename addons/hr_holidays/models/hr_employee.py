@@ -109,12 +109,14 @@ class HrEmployee(models.Model):
 
     def _compute_presence_icon(self):
         super()._compute_presence_icon()
-        employees_absent = self.filtered(
-            lambda employee: employee.hr_presence_state != 'present' and employee.is_absent)
-        employees_absent.update({'hr_icon_display': 'presence_holiday_absent', 'show_hr_icon_display': True})
-        employees_present = self.filtered(
-            lambda employee: employee.hr_presence_state == 'present' and employee.is_absent)
-        employees_present.update({'hr_icon_display': 'presence_holiday_present', 'show_hr_icon_display': True})
+        dayfield = self._get_current_day_location_field()
+        for employee in self:
+            today_employee_location_id = employee.sudo().exceptional_location_id or employee[dayfield]
+            if employee.is_absent:
+                employee.hr_icon_display = f'presence_holiday_{"absent" if employee.hr_presence_state != "present" else "present"}'
+            elif today_employee_location_id:
+                employee.hr_icon_display = f'presence_{today_employee_location_id.location_type}'
+            employee.show_hr_icon_display = True
 
     def _get_first_working_interval(self, dt):
         # find the first working interval after a given date
