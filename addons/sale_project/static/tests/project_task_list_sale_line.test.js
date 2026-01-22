@@ -12,7 +12,7 @@ defineProjectModels();
 
 test("cannot edit sale_line_id when partners are different", async () => {
     mailModels.ResPartner._records = [
-        { id: 101, name: "Deco Addict" },
+        { id: 101, name: "Acme Corporation" },
         { id: 102, name: "Azure Interior" },
         ...mailModels.ResPartner._records,
     ];

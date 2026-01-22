@@ -539,7 +539,7 @@ class TestMultiCompany(TransactionCase):
         supplier_location = self.env.ref('stock.stock_location_suppliers')
         intercom_location = self.env.ref('stock.stock_location_inter_company')
         intercom_location.write({'active': True})
-        partner = self.env['res.partner'].create({'name': 'Deco Addict'})
+        partner = self.env['res.partner'].create({'name': 'Acme Corporation'})
         self.warehouse_a.resupply_wh_ids = [(6, 0, [self.warehouse_b.id])]
         resupply_route = self.env['stock.route'].search([
             ('supplier_wh_id', '=', self.warehouse_b.id),
