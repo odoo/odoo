@@ -164,7 +164,7 @@ class AccountEdiProxyClientUser(models.Model):
             attachment_ids=attachment.ids,
         )
         attachment.write({'res_model': 'account.move', 'res_id': move.id})
-        return True
+        return move
 
     def _nemhandel_get_new_documents(self, batch_size=None):
         job_count = batch_size or BATCH_SIZE
@@ -199,90 +199,112 @@ class AccountEdiProxyClientUser(models.Model):
             need_retrigger = need_retrigger or len(message_uuids) > job_count
             message_uuids = message_uuids[:job_count]
 
-            proxy_acks = []
             # retrieve attachments for filtered messages
             all_messages = edi_user._call_nemhandel_proxy(
                 "/api/nemhandel/1/get_document",
                 params={'message_uuids': message_uuids},
             )
 
-            for uuid, content in all_messages.items():
-                enc_key = content["enc_key"]
-                document_content = content["document"]
-                filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
-                decoded_document = edi_user._decrypt_data(document_content, enc_key)
-                attachment = self.env["ir.attachment"].create(
-                    {
-                        "name": f"{filename}.xml",
-                        "raw": decoded_document,
-                        "type": "binary",
-                        "mimetype": "application/xml",
-                    }
-                )
-                if edi_user._nemhandel_import_invoice(attachment, content["state"], uuid):
-                    # Only acknowledge when we saved the document somewhere
-                    proxy_acks.append(uuid)
+            processed_uuid_to_record = edi_user._nemhandel_process_new_messages(all_messages)
 
             if not tools.config['test_enable']:
                 self.env.cr.commit()
-            if proxy_acks:
+            if processed_uuid_to_record:
                 edi_user._call_nemhandel_proxy(
                     "/api/nemhandel/1/ack",
-                    params={'message_uuids': proxy_acks},
+                    params={'message_uuids': list(processed_uuid_to_record)},
                 )
         if need_retrigger:
             self.env.ref('l10n_dk_nemhandel.ir_cron_nemhandel_get_new_documents')._trigger()
+
+    def _nemhandel_process_new_messages(self, messages):
+        self.ensure_one()
+        processed_messages = {}
+        for uuid, content in messages.items():
+            enc_key = content["enc_key"]
+            document_content = content["document"]
+            filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
+            decoded_document = self._decrypt_data(document_content, enc_key)
+            attachment = self.env["ir.attachment"].create(
+                {
+                    "name": f"{filename}.xml",
+                    "raw": decoded_document,
+                    "type": "binary",
+                    "mimetype": "application/xml",
+                }
+            )
+            if move := self._nemhandel_import_invoice(attachment, content["state"], uuid):
+                # Only acknowledge when we saved the document somewhere
+                processed_messages[uuid] = move
+        return processed_messages
 
     def _nemhandel_get_message_status(self, batch_size=None):
         job_count = batch_size or BATCH_SIZE
         need_retrigger = False
         for edi_user in self:
-            edi_user_moves = self.env['account.move'].search(
-                [
-                    ('nemhandel_move_state', '=', 'processing'),
-                    ('company_id', '=', edi_user.company_id.id),
-                ],
-                limit=job_count + 1,
-            )
-            if not edi_user_moves:
+            documents = edi_user._nemhandel_get_documents_for_status(job_count)
+            if not documents:
                 continue
 
-            need_retrigger = need_retrigger or len(edi_user_moves) > job_count
-            message_uuids = {move.nemhandel_message_uuid: move for move in edi_user_moves[:job_count]}
+            need_retrigger = need_retrigger or len(documents) > job_count
+            uuid_to_record = {document.nemhandel_message_uuid: document for document in documents[:job_count]}
             messages_to_process = edi_user._call_nemhandel_proxy(
                 "/api/nemhandel/1/get_document",
-                params={'message_uuids': list(message_uuids.keys())},
+                params={'message_uuids': list(uuid_to_record)},
             )
 
-            for uuid, content in messages_to_process.items():
-                if uuid == 'error':
-                    # this rare edge case can happen if the participant is not active on the proxy side
-                    # in this case we can't get information about the invoices
-                    edi_user_moves.nemhandel_move_state = 'error'
-                    log_message = _("Nemhandel error: %s", content['message'])
-                    edi_user_moves._message_log_batch(bodies={move.id: log_message for move in edi_user_moves})
-                    break
+            processed_message_uuids = edi_user._nemhandel_process_messages_status(messages_to_process, uuid_to_record)
 
-                move = message_uuids[uuid]
-                if content.get('error'):
-                    # "Nemhandel request not ready" error:
-                    # thrown when the IAP is still processing the message
-                    if content['error'].get('code') == 702:
-                        continue
-
-                    move.nemhandel_move_state = 'error'
-                    move._message_log(body=_("Nemhandel error: %s", content['error'].get('data', {}).get('message') or content['error']['message']))
-                    continue
-
-                move.nemhandel_move_state = content['state']
-                move._message_log(body=_('Nemhandel status update: %s', content['state']))
-
-                edi_user._call_nemhandel_proxy(
-                    "/api/nemhandel/1/ack",
-                    params={'message_uuids': list(message_uuids.keys())},
-                )
+            edi_user._call_nemhandel_proxy(
+                "/api/nemhandel/1/ack",
+                params={'message_uuids': list(processed_message_uuids)},
+            )
         if need_retrigger:
             self.env.ref('l10n_dk_nemhandel.ir_cron_nemhandel_get_message_status')._trigger()
+
+    def _nemhandel_get_documents_for_status(self, batch_size):
+        self.ensure_one()
+        edi_user_moves = self.env['account.move'].search(
+            [
+                ('nemhandel_move_state', '=', 'processing'),
+                ('company_id', '=', self.company_id.id),
+            ],
+            limit=batch_size + 1,
+        )
+        return list(edi_user_moves)
+
+    def _nemhandel_process_messages_status(self, messages, uuid_to_record):
+        self.ensure_one()
+        processed_message_uuids = []
+        for uuid, content in messages.items():
+            if uuid == 'error':
+                # this rare edge case can happen if the participant is not active on the proxy side
+                # in this case we can't get information about the invoices
+                moves = self.env['account.move']
+                log_message = self.env._("Nemhandel error: %s", content['message'])
+                bodies = {}
+                for move in uuid_to_record.values():
+                    moves |= move
+                    bodies[move.id] = log_message
+                moves.nemhandel_move_state = 'error'
+                moves._message_log_batch(bodies=bodies)
+                return processed_message_uuids
+
+            move = uuid_to_record[uuid]
+            if content.get('error'):
+                # "Nemhandel request not ready" error:
+                # thrown when the IAP is still processing the message
+                if content['error'].get('code') == 702:
+                    continue
+                move._message_log(body=_("Nemhandel error: %s", content['error'].get('data', {}).get('message') or content['error']['message']))
+                move.nemhandel_move_state = 'error'
+                processed_message_uuids.append(uuid)
+                continue
+
+            move.nemhandel_move_state = content['state']
+            move._message_log(body=_('Nemhandel status update: %s', content['state']))
+            processed_message_uuids.append(uuid)
+        return processed_message_uuids
 
     def _nemhandel_get_participant_status(self):
         for edi_user in self:
