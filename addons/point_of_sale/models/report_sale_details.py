@@ -226,7 +226,7 @@ class ReportSaleDetails(models.AbstractModel):
                     })
 
                 # If there is a cash difference, we remove the last cash move which is the cash difference
-                if cash_difference != 0:
+                if session.currency_id.round(cash_difference) != 0:
                     cash_moves = cash_moves[:-1]
 
                 for cash_move in cash_moves:
