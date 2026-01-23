@@ -9,7 +9,7 @@ class MrpProductionSerials(models.TransientModel):
     def action_apply(self):
         self.ensure_one()
         sbc_move = self.production_id._get_subcontract_move()
-        if not sbc_move:
+        if not sbc_move or not self.serial_numbers:
             return super().action_apply()
 
         lots = list(filter(lambda serial_number: len(serial_number.strip()) > 0, self.serial_numbers.split('\n'))) if self.serial_numbers else []

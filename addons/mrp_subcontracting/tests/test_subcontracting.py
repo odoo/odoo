@@ -1633,7 +1633,10 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
 
     def test_subcontract_move_lines_are_linked_to_picking(self):
         """Test to ensure that when we generate mass serial numbers for a
-        subcontracting order, the created move lines are linked to the picking."""
+        subcontracting order, the created move lines are linked to the picking.
+
+        Also ensure that applying the serial number generation wizard without
+        creating any lot/serial numbers does not raise an error."""
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         receipt = self.env['stock.picking'].create({
             'picking_type_id': warehouse.in_type_id.id,
@@ -1648,6 +1651,8 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
 
         self.finished.lot_sequence_id.number_next_actual = 1
         wizard = Form.from_action(self.env, mo.action_generate_serial()).save()
+        # Applying the wizard without generating any lot/serial numbers should not raise an error.
+        wizard.action_apply()
         wizard.action_generate_serial_numbers()
         wizard.action_apply()
         self.assertRecordValues(mo._get_subcontract_move().lot_ids, [
