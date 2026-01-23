@@ -101,7 +101,10 @@ export class KanbanCompiler extends ViewCompiler {
     compileMain(el, params) {
         const compiled = createElement("div");
 
-        compiled.setAttribute("class", `o_record_main`);
+        for (const { name, value } of el.attributes) {
+            compiled.setAttribute(name, value);
+        }
+        combineAttributes(compiled, "class", ["o_record_main"]);
         for (const child of el.childNodes) {
             append(compiled, this.compileNode(child, params));
         }
