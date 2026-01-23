@@ -35,7 +35,7 @@ class FleetVehicleModel(models.Model):
     vendors = fields.Many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors')
     image_128 = fields.Image(related='brand_id.image_128', readonly=True)
     active = fields.Boolean(default=True)
-    vehicle_type = fields.Selection([('car', 'Car'), ('bike', 'Bike')], default='car', required=True, tracking=True)
+    vehicle_type = fields.Selection([('car', 'Car'), ('bike', 'Bike'), ('other', 'Other')], default='car', required=True, tracking=True)
     transmission = fields.Selection(
         selection=[('manual', 'Manual'), ('semi_automatic', 'Semi-Automatic'), ('automatic', 'Automatic')],
         string='Transmission', tracking=True)

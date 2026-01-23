@@ -74,16 +74,14 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="image_128" widget='image' class="oe_avatar"/>
                     <div class="oe_title">
-                        <label for="model_id"/>
-                        <h1>
-                            <field name="model_id" placeholder="e.g. Model S" class="w-100"/>
-                        </h1>
                         <label for="license_plate"/>
-                        <h2>
-                            <field name="license_plate" class="oe_inline" placeholder="e.g. PAE 326"/>
-                        </h2>
-                        <label for="tag_ids" class="me-3"/>
-                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
+                        <h1>
+                            <field name="license_plate" class="oe_inline" placeholder="Unregistered"/>
+                        </h1>
+                        <group>
+                            <field name="model_id" placeholder="e.g. Model S" class="w-100"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
+                        </group>
                     </div>
                     <group col="2">
                         <group string="Driver">
@@ -295,10 +293,7 @@
                         </aside>
                         <main>
                             <div>
-                                <t t-if="record.license_plate.raw_value">
-                                    <field class="fw-bolder fs-5" name="license_plate"/>:
-                                </t>
-                                <field class="fw-bolder fs-5" name="model_id"/>
+                                <field name="name" class="fw-bolder fs-5"/>
                             </div>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                             <div class="d-flex gap-1" t-if="record.driver_id.raw_value">
