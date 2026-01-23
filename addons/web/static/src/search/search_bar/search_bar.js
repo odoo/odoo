@@ -190,7 +190,7 @@ export class SearchBar extends Component {
         const options = await this.orm.call(field.relation, "name_search", [], {
             args: domain,
             context: field.context,
-            limit: 8,
+            limit: typeof(searchItem.limit) !== 'undefined' ? searchItem.limit : 8,
             name: query.trim(),
         });
         const subItems = [];

@@ -124,6 +124,10 @@ export class SearchArchParser extends XMLParser {
         if (node.hasAttribute("context")) {
             preField.context = node.getAttribute("context");
         }
+        if (node.hasAttribute("limit")) {
+            preField.limit = parseInt(node.getAttribute("limit"));
+        } 
+        
         if (node.hasAttribute("name")) {
             const name = node.getAttribute("name");
             preField.fieldName = name;
