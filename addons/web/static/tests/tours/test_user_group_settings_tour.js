@@ -56,7 +56,7 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             run: "edit Bar Manager",
         },
         {
-            trigger: 'a[name="inherit_groups"]',
+            trigger: 'button[name="inherit_groups"]',
             content: "get implied groups",
             run: "click",
         },

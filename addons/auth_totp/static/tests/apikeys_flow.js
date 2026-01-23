@@ -11,7 +11,7 @@ const openUserPreferenceSecurity = () => [{
     run: 'click',
 }, {
     content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Security")',
+    trigger: 'button[role=tab]:contains("Security")',
     run: 'click',
 }]
 
@@ -78,7 +78,7 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     run: "click",
 }, {
     content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Security")',
+    trigger: 'button[role=tab]:contains("Security")',
     run: 'click',
 }, {
     content: "Open kanban dropdown menu of the key",
@@ -105,7 +105,7 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     run: "click",
 }, {
     content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Security")',
+    trigger: 'button[role=tab]:contains("Security")',
     run: 'click',
 }, {
     content: "Check that there's no more keys",

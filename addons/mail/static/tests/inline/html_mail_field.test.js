@@ -149,7 +149,7 @@ test("HtmlMail add icon and save inline html", async function () {
     await insertText(htmlEditor, "/image");
     await press("enter");
 
-    await contains("a.nav-link:contains('Icons')").click();
+    await contains("button.nav-link:contains('Icons')").click();
     await contains("span.fa-glass").click();
 
     await clickSave();

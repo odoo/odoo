@@ -159,7 +159,7 @@ registry.category("web_tour.tours").add("project_sharing_with_blocked_task_tour"
         content: 'Click on the task',
         run: "click",
     }, {
-        trigger: 'a:contains("Blocked By")',
+        trigger: 'button:contains("Blocked By")',
         content: 'Go to the Block by task tab',
         run: "click",
     }, {

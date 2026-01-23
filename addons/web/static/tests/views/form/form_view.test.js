@@ -1429,8 +1429,8 @@ test(`invisible elements are properly hidden`, async () => {
         resId: 1,
     });
     expect(`.o_form_statusbar button:contains(coucou)`).toHaveCount(0);
-    expect(`.o_notebook li a:contains(visible)`).toHaveCount(1);
-    expect(`.o_notebook li a:contains(invisible)`).toHaveCount(0);
+    expect(`.o_notebook li button:contains(visible)`).toHaveCount(1);
+    expect(`.o_notebook li button:contains(invisible)`).toHaveCount(0);
     expect(`div.o_inner_group:contains(visgroup)`).toHaveCount(1);
     expect(`div.o_inner_group:contains(invgroup)`).toHaveCount(0);
 });
