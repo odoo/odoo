@@ -5,8 +5,7 @@ from odoo import api, SUPERUSER_ID
 def migrate(cr, version):
     env = api.Environment(cr, SUPERUSER_ID, {"lang": "en_US"})
 
-    ChartTemplate = env["account.chart.template"]
-    companies = env["res.company"].search([("chart_template", "=", "id")], order="parent_path")
+    companies = env["res.company"].search([("chart_template", "=", "id"), ("parent_id", "=", False)])
 
     new_tax_groups = ["l10n_id_tax_group_stlg", "l10n_id_tax_group_non_luxury_goods", "l10n_id_tax_group_luxury_goods", "l10n_id_tax_group_0"]
     new_taxes = [
@@ -17,33 +16,36 @@ def migrate(cr, version):
         "tax_PT6", "tax_PT7",
     ]
 
-    tax_group_data = {
-        xmlid: data
-        for xmlid, data in ChartTemplate._get_account_tax_group("id").items()
-        if xmlid in new_tax_groups
-    }
-    tax_data = {
-        xmlid: data
-        for xmlid, data in ChartTemplate._get_account_tax("id").items()
-        if xmlid in new_taxes
-    }
-
     for company in companies:
-        new_tax_group_data = {}
-        if (tax_group_data):
-            new_tax_group_data = {g: data for g, data in tax_group_data.items() if not env.ref(f"account._{company.id}_{g}", raise_if_not_found=False)}
-
+        ChartTemplate = env["account.chart.template"].with_company(company)
         # =============================
         # Load new tax data
-        if new_tax_group_data:
-            ChartTemplate.with_company(company)._load_data({
-                "account.tax.group": new_tax_group_data,
-            })
-        if tax_data:
-            ChartTemplate.with_company(company)._load_data({
-                "account.tax": tax_data,
-            })
+        tax_group_data = {
+            xmlid: data
+            for xmlid, data in ChartTemplate._get_account_tax_group("id").items()
+            if xmlid in new_tax_groups
+        }
+        tax_data = {
+            xmlid: data
+            for xmlid, data in ChartTemplate._get_account_tax("id").items()
+            if xmlid in new_taxes
+        }
+        new_tax_group_data = {}
+        if (tax_group_data):
+            new_tax_group_data = {
+                g: data
+                for g, data in tax_group_data.items()
+                if not ChartTemplate.ref(g, raise_if_not_found=False)
+            }
 
+        if new_tax_group_data:
+            data = {"account.tax.group": new_tax_group_data}
+            ChartTemplate._pre_reload_data(company, {}, data)
+            ChartTemplate._load_data(data)
+        if tax_data:
+            data = {"account.tax": tax_data}
+            ChartTemplate._pre_reload_data(company, {}, data)
+            ChartTemplate._load_data(data)
         # =============================
         # Update existing tax description
         tax_map = {
@@ -55,7 +57,7 @@ def migrate(cr, version):
             "tax_PT3": "Standard Rate for Luxury Goods & Services",
         }
         for xmlid, new_description in tax_map.items():
-            tax = ChartTemplate.with_company(company).ref(xmlid, raise_if_not_found=False)
+            tax = ChartTemplate.ref(xmlid, raise_if_not_found=False)
             if not tax:
                 continue
             # Only update description if it hasn't been manually changed
@@ -65,7 +67,7 @@ def migrate(cr, version):
         # =============================
         # Archive ST1 and PT1
         for xmlid in ["tax_ST1", "tax_PT1"]:
-            tax = ChartTemplate.with_company(company).ref(xmlid, raise_if_not_found=False)
+            tax = ChartTemplate.ref(xmlid, raise_if_not_found=False)
             if tax and not tax.active:
                 continue
             if tax:
@@ -82,7 +84,7 @@ def migrate(cr, version):
         if ppn_tag:
             tax_records = env["account.tax"].browse([])
             for xmlid in taxes_to_clean:
-                rec = ChartTemplate.with_company(company).ref(xmlid, raise_if_not_found=False)
+                rec = ChartTemplate.ref(xmlid, raise_if_not_found=False)
                 if rec:
                     tax_records |= rec
 
@@ -96,9 +98,9 @@ def migrate(cr, version):
 
         # =============================
         # Update tax_luxury_sales group, description and invoice_label
-        old_group = ChartTemplate.with_company(company).ref("l10n_id_tax_group_luxury_goods", raise_if_not_found=False)
-        new_group = ChartTemplate.with_company(company).ref("l10n_id_tax_group_stlg", raise_if_not_found=False)
-        tax_luxury_sales = ChartTemplate.with_company(company).ref("tax_luxury_sales", raise_if_not_found=False)
+        old_group = ChartTemplate.ref("l10n_id_tax_group_luxury_goods", raise_if_not_found=False)
+        new_group = ChartTemplate.ref("l10n_id_tax_group_stlg", raise_if_not_found=False)
+        tax_luxury_sales = ChartTemplate.ref("tax_luxury_sales", raise_if_not_found=False)
         if not (old_group and new_group and tax_luxury_sales):
             continue
         tax_luxury_sales_vals = {}

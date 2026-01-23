@@ -33,13 +33,13 @@ registry.category("web_tour.tours").add('shop_mail', {
     },
     {
         content: "Select azure interior",
-        trigger: '.ui-menu-item a:contains(Interior24)',
+        trigger: '.ui-menu-item a:contains(olson28)',
         in_modal: false,
     },
     {
         content: "click Send email",
         trigger: '.btn[name="action_send_mail"]',
-        extra_trigger: '.o_badge_text:contains("Azure")',
+        extra_trigger: '.o_badge_text:contains("Acme")',
     },
     {
         content: "wait mail to be sent, and go see it",
