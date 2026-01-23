@@ -134,9 +134,12 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         For export invoices, a buyer party node is created based on the customer,
         and the PartyIdentification values are updated to indicate an export customer.
 
+        For public sector invoices, a buyer party node is created based on the public sector partner.
+
         :param document_node: dict representing the invoice XML structure to modify.
         :param vals: dict containing invoice-related values, including 'invoice'.
         """
+        buyer_party_node = False
         if vals['invoice'].l10n_tr_is_export_invoice:
             buyer_party_node = self._get_party_node({**vals, 'partner': vals['customer'], 'role': 'buyer'})
             buyer_party_node['cac:PartyIdentification'] = [{'cbc:ID': {
@@ -144,7 +147,11 @@ class AccountEdiXmlUblTr(models.AbstractModel):
                 'schemeID': 'PARTYTYPE',
                 },
             }]
-            document_node['cac:BuyerCustomerParty'] = {'cac:Party': buyer_party_node}
+
+        elif vals['invoice'].l10n_tr_gib_invoice_scenario == 'KAMU':
+            buyer_party_node = self._get_party_node({**vals, 'partner': vals['customer'], 'role': 'buyer'})
+
+        document_node['cac:BuyerCustomerParty'] = {'cac:Party': buyer_party_node} if buyer_party_node else None
 
     def _add_invoice_delivery_nodes(self, document_node, vals):
         super()._add_invoice_delivery_nodes(document_node, vals)

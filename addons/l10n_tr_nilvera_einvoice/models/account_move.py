@@ -103,6 +103,19 @@ class AccountMove(models.Model):
         string="Partner Nilvera Status",
         related='partner_id.l10n_tr_nilvera_customer_status',
     )
+    l10n_tr_public_spending_unit_id = fields.Many2one(comodel_name='res.partner',
+                                                      string='Public Spending Unit',
+                                                      store=True,
+                                                      readonly=False,
+                                                      compute='_compute_l10n_tr_public_spending_unit_id')
+
+    @api.depends('move_type', 'l10n_tr_gib_invoice_scenario')
+    def _compute_l10n_tr_public_spending_unit_id(self):
+        for record in self:
+            if record.move_type == 'out_invoice' and record.l10n_tr_gib_invoice_scenario == 'KAMU':  # Public Scenario Invoices
+                record.l10n_tr_public_spending_unit_id = record.l10n_tr_public_spending_unit_id or record.partner_id
+            else:
+                record.l10n_tr_public_spending_unit_id = False
 
     @api.depends("l10n_tr_gib_invoice_scenario", "l10n_tr_gib_invoice_type", "l10n_tr_is_export_invoice")
     def _compute_l10n_tr_exemption_code_domain_list(self):
