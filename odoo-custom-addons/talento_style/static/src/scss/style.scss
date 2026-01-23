@@ -1,0 +1,212 @@
+// @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+body {
+    // font-family: 'Poppins', sans-serif !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    background-color: $body-bg;
+    color: $o-main-text-color;
+}
+
+// ------------------------------------------------------------------
+// Navbar Styling (Top Bar)
+// ------------------------------------------------------------------
+.o_main_navbar {
+    background-color: #ffffff !important;
+    border-bottom: 0px solid $gray-200 !important;
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
+    height: 60px !important;
+
+    // Brand Name/Logo Area
+    > .o_menu_brand {
+        color: $o-brand-primary !important;
+        font-weight: 700;
+        font-size: 20px;
+        &:hover {
+            color: darken($o-brand-primary, 10%) !important;
+        }
+    }
+
+    // Menu Links
+    > ul > li > a, > ul > li > label {
+        color: #808191 !important;
+        font-weight: 500;
+        
+        &:hover, &.active {
+            color: $o-brand-primary !important;
+            background-color: transparent !important;
+        }
+    }
+
+    // User Menu
+    .o_user_menu .oe_topbar_name {
+        color: $o-main-text-color !important;
+        font-weight: 600;
+    }
+}
+
+// ------------------------------------------------------------------
+// Control Panel (Breadcrumbs, Search)
+// ------------------------------------------------------------------
+.o_control_panel {
+    background-color: transparent !important;
+    border-bottom: none !important;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    .breadcrumb {
+        background-color: transparent;
+        font-weight: 600;
+        font-size: 1.2rem;
+        
+        .breadcrumb-item.active {
+            color: $o-main-text-color;
+        }
+    }
+    
+    // Search View
+    .o_searchview {
+        border-radius: 12px;
+        border: 1px solid #E4E4E4;
+        background-color: #ffffff;
+        padding: 5px 10px;
+        box-shadow: none;
+
+        .o_searchview_input {
+            font-family: 'Poppins', sans-serif;
+        }
+    }
+}
+
+// ------------------------------------------------------------------
+// Buttons
+// ------------------------------------------------------------------
+.btn {
+    border-radius: 10px !important;
+    padding: 8px 16px;
+    font-weight: 500;
+    box-shadow: none !important;
+    text-transform: capitalize;
+    
+    &-primary {
+        background-color: $o-brand-primary !important;
+        border-color: $o-brand-primary !important;
+        &:hover {
+            background-color: darken($o-brand-primary, 5%) !important;
+        }
+    }
+    
+    &-secondary {
+        background-color: #ffffff !important;
+        border-color: #E4E4E4 !important;
+        color: $o-main-text-color !important;
+        &:hover {
+            background-color: $gray-100 !important;
+        }
+    }
+}
+
+// ------------------------------------------------------------------
+// Form Views & Sheets
+// ------------------------------------------------------------------
+.o_form_view {
+    background-color: transparent !important;
+    
+    .o_form_sheet_bg {
+        background-color: transparent !important;
+        padding: 0 !important;
+        border-bottom: none !important;
+        
+        .o_form_sheet {
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.03) !important;
+            border: 1px solid #F0F0F0;
+            padding: 30px !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+        }
+    }
+}
+
+// ------------------------------------------------------------------
+// Kanban Views (Cards)
+// ------------------------------------------------------------------
+.o_kanban_view {
+    background-color: transparent !important;
+    
+    .o_kanban_record {
+        border-radius: 16px;
+        border: none !important;
+        background-color: #ffffff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        margin-bottom: 16px !important;
+        padding: 16px !important;
+        
+        // Remove Odoo's default colored left borders
+        &::after {
+            display: none;
+        }
+    }
+}
+
+// ------------------------------------------------------------------
+// List Views
+// ------------------------------------------------------------------
+.o_list_view {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
+    border: none !important;
+    
+    thead {
+        background-color: #ffffff !important;
+        tr th {
+            border-bottom: 1px solid #f0f0f0 !important;
+            color: #808191;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+    }
+    
+    tbody tr {
+        &.o_data_row:hover {
+            background-color: $gray-100 !important;
+        }
+        td {
+            border-top: 1px solid #f9f9f9 !important;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            color: $o-main-text-color;
+        }
+    }
+}
+
+// ------------------------------------------------------------------
+// Inputs
+// ------------------------------------------------------------------
+.o_input {
+    border-radius: 8px !important;
+    border: 1px solid #E4E4E4 !important;
+    padding: 8px 12px !important;
+    background-color: #FCFCFD !important;
+    
+    &:focus {
+        border-color: $o-brand-primary !important;
+        background-color: #ffffff !important;
+    }
+}
+
+// Hide the "Powered by Odoo" footer in login (optional, but good for white labeling)
+.o_footer_copyright {
+    display: none !important;
+}
+
+// Adjust Badge styling
+.badge {
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-weight: 500;
+}

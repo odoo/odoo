@@ -301,6 +301,18 @@ class QWeb(object):
         if 'profile' in options:
             self._profiling(astmod, _options)
 
+        for node in ast.walk(astmod):
+            if hasattr(node, 'lineno'):
+                if getattr(node, 'end_lineno', None) is None:
+                    node.end_lineno = node.lineno
+                elif node.end_lineno < node.lineno:
+                    node.end_lineno = node.lineno
+            if hasattr(node, 'col_offset'):
+                if getattr(node, 'end_col_offset', None) is None:
+                    node.end_col_offset = node.col_offset
+                elif node.end_col_offset < node.col_offset:
+                    node.end_col_offset = node.col_offset
+
         ast.fix_missing_locations(astmod)
 
         # compile ast

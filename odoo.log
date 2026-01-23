@@ -1,0 +1,1282 @@
+/home/codespace/.python/current/lib/python3.12/site-packages/PyPDF2/_utils.py:72: UserWarning: isString is deprecated and will be removed in PyPDF2 2.0.0.
+  warnings.warn(DEPR_MSG_NO_REPLACEMENT.format("isString"))
+/workspaces/odoo/odoo/modules/module.py:9: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+2026-01-23 20:22:18,581 124843 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.request:INFO" 
+2026-01-23 20:22:18,581 124843 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.response:INFO" 
+2026-01-23 20:22:18,581 124843 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-01-23 20:22:18,581 124843 DEBUG ? odoo.netsvc: logger level set: "odoo:DEBUG" 
+2026-01-23 20:22:18,582 124843 DEBUG ? odoo.netsvc: logger level set: "odoo.sql_db:INFO" 
+2026-01-23 20:22:18,582 124843 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-01-23 20:22:18,582 124843 INFO ? odoo: Odoo version 14.0 
+2026-01-23 20:22:18,582 124843 INFO ? odoo: Using configuration file at /workspaces/odoo/odoo.conf 
+2026-01-23 20:22:18,582 124843 INFO ? odoo: addons paths: ['/workspaces/odoo/odoo/addons', '/home/codespace/.local/share/Odoo/addons/14.0', '/workspaces/odoo/addons', '/workspaces/odoo/odoo-custom-addons'] 
+2026-01-23 20:22:18,582 124843 INFO ? odoo: database: odoo14@127.0.0.1:5433 
+2026-01-23 20:22:18,753 124843 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltopdf to print a pdf version of the reports. 
+2026-01-23 20:22:18,845 124843 WARNING ? odoo.addons.base.models.res_currency: The num2words python library is not installed, amount-to-text features won't be fully available. 
+2026-01-23 20:22:18,863 124843 DEBUG ? odoo.service.server: Setting signal handlers 
+2026-01-23 20:22:18,865 124843 DEBUG ? odoo.service.server: cron0 started! 
+2026-01-23 20:22:18,866 124843 INFO ? odoo.service.server: HTTP service (werkzeug) running on localhost:8069 
+2026-01-23 20:22:18,866 124843 DEBUG ? odoo.service.server: cron1 started! 
+2026-01-23 20:22:37,518 124843 DEBUG ? odoo.http: Loading base 
+2026-01-23 20:22:37,519 124843 DEBUG ? odoo.http: Loading test_apikeys 
+2026-01-23 20:22:37,519 124843 DEBUG ? odoo.http: Loading test_assetsbundle 
+2026-01-23 20:22:37,519 124843 DEBUG ? odoo.http: Loading test_exceptions 
+2026-01-23 20:22:37,520 124843 DEBUG ? odoo.http: Loading test_main_flows 
+2026-01-23 20:22:37,520 124843 DEBUG ? odoo.http: Loading test_new_api 
+2026-01-23 20:22:37,520 124843 DEBUG ? odoo.http: Loading test_translation_import 
+2026-01-23 20:22:37,521 124843 DEBUG ? odoo.http: Loading account 
+2026-01-23 20:22:37,521 124843 DEBUG ? odoo.http: Loading account_check_printing 
+2026-01-23 20:22:37,522 124843 DEBUG ? odoo.http: Loading adyen_platforms 
+2026-01-23 20:22:37,522 124843 DEBUG ? odoo.http: Loading auth_oauth 
+2026-01-23 20:22:37,522 124843 DEBUG ? odoo.http: Loading auth_password_policy 
+2026-01-23 20:22:37,523 124843 DEBUG ? odoo.http: Loading auth_password_policy_portal 
+2026-01-23 20:22:37,523 124843 DEBUG ? odoo.http: Loading auth_password_policy_signup 
+2026-01-23 20:22:37,523 124843 DEBUG ? odoo.http: Loading auth_signup 
+2026-01-23 20:22:37,523 124843 DEBUG ? odoo.http: Loading auth_totp 
+2026-01-23 20:22:37,523 124843 DEBUG ? odoo.http: Loading auth_totp_portal 
+2026-01-23 20:22:37,524 124843 DEBUG ? odoo.http: Loading barcodes 
+2026-01-23 20:22:37,524 124843 DEBUG ? odoo.http: Loading base_automation 
+2026-01-23 20:22:37,524 124843 DEBUG ? odoo.http: Loading base_iban 
+2026-01-23 20:22:37,524 124843 DEBUG ? odoo.http: Loading base_import 
+2026-01-23 20:22:37,525 124843 DEBUG ? odoo.http: Loading base_setup 
+2026-01-23 20:22:37,525 124843 DEBUG ? odoo.http: Loading board 
+2026-01-23 20:22:37,525 124843 DEBUG ? odoo.http: Loading bus 
+2026-01-23 20:22:37,525 124843 DEBUG ? odoo.http: Loading calendar 
+2026-01-23 20:22:37,526 124843 DEBUG ? odoo.http: Loading contacts 
+2026-01-23 20:22:37,526 124843 DEBUG ? odoo.http: Loading crm 
+2026-01-23 20:22:37,526 124843 DEBUG ? odoo.http: Loading crm_iap_lead 
+2026-01-23 20:22:37,527 124843 DEBUG ? odoo.http: Loading digest 
+2026-01-23 20:22:37,527 124843 DEBUG ? odoo.http: Loading event 
+2026-01-23 20:22:37,527 124843 DEBUG ? odoo.http: Loading event_sale 
+2026-01-23 20:22:37,528 124843 DEBUG ? odoo.http: Loading fleet 
+2026-01-23 20:22:37,528 124843 DEBUG ? odoo.http: Loading gamification 
+2026-01-23 20:22:37,528 124843 DEBUG ? odoo.http: Loading google_calendar 
+2026-01-23 20:22:37,529 124843 DEBUG ? odoo.http: Loading google_drive 
+2026-01-23 20:22:37,529 124843 DEBUG ? odoo.http: Loading google_recaptcha 
+2026-01-23 20:22:37,529 124843 DEBUG ? odoo.http: Loading google_spreadsheet 
+2026-01-23 20:22:37,529 124843 DEBUG ? odoo.http: Loading hr 
+2026-01-23 20:22:37,530 124843 DEBUG ? odoo.http: Loading hr_attendance 
+2026-01-23 20:22:37,530 124843 DEBUG ? odoo.http: Loading hr_contract 
+2026-01-23 20:22:37,530 124843 DEBUG ? odoo.http: Loading hr_expense 
+2026-01-23 20:22:37,530 124843 DEBUG ? odoo.http: Loading hr_gamification 
+2026-01-23 20:22:37,531 124843 DEBUG ? odoo.http: Loading hr_holidays 
+2026-01-23 20:22:37,531 124843 DEBUG ? odoo.http: Loading hr_org_chart 
+2026-01-23 20:22:37,531 124843 DEBUG ? odoo.http: Loading hr_recruitment 
+2026-01-23 20:22:37,532 124843 DEBUG ? odoo.http: Loading hr_skills 
+2026-01-23 20:22:37,532 124843 DEBUG ? odoo.http: Loading hr_skills_slides 
+2026-01-23 20:22:37,532 124843 DEBUG ? odoo.http: Loading hr_skills_survey 
+2026-01-23 20:22:37,532 124843 DEBUG ? odoo.http: Loading hr_timesheet 
+2026-01-23 20:22:37,533 124843 DEBUG ? odoo.http: Loading hr_work_entry 
+2026-01-23 20:22:37,533 124843 DEBUG ? odoo.http: Loading http_routing 
+2026-01-23 20:22:37,533 124843 DEBUG ? odoo.http: Loading iap 
+2026-01-23 20:22:37,534 124843 DEBUG ? odoo.http: Loading im_livechat 
+2026-01-23 20:22:37,534 124843 DEBUG ? odoo.http: Loading l10n_ae 
+2026-01-23 20:22:37,534 124843 DEBUG ? odoo.http: Loading l10n_ar 
+2026-01-23 20:22:37,534 124843 DEBUG ? odoo.http: Loading l10n_ar_website_sale 
+2026-01-23 20:22:37,535 124843 DEBUG ? odoo.http: Loading l10n_at 
+2026-01-23 20:22:37,535 124843 DEBUG ? odoo.http: Loading l10n_au 
+2026-01-23 20:22:37,535 124843 DEBUG ? odoo.http: Loading l10n_be 
+2026-01-23 20:22:37,535 124843 DEBUG ? odoo.http: Loading l10n_bo 
+2026-01-23 20:22:37,536 124843 DEBUG ? odoo.http: Loading l10n_br 
+2026-01-23 20:22:37,536 124843 DEBUG ? odoo.http: Loading l10n_ca 
+2026-01-23 20:22:37,536 124843 DEBUG ? odoo.http: Loading l10n_ch 
+2026-01-23 20:22:37,537 124843 DEBUG ? odoo.http: Loading l10n_cl 
+2026-01-23 20:22:37,537 124843 DEBUG ? odoo.http: Loading l10n_cn 
+2026-01-23 20:22:37,537 124843 DEBUG ? odoo.http: Loading l10n_cn_city 
+2026-01-23 20:22:37,537 124843 DEBUG ? odoo.http: Loading l10n_co 
+2026-01-23 20:22:37,538 124843 DEBUG ? odoo.http: Loading l10n_co_pos 
+2026-01-23 20:22:37,538 124843 DEBUG ? odoo.http: Loading l10n_cr 
+2026-01-23 20:22:37,538 124843 DEBUG ? odoo.http: Loading l10n_cz 
+2026-01-23 20:22:37,538 124843 DEBUG ? odoo.http: Loading l10n_de 
+2026-01-23 20:22:37,539 124843 DEBUG ? odoo.http: Loading l10n_dk 
+2026-01-23 20:22:37,539 124843 DEBUG ? odoo.http: Loading l10n_do 
+2026-01-23 20:22:37,539 124843 DEBUG ? odoo.http: Loading l10n_dz 
+2026-01-23 20:22:37,539 124843 DEBUG ? odoo.http: Loading l10n_ec 
+2026-01-23 20:22:37,540 124843 DEBUG ? odoo.http: Loading l10n_es 
+2026-01-23 20:22:37,540 124843 DEBUG ? odoo.http: Loading l10n_et 
+2026-01-23 20:22:37,540 124843 DEBUG ? odoo.http: Loading l10n_fi 
+2026-01-23 20:22:37,540 124843 DEBUG ? odoo.http: Loading l10n_fi_sale 
+2026-01-23 20:22:37,541 124843 DEBUG ? odoo.http: Loading l10n_fr 
+2026-01-23 20:22:37,541 124843 DEBUG ? odoo.http: Loading l10n_fr_pos_cert 
+2026-01-23 20:22:37,541 124843 DEBUG ? odoo.http: Loading l10n_gcc_pos 
+2026-01-23 20:22:37,541 124843 DEBUG ? odoo.http: Loading l10n_generic_coa 
+2026-01-23 20:22:37,542 124843 DEBUG ? odoo.http: Loading l10n_gr 
+2026-01-23 20:22:37,542 124843 DEBUG ? odoo.http: Loading l10n_gt 
+2026-01-23 20:22:37,542 124843 DEBUG ? odoo.http: Loading l10n_hk 
+2026-01-23 20:22:37,542 124843 DEBUG ? odoo.http: Loading l10n_hn 
+2026-01-23 20:22:37,543 124843 DEBUG ? odoo.http: Loading l10n_hr 
+2026-01-23 20:22:37,543 124843 DEBUG ? odoo.http: Loading l10n_hu 
+2026-01-23 20:22:37,543 124843 DEBUG ? odoo.http: Loading l10n_id 
+2026-01-23 20:22:37,543 124843 DEBUG ? odoo.http: Loading l10n_ie 
+2026-01-23 20:22:37,544 124843 DEBUG ? odoo.http: Loading l10n_in 
+2026-01-23 20:22:37,544 124843 DEBUG ? odoo.http: Loading l10n_in_pos 
+2026-01-23 20:22:37,544 124843 DEBUG ? odoo.http: Loading l10n_it 
+2026-01-23 20:22:37,545 124843 DEBUG ? odoo.http: Loading l10n_jp 
+2026-01-23 20:22:37,545 124843 DEBUG ? odoo.http: Loading l10n_lt 
+2026-01-23 20:22:37,545 124843 DEBUG ? odoo.http: Loading l10n_lu 
+2026-01-23 20:22:37,545 124843 DEBUG ? odoo.http: Loading l10n_ma 
+2026-01-23 20:22:37,546 124843 DEBUG ? odoo.http: Loading l10n_mn 
+2026-01-23 20:22:37,546 124843 DEBUG ? odoo.http: Loading l10n_mx 
+2026-01-23 20:22:37,546 124843 DEBUG ? odoo.http: Loading l10n_nl 
+2026-01-23 20:22:37,546 124843 DEBUG ? odoo.http: Loading l10n_no 
+2026-01-23 20:22:37,547 124843 DEBUG ? odoo.http: Loading l10n_nz 
+2026-01-23 20:22:37,547 124843 DEBUG ? odoo.http: Loading l10n_pa 
+2026-01-23 20:22:37,547 124843 DEBUG ? odoo.http: Loading l10n_pe 
+2026-01-23 20:22:37,548 124843 DEBUG ? odoo.http: Loading l10n_pl 
+2026-01-23 20:22:37,548 124843 DEBUG ? odoo.http: Loading l10n_ro 
+2026-01-23 20:22:37,548 124843 DEBUG ? odoo.http: Loading l10n_sa 
+2026-01-23 20:22:37,549 124843 DEBUG ? odoo.http: Loading l10n_sa_pos 
+2026-01-23 20:22:37,549 124843 DEBUG ? odoo.http: Loading l10n_se 
+2026-01-23 20:22:37,549 124843 DEBUG ? odoo.http: Loading l10n_se_ocr 
+2026-01-23 20:22:37,549 124843 DEBUG ? odoo.http: Loading l10n_sg 
+2026-01-23 20:22:37,550 124843 DEBUG ? odoo.http: Loading l10n_si 
+2026-01-23 20:22:37,550 124843 DEBUG ? odoo.http: Loading l10n_sk 
+2026-01-23 20:22:37,550 124843 DEBUG ? odoo.http: Loading l10n_th 
+2026-01-23 20:22:37,551 124843 DEBUG ? odoo.http: Loading l10n_tr 
+2026-01-23 20:22:37,551 124843 DEBUG ? odoo.http: Loading l10n_ua 
+2026-01-23 20:22:37,551 124843 DEBUG ? odoo.http: Loading l10n_uk 
+2026-01-23 20:22:37,551 124843 DEBUG ? odoo.http: Loading l10n_us 
+2026-01-23 20:22:37,552 124843 DEBUG ? odoo.http: Loading l10n_uy 
+2026-01-23 20:22:37,552 124843 DEBUG ? odoo.http: Loading l10n_ve 
+2026-01-23 20:22:37,552 124843 DEBUG ? odoo.http: Loading l10n_vn 
+2026-01-23 20:22:37,553 124843 DEBUG ? odoo.http: Loading l10n_za 
+2026-01-23 20:22:37,553 124843 DEBUG ? odoo.http: Loading lunch 
+2026-01-23 20:22:37,554 124843 DEBUG ? odoo.http: Loading mail 
+2026-01-23 20:22:37,554 124843 DEBUG ? odoo.http: Loading mail_bot 
+2026-01-23 20:22:37,555 124843 DEBUG ? odoo.http: Loading maintenance 
+2026-01-23 20:22:37,555 124843 DEBUG ? odoo.http: Loading mass_mailing 
+2026-01-23 20:22:37,555 124843 DEBUG ? odoo.http: Loading mass_mailing_sms 
+2026-01-23 20:22:37,556 124843 DEBUG ? odoo.http: Loading membership 
+2026-01-23 20:22:37,556 124843 DEBUG ? odoo.http: Loading microsoft_calendar 
+2026-01-23 20:22:37,556 124843 DEBUG ? odoo.http: Loading mrp 
+2026-01-23 20:22:37,557 124843 DEBUG ? odoo.http: Loading note 
+2026-01-23 20:22:37,557 124843 DEBUG ? odoo.http: Loading odoo_referral 
+2026-01-23 20:22:37,557 124843 DEBUG ? odoo.http: Loading pad 
+2026-01-23 20:22:37,558 124843 DEBUG ? odoo.http: Loading pad_project 
+2026-01-23 20:22:37,558 124843 DEBUG ? odoo.http: Loading partner_autocomplete 
+2026-01-23 20:22:37,558 124843 DEBUG ? odoo.http: Loading payment 
+2026-01-23 20:22:37,559 124843 DEBUG ? odoo.http: Loading payment_adyen 
+2026-01-23 20:22:37,559 124843 DEBUG ? odoo.http: Loading payment_alipay 
+2026-01-23 20:22:37,559 124843 DEBUG ? odoo.http: Loading payment_authorize 
+2026-01-23 20:22:37,559 124843 DEBUG ? odoo.http: Loading payment_buckaroo 
+2026-01-23 20:22:37,560 124843 DEBUG ? odoo.http: Loading payment_ingenico 
+2026-01-23 20:22:37,560 124843 DEBUG ? odoo.http: Loading payment_odoo_by_adyen 
+2026-01-23 20:22:37,560 124843 DEBUG ? odoo.http: Loading payment_paypal 
+2026-01-23 20:22:37,561 124843 DEBUG ? odoo.http: Loading payment_payulatam 
+2026-01-23 20:22:37,561 124843 DEBUG ? odoo.http: Loading payment_payumoney 
+2026-01-23 20:22:37,561 124843 DEBUG ? odoo.http: Loading payment_sips 
+2026-01-23 20:22:37,561 124843 DEBUG ? odoo.http: Loading payment_stripe 
+2026-01-23 20:22:37,562 124843 DEBUG ? odoo.http: Loading payment_test 
+2026-01-23 20:22:37,562 124843 DEBUG ? odoo.http: Loading payment_transfer 
+2026-01-23 20:22:37,563 124843 DEBUG ? odoo.http: Loading point_of_sale 
+2026-01-23 20:22:37,563 124843 DEBUG ? odoo.http: Loading portal 
+2026-01-23 20:22:37,563 124843 DEBUG ? odoo.http: Loading portal_rating 
+2026-01-23 20:22:37,564 124843 DEBUG ? odoo.http: Loading pos_adyen 
+2026-01-23 20:22:37,564 124843 DEBUG ? odoo.http: Loading pos_cache 
+2026-01-23 20:22:37,564 124843 DEBUG ? odoo.http: Loading pos_discount 
+2026-01-23 20:22:37,564 124843 DEBUG ? odoo.http: Loading pos_epson_printer 
+2026-01-23 20:22:37,565 124843 DEBUG ? odoo.http: Loading pos_epson_printer_restaurant 
+2026-01-23 20:22:37,565 124843 DEBUG ? odoo.http: Loading pos_hr 
+2026-01-23 20:22:37,565 124843 DEBUG ? odoo.http: Loading pos_mercury 
+2026-01-23 20:22:37,566 124843 DEBUG ? odoo.http: Loading pos_restaurant 
+2026-01-23 20:22:37,566 124843 DEBUG ? odoo.http: Loading pos_restaurant_adyen 
+2026-01-23 20:22:37,566 124843 DEBUG ? odoo.http: Loading pos_six 
+2026-01-23 20:22:37,567 124843 DEBUG ? odoo.http: Loading product 
+2026-01-23 20:22:37,567 124843 DEBUG ? odoo.http: Loading product_email_template 
+2026-01-23 20:22:37,567 124843 DEBUG ? odoo.http: Loading product_expiry 
+2026-01-23 20:22:37,567 124843 DEBUG ? odoo.http: Loading product_matrix 
+2026-01-23 20:22:37,568 124843 DEBUG ? odoo.http: Loading project 
+2026-01-23 20:22:37,568 124843 DEBUG ? odoo.http: Loading purchase 
+2026-01-23 20:22:37,569 124843 DEBUG ? odoo.http: Loading purchase_product_matrix 
+2026-01-23 20:22:37,569 124843 DEBUG ? odoo.http: Loading purchase_stock 
+2026-01-23 20:22:37,569 124843 DEBUG ? odoo.http: Loading rating 
+2026-01-23 20:22:37,570 124843 DEBUG ? odoo.http: Loading repair 
+2026-01-23 20:22:37,570 124843 DEBUG ? odoo.http: Loading resource 
+2026-01-23 20:22:37,570 124843 DEBUG ? odoo.http: Loading sale 
+2026-01-23 20:22:37,571 124843 DEBUG ? odoo.http: Loading sale_expense 
+2026-01-23 20:22:37,571 124843 DEBUG ? odoo.http: Loading sale_management 
+2026-01-23 20:22:37,571 124843 DEBUG ? odoo.http: Loading sale_product_configurator 
+2026-01-23 20:22:37,571 124843 DEBUG ? odoo.http: Loading sale_product_matrix 
+2026-01-23 20:22:37,572 124843 DEBUG ? odoo.http: Loading sale_stock 
+2026-01-23 20:22:37,572 124843 DEBUG ? odoo.http: Loading sale_timesheet 
+2026-01-23 20:22:37,573 124843 DEBUG ? odoo.http: Loading sale_timesheet_edit 
+2026-01-23 20:22:37,573 124843 DEBUG ? odoo.http: Loading sales_team 
+2026-01-23 20:22:37,573 124843 DEBUG ? odoo.http: Loading sms 
+2026-01-23 20:22:37,574 124843 DEBUG ? odoo.http: Loading snailmail 
+2026-01-23 20:22:37,574 124843 DEBUG ? odoo.http: Loading snailmail_account 
+2026-01-23 20:22:37,575 124843 DEBUG ? odoo.http: Loading stock 
+2026-01-23 20:22:37,575 124843 DEBUG ? odoo.http: Loading survey 
+2026-01-23 20:22:37,575 124843 DEBUG ? odoo.http: Loading test_event_full 
+2026-01-23 20:22:37,576 124843 DEBUG ? odoo.http: Loading test_website 
+2026-01-23 20:22:37,576 124843 DEBUG ? odoo.http: Loading theme_default 
+2026-01-23 20:22:37,576 124843 DEBUG ? odoo.http: Loading transifex 
+2026-01-23 20:22:37,577 124843 DEBUG ? odoo.http: Loading utm 
+2026-01-23 20:22:37,577 124843 DEBUG ? odoo.http: Loading web 
+2026-01-23 20:22:37,577 124843 DEBUG ? odoo.http: Loading web_editor 
+2026-01-23 20:22:37,577 124843 DEBUG ? odoo.http: Loading web_kanban_gauge 
+2026-01-23 20:22:37,578 124843 DEBUG ? odoo.http: Loading web_tour 
+2026-01-23 20:22:37,578 124843 DEBUG ? odoo.http: Loading web_unsplash 
+2026-01-23 20:22:37,580 124843 DEBUG ? odoo.http: Loading website 
+2026-01-23 20:22:37,580 124843 DEBUG ? odoo.http: Loading website_blog 
+2026-01-23 20:22:37,581 124843 DEBUG ? odoo.http: Loading website_crm 
+2026-01-23 20:22:37,581 124843 DEBUG ? odoo.http: Loading website_crm_partner_assign 
+2026-01-23 20:22:37,581 124843 DEBUG ? odoo.http: Loading website_customer 
+2026-01-23 20:22:37,582 124843 DEBUG ? odoo.http: Loading website_event 
+2026-01-23 20:22:37,582 124843 DEBUG ? odoo.http: Loading website_event_meet 
+2026-01-23 20:22:37,582 124843 DEBUG ? odoo.http: Loading website_event_questions 
+2026-01-23 20:22:37,583 124843 DEBUG ? odoo.http: Loading website_event_sale 
+2026-01-23 20:22:37,583 124843 DEBUG ? odoo.http: Loading website_event_track 
+2026-01-23 20:22:37,583 124843 DEBUG ? odoo.http: Loading website_event_track_exhibitor 
+2026-01-23 20:22:37,584 124843 DEBUG ? odoo.http: Loading website_event_track_live 
+2026-01-23 20:22:37,584 124843 DEBUG ? odoo.http: Loading website_event_track_live_quiz 
+2026-01-23 20:22:37,584 124843 DEBUG ? odoo.http: Loading website_event_track_quiz 
+2026-01-23 20:22:37,585 124843 DEBUG ? odoo.http: Loading website_form 
+2026-01-23 20:22:37,585 124843 DEBUG ? odoo.http: Loading website_form_project 
+2026-01-23 20:22:37,585 124843 DEBUG ? odoo.http: Loading website_forum 
+2026-01-23 20:22:37,586 124843 DEBUG ? odoo.http: Loading website_google_map 
+2026-01-23 20:22:37,586 124843 DEBUG ? odoo.http: Loading website_hr_recruitment 
+2026-01-23 20:22:37,586 124843 DEBUG ? odoo.http: Loading website_jitsi 
+2026-01-23 20:22:37,586 124843 DEBUG ? odoo.http: Loading website_links 
+2026-01-23 20:22:37,587 124843 DEBUG ? odoo.http: Loading website_livechat 
+2026-01-23 20:22:37,587 124843 DEBUG ? odoo.http: Loading website_mail 
+2026-01-23 20:22:37,588 124843 DEBUG ? odoo.http: Loading website_mail_channel 
+2026-01-23 20:22:37,588 124843 DEBUG ? odoo.http: Loading website_mass_mailing 
+2026-01-23 20:22:37,588 124843 DEBUG ? odoo.http: Loading website_membership 
+2026-01-23 20:22:37,589 124843 DEBUG ? odoo.http: Loading website_partner 
+2026-01-23 20:22:37,589 124843 DEBUG ? odoo.http: Loading website_payment 
+2026-01-23 20:22:37,589 124843 DEBUG ? odoo.http: Loading website_profile 
+2026-01-23 20:22:37,590 124843 DEBUG ? odoo.http: Loading website_sale 
+2026-01-23 20:22:37,590 124843 DEBUG ? odoo.http: Loading website_sale_comparison 
+2026-01-23 20:22:37,590 124843 DEBUG ? odoo.http: Loading website_sale_coupon 
+2026-01-23 20:22:37,590 124843 DEBUG ? odoo.http: Loading website_sale_coupon_delivery 
+2026-01-23 20:22:37,591 124843 DEBUG ? odoo.http: Loading website_sale_delivery 
+2026-01-23 20:22:37,591 124843 DEBUG ? odoo.http: Loading website_sale_digital 
+2026-01-23 20:22:37,591 124843 DEBUG ? odoo.http: Loading website_sale_management 
+2026-01-23 20:22:37,591 124843 DEBUG ? odoo.http: Loading website_sale_product_configurator 
+2026-01-23 20:22:37,592 124843 DEBUG ? odoo.http: Loading website_sale_slides 
+2026-01-23 20:22:37,592 124843 DEBUG ? odoo.http: Loading website_sale_stock 
+2026-01-23 20:22:37,592 124843 DEBUG ? odoo.http: Loading website_sale_wishlist 
+2026-01-23 20:22:37,593 124843 DEBUG ? odoo.http: Loading website_slides 
+2026-01-23 20:22:37,593 124843 DEBUG ? odoo.http: Loading website_slides_forum 
+2026-01-23 20:22:37,593 124843 DEBUG ? odoo.http: Loading website_slides_survey 
+2026-01-23 20:22:37,594 124843 DEBUG ? odoo.http: Loading website_twitter 
+2026-01-23 20:22:37,594 124843 DEBUG ? odoo.http: Loading hr_custom_theme 
+2026-01-23 20:22:37,594 124843 INFO ? odoo.http: HTTP Configuring static files 
+2026-01-23 20:22:37,596 124843 DEBUG ? odoo.http: HTTP sessions stored in: /home/codespace/.local/share/Odoo/sessions 
+2026-01-23 20:22:37,620 124843 DEBUG odoo14 odoo.modules.registry: Multiprocess load registry signaling: [Registry: 1] [Cache: 1] 
+2026-01-23 20:22:37,623 124843 INFO odoo14 odoo.modules.loading: loading 1 modules... 
+2026-01-23 20:22:37,623 124843 DEBUG odoo14 odoo.modules.loading: Loading module base (1/1) 
+2026-01-23 20:22:37,635 124843 DEBUG odoo14 odoo.modules.loading: Module base loaded in 0.01s, 0 queries 
+2026-01-23 20:22:37,635 124843 INFO odoo14 odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries (+0 extra) 
+2026-01-23 20:22:37,638 124843 DEBUG odoo14 odoo.modules.loading: Updating graph with 6 more modules 
+2026-01-23 20:22:37,638 124843 INFO odoo14 odoo.modules.loading: loading 7 modules... 
+2026-01-23 20:22:37,638 124843 DEBUG odoo14 odoo.modules.loading: Loading module web (2/7) 
+2026-01-23 20:22:37,644 124843 DEBUG odoo14 odoo.modules.loading: Module web loaded in 0.01s, 0 queries 
+2026-01-23 20:22:37,645 124843 DEBUG odoo14 odoo.modules.loading: Loading module auth_totp (3/7) 
+2026-01-23 20:22:37,651 124843 DEBUG odoo14 odoo.modules.loading: Module auth_totp loaded in 0.01s, 1 queries 
+2026-01-23 20:22:37,651 124843 DEBUG odoo14 odoo.modules.loading: Loading module base_import (4/7) 
+2026-01-23 20:22:37,671 124843 DEBUG odoo14 odoo.modules.loading: Module base_import loaded in 0.02s, 1 queries 
+2026-01-23 20:22:37,671 124843 DEBUG odoo14 odoo.modules.loading: Loading module web_editor (5/7) 
+2026-01-23 20:22:37,691 124843 DEBUG odoo14 odoo.modules.loading: Module web_editor loaded in 0.02s, 0 queries 
+2026-01-23 20:22:37,691 124843 DEBUG odoo14 odoo.modules.loading: Loading module web_kanban_gauge (6/7) 
+2026-01-23 20:22:37,692 124843 DEBUG odoo14 odoo.modules.loading: Module web_kanban_gauge loaded in 0.00s, 0 queries 
+2026-01-23 20:22:37,692 124843 DEBUG odoo14 odoo.modules.loading: Loading module web_tour (7/7) 
+2026-01-23 20:22:37,694 124843 DEBUG odoo14 odoo.modules.loading: Module web_tour loaded in 0.00s, 0 queries 
+2026-01-23 20:22:37,694 124843 INFO odoo14 odoo.modules.loading: 7 modules loaded in 0.06s, 2 queries (+0 extra) 
+2026-01-23 20:22:37,853 124843 INFO odoo14 odoo.modules.loading: Modules loaded. 
+2026-01-23 20:22:37,869 124843 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:22:37,870 124843 INFO odoo14 odoo.addons.base.models.ir_http: Generating routing map for key None 
+2026-01-23 20:22:37,871 124843 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/site-packages/werkzeug/routing.py:957: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  parts = parts or [ast.Str("")]
+ 
+2026-01-23 20:22:37,871 124843 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/site-packages/werkzeug/routing.py:954: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  _convert(elem) if is_dynamic else ast.Str(s=elem)
+ 
+2026-01-23 20:22:37,871 124843 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/ast.py:587: DeprecationWarning: Attribute s is deprecated and will be removed in Python 3.14; use value instead
+  return Constant(*args, **kwargs)
+ 
+2026-01-23 20:22:37,872 124843 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/site-packages/werkzeug/routing.py:961: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  if isinstance(p, ast.Str) and isinstance(ret[-1], ast.Str):
+ 
+2026-01-23 20:22:37,872 124843 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/site-packages/werkzeug/routing.py:962: DeprecationWarning: Attribute s is deprecated and will be removed in Python 3.14; use value instead
+  ret[-1] = ast.Str(ret[-1].s + p.s)
+ 
+2026-01-23 20:22:37,872 124843 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/site-packages/werkzeug/routing.py:962: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ret[-1] = ast.Str(ret[-1].s + p.s)
+ 
+2026-01-23 20:22:38,152 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:642: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Str('last_path_node')),
+ 
+2026-01-23 20:22:38,152 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:644: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  value=ast.Str(path)
+ 
+2026-01-23 20:22:38,152 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1074: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body.append(self._append(ast.Str(pycompat.to_text(el.text))))
+ 
+2026-01-23 20:22:38,153 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:985: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body = [self._append(ast.Str(u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(pycompat.to_text(value))) for name, value in extra_attrib.items()]))))]
+ 
+2026-01-23 20:22:38,153 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:874: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  nodes.append((key, ast.Str(value)))
+ 
+2026-01-23 20:22:38,153 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:70: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  args=[ast.Str(node.id)], keywords=[],
+ 
+2026-01-23 20:22:38,153 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:932: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Str(item[0])),
+ 
+2026-01-23 20:22:38,154 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:954: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  value=ast.Str(el.tag))
+ 
+2026-01-23 20:22:38,154 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:753: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u' ')),
+ 
+2026-01-23 20:22:38,154 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:755: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'="')),
+ 
+2026-01-23 20:22:38,154 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:765: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'"')),
+ 
+2026-01-23 20:22:38,154 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:988: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body.append(self._append(ast.Str(u'/>')))
+ 
+2026-01-23 20:22:38,154 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1174: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return el.tail is not None and [self._append(ast.Str(pycompat.to_text(el.tail)))] or []
+ 
+2026-01-23 20:22:38,155 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:858: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return [self._append(ast.Str(tag + '>'))] + content + [self._append(ast.Str('</%s>' % el_tag))]
+ 
+2026-01-23 20:22:38,156 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1722: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  elts.append(ast.Str(literal if isinstance(literal, str) else literal.decode('utf-8')))
+ 
+2026-01-23 20:22:38,157 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:991: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body.append(self._append(ast.Str(u'>')))
+ 
+2026-01-23 20:22:38,157 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:993: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body.append(self._append(ast.Str(u'</%s>' % el_tag)))
+ 
+2026-01-23 20:22:38,163 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1730: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  elts.append(ast.Str(literal if isinstance(literal, str) else literal.decode('utf-8')))
+ 
+2026-01-23 20:22:38,163 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1459: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Num(0)),
+ 
+2026-01-23 20:22:38,163 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1606: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  keys=[ast.Str(s='caller_template'), ast.Str(s='last_path_node')],
+ 
+2026-01-23 20:22:38,164 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1608: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(s=str(options.get('template'))),
+ 
+2026-01-23 20:22:38,164 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1609: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(s=str(options['root'].getpath(el))),
+ 
+2026-01-23 20:22:38,178 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1025: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  varset = self._values_var(ast.Str(varname), ctx=ast.Store())
+ 
+2026-01-23 20:22:38,179 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1067: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  targets=[self._values_var(ast.Str(varname), ctx=ast.Store())],
+ 
+2026-01-23 20:22:38,180 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1694: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  value=ast.Str(u''),
+ 
+2026-01-23 20:22:38,180 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1705: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  args=[ast.Num(0), ast.List(elts=[], ctx=ast.Load())], keywords=[],
+ 
+2026-01-23 20:22:38,193 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:856: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return [self._append(ast.Str(tag + '/>'))] + content
+ 
+2026-01-23 20:22:38,194 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:201: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(el.get('t-call-assets')),
+ 
+2026-01-23 20:22:38,194 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:213: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  args=[ast.Str('debug')],
+ 
+2026-01-23 20:22:38,194 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:242: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body=[self._append(ast.Str(sep))],
+ 
+2026-01-23 20:22:38,194 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:245: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'<')),
+ 
+2026-01-23 20:22:38,194 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:264: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body=[self._append(ast.Str(u'/>'))],
+ 
+2026-01-23 20:22:38,195 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:266: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'>')),
+ 
+2026-01-23 20:22:38,195 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:272: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'</')),
+ 
+2026-01-23 20:22:38,195 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:274: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'>')),
+ 
+2026-01-23 20:22:38,197 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1471: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Num(0)),
+ 
+2026-01-23 20:22:38,199 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1323: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(field_name),
+ 
+2026-01-23 20:22:38,199 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1324: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(expression),
+ 
+2026-01-23 20:22:38,199 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1325: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(node_name),
+ 
+2026-01-23 20:22:38,200 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1368: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  value=ast.Str(u''),
+ 
+2026-01-23 20:22:38,203 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:898: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(el.tag),
+ 
+2026-01-23 20:22:38,483 124843 WARNING odoo14 odoo.addons.base.models.assetsbundle: Could not execute command 'sassc'This error occured while compiling the bundle 'web.assets_common' containing:
+    - /web/static/lib/bootstrap/scss/_functions.scss
+    - /web/static/lib/bootstrap/scss/_mixins.scss
+    - /web/static/src/scss/bs_mixins_overrides.scss
+    - /web/static/src/scss/utils.scss
+    - /web/static/src/scss/primary_variables.scss
+    - /web_editor/static/src/scss/web_editor.variables.scss
+    - /web_editor/static/src/scss/secondary_variables.scss
+    - /web/static/src/scss/secondary_variables.scss
+    - /web/static/lib/bootstrap/scss/_variables.scss
+    - /web/static/lib/tempusdominus/tempusdominus.scss
+    - /web/static/src/scss/fonts.scss
+    - /web/static/src/scss/ui.scss
+    - /web/static/src/scss/ui_extra.scss
+    - /web/static/src/scss/navbar.scss
+    - /web/static/src/scss/mimetypes.scss
+    - /web/static/src/scss/modal.scss
+    - /web/static/src/scss/animation.scss
+    - /web/static/src/scss/rainbow.scss
+    - /web/static/src/scss/datepicker.scss
+    - /web/static/src/scss/daterangepicker.scss
+    - /web/static/src/scss/banner.scss
+    - /web/static/src/scss/colorpicker.scss
+    - /web/static/src/scss/popover.scss
+    - /web/static/src/scss/translation_dialog.scss
+    - /web/static/src/scss/keyboard.scss
+    - /web/static/src/scss/name_and_signature.scss
+    - /web/static/src/scss/web.zoomodoo.scss
+    - /web/static/src/scss/color_picker.scss
+    - /web/static/src/scss/fontawesome_overridden.scss
+    - /web_tour/static/src/scss/tip.scss
+    - /web_tour/static/src/scss/keyframes.scss 
+2026-01-23 20:22:38,566 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:642: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Str('last_path_node')),
+ 
+2026-01-23 20:22:38,567 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:644: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  value=ast.Str(path)
+ 
+2026-01-23 20:22:38,568 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1074: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body.append(self._append(ast.Str(pycompat.to_text(el.text))))
+ 
+2026-01-23 20:22:38,568 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1471: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Num(0)),
+ 
+2026-01-23 20:22:38,570 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1606: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  keys=[ast.Str(s='caller_template'), ast.Str(s='last_path_node')],
+ 
+2026-01-23 20:22:38,570 124843 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/ast.py:587: DeprecationWarning: Attribute s is deprecated and will be removed in Python 3.14; use value instead
+  return Constant(*args, **kwargs)
+ 
+2026-01-23 20:22:38,571 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1608: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(s=str(options.get('template'))),
+ 
+2026-01-23 20:22:38,571 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1609: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(s=str(options['root'].getpath(el))),
+ 
+2026-01-23 20:22:38,571 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1730: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  elts.append(ast.Str(literal if isinstance(literal, str) else literal.decode('utf-8')))
+ 
+2026-01-23 20:22:38,572 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1174: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return el.tail is not None and [self._append(ast.Str(pycompat.to_text(el.tail)))] or []
+ 
+2026-01-23 20:22:38,572 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1459: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Num(0)),
+ 
+2026-01-23 20:22:38,573 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:856: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return [self._append(ast.Str(tag + '/>'))] + content
+ 
+2026-01-23 20:22:38,575 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:858: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return [self._append(ast.Str(tag + '>'))] + content + [self._append(ast.Str('</%s>' % el_tag))]
+ 
+2026-01-23 20:22:38,652 124843 WARNING odoo14 odoo.addons.base.models.assetsbundle: Could not execute command 'sassc'This error occured while compiling the bundle 'web.assets_frontend' containing:
+    - /web/static/lib/bootstrap/scss/_functions.scss
+    - /web/static/lib/bootstrap/scss/_mixins.scss
+    - /web/static/src/scss/bs_mixins_overrides.scss
+    - /web/static/src/scss/utils.scss
+    - /web/static/src/scss/primary_variables.scss
+    - /web_editor/static/src/scss/web_editor.variables.scss
+    - /web_editor/static/src/scss/secondary_variables.scss
+    - /web/static/src/scss/secondary_variables.scss
+    - /web_editor/static/src/scss/bootstrap_overridden.scss
+    - /web/static/src/scss/bootstrap_overridden_frontend.scss
+    - /web/static/lib/bootstrap/scss/_variables.scss
+    - /web/static/src/scss/import_bootstrap.scss
+    - /web/static/src/scss/bootstrap_review.scss
+    - /web/static/src/scss/base_frontend.scss
+    - /web/static/src/scss/lazyloader.scss
+    - /web/static/src/scss/navbar_mobile.scss
+    - /web/static/src/scss/notification.scss
+    - /web_editor/static/src/scss/web_editor.common.scss
+    - /web_editor/static/src/scss/web_editor.frontend.scss 
+2026-01-23 20:22:38,704 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:642: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Str('last_path_node')),
+ 
+2026-01-23 20:22:38,705 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:644: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  value=ast.Str(path)
+ 
+2026-01-23 20:22:38,706 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1074: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body.append(self._append(ast.Str(pycompat.to_text(el.text))))
+ 
+2026-01-23 20:22:38,707 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1471: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Num(0)),
+ 
+2026-01-23 20:22:38,707 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1606: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  keys=[ast.Str(s='caller_template'), ast.Str(s='last_path_node')],
+ 
+2026-01-23 20:22:38,707 124843 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/ast.py:587: DeprecationWarning: Attribute s is deprecated and will be removed in Python 3.14; use value instead
+  return Constant(*args, **kwargs)
+ 
+2026-01-23 20:22:38,707 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1608: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(s=str(options.get('template'))),
+ 
+2026-01-23 20:22:38,707 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1609: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(s=str(options['root'].getpath(el))),
+ 
+2026-01-23 20:22:38,707 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1730: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  elts.append(ast.Str(literal if isinstance(literal, str) else literal.decode('utf-8')))
+ 
+2026-01-23 20:22:38,707 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1174: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return el.tail is not None and [self._append(ast.Str(pycompat.to_text(el.tail)))] or []
+ 
+2026-01-23 20:22:38,773 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:70: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  args=[ast.Str(node.id)], keywords=[],
+ 
+2026-01-23 20:22:38,773 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:201: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(el.get('t-call-assets')),
+ 
+2026-01-23 20:22:38,773 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:213: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  args=[ast.Str('debug')],
+ 
+2026-01-23 20:22:38,773 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:242: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body=[self._append(ast.Str(sep))],
+ 
+2026-01-23 20:22:38,773 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:245: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'<')),
+ 
+2026-01-23 20:22:38,773 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:753: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u' ')),
+ 
+2026-01-23 20:22:38,773 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:755: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'="')),
+ 
+2026-01-23 20:22:38,774 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:765: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'"')),
+ 
+2026-01-23 20:22:38,774 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:264: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body=[self._append(ast.Str(u'/>'))],
+ 
+2026-01-23 20:22:38,774 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:266: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'>')),
+ 
+2026-01-23 20:22:38,774 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:272: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'</')),
+ 
+2026-01-23 20:22:38,774 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:274: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'>')),
+ 
+2026-01-23 20:22:38,791 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:856: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return [self._append(ast.Str(tag + '/>'))] + content
+ 
+2026-01-23 20:22:38,795 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:858: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return [self._append(ast.Str(tag + '>'))] + content + [self._append(ast.Str('</%s>' % el_tag))]
+ 
+2026-01-23 20:22:40,036 124843 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1459: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Num(0)),
+ 
+2026-01-23 20:22:40,083 124843 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:22:40] "HEAD /web/login HTTP/1.1" 200 - 207 0.286 2.201
+2026-01-23 20:22:50,956 124843 INFO ? odoo.service.server: Initiating shutdown 
+2026-01-23 20:22:50,956 124843 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-01-23 20:22:51,069 124843 DEBUG ? odoo.service.server: current thread: <_MainThread(MainThread, started 129904405780288)> 
+2026-01-23 20:22:51,069 124843 DEBUG ? odoo.service.server: process <_MainThread(MainThread, started 129904405780288)> (False) 
+2026-01-23 20:22:51,069 124843 DEBUG ? odoo.service.server: process <Thread(odoo.service.cron.cron0, started daemon 129904292300480)> (True) 
+2026-01-23 20:22:51,069 124843 DEBUG ? odoo.service.server: process <Thread(odoo.service.cron.cron1, started daemon 129904283907776)> (True) 
+2026-01-23 20:22:51,070 124843 INFO ? odoo.sql_db: ConnectionPool(used=0/count=0/max=64): Closed 1 connections  
+2026-01-23 20:22:51,070 124843 DEBUG ? odoo.service.server: -- 
+2026-01-23 20:23:16,968 125907 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.request:INFO" 
+2026-01-23 20:23:16,969 125907 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.response:INFO" 
+2026-01-23 20:23:16,969 125907 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-01-23 20:23:16,969 125907 DEBUG ? odoo.netsvc: logger level set: "odoo:DEBUG" 
+2026-01-23 20:23:16,969 125907 DEBUG ? odoo.netsvc: logger level set: "odoo.sql_db:INFO" 
+2026-01-23 20:23:16,969 125907 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-01-23 20:23:16,969 125907 INFO ? odoo: Odoo version 14.0 
+2026-01-23 20:23:16,969 125907 INFO ? odoo: Using configuration file at /workspaces/odoo/odoo.conf 
+2026-01-23 20:23:16,969 125907 INFO ? odoo: addons paths: ['/workspaces/odoo/odoo/addons', '/home/codespace/.local/share/Odoo/addons/14.0', '/workspaces/odoo/addons', '/workspaces/odoo/odoo-custom-addons'] 
+2026-01-23 20:23:16,970 125907 INFO ? odoo: database: odoo14@127.0.0.1:5433 
+2026-01-23 20:23:17,219 125907 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltopdf to print a pdf version of the reports. 
+2026-01-23 20:23:17,364 125907 WARNING ? odoo.addons.base.models.res_currency: The num2words python library is not installed, amount-to-text features won't be fully available. 
+2026-01-23 20:23:17,383 125907 DEBUG ? odoo.service.server: Setting signal handlers 
+2026-01-23 20:23:17,384 125907 INFO ? odoo.service.server: HTTP service (werkzeug) running on localhost:8069 
+2026-01-23 20:23:17,386 125907 DEBUG ? odoo.service.server: cron0 started! 
+2026-01-23 20:23:17,386 125907 DEBUG ? odoo.service.server: cron1 started! 
+2026-01-23 20:23:55,893 125907 DEBUG ? odoo.http: Loading base 
+2026-01-23 20:23:55,894 125907 DEBUG ? odoo.http: Loading test_apikeys 
+2026-01-23 20:23:55,894 125907 DEBUG ? odoo.http: Loading test_assetsbundle 
+2026-01-23 20:23:55,895 125907 DEBUG ? odoo.http: Loading test_exceptions 
+2026-01-23 20:23:55,895 125907 DEBUG ? odoo.http: Loading test_main_flows 
+2026-01-23 20:23:55,896 125907 DEBUG ? odoo.http: Loading test_new_api 
+2026-01-23 20:23:55,896 125907 DEBUG ? odoo.http: Loading test_translation_import 
+2026-01-23 20:23:55,897 125907 DEBUG ? odoo.http: Loading account 
+2026-01-23 20:23:55,897 125907 DEBUG ? odoo.http: Loading account_check_printing 
+2026-01-23 20:23:55,898 125907 DEBUG ? odoo.http: Loading adyen_platforms 
+2026-01-23 20:23:55,898 125907 DEBUG ? odoo.http: Loading auth_oauth 
+2026-01-23 20:23:55,898 125907 DEBUG ? odoo.http: Loading auth_password_policy 
+2026-01-23 20:23:55,898 125907 DEBUG ? odoo.http: Loading auth_password_policy_portal 
+2026-01-23 20:23:55,899 125907 DEBUG ? odoo.http: Loading auth_password_policy_signup 
+2026-01-23 20:23:55,899 125907 DEBUG ? odoo.http: Loading auth_signup 
+2026-01-23 20:23:55,899 125907 DEBUG ? odoo.http: Loading auth_totp 
+2026-01-23 20:23:55,900 125907 DEBUG ? odoo.http: Loading auth_totp_portal 
+2026-01-23 20:23:55,900 125907 DEBUG ? odoo.http: Loading barcodes 
+2026-01-23 20:23:55,900 125907 DEBUG ? odoo.http: Loading base_automation 
+2026-01-23 20:23:55,901 125907 DEBUG ? odoo.http: Loading base_iban 
+2026-01-23 20:23:55,901 125907 DEBUG ? odoo.http: Loading base_import 
+2026-01-23 20:23:55,901 125907 DEBUG ? odoo.http: Loading base_setup 
+2026-01-23 20:23:55,901 125907 DEBUG ? odoo.http: Loading board 
+2026-01-23 20:23:55,902 125907 DEBUG ? odoo.http: Loading bus 
+2026-01-23 20:23:55,902 125907 DEBUG ? odoo.http: Loading calendar 
+2026-01-23 20:23:55,902 125907 DEBUG ? odoo.http: Loading contacts 
+2026-01-23 20:23:55,903 125907 DEBUG ? odoo.http: Loading crm 
+2026-01-23 20:23:55,903 125907 DEBUG ? odoo.http: Loading crm_iap_lead 
+2026-01-23 20:23:55,903 125907 DEBUG ? odoo.http: Loading digest 
+2026-01-23 20:23:55,903 125907 DEBUG ? odoo.http: Loading event 
+2026-01-23 20:23:55,904 125907 DEBUG ? odoo.http: Loading event_sale 
+2026-01-23 20:23:55,904 125907 DEBUG ? odoo.http: Loading fleet 
+2026-01-23 20:23:55,904 125907 DEBUG ? odoo.http: Loading gamification 
+2026-01-23 20:23:55,905 125907 DEBUG ? odoo.http: Loading google_calendar 
+2026-01-23 20:23:55,905 125907 DEBUG ? odoo.http: Loading google_drive 
+2026-01-23 20:23:55,905 125907 DEBUG ? odoo.http: Loading google_recaptcha 
+2026-01-23 20:23:55,905 125907 DEBUG ? odoo.http: Loading google_spreadsheet 
+2026-01-23 20:23:55,906 125907 DEBUG ? odoo.http: Loading hr 
+2026-01-23 20:23:55,906 125907 DEBUG ? odoo.http: Loading hr_attendance 
+2026-01-23 20:23:55,906 125907 DEBUG ? odoo.http: Loading hr_contract 
+2026-01-23 20:23:55,907 125907 DEBUG ? odoo.http: Loading hr_expense 
+2026-01-23 20:23:55,907 125907 DEBUG ? odoo.http: Loading hr_gamification 
+2026-01-23 20:23:55,907 125907 DEBUG ? odoo.http: Loading hr_holidays 
+2026-01-23 20:23:55,908 125907 DEBUG ? odoo.http: Loading hr_org_chart 
+2026-01-23 20:23:55,908 125907 DEBUG ? odoo.http: Loading hr_recruitment 
+2026-01-23 20:23:55,908 125907 DEBUG ? odoo.http: Loading hr_skills 
+2026-01-23 20:23:55,908 125907 DEBUG ? odoo.http: Loading hr_skills_slides 
+2026-01-23 20:23:55,909 125907 DEBUG ? odoo.http: Loading hr_skills_survey 
+2026-01-23 20:23:55,909 125907 DEBUG ? odoo.http: Loading hr_timesheet 
+2026-01-23 20:23:55,909 125907 DEBUG ? odoo.http: Loading hr_work_entry 
+2026-01-23 20:23:55,909 125907 DEBUG ? odoo.http: Loading http_routing 
+2026-01-23 20:23:55,910 125907 DEBUG ? odoo.http: Loading iap 
+2026-01-23 20:23:55,910 125907 DEBUG ? odoo.http: Loading im_livechat 
+2026-01-23 20:23:55,911 125907 DEBUG ? odoo.http: Loading l10n_ae 
+2026-01-23 20:23:55,911 125907 DEBUG ? odoo.http: Loading l10n_ar 
+2026-01-23 20:23:55,911 125907 DEBUG ? odoo.http: Loading l10n_ar_website_sale 
+2026-01-23 20:23:55,911 125907 DEBUG ? odoo.http: Loading l10n_at 
+2026-01-23 20:23:55,912 125907 DEBUG ? odoo.http: Loading l10n_au 
+2026-01-23 20:23:55,912 125907 DEBUG ? odoo.http: Loading l10n_be 
+2026-01-23 20:23:55,912 125907 DEBUG ? odoo.http: Loading l10n_bo 
+2026-01-23 20:23:55,912 125907 DEBUG ? odoo.http: Loading l10n_br 
+2026-01-23 20:23:55,913 125907 DEBUG ? odoo.http: Loading l10n_ca 
+2026-01-23 20:23:55,913 125907 DEBUG ? odoo.http: Loading l10n_ch 
+2026-01-23 20:23:55,913 125907 DEBUG ? odoo.http: Loading l10n_cl 
+2026-01-23 20:23:55,914 125907 DEBUG ? odoo.http: Loading l10n_cn 
+2026-01-23 20:23:55,914 125907 DEBUG ? odoo.http: Loading l10n_cn_city 
+2026-01-23 20:23:55,914 125907 DEBUG ? odoo.http: Loading l10n_co 
+2026-01-23 20:23:55,914 125907 DEBUG ? odoo.http: Loading l10n_co_pos 
+2026-01-23 20:23:55,915 125907 DEBUG ? odoo.http: Loading l10n_cr 
+2026-01-23 20:23:55,915 125907 DEBUG ? odoo.http: Loading l10n_cz 
+2026-01-23 20:23:55,915 125907 DEBUG ? odoo.http: Loading l10n_de 
+2026-01-23 20:23:55,915 125907 DEBUG ? odoo.http: Loading l10n_dk 
+2026-01-23 20:23:55,916 125907 DEBUG ? odoo.http: Loading l10n_do 
+2026-01-23 20:23:55,916 125907 DEBUG ? odoo.http: Loading l10n_dz 
+2026-01-23 20:23:55,916 125907 DEBUG ? odoo.http: Loading l10n_ec 
+2026-01-23 20:23:55,916 125907 DEBUG ? odoo.http: Loading l10n_es 
+2026-01-23 20:23:55,917 125907 DEBUG ? odoo.http: Loading l10n_et 
+2026-01-23 20:23:55,917 125907 DEBUG ? odoo.http: Loading l10n_fi 
+2026-01-23 20:23:55,917 125907 DEBUG ? odoo.http: Loading l10n_fi_sale 
+2026-01-23 20:23:55,917 125907 DEBUG ? odoo.http: Loading l10n_fr 
+2026-01-23 20:23:55,918 125907 DEBUG ? odoo.http: Loading l10n_fr_pos_cert 
+2026-01-23 20:23:55,918 125907 DEBUG ? odoo.http: Loading l10n_gcc_pos 
+2026-01-23 20:23:55,918 125907 DEBUG ? odoo.http: Loading l10n_generic_coa 
+2026-01-23 20:23:55,918 125907 DEBUG ? odoo.http: Loading l10n_gr 
+2026-01-23 20:23:55,919 125907 DEBUG ? odoo.http: Loading l10n_gt 
+2026-01-23 20:23:55,919 125907 DEBUG ? odoo.http: Loading l10n_hk 
+2026-01-23 20:23:55,919 125907 DEBUG ? odoo.http: Loading l10n_hn 
+2026-01-23 20:23:55,919 125907 DEBUG ? odoo.http: Loading l10n_hr 
+2026-01-23 20:23:55,920 125907 DEBUG ? odoo.http: Loading l10n_hu 
+2026-01-23 20:23:55,920 125907 DEBUG ? odoo.http: Loading l10n_id 
+2026-01-23 20:23:55,920 125907 DEBUG ? odoo.http: Loading l10n_ie 
+2026-01-23 20:23:55,921 125907 DEBUG ? odoo.http: Loading l10n_in 
+2026-01-23 20:23:55,921 125907 DEBUG ? odoo.http: Loading l10n_in_pos 
+2026-01-23 20:23:55,921 125907 DEBUG ? odoo.http: Loading l10n_it 
+2026-01-23 20:23:55,921 125907 DEBUG ? odoo.http: Loading l10n_jp 
+2026-01-23 20:23:55,922 125907 DEBUG ? odoo.http: Loading l10n_lt 
+2026-01-23 20:23:55,922 125907 DEBUG ? odoo.http: Loading l10n_lu 
+2026-01-23 20:23:55,922 125907 DEBUG ? odoo.http: Loading l10n_ma 
+2026-01-23 20:23:55,922 125907 DEBUG ? odoo.http: Loading l10n_mn 
+2026-01-23 20:23:55,923 125907 DEBUG ? odoo.http: Loading l10n_mx 
+2026-01-23 20:23:55,923 125907 DEBUG ? odoo.http: Loading l10n_nl 
+2026-01-23 20:23:55,923 125907 DEBUG ? odoo.http: Loading l10n_no 
+2026-01-23 20:23:55,923 125907 DEBUG ? odoo.http: Loading l10n_nz 
+2026-01-23 20:23:55,924 125907 DEBUG ? odoo.http: Loading l10n_pa 
+2026-01-23 20:23:55,924 125907 DEBUG ? odoo.http: Loading l10n_pe 
+2026-01-23 20:23:55,924 125907 DEBUG ? odoo.http: Loading l10n_pl 
+2026-01-23 20:23:55,925 125907 DEBUG ? odoo.http: Loading l10n_ro 
+2026-01-23 20:23:55,925 125907 DEBUG ? odoo.http: Loading l10n_sa 
+2026-01-23 20:23:55,925 125907 DEBUG ? odoo.http: Loading l10n_sa_pos 
+2026-01-23 20:23:55,925 125907 DEBUG ? odoo.http: Loading l10n_se 
+2026-01-23 20:23:55,925 125907 DEBUG ? odoo.http: Loading l10n_se_ocr 
+2026-01-23 20:23:55,926 125907 DEBUG ? odoo.http: Loading l10n_sg 
+2026-01-23 20:23:55,926 125907 DEBUG ? odoo.http: Loading l10n_si 
+2026-01-23 20:23:55,926 125907 DEBUG ? odoo.http: Loading l10n_sk 
+2026-01-23 20:23:55,926 125907 DEBUG ? odoo.http: Loading l10n_th 
+2026-01-23 20:23:55,927 125907 DEBUG ? odoo.http: Loading l10n_tr 
+2026-01-23 20:23:55,927 125907 DEBUG ? odoo.http: Loading l10n_ua 
+2026-01-23 20:23:55,927 125907 DEBUG ? odoo.http: Loading l10n_uk 
+2026-01-23 20:23:55,927 125907 DEBUG ? odoo.http: Loading l10n_us 
+2026-01-23 20:23:55,928 125907 DEBUG ? odoo.http: Loading l10n_uy 
+2026-01-23 20:23:55,928 125907 DEBUG ? odoo.http: Loading l10n_ve 
+2026-01-23 20:23:55,928 125907 DEBUG ? odoo.http: Loading l10n_vn 
+2026-01-23 20:23:55,928 125907 DEBUG ? odoo.http: Loading l10n_za 
+2026-01-23 20:23:55,929 125907 DEBUG ? odoo.http: Loading lunch 
+2026-01-23 20:23:55,929 125907 DEBUG ? odoo.http: Loading mail 
+2026-01-23 20:23:55,930 125907 DEBUG ? odoo.http: Loading mail_bot 
+2026-01-23 20:23:55,930 125907 DEBUG ? odoo.http: Loading maintenance 
+2026-01-23 20:23:55,930 125907 DEBUG ? odoo.http: Loading mass_mailing 
+2026-01-23 20:23:55,931 125907 DEBUG ? odoo.http: Loading mass_mailing_sms 
+2026-01-23 20:23:55,931 125907 DEBUG ? odoo.http: Loading membership 
+2026-01-23 20:23:55,931 125907 DEBUG ? odoo.http: Loading microsoft_calendar 
+2026-01-23 20:23:55,931 125907 DEBUG ? odoo.http: Loading mrp 
+2026-01-23 20:23:55,932 125907 DEBUG ? odoo.http: Loading note 
+2026-01-23 20:23:55,932 125907 DEBUG ? odoo.http: Loading odoo_referral 
+2026-01-23 20:23:55,932 125907 DEBUG ? odoo.http: Loading pad 
+2026-01-23 20:23:55,932 125907 DEBUG ? odoo.http: Loading pad_project 
+2026-01-23 20:23:55,933 125907 DEBUG ? odoo.http: Loading partner_autocomplete 
+2026-01-23 20:23:55,933 125907 DEBUG ? odoo.http: Loading payment 
+2026-01-23 20:23:55,933 125907 DEBUG ? odoo.http: Loading payment_adyen 
+2026-01-23 20:23:55,933 125907 DEBUG ? odoo.http: Loading payment_alipay 
+2026-01-23 20:23:55,934 125907 DEBUG ? odoo.http: Loading payment_authorize 
+2026-01-23 20:23:55,934 125907 DEBUG ? odoo.http: Loading payment_buckaroo 
+2026-01-23 20:23:55,934 125907 DEBUG ? odoo.http: Loading payment_ingenico 
+2026-01-23 20:23:55,934 125907 DEBUG ? odoo.http: Loading payment_odoo_by_adyen 
+2026-01-23 20:23:55,935 125907 DEBUG ? odoo.http: Loading payment_paypal 
+2026-01-23 20:23:55,935 125907 DEBUG ? odoo.http: Loading payment_payulatam 
+2026-01-23 20:23:55,935 125907 DEBUG ? odoo.http: Loading payment_payumoney 
+2026-01-23 20:23:55,935 125907 DEBUG ? odoo.http: Loading payment_sips 
+2026-01-23 20:23:55,936 125907 DEBUG ? odoo.http: Loading payment_stripe 
+2026-01-23 20:23:55,936 125907 DEBUG ? odoo.http: Loading payment_test 
+2026-01-23 20:23:55,936 125907 DEBUG ? odoo.http: Loading payment_transfer 
+2026-01-23 20:23:55,937 125907 DEBUG ? odoo.http: Loading point_of_sale 
+2026-01-23 20:23:55,937 125907 DEBUG ? odoo.http: Loading portal 
+2026-01-23 20:23:55,937 125907 DEBUG ? odoo.http: Loading portal_rating 
+2026-01-23 20:23:55,937 125907 DEBUG ? odoo.http: Loading pos_adyen 
+2026-01-23 20:23:55,938 125907 DEBUG ? odoo.http: Loading pos_cache 
+2026-01-23 20:23:55,938 125907 DEBUG ? odoo.http: Loading pos_discount 
+2026-01-23 20:23:55,938 125907 DEBUG ? odoo.http: Loading pos_epson_printer 
+2026-01-23 20:23:55,938 125907 DEBUG ? odoo.http: Loading pos_epson_printer_restaurant 
+2026-01-23 20:23:55,939 125907 DEBUG ? odoo.http: Loading pos_hr 
+2026-01-23 20:23:55,939 125907 DEBUG ? odoo.http: Loading pos_mercury 
+2026-01-23 20:23:55,939 125907 DEBUG ? odoo.http: Loading pos_restaurant 
+2026-01-23 20:23:55,939 125907 DEBUG ? odoo.http: Loading pos_restaurant_adyen 
+2026-01-23 20:23:55,940 125907 DEBUG ? odoo.http: Loading pos_six 
+2026-01-23 20:23:55,940 125907 DEBUG ? odoo.http: Loading product 
+2026-01-23 20:23:55,940 125907 DEBUG ? odoo.http: Loading product_email_template 
+2026-01-23 20:23:55,940 125907 DEBUG ? odoo.http: Loading product_expiry 
+2026-01-23 20:23:55,941 125907 DEBUG ? odoo.http: Loading product_matrix 
+2026-01-23 20:23:55,941 125907 DEBUG ? odoo.http: Loading project 
+2026-01-23 20:23:55,941 125907 DEBUG ? odoo.http: Loading purchase 
+2026-01-23 20:23:55,942 125907 DEBUG ? odoo.http: Loading purchase_product_matrix 
+2026-01-23 20:23:55,942 125907 DEBUG ? odoo.http: Loading purchase_stock 
+2026-01-23 20:23:55,942 125907 DEBUG ? odoo.http: Loading rating 
+2026-01-23 20:23:55,942 125907 DEBUG ? odoo.http: Loading repair 
+2026-01-23 20:23:55,943 125907 DEBUG ? odoo.http: Loading resource 
+2026-01-23 20:23:55,943 125907 DEBUG ? odoo.http: Loading sale 
+2026-01-23 20:23:55,943 125907 DEBUG ? odoo.http: Loading sale_expense 
+2026-01-23 20:23:55,943 125907 DEBUG ? odoo.http: Loading sale_management 
+2026-01-23 20:23:55,944 125907 DEBUG ? odoo.http: Loading sale_product_configurator 
+2026-01-23 20:23:55,944 125907 DEBUG ? odoo.http: Loading sale_product_matrix 
+2026-01-23 20:23:55,944 125907 DEBUG ? odoo.http: Loading sale_stock 
+2026-01-23 20:23:55,945 125907 DEBUG ? odoo.http: Loading sale_timesheet 
+2026-01-23 20:23:55,945 125907 DEBUG ? odoo.http: Loading sale_timesheet_edit 
+2026-01-23 20:23:55,945 125907 DEBUG ? odoo.http: Loading sales_team 
+2026-01-23 20:23:55,945 125907 DEBUG ? odoo.http: Loading sms 
+2026-01-23 20:23:55,946 125907 DEBUG ? odoo.http: Loading snailmail 
+2026-01-23 20:23:55,946 125907 DEBUG ? odoo.http: Loading snailmail_account 
+2026-01-23 20:23:55,946 125907 DEBUG ? odoo.http: Loading stock 
+2026-01-23 20:23:55,947 125907 DEBUG ? odoo.http: Loading survey 
+2026-01-23 20:23:55,947 125907 DEBUG ? odoo.http: Loading test_event_full 
+2026-01-23 20:23:55,947 125907 DEBUG ? odoo.http: Loading test_website 
+2026-01-23 20:23:55,948 125907 DEBUG ? odoo.http: Loading theme_default 
+2026-01-23 20:23:55,948 125907 DEBUG ? odoo.http: Loading transifex 
+2026-01-23 20:23:55,948 125907 DEBUG ? odoo.http: Loading utm 
+2026-01-23 20:23:55,948 125907 DEBUG ? odoo.http: Loading web 
+2026-01-23 20:23:55,948 125907 DEBUG ? odoo.http: Loading web_editor 
+2026-01-23 20:23:55,949 125907 DEBUG ? odoo.http: Loading web_kanban_gauge 
+2026-01-23 20:23:55,949 125907 DEBUG ? odoo.http: Loading web_tour 
+2026-01-23 20:23:55,949 125907 DEBUG ? odoo.http: Loading web_unsplash 
+2026-01-23 20:23:55,950 125907 DEBUG ? odoo.http: Loading website 
+2026-01-23 20:23:55,951 125907 DEBUG ? odoo.http: Loading website_blog 
+2026-01-23 20:23:55,951 125907 DEBUG ? odoo.http: Loading website_crm 
+2026-01-23 20:23:55,951 125907 DEBUG ? odoo.http: Loading website_crm_partner_assign 
+2026-01-23 20:23:55,952 125907 DEBUG ? odoo.http: Loading website_customer 
+2026-01-23 20:23:55,952 125907 DEBUG ? odoo.http: Loading website_event 
+2026-01-23 20:23:55,952 125907 DEBUG ? odoo.http: Loading website_event_meet 
+2026-01-23 20:23:55,952 125907 DEBUG ? odoo.http: Loading website_event_questions 
+2026-01-23 20:23:55,953 125907 DEBUG ? odoo.http: Loading website_event_sale 
+2026-01-23 20:23:55,953 125907 DEBUG ? odoo.http: Loading website_event_track 
+2026-01-23 20:23:55,953 125907 DEBUG ? odoo.http: Loading website_event_track_exhibitor 
+2026-01-23 20:23:55,953 125907 DEBUG ? odoo.http: Loading website_event_track_live 
+2026-01-23 20:23:55,954 125907 DEBUG ? odoo.http: Loading website_event_track_live_quiz 
+2026-01-23 20:23:55,954 125907 DEBUG ? odoo.http: Loading website_event_track_quiz 
+2026-01-23 20:23:55,954 125907 DEBUG ? odoo.http: Loading website_form 
+2026-01-23 20:23:55,954 125907 DEBUG ? odoo.http: Loading website_form_project 
+2026-01-23 20:23:55,955 125907 DEBUG ? odoo.http: Loading website_forum 
+2026-01-23 20:23:55,955 125907 DEBUG ? odoo.http: Loading website_google_map 
+2026-01-23 20:23:55,955 125907 DEBUG ? odoo.http: Loading website_hr_recruitment 
+2026-01-23 20:23:55,955 125907 DEBUG ? odoo.http: Loading website_jitsi 
+2026-01-23 20:23:55,956 125907 DEBUG ? odoo.http: Loading website_links 
+2026-01-23 20:23:55,956 125907 DEBUG ? odoo.http: Loading website_livechat 
+2026-01-23 20:23:55,956 125907 DEBUG ? odoo.http: Loading website_mail 
+2026-01-23 20:23:55,956 125907 DEBUG ? odoo.http: Loading website_mail_channel 
+2026-01-23 20:23:55,957 125907 DEBUG ? odoo.http: Loading website_mass_mailing 
+2026-01-23 20:23:55,957 125907 DEBUG ? odoo.http: Loading website_membership 
+2026-01-23 20:23:55,957 125907 DEBUG ? odoo.http: Loading website_partner 
+2026-01-23 20:23:55,957 125907 DEBUG ? odoo.http: Loading website_payment 
+2026-01-23 20:23:55,958 125907 DEBUG ? odoo.http: Loading website_profile 
+2026-01-23 20:23:55,958 125907 DEBUG ? odoo.http: Loading website_sale 
+2026-01-23 20:23:55,958 125907 DEBUG ? odoo.http: Loading website_sale_comparison 
+2026-01-23 20:23:55,959 125907 DEBUG ? odoo.http: Loading website_sale_coupon 
+2026-01-23 20:23:55,959 125907 DEBUG ? odoo.http: Loading website_sale_coupon_delivery 
+2026-01-23 20:23:55,959 125907 DEBUG ? odoo.http: Loading website_sale_delivery 
+2026-01-23 20:23:55,960 125907 DEBUG ? odoo.http: Loading website_sale_digital 
+2026-01-23 20:23:55,960 125907 DEBUG ? odoo.http: Loading website_sale_management 
+2026-01-23 20:23:55,960 125907 DEBUG ? odoo.http: Loading website_sale_product_configurator 
+2026-01-23 20:23:55,960 125907 DEBUG ? odoo.http: Loading website_sale_slides 
+2026-01-23 20:23:55,961 125907 DEBUG ? odoo.http: Loading website_sale_stock 
+2026-01-23 20:23:55,961 125907 DEBUG ? odoo.http: Loading website_sale_wishlist 
+2026-01-23 20:23:55,961 125907 DEBUG ? odoo.http: Loading website_slides 
+2026-01-23 20:23:55,962 125907 DEBUG ? odoo.http: Loading website_slides_forum 
+2026-01-23 20:23:55,962 125907 DEBUG ? odoo.http: Loading website_slides_survey 
+2026-01-23 20:23:55,962 125907 DEBUG ? odoo.http: Loading website_twitter 
+2026-01-23 20:23:55,963 125907 DEBUG ? odoo.http: Loading hr_custom_theme 
+2026-01-23 20:23:55,963 125907 INFO ? odoo.http: HTTP Configuring static files 
+2026-01-23 20:23:55,965 125907 DEBUG ? odoo.http: HTTP sessions stored in: /home/codespace/.local/share/Odoo/sessions 
+2026-01-23 20:23:56,005 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess load registry signaling: [Registry: 1] [Cache: 1] 
+2026-01-23 20:23:56,011 125907 INFO odoo14 odoo.modules.loading: loading 1 modules... 
+2026-01-23 20:23:56,012 125907 DEBUG odoo14 odoo.modules.loading: Loading module base (1/1) 
+2026-01-23 20:23:56,034 125907 DEBUG odoo14 odoo.modules.loading: Module base loaded in 0.02s, 0 queries 
+2026-01-23 20:23:56,034 125907 INFO odoo14 odoo.modules.loading: 1 modules loaded in 0.02s, 0 queries (+0 extra) 
+2026-01-23 20:23:56,037 125907 DEBUG odoo14 odoo.modules.loading: Updating graph with 6 more modules 
+2026-01-23 20:23:56,037 125907 INFO odoo14 odoo.modules.loading: loading 7 modules... 
+2026-01-23 20:23:56,037 125907 DEBUG odoo14 odoo.modules.loading: Loading module web (2/7) 
+2026-01-23 20:23:56,044 125907 DEBUG odoo14 odoo.modules.loading: Module web loaded in 0.01s, 0 queries 
+2026-01-23 20:23:56,044 125907 DEBUG odoo14 odoo.modules.loading: Loading module auth_totp (3/7) 
+2026-01-23 20:23:56,050 125907 DEBUG odoo14 odoo.modules.loading: Module auth_totp loaded in 0.01s, 1 queries 
+2026-01-23 20:23:56,050 125907 DEBUG odoo14 odoo.modules.loading: Loading module base_import (4/7) 
+2026-01-23 20:23:56,064 125907 DEBUG odoo14 odoo.modules.loading: Module base_import loaded in 0.01s, 1 queries 
+2026-01-23 20:23:56,064 125907 DEBUG odoo14 odoo.modules.loading: Loading module web_editor (5/7) 
+2026-01-23 20:23:56,082 125907 DEBUG odoo14 odoo.modules.loading: Module web_editor loaded in 0.02s, 0 queries 
+2026-01-23 20:23:56,082 125907 DEBUG odoo14 odoo.modules.loading: Loading module web_kanban_gauge (6/7) 
+2026-01-23 20:23:56,083 125907 DEBUG odoo14 odoo.modules.loading: Module web_kanban_gauge loaded in 0.00s, 0 queries 
+2026-01-23 20:23:56,083 125907 DEBUG odoo14 odoo.modules.loading: Loading module web_tour (7/7) 
+2026-01-23 20:23:56,085 125907 DEBUG odoo14 odoo.modules.loading: Module web_tour loaded in 0.00s, 0 queries 
+2026-01-23 20:23:56,086 125907 INFO odoo14 odoo.modules.loading: 7 modules loaded in 0.05s, 2 queries (+0 extra) 
+2026-01-23 20:23:56,195 125907 INFO odoo14 odoo.modules.loading: Modules loaded. 
+2026-01-23 20:23:56,198 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:23:56,199 125907 INFO odoo14 odoo.addons.base.models.ir_http: Generating routing map for key None 
+2026-01-23 20:23:56,200 125907 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/site-packages/werkzeug/routing.py:957: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  parts = parts or [ast.Str("")]
+ 
+2026-01-23 20:23:56,200 125907 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/site-packages/werkzeug/routing.py:954: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  _convert(elem) if is_dynamic else ast.Str(s=elem)
+ 
+2026-01-23 20:23:56,200 125907 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/ast.py:587: DeprecationWarning: Attribute s is deprecated and will be removed in Python 3.14; use value instead
+  return Constant(*args, **kwargs)
+ 
+2026-01-23 20:23:56,201 125907 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/site-packages/werkzeug/routing.py:961: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  if isinstance(p, ast.Str) and isinstance(ret[-1], ast.Str):
+ 
+2026-01-23 20:23:56,201 125907 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/site-packages/werkzeug/routing.py:962: DeprecationWarning: Attribute s is deprecated and will be removed in Python 3.14; use value instead
+  ret[-1] = ast.Str(ret[-1].s + p.s)
+ 
+2026-01-23 20:23:56,201 125907 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/site-packages/werkzeug/routing.py:962: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ret[-1] = ast.Str(ret[-1].s + p.s)
+ 
+2026-01-23 20:23:56,320 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:23:56] "GET / HTTP/1.1" 303 - 17 0.025 0.331
+2026-01-23 20:23:58,336 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:23:58,339 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:23:58] "GET /web HTTP/1.1" 303 - 1 0.001 0.005
+2026-01-23 20:24:02,415 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:02,513 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:642: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Str('last_path_node')),
+ 
+2026-01-23 20:24:02,513 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:644: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  value=ast.Str(path)
+ 
+2026-01-23 20:24:02,513 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1074: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body.append(self._append(ast.Str(pycompat.to_text(el.text))))
+ 
+2026-01-23 20:24:02,516 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:985: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body = [self._append(ast.Str(u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(pycompat.to_text(value))) for name, value in extra_attrib.items()]))))]
+ 
+2026-01-23 20:24:02,516 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:874: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  nodes.append((key, ast.Str(value)))
+ 
+2026-01-23 20:24:02,516 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:70: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  args=[ast.Str(node.id)], keywords=[],
+ 
+2026-01-23 20:24:02,517 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:932: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Str(item[0])),
+ 
+2026-01-23 20:24:02,518 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:954: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  value=ast.Str(el.tag))
+ 
+2026-01-23 20:24:02,519 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:753: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u' ')),
+ 
+2026-01-23 20:24:02,519 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:755: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'="')),
+ 
+2026-01-23 20:24:02,520 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:765: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'"')),
+ 
+2026-01-23 20:24:02,521 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:988: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body.append(self._append(ast.Str(u'/>')))
+ 
+2026-01-23 20:24:02,521 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1174: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return el.tail is not None and [self._append(ast.Str(pycompat.to_text(el.tail)))] or []
+ 
+2026-01-23 20:24:02,522 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:858: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return [self._append(ast.Str(tag + '>'))] + content + [self._append(ast.Str('</%s>' % el_tag))]
+ 
+2026-01-23 20:24:02,525 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1722: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  elts.append(ast.Str(literal if isinstance(literal, str) else literal.decode('utf-8')))
+ 
+2026-01-23 20:24:02,531 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:991: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body.append(self._append(ast.Str(u'>')))
+ 
+2026-01-23 20:24:02,531 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:993: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body.append(self._append(ast.Str(u'</%s>' % el_tag)))
+ 
+2026-01-23 20:24:02,550 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1730: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  elts.append(ast.Str(literal if isinstance(literal, str) else literal.decode('utf-8')))
+ 
+2026-01-23 20:24:02,553 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1459: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Num(0)),
+ 
+2026-01-23 20:24:02,553 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1606: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  keys=[ast.Str(s='caller_template'), ast.Str(s='last_path_node')],
+ 
+2026-01-23 20:24:02,553 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1608: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(s=str(options.get('template'))),
+ 
+2026-01-23 20:24:02,555 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1609: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(s=str(options['root'].getpath(el))),
+ 
+2026-01-23 20:24:02,617 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1025: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  varset = self._values_var(ast.Str(varname), ctx=ast.Store())
+ 
+2026-01-23 20:24:02,617 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1067: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  targets=[self._values_var(ast.Str(varname), ctx=ast.Store())],
+ 
+2026-01-23 20:24:02,621 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1694: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  value=ast.Str(u''),
+ 
+2026-01-23 20:24:02,623 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1705: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  args=[ast.Num(0), ast.List(elts=[], ctx=ast.Load())], keywords=[],
+ 
+2026-01-23 20:24:02,687 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:856: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return [self._append(ast.Str(tag + '/>'))] + content
+ 
+2026-01-23 20:24:02,693 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:201: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(el.get('t-call-assets')),
+ 
+2026-01-23 20:24:02,695 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:213: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  args=[ast.Str('debug')],
+ 
+2026-01-23 20:24:02,695 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:242: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body=[self._append(ast.Str(sep))],
+ 
+2026-01-23 20:24:02,696 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:245: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'<')),
+ 
+2026-01-23 20:24:02,696 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:264: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body=[self._append(ast.Str(u'/>'))],
+ 
+2026-01-23 20:24:02,696 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:266: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'>')),
+ 
+2026-01-23 20:24:02,696 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:272: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'</')),
+ 
+2026-01-23 20:24:02,698 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:274: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'>')),
+ 
+2026-01-23 20:24:02,705 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1471: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Num(0)),
+ 
+2026-01-23 20:24:02,717 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1323: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(field_name),
+ 
+2026-01-23 20:24:02,717 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1324: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(expression),
+ 
+2026-01-23 20:24:02,719 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1325: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(node_name),
+ 
+2026-01-23 20:24:02,720 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1368: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  value=ast.Str(u''),
+ 
+2026-01-23 20:24:02,864 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:898: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(el.tag),
+ 
+2026-01-23 20:24:03,329 125907 WARNING odoo14 odoo.addons.base.models.assetsbundle: Could not execute command 'sassc'This error occured while compiling the bundle 'web.assets_common' containing:
+    - /web/static/lib/bootstrap/scss/_functions.scss
+    - /web/static/lib/bootstrap/scss/_mixins.scss
+    - /web/static/src/scss/bs_mixins_overrides.scss
+    - /web/static/src/scss/utils.scss
+    - /web/static/src/scss/primary_variables.scss
+    - /web_editor/static/src/scss/web_editor.variables.scss
+    - /web_editor/static/src/scss/secondary_variables.scss
+    - /web/static/src/scss/secondary_variables.scss
+    - /web/static/lib/bootstrap/scss/_variables.scss
+    - /web/static/lib/tempusdominus/tempusdominus.scss
+    - /web/static/src/scss/fonts.scss
+    - /web/static/src/scss/ui.scss
+    - /web/static/src/scss/ui_extra.scss
+    - /web/static/src/scss/navbar.scss
+    - /web/static/src/scss/mimetypes.scss
+    - /web/static/src/scss/modal.scss
+    - /web/static/src/scss/animation.scss
+    - /web/static/src/scss/rainbow.scss
+    - /web/static/src/scss/datepicker.scss
+    - /web/static/src/scss/daterangepicker.scss
+    - /web/static/src/scss/banner.scss
+    - /web/static/src/scss/colorpicker.scss
+    - /web/static/src/scss/popover.scss
+    - /web/static/src/scss/translation_dialog.scss
+    - /web/static/src/scss/keyboard.scss
+    - /web/static/src/scss/name_and_signature.scss
+    - /web/static/src/scss/web.zoomodoo.scss
+    - /web/static/src/scss/color_picker.scss
+    - /web/static/src/scss/fontawesome_overridden.scss
+    - /web_tour/static/src/scss/tip.scss
+    - /web_tour/static/src/scss/keyframes.scss 
+2026-01-23 20:24:03,615 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:642: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Str('last_path_node')),
+ 
+2026-01-23 20:24:03,615 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:644: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  value=ast.Str(path)
+ 
+2026-01-23 20:24:03,615 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1074: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body.append(self._append(ast.Str(pycompat.to_text(el.text))))
+ 
+2026-01-23 20:24:03,617 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1471: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Num(0)),
+ 
+2026-01-23 20:24:03,619 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1606: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  keys=[ast.Str(s='caller_template'), ast.Str(s='last_path_node')],
+ 
+2026-01-23 20:24:03,619 125907 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/ast.py:587: DeprecationWarning: Attribute s is deprecated and will be removed in Python 3.14; use value instead
+  return Constant(*args, **kwargs)
+ 
+2026-01-23 20:24:03,624 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1608: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(s=str(options.get('template'))),
+ 
+2026-01-23 20:24:03,624 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1609: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(s=str(options['root'].getpath(el))),
+ 
+2026-01-23 20:24:03,624 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1730: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  elts.append(ast.Str(literal if isinstance(literal, str) else literal.decode('utf-8')))
+ 
+2026-01-23 20:24:03,624 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1174: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return el.tail is not None and [self._append(ast.Str(pycompat.to_text(el.tail)))] or []
+ 
+2026-01-23 20:24:03,624 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1459: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Num(0)),
+ 
+2026-01-23 20:24:03,625 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:856: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return [self._append(ast.Str(tag + '/>'))] + content
+ 
+2026-01-23 20:24:03,629 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:858: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return [self._append(ast.Str(tag + '>'))] + content + [self._append(ast.Str('</%s>' % el_tag))]
+ 
+2026-01-23 20:24:03,748 125907 WARNING odoo14 odoo.addons.base.models.assetsbundle: Could not execute command 'sassc'This error occured while compiling the bundle 'web.assets_frontend' containing:
+    - /web/static/lib/bootstrap/scss/_functions.scss
+    - /web/static/lib/bootstrap/scss/_mixins.scss
+    - /web/static/src/scss/bs_mixins_overrides.scss
+    - /web/static/src/scss/utils.scss
+    - /web/static/src/scss/primary_variables.scss
+    - /web_editor/static/src/scss/web_editor.variables.scss
+    - /web_editor/static/src/scss/secondary_variables.scss
+    - /web/static/src/scss/secondary_variables.scss
+    - /web_editor/static/src/scss/bootstrap_overridden.scss
+    - /web/static/src/scss/bootstrap_overridden_frontend.scss
+    - /web/static/lib/bootstrap/scss/_variables.scss
+    - /web/static/src/scss/import_bootstrap.scss
+    - /web/static/src/scss/bootstrap_review.scss
+    - /web/static/src/scss/base_frontend.scss
+    - /web/static/src/scss/lazyloader.scss
+    - /web/static/src/scss/navbar_mobile.scss
+    - /web/static/src/scss/notification.scss
+    - /web_editor/static/src/scss/web_editor.common.scss
+    - /web_editor/static/src/scss/web_editor.frontend.scss 
+2026-01-23 20:24:03,814 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:642: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Str('last_path_node')),
+ 
+2026-01-23 20:24:03,816 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:644: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  value=ast.Str(path)
+ 
+2026-01-23 20:24:03,817 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1074: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body.append(self._append(ast.Str(pycompat.to_text(el.text))))
+ 
+2026-01-23 20:24:03,817 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1471: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Num(0)),
+ 
+2026-01-23 20:24:03,819 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1606: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  keys=[ast.Str(s='caller_template'), ast.Str(s='last_path_node')],
+ 
+2026-01-23 20:24:03,819 125907 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/ast.py:587: DeprecationWarning: Attribute s is deprecated and will be removed in Python 3.14; use value instead
+  return Constant(*args, **kwargs)
+ 
+2026-01-23 20:24:03,820 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1608: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(s=str(options.get('template'))),
+ 
+2026-01-23 20:24:03,820 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1609: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(s=str(options['root'].getpath(el))),
+ 
+2026-01-23 20:24:03,820 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1730: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  elts.append(ast.Str(literal if isinstance(literal, str) else literal.decode('utf-8')))
+ 
+2026-01-23 20:24:03,820 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1174: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return el.tail is not None and [self._append(ast.Str(pycompat.to_text(el.tail)))] or []
+ 
+2026-01-23 20:24:03,874 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:70: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  args=[ast.Str(node.id)], keywords=[],
+ 
+2026-01-23 20:24:03,874 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:201: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ast.Str(el.get('t-call-assets')),
+ 
+2026-01-23 20:24:03,874 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:213: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  args=[ast.Str('debug')],
+ 
+2026-01-23 20:24:03,874 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:242: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body=[self._append(ast.Str(sep))],
+ 
+2026-01-23 20:24:03,881 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:245: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'<')),
+ 
+2026-01-23 20:24:03,882 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:753: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u' ')),
+ 
+2026-01-23 20:24:03,882 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:755: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'="')),
+ 
+2026-01-23 20:24:03,882 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:765: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'"')),
+ 
+2026-01-23 20:24:03,882 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:264: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  body=[self._append(ast.Str(u'/>'))],
+ 
+2026-01-23 20:24:03,882 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:266: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'>')),
+ 
+2026-01-23 20:24:03,882 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:272: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'</')),
+ 
+2026-01-23 20:24:03,882 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_qweb.py:274: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  self._append(ast.Str(u'>')),
+ 
+2026-01-23 20:24:03,918 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:856: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return [self._append(ast.Str(tag + '/>'))] + content
+ 
+2026-01-23 20:24:03,924 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:858: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  return [self._append(ast.Str(tag + '>'))] + content + [self._append(ast.Str('</%s>' % el_tag))]
+ 
+2026-01-23 20:24:04,089 125907 WARNING odoo14 py.warnings: /workspaces/odoo/odoo/addons/base/models/qweb.py:1459: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  slice=ast.Index(ast.Num(0)),
+ 
+2026-01-23 20:24:04,127 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:04] "GET /web/login HTTP/1.1" 200 - 180 0.538 1.181
+2026-01-23 20:24:05,016 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:05,045 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:05,045 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:05] "GET /web/content/28-5789b44/web.assets_common_minimal_js.js HTTP/1.1" 200 - 5 0.009 0.023
+2026-01-23 20:24:05,050 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:05] "GET /web/content/29-7890e6d/web.assets_frontend_minimal_js.js HTTP/1.1" 200 - 3 0.002 0.017
+2026-01-23 20:24:05,491 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:05,494 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:05] "GET /web/binary/company_logo HTTP/1.1" 200 - 2 0.001 0.004
+2026-01-23 20:24:05,700 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:05,701 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:05] "GET / HTTP/1.1" 303 - 1 0.000 0.002
+2026-01-23 20:24:05,895 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:05,903 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:05] "GET /web/content/29-7890e6d/web.assets_frontend_minimal_js.js HTTP/1.1" 200 - 3 0.004 0.007
+2026-01-23 20:24:06,059 125907 WARNING ? py.warnings: /home/codespace/.python/current/lib/python3.12/site-packages/werkzeug/middleware/shared_data.py:141: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
+  datetime.utcfromtimestamp(os.path.getmtime(filename)),
+ 
+2026-01-23 20:24:06,061 125907 INFO ? werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:06] "GET /web/static/lib/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0 HTTP/1.1" 200 - - - -
+2026-01-23 20:24:06,075 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:06,082 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:06] "GET /web/content/28-5789b44/web.assets_common_minimal_js.js HTTP/1.1" 200 - 3 0.002 0.007
+2026-01-23 20:24:06,179 125907 INFO ? werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:06] "GET /web/static/src/img/favicon.ico HTTP/1.1" 200 - - - -
+2026-01-23 20:24:07,369 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:07,381 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:07] "GET /web/content/30-ac22524/web.assets_common_lazy.js HTTP/1.1" 200 - 3 0.001 0.012
+2026-01-23 20:24:07,441 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:07,443 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:07] "GET /web HTTP/1.1" 303 - 1 0.000 0.003
+2026-01-23 20:24:07,916 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:07,930 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:07] "GET /web/login HTTP/1.1" 200 - 5 0.003 0.012
+2026-01-23 20:24:09,715 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:09,733 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:09] "GET /web/content/30-ac22524/web.assets_common_lazy.js HTTP/1.1" 200 - 3 0.001 0.018
+2026-01-23 20:24:09,873 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:09,879 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:09] "GET /web/content/31-3b38af0/web.assets_frontend_lazy.js HTTP/1.1" 200 - 3 0.002 0.006
+2026-01-23 20:24:10,603 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:10,612 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:10] "GET /web/webclient/translations/1769199850292?mods=&lang= HTTP/1.1" 200 - 9 0.005 0.006
+2026-01-23 20:24:10,662 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:10,668 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:10] "GET /web/content/31-3b38af0/web.assets_frontend_lazy.js HTTP/1.1" 200 - 3 0.002 0.006
+2026-01-23 20:24:10,756 125907 INFO ? werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:10] "GET /web/static/src/xml/dialog.xml HTTP/1.1" 200 - - - -
+2026-01-23 20:24:11,985 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:11,986 125907 DEBUG odoo14 odoo.addons.web.controllers.main: No moment locale for code en-us 
+2026-01-23 20:24:11,987 125907 DEBUG odoo14 odoo.addons.web.controllers.main: No moment locale for code en 
+2026-01-23 20:24:11,987 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:11] "GET /web/webclient/locale/en_US HTTP/1.1" 200 - 1 0.001 0.004
+2026-01-23 20:24:12,215 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:12,221 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:12] "GET /web/webclient/translations/1769199850293?mods=&lang= HTTP/1.1" 200 - 6 0.004 0.004
+2026-01-23 20:24:16,375 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:24:16,376 125907 DEBUG odoo14 odoo.addons.web.controllers.main: No moment locale for code en-us 
+2026-01-23 20:24:16,377 125907 DEBUG odoo14 odoo.addons.web.controllers.main: No moment locale for code en 
+2026-01-23 20:24:16,378 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:24:16] "GET /web/webclient/locale/en_US HTTP/1.1" 200 - 1 0.001 0.004
+2026-01-23 20:24:17,386 125907 DEBUG ? odoo.service.server: cron0 polling for jobs 
+2026-01-23 20:24:18,386 125907 DEBUG ? odoo.service.server: cron1 polling for jobs 
+2026-01-23 20:25:17,389 125907 DEBUG ? odoo.service.server: cron0 polling for jobs 
+2026-01-23 20:25:19,389 125907 DEBUG ? odoo.service.server: cron1 polling for jobs 
+2026-01-23 20:26:17,392 125907 DEBUG ? odoo.service.server: cron0 polling for jobs 
+2026-01-23 20:26:20,392 125907 DEBUG ? odoo.service.server: cron1 polling for jobs 
+2026-01-23 20:26:49,500 129200 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.request:INFO" 
+2026-01-23 20:26:49,500 129200 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.response:INFO" 
+2026-01-23 20:26:49,500 129200 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-01-23 20:26:49,500 129200 DEBUG ? odoo.netsvc: logger level set: "odoo:DEBUG" 
+2026-01-23 20:26:49,501 129200 DEBUG ? odoo.netsvc: logger level set: "odoo.sql_db:INFO" 
+2026-01-23 20:26:49,501 129200 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-01-23 20:26:49,501 129200 INFO ? odoo: Odoo version 14.0 
+2026-01-23 20:26:49,501 129200 INFO ? odoo: Using configuration file at /workspaces/odoo/odoo.conf 
+2026-01-23 20:26:49,501 129200 INFO ? odoo: addons paths: ['/workspaces/odoo/odoo/addons', '/home/codespace/.local/share/Odoo/addons/14.0', '/workspaces/odoo/addons', '/workspaces/odoo/odoo-custom-addons'] 
+2026-01-23 20:26:49,501 129200 INFO ? odoo: database: odoo14@127.0.0.1:5433 
+2026-01-23 20:26:49,695 129200 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltopdf to print a pdf version of the reports. 
+2026-01-23 20:26:49,819 129200 WARNING ? odoo.addons.base.models.res_currency: The num2words python library is not installed, amount-to-text features won't be fully available. 
+2026-01-23 20:26:49,832 129200 DEBUG ? odoo.service.server: Setting signal handlers 
+2026-01-23 20:26:49,837 129200 DEBUG ? odoo.service.server: cron0 started! 
+2026-01-23 20:26:49,840 129200 DEBUG ? odoo.service.server: cron1 started! 
+2026-01-23 20:27:02,306 125907 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 20:27:02,319 125907 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 20:27:02] "HEAD /web/login HTTP/1.1" 200 - 6 0.005 0.019
+2026-01-23 20:27:09,865 125907 INFO ? odoo.service.server: Initiating shutdown 
+2026-01-23 20:27:09,865 129200 INFO ? odoo.service.server: Initiating shutdown 
+2026-01-23 20:27:09,866 129200 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-01-23 20:27:09,866 129200 DEBUG ? odoo.service.server: current thread: <_MainThread(MainThread, started 135227282077504)> 
+2026-01-23 20:27:09,866 129200 DEBUG ? odoo.service.server: process <_MainThread(MainThread, started 135227282077504)> (False) 
+2026-01-23 20:27:09,866 125907 INFO ? odoo.service.server: Hit CTRL-C again or send a second signal to force the shutdown. 
+2026-01-23 20:27:09,866 129200 DEBUG ? odoo.service.server: process <Thread(odoo.service.cron.cron0, started daemon 135227168163520)> (True) 
+2026-01-23 20:27:09,866 129200 DEBUG ? odoo.service.server: process <Thread(odoo.service.cron.cron1, started daemon 135227159770816)> (True) 
+2026-01-23 20:27:09,866 129200 DEBUG ? odoo.service.server: -- 
+2026-01-23 20:27:10,311 125907 DEBUG ? odoo.service.server: current thread: <_MainThread(MainThread, started 134876502525760)> 
+2026-01-23 20:27:10,312 125907 DEBUG ? odoo.service.server: process <_MainThread(MainThread, started 134876502525760)> (False) 
+2026-01-23 20:27:10,312 125907 DEBUG ? odoo.service.server: process <Thread(odoo.service.cron.cron0, started daemon 134876389082816)> (True) 
+2026-01-23 20:27:10,314 125907 DEBUG ? odoo.service.server: process <Thread(odoo.service.cron.cron1, started daemon 134876380690112)> (True) 
+2026-01-23 20:27:10,315 125907 INFO ? odoo.sql_db: ConnectionPool(used=0/count=0/max=64): Closed 2 connections  
+2026-01-23 20:27:10,315 125907 DEBUG ? odoo.service.server: -- 

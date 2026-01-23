@@ -59,13 +59,16 @@ _BLACKLIST = set(to_opcodes([
 _CONST_OPCODES = set(to_opcodes([
     # stack manipulations
     'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP', 'DUP_TOP_TWO',
+    'COPY',  # added in 3.11
     'LOAD_CONST',
     'RETURN_VALUE', # return the result of the literal/expr evaluation
+    'RETURN_CONST', # added in 3.12
     # literal collections
     'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE', 'BUILD_SET',
     # 3.6: literal map with constant keys https://bugs.python.org/issue27140
     'BUILD_CONST_KEY_MAP',
     'LIST_EXTEND', 'SET_UPDATE',
+    'RESUME',  # added in 3.11
 ])) - _BLACKLIST
 
 # operations which are both binary and inplace, same order as in doc'
@@ -77,7 +80,7 @@ _operations = [
 # operations on literal values
 _EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
     'UNARY_POSITIVE', 'UNARY_NEGATIVE', 'UNARY_NOT', 'UNARY_INVERT',
-    *('BINARY_' + op for op in _operations), 'BINARY_SUBSCR',
+    *('BINARY_' + op for op in _operations), 'BINARY_SUBSCR', 'BINARY_OP',
     *('INPLACE_' + op for op in _operations),
     'BUILD_SLICE',
     # comprehensions
@@ -86,10 +89,15 @@ _EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
     # specialised comparisons
     'IS_OP', 'CONTAINS_OP',
     'DICT_MERGE', 'DICT_UPDATE',
+    'RESUME',  # added in 3.11
 ])) - _BLACKLIST
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'GEN_START',  # added in 3.10
+    'RESUME',     # added in 3.11
+    'PUSH_NULL',  # added in 3.11
+    'CALL',       # added in 3.11 (replaces CALL_FUNCTION*)
+    'KW_NAMES',   # added in 3.11
     'POP_BLOCK', 'POP_EXCEPT',
 
     # note: removed in 3.8

@@ -1,0 +1,969 @@
+2026-01-23 19:24:20,013 58241 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.request:INFO" 
+2026-01-23 19:24:20,014 58241 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.response:INFO" 
+2026-01-23 19:24:20,014 58241 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-01-23 19:24:20,015 58241 DEBUG ? odoo.netsvc: logger level set: "odoo:DEBUG" 
+2026-01-23 19:24:20,015 58241 DEBUG ? odoo.netsvc: logger level set: "odoo.sql_db:INFO" 
+2026-01-23 19:24:20,015 58241 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-01-23 19:24:20,015 58241 INFO ? odoo: Odoo version 14.0 
+2026-01-23 19:24:20,015 58241 INFO ? odoo: Using configuration file at /workspaces/odoo/odoo.conf 
+2026-01-23 19:24:20,015 58241 INFO ? odoo: addons paths: ['/workspaces/odoo/odoo/addons', '/home/codespace/.local/share/Odoo/addons/14.0', '/workspaces/odoo/addons', '/workspaces/odoo/odoo-custom-addons'] 
+2026-01-23 19:24:20,016 58241 INFO ? odoo: database: odoo14@127.0.0.1:5433 
+2026-01-23 19:24:20,301 58241 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltopdf to print a pdf version of the reports. 
+2026-01-23 19:24:20,507 58241 WARNING ? odoo.addons.base.models.res_currency: The num2words python library is not installed, amount-to-text features won't be fully available. 
+2026-01-23 19:24:20,554 58241 DEBUG ? odoo.service.server: Setting signal handlers 
+2026-01-23 19:24:20,598 58241 DEBUG ? odoo.service.server: cron0 started! 
+2026-01-23 19:24:20,628 58241 INFO ? odoo.service.server: HTTP service (werkzeug) running on localhost:8069 
+2026-01-23 19:24:20,645 58241 DEBUG ? odoo.service.server: cron1 started! 
+2026-01-23 19:24:23,639 58548 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.request:INFO" 
+2026-01-23 19:24:23,639 58548 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.response:INFO" 
+2026-01-23 19:24:23,639 58548 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-01-23 19:24:23,640 58548 DEBUG ? odoo.netsvc: logger level set: "odoo:DEBUG" 
+2026-01-23 19:24:23,640 58548 DEBUG ? odoo.netsvc: logger level set: "odoo.sql_db:INFO" 
+2026-01-23 19:24:23,640 58548 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-01-23 19:24:23,640 58548 INFO ? odoo: Odoo version 14.0 
+2026-01-23 19:24:23,640 58548 INFO ? odoo: Using configuration file at /workspaces/odoo/odoo.conf 
+2026-01-23 19:24:23,640 58548 INFO ? odoo: addons paths: ['/workspaces/odoo/odoo/addons', '/home/codespace/.local/share/Odoo/addons/14.0', '/workspaces/odoo/addons', '/workspaces/odoo/odoo-custom-addons'] 
+2026-01-23 19:24:23,641 58548 INFO ? odoo: database: odoo14@127.0.0.1:5433 
+2026-01-23 19:24:23,923 58548 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltopdf to print a pdf version of the reports. 
+2026-01-23 19:24:24,095 58548 WARNING ? odoo.addons.base.models.res_currency: The num2words python library is not installed, amount-to-text features won't be fully available. 
+2026-01-23 19:24:24,114 58548 DEBUG ? odoo.service.server: Setting signal handlers 
+2026-01-23 19:24:24,126 58548 DEBUG ? odoo.service.server: cron0 started! 
+2026-01-23 19:24:24,130 58548 DEBUG ? odoo.service.server: cron1 started! 
+2026-01-23 19:24:41,116 58241 DEBUG ? odoo.http: Loading base 
+2026-01-23 19:24:41,117 58241 DEBUG ? odoo.http: Loading test_apikeys 
+2026-01-23 19:24:41,118 58241 DEBUG ? odoo.http: Loading test_assetsbundle 
+2026-01-23 19:24:41,120 58241 DEBUG ? odoo.http: Loading test_exceptions 
+2026-01-23 19:24:41,122 58241 DEBUG ? odoo.http: Loading test_main_flows 
+2026-01-23 19:24:41,125 58241 DEBUG ? odoo.http: Loading test_new_api 
+2026-01-23 19:24:41,126 58241 DEBUG ? odoo.http: Loading test_translation_import 
+2026-01-23 19:24:41,135 58241 DEBUG ? odoo.http: Loading account 
+2026-01-23 19:24:41,144 58241 DEBUG ? odoo.http: Loading account_check_printing 
+2026-01-23 19:24:41,150 58241 DEBUG ? odoo.http: Loading adyen_platforms 
+2026-01-23 19:24:41,176 58241 DEBUG ? odoo.http: Loading auth_oauth 
+2026-01-23 19:24:41,183 58241 DEBUG ? odoo.http: Loading auth_password_policy 
+2026-01-23 19:24:41,195 58241 DEBUG ? odoo.http: Loading auth_password_policy_portal 
+2026-01-23 19:24:41,202 58241 DEBUG ? odoo.http: Loading auth_password_policy_signup 
+2026-01-23 19:24:41,206 58241 DEBUG ? odoo.http: Loading auth_signup 
+2026-01-23 19:24:41,217 58241 DEBUG ? odoo.http: Loading auth_totp 
+2026-01-23 19:24:41,224 58241 DEBUG ? odoo.http: Loading auth_totp_portal 
+2026-01-23 19:24:41,227 58241 DEBUG ? odoo.http: Loading barcodes 
+2026-01-23 19:24:41,231 58241 DEBUG ? odoo.http: Loading base_automation 
+2026-01-23 19:24:41,246 58241 DEBUG ? odoo.http: Loading base_iban 
+2026-01-23 19:24:41,248 58241 DEBUG ? odoo.http: Loading base_import 
+2026-01-23 19:24:41,252 58241 DEBUG ? odoo.http: Loading base_setup 
+2026-01-23 19:24:41,256 58241 DEBUG ? odoo.http: Loading board 
+2026-01-23 19:24:41,262 58241 DEBUG ? odoo.http: Loading bus 
+2026-01-23 19:24:41,263 58241 DEBUG ? odoo.http: Loading calendar 
+2026-01-23 19:24:41,267 58241 DEBUG ? odoo.http: Loading contacts 
+2026-01-23 19:24:41,268 58241 DEBUG ? odoo.http: Loading crm 
+2026-01-23 19:24:41,269 58241 DEBUG ? odoo.http: Loading crm_iap_lead 
+2026-01-23 19:24:41,271 58241 DEBUG ? odoo.http: Loading digest 
+2026-01-23 19:24:41,275 58241 DEBUG ? odoo.http: Loading event 
+2026-01-23 19:24:41,277 58241 DEBUG ? odoo.http: Loading event_sale 
+2026-01-23 19:24:41,302 58241 DEBUG ? odoo.http: Loading fleet 
+2026-01-23 19:24:41,316 58241 DEBUG ? odoo.http: Loading gamification 
+2026-01-23 19:24:41,321 58241 DEBUG ? odoo.http: Loading google_calendar 
+2026-01-23 19:24:41,331 58241 DEBUG ? odoo.http: Loading google_drive 
+2026-01-23 19:24:41,333 58241 DEBUG ? odoo.http: Loading google_recaptcha 
+2026-01-23 19:24:41,337 58241 DEBUG ? odoo.http: Loading google_spreadsheet 
+2026-01-23 19:24:41,340 58241 DEBUG ? odoo.http: Loading hr 
+2026-01-23 19:24:41,342 58241 DEBUG ? odoo.http: Loading hr_attendance 
+2026-01-23 19:24:41,346 58241 DEBUG ? odoo.http: Loading hr_contract 
+2026-01-23 19:24:41,351 58241 DEBUG ? odoo.http: Loading hr_expense 
+2026-01-23 19:24:41,357 58241 DEBUG ? odoo.http: Loading hr_gamification 
+2026-01-23 19:24:41,358 58241 DEBUG ? odoo.http: Loading hr_holidays 
+2026-01-23 19:24:41,363 58241 DEBUG ? odoo.http: Loading hr_org_chart 
+2026-01-23 19:24:41,367 58241 DEBUG ? odoo.http: Loading hr_recruitment 
+2026-01-23 19:24:41,379 58241 DEBUG ? odoo.http: Loading hr_skills 
+2026-01-23 19:24:41,380 58241 DEBUG ? odoo.http: Loading hr_skills_slides 
+2026-01-23 19:24:41,381 58241 DEBUG ? odoo.http: Loading hr_skills_survey 
+2026-01-23 19:24:41,382 58241 DEBUG ? odoo.http: Loading hr_timesheet 
+2026-01-23 19:24:41,396 58241 DEBUG ? odoo.http: Loading hr_work_entry 
+2026-01-23 19:24:41,402 58241 DEBUG ? odoo.http: Loading http_routing 
+2026-01-23 19:24:41,405 58241 DEBUG ? odoo.http: Loading iap 
+2026-01-23 19:24:41,416 58241 DEBUG ? odoo.http: Loading im_livechat 
+2026-01-23 19:24:41,420 58241 DEBUG ? odoo.http: Loading l10n_ae 
+2026-01-23 19:24:41,430 58241 DEBUG ? odoo.http: Loading l10n_ar 
+2026-01-23 19:24:41,431 58241 DEBUG ? odoo.http: Loading l10n_ar_website_sale 
+2026-01-23 19:24:41,433 58241 DEBUG ? odoo.http: Loading l10n_at 
+2026-01-23 19:24:41,435 58241 DEBUG ? odoo.http: Loading l10n_au 
+2026-01-23 19:24:41,438 58241 DEBUG ? odoo.http: Loading l10n_be 
+2026-01-23 19:24:41,443 58241 DEBUG ? odoo.http: Loading l10n_bo 
+2026-01-23 19:24:41,443 58241 DEBUG ? odoo.http: Loading l10n_br 
+2026-01-23 19:24:41,446 58241 DEBUG ? odoo.http: Loading l10n_ca 
+2026-01-23 19:24:41,447 58241 DEBUG ? odoo.http: Loading l10n_ch 
+2026-01-23 19:24:41,450 58241 DEBUG ? odoo.http: Loading l10n_cl 
+2026-01-23 19:24:41,451 58241 DEBUG ? odoo.http: Loading l10n_cn 
+2026-01-23 19:24:41,452 58241 DEBUG ? odoo.http: Loading l10n_cn_city 
+2026-01-23 19:24:41,454 58241 DEBUG ? odoo.http: Loading l10n_co 
+2026-01-23 19:24:41,455 58241 DEBUG ? odoo.http: Loading l10n_co_pos 
+2026-01-23 19:24:41,458 58241 DEBUG ? odoo.http: Loading l10n_cr 
+2026-01-23 19:24:41,460 58241 DEBUG ? odoo.http: Loading l10n_cz 
+2026-01-23 19:24:41,461 58241 DEBUG ? odoo.http: Loading l10n_de 
+2026-01-23 19:24:41,462 58241 DEBUG ? odoo.http: Loading l10n_dk 
+2026-01-23 19:24:41,462 58241 DEBUG ? odoo.http: Loading l10n_do 
+2026-01-23 19:24:41,464 58241 DEBUG ? odoo.http: Loading l10n_dz 
+2026-01-23 19:24:41,465 58241 DEBUG ? odoo.http: Loading l10n_ec 
+2026-01-23 19:24:41,466 58241 DEBUG ? odoo.http: Loading l10n_es 
+2026-01-23 19:24:41,467 58241 DEBUG ? odoo.http: Loading l10n_et 
+2026-01-23 19:24:41,468 58241 DEBUG ? odoo.http: Loading l10n_fi 
+2026-01-23 19:24:41,468 58241 DEBUG ? odoo.http: Loading l10n_fi_sale 
+2026-01-23 19:24:41,469 58241 DEBUG ? odoo.http: Loading l10n_fr 
+2026-01-23 19:24:41,470 58241 DEBUG ? odoo.http: Loading l10n_fr_pos_cert 
+2026-01-23 19:24:41,471 58241 DEBUG ? odoo.http: Loading l10n_gcc_pos 
+2026-01-23 19:24:41,472 58241 DEBUG ? odoo.http: Loading l10n_generic_coa 
+2026-01-23 19:24:41,473 58241 DEBUG ? odoo.http: Loading l10n_gr 
+2026-01-23 19:24:41,475 58241 DEBUG ? odoo.http: Loading l10n_gt 
+2026-01-23 19:24:41,476 58241 DEBUG ? odoo.http: Loading l10n_hk 
+2026-01-23 19:24:41,477 58241 DEBUG ? odoo.http: Loading l10n_hn 
+2026-01-23 19:24:41,478 58241 DEBUG ? odoo.http: Loading l10n_hr 
+2026-01-23 19:24:41,480 58241 DEBUG ? odoo.http: Loading l10n_hu 
+2026-01-23 19:24:41,480 58241 DEBUG ? odoo.http: Loading l10n_id 
+2026-01-23 19:24:41,483 58241 DEBUG ? odoo.http: Loading l10n_ie 
+2026-01-23 19:24:41,488 58241 DEBUG ? odoo.http: Loading l10n_in 
+2026-01-23 19:24:41,490 58241 DEBUG ? odoo.http: Loading l10n_in_pos 
+2026-01-23 19:24:41,492 58241 DEBUG ? odoo.http: Loading l10n_it 
+2026-01-23 19:24:41,492 58241 DEBUG ? odoo.http: Loading l10n_jp 
+2026-01-23 19:24:41,494 58241 DEBUG ? odoo.http: Loading l10n_lt 
+2026-01-23 19:24:41,495 58241 DEBUG ? odoo.http: Loading l10n_lu 
+2026-01-23 19:24:41,496 58241 DEBUG ? odoo.http: Loading l10n_ma 
+2026-01-23 19:24:41,500 58241 DEBUG ? odoo.http: Loading l10n_mn 
+2026-01-23 19:24:41,504 58241 DEBUG ? odoo.http: Loading l10n_mx 
+2026-01-23 19:24:41,505 58241 DEBUG ? odoo.http: Loading l10n_nl 
+2026-01-23 19:24:41,506 58241 DEBUG ? odoo.http: Loading l10n_no 
+2026-01-23 19:24:41,507 58241 DEBUG ? odoo.http: Loading l10n_nz 
+2026-01-23 19:24:41,508 58241 DEBUG ? odoo.http: Loading l10n_pa 
+2026-01-23 19:24:41,510 58241 DEBUG ? odoo.http: Loading l10n_pe 
+2026-01-23 19:24:41,513 58241 DEBUG ? odoo.http: Loading l10n_pl 
+2026-01-23 19:24:41,513 58241 DEBUG ? odoo.http: Loading l10n_ro 
+2026-01-23 19:24:41,514 58241 DEBUG ? odoo.http: Loading l10n_sa 
+2026-01-23 19:24:41,516 58241 DEBUG ? odoo.http: Loading l10n_sa_pos 
+2026-01-23 19:24:41,517 58241 DEBUG ? odoo.http: Loading l10n_se 
+2026-01-23 19:24:41,518 58241 DEBUG ? odoo.http: Loading l10n_se_ocr 
+2026-01-23 19:24:41,520 58241 DEBUG ? odoo.http: Loading l10n_sg 
+2026-01-23 19:24:41,535 58241 DEBUG ? odoo.http: Loading l10n_si 
+2026-01-23 19:24:41,536 58241 DEBUG ? odoo.http: Loading l10n_sk 
+2026-01-23 19:24:41,540 58241 DEBUG ? odoo.http: Loading l10n_th 
+2026-01-23 19:24:41,543 58241 DEBUG ? odoo.http: Loading l10n_tr 
+2026-01-23 19:24:41,545 58241 DEBUG ? odoo.http: Loading l10n_ua 
+2026-01-23 19:24:41,547 58241 DEBUG ? odoo.http: Loading l10n_uk 
+2026-01-23 19:24:41,548 58241 DEBUG ? odoo.http: Loading l10n_us 
+2026-01-23 19:24:41,551 58241 DEBUG ? odoo.http: Loading l10n_uy 
+2026-01-23 19:24:41,555 58241 DEBUG ? odoo.http: Loading l10n_ve 
+2026-01-23 19:24:41,556 58241 DEBUG ? odoo.http: Loading l10n_vn 
+2026-01-23 19:24:41,558 58241 DEBUG ? odoo.http: Loading l10n_za 
+2026-01-23 19:24:41,562 58241 DEBUG ? odoo.http: Loading lunch 
+2026-01-23 19:24:41,568 58241 DEBUG ? odoo.http: Loading mail 
+2026-01-23 19:24:41,572 58241 DEBUG ? odoo.http: Loading mail_bot 
+2026-01-23 19:24:41,586 58241 DEBUG ? odoo.http: Loading maintenance 
+2026-01-23 19:24:41,594 58241 DEBUG ? odoo.http: Loading mass_mailing 
+2026-01-23 19:24:41,597 58241 DEBUG ? odoo.http: Loading mass_mailing_sms 
+2026-01-23 19:24:41,600 58241 DEBUG ? odoo.http: Loading membership 
+2026-01-23 19:24:41,607 58241 DEBUG ? odoo.http: Loading microsoft_calendar 
+2026-01-23 19:24:41,609 58241 DEBUG ? odoo.http: Loading mrp 
+2026-01-23 19:24:41,610 58241 DEBUG ? odoo.http: Loading note 
+2026-01-23 19:24:41,617 58241 DEBUG ? odoo.http: Loading odoo_referral 
+2026-01-23 19:24:41,617 58241 DEBUG ? odoo.http: Loading pad 
+2026-01-23 19:24:41,618 58241 DEBUG ? odoo.http: Loading pad_project 
+2026-01-23 19:24:41,621 58241 DEBUG ? odoo.http: Loading partner_autocomplete 
+2026-01-23 19:24:41,628 58241 DEBUG ? odoo.http: Loading payment 
+2026-01-23 19:24:41,630 58241 DEBUG ? odoo.http: Loading payment_adyen 
+2026-01-23 19:24:41,631 58241 DEBUG ? odoo.http: Loading payment_alipay 
+2026-01-23 19:24:41,636 58241 DEBUG ? odoo.http: Loading payment_authorize 
+2026-01-23 19:24:41,637 58241 DEBUG ? odoo.http: Loading payment_buckaroo 
+2026-01-23 19:24:41,638 58241 DEBUG ? odoo.http: Loading payment_ingenico 
+2026-01-23 19:24:41,641 58241 DEBUG ? odoo.http: Loading payment_odoo_by_adyen 
+2026-01-23 19:24:41,642 58241 DEBUG ? odoo.http: Loading payment_paypal 
+2026-01-23 19:24:41,646 58241 DEBUG ? odoo.http: Loading payment_payulatam 
+2026-01-23 19:24:41,648 58241 DEBUG ? odoo.http: Loading payment_payumoney 
+2026-01-23 19:24:41,649 58241 DEBUG ? odoo.http: Loading payment_sips 
+2026-01-23 19:24:41,656 58241 DEBUG ? odoo.http: Loading payment_stripe 
+2026-01-23 19:24:41,660 58241 DEBUG ? odoo.http: Loading payment_test 
+2026-01-23 19:24:41,661 58241 DEBUG ? odoo.http: Loading payment_transfer 
+2026-01-23 19:24:41,665 58241 DEBUG ? odoo.http: Loading point_of_sale 
+2026-01-23 19:24:41,670 58241 DEBUG ? odoo.http: Loading portal 
+2026-01-23 19:24:41,679 58241 DEBUG ? odoo.http: Loading portal_rating 
+2026-01-23 19:24:41,685 58241 DEBUG ? odoo.http: Loading pos_adyen 
+2026-01-23 19:24:41,688 58241 DEBUG ? odoo.http: Loading pos_cache 
+2026-01-23 19:24:41,689 58241 DEBUG ? odoo.http: Loading pos_discount 
+2026-01-23 19:24:41,690 58241 DEBUG ? odoo.http: Loading pos_epson_printer 
+2026-01-23 19:24:41,693 58241 DEBUG ? odoo.http: Loading pos_epson_printer_restaurant 
+2026-01-23 19:24:41,693 58241 DEBUG ? odoo.http: Loading pos_hr 
+2026-01-23 19:24:41,694 58241 DEBUG ? odoo.http: Loading pos_mercury 
+2026-01-23 19:24:41,699 58241 DEBUG ? odoo.http: Loading pos_restaurant 
+2026-01-23 19:24:41,702 58241 DEBUG ? odoo.http: Loading pos_restaurant_adyen 
+2026-01-23 19:24:41,703 58241 DEBUG ? odoo.http: Loading pos_six 
+2026-01-23 19:24:41,715 58241 DEBUG ? odoo.http: Loading product 
+2026-01-23 19:24:41,723 58241 DEBUG ? odoo.http: Loading product_email_template 
+2026-01-23 19:24:41,730 58241 DEBUG ? odoo.http: Loading product_expiry 
+2026-01-23 19:24:41,741 58241 DEBUG ? odoo.http: Loading product_matrix 
+2026-01-23 19:24:41,746 58241 DEBUG ? odoo.http: Loading project 
+2026-01-23 19:24:41,763 58241 DEBUG ? odoo.http: Loading purchase 
+2026-01-23 19:24:41,765 58241 DEBUG ? odoo.http: Loading purchase_product_matrix 
+2026-01-23 19:24:41,771 58241 DEBUG ? odoo.http: Loading purchase_stock 
+2026-01-23 19:24:41,776 58241 DEBUG ? odoo.http: Loading rating 
+2026-01-23 19:24:41,779 58241 DEBUG ? odoo.http: Loading repair 
+2026-01-23 19:24:41,782 58241 DEBUG ? odoo.http: Loading resource 
+2026-01-23 19:24:41,785 58241 DEBUG ? odoo.http: Loading sale 
+2026-01-23 19:24:41,790 58241 DEBUG ? odoo.http: Loading sale_expense 
+2026-01-23 19:24:41,793 58241 DEBUG ? odoo.http: Loading sale_management 
+2026-01-23 19:24:41,795 58241 DEBUG ? odoo.http: Loading sale_product_configurator 
+2026-01-23 19:24:41,803 58241 DEBUG ? odoo.http: Loading sale_product_matrix 
+2026-01-23 19:24:41,808 58241 DEBUG ? odoo.http: Loading sale_stock 
+2026-01-23 19:24:41,815 58241 DEBUG ? odoo.http: Loading sale_timesheet 
+2026-01-23 19:24:41,816 58241 DEBUG ? odoo.http: Loading sale_timesheet_edit 
+2026-01-23 19:24:41,822 58241 DEBUG ? odoo.http: Loading sales_team 
+2026-01-23 19:24:41,826 58241 DEBUG ? odoo.http: Loading sms 
+2026-01-23 19:24:41,830 58241 DEBUG ? odoo.http: Loading snailmail 
+2026-01-23 19:24:41,833 58241 DEBUG ? odoo.http: Loading snailmail_account 
+2026-01-23 19:24:41,836 58241 DEBUG ? odoo.http: Loading stock 
+2026-01-23 19:24:41,840 58241 DEBUG ? odoo.http: Loading survey 
+2026-01-23 19:24:41,842 58241 DEBUG ? odoo.http: Loading test_event_full 
+2026-01-23 19:24:41,849 58241 DEBUG ? odoo.http: Loading test_website 
+2026-01-23 19:24:41,856 58241 DEBUG ? odoo.http: Loading theme_default 
+2026-01-23 19:24:41,875 58241 DEBUG ? odoo.http: Loading transifex 
+2026-01-23 19:24:41,879 58241 DEBUG ? odoo.http: Loading utm 
+2026-01-23 19:24:41,880 58241 DEBUG ? odoo.http: Loading web 
+2026-01-23 19:24:41,884 58241 DEBUG ? odoo.http: Loading web_editor 
+2026-01-23 19:24:41,888 58241 DEBUG ? odoo.http: Loading web_kanban_gauge 
+2026-01-23 19:24:41,889 58241 DEBUG ? odoo.http: Loading web_tour 
+2026-01-23 19:24:41,891 58241 DEBUG ? odoo.http: Loading web_unsplash 
+2026-01-23 19:24:41,897 58241 DEBUG ? odoo.http: Loading website 
+2026-01-23 19:24:41,903 58241 DEBUG ? odoo.http: Loading website_blog 
+2026-01-23 19:24:41,918 58241 DEBUG ? odoo.http: Loading website_crm 
+2026-01-23 19:24:41,928 58241 DEBUG ? odoo.http: Loading website_crm_partner_assign 
+2026-01-23 19:24:41,938 58241 DEBUG ? odoo.http: Loading website_customer 
+2026-01-23 19:24:41,945 58241 DEBUG ? odoo.http: Loading website_event 
+2026-01-23 19:24:41,953 58241 DEBUG ? odoo.http: Loading website_event_meet 
+2026-01-23 19:24:41,962 58241 DEBUG ? odoo.http: Loading website_event_questions 
+2026-01-23 19:24:41,967 58241 DEBUG ? odoo.http: Loading website_event_sale 
+2026-01-23 19:24:41,969 58241 DEBUG ? odoo.http: Loading website_event_track 
+2026-01-23 19:24:41,972 58241 DEBUG ? odoo.http: Loading website_event_track_exhibitor 
+2026-01-23 19:24:41,979 58241 DEBUG ? odoo.http: Loading website_event_track_live 
+2026-01-23 19:24:41,980 58241 DEBUG ? odoo.http: Loading website_event_track_live_quiz 
+2026-01-23 19:24:41,980 58241 DEBUG ? odoo.http: Loading website_event_track_quiz 
+2026-01-23 19:24:41,983 58241 DEBUG ? odoo.http: Loading website_form 
+2026-01-23 19:24:41,986 58241 DEBUG ? odoo.http: Loading website_form_project 
+2026-01-23 19:24:41,987 58241 DEBUG ? odoo.http: Loading website_forum 
+2026-01-23 19:24:41,990 58241 DEBUG ? odoo.http: Loading website_google_map 
+2026-01-23 19:24:41,991 58241 DEBUG ? odoo.http: Loading website_hr_recruitment 
+2026-01-23 19:24:41,997 58241 DEBUG ? odoo.http: Loading website_jitsi 
+2026-01-23 19:24:41,998 58241 DEBUG ? odoo.http: Loading website_links 
+2026-01-23 19:24:42,000 58241 DEBUG ? odoo.http: Loading website_livechat 
+2026-01-23 19:24:42,003 58241 DEBUG ? odoo.http: Loading website_mail 
+2026-01-23 19:24:42,004 58241 DEBUG ? odoo.http: Loading website_mail_channel 
+2026-01-23 19:24:42,008 58241 DEBUG ? odoo.http: Loading website_mass_mailing 
+2026-01-23 19:24:42,024 58241 DEBUG ? odoo.http: Loading website_membership 
+2026-01-23 19:24:42,027 58241 DEBUG ? odoo.http: Loading website_partner 
+2026-01-23 19:24:42,032 58241 DEBUG ? odoo.http: Loading website_payment 
+2026-01-23 19:24:42,033 58241 DEBUG ? odoo.http: Loading website_profile 
+2026-01-23 19:24:42,037 58241 DEBUG ? odoo.http: Loading website_sale 
+2026-01-23 19:24:42,061 58241 DEBUG ? odoo.http: Loading website_sale_comparison 
+2026-01-23 19:24:42,071 58241 DEBUG ? odoo.http: Loading website_sale_coupon 
+2026-01-23 19:24:42,072 58241 DEBUG ? odoo.http: Loading website_sale_coupon_delivery 
+2026-01-23 19:24:42,074 58241 DEBUG ? odoo.http: Loading website_sale_delivery 
+2026-01-23 19:24:42,079 58241 DEBUG ? odoo.http: Loading website_sale_digital 
+2026-01-23 19:24:42,083 58241 DEBUG ? odoo.http: Loading website_sale_management 
+2026-01-23 19:24:42,084 58241 DEBUG ? odoo.http: Loading website_sale_product_configurator 
+2026-01-23 19:24:42,087 58241 DEBUG ? odoo.http: Loading website_sale_slides 
+2026-01-23 19:24:42,092 58241 DEBUG ? odoo.http: Loading website_sale_stock 
+2026-01-23 19:24:42,093 58241 DEBUG ? odoo.http: Loading website_sale_wishlist 
+2026-01-23 19:24:42,095 58241 DEBUG ? odoo.http: Loading website_slides 
+2026-01-23 19:24:42,098 58241 DEBUG ? odoo.http: Loading website_slides_forum 
+2026-01-23 19:24:42,103 58241 DEBUG ? odoo.http: Loading website_slides_survey 
+2026-01-23 19:24:42,106 58241 DEBUG ? odoo.http: Loading website_twitter 
+2026-01-23 19:24:42,107 58241 DEBUG ? odoo.http: Loading hr_custom_theme 
+2026-01-23 19:24:42,107 58241 INFO ? odoo.http: HTTP Configuring static files 
+2026-01-23 19:24:42,109 58241 DEBUG ? odoo.http: HTTP sessions stored in: /home/codespace/.local/share/Odoo/sessions 
+2026-01-23 19:24:42,212 58241 DEBUG odoo14 odoo.modules.registry: Multiprocess load registry signaling: [Registry: 1] [Cache: 1] 
+2026-01-23 19:24:42,222 58241 ERROR odoo14 odoo.modules.loading: Database odoo14 not initialized, you can force it with `-i base` 
+2026-01-23 19:24:42,229 58241 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 19:24:42,231 58241 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 19:24:42] "GET / HTTP/1.1" 500 - 7 0.020 0.102
+2026-01-23 19:24:42,280 58241 ERROR odoo14 werkzeug: Error on request:
+Traceback (most recent call last):
+  File "/usr/local/python/3.12.1/lib/python3.12/site-packages/werkzeug/serving.py", line 323, in run_wsgi
+    execute(self.server.app)
+  File "/usr/local/python/3.12.1/lib/python3.12/site-packages/werkzeug/serving.py", line 312, in execute
+    application_iter = app(environ, start_response)
+  File "/workspaces/odoo/odoo/service/server.py", line 441, in app
+    return self.app(e, s)
+  File "/workspaces/odoo/odoo/service/wsgi_server.py", line 113, in application
+    return application_unproxied(environ, start_response)
+  File "/workspaces/odoo/odoo/service/wsgi_server.py", line 88, in application_unproxied
+    result = odoo.http.root(environ, start_response)
+  File "/workspaces/odoo/odoo/http.py", line 1341, in __call__
+    return self.dispatch(environ, start_response)
+  File "/workspaces/odoo/odoo/http.py", line 1307, in __call__
+    return self.app(environ, start_wrapped)
+  File "/usr/local/python/3.12.1/lib/python3.12/site-packages/werkzeug/middleware/shared_data.py", line 260, in __call__
+    return self.app(environ, start_response)
+  File "/workspaces/odoo/odoo/http.py", line 1514, in dispatch
+    ir_http = request.registry['ir.http']
+  File "/workspaces/odoo/odoo/modules/registry.py", line 177, in __getitem__
+    return self.models[model_name]
+KeyError: 'ir.http' - - -
+2026-01-23 19:32:07,264 77805 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.request:INFO" 
+2026-01-23 19:32:07,292 77805 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.response:INFO" 
+2026-01-23 19:32:07,293 77805 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-01-23 19:32:07,293 77805 DEBUG ? odoo.netsvc: logger level set: "odoo:DEBUG" 
+2026-01-23 19:32:07,293 77805 DEBUG ? odoo.netsvc: logger level set: "odoo.sql_db:INFO" 
+2026-01-23 19:32:07,293 77805 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-01-23 19:32:07,293 77805 INFO ? odoo: Odoo version 14.0 
+2026-01-23 19:32:07,294 77805 INFO ? odoo: Using configuration file at /workspaces/odoo/odoo.conf 
+2026-01-23 19:32:07,294 77805 INFO ? odoo: addons paths: ['/workspaces/odoo/odoo/addons', '/home/codespace/.local/share/Odoo/addons/14.0', '/workspaces/odoo/addons', '/workspaces/odoo/odoo-custom-addons'] 
+2026-01-23 19:32:07,294 77805 INFO ? odoo: database: odoo14@127.0.0.1:5433 
+2026-01-23 19:32:07,305 77805 WARNING ? py.warnings: /workspaces/odoo/addons/web/controllers/main.py:464: SyntaxWarning: invalid escape sequence '\ '
+  """
+ 
+2026-01-23 19:32:07,409 77805 WARNING ? py.warnings: /workspaces/odoo/odoo/addons/base/models/assetsbundle.py:106: SyntaxWarning: invalid escape sequence '\s'
+  rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
+ 
+2026-01-23 19:32:07,409 77805 WARNING ? py.warnings: /workspaces/odoo/odoo/addons/base/models/assetsbundle.py:107: SyntaxWarning: invalid escape sequence '\/'
+  rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
+ 
+2026-01-23 19:32:07,912 77805 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltopdf to print a pdf version of the reports. 
+2026-01-23 19:32:08,027 77805 WARNING ? py.warnings: /workspaces/odoo/odoo/addons/base/models/ir_http.py:347: SyntaxWarning: invalid escape sequence '\w'
+  url_match = re.match("^/(\w+)/(.+)$", record.url)
+ 
+2026-01-23 19:32:08,218 77805 WARNING ? py.warnings: /workspaces/odoo/odoo/addons/base/models/res_partner.py:833: SyntaxWarning: invalid escape sequence '\-'
+  where_clause_params += [re.sub('[^a-zA-Z0-9\-\.]+', '', search_name) or None]  # for vat
+ 
+2026-01-23 19:32:08,288 77805 WARNING ? py.warnings: /workspaces/odoo/odoo/addons/base/models/res_config.py:703: SyntaxWarning: invalid escape sequence '\J'
+  """
+ 
+2026-01-23 19:32:08,296 77805 WARNING ? odoo.addons.base.models.res_currency: The num2words python library is not installed, amount-to-text features won't be fully available. 
+2026-01-23 19:32:08,308 77805 WARNING ? py.warnings: /workspaces/odoo/odoo/addons/base/models/res_users.py:344: SyntaxWarning: invalid escape sequence '\$'
+  cr.execute("""
+ 
+2026-01-23 19:32:08,376 77805 DEBUG ? odoo.service.server: Setting signal handlers 
+2026-01-23 19:32:08,384 77805 DEBUG ? odoo.service.server: cron0 started! 
+2026-01-23 19:32:08,385 77805 DEBUG ? odoo.service.server: cron1 started! 
+2026-01-23 19:32:08,386 77805 INFO ? odoo.service.server: HTTP service (werkzeug) running on localhost:8069 
+2026-01-23 19:32:17,815 77805 DEBUG ? odoo.http: Loading base 
+2026-01-23 19:32:17,821 77805 DEBUG ? odoo.http: Loading test_apikeys 
+2026-01-23 19:32:17,823 77805 DEBUG ? odoo.http: Loading test_assetsbundle 
+2026-01-23 19:32:17,827 77805 DEBUG ? odoo.http: Loading test_exceptions 
+2026-01-23 19:32:17,831 77805 DEBUG ? odoo.http: Loading test_main_flows 
+2026-01-23 19:32:17,836 77805 DEBUG ? odoo.http: Loading test_new_api 
+2026-01-23 19:32:17,839 77805 DEBUG ? odoo.http: Loading test_translation_import 
+2026-01-23 19:32:17,851 77805 DEBUG ? odoo.http: Loading account 
+2026-01-23 19:32:17,878 77805 DEBUG ? odoo.http: Loading account_check_printing 
+2026-01-23 19:32:17,883 77805 DEBUG ? odoo.http: Loading adyen_platforms 
+2026-01-23 19:32:17,887 77805 DEBUG ? odoo.http: Loading auth_oauth 
+2026-01-23 19:32:17,891 77805 DEBUG ? odoo.http: Loading auth_password_policy 
+2026-01-23 19:32:17,924 77805 DEBUG ? odoo.http: Loading auth_password_policy_portal 
+2026-01-23 19:32:17,926 77805 DEBUG ? odoo.http: Loading auth_password_policy_signup 
+2026-01-23 19:32:17,926 77805 DEBUG ? odoo.http: Loading auth_signup 
+2026-01-23 19:32:17,930 77805 DEBUG ? odoo.http: Loading auth_totp 
+2026-01-23 19:32:17,931 77805 DEBUG ? odoo.http: Loading auth_totp_portal 
+2026-01-23 19:32:17,931 77805 DEBUG ? odoo.http: Loading barcodes 
+2026-01-23 19:32:17,933 77805 DEBUG ? odoo.http: Loading base_automation 
+2026-01-23 19:32:17,972 77805 DEBUG ? odoo.http: Loading base_iban 
+2026-01-23 19:32:17,973 77805 DEBUG ? odoo.http: Loading base_import 
+2026-01-23 19:32:17,975 77805 DEBUG ? odoo.http: Loading base_setup 
+2026-01-23 19:32:17,982 77805 DEBUG ? odoo.http: Loading board 
+2026-01-23 19:32:17,990 77805 DEBUG ? odoo.http: Loading bus 
+2026-01-23 19:32:17,991 77805 DEBUG ? odoo.http: Loading calendar 
+2026-01-23 19:32:18,020 77805 DEBUG ? odoo.http: Loading contacts 
+2026-01-23 19:32:18,024 77805 DEBUG ? odoo.http: Loading crm 
+2026-01-23 19:32:18,025 77805 DEBUG ? odoo.http: Loading crm_iap_lead 
+2026-01-23 19:32:18,027 77805 DEBUG ? odoo.http: Loading digest 
+2026-01-23 19:32:18,030 77805 DEBUG ? odoo.http: Loading event 
+2026-01-23 19:32:18,032 77805 DEBUG ? odoo.http: Loading event_sale 
+2026-01-23 19:32:18,034 77805 DEBUG ? odoo.http: Loading fleet 
+2026-01-23 19:32:18,070 77805 DEBUG ? odoo.http: Loading gamification 
+2026-01-23 19:32:18,071 77805 DEBUG ? odoo.http: Loading google_calendar 
+2026-01-23 19:32:18,074 77805 DEBUG ? odoo.http: Loading google_drive 
+2026-01-23 19:32:18,076 77805 DEBUG ? odoo.http: Loading google_recaptcha 
+2026-01-23 19:32:18,079 77805 DEBUG ? odoo.http: Loading google_spreadsheet 
+2026-01-23 19:32:18,080 77805 DEBUG ? odoo.http: Loading hr 
+2026-01-23 19:32:18,082 77805 DEBUG ? odoo.http: Loading hr_attendance 
+2026-01-23 19:32:18,113 77805 DEBUG ? odoo.http: Loading hr_contract 
+2026-01-23 19:32:18,116 77805 DEBUG ? odoo.http: Loading hr_expense 
+2026-01-23 19:32:18,118 77805 DEBUG ? odoo.http: Loading hr_gamification 
+2026-01-23 19:32:18,119 77805 DEBUG ? odoo.http: Loading hr_holidays 
+2026-01-23 19:32:18,122 77805 DEBUG ? odoo.http: Loading hr_org_chart 
+2026-01-23 19:32:18,124 77805 DEBUG ? odoo.http: Loading hr_recruitment 
+2026-01-23 19:32:18,178 77805 DEBUG ? odoo.http: Loading hr_skills 
+2026-01-23 19:32:18,181 77805 DEBUG ? odoo.http: Loading hr_skills_slides 
+2026-01-23 19:32:18,183 77805 DEBUG ? odoo.http: Loading hr_skills_survey 
+2026-01-23 19:32:18,185 77805 DEBUG ? odoo.http: Loading hr_timesheet 
+2026-01-23 19:32:18,189 77805 DEBUG ? odoo.http: Loading hr_work_entry 
+2026-01-23 19:32:18,191 77805 DEBUG ? odoo.http: Loading http_routing 
+2026-01-23 19:32:18,193 77805 DEBUG ? odoo.http: Loading iap 
+2026-01-23 19:32:18,222 77805 DEBUG ? odoo.http: Loading im_livechat 
+2026-01-23 19:32:18,225 77805 DEBUG ? odoo.http: Loading l10n_ae 
+2026-01-23 19:32:18,229 77805 DEBUG ? odoo.http: Loading l10n_ar 
+2026-01-23 19:32:18,231 77805 DEBUG ? odoo.http: Loading l10n_ar_website_sale 
+2026-01-23 19:32:18,231 77805 DEBUG ? odoo.http: Loading l10n_at 
+2026-01-23 19:32:18,233 77805 DEBUG ? odoo.http: Loading l10n_au 
+2026-01-23 19:32:18,268 77805 DEBUG ? odoo.http: Loading l10n_be 
+2026-01-23 19:32:18,270 77805 DEBUG ? odoo.http: Loading l10n_bo 
+2026-01-23 19:32:18,272 77805 DEBUG ? odoo.http: Loading l10n_br 
+2026-01-23 19:32:18,273 77805 DEBUG ? odoo.http: Loading l10n_ca 
+2026-01-23 19:32:18,274 77805 DEBUG ? odoo.http: Loading l10n_ch 
+2026-01-23 19:32:18,274 77805 DEBUG ? odoo.http: Loading l10n_cl 
+2026-01-23 19:32:18,277 77805 DEBUG ? odoo.http: Loading l10n_cn 
+2026-01-23 19:32:18,278 77805 DEBUG ? odoo.http: Loading l10n_cn_city 
+2026-01-23 19:32:18,279 77805 DEBUG ? odoo.http: Loading l10n_co 
+2026-01-23 19:32:18,280 77805 DEBUG ? odoo.http: Loading l10n_co_pos 
+2026-01-23 19:32:18,281 77805 DEBUG ? odoo.http: Loading l10n_cr 
+2026-01-23 19:32:18,281 77805 DEBUG ? odoo.http: Loading l10n_cz 
+2026-01-23 19:32:18,282 77805 DEBUG ? odoo.http: Loading l10n_de 
+2026-01-23 19:32:18,285 77805 DEBUG ? odoo.http: Loading l10n_dk 
+2026-01-23 19:32:18,286 77805 DEBUG ? odoo.http: Loading l10n_do 
+2026-01-23 19:32:18,287 77805 DEBUG ? odoo.http: Loading l10n_dz 
+2026-01-23 19:32:18,291 77805 DEBUG ? odoo.http: Loading l10n_ec 
+2026-01-23 19:32:18,291 77805 DEBUG ? odoo.http: Loading l10n_es 
+2026-01-23 19:32:18,293 77805 DEBUG ? odoo.http: Loading l10n_et 
+2026-01-23 19:32:18,294 77805 DEBUG ? odoo.http: Loading l10n_fi 
+2026-01-23 19:32:18,314 77805 DEBUG ? odoo.http: Loading l10n_fi_sale 
+2026-01-23 19:32:18,315 77805 DEBUG ? odoo.http: Loading l10n_fr 
+2026-01-23 19:32:18,316 77805 DEBUG ? odoo.http: Loading l10n_fr_pos_cert 
+2026-01-23 19:32:18,317 77805 DEBUG ? odoo.http: Loading l10n_gcc_pos 
+2026-01-23 19:32:18,318 77805 DEBUG ? odoo.http: Loading l10n_generic_coa 
+2026-01-23 19:32:18,319 77805 DEBUG ? odoo.http: Loading l10n_gr 
+2026-01-23 19:32:18,320 77805 DEBUG ? odoo.http: Loading l10n_gt 
+2026-01-23 19:32:18,320 77805 DEBUG ? odoo.http: Loading l10n_hk 
+2026-01-23 19:32:18,321 77805 DEBUG ? odoo.http: Loading l10n_hn 
+2026-01-23 19:32:18,322 77805 DEBUG ? odoo.http: Loading l10n_hr 
+2026-01-23 19:32:18,323 77805 DEBUG ? odoo.http: Loading l10n_hu 
+2026-01-23 19:32:18,323 77805 DEBUG ? odoo.http: Loading l10n_id 
+2026-01-23 19:32:18,324 77805 DEBUG ? odoo.http: Loading l10n_ie 
+2026-01-23 19:32:18,325 77805 DEBUG ? odoo.http: Loading l10n_in 
+2026-01-23 19:32:18,326 77805 DEBUG ? odoo.http: Loading l10n_in_pos 
+2026-01-23 19:32:18,327 77805 DEBUG ? odoo.http: Loading l10n_it 
+2026-01-23 19:32:18,331 77805 DEBUG ? odoo.http: Loading l10n_jp 
+2026-01-23 19:32:18,362 77805 DEBUG ? odoo.http: Loading l10n_lt 
+2026-01-23 19:32:18,363 77805 DEBUG ? odoo.http: Loading l10n_lu 
+2026-01-23 19:32:18,364 77805 DEBUG ? odoo.http: Loading l10n_ma 
+2026-01-23 19:32:18,365 77805 DEBUG ? odoo.http: Loading l10n_mn 
+2026-01-23 19:32:18,367 77805 DEBUG ? odoo.http: Loading l10n_mx 
+2026-01-23 19:32:18,368 77805 DEBUG ? odoo.http: Loading l10n_nl 
+2026-01-23 19:32:18,369 77805 DEBUG ? odoo.http: Loading l10n_no 
+2026-01-23 19:32:18,370 77805 DEBUG ? odoo.http: Loading l10n_nz 
+2026-01-23 19:32:18,370 77805 DEBUG ? odoo.http: Loading l10n_pa 
+2026-01-23 19:32:18,371 77805 DEBUG ? odoo.http: Loading l10n_pe 
+2026-01-23 19:32:18,426 77805 DEBUG ? odoo.http: Loading l10n_pl 
+2026-01-23 19:32:18,428 77805 DEBUG ? odoo.http: Loading l10n_ro 
+2026-01-23 19:32:18,429 77805 DEBUG ? odoo.http: Loading l10n_sa 
+2026-01-23 19:32:18,430 77805 DEBUG ? odoo.http: Loading l10n_sa_pos 
+2026-01-23 19:32:18,431 77805 DEBUG ? odoo.http: Loading l10n_se 
+2026-01-23 19:32:18,431 77805 DEBUG ? odoo.http: Loading l10n_se_ocr 
+2026-01-23 19:32:18,433 77805 DEBUG ? odoo.http: Loading l10n_sg 
+2026-01-23 19:32:18,436 77805 DEBUG ? odoo.http: Loading l10n_si 
+2026-01-23 19:32:18,438 77805 DEBUG ? odoo.http: Loading l10n_sk 
+2026-01-23 19:32:18,439 77805 DEBUG ? odoo.http: Loading l10n_th 
+2026-01-23 19:32:18,439 77805 DEBUG ? odoo.http: Loading l10n_tr 
+2026-01-23 19:32:18,440 77805 DEBUG ? odoo.http: Loading l10n_ua 
+2026-01-23 19:32:18,441 77805 DEBUG ? odoo.http: Loading l10n_uk 
+2026-01-23 19:32:18,442 77805 DEBUG ? odoo.http: Loading l10n_us 
+2026-01-23 19:32:18,443 77805 DEBUG ? odoo.http: Loading l10n_uy 
+2026-01-23 19:32:18,443 77805 DEBUG ? odoo.http: Loading l10n_ve 
+2026-01-23 19:32:18,444 77805 DEBUG ? odoo.http: Loading l10n_vn 
+2026-01-23 19:32:18,445 77805 DEBUG ? odoo.http: Loading l10n_za 
+2026-01-23 19:32:18,451 77805 DEBUG ? odoo.http: Loading lunch 
+2026-01-23 19:32:18,472 77805 DEBUG ? odoo.http: Loading mail 
+2026-01-23 19:32:18,474 77805 DEBUG ? odoo.http: Loading mail_bot 
+2026-01-23 19:32:18,477 77805 DEBUG ? odoo.http: Loading maintenance 
+2026-01-23 19:32:18,479 77805 DEBUG ? odoo.http: Loading mass_mailing 
+2026-01-23 19:32:18,521 77805 DEBUG ? odoo.http: Loading mass_mailing_sms 
+2026-01-23 19:32:18,524 77805 DEBUG ? odoo.http: Loading membership 
+2026-01-23 19:32:18,526 77805 DEBUG ? odoo.http: Loading microsoft_calendar 
+2026-01-23 19:32:18,534 77805 DEBUG ? odoo.http: Loading mrp 
+2026-01-23 19:32:18,565 77805 DEBUG ? odoo.http: Loading note 
+2026-01-23 19:32:18,568 77805 DEBUG ? odoo.http: Loading odoo_referral 
+2026-01-23 19:32:18,569 77805 DEBUG ? odoo.http: Loading pad 
+2026-01-23 19:32:18,569 77805 DEBUG ? odoo.http: Loading pad_project 
+2026-01-23 19:32:18,572 77805 DEBUG ? odoo.http: Loading partner_autocomplete 
+2026-01-23 19:32:18,575 77805 DEBUG ? odoo.http: Loading payment 
+2026-01-23 19:32:18,577 77805 DEBUG ? odoo.http: Loading payment_adyen 
+2026-01-23 19:32:18,578 77805 DEBUG ? odoo.http: Loading payment_alipay 
+2026-01-23 19:32:18,617 77805 DEBUG ? odoo.http: Loading payment_authorize 
+2026-01-23 19:32:18,619 77805 DEBUG ? odoo.http: Loading payment_buckaroo 
+2026-01-23 19:32:18,620 77805 DEBUG ? odoo.http: Loading payment_ingenico 
+2026-01-23 19:32:18,621 77805 DEBUG ? odoo.http: Loading payment_odoo_by_adyen 
+2026-01-23 19:32:18,622 77805 DEBUG ? odoo.http: Loading payment_paypal 
+2026-01-23 19:32:18,624 77805 DEBUG ? odoo.http: Loading payment_payulatam 
+2026-01-23 19:32:18,625 77805 DEBUG ? odoo.http: Loading payment_payumoney 
+2026-01-23 19:32:18,626 77805 DEBUG ? odoo.http: Loading payment_sips 
+2026-01-23 19:32:18,629 77805 DEBUG ? odoo.http: Loading payment_stripe 
+2026-01-23 19:32:18,631 77805 DEBUG ? odoo.http: Loading payment_test 
+2026-01-23 19:32:18,633 77805 DEBUG ? odoo.http: Loading payment_transfer 
+2026-01-23 19:32:18,670 77805 DEBUG ? odoo.http: Loading point_of_sale 
+2026-01-23 19:32:18,673 77805 DEBUG ? odoo.http: Loading portal 
+2026-01-23 19:32:18,684 77805 DEBUG ? odoo.http: Loading portal_rating 
+2026-01-23 19:32:18,687 77805 DEBUG ? odoo.http: Loading pos_adyen 
+2026-01-23 19:32:18,727 77805 DEBUG ? odoo.http: Loading pos_cache 
+2026-01-23 19:32:18,728 77805 DEBUG ? odoo.http: Loading pos_discount 
+2026-01-23 19:32:18,729 77805 DEBUG ? odoo.http: Loading pos_epson_printer 
+2026-01-23 19:32:18,730 77805 DEBUG ? odoo.http: Loading pos_epson_printer_restaurant 
+2026-01-23 19:32:18,731 77805 DEBUG ? odoo.http: Loading pos_hr 
+2026-01-23 19:32:18,731 77805 DEBUG ? odoo.http: Loading pos_mercury 
+2026-01-23 19:32:18,734 77805 DEBUG ? odoo.http: Loading pos_restaurant 
+2026-01-23 19:32:18,770 77805 DEBUG ? odoo.http: Loading pos_restaurant_adyen 
+2026-01-23 19:32:18,773 77805 DEBUG ? odoo.http: Loading pos_six 
+2026-01-23 19:32:18,776 77805 DEBUG ? odoo.http: Loading product 
+2026-01-23 19:32:18,778 77805 DEBUG ? odoo.http: Loading product_email_template 
+2026-01-23 19:32:18,780 77805 DEBUG ? odoo.http: Loading product_expiry 
+2026-01-23 19:32:18,783 77805 DEBUG ? odoo.http: Loading product_matrix 
+2026-01-23 19:32:18,783 77805 DEBUG ? odoo.http: Loading project 
+2026-01-23 19:32:18,819 77805 DEBUG ? odoo.http: Loading purchase 
+2026-01-23 19:32:18,821 77805 DEBUG ? odoo.http: Loading purchase_product_matrix 
+2026-01-23 19:32:18,823 77805 DEBUG ? odoo.http: Loading purchase_stock 
+2026-01-23 19:32:18,826 77805 DEBUG ? odoo.http: Loading rating 
+2026-01-23 19:32:18,867 77805 DEBUG ? odoo.http: Loading repair 
+2026-01-23 19:32:18,869 77805 DEBUG ? odoo.http: Loading resource 
+2026-01-23 19:32:18,871 77805 DEBUG ? odoo.http: Loading sale 
+2026-01-23 19:32:18,873 77805 DEBUG ? odoo.http: Loading sale_expense 
+2026-01-23 19:32:18,913 77805 DEBUG ? odoo.http: Loading sale_management 
+2026-01-23 19:32:18,915 77805 DEBUG ? odoo.http: Loading sale_product_configurator 
+2026-01-23 19:32:18,916 77805 DEBUG ? odoo.http: Loading sale_product_matrix 
+2026-01-23 19:32:18,919 77805 DEBUG ? odoo.http: Loading sale_stock 
+2026-01-23 19:32:18,976 77805 DEBUG ? odoo.http: Loading sale_timesheet 
+2026-01-23 19:32:18,979 77805 DEBUG ? odoo.http: Loading sale_timesheet_edit 
+2026-01-23 19:32:18,980 77805 DEBUG ? odoo.http: Loading sales_team 
+2026-01-23 19:32:18,982 77805 DEBUG ? odoo.http: Loading sms 
+2026-01-23 19:32:18,985 77805 DEBUG ? odoo.http: Loading snailmail 
+2026-01-23 19:32:19,026 77805 DEBUG ? odoo.http: Loading snailmail_account 
+2026-01-23 19:32:19,035 77805 DEBUG ? odoo.http: Loading stock 
+2026-01-23 19:32:19,038 77805 DEBUG ? odoo.http: Loading survey 
+2026-01-23 19:32:19,041 77805 DEBUG ? odoo.http: Loading test_event_full 
+2026-01-23 19:32:19,044 77805 DEBUG ? odoo.http: Loading test_website 
+2026-01-23 19:32:19,046 77805 DEBUG ? odoo.http: Loading theme_default 
+2026-01-23 19:32:19,071 77805 DEBUG ? odoo.http: Loading transifex 
+2026-01-23 19:32:19,073 77805 DEBUG ? odoo.http: Loading utm 
+2026-01-23 19:32:19,074 77805 DEBUG ? odoo.http: Loading web 
+2026-01-23 19:32:19,076 77805 DEBUG ? odoo.http: Loading web_editor 
+2026-01-23 19:32:19,079 77805 DEBUG ? odoo.http: Loading web_kanban_gauge 
+2026-01-23 19:32:19,079 77805 DEBUG ? odoo.http: Loading web_tour 
+2026-01-23 19:32:19,080 77805 DEBUG ? odoo.http: Loading web_unsplash 
+2026-01-23 19:32:19,118 77805 DEBUG ? odoo.http: Loading website 
+2026-01-23 19:32:19,121 77805 DEBUG ? odoo.http: Loading website_blog 
+2026-01-23 19:32:19,123 77805 DEBUG ? odoo.http: Loading website_crm 
+2026-01-23 19:32:19,126 77805 DEBUG ? odoo.http: Loading website_crm_partner_assign 
+2026-01-23 19:32:19,129 77805 DEBUG ? odoo.http: Loading website_customer 
+2026-01-23 19:32:19,169 77805 DEBUG ? odoo.http: Loading website_event 
+2026-01-23 19:32:19,172 77805 DEBUG ? odoo.http: Loading website_event_meet 
+2026-01-23 19:32:19,175 77805 DEBUG ? odoo.http: Loading website_event_questions 
+2026-01-23 19:32:19,177 77805 DEBUG ? odoo.http: Loading website_event_sale 
+2026-01-23 19:32:19,179 77805 DEBUG ? odoo.http: Loading website_event_track 
+2026-01-23 19:32:19,181 77805 DEBUG ? odoo.http: Loading website_event_track_exhibitor 
+2026-01-23 19:32:19,212 77805 DEBUG ? odoo.http: Loading website_event_track_live 
+2026-01-23 19:32:19,213 77805 DEBUG ? odoo.http: Loading website_event_track_live_quiz 
+2026-01-23 19:32:19,214 77805 DEBUG ? odoo.http: Loading website_event_track_quiz 
+2026-01-23 19:32:19,217 77805 DEBUG ? odoo.http: Loading website_form 
+2026-01-23 19:32:19,220 77805 DEBUG ? odoo.http: Loading website_form_project 
+2026-01-23 19:32:19,221 77805 DEBUG ? odoo.http: Loading website_forum 
+2026-01-23 19:32:19,281 77805 DEBUG ? odoo.http: Loading website_google_map 
+2026-01-23 19:32:19,281 77805 DEBUG ? odoo.http: Loading website_hr_recruitment 
+2026-01-23 19:32:19,283 77805 DEBUG ? odoo.http: Loading website_jitsi 
+2026-01-23 19:32:19,284 77805 DEBUG ? odoo.http: Loading website_links 
+2026-01-23 19:32:19,288 77805 DEBUG ? odoo.http: Loading website_livechat 
+2026-01-23 19:32:19,290 77805 DEBUG ? odoo.http: Loading website_mail 
+2026-01-23 19:32:19,292 77805 DEBUG ? odoo.http: Loading website_mail_channel 
+2026-01-23 19:32:19,325 77805 DEBUG ? odoo.http: Loading website_mass_mailing 
+2026-01-23 19:32:19,328 77805 DEBUG ? odoo.http: Loading website_membership 
+2026-01-23 19:32:19,330 77805 DEBUG ? odoo.http: Loading website_partner 
+2026-01-23 19:32:19,331 77805 DEBUG ? odoo.http: Loading website_payment 
+2026-01-23 19:32:19,332 77805 DEBUG ? odoo.http: Loading website_profile 
+2026-01-23 19:32:19,335 77805 DEBUG ? odoo.http: Loading website_sale 
+2026-01-23 19:32:19,372 77805 DEBUG ? odoo.http: Loading website_sale_comparison 
+2026-01-23 19:32:19,374 77805 DEBUG ? odoo.http: Loading website_sale_coupon 
+2026-01-23 19:32:19,374 77805 DEBUG ? odoo.http: Loading website_sale_coupon_delivery 
+2026-01-23 19:32:19,375 77805 DEBUG ? odoo.http: Loading website_sale_delivery 
+2026-01-23 19:32:19,379 77805 DEBUG ? odoo.http: Loading website_sale_digital 
+2026-01-23 19:32:19,381 77805 DEBUG ? odoo.http: Loading website_sale_management 
+2026-01-23 19:32:19,381 77805 DEBUG ? odoo.http: Loading website_sale_product_configurator 
+2026-01-23 19:32:19,383 77805 DEBUG ? odoo.http: Loading website_sale_slides 
+2026-01-23 19:32:19,384 77805 DEBUG ? odoo.http: Loading website_sale_stock 
+2026-01-23 19:32:19,418 77805 DEBUG ? odoo.http: Loading website_sale_wishlist 
+2026-01-23 19:32:19,420 77805 DEBUG ? odoo.http: Loading website_slides 
+2026-01-23 19:32:19,424 77805 DEBUG ? odoo.http: Loading website_slides_forum 
+2026-01-23 19:32:19,425 77805 DEBUG ? odoo.http: Loading website_slides_survey 
+2026-01-23 19:32:19,428 77805 DEBUG ? odoo.http: Loading website_twitter 
+2026-01-23 19:32:19,429 77805 DEBUG ? odoo.http: Loading hr_custom_theme 
+2026-01-23 19:32:19,429 77805 INFO ? odoo.http: HTTP Configuring static files 
+2026-01-23 19:32:19,432 77805 DEBUG ? odoo.http: HTTP sessions stored in: /home/codespace/.local/share/Odoo/sessions 
+2026-01-23 19:32:19,987 77805 DEBUG odoo14 odoo.modules.registry: Multiprocess load registry signaling: [Registry: 1] [Cache: 1] 
+2026-01-23 19:32:20,069 77805 INFO odoo14 odoo.modules.loading: loading 1 modules... 
+2026-01-23 19:32:20,070 77805 DEBUG odoo14 odoo.modules.loading: Loading module base (1/1) 
+2026-01-23 19:32:20,103 77805 DEBUG odoo14 odoo.modules.loading: Module base loaded in 0.03s, 0 queries 
+2026-01-23 19:32:20,103 77805 INFO odoo14 odoo.modules.loading: 1 modules loaded in 0.03s, 0 queries (+0 extra) 
+2026-01-23 19:32:20,202 77805 INFO odoo14 odoo.modules.loading: Modules loaded. 
+2026-01-23 19:32:20,208 77805 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 19:32:20,209 77805 INFO odoo14 odoo.addons.base.models.ir_http: Generating routing map for key None 
+2026-01-23 19:32:20,211 77805 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/site-packages/werkzeug/routing.py:957: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  parts = parts or [ast.Str("")]
+ 
+2026-01-23 19:32:20,212 77805 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/site-packages/werkzeug/routing.py:954: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  _convert(elem) if is_dynamic else ast.Str(s=elem)
+ 
+2026-01-23 19:32:20,221 77805 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/ast.py:587: DeprecationWarning: Attribute s is deprecated and will be removed in Python 3.14; use value instead
+  return Constant(*args, **kwargs)
+ 
+2026-01-23 19:32:20,222 77805 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/site-packages/werkzeug/routing.py:961: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  if isinstance(p, ast.Str) and isinstance(ret[-1], ast.Str):
+ 
+2026-01-23 19:32:20,222 77805 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/site-packages/werkzeug/routing.py:962: DeprecationWarning: Attribute s is deprecated and will be removed in Python 3.14; use value instead
+  ret[-1] = ast.Str(ret[-1].s + p.s)
+ 
+2026-01-23 19:32:20,222 77805 WARNING odoo14 py.warnings: /home/codespace/.python/current/lib/python3.12/site-packages/werkzeug/routing.py:962: DeprecationWarning: ast.Str is deprecated and will be removed in Python 3.14; use ast.Constant instead
+  ret[-1] = ast.Str(ret[-1].s + p.s)
+ 
+2026-01-23 19:32:20,365 77805 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 19:32:20] "GET / HTTP/1.1" 303 - 14 0.147 0.787
+2026-01-23 19:32:25,063 77805 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 19:32:25,066 77805 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 19:32:25] "GET /web HTTP/1.1" 303 - 2 0.004 0.041
+2026-01-23 19:32:25,088 77805 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 19:32:25,135 77805 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 19:32:25] "GET /web/login HTTP/1.0" 500 - 5 0.016 0.051
+2026-01-23 19:32:25,168 77805 ERROR odoo14 werkzeug: Error on request:
+Traceback (most recent call last):
+  File "/workspaces/odoo/odoo/addons/base/models/ir_http.py", line 237, in _dispatch
+    result = request.dispatch()
+  File "/workspaces/odoo/odoo/http.py", line 813, in dispatch
+    r = self._call_function(**self.params)
+  File "/workspaces/odoo/odoo/http.py", line 370, in _call_function
+    return checked_call(self.db, *args, **kwargs)
+  File "/workspaces/odoo/odoo/service/model.py", line 94, in wrapper
+    return f(dbname, *args, **kwargs)
+  File "/workspaces/odoo/odoo/http.py", line 361, in checked_call
+    result.flatten()
+  File "/workspaces/odoo/odoo/http.py", line 1282, in flatten
+    self.response.append(self.render())
+  File "/workspaces/odoo/odoo/http.py", line 1275, in render
+    return env["ir.ui.view"]._render_template(self.template, self.qcontext)
+  File "/workspaces/odoo/odoo/addons/base/models/ir_ui_view.py", line 1727, in _render_template
+    return self.browse(self.get_view_id(template))._render(values, engine)
+  File "/workspaces/odoo/odoo/addons/base/models/ir_ui_view.py", line 1612, in get_view_id
+    return view and view.id or self.env['ir.model.data'].xmlid_to_res_id(template, raise_if_not_found=True)
+  File "/workspaces/odoo/odoo/addons/base/models/ir_model.py", line 1965, in xmlid_to_res_id
+    return self.xmlid_to_res_model_res_id(xmlid, raise_if_not_found)[1]
+  File "/workspaces/odoo/odoo/addons/base/models/ir_model.py", line 1956, in xmlid_to_res_model_res_id
+    return self.xmlid_lookup(xmlid)[1:3]
+  File "/home/codespace/.local/lib/python3.12/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/workspaces/odoo/odoo/tools/cache.py", line 90, in lookup
+    value = d[key] = self.method(*args, **kwargs)
+  File "/workspaces/odoo/odoo/addons/base/models/ir_model.py", line 1949, in xmlid_lookup
+    raise ValueError('External ID not found in the system: %s' % xmlid)
+Exception
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/python/3.12.1/lib/python3.12/site-packages/werkzeug/serving.py", line 323, in run_wsgi
+    execute(self.server.app)
+  File "/usr/local/python/3.12.1/lib/python3.12/site-packages/werkzeug/serving.py", line 312, in execute
+    application_iter = app(environ, start_response)
+  File "/workspaces/odoo/odoo/service/server.py", line 441, in app
+    return self.app(e, s)
+  File "/workspaces/odoo/odoo/service/wsgi_server.py", line 113, in application
+    return application_unproxied(environ, start_response)
+  File "/workspaces/odoo/odoo/service/wsgi_server.py", line 88, in application_unproxied
+    result = odoo.http.root(environ, start_response)
+  File "/workspaces/odoo/odoo/http.py", line 1341, in __call__
+    return self.dispatch(environ, start_response)
+  File "/workspaces/odoo/odoo/http.py", line 1307, in __call__
+    return self.app(environ, start_wrapped)
+  File "/usr/local/python/3.12.1/lib/python3.12/site-packages/werkzeug/middleware/shared_data.py", line 260, in __call__
+    return self.app(environ, start_response)
+  File "/workspaces/odoo/odoo/http.py", line 1530, in dispatch
+    result = ir_http._dispatch()
+  File "/workspaces/odoo/odoo/addons/base/models/ir_http.py", line 241, in _dispatch
+    return cls._handle_exception(e)
+  File "/workspaces/odoo/odoo/addons/base/models/ir_http.py", line 209, in _handle_exception
+    return request._handle_exception(exception)
+  File "/workspaces/odoo/odoo/http.py", line 757, in _handle_exception
+    return super(HttpRequest, self)._handle_exception(exception)
+  File "/workspaces/odoo/odoo/http.py", line 317, in _handle_exception
+    raise exception.with_traceback(None) from new_cause
+ValueError: External ID not found in the system: web.login - - -
+2026-01-23 19:32:50,580 79964 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.request:INFO" 
+2026-01-23 19:32:50,581 79964 DEBUG ? odoo.netsvc: logger level set: "odoo.http.rpc.response:INFO" 
+2026-01-23 19:32:50,581 79964 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-01-23 19:32:50,581 79964 DEBUG ? odoo.netsvc: logger level set: "odoo:DEBUG" 
+2026-01-23 19:32:50,581 79964 DEBUG ? odoo.netsvc: logger level set: "odoo.sql_db:INFO" 
+2026-01-23 19:32:50,581 79964 DEBUG ? odoo.netsvc: logger level set: ":INFO" 
+2026-01-23 19:32:50,582 79964 INFO ? odoo: Odoo version 14.0 
+2026-01-23 19:32:50,582 79964 INFO ? odoo: Using configuration file at /workspaces/odoo/odoo.conf 
+2026-01-23 19:32:50,582 79964 INFO ? odoo: addons paths: ['/workspaces/odoo/odoo/addons', '/home/codespace/.local/share/Odoo/addons/14.0', '/workspaces/odoo/addons', '/workspaces/odoo/odoo-custom-addons'] 
+2026-01-23 19:32:50,582 79964 INFO ? odoo: database: odoo14@127.0.0.1:5433 
+2026-01-23 19:32:50,930 79964 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltopdf to print a pdf version of the reports. 
+2026-01-23 19:32:51,250 79964 WARNING ? odoo.addons.base.models.res_currency: The num2words python library is not installed, amount-to-text features won't be fully available. 
+2026-01-23 19:32:51,315 79964 DEBUG ? odoo.service.server: Setting signal handlers 
+2026-01-23 19:32:51,320 79964 DEBUG ? odoo.service.server: cron0 started! 
+2026-01-23 19:32:51,320 79964 DEBUG ? odoo.service.server: cron1 started! 
+2026-01-23 19:32:51,333 79964 INFO ? odoo.service.server: HTTP service (werkzeug) running on localhost:8069 
+2026-01-23 19:33:05,057 79964 DEBUG ? odoo.http: Loading base 
+2026-01-23 19:33:05,058 79964 DEBUG ? odoo.http: Loading test_apikeys 
+2026-01-23 19:33:05,059 79964 DEBUG ? odoo.http: Loading test_assetsbundle 
+2026-01-23 19:33:05,060 79964 DEBUG ? odoo.http: Loading test_exceptions 
+2026-01-23 19:33:05,063 79964 DEBUG ? odoo.http: Loading test_main_flows 
+2026-01-23 19:33:05,064 79964 DEBUG ? odoo.http: Loading test_new_api 
+2026-01-23 19:33:05,070 79964 DEBUG ? odoo.http: Loading test_translation_import 
+2026-01-23 19:33:05,077 79964 DEBUG ? odoo.http: Loading account 
+2026-01-23 19:33:05,083 79964 DEBUG ? odoo.http: Loading account_check_printing 
+2026-01-23 19:33:05,087 79964 DEBUG ? odoo.http: Loading adyen_platforms 
+2026-01-23 19:33:05,091 79964 DEBUG ? odoo.http: Loading auth_oauth 
+2026-01-23 19:33:05,093 79964 DEBUG ? odoo.http: Loading auth_password_policy 
+2026-01-23 19:33:05,095 79964 DEBUG ? odoo.http: Loading auth_password_policy_portal 
+2026-01-23 19:33:05,096 79964 DEBUG ? odoo.http: Loading auth_password_policy_signup 
+2026-01-23 19:33:05,097 79964 DEBUG ? odoo.http: Loading auth_signup 
+2026-01-23 19:33:05,099 79964 DEBUG ? odoo.http: Loading auth_totp 
+2026-01-23 19:33:05,101 79964 DEBUG ? odoo.http: Loading auth_totp_portal 
+2026-01-23 19:33:05,102 79964 DEBUG ? odoo.http: Loading barcodes 
+2026-01-23 19:33:05,105 79964 DEBUG ? odoo.http: Loading base_automation 
+2026-01-23 19:33:05,107 79964 DEBUG ? odoo.http: Loading base_iban 
+2026-01-23 19:33:05,108 79964 DEBUG ? odoo.http: Loading base_import 
+2026-01-23 19:33:05,111 79964 DEBUG ? odoo.http: Loading base_setup 
+2026-01-23 19:33:05,114 79964 DEBUG ? odoo.http: Loading board 
+2026-01-23 19:33:05,117 79964 DEBUG ? odoo.http: Loading bus 
+2026-01-23 19:33:05,118 79964 DEBUG ? odoo.http: Loading calendar 
+2026-01-23 19:33:05,121 79964 DEBUG ? odoo.http: Loading contacts 
+2026-01-23 19:33:05,124 79964 DEBUG ? odoo.http: Loading crm 
+2026-01-23 19:33:05,125 79964 DEBUG ? odoo.http: Loading crm_iap_lead 
+2026-01-23 19:33:05,128 79964 DEBUG ? odoo.http: Loading digest 
+2026-01-23 19:33:05,132 79964 DEBUG ? odoo.http: Loading event 
+2026-01-23 19:33:05,139 79964 DEBUG ? odoo.http: Loading event_sale 
+2026-01-23 19:33:05,145 79964 DEBUG ? odoo.http: Loading fleet 
+2026-01-23 19:33:05,148 79964 DEBUG ? odoo.http: Loading gamification 
+2026-01-23 19:33:05,149 79964 DEBUG ? odoo.http: Loading google_calendar 
+2026-01-23 19:33:05,152 79964 DEBUG ? odoo.http: Loading google_drive 
+2026-01-23 19:33:05,156 79964 DEBUG ? odoo.http: Loading google_recaptcha 
+2026-01-23 19:33:05,159 79964 DEBUG ? odoo.http: Loading google_spreadsheet 
+2026-01-23 19:33:05,160 79964 DEBUG ? odoo.http: Loading hr 
+2026-01-23 19:33:05,166 79964 DEBUG ? odoo.http: Loading hr_attendance 
+2026-01-23 19:33:05,169 79964 DEBUG ? odoo.http: Loading hr_contract 
+2026-01-23 19:33:05,172 79964 DEBUG ? odoo.http: Loading hr_expense 
+2026-01-23 19:33:05,173 79964 DEBUG ? odoo.http: Loading hr_gamification 
+2026-01-23 19:33:05,174 79964 DEBUG ? odoo.http: Loading hr_holidays 
+2026-01-23 19:33:05,176 79964 DEBUG ? odoo.http: Loading hr_org_chart 
+2026-01-23 19:33:05,179 79964 DEBUG ? odoo.http: Loading hr_recruitment 
+2026-01-23 19:33:05,183 79964 DEBUG ? odoo.http: Loading hr_skills 
+2026-01-23 19:33:05,188 79964 DEBUG ? odoo.http: Loading hr_skills_slides 
+2026-01-23 19:33:05,189 79964 DEBUG ? odoo.http: Loading hr_skills_survey 
+2026-01-23 19:33:05,190 79964 DEBUG ? odoo.http: Loading hr_timesheet 
+2026-01-23 19:33:05,194 79964 DEBUG ? odoo.http: Loading hr_work_entry 
+2026-01-23 19:33:05,211 79964 DEBUG ? odoo.http: Loading http_routing 
+2026-01-23 19:33:05,213 79964 DEBUG ? odoo.http: Loading iap 
+2026-01-23 19:33:05,216 79964 DEBUG ? odoo.http: Loading im_livechat 
+2026-01-23 19:33:05,218 79964 DEBUG ? odoo.http: Loading l10n_ae 
+2026-01-23 19:33:05,221 79964 DEBUG ? odoo.http: Loading l10n_ar 
+2026-01-23 19:33:05,221 79964 DEBUG ? odoo.http: Loading l10n_ar_website_sale 
+2026-01-23 19:33:05,222 79964 DEBUG ? odoo.http: Loading l10n_at 
+2026-01-23 19:33:05,222 79964 DEBUG ? odoo.http: Loading l10n_au 
+2026-01-23 19:33:05,273 79964 DEBUG ? odoo.http: Loading l10n_be 
+2026-01-23 19:33:05,275 79964 DEBUG ? odoo.http: Loading l10n_bo 
+2026-01-23 19:33:05,276 79964 DEBUG ? odoo.http: Loading l10n_br 
+2026-01-23 19:33:05,277 79964 DEBUG ? odoo.http: Loading l10n_ca 
+2026-01-23 19:33:05,278 79964 DEBUG ? odoo.http: Loading l10n_ch 
+2026-01-23 19:33:05,279 79964 DEBUG ? odoo.http: Loading l10n_cl 
+2026-01-23 19:33:05,281 79964 DEBUG ? odoo.http: Loading l10n_cn 
+2026-01-23 19:33:05,282 79964 DEBUG ? odoo.http: Loading l10n_cn_city 
+2026-01-23 19:33:05,282 79964 DEBUG ? odoo.http: Loading l10n_co 
+2026-01-23 19:33:05,283 79964 DEBUG ? odoo.http: Loading l10n_co_pos 
+2026-01-23 19:33:05,286 79964 DEBUG ? odoo.http: Loading l10n_cr 
+2026-01-23 19:33:05,288 79964 DEBUG ? odoo.http: Loading l10n_cz 
+2026-01-23 19:33:05,288 79964 DEBUG ? odoo.http: Loading l10n_de 
+2026-01-23 19:33:05,294 79964 DEBUG ? odoo.http: Loading l10n_dk 
+2026-01-23 19:33:05,295 79964 DEBUG ? odoo.http: Loading l10n_do 
+2026-01-23 19:33:05,296 79964 DEBUG ? odoo.http: Loading l10n_dz 
+2026-01-23 19:33:05,299 79964 DEBUG ? odoo.http: Loading l10n_ec 
+2026-01-23 19:33:05,301 79964 DEBUG ? odoo.http: Loading l10n_es 
+2026-01-23 19:33:05,302 79964 DEBUG ? odoo.http: Loading l10n_et 
+2026-01-23 19:33:05,303 79964 DEBUG ? odoo.http: Loading l10n_fi 
+2026-01-23 19:33:05,304 79964 DEBUG ? odoo.http: Loading l10n_fi_sale 
+2026-01-23 19:33:05,305 79964 DEBUG ? odoo.http: Loading l10n_fr 
+2026-01-23 19:33:05,305 79964 DEBUG ? odoo.http: Loading l10n_fr_pos_cert 
+2026-01-23 19:33:05,306 79964 DEBUG ? odoo.http: Loading l10n_gcc_pos 
+2026-01-23 19:33:05,306 79964 DEBUG ? odoo.http: Loading l10n_generic_coa 
+2026-01-23 19:33:05,307 79964 DEBUG ? odoo.http: Loading l10n_gr 
+2026-01-23 19:33:05,320 79964 DEBUG ? odoo.http: Loading l10n_gt 
+2026-01-23 19:33:05,321 79964 DEBUG ? odoo.http: Loading l10n_hk 
+2026-01-23 19:33:05,321 79964 DEBUG ? odoo.http: Loading l10n_hn 
+2026-01-23 19:33:05,322 79964 DEBUG ? odoo.http: Loading l10n_hr 
+2026-01-23 19:33:05,323 79964 DEBUG ? odoo.http: Loading l10n_hu 
+2026-01-23 19:33:05,324 79964 DEBUG ? odoo.http: Loading l10n_id 
+2026-01-23 19:33:05,325 79964 DEBUG ? odoo.http: Loading l10n_ie 
+2026-01-23 19:33:05,326 79964 DEBUG ? odoo.http: Loading l10n_in 
+2026-01-23 19:33:05,327 79964 DEBUG ? odoo.http: Loading l10n_in_pos 
+2026-01-23 19:33:05,328 79964 DEBUG ? odoo.http: Loading l10n_it 
+2026-01-23 19:33:05,328 79964 DEBUG ? odoo.http: Loading l10n_jp 
+2026-01-23 19:33:05,330 79964 DEBUG ? odoo.http: Loading l10n_lt 
+2026-01-23 19:33:05,331 79964 DEBUG ? odoo.http: Loading l10n_lu 
+2026-01-23 19:33:05,332 79964 DEBUG ? odoo.http: Loading l10n_ma 
+2026-01-23 19:33:05,332 79964 DEBUG ? odoo.http: Loading l10n_mn 
+2026-01-23 19:33:05,368 79964 DEBUG ? odoo.http: Loading l10n_mx 
+2026-01-23 19:33:05,369 79964 DEBUG ? odoo.http: Loading l10n_nl 
+2026-01-23 19:33:05,370 79964 DEBUG ? odoo.http: Loading l10n_no 
+2026-01-23 19:33:05,372 79964 DEBUG ? odoo.http: Loading l10n_nz 
+2026-01-23 19:33:05,372 79964 DEBUG ? odoo.http: Loading l10n_pa 
+2026-01-23 19:33:05,373 79964 DEBUG ? odoo.http: Loading l10n_pe 
+2026-01-23 19:33:05,376 79964 DEBUG ? odoo.http: Loading l10n_pl 
+2026-01-23 19:33:05,377 79964 DEBUG ? odoo.http: Loading l10n_ro 
+2026-01-23 19:33:05,379 79964 DEBUG ? odoo.http: Loading l10n_sa 
+2026-01-23 19:33:05,380 79964 DEBUG ? odoo.http: Loading l10n_sa_pos 
+2026-01-23 19:33:05,380 79964 DEBUG ? odoo.http: Loading l10n_se 
+2026-01-23 19:33:05,381 79964 DEBUG ? odoo.http: Loading l10n_se_ocr 
+2026-01-23 19:33:05,382 79964 DEBUG ? odoo.http: Loading l10n_sg 
+2026-01-23 19:33:05,417 79964 DEBUG ? odoo.http: Loading l10n_si 
+2026-01-23 19:33:05,419 79964 DEBUG ? odoo.http: Loading l10n_sk 
+2026-01-23 19:33:05,421 79964 DEBUG ? odoo.http: Loading l10n_th 
+2026-01-23 19:33:05,423 79964 DEBUG ? odoo.http: Loading l10n_tr 
+2026-01-23 19:33:05,424 79964 DEBUG ? odoo.http: Loading l10n_ua 
+2026-01-23 19:33:05,425 79964 DEBUG ? odoo.http: Loading l10n_uk 
+2026-01-23 19:33:05,426 79964 DEBUG ? odoo.http: Loading l10n_us 
+2026-01-23 19:33:05,426 79964 DEBUG ? odoo.http: Loading l10n_uy 
+2026-01-23 19:33:05,427 79964 DEBUG ? odoo.http: Loading l10n_ve 
+2026-01-23 19:33:05,428 79964 DEBUG ? odoo.http: Loading l10n_vn 
+2026-01-23 19:33:05,429 79964 DEBUG ? odoo.http: Loading l10n_za 
+2026-01-23 19:33:05,432 79964 DEBUG ? odoo.http: Loading lunch 
+2026-01-23 19:33:05,435 79964 DEBUG ? odoo.http: Loading mail 
+2026-01-23 19:33:05,437 79964 DEBUG ? odoo.http: Loading mail_bot 
+2026-01-23 19:33:05,441 79964 DEBUG ? odoo.http: Loading maintenance 
+2026-01-23 19:33:05,464 79964 DEBUG ? odoo.http: Loading mass_mailing 
+2026-01-23 19:33:05,466 79964 DEBUG ? odoo.http: Loading mass_mailing_sms 
+2026-01-23 19:33:05,469 79964 DEBUG ? odoo.http: Loading membership 
+2026-01-23 19:33:05,473 79964 DEBUG ? odoo.http: Loading microsoft_calendar 
+2026-01-23 19:33:05,476 79964 DEBUG ? odoo.http: Loading mrp 
+2026-01-23 19:33:05,525 79964 DEBUG ? odoo.http: Loading note 
+2026-01-23 19:33:05,531 79964 DEBUG ? odoo.http: Loading odoo_referral 
+2026-01-23 19:33:05,532 79964 DEBUG ? odoo.http: Loading pad 
+2026-01-23 19:33:05,535 79964 DEBUG ? odoo.http: Loading pad_project 
+2026-01-23 19:33:05,540 79964 DEBUG ? odoo.http: Loading partner_autocomplete 
+2026-01-23 19:33:05,545 79964 DEBUG ? odoo.http: Loading payment 
+2026-01-23 19:33:05,573 79964 DEBUG ? odoo.http: Loading payment_adyen 
+2026-01-23 19:33:05,576 79964 DEBUG ? odoo.http: Loading payment_alipay 
+2026-01-23 19:33:05,579 79964 DEBUG ? odoo.http: Loading payment_authorize 
+2026-01-23 19:33:05,581 79964 DEBUG ? odoo.http: Loading payment_buckaroo 
+2026-01-23 19:33:05,582 79964 DEBUG ? odoo.http: Loading payment_ingenico 
+2026-01-23 19:33:05,585 79964 DEBUG ? odoo.http: Loading payment_odoo_by_adyen 
+2026-01-23 19:33:05,586 79964 DEBUG ? odoo.http: Loading payment_paypal 
+2026-01-23 19:33:05,588 79964 DEBUG ? odoo.http: Loading payment_payulatam 
+2026-01-23 19:33:05,589 79964 DEBUG ? odoo.http: Loading payment_payumoney 
+2026-01-23 19:33:05,590 79964 DEBUG ? odoo.http: Loading payment_sips 
+2026-01-23 19:33:05,591 79964 DEBUG ? odoo.http: Loading payment_stripe 
+2026-01-23 19:33:05,592 79964 DEBUG ? odoo.http: Loading payment_test 
+2026-01-23 19:33:05,593 79964 DEBUG ? odoo.http: Loading payment_transfer 
+2026-01-23 19:33:05,630 79964 DEBUG ? odoo.http: Loading point_of_sale 
+2026-01-23 19:33:05,632 79964 DEBUG ? odoo.http: Loading portal 
+2026-01-23 19:33:05,635 79964 DEBUG ? odoo.http: Loading portal_rating 
+2026-01-23 19:33:05,637 79964 DEBUG ? odoo.http: Loading pos_adyen 
+2026-01-23 19:33:05,640 79964 DEBUG ? odoo.http: Loading pos_cache 
+2026-01-23 19:33:05,641 79964 DEBUG ? odoo.http: Loading pos_discount 
+2026-01-23 19:33:05,641 79964 DEBUG ? odoo.http: Loading pos_epson_printer 
+2026-01-23 19:33:05,669 79964 DEBUG ? odoo.http: Loading pos_epson_printer_restaurant 
+2026-01-23 19:33:05,670 79964 DEBUG ? odoo.http: Loading pos_hr 
+2026-01-23 19:33:05,670 79964 DEBUG ? odoo.http: Loading pos_mercury 
+2026-01-23 19:33:05,673 79964 DEBUG ? odoo.http: Loading pos_restaurant 
+2026-01-23 19:33:05,675 79964 DEBUG ? odoo.http: Loading pos_restaurant_adyen 
+2026-01-23 19:33:05,676 79964 DEBUG ? odoo.http: Loading pos_six 
+2026-01-23 19:33:05,679 79964 DEBUG ? odoo.http: Loading product 
+2026-01-23 19:33:05,722 79964 DEBUG ? odoo.http: Loading product_email_template 
+2026-01-23 19:33:05,730 79964 DEBUG ? odoo.http: Loading product_expiry 
+2026-01-23 19:33:05,738 79964 DEBUG ? odoo.http: Loading product_matrix 
+2026-01-23 19:33:05,738 79964 DEBUG ? odoo.http: Loading project 
+2026-01-23 19:33:05,742 79964 DEBUG ? odoo.http: Loading purchase 
+2026-01-23 19:33:05,747 79964 DEBUG ? odoo.http: Loading purchase_product_matrix 
+2026-01-23 19:33:05,763 79964 DEBUG ? odoo.http: Loading purchase_stock 
+2026-01-23 19:33:05,765 79964 DEBUG ? odoo.http: Loading rating 
+2026-01-23 19:33:05,767 79964 DEBUG ? odoo.http: Loading repair 
+2026-01-23 19:33:05,770 79964 DEBUG ? odoo.http: Loading resource 
+2026-01-23 19:33:05,772 79964 DEBUG ? odoo.http: Loading sale 
+2026-01-23 19:33:05,774 79964 DEBUG ? odoo.http: Loading sale_expense 
+2026-01-23 19:33:05,826 79964 DEBUG ? odoo.http: Loading sale_management 
+2026-01-23 19:33:05,830 79964 DEBUG ? odoo.http: Loading sale_product_configurator 
+2026-01-23 19:33:05,834 79964 DEBUG ? odoo.http: Loading sale_product_matrix 
+2026-01-23 19:33:05,836 79964 DEBUG ? odoo.http: Loading sale_stock 
+2026-01-23 19:33:05,839 79964 DEBUG ? odoo.http: Loading sale_timesheet 
+2026-01-23 19:33:05,874 79964 DEBUG ? odoo.http: Loading sale_timesheet_edit 
+2026-01-23 19:33:05,875 79964 DEBUG ? odoo.http: Loading sales_team 
+2026-01-23 19:33:05,878 79964 DEBUG ? odoo.http: Loading sms 
+2026-01-23 19:33:05,880 79964 DEBUG ? odoo.http: Loading snailmail 
+2026-01-23 19:33:05,883 79964 DEBUG ? odoo.http: Loading snailmail_account 
+2026-01-23 19:33:05,888 79964 DEBUG ? odoo.http: Loading stock 
+2026-01-23 19:33:05,890 79964 DEBUG ? odoo.http: Loading survey 
+2026-01-23 19:33:05,892 79964 DEBUG ? odoo.http: Loading test_event_full 
+2026-01-23 19:33:05,920 79964 DEBUG ? odoo.http: Loading test_website 
+2026-01-23 19:33:05,921 79964 DEBUG ? odoo.http: Loading theme_default 
+2026-01-23 19:33:05,924 79964 DEBUG ? odoo.http: Loading transifex 
+2026-01-23 19:33:05,925 79964 DEBUG ? odoo.http: Loading utm 
+2026-01-23 19:33:05,926 79964 DEBUG ? odoo.http: Loading web 
+2026-01-23 19:33:05,928 79964 DEBUG ? odoo.http: Loading web_editor 
+2026-01-23 19:33:05,968 79964 DEBUG ? odoo.http: Loading web_kanban_gauge 
+2026-01-23 19:33:05,970 79964 DEBUG ? odoo.http: Loading web_tour 
+2026-01-23 19:33:05,971 79964 DEBUG ? odoo.http: Loading web_unsplash 
+2026-01-23 19:33:05,978 79964 DEBUG ? odoo.http: Loading website 
+2026-01-23 19:33:05,991 79964 DEBUG ? odoo.http: Loading website_blog 
+2026-01-23 19:33:06,017 79964 DEBUG ? odoo.http: Loading website_crm 
+2026-01-23 19:33:06,019 79964 DEBUG ? odoo.http: Loading website_crm_partner_assign 
+2026-01-23 19:33:06,022 79964 DEBUG ? odoo.http: Loading website_customer 
+2026-01-23 19:33:06,025 79964 DEBUG ? odoo.http: Loading website_event 
+2026-01-23 19:33:06,065 79964 DEBUG ? odoo.http: Loading website_event_meet 
+2026-01-23 19:33:06,067 79964 DEBUG ? odoo.http: Loading website_event_questions 
+2026-01-23 19:33:06,070 79964 DEBUG ? odoo.http: Loading website_event_sale 
+2026-01-23 19:33:06,071 79964 DEBUG ? odoo.http: Loading website_event_track 
+2026-01-23 19:33:06,072 79964 DEBUG ? odoo.http: Loading website_event_track_exhibitor 
+2026-01-23 19:33:06,111 79964 DEBUG ? odoo.http: Loading website_event_track_live 
+2026-01-23 19:33:06,112 79964 DEBUG ? odoo.http: Loading website_event_track_live_quiz 
+2026-01-23 19:33:06,113 79964 DEBUG ? odoo.http: Loading website_event_track_quiz 
+2026-01-23 19:33:06,116 79964 DEBUG ? odoo.http: Loading website_form 
+2026-01-23 19:33:06,118 79964 DEBUG ? odoo.http: Loading website_form_project 
+2026-01-23 19:33:06,119 79964 DEBUG ? odoo.http: Loading website_forum 
+2026-01-23 19:33:06,121 79964 DEBUG ? odoo.http: Loading website_google_map 
+2026-01-23 19:33:06,121 79964 DEBUG ? odoo.http: Loading website_hr_recruitment 
+2026-01-23 19:33:06,123 79964 DEBUG ? odoo.http: Loading website_jitsi 
+2026-01-23 19:33:06,124 79964 DEBUG ? odoo.http: Loading website_links 
+2026-01-23 19:33:06,175 79964 DEBUG ? odoo.http: Loading website_livechat 
+2026-01-23 19:33:06,177 79964 DEBUG ? odoo.http: Loading website_mail 
+2026-01-23 19:33:06,179 79964 DEBUG ? odoo.http: Loading website_mail_channel 
+2026-01-23 19:33:06,182 79964 DEBUG ? odoo.http: Loading website_mass_mailing 
+2026-01-23 19:33:06,185 79964 DEBUG ? odoo.http: Loading website_membership 
+2026-01-23 19:33:06,219 79964 DEBUG ? odoo.http: Loading website_partner 
+2026-01-23 19:33:06,220 79964 DEBUG ? odoo.http: Loading website_payment 
+2026-01-23 19:33:06,221 79964 DEBUG ? odoo.http: Loading website_profile 
+2026-01-23 19:33:06,223 79964 DEBUG ? odoo.http: Loading website_sale 
+2026-01-23 19:33:06,226 79964 DEBUG ? odoo.http: Loading website_sale_comparison 
+2026-01-23 19:33:06,228 79964 DEBUG ? odoo.http: Loading website_sale_coupon 
+2026-01-23 19:33:06,228 79964 DEBUG ? odoo.http: Loading website_sale_coupon_delivery 
+2026-01-23 19:33:06,230 79964 DEBUG ? odoo.http: Loading website_sale_delivery 
+2026-01-23 19:33:06,232 79964 DEBUG ? odoo.http: Loading website_sale_digital 
+2026-01-23 19:33:06,235 79964 DEBUG ? odoo.http: Loading website_sale_management 
+2026-01-23 19:33:06,236 79964 DEBUG ? odoo.http: Loading website_sale_product_configurator 
+2026-01-23 19:33:06,237 79964 DEBUG ? odoo.http: Loading website_sale_slides 
+2026-01-23 19:33:06,268 79964 DEBUG ? odoo.http: Loading website_sale_stock 
+2026-01-23 19:33:06,271 79964 DEBUG ? odoo.http: Loading website_sale_wishlist 
+2026-01-23 19:33:06,272 79964 DEBUG ? odoo.http: Loading website_slides 
+2026-01-23 19:33:06,274 79964 DEBUG ? odoo.http: Loading website_slides_forum 
+2026-01-23 19:33:06,276 79964 DEBUG ? odoo.http: Loading website_slides_survey 
+2026-01-23 19:33:06,315 79964 DEBUG ? odoo.http: Loading website_twitter 
+2026-01-23 19:33:06,315 79964 DEBUG ? odoo.http: Loading hr_custom_theme 
+2026-01-23 19:33:06,315 79964 INFO ? odoo.http: HTTP Configuring static files 
+2026-01-23 19:33:06,318 79964 DEBUG ? odoo.http: HTTP sessions stored in: /home/codespace/.local/share/Odoo/sessions 
+2026-01-23 19:33:07,219 79964 DEBUG odoo14 odoo.modules.registry: Multiprocess load registry signaling: [Registry: 1] [Cache: 1] 
+2026-01-23 19:33:07,233 79964 ERROR odoo14 odoo.modules.loading: Database odoo14 not initialized, you can force it with `-i base` 
+2026-01-23 19:33:07,235 79964 DEBUG odoo14 odoo.modules.registry: Multiprocess signaling check: [Registry - 1 -> 1] [Cache - 1 -> 1] 
+2026-01-23 19:33:07,239 79964 INFO odoo14 werkzeug: 127.0.0.1 - - [23/Jan/2026 19:33:07] "GET /web/database/manager HTTP/1.1" 500 - 11 0.544 0.377
+2026-01-23 19:33:07,260 79964 ERROR odoo14 werkzeug: Error on request:
+Traceback (most recent call last):
+  File "/usr/local/python/3.12.1/lib/python3.12/site-packages/werkzeug/serving.py", line 323, in run_wsgi
+    execute(self.server.app)
+  File "/usr/local/python/3.12.1/lib/python3.12/site-packages/werkzeug/serving.py", line 312, in execute
+    application_iter = app(environ, start_response)
+  File "/workspaces/odoo/odoo/service/server.py", line 441, in app
+    return self.app(e, s)
+  File "/workspaces/odoo/odoo/service/wsgi_server.py", line 113, in application
+    return application_unproxied(environ, start_response)
+  File "/workspaces/odoo/odoo/service/wsgi_server.py", line 88, in application_unproxied
+    result = odoo.http.root(environ, start_response)
+  File "/workspaces/odoo/odoo/http.py", line 1341, in __call__
+    return self.dispatch(environ, start_response)
+  File "/workspaces/odoo/odoo/http.py", line 1307, in __call__
+    return self.app(environ, start_wrapped)
+  File "/usr/local/python/3.12.1/lib/python3.12/site-packages/werkzeug/middleware/shared_data.py", line 260, in __call__
+    return self.app(environ, start_response)
+  File "/workspaces/odoo/odoo/http.py", line 1514, in dispatch
+    ir_http = request.registry['ir.http']
+  File "/workspaces/odoo/odoo/modules/registry.py", line 177, in __getitem__
+    return self.models[model_name]
+KeyError: 'ir.http' - - -

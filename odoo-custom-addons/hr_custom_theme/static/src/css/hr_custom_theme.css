@@ -1,0 +1,284 @@
+/* ==========================================
+   HR Custom Theme Styles for Odoo 14
+   ========================================== */
+
+/* HR Module Primary Color Theme */
+.o_hr_root {
+    --hr-primary-color: #5b42f3;
+    --hr-secondary-color: #00d4ff;
+    --hr-accent-color: #ff6b6b;
+    --hr-background-color: #f8f9fa;
+    --hr-text-color: #2c3e50;
+    --hr-card-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --hr-card-hover-shadow: 0 8px 15px rgba(91, 66, 243, 0.15);
+}
+
+/* HR Dashboard Cards */
+.o_hr_dashboard .o_hr_card {
+    background: linear-gradient(135deg, var(--hr-primary-color) 0%, var(--hr-secondary-color) 100%);
+    border-radius: 12px;
+    color: white;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: var(--hr-card-shadow);
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.o_hr_dashboard .o_hr_card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hr-card-hover-shadow);
+}
+
+.o_hr_dashboard .o_hr_card h3 {
+    color: white;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.o_hr_dashboard .o_hr_card p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    margin: 0;
+}
+
+/* HR Employee Form Styling */
+.o_form_view.o_hr_employee_form .o_form_sheet_bg {
+    background: var(--hr-background-color);
+}
+
+.o_form_view.o_hr_employee_form .o_form_statusbar {
+    background: linear-gradient(90deg, var(--hr-primary-color), var(--hr-secondary-color));
+    border-radius: 8px 8px 0 0;
+    padding: 15px 20px;
+}
+
+.o_form_view.o_hr_employee_form .o_form_statusbar > button {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.o_form_view.o_hr_employee_form .o_form_statusbar > button:hover {
+    background: white;
+    color: var(--hr-primary-color);
+}
+
+/* HR Employee List View */
+.o_list_view.o_hr_employee_list {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.o_list_view.o_hr_employee_list thead {
+    background: linear-gradient(135deg, var(--hr-primary-color) 0%, var(--hr-secondary-color) 100%);
+    color: white;
+}
+
+.o_list_view.o_hr_employee_list tbody tr:hover {
+    background-color: rgba(91, 66, 243, 0.05);
+}
+
+.o_list_view.o_hr_employee_list tbody tr.o_data_row:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+/* HR Employee Kanban Cards */
+.o_kanban_view.o_hr_kanban .o_kanban_record {
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+    box-shadow: var(--hr-card-shadow);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.o_kanban_view.o_hr_kanban .o_kanban_record:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--hr-card-hover-shadow);
+    border-color: var(--hr-primary-color);
+}
+
+.o_kanban_view.o_hr_kanban .o_kanban_record .oe_kanban_details {
+    padding: 15px;
+}
+
+.o_kanban_view.o_hr_kanban .o_kanban_record .oe_kanban_details h4 {
+    color: var(--hr-text-color);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+/* HR Avatar Styling */
+.o_hr_avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--hr-primary-color) 0%, var(--hr-secondary-color) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 20px;
+    box-shadow: 0 2px 8px rgba(91, 66, 243, 0.3);
+}
+
+/* HR Buttons */
+.o_hr_button {
+    background: linear-gradient(135deg, var(--hr-primary-color) 0%, var(--hr-secondary-color) 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.o_hr_button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(91, 66, 243, 0.3);
+    color: white;
+}
+
+/* HR Badge Styles */
+.o_hr_badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.o_hr_badge_success {
+    background-color: #28a745;
+    color: white;
+}
+
+.o_hr_badge_warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.o_hr_badge_danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.o_hr_badge_info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+/* HR Sidebar Menu */
+.o_web_settings .o_hr_menu {
+    background: linear-gradient(180deg, var(--hr-primary-color) 0%, #4a35d1 100%);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.o_web_settings .o_hr_menu .o_menu_item {
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+.o_web_settings .o_hr_menu .o_menu_item:hover,
+.o_web_settings .o_hr_menu .o_menu_item.active {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+}
+
+/* HR Statistics Cards */
+.o_hr_stats {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.o_hr_stats .o_stat_card {
+    flex: 1;
+    min-width: 200px;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--hr-card-shadow);
+    border-left: 4px solid var(--hr-primary-color);
+    transition: all 0.3s ease;
+}
+
+.o_hr_stats .o_stat_card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--hr-card-hover-shadow);
+}
+
+.o_hr_stats .o_stat_card .o_stat_value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--hr-primary-color);
+    margin-bottom: 5px;
+}
+
+.o_hr_stats .o_stat_card .o_stat_label {
+    font-size: 14px;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* HR Progress Bars */
+.o_hr_progress {
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.o_hr_progress .o_progress_bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--hr-primary-color) 0%, var(--hr-secondary-color) 100%);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+/* HR Search Box */
+.o_hr_search .o_search_input {
+    border: 2px solid #e9ecef;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.o_hr_search .o_search_input:focus {
+    border-color: var(--hr-primary-color);
+    box-shadow: 0 0 0 3px rgba(91, 66, 243, 0.1);
+    outline: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .o_hr_dashboard .o_hr_card {
+        margin-bottom: 10px;
+        padding: 15px;
+    }
+
+    .o_hr_stats {
+        flex-direction: column;
+    }
+
+    .o_hr_stats .o_stat_card {
+        min-width: 100%;
+    }
+}
