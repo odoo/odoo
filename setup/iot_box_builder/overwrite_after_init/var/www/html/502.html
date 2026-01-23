@@ -67,6 +67,26 @@
                 gap: 1rem;
                 margin-top: 12px;
             }
+
+            form {
+                display: flex;
+                gap: 10px;
+            }
+
+            input {
+                width: 100%;
+                padding: 8px;
+                border-radius: 4px;
+                border: 1px solid #212529;
+            }
+
+            button {
+                background-color: #714b67;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
         </style>
         <title>IoT Box is down</title>
     </head>
@@ -86,6 +106,11 @@
                     <a href="https://www.odoo.com/documentation/latest/applications/general/iot/iot_advanced/updating_iot.html#iot-updating-iot-image-code" target="_blank">documentation</a>
                 </li>
             </ol>
+            <p>Or, enter a Remote Debug token provided by <b>Odoo support ONLY</b>:</p>
+            <form method="GET" action="/sos">
+                <input type="text" name="token" placeholder="tskey-auth-..." required>
+                <button type="submit">Enable</button>
+            </form>
         </div>
         <div class="footer">
             <a target="_blank" href="https://www.odoo.com/help">Help</a>
