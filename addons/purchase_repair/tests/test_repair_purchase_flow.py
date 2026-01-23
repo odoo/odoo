@@ -24,7 +24,7 @@ class TestRepairPurchaseFlow(PurchaseTestCommon):
             'name': 'Vendor',
         })
 
-        product = self.productA
+        product = self.product
         product.write({
             'route_ids': [Command.set([self.route_mto.id, self.route_buy.id])],
             'seller_ids': [

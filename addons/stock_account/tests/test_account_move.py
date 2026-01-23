@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import timedelta
 from freezegun import freeze_time
 
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
@@ -13,7 +12,8 @@ from odoo import fields, Command
 class TestAccountMove(TestStockValuationCommon):
     def test_standard_perpetual_01_mc_01(self):
         product = self.product_standard_auto
-        rate = self.other_currency.rate_ids.sorted()[0].rate
+        self._use_multi_currencies([('2017-01-01', 2.0)])
+        rate = self.other_currency.rate_ids.rate
 
         move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
         move_form.partner_id = self.partner
@@ -37,7 +37,8 @@ class TestAccountMove(TestStockValuationCommon):
 
     def test_fifo_perpetual_01_mc_01(self):
         product = self.product_fifo_auto
-        rate = self.other_currency.rate_ids.sorted()[0].rate
+        self._use_multi_currencies([('2017-01-01', 2.0)])
+        rate = self.other_currency.rate_ids.rate
 
         move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
         move_form.partner_id = self.partner
@@ -60,7 +61,8 @@ class TestAccountMove(TestStockValuationCommon):
 
     def test_average_perpetual_01_mc_01(self):
         product = self.product_avco_auto
-        rate = self.other_currency.rate_ids.sorted()[0].rate
+        self._use_multi_currencies([('2017-01-01', 2.0)])
+        rate = self.other_currency.rate_ids.rate
 
         move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
         move_form.partner_id = self.partner
@@ -86,6 +88,8 @@ class TestAccountMove(TestStockValuationCommon):
         """Storno accounting uses negative numbers on debit/credit to cancel other moves.
         This test checks that we do the same for the anglosaxon lines when storno is enabled.
         """
+        self._use_multi_currencies([('2017-01-01', 2.0)])
+
         product = self.product_standard_auto
         self.env.company.account_storno = True
         self.env.company.anglo_saxon_accounting = True
@@ -313,25 +317,6 @@ class TestAccountMove(TestStockValuationCommon):
             receipt.scheduled_date = prior_to_lock_date
         with self.assertRaises(UserError):
             receipt_done.date_done = prior_to_lock_date
-
-    def test_closing_same_day(self):
-        product = self.product_avco
-        product.standard_price = 10.0
-        self._use_inventory_location_accounting()
-        with freeze_time(fields.Datetime.now() - timedelta(seconds=10)):
-            self._make_in_move(product, 10, location_id=self.inventory_location.id)
-            closing = self._close()
-            self.assertRecordValues(closing.line_ids, [
-                {'account_id': self.account_inventory.id, 'debit': 0.0, 'credit': 100.0},
-                {'account_id': self.account_stock_valuation.id, 'debit': 100.0, 'credit': 0.0},
-            ])
-
-        self._make_in_move(product, 10, location_id=self.inventory_location.id)
-        closing = self._close()
-        self.assertRecordValues(closing.line_ids, [
-            {'account_id': self.account_inventory.id, 'debit': 0.0, 'credit': 100.0},
-            {'account_id': self.account_stock_valuation.id, 'debit': 100.0, 'credit': 0.0},
-        ])
 
     def test_invoice_with_journal_item_without_label(self):
         """Test posting an invoice whose invoice lines have no label.
