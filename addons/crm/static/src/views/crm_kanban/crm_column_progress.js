@@ -1,6 +1,7 @@
 import { onWillStart } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { RottingColumnProgress } from "@mail/js/rotting_mixin/rotting_column_progress";
+import { _t } from "@web/core/l10n/translation";
 
 export class CrmColumnProgress extends RottingColumnProgress {
     static template = "crm.ColumnProgress";
@@ -21,5 +22,9 @@ export class CrmColumnProgress extends RottingColumnProgress {
         }
         const rrField = this.props.progressBarState.progressAttributes.recurring_revenue_sum_field;
         return this.props.progressBarState.getAggregateValue(group, rrField);
+    }
+
+    getColumnProgressTooltip(bar) {
+        return typeof bar.value === 'symbol' ? _t('No activities scheduled') : `${bar.count} ${bar.string}`
     }
 }
