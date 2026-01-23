@@ -29,7 +29,7 @@ class StockMove(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        if 'state' in vals and vals['state'] == 'assigned':
+        if 'state' in vals and vals['state'] in ('partially_available', 'assigned'):
             for picking in self.picking_id:
                 if picking.state != 'assigned':
                     continue
