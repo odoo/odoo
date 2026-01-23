@@ -1,3 +1,6 @@
+import re
+from dateutil.relativedelta import relativedelta
+
 from odoo import Command, fields
 from odoo.tools.misc import clean_context
 from odoo.tests import Form
@@ -40,19 +43,65 @@ class TestStockValuationCommon(BaseCommon):
             invoice.action_post()
         return invoice
 
-    def _create_invoice(self, product, quantity=1.0, price_unit=None, post=True, **kwargs):
+    def _create_invoice(self, product=None, quantity=1.0, price_unit=None, post=True, **kwargs):
         return self._create_account_move("out_invoice", product, quantity, price_unit, post, **kwargs)
 
-    def _create_bill(self, product, quantity=1.0, price_unit=None, post=True, **kwargs):
+    def _create_bill(self, product=None, quantity=1.0, price_unit=None, post=True, **kwargs):
         return self._create_account_move("in_invoice", product, quantity, price_unit, post, **kwargs)
 
     def _create_credit_note(self, product, quantity=1.0, price_unit=1.0, post=True, **kwargs):
         move_type = kwargs.pop("move_type", "out_refund")
         return self._create_account_move(move_type, product, quantity, price_unit, post, **kwargs)
 
+    def _refund(self, move_to_refund, quantity=None, post=True):
+        reversal = self.env['account.move.reversal'].with_context(active_ids=move_to_refund.ids, active_model='account.move').create({
+            'journal_id': move_to_refund.journal_id.id,
+        })
+        credit_note = self.env['account.move'].browse(reversal.refund_moves()['res_id'])
+        if quantity:
+            credit_note.line_ids.quantity = quantity
+        if post:
+            credit_note.action_post()
+        return credit_note
+
     def _close(self, auto_post=True, at_date=None):
         action = self.company.action_close_stock_valuation(at_date=at_date, auto_post=auto_post)
         return action['res_id'] and self.env['account.move'].browse(action['res_id'])
+
+    def _use_price_diff(self):
+        self.account_price_diff = self.env['account.account'].create({
+            'name': 'Price Difference Account',
+            'code': '100102',
+            'account_type': 'asset_current',
+        })
+        self.category_standard.property_price_difference_account_id = self.account_price_diff.id
+        self.category_standard_auto.property_price_difference_account_id = self.account_price_diff.id
+        return self.account_price_diff
+
+    def _use_route_mto(self, product):
+        if not self.route_mto.active:
+            self.route_mto.active = True
+        product.route_ids = [(4, self.route_mto.id)]
+        return product
+
+    def _use_multi_currencies(self, rates=None):
+        date_1 = fields.Date.today()
+        date_2 = date_1 + relativedelta(days=1)
+        date_3 = date_2 + relativedelta(days=1)
+        rates = rates or [
+            (fields.Date.to_string(date_1), 1),
+            (fields.Date.to_string(date_2), 2),
+            (fields.Date.to_string(date_3), 3),
+        ]
+        self.other_currency = self.setup_other_currency('EUR', rates=rates)
+        return self.other_currency
+
+    def _use_multi_warehouses(self):
+        self.other_warehouse = self.env['stock.warehouse'].create({
+            'name': 'Other Warehouse',
+            'code': 'OWH',
+            'company_id': self.company.id,
+        })
 
     def _use_inventory_location_accounting(self):
         self.account_inventory = self.env['account.account'].create({
@@ -273,21 +322,32 @@ class TestStockValuationCommon(BaseCommon):
             ('account_id', '=', self.account_expense.id),
         ], order='date, id')
 
+    def _url_extract_rec_id_and_model(self, url):
+        # Extract model and record ID
+        action_match = re.findall(r'action-([^/]+)', url)
+        model_name = self.env.ref(action_match[0]).res_model
+        rec_id = re.findall(r'/(\d+)$', url)[0]
+        return rec_id, model_name
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        # To move to stock common later
+        cls.route_mto = cls.env.ref('stock.route_warehouse0_mto')
         cls.company = cls.env['res.company'].create({'name': 'Inventory Test Company'})
         cls.env["account.chart.template"]._load(
             "generic_coa", cls.company, install_demo=False
         )
         cls.env.user.company_id = cls.company
-        cls.inventory_user = cls._create_new_internal_user(name='Pauline Poivraisselle', login='pauline', groups='stock.group_stock_user')
+        # We use the admin on tour.
+        cls.user_admin = cls.env.ref('base.user_admin')
+        cls.user_admin.company_ids = [(4, cls.company.id)]
+        cls.user_admin.company_id = cls.company
+
+        cls.inventory_user = cls._create_new_internal_user(name='Inventory User', login='inventory_user', groups='stock.group_stock_user')
         cls.owner = cls._create_partner(name='Consignment Owner')
-        cls.warehouse = cls.env['stock.warehouse'].create({
-            'name': 'Test Warehouse',
-            'code': 'TW',
-            'company_id': cls.company.id,
-        })
+        cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.company.id)], limit=1)
         cls.stock_location = cls.warehouse.lot_stock_id
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
@@ -296,16 +356,14 @@ class TestStockValuationCommon(BaseCommon):
             ('company_id', '=', cls.company.id)
         ], limit=1)
 
-        cls.account_expense = cls.company.expense_account_id
-        cls.account_stock_valuation = cls.company.account_stock_valuation_id
-        cls.account_stock_variation = cls.account_stock_valuation.account_stock_variation_id
-        cls.account_payable = cls.company.partner_id.property_account_payable_id
-        cls.account_receivable = cls.company.partner_id.property_account_receivable_id
-        cls.account_income = cls.company.income_account_id
-
         cls.picking_type_in = cls.warehouse.in_type_id
         cls.picking_type_out = cls.warehouse.out_type_id
         cls.uom = cls.env.ref('uom.product_uom_unit')
+        cls.uom_pack_of_6 = cls.env['uom.uom'].create({
+            'name': 'Pack of 6',
+            'relative_uom_id': cls.uom.id,
+            'relative_factor': 6.0,
+        })
 
         cls.vendor = cls.env['res.partner'].create({
             'name': 'Test Vendor',
@@ -313,11 +371,14 @@ class TestStockValuationCommon(BaseCommon):
         })
         cls.other_company = cls._create_company(name="Other Company")
         cls.branch = cls._create_company(name="Branch Company", parent_id=cls.company.id)
-        cls.other_currency = cls.setup_other_currency(code="EUR", rates=[
-            ('1900-01-01', 1.0),
-            ('2016-01-01', 3.0),
-            ('2017-01-01', 2.0),
-        ])
+
+        # Stock account
+        cls.account_expense = cls.company.expense_account_id
+        cls.account_stock_valuation = cls.company.account_stock_valuation_id
+        cls.account_stock_variation = cls.account_stock_valuation.account_stock_variation_id
+        cls.account_payable = cls.company.partner_id.property_account_payable_id
+        cls.account_receivable = cls.company.partner_id.property_account_receivable_id
+        cls.account_income = cls.company.income_account_id
 
         cls.category_standard = cls.env['product.category'].create({
             'name': 'Standard',
@@ -354,6 +415,7 @@ class TestStockValuationCommon(BaseCommon):
             "uom_id": cls.uom.id,
             "is_storable": True,
         }
+        cls.product = cls.env['product.product'].create({**product_common_vals, 'name': 'Storable Product'}).with_context(clean_context(cls.env.context))
         cls.product_standard = cls.env['product.product'].create({
             **product_common_vals,
             'name': 'Standard Product',
