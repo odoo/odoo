@@ -12,7 +12,7 @@
             </div>
             <div t-if="widget._slideValue.category === 'certification' &amp;&amp; widget._slideValue.completed">
                 <h4 class="mb-3 text-white">Congratulations, you passed the Certification!</h4>
-                <a role="button" class="btn btn-primary" t-att-href="'/survey/' + widget._slideValue.certificationId + '/get_certification'">
+                <a t-if="widget._slideValue.isCertification" role="button" class="btn btn-primary" t-att-href="'/survey/' + widget._slideValue.certificationId + '/get_certification'">
                     <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/> Download certification
                 </a>
             </div>
