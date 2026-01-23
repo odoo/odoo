@@ -53,5 +53,5 @@ class PurchaseOrder(models.Model):
             'name': name,
             'product_qty': quantity,
             'price_unit': price_unit,
-            'taxes_id': [Command.set(tax_ids)],
+            'tax_ids': [Command.set(tax_ids)],
         } for name, quantity, price_unit, tax_ids in lines_vals]
