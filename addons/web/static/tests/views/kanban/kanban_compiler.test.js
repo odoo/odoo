@@ -36,3 +36,29 @@ test("bootstrap dropdowns with kanban_ignore_dropdown class should be left as is
         </t>`;
     expect(compileTemplate(arch)).toHaveOuterHTML(expected);
 });
+
+test("kanban compiler keeps dynamic attributes on <main> and adds o_record_main", async () => {
+    const arch = `
+        <kanban>
+            <templates>
+                <t t-name="card">
+                    <main t-att-class="{'test': true}">
+                        <span>Content</span>
+                    </main>
+                </t>
+            </templates>
+        </kanban>`;
+    const expected = `
+        <t t-translation="off">
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <div t-att-class="{'test': true}" class="o_record_main">
+                            <span>Content</span>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </t>`;
+    expect(compileTemplate(arch)).toHaveOuterHTML(expected);
+});
