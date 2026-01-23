@@ -11,10 +11,35 @@
     .o_kanban_record_top {
         justify-content: space-between;
         .o_kanban_workorder_title {
+            display: flex;
             flex-basis: 40%;
+            flex-direction: row;
         }
-        .o_kanban_workorder_status {
-            flex-basis: 20%;
+    }
+    .o_kanban_workorder_production_name {
+        display: flex;
+        flex-basis: 40%;
+        flex-direction: row;
+        color: gray;
+    }
+    .o_kanban_workorder_date {
+        display: flex;
+        flex-basis: 40%;
+        flex-direction: row;
+        color: gray;
+        &.o_wo_red {
+          color: red;
+        }
+        &.o_wo_orange {
+          color: orange;
+        }
+    }
+    .o_kanban_workorder_remaining {
+        border: solid 1px;
+        padding: 3px;
+        border-color: green;
+        &.o_wo_red {
+          border-color: red;
         }
     }
 }

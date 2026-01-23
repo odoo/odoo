@@ -3,9 +3,10 @@
 
     <t t-name="mrp.MOViewListDropdown" style="btn" t-if="this.props.record.data.state !== 'done' and !['draft', 'done', 'cancel'].includes(this.props.record.data.production_state)">
         <Dropdown>
-            <button t-attf-class="btn btn-link d-flex p-0 pb-1 {{!this.props.record.resId ? 'invisible': ''}}">
+            <button t-attf-class="btn btn-link d-flex p-0 {{!this.props.record.resId ? 'invisible': ''}}">
                 <div class="d-flex align-items-center">
-                    <span t-attf-class="o_status {{statusColor}}"/>
+                    <span t-attf-class="o_wo_status {{statusColor}}" t-if="this.props.display === 'bubble'"/>
+                    <span t-esc="formattedValue" class="badge rounded-pill" t-attf-class="{{statusColor}}" t-if="this.props.display === 'badge'"/>
                 </div>
             </button>
             <t t-set-slot="content">

@@ -3292,7 +3292,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(op_2.date_start, datetime(2022, 10, 23, 12))
 
         with Form(mo_01) as mo_01_form:
-            with mo_01_form.workorder_ids.edit(0) as workorder:
+            with mo_01_form.workorder_ids.edit(1) as workorder:
                 workorder.date_start = datetime(2022, 10, 18, 12)
             mo_01 = mo_01_form.save()
 
@@ -3301,7 +3301,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(op_2.date_start, datetime(2022, 10, 23, 12))
         self.assertNotEqual(op_1.date_finished, op_2.date_start)
 
-        #Second MO
+        # Second MO
         with Form(mo_02) as mo_02_form:
             with mo_02_form.workorder_ids.new() as workorder:
                 workorder.name = "OP1"
@@ -3456,6 +3456,43 @@ class TestMrpOrder(TestMrpCommon):
         self.assertFalse(mo_backorder.workorder_ids[0].date_start)
         self.assertEqual(mo_backorder.workorder_ids[1].date_start, datetime(2023, 3, 1, 12, 0))
         self.assertEqual(mo_backorder.workorder_ids[2].date_start, datetime(2023, 3, 1, 12, 45))
+
+    @freeze_time('2023-03-01 12:00')
+    def test_all_workorders_planned(self):
+        """
+            Test, when writing to a confirmed MO, that all workorders that are expected to be planned are planned.
+        """
+        self.env.user.group_ids += self.env.ref('mrp.group_mrp_routings')
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_8
+        mo = mo_form.save()
+        with mo_form.workorder_ids.new() as workorder:
+            workorder.name = "OP1"
+            workorder.workcenter_id = self.workcenter_2
+        with mo_form.workorder_ids.new() as workorder:
+            workorder.name = "OP2"
+            workorder.workcenter_id = self.workcenter_2
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        mo.workorder_ids[1].button_start()
+        mo.workorder_ids[1].button_finish()
+
+        self.assertTrue(mo.workorder_ids[1].date_start)
+
+        with Form(mo) as mo_form:
+            with mo_form.workorder_ids.new() as workorder:
+                workorder.name = "OP3"
+                workorder.workcenter_id = self.workcenter_2
+            mo = mo_form.save()
+
+        self.assertTrue(mo.workorder_ids[0].date_start)
+        self.assertFalse(mo.workorder_ids[2].date_start)
+
+        mo.button_plan()
+        self.assertTrue(mo.workorder_ids[0].date_start)
+        self.assertTrue(mo.workorder_ids[2].date_start)
 
     def test_compute_product_id(self):
         """

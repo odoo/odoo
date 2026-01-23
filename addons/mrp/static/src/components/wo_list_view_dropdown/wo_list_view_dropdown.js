@@ -1,18 +1,22 @@
-import { Component, useState } from "@odoo/owl";
+import { useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
-import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useService } from "@web/core/utils/hooks";
+import { BadgeField, badgeField } from "@web/views/fields/badge/badge_field";
 
-
-export class MOListViewDropdown extends Component {
+export class MOListViewDropdown extends BadgeField {
     static template = "mrp.MOViewListDropdown";
     static components = {
         Dropdown,
         DropdownItem,
     };
-    static props = { ...standardWidgetProps };
+
+    static props = {
+        ...standardFieldProps,
+        display: { type: String, validate: (val) => ["bubble", "badge"].includes(val)} ,
+    };
 
     setup() {
         this.orm = useService("orm");
@@ -21,11 +25,11 @@ export class MOListViewDropdown extends Component {
             state: this.props.record.data.state,
         });
         this.colorIcons = {
-            "blocked": "bg-warning",
-            "ready": "bg-muted",
-            "progress": "bg-info",
-            "cancel": "bg-danger",
-            "done": "bg-success",
+            "blocked": "text-bg-warning",
+            "ready": "text-bg-secondary",
+            "progress": "text-bg-info",
+            "cancel": "text-bg-danger",
+            "done": "text-bg-success",
         };
     }
 
@@ -35,7 +39,7 @@ export class MOListViewDropdown extends Component {
     }
 
     get statusColor() {
-        const state = this.workorderState.state;
+        const state = this.props.record.data.state;
         return this.colorIcons[state] || "";
     }
 
@@ -66,11 +70,18 @@ export class MOListViewDropdown extends Component {
         }
         await this.reload();
     }
-}
-
-export const moListViewDropdown = {
-    listViewWidth: 20,
-    component: MOListViewDropdown,
 };
 
-registry.category("view_widgets").add("mo_view_list_dropdown", moListViewDropdown);
+registry.category("fields").add("mo_view_list_dropdown", {
+    ...badgeField,
+    supportedOptions: [
+        {
+            name: "display",
+            type: "String"
+        }
+    ],
+    extractProps: ({ options }) => ({
+        display: options.display,
+    }),
+    component: MOListViewDropdown,
+});

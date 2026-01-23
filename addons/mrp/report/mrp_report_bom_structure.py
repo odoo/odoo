@@ -831,7 +831,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
 
     def _simulate_operation_planning(self, operation, product, start_date, quantity, planning_per_operation=False, simulated_leaves_per_workcenter=False):
         """ Simulate planning of an operation depending on its workcenter/alternatives work schedule.
-        (see '_plan_workorder')
+        (see '_plan_workorders')
         """
         operation.ensure_one()
         if planning_per_operation is False:

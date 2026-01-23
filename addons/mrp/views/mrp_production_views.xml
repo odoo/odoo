@@ -92,6 +92,41 @@
             </field>
         </record>
 
+        <record id="mrp_production_to_plan" model="ir.ui.view">
+            <field name="name">mrp.production.to.plan</field>
+            <field name="model">mrp.production</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <list string="Manufacturing Orders">
+                    <header>
+                        <button name="button_plan" type="object" string="Plan"/>
+                    </header>
+                    <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
+                    <field name="name" decoration-bf="1"/>
+                    <field name="date_start" optional="show" widget="remaining_days"/>
+                    <field name="date_finished" optional="hide" widget="remaining_days"/>
+                    <field name="product_id" readonly="1" optional="show"/>
+                    <field name="components_availability_state" column_invisible="True" options='{"lazy": true}'/>
+                    <field name="components_availability" options='{"lazy": true}'
+                        invisible="state not in ['confirmed', 'progress']"
+                        optional="show"
+                        decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'"
+                        decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')"
+                        decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
+                    <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
+                    <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
+                    <field name="uom_id" readonly="1" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" widget="many2one_uom" optional="show"/>
+                    <field name="state"
+                        decoration-success="state in ('done', 'to_close')"
+                        decoration-warning="state == 'progress'"
+                        decoration-info="state == 'confirmed'"
+                        decoration-danger="state == 'cancel'"
+                        decoration-muted="state == 'draft'"
+                        optional="show" widget="badge" class="text-dark"/>
+                </list>
+            </field>
+        </record>
+
         <record id="action_production_order_split" model="ir.actions.server">
             <field name="name">Split</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
