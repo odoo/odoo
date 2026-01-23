@@ -217,10 +217,6 @@ class Application:
             HTTP response status line and the response headers.
         """
         current_thread = threading.current_thread()
-        current_thread.query_count = 0
-        current_thread.query_time = 0
-        current_thread.perf_t0 = real_time()
-        current_thread.cursor_mode = None
         if hasattr(current_thread, 'dbname'):
             del current_thread.dbname
         if hasattr(current_thread, 'uid'):

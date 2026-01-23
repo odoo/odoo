@@ -451,6 +451,74 @@ def str2bool(s: str, default: bool | None = None) -> bool:
     return bool(default)
 
 
+class humanint(int):  # noqa: N801
+    """
+    Integer with a human representation.
+
+    >>> humanint(1500)
+    1.5KB
+    >>> humainint('1.5KB') == 1500
+    True
+    >>> humainint((1024 + 512) * 1000)
+    1500kiB
+    >>> hi = humainint(1023)
+    >>> (repr(hi), str(hi))  # repr is exact but long, str is short but rounds
+    ('1023B', '1kiB')
+    """
+    __sizes = {  # noqa: RUF012
+        'Ti': 1 << 40,
+        'T': 1000 ** 4,
+        'Gi': 1 << 30,
+        'G': 1000 ** 3,
+        'Mi': 1 << 20,
+        'M': 1000 ** 2,
+        'ki': 1 << 10,
+        'K': 1000 ** 1,
+        '':  1,
+    }
+
+    __re = re.compile(br"""^
+        (?P<float>[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?)  # The number as float
+        (?P<unit>k|M|G|T|ki|Mi|Gi|Ti)?[Bo]?                 # The unit
+    $""", re.VERBOSE)
+
+    def __new__(cls, x=0):
+        if isinstance(x, (int, float)):
+            return super().__new__(cls, x)
+        if isinstance(x, str):
+            x = x.encode()
+        if match := cls.__re.search(x):
+            base = float(match.group('float'))
+            unit = cls.__sizes[match.group('unit') or '']
+            return super().__new__(cls, base * unit)
+        e = f"not a valid {cls.__name__} representation: {x}"
+        raise ValueError(e)
+
+    def __repr__(self):
+        """ Get the precise representation. """
+        if not self:
+            return "0B"
+        for unit, size in type(self).__sizes.items():  # noqa: SLF001
+            d, m = divmod(self, size)
+            if not m:
+                return f"{d}{unit}B"
+        return super().__str__()
+
+    def __str__(self):
+        """ Get an approximation that is suitable for humans. """
+        r = repr(self)
+        if not r[-2].isdigit() or abs(self) < 1024:
+            return r  # it is human readable already
+        nbr = self
+        for unit in list(type(self).__sizes)[-3::-2]:
+            nbr /= 1024
+            if abs(nbr) < 1:
+                return f'1{unit}B'
+            if abs(nbr) < 1000:
+                break
+        return f'{nbr:.3g}{unit}B'
+
+
 def human_size(sz: float | str) -> str | typing.Literal[False]:
     """
     Return the size in a human readable format

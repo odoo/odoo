@@ -18,11 +18,9 @@ import textwrap
 import threading
 import time
 from collections import deque
-from io import BytesIO
+from concurrent.futures import ThreadPoolExecutor
 
 import psutil
-import werkzeug.serving
-from werkzeug .urls import uri_to_iri
 
 if os.name == 'posix':
     # Unix only for workers
@@ -74,6 +72,8 @@ thread_local = threading.local()
 # the model and method name that was called via rpc, for logging
 thread_local.rpc_model_method = ''
 
+from odoo.http.client import HTTPClient  # noqa: E402
+
 
 def memory_info(process):
     """
@@ -112,185 +112,6 @@ def empty_pipe(fd):
 def cron_database_list():
     from odoo.modules.db import list_dbs  # noqa: PLC0415
     return config['db_name'] or list_dbs(force=True)
-
-
-# ----------------------------------------------------------
-# Werkzeug WSGI servers patched
-# ----------------------------------------------------------
-class LoggingBaseWSGIServerMixIn:
-    def handle_error(self, request, client_address):
-        type_, value, _traceback = exc_info = sys.exc_info()
-        if type_ is OSError and value.errno == errno.EPIPE:
-            # broken pipe, ignore error
-            return
-        _logger.error("Exception happened during processing of request from %s", client_address, exc_info=exc_info)
-
-
-class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGIServer):
-    """ werkzeug Base WSGI Server patched to skip socket binding. PreforkServer
-    use this class, sets the socket and calls the process_request() manually
-    """
-    def __init__(self, app):
-        werkzeug.serving.BaseWSGIServer.__init__(self, "127.0.0.1", 0, app, handler=CommonRequestHandler)
-        # Directly close the socket. It will be replaced by WorkerHTTP when processing requests
-        if self.socket:
-            self.socket.close()
-
-    def server_activate(self):
-        # dont listen as we use PreforkServer#socket
-        pass
-
-
-class CommonRequestHandler(werkzeug.serving.WSGIRequestHandler):
-    def log_request(self, code='-', size='-'):
-        try:
-            path = uri_to_iri(self.path)
-            fragment = thread_local.rpc_model_method
-            if fragment:
-                path += '#' + fragment
-            msg = f"{self.command} {path} {self.request_version}"
-        except AttributeError:
-            # path isn't set if the requestline was bad
-            msg = self.requestline
-
-        code = str(code)
-
-        if code[0] == "1":  # 1xx - Informational
-            msg = werkzeug.serving._ansi_style(msg, "bold")
-        elif code == "200":  # 2xx - Success
-            pass
-        elif code == "304":  # 304 - Resource Not Modified
-            msg = werkzeug.serving._ansi_style(msg, "cyan")
-        elif code[0] == "3":  # 3xx - Redirection
-            msg = werkzeug.serving._ansi_style(msg, "green")
-        elif code == "404":  # 404 - Resource Not Found
-            msg = werkzeug.serving._ansi_style(msg, "yellow")
-        elif code[0] == "4":  # 4xx - Client Error
-            msg = werkzeug.serving._ansi_style(msg, "bold", "red")
-        else:  # 5xx, or any other response
-            msg = werkzeug.serving._ansi_style(msg, "bold", "magenta")
-
-        self.log("info", '"%s" %s %s', msg, code, size)
-
-
-class RequestHandler(CommonRequestHandler):
-    def setup(self):
-        # timeout to avoid chrome headless preconnect during tests
-        if config['test_enable']:
-            self.timeout = 5
-        # flag the current thread as handling a http request
-        super().setup()
-        me = threading.current_thread()
-        me.name = 'odoo.service.http.request.%s' % (me.ident,)
-
-    def make_environ(self):
-        environ = super().make_environ()
-        # Add the TCP socket to environ in order for the websocket
-        # connections to use it.
-        environ['socket'] = self.connection
-        if self.headers.get('Upgrade') == 'websocket':
-            # Since the upgrade header is introduced in version 1.1, Firefox
-            # won't accept a websocket connection if the version is set to
-            # 1.0.
-            self.protocol_version = "HTTP/1.1"
-        return environ
-
-    def send_header(self, keyword, value):
-        # Prevent `WSGIRequestHandler` from sending the connection close header (compatibility with werkzeug >= 2.1.1 )
-        # since it is incompatible with websocket.
-        if self.headers.get('Upgrade') == 'websocket' and keyword == 'Connection' and value == 'close':
-            # Do not keep processing requests.
-            self.close_connection = True
-            return
-        super().send_header(keyword, value)
-
-    def end_headers(self, *a, **kw):
-        super().end_headers(*a, **kw)
-        # At this point, Werkzeug assumes the connection is closed and will discard any incoming
-        # data. In the case of WebSocket connections, data should not be discarded. Replace the
-        # rfile/wfile of this handler to prevent any further action (compatibility with werkzeug >= 2.3.x).
-        # See: https://github.com/pallets/werkzeug/blob/2.3.x/src/werkzeug/serving.py#L334
-        if self.headers.get('Upgrade') == 'websocket':
-            self.rfile = BytesIO()
-            self.wfile = BytesIO()
-
-    def log_error(self, format, *args):
-        if format == "Request timed out: %r" and config['test_enable']:
-            _logger.info(format, *args)
-        else:
-            super().log_error(format, *args)
-
-
-class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
-    """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
-    given by the environment, this is used by autoreload to keep the listen
-    socket open when a reload happens.
-    """
-    def __init__(self, host, port, app):
-        # The ODOO_MAX_HTTP_THREADS environment variable allows to limit the amount of concurrent
-        # socket connections accepted by a threaded server, implicitly limiting the amount of
-        # concurrent threads running for http requests handling.
-        self.max_http_threads = os.environ.get("ODOO_MAX_HTTP_THREADS")
-        if self.max_http_threads:
-            try:
-                self.max_http_threads = int(self.max_http_threads)
-            except ValueError:
-                # If the value can't be parsed to an integer then it's computed in an automated way to
-                # half the size of db_maxconn because while most requests won't borrow cursors concurrently
-                # there are some exceptions where some controllers might allocate two or more cursors.
-                self.max_http_threads = max((config['db_maxconn'] - config['max_cron_threads']) // 2, 1)
-            self.http_threads_sem = threading.Semaphore(self.max_http_threads)
-        super(werkzeug.serving.ThreadedWSGIServer, self).__init__(host, port, app, handler=RequestHandler)
-
-        # See https://github.com/pallets/werkzeug/pull/770
-        # This allow the request threads to not be set as daemon
-        # so the server waits for them when shutting down gracefully.
-        self.daemon_threads = False
-
-    def server_bind(self):
-        SD_LISTEN_FDS_START = 3
-        if config.http_socket_activation:
-            self.reload_socket = True
-            self.socket = socket.fromfd(SD_LISTEN_FDS_START, socket.AF_INET, socket.SOCK_STREAM)
-            _logger.info('HTTP service (werkzeug) running through socket activation')
-        else:
-            self.reload_socket = False
-            super().server_bind()
-            _logger.info('HTTP service (werkzeug) running on %s:%s', self.server_name, self.server_port)
-
-    def server_activate(self):
-        if not self.reload_socket:
-            super().server_activate()
-
-    def process_request(self, request, client_address):
-        """
-        Start a new thread to process the request.
-        Override the default method of class socketserver.ThreadingMixIn
-        to be able to get the thread object which is instantiated
-        and set its start time as an attribute
-        """
-        t = threading.Thread(target=self.process_request_thread,
-                             args=(request, client_address))
-        t.daemon = self.daemon_threads
-        t.type = 'http'
-        t.start_time = time.time()
-        t.start()
-
-    def _handle_request_noblock(self):
-        if self.max_http_threads and not self.http_threads_sem.acquire(timeout=0.1):
-            # If the semaphore is full we will return immediately to the upstream (most probably
-            # socketserver.BaseServer's serve_forever loop  which will retry immediately as the
-            # selector will find a pending connection to accept on the socket. There is a 100 ms
-            # penalty in such case in order to avoid cpu bound loop while waiting for the semaphore.
-            return
-        # upstream _handle_request_noblock will handle errors and call shutdown_request in any cases
-        super()._handle_request_noblock()
-
-    def shutdown_request(self, request):
-        if self.max_http_threads:
-            # upstream is supposed to call this function no matter what happens during processing
-            self.http_threads_sem.release()
-        super().shutdown_request(request)
 
 
 # ----------------------------------------------------------
@@ -442,8 +263,7 @@ class ThreadedServer(CommonServer):
         # below. This variable is monitored by ``quit_on_signals()``.
         self.quit_signals_received = 0
 
-        # self.socket = None
-        self.httpd = None
+        self.stop_event = threading.Event()
         self.limits_reached_threads = set()
         self.limit_reached_time = None
 
@@ -594,10 +414,68 @@ class ThreadedServer(CommonServer):
             t.start()
             _logger.debug("cron%d started!", i)
 
+    def http_client_thread(self, client, address, prelude=b''):
+        try:
+            # timeout to avoid chrome headless preconnect during tests
+            if config['test_enable']:
+                client.settimeout(5)
+
+            http_client = HTTPClient(client, address, prelude=prelude)
+            del prelude
+            http_client.serve()
+            # if http_client.upgrade == b'websocket':
+            #     ws_client = WSClient(client, address, prelude=http_client.conn.trailing_data)
+            #     del http_client
+            #     ws_client.serve()
+        except BaseException:  # noqa: BLE001
+            current_thread = threading.current_thread()
+            _logger.critical("Thread %s (%s) Exception occurred, quitting...",
+                current_thread.name, current_thread.ident, exc_info=True)
+        finally:
+            client.close()
+
+    def http_server_thread(self, interface, port, stop_event):
+
+        piscine = ThreadPoolExecutor(
+            max_workers=config.max_http_threads or None,  # None: no limit
+            thread_name_prefix='odoo.service.http.request',
+        )
+
+        if config.http_socket_activation:
+            SD_LISTEN_FDS_START = 3
+            server = socket.fromfd(
+                SD_LISTEN_FDS_START,
+                socket.AF_INET,
+                socket.SOCK_STREAM,
+            )
+            _logger.info('HTTP service running through socket activation')
+        else:
+            family = (socket.AF_UNIX if interface.startswith('unix://')
+                else socket.AF_INET6 if ':' in interface
+                else socket.AF_INET
+            )
+            server = socket.create_server(
+                (interface, port),
+                family=family,
+                backlog=max(128, config.max_http_threads),
+            )
+            _logger.info('HTTP service running on %s:%s',
+                    f'[{interface}]' if ':' in interface else interface, port)
+
+        server.settimeout(1)  # it uses poll(2) under the hood
+        with piscine, server:
+            while not stop_event.is_set():
+                try:
+                    client, address = server.accept()
+                except TimeoutError:
+                    continue
+                else:
+                    piscine.submit(self.http_client_thread, client, address)
+
     def http_spawn(self):
-        self.httpd = ThreadedWSGIServerReloadable(self.interface, self.port, self.app)
         threading.Thread(
-            target=self.httpd.serve_forever,
+            target=self.http_server_thread,
+            args=(self.interface, self.port, self.stop_event),
             name="odoo.service.httpd",
             daemon=True,
         ).start()
@@ -632,9 +510,7 @@ class ThreadedServer(CommonServer):
             _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
 
         stop_time = time.time()
-
-        if self.httpd:
-            self.httpd.shutdown()
+        self.stop_event.set()
 
         super().stop()
 
@@ -1101,9 +977,10 @@ class PreforkServer(CommonServer):
 
         if config['http_enable']:
             if config.http_socket_activation:
-                _logger.info('HTTP service (werkzeug) running through socket activation')
+                _logger.info('HTTP service running through socket activation')
             else:
-                _logger.info('HTTP service (werkzeug) running on %s:%s', self.interface, self.port)
+                _logger.info('HTTP service running on %s:%s',
+                    f'[{self.interface}]' if ':' in self.interface else self.interface, self.port)
 
             if os.environ.get('ODOO_HTTP_SOCKET_FD'):
                 # reload
@@ -1330,7 +1207,7 @@ class Worker:
             _logger.info("Worker (%d) max request (%s) reached.", self.pid, self.request_count)
             self.alive = False
         # Reset the worker if it consumes too much memory (e.g. caused by a memory leak).
-        memory = memory_info(psutil.Process(os.getpid()))
+        memory = memory_info(psutil.Process(os.getpid()))  # TODO: optimize this line
         if config['limit_memory_soft'] and memory > config['limit_memory_soft']:
             _logger.info('Worker (%d) virtual memory limit (%s) reached.', self.pid, memory)
             self.alive = False      # Commit suicide after the request.
@@ -1423,15 +1300,9 @@ class WorkerHTTP(Worker):
         # Prevent fd inherientence close_on_exec
         flags = fcntl.fcntl(client, fcntl.F_GETFD) | fcntl.FD_CLOEXEC
         fcntl.fcntl(client, fcntl.F_SETFD, flags)
-        # do request using BaseWSGIServerNoBind monkey patched with socket
-        self.server.socket = client
-        # tolerate broken pipe when the http client closes the socket before
-        # receiving the full reply
-        try:
-            self.server.process_request(client, addr)
-        except OSError as e:
-            if e.errno != errno.EPIPE:
-                raise
+        http_client = HTTPClient(client, addr)
+        http_client.serve()
+
         self.request_count += 1
 
     def process_work(self):
@@ -1441,10 +1312,6 @@ class WorkerHTTP(Worker):
         except OSError as e:
             if e.errno not in (errno.EAGAIN, errno.ECONNABORTED):
                 raise
-
-    def start(self):
-        Worker.start(self)
-        self.server = BaseWSGIServerNoBind(self.multi.app)
 
 
 class WorkerCron(Worker):
