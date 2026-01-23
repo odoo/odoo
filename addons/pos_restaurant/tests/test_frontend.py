@@ -1001,3 +1001,7 @@ class TestFrontend(TestFrontendCommon):
         self.assertEqual(present_order.state, 'cancel')
         self.assertEqual(future_order.state, 'draft')
         self.assertEqual(future_order.session_id.id, False)
+
+    def test_add_new_table_number_with_multi_floor(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_add_new_table_number_with_multi_floor', login="pos_admin")

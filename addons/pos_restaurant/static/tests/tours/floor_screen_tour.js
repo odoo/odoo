@@ -325,3 +325,17 @@ registry.category("web_tour.tours").add("no_ghost_floor", {
             FloorScreen.hasNotFloor("Ghost Floor"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_add_new_table_number_with_multi_floor", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickEditPlan(),
+            FloorScreen.addTable({ close: false }),
+            FloorScreen.hasTable("6"),
+            FloorScreen.selectFloorEditMode("Second Floor"),
+            FloorScreen.addTable({ close: false }),
+            FloorScreen.hasTable("4"),
+        ].flat(),
+});
