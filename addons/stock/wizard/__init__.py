@@ -18,3 +18,4 @@ from . import stock_request_count
 from . import stock_replenishment_info
 from . import stock_quant_relocate
 from . import stock_put_in_pack
+from . import stock_zero_demand_confirmation

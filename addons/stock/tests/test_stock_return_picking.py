@@ -251,7 +251,7 @@ class TestReturnPicking(TestStockCommon):
         # create a return picking
         return_picking = receipt._create_return()
         return_picking.move_ids.product_uom_qty = 1000.0
-        self.assertEqual(return_picking.move_ids.product_uom.id, self.uom_gram.id)
+        self.assertEqual(return_picking.move_ids.uom_id.id, self.uom_gram.id)
         self.assertEqual(return_picking.move_ids.product_uom_qty, 1000.0)
         return_picking.button_validate()
         self.assertEqual(return_picking.state, 'done')

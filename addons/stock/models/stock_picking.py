@@ -5,7 +5,7 @@ from ast import literal_eval
 from datetime import date, timedelta, UTC
 from collections import defaultdict
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, modules
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError
@@ -1192,6 +1192,12 @@ class StockPicking(models.Model):
 
     def action_confirm(self):
         self._check_company()
+        if not self.env.context.get('skip_zero_demand_check') and not modules.module.current_test:
+            # Check for zero demand moves before confirming
+            zero_demand_moves = self.move_ids.filtered(lambda m: m.product_uom_qty <= 0)
+            if zero_demand_moves:
+                return self._action_generate_zero_demand_wizard()
+
         # call `_action_confirm` on every draft move
         self.move_ids.filtered(lambda move: move.state == 'draft')._action_confirm()
 
@@ -1205,7 +1211,7 @@ class StockPicking(models.Model):
         also impact the state of the picking as it is computed based on move's states.
         @return: True
         """
-        self.filtered(lambda picking: picking.state == 'draft').action_confirm()
+        self.filtered(lambda picking: picking.state == 'draft').with_context(skip_zero_demand_check=True).action_confirm()
         moves = self.move_ids.filtered(lambda move: move.state not in ('draft', 'cancel', 'done')).sorted(
             key=lambda move: (-int(move.priority), not bool(move.date_deadline), move.date_deadline, move.date, move.id)
         )
@@ -1528,7 +1534,9 @@ class StockPicking(models.Model):
     def button_validate(self):
         self = self.filtered(lambda p: p.state != 'done')
         draft_picking = self.filtered(lambda p: p.state == 'draft')
-        draft_picking.action_confirm()
+        res = draft_picking.with_context(to_validate=True).action_confirm()
+        if res is not True:
+            return res
         for move in draft_picking.move_ids:
             if move.uom_id.is_zero(move.quantity) and not move.uom_id.is_zero(move.product_uom_qty):
                 move.quantity = move.product_uom_qty
@@ -1631,6 +1639,22 @@ class StockPicking(models.Model):
                 return pickings_to_backorder._action_generate_backorder_wizard(show_transfers=self._should_show_transfers())
         return True
 
+    def _action_generate_zero_demand_wizard(self):
+        view = self.env.ref('stock.view_zero_demand_confirmation')
+        return {
+            'name': _('Zero Demand Warning'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'stock.zero.demand.confirmation',
+            'views': [(view.id, 'form')],
+            'view_id': view.id,
+            'target': 'new',
+            'context': dict(
+                self.env.context,
+                default_picking_ids=[self.id],
+            ),
+        }
+
     def _should_show_transfers(self):
         """Whether the different transfers should be displayed on the pre action done wizards."""
         return len(self) > 1
@@ -1696,7 +1720,7 @@ class StockPicking(models.Model):
             if not picking.move_ids:
                 continue
             if any(move.additional for move in picking.move_ids):
-                picking.action_confirm()
+                picking.with_context(skip_zero_demand_check=True).action_confirm()
         to_confirm = self.move_ids.filtered(lambda m: m.state == 'draft' and m.quantity)
         to_confirm._action_confirm()
 

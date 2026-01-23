@@ -46,6 +46,7 @@
         'views/stock_menu_views.xml',
         'wizard/stock_inventory_conflict.xml',
         'wizard/stock_backorder_confirmation_views.xml',
+        'wizard/stock_zero_demand_confirmation_views.xml',
         'wizard/stock_quantity_history.xml',
         'wizard/stock_request_count.xml',
         'wizard/stock_replenishment_info.xml',
