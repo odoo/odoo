@@ -100,7 +100,16 @@ class HrLeaveEmployeeReport(models.Model):
     def _generate_report_query(self, report_records):
         report_records = [report_record for report_record in report_records if report_record.get('number_of_days', 0) > 0]
         if not report_records:
-            return ""
+            return SQL(
+                """ SELECT
+                        NULL::integer AS id,
+                        NULL::integer AS employee_id,
+                        NULL::integer AS holiday_status_id,
+                        NULL::timestamp AS working_schedule_aligned_date_from,
+                        NULL::float AS number_of_days
+                    WHERE false
+                """
+            )
 
         column_names = list(report_records[0].keys())
         report_records_tuples = []
