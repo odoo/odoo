@@ -790,7 +790,8 @@ export class SeoChecks extends Component {
         const uniqueRecords = new Set();
 
         // Select all relevant <img> elements in the editable page.
-        const imgEls = this.website.pageDocument.documentElement.querySelectorAll("#wrapwrap img");
+        const htmlEl = this.website.pageDocument.documentElement;
+        const imgEls = htmlEl.querySelectorAll("#wrapwrap img");
 
         imgEls.forEach((el) => {
             // Find the closest ancestor element containing Odoo metadata.
@@ -812,6 +813,14 @@ export class SeoChecks extends Component {
             // Build a unique signature string to avoid duplicates.
             uniqueRecords.add(`${model}||${id}||${field}||${type}`);
         });
+
+        // Fallback for translated pages
+        if (uniqueRecords.size === 0 && !htmlEl.dataset.editable && htmlEl.dataset.translatable) {
+            const viewId = parseInt(htmlEl.dataset.viewid, 10);
+            if (viewId) {
+                uniqueRecords.add(`ir.ui.view||${viewId}||arch||html`);
+            }
+        }
 
         // Transform the Set of unique strings back into structured objects.
         const models = Array.from(uniqueRecords).map((entry) => {

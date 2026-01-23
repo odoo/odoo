@@ -745,3 +745,7 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_anchor_on_accordion_item(self):
         self.start_tour("/", "anchor_behaviour_on_accordion_same_tab", login="admin")
         self.start_tour("/#What-services-does-your-company-offer-%3F", "anchor_behaviour_on_accordion_new_tab", login="admin")
+
+    def test_seo_multilang_alt_check(self):
+        self.add_fr_language_to_website()
+        self.start_tour("/", "seo_multilang_alt_check", login="admin")
