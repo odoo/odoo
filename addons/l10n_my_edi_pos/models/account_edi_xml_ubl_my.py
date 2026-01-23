@@ -149,8 +149,13 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             total_amount = total_amount_currency = 0.0
             for base_line in base_lines:
                 sign = -1 if base_line["is_refund"] else 1
-                total_amount += sign * ((base_line['price_unit'] / base_line['rate']) * base_line['quantity'])
-                total_amount_currency += sign * (base_line['price_unit'] * base_line['quantity'])
+                discount_factor = 1 - (base_line['discount'] / 100.0)
+                if discount_factor:
+                    total_amount += sign * (base_line['tax_details']['raw_total_excluded'] / discount_factor)
+                    total_amount_currency += sign * (base_line['tax_details']['raw_total_excluded_currency'] / discount_factor)
+                else:
+                    total_amount += sign * ((base_line['price_unit'] / base_line['rate']) * base_line['quantity'])
+                    total_amount_currency += sign * (base_line['price_unit'] * base_line['quantity'])
 
             new_base_line = AccountTax._prepare_base_line_for_taxes_computation(
                 {},
