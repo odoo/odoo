@@ -7,7 +7,7 @@
             <field name="model">account.journal</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <list string="Account Journal">
+                <list create="False">
                     <field name='sequence' widget='handle'/>
                     <field name="name"/>
                     <field name="type"/>
@@ -201,7 +201,7 @@
             <field name="model">account.journal</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban on_create="account_accountant.action_journal_create_wizard" class="o_kanban_mobile">
                     <templates>
                         <t t-name="card" class="row g-0">
                             <div class="col-6">
