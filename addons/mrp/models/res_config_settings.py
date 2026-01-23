@@ -18,7 +18,7 @@ class ResConfigSettings(models.TransientModel):
         implied_group='mrp.group_mrp_routings')
     group_unlocked_by_default = fields.Boolean("Unlock Manufacturing Orders", implied_group='mrp.group_unlocked_by_default')
     group_mrp_reception_report = fields.Boolean("Allocation Report for Manufacturing Orders", implied_group='mrp.group_mrp_reception_report')
-    group_mrp_workorder_dependencies = fields.Boolean("Work Order Dependencies", implied_group="mrp.group_mrp_workorder_dependencies")
+    group_mrp_workorder_dependencies = fields.Boolean("Custom Work Order Dependencies", implied_group="mrp.group_mrp_workorder_dependencies")
 
     def set_values(self):
         routing_before = self.env.user.has_group('mrp.group_mrp_routings')

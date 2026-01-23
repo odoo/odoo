@@ -479,11 +479,11 @@ class MrpProduction(models.Model):
         for production in self:
             production.duration = sum(production.workorder_ids.mapped('duration'))
 
-    @api.depends("workorder_ids.date_start", "workorder_ids.date_finished", "date_start")
+    @api.depends("workorder_ids.is_planned")
     def _compute_is_planned(self):
         for production in self:
             if production.workorder_ids:
-                production.is_planned = all(wo.date_start and wo.date_finished for wo in production.workorder_ids if wo.state != 'cancel')
+                production.is_planned = all(wo.is_planned for wo in production.workorder_ids if wo.state != 'cancel')
             else:
                 production.is_planned = False
 
@@ -1684,12 +1684,9 @@ class MrpProduction(models.Model):
             order.message_post(body=self.env._("The manufacturing order has been planned."), subtype_id=self.env.ref('mrp.mrp_mo_planned').id)
         return True
 
-    def _plan_workorders(self, replan=False):
+    def _plan_workorders(self):
         """ Plan all the production's workorders depending on the workcenters
         work schedule.
-
-        :param replan: If it is a replan, only ready and blocked workorder will be taken into account
-        :type replan: bool.
         """
         self.ensure_one()
 
@@ -1700,18 +1697,10 @@ class MrpProduction(models.Model):
         self._link_workorders_and_moves()
 
         # Plan workorders starting from final ones (those with no dependent workorders)
-        final_workorders = self.workorder_ids.filtered(lambda wo: not wo.needed_by_workorder_ids)
-        for workorder in final_workorders:
-            workorder._plan_workorder(replan)
-
-        workorders = self.workorder_ids.filtered(lambda w: w.state not in ['cancel'])
-        if not workorders:
-            return
-
-        self.with_context(force_date=True).write({
-            'date_start': min((workorder.leave_id.date_from for workorder in workorders if workorder.leave_id), default=None),
-            'date_finished': max((workorder.leave_id.date_to for workorder in workorders if workorder.leave_id), default=None),
-        })
+        self.workorder_ids.filtered(
+            lambda wo: not wo.is_planned
+            and not wo.needed_by_workorder_ids
+        )._plan_workorders(from_date=self.date_start)
 
     def button_unplan(self):
         self._unplan_workorders()
