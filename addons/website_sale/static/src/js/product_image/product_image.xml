@@ -3,20 +3,18 @@
 
     <t t-name="variant_image_assignment">
         <Dropdown
+            t-if="showDropdown"
             state="dropdownState"
             beforeOpen.bind="beforeOpen"
         >
-                <button
-                        class="btn btn-outline-secondary w-100"
-                >
-                    <div class="d-flex align-items-center justify-content-between">
+            <button class="btn btn-outline-secondary w-100">
+                <div class="d-flex align-items-center justify-content-between">
                     <span>Assign</span>
                     <i t-if="!dropdownState.isOpen" class="fa fa-caret-down ms-1"/>
                     <i t-else="" class="fa fa-caret-up ms-1"/>
-                    </div>
-                </button>
+                </div>
+            </button>
             <t t-set-slot="content">
-
                 <t t-if="state.attributes.length" t-foreach="state.attributes" t-as="attr" t-key="attr.id">
                 <t t-foreach="attr.values" t-as="val" t-key="val.id">
                     <DropdownItem

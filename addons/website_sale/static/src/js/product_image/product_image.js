@@ -28,16 +28,24 @@ export class ProductImage extends Component {
         this.dropdownState = useDropdownState();
     }
 
-    async beforeOpen() {
-        const tmplId = this.record.data.product_tmpl_id.id;
-        if (!tmplId) {
-            return;
+    get showDropdown() {
+        if (!this.record.resId) {
+            return false;
         }
+
+        if (this.record.data.product_tmpl_id && this.record._parentRecord?.resModel === 'product.template') {
+            return this.record._parentRecord.data.attribute_line_ids.count > 0;
+        }
+        return true;
+    }
+
+    async beforeOpen() {
         this.state.attributes = await this.orm.call(
-            'product.template',
-            'get_template_attribute_values_for_image_assignment',
-            [tmplId]
+            'product.image',
+            'get_attribute_values_for_image_assignment',
+            [this.record.resId],
         );
+
         this.state.checkedIds = new Set(
             this.record.data[this.props.name].resIds || []
         );

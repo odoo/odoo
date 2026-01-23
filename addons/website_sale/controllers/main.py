@@ -750,7 +750,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             product_template = image_to_resequence
             product = product_template.product_variant_id
         else:
-            product = image_to_resequence.product_variant_id
+            product = image_to_resequence.product_variant_ids[:1]
             product_template = product.product_tmpl_id or image_to_resequence.product_tmpl_id
 
         if not product and not product_template:

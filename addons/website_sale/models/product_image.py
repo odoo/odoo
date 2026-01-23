@@ -2,7 +2,9 @@
 
 import base64
 
-from odoo import _, api, fields, models
+from collections import defaultdict
+
+from odoo import _, api, fields, models, Command
 from odoo.exceptions import ValidationError
 from odoo.tools.image import is_image_size_above
 
@@ -23,8 +25,12 @@ class ProductImage(models.Model):
     product_tmpl_id = fields.Many2one(
         string="Product Template", comodel_name='product.template', ondelete='cascade', index=True,
     )
-    product_variant_id = fields.Many2one(
-        string="Product Variant", comodel_name='product.product', ondelete='cascade', index=True,
+    product_variant_ids = fields.Many2many(
+        'product.product',
+        string="Product Variants",
+        relation='product_image_product_variant_rel',
+        column1='product_image_id',
+        column2='product_variant_id',
     )
     video_url = fields.Char(
         string="Video URL",
@@ -40,6 +46,11 @@ class ProductImage(models.Model):
     attribute_value_ids = fields.Many2many(
         'product.attribute.value',
     )
+    is_template_image = fields.Boolean(
+        compute='_compute_is_template_image',
+        store=True,
+        index=True,
+    )
 
     #=== COMPUTE METHODS ===#
 
@@ -52,6 +63,11 @@ class ProductImage(models.Model):
     def _compute_embed_code(self):
         for image in self:
             image.embed_code = image.video_url and get_video_embed_code(image.video_url) or False
+
+    @api.depends('product_tmpl_id', 'product_variant_ids')
+    def _compute_is_template_image(self):
+        for image in self:
+            image.is_template_image = bool(image.product_tmpl_id and not image.product_variant_ids)
 
     #=== ONCHANGE METHODS ===#
 
@@ -75,18 +91,79 @@ class ProductImage(models.Model):
     def create(self, vals_list):
         """
             We don't want the default_product_tmpl_id from the context
-            to be applied if we have a product_variant_id set to avoid
+            to be applied if we have a product_variant_ids set to avoid
             having the variant images to show also as template images.
-            But we want it if we don't have a product_variant_id set.
+            But we want it if we don't have a product_variant_ids set.
         """
         context_without_template = self.with_context({k: v for k, v in self.env.context.items() if k != 'default_product_tmpl_id'})
         normal_vals = []
         variant_vals_list = []
 
         for vals in vals_list:
-            if vals.get('product_variant_id') and 'default_product_tmpl_id' in self.env.context:
+            if vals.get('product_variant_ids') and 'default_product_tmpl_id' in self.env.context:
+                variant = self.env['product.product'].browse(vals['product_variant_ids'][0][1])
+                vals['attribute_value_ids'] = [
+                    (4, ptav.product_attribute_value_id.id) for ptav in variant.product_template_attribute_value_ids
+                ]
                 variant_vals_list.append(vals)
             else:
                 normal_vals.append(vals)
 
         return super().create(normal_vals) + super(ProductImage, context_without_template).create(variant_vals_list)
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'attribute_value_ids' in vals:
+            self._sync_variant_images()
+        return res
+
+    # === BUSINESS METHODS === #
+
+    def get_attribute_values_for_image_assignment(self):
+        product_template = self.product_variant_ids[:1].product_tmpl_id or self.product_tmpl_id
+        if not product_template:
+            return []
+
+        return [
+            {
+                'id': line.attribute_id.id,
+                'name': line.attribute_id.name,
+                'values': [
+                    {
+                        'id': ptav.product_attribute_value_id.id,
+                        'name': ptav.product_attribute_value_id.name,
+                    }
+                    for ptav in line.product_template_value_ids
+                    if ptav.ptav_active
+                ],
+            }
+            for line in product_template.attribute_line_ids
+        ]
+
+    def _sync_variant_images(self):
+        for image in self:
+            product_template = image.product_variant_ids[:1].product_tmpl_id or image.product_tmpl_id
+
+            if not product_template or not image.attribute_value_ids:
+                image.product_variant_ids = [Command.clear()]
+                continue
+
+            image_vals_by_attr = defaultdict(set)
+            for val in image.attribute_value_ids:
+                image_vals_by_attr[val.attribute_id.id].add(val.id)
+
+            compatible_variant_ids = []
+
+            for variant in product_template.product_variant_ids:
+                variant_vals = {
+                    ptav.attribute_id.id: ptav.product_attribute_value_id.id
+                    for ptav in variant.product_template_attribute_value_ids
+                }
+
+                if all(
+                    variant_vals.get(attr_id) in allowed_vals
+                    for attr_id, allowed_vals in image_vals_by_attr.items()
+                ):
+                    compatible_variant_ids.append(variant.id)
+
+            image.product_variant_ids = [Command.set(compatible_variant_ids)]

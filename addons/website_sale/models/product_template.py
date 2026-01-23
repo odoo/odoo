@@ -755,24 +755,6 @@ class ProductTemplate(models.Model):
             return 'image_512'
         return 'image_1024'
 
-    def get_template_attribute_values_for_image_assignment(self):
-        self.ensure_one()
-        return [
-            {
-                'id': line.attribute_id.id,
-                'name': line.attribute_id.name,
-                'values': [
-                    {
-                        'id': ptav.product_attribute_value_id.id,
-                        'name': ptav.name,
-                    }
-                    for ptav in line.product_template_value_ids
-                    if ptav.ptav_active
-                ],
-            }
-            for line in self.attribute_line_ids
-        ]
-
     def _init_column(self, column_name):
         # to avoid generating a single default website_sequence when installing the module,
         # we need to set the default row by row for this column

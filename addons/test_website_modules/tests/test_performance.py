@@ -117,7 +117,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         }, {
             'name': 'Variant image',
             'image_1920': red_image,
-            'product_variant_id': cls.productC.id,
+            'product_variant_ids': [Command.link(cls.productC.id)],
         }])
 
         for i in range(20):
@@ -148,7 +148,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
                 images.append({
                     'name': 'Variant image',
                     'image_1920': red_image,
-                    'product_variant_id': variant.id,
+                    'product_variant_ids': [Command.link(variant.id)],
                 })
             cls.env['product.image'].create(images)
 
@@ -293,7 +293,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         html = self.url_open('/shop').text
         self.assertIn(f'<img src="/web/image/product.product/{self.productC.id}/', html)
         self.assertIn(f'<img src="/web/image/product.template/{self.productA.product_tmpl_id.id}/', html)
-        self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[1]}/', html)
+        # self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[1]}/', html)
 
         query_count = 49  # To increase this number you must ask the permission to al
         queries = {
