@@ -293,10 +293,10 @@ class AccountMove(models.Model):
         # A config param is used to be able to store the date in stable. One for einvoice and one for earchive.
         # Should be removed in master and replaced with two date fields on the company.
         param_key = f"l10n_tr_nilvera_{invoice_channel}_{journal_type}.last_fetched_date.{self.env.company.id}"
-        last_fetched_date = self.env['ir.config_parameter'].sudo().get_param(param_key)
+        last_fetched_date = self.env['ir.config_parameter'].sudo().get_str(param_key)
         if not last_fetched_date:
             last_fetched_date = (fields.Date.today() - relativedelta(months=1)).strftime("%Y-%m-%d")
-            self.env['ir.config_parameter'].sudo().set_param(param_key, last_fetched_date)
+            self.env['ir.config_parameter'].sudo().set_str(param_key, last_fetched_date)
         return last_fetched_date
 
     def _l10n_tr_nilvera_get_documents(self, invoice_channel="einvoice", document_category="Purchase", journal_type="purchase"):
@@ -350,7 +350,7 @@ class AccountMove(models.Model):
                     self._l10n_tr_nilvera_add_pdf_to_invoice(client, move, document_uuid, document_category, invoice_channel)
                     moves |= move
                     # Update the last fetched date.
-                    self.env['ir.config_parameter'].sudo().set_param(date_param_key, created_date)
+                    self.env['ir.config_parameter'].sudo().set_str(date_param_key, created_date)
                     self.env.cr.commit()
                 page += 1
             journal._notify_einvoices_received(moves)
