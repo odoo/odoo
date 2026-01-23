@@ -768,6 +768,23 @@ registry.category("web_tour.tours").add("test_specific_reward_product_tax_includ
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_loyalty_is_not_processed_for_draft_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAA"),
+            ProductScreen.addOrderline("Whiteboard Pen", "1", "100"),
+            PosLoyalty.pointsAwardedAre("100"),
+            PosLoyalty.pointsTotalIs("150"),
+            ProductScreen.saveOrder(),
+            ProductScreen.selectFloatingOrder(0),
+            PosLoyalty.pointsAwardedAre("100"),
+            PosLoyalty.pointsTotalIs("150"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_race_conditions_update_program", {
     steps: () =>
         [
