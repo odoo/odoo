@@ -324,6 +324,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         line_vals = super()._retrieve_line_vals(
             record, tree, document_type=document_type, qty_factor=qty_factor
         )
+        line_vals['product_uom_qty'] = line_vals.pop('quantity')
         if not line_vals.get('product_id'):
             # Set customer product reference on order line
             line_vals['edi_customer_product_ref'] = self._find_value(
@@ -372,7 +373,6 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         lines_vals, line_logs = self._import_lines(order, tree, './{*}OrderLine/{*}LineItem', document_type='order', tax_type='sale')
         # adapt each line to sale.order.line
         for line in lines_vals:
-            line['product_uom_qty'] = line.pop('quantity')
             # remove invoice line fields
             line.pop('deferred_start_date', False)
             line.pop('deferred_end_date', False)
