@@ -34,6 +34,7 @@ setup(
         'geoip2',
         'gevent',
         'greenlet',
+        "h11",
         'idna',
         'Jinja2',
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/

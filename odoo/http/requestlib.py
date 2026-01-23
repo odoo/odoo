@@ -666,7 +666,7 @@ class Request:
 
 
 # ruff: noqa: E402
-from ._facade import DEFAULT_MAX_CONTENT_LENGTH, HTTPRequest  # noqa: F401
+from ._facade import DEFAULT_MAX_CONTENT_LENGTH, MAX_FORM_SIZE, HTTPRequest  # noqa: F401
 from .dispatcher import HttpDispatcher, JsonRPCDispatcher, _dispatchers
 from .geoip import GeoIP
 from .response import FutureResponse, Response

@@ -9,7 +9,6 @@ from odoo.exceptions import (
     AccessDenied,
     UserError,
 )
-from odoo.http.retrying import retrying
 from odoo.models import BaseModel, get_public_method
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
@@ -98,6 +97,8 @@ def dispatch(method, params):
 
 
 def execute_cr(cr, uid, obj, method, args, kw):
+    from odoo.http.retrying import retrying  # noqa: PLC0415
+
     env = api.Environment(cr, uid, {})
     env.transaction.reset()  # clean cache etc if we retry the same transaction
     env.transaction.default_env = env  # ensure this is the default env for the call
