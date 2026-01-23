@@ -1958,7 +1958,7 @@ class MrpProduction(models.Model):
             'orderpoint_id': self.orderpoint_id.id,
         }
 
-    def _split_productions(self, amounts=False, cancel_remaining_qty=False, set_consumed_qty=False, skip_workorder_quantity=False):
+    def _split_productions(self, amounts=False, cancel_remaining_qty=False, set_consumed_qty=False):
         """ Splits productions into productions smaller quantities to produce, i.e. creates
         its backorders.
 
@@ -2171,20 +2171,19 @@ class MrpProduction(models.Model):
             # Adapt duration
             for workorder in bo.workorder_ids:
                 workorder.duration_expected = workorder._get_duration_expected()
-            if not skip_workorder_quantity:
-                # Adapt quantities produced
-                for workorder in production.workorder_ids.sorted('id'):
-                    initial_workorder_remaining_qty.append(max(initial_qty - workorder.qty_reported_from_previous_wo - workorder.qty_produced, 0))
-                    if workorder.production_id.id not in (self.env.context.get('mo_ids_to_backorder') or []):
-                        workorder.qty_produced = min(workorder.qty_produced, workorder.qty_production)
-                workorders_len = len(production.workorder_ids)
-                for index, workorder in enumerate(bo.workorder_ids):
-                    remaining_qty = initial_workorder_remaining_qty[index % workorders_len]
-                    workorder.qty_reported_from_previous_wo = max(workorder.qty_production - remaining_qty, 0)
-                    if remaining_qty:
-                        initial_workorder_remaining_qty[index % workorders_len] = max(remaining_qty - workorder.qty_produced, 0)
-                    else:
-                        workorders_to_cancel += workorder
+            # Adapt quantities produced
+            for workorder in production.workorder_ids.sorted('id'):
+                initial_workorder_remaining_qty.append(max(initial_qty - workorder.qty_reported_from_previous_wo - workorder.qty_produced, 0))
+                if workorder.production_id.id not in (self.env.context.get('mo_ids_to_backorder') or []):
+                    workorder.qty_produced = min(workorder.qty_produced, workorder.qty_production)
+            workorders_len = len(production.workorder_ids)
+            for index, workorder in enumerate(bo.workorder_ids):
+                remaining_qty = initial_workorder_remaining_qty[index % workorders_len]
+                workorder.qty_reported_from_previous_wo = max(workorder.qty_production - remaining_qty, 0)
+                if remaining_qty:
+                    initial_workorder_remaining_qty[index % workorders_len] = max(remaining_qty - workorder.qty_produced, 0)
+                else:
+                    workorders_to_cancel += workorder
         workorders_to_cancel.action_cancel()
         backorders._action_confirm_mo_backorders()
 
@@ -2514,6 +2513,15 @@ class MrpProduction(models.Model):
             action['res_id'] = wizard.id
             return action
         else:
+            if self.state not in ('draft', 'confirmed'):
+                if self.qty_producing <= 0:
+                    raise UserError(_("Please specify a quantity greater than 0."))
+                if self.qty_producing >= self.product_qty:
+                    raise UserError(_("Set a quantity that is smaller than the initial demand to split the manufacturing order."))
+                new_product_qty = self.product_qty - self.qty_producing
+                new_mo = self._split_productions(amounts={self: [self.qty_producing, new_product_qty]})
+                self.message_post(body=self.env._("The backorder %s has been created.", new_mo[-1]._get_html_link()))
+                return
             action = self.env['ir.actions.actions']._for_xml_id('mrp.action_mrp_production_split')
             action['context'] = {
                 'default_production_id': self.id,
@@ -2883,13 +2891,13 @@ class MrpProduction(models.Model):
         if not merge and not split:
             return True
         ope_str = merge and _('merged') or _('split')
-        if any(production.state not in ('draft', 'confirmed') for production in self):
-            raise UserError(_("Only manufacturing orders in either a draft or confirmed state can be %s.", ope_str))
         if any(not production.bom_id for production in self):
             raise UserError(_("Only manufacturing orders with a Bill of Materials can be %s.", ope_str))
         if split:
             return True
 
+        if any(production.state not in ('draft', 'confirmed') for production in self):
+            raise UserError(_("Only manufacturing orders in either a draft or confirmed state can be merged"))
         if len(self) < 2:
             raise UserError(_("You need at least two production orders to merge them."))
         products = set([(production.product_id, production.bom_id) for production in self])

@@ -86,7 +86,7 @@ class ChangeProductionQty(models.TransientModel):
                     quantity = 1.0 if not float_is_zero(quantity, precision_digits=precision) else 0.0
                 else:
                     quantity = quantity if (quantity > 0 and not float_is_zero(quantity, precision_digits=precision)) else 0
-                wo._update_qty_producing(quantity)
+                wo._update_qty_producing(quantity if wo.production_id.state != 'to_close' else wo.qty_production)
                 wo.duration_expected = wo._get_duration_expected(ratio=new_production_qty / old_production_qty)
                 if wo.qty_produced < wo.qty_production and wo.state == 'done':
                     wo.state = 'progress'
@@ -102,14 +102,3 @@ class ChangeProductionQty(models.TransientModel):
         self.mo_id.filtered(lambda mo: mo.state in ['confirmed', 'progress']).move_raw_ids._trigger_scheduler()
 
         return {}
-
-    def action_split_mo(self):
-        for wizard in self:
-            if wizard.product_qty <= 0:
-                raise UserError(_("Please specify a quantity bigger than 0."))
-            if wizard.product_qty >= wizard.mo_id.product_qty:
-                raise UserError(_("Set a quantity that is smaller than the intial demand to split the manufacturing order."))
-            new_product_qty = wizard.mo_id.product_qty - wizard.product_qty
-            new_mo = wizard.mo_id._split_productions(amounts={wizard.mo_id: [wizard.product_qty, new_product_qty]}, skip_workorder_quantity=True)
-            wizard.change_prod_qty()
-            wizard.mo_id.message_post(body=wizard.env._("The backorder %s has been created.", new_mo[-1]._get_html_link()))

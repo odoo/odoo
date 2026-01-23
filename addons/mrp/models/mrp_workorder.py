@@ -505,9 +505,7 @@ class MrpWorkorder(models.Model):
         new_workcenter = False
         if 'qty_produced' in values:
             for wo in self:
-                if wo.state in ['done', 'cancel']:
-                    raise UserError(_('You cannot change the quantity produced of a work order that is in done or cancel state.'))
-                elif wo.uom_id.compare(values['qty_produced'], 0) < 0:
+                if wo.uom_id.compare(values['qty_produced'], 0) < 0:
                     raise UserError(_('The quantity produced must be positive.'))
 
         workorders_with_new_wc = self.env['mrp.workorder']
