@@ -3601,6 +3601,20 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Discount should be the same even if tax mode is changed
         self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_order_reward_product_tax_included_excluded', login="pos_user")
 
+    def test_loyalty_is_not_processed_for_draft_order(self):
+        """Test that loyalty is not processed for draft orders"""
+        self.env['loyalty.program'].search([]).write({'active': False})
+        trusted_pos_config = self.main_pos_config.copy()
+        loyalty_program = self.create_programs([('Loyalty P', 'loyalty')])['Loyalty P']
+        partner = self.env['res.partner'].create({'name': 'AAAA'})
+        self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': partner.id,
+            'points': 50,
+        })
+        self.main_pos_config.trusted_config_ids += trusted_pos_config
+        self.start_pos_tour("test_loyalty_is_not_processed_for_draft_order", login="pos_user")
+
     def test_race_conditions_update_program(self):
         """This test ensures that the loyalty program update are correctly applied, even if a lot of programs applies on one order."""
         product_test = self.env['product.product'].create({
