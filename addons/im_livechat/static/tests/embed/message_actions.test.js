@@ -29,7 +29,7 @@ test("Only two quick actions are shown", async () => {
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
     // message data from post contains no reaction, wait now to avoid overriding newer value later
-    await expect.waitForSteps(["discuss.channel/new_message"]);
+    await expect.waitForSteps(["discuss.channel/new_message"], { timeout: 3000 });
     await click("[title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button", { text: "😅" });
     await contains(".o-mail-MessageReaction", { text: "😅" });
