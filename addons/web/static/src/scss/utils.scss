@@ -311,17 +311,18 @@
 %o-nocontent-init-image {
     content: "";
     display: block;
-    margin: auto;
+    margin: var(--o-nocontent-img-margin, auto);
     background-size: cover;
 }
 
-%o-nocontent-empty-document {
+%o-nocontent-init-image-mask {
     @extend %o-nocontent-init-image;
-    width: 120px;
-    height: 80px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    background: transparent url(/web/static/img/empty_folder.svg) no-repeat center;
+    width: var(--o-nocontent-img-width, 50px);
+    height: var(--o-nocontent-img-height, 50px);
+    background-color: var(--o-nocontent-bg-color, var(--black)); 
+    mask-image: url(/web/static/img/nocontent_sprite.svg); // We use mask-image with variable color background to easily switch between dark/light modes
+    mask-size: 400% 300%; // 4 columns, 3 rows: if we add images to `nocontent_sprite.svg`, we need to update this value
+    mask-position: var(--o-nocontent-x, 0%) var(--o-nocontent-y, 0%);
 }
 
 // Sample data

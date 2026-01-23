@@ -596,7 +596,7 @@
         </record>
 
         <template id="help_message_template" name="Help Message" groups="base.group_user">
-            <p name="top_help_message" class="o_view_nocontent_smiling_face o_view_nocontent_stock">
+            <p name="top_help_message" class="o_view_nocontent_stock">
                 <t name="receipt_message">
                     <t t-if="picking_type_code == 'incoming'">
                         No receipt yet! Create a new one.
@@ -656,7 +656,7 @@
             }</field>
             <field name="search_view_id" ref="stock_move_line_view_search"/>
             <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
+                <p class="o_view_nocontent_img_smiling_face">
                     No operations found. Let's create a transfer!
                 </p>
                 <p>

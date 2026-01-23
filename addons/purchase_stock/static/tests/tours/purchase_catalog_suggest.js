@@ -102,7 +102,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
 
         ...catalogSuggestion.setParameters({ nbDays: 7 }),
         { trigger: "span[name='suggest_total']:visible:contains('$ 0.00')" }, // Move out of 100 in 20days, so no suggest for 7 days
-        { trigger: ".o_view_nocontent_smiling_face" }, // Should suggest no products
+        { trigger: ".o_view_nocontent_img_smiling_face" }, // Should suggest no products
 
         // --- Check with suggest OFF we come back to normal
         ...catalogSuggestion.toggleSuggest(false),

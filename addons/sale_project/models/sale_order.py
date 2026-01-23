@@ -253,7 +253,7 @@ class SaleOrder(models.Model):
             'views': [(self.env.ref('sale_project.project_milestone_view_tree').id, 'list')],
             'view_mode': 'list',
             'help': _("""
-                <p class="o_view_nocontent_smiling_face">
+                <p class="o_view_nocontent_img_smiling_face">
                     No milestones found. Let's create one!
                 </p><p>
                     Track major progress points that must be reached to achieve success.

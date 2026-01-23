@@ -22,22 +22,50 @@
     .o_nocontent_help {
         @include o-nocontent-empty;
 
-        .o_view_nocontent_smiling_face:before {
-            @extend %o-nocontent-init-image;
-            width: 120px;
-            height: 140px;
-            background: transparent url(/web/static/img/smiling_face.svg) no-repeat center;
+        [class^="o_view_nocontent_img_"]:before { // Specific to the mask images. Had to add "_img_" to avoid conflict with custom images and for more clarity, for e.g.: .o_view_nocontent_amortization
+            --o-nocontent-img-width: 80px;
+            --o-nocontent-img-height: var(--o-nocontent-img-width);
+            @extend %o-nocontent-init-image-mask;
+        }
+            
+        .o_view_nocontent_img_smiling_face {
+            --o-nocontent-x: 0;
+            --o-nocontent-y: 0;
         }
 
-        .o_view_nocontent_neutral_face:before {
-            @extend %o-nocontent-init-image;
-            width: 120px;
-            height: 140px;
-            background: transparent url(/web/static/img/neutral_face.svg) no-repeat center;
+        .o_view_nocontent_img_empty_folder:before {
+            --o-nocontent-x: -100%;
+            --o-nocontent-y: 0;
         }
 
-        .o_view_nocontent_empty_folder:before {
-            @extend %o-nocontent-empty-document;
+        .o_view_nocontent_img_leaves:before {
+            --o-nocontent-x: -300%;
+            --o-nocontent-y: 0;
+        }
+
+        .o_view_nocontent_img_cactus:before {
+            --o-nocontent-x: 0;
+            --o-nocontent-y: -100%;
+        }
+
+        .o_view_nocontent_img_pouf:before {
+            --o-nocontent-x: -200%;
+            --o-nocontent-y: -100%;
+        }
+
+        .o_view_nocontent_img_filebox:before {
+            --o-nocontent-x: -200%;
+            --o-nocontent-y: 0;
+        }
+
+        .o_view_nocontent_img_hole:before {
+            --o-nocontent-x: -100%;
+            --o-nocontent-y: -100%;
+        }
+
+        .o_view_nocontent_img_box:before {
+            --o-nocontent-x: -300%;
+            --o-nocontent-y: -100%;
         }
 
         .o_empty_custom_dashboard {

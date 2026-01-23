@@ -50,5 +50,5 @@ class SlideChannel(models.Model):
     def action_redirect_to_certified_members(self):
         action = self.action_redirect_to_members('certified')
         msg = _('No Attendee passed this course certification yet!')
-        action['help'] = Markup('<p class="o_view_nocontent_smiling_face">%s</p>') % msg
+        action['help'] = Markup('<p class="o_view_nocontent_img_smiling_face">%s</p>') % msg
         return action
