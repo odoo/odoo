@@ -264,6 +264,7 @@ class SaleOrder(models.Model):
         return super()._action_cancel()
 
     def _display_return_button(self):
+        """Return whether we should display return button on sale order portal or not."""
         self.ensure_one()
         today = fields.Date.today()
         return (

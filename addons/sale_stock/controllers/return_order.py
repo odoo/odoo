@@ -16,6 +16,13 @@ class CustomerPortal(sale_portal.CustomerPortal):
         type='jsonrpc', auth='user', website=True, readonly=True
     )
     def return_order_content(self, order_id, access_token):
+        """Prepare return details of current order depending on deliveries.
+
+        :param int order_id: The order for which we are preparing return content.
+        :param str access_token: The access token used to authenticate the request.
+        :rtype: dict
+        :return: A dict containing a list of returnable lines vals depending on deliveries.
+        """
         try:
             sale_order = self._document_check_access(
                 'sale.order', order_id, access_token=access_token
@@ -28,7 +35,7 @@ class CustomerPortal(sale_portal.CustomerPortal):
             'warehouse_address': sale_order.warehouse_id.partner_id._display_address(
                 without_company=True,
             ),
-            'products': [],
+            'returnable_lines': [],
             'reasons': [{
                 'id': reason.id,
                 'name': reason.name,
@@ -71,15 +78,15 @@ class CustomerPortal(sale_portal.CustomerPortal):
                                 ', '.join(move.lot_ids.mapped('name')) if move.lot_ids else False
                             ),
                         }
-                        return_data['products'].append(returnable_line_vals)
+                        return_data['returnable_lines'].append(returnable_line_vals)
 
         return return_data
 
     @route('/my/orders/return_order/download_label', type='http', auth="user")
     def return_order_dowload_label(
-        self, order_id, access_token=False, selected_products='', return_reason=''
+        self, order_id, access_token=False, selected_lines='', return_reason=''
     ):
-        """Download return data of picking for selected products."""
+        """Download return report of picking for selected products."""
         try:
             sale_order = self._document_check_access(
                 'sale.order', int(order_id), access_token=access_token
@@ -87,22 +94,22 @@ class CustomerPortal(sale_portal.CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
 
-        selected_products_list = json.loads(selected_products)
-        selected_products_per_delivery = defaultdict(dict)
-        for product_data in selected_products_list:
-            selected_products_per_delivery[product_data['delivery_id']][
-                product_data['product_id']
-            ] = product_data['quantity']
+        selected_lines_list = json.loads(selected_lines)
+        return_product_qty_by_delivery = defaultdict(dict)
+        for line in selected_lines_list:
+            delivery_id = line['delivery_id']
+            product_id = line['product_id']
+            return_product_qty_by_delivery[delivery_id][product_id] = line['quantity']
 
         return_data = {
             'wh_address_id': sale_order.warehouse_id.partner_id,
-            'selected_products_per_delivery': selected_products_per_delivery,
+            'return_product_qty_by_delivery': return_product_qty_by_delivery,
             'return_reason': self.env['return.reason'].browse(int(return_reason)),
         }
 
         pdf = request.env['ir.actions.report'].sudo()._render_qweb_pdf(
             'sale_stock.action_report_return_slip',
-            list(selected_products_per_delivery.keys()), data=return_data,
+            list(return_product_qty_by_delivery.keys()), data=return_data,
         )[0]
         pdfhttpheaders = [
             ('Content-Type', 'application/pdf'),

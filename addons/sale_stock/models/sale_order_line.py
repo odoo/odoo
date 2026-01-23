@@ -447,6 +447,7 @@ class SaleOrderLine(models.Model):
         return res
 
     def _is_returnable(self):
+        """Return whether this line contain returnable product and have related delivery or not."""
         self.ensure_one()
         return (
             self.product_type == 'consu'

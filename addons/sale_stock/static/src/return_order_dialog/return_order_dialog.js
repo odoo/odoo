@@ -23,12 +23,12 @@ export class ReturnOrderDialog extends Component {
     setup() {
         this.dialog = useService('dialog');
         this.orm = useService('orm');
-        this.state =  useState({ products: [] });
+        this.state =  useState({ returnableLines: [] });
         this.title = _t("Request a return");
 
         onWillStart(async () => {
             this.content = await this._loadData();
-            this.state.products = this.content.products;
+            this.state.returnableLines = this.content.returnable_lines;
             this.formatCurrency = formatCurrency;
         });
     }
@@ -48,16 +48,16 @@ export class ReturnOrderDialog extends Component {
     // Handlers
     //--------------------------------------------------------------------------
 
-    setQuantity(product, quantity) {
+    setQuantity(line, quantity) {
         if (quantity < 0) {
             quantity = 0;
-        } else if (quantity > product.order_qty) {
-            quantity = product.order_qty;
+        } else if (quantity > line.order_qty) {
+            quantity = line.order_qty;
         }
-        if (product.quantity === quantity) {
+        if (line.quantity === quantity) {
             return false;
         }
-        product.quantity = quantity;
+        line.quantity = quantity;
         return true;
     }
 
@@ -82,7 +82,7 @@ export class ReturnOrderDialog extends Component {
             });
             return;
         }
-        const selectedProducts = this.state.products.filter(product => product.quantity);
+        const selectedlines = this.state.returnableLines.filter(line => line.quantity);
         this.dialog.add(ConfirmationDialog, {
             title: '',
             body: markup(
@@ -95,10 +95,10 @@ export class ReturnOrderDialog extends Component {
                 const params = {
                     order_id: this.props.saleOrderId,
                     access_token: this.props.accessToken,
-                    selected_products: JSON.stringify(selectedProducts),
+                    selected_lines: JSON.stringify(selectedlines),
                     return_reason: returnReasonValue,
                 }
-                if (selectedProducts.length <= 10) {
+                if (selectedlines.length <= 10) {
                     const query = new URLSearchParams(params).toString();
                     const url = `return_order/download_label?${query}`;
                     window.open(url, '_blank');
@@ -111,10 +111,10 @@ export class ReturnOrderDialog extends Component {
     }
 
     _getErrorMessage() {
-        const noSelectedProduct = this.state.products.every(
-            product => Number(product.quantity || 0) === 0
+        const noSelectedLine = this.state.returnableLines.every(
+            line => Number(line.quantity || 0) === 0
         );
-        if (noSelectedProduct) {
+        if (noSelectedLine) {
             return _t("Please add at least one product to return.");
         }
 

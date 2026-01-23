@@ -68,9 +68,10 @@
                         <!-- Product list -->
                         <div class="mt-3">
                             <strong>Returned products</strong>
+                            <t t-set="return_products" t-value="return_product_qty_by_delivery[picking.id]"/>
                             <div
                                 t-foreach="picking.move_ids.filtered(
-                                    lambda move: move.product_id.id in selected_products_per_delivery[picking.id].keys()
+                                    lambda move: move.product_id.id in return_products.keys()
                                 )"
                                 t-as="move"
                                 class="d-flex mt-2 align-items-center"
@@ -87,7 +88,7 @@
                                     <br/>
                                     Quantity:
                                     <span
-                                        t-out="selected_products_per_delivery[picking.id][move.product_id.id]"
+                                        t-out="return_products[move.product_id.id]"
                                     /><br/>
                                     <t t-if="move.lot_ids">
                                         Lot/Serial Number:
