@@ -297,9 +297,19 @@ export function bootstrapToTable(element) {
             bootstrapRow.remove();
 
             // COLUMNS
-            const bootstrapColumns = [...tr.children].filter(
-                (column) => column.className && column.className.match(RE_COL_MATCH)
-            );
+            const bootstrapColumns = [...tr.children].filter((column) => {
+                let match = column.className && column.className.match(RE_COL_MATCH);
+                const size = match ? _getColumnSize(column) : undefined;
+                while (match) {
+                    column.classList.remove(match[0].trim());
+                    match = column.className && column.className.match(RE_COL_MATCH);
+                }
+                if (size !== undefined) {
+                    // Only keep the final column size. Everything else was stripped.
+                    column.classList.add(`col${size ? `-${size}` : ``}`);
+                }
+                return size !== undefined;
+            });
 
             // 1. Replace generic "col" classes with specific "col-n", computed
             //    by sharing the available space between them.
@@ -323,9 +333,11 @@ export function bootstrapToTable(element) {
                 if (offsetSize) {
                     const newColumn = document.createElement("div");
                     newColumn.classList.add(`col-${offsetSize}`);
-                    bootstrapColumn.classList.remove(
-                        bootstrapColumn.className.match(RE_OFFSET_MATCH)[0].trim()
-                    );
+                    let match = bootstrapColumn.className.match(RE_OFFSET_MATCH);
+                    while (match) {
+                        bootstrapColumn.classList.remove(match[0].trim());
+                        match = bootstrapColumn.className.match(RE_OFFSET_MATCH);
+                    }
                     bootstrapColumn.before(newColumn);
                     bootstrapColumns.splice(columnIndex, 0, newColumn);
                     columnIndex++;
@@ -344,12 +356,6 @@ export function bootstrapToTable(element) {
                     currentCol = grid[gridIndex];
                     _applyColspan(currentCol, columnSize, containerWidth);
                     gridIndex += columnSize;
-                    if (columnIndex === bootstrapColumns.length - 1) {
-                        // We handled all the columns but there is still space
-                        // in the row. Insert the columns and fill the row.
-                        _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
-                        currentRow.append(...grid.filter((td) => td.getAttribute("colspan")));
-                    }
                 } else if (gridIndex + columnSize === 12) {
                     // Finish the row.
                     currentCol = grid[gridIndex];
@@ -365,9 +371,11 @@ export function bootstrapToTable(element) {
                         gridIndex = 0;
                     }
                 } else {
-                    // Fill the row with what was in the grid before it
-                    // overflowed.
-                    _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
+                    if (gridIndex < 12) {
+                        // Fill the row with what was in the grid before it
+                        // overflowed.
+                        _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
+                    }
                     currentRow.append(...grid.filter((td) => td.getAttribute("colspan")));
                     // Start a new row that starts with the current col.
                     const previousRow = currentRow;
@@ -376,13 +384,15 @@ export function bootstrapToTable(element) {
                     grid = _createColumnGrid();
                     currentCol = grid[0];
                     _applyColspan(currentCol, columnSize, containerWidth);
-                    gridIndex = columnSize % 12;
-                    if (columnIndex === bootstrapColumns.length - 1 && gridIndex < 12) {
+                    gridIndex = columnSize;
+                }
+                if (columnIndex === bootstrapColumns.length - 1) {
+                    if (gridIndex < 12) {
                         // We handled all the columns but there is still space
                         // in the row. Insert the columns and fill the row.
                         _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
-                        currentRow.append(...grid.filter((td) => td.getAttribute("colspan")));
                     }
+                    currentRow.append(...grid.filter((td) => td.getAttribute("colspan")));
                 }
                 if (currentCol) {
                     for (const attr of bootstrapColumn.attributes) {
