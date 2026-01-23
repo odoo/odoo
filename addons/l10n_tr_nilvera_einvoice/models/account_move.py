@@ -99,7 +99,7 @@ class AccountMove(models.Model):
         string="Exemption Reason",
         help="The exception reason of the invoice.",
     )
-    l10n_tr_exemption_code_domain_list = fields.Binary(compute='_compute_l10n_tr_exemption_code_domain_list')
+    l10n_tr_exemption_code_domain_list = fields.Json(compute='_compute_l10n_tr_exemption_code_domain_list')
     l10n_tr_nilvera_customer_status = fields.Selection(
         string="Partner Nilvera Status",
         related='partner_id.l10n_tr_nilvera_customer_status',
