@@ -5,7 +5,14 @@
         <div t-if="Object.keys(props.scales).length > 1" t-att-class="`btn-group o_view_scale_selector ${props.dropdownClass || ''}`">
             <Dropdown>
                 <button class="btn btn-secondary scale_button_selection o-dropdown-caret" data-hotkey="v">
-                    <t t-esc="props.scales[props.currentScale].description" />
+                    <t t-if="props.currentScale === 'custom'">
+                        <div class="d-inline-flex gap-1 align-items-center">
+                            <t t-esc="props.scales[props.currentScale].from_date"/>
+                            <i class="fa fa-long-arrow-right"/>
+                            <t t-esc="props.scales[props.currentScale].to_date"/>
+                        </div>
+                    </t>
+                    <t t-else="" t-esc="props.scales[props.currentScale].description" />
                 </button>
                 <t t-set-slot="content">
                     <t t-foreach="scales" t-as="scale" t-key="scale.key">
