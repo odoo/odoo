@@ -12,7 +12,7 @@ else:
     parse_auth = http.parse_www_authenticate_header
 
 from odoo import api, fields, models
-from odoo.exceptions import AccessDenied, UserError
+from odoo.exceptions import AccessDenied, UserError, ValidationError
 from odoo.addons.auth_signup.models.res_users import SignupError
 
 from odoo.addons import base
@@ -50,7 +50,7 @@ class ResUsers(models.Model):
         oauth_provider = self.env['auth.oauth.provider'].browse(provider)
         validation = self._auth_oauth_rpc(oauth_provider.validation_endpoint, access_token)
         if validation.get("error"):
-            raise Exception(validation['error'])
+            raise ValidationError(validation['error'])
         if oauth_provider.data_endpoint:
             data = self._auth_oauth_rpc(oauth_provider.data_endpoint, access_token)
             validation.update(data)
