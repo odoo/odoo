@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
             run: "edit Test",
         },
         {
-            trigger: '.modal ul.ui-autocomplete a:contains("TestEvent")',
+            trigger: '.modal ul.ui-autocomplete button:contains("TestEvent")',
             run: "click",
         },
         {
@@ -33,7 +33,7 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
             run: "click",
         },
         {
-            trigger: '.modal ul.ui-autocomplete a:contains("Kid + meal")',
+            trigger: '.modal ul.ui-autocomplete button:contains("Kid + meal")',
             run: "click",
         },
         {
@@ -68,7 +68,7 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
             run: "edit Test",
         },
         {
-            trigger: '.modal ul.ui-autocomplete a:contains("TestEvent")',
+            trigger: '.modal ul.ui-autocomplete button:contains("TestEvent")',
             run: "click",
         },
         {
@@ -76,7 +76,7 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
             run: "click",
         },
         {
-            trigger: '.modal ul.ui-autocomplete a:contains("Adult")',
+            trigger: '.modal ul.ui-autocomplete button:contains("Adult")',
             run: "click",
         },
         {
@@ -106,7 +106,7 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
             run: "edit Test",
         },
         {
-            trigger: '.modal ul.ui-autocomplete a:contains("TestEvent")',
+            trigger: '.modal ul.ui-autocomplete button:contains("TestEvent")',
             run: "click",
         },
         {
@@ -114,7 +114,7 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
             run: "click",
         },
         {
-            trigger: '.modal ul.ui-autocomplete a:contains("VIP")',
+            trigger: '.modal ul.ui-autocomplete button:contains("VIP")',
             run: "click",
         },
         {

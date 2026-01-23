@@ -270,7 +270,7 @@ test("selection filter", async function () {
     });
     await mountFilterValueComponent({ model, filter: model.getters.getGlobalFilter("42") });
     await contains("input").click();
-    await contains("a:first").click();
+    await contains("button:first").click();
     expect(model.getters.getGlobalFilterValue("42")).toEqual({
         operator: "in",
         selectionValues: ["after"],

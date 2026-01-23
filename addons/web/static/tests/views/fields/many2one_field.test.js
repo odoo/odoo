@@ -2945,12 +2945,12 @@ test("propagate can_create onto the search popup", async () => {
 
     await contains(".o_field_widget[name=product_id] input").click();
 
-    expect(".o-autocomplete a:contains(Start typing...)").toHaveCount(0);
+    expect(".o-autocomplete button:contains(Start typing...)").toHaveCount(0);
 
     await contains(".o_field_widget[name=product_id] input").edit("a", { confirm: false });
     await runAllTimers();
 
-    expect(".ui-autocomplete a:contains(Create and Edit)").toHaveCount(0);
+    expect(".ui-autocomplete button:contains(Create and Edit)").toHaveCount(0);
 
     await contains(".o_field_many2one[name=product_id] input").edit("", { confirm: false });
     await runAllTimers();
@@ -3990,7 +3990,7 @@ test("many2one search with false as name", async () => {
     });
 
     await contains(".o_field_many2one input").click();
-    expect(".o_field_many2one[name='trululu'] .dropdown-menu a.dropdown-item:eq(0)").toHaveText(
+    expect(".o_field_many2one[name='trululu'] .dropdown-menu button.dropdown-item:eq(0)").toHaveText(
         "Unnamed"
     );
 });
@@ -4015,12 +4015,12 @@ test("many2one search with formatted name", async () => {
 
     await contains(".o_field_many2one input").click();
     expect(
-        ".o_field_many2one[name='trululu'] .dropdown-menu a.dropdown-item:eq(0)"
+        ".o_field_many2one[name='trululu'] .dropdown-menu button.dropdown-item:eq(0)"
     ).toHaveInnerHTML(
         `Research & Development Test: <b>Paul</b> <span class="text-muted">Eric</span> <span class="o_tag position-relative d-inline-flex align-items-center align-baseline mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">good guy</span><br/><span style="margin-left: 2em"></span>More text`
     );
     await contains(
-        ".o_field_many2one[name='trululu'] .dropdown-menu a.dropdown-item:eq(0)"
+        ".o_field_many2one[name='trululu'] .dropdown-menu button.dropdown-item:eq(0)"
     ).click();
     expect(".o_field_many2one input").toHaveValue("Paul Eric");
 });
@@ -4082,15 +4082,15 @@ test("highlight search in many2one", async () => {
     });
     await contains(".o_field_widget[name=trululu] input").edit("rec", { confirm: false });
     await runAllTimers();
-    expect(`.o-autocomplete.dropdown li:not(.o_m2o_dropdown_option) a`).toHaveCount(2);
-    expect(`.o-autocomplete.dropdown li:eq(0) a`).toHaveInnerHTML(`
+    expect(`.o-autocomplete.dropdown li:not(.o_m2o_dropdown_option) button`).toHaveCount(2);
+    expect(`.o-autocomplete.dropdown li:eq(0) button`).toHaveInnerHTML(`
         first
         <span class="text-primary fw-bold">
             rec
         </span>
         ord
     `);
-    expect(`.o-autocomplete.dropdown li:eq(1) a`).toHaveInnerHTML(`
+    expect(`.o-autocomplete.dropdown li:eq(1) button`).toHaveInnerHTML(`
         second
         <span class="text-primary fw-bold">
             rec

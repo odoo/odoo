@@ -18,7 +18,7 @@
             --dropdown-link-hover-bg: var(--dropdown-bg);
         }
 
-        > a.ui-state-active {
+        > button.ui-state-active {
             margin: 0;
             border: none;
             font-weight: $font-weight-normal;
@@ -27,11 +27,13 @@
         }
 
         &.o_m2o_dropdown_option, &.o_m2o_start_typing, &.o_m2o_no_result {
-            text-indent: $o-dropdown-hpadding * .5;
+            > .dropdown-item {
+                text-indent: $o-dropdown-hpadding * .5;
+            }
         }
 
         &.o_m2o_dropdown_option, &.o_calendar_dropdown_option {
-            > a {
+            > button {
                 color: $link-color;
                 &.ui-state-active:not(.o_m2o_start_typing) {
                     color: $link-hover-color;
@@ -41,12 +43,12 @@
 
         &.o_m2o_start_typing, &.o_m2o_no_result {
             font-style: italic;
-            a.ui-menu-item-wrapper, a.ui-state-active, a.ui-state-active:hover {
+            button.ui-menu-item-wrapper, button.ui-state-active, button.ui-state-active:hover {
                 background: none;
             }
         }
 
-        &.o_m2o_start_typing > a.ui-state-active {
+        &.o_m2o_start_typing > button.ui-state-active {
             color: $dropdown-link-color;
         }
     }

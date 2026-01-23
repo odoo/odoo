@@ -49,7 +49,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
         },
         {
             isActive: ["auto"],
-            trigger: ".ui-menu-item > a:contains('Azure Interior')",
+            trigger: ".ui-menu-item > button:contains('Azure Interior')",
             run: "click",
         },
         {
@@ -75,7 +75,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
         },
         {
             isActive: ["auto"],
-            trigger: "a:contains('DESK0001')",
+            trigger: "button:contains('DESK0001')",
             run: "click",
         },
         {

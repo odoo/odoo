@@ -389,7 +389,7 @@ test("Selecting item in autocomplete field through Enter", async () => {
     await press("Enter");
     checkTourSteps([
         ".o-autocomplete--input",
-        ".o-autocomplete--dropdown-item > a:contains('World'), .fa-circle-o-notch",
+        ".o-autocomplete--dropdown-item > button:contains('World'), .fa-circle-o-notch",
     ]);
     expect(tourRecorder.state.steps.map((s) => s.run)).toEqual(["click", "click"]);
 });

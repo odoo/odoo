@@ -13167,7 +13167,7 @@ test("add record in nested x2many with context depending on parent", async () =>
 
     await contains(".o_data_cell").click();
     await contains("div[name=turtles] .o-autocomplete.dropdown input").click();
-    await contains(".o-autocomplete--dropdown-menu li a").click();
+    await contains(".o-autocomplete--dropdown-menu li button").click();
 });
 
 test("one2many with default_order on id, but id not in view", async () => {

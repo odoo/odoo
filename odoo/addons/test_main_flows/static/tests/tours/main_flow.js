@@ -143,7 +143,7 @@ stepUtils.autoExpandMoreButtons(),
     run: "edit the_flow.component1",
 }, {
     isActive: ["auto", "desktop"],
-    trigger: ".ui-menu-item > a:contains('the_flow.component1')",
+    trigger: ".ui-menu-item > button:contains('the_flow.component1')",
     run: "click",
 }, {
     isActive: ["mobile"],
@@ -206,7 +206,7 @@ stepUtils.autoExpandMoreButtons(),
     run: "edit the_flow.vendor",
 }, {
     isActive: ["desktop"],
-    trigger: ".ui-menu-item > a:contains('the_flow.vendor')",
+    trigger: ".ui-menu-item > button:contains('the_flow.vendor')",
     run: "click",
 }, {
     isActive: ["mobile"],
@@ -367,7 +367,7 @@ stepUtils.autoExpandMoreButtons(),
     run: "edit the_flow.component2",
 }, {
     isActive: ["auto", "desktop"],
-    trigger: ".ui-menu-item > a:contains('the_flow.component2')",
+    trigger: ".ui-menu-item > button:contains('the_flow.component2')",
     run: "click",
 }, {
 // Edit second component
@@ -420,7 +420,7 @@ stepUtils.autoExpandMoreButtons(),
     run: "edit the_flow.vendor",
 }, {
     isActive: ["auto", "desktop"],
-    trigger: ".ui-menu-item > a:contains('the_flow.vendor')",
+    trigger: ".ui-menu-item > button:contains('the_flow.vendor')",
     run: "click",
 },
 {
@@ -599,7 +599,7 @@ stepUtils.autoExpandMoreButtons(),
     run: "edit the_flow.project",
 }, {
     isActive: ["auto", "desktop"],
-    trigger: ".o-autocomplete--dropdown-item > a:contains('the_flow.project')",
+    trigger: ".o-autocomplete--dropdown-item > button:contains('the_flow.project')",
     run: "click",
 },
 {
@@ -665,7 +665,7 @@ stepUtils.autoExpandMoreButtons(),
     run: "edit the_flow.customer",
 }, {
     isActive: ["auto", "desktop"],
-    trigger: ".ui-menu-item > a:contains('the_flow.customer')",
+    trigger: ".ui-menu-item > button:contains('the_flow.customer')",
     run: "click",
 },
 {
@@ -748,7 +748,7 @@ stepUtils.autoExpandMoreButtons(),
     run: "edit the_flow.product",
 }, {
     isActive: ["desktop"],
-    trigger: ".ui-menu-item > a:contains('the_flow.product')",
+    trigger: ".ui-menu-item > button:contains('the_flow.product')",
     run: "click",
 },
 {
@@ -809,7 +809,7 @@ stepUtils.autoExpandMoreButtons(),
     run: "edit the_flow.service",
 }, {
     isActive: ["desktop"],
-    trigger: ".ui-menu-item > a:contains('the_flow.service')",
+    trigger: ".ui-menu-item > button:contains('the_flow.service')",
     run: "click",
 }, {
     isActive: ["desktop"],
@@ -1235,7 +1235,7 @@ stepUtils.autoExpandMoreButtons(true),
     run: "edit the_flow.customer",
 }, {
     isActive: ["auto", "desktop", "enterprise"],
-    trigger: ".ui-menu-item > a:contains('the_flow.customer')",
+    trigger: ".ui-menu-item > button:contains('the_flow.customer')",
     run: "click",
 },
 {

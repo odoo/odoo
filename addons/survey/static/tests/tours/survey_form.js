@@ -41,7 +41,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         run: "click",
     }, {
         content: "Set the first question's first answer as trigger",
-        trigger: ".modal ul.ui-autocomplete a:contains(Question 1 : Answer A)",
+        trigger: ".modal ul.ui-autocomplete button:contains(Question 1 : Answer A)",
         run: 'click',
     },
     ...changeTab("answers"),
@@ -59,7 +59,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         run: "click",
     }, {
         content: "Set the second question's second answer as trigger",
-        trigger: ".modal ul.ui-autocomplete a:contains(Question 2 : Answer B)",
+        trigger: ".modal ul.ui-autocomplete button:contains(Question 2 : Answer B)",
         run: 'click',
     },
     {
@@ -104,7 +104,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         run: "click",
     }, {
         content: "Set the first question's second answer as trigger, then",
-        trigger: 'ul.ui-autocomplete a:contains("Question 1 : Answer B")',
+        trigger: 'ul.ui-autocomplete button:contains("Question 1 : Answer B")',
         run: 'click',
     },
     {
@@ -140,7 +140,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         run: "click",
     }, {
         content: "Add the second question's second answer as trigger, then",
-        trigger: '.modal-content ul.ui-autocomplete a:contains("Question 2 : Answer B")',
+        trigger: '.modal-content ul.ui-autocomplete button:contains("Question 2 : Answer B")',
         run: "click",
     },
     {

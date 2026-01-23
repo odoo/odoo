@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     run: "edit Agrolait",
 }, {
     isActive: ["auto"],
-    trigger: '.ui-menu-item > a:contains("Agrolait")',
+    trigger: '.ui-menu-item > button:contains("Agrolait")',
     run: "click",
 }, {
     trigger: "button:contains('Add a product')",
@@ -27,7 +27,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: 'div[name="product_template_id"] input',
     run: "edit Matrix",
 }, {
-    trigger: 'ul.ui-autocomplete a:contains("Matrix")',
+    trigger: 'ul.ui-autocomplete button:contains("Matrix")',
     run: "click",
 }, {
     trigger: '.modal .o_matrix_input_table',
@@ -91,7 +91,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: 'div[name="product_template_id"] input',
     run: "edit Matrix",
 }, {
-    trigger: 'ul.ui-autocomplete a:contains("Matrix")',
+    trigger: 'ul.ui-autocomplete button:contains("Matrix")',
     run: "click",
 }, {
     trigger: 'input[value="4"]',

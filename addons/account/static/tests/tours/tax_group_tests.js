@@ -32,7 +32,7 @@ registry.category("web_tour.tours").add('account_tax_group', {
     },
     {
         content: "Valid vendor",
-        trigger: '.ui-menu-item a:contains("Account Tax Group Partner")',
+        trigger: '.ui-menu-item button:contains("Account Tax Group Partner")',
         run: "click",
     },
     // Show product column

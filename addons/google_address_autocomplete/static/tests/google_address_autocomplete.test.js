@@ -114,7 +114,7 @@ test("correctly fill all standard fields", async () => {
     expect.verifySteps(["/autocomplete/address"]);
 
     await contains(
-        ".o_field_widget[name='street'] .o-autocomplete--dropdown-item a:contains(Bourlottes)"
+        ".o_field_widget[name='street'] .o-autocomplete--dropdown-item button:contains(Bourlottes)"
     ).click();
     expect.verifySteps(["/autocomplete/address_full"]);
     const expectedFields = {
@@ -155,7 +155,7 @@ test("fills current field with values of unknown ones", async () => {
     });
     await runAllTimers();
     await contains(
-        ".o_field_widget[name='some_char'] .o-autocomplete--dropdown-item a:contains(Bourlottes)"
+        ".o_field_widget[name='some_char'] .o-autocomplete--dropdown-item button:contains(Bourlottes)"
     ).click();
 
     const expectedFields = {
@@ -203,7 +203,7 @@ test("support field mapping in options", async () => {
     });
     await runAllTimers();
     await contains(
-        ".o_field_widget[name='some_char'] .o-autocomplete--dropdown-item a:contains(Bourlottes)"
+        ".o_field_widget[name='some_char'] .o-autocomplete--dropdown-item button:contains(Bourlottes)"
     ).click();
 
     const expectedFields = {

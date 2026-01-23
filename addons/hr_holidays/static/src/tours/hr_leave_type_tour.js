@@ -56,7 +56,7 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
         },
         {
             isActive: ["auto"],
-            trigger: `.ui-autocomplete .ui-menu-item a:contains("${leaveType1}")`,
+            trigger: `.ui-autocomplete .ui-menu-item button:contains("${leaveType1}")`,
             run: "click",
         },
         {
@@ -81,7 +81,7 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
         },
         {
             isActive: ["auto"],
-            trigger: `.ui-autocomplete .ui-menu-item a:contains("${leaveType3}")`,
+            trigger: `.ui-autocomplete .ui-menu-item button:contains("${leaveType3}")`,
             run: "click",
         },
         {
@@ -155,7 +155,7 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
         },
         {
             isActive: ["auto"],
-            trigger: `.ui-autocomplete .ui-menu-item a:contains("${leaveType2}")`,
+            trigger: `.ui-autocomplete .ui-menu-item button:contains("${leaveType2}")`,
             run: "click",
         },
         {

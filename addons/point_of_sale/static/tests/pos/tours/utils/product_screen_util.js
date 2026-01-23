@@ -499,7 +499,7 @@ export function enterLotNumber(number, tracking = "serial", click = false) {
     steps.push(
         {
             trigger:
-                ".o-autocomplete--dropdown-item a:contains('No existing Lot/Serial number found...')",
+                ".o-autocomplete--dropdown-item button:contains('No existing Lot/Serial number found...')",
         },
         {
             content: "enter lot number",
@@ -507,7 +507,8 @@ export function enterLotNumber(number, tracking = "serial", click = false) {
             run: "edit " + number,
         },
         {
-            trigger: ".o-autocomplete--dropdown-item a:contains('Create Lot/Serial number...')",
+            trigger:
+                ".o-autocomplete--dropdown-item button:contains('Create Lot/Serial number...')",
         },
         {
             trigger: ".o-autocomplete input",
@@ -568,7 +569,8 @@ export function enterLotNumbers(numbers) {
                 run: "edit " + lot,
             },
             {
-                trigger: ".o-autocomplete--dropdown-item a:contains('Create Lot/Serial number...')",
+                trigger:
+                    ".o-autocomplete--dropdown-item button:contains('Create Lot/Serial number...')",
             },
             {
                 trigger: ".o-autocomplete input",

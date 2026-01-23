@@ -56,7 +56,7 @@ registerWebsitePreviewTour(
             run: 'edit Test',
         },
         {
-            trigger: '.ui-autocomplete a:contains("Test Category")',
+            trigger: '.ui-autocomplete button:contains("Test Category")',
             run: 'click',
         },
         {

@@ -36,7 +36,7 @@
         },
         {
             isActive: ["auto"],
-            trigger: ".ui-autocomplete > li > a:contains('[COMM] Communication')",
+            trigger: ".ui-autocomplete > li > button:contains('[COMM] Communication')",
             run: "click",
         },
         {

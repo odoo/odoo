@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add("event_configurator_tour", {
             run: "click",
         },
         {
-            trigger: "ul.ui-autocomplete a:text(Design Fair Los Angeles)",
+            trigger: "ul.ui-autocomplete button:text(Design Fair Los Angeles)",
             run: "click",
         },
         {
@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add("event_configurator_tour", {
             run: "click",
         },
         {
-            trigger: "ul.ui-autocomplete a:contains(VIP)",
+            trigger: "ul.ui-autocomplete button:contains(VIP)",
             run: "click",
         },
         {
@@ -41,7 +41,7 @@ registry.category("web_tour.tours").add("event_configurator_tour", {
             run: "click",
         },
         {
-            trigger: "ul.ui-autocomplete a:contains(Standard)",
+            trigger: "ul.ui-autocomplete button:contains(Standard)",
             run: "click",
         },
         {

@@ -79,7 +79,7 @@ export const purchaseForm = {
             {
                 content: "Select vendor from many to one",
                 isActive: ["auto"],
-                trigger: `.ui-menu-item > a:contains(${vendorName})`,
+                trigger: `.ui-menu-item > button:contains(${vendorName})`,
                 run: "click",
             },
         ];
@@ -99,7 +99,7 @@ export const purchaseForm = {
             {
                 content: "Select BaseWarehouse as PO WH",
                 isActive: ["auto"],
-                trigger: `.ui-menu-item > a:contains(${warehouseName})`,
+                trigger: `.ui-menu-item > button:contains(${warehouseName})`,
                 run: "click",
             },
         ];

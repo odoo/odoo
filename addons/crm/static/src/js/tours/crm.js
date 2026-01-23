@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     run: "edit Brandon Freeman",
 }, {
     isActive: ["auto"],
-    trigger: ".ui-menu-item > a:contains('Brandon Freeman')",
+    trigger: ".ui-menu-item > button:contains('Brandon Freeman')",
     run: "click",
 }, {
     trigger: ".o_kanban_quick_create .o_field_widget[name='name'] input:value('Brandon Freeman')",

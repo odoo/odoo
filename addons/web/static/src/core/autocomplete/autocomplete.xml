@@ -36,15 +36,14 @@
                                     'o-autocomplete--dropdown-item': props.dropdown,
                                     'd-block': !props.dropdown
                                 }">
-                                <a
+                                <button
                                     t-attf-id="{{props.id or 'autocomplete'}}_{{source_index}}_loading"
                                     role="option"
-                                    href="#"
                                     class="o_loading dropdown-item ui-menu-item-wrapper"
                                     aria-selected="true"
                                 >
                                     <i class="fa fa-spin fa-circle-o-notch" /> <t t-esc="source.placeholder" />
-                                </a>
+                                </button>
                             </li>
                         </t>
                         <t t-else="">
@@ -57,11 +56,10 @@
                                     t-on-click="() => this.onOptionClick(option)"
                                     t-on-pointerdown="(ev) => this.onOptionPointerDown(option, ev)"
                                 >
-                                    <t t-tag="option.unselectable ? 'span' : 'a'"
+                                    <t t-tag="option.unselectable ? 'span' : 'button'"
                                         class="dropdown-item ui-menu-item-wrapper text-truncate"
                                         t-attf-id="{{props.id or 'autocomplete'}}_{{source_index}}_{{option_index}}"
                                         t-att-role="!option.unselectable and 'option'"
-                                        t-att-href="!option.unselectable and '#'"
                                         t-att-class="{ 'ui-state-active': isActiveSourceOption([source_index, option_index]) }"
                                         t-att-aria-selected="isActiveSourceOption([source_index, option_index]) ? 'true' : 'false'"
                                     >

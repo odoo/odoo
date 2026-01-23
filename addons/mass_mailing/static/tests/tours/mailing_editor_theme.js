@@ -29,7 +29,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Pick 'Newsletter' option",
-            trigger: '.o_input_dropdown a:contains(Newsletter)',
+            trigger: '.o_input_dropdown button:contains(Newsletter)',
             run: "click",
         },
         {
@@ -68,7 +68,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Pick 'Newsletter' option",
-            trigger: '.o_input_dropdown a:contains(Newsletter)',
+            trigger: '.o_input_dropdown button:contains(Newsletter)',
             run: "click",
         },
         {
