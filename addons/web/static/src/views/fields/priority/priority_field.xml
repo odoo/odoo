@@ -17,16 +17,15 @@
                         />
                     </t>
                     <t t-else="">
-                        <a
-                            href="#"
-                            class="o_priority_star fa"
+                        <button
+                            class="o_priority_star btn btn-link btn-link-inline fa"
                             role="radio"
                             t-att-class="value_index lte index ? 'fa-star' : 'fa-star-o opacity-25 opacity-100-hover'"
                             tabindex="0"
                             t-att-data-tooltip="getTooltip(value[1])"
                             t-att-aria-checked="value_index === index ? 'true' : 'false'"
                             t-att-aria-label="value[1]"
-                            t-on-click.prevent.stop="() => this.onStarClicked(value[0])"
+                            t-on-click.stop="() => this.onStarClicked(value[0])"
                             t-on-mouseenter="() => state.index = value_index"
                             t-on-mouseleave="() => state.index = -1"
                         />
