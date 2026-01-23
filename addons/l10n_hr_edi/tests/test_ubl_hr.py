@@ -89,9 +89,9 @@ class TestL10nHrEdiXml(TestL10nHrEdiCommon, AccountTestInvoicingCommon):
             self.get_xml_tree_from_string(expected_content),
         )
 
-    def test_export_invoice_with_exemption(self):
+    def test_export_invoice_with_exemption_k(self):
         """
-        Test the content of a generated invoice with VAT exemption in Croation UBL format.
+        Test the content of a generated invoice with HR:K exemption in Croation UBL format.
         """
         self.setup_partner_as_hr(self.env.company.partner_id)
         self.setup_partner_as_hr_alt(self.partner_a)
@@ -116,7 +116,41 @@ class TestL10nHrEdiXml(TestL10nHrEdiCommon, AccountTestInvoicingCommon):
             'fiscalization_number': self.env['account.move']._get_l10n_hr_fiscalization_number(invoice.name),
         })
         actual_content, _dummy = self.env['account.edi.xml.ubl_hr'].with_context(lang='en_US')._export_invoice(invoice)
-        with misc.file_open(f'addons/{self.test_module}/tests/test_files/test_invoice_exemption.xml', 'rb') as file:
+        with misc.file_open(f'addons/{self.test_module}/tests/test_files/test_invoice_exemption_k.xml', 'rb') as file:
+            expected_content = file.read()
+        self.assertXmlTreeEqual(
+            self.get_xml_tree_from_string(actual_content),
+            self.get_xml_tree_from_string(expected_content),
+        )
+
+    def test_export_invoice_with_exemption_e(self):
+        """
+        Test the content of a generated invoice with HR:E exemption in Croation UBL format.
+        """
+        self.setup_partner_as_hr(self.env.company.partner_id)
+        self.setup_partner_as_hr_alt(self.partner_a)
+        tax = self.env['account.chart.template'].ref('VAT_S_other_exempt_O')
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2025-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(tax.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        invoice.l10n_hr_edi_addendum_id = self.env['l10n_hr_edi.addendum'].create({
+            'move_id': invoice.id,
+            'invoice_sending_time': '2025-01-02',
+            'fiscalization_number': self.env['account.move']._get_l10n_hr_fiscalization_number(invoice.name),
+        })
+        actual_content, _dummy = self.env['account.edi.xml.ubl_hr'].with_context(lang='en_US')._export_invoice(invoice)
+        with misc.file_open(f'addons/{self.test_module}/tests/test_files/test_invoice_exemption_e.xml', 'rb') as file:
             expected_content = file.read()
         self.assertXmlTreeEqual(
             self.get_xml_tree_from_string(actual_content),
