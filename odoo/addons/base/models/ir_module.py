@@ -232,7 +232,7 @@ class IrModuleModule(models.Model):
 
             # then, search and group ir.model.data records
             imd_models = defaultdict(list)
-            imd_domain = [('module', '=', module.name), ('model', 'in', tuple(dmodels))]
+            imd_domain = [('module', '=', module.name), ('model', 'in', tuple(dmodels)), ('res_id', '!=', False)]
             for data in IrModelData.sudo().search(imd_domain):
                 imd_models[data.model].append(data.res_id)
 
