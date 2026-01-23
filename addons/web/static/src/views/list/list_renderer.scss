@@ -78,11 +78,11 @@
         }
 
         thead {
-            background-color: var(--ListRenderer-thead-bg-color);
+            background-color: transparent;
 
             th {
                 padding-top: var(--ListRenderer-thead-padding-y);
-                background-color: transparent;
+                background-color: var(--ListRenderer-thead-bg-color);
                 color: $headings-color;
 
                 @include media-only(print) {
