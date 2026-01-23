@@ -865,12 +865,15 @@ class GeventServer(CommonServer):
 
         self.httpd.close = httpd_close_override
 
-        _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
+        _logger.info('Evented/Websocket Service running on %s:%s',
+            f'[{self.interface}]' if ':' in self.interface else self.interface, self.port)
         try:
             self.httpd.serve_forever(stop_timeout=GEVENT_STOP_TIMEOUT)
-        except:
-            _logger.exception("Evented Service (longpolling): uncaught error during main loop")
+        except SystemExit:
             raise
+        except BaseException:
+            _logger.critical("Evented/Websocket Service (%s): uncaught error in main loop", self.pid, exc_info=True)
+            sys.exit(1)
 
     def stop(self):
         if self.httpd:
@@ -947,7 +950,14 @@ class PreforkServer(CommonServer):
             return worker
 
         # child
-        worker.run()
+        try:
+            worker.run()
+        except SystemExit:
+            raise
+        except BaseException as exc:
+            _logger.critical("Worker %s (%d): uncaught error in main loop, exiting...",
+                type(worker).__name__, worker.pid, exc_info=exc)
+            sys.exit(1)
         sys.exit(0)
 
     def gevent_spawn(self):
@@ -1010,7 +1020,7 @@ class PreforkServer(CommonServer):
                 if not wpid:
                     break
                 if (status >> 8) == 3:
-                    msg = "Critial worker error (%s)"
+                    msg = "Worker (%s): dead"
                     _logger.critical(msg, wpid)
                     raise Exception(msg % wpid)  # noqa: TRY002
                 self.worker_pop(wpid)
@@ -1241,7 +1251,7 @@ class PreforkServer(CommonServer):
         if os.environ.get('ODOO_READY_SIGHUP_PID'):
             os.kill(int(os.environ.pop('ODOO_READY_SIGHUP_PID')), signal.SIGHUP)
 
-        _logger.debug("Multiprocess starting")
+        _logger.debug("Prefork Server (%d): starting", self.pid)
         while 1:
             try:
                 # _logger.debug("Multiprocess beat (%s)",time.time())
@@ -1254,8 +1264,10 @@ class PreforkServer(CommonServer):
                 _logger.debug("Multiprocess clean stop")
                 self.stop()
                 break
-            except Exception:
-                _logger.exception("Error in server mainloop")
+            except SystemExit:
+                raise
+            except BaseException as exc:
+                _logger.critical("Prefork Server (%d): uncaught error in main loop, exiting...", self.pid, exc_info=exc)
                 self.stop(False)
                 return -1
 
@@ -1362,20 +1374,15 @@ class Worker:
         pass
 
     def run(self):
-        try:
-            self.start()
-            t = threading.Thread(name="Worker %s (%s) workthread" % (self.__class__.__name__, self.pid), target=self._runloop)
-            t.daemon = True
-            t.start()
-            t.join()
-            _logger.info("Worker (%s) exiting. request_count: %s, registry count: %s.",
-                         self.pid, self.request_count,
-                         len(Registry.registries))
-            self.stop()
-        except Exception:
-            _logger.exception("Worker (%s) Exception occurred, exiting...", self.pid)
-            # should we use 3 to abort everything ?
-            sys.exit(1)
+        self.start()
+        t = threading.Thread(name="Worker %s (%s) workthread" % (self.__class__.__name__, self.pid), target=self._runloop)
+        t.daemon = True
+        t.start()
+        t.join()
+        _logger.info("Worker (%s) exiting. request_count: %s, registry count: %s.",
+                     self.pid, self.request_count,
+                     len(Registry.registries))
+        self.stop()
 
     def _runloop(self):
         signal.pthread_sigmask(signal.SIG_BLOCK, {
