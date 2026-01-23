@@ -433,6 +433,10 @@ export class LinkPlugin extends Plugin {
             description: _t("Create an URL."),
             icon: "fa-link",
             run: () => {
+                this.dispatchTo(
+                    "before_paste_handlers",
+                    this.dependencies.selection.getEditableSelection()
+                );
                 this.dependencies.dom.insert(this.createLink(url, text));
                 this.dependencies.history.addStep();
             },
