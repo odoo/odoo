@@ -2,6 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { defineModels, fields, getService, models, mountWebClient, onRpc } from "@web/../tests/web_test_helpers";
 import { defineHrHolidaysModels } from "./hr_holidays_test_helpers";
+import { click, waitFor } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 
@@ -105,4 +106,47 @@ test(`test basic rendering`, async () => {
     expect(`.o_calendar_filter:contains("To Approve")`).toHaveCount(1);
     expect(`.o_calendar_filter:contains("Mar 17, 2025 : Test Mandatory Day")`).toHaveCount(1);
     expect(`.fc-day.hr_mandatory_day_5[data-date="2025-03-17"]`).toHaveCount(1);
+});
+
+test(`dashboard allocations update when changing calendar year`, async () => {
+    const now = luxon.DateTime.now();
+    mockDate(now);
+    const nextYear = now.plus({ years: 1 }).year;
+    onRpc("hr.employee", "get_time_off_dashboard_data", ({ args }) => {
+        const arg = args && args[0];
+        const dt = typeof arg === "string" ? luxon.DateTime.fromISO(arg) : arg;
+        if (dt) {
+            if (dt.year === nextYear && dt.month === 1 && dt.day === 1) {
+                return {
+                    allocation_request_amount: 0,
+                    allocation_data: [[
+                        "Next Year Type",
+                        {
+                            virtual_excess_data: {},
+                            virtual_remaining_leaves: 7,
+                            request_unit: "day",
+                        },
+                        true,
+                        1,
+                    ]],
+                };
+            }
+        }
+        return { allocation_data: {}, allocation_request_amount: 0 };
+    });
+
+    await mountWebClient();
+    await getService("action").doAction({
+        id: 1,
+        res_model: "hr.leave",
+        type: "ir.actions.act_window",
+        views: [[false, "calendar"]],
+        context: { employee_id: [200] },
+        domain: [["employee_id", "in", [200]]],
+    });
+    expect(`.o_timeoff_name:contains("Next Year Type")`).toHaveCount(0);
+    click('.o_calendar_button_next')
+    await waitFor(`.o_timeoff_name:contains("Next Year Type")`);
+    expect(`.o_timeoff_name:contains("Next Year Type")`).toHaveCount(1);
+    expect(`.o_timeoff_card:contains("7")`).toHaveCount(1);
 });
