@@ -485,6 +485,8 @@ class Environment(Mapping[str, "BaseModel"]):
         def get(key, get_context=self.context.get):
             if key == 'company':
                 return self.company.id
+            elif key == 'companies':
+                return self.companies._ids
             elif key == 'uid':
                 return self.uid if field.compute_sudo else (self.uid, self.su)
             elif key == 'lang':

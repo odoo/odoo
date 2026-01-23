@@ -556,6 +556,16 @@ class Field[T]:
             if not isinstance(self.readonly, bool):
                 warnings.warn(f'Property {self}.readonly should be a boolean ({self.readonly}).', stacklevel=1)
 
+            if self.store and self._depends_context and not all(
+                (self.translate and c == 'lang')
+                or (self.company_dependent and c == 'company')
+                or c == 'bin_size'
+                or self.type == 'one2many'  # accept all context on o2m
+                or (self.type == 'many2many' and c in ('uid', 'company', 'companies'))  # caching issues
+                for c in self._depends_context
+            ):
+                warnings.warn(f'Stored field {self} should not depend on context ({self._depends_context}).', stacklevel=1)
+
             self._setup_done = True
             # column_type might be changed during Field.setup
             reset_cached_properties(self)
