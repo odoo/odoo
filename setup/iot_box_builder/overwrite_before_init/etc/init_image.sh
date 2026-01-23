@@ -231,7 +231,8 @@ systemctl enable \
     ssh \
     labwc.service \
     odoo.service \
-    odoo-led-manager.service
+    odoo-led-manager.service \
+    sos.service
 
 systemctl disable \
     dphys-swapfile.service \
