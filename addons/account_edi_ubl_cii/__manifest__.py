@@ -27,6 +27,7 @@ Pro rules and show the errors.
         'data/ubl_20_templates.xml',
         'data/ubl_21_templates.xml',
         'views/res_partner_views.xml',
+        'report/account_edi_ubl_cii_report_templates.xml',
     ],
     'assets': {
         'web.assets_backend': [
