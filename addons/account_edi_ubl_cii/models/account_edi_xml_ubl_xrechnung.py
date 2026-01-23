@@ -57,16 +57,53 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
         if not document_node['cbc:BuyerReference']['_text']:
             document_node['cbc:BuyerReference']['_text'] = 'N/A'
 
-    def _get_party_node(self, vals):
+    def _ubl_add_party_endpoint_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
-        party_node = super()._get_party_node(vals)
-        partner = vals['partner']
-        if not party_node.get('cbc:EndpointID', {}).get('_text') and partner.email:
-            party_node['cbc:EndpointID'] = {
+        super()._ubl_add_party_endpoint_id_node(vals)
+        partner = vals['party_vals']['partner']
+
+        if not vals['party_node']['cbc:EndpointID']['_text'] and partner.email:
+            vals['party_node']['cbc:EndpointID'] = {
                 '_text': partner.email,
                 'schemeID': 'EM'
             }
-        return party_node
+
+    def _ubl_add_party_tax_scheme_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_party_tax_scheme_nodes(vals)
+        nodes = vals['party_node']['cac:PartyTaxScheme']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if (
+            not nodes
+            and commercial_partner.peppol_eas
+        ):
+            nodes.append({
+                'cbc:CompanyID': {'_text': None},
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': commercial_partner.peppol_eas},
+                },
+            })
+
+    def _ubl_add_party_legal_entity_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_party_legal_entity_nodes(vals)
+        nodes = vals['party_node']['cac:PartyLegalEntity']
+        partner = vals['party_vals']['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        if (
+            not nodes
+            and commercial_partner.name
+        ):
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': None,
+                    'schemeID': None,
+                },
+            })
 
     def _ubl_get_line_allowance_charge_discount_node(self, vals, discount_values):
         # EXTENDS account.edi.xml.ubl_bis3

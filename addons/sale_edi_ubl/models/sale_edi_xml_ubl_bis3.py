@@ -106,19 +106,40 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         })
 
     def _add_sale_order_buyer_customer_party_nodes(self, document_node, vals):
-        document_node['cac:BuyerCustomerParty'] = {
-            'cac:Party': self._get_party_node({**vals, 'partner': vals['customer'], 'role': 'customer'})
+        # OVERRIDE
+        sub_vals = {
+            **vals,
+            'document_node': document_node,
         }
+        self._ubl_add_buyer_customer_party_node(sub_vals)
 
     def _add_sale_order_seller_supplier_party_nodes(self, document_node, vals):
-        document_node['cac:SellerSupplierParty'] = {
-            'cac:Party': self._get_party_node({**vals, 'partner': vals['supplier'], 'role': 'supplier'})
+        # OVERRIDE
+        sub_vals = {
+            **vals,
+            'document_node': document_node,
         }
+        self._ubl_add_seller_supplier_party_node(sub_vals)
+
+    def _ubl_get_delivery_node_from_delivery_address(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        node = super()._ubl_get_delivery_node_from_delivery_address(vals)
+        node['cbc:ActualDeliveryDate'] = None
+        node['cac:DeliveryLocation'] = None
+        return node
 
     def _add_sale_order_delivery_nodes(self, document_node, vals):
-        document_node['cac:Delivery'] = {
-            'cac:DeliveryParty': self._get_party_node({**vals, 'partner': vals['partner_shipping'], 'role': 'delivery'})
+        # OVERRIDE
+        sub_vals = {
+            **vals,
+            'document_node': document_node,
+            'delivery': vals['partner_shipping'],
         }
+        self._ubl_add_delivery_nodes(sub_vals)
+
+        # Retro-compatibility with the "old" code.
+        if document_node['cac:Delivery']:
+            document_node['cac:Delivery'] = document_node['cac:Delivery'][0]
 
     def _add_sale_order_payment_terms_nodes(self, document_node, vals):
         sale_order = vals['sale_order']
