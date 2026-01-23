@@ -191,7 +191,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on the 'Icons' tab",
-            trigger: '.o_select_media_dialog .o_notebook_headers .nav-item a:contains("Icons")',
+            trigger: '.o_select_media_dialog .o_notebook_headers .nav-item button:contains("Icons")',
             run: "click",
         },
         {
@@ -248,7 +248,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on the 'Icons' tab",
-            trigger: ".o_select_media_dialog a.nav-link:contains('Icons')",
+            trigger: ".o_select_media_dialog button.nav-link:contains('Icons')",
             run: "click",
         },
         {

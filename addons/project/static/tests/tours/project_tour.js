@@ -64,7 +64,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         trigger: '.o_kanban_record span:contains("New task")',
         run: "click",
     }, {
-        trigger: 'a[name="sub_tasks_page"]',
+        trigger: 'button[name="sub_tasks_page"]',
         content: 'Open sub-tasks notebook section',
         run: 'click',
     }, {
@@ -135,7 +135,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         content: 'Assign the task to you',
         run: "click",
     }, {
-        trigger: 'a[name="sub_tasks_page"]',
+        trigger: 'button[name="sub_tasks_page"]',
         content: 'Open sub-tasks notebook section',
         run: 'click',
     }, {

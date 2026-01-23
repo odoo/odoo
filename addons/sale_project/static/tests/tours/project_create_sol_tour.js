@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add('project_create_sol_tour', {
         trigger: 'div.o_notebook_headers',
     },
     {
-        trigger: 'a.nav-link[name="settings"]',
+        trigger: 'button.nav-link[name="settings"]',
         content: 'Click on Settings tab to configure this project.',
         run: "click",
     }, {

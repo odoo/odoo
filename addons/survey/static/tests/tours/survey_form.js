@@ -278,12 +278,12 @@ function changeTab(tabName) {
     return [
         {
             content: `Go to ${tabName} tab`,
-            trigger: `.modal .modal-content a[name=${tabName}].nav-link`,
+            trigger: `.modal .modal-content button[name=${tabName}].nav-link`,
             run: "click",
         },
         {
             content: `Wait for tab ${tabName} tab`,
-            trigger: `.modal .modal-content a[name=${tabName}].nav-link.active`,
+            trigger: `.modal .modal-content button[name=${tabName}].nav-link.active`,
         },
     ];
 }

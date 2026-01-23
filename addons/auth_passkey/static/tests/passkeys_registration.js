@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add('passkeys_tour_registration', {
             run: 'click',
         }, {
             content: "Switch to security tab",
-            trigger: 'a[role=tab]:contains("Security")',
+            trigger: 'button[role=tab]:contains("Security")',
             run: 'click',
         }, {
             content: "Ensure there are no passkeys already",
@@ -103,7 +103,7 @@ registry.category("web_tour.tours").add('passkeys_tour_registration', {
             trigger: 'label:contains("Email Signature")',
         }, {
             content: "Switch to security tab",
-            trigger: 'a[role=tab]:contains("Security")',
+            trigger: 'button[role=tab]:contains("Security")',
             run: 'click',
         }, {
             content: "Ensure there is one passkey",

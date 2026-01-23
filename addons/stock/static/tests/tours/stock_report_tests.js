@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add("test_stock_route_diagram_report", {
         run: "click",
     },
     {
-        trigger: '.nav-item > a:contains("Inventory")',
+        trigger: '.nav-item > button:contains("Inventory")',
         run: "click",
     },
     {

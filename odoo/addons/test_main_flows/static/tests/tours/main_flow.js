@@ -1095,7 +1095,7 @@ stepUtils.autoExpandMoreButtons(true),
     trigger: '.o_form_view div.o_notebook_headers',
 },
 {
-    trigger: 'a.nav-link:contains(Timesheets)',
+    trigger: 'button.nav-link:contains(Timesheets)',
     content: 'Click on Timesheets page to log a timesheet',
     run: "click",
 }, {

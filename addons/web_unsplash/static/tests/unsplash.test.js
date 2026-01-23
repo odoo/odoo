@@ -112,6 +112,6 @@ test("Document tab does not crash with FileSelector extension", async () => {
     await animationFrame();
     await press("enter");
     await animationFrame();
-    await click("li:nth-child(2) > a.nav-link");
+    await click("li:nth-child(2) > button.nav-link");
     expect(".o_existing_attachment_cell").toHaveCount(1);
 });

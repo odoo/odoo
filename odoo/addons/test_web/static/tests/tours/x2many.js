@@ -50,7 +50,7 @@
         trigger: '.o_field_widget[name=moderator] input:value(user_test)',
     }, {
         content: "go to Participants tab to check onchange",
-        trigger: '.o_notebook_headers .nav-item a:contains(Participants)',
+        trigger: '.o_notebook_headers .nav-item button:contains(Participants)',
         run: "click",
     }, {
         content: "check the onchange from the o2m to the m2m",
@@ -78,7 +78,7 @@
     ...stepUtils.saveForm(),
     { // add message a
         content: "Select First Tab",
-        trigger: '.o_notebook_headers .nav-item a:contains(Messages)',
+        trigger: '.o_notebook_headers .nav-item button:contains(Messages)',
         run: "click",
     }, {
         content: "create new message a",
@@ -154,7 +154,7 @@
     },
     { // add participants
         content: "change tab to Participants",
-        trigger: '.o_notebook_headers .nav-item a:contains(Participants)',
+        trigger: '.o_notebook_headers .nav-item button:contains(Participants)',
         run: "click",
     }, {
         content: "click to add participants",
@@ -178,7 +178,7 @@
         run: "click",
     }, {
         content: "go back to tab 1",
-        trigger: '.o_notebook_headers .nav-item a:contains(Messages)',
+        trigger: '.o_notebook_headers .nav-item button:contains(Messages)',
         run: "click",
     },
     {
@@ -192,7 +192,7 @@
         trigger: `.o_content:has(.o_field_widget[name=messages] tr:has(td:text(bbb)):has(td:text([test_trigger] Mitchell Admin)))`,
     }, {
         content: "go to tab 3",
-        trigger: '.o_notebook_headers .nav-item a:contains(Participants)',
+        trigger: '.o_notebook_headers .nav-item button:contains(Participants)',
         run: "click",
     },
     {
@@ -207,7 +207,7 @@
     },
     {
         content: "change tab to Messages",
-        trigger: '.o_notebook_headers .nav-item a:contains(Messages)',
+        trigger: '.o_notebook_headers .nav-item button:contains(Messages)',
         run: "click",
     },
     {
@@ -316,7 +316,7 @@
         trigger: `.o_content:has(.o_field_widget[name=messages] tbody tr:has(td:text([test_trigger] Mitchell Admin)):has(td:text(aaa)))`,
     }, {
         content: "go to Participants",
-        trigger: '.o_notebook_headers .nav-item a:contains(Participants)',
+        trigger: '.o_notebook_headers .nav-item button:contains(Participants)',
         run: "click",
     },
     {
@@ -327,7 +327,7 @@
         trigger: '.o_content:has(.o_field_widget[name=participants] tbody .o_data_row:eq(2))',
     }, {
         content: "go to Messages",
-        trigger: '.o_notebook_headers .nav-item a:contains(Messages)',
+        trigger: '.o_notebook_headers .nav-item button:contains(Messages)',
         run: "click",
     },
     {

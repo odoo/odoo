@@ -258,11 +258,11 @@ registry.category("web_tour.tours").add("project_task_last_history_steps_tour", 
         ...stepUtils.saveForm(),
         ...insertEditorContent("4"),
     {
-        trigger: ".o_notebook_headers li:nth-of-type(2) a",
+        trigger: ".o_notebook_headers li:nth-of-type(2) button",
         run: "click",
     },
     {
-        trigger: ".o_notebook_headers li:nth-of-type(1) a",
+        trigger: ".o_notebook_headers li:nth-of-type(1) button",
         run: "click",
     },
         ...insertEditorContent("5"),

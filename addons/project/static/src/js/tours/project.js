@@ -178,7 +178,7 @@ registry.category("web_tour.tours").add('project_tour', {
     run: "click",
 }, {
     isActive: ["auto"],
-    trigger: 'a[name="sub_tasks_page"]',
+    trigger: 'button[name="sub_tasks_page"]',
     content: _t('Open sub-tasks notebook section'),
     run: 'click',
 }, {
