@@ -8,7 +8,7 @@ export function table({ name, withClass = "", withoutClass, run = () => {}, numO
         trigger += `:not(${withoutClass})`;
     }
     if (name) {
-        trigger += `:has(.label:contains("${name}"))`;
+        trigger += `:has(.o_fp_table_number:contains("${name}"))`;
     }
     return {
         content: `Check table with attributes: ${JSON.stringify(arguments[0])}`,

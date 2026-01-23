@@ -185,8 +185,8 @@ export class FloorPlanStore extends Reactive {
         if (this.editMode) {
             this.showEditToolbar = true;
             let nextTableNumber = 1;
-            if (this.floors.length) {
-                nextTableNumber = Math.max(...this.floors.map((f) => f.getMaxTableNumber())) + 1;
+            if (this.selectedFloor) {
+                nextTableNumber = this.selectedFloor.getMaxTableNumber() + 1;
             }
             this.editState = {
                 history: new History(),
@@ -613,15 +613,14 @@ export class FloorPlanStore extends Reactive {
     }
 
     selectFloorByUuid(uuid) {
+        this.selectedFloor = uuid instanceof Floor ? uuid : this.getFloorByUuid(uuid);
         if (this.editMode) {
             this.endEditSelectedElement();
             this.selectElementByUuid(null);
+            if (this.selectedFloor) {
+                this.nextTableNumber = this.selectedFloor.getMaxTableNumber() + 1;
+            }
         }
-        if (uuid instanceof Floor) {
-            this.selectedFloor = uuid;
-            return;
-        }
-        this.selectedFloor = this.getFloorByUuid(uuid);
     }
 
     selectFloorById(id) {
