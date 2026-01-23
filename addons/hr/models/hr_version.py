@@ -137,6 +137,7 @@ class HrVersion(models.Model):
     departure_id = fields.Many2one('hr.employee.departure', string="Departure", copy=False)
     departure_reason_id = fields.Many2one(related='departure_id.departure_reason_id', readonly=False, groups="hr.group_hr_user", tracking=1)
     departure_description = fields.Html(related='departure_id.departure_description', readonly=False, groups="hr.group_hr_user")
+    dismissal_date = fields.Date(related='departure_id.dismissal_date', readonly=False, groups="hr.group_hr_user", tracking=1)
     departure_date = fields.Date(related='departure_id.departure_date', readonly=False, groups="hr.group_hr_user", tracking=1)
     departure_action_at_departure = fields.Boolean(related='departure_id.action_at_departure', readonly=False, groups="hr.group_hr_user")
     departure_action_other_date = fields.Date(related='departure_id.action_other_date', readonly=False, groups="hr.group_hr_user")
@@ -554,7 +555,7 @@ class HrVersion(models.Model):
 
     @api.depends(
         'contract_date_start', 'contract_date_end', 'date_version', 'employee_id',
-        'employee_id.version_ids.date_version')
+        'employee_id.version_ids.date_version', 'departure_date')
     def _compute_dates(self):
         for version in self:
             version.date_start = max(version.date_version, version.contract_date_start) \
@@ -571,13 +572,14 @@ class HrVersion(models.Model):
                 date_version_end = next((d for d in next_versions.mapped('date_version') if d > version.date_version), None)
                 if date_version_end:
                     date_version_end -= relativedelta(days=1)
+                else:
+                    date_version_end = date.max
 
-            if date_version_end and version.contract_date_end:
-                version.date_end = min(date_version_end, version.contract_date_end)
-            elif date_version_end:
-                version.date_end = date_version_end
-            else:
-                version.date_end = version.contract_date_end
+            date_contract_end = version.contract_date_end or date.max
+            date_departure = version.departure_date or date.max
+            version.date_end = False
+            if date_version_end != date.max or date_contract_end != date.max or date_departure != date.max:
+                version.date_end = min(date_version_end, date_contract_end, date_departure)
 
     def _search_start_date(self, operator, value):
         return [('contract_date_start', operator, value)]

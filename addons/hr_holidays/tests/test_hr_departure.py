@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date, timedelta
 
-from odoo import Command
 from odoo.tests import tagged
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
@@ -20,7 +19,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         departure_reason = cls.env['hr.departure.reason'].create({'name': "Fired"})
         cls.departure = cls.env['hr.employee.departure'].create({
             'departure_reason_id': departure_reason.id,
-            'departure_date': cls.departure_date,
+            'dismissal_date': cls.departure_date,
             'employee_id': cls.employee.id,
         })
         cls.work_entry_type = cls.env['hr.work.entry.type'].create({
@@ -72,7 +71,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         self.assertTrue(message in leave.message_ids.mapped('body'))
 
         cancel_message = "<p>The time off request has been cancelled for the following reason:</p><p>The employee will leave the company on %(departure_date)s.</p>" % {
-            'departure_date': self.departure_date
+            'departure_date': self.departure_date,
         }
         self.assertTrue(cancel_message in self.env['hr.leave'].search([
             ('request_date_from', '=', self.departure_date + timedelta(days=1)),

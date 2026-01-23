@@ -9,7 +9,8 @@
                     <field name="employee_id" invisible="1"/> <!-- used in computes -->
                     <group name="header_group">
                         <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
-                        <field name="departure_date" class="oe_inline"/>
+                        <field name="dismissal_date" class="oe_inline"/>
+                        <field name="departure_date" invisible="departure_date == dismissal_date" class="oe_inline"/>
                     </group>
                     <notebook name="departure_notebook">
                         <page string="Planned Actions" name="planned_actions">

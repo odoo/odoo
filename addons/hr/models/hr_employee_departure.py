@@ -30,10 +30,10 @@ class HrEmployeeDeparture(models.Model):
         default=lambda self: self.env['hr.departure.reason'].search([], limit=1),
         required=True, ondelete='restrict')
     departure_description = fields.Html(string="Additional Information")
-    departure_date = fields.Date(
-        string="Departure Date",
-        default=fields.Date.today,
-        required=True)
+    dismissal_date = fields.Date(string="Dismissal Date", default=fields.Date.today, required=True,
+        help="Date at which the departure process starts. Differs from the actual departure date in case of a notice period.")
+    departure_date = fields.Date(string="Departure Date", compute="_compute_departure_date",
+        store=True, help="Date at which the departure actually takes place.")
     action_at_departure = fields.Boolean(string="Action at", default=True)
     action_other_date = fields.Date(string="Apply date")
     is_user_employee = fields.Boolean(
@@ -58,6 +58,12 @@ class HrEmployeeDeparture(models.Model):
     def _get_action_fields(self):
         return [f for f in self._fields if f.startswith('do_')]
 
+    @api.depends('dismissal_date')
+    def _compute_departure_date(self):
+        # meant to be overriden in case of notice period
+        for departure in self:
+            departure.departure_date = departure.dismissal_date
+
     @api.depends('employee_id.user_id')
     def _compute_is_user_employee(self):
         for departure in self:
@@ -73,7 +79,9 @@ class HrEmployeeDeparture(models.Model):
     def _compute_apply_immediately(self):
         today = fields.Date.today()
         for departure in self:
-            if departure.action_at_departure:
+            if not departure.departure_date:
+                departure.apply_immediately = False
+            elif departure.action_at_departure:
                 departure.apply_immediately = departure.departure_date <= today
             else:
                 departure.apply_immediately = not departure.action_other_date or departure.action_other_date <= today
@@ -106,7 +114,7 @@ class HrEmployeeDeparture(models.Model):
     def create(self, vals_list):
         res = super().create(vals_list)
         for departure in res:
-            departure.employee_id._get_version(departure.departure_date).write({
+            departure.employee_id._get_version(departure.dismissal_date).write({
                 'departure_id': departure.id,
             })
         return res
@@ -126,6 +134,9 @@ class HrEmployeeDeparture(models.Model):
                         ('action_other_date', '=', False),
         ])
         departures.action_register()
+
+    def action_schedule(self):
+        return {'type': 'ir.actions.act_window_close'}
 
     def action_register(self):
         def _get_user_archive_notification_action(message, message_type, next_action):

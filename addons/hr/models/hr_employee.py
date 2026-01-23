@@ -278,6 +278,8 @@ class HrEmployee(models.Model):
         readonly=False, groups="hr.group_hr_user")
     departure_description = fields.Html(related='version_id.departure_description', inherited=True,
         readonly=False, groups="hr.group_hr_user")
+    dismissal_date = fields.Date(related='version_id.dismissal_date', inherited=True,
+        readonly=False, groups="hr.group_hr_user")
     departure_date = fields.Date(related='version_id.departure_date', inherited=True,
         readonly=False, groups="hr.group_hr_user")
     departure_action_at_departure = fields.Boolean(related='version_id.departure_action_at_departure', inherited=True,
