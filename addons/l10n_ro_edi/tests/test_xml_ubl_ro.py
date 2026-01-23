@@ -277,7 +277,6 @@ class TestUBLRO(TestUBLCommon):
             invoice._generate_and_send(allow_fallback_pdf=False, template_id=self.move_template.id)
 
     def test_export_constraints(self):
-        self.company_data['company'].company_registry = False
         for required_field in ('city', 'street', 'state_id', 'vat'):
             with self.assertRaisesRegex(UserError, "required"):
                 self.company_data["company"][required_field] = False
