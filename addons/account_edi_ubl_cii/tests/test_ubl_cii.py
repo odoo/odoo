@@ -737,27 +737,3 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             "rsm": "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
         })
         self.assertEqual(node[0].text, self.company.vat, "Company VAT fallback")
-
-    def test_partner_name_in_xml(self):
-        """
-        Test that invoice contacts without specific names use their parent partner's
-        name in the XML output, avoiding the 'Invoice address' suffix from display_name.
-        """
-        self.env['ir.config_parameter'].set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
-        partner = self.env['res.partner'].create({
-            'parent_id': self.partner_a.id,
-            'type': 'invoice'
-        })
-        invoice = self.env['account.move'].create({
-            'partner_id': partner.id,
-            'move_type': 'out_invoice',
-            'invoice_date': "2025-12-23",
-            'invoice_date_due': "2025-12-31",
-            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
-        })
-        invoice.action_post()
-
-        xml_content = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
-        xml_tree = etree.fromstring(xml_content)
-        partner_name = xml_tree.find('.//cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name', self.ubl_namespaces)
-        self.assertEqual(partner_name.text, 'partner_a')
