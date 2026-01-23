@@ -682,7 +682,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("load a window action without id (in a multi-record view)", async function (assert) {
-        assert.expect(14);
+        assert.expect(15);
         patchWithCleanup(browser.sessionStorage, {
             getItem(k) {
                 assert.step(`getItem session ${k}`);
@@ -717,6 +717,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_list_view", "should display a list view");
         assert.verifySteps([
             "/web/webclient/load_menus",
+            "getItem session current_action",
             "/web/action/load",
             "get_views",
             "web_search_read",
@@ -1142,7 +1143,7 @@ QUnit.module("ActionManager", (hooks) => {
                 target.querySelector(".o_nocontent_help").innerText
             );
 
-            assert.verifySteps(["getItem session current_action"]);
+            assert.verifySteps(["getItem session current_action", "getItem session current_action"]);
         }
     );
 });
