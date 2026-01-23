@@ -12,7 +12,7 @@
     'data': [],
     'assets': {
         'web.assets_backend': [
-            
+            'test_convert_inline/static/src/**/*',
         ],
     },
     'installable': True,

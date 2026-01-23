@@ -1,0 +1,22 @@
+<templates>
+    <t t-name="test_convert_inline.DebugConvertInlineDialog">
+        <Dialog title.translate="Debug Convert Inline" size="'fs'">
+            <div>
+                <button t-on-click="() => this.updateLayoutDimensions(!state.isMobile)">
+                    Switch to <t t-out="state.isMobile ? 'Desktop' : 'Mobile'"/>
+                </button>
+            </div>
+            <div class="d-flex">
+                <div t-ref="referenceIframe"/>
+                <div>
+                    <iframe t-ref="outputIframe" t-att-sandbox="isBrowserSafari() ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
+                        t-attf-style="
+                            display: block !important;
+                            width: {{ state.width }}px !important;
+                            height: {{ state.height }}px !important;
+                        "/>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>

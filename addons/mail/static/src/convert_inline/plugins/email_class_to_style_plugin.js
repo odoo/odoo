@@ -27,7 +27,7 @@ export class EmailClassToStylePlugin extends BasePlugin {
     resources = {
         ignored_style_predicates: (propertyName, value) =>
             !value ||
-            propertyName.startsWith("--") ||
+            // propertyName.startsWith("--") || // TODO EGGMAIL, not correct, check where they should be removed
             propertyName.includes("animation") ||
             propertyName.includes("-webkit") ||
             typeof value !== "string",
