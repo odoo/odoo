@@ -374,7 +374,7 @@ export function bootstrapToTable(element) {
                     grid = _createColumnGrid();
                     currentCol = grid[0];
                     _applyColspan(currentCol, columnSize, containerWidth);
-                    gridIndex = columnSize;
+                    gridIndex = columnSize % 12;
                     if (columnIndex === bootstrapColumns.length - 1 && gridIndex < 12) {
                         // We handled all the columns but there is still space
                         // in the row. Insert the columns and fill the row.
