@@ -741,3 +741,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_mega_footer(self):
         self.start_tour('/', 'mega_footer', login='admin')
+
+    def test_seo_video_description_check(self):
+        self.start_tour("/", "seo_video_description_check", login="admin")

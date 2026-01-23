@@ -7,7 +7,7 @@ setupInteractionWhiteList("website.media_video");
 
 const videoTemplate = `
     <div style="background-color: white;" data-need-cookies-approval>
-        <div class="media_iframe_video" data-oe-expression="//www.youtube.com/embed/G8b4UZIcTfg?rel=0&amp;autoplay=0" contenteditable="false">
+        <div class="media_iframe_video" data-oe-expression="//www.youtube.com/embed/G8b4UZIcTfg?rel=0&amp;autoplay=0" contenteditable="false" data-description="My video description">
             <div class="css_editable_mode_display">&nbsp;</div>
             <div class="media_iframe_video_size">&nbsp;</div>
             <iframe original="true" allowfullscreen="" aria-label="Media video" src="about:blank"></iframe>
@@ -31,4 +31,12 @@ test("media video: iframe replaced in edition if not present", async () => {
     expect("iframe").toHaveCount(0);
     await switchToEditMode(core);
     expect("iframe").toHaveCount(1);
+});
+
+test("media video: video iframe should have a title attribute based on parent div", async () => {
+    const { core } = await startInteractions(videoTemplate, { editMode: true });
+    expect(".media_iframe_video").toHaveAttribute("data-description", "My video description");
+    await switchToEditMode(core);
+    expect("iframe").toHaveCount(1);
+    expect("iframe").toHaveAttribute("title", "My video description");
 });

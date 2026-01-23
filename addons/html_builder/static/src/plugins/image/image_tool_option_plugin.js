@@ -21,6 +21,7 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 import { isCSSColor } from "@web/core/utils/colors";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { VideoMediaOption } from "../video_media_option";
 
 export class ImageAndFaOption extends BaseOptionComponent {
     static template = "html_builder.ImageAndFaOption";
@@ -43,6 +44,7 @@ class ImageToolOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(REPLACE_MEDIA, ReplaceMediaOption),
+            withSequence(REPLACE_MEDIA, VideoMediaOption),
             withSequence(IMAGE_TOOL, ImageToolOption),
             withSequence(ALIGNMENT_STYLE_PADDING, ImageAndFaOption),
             withSequence(IMAGE_TOOL, VideoSizeOption),
