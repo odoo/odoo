@@ -222,14 +222,15 @@ class ResCompany(models.Model):
             amls_vals_list += amls_vals
         return amls_vals_list
 
-    def _get_stock_valuation_account_vals(self, accounts_by_product, at_date=None, extra_aml_vals_list=None):
+    def _get_stock_valuation_account_vals(self, accounts_by_product, at_date=None, extra_aml_vals_list=None, inventory_data=None):
         amls_vals_list = []
         if not accounts_by_product:
             return amls_vals_list
 
         extra_balance = self._get_extra_balance(extra_aml_vals_list)
 
-        inventory_data = self.stock_value(accounts_by_product, at_date)
+        if inventory_data is None:
+            inventory_data = self.stock_value(accounts_by_product, at_date)
         accounting_data = self.stock_accounting_value(accounts_by_product, at_date)
 
         accounts = inventory_data.keys() | accounting_data.keys()

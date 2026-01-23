@@ -399,14 +399,14 @@ class StockMove(models.Model):
 
     def _get_valued_qty(self, lot=None):
         self.ensure_one()
-        if self._is_in():
-            return sum(self._get_in_move_lines(lot).mapped('quantity_product_uom'))
-        if self._is_out():
-            return sum(self._get_out_move_lines(lot).mapped('quantity_product_uom'))
         if self.is_dropship:
             if lot:
                 return sum(self.move_line_ids.filtered(lambda ml: ml.lot_id == lot).mapped('quantity_product_uom'))
             return self.product_uom._compute_quantity(self.quantity, self.product_id.uom_id)
+        if self._is_in():
+            return sum(self._get_in_move_lines(lot).mapped('quantity_product_uom'))
+        if self._is_out():
+            return sum(self._get_out_move_lines(lot).mapped('quantity_product_uom'))
         return 0
 
     def _get_manual_value(self, quantity, at_date=None):
@@ -463,27 +463,55 @@ class StockMove(models.Model):
         return dict(VALUATION_DICT)
 
     def _get_move_directions(self):
-        move_in_ids = set()
-        move_out_ids = set()
-        locations_should_be_valued = (self.move_line_ids.location_id | self.move_line_ids.location_dest_id).filtered(lambda l: l._should_be_valued())
-        for record in self:
-            for move_line in record.move_line_ids:
-                if move_line._should_exclude_for_valuation() or not move_line.picked:
-                    continue
-                if move_line.location_id not in locations_should_be_valued and move_line.location_dest_id in locations_should_be_valued:
-                    move_in_ids.add(record.id)
-                if move_line.location_id in locations_should_be_valued and move_line.location_dest_id not in locations_should_be_valued:
-                    move_out_ids.add(record.id)
+        """
+        Gets the 'in' and 'out' moves from self based on their move lines and locations.
+        Calculates the quantities for each move accordingly.
+        """
+        if not self:
+            return {
+                'in': self.env['stock.move'],
+                'out': self.env['stock.move'],
+                'in_qty_map': {},
+                'out_qty_map': {}
+            }
 
-        move_directions = defaultdict(set)
-        for record in self:
-            if record.id in move_in_ids and not record._is_dropshipped_returned():
-                move_directions[record.id].add('in')
+        self.fetch(['location_id', 'location_dest_id', 'company_id'])
+        move_lines = self.move_line_ids
+        move_lines.fetch(['location_id', 'location_dest_id', 'owner_id', 'picked', 'quantity_product_uom'])
 
-            if record.id in move_out_ids and not record._is_dropshipped():
-                move_directions[record.id].add('out')
+        all_locations = (self.location_id | self.location_dest_id |
+                        move_lines.location_id | move_lines.location_dest_id)
+        valued_loc_ids = {loc.id for loc in all_locations if loc._should_be_valued()}
 
-        return move_directions
+        in_qty_map = {}
+        out_qty_map = {}
+        move_in_candidates = set()
+        move_out_candidates = set()
+
+        for ml in move_lines:
+            if not ml.picked or ml._should_exclude_for_valuation():
+                continue
+
+            move = ml.move_id
+            is_in = ml.location_id.id not in valued_loc_ids and ml.location_dest_id.id in valued_loc_ids
+            is_out = ml.location_id.id in valued_loc_ids and ml.location_dest_id.id not in valued_loc_ids
+
+            if is_in:
+                move_in_candidates.add(move)
+                in_qty_map[move] = in_qty_map.get(move, 0.0) + ml.quantity_product_uom
+            if is_out:
+                move_out_candidates.add(move)
+                out_qty_map[move] = out_qty_map.get(move, 0.0) + ml.quantity_product_uom
+
+        final_in_ids = [move.id for move in move_in_candidates if not move._is_dropshipped_returned()]
+        final_out_ids = [move.id for move in move_out_candidates if not move._is_dropshipped()]
+
+        return {
+            'in': self.browse(final_in_ids),
+            'out': self.browse(final_out_ids),
+            'in_qty_map': in_qty_map,
+            'out_qty_map': out_qty_map,
+        }
 
     def _get_in_move_lines(self, lot=None):
         """ Returns the `stock.move.line` records of `self` considered as incoming. It is done thanks
