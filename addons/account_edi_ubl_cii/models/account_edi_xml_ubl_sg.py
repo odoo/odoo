@@ -32,7 +32,6 @@ class AccountEdiXmlUbl_Sg(models.AbstractModel):
         if not grouping_key:
             return
 
-        grouping_key['scheme_id'] = 'GST'
         grouping_key['tax_exemption_reason'] = None
         grouping_key['tax_exemption_reason_code'] = None
 
@@ -77,9 +76,3 @@ class AccountEdiXmlUbl_Sg(models.AbstractModel):
             '_text': 54,
             'name': 'Credit Card',
         }
-
-    def _get_party_node(self, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        party_node = super()._get_party_node(vals)
-        party_node['cac:PartyTaxScheme'][0]['cac:TaxScheme']['cbc:ID']['_text'] = 'GST'
-        return party_node
