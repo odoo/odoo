@@ -2077,3 +2077,49 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'debit': 0.0, 'credit': 100.0, 'reconciled': True},
             {'debit': 100.0, 'credit': 0.0, 'reconciled': True},
         ])
+
+    def test_move_value_invoice_manual_rate(self):
+        """Check that if a rate is manually set on a bill, this rate
+        is used for the valuation of the move.
+        """
+        grp_currencies = self.env.ref('base.group_multi_currency')
+        self.env.user.write({'group_ids': [(4, grp_currencies.id)]})
+        product = self.env['product.product'].create({
+            'name': 'product_a',
+            'standard_price': 100.0,
+        })
+        partner = self.env['res.partner'].create({'name': 'testpartner'})
+        eur_currency = self.env.ref('base.EUR')
+        eur_currency.active = True
+        eur_currency.write({
+            'rate_ids': [Command.create({
+                'rate': 2,
+            })]
+        })
+        product.product_tmpl_id.categ_id.property_cost_method = 'average'
+        product.product_tmpl_id.categ_id.property_valuation = 'real_time'
+
+        po = self.env['purchase.order'].create({
+            'partner_id': partner.id,
+            'currency_id': eur_currency.id,
+            'order_line': [
+                Command.create({
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_qty': 1.0,
+                    'price_unit': 100.0,
+                }),
+            ],
+        })
+        po.button_confirm()
+        receipt_po = po.picking_ids[0]
+        receipt_po.button_validate()
+        self.assertEqual(po.picking_ids.move_ids.value, 50)
+
+        action = po.action_create_invoice()
+        bill = self.env["account.move"].browse(action["res_id"])
+        bill.invoice_date = fields.Date.today()
+        with Form(bill) as move_form:
+            move_form.invoice_currency_rate = 4
+        bill.action_post()
+        self.assertEqual(po.picking_ids.move_ids.value, 25)
