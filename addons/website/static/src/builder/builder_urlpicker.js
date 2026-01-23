@@ -1,47 +1,71 @@
-import { useEffect } from "@odoo/owl";
-import wUtils from "@website/js/utils";
-import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
 import { BuilderUrlPicker } from "@html_builder/core/building_blocks/builder_urlpicker";
+import { patch } from "@web/core/utils/patch";
+import { useChildRef } from "@web/core/utils/hooks";
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { _t } from "@web/core/l10n/translation";
+import wUtils from "@website/js/utils";
+import { useActionInfo } from "@html_builder/core/utils";
+import { textInputBasePassthroughProps } from "@html_builder/core/building_blocks/builder_input_base";
 
-export class WebsiteUrlPicker extends BuilderUrlPicker {
+export class AutoCompleteInBuilderUrlPicker extends AutoComplete {
+    static props = {
+        ...AutoComplete.props,
+        ...textInputBasePassthroughProps,
+        inputClass: { type: String, optional: true },
+    };
+    static template = "website.AutoCompleteInBuilderUrlPicker";
+
     setup() {
         super.setup();
+        this.info = useActionInfo();
+    }
 
-        useEffect(
-            (inputEl) => {
-                if (!inputEl) {
-                    return;
-                }
-                const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(
-                    inputEl,
-                    {
-                        classes: {
-                            "ui-autocomplete": "o_website_ui_autocomplete",
-                        },
-                        body: this.env.getEditingElement().ownerDocument.body,
-                        urlChosen: () => {
-                            this.commit(this.inputRef.el.value);
-                        },
-                    },
-                    this.env
-                );
-                return () => unmountAutocompleteWithPages();
-            },
-            () => [this.inputRef.el]
-        );
+    get ulDropdownClass() {
+        return `${super.ulDropdownClass} dropdown-menu ui-autocomplete o_website_ui_autocomplete`;
+    }
+
+    get inputClass() {
+        return this.props.inputClass;
+    }
+
+    get inputTitle() {
+        return this.props.title;
     }
 }
 
-class UrlPickerPlugin extends Plugin {
-    static id = "urlPickerPlugin";
+patch(BuilderUrlPicker, {
+    components: { ...BuilderUrlPicker.components, AutoCompleteInBuilderUrlPicker },
+});
 
-    /** @type {import("plugins").WebsiteResources} */
-    resources = {
-        builder_components: {
-            WebsiteUrlPicker,
-        },
-    };
-}
+patch(BuilderUrlPicker.prototype, {
+    setup() {
+        super.setup();
+        this.urlRef = useChildRef();
+    },
 
-registry.category("website-plugins").add(UrlPickerPlugin.id, UrlPickerPlugin);
+    get sources() {
+        const body = this.env.getEditingElement().ownerDocument.body;
+        return [
+            {
+                placeholder: _t("Loading..."),
+                options: (term) => wUtils.loadOptionsSource(term, body, this.onSelect.bind(this)),
+                optionSlot: "urlOption",
+            },
+        ];
+    },
+
+    onSelect(value) {
+        this.urlRef.el.value = value;
+        this.commit(value);
+    },
+
+    onChange(req) {
+        this.commit(req.inputValue);
+    },
+
+    openPreviewUrl() {
+        if (this.urlRef.el.value) {
+            window.open(this.urlRef.el.value, "_blank");
+        }
+    },
+});
