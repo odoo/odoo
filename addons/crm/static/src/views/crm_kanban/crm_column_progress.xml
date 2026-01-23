@@ -5,6 +5,12 @@
             <attribute name="class" remove="w-75" add="w-50" separator=" "/>
         </xpath>
 
+        <xpath expr="//div[hasclass('o_bar_has_records') and hasclass('progress-bar')]" position="attributes">
+            <attribute name="t-att-data-tooltip">
+                getColumnProgressTooltip(bar)
+            </attribute>
+        </xpath>
+
         <AnimatedNumber position="before">
             <div class="ms-auto"/>
         </AnimatedNumber>
