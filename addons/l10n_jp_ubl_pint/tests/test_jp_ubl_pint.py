@@ -41,6 +41,7 @@ class TestJpUBLPint(AccountTestInvoicingCommon):
         cls.startClassPatcher(freeze_time(cls.fakenow))
 
     def test_invoice(self):
+        self.env['ir.config_parameter'].set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', 'True')
         invoice = self.init_invoice('out_invoice', currency=self.other_currency, products=self.product_a)
         invoice.action_post()
 
@@ -54,7 +55,3 @@ class TestJpUBLPint(AccountTestInvoicingCommon):
             self.get_xml_tree_from_string(actual_xml),
             self.get_xml_tree_from_string(expected_xml),
         )
-
-    def test_invoice_new(self):
-        self.env['ir.config_parameter'].set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', 'True')
-        self.test_invoice()
