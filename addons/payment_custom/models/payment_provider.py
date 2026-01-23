@@ -83,3 +83,9 @@ class PaymentProvider(models.Model):
         )
         if transfer_providers_without_msg:
             transfer_providers_without_msg.action_recompute_pending_msg()
+
+    def _get_code(self):
+        """Override to allow the post-processing of transactions to create payments."""
+        if self.code == 'custom' and self.custom_mode == 'wire_transfer':
+            return 'wire_transfer'
+        return super()._get_code()

@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from itertools import groupby
-
 from odoo import api, models
 
 
@@ -27,37 +25,34 @@ class AccountBankStatementLine(models.Model):
         Note: This method is called by the `cron_auto_confirm_paid_wire_transfer_txs` cron.
         :return: None
         """
-        pending_wire_transfer_txs = self.env['payment.transaction'].search([
-            ('payment_method_id.code', '=', 'wire_transfer'),
-            ('state', '=', 'pending'),
-        ])
-        if not pending_wire_transfer_txs:
-            return
-
-        for company, txs_list in groupby(pending_wire_transfer_txs, key=lambda tx: tx.company_id):
-            txs_list = list(txs_list)
+        tx_ids_by_company = self.env['payment.transaction']._read_group(
+            domain=[('payment_method_id.code', '=', 'wire_transfer'), ('state', '=', 'pending')],
+            groupby=['company_id'],
+            aggregates=['id:array_agg'],
+        )
+        for company, tx_ids in tx_ids_by_company:
+            txs = self.env['payment.transaction'].browse(tx_ids)
             statement_lines = self.search([
-                ('payment_ref', 'in', [tx.reference for tx in txs_list]),
                 ('company_id', '=', company.id),
+                ('payment_ref', 'in', txs.mapped('reference')),
             ])
             if not statement_lines:
                 continue
 
-            for tx in txs_list:
-                if any(
-                    line.payment_ref == tx.reference
-                    and (
-                        line.partner_id == tx.partner_id.commercial_partner_id
-                        or (
-                            not line.partner_id
-                            and line.partner_name == tx.partner_id.commercial_partner_id.name
-                        )
+            lines_by_ref = {line.payment_ref: line for line in statement_lines}
+            for tx in txs:
+                line = lines_by_ref.get(tx.reference)
+                if (line and (
+                    line.partner_id == tx.partner_id.commercial_partner_id
+                    or (
+                        not line.partner_id
+                        and line.partner_name == tx.partner_id.commercial_partner_id.name
                     )
-                    and (
+                ) and
+                    (
                         line.currency_id == tx.currency_id
                         and tx.currency_id.compare_amounts(line.amount, tx.amount) == 0
                     )
-                    for line in statement_lines
                 ):
                     tx._set_done()
                     tx._post_process()
