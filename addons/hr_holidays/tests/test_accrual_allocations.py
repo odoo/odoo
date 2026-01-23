@@ -3681,6 +3681,74 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             remaining_future = data[self.employee_emp][0][1]["remaining_leaves"]
             self.assertEqual(remaining_future, 27)
 
+    def test_accrual_days_left_over_carryover_maximum_with_leaves_around_carryover(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': '21 days per year, 5 carryover max',
+            'transition_mode': 'immediately',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'start',
+            'level_ids':
+                [(0, 0, {
+                "accrued_gain_time": "start",
+                "action_with_unused_accruals": "maximum",
+                "added_value": 21,
+                "cap_accrued_time": True,
+                "first_day": 1,
+                "first_month": "jan",
+                "first_month_day": 1,
+                "frequency": "yearly",
+                "postpone_max_days": 5,
+                "start_count": 0,
+                "start_type": "day",
+                "yearly_day": 1,
+                "yearly_month": "jan"
+            })
+            ],
+        })
+
+        with freeze_time('2024-11-25'):
+            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
+                f.allocation_type = "accrual"
+                f.accrual_plan_id = accrual_plan
+                f.date_from = '2024-01-01'
+                f.employee_id = self.employee_emp
+                f.holiday_status_id = self.leave_type
+                f.name = "Employee Allocation"
+
+            allocation = f.record
+            allocation.action_validate()
+
+            # take 10 days in the past
+            leave = self.env['hr.leave'].create({
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.leave_type.id,
+                'request_date_from': '2024-12-09',
+                'request_date_to': '2024-12-20',
+            })
+            leave.action_validate()
+            # take 10 days in January
+            leave_2 = self.env['hr.leave'].create({
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.leave_type.id,
+                'request_date_from': '2025-01-06',
+                'request_date_to': '2025-01-17',
+            })
+            leave_2.action_validate()
+
+            # The remaining leaves on a specific date should be:
+            # 25/11/2024 to 08/12/2024: 21 days, no leave are deducted
+            # 09/12/2024 to 31/12/2024: 11 days, the first leave is deducted as its start date is past
+            # 01/01/2025 to 05/01/2025: 26 days, carryover occured, from the 11 days only 5 are left, then the yearly 21 days are added
+            # from 06/01/2025: 16 days, the second leave is deducted as its start date is past
+            def _get_remaining_leaves_on(date):
+                data = self.leave_type.get_allocation_data(self.employee_emp, date)
+                return data[self.employee_emp][0][1]["remaining_leaves"]
+
+            self.assertEqual(_get_remaining_leaves_on(date(2024, 12, 1)), 21.0)
+            self.assertEqual(_get_remaining_leaves_on(date(2024, 12, 15)), 11.0)
+            self.assertEqual(_get_remaining_leaves_on(date(2025, 1, 2)), 26.0)
+            self.assertEqual(_get_remaining_leaves_on(date(2025, 1, 6)), 16.0)
+
     def test_accrual_unused_accrual_reset_to_lost(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': '21 days per year, 28 days cap, 7 carryover max',

@@ -514,7 +514,10 @@ class HolidaysAllocation(models.Model):
                 if allocation.nextcall == carryover_date:
                     allocation.last_executed_carryover_date = carryover_date
                     if current_level.action_with_unused_accruals in ['lost', 'maximum']:
-                        allocated_days_left = allocation.number_of_days - leaves_taken
+                        employee_days_per_allocation = allocation.employee_id._get_consumed_leaves(allocation.holiday_status_id, carryover_date - relativedelta(days=1), ignore_future=True)[0]
+                        origin = allocation._origin
+                        leaves_taken_before_carryover = employee_days_per_allocation[origin.employee_id][origin.holiday_status_id][origin]['leaves_taken']
+                        allocated_days_left = allocation.number_of_days - leaves_taken_before_carryover
                         allocation_max_days = 0 # default if unused_accrual are lost
                         if current_level.action_with_unused_accruals == 'maximum':
                             if current_level.added_value_type == 'day':
@@ -522,7 +525,7 @@ class HolidaysAllocation(models.Model):
                             else:
                                 postpone_max_days = current_level.postpone_max_days / allocation.employee_id._get_hours_per_day(allocation.date_from)
                             allocation_max_days = min(postpone_max_days, allocated_days_left)
-                        allocation.number_of_days = min(allocation.number_of_days, allocation_max_days) + leaves_taken
+                        allocation.number_of_days = min(allocation.number_of_days, allocation_max_days) + leaves_taken_before_carryover
                     allocation.expiring_carryover_days = allocation.number_of_days
 
                 if not allocation.already_accrued and is_accrual_date and allocation.accrual_plan_id.accrued_gain_time == 'end':
@@ -560,16 +563,18 @@ class HolidaysAllocation(models.Model):
                     # If the days were accrued on the carryover period, then apply the carryover policy
                     if accrued and last_carryover_date <= allocation.nextcall <= carryover_period_end:
                         if carryover_level.action_with_unused_accruals in ['lost', 'maximum']:
+                            employee_days_per_allocation = allocation.employee_id._get_consumed_leaves(allocation.holiday_status_id, last_carryover_date - relativedelta(days=1), ignore_future=True)[0]
+                            origin = allocation._origin
+                            leaves_taken_before_carryover = employee_days_per_allocation[origin.employee_id][origin.holiday_status_id][origin]['leaves_taken']
                             allocation.last_executed_carryover_date = carryover_date
-                            allocated_days_left = allocation.number_of_days - leaves_taken
                             postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' \
                                 else current_level.postpone_max_days / allocation.employee_id._get_hours_per_day(allocation.date_from)
-                            allocated_days_left = allocation.number_of_days - leaves_taken
+                            allocated_days_left = allocation.number_of_days - leaves_taken_before_carryover
                             allocation_max_days = 0 # default if unused_accrual are lost
                             if current_level.action_with_unused_accruals == 'maximum':
                                 postpone_max_days = current_level.postpone_max_days
                                 allocation_max_days = min(postpone_max_days, allocated_days_left)
-                            allocation.number_of_days = min(allocation.number_of_days, allocation_max_days) + leaves_taken
+                            allocation.number_of_days = min(allocation.number_of_days, allocation_max_days) + leaves_taken_before_carryover
 
                 if is_accrual_date:
                     allocation.lastcall = allocation.nextcall
