@@ -206,6 +206,24 @@ TAX_EXEMPTION_MAPPING = {
 }
 
 # -------------------------------------------------------------------------
+# AREA of countries
+# -------------------------------------------------------------------------
+
+GST_COUNTRY_CODES = {
+    'AU', 'NZ', 'IN', 'SG', 'MY', 'PK', 'BD', 'LK', 'NP', 'BT', 'PG', 'SA',
+    'AG', 'BS', 'BB', 'DM', 'GD', 'JM', 'KN', 'LC', 'VC', 'TT',
+}
+
+EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES = {
+    # EU Member States
+    'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE',
+    'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'CH',
+
+    # EFTA Countries in the EEA
+    'IS', 'LI', 'NO',
+}
+
+# -------------------------------------------------------------------------
 # SUPPORTED FILE TYPES FOR IMPORT
 # -------------------------------------------------------------------------
 SUPPORTED_FILE_TYPES = {
@@ -326,8 +344,6 @@ class AccountEdiCommon(models.AbstractModel):
         https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/
         """
         # add Norway, Iceland, Liechtenstein
-        european_economic_area = self.env.ref('base.europe').country_ids.mapped('code') + ['NO', 'IS', 'LI']
-
         if not tax:
             return 'E'
 
@@ -358,15 +374,15 @@ class AccountEdiCommon(models.AbstractModel):
             else:
                 return 'S'  # standard VAT
 
-        if supplier.country_id.code in european_economic_area and supplier.vat:
+        if supplier.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES and supplier.vat:
             if tax.amount != 0 and not tax.has_negative_factor:
                 # Special case: Purchase reverse-charge taxes for self-billed invoices.
                 # See explanation above.
                 # In the XML we put the zero-percent tax with code 'G' or 'K' that the buyer would have used.
                 return 'S'
-            if customer.country_id.code not in european_economic_area:
+            if customer.country_id.code not in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES:
                 return 'G'
-            if customer.country_id.code in european_economic_area:
+            if customer.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES:
                 return 'K'
 
         if tax.amount != 0:
