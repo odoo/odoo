@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_loyalty.BarcodeScannerPopup">
+        <div class="self_order_barcode_scanner_popup o_dialog" t-att-id="id">
+            <div role="dialog" class="modal d-block" tabindex="-1" >
+                <div class="modal-dialog modal-dialog-centered mw-md-50" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body p-4 overflow-visible">
+                            <div class="position-absolute top-0 start-50 translate-middle px-4 py-3 rounded-4 text-bg-info border border-white border-5">
+                                <i class="fa fa-user" aria-hidden="true"/>
+                            </div>
+                            <div class="mt-4 mt-lg-5 text-center fs-2">
+                                <t t-esc="this.props.text"/>
+                            </div>
+                            <div class="d-flex flex-row px-3 mb-4 mb-lg-5 mt-2 gap-2 justify-content-center">
+                                <input type="text" pattern="[0-9a-fA-F]+(-[0-9a-fA-F]+)*" t-model="this.state.code" class="form-control w-100 w-lg-50 rounded-4 bg-white shadow-sm" placeholder="04224876516273" />
+                                <button t-if="this.selfOrder.config.self_ordering_mode === 'mobile'" class="btn btn-secondary mobile-scanner px-4" t-on-click.stop="() => this.openMobileScanner()">
+                                    <i class="fa fa-barcode" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="d-grid d-md-flex flex-wrap justify-content-md-center gap-2 gap-md-3">
+                                <button type="button" class="btn btn-secondary kiosk-p-btn-lg popup_button" t-on-click.stop="() => this.props.close()">Discard</button>
+                                <button type="button" class="btn btn-primary kiosk-p-btn-lg popup_button" t-on-click.stop="() => this.confirm()">Validate</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

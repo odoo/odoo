@@ -15,7 +15,7 @@
                 <ProductListPage />
             </t>
             <t t-set-slot="product" route="`/pos-self/${selfOrder.config.id}/product/{int:id}`" t-slot-scope="url">
-                <ProductPage  productTemplate="selfOrder.models['product.template'].get(url.id)" />
+                <ProductPage productTemplate="selfOrder.models['product.template'].get(url.id)" />
             </t>
             <t t-set-slot="combo_selection" route="`/pos-self/${selfOrder.config.id}/combo-selection/{int:id}`" t-slot-scope="url">
                 <ComboPage productTemplate="selfOrder.models['product.template'].get(url.id)" />

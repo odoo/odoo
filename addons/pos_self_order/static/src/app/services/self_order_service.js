@@ -31,10 +31,7 @@ export class SelfOrder extends Reactive {
         this.ready = this.setup(...args).then(() => this);
     }
 
-    async setup(
-        env,
-        { notification, router, printer, renderer, barcode, bus_service, dialog, pos_data }
-    ) {
+    async setup(env, { notification, router, printer, renderer, bus_service, dialog, pos_data }) {
         // services
         this.notification = notification;
         this.router = router;
@@ -42,7 +39,6 @@ export class SelfOrder extends Reactive {
         this.env = env;
         this.printer = printer;
         this.renderer = renderer;
-        this.barcode = barcode;
         this.bus = bus_service;
         this.dialog = dialog;
 
@@ -122,36 +118,40 @@ export class SelfOrder extends Reactive {
                 }
             });
         }
-        barcode.bus.addEventListener("barcode_scanned", (ev) => {
-            if (!this.ordering) {
-                this.notification.add(_t("We're currently closed"), {
-                    type: "danger",
-                });
-                return;
-            }
-            const product = this.models["product.product"].filter(
-                (p) => p.barcode === ev.detail.barcode
-            )?.[0];
-            if (!product) {
-                this.notification.add(_t("Product not found"), {
-                    type: "danger",
-                });
-                return;
-            }
-            if (!product.self_order_available) {
-                this.notification.add(_t("Product is not available"), {
-                    type: "danger",
-                });
-                return;
-            }
-            const productTemplate = product.product_tmpl_id;
-            if (productTemplate.isConfigurable()) {
-                this.router.navigate("product", { id: productTemplate.id });
-                return;
-            }
-            this.addToCart(productTemplate, 1, "", {}, {});
-            this.router.navigate("cart");
-        });
+    }
+
+    async _barcodeProductAction(code) {
+        if (!this.ordering) {
+            this.notification.add(_t("We're currently closed"), {
+                type: "danger",
+            });
+            return;
+        }
+        if (this.getOrder() == null) {
+            return this.startOrder();
+        }
+        const product = this.models["product.product"].filter(
+            (p) => p.barcode === code.base_code
+        )?.[0];
+        if (!product) {
+            this.notification.add(_t("Product not found"), {
+                type: "danger",
+            });
+            return;
+        }
+        if (!product.self_order_available) {
+            this.notification.add(_t("Product is not available"), {
+                type: "danger",
+            });
+            return;
+        }
+        const productTemplate = product.product_tmpl_id;
+        if (productTemplate.isConfigurable()) {
+            this.router.navigate("product", { id: productTemplate.id });
+            return;
+        }
+        this.addToCart(productTemplate, 1, "", {}, {});
+        this.router.navigate("cart");
     }
 
     get selfService() {
@@ -233,16 +233,67 @@ export class SelfOrder extends Reactive {
         return { show: false, selectedCombos };
     }
 
+    addToOrderOpts(opts) {
+        return {};
+    }
+
+    addToOrderUiState(opts) {
+        return {};
+    }
+
+    selectProduct(product, animationFunction = () => {}, opts = {}) {
+        if (product.isCombo()) {
+            const { show, selectedCombos } = this.showComboSelectionPage(product);
+            if (show) {
+                this.router.navigate("combo_selection", { id: product.id, ...opts });
+            } else {
+                animationFunction();
+                this.addToCart(
+                    product,
+                    1,
+                    "",
+                    {},
+                    {},
+                    selectedCombos.map((combo) => ({
+                        ...combo,
+                        qty: 1,
+                    })),
+                    this.addToOrderOpts(opts),
+                    this.addToOrderUiState(opts)
+                );
+            }
+        } else if (product.isConfigurable()) {
+            this.router.navigate("product", { id: product.id, ...opts });
+        } else {
+            if (!this.ordering) {
+                return;
+            }
+            animationFunction();
+            this.addToCart(
+                product,
+                1,
+                "",
+                {},
+                {},
+                {},
+                this.addToOrderOpts(opts),
+                this.addToOrderUiState(opts)
+            );
+        }
+    }
+
     async addToCart(
         productTemplate,
         qty,
         customer_note,
         selectedValues = {},
         customValues = {},
-        comboValues = {}
+        comboValues = {},
+        opts = {},
+        uiState = {}
     ) {
         const product = productTemplate.product_variant_ids[0];
-        const values = getOrderLineValues(
+        let values = getOrderLineValues(
             this,
             productTemplate,
             qty,
@@ -251,12 +302,14 @@ export class SelfOrder extends Reactive {
             customValues,
             comboValues
         );
+        values = { ...values, ...opts };
         const newLine = this.models["pos.order.line"].create(values);
         newLine.full_product_name = constructFullProductName(
             newLine,
             this.models["product.template.attribute.value"].getAllBy("id"),
             product.name
         );
+        newLine.uiState = { ...newLine.uiState, ...uiState };
         const lineToMerge = this.currentOrder.lines.find(
             (l) => l.canBeMergedWith(newLine) && l.id !== newLine.id
         );
@@ -270,7 +323,6 @@ export class SelfOrder extends Reactive {
         if (!access_token) {
             throw new Error("No access token provided for confirmation page");
         }
-
         this.router.navigate("confirmation", {
             orderAccessToken: access_token || this.currentOrder.access_token,
             screenMode: screen_mode,
@@ -311,7 +363,7 @@ export class SelfOrder extends Reactive {
 
         // When no payment methods redirect to confirmation page
         // the client will be able to pay at counter
-        if (!this.hasPaymentMethod()) {
+        if (!this.hasPaymentMethod() || this.currency.isZero(order.priceIncl)) {
             let screenMode = "pay";
 
             if (orderHasChanges) {
@@ -390,6 +442,14 @@ export class SelfOrder extends Reactive {
             pricelist_id: pricelist,
             preset_id: autoSelectedPresets ? this.config.default_preset_id : false,
         });
+    }
+
+    startOrder() {
+        if (this.hasPresets() && !this.currentOrder.preset_id) {
+            this.router.navigate("location");
+        } else {
+            this.router.navigate("product_list");
+        }
     }
 
     get kioskMode() {
@@ -739,7 +799,9 @@ export class SelfOrder extends Reactive {
                 openOrder.update({
                     lines: [["link", lineCmd]],
                 });
-                openOrder.recomputeChanges();
+                if (this.config.self_ordering_pay_after === "meal") {
+                    openOrder.recomputeChanges();
+                }
             }
             this.data.debouncedSynchronizeLocalDataInIndexedDB();
         } catch (error) {
@@ -914,7 +976,7 @@ export class SelfOrder extends Reactive {
             (acc, [key, { qty }]) => {
                 if (qty && qty > 0) {
                     const line = this.models["pos.order.line"].getBy("uuid", key);
-                    if (!line.combo_parent_id) {
+                    if (line.countInLineNotSend) {
                         acc.count += qty;
                     }
                     const { total_included, total_excluded } = line.unitPrices;

@@ -3,18 +3,18 @@ import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
-import { ProductNameWidget } from "@pos_self_order/app/components/product_name_widget/product_name_widget";
 import { CategoryListPopup } from "@pos_self_order/app/components/category_list_popup/category_list_popup";
 import { useCategoryScrollSpy } from "../../utils/category_scrollspy_hook";
 import { useDraggableScroll } from "../../utils/scroll_dnd_hook";
 import { scrollItemIntoViewX } from "../../utils/scroll";
 import { useScrollShadow, useHorizontalScrollShadow } from "../../utils/scroll_shadow_hook";
+import { ProductBox } from "@pos_self_order/app/components/product_box/product_box";
 
 let savedScrollTop = 0;
 
 export class ProductListPage extends Component {
     static template = "pos_self_order.ProductListPage";
-    static components = { OrderWidget, ProductNameWidget };
+    static components = { OrderWidget, ProductBox };
     static props = {};
 
     setup() {
@@ -198,37 +198,23 @@ export class ProductListPage extends Component {
         this.router.navigate("cart");
     }
 
+    getProductBoxProps(product, productList) {
+        return {
+            product: product,
+            onClick: (evt) => this.selectProduct(product, evt.target),
+            bigList: productList.length > 9,
+            qty: this.state.quantityByProductTmplId[product.id],
+        };
+    }
+
     selectProduct(product, target) {
         if (!product.self_order_available || !this.isProductAvailable(product)) {
             return;
         }
-        if (product.isCombo()) {
-            const { show, selectedCombos } = this.selfOrder.showComboSelectionPage(product);
-            if (show) {
-                this.router.navigate("combo_selection", { id: product.id });
-            } else {
-                this.flyToCart(target);
-                this.selfOrder.addToCart(
-                    product,
-                    1,
-                    "",
-                    {},
-                    {},
-                    selectedCombos.map((combo) => ({
-                        ...combo,
-                        qty: 1,
-                    }))
-                );
-            }
-        } else if (product.isConfigurable()) {
-            this.router.navigate("product", { id: product.id });
-        } else {
-            if (!this.selfOrder.ordering) {
-                return;
-            }
+        const animationFunction = () => {
             this.flyToCart(target);
-            this.selfOrder.addToCart(product, 1);
-        }
+        };
+        this.selfOrder.selectProduct(product, animationFunction);
     }
 
     displayCategoryList(categories) {

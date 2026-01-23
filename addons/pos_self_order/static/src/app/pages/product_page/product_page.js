@@ -8,7 +8,9 @@ import { useStickyTitleObserver } from "@pos_self_order/app/utils/sticky_title_o
 export class ProductPage extends Component {
     static template = "pos_self_order.ProductPage";
     static components = { AttributeSelection };
-    static props = ["productTemplate"];
+    static props = {
+        productTemplate: Object,
+    };
 
     setup() {
         this.selfOrder = useSelfOrder();
@@ -61,6 +63,10 @@ export class ProductPage extends Component {
         }
 
         return increase ? this.state.qty++ : this.state.qty--;
+    }
+
+    canChangeQuantity() {
+        return true;
     }
 
     isProductAvailable() {
@@ -127,6 +133,14 @@ export class ProductPage extends Component {
         );
     }
 
+    get addToOrderOpts() {
+        return {};
+    }
+
+    get addToOrderUiState() {
+        return {};
+    }
+
     addToCart() {
         if (!this.isAddToCartEnabled()) {
             return;
@@ -136,7 +150,10 @@ export class ProductPage extends Component {
             this.state.qty,
             "",
             this.getSelectedAttributesValues(),
-            this.state.selectedValues[this.productTemplate.id]?.getAllCustomValues()
+            this.state.selectedValues[this.productTemplate.id]?.getAllCustomValues(),
+            {},
+            this.addToOrderOpts,
+            this.addToOrderUiState
         );
 
         this.goBack();

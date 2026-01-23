@@ -146,7 +146,7 @@
                 </div>
 
                <div t-if="this.state.showResume and selfOrder.ordering" class="container o_self_container">
-                   <div class="d-flex justify-content-end mt-auto pb-3">
+                   <div class="d-flex justify-content-end mt-auto pb-3 quantity-selector">
                        <t t-call="pos_self_order.QuantityWidget" />
                     </div>
                </div>
@@ -166,8 +166,10 @@
                         <div t-else=""/>
                         <div class="d-flex justify-content-between align-items-center  gap-2 gap-md-5">
                             <div class="ms-auto text-start">
-                                <h4 class="d-none d-sm-block text-muted opacity-75 mb-1">Combo</h4>
-                                <div class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary" t-esc="selfOrder.formatMonetary(getComboPrice())" />
+                                <h4 class="d-none d-sm-block text-muted opacity-75 mb-1 text-end">Combo</h4>
+                                <div class="d-flex align-items-center">
+                                    <div class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary combo-price" t-esc="selfOrder.formatMonetary(getComboPrice())" />
+                                </div>
                             </div>
                             <button t-if="!state.showResume" class="btn btn-lg btn-primary text-truncate ps-auto" t-on-click="next" t-att-disabled="!this.isNextEnabled()">
                                 <span><t t-if="!selectedChoice.qty_free and !hasSelectedItems" >No, thanks</t><t t-else="">Next</t></span>

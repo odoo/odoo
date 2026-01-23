@@ -2,10 +2,10 @@ import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
 import { floatIsZero, range } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
-import { loyaltyIdsGenerator } from "@pos_loyalty/app/services/pos_store";
+import { loyaltyIdsGenerator } from "@pos_loyalty/app/models/utils";
 const { DateTime } = luxon;
 
-function _newRandomRewardCode() {
+export function _newRandomRewardCode() {
     return (Math.random() + 1).toString(36).substring(3);
 }
 
@@ -956,7 +956,7 @@ patch(PosOrder.prototype, {
         let discountable = 0;
         const discountablePerTax = {};
         for (const line of this.getOrderlines()) {
-            if (!line.getQuantity()) {
+            if (!line.getQuantity() || line.is_reward_line) {
                 continue;
             }
             const taxKey = ["ewallet", "gift_card"].includes(reward.program_id.program_type)
@@ -1421,21 +1421,23 @@ patch(PosOrder.prototype, {
         ];
         return array.some((elem) => elem.length > 0);
     },
-    removeOrderline(lineToRemove) {
+    removeOrderline(lineToRemove, deep = true) {
         if (lineToRemove.is_reward_line) {
             // Remove any line that is part of that same reward aswell.
-            const linesToRemove = this.getOrderlines().filter(
+            const nextLine = this.getOrderlines().find(
                 (line) =>
+                    line.id !== lineToRemove.id &&
                     line.reward_id === lineToRemove.reward_id &&
                     line.coupon_id === lineToRemove.coupon_id &&
                     line.reward_identifier_code === lineToRemove.reward_identifier_code
             );
-            for (const line of linesToRemove) {
-                line.delete();
+            const result = super.removeOrderline(...arguments);
+            if (result && nextLine) {
+                return this.removeOrderline(nextLine, deep);
             }
-            return true;
+            return result;
         } else {
-            return super.removeOrderline(lineToRemove);
+            return super.removeOrderline(...arguments);
         }
     },
 

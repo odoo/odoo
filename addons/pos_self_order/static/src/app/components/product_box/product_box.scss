@@ -1,0 +1,19 @@
+.o_self_product_box{
+    .product_img{
+        width: 90px;
+    }
+
+    .product_descr{
+        overflow: hidden;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+    }
+}
+
+@include media-breakpoint-down(lg) {
+    .o_self_product_box{
+        background: $white;
+    }
+}

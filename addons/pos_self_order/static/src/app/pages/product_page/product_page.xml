@@ -38,7 +38,7 @@
                          </div>
                    </div>
                </div>
-                 <div  t-if="showQtyButtons and selfOrder.ordering" class="d-flex container o_self_container justify-content-end pt-0 py-3">
+                 <div t-if="showQtyButtons and selfOrder.ordering" class="d-flex container o_self_container justify-content-end pt-0 py-3 quantity-selector">
                      <t t-call="pos_self_order.QuantityWidget" />
                  </div>
                  <t t-if="hasMissingAttributeValues() and shouldShowMissingDetails()" t-call="pos_self_order.MissingRequiredDetails" />
@@ -52,8 +52,10 @@
                     </div>
                    <div class="d-flex justify-content-between align-items-center  gap-2 gap-md-5">
                         <div class="ms-auto text-start">
-                            <h4 class="d-none d-sm-block text-muted opacity-75 mb-1">Selection</h4>
-                            <div class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary" t-esc="selfOrder.formatMonetary(getProductPrice())" />
+                            <h4 class="d-none d-sm-block text-muted opacity-75 mb-1 text-end">Selection</h4>
+                            <div class="d-flex align-items-center">
+                                <div class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary product-price" t-esc="selfOrder.formatMonetary(getProductPrice())" />
+                            </div>
                         </div>
                         <button t-if="selfOrder.ordering" class="btn btn-lg btn-primary text-truncate ps-auto" t-on-click="addToCart" t-att-disabled="!this.isAddToCartEnabled()" >
                             <span>Add to cart</span>

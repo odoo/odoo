@@ -8,17 +8,13 @@ import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dial
 import { Mutex } from "@web/core/utils/concurrency";
 import { serializeDate } from "@web/core/l10n/dates";
 import { omit } from "@web/core/utils/objects";
+import { loyaltyIdsGenerator } from "@pos_loyalty/app/models/utils";
 
-let nextId = -1;
 const mutex = new Mutex();
 const updateRewardsMutex = new Mutex();
 const updateProgramsMutex = new Mutex();
 const pointsForProgramsCountedRules = {};
 const { DateTime } = luxon;
-
-export function loyaltyIdsGenerator() {
-    return nextId--;
-}
 
 function inverted(fn) {
     return (arg) => !fn(arg);

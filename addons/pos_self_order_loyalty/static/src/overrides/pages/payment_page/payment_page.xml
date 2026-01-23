@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_loyalty.PaymentPage" t-inherit="pos_self_order.PaymentPage" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_self_payment_page')]//button[hasclass('payment-method')]" position="after">
+            <button
+                t-if="this.showGiftCardButton"
+                role="button"
+                class="col-12 col-md-4 m-1 btn btn-light btn-lg d-flex flex-column align-items-center gap-2 px-0 py-5 border border-light shadow-sm overflow-hidden payment-method"
+                t-on-click="() => this.useGiftCard()">
+                <i class="fa fa-gift" aria-hidden="true"></i>
+                <span>Gift Card</span>
+            </button>
+            <button
+                t-if="this.showEwalletButton"
+                role="button"
+                class="col-12 col-md-4 m-1 btn btn-light btn-lg d-flex flex-column align-items-center gap-2 px-0 py-5 border border-light shadow-sm overflow-hidden payment-method"
+                t-on-click="() => this.useEwallet()">
+                <i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+                <span>eWallet</span>
+            </button>
+        </xpath>
+    </t>
+</templates>

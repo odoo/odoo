@@ -1,4 +1,5 @@
 import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
+import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
@@ -7,6 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 export class PaymentPage extends Component {
     static template = "pos_self_order.PaymentPage";
     static props = {};
+    static components = { PriceFormatter };
 
     setup() {
         this.selfOrder = useSelfOrder();
@@ -18,7 +20,7 @@ export class PaymentPage extends Component {
         });
 
         onMounted(() => {
-            if (this.selfOrder.models["pos.payment.method"].length === 1) {
+            if (this.canAutoSelectFirstMethod()) {
                 this.selectMethod(this.selfOrder.models["pos.payment.method"].getFirst().id);
             }
         });
@@ -26,6 +28,10 @@ export class PaymentPage extends Component {
         onWillUnmount(() => {
             this.selfOrder.paymentError = false;
         });
+    }
+
+    canAutoSelectFirstMethod() {
+        return this.selfOrder.models["pos.payment.method"].length === 1;
     }
 
     back() {

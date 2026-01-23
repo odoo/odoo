@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-t-name="pos_self_order_loyalty.selfOrderIndex" t-inherit="pos_self_order.selfOrderIndex" t-inherit-mode="extension">
+        <xpath expr="//Router/t[@t-set-slot='product']" position="attributes">
+            <attribute name="route">`/pos-self/${selfOrder.config.id}/product/{int:id}/{string:reward_id}/{string:card_id}/{string:code}/`</attribute>
+        </xpath>
+        <xpath expr="//Router/t[@t-set-slot='product']/ProductPage" position="attributes">
+            <attribute name="reward_id">selfOrder.models['loyalty.reward'].get(url.reward_id)</attribute>
+            <attribute name="card_id">selfOrder.models['loyalty.card'].get(url.card_id)</attribute>
+            <attribute name="code">url.code</attribute>
+        </xpath>
+        <xpath expr="//Router/t[@t-set-slot='combo_selection']" position="attributes">
+            <attribute name="route">`/pos-self/${selfOrder.config.id}/combo-selection/{int:id}/{string:reward_id}/{string:card_id}/{string:code}/`</attribute>
+        </xpath>
+        <xpath expr="//Router/t[@t-set-slot='combo_selection']/ComboPage" position="attributes">
+            <attribute name="reward_id">selfOrder.models['loyalty.reward'].get(url.reward_id)</attribute>
+            <attribute name="card_id">selfOrder.models['loyalty.card'].get(url.card_id)</attribute>
+            <attribute name="code">url.code</attribute>
+        </xpath>
+    </t>
+</templates>

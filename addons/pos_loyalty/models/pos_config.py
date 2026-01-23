@@ -14,6 +14,7 @@ class PosConfig(models.Model):
         today = fields.Date.context_today(self)
         return self.env['loyalty.program'].search([
             ('pos_ok', '=', True),
+            *self._check_company_domain(self.company_id.id),
             '|', ('pos_config_ids', '=', self.id), ('pos_config_ids', '=', False),
             '|', ('date_from', '=', False), ('date_from', '<=', today),
             '|', ('date_to', '=', False), ('date_to', '>=', today),

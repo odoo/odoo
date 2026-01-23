@@ -35,6 +35,9 @@ patch(PosOrderline.prototype, {
         };
         return diff;
     },
+    get countInLineNotSend() {
+        return !this.combo_parent_id;
+    },
     isLotTracked() {
         return false;
     },
