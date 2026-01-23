@@ -9,7 +9,7 @@ class HrAttendanceOvertimeRuleset(models.Model):
 
     name = fields.Char(required=True)
     description = fields.Html()
-    rule_ids = fields.One2many('hr.attendance.overtime.rule', 'ruleset_id')
+    rule_ids = fields.One2many('hr.attendance.overtime.rule', 'ruleset_id', copy=True)
     company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.company)
     country_id = fields.Many2one(
         'res.country',
@@ -78,3 +78,7 @@ class HrAttendanceOvertimeRuleset(models.Model):
         action['domain'] = self._get_current_versions_domain()
         action['context'] = {'default_ruleset_id': self.id}
         return action
+
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        return [dict(vals, name=self.env._("%s (copy)", ruleset.name)) for ruleset, vals in zip(self, vals_list)]
