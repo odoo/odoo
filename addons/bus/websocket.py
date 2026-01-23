@@ -2,7 +2,6 @@ import base64
 import bisect
 import functools
 import hashlib
-import json
 import logging
 import os
 import random
@@ -38,6 +37,7 @@ from odoo.tools import config
 
 from .models.bus import dispatch, fetch_bus_notifications
 from .session_helpers import check_session, new_env
+from .tools import orjson
 
 _logger = logging.getLogger(__name__)
 
@@ -558,7 +558,7 @@ class Websocket:
         if isinstance(frame.payload, str):
             frame.payload = frame.payload.encode('utf-8')
         elif not isinstance(frame.payload, (bytes, bytearray)):
-            frame.payload = json.dumps(frame.payload).encode('utf-8')
+            frame.payload = orjson.dumps(frame.payload)
 
         output = bytearray()
         first_byte = (
@@ -898,7 +898,7 @@ class WebsocketRequest:
 
     def serve_websocket_message(self, message):
         try:
-            jsonrequest = json.loads(message)
+            jsonrequest = orjson.loads(message)
             event_name = jsonrequest['event_name']  # mandatory
         except KeyError as exc:
             raise InvalidWebsocketRequest(
