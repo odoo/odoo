@@ -45,7 +45,7 @@ class PaymentTransaction(models.Model):
 
         # Extract the payment link URL and params and embed them in the redirect form.
         parsed_url = urlparse(api_url)
-        url_params = parse_qs(parsed_url.query)
+        url_params = {k: v[0] for k, v in parse_qs(parsed_url.query).items()}
         rendering_values = {
             'api_url': api_url,
             'url_params': url_params,  # Encore the params as inputs to preserve them.

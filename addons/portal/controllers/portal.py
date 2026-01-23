@@ -3,8 +3,7 @@
 import json
 import math
 import re
-import urllib.parse
-from urllib.parse import urlencode, urlparse, parse_qsl
+from urllib.parse import urlencode, urlparse, parse_qsl, quote
 
 from werkzeug.exceptions import Forbidden
 
@@ -935,7 +934,7 @@ class CustomerPortal(Controller):
                 request.env['res.users']._check_credentials(credential, {'interactive': True})
                 request.env.user.sudo()._deactivate_portal_user(**post)
                 request.session.logout()
-                return request.redirect('/web/login?message=%s' % urllib.parse.quote(_('Account deleted!')))
+                return request.redirect('/web/login?message=%s' % quote(_('Account deleted!')))
             except AccessDenied:
                 values['errors'] = {'deactivate': 'password'}
             except UserError as e:

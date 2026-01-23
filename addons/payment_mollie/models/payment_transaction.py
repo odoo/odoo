@@ -46,7 +46,7 @@ class PaymentTransaction(models.Model):
         # when only one payment method is enabled on Mollie and query parameters are provided.
         checkout_url = payment_data['_links']['checkout']['href']
         parsed_url = urlparse(checkout_url)
-        url_params = parse_qs(parsed_url.query)
+        url_params = {k: v[0] for k, v in parse_qs(parsed_url.query).items()}
         return {'api_url': checkout_url, 'url_params': url_params}
 
     def _mollie_prepare_payment_request_payload(self):
