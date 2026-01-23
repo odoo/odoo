@@ -1,0 +1,137 @@
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+	<cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
+	<cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+	<cbc:ID>___ignore___</cbc:ID>
+	<cbc:IssueDate>___ignore___</cbc:IssueDate>
+	<cbc:DueDate>___ignore___</cbc:DueDate>
+	<cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+	<cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+	<cac:OrderReference>
+		<cbc:ID>___ignore___</cbc:ID>
+	</cac:OrderReference>
+	<cac:AdditionalDocumentReference>
+		<cbc:ID>___ignore___</cbc:ID>
+		<cac:Attachment>
+			<cbc:EmbeddedDocumentBinaryObject filename="___ignore___" mimeCode="___ignore___">___ignore___</cbc:EmbeddedDocumentBinaryObject>
+		</cac:Attachment>
+	</cac:AdditionalDocumentReference>
+	<cac:AccountingSupplierParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="0009">40678483500521</cbc:EndpointID>
+			<cac:PartyIdentification>
+				<cbc:ID schemeID="0009">40678483500521</cbc:ID>
+			</cac:PartyIdentification>
+			<cac:PartyName>
+				<cbc:Name>company_1_data</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Rue Grand Port 1</cbc:StreetName>
+				<cbc:CityName>Saint-Malo</cbc:CityName>
+				<cbc:PostalZone>35400</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode>FR</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID>FR23334175221</cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>company_1_data</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="0009">40678483500521</cbc:CompanyID>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Name>company_1_data</cbc:Name>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingSupplierParty>
+	<cac:AccountingCustomerParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="0009">11000201100044</cbc:EndpointID>
+			<cac:PartyIdentification>
+				<cbc:ID schemeID="0009">21440109300015</cbc:ID>
+			</cac:PartyIdentification>
+			<cac:PartyName>
+				<cbc:Name>Chorus Pro - Commune de Nantes</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cac:Country>
+					<cbc:IdentificationCode>FR</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID>FR74214401093</cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>Chorus Pro - Commune de Nantes</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="0009">21440109300015</cbc:CompanyID>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Name>Chorus Pro - Commune de Nantes</cbc:Name>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingCustomerParty>
+	<cac:Delivery>
+		<cac:DeliveryLocation>
+			<cac:Address>
+				<cac:Country>
+					<cbc:IdentificationCode>FR</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:Address>
+		</cac:DeliveryLocation>
+		<cac:DeliveryParty>
+			<cac:PartyName>
+				<cbc:Name>Chorus Pro - Commune de Nantes</cbc:Name>
+			</cac:PartyName>
+		</cac:DeliveryParty>
+	</cac:Delivery>
+	<cac:PaymentMeans>
+		<cbc:PaymentMeansCode name="mutually defined">ZZZ</cbc:PaymentMeansCode>
+		<cbc:PaymentID>___ignore___</cbc:PaymentID>
+	</cac:PaymentMeans>
+	<cac:TaxTotal>
+		<cbc:TaxAmount currencyID="EUR">20.00</cbc:TaxAmount>
+		<cac:TaxSubtotal>
+			<cbc:TaxableAmount currencyID="EUR">100.00</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="EUR">20.00</cbc:TaxAmount>
+			<cac:TaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>20.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:TaxCategory>
+		</cac:TaxSubtotal>
+	</cac:TaxTotal>
+	<cac:LegalMonetaryTotal>
+		<cbc:LineExtensionAmount currencyID="EUR">100.00</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="EUR">100.00</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="EUR">120.00</cbc:TaxInclusiveAmount>
+		<cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
+		<cbc:PayableAmount currencyID="EUR">120.00</cbc:PayableAmount>
+	</cac:LegalMonetaryTotal>
+	<cac:InvoiceLine>
+		<cbc:ID>___ignore___</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">100.00</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Description>Test Product</cbc:Description>
+			<cbc:Name>Test Product</cbc:Name>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>20.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">100.0</cbc:PriceAmount>
+		</cac:Price>
+	</cac:InvoiceLine>
+</Invoice>
