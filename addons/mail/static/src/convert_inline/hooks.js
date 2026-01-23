@@ -1,4 +1,4 @@
-import { onWillDestroy, status, useComponent } from "@odoo/owl";
+import { onMounted, onWillUnmount, status, useComponent } from "@odoo/owl";
 import { renderToElement, renderToFragment } from "@web/core/utils/render";
 import { EmailHtmlConverter } from "@mail/convert_inline/email_html_converter";
 import { registry } from "@web/core/registry";
@@ -10,7 +10,7 @@ export const EMAIL_DESKTOP_DIMENSIONS = {
     height: 1000,
 };
 export const EMAIL_MOBILE_DIMENSIONS = {
-    width: 367, // see `MassMailingIframe` mobile width
+    width: 360,
     height: 1000,
 };
 
@@ -20,7 +20,7 @@ export const EMAIL_MOBILE_DIMENSIONS = {
  *          the conversion iframe, and convertToEmailHtml, a function to convert
  *          a reference fragment (field value inside a DIV) to mail compliant HTML.
  */
-export function useEmailHtmlConverter({ Plugins, bundles, target, isVisible }) {
+export function useEmailHtmlConverter({ Plugins, bundles, targetRef, isVisible }) {
     let converter, reference, referenceDocument;
     let currentConfig = {};
     const cmp = useComponent();
@@ -28,7 +28,6 @@ export function useEmailHtmlConverter({ Plugins, bundles, target, isVisible }) {
         isBrowserSafari,
         isVisible,
     });
-    target.append(referenceIframe);
 
     const updateLayoutDimensions = ({ width, height } = EMAIL_DESKTOP_DIMENSIONS) => {
         Object.assign(referenceIframe.style, {
@@ -93,7 +92,10 @@ export function useEmailHtmlConverter({ Plugins, bundles, target, isVisible }) {
         throw error;
     });
 
-    onWillDestroy(() => {
+    onMounted(() => {
+        targetRef.el.append(referenceIframe);
+    });
+    onWillUnmount(() => {
         cleanupEmailHtmlConversion();
         referenceIframe.remove();
     });
