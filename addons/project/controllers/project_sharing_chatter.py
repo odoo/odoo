@@ -4,11 +4,11 @@ from werkzeug.exceptions import Forbidden
 
 from odoo.http import request
 
-from odoo.addons.portal.controllers.portal_thread import PortalChatter
+from odoo.addons.portal.controllers.thread import PortalThreadController
 from .portal import ProjectCustomerPortal
 
 
-class ProjectSharingChatter(PortalChatter):
+class ProjectSharingChatter(PortalThreadController):
     def _check_project_access_and_get_token(self, project_id, res_model, res_id, token):
         """ Check if the chatter in project sharing can be accessed
 
