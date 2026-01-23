@@ -407,8 +407,9 @@
                             <page name="departure" string="Departure" groups="hr.group_hr_user" invisible="not departure_id">
                                 <group>
                                     <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"
-                                        readonly="departure_apply_date"/>
-                                    <field name="departure_date" readonly="1"/>
+                                        readonly="1"/>
+                                    <field name="dismissal_date" readonly="1"/>
+                                    <field name="departure_date" invisible="departure_date == dismissal_date" readonly="1"/>
                                 </group>
                                 <notebook name="departure_notebook">
                                     <page string="Planned Actions" name="planned_actions">

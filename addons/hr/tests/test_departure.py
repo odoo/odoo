@@ -43,7 +43,7 @@ class TestDeparture(TestHrCommon):
     def test_immediate_departure(self):
         departure = self.env['hr.employee.departure'].create([{
             'employee_id': self.emp_A.id,
-            'departure_date': date.today(),
+            'dismissal_date': date.today(),
             'departure_reason_id': self.env.ref('hr.departure_fired').id,
             'departure_description': "Didn't bring coffee",
         }])
@@ -56,7 +56,7 @@ class TestDeparture(TestHrCommon):
         dep_date = date(2025, 6, 1)
         departure = self.env['hr.employee.departure'].create([{
             'employee_id': self.emp_A.id,
-            'departure_date': dep_date,
+            'dismissal_date': dep_date,
             'do_set_date_end': True,
             'do_archive_employee': True,
             'do_archive_user': True,
@@ -70,7 +70,7 @@ class TestDeparture(TestHrCommon):
     def test_departure_actions_to_false(self):
         departure = self.env['hr.employee.departure'].create([{
             'employee_id': self.emp_A.id,
-            'departure_date': date(2025, 6, 1),
+            'dismissal_date': date(2025, 6, 1),
             'do_set_date_end': False,
             'do_archive_employee': False,
             'do_archive_user': False,
@@ -85,21 +85,21 @@ class TestDeparture(TestHrCommon):
         with self.assertRaises(ValidationError):
             self.env['hr.employee.departure'].create([{
                 'employee_id': self.emp_A.id,
-                'departure_date': date(2025, 1, 1),
+                'dismissal_date': date(2025, 1, 1),
             }])
 
         # the departure should be blocked if not after the first contract date
         with self.assertRaises(ValidationError):
             self.env['hr.employee.departure'].create([{
                 'employee_id': self.emp_A.id,
-                'departure_date': date(2025, 2, 1),
+                'dismissal_date': date(2025, 2, 1),
             }])
 
     def test_future_departure(self):
         with freeze_time('2025-04-01'):
             departure = self.env['hr.employee.departure'].create([{
                 'employee_id': self.emp_A.id,
-                'departure_date': date(2025, 6, 1),
+                'dismissal_date': date(2025, 6, 1),
                 'departure_reason_id': self.env.ref('hr.departure_fired').id,
                 'departure_description': "Didn't bring coffee",
                 'do_archive_employee': True,
