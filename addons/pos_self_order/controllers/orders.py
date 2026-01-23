@@ -34,7 +34,10 @@ class PosSelfOrderController(http.Controller):
         elif not order.get('floating_order_name'):
             floating_order_name = f"Self-order {tracking_number}"
 
-        prefix = 'K' if device_type == 'kiosk' else 'S'
+        # The goal of this is to reduce collisions with other pos.order tracking numbers
+        # when several kiosks are used with different pos.configurations.
+        # This is a little hack in stable, in master the prefix will be chosen differently.
+        prefix = f"K{pos_config.id}-" if device_type == "kiosk" else "S"
         order['pos_reference'] = pos_reference
         order['source'] = 'kiosk' if device_type == 'kiosk' else 'mobile'
         order['floating_order_name'] = order.get('floating_order_name') or floating_order_name
