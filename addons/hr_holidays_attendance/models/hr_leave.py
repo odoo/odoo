@@ -43,7 +43,16 @@ class HrLeave(models.Model):
         # If the type of leave is overtime deductible, we have to check that the employee has enough extra hours
         hours = leaves.employee_id._get_deductible_employee_overtime()
         for leave in leaves.filtered('overtime_deductible'):
-            if hours[leave.employee_id] < 0:
+            remaining_overtime = hours[leave.employee_id]
+            leave_type = leave.holiday_status_id
+
+            excess_limit = leave_type.max_allowed_negative if leave_type.allows_negative else 0
+            if leave_type.unit_of_measure == 'day':
+                excess_limit *= leave.employee_id._get_hours_per_day(leave.date_from)
+
+            if remaining_overtime < -excess_limit:
+                if leave_type.allows_negative:
+                    raise ValidationError(_('This leave request exceeds the allowed negative leave balance cap'))
                 if leave.employee_id.user_id == self.env.user:
                     raise ValidationError(_('You do not have enough extra hours to request this leave'))
                 raise ValidationError(_('The employee does not have enough extra hours to request this leave.'))

@@ -12,6 +12,9 @@
             <field name="support_document" nolabel="1" position="after">
                 <field name="overtime_deductible" nolabel="1"/>
             </field>
+            <group name="negative_cap" position="attributes">
+                <attribute name="invisible">not requires_allocation and not overtime_deductible</attribute>
+            </group>
         </field>
     </record>
 </odoo>
