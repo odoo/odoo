@@ -38,7 +38,7 @@ test("Simple render", async () => {
     expect(router.current).toEqual({});
     expect(".o_widget_res_config_dev_tool").toHaveCount(1);
     expect(queryAllTexts`#developer_tool h2`).toEqual(["Developer Tools"]);
-    expect(queryAllTexts`#developer_tool .o_setting_right_pane .d-block`).toEqual([
+    expect(queryAllTexts`#developer_tool .o_setting_right_pane button`).toEqual([
         "Activate the developer mode",
         "Activate the developer mode (with assets)",
         "Activate the developer mode (with tests assets)",
@@ -66,7 +66,7 @@ test("Activate the developer mode", async () => {
         resModel: "res.config.settings",
     });
     expect(router.current).toEqual({});
-    await click("a:contains('Activate the developer mode')");
+    await click("button:contains('Activate the developer mode')");
     await tick();
     expect(router.current).toEqual({ debug: 1 });
     expect.verifySteps(["location reload"]);
@@ -93,7 +93,7 @@ test("Activate the developer mode (with assets)", async () => {
         resModel: "res.config.settings",
     });
     expect(router.current).toEqual({});
-    await click("a:contains('Activate the developer mode (with assets)')");
+    await click("button:contains('Activate the developer mode (with assets)')");
     await tick();
     expect(router.current).toEqual({ debug: "assets" });
     expect.verifySteps(["location reload"]);
@@ -121,7 +121,7 @@ test("Activate the developer mode (with tests assets)", async () => {
     });
     expect(router.current).toEqual({});
 
-    await click("a:contains('Activate the developer mode (with tests assets)')");
+    await click("button:contains('Activate the developer mode (with tests assets)')");
     await tick();
     expect(router.current).toEqual({ debug: "assets,tests" });
     expect.verifySteps(["location reload"]);
@@ -150,11 +150,11 @@ test("Activate the developer modeddd (with tests assets)", async () => {
     });
     expect(router.current).toEqual({ debug: "assets,tests" });
 
-    expect(queryAllTexts`#developer_tool .o_setting_right_pane .d-block`).toEqual([
+    expect(queryAllTexts`#developer_tool .o_setting_right_pane button`).toEqual([
         "Deactivate the developer mode",
     ]);
 
-    await click("a:contains('Deactivate the developer mode')");
+    await click("button:contains('Deactivate the developer mode')");
     await tick();
     expect(router.current).toEqual({ debug: 0 });
     expect.verifySteps(["location reload"]);
