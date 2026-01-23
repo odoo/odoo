@@ -115,7 +115,7 @@ class AccountMoveSend(models.AbstractModel):
                 addendum.mer_document_status = '50'
                 invoice_data['error'] = e.message
             else:
-                if not isinstance(response, list) and not response.get('ElectronicId'):
+                if not response.get('ElectronicId'):
                     addendum.mer_document_status = '50'
                     errors = []
                     for key in response:
