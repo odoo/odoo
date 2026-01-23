@@ -76,14 +76,9 @@ class AccountEdiUBLInvoiceCommon(models.AbstractModel):
             amount_total = invoice.amount_total_signed * -invoice.direction_sign
             amount_residual = invoice.amount_residual_signed * -invoice.direction_sign
 
-        node['cbc:PrepaidAmount']['_text'] = FloatFmt(
-            amount_total
-            - amount_residual
-            + node['cbc:PrepaidAmount']['_text'],
-            min_dp=currency.decimal_places,
-        )
+        node['cbc:PrepaidAmount']['_text'] += amount_total - amount_residual
         node['cbc:PayableAmount']['_text'] = FloatFmt(
-            invoice.amount_residual,
+            amount_residual,
             min_dp=currency.decimal_places,
         )
 

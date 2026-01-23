@@ -487,5 +487,4 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         )
 
         self._generate_invoice_ubl_file(invoice)
-
         self._assert_invoice_ubl_file(invoice, 'test_invoice_negative_discount_upsell')

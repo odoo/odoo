@@ -133,41 +133,36 @@ class FloatFmt(float):
         return super().__new__(cls, value)
 
     def __init__(self, value, min_dp=2, max_dp=None):
+        assert min_dp is not None and isinstance(min_dp, int)
+        assert (max_dp is None or isinstance(max_dp, int)) and (max_dp is None or max_dp >= min_dp)
         self.min_dp = min_dp
         self.max_dp = max_dp
 
     def __str__(self):
-        if not isinstance(self.min_dp, int) or (self.max_dp is not None and not isinstance(self.max_dp, int)):
-            return "<FloatFmt()>"
         self_float = float(self)
-        min_dp_int = int(self.min_dp)
-        if self.max_dp is None:
-            return float_repr(self_float, min_dp_int)
-        else:
-            # Format the float to between self.min_dp and self.max_dp decimal places.
-            # We start by formatting to self.max_dp, and then remove trailing zeros,
-            # but always keep at least self.min_dp decimal places.
-            max_dp_int = int(self.max_dp)
-            amount_max_dp = float_repr(self_float, max_dp_int)
-            num_trailing_zeros = len(amount_max_dp) - len(amount_max_dp.rstrip('0'))
-            return float_repr(self_float, max(max_dp_int - num_trailing_zeros, min_dp_int))
+        min_dp = self.min_dp
+        max_dp = min_dp if self.max_dp is None else self.max_dp
+        # Format the float to between self.min_dp and self.max_dp decimal places.
+        # We start by formatting to self.max_dp, and then remove trailing zeros,
+        # but always keep at least self.min_dp decimal places.
+        amount_max_dp = float_repr(self_float, precision_digits=max_dp)
+        num_trailing_zeros = len(amount_max_dp) - len(amount_max_dp.rstrip('0'))
+        return float_repr(self_float, max(max_dp - num_trailing_zeros, min_dp))
 
     def __repr__(self):
-        if not isinstance(self.min_dp, int) or (self.max_dp is not None and not isinstance(self.max_dp, int)):
-            return "<FloatFmt()>"
         self_float = float(self)
-        min_dp_int = int(self.min_dp)
-        if self.max_dp is None:
-            return f"FloatFmt({self_float!r}, {min_dp_int!r})"
-        else:
-            max_dp_int = int(self.max_dp)
-            return f"FloatFmt({self_float!r}, {min_dp_int!r}, {max_dp_int!r})"
+        min_dp = self.min_dp
+        max_dp = min_dp if self.max_dp is None else self.max_dp
+        return f"FloatFmt({self_float!r}, {min_dp!r}, {max_dp!r})"
 
     def __add__(self, other):
         return FloatFmt(super().__add__(other), min_dp=self.min_dp, max_dp=self.max_dp)
 
     def __sub__(self, other):
         return FloatFmt(super().__sub__(other), min_dp=self.min_dp, max_dp=self.max_dp)
+
+    def __mul__(self, other):
+        return FloatFmt(super().__mul__(other), min_dp=self.min_dp, max_dp=self.max_dp)
 
 
 class AccountEdiCommon(models.AbstractModel):

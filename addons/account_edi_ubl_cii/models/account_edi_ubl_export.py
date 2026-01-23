@@ -896,7 +896,7 @@ class AccountEdiUBL(models.AbstractModel):
             '_currency': currency,
             'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
             'cbc:MultiplierFactorNumeric': {'_text': abs(percent)},
-            'cbc:AllowanceChargeReasonCode': {'_text': '95' if amount > 0.0 else 'ADK'},
+            'cbc:AllowanceChargeReasonCode': {'_text': 'ADK' if is_charge else '95'},
             'cbc:AllowanceChargeReason': {'_text': _("Discount")},
             'cbc:Amount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
@@ -974,13 +974,16 @@ class AccountEdiUBL(models.AbstractModel):
         suffix = '_currency' if in_foreign_currency else ''
         tax_details = base_line['tax_details']
 
+        gross_total_excluded = tax_details[f'raw_gross_total_excluded{suffix}']
         total_excluded = tax_details[f'total_excluded{suffix}'] + tax_details[f'delta_total_excluded{suffix}']
         for allowance_charge_node in line_node['cac:AllowanceCharge']:
-            if allowance_charge_node['cbc:ChargeIndicator']['_text'] == 'true':
-                total_excluded += allowance_charge_node['cbc:Amount']['_text']
+            sign = 1 if allowance_charge_node['cbc:ChargeIndicator']['_text'] == 'true' else -1
+            gross_total_excluded += sign * allowance_charge_node['cbc:Amount']['_text']
+        if gross_total_excluded != total_excluded:
+            import pudb; pudb.set_trace()
 
         line_node['cbc:LineExtensionAmount'] = {
-            '_text': FloatFmt(total_excluded, min_dp=currency.decimal_places),
+            '_text': FloatFmt(gross_total_excluded, min_dp=currency.decimal_places),
             'currencyID': currency.name,
         }
 
@@ -1118,7 +1121,7 @@ class AccountEdiUBL(models.AbstractModel):
         }
 
     def _ubl_line_nodes_filter_base_lines(self, vals, filter_function=None):
-        index = 0
+        index = 1
         for base_line in vals['base_lines']:
             if not filter_function or filter_function(base_line):
                 line_vals = {'base_line': base_line, 'index': index}
@@ -1776,7 +1779,10 @@ class AccountEdiUBL(models.AbstractModel):
         )
 
         node['cbc:TaxInclusiveAmount'] = {
-            '_text': FloatFmt(node['cbc:TaxExclusiveAmount']['_text'] + tax_amount, min_dp=currency.decimal_places),
+            '_text': FloatFmt(
+                node['cbc:TaxExclusiveAmount']['_text'] + tax_amount,
+                min_dp=currency.decimal_places,
+            ),
             'currencyID': currency.name,
         }
 
@@ -1810,7 +1816,7 @@ class AccountEdiUBL(models.AbstractModel):
         currency = vals['currency_id'] if in_foreign_currency else vals['company_currency']
         node = vals['legal_monetary_total_node']
 
-        payable_rounding_amount = (node['cbc:PayableRoundingAmount'] or {}).get('_text', 0.0)
+        payable_rounding_amount = (node['cbc:PayableRoundingAmount'] or {}).get('_text') or 0.0
         node['cbc:PrepaidAmount'] = {
             '_text': FloatFmt(0.0, min_dp=currency.decimal_places),
             'currencyID': currency.name,
