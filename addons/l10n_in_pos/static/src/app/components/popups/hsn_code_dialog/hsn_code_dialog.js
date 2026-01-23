@@ -38,18 +38,10 @@ export class hsnCodeDialog extends Component {
             return false;
         }
 
-        await this.action.doAction({
-            type: "ir.actions.act_window",
-            title: _t("Missing HSN Codes"),
-            res_model: "product.template",
-            views: [[false, "list"]],
-            domain: [["id", "in", this.props.productIds]],
-            target: "current",
-            context: {
-                create: false,
-                edit: true,
-                list_view_ref: "l10n_in_pos.product_tree_hsn_code",
-            },
-        });
+        const action = await this.pos.data.call("product.template", "l10n_in_get_hsn_code_action", [
+            this.props.productIds,
+        ]);
+
+        await this.action.doAction(action);
     }
 }
