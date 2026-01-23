@@ -419,7 +419,7 @@ class StockQuant(models.Model):
             'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
             'views': [(view_id, 'list')],
             'help': """
-                <p class="o_view_nocontent_smiling_face">
+                <p class="o_nc_icon_smiling">
                     {}
                 </p>
                 <p>

@@ -153,7 +153,7 @@ export class KanbanRenderer extends Component {
                         ".o_kanban_group",
                         ".o_kanban_header",
                         ".o_column_quick_create",
-                        ".o_view_nocontent_smiling_face",
+                        ".o_nc_icon_smiling",
                     ].join(", ")
                 );
             }

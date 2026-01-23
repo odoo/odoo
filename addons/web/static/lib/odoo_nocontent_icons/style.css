@@ -1,0 +1,34 @@
+@font-face {
+    font-family: 'odoo_nocontent_icons';
+    src: 
+        url('/web/static/lib/odoo_nocontent_icons/fonts/odoo_nocontent_icons.woff2') format('woff2'),
+        url('/web/static/lib/odoo_nocontent_icons/fonts/odoo_nocontent_icons.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+.o_nc_icon_, [class^="o_nc_icon_"], [class*=" o_nc_icon_"] {
+    &:before{
+        font-family: "odoo_nocontent_icons";
+        speak: never;
+        font-size: var(--icon-size, 50px);
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        display: block;
+
+        /* Better Font Rendering =========== */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+}
+}
+.o_nc_icon_smiling:before { content: "\f009"; }
+.o_nc_icon_folder:before { content: "\f000"; }
+.o_nc_icon_filebox:before { content: "\f001"; }
+.o_nc_icon_leaves:before { content: "\f002"; }
+.o_nc_icon_desert:before { content: "\f003"; }
+.o_nc_icon_hole:before { content: "\f004"; }
+.o_nc_icon_poof:before { content: "\f005"; }
+.o_nc_icon_box:before { content: "\f006"; }

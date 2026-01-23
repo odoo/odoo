@@ -137,7 +137,7 @@
         <field name="domain">[('consumed','=',True), ('parent_res_model','=','project.project'), ('parent_res_id', '=', active_id)]</field>
         <field name="search_view_id" ref="rating_rating_view_search_project"/>
         <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
+            <p class="o_nc_icon_folder">
                 There are no ratings for this project at the moment
             </p>
         </field>
@@ -185,7 +185,7 @@
         <field name="domain">[('res_model', '=', 'project.task'), ('res_id', '=', active_id), ('consumed', '=', True)]</field>
         <field name="search_view_id" ref="rating_rating_view_search_project"/>
         <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
+            <p class="o_nc_icon_folder">
                 No customer ratings yet
             </p>
             <p>
@@ -237,7 +237,7 @@
         <field name="domain">[('parent_res_model','=','project.project'), ('consumed', '=', True)]</field>
         <field name="search_view_id" ref="rating_rating_view_search_project"/>
         <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
+            <p class="o_nc_icon_folder">
                 No customer ratings yet
             </p>
             <p>

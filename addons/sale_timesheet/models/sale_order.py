@@ -139,7 +139,7 @@ class SaleOrder(models.Model):
             'context': context,
             'domain': [('so_line', 'in', self.order_line.ids), ('project_id', '!=', False)],
             'help': _("""
-                <p class="o_view_nocontent_smiling_face">
+                <p class="o_nc_icon_smiling">
                     No activities found. Let's start a new one!
                 </p><p>
                     Track your working hours by projects every day and invoice this time to your customers.

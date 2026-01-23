@@ -36,7 +36,7 @@ class MailGatewayAllowed(models.Model):
         LOOP_THRESHOLD = get_int('mail.gateway.loop.threshold') or 20
 
         return Markup(_('''
-            <p class="o_view_nocontent_smiling_face">
+            <p class="o_nc_icon_smiling">
                 Add addresses to the Allowed List
             </p><p>
                 To protect you from spam and reply loops, Odoo automatically blocks emails

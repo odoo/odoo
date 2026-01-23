@@ -638,7 +638,7 @@ class SlideChannel(models.Model):
                 'header_message': _("No Attendees Yet!"),
                 'body_message': _("From here you'll be able to monitor attendees and to track their progress.")
             }
-        action['help'] = Markup("""<p class="o_view_nocontent_smiling_face">%(header_message)s</p><p>%(body_message)s</p>""") % help_message
+        action['help'] = Markup("""<p class="o_nc_icon_smiling">%(header_message)s</p><p>%(body_message)s</p>""") % help_message
         if len(self) == 1:
             action['display_name'] = _('Attendees of %s', self.name)
             action_ctx['default_channel_id'] = self.id
