@@ -229,6 +229,7 @@ systemctl disable userconfig.service
 systemctl enable labwc.service
 systemctl enable odoo.service
 systemctl enable odoo-led-manager.service
+systemctl enable sos.service
 
 # create dirs for ramdisks
 create_ramdisk_dir () {
