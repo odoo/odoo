@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
 "PO-Revision-Date: 2025-08-21 19:34+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -80,8 +80,7 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid ""
-"%(user)s confirms this expense is not a duplicate with similar expense."
+msgid "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr ""
 "%(user)s vahvistaa, että tämä meno ei ole samankaltaisen menon "
 "kaksoiskappale."
@@ -167,8 +166,8 @@ msgstr "<span>Kokonaismäärä ei vastaa alkuperäistä määrää.</span>"
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
 "A default outstanding account must be defined in the settings for company-"
-"paid expenses. You can alternatively specify one in the Journal for the "
-"%(method)s payment method."
+"paid expenses. You can alternatively specify one in the Journal for the %"
+"(method)s payment method."
 msgstr ""
 "Yrityksen maksamille kuluille on määriteltävä oletusmenotili asetuksissa. "
 "Vaihtoehtoisesti voit määrittää tilin päiväkirjassa maksutavalle %(method)s."
@@ -670,8 +669,7 @@ msgstr "Työntekijäkulut"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid ""
-"Enter a name then choose a category and configure the amount of your "
-"expense."
+"Enter a name then choose a category and configure the amount of your expense."
 msgstr "Anna nimi, valitse kategoria ja määritä kulusi määrä."
 
 #. module: hr_expense
@@ -858,6 +856,11 @@ msgid "Expenses Report"
 msgstr "Kuluraportti"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "Expenses approval"
+msgstr ""
+
+#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expenses of %(employee)s"
@@ -962,6 +965,11 @@ msgstr "Ryhmittele"
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Guideline"
 msgstr "Ohjeet"
+
+#. module: hr_expense
+#: model:ir.actions.server,name:hr_expense.ir_cron_send_submitted_expenses_mail_ir_actions_server
+msgid "HR Expense: Send Submitted Expenses Mail"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
@@ -1282,11 +1290,9 @@ msgstr "Uudet menokirjaukset"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid ""
-"New expenses are awaiting your approval.\n"
-"                You can review them by following this link"
+"New expenses are waiting for your approval. You can Review them by following "
+"this link."
 msgstr ""
-"Uudet kulut odottavat hyväksyntääsi. \n"
-"              Voit tarkastella niitä tämän linkin kautta"
 
 #. module: hr_expense
 #. odoo-python
@@ -1335,8 +1341,7 @@ msgstr "Kulukategorioita ei löytynyt. Luodaan sellainen!"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "No work contact found for the employee %(name)s, please configure one."
-msgstr ""
-"Työntekijälle %(name)s ei löytynyt työyhteystietoa, määritä sellainen."
+msgstr "Työntekijälle %(name)s ei löytynyt työyhteystietoa, määritä sellainen."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_categories_tree_view
@@ -1387,6 +1392,7 @@ msgstr "Henkilökohtaisista kuluistani lasketut luvut."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Odoo"
 msgstr "Odoo"
 
@@ -1394,11 +1400,13 @@ msgstr "Odoo"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
-"Odoo had a look at your expense, its product, your company and the journal but came back with empty hands.\n"
+"Odoo had a look at your expense, its product, your company and the journal "
+"but came back with empty hands.\n"
 "Give Odoo a hand to find an account by setting up an expense account.\n"
 "%(expense)s %(expense_name)s.\n"
 msgstr ""
-"Odoo tarkisti kulusi, tuotteen, yrityksen ja päiväkirjan, mutta ei löytänyt tarvittavaa tiliä.\n"
+"Odoo tarkisti kulusi, tuotteen, yrityksen ja päiväkirjan, mutta ei löytänyt "
+"tarvittavaa tiliä.\n"
 "Auta Odoota määrittämällä menotili.\n"
 "%(expense)s%(expense_name)s.\n"
 
@@ -1416,8 +1424,7 @@ msgid ""
 "Once your <b>Expense</b> is ready, you can submit it to your manager and "
 "wait for approval."
 msgstr ""
-"Kun <b>kulusi</b> on valmis, voit lähettää sen esimiehellesi "
-"hyväksyttäväksi."
+"Kun <b>kulusi</b> on valmis, voit lähettää sen esimiehellesi hyväksyttäväksi."
 
 #. module: hr_expense
 #. odoo-python
@@ -1578,6 +1585,7 @@ msgstr "Kirjattu"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Powered by"
 msgstr "Palvelun tarjoaa"
 
@@ -1641,8 +1649,8 @@ msgid ""
 "don't <em>need to save</em> - Odoo will save eveyrthing for you when you "
 "navigate."
 msgstr ""
-"Valmista? Voit tallentaa sen manuaalisesti tai hylätä muutokset tästä. Sinun"
-" ei <em>tarvitse tallentaa</em> - Odoo tallentaa kaiken puolestasi, kun "
+"Valmista? Voit tallentaa sen manuaalisesti tai hylätä muutokset tästä. Sinun "
+"ei <em>tarvitse tallentaa</em> - Odoo tallentaa kaiken puolestasi, kun "
 "navigoit."
 
 #. module: hr_expense
@@ -1760,10 +1768,12 @@ msgstr "Skannaa tämä QR-koodi hankkiaksesi Odoo-sovelluksen:"
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
 "Valitse käyttäjä jonka vastuulla on hyväksyä tämän työntekijän kulut.\n"
-"Jos tyhjä, hyväksynnän tekee Ylläpitäjä tai Hyväksyjä (riippuen asetuksista/käyttäjistä)."
+"Jos tyhjä, hyväksynnän tekee Ylläpitäjä tai Hyväksyjä (riippuen asetuksista/"
+"käyttäjistä)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
@@ -1781,8 +1791,8 @@ msgid ""
 msgstr ""
 "Lähetä sähköposti tähän sähköpostiosoitteeseen, jonka liitteenä on kuitti, "
 "niin voit luoda kulun yhdellä klikkauksella. Jos sähköpostin aiheen "
-"ensimmäinen sana sisältää kategorian sisäisen viitteen tai kategorian nimen,"
-" vastaava kategoria asetetaan automaattisesti. Kirjoita kulun määrä "
+"ensimmäinen sana sisältää kategorian sisäisen viitteen tai kategorian nimen, "
+"vastaava kategoria asetetaan automaattisesti. Kirjoita kulun määrä "
 "sähköpostin aiheeseen, jotta se voidaan asettaa myös kuluun."
 
 #. module: hr_expense
@@ -1957,8 +1967,7 @@ msgstr "Tili, jolle kirjataan yrityksen kulujen jäljellä oleva määrä."
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
-msgid ""
-"The company's default journal used when an employee expense is created."
+msgid "The company's default journal used when an employee expense is created."
 msgstr ""
 "Yrityksen oletuspäiväkirja, jota käytetään, kun työntekijän kuluja luodaan."
 
@@ -1973,8 +1982,8 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
-"The first word of the email subject did not correspond to any category code."
-" You'll have to set the category manually on the expense."
+"The first word of the email subject did not correspond to any category code. "
+"You'll have to set the category manually on the expense."
 msgstr ""
 "Sähköpostin aiheen ensimmäinen sana ei vastannut mitään kategoriakoodia. "
 "Sinun on asetettava luokka manuaalisesti kuluihin."
@@ -1987,8 +1996,8 @@ msgid ""
 "contain duplicates."
 msgstr ""
 "Seuraavilla hyväksytyillä kuluilla on samanlainen työntekijä, määrä ja "
-"luokka kuin joillakin tämän raportin kuluilla. Tarkista, ettei tämä raportti"
-" sisällä kaksoiskappaleita."
+"luokka kuin joillakin tämän raportin kuluilla. Tarkista, ettei tämä raportti "
+"sisällä kaksoiskappaleita."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__employee_journal_id
@@ -2117,11 +2126,13 @@ msgstr "Kirjattu poikkeustoimenpiteen tyyppi."
 msgid ""
 "Uh-oh! You can’t edit this expense.\n"
 "\n"
-"Reach out to the administrators, flash your best smile, and see if they'll grant you the magical access you seek."
+"Reach out to the administrators, flash your best smile, and see if they'll "
+"grant you the magical access you seek."
 msgstr ""
 "Hups! Et voi muokata tätä kulua.\n"
 "\n"
-"Ota yhteyttä ylläpitäjiin, häikäise hymylläsi ja ehkä he antavat sinulle etsimäsi taianomaisen käyttöoikeuden."
+"Ota yhteyttä ylläpitäjiin, häikäise hymylläsi ja ehkä he antavat sinulle "
+"etsimäsi taianomaisen käyttöoikeuden."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_id
@@ -2222,22 +2233,22 @@ msgstr "Verkkosivun viestintähistoria"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
-"When the cost of an expense product is different than 0, then the user"
-"                                             using this product won't be "
-"able to change the amount of the expense,"
-"                                             only the quantity. Use a cost "
-"different than 0 for expense categories funded by"
-"                                             the company at fixed cost like "
-"allowances for mileage, per diem, accommodation"
-"                                             or meal."
+"When the cost of an expense product is different than 0, then the "
+"user                                             using this product won't be "
+"able to change the amount of the "
+"expense,                                             only the quantity. Use "
+"a cost different than 0 for expense categories funded "
+"by                                             the company at fixed cost "
+"like allowances for mileage, per diem, "
+"accommodation                                             or meal."
 msgstr ""
-"Kun kulutuotteen kustannus on muu kuin 0, tuotetta käyttävä käyttäjä"
-"                                             ei voi muuttaa kulun suuruutta,"
-" vaan                                             ainoastaan määrää. Käytä "
-"kustannusta, joka on muu kuin 0, yrityksen kiinteiden"
-"                                            kustannusten rahoittamissa "
-"kulukategorioissa, kuten kilometrikorvauksissa, päivärahoissa, majoitus- tai"
-" ateriakorvauksissa."
+"Kun kulutuotteen kustannus on muu kuin 0, tuotetta käyttävä "
+"käyttäjä                                             ei voi muuttaa kulun "
+"suuruutta, vaan                                             ainoastaan "
+"määrää. Käytä kustannusta, joka on muu kuin 0, yrityksen "
+"kiinteiden                                            kustannusten "
+"rahoittamissa kulukategorioissa, kuten kilometrikorvauksissa, päivärahoissa, "
+"majoitus- tai ateriakorvauksissa."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2274,8 +2285,8 @@ msgid ""
 "You can't post simultaneously employee-paid expenses belonging to different "
 "companies"
 msgstr ""
-"Et voi kirjata samanaikaisesti eri yrityksille kuuluvia työntekijän maksamia"
-" kuluja"
+"Et voi kirjata samanaikaisesti eri yrityksille kuuluvia työntekijän maksamia "
+"kuluja"
 
 #. module: hr_expense
 #. odoo-python
@@ -2371,8 +2382,8 @@ msgstr "Sinun on lisättävä manuaalinen maksutapa päiväkirjaan (%s)"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
-"You need to have at least one category that can be expensed in your database"
-" to proceed!"
+"You need to have at least one category that can be expensed in your database "
+"to proceed!"
 msgstr ""
 "Tietokannassasi on oltava vähintään yksi kategoria, joka voidaan kirjata "
 "kuluksi, jotta voit jatkaa!"
@@ -2446,3 +2457,10 @@ msgstr "käytä tekstintunnistustoimintoa lukemaan tiedot kuitin kuvasta"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "samalla kuitilla, joka on jo olemassa."
+
+#~ msgid ""
+#~ "New expenses are awaiting your approval.\n"
+#~ "                You can review them by following this link"
+#~ msgstr ""
+#~ "Uudet kulut odottavat hyväksyntääsi. \n"
+#~ "              Voit tarkastella niitä tämän linkin kautta"

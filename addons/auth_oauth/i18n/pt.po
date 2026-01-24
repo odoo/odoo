@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
 "PO-Revision-Date: 2025-09-02 16:37+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -26,16 +26,6 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.12.2\n"
-
-#. module: auth_oauth
-#: model_terms:ir.ui.view,arch_db:auth_oauth.providers
-msgid "- or -"
-msgstr "- ou -"
-
-#. module: auth_oauth
-#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
-msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Tutorial"
-msgstr ""
 
 #. module: auth_oauth
 #. odoo-python
@@ -101,6 +91,9 @@ msgstr "Endpoint de dados"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__display_name
 msgid "Display Name"
 msgstr "Nome"
 
@@ -110,7 +103,15 @@ msgid "Google Authentication"
 msgstr "Autenticação Google"
 
 #. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__has_oauth_access_token
+msgid "Has OAuth Access Token"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__id
+#: model:ir.model.fields,field_description:auth_oauth.field_ir_config_parameter__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -130,29 +131,20 @@ msgid "Link text in Login Dialog"
 msgstr "Texto do link na caixa de diálogo de login"
 
 #. module: auth_oauth
-#: model:auth.oauth.provider,body:auth_oauth.provider_facebook
-msgid "Log in with Facebook"
-msgstr ""
-
-#. module: auth_oauth
-#: model:auth.oauth.provider,body:auth_oauth.provider_google
-msgid "Log in with Google"
-msgstr ""
-
-#. module: auth_oauth
-#: model:auth.oauth.provider,body:auth_oauth.provider_openerp
-msgid "Log in with Odoo.com"
-msgstr ""
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
 msgid "Login button label"
 msgstr "Rótulo do botão de login"
 
 #. module: auth_oauth
+#. odoo-python
+#: code:addons/auth_oauth/models/res_users.py:0
+msgid "Missing subject identity"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_access_token
-msgid "OAuth Access Token"
-msgstr "Código de Acesso OAuth"
+msgid "OAuth Access Token Store"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_provider_id
@@ -201,6 +193,11 @@ msgid "Providers"
 msgstr "Provedores"
 
 #. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.view_users_form
+msgid "Remove Token"
+msgstr ""
+
+#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__scope
 msgid "Scope"
 msgstr "Âmbito"
@@ -216,6 +213,21 @@ msgid "Server uri"
 msgstr "Uri do servidor"
 
 #. module: auth_oauth
+#: model:auth.oauth.provider,body:auth_oauth.provider_facebook
+msgid "Sign in with Facebook"
+msgstr ""
+
+#. module: auth_oauth
+#: model:auth.oauth.provider,body:auth_oauth.provider_google
+msgid "Sign in with Google"
+msgstr ""
+
+#. module: auth_oauth
+#: model:auth.oauth.provider,body:auth_oauth.provider_openerp
+msgid "Sign in with Odoo.com"
+msgstr ""
+
+#. module: auth_oauth
 #. odoo-python
 #: code:addons/auth_oauth/controllers/main.py:0
 msgid "Sign up is not allowed on this database."
@@ -225,6 +237,11 @@ msgstr "Não é permitido inscrever-se nesta base de dados."
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
 msgid "System Parameter"
 msgstr "Parâmetro de Sistema"
+
+#. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Tutorial"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
@@ -239,8 +256,19 @@ msgstr "URL de UserInfo"
 #. module: auth_oauth
 #. odoo-python
 #: code:addons/auth_oauth/controllers/main.py:0
-msgid "You do not have access to this database or your invitation has expired. Please ask for an invitation and be sure to follow the link in your invitation email."
-msgstr "Não tem acesso a esta base de dados ou o convite expirou. Por favor peça um novo convite e siga o link que virá no e-mail de convite."
+msgid ""
+"You do not have access to this database or your invitation has expired. "
+"Please ask for an invitation and be sure to follow the link in your "
+"invitation email."
+msgstr ""
+"Não tem acesso a esta base de dados ou o convite expirou. Por favor peça um "
+"novo convite e siga o link que virá no e-mail de convite."
+
+#. module: auth_oauth
+#. odoo-python
+#: code:addons/auth_oauth/models/res_users.py:0
+msgid "You do not have permissions to remove the access token"
+msgstr ""
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
@@ -252,3 +280,9 @@ msgstr "arco"
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
 msgstr "Por exemplo, 1234-xyz.apps.googleusercontent.com"
+
+#~ msgid "- or -"
+#~ msgstr "- ou -"
+
+#~ msgid "OAuth Access Token"
+#~ msgstr "Código de Acesso OAuth"

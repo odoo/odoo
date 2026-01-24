@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-16 18:35+0000\n"
+"POT-Creation-Date: 2026-01-23 18:35+0000\n"
 "PO-Revision-Date: 2025-11-12 13:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -16866,18 +16866,6 @@ msgstr "Anul acesta"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"Acest cont este configurat în jurnal(e) %(journal_names)s (ids %"
-"(journal_ids)s) ca cont de debit sau credit. Acest lucru înseamnă că tipul "
-"contului ar trebui să fie reconciliabil."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
 msgstr "Acest cont a fost separat din %(account_name)s (%(company_name)s)."
 
@@ -19047,6 +19035,12 @@ msgstr "Nu puteți posta o intrare într-un jurnal arhivat (%(journal)s)"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
@@ -19899,6 +19893,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Chitanță de plată (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "Acest cont este configurat în jurnal(e) %(journal_names)s (ids %"
+#~ "(journal_ids)s) ca cont de debit sau credit. Acest lucru înseamnă că "
+#~ "tipul contului ar trebui să fie reconciliabil."
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr ""

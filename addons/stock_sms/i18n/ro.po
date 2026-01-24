@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2026-01-22 18:36+0000\n"
 "PO-Revision-Date: 2025-11-13 14:14+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -29,11 +29,21 @@ msgstr ""
 #: model:sms.template,body:stock_sms.sms_template_data_stock_delivery
 msgid ""
 "\n"
-"                {{ (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"                {{ (object.company_id.name + ': We are glad to inform you "
+"that your order n° ' + object.origin + ' has been shipped.' if object.origin "
+"else object.company_id.name + ': We are glad to inform you that your order "
+"has been shipped.') + (' Your tracking reference is ' + "
+"(object.carrier_tracking_ref) + '.' if hasattr(object, "
+"'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 msgstr ""
 "\n"
-"                {{ (object.company_id.name + ': Suntem bucuroși să vă informăm că a  fost expediată comanda ' + object.origin + ' .' if object.origin else object.company_id.name + ': Suntem bucuroși să vă informăm că a fost expediată comanda dumneavoastră.') + (' Referința dvs. de urmărire este ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"                {{ (object.company_id.name + ': Suntem bucuroși să vă "
+"informăm că a  fost expediată comanda ' + object.origin + ' .' if "
+"object.origin else object.company_id.name + ': Suntem bucuroși să vă "
+"informăm că a fost expediată comanda dumneavoastră.') + (' Referința dvs. de "
+"urmărire este ' + (object.carrier_tracking_ref) + '.' if hasattr(object, "
+"'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 
 #. module: stock_sms
@@ -83,6 +93,9 @@ msgstr "Dezactivați SMS-urile"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__display_name
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__display_name
+#: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:stock_sms.field_stock_picking__display_name
 msgid "Display Name"
 msgstr "Nume afișat"
 
@@ -93,13 +106,11 @@ msgstr "A primit SMS-uri de avertizare"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__id
+#: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__id
+#: model:ir.model.fields,field_description:stock_sms.field_stock_picking__id
 msgid "ID"
 msgstr "ID"
-
-#. module: stock_sms
-#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms____last_update
-msgid "Last Modified on"
-msgstr "Ultima modificare la"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__write_uid
@@ -117,6 +128,7 @@ msgid "Pick"
 msgstr "Ridică"
 
 #. module: stock_sms
+#. odoo-python
 #: code:addons/stock_sms/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid "SMS"
@@ -155,7 +167,12 @@ msgstr "Transfer"
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid ""
 "You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
-"                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
+"                This feature can easily be disabled from the Settings of "
+"Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""
 "Sunteți pe cale să confirmați această comandă de livrare prin SMS.<br/>\n"
-"                  Această caracteristică poate fi dezactivată cu ușurință din Setările inventarului sau făcând clic pe „Dezactivare SMS”.<br/>"
+"                  Această caracteristică poate fi dezactivată cu ușurință "
+"din Setările inventarului sau făcând clic pe „Dezactivare SMS”.<br/>"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Ultima modificare la"

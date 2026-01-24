@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
 "PO-Revision-Date: 2026-01-17 13:13+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -21,8 +21,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
-"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_expense
@@ -83,8 +83,7 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid ""
-"%(user)s confirms this expense is not a duplicate with similar expense."
+msgid "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr ""
 "%(user)s potwierdza, że ten wydatek nie jest duplikatem podobnego wydatku."
 
@@ -170,8 +169,8 @@ msgstr "<span>Całkowita suma nie jest zgodna z pierwotną kwotą.</span>"
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
 "A default outstanding account must be defined in the settings for company-"
-"paid expenses. You can alternatively specify one in the Journal for the "
-"%(method)s payment method."
+"paid expenses. You can alternatively specify one in the Journal for the %"
+"(method)s payment method."
 msgstr ""
 "W ustawieniach wydatków należy zdefiniować domyślne konto należności. "
 "Alternatywnie można je określić w dzienniku metody płatności %(method)s."
@@ -543,8 +542,7 @@ msgstr "Domyślny dziennik wydatków"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default accounting journal for expenses paid by employees."
-msgstr ""
-"Domyślny dziennik księgowy dla wydatków ponoszonych przez pracowników."
+msgstr "Domyślny dziennik księgowy dla wydatków ponoszonych przez pracowników."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -672,8 +670,7 @@ msgstr "Wydatki pracownicze"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid ""
-"Enter a name then choose a category and configure the amount of your "
-"expense."
+"Enter a name then choose a category and configure the amount of your expense."
 msgstr ""
 "Wprowadź nazwę, a następnie wybierz kategorię i skonfiguruj kwotę wydatku."
 
@@ -861,6 +858,11 @@ msgid "Expenses Report"
 msgstr "Raport wydatków"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "Expenses approval"
+msgstr ""
+
+#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expenses of %(employee)s"
@@ -965,6 +967,11 @@ msgstr "Grupuj wg."
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Guideline"
 msgstr "Wytyczne"
+
+#. module: hr_expense
+#: model:ir.actions.server,name:hr_expense.ir_cron_send_submitted_expenses_mail_ir_actions_server
+msgid "HR Expense: Send Submitted Expenses Mail"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
@@ -1286,11 +1293,9 @@ msgstr "Nowe wpisy wydatków"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid ""
-"New expenses are awaiting your approval.\n"
-"                You can review them by following this link"
+"New expenses are waiting for your approval. You can Review them by following "
+"this link."
 msgstr ""
-"Nowe wydatki oczekują na Twoje zatwierdzenie.\n"
-"                Możesz je przejrzeć pod tym linkiem"
 
 #. module: hr_expense
 #. odoo-python
@@ -1391,6 +1396,7 @@ msgstr "Liczby obliczone z Twoich osobistych wydatków."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Odoo"
 msgstr "Odoo"
 
@@ -1398,11 +1404,13 @@ msgstr "Odoo"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
-"Odoo had a look at your expense, its product, your company and the journal but came back with empty hands.\n"
+"Odoo had a look at your expense, its product, your company and the journal "
+"but came back with empty hands.\n"
 "Give Odoo a hand to find an account by setting up an expense account.\n"
 "%(expense)s %(expense_name)s.\n"
 msgstr ""
-"Odoo rzuciło okiem na Twój wydatek, jego produkt, Twoją firmę i dziennik, ale wróciło z pustymi rękami.\n"
+"Odoo rzuciło okiem na Twój wydatek, jego produkt, Twoją firmę i dziennik, "
+"ale wróciło z pustymi rękami.\n"
 "Podaj pomocną dłoń i pomóż nam znaleźć konto, konfigurując konto wydatków.\n"
 "%(expense)s %(expense_name)s.\n"
 
@@ -1587,6 +1595,7 @@ msgstr "Zaksięgowano"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Powered by"
 msgstr "Powered by"
 
@@ -1769,10 +1778,13 @@ msgstr "Zeskanuj ten kod QR, aby pobrać aplikację Odoo:"
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
-"Wybierz użytkownika odpowiedzialnego za zatwierdzanie \"Wydatków\" tego pracownika.\n"
-"Jeśli pole jest puste, zatwierdzenie zostanie wykonane przez Administratora lub Zatwierdzającego (określone w ustawieniach/użytkownicy)."
+"Wybierz użytkownika odpowiedzialnego za zatwierdzanie \"Wydatków\" tego "
+"pracownika.\n"
+"Jeśli pole jest puste, zatwierdzenie zostanie wykonane przez Administratora "
+"lub Zatwierdzającego (określone w ustawieniach/użytkownicy)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
@@ -1790,8 +1802,8 @@ msgid ""
 msgstr ""
 "Wyślij wiadomość e-mail na ten alias e-mail z paragonem w załączniku, aby "
 "utworzyć wydatek jednym kliknięciem. Jeśli pierwsze słowo tematu wiadomości "
-"zawiera wewnętrzne odniesienie do kategorii lub nazwę kategorii, odpowiednia"
-" kategoria zostanie ustawiona automatycznie. Wpisz kwotę wydatku w temacie "
+"zawiera wewnętrzne odniesienie do kategorii lub nazwę kategorii, odpowiednia "
+"kategoria zostanie ustawiona automatycznie. Wpisz kwotę wydatku w temacie "
 "wiadomości e-mail, aby ustawić ją również w wydatku."
 
 #. module: hr_expense
@@ -1964,8 +1976,7 @@ msgstr "Konto używane do rejestrowania należności z tytułu wydatków firmy."
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
-msgid ""
-"The company's default journal used when an employee expense is created."
+msgid "The company's default journal used when an employee expense is created."
 msgstr ""
 "Domyślny dziennik firmy używany podczas tworzenia wydatków pracowniczych."
 
@@ -1979,8 +1990,8 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
-"The first word of the email subject did not correspond to any category code."
-" You'll have to set the category manually on the expense."
+"The first word of the email subject did not correspond to any category code. "
+"You'll have to set the category manually on the expense."
 msgstr ""
 "Pierwsze słowo tematu wiadomości e-mail nie odpowiadało żadnemu kodowi "
 "kategorii. Konieczne będzie ręczne ustawienie kategorii w wydatkach."
@@ -2124,7 +2135,8 @@ msgstr "Typ wyjątku działania na rekordzie."
 msgid ""
 "Uh-oh! You can’t edit this expense.\n"
 "\n"
-"Reach out to the administrators, flash your best smile, and see if they'll grant you the magical access you seek."
+"Reach out to the administrators, flash your best smile, and see if they'll "
+"grant you the magical access you seek."
 msgstr ""
 "Ups! Nie możesz edytować tego wydatku.\n"
 "\n"
@@ -2229,14 +2241,14 @@ msgstr "Historia komunikacji"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
-"When the cost of an expense product is different than 0, then the user"
-"                                             using this product won't be "
-"able to change the amount of the expense,"
-"                                             only the quantity. Use a cost "
-"different than 0 for expense categories funded by"
-"                                             the company at fixed cost like "
-"allowances for mileage, per diem, accommodation"
-"                                             or meal."
+"When the cost of an expense product is different than 0, then the "
+"user                                             using this product won't be "
+"able to change the amount of the "
+"expense,                                             only the quantity. Use "
+"a cost different than 0 for expense categories funded "
+"by                                             the company at fixed cost "
+"like allowances for mileage, per diem, "
+"accommodation                                             or meal."
 msgstr ""
 "Gdy koszt produktu wydatku jest różny od "
 "0,                                             użytkownik korzystający z "
@@ -2267,8 +2279,7 @@ msgstr "Nie możesz przesłać wydatku bez kategorii."
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "You can now submit it to the manager from the following link."
-msgstr ""
-"Możesz teraz przesłać go do menedżera, korzystając z poniższego łącza."
+msgstr "Możesz teraz przesłać go do menedżera, korzystając z poniższego łącza."
 
 #. module: hr_expense
 #. odoo-python
@@ -2345,8 +2356,8 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot reset to draft an expense linked to a posted journal entry."
 msgstr ""
-"Nie możesz zresetować do wersji roboczej wydatku powiązanego z opublikowanym"
-" wpisem dziennika."
+"Nie możesz zresetować do wersji roboczej wydatku powiązanego z opublikowanym "
+"wpisem dziennika."
 
 #. module: hr_expense
 #. odoo-python
@@ -2382,8 +2393,8 @@ msgstr "Musisz dodać ręczną metodę płatności w dzienniku (%s)"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
-"You need to have at least one category that can be expensed in your database"
-" to proceed!"
+"You need to have at least one category that can be expensed in your database "
+"to proceed!"
 msgstr ""
 "Aby kontynuować, musisz mieć co najmniej jedną kategorię, która może być "
 "kosztem w bazie danych!"
@@ -2457,3 +2468,10 @@ msgstr "używać OCR do wypełniania danych ze zdjęcia rachunku"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "z tym samym pokwitowaniem już istnieje."
+
+#~ msgid ""
+#~ "New expenses are awaiting your approval.\n"
+#~ "                You can review them by following this link"
+#~ msgstr ""
+#~ "Nowe wydatki oczekują na Twoje zatwierdzenie.\n"
+#~ "                Możesz je przejrzeć pod tym linkiem"

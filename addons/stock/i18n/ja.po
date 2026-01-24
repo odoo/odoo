@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 18:36+0000\n"
-"PO-Revision-Date: 2026-01-17 13:18+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
+"PO-Revision-Date: 2026-01-23 16:17+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/"
 "stock/ja/>\n"
@@ -558,7 +558,7 @@ msgid ""
 "<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill "
 "it."
 msgstr ""
-"<br>ニーズは<b>%sで</b>作成され、それを満たすために規則がトリガーされます。"
+"<br>ニーズは<b>%sで</b>作成され、それを満たすためにルールがトリガーされます。"
 
 #. module: stock
 #. odoo-python
@@ -568,7 +568,7 @@ msgid ""
 "to bring the missing quantity in this location."
 msgstr ""
 "<br>プロダクト在庫が <b>%s</b>でない場合、この場所の不足数量を補うために、あ"
-"る規則がトリガされます。"
+"るルールがトリガされます。"
 
 #. module: stock
 #. odoo-python
@@ -779,7 +779,7 @@ msgstr "<span class=\"o_stat_text\">プロダクト移動</span>"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Putaway Rules</span>"
-msgstr "<span class=\"o_stat_text\">入庫規則</span>"
+msgstr "<span class=\"o_stat_text\">入庫ルール</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -1053,14 +1053,14 @@ msgstr "バーコードは１つの梱包タイプに対して１つのみ割り
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
 msgid "A replenishment rule already exists for this product on this location."
-msgstr "このロケーションのこのプロダクトについて補充規則が既に存在します。"
+msgstr "このロケーションのこのプロダクトについて補充ルールが既に存在します。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__is_storable
 #: model:ir.model.fields,help:stock.field_product_template__is_storable
 #: model:ir.model.fields,help:stock.field_stock_move__is_storable
 msgid "A storable product is a product for which you manage stock."
-msgstr "在庫可能プロダクトは、在庫を管理するプロダクトです。"
+msgstr "在庫可能品は、在庫を管理する対象となるプロダクトのことです。"
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -1251,7 +1251,7 @@ msgstr "高度なスケジューリング"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__procure_method__make_to_order
 msgid "Advanced: Apply Procurement Rules"
-msgstr "高度：調達規則の適用"
+msgstr "高度：調達ルールの適用"
 
 #. module: stock
 #. odoo-python
@@ -1712,12 +1712,12 @@ msgstr "バーコードデモ"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
-msgstr "バーコード表現規則"
+msgstr "バーコード表現ルール"
 
 #. module: stock
 #: model:ir.model,name:stock.model_barcode_rule
 msgid "Barcode Rule"
-msgstr "バーコード規則"
+msgstr "バーコードルール"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_barcode
@@ -2403,7 +2403,7 @@ msgstr "在庫作成"
 #. module: stock
 #: model:ir.model,website_form_label:stock.model_res_partner
 msgid "Create a Customer"
-msgstr "顧客を作成する"
+msgstr "顧客を作成"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -2439,8 +2439,8 @@ msgid ""
 "Create new putaway rules to dispatch automatically specific products to "
 "their appropriate destination location upon receptions."
 msgstr ""
-"新しい入庫規則を作成して、入荷時に特定のプロダクトを適切な配送先の場所に自動"
-"的に発送します。"
+"新しい入庫ルールを作成して、入荷時に特定のプロダクトを適切な配送先の場所に自"
+"動的に発送します。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2888,8 +2888,8 @@ msgid ""
 "Define a minimum stock rule so that Odoo automatically creates requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
-"最小在庫規則を定義して、在庫を補充するための見積依頼または製造オーダのドラフ"
-"トをOdooが自動的に作成するようにします。"
+"最小在庫ルールを定義して、在庫を補充するための見積依頼または製造オーダのドラ"
+"フトをOdooが自動的に作成するようにします。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -3247,7 +3247,7 @@ msgstr "移動先ロケーション"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__location_dest_from_rule
 msgid "Destination location origin from rule"
-msgstr "規則からの移動先ロケーション元"
+msgstr "ルールからの移動先ロケーション元"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__route_ids
@@ -4267,8 +4267,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
 msgstr ""
-"アクティブな項目がFalseにセットされている場合は、発注点を削除することなく非表"
-"示にできます。"
+"有効化フィールドをFalseに設定すると、補充ルールを削除せずに非表示にすることが"
+"できます。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__active
@@ -6326,7 +6326,7 @@ msgstr "%sにより署名されたオーダ"
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__orderpoint_ids
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__orderpoint_id
 msgid "Orderpoint"
-msgstr "オーダポイント"
+msgstr "補充ルール"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -7394,7 +7394,7 @@ msgstr "品質ワークシート"
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__quant_ids
 msgid "Quant"
-msgstr "Quant"
+msgstr "在庫数量"
 
 #. module: stock
 #. odoo-python
@@ -8871,7 +8871,7 @@ msgstr "一時停止日"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_orderpoint_snooze
 msgid "Snooze Orderpoint"
-msgstr "オーダポイント一時停止"
+msgstr "補充ルールを一時停止"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__predefined_date
@@ -11113,8 +11113,7 @@ msgstr "以下を行うことができます:"
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "You can not create a snoozed orderpoint that is not manually triggered."
 msgstr ""
-"手動でトリガされていない一時停止済のオーダポイントを作成することはできませ"
-"ん。"
+"手動トリガでない補充ルールに対しては、一時停止を設定することはできません。"
 
 #. module: stock
 #. odoo-python
@@ -11167,8 +11166,8 @@ msgid ""
 "You can only snooze manual orderpoints. You should rather archive 'auto-"
 "trigger' orderpoints if you do not want them to be triggered."
 msgstr ""
-"一時停止できるのは手動オーダポイントのみです。トリガさせたくない場合は、'自動"
-"トリガ' オーダーポイントをアーカイブして下さい。"
+"一時停止できるのは手動の補充ルールのみです。「自動でトリガー」される補充ルー"
+"ルを無効にしたい場合は、アーカイブすることをおすすめします。"
 
 #. module: stock
 #. odoo-python

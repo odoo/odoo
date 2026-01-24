@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_expense
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Aleš Pipan, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3);\n"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -77,8 +78,7 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid ""
-"%(user)s confirms this expense is not a duplicate with similar expense."
+msgid "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr "%(user)s potrjuje, da ta odhodek ni dvojnik podobnega odhodka."
 
 #. module: hr_expense
@@ -165,8 +165,8 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
 "A default outstanding account must be defined in the settings for company-"
-"paid expenses. You can alternatively specify one in the Journal for the "
-"%(method)s payment method."
+"paid expenses. You can alternatively specify one in the Journal for the %"
+"(method)s payment method."
 msgstr ""
 "V nastavitvah za stroške, ki jih plača podjetje, mora biti določen privzeti "
 "neporavnani račun. Lahko pa ga določite tudi v dnevniku za %(method)s način "
@@ -668,8 +668,7 @@ msgstr "Stroški zaposlenih"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid ""
-"Enter a name then choose a category and configure the amount of your "
-"expense."
+"Enter a name then choose a category and configure the amount of your expense."
 msgstr ""
 "Vnesite ime, nato izberite kategorijo in konfigurirajte znesek stroškov."
 
@@ -857,6 +856,11 @@ msgid "Expenses Report"
 msgstr "Poročilo o stroških"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "Expenses approval"
+msgstr ""
+
+#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expenses of %(employee)s"
@@ -961,6 +965,11 @@ msgstr "Združi po"
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Guideline"
 msgstr "Smernica"
+
+#. module: hr_expense
+#: model:ir.actions.server,name:hr_expense.ir_cron_send_submitted_expenses_mail_ir_actions_server
+msgid "HR Expense: Send Submitted Expenses Mail"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
@@ -1279,11 +1288,9 @@ msgstr "Novi vnosi stroškov"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid ""
-"New expenses are awaiting your approval.\n"
-"                You can review them by following this link"
+"New expenses are waiting for your approval. You can Review them by following "
+"this link."
 msgstr ""
-"Novi stroški čakajo na vašo odobritev.\n"
-"Pregledate jih lahko na tej povezavi."
 
 #. module: hr_expense
 #. odoo-python
@@ -1385,6 +1392,7 @@ msgstr "Številke, izračunane na podlagi vaših osebnih stroškov."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Odoo"
 msgstr "Odoo"
 
@@ -1392,11 +1400,13 @@ msgstr "Odoo"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
-"Odoo had a look at your expense, its product, your company and the journal but came back with empty hands.\n"
+"Odoo had a look at your expense, its product, your company and the journal "
+"but came back with empty hands.\n"
 "Give Odoo a hand to find an account by setting up an expense account.\n"
 "%(expense)s %(expense_name)s.\n"
 msgstr ""
-"Odoo si je ogledal vaše stroške, svoj izdelek, vaše podjetje in dnevnik, vendar se je vrnil praznih rok.\n"
+"Odoo si je ogledal vaše stroške, svoj izdelek, vaše podjetje in dnevnik, "
+"vendar se je vrnil praznih rok.\n"
 "Pomagajte Odooju najti račun tako, da ustvarite račun stroškov.\n"
 "%(expense)s %(expense_name)s.\n"
 
@@ -1424,8 +1434,8 @@ msgstr ""
 msgid ""
 "Only HR Officers, accountants, or the concerned employee can reset to draft."
 msgstr ""
-"Samo kadrovski uradniki, računovodje ali zadevni zaposleni lahko ponastavijo"
-" na osnutek."
+"Samo kadrovski uradniki, računovodje ali zadevni zaposleni lahko ponastavijo "
+"na osnutek."
 
 #. module: hr_expense
 #. odoo-python
@@ -1577,6 +1587,7 @@ msgstr "Knjiženo"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Powered by"
 msgstr "Uporablja tehnologijo"
 
@@ -1758,10 +1769,12 @@ msgstr "Skenirajte to QR kodo, da dobite aplikacijo Odoo:"
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
 "Izberite uporabnika, odgovornega za odobritev »Stroškov« tega zaposlenega.\n"
-"Če je polje prazno, odobritev opravi skrbnik ali odobritelj (določeno v nastavitvah/uporabnikih)."
+"Če je polje prazno, odobritev opravi skrbnik ali odobritelj (določeno v "
+"nastavitvah/uporabnikih)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
@@ -1780,8 +1793,8 @@ msgstr ""
 "Pošljite e-pošto na ta e-poštni vzdevek s potrdilom v prilogi, da ustvarite "
 "strošek z enim klikom. Če prva beseda v zadevi e-pošte vsebuje interno "
 "referenco kategorije ali ime kategorije, bo ustrezna kategorija samodejno "
-"nastavljena. V zadevo e-pošte vnesite znesek stroška, ​​da ga nastavite tudi"
-" za strošek."
+"nastavljena. V zadevo e-pošte vnesite znesek stroška, ​​da ga nastavite tudi "
+"za strošek."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1954,8 +1967,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
-msgid ""
-"The company's default journal used when an employee expense is created."
+msgid "The company's default journal used when an employee expense is created."
 msgstr ""
 "Privzeti dnevnik podjetja, ki se uporablja ob ustvarjanju stroškov "
 "zaposlenega."
@@ -1970,8 +1982,8 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
-"The first word of the email subject did not correspond to any category code."
-" You'll have to set the category manually on the expense."
+"The first word of the email subject did not correspond to any category code. "
+"You'll have to set the category manually on the expense."
 msgstr ""
 "Prva beseda v zadevi e-poštnega sporočila ni ustrezala nobeni kodi "
 "kategorije. Kategorijo boste morali ročno nastaviti za strošek."
@@ -1983,8 +1995,8 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
-"Naslednji odobreni stroški imajo podobne zaposlene, zneske in kategorije kot"
-" nekateri stroški v tem poročilu. Preverite, ali to poročilo vsebuje "
+"Naslednji odobreni stroški imajo podobne zaposlene, zneske in kategorije kot "
+"nekateri stroški v tem poročilu. Preverite, ali to poročilo vsebuje "
 "podvojene podatke."
 
 #. module: hr_expense
@@ -2115,7 +2127,8 @@ msgstr "Vrsta dejavnosti izjeme na zapisu. "
 msgid ""
 "Uh-oh! You can’t edit this expense.\n"
 "\n"
-"Reach out to the administrators, flash your best smile, and see if they'll grant you the magical access you seek."
+"Reach out to the administrators, flash your best smile, and see if they'll "
+"grant you the magical access you seek."
 msgstr ""
 
 #. module: hr_expense
@@ -2217,14 +2230,14 @@ msgstr "Kronologija komunikacij spletne strani"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
-"When the cost of an expense product is different than 0, then the user"
-"                                             using this product won't be "
-"able to change the amount of the expense,"
-"                                             only the quantity. Use a cost "
-"different than 0 for expense categories funded by"
-"                                             the company at fixed cost like "
-"allowances for mileage, per diem, accommodation"
-"                                             or meal."
+"When the cost of an expense product is different than 0, then the "
+"user                                             using this product won't be "
+"able to change the amount of the "
+"expense,                                             only the quantity. Use "
+"a cost different than 0 for expense categories funded "
+"by                                             the company at fixed cost "
+"like allowances for mileage, per diem, "
+"accommodation                                             or meal."
 msgstr ""
 "Ko je strošek produkta stroškov drugačen od 0, uporabnik, ki uporablja ta "
 "produkt, ne bo mogel spremeniti zneska stroška, ​​temveč le količino. Za "
@@ -2328,8 +2341,8 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot reset to draft an expense linked to a posted journal entry."
 msgstr ""
-"Stroška, ​​povezanega s knjiženim vpisom v dnevnik, ni mogoče ponastaviti na"
-" osnutek."
+"Stroška, ​​povezanega s knjiženim vpisom v dnevnik, ni mogoče ponastaviti na "
+"osnutek."
 
 #. module: hr_expense
 #. odoo-python
@@ -2365,8 +2378,8 @@ msgstr "V dnevnik morate dodati ročni način plačila (%s)"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
-"You need to have at least one category that can be expensed in your database"
-" to proceed!"
+"You need to have at least one category that can be expensed in your database "
+"to proceed!"
 msgstr ""
 "Za nadaljevanje morate imeti v svoji bazi podatkov vsaj eno kategorijo, ki "
 "jo je mogoče obračunati kot stroške!"
@@ -2440,3 +2453,10 @@ msgstr "uporabite OCR za izpolnjevanje podatkov s slike računa"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "z istim računom že obstaja."
+
+#~ msgid ""
+#~ "New expenses are awaiting your approval.\n"
+#~ "                You can review them by following this link"
+#~ msgstr ""
+#~ "Novi stroški čakajo na vašo odobritev.\n"
+#~ "Pregledate jih lahko na tej povezavi."

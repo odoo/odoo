@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:37+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
 "PO-Revision-Date: 2025-08-27 06:13+0000\n"
 "Last-Translator: \"Rasareeyar Lappiam (rlap)\" <rlap@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -78,8 +78,7 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid ""
-"%(user)s confirms this expense is not a duplicate with similar expense."
+msgid "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr "%(user)s ยืนยันว่าค่าใช้จ่ายนี้ไม่ซ้ำกับค่าใช้จ่ายที่เหมือนกัน"
 
 #. module: hr_expense
@@ -161,8 +160,8 @@ msgstr "<span>ยอดรวมไม่ตรงกับยอดเดิม
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
 "A default outstanding account must be defined in the settings for company-"
-"paid expenses. You can alternatively specify one in the Journal for the "
-"%(method)s payment method."
+"paid expenses. You can alternatively specify one in the Journal for the %"
+"(method)s payment method."
 msgstr ""
 "ต้องกำหนดบัญชีค้างชำระเริ่มต้นในการตั้งค่าสำหรับค่าใช้จ่ายที่บริษัทชำระ "
 "หรือสามารถระบุบัญชีค้างชำระในสมุดรายวันสำหรับวิธีการชำระเงิน %(method)s ได้"
@@ -379,8 +378,7 @@ msgstr ""
 msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
 "taxes for expenses."
-msgstr ""
-"ทั้งภาษีที่รวมราคาและไม่รวมราคาจะทำหน้าที่เป็นภาษีที่รวมราคาสำหรับค่าใช้จ่าย"
+msgstr "ทั้งภาษีที่รวมราคาและไม่รวมราคาจะทำหน้าที่เป็นภาษีที่รวมราคาสำหรับค่าใช้จ่าย"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -659,8 +657,7 @@ msgstr "รายจ่ายพนักงาน"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid ""
-"Enter a name then choose a category and configure the amount of your "
-"expense."
+"Enter a name then choose a category and configure the amount of your expense."
 msgstr "ให้ป้อนชื่อและจากนั้นเลือกหมวดหมู่และกำหนดจำนวนค่าใช้จ่ายของคุณ"
 
 #. module: hr_expense
@@ -847,6 +844,11 @@ msgid "Expenses Report"
 msgstr "รายงานรายจ่าย"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "Expenses approval"
+msgstr ""
+
+#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expenses of %(employee)s"
@@ -949,6 +951,11 @@ msgstr "กลุ่มโดย"
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Guideline"
 msgstr "แนวทาง"
+
+#. module: hr_expense
+#: model:ir.actions.server,name:hr_expense.ir_cron_send_submitted_expenses_mail_ir_actions_server
+msgid "HR Expense: Send Submitted Expenses Mail"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
@@ -1265,8 +1272,8 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid ""
-"New expenses are awaiting your approval.\n"
-"                You can review them by following this link"
+"New expenses are waiting for your approval. You can Review them by following "
+"this link."
 msgstr ""
 
 #. module: hr_expense
@@ -1367,6 +1374,7 @@ msgstr "ตัวเลขคำนวณจากค่าใช้จ่าย
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Odoo"
 msgstr "Odoo"
 
@@ -1374,12 +1382,13 @@ msgstr "Odoo"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
-"Odoo had a look at your expense, its product, your company and the journal but came back with empty hands.\n"
+"Odoo had a look at your expense, its product, your company and the journal "
+"but came back with empty hands.\n"
 "Give Odoo a hand to find an account by setting up an expense account.\n"
 "%(expense)s %(expense_name)s.\n"
 msgstr ""
-"Odoo ได้ตรวจสอบค่าใช้จ่าย, สินค้า, บริษัทของคุณ และสมุดบัญชีของคุณแล้ว แต่ยังไม่พบข้อมูลที่ต้"
-"องการ\n"
+"Odoo ได้ตรวจสอบค่าใช้จ่าย, สินค้า, บริษัทของคุณ และสมุดบัญชีของคุณแล้ว "
+"แต่ยังไม่พบข้อมูลที่ต้องการ\n"
 "ช่วย Odoo เลือกบัญชีสำหรับบันทึกค่าใช้จ่ายนี้โดยการตั้งค่าบัญชีค่าใช้จ่าย\n"
 "%(expense)s %(expense_name)s.\n"
 
@@ -1555,6 +1564,7 @@ msgstr "โพสต์"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Powered by"
 msgstr "สนับสนุนโดย"
 
@@ -1736,7 +1746,8 @@ msgstr "สแกนโค้ด QR นี้เพื่อดาวน์โ�
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
 "เลือกผู้ใช้ที่รับผิดชอบในการอนุมัติ \"ค่าใช้จ่าย\" ของพนักงานคนนี้\n"
 "หากว่างเปล่า การอนุมัติจะทำโดยผู้ดูแลระบบหรือผู้อนุมัติ (กำหนดในการตั้งค่า/ผู้ใช้)"
@@ -1929,8 +1940,7 @@ msgstr "บัญชีที่ใช้บันทึกยอดคงค้
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
-msgid ""
-"The company's default journal used when an employee expense is created."
+msgid "The company's default journal used when an employee expense is created."
 msgstr "สมุดรายวันเริ่มต้นของบริษัทที่ใช้เมื่อมีการสร้างค่าใช้จ่ายของพนักงาน"
 
 #. module: hr_expense
@@ -1942,8 +1952,8 @@ msgstr "ผู้ใช้ปัจจุบันไม่มีพนักง
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
-"The first word of the email subject did not correspond to any category code."
-" You'll have to set the category manually on the expense."
+"The first word of the email subject did not correspond to any category code. "
+"You'll have to set the category manually on the expense."
 msgstr ""
 "คำแรกของหัวเรื่องอีเมลไม่ตรงกับรหัสหมวดหมู่ใดๆ คุณจะต้องตั้งค่าหมวดหมู่ด้วยตนเองเกี่ยวกับรายจ่าย"
 
@@ -2085,7 +2095,8 @@ msgstr "ประเภทกิจกรรมข้อยกเว้นบน
 msgid ""
 "Uh-oh! You can’t edit this expense.\n"
 "\n"
-"Reach out to the administrators, flash your best smile, and see if they'll grant you the magical access you seek."
+"Reach out to the administrators, flash your best smile, and see if they'll "
+"grant you the magical access you seek."
 msgstr ""
 "ขออภัย! คุณแก้ไขค่าใช้จ่ายนี้ไม่ได้หรอก\n"
 "\n"
@@ -2190,19 +2201,19 @@ msgstr "ประวัติการสื่อสารของเว็บ
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
-"When the cost of an expense product is different than 0, then the user"
-"                                             using this product won't be "
-"able to change the amount of the expense,"
-"                                             only the quantity. Use a cost "
-"different than 0 for expense categories funded by"
-"                                             the company at fixed cost like "
-"allowances for mileage, per diem, accommodation"
-"                                             or meal."
+"When the cost of an expense product is different than 0, then the "
+"user                                             using this product won't be "
+"able to change the amount of the "
+"expense,                                             only the quantity. Use "
+"a cost different than 0 for expense categories funded "
+"by                                             the company at fixed cost "
+"like allowances for mileage, per diem, "
+"accommodation                                             or meal."
 msgstr ""
-"เมื่อต้นทุนของผลิตภัณฑ์ค่าใช้จ่ายแตกต่างจาก 0 ผู้ใช้ที่ใช้ผลิตภัณฑ์นี้จะไม่สามารถเปลี่ยนจำนวนค่าใช้จ่ายได้"
-" แต่จะสามารถเปลี่ยนเฉพาะปริมาณได้ ใช้ค่าใช้จ่ายที่แตกต่างจาก 0 "
-"สำหรับหมวดหมู่ค่าใช้จ่ายที่ได้รับทุนจากบริษัทโดยมีต้นทุนคงที่ เช่น ค่าเบี้ยเลี้ยงระยะทาง เบี้ยเลี้ยง ที่พัก "
-"หรือมื้ออาหาร"
+"เมื่อต้นทุนของผลิตภัณฑ์ค่าใช้จ่ายแตกต่างจาก 0 "
+"ผู้ใช้ที่ใช้ผลิตภัณฑ์นี้จะไม่สามารถเปลี่ยนจำนวนค่าใช้จ่ายได้ แต่จะสามารถเปลี่ยนเฉพาะปริมาณได้ "
+"ใช้ค่าใช้จ่ายที่แตกต่างจาก 0 สำหรับหมวดหมู่ค่าใช้จ่ายที่ได้รับทุนจากบริษัทโดยมีต้นทุนคงที่ เช่น "
+"ค่าเบี้ยเลี้ยงระยะทาง เบี้ยเลี้ยง ที่พัก หรือมื้ออาหาร"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2331,10 +2342,9 @@ msgstr "คุณต้องเพิ่มวิธีการชำระเ
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid ""
-"You need to have at least one category that can be expensed in your database"
-" to proceed!"
-msgstr ""
-"คุณต้องมีอย่างน้อยหนึ่งหมวดหมู่ที่สามารถใช้จ่ายในฐานข้อมูลของคุณเพื่อดำเนินการต่อ!"
+"You need to have at least one category that can be expensed in your database "
+"to proceed!"
+msgstr "คุณต้องมีอย่างน้อยหนึ่งหมวดหมู่ที่สามารถใช้จ่ายในฐานข้อมูลของคุณเพื่อดำเนินการต่อ!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason

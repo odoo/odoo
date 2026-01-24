@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:38+0000\n"
+"POT-Creation-Date: 2026-01-22 18:36+0000\n"
 "PO-Revision-Date: 2025-08-25 07:48+0000\n"
 "Last-Translator: \"Rasareeyar Lappiam (rlap)\" <rlap@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -120,8 +120,7 @@ msgstr "ยกเลิก"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid ""
-"Cancelling a delivery may not be undoable. Are you sure you want to "
-"continue?"
+"Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr "การจัดส่งอาจไม่สามารถยกเลิกได้ คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?"
 
 #. module: stock_delivery
@@ -224,12 +223,14 @@ msgstr "แสดงลิงก์ติดตาม"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
 "ต้นทุนโดยประมาณ: ลูกค้าจะได้รับใบแจ้งหนี้ตามต้นทุนโดยประมาณของการจัดส่ง\n"
-"ต้นทุนจริง: ลูกค้าจะได้รับใบแจ้งหนี้ตามต้นทุนจริงของการจัดส่ง ต้นทุนของการจัดส่งจะได้รับการอั"
-"ปเดตใน SO หลังการส่งมอบ"
+"ต้นทุนจริง: ลูกค้าจะได้รับใบแจ้งหนี้ตามต้นทุนจริงของการจัดส่ง "
+"ต้นทุนของการจัดส่งจะได้รับการอัปเดตใน SO หลังการส่งมอบ"
 
 #. module: stock_delivery
 #. odoo-python
@@ -393,8 +394,10 @@ msgstr "เส้นทาง"
 #: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
 msgid ""
-"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
-"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+"Rules of origin determine where goods originate, i.e. not where they have "
+"been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in "
+"commerce."
 msgstr ""
 "กฎของต้นกำเนิดสินค้าจะกำหนดแหล่งที่มาของสินค้า ซึ่งไม่ใช่แหล่งกำเนิดสินค้าโดยตรง "
 "แต่คือแหล่งผลิตหรือสถานที่ผลิต\n"
@@ -429,11 +432,11 @@ msgstr "ส่งไปยังผู้จัดส่ง"
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid ""
-"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
-"%(ref)s"
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number %"
+"(ref)s"
 msgstr ""
-"การจัดส่งที่ส่งไปยังผู้ให้บริการขนส่ง %(carrier_name)s สำหรับการจัดส่งโดยมีหมายเลขติดตาม "
-"%(ref)s"
+"การจัดส่งที่ส่งไปยังผู้ให้บริการขนส่ง %(carrier_name)s สำหรับการจัดส่งโดยมีหมายเลขติดตาม %"
+"(ref)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
@@ -503,8 +506,7 @@ msgstr ""
 msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
-msgstr ""
-"ไม่สามารถสร้างบรรจุภัณฑ์ได้ เนื่องจากน้ำหนักรวมของสินค้าในการเบิกสินค้าคือ 0.0 %s"
+msgstr "ไม่สามารถสร้างบรรจุภัณฑ์ได้ เนื่องจากน้ำหนักรวมของสินค้าในการเบิกสินค้าคือ 0.0 %s"
 
 #. module: stock_delivery
 #. odoo-python
@@ -604,8 +606,8 @@ msgstr "น้ำหนัก:"
 #: code:addons/stock_delivery/models/stock_move.py:0
 msgid ""
 "You cannot pack products into the same package when they have different "
-"carriers (i.e. check that all of their transfers have a carrier assigned and"
-" are using the same carrier)."
+"carriers (i.e. check that all of their transfers have a carrier assigned and "
+"are using the same carrier)."
 msgstr ""
 "คุณไม่สามารถบรรจุผลิตภัณฑ์ลงในบรรจุภัณฑ์เดียวกันได้เมื่อมีผู้ให้บริการขนส่งที่แตกต่างกัน (เช่น "
 "ตรวจสอบว่าการขนส่งทั้งหมดมีผู้ให้บริการที่กำหนดและใช้ผู้ให้บริการรายเดียวกัน)"
@@ -621,8 +623,7 @@ msgstr "คุณมีลิงก์ติดตามหลายลิงก
 msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
-msgstr ""
-"วิธีการจัดส่งของคุณไม่มีการเปลี่ยนเส้นทางบนเว็บไซต์ของผู้ให้บริการจัดส่งเพื่อติดตามคำสั่งนี้"
+msgstr "วิธีการจัดส่งของคุณไม่มีการเปลี่ยนเส้นทางบนเว็บไซต์ของผู้ให้บริการจัดส่งเพื่อติดตามคำสั่งนี้"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_delivery_zip_prefix

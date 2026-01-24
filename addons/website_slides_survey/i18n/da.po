@@ -5,13 +5,13 @@
 # Translators:
 # Wil Odoo, 2025
 #
-# "Kira Petersen François (peti)" <peti@odoo.com>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-16 18:39+0000\n"
-"PO-Revision-Date: 2025-12-06 13:30+0000\n"
+"POT-Creation-Date: 2026-01-22 18:36+0000\n"
+"PO-Revision-Date: 2026-01-23 16:17+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "website_slides_survey/da/>\n"
@@ -47,11 +47,19 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'participant' or ''\">participant</t><br/><br/>\n"
-"        Unfortunately, you have failed the certification and are no longer a member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Basics of Gardening</t>.<br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant' or "
+"''\">participant</t><br/><br/>\n"
+"        Unfortunately, you have failed the certification and are no longer a "
+"member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or "
+"''\">Basics of Gardening</t>.<br/><br/>\n"
 "        Don't hesitate to enroll again!\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-style=\"background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-"
+"href=\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
 "                Enroll now\n"
 "            </a>\n"
 "        </div>\n"
@@ -62,20 +70,19 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Kære <t t-out=\"object.partner_id.name or 'participant' or ''\""
-">deltager</t><br/><br/>\n"
+"        Kære <t t-out=\"object.partner_id.name or 'participant' or "
+"''\">deltager</t><br/><br/>\n"
 "        Du har desværre ikke bestået certificeringen og kan derfor ikke "
-"længere deltage i kurset. <t t-out="
-"\"object.slide_partner_id.channel_id.name or ''\">Grundprincipperne for "
-"havearbejde</t>.<br/><br/>\n"
+"længere deltage i kurset. <t t-out=\"object.slide_partner_id.channel_id.name "
+"or ''\">Grundprincipperne for havearbejde</t>.<br/><br/>\n"
 "        Du må gerne tilmelde dig igen!\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href="
-"\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-style"
-"=\"background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; "
-"padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
-"user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-"
-"size:13px;\">\n"
+"            <a t-att-"
+"href=\"(object.slide_partner_id.channel_id.website_absolute_url)\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
 "                Tilmeld dig\n"
 "            </a>\n"
 "        </div>\n"
@@ -95,8 +102,8 @@ msgid ""
 "<i class=\"fa fa-download\" aria-label=\"Download certification\" "
 "title=\"Download Certification\"/>"
 msgstr ""
-"<i class=\"fa fa-download\" aria-label=\"Download certificering\" title="
-"\"Download Certificering\"/>"
+"<i class=\"fa fa-download\" aria-label=\"Download certificering\" "
+"title=\"Download Certificering\"/>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
@@ -104,18 +111,18 @@ msgid ""
 "<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
 "certification\" title=\"Download certification\"/> Download certification"
 msgstr ""
-"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label="
-"\"Download certificering\" title=\"Download certificering\"/> Download "
-"certificering"
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
+"certificering\" title=\"Download certificering\"/> Download certificering"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_fill_form_done_inherit_website_slides
 msgid ""
-"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" title=\"Share certification\"/>\n"
+"<i class=\"fa fa-share-alt\" aria-label=\"Share certification\" "
+"title=\"Share certification\"/>\n"
 "                        Share your certification"
 msgstr ""
-"<i class=\"fa fa-share-alt\" aria-label=\"Del certificering\" title="
-"\"Del certificering\"/>\n"
+"<i class=\"fa fa-share-alt\" aria-label=\"Del certificering\" title=\"Del "
+"certificering\"/>\n"
 "                        Del din certificering"
 
 #. module: website_slides_survey
@@ -166,7 +173,8 @@ msgstr "<span class=\"text-muted\">Certificeringer</span>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
-msgid "<span>Start Now</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
+msgid ""
+"<span>Start Now</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
 msgstr ""
 "<span>Start nu</span><i class=\"oi oi-chevron-right ms-2 align-middle\"/>"
 
@@ -577,8 +585,8 @@ msgstr "Abonnementsoplysninger"
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
 msgid ""
-"Subtype of the slide category, allows more precision on the actual file type"
-" / source type."
+"Subtype of the slide category, allows more precision on the actual file "
+"type / source type."
 msgstr ""
 "Undertype for slidekategorien specificerer fil- eller kildetypen mere "
 "præcist."
@@ -637,15 +645,14 @@ msgstr ""
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_channel_ids
-msgid ""
-"The courses this survey is linked to through the e-learning application"
+msgid "The courses this survey is linked to through the e-learning application"
 msgstr "Kurset denne undersøgelse er tilknyttet via e-læringsappen"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_id
 msgid "The related course slide when there is no membership information"
 msgstr ""
-"Den relaterede kursusslide, når der ikke er nogen oplysninger om medlemsskab"
+"Den relaterede kursusslide, når der ikke er nogen oplysninger om medlemskab"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_ids
@@ -661,7 +668,8 @@ msgstr "Titel"
 #. odoo-python
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 msgid ""
-"Uh-oh! You can’t delete surveys used as a Course Certification! Otherwise, students might think diplomas just grow on trees.\n"
+"Uh-oh! You can’t delete surveys used as a Course Certification! Otherwise, "
+"students might think diplomas just grow on trees.\n"
 "The courses that need them are:\n"
 "%s"
 msgstr ""
@@ -696,8 +704,10 @@ msgstr "Du har ikke tilladelse til at tilknytte en certificering."
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
 msgid ""
-"You can gain badges by passing certifications. Here is a list of all available certification badges.\n"
-"                            <br/>Follow the links to reach new heights and skill up!"
+"You can gain badges by passing certifications. Here is a list of all "
+"available certification badges.\n"
+"                            <br/>Follow the links to reach new heights and "
+"skill up!"
 msgstr ""
 "Du kan modtage badges ved at bestå certificeringer. Her er en oversigt over "
 "alle tilgængelige certificeringsbadges.\n"

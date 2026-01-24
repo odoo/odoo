@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2026-01-22 18:36+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
 "Last-Translator: Cozmin Candea <office@terrabit.ro>, 2023\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
@@ -25,6 +25,17 @@ msgstr ""
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "<span invisible=\"not show_availability\">Units</span>"
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.js:0
+msgid "All available quantity selected"
+msgstr ""
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "All warehouses"
 msgstr ""
 
 #. module: website_sale_stock
@@ -70,6 +81,18 @@ msgid "Default visibility for custom messages."
 msgstr "Vizibilitate implicită pentru mesaje personalizate."
 
 #. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "Get notified when back in stock"
@@ -79,6 +102,18 @@ msgstr "Fiți notificat când revine în stoc"
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "How to display products having low quantities (on hand - reserved)"
 msgstr "Cum să afișați produsele cu cantități mici (disponibile - rezervate)"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__id
+msgid "ID"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-python
@@ -98,12 +133,6 @@ msgid "Inventory Defaults"
 msgstr "Valori implicite inventar"
 
 #. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "Only"
-msgstr "Doar"
-
-#. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Order Now"
 msgstr "Comandă acum"
@@ -113,6 +142,12 @@ msgstr "Comandă acum"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "Out of Stock"
 msgstr "Stoc epuizat"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product/product.xml:0
+msgid "Out of stock"
+msgstr ""
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -134,6 +169,11 @@ msgid "Product"
 msgstr "Produs"
 
 #. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_combo
+msgid "Product Combo"
+msgstr ""
+
+#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product Variant"
 msgstr "Variantă produs"
@@ -147,6 +187,12 @@ msgstr "Produs: trimite email cu privire la disponibilitatea produselor"
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Regards,"
 msgstr "Toate cele bune,"
+
+#. module: website_sale_stock
+#. odoo-javascript
+#: code:addons/website_sale_stock/static/src/js/product_card/product_card.xml:0
+msgid "Requested quantity not available"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
@@ -231,8 +277,8 @@ msgstr "Depozit"
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "We'll notify you once the product is back in stock."
-msgstr "Vă vom anunța imediat ce produsul va fi din nou disponibil."
+msgid "We'll notify you once the product is back in stock"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
@@ -249,14 +295,8 @@ msgstr ""
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "You already added"
-msgstr "Ai adăugat deja"
-
-#. module: website_sale_stock
-#. odoo-javascript
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "You already added all the available product in your cart."
-msgstr "Ai adăugat deja toate produsele disponibile în coșul tău."
+msgid "You already added all the available product in your cart"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -266,28 +306,36 @@ msgstr "Ai deja %s buc în coș."
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
-msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
-msgstr "Doriți %(desired_qty)s produse dar sunt disponibile doar %(new_qty)s"
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
+msgid ""
+"You ask for %(desired_qty)s products but only %(available_qty)s is available."
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
-msgid "You ask for %s Units but only %s are available."
-msgstr "Doriți %s buc dar sunt disponibile doar %s."
+msgid "You ask for %(quantity1)s Units but only %(quantity2)s are available."
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "in your cart."
-msgstr "în coșul tau. "
+msgid "in your cart)"
+msgstr ""
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
-msgid "left in stock."
-msgstr "rămase în stoc."
+msgid "left in stock"
+msgstr ""
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -300,3 +348,29 @@ msgstr "dacă sunt sub"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "youremail@gmail.com"
 msgstr "youremail@gmail.com"
+
+#~ msgid "Only"
+#~ msgstr "Doar"
+
+#~ msgid "We'll notify you once the product is back in stock."
+#~ msgstr "Vă vom anunța imediat ce produsul va fi din nou disponibil."
+
+#~ msgid "You already added"
+#~ msgstr "Ai adăugat deja"
+
+#~ msgid "You already added all the available product in your cart."
+#~ msgstr "Ai adăugat deja toate produsele disponibile în coșul tău."
+
+#~ msgid ""
+#~ "You ask for %(desired_qty)s products but only %(new_qty)s is available"
+#~ msgstr ""
+#~ "Doriți %(desired_qty)s produse dar sunt disponibile doar %(new_qty)s"
+
+#~ msgid "You ask for %s Units but only %s are available."
+#~ msgstr "Doriți %s buc dar sunt disponibile doar %s."
+
+#~ msgid "in your cart."
+#~ msgstr "în coșul tau. "
+
+#~ msgid "left in stock."
+#~ msgstr "rămase în stoc."

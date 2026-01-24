@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-16 18:35+0000\n"
-"PO-Revision-Date: 2026-01-17 13:19+0000\n"
+"POT-Creation-Date: 2026-01-23 18:35+0000\n"
+"PO-Revision-Date: 2026-01-23 16:18+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/ja/>\n"
@@ -4293,7 +4293,7 @@ msgstr "0の時ブランク"
 #: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__blocked
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Blocked"
-msgstr "不許可"
+msgstr "ブロック中"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body_has_template_value
@@ -5422,7 +5422,7 @@ msgstr "支払作成"
 #. module: account
 #: model:ir.model,website_form_label:account.model_res_partner
 msgid "Create a Customer"
-msgstr "顧客を作成する"
+msgstr "顧客を作成"
 
 #. module: account
 #. odoo-python
@@ -8800,7 +8800,7 @@ msgstr "支払期限の60日後にまだ未払の場合は、"
 msgid ""
 "If activated, user-defined filters on journal items can be selected on this "
 "report"
-msgstr "有効にすると、仕訳項目のユーザ定義フィルタをこのレポートで選択できます"
+msgstr "有効にすると、仕訳明細のユーザ定義フィルタをこのレポートで選択できます"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_needaction
@@ -10090,13 +10090,13 @@ msgstr "仕訳明細"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s created"
-msgstr "仕訳項目 %s が作成されました"
+msgstr "仕訳明細 %s が作成されました"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s deleted"
-msgstr "仕訳項目 %s が削除されました"
+msgstr "仕訳明細 %s が削除されました"
 
 #. module: account
 #. odoo-python
@@ -10157,14 +10157,14 @@ msgstr "仕訳明細"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journal items where matching number isn't set"
-msgstr "照合番号が設定されていない仕訳項目"
+msgstr "照合番号が設定されていない仕訳明細"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid ""
 "Journal items where the account allows reconciliation no matter the residual "
 "amount"
-msgstr "残高に関わらず、会計で消込が許可されている仕訳項目"
+msgstr "残高に関わらず、会計で消込が許可されている仕訳明細"
 
 #. module: account
 #. odoo-python
@@ -11995,7 +11995,7 @@ msgstr "オペレーティング活動"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Operation Templates"
-msgstr "操作テンプレート"
+msgstr "消込操作テンプレート"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hide_0_lines__optional
@@ -16788,7 +16788,7 @@ msgid ""
 "registration is necessary. You've got your finances under control like a "
 "boss!"
 msgstr ""
-"選択された仕訳項目には未払いが残っていないため、支払い登録は不要です。財務管"
+"選択された仕訳明細には未払いが残っていないため、支払い登録は不要です。財務管"
 "理、完璧です!"
 
 #. module: account
@@ -16821,18 +16821,6 @@ msgstr "今週"
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_year
 msgid "This Year"
 msgstr "今年"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"この勘定科目は、%(journal_names)s仕訳 (ids%(journal_ids)s)で支払の借方又は貸"
-"方の勘定科目として設定されています。よって、勘定科目の種類が消込可能であるこ"
-"とを意味します。"
 
 #. module: account
 #. odoo-python
@@ -17924,7 +17912,7 @@ msgid ""
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
 msgstr ""
-"レポートで使用され、会計年度のみではなく、時間の初めから仕訳項目を検討する必"
+"レポートで使用され、会計年度のみではなく、時間の初めから仕訳明細を検討する必"
 "要があるかどうかを判断します。新しい会計年度ごとにゼロにリセットする必要があ"
 "るアカウントタイプ（経費、収益など）には、このオプションを設定しないでくださ"
 "い。"
@@ -18668,7 +18656,7 @@ msgid ""
 "items linked to it."
 msgstr ""
 "この会社とこの勘定科目のリンクを解除することはできません。この会社にはいくつ"
-"かの仕訳項目がリンクされているためです。"
+"かの仕訳明細がリンクされているためです。"
 
 #. module: account
 #. odoo-python
@@ -18749,7 +18737,7 @@ msgstr "税レポートに影響を与えるため、税目を削除すること
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
-msgstr "ロックされた仕訳帳の仕訳項目は削除できません。"
+msgstr "ロックされた仕訳帳の仕訳明細は削除できません。"
 
 #. module: account
 #. odoo-python
@@ -18941,6 +18929,12 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
 msgstr "アーカイブされた仕訳帳 (%(journal)s)に記帳することはできません。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19775,6 +19769,15 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} 支払受領書 (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "この勘定科目は、%(journal_names)s仕訳 (ids%(journal_ids)s)で支払の借方又は"
+#~ "貸方の勘定科目として設定されています。よって、勘定科目の種類が消込可能であ"
+#~ "ることを意味します。"
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "顧客請求書作成後は、この設定を変更することはできません。"

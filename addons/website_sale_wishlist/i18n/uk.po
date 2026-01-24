@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
+"POT-Creation-Date: 2026-01-22 18:36+0000\n"
 "PO-Revision-Date: 2025-11-10 06:12+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -19,10 +19,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
-"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
-"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
-"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: website_sale_wishlist
@@ -36,10 +36,10 @@ msgstr ""
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
-msgid "<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to wishlist\"/>Add to wishlist"
+msgid ""
+"<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"Add to "
+"wishlist\"/>"
 msgstr ""
-"<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to wishlist\"/"
-">Додати до списку побажань"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -47,9 +47,24 @@ msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
 msgstr "<small><i class=\"fa fa-trash-o\"/> Видалити</small>"
 
 #. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+msgid ""
+"<span class=\"fa fa-fw fa-shopping-cart o_not-animable\"/>\n"
+"                                                <span class=\"d-none d-md-"
+"inline\">Add</span>"
+msgstr ""
+
+#. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
-msgid "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
-msgstr "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+msgid ""
+"<span class=\"fa fa-heart o_not-animable\" role=\"img\" aria-label=\"Add to "
+"wishlist\"/>"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_cart_lines
+msgid "<span class=\"text-300\">|</span>"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
@@ -58,16 +73,14 @@ msgstr "Активно"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
-msgid "Add <span class=\"d-none d-md-inline\">to Cart</span>"
-msgstr "Додати <span class=\"d-none d-md-inline\">до кошика</span>"
-
-#. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Add product to my cart but keep it in my wishlist"
 msgstr "Додайте товар у свій кошик, але залиште його в списку побажань"
 
 #. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/checkout_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
 msgid "Add to Wishlist"
 msgstr "Додати в список побажань"
 
@@ -87,6 +100,11 @@ msgid "Contact Us"
 msgstr "Зв'язатися з нами"
 
 #. module: website_sale_wishlist
+#: model:ir.model,website_form_label:website_sale_wishlist.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_uid
 msgid "Created by"
 msgstr "Створив"
@@ -102,7 +120,11 @@ msgid "Default Currency"
 msgstr "Типова валюта"
 
 #. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template__display_name
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
@@ -112,7 +134,11 @@ msgid "Duplicated wishlisted product for this partner."
 msgstr "Дубльовані товари списку побажань для цього партнера."
 
 #. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template__id
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -178,14 +204,21 @@ msgid "Product image"
 msgstr "Зображення товару"
 
 #. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_cart_lines
+msgid "Save for Later"
+msgstr ""
+
+#. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Shop Wishlist"
 msgstr "Список побажань магазину"
 
 #. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/show_empty_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
-msgid "Show Empty Wishlist"
-msgstr "Показати пустий список побажань"
+msgid "Show/hide empty wishlist"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_users
@@ -198,9 +231,31 @@ msgid "Website"
 msgstr "Веб-сайт"
 
 #. module: website_sale_wishlist
+#. odoo-javascript
+#: code:addons/website_sale_wishlist/static/src/website_builder/product_page_list_option.xml:0
+#: code:addons/website_sale_wishlist/static/src/website_builder/product_page_option.xml:0
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__wishlist_ids
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header_wishlist_link
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
 msgid "Wishlist"
 msgstr "Список побажань"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to "
+#~ "wishlist\"/>Add to wishlist"
+#~ msgstr ""
+#~ "<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to "
+#~ "wishlist\"/>Додати до списку побажань"
+
+#~ msgid ""
+#~ "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+#~ msgstr ""
+#~ "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+
+#~ msgid "Add <span class=\"d-none d-md-inline\">to Cart</span>"
+#~ msgstr "Додати <span class=\"d-none d-md-inline\">до кошика</span>"
+
+#~ msgid "Show Empty Wishlist"
+#~ msgstr "Показати пустий список побажань"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
 "PO-Revision-Date: 2025-11-14 12:46+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -37,10 +37,12 @@ msgstr "ממשק תכנות יישומים (API)"
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
 msgid ""
 "API key for GeoCoding (Places) required.\n"
-"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key "
+"for more information."
 msgstr ""
 "מפתח API עבור GeoCoding (מקומות) נדרש.\n"
-"בקר ב: https://developers.google.com/maps/documentation/geocoding/get-api-key למידע נוסף."
+"בקר ב: https://developers.google.com/maps/documentation/geocoding/get-api-"
+"key למידע נוסף."
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.res_config_settings_view_form
@@ -68,6 +70,11 @@ msgid "Contact"
 msgstr "איש קשר"
 
 #. module: base_geolocalize
+#: model:ir.model,website_form_label:base_geolocalize.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__create_uid
 msgid "Created by"
 msgstr "נוצר על-ידי"
@@ -79,14 +86,17 @@ msgstr "נוצר ב-"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__display_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__display_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__display_name
 msgid "Display Name"
 msgstr "שם לתצוגה"
 
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/base_geocoder.py:0
-msgid "Error with geolocation server:"
-msgstr "שגיאה בשרת מיקום גיאוגרפי:"
+msgid "Error with geolocation server: %s"
+msgstr ""
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geocoder
@@ -121,6 +131,9 @@ msgstr "מפתח API של גוגל מפות"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_base_geo_provider__id
+#: model:ir.model.fields,field_description:base_geolocalize.field_base_geocoder__id
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__id
 msgid "ID"
 msgstr "מזהה"
 
@@ -158,6 +171,12 @@ msgstr "שם"
 #. odoo-python
 #: code:addons/base_geolocalize/models/res_partner.py:0
 msgid "No match found for %(partner_names)s address(es)."
+msgstr ""
+
+#. module: base_geolocalize
+#. odoo-python
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+msgid "OpenStreetMap calls disabled in testing environment."
 msgstr ""
 
 #. module: base_geolocalize
@@ -208,17 +227,30 @@ msgstr ""
 "קידוד גיאוגרפי, מפות סטטיות, מפות ג'אווה סקריפט.\n"
 
 #. module: base_geolocalize
+#. odoo-python
+#: code:addons/base_geolocalize/models/base_geocoder.py:0
+msgid "Unknown"
+msgstr ""
+
+#. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Updated on:"
 msgstr ""
 
 #. module: base_geolocalize
 #: model:ir.model.fields,help:base_geolocalize.field_res_config_settings__geoloc_provider_googlemap_key
-msgid "Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information."
-msgstr "בקר ב: https://developers.google.com/maps/documentation/geocoding/get-api-key למידע נוסף."
+msgid ""
+"Visit https://developers.google.com/maps/documentation/geocoding/get-api-key "
+"for more information."
+msgstr ""
+"בקר ב: https://developers.google.com/maps/documentation/geocoding/get-api-"
+"key למידע נוסף."
 
 #. module: base_geolocalize
 #. odoo-python
 #: code:addons/base_geolocalize/models/res_partner.py:0
 msgid "Warning"
 msgstr "אזהרה"
+
+#~ msgid "Error with geolocation server:"
+#~ msgstr "שגיאה בשרת מיקום גיאוגרפי:"

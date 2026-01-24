@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-16 18:35+0000\n"
+"POT-Creation-Date: 2026-01-23 18:35+0000\n"
 "PO-Revision-Date: 2025-11-12 11:17+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-s18-4/account/"
@@ -16735,18 +16735,6 @@ msgstr "Tento rok"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"Tento účet je nakonfigurován v deníku(-cích) %(journal_names)s (id %"
-"(journal_ids)s) jako platební debetní nebo kreditní účet. To znamená, že "
-"tento typ účtu by měl nastaven jako spárovatelný."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
 msgstr ""
 
@@ -18860,6 +18848,12 @@ msgstr "Nemůžete zaúčtovat záznam v archivovaném deníku (%(journal)s)"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
@@ -19705,6 +19699,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Platební doklad (číslo {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "Tento účet je nakonfigurován v deníku(-cích) %(journal_names)s (id %"
+#~ "(journal_ids)s) jako platební debetní nebo kreditní účet. To znamená, že "
+#~ "tento typ účtu by měl nastaven jako spárovatelný."
 
 #~ msgid ""
 #~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"

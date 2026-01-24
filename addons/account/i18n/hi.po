@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-16 18:35+0000\n"
+"POT-Creation-Date: 2026-01-23 18:35+0000\n"
 "PO-Revision-Date: 2025-11-12 11:17+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-4/account/"
@@ -16747,18 +16747,6 @@ msgstr "इस साल"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"यह खाता %(journal_names)s जर्नल (जिनकी आईडी %(journal_ids)s हैं) में पेमेंट के डेबिट "
-"या क्रेडिट अकाउंट के तौर पर सेट है. इसका मतलब है कि इस खाते का प्रकार 'मिलान करने "
-"योग्य' होना चाहिए."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
 msgstr "यह खाता %(account_name)s (%(company_name)s) से अलग किया गया था."
 
@@ -18876,6 +18864,12 @@ msgstr "आप बंद किए हुए जर्नल (%(journal)s) म�
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
@@ -19713,6 +19707,15 @@ msgstr "{{ object.company_id.name }} इनवॉइस (Ref {{ object.name or '
 msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} पेमेंट रसीद (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "यह खाता %(journal_names)s जर्नल (जिनकी आईडी %(journal_ids)s हैं) में पेमेंट के "
+#~ "डेबिट या क्रेडिट अकाउंट के तौर पर सेट है. इसका मतलब है कि इस खाते का प्रकार 'मिलान "
+#~ "करने योग्य' होना चाहिए."
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "एक बार इनवॉइस बन जाने के बाद, इस सेटिंग में बदलाव नहीं किया जा सकता."

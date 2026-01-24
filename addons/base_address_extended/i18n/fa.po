@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
 "PO-Revision-Date: 2025-11-12 13:14+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -39,13 +39,16 @@ msgstr "<span> - </span>"
 #: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,help:base_address_extended.field_res_users__country_enforce_cities
-msgid "Check this box to ensure every address created in that country has a 'City' chosen in the list of the country's cities."
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
 msgstr ""
 "کادر را علامت بزنید تا اطمینان حاصل کنید که هر آدرسی که در آن کشور ایجاد "
 "می‌شود، دارای یک 'شهر' انتخاب‌شده در لیست شهرهای آن کشور است."
 
 #. module: base_address_extended
 #: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
+#: model:ir.ui.menu,name:base_address_extended.menu_res_city
 msgid "Cities"
 msgstr "شهرها"
 
@@ -77,6 +80,11 @@ msgid "Country"
 msgstr "کشور"
 
 #. module: base_address_extended
+#: model:ir.model,website_form_label:base_address_extended.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_uid
 msgid "Created by"
 msgstr "ایجاد شده توسط"
@@ -88,6 +96,8 @@ msgstr "ایجادشده در"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__display_name
 msgid "Display Name"
 msgstr "نام نمایشی"
 
@@ -95,12 +105,13 @@ msgstr "نام نمایشی"
 #: model_terms:ir.actions.act_window,help:base_address_extended.action_res_city_tree
 msgid ""
 "Display and manage the list of all cities that can be assigned to\n"
-"                your partner records. Note that an option can be set on each country separately\n"
+"                your partner records. Note that an option can be set on each "
+"country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
 "نمایش و مدیریت فهرست تمام شهرهایی که می‌توان به\n"
-"                رکوردهای شریک شما اختصاص داد. توجه داشته باشید که گزینه‌ای می‌"
-"تواند به صورت جداگانه برای هر کشور تنظیم شود\n"
+"                رکوردهای شریک شما اختصاص داد. توجه داشته باشید که گزینه‌ای "
+"می‌تواند به صورت جداگانه برای هر کشور تنظیم شود\n"
 "                تا هر آدرسی در آن الزاماً شامل یک شهر از این فهرست باشد."
 
 #. module: base_address_extended
@@ -134,6 +145,8 @@ msgstr "شماره خانه#"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__id
 msgid "ID"
 msgstr "شناسه"
 
