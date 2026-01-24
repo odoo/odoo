@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:36+0000\n"
+"POT-Creation-Date: 2026-01-23 18:36+0000\n"
 "PO-Revision-Date: 2026-01-10 11:16+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -16794,18 +16794,6 @@ msgstr "Năm nay"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"Tài khoản này được cấu hình trong (các) sổ nhật ký %(journal_names)s (id %"
-"(journal_ids)s) là tài khoản ghi nợ hoặc ghi có thanh toán. Điều này có "
-"nghĩa là loại tài khoản này phải có thể đối chiếu được."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
 msgstr "Tài khoản này được tách ra từ %(account_name)s (%(company_name)s)."
 
@@ -18981,6 +18969,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
@@ -19837,6 +19831,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Biên lai thanh toán (Mã {{ object.name or "
 "'Không có' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "Tài khoản này được cấu hình trong (các) sổ nhật ký %(journal_names)s (id %"
+#~ "(journal_ids)s) là tài khoản ghi nợ hoặc ghi có thanh toán. Điều này có "
+#~ "nghĩa là loại tài khoản này phải có thể đối chiếu được."
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "Không thể thay đổi cài đặt này sau khi hóa đơn được tạo."

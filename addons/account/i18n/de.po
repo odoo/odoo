@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:36+0000\n"
+"POT-Creation-Date: 2026-01-23 18:36+0000\n"
 "PO-Revision-Date: 2026-01-10 11:14+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -17136,18 +17136,6 @@ msgstr "Dieses Jahr"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"Dieses Konto ist in dem/den Journal(en) %(journal_names)s (IDs %"
-"(journal_ids)s) als Zahlungssoll- oder -habenkonto konfiguriert. Dies "
-"bedeutet, dass die Art dieses Kontos abstimmbar sein sollte."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
 msgstr "Dieses Konto wird von %(account_name)s getrennt (%(company_name)s)."
 
@@ -19377,6 +19365,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
@@ -20248,6 +20242,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Zahlungseingang (Ref {{ object.name or 'k. "
 "A.' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "Dieses Konto ist in dem/den Journal(en) %(journal_names)s (IDs %"
+#~ "(journal_ids)s) als Zahlungssoll- oder -habenkonto konfiguriert. Dies "
+#~ "bedeutet, dass die Art dieses Kontos abstimmbar sein sollte."
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr ""

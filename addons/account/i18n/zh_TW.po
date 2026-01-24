@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:36+0000\n"
+"POT-Creation-Date: 2026-01-23 18:36+0000\n"
 "PO-Revision-Date: 2026-01-10 11:16+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -16372,17 +16372,6 @@ msgstr "本年度"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"此科目在 %(journal_names)s 個日記帳 (ids %(journal_ids)s) 中設定為付款借記或"
-"貸記科目. 這意味著該科目的類型應該是可核銷的."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
 msgstr "賬戶已從 %(account_name)s（%(company_name)s）分拆出來。"
 
@@ -18426,6 +18415,12 @@ msgstr "您不能在已歸檔封存的日記帳(%(journal)s)中過帳分錄"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
@@ -19239,6 +19234,14 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} 付款收據(編號 {{ object.name 或 'n/a' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "此科目在 %(journal_names)s 個日記帳 (ids %(journal_ids)s) 中設定為付款借記"
+#~ "或貸記科目. 這意味著該科目的類型應該是可核銷的."
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "建立發票後，將無法更改此設定。"

@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:38+0000\n"
-"PO-Revision-Date: 2026-01-14 18:43+0000\n"
+"PO-Revision-Date: 2026-01-24 11:48+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-3/"
 "spreadsheet/ja/>\n"
@@ -313,7 +313,7 @@ msgstr "(前へ)"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "+ Add another rule"
-msgstr "+ 規則を1つ追加"
+msgstr "+ ルールを1つ追加"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -959,7 +959,7 @@ msgstr ""
 msgid ""
 "An expression or reference to a cell holding an expression that represents "
 "some logical value."
-msgstr "ある論理値を表す式を保持するセルへの式または参照。"
+msgstr "論理値を表す式、またはそのような式を含むセルへの参照。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1027,7 +1027,7 @@ msgstr "その行カラム式を計算するマトリクスを表す、行とカ
 msgid ""
 "An range with an equal number of rows and columns representing a matrix "
 "whose multiplicative inverse will be calculated."
-msgstr "乗法逆行カラムを計算するマトリクスを表す、行とカラムの数が等しい範囲。"
+msgstr "乗法逆行列を計算する対象となる、行と列の数が等しい範囲(正方行列)。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1117,37 +1117,37 @@ msgstr "匿名"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Any real value to calculate the hyperbolic cosecant of."
-msgstr "そのハイパボリックコセカントを計算するための任意の実数値"
+msgstr "双曲線余割を計算するための任意の実数値。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Any real value to calculate the hyperbolic cosine of."
-msgstr "そのハイパボリックコサインを計算するための任意の実数値"
+msgstr "双曲線余弦を計算するための任意の実数値。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Any real value to calculate the hyperbolic cotangent of."
-msgstr "そのハイパボリックコタンジェントを計算するための任意の実数値"
+msgstr "双曲線余接を計算するための任意の実数値。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Any real value to calculate the hyperbolic secant of."
-msgstr "そのハイパボリックセカントを計算するための任意の実数値"
+msgstr "双曲線正割を計算するための任意の実数値。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Any real value to calculate the hyperbolic sine of."
-msgstr "そのハイパボリックサインを計算するための任意の実数値"
+msgstr "双曲線正弦を計算するための任意の実数値。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Any real value to calculate the hyperbolic tangent of."
-msgstr "そのハイパボリックタンジェントを計算するための任意の実数値"
+msgstr "双曲線正接を計算するための任意の実数値。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1294,7 +1294,7 @@ msgstr "アジア"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "At least one measure and/or dimension is not correct."
-msgstr "少なくとも1つのメジャーおよび/またはディメンションが正しくありません。"
+msgstr "1つ以上の指標またはディメンションが正しくありません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1424,7 +1424,7 @@ msgstr "ベースライン"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Baseline colors"
-msgstr "ベースラインカラー"
+msgstr "ベースラインの色"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1518,13 +1518,13 @@ msgstr "カウント"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Calculated measure %s"
-msgstr "計算した測定値 %s"
+msgstr "計算済指標 %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Calculated measure 1"
-msgstr "計算した測定値 1"
+msgstr "計算済指標 1"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1597,14 +1597,14 @@ msgstr "2つの配列の値の2乗の差の和を計算します。"
 msgid ""
 "Calculates the sum of the products of corresponding entries in equal-sized "
 "ranges."
-msgstr "等しいサイズの範囲内の対応するエントリの積の合計を計算します。"
+msgstr "同じサイズの範囲にある対応する要素同士を掛け算し、その積の合計を計算します。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Calculates the sum of the sum of the squares of the values in two array."
-msgstr "この注文の製品バリアントのマトリクスがあれば、ここに表示されます。"
+msgstr "2つの配列内の値の2乗の合計をさらに合計して返します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1673,7 +1673,7 @@ msgstr "図形の特殊な貼り付けはできません。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot duplicate a pivot in error."
-msgstr "エラーでピボットを複製できません。"
+msgstr "エラー状態のピボットは複製できません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1691,7 +1691,7 @@ msgstr "ヘッダ行なしのフィルタを持つことはできません"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot hide all the columns of a sheet."
-msgstr "シートの全てのカラムを隠すことはできません。"
+msgstr "シートの全ての列を隠すことはできません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1795,7 +1795,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Chart"
-msgstr "チャート"
+msgstr "グラフ"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3633,7 +3633,7 @@ msgstr "次の場合にセルをフォーマットします..."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Format rules"
-msgstr "フォーマット規則"
+msgstr "フォーマットルール"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4638,6 +4638,7 @@ msgstr "ラジアンの値の逆正接、。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, fuzzy
 msgid "Irregularity map"
 msgstr "不規則性マップ"
 
@@ -6285,7 +6286,7 @@ msgstr "行グループを削除"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Remove rule"
-msgstr "規則を削除する"
+msgstr "ルールを削除する"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6544,7 +6545,7 @@ msgstr "右軸"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Rounds a number according to standard rules."
-msgstr "標準規則に従って番号を丸めます。"
+msgstr "標準ルールに従って番号を丸めます。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7927,7 +7928,7 @@ msgid ""
 "cell:\n"
 "%s"
 msgstr ""
-" %sに入力したデータは以下のセルに設定された検証規則に反します:\n"
+"%sに入力したデータは以下のセルに設定された検証ルールに反します:\n"
 "%s"
 
 #. module: spreadsheet
@@ -9852,13 +9853,13 @@ msgstr "返される行のインデックス"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The rule is invalid for an unknown reason"
-msgstr "規則は不明な理由で無効です。"
+msgstr "ルールは不明な理由で無効です。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The rule is invalid for an unknown reason."
-msgstr "規則は不明な理由で無効です。"
+msgstr "ルールは不明な理由で無効です。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10333,7 +10334,7 @@ msgstr "値 (%s)は必ず正の値にして下さい。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value does not match the custom formula data validation rule"
-msgstr "値がカスタム式のデータ検証規則に一致しません。"
+msgstr "値がカスタム式のデータ検証ルールに一致しません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11006,7 +11007,7 @@ msgid ""
 "            may indicate potential errors in formula structures, references "
 "or arguments."
 msgstr ""
-"このツールは、数式をパターンについて分析し、不整合を強調表示します。不規則"
+"このツールは、数式をパターンについて分析し、不整合を強調表示します。不ルール"
 "性\n"
 "は、数式の構造、参照、または引数に潜在的なエラーがある可能性を示しています。"
 
@@ -11019,8 +11020,8 @@ msgid ""
 "structures, references, or arguments. (Click to turn off)"
 msgstr ""
 "このツールは、スプレッドシートの数式を分析し、パターンを特定し、不整合をハイ"
-"ライトします。不規則性は、数式の構造、参照、または引数における潜在的なエラー"
-"を示す場合があります。(クリックしてオフにします)"
+"ライトします。不ルール性は、数式の構造、参照、または引数における潜在的なエラ"
+"ーを示す場合があります。(クリックしてオフにします)"
 
 #. module: spreadsheet
 #. odoo-javascript

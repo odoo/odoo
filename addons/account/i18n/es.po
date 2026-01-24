@@ -7,13 +7,13 @@
 # Larissa Manderfeld, 2025
 #
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
-# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:36+0000\n"
-"PO-Revision-Date: 2025-12-06 11:09+0000\n"
+"POT-Creation-Date: 2026-01-23 18:36+0000\n"
+"PO-Revision-Date: 2026-01-24 11:49+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s18-3/"
 "account/es/>\n"
@@ -8307,9 +8307,9 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
-"Fórmula en el formulario line_code.expression_label. Esto permite establecer "
-"el objetivo del traspaso para esta expresión (en una expresión etiquetada "
-"como  _carryover_* ), en caso de que sea diferentes de una línea padre."
+"Fórmula en el formato line_code.expression_label. Esto permite establecer el "
+"destino del traspaso para esta expresión (en una expresión etiquetada como "
+"_carryover_* ), en caso de que sea diferente del de la línea padre."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -17071,18 +17071,6 @@ msgstr "Este año"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"Esta cuenta está configurada en %(journal_names)s diario(s) (ids %"
-"(journal_ids)s) como cuenta de crédito o débito de pago. Esto significa que "
-"el tipo de esta cuenta debe poder conciliarse."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
 msgstr "Esta cuenta se dividió de %(account_name)s (%(company_name)s)."
 
@@ -19284,6 +19272,12 @@ msgstr "No puede publicar un asiento en un diario archivado (%(journal)s)"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
@@ -20145,6 +20139,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Comprobante de pago (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "Esta cuenta está configurada en %(journal_names)s diario(s) (ids %"
+#~ "(journal_ids)s) como cuenta de crédito o débito de pago. Esto significa "
+#~ "que el tipo de esta cuenta debe poder conciliarse."
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "No puede cambiar esta configuración después de crear una factura."

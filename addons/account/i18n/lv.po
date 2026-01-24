@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:36+0000\n"
+"POT-Creation-Date: 2026-01-23 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Thomas Becquevort, 2025\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
@@ -16451,18 +16451,6 @@ msgstr "Šis gads"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"Šis konts ir konfigurēts %(journal_names)s žurnālā(-os) (ids %"
-"(journal_ids)s) kā maksājumu debeta vai kredīta konts. Tas nozīmē, ka šī "
-"konta tipam jābūt saskaņojamam."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
 msgstr ""
 
@@ -18573,6 +18561,12 @@ msgstr "Jūs nevarat publicēt ierakstu arhivētā žurnālā (%(journal)s)"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
@@ -19441,6 +19435,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Maksājuma kvīts (Reference {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "Šis konts ir konfigurēts %(journal_names)s žurnālā(-os) (ids %"
+#~ "(journal_ids)s) kā maksājumu debeta vai kredīta konts. Tas nozīmē, ka šī "
+#~ "konta tipam jābūt saskaņojamam."
 
 #~ msgid ""
 #~ "\n"

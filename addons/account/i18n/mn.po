@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:36+0000\n"
+"POT-Creation-Date: 2026-01-23 18:36+0000\n"
 "PO-Revision-Date: 2025-11-15 11:23+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -16655,18 +16655,6 @@ msgstr "Энэ Жил"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"Энэ данс нь %(journal_names)s журнал(ууд)д (ID-ууд: %(journal_ids)s) "
-"төлбөрийн дебет эсвэл кредит данс болгон тохируулагдсан байна. Иймд уг "
-"дансны төрөл тулгалт хийж болохоор байх шаардлагатай."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
 msgstr ""
 
@@ -18827,6 +18815,12 @@ msgstr "Архивлагдсан журналд (%(journal)s) бичилт ба�
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
@@ -19679,6 +19673,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Төлбөрийн баримт (Лавлах {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "Энэ данс нь %(journal_names)s журнал(ууд)д (ID-ууд: %(journal_ids)s) "
+#~ "төлбөрийн дебет эсвэл кредит данс болгон тохируулагдсан байна. Иймд уг "
+#~ "дансны төрөл тулгалт хийж болохоор байх шаардлагатай."
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "Нэхэмжлэл үүсгэсний дараа энэ тохиргоог өөрчлөх боломжгүй."
