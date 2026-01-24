@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_management
+# * sale_management
 #
 # Translators:
 # Wil Odoo, 2024
 # Odoo哥 <vnsoft.he@gmail.com>, 2024
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Odoo哥 <vnsoft.he@gmail.com>, 2024\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
-"zh_CN/)\n"
+"PO-Revision-Date: 2026-01-24 09:13+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
+"projects/odoo-18/sale_management/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -637,6 +638,10 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"您的模板归属公司为 %(template_company)s，但其中包含了归属公司为 %"
+"(product_company)s 的产品，而这些产品对 %(template_company)s 公司无访问权限。"
+"\n"
+"请修改模板的归属公司，或移除这些来自其他公司的产品。"
 
 #. module: sale_management
 #. odoo-python
@@ -648,6 +653,9 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"您的模板归属公司为 %(template_company)s，但其中包含了归属公司为 %"
+"(product_company)s 的产品，\n"
+"而这些产品对%(template_company)s公司无访问权限。"
 
 #. module: sale_management
 #. odoo-python
@@ -656,7 +664,8 @@ msgid ""
 "Your template cannot contain products from specific companies if it's shared "
 "between companies. Please restrict the template access, or remove those "
 "products."
-msgstr ""
+msgstr "若模板为多公司共享模板，则不可包含归属特定公司的产品。请限制该模板的访问范围"
+"，或移除这些专属公司的产品。"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
