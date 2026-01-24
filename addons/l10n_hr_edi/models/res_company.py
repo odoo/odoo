@@ -235,8 +235,7 @@ class ResCompany(models.Model):
                     'fiscalization_channel_type': str(fisc_data.get('channelType')),
                 })
                 if document['fiscalization_status'] != '0':
-                    _logger.warning("Document eID %s is not successfully fiscalized, skipping import.", document['mer_document_eid'])
-                    continue
+                    _logger.warning("Document eID %s is not successfully fiscalized by MojEracun.", document['mer_document_eid'])
                 try:
                     business_data = _mer_api_query_document_process_status_inbox(company, electronic_id=document['mer_document_eid'])[0]
                 except (MojEracunServiceError, UserError):
@@ -299,7 +298,7 @@ class ResCompany(models.Model):
                 try:
                     response_fisc = check_function(company)
                 except (MojEracunServiceError, UserError):
-                    _logger.error("Failed to retreive fiscalizatio data for company %s", company.name)
+                    _logger.error("Failed to retreive fiscalization data for company %s", company.name)
                     if from_cron or company.l10n_hr_mer_connection_mode == 'test':
                         response_fisc = []
                     else:

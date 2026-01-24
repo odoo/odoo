@@ -118,7 +118,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         })
 
         env['res.partner'].create({
-            'name': 'Deco Addict',
+            'name': 'Acme Corporation',
         })
 
         cash_journal = journal_obj.create({

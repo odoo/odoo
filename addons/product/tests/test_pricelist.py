@@ -1,14 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tests import tagged, Form
+from odoo.tests import Form, tagged
 
-from odoo.addons.product.tests.common import ProductCommon
+from odoo.addons.product.tests.common import ProductVariantsCommon
 
 
 @tagged('post_install', '-at_install')
-class TestPricelist(ProductCommon):
+class TestPricelist(ProductVariantsCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -17,7 +19,7 @@ class TestPricelist(ProductCommon):
         cls.datacard = cls.env['product.product'].create({'name': 'Office Lamp'})
         cls.usb_adapter = cls.env['product.product'].create({'name': 'Office Chair'})
 
-        cls.sale_pricelist_id = cls.env['product.pricelist'].create({
+        cls.sale_pricelist_id, cls.pricelist_eu = cls.env['product.pricelist'].create([{
             'name': 'Sale pricelist',
             'item_ids': [
                 Command.create({
@@ -41,7 +43,11 @@ class TestPricelist(ProductCommon):
                     'applied_on': '3_global',
                 }),
             ],
-        })
+        }, {
+            'name': "EU Pricelist",
+            'country_group_ids': cls.env.ref('base.europe').ids,
+        }])
+
         # Enable pricelist feature
         cls.env.user.groups_id += cls.env.ref('product.group_product_pricelist')
 
@@ -136,6 +142,62 @@ class TestPricelist(ProductCommon):
 
         self.assertEqual(res_partner.property_product_pricelist, pl_first)
 
+    def test_40_specific_property_product_pricelist(self):
+        """Ensure that that ``specific_property_product_pricelist`` value only gets set
+        when changing ``property_product_pricelist`` to a non-default value for the partner.
+        """
+        pricelist_1, pricelist_2 = self.pricelist, self.sale_pricelist_id
+        self.env['product.pricelist'].search([
+            ('id', 'not in', [pricelist_1.id, pricelist_2.id, self.pricelist_eu.id]),
+        ]).active = False
+
+        # Set country to BE -> property defaults to EU pricelist
+        with Form(self.partner) as partner_form:
+            partner_form.country_id = self.env.ref('base.be')
+        self.assertEqual(self.partner.property_product_pricelist, self.pricelist_eu)
+        self.assertFalse(self.partner.specific_property_product_pricelist)
+
+        # Set country to KI -> property defaults to highest sequence pricelist
+        with Form(self.partner) as partner_form:
+            partner_form.country_id = self.env.ref('base.ki')
+        self.assertEqual(self.partner.property_product_pricelist, pricelist_1)
+        self.assertFalse(self.partner.specific_property_product_pricelist)
+
+        # Setting non-default pricelist as property should update specific property
+        with Form(self.partner) as partner_form:
+            partner_form.property_product_pricelist = pricelist_2
+        self.assertEqual(self.partner.property_product_pricelist, pricelist_2)
+        self.assertEqual(self.partner.specific_property_product_pricelist, pricelist_2)
+
+        # Changing partner country shouldn't update (specific) pricelist property
+        with Form(self.partner) as partner_form:
+            partner_form.country_id = self.env.ref('base.be')
+        self.assertEqual(self.partner.property_product_pricelist, pricelist_2)
+        self.assertEqual(self.partner.specific_property_product_pricelist, pricelist_2)
+
+    def test_45_property_product_pricelist_config_parameter(self):
+        """Check that the ``ir.config_parameter`` is accounted for as fallback
+        for both ``property_product_pricelist`` & ``specific_property_product_pricelist``
+        """
+        pricelist_1, pricelist_2 = self.pricelist, self.sale_pricelist_id
+        self.env['product.pricelist'].search([
+            ('id', 'not in', [pricelist_1.id, pricelist_2.id]),
+        ]).active = False
+        self.assertEqual(self.partner.property_product_pricelist, pricelist_1)
+
+        self.partner.invalidate_recordset(['property_product_pricelist'])
+        ICP = self.env['ir.config_parameter'].sudo()
+        ICP.set_param('res.partner.property_product_pricelist', pricelist_2.id)
+        with patch.object(
+            self.pricelist.__class__, '_get_partner_pricelist_multi_search_domain_hook',
+            return_value=[(0, '=', 1)],  # ensures pricelist falls back on ICP
+        ):
+            with Form(self.partner) as partner_form:
+                self.assertEqual(partner_form.property_product_pricelist, pricelist_2)
+                partner_form.property_product_pricelist = pricelist_1
+            self.assertEqual(self.partner.property_product_pricelist, pricelist_1)
+            self.assertEqual(self.partner.specific_property_product_pricelist, pricelist_1)
+
     def test_pricelists_multi_comp_checks(self):
         first_company = self.env.company
         second_company = self.env['res.company'].create({'name': 'Test Company'})
@@ -177,11 +239,7 @@ class TestPricelist(ProductCommon):
             self.pricelist.company_id = second_company
 
     def test_pricelists_res_partner_form(self):
-        pricelist_europe = self.env['product.pricelist'].create({
-            'name': 'Sale pricelist',
-            'country_group_ids': self.env.ref('base.europe').ids,
-        })
-
+        pricelist_europe = self.pricelist_eu
         default_pricelist = self.env['product.pricelist'].search([('name', 'ilike', ' ')], limit=1)
 
         with Form(self.env['res.partner']) as partner_form:
@@ -260,3 +318,36 @@ class TestPricelist(ProductCommon):
             company_2_b2b_pl,
             "Assigning pricelists in one company shouldn't impact pricelists in other companies",
         )
+
+    def test_pricelist_applied_on_product_variant(self):
+        # product template with variants
+        sofa_1 = self.product_template_sofa.product_variant_ids[0]
+        # create pricelist with rule on template
+        pricelist = self.env["product.pricelist"].create(
+            {
+                "name": "Pricelist for Acoustic Bloc Screens",
+                "item_ids": [
+                    Command.create(
+                        {
+                            "compute_price": "fixed",
+                            "fixed_price": 123,
+                            "base": "list_price",
+                            "applied_on": "1_product",
+                            "product_tmpl_id": self.product_template_sofa.id,
+                        }
+                    ),
+                ],
+            }
+        )
+        # open rule form and change rule to apply on variant instead of template
+        with Form(pricelist.item_ids) as item_form:
+            item_form.product_id = sofa_1
+        # check that `applied_on` changed to variant
+        self.assertEqual(pricelist.item_ids.applied_on, "0_product_variant")
+        # re-edit rule to apply on template again by clearing `product_id`
+        with Form(pricelist.item_ids) as item_form:
+            item_form.product_id = self.env["product.product"]
+        # check that `applied_on` changed to template
+        self.assertEqual(pricelist.item_ids.applied_on, "1_product")
+        # check that product_id is cleared
+        self.assertFalse(pricelist.item_ids.product_id)

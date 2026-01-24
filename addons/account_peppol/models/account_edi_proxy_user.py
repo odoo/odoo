@@ -283,14 +283,36 @@ class AccountEdiProxyClientUser(models.Model):
         for edi_user in self:
             edi_user = edi_user.with_company(edi_user.company_id)
             try:
-                proxy_user = edi_user._call_peppol_proxy("/api/peppol/2/participant_status")
+                proxy_user = self._make_request(f"{self._get_server_url()}/api/peppol/2/participant_status")
             except AccountEdiProxyError as e:
-                _logger.error('Error while updating Peppol participant status: %s', e)
+                if e.code == 'client_gone':
+                    # reset the connection if it was archived/deleted on IAP side
+                    edi_user.sudo().company_id._reset_peppol_configuration()
+                else:
+                    # don't auto-deregister users on any other errors to avoid settings client-side to states
+                    # that are not recoverable without user action if an error on IAP side ever occurs
+                    _logger.error('Error while updating Peppol participant status: %s', e)
                 continue
 
-            if proxy_user['peppol_state'] in ('sender', 'smp_registration', 'receiver', 'rejected'):
-                edi_user.company_id.account_peppol_proxy_state = proxy_user['peppol_state']
+            if 'error' in proxy_user:
+                error_message = proxy_user['error'].get('message') or proxy_user['error'].get('data', {}).get('message')
+                _logger.error('Error while updating Peppol participant status: %s', error_message)
+                continue
 
+            local_state = {
+                'draft': 'not_registered',
+                'sender': 'sender',
+                'smp_registration': 'smp_registration',
+                'receiver': 'receiver',
+                'rejected': 'rejected',
+            }.get(proxy_user.get('peppol_state'))
+
+            if local_state == 'not_registered':
+                edi_user.sudo().company_id._reset_peppol_configuration()
+            elif local_state:
+                edi_user.company_id.account_peppol_proxy_state = local_state
+            else:
+                _logger.warning("Received unknown Peppol state '%s' for EDI proxy user id=%s", proxy_user.get('peppol_state'), edi_user.id)
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
@@ -371,7 +393,17 @@ class AccountEdiProxyClientUser(models.Model):
     def _peppol_deregister_participant(self):
         self.ensure_one()
 
-        if self.company_id.account_peppol_proxy_state == 'receiver':
+        proxy_state = None
+        try:
+            # call _make_request directly because _peppol_get_participant_status()
+            # is cron-safe and swallows AccountEdiProxyError.
+            proxy_user = self._make_request(f"{self._get_server_url()}/api/peppol/2/participant_status")
+            proxy_state = proxy_user.get('peppol_state')
+        except AccountEdiProxyError as e:
+            # If user no longer exists on IAP side, don't try to fetch docs/statuses (they will fail).
+            if e.code not in ['client_gone', 'no_such_user_found']:
+                raise
+        if proxy_state in ('sender', 'smp_registration', 'receiver'):
             # fetch all documents and message statuses before unlinking the edi user
             # so that the invoices are acknowledged
             self._cron_peppol_get_message_status()
@@ -379,7 +411,6 @@ class AccountEdiProxyClientUser(models.Model):
             if not tools.config['test_enable'] and not modules.module.current_test:
                 self.env.cr.commit()
 
-        if self.company_id.account_peppol_proxy_state != 'not_registered':
             self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
 
         self.company_id._reset_peppol_configuration()

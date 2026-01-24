@@ -1101,9 +1101,9 @@ class AccountMove(models.Model):
                 ))
                 message_to_log.append(message)
 
-            # Numbering attributed by the transmitter
-            if progressive_id := get_text(tree, '//ProgressivoInvio'):
-                self.payment_reference = progressive_id
+            # Payment code
+            if payment_code := get_text(tree, './/DettaglioPagamento[1]/CodicePagamento'):
+                self.payment_reference = payment_code
 
             # Document Number
             if number := get_text(tree, './/DatiGeneraliDocumento//Numero'):

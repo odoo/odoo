@@ -401,4 +401,6 @@ class PeppolRegistration(models.TransientModel):
 
         if self.edi_user_id:
             self.edi_user_id._peppol_deregister_participant()
+        else:
+            self.company_id._reset_peppol_configuration()
         return True

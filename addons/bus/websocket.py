@@ -2,7 +2,6 @@ import base64
 import bisect
 import functools
 import hashlib
-import json
 import logging
 import os
 import psycopg2
@@ -26,6 +25,7 @@ from werkzeug.exceptions import BadRequest, HTTPException, ServiceUnavailable
 import odoo
 from odoo import api, modules
 from .models.bus import dispatch
+from .tools import orjson
 from odoo.http import root, Request, Response, SessionExpiredException, get_default_session
 from odoo.modules.registry import Registry
 from odoo.service import model as service_model
@@ -525,7 +525,7 @@ class Websocket:
         if isinstance(frame.payload, str):
             frame.payload = frame.payload.encode('utf-8')
         elif not isinstance(frame.payload, (bytes, bytearray)):
-            frame.payload = json.dumps(frame.payload).encode('utf-8')
+            frame.payload = orjson.dumps(frame.payload)
 
         output = bytearray()
         first_byte = (
@@ -821,7 +821,7 @@ class WebsocketRequest:
 
     def serve_websocket_message(self, message):
         try:
-            jsonrequest = json.loads(message)
+            jsonrequest = orjson.loads(message)
             event_name = jsonrequest['event_name']  # mandatory
         except KeyError as exc:
             raise InvalidWebsocketRequest(

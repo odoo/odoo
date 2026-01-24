@@ -898,23 +898,25 @@ class account_journal(models.Model):
                 journal_types=', '.join(journal_types),
             )
 
+    @api.model
+    def is_sample_action_available(self):
+        """Used to hide 'try our sample' when demo data is not installed."""
+        return bool(self.env.ref('base.res_partner_2', raise_if_not_found=False))
+
     def action_create_vendor_bill(self):
         """ This function is called by the "try our sample" button of Vendor Bills,
         visible on dashboard if no bill has been created yet.
         """
         context = dict(self._context)
         purchase_journal = self.browse(context.get('default_journal_id')) or self.search([('type', '=', 'purchase')], limit=1)
+        partner = self.env.ref('base.res_partner_2', raise_if_not_found=False)
         if not purchase_journal:
             raise UserError(self._build_no_journal_error_msg(self.env.company.display_name, ['purchase']))
+        if not partner:
+            raise UserError(_('You may only use samples in demo mode, try uploading one of your invoices instead.'))
         context['default_move_type'] = 'in_invoice'
         invoice_date = fields.Date.today() - timedelta(days=12)
-        partner = self.env['res.partner'].search([('name', '=', 'Deco Addict')], limit=1)
         company = purchase_journal.company_id
-        if not partner:
-            partner = self.env['res.partner'].create({
-                'name': 'Deco Addict',
-                'is_company': True,
-            })
         ProductCategory = self.env['product.category'].with_company(company)
         default_expense_account = ProductCategory._fields['property_account_expense_categ_id'].get_company_dependent_fallback(ProductCategory)
         ref = 'DE%s' % invoice_date.strftime('%Y%m')
