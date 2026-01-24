@@ -38,6 +38,8 @@ test("visibility of animation animation=none", async () => {
     expect(".options-container [data-label='Start After']").not.toHaveCount();
     expect(".options-container [data-label='Duration']").not.toHaveCount();
 });
+
+// SHSA: Is it really needed for this test ? its mearly testing builderActions
 describe("onAppearance", () => {
     test("visibility of animation animation=onAppearance", async () => {
         const { waitSidebarUpdated } = await setupWebsiteBuilder(
@@ -46,7 +48,7 @@ describe("onAppearance", () => {
                     ${testImg}
                 </div>
             `,
-            { styleContent }
+            { styleContent, enableInteractions: true, interactionEditMode: true }
         );
         await contains(":iframe .test-options-target img").click();
         await waitSidebarUpdated();
@@ -75,7 +77,7 @@ describe("onAppearance", () => {
                     ${testImg}
                 </div>
             `,
-            { styleContent }
+            { styleContent, enableInteractions: true, interactionEditMode: true }
         );
         await contains(":iframe .test-options-target img").click();
         await waitSidebarUpdated();
@@ -104,7 +106,7 @@ describe("onAppearance", () => {
                     ${testImg}
                 </div>
             `,
-            { styleContent }
+            { styleContent, enableInteractions: true, interactionEditMode: true }
         );
         await contains(":iframe .test-options-target img").click();
         await waitSidebarUpdated();
@@ -133,7 +135,7 @@ describe("onAppearance", () => {
                     ${testImg}
                 </div>
             `,
-            { styleContent }
+            { styleContent, enableInteractions: true, interactionEditMode: true }
         );
         await contains(":iframe .test-options-target img").click();
         await waitSidebarUpdated();
@@ -187,7 +189,7 @@ test("animation=onScroll should not be visible when the animation is limited", a
                     ${testImg}
                 </div>
             `,
-        { styleContent }
+        { styleContent, enableInteractions: true, interactionEditMode: true }
     );
     await contains(":iframe .test-options-target img").click();
     await waitSidebarUpdated();
@@ -232,11 +234,17 @@ test("visibility of animation animation=onHover", async () => {
         }
     }
 
-    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `
         <div class="test-options-target">
             ${testImg}
         </div>
-    `);
+    `,
+        {
+            enableInteractions: true,
+            interactionEditMode: true,
+        }
+    );
     await contains(":iframe .test-options-target img").click();
     await waitSidebarUpdated();
 
