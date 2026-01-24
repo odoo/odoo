@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-01-10 08:05+0000\n"
+"PO-Revision-Date: 2026-01-24 08:09+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/mrp/ja/>"
 "\n"
@@ -37,8 +37,8 @@ msgid ""
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
 " * ドラフト: 製造オーダはまだ確認されていません。\n"
-" * 確認済: 製造オーダが確認済で、在庫規則および構成品の再オーダがトリガーされ"
-"ています。\n"
+" * 確認済: 製造オーダが確認済で、在庫ルールおよび構成品の再オーダがトリガーさ"
+"れています。\n"
 " * 進行中: 製造が開始されています。(製造オーダ又は作業オーダ上)\n"
 " * クローズ対象: 製品が完成し、製造オーダをクローズする必要があります。\n"
 " * 完了: 製造オーダがクローズされ、在庫移動が計上されています。\n"
@@ -579,8 +579,7 @@ msgstr "製造オーダがすでに完了済か取消されています。"
 #, python-format
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
-msgstr ""
-"キットタイプ部品表のあるプロダクトは再オーダ規則を持つことはできません。"
+msgstr "キットタイプ部品表のあるプロダクトは再オーダルールを持つことはできません。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -931,7 +930,7 @@ msgstr "利用可能プロダクト"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "Availability"
-msgstr "利用可能"
+msgstr "在庫状況"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
@@ -1152,7 +1151,7 @@ msgstr "作業区をブロック"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__consumption__strict
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter__working_state__blocked
 msgid "Blocked"
-msgstr "不許可"
+msgstr "ブロック中"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__blocked_by_operation_ids
@@ -3276,7 +3275,7 @@ msgstr "製造(1ステップ)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_mto_pull_id
 msgid "Manufacture MTO Rule"
-msgstr "製造MTO（受注生産）規則"
+msgstr "製造MTO（受注生産）ルール"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_pull_id
@@ -3953,7 +3952,7 @@ msgstr "この工程が開始する前に完了する必要のある工程"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__orderpoint_id
 msgid "Orderpoint"
-msgstr "オーダポイント"
+msgstr "補充ルール"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__order_ids
@@ -4095,7 +4094,7 @@ msgstr "構成品をピッキング、製造しプロダクトを格納(3ステ�
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
 msgid "Picking Before Manufacturing MTO Rule"
-msgstr "製造MTO規則前のピッキング"
+msgstr "製造MTOルール前のピッキング"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_type_id
@@ -4612,7 +4611,7 @@ msgstr "品質ワークシート"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__quant_ids
 msgid "Quant"
-msgstr "Quant"
+msgstr "在庫数量"
 
 #. module: mrp
 #. odoo-javascript
@@ -5381,7 +5380,7 @@ msgstr "製造オペレーション後のピッキング"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_rule_id
 msgid "Stock After Manufacturing Rule"
-msgstr "製造規則後の在庫"
+msgstr "製造ルール後の在庫"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_assign_serial
@@ -5421,7 +5420,7 @@ msgstr "在庫補充レポート"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_rule
 msgid "Stock Rule"
-msgstr "在庫規則"
+msgstr "在庫ルール"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_loc_id
@@ -5431,7 +5430,7 @@ msgstr "製造ロケーション後の在庫"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr "在庫規則レポート"
+msgstr "在庫ルールレポート"
 
 #. module: mrp
 #. odoo-python
@@ -6825,9 +6824,8 @@ msgstr ""
 msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
-msgstr ""
-"少なくとも1つの再オーダ規則を持つプロダクト用のキットタイプ部品表を作成するこ"
-"とはできません。"
+msgstr "少なくとも1つの再オーダルールを持つプロダクト用のキットタイプ部品表を作成する"
+"ことはできません。"
 
 #. module: mrp
 #. odoo-python

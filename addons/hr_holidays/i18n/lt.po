@@ -24,13 +24,13 @@
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
 # Jessica Jakara, 2025
 # Wil Odoo, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2025-11-15 17:01+0000\n"
+"PO-Revision-Date: 2026-01-24 08:08+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-17/"
 "hr_holidays/lt/>\n"
@@ -38,10 +38,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
-"1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=4; plural="
+"(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : "
+"(n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != "
+"0 ? 2: 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -769,7 +770,7 @@ msgstr "Kaupiamasis priskyrimas"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Accrual Level"
-msgstr ""
+msgstr "Priskyrimo lygis"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_accrual_plan
@@ -787,14 +788,14 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_accrual_level
 msgid "Accrual Plan Level"
-msgstr ""
+msgstr "Atostogų normos lygis"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
 #, python-format
 msgid "Accrual Plan's Employees"
-msgstr ""
+msgstr "Atostogų norma priskirta darbuotojams"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_accrual_plans
@@ -811,7 +812,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accruals_ids
 msgid "Accruals"
-msgstr ""
+msgstr "Kaupimai"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accrual_count
@@ -1104,7 +1105,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__already_accrued
 msgid "Already Accrued"
-msgstr ""
+msgstr "Jau sukaupta"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
@@ -3033,7 +3034,7 @@ msgstr "Tik Neatvykimų vadovas gali atkurti pradėtus neatvykimus."
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Time Off Manager can reset other people leaves."
-msgstr ""
+msgstr "Tik Neatvykimų vadovas gali atkurti kitų darbuotojų laisvadienius."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3130,7 +3131,7 @@ msgstr "Suplanuota:"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__hr_icon_display__presence_holiday_present
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__hr_icon_display__presence_holiday_present
 msgid "Present but on leave"
-msgstr ""
+msgstr "Esamas, bet turintis laisvadienį"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_employee
@@ -3281,7 +3282,7 @@ msgstr "Užklausos tipas"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__duration_display
 msgid "Requested (Days/Hours)"
-msgstr ""
+msgstr "Laisvadienio trukmė (Dienomis/Valandomis)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__requires_allocation
@@ -3347,7 +3348,7 @@ msgstr "Išsaugoti"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_search_hr_holidays_employee_type_report
 msgid "Search Time Off"
-msgstr ""
+msgstr "Ieškoti laisvadienio"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
@@ -3399,14 +3400,14 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Second approval request for %(leave_type)s"
-msgstr ""
+msgstr "Antras patvirtinimo užklausa %(leave_type)s"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 #, python-format
 msgid "Select Time Off"
-msgstr ""
+msgstr "Pasirinkite laisvadienį"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__holiday_type
@@ -3429,7 +3430,7 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 #, python-format
 msgid "Select the request you just created"
-msgstr ""
+msgstr "Pasirinkite ką tik sukurtą užklausą"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_employee__leave_manager_id
@@ -3441,6 +3442,10 @@ msgid ""
 "If empty, the approval is done by an Administrator or Approver (determined "
 "in settings/users)."
 msgstr ""
+"Pasirinkite vartotoją, atsakingą už šio darbuotojo laisvadienių patvirtinimą."
+"\n"
+"Jei laukas paliks tuščias, patvirtinimą galės atlikti administratorius arba "
+"tvirtintojas (turintis teises Administravimas / prieigos teisės)."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__sep
@@ -3481,7 +3486,7 @@ msgstr ""
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_sick
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_sick
 msgid "Sick Time Off"
-msgstr ""
+msgstr "Neatvykimas dėl ligos"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3579,7 +3584,7 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 #, python-format
 msgid "Submit your request"
-msgstr ""
+msgstr "Pateikti užklausą"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -3601,7 +3606,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__support_document
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "Supporting Document"
-msgstr ""
+msgstr "Pagrindžiantis dokumentas"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3630,6 +3635,7 @@ msgstr ""
 #, python-format
 msgid "The Start Date of the Validity Period must be anterior to the End Date."
 msgstr ""
+"Galiojimo laikotarpio pradžios data turi būti ankstesnė už pabaigos datą."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_count
@@ -3660,7 +3666,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_check_dates
 msgid "The dates you've set up aren't correct. Please check them."
-msgstr ""
+msgstr "Jūsų nustatytos datos yra neteisingos. Patikrinkite jas."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__time_type
@@ -3742,6 +3748,10 @@ msgid ""
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
+"Kai neatvykimas yra sukurtas, jo būsena yra 'Pateikti'.\n"
+"Kai neatvykimas yra pateiktas naudotojo, jo būsena yra 'Patvirtinti'.\n"
+"Kai neatvykimas yra vadovo atmestas, jo būsena yra 'Atmestas'.\n"
+"Kai neatvykimas yra vadovo patvirtintas, jo būsena yra 'Patvirtintas'."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__state
@@ -3796,7 +3806,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
 msgid "This area is automatically filled by the user who validate the time off"
-msgstr ""
+msgstr "Šią zoną automatiškai užpildo vartotojas, patvirtinęs laisvadienį"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
@@ -3804,12 +3814,14 @@ msgid ""
 "This area is automatically filled by the user who validate the time off with "
 "second level (If time off type need second validation)"
 msgstr ""
+"Šią zoną automatiškai užpildo vartotojas, kuris antru lygiu patvirtina "
+"laisvadienį(jei laisvadieniui reikia antro patvirtinimo)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__approver_id
 msgid ""
 "This area is automatically filled by the user who validates the allocation"
-msgstr ""
+msgstr "Šią zoną automatiškai užpildo vartotojas, patvirtinęs priskyrimą"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -3915,7 +3927,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_employee.py:0
 #, python-format
 msgid "Time Off Dashboard"
-msgstr ""
+msgstr "Neatvykimų skydeliai"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__private_name
@@ -3965,7 +3977,7 @@ msgstr "Atostogų Prašymai"
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_responsible
 msgid "Time Off Responsible"
-msgstr ""
+msgstr "Atsakingas už laisvadienius"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_second_approval
@@ -4024,7 +4036,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Time Off of Your Team Member"
-msgstr ""
+msgstr "Jūsų komandos laisvadieniai"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__leave_to_approve_count
@@ -4054,7 +4066,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_holidays_by_employee_and_type_report
 msgid "Time off Analysis by Employee and Time Off Type"
-msgstr ""
+msgstr "Neatvykimų analizė pagal darbuotoją ir neatvykimo tipą"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_graph
@@ -4071,7 +4083,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Time off of people you are manager of"
-msgstr ""
+msgstr "Jums priskirtų darbuotojų laisvadieniai"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4141,7 +4153,7 @@ msgstr "Reikia patvirtinti"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "To Approve or Approved Allocations"
-msgstr ""
+msgstr "Patvirtinti arba laukiantys patvirtinimo paskirstymai"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_to
@@ -4177,7 +4189,7 @@ msgstr "Šiandienos veiklos"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__allocations_count
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocations_count
 msgid "Total number of allocations"
-msgstr ""
+msgstr "Bendras priskyrimų skaičius"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_count
@@ -4200,7 +4212,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_training
 msgid "Training Time Off"
-msgstr ""
+msgstr "Mokymų neatvykimas"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.mail_activity_type_action_config_hr_holidays
@@ -4252,12 +4264,12 @@ msgstr "Įrašytos išimties veiklos tipas."
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz
 msgid "Tz"
-msgstr ""
+msgstr "Laiko zona"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz_mismatch
 msgid "Tz Mismatch"
-msgstr ""
+msgstr "Laiko zonos neatitikimas"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4283,7 +4295,7 @@ msgstr "Neperskaitytos žinutės"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Up to"
-msgstr ""
+msgstr "Iki"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_users
@@ -4297,7 +4309,7 @@ msgstr "Vartotojas"
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
 #, python-format
 msgid "User is idle"
-msgstr ""
+msgstr "Naudotojas yra neaktyvus"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4305,7 +4317,7 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/im_status_patch.xml:0
 #, python-format
 msgid "User is online"
-msgstr ""
+msgstr "Naudotojas yra prisijungęs"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4337,7 +4349,7 @@ msgstr "Patvirtinta"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__validation_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__validation_type
 msgid "Validation Type"
-msgstr ""
+msgstr "Patvirtinimo tipas"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -4416,7 +4428,7 @@ msgstr "Kartą per savaitę"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other
 msgid "Worked Time"
-msgstr ""
+msgstr "Darbo laikas"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_mandatory_day__resource_calendar_id
@@ -4431,7 +4443,7 @@ msgstr "Kas metus"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__yearly_day
 msgid "Yearly Day"
-msgstr ""
+msgstr "Metų diena"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__yearly_day_display
@@ -4515,14 +4527,14 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You cannot delete a time off which is in %s state"
-msgstr ""
+msgstr "Negalite ištrinti neatvykimo, kurio būsena yra %s"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You cannot delete a time off which is in the past"
-msgstr ""
+msgstr "Negalite ištrinti praeityje esančio neatvykimo"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4531,13 +4543,15 @@ msgstr ""
 msgid ""
 "You cannot delete an allocation request which has some validated leaves."
 msgstr ""
+"Negalite ištrinti priskyrimo užklausos, kurios kažkuris lygis jau yra "
+"patvirtintas."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "You cannot delete an allocation request which is in %s state."
-msgstr ""
+msgstr "Negalite ištrinti priskyrimo užklausos, kurios būsena yra %s ."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4604,6 +4618,8 @@ msgid ""
 "You must either be a Time off Officer or Time off Manager to approve this "
 "leave"
 msgstr ""
+"Kad patvirtintumėte šį laisvadienį, Jūs turite turėti neatvykimų vadybininko "
+"arba neatvykimų vadovo teisės"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
@@ -4634,21 +4650,21 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Your %(leave_type)s planned on %(date)s has been accepted"
-msgstr ""
+msgstr "Jūsų %(leave_type)s , suplanuotos %(date)s datai, buvo patvirtintos"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Your %(leave_type)s planned on %(date)s has been refused"
-msgstr ""
+msgstr "Jūsų %(leave_type)s , suplanuota(-os) %(date)s datai, buvo atmesta"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Your Time Off"
-msgstr ""
+msgstr "Jūsų neatvykimai"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4705,19 +4721,19 @@ msgstr "pagal neatvykimo tipą"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "can be used before the allocation expires."
-msgstr ""
+msgstr "galima panaudoti iki priskyrimo galiojimo pabaigos."
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "click here"
-msgstr ""
+msgstr "spauskite čia"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "day of the month"
-msgstr ""
+msgstr "mėnesio dienos"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4741,13 +4757,13 @@ msgstr "dienos"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "days of the months"
-msgstr ""
+msgstr "mėnesio dienos"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
 msgid "days)"
-msgstr ""
+msgstr "dienos)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4796,14 +4812,14 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan_level.py:0
 #, python-format
 msgid "last day"
-msgstr ""
+msgstr "paskutinė diena"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "new request"
-msgstr ""
+msgstr "nauja užklausa"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -4876,7 +4892,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "up to"
-msgstr ""
+msgstr "iki"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4888,7 +4904,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
-msgstr ""
+msgstr "Patvirtinti"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban

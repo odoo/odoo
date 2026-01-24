@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-15 18:37+0000\n"
+"POT-Creation-Date: 2026-01-22 18:36+0000\n"
 "PO-Revision-Date: 2026-01-17 17:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -20,8 +20,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : "
-"((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: account_peppol
@@ -167,20 +167,6 @@ msgid ""
 msgstr ""
 "Não é possível cancelar um registro ativo. Em vez disso, solicite uma "
 "migração ou cancele o registro."
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
-msgid "Can't cancel registration with this status: %s"
-msgstr "Não é possível cancelar o registro com esse status: %s"
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
-msgid "Can't deregister with this status: %s"
-msgstr "Não é possível cancelar o registro com esse status: %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -1038,6 +1024,14 @@ msgstr "to send invoices, but this one"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "uses"
+
+#, python-format
+#~ msgid "Can't cancel registration with this status: %s"
+#~ msgstr "Não é possível cancelar o registro com esse status: %s"
+
+#, python-format
+#~ msgid "Can't deregister with this status: %s"
+#~ msgstr "Não é possível cancelar o registro com esse status: %s"
 
 #~ msgid "Cannot receive this format"
 #~ msgstr "Não é possível receber esse formato"
