@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1666,6 +1666,12 @@ msgid "Basic Receipt"
 msgstr "Oddiy chek"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
+msgid "Be aware that reloading data will delete unsaved orders."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
 #, fuzzy
 msgid "Before Closing Difference"
@@ -2414,6 +2420,7 @@ msgstr "Mijoz"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3711,6 +3718,12 @@ msgid "Display Name"
 msgstr "Ko‘rsatish nomi"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Display QR"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #, fuzzy
 msgid ""
@@ -4254,6 +4267,12 @@ msgid "For imprecise industrial touchscreens."
 msgstr "Aniq bo‘lmagan sanoat sensorli ekranlari uchun."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force Cancel"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
@@ -4267,6 +4286,12 @@ msgstr "Sessiyani majburiy yopish"
 #, fuzzy
 msgid "Force Done"
 msgstr "Majburiy tugatish"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Force cancel"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6185,6 +6210,12 @@ msgid "No slot available for this day"
 msgstr "Bu kun uchun bo‘sh joy mavjud emas"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
+msgid "No valid orders were selected. No new invoices could be generated"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__barcode_nomenclature_id
 #, fuzzy
 msgid "Nomenclature"
@@ -7430,7 +7461,7 @@ msgstr "PoS sozlamasi"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.js:0
 #, fuzzy
 msgid "PoS Customer Display opened in a new window"
 msgstr "PoS mijoz ekrani yangi oynada ochildi"
@@ -8706,6 +8737,8 @@ msgstr "Tegishli seans: %(link)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.js:0
+#: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
 #, fuzzy
 msgid "Reload Data"
 msgstr "Ma'lumotlarni qayta yuklash"
@@ -9079,6 +9112,12 @@ msgstr "Tarozi xatosi"
 #, fuzzy
 msgid "Scan"
 msgstr "Skanerlash"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "Scan QR"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9854,6 +9893,7 @@ msgstr "Zamonaviy charm kurtka, barcha holatlar uchun chidamli va shinam"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #, fuzzy
 msgid "Subtotal"
 msgstr "Oraliq jami"
@@ -10017,6 +10057,7 @@ msgstr "Soliqli narx"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
+#: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_tax
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__tax_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_action_tax_form_open
@@ -10920,6 +10961,12 @@ msgstr ""
 "Savdo nuqtasi uchun yangi naqd to‘lov usuli yaratilishi kerak."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid "This device"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_amount_authorized_diff
 #, fuzzy
@@ -11441,19 +11488,6 @@ msgstr ""
 "taqsimlash qatorida tegishli soliq hisobini o‘rnating: %s"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
-#, fuzzy
-msgid ""
-"Unable to create consolidated invoice/s because the following orders can't "
-"be invoiced.\n"
-"\n"
-"%s"
-msgstr ""
-"Birlashtirilgan hisob-faktura(lar) yaratib bo‘lmadi, chunki quyidagi "
-"buyurtmalar uchun hisob-faktura yozib bo‘lmaydi.  %s"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/invoice_button/invoice_button.js:0
 #, fuzzy
@@ -11691,17 +11725,11 @@ msgstr "Uuid"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 #, fuzzy
 msgid "VAT"
 msgstr "QQS"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
-#, fuzzy
-msgid "VAT:"
-msgstr "QQS:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11936,6 +11964,14 @@ msgid ""
 msgstr ""
 "Siz seriya/partiya raqamli mahsulotlarni sotmoqchisiz, ammo ularning "
 "ayrimlari o‘rnatilmagan. Baribir davom etishni xohlaysizmi?"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
+msgid ""
+"You can either use it on this device or scan the QR code to display it on "
+"another device"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12560,3 +12596,17 @@ msgstr "tugmalarni faollashtirish uchun"
 #, fuzzy
 msgid "using"
 msgstr "foydalanish"
+
+#, fuzzy
+#~ msgid ""
+#~ "Unable to create consolidated invoice/s because the following orders "
+#~ "can't be invoiced.\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Birlashtirilgan hisob-faktura(lar) yaratib bo‘lmadi, chunki quyidagi "
+#~ "buyurtmalar uchun hisob-faktura yozib bo‘lmaydi.  %s"
+
+#, fuzzy
+#~ msgid "VAT:"
+#~ msgstr "QQS:"

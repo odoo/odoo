@@ -26,8 +26,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2026-01-14 11:38+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
+"PO-Revision-Date: 2026-01-23 07:37+0000\n"
 "Last-Translator: Tommy Gombar <tommy.gombar@kilafornia.net>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
 "website_sale/hu/>\n"
@@ -331,8 +331,8 @@ msgid ""
 "role=\"presentation\"/>"
 msgstr ""
 "<small class=\"mx-auto\"><b>Szűrők nélkül</b></small>\n"
-"                                        <i class=\"oi oi-close\" role="
-"\"presentation\"/>"
+"                                        <i class=\"oi oi-close\" "
+"role=\"presentation\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_terms_and_conditions
@@ -1679,8 +1679,9 @@ msgstr ""
 #. module: website_sale
 #: model:website.checkout.step,main_button_label:website_sale.checkout_step_extra
 #: model:website.checkout.step,main_button_label:website_sale.checkout_step_payment
+#, fuzzy
 msgid "Confirm"
-msgstr "Megerősítés"
+msgstr "Megrendel"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
@@ -5350,6 +5351,12 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "The delivery method is not compatible with your delivery address."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/product_feed.py:0
 msgid ""
 "The feed %(feed_name)s contains more than %(limit)s products, which may not "
@@ -6048,8 +6055,8 @@ msgstr ""
 "Egyszerre szerkeszted a <b>szállítási és a számlázási</b> címedet!<br/>\n"
 "                           Ha módosítani szeretnéd a számlázási címedet, "
 "hozz létre egy \n"
-"                           <a class=\"o_translate_inline\" href="
-"\"/shop/address?address_type=billing\">új címet</a>."
+"                           <a class=\"o_translate_inline\" href=\"/shop/"
+"address?address_type=billing\">új címet</a>."
 
 #. module: website_sale
 #. odoo-python
