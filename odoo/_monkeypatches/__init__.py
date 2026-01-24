@@ -37,3 +37,5 @@ def patch_all():
     patch_werkzeug()
     from .zeep import patch_zeep
     patch_zeep()
+    from .reportlab import patch_reportlab
+    patch_reportlab()
