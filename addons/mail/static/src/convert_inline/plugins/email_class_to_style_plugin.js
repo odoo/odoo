@@ -1,6 +1,6 @@
 import { BasePlugin } from "@html_editor/base_plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { parseSelector } from "@mail/convert_inline/css_parsers";
+import { parseCssText, parseSelector } from "@mail/convert_inline/css_parsers";
 import { splitSelectorList } from "@mail/convert_inline/style_utils";
 import { registry } from "@web/core/registry";
 import { useShorthands } from "@mail/convert_inline/plugins/hooks";
@@ -27,7 +27,7 @@ export class EmailClassToStylePlugin extends BasePlugin {
     resources = {
         ignored_style_predicates: (propertyName, value) =>
             !value ||
-            // propertyName.startsWith("--") || // TODO EGGMAIL, not correct, check where they should be removed
+            propertyName.startsWith("--") ||
             propertyName.includes("animation") ||
             propertyName.includes("-webkit") ||
             typeof value !== "string",
@@ -201,7 +201,8 @@ export class EmailClassToStylePlugin extends BasePlugin {
      */
     normalizeStyle(style) {
         const styleInfo = new StyleInfo();
-        for (const propertyName of style) {
+        const propertyNames = parseCssText(style.cssText).map((property) => property.name);
+        for (const propertyName of propertyNames) {
             const value = style.getPropertyValue(propertyName);
             if (
                 !this.getResource("ignored_style_predicates").some((predicate) =>
