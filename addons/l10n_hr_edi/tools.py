@@ -80,7 +80,8 @@ def _make_request(company, endpoint_type, params=False):
     # Structure-specific error handling
     if response.status_code != 200:
         try:
-            error_message = response.json().get('errors')
+            error_message = response.json()
+            error_message = error_message.get('errors') or error_message.get('message')
         except (JSONDecodeError, TypeError):
             error_message = False
         raise UserError(company.env._("Error handling request: %s", error_message) if error_message else company.env._("HTTP %s: Connection error.", response.status_code))
