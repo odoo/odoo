@@ -12,13 +12,14 @@
 # Jessica Jakara, 2025
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
 # "Jessica Tuulia Sade Jäkärä (jtsj)" <jtsj@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-08-21 14:30+0000\n"
-"Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
+"PO-Revision-Date: 2026-01-24 09:02+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/"
 "account_fleet/fi/>\n"
 "Language: fi\n"
@@ -26,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_log_services_view_form
@@ -37,21 +38,22 @@ msgid ""
 "invisible=\"account_move_state == 'posted'\" title=\"Service's "
 "Bill\">Service's Bill</span>"
 msgstr ""
-"<span class=\"o_stat_text text-success\" invisible=\"account_move_state != "
-"'posted'\" title=\"Service's Bill\">Palvelun lasku</span>\n"
+"<span class=\"o_stat_text text-success\" invisible="
+"\"account_move_state != 'posted'\" title=\"Service's Bill\""
+">Palvelulasku</span>\n"
 "                            <span class=\"o_stat_text text-warning\" "
-"invisible=\"account_move_state == 'posted'\" title=\"Service's "
-"Bill\">Palvelun lasku</span>"
+"invisible=\"account_move_state == 'posted'\" title=\"Service's Bill\""
+">Palvelulasku</span>"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__account_move_ids
 msgid "Account Move"
-msgstr "Kirjanpitovienti"
+msgstr "Tilikirjaus"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_line_id
 msgid "Account Move Line"
-msgstr "Kirjanpidon kirjaus"
+msgstr "Tilisikirjausrivi"
 
 #. module: account_fleet
 #. odoo-python
@@ -67,17 +69,17 @@ msgstr "Laskut"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__bill_count
 msgid "Bills Count"
-msgstr "Laskujen määrä"
+msgstr "Laskujen lukumäärä"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__amount
 msgid "Cost"
-msgstr "Kustannushinta"
+msgstr "Hinta"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_automatic_entry_wizard
 msgid "Create Automatic Entries"
-msgstr "Luo automaattiset viennit"
+msgstr "Luo automaattisia kirjauksia"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.account_move_view_tree
@@ -92,7 +94,7 @@ msgstr "Päiväkirjan kirjaus"
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_move_line
 msgid "Journal Item"
-msgstr "Päiväkirjamerkintä"
+msgstr "Kirjausrivi"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__need_vehicle
@@ -103,12 +105,12 @@ msgstr "Tarvitaan ajoneuvo"
 #. odoo-python
 #: code:addons/account_fleet/models/account_move.py:0
 msgid "Service Vendor Bill: %s"
-msgstr "Lähetä ostolasku: %s"
+msgstr "Palveluntarjoajan lasku: %s"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_fleet_vehicle_log_services
 msgid "Services for vehicles"
-msgstr "Ajoneuvoja koskevat palvelut"
+msgstr "Ajoneuvopalvelut"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_state
@@ -125,7 +127,7 @@ msgstr "Ajoneuvo"
 #. module: account_fleet
 #: model:fleet.service.type,name:account_fleet.data_fleet_service_type_vendor_bill
 msgid "Vendor Bill"
-msgstr "Ostolasku"
+msgstr "Toimittajan lasku"
 
 #. module: account_fleet
 #. odoo-python
@@ -134,8 +136,8 @@ msgid ""
 "You cannot delete log services records because one or more of them were bill "
 "created."
 msgstr ""
-"Et voi poistaa palveluiden lokimerkintöjä, koska yksi tai useampi niistä on "
-"laskutettu."
+"Et voi poistaa lokipalveluiden tietueita, koska yksi tai useampi niistä on "
+"jo laskutettu."
 
 #. module: account_fleet
 #. odoo-python
@@ -144,10 +146,10 @@ msgid ""
 "You cannot modify amount of services linked to an account move line. Do it "
 "on the related accounting entry instead."
 msgstr ""
-"Et voi muokata tilisiirron erään linkitettyjen palvelujen määrää. Voit tehdä "
-"tarvittavat muutoksen sen sijaan siihen liittyvään kirjanpidon kirjaukseen."
+"Et voi muokata tilikirjauksen riviin linkitettyjen palvelujen määrää. Tee "
+"muutokset siihen liittyvään kirjanpidon kirjaukseen."
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
 msgid "show the vendor bills for this vehicle"
-msgstr "Näytä tämän ajoneuvon ostolasku"
+msgstr "näytä toimittajan laskut tälle ajoneuvolle"

@@ -12,13 +12,13 @@
 # Manav Shah, 2025
 # Ujjawal Pathak, 2025
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-13 15:13+0000\n"
-"PO-Revision-Date: 2025-12-26 14:00+0000\n"
+"PO-Revision-Date: 2026-01-24 09:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/base/hi/>\n"
 "Language: hi\n"
@@ -1762,6 +1762,61 @@ msgid ""
 "validate VAT numbers for each country that have or not have the possibility "
 "to manage multiple identification types.\n"
 msgstr ""
+"\n"
+"\"पहचान का प्रकार\" नाम का नया मॉडल जोड़ें जो पार्टनर में वैट फ़ील्ड की सुविधा बढ़ाता है. अब कॉन्टैक्ट्स को सिर्फ़ "
+"टैक्स आईडी (वैट) से ही नहीं, बल्कि नेशनल डॉक्यूमेंट, पासपोर्ट या विदेशी आईडी से भी पहचानें और इनवॉइस बनाएं. "
+"इस मॉड्यूल को इंस्टॉल करने के बाद आपको पार्टनर फ़ॉर्म में दो फ़ील्ड दिखेंगे:\n"
+"\n"
+"* पहचान का प्रकार\n"
+"* पहचान संख्या\n"
+"\n"
+"यह व्यवहार अर्जेंटीना और चिली जैसे कुछ लैटम देशों की सामान्य आवश्यकता है. अगर आपकी लोकलाइज़ेशन में ये "
+"आवश्यकताएं हैं, तो आपको इस मॉड्यूल पर निर्भर रहना होगा और अपनी लोकलाइज़ेशन मॉड्यूल में उन पहचान प्रकारों को "
+"परिभाषित करें जो आपके देश में उपयोग किए जाते हैं. आम तौर पर, ये पहचान प्रकार उन सरकारी अधिकारियों द्वारा "
+"परिभाषित किए जाते हैं जो राजकोषीय (फ़िस्कल) ऑपरेशन्स को कंट्रोल करते हैं. उदाहरण के लिए:\n"
+"* अर्जेंटीना में, AFIP (एक सरकारी संस्था जो टैक्स संभालती है) आधिकारिक तौर पर कई तरह की पहचान आईडी तय "
+"करती है. इनमें शामिल हैं: DNI (नेशनल आईडी), CUIT (कंपनियों या कानूनी संस्थाओं के लिए टैक्स ID), और "
+"CUIL (व्यक्तिगत लोगों के लिए टैक्स ID). इसके अलावा, वे लगभग 80 और भी मान्य पहचान प्रकारों को मानते हैं."
+"\n"
+"\n"
+"हर पहचान में यह जानकारी होती है:\n"
+"\n"
+"* नाम: पहचान का छोटा नाम\n"
+"* विवरण: यही छोटा नाम या लंबा नाम हो सकता है\n"
+"* country_id: यह पहचान जिस देश से संबंधित है\n"
+"* is_vat: इस रिकॉर्ड को उस खास देश के लिए संबंधित वैट के रूप में पहचानें.\n"
+"* क्रम: हमें सबसे अधिक उपयोग की जाने वाली पहचान प्रकारों के आधार पर उन्हें क्रमबद्ध करने देता है.\n"
+"* सक्रिय: हम अपने ग्राहकों के लिए इसे आसान बनाने के लिए पहचानों को सक्रिय/निष्क्रिय कर सकते हैं\n"
+"\n"
+"इस मॉड्यूल को मल्टी-कंपनी एनवायरमेंट के अनुकूल बनाने के लिए, जहाँ कुछ कंपनियों को इस ज़रूरत/सहयोग की आवश्यकता"
+" नहीं है, हमने सामान्य पहचान प्रकार और सामान्य नियम जोड़े हैं, ताकि संपर्क जानकारी को मैनेज किया जा सके और जब "
+"उपयोगकर्ता सिर्फ़ वैट का उपयोग करता है, जैसा कि हम पहले जानते थे, तो इसे उपयोगकर्ता के लिए पारदर्शी बनाए "
+"रखें.\n"
+"\n"
+"सामान्य पहचान:\n"
+"\n"
+"* वैट: राजकोषीय (फ़िस्कल) टैक्स पहचान या वैट नंबर, डिफ़ॉल्ट रूप से पहचान प्रकार के रूप में चुना जाएगा, ताकि "
+"उपयोगकर्ता को सिर्फ़ संबंधित वैट नंबर जोड़ना पड़े.\n"
+"* पासपोर्ट\n"
+"* विदेशी आईडी (विदेशी राष्ट्रीय दस्तावेज़)\n"
+"\n"
+"नया पार्टनर बनाते समय नियम: हम सिर्फ़ वही पहचान प्रकार देखेंगे जो ज़रूरी हैं, इन नियमों को ध्यान में रखते हुए:"
+"\n"
+"\n"
+"* अगर पार्टनर का कोई देश पता सेट नहीं है: यह सामान्य पहचान प्रकार दिखाएगा, साथ ही पार्टनर की संबंधित कंपनी"
+" के देश में परिभाषित पहचान प्रकार भी दिखाएगा. (अगर पार्टनर के पास कोई खास कंपनी नहीं है, तो यह वर्तमान "
+"उपयोगकर्ता कंपनी से संबंधित पहचान प्रकार दिखाएगा)\n"
+"\n"
+"* अगर पार्टनर का देश पता है: यह सामान्य पहचान प्रकार दिखाएगा, साथ ही पार्टनर के देश के लिए परिभाषित पहचा"
+"न प्रकार भी दिखाएगा.\n"
+"\n"
+"जब कोई नई कंपनी बनाते हैं, तो संबंधित पार्टनर को हमेशा संबंधित देश का is_vat पहचान प्रकार सेट करें.\n"
+"\n"
+"सभी परिभाषित पहचान प्रकारों की समीक्षा की जा सकती है और \"कॉन्टैक्ट्स / कॉन्फ़िगरेशन / पहचान का प्रकार\" मेन्यू"
+" में उन्हें सक्रिय/निष्क्रिय किया जा सकता है.\n"
+"\n"
+"यह मॉड्यूल base_vat मॉड्यूल के साथ काम करता है, है ताकि उन देशों के लिए वैट नंबरों को सत्यापित किया जा सके "
+"जहां कई पहचान प्रकारों को प्रबंधित करने की संभावना है या नहीं.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract
@@ -2737,6 +2792,60 @@ msgid ""
 "    encode in in the payroll Settings, with the .pem file and the related "
 "password, if any.\n"
 msgstr ""
+"\n"
+"बेल्जियम के पेरोल नियम.\n"
+"======================\n"
+"\n"
+"    * कर्मचारी की जानकारी\n"
+"    * कर्मचारी अनुबंध\n"
+"    * पासपोर्ट आधारित अनुबंध\n"
+"    * भत्ते/कटौती\n"
+"    * बेसिक/ग्रॉस/नेट वेतन कॉन्फ़िगर करने की अनुमति\n"
+"    * कर्मचारी पेस्लिप\n"
+"    * मासिक पेरोल रजिस्टर\n"
+"    * लीव मैनेजमेंट के साथ इंटिग्रेशन\n"
+"    * सैलरी मेज, ONSS, विदहोल्डिंग टैक्स, चाइल्ड अलाउंस, ...\n"
+"\n"
+"ऑटोमैटिक DmfA हस्ताक्षर\n"
+"========================\n"
+"\n"
+"शर्तें:\n"
+"--------------\n"
+"\n"
+"- आपको ग्लोबल साइन के ज़रिए दिया गया बेल्जियम सरकार के हिसाब से डिजिटल सर्टिफिकेट \n"
+"  चाहिए. देखें: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- अपने SSL सर्टिफिकेट (.pfx फ़ाइल) से सर्टिफिकेट फ़ाइलें जेनरेट करें. तकनीकी उपयोगकर्ता (.cer फ़ाइल) बनाने"
+" \n"
+"  और ONSS (.pem) फ़ाइल को प्रमाणित करने के लिए इनकी ज़रूरत होती है.\n"
+"  UNIX सिस्टम पर इन कमांड का इस्तेमाल करें:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -"
+"clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out "
+"my_cert.cer\n"
+"\n"
+"  - PFX -> PEM: openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"  - PFX -> KEY: openssl pkcs12 -in my_cert.pfx -out my_cert.key -nocerts\n"
+"\n"
+"- सोशल सिक्योरिटी REST वेब सर्विस का उपयोग करने से पहले,\n"
+"  अपने लिए या अपने क्लाइंट के लिए एक अकाउंट बनाएं और सुरक्षा कॉन्फ़िगर करें. (पूरी प्रक्रिया\n"
+"   https://www.socialsecurity.be/site_fr/general/helpcentre/batch/sftp/"
+"previewstep.htm पर उपलब्ध है)\n"
+"\n"
+"  - एक तकनीकी उपयोगकर्ता बनाएं + SFTP चैनल सक्रिय करें: आपके क्लाइंट को अब ऐक्सेस मैनेजमेंट ऑनलाइन "
+"सर्विस में एक \n"
+"    तकनीकी उपयोगकर्ता बनाना होगा. इस प्रक्रिया का पालन करें: https://www.socialsecurity.be/"
+"site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR."
+"pdf\n"
+"\n"
+"  - अपना SFTP क्लाइंट कॉन्फ़िगर करें: https://www.socialsecurity.be/site_fr/general/"
+"helpcentre/batch/document/pdf/step6_sftp_F.pdf\n"
+"\n"
+"  - प्रक्रिया के अंत में, आपको एक \"ONSS एक्सपेडिटर नंबर\" प्राप्त होना चाहिए,\n"
+"    इसे .pem फ़ाइल और संबंधित पासवर्ड (अगर कोई हो) के साथ पेरोल सेटिंग्स में दर्ज करें.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_blackbox_be
@@ -3049,6 +3158,35 @@ msgid ""
 "proposed,\n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"\n"
+"वेनेज़ुएला में खातों की सूची.\n"
+"===============================\n"
+"\n"
+"वेनेजुएला में कानूनन कोई खातों की सूची (चार्ट ऑफ़ अकाउंट नहीं है), \n"
+"लेकिन Odoo में प्रस्तावित यह डिफॉल्ट प्लान वेनेजुएला की सबसे अच्छी अकाउंटिंग नियम के हिसाब से एक डिफ़ॉल्ट चार्ट "
+"देता है. \n"
+"यह योजना इन नियमों का अनुपालन करती है.\n"
+"\n"
+"इस मॉड्यूल का 1000 से अधिक कंपनियों के आधार के रूप में परीक्षण किया गया है.\n"
+"यह वेनेजुएला के सबसे सामान्य सॉफ्टवेयरों का मिलाकर बनाया गया है,\n"
+" जिससे अकाउंटेंट को Odoo के साथ काम शुरू करने में आसानी होगी.\n"
+"\n"
+"\n"
+"यह मॉड्यूल वेनेज़ुएला के लिए पूरे तौर पर लोकलाइज़ होने का दावा नहीं करता है, \n"
+"लेकिन यह आपको इस देश में Odoo के साथ तेज़ी से शुरुआत करने में मदद करेगा.\n"
+"\n"
+"यह मॉड्यूल आपको देता है.\n"
+"---------------------\n"
+"\n"
+"- वेनेज़ुएला के बुनियादी टैक्स की जानकारी.\n"
+"- कम्यूनिटी लोकलाइजेशन के साथ परीक्षण के लिए बुनियादी डेटा.\n"
+"- बेसिक अकाउंटिंग जरूरतों वाली नई कंपनी शुरू करने की सुविधा.\n"
+"\n"
+"अगर आप बिना इनवॉइस के स्टॉक वैल्यूएशन चाहते हैं, तो\n"
+" 'account_anglo_saxon' के इस्तेमाल की सलाह दी जाती है.\n"
+"\n"
+"अगर आप इस मॉड्यूल को इंस्टॉल करके कस्टम चार्ट चुनते हैं, तो एक बुनियादी चार्ट प्रस्तावित किया जाएगा,\n"
+"लेकिन आपको टैक्स के लिए अकाउंट डिफॉल्ट मैन्युअल रूप से सेट करने होंगे.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lv
@@ -3742,6 +3880,65 @@ msgid ""
 "factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf).\n"
 "\n"
 msgstr ""
+"\n"
+"EDI चिली लोकलाइज़ेशन\n"
+"========================\n"
+"यह मॉड्यूल चिली इनवॉइसिंग के लिए DTE (इलेक्ट्रॉनिक टैक्सेबल डॉक्यूमेंट) बनाने की सुविधा देता है. मुख्य विशेषताओं में "
+"शामिल हैं:\n"
+"- XML में DTE फ़ॉर्मैट: DTE (Digital Tax Envelope) एक ऐसा डिजिटल दस्तावेज़ है जिसे XML भाषा में "
+"बनाया गया है, ताकि बिज़नेस के बीच होने वाले लेन-देन सुरक्षित और एक समान तरीके से हो सकें.\n"
+"- SII के साथ सीधा कम्यूनिकेशन: यह सुविधा आपको अपने सेल्स इनवॉइस और टैक्स से जुड़े पेपर्स को सीधे चिली के टैक्"
+"स विभाग (SII) को भेजने की अनुमति देती है, ताकि आपको मैन्युअली कुछ भी अपलोड न करना पड़े.\n"
+"- कस्टमर कम्यूनिकेशन: इसके ज़रिए ग्राहकों को सेल्स के डिजिटल बिल भेजे जाते हैं.\n"
+"- सप्लायर कम्यूनिकेशन: यह सप्लायर्स से मिलने वाले डिजिटल बिलों को स्वीकार करता है.\n"
+"- SII सूचनाएं: वेंडर बिल या अन्य DTEs की स्वीकृति या अस्वीकृति के बारे में SII को सूचित करें.\n"
+"\n"
+"ध्यान दें: इनवॉइस पर बारकोड दिखाने के लिए `pdf417gen` लाइब्रेरी का होना ज़रूरी है.\n"
+"\n"
+"इलेक्ट्रॉनिक रसीद के नियमों का पालन करना\n"
+"==============================\n"
+"\n"
+"SII की आवश्यकताओं के अनुसार, मार्च 2021 से, सभी boletas लेनदेन को इलेक्ट्रॉनिक इनवॉइस के लिए उपयोग की"
+" जाने वाली वेब सेवा से अलग सेवा का उपयोग करके SII को भेजा जाना चाहिए. पहले, सिर्फ़ एक दैनिक रिपोर्ट की ज़रू"
+"रत होती थी.\n"
+"\n"
+"हाल ही के बदलाव\n"
+"==============\n"
+"\n"
+"- रोजाना सेल्स का हिसाब रखने वाली किताब की ज़रूरत नहीं: सरकारी नियमों के अनुसार, अब डेली सेल्स बुक "
+"(\"Libro de ventas diarias\") बनाए रखने की ज़रूरत खत्म हो गई है, इसलिए इसे Odoo के वर्शन "
+"से हटा दिया गया है.\n"
+"\n"
+"इलेक्ट्रॉनिक Boletas और इलेक्ट्रॉनिक इनवॉइसिंग वर्कफ़्लो के बीच अंतर\n"
+"=========================================================================\n"
+"\n"
+"1. Boletas के लिए खास तौर पर सर्वर:\n"
+"- प्रॉडक्शन एनवॉयरमेंट: `palena.sii.cl`\n"
+"- टेस्ट एनवॉयरमेंट: `maullin.sii.cl`\n"
+"\n"
+"2. विभिन्न प्रमाणीकरण और स्थिति सेवाएँ:\n"
+"- इलेक्ट्रॉनिक बोलेटस और इलेक्ट्रॉनिक इनवॉइस के बीच प्रमाणीकरण सेवाएँ और डिलीवरी और दस्तावेज़ की स्थिति जानने के"
+" तरीके अलग-अलग हैं.\n"
+"\n"
+"3. प्रमाणित करने के लिए टोकन:\n"
+"- सिस्टम में पहचान की पुष्टि करने के लिए जो सिक्योरिटी टोकन चाहिए होते हैं, उन्हें पाने का तरीका हर सर्विस के लिए "
+"अलग है.\n"
+"\n"
+"4. अपडेट किया गया XML स्कीमा:\n"
+"- इलेक्ट्रॉनिक बोलेटस (boletas) के लिए XML स्कीमा में नए टैग शामिल किए गए हैं.\n"
+"\n"
+"5. पुष्टिकरण से जुड़ी समस्याओं का समाधान:\n"
+"- boletas सही हैं या नहीं, इसकी जांच के लिए REST API सर्विस का इस्तेमाल किया जाता है. इसके लिए 'डिलीवरी "
+"ट्रैक-आईडी' को पहचान के रूप में भेजा जाता.\n"
+"- इलेक्ट्रॉनिक इनवॉइस की कमियों या गलतियों की जानकारी ईमेल से पाएं.\n"
+"\n"
+"6. ट्रैक आईडी लेंथ:\n"
+"- इलेक्ट्रॉनिक boletas: 15 अंक\n"
+"- इलेक्ट्रॉनिक इनवॉइस: 10 अंक\n"
+"\n"
+"पूरी जानकारी और निर्देशों के लिए दी गई [SII Guide](https://www.sii.cl/factura_electronica/"
+"factura_mercado/Instructivo_Emision_Boleta_Elect.pdf) लिंक पर जाएं.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec_edi
@@ -4340,6 +4537,30 @@ msgid ""
 "country. The document type has a country field\n"
 "\n"
 msgstr ""
+"\n"
+"फ़ंक्शनल\n"
+"----------\n"
+"\n"
+"अर्जेंटीना और चिली जैसे लैटिन अमेरिकी देशों में, इनवॉइस और बिल सरकारी अधिकारियों द्वारा निर्धारित दस्तावेज़ प्रकारों में "
+"वर्गीकृत होते हैं. यह मॉड्यूल इन दस्तावेज़ों को मैनेज करने, प्रिंट करने और पहचानने के लिए है. प्रत्येक दस्तावेज़ "
+"के अपने नियम और नंबर अनुक्रम होते हैं, जो जर्नल से जुड़े होते हैं.\n"
+"\n"
+"यह मॉड्यूल स्थानीय ज़रूरत के हिसाब से दस्तावेज़ संभालने के लिए है. यह ज़रूरी जानकारी देता है जो रिपोर्ट में दिखनी चाहि"
+"ए और जिसे इनवॉइस या खातों में आसानी से ढूंढा जा सके.\n"
+"\n"
+"हर दस्तावेज़ प्रकार के नियम और सीक्वेंस नंबर होते हैं. यूज़र की आसानी के लिए इसे इनवॉइस नंबर और जर्नल सीक्वें"
+"स से जोड़ा गया है. जर्नल में यह विकल्प चुनें कि दस्तावेज़ इस्तेमाल करना है या नहीं.\n"
+"\n"
+"टेक्निकल\n"
+"---------\n"
+"\n"
+"अगर स्थानीय ज़रूरत के लिए यह लॉजिक चाहिए, तो इस मॉड्यूल को जोड़ें और इसे अपने स्थानीय मॉड्यूल में इस्तेमाल करें:"
+"\n"
+"\n"
+"* company's _localization_use_documents() मेथड का विस्तार करें.\n"
+"* वह डेटा बनाएं जिसमें उस खास देश के लिए इस्तेमाल होने वाले सभी दस्तावेज़ प्रकार शामिल हों. हर दस्तावेज़ प्रकार "
+"में एक देश फ़ील्ड होती है\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -4424,6 +4645,73 @@ msgid ""
 "* Unit of measures AFIP codes\n"
 "* Partners: Consumidor Final and AFIP\n"
 msgstr ""
+"\n"
+"फ़ंक्शनल\n"
+"----------\n"
+"\n"
+"यह मॉड्यूल अर्जेंटीना के लोकलाइजेशन के लिए अकाउंटिंग फीचर्स जोड़ता है. यह अर्जेंटीना में और AFIP के नियमों और "
+"दिशा-निर्देशों के तहत काम करने के लिए ज़रूरी न्यूनतम कॉन्फ़िगरेशन है.\n"
+"प्रोडक्शन के लिए इन कॉन्फ़िगरेशन स्टेप्स का पालन करें:\n"
+"\n"
+"1. अपनी कंपनी की जानकारी में जाकर वैट नंबर और AFIP रिस्पॉन्सिबिलिटी टाइप सेट करें\n"
+"2. अकाउंटिंग / सेटिंग्स में जाएं और वह चार्ट ऑफ अकाउंट चुनें जिसे आप उपयोग करना चाहते हैं.\n"
+"3. AFIP POS जानकारी को ध्यान में रखते हुए अपने सेल जर्नल बनाएं.\n"
+"\n"
+"टेस्टिंग के लिए डेमो डेटा:\n"
+"\n"
+"* 3 कंपनियां बनाई गई हैं, प्रत्येक AFIP रिस्पॉन्सिबिलिटी टाइप के लिए एक, जिसमें संबंधित चार्ट ऑफ अकाउंट इंस्टॉ"
+"ल है. टेस्टिंग के लिए वह कंपनी चुनें जो आपके लिए सही हो:\n"
+"\n"
+"  * (AR) Responsable Inscripto\n"
+"  * (AR) Exento\n"
+"  * (AR) Monotributo\n"
+"\n"
+"* सभी कंपनियों में जर्नल सेल्स को प्री-प्रिंटेड और एक्सपो इनवॉइस के लिए कॉन्फ़िगर किया गया है\n"
+"* \"(AR) Responsable Inscripto\" कंपनी में इनवॉइस और अन्य दस्तावेज़ों के उदाहरण पहले ही सत्यापि"
+"त किए जा चुके हैं\n"
+"* विभिन्न रिस्पॉन्सिबिलिटी टाइप के लिए पार्टनर के उदाहरण:\n"
+"\n"
+"  * ADHOC (IVA Responsable Inscripto)\n"
+"  * Servicios Globales (IVA Sujeto Exento)\n"
+"  * Gritti (Monotributo)\n"
+"  * Montana Sur. IVA Liberado in Zona Franca\n"
+"  * Barcelona food (Cliente del Exterior)\n"
+"  * Odoo (Proveedor del Exterior)\n"
+"\n"
+"हाइलाइट:\n"
+"\n"
+"* चार्ट ऑफ अकाउंट अपने आप इंस्टॉल नहीं होगा. प्रत्येक CoA टेम्प्लेट कंपनी की AFIP रिस्पॉन्सिबिलिटी पर निर्भर "
+"करता है, आपको अपनी ज़रूरतों के हिसाब से CoA इंस्टॉल करना होगा.\n"
+"* CoA इंस्टॉल करते समय कोई सेल्स जर्नल नहीं बनाया जाएगा. आपको अपने जर्नल मैन्युअल रूप से कॉन्फ़िगर करने "
+"होंगे.\n"
+"* दस्तावेज़ जारी करने वाले और प्राप्त करने वाले की वित्तीय जिम्मेदारी और संबंधित जर्नल के आधार पर, इनवॉइस "
+"बनाते समय दस्तावेज़ का प्रकार अपने आप चुना जाएगा.\n"
+"* CBU अकाउंट प्रकार जोड़ दिया गया है और साथ ही CBU सत्यापन भी जोड़ दिया गया है\n"
+"\n"
+"\n"
+"टेक्निकल\n"
+"---------\n"
+"\n"
+"यह मॉड्यूल वे मॉडल और फ़ील्ड जोड़ता है जिनका इस्तेमाल इलेक्ट्रॉनिक इनवॉइस मॉड्यूल के लिए किया जाएगा. इसकी मुख्य "
+"विशेषताओं का सारांश यहां दिया गया है:\n"
+"\n"
+"मास्टर डेटा:\n"
+"\n"
+"* चार्ट ऑफ अकाउंट: प्रत्येक AFIP रिस्पॉन्सिबिलिटी के लिए एक, जो एक कानूनी संस्था से संबंधित है:\n"
+"\n"
+"  * Responsable Inscripto (RI)\n"
+"  * Exento (EX)\n"
+"  * Monotributo (Mono)\n"
+"\n"
+"* अर्जेंटीना के टैक्स और अकाउंट टैक्स ग्रुप्स (मौजूदा एलिकोट्स के साथ वैट टैक्स और अन्य प्रकार)\n"
+"* AFIP रिस्पॉन्सिबिलिटी टाइप\n"
+"* फिस्कल पोजीशन (टैक्स मैप करने के लिए)\n"
+"* अर्जेंटीना में कानूनी दस्तावेज़ों के प्रकार\n"
+"* अर्जेंटीना में मान्य पहचान के प्रकार.\n"
+"* कानूनी संस्थाओं, प्राकृतिक व्यक्तियों और अन्य के लिए देश के AFIP कोड और देश के वैट कोड\n"
+"* करेंसी AFIP कोड\n"
+"* मापन इकाइयों के AFIP कोड\n"
+"* पार्टनर: कंज्यूमर फाइनल और AFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -4858,6 +5146,18 @@ msgid ""
 "    * FBM: Delivery notifications are sent to Amazon for each confirmed "
 "picking (partial delivery friendly).\n"
 msgstr ""
+"\n"
+"अपने Amazon ऑर्डर्स को Odoo में इम्पोर्ट करें और डिलीवरी सिंक करें\n"
+"============================================================\n"
+"\n"
+"मुख्य विशेषताएं\n"
+"------------\n"
+"* कई अकाउंट्स और मार्केटप्लेस से ऑर्डर इम्पोर्ट करें.\n"
+"* ऑर्डर्स को उनके इंटरनल रेफरेंस (Amazon में SKU) के आधार पर Odoo प्रोडक्ट्स से मैच किया जाता है.\n"
+"* Odoo में कन्फर्म की गई डिलीवरी Amazon में सिंक हो जाती है.\n"
+"* Fulfilment by Amazon (FBA) और Fulfilment by Merchant (FBM) दोनों के लिए सपोर्ट:\n"
+"    * FBA: स्टॉक लोकेशन और स्टॉक मूव्स के ज़रिए Amazon फुलफिलमेंट सेंटर्स में अपने स्टॉक को ट्रैक करें.\n"
+"    * FBM: हर कन्फर्म पिकिंग के लिए Amazon को डिलीवरी नोटिफिकेशन भेजे जाते हैं (आंशिक डिलीवरी भी संभव).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_shopee
@@ -4994,6 +5294,19 @@ msgid ""
 "Sheet, now only Vertical format has been permitted Which is Supported By "
 "Odoo.\n"
 msgstr ""
+"\n"
+"भारतीय अकाउंटिंग: खातों की सूची.\n"
+"====================================\n"
+"\n"
+"भारतीय अकाउंटिंग चार्ट और लोकलाइज़ेशन.\n"
+"\n"
+"Odoo भारतीय अकाउंटिंग के मैनेजमेंट के लिए चार्ट ऑफ़ अकाउंट्स के दो फ़ॉर्मैट प्रदान करता है यानी भारतीय चार्ट ऑफ़ "
+"अकाउंट्स - स्टैंडर्ड और भारतीय चार्ट ऑफ़ अकाउंट्स - शेड्यूल VI.\n"
+"\n"
+"नोट: MCA द्वारा शेड्यूल VI संशोधित किया गया है और यह 31 मार्च, 2011 के बाद की सभी बैलेंस शीट पर लागू है"
+"\n"
+"स प्रारूप ने पुराने विकल्पों को हटा दिया है, अब केवल वर्टिकल प्रारूप की अनुमति है\n"
+"जिसे Odoo सपोर्ट करता है.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_ewaybill_stock
@@ -5087,6 +5400,14 @@ msgid ""
 "This module also offers you an easy method of registering payments, without "
 "having to encode complete abstracts of account.\n"
 msgstr ""
+"\n"
+"इनवॉइसिंग और पेमेंट\n"
+"====================\n"
+"Odoo का खास और इस्तेमाल में आसान इनवॉइसिंग सिस्टम आपको बिना अकाउंटेंट बने अपनी अकाउंटिंग मैनेज करने की सुविधा "
+"देता है. यह वेंडरों और ग्राहकों के साथ फॉलो-अप करने का आसान तरीका देता है.\n"
+"\n"
+"अगर आप बाहरी अकाउंटेंट से हिसाब-किताब रखवाते हैं और भुगतानों पर नज़र रखना चाहते हैं, तो इस आसान अकाउंटिंग का "
+"इस्तेमाल करें. यह मॉड्यूल खातों का पूरा विवरण दर्ज किए बिना भुगतान रजिस्टर करने का आसान तरीका देता है.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_accountant
@@ -5992,6 +6313,52 @@ msgid ""
 "If required, you can manually adjust the descriptions via the CODA "
 "configuration menu.\n"
 msgstr ""
+"\n"
+"CODA बैंक स्टेटमेंट इंपोर्ट करने के लिए मॉड्यूल.\n"
+"======================================\n"
+"\n"
+"बेल्जियम के बैंक खातों से V2 फ़ॉर्मैट वाली CODA फ्लैट फाइलें सपोर्ट करता है.\n"
+"----------------------------------------------------------------------\n"
+"    * CODA v1 सपोर्ट.\n"
+"    * CODA v2.2 सपोर्ट.\n"
+"    * फॉरेन करेंसी सपोर्ट.\n"
+"    * सभी डेटा रिकॉर्ड टाइप (0, 1, 2, 3, 4, 8, 9) के लिए सपोर्ट.\n"
+"    * सभी ट्रांजेक्शन कोड और स्ट्रक्चर्ड फॉर्मेट कम्यूनिकेशन की पार्सिंग \n"
+"      और लॉगिंग.\n"
+"    * CODA कॉन्फ़िगरेशन पैरामीटर्स के माध्यम से ऑटोमैटिक फाइनेंशियल जर्नल असाइनमेंट.\n"
+"    * प्रति बैंक खाता संख्या मल्टीपल जर्नल्स के लिए सपोर्ट.\n"
+"    * एक ही CODA फ़ाइल में अलग-अलग बैंक खातों के मल्टीपल स्टेटमेंट्स के लिए \n"
+"      सपोर्ट.\n"
+"    * 'सिर्फ़ पार्सिंग' (parsing only) वाले CODA बैंक खातों के लिए सपोर्ट\n"
+"      (जिन्हें CODA बैंक खाता कॉन्फ़िगरेशन रिकॉर्ड में type='info' के रूप में परिभाषित किया गया है).\n"
+"    * मल्टी-लैंग्वेज CODA पार्सिंग. EN, NL, FR के लिए पार्सिंग कॉन्फ़िगरेशन,\n"
+"      डेटा उपलब्ध है.\n"
+"\n"
+"मशीन-से पढ़ने जा सकने वाली CODA फ़ाइलों को पार्स करके 'CODA बैंक स्टेटमेंट्स'\n"
+"में मानव-पठनीय फॉर्मेट में स्टोर किया जाता है. साथ ही, बैंक स्टेटमेंट भी जनरेट किए जाते हैं जिनमें\n"
+"CODA जानकारी का एक हिस्सा होता है (केवल वे ट्रांजेक्शन लाइनें जो फाइनेंशियल\n"
+"अकाउंटिंग रिकॉर्ड बनाने के लिए ज़रूरी हैं). CODA बैंक स्टेटमेंट एक 'रीड-ओनली' ऑब्जेक्ट है,\n"
+"इसलिए यह मूल CODA फ़ाइल का एक विश्वसनीय रूप बना रहता है,\n"
+"जबकि बैंक स्टेटमेंट को अकाउंटिंग बिजनेस प्रोसेस के अनुसार\n"
+"बदला जाएगा.\n"
+"\n"
+"'जानकारी' टाइप के रूप में कॉन्फ़िगर किए गए CODA बैंक खाते सिर्फ़ CODA बैंक स्टेटमेंट जनरेट करेंगे.\n"
+"\n"
+"CODA प्रोसेसिंग में एक ऑब्जेक्ट को हटाने पर उससे जुड़े अन्य ऑब्जेक्ट\n"
+"भी हट जाएंगे. मल्टीपल बैंक स्टेटमेंट्स वाली CODA फ़ाइल को हटाने पर\n"
+"उससे जुड़े सभी स्टेटमेंट्स भी हट जाएंगे.\n"
+"\n"
+"जनरेट किए गए बैंक स्टेटमेंट्स को मैन्युअल रूप से एडजस्ट करने के बजाय,\n"
+"आप ऑटोमैटिक रिकॉन्सिलीएशन के लिए गायब जानकारी को OpenERP डेटाबेस में\n"
+"अपडेट करने के बाद CODA को फिर से इंपोर्ट कर सकते हैं.\n"
+"\n"
+"CODA V1 सपोर्ट के बारे में जानकारी:\n"
+"~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+"कुछ मामलों में, CODA V2 में ट्रांजेक्शन कोड, ट्रांजेक्शन कैटेगरी या स्ट्रक्चर्ड कम्यूनिकेशन\n"
+"कोड को नया या ज़्यादा साफ़ विवरण दिया गया है. \n"
+"CODA कॉन्फ़िगरेशन टेबल द्वारा दिया गया विवरण CODA V2.2 स्पेसिफिकेशन\n"
+"पर आधारित है.\n"
+"अगर ज़रूरी हो, तो आप CODA कॉन्फ़िगरेशन मेन्यू के माध्यम से विवरणों को मैन्युअल रूप से एडजस्ट कर सकते हैं.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_csv
@@ -6152,6 +6519,12 @@ msgid ""
 "level including customer and supplier transactions.\n"
 "Necessary master data is also included.\n"
 msgstr ""
+"\n"
+"नॉर्वेजियन SAF-T (Norwegian SAF-T) विभिन्न प्रकार के अकाउंटिंग ट्रांजेक्शन डेटा को XML फॉर्मेट में एक्सपोर्"
+"ट करने का एक स्टैंडर्ड फाइल फॉर्मेट है.\n"
+"SAF-T Financial का पहला वर्जन जनरल लेजर स्तर तक सीमित है, जिसमें ग्राहक और सप्लायर के ट्रांज़ैक्शन "
+"शामिल हैं.\n"
+"ज़रूरी मास्टर डेटा भी इसमें शामिल है.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_account_accountant
@@ -6293,6 +6666,42 @@ msgid ""
 "\n"
 "  * Those operations can be done with multiple checks at once\n"
 msgstr ""
+"\n"
+"खुद के चेक का मैनेजमेंट\n"
+"---------------------\n"
+"\n"
+"'चेक प्रिंटिंग बेस' मॉड्यूल का विस्तार करें, ताकि अपने चेक को ज़्यादा सुविधाओं के साथ मैनेज करें::\n"
+"\n"
+"* अपने ऐसे चेक इस्तेमाल करें जो प्रिंटेड नहीं हैं, बल्कि उपयोगकर्ता द्वारा मैन्युअल रूप से भरे गए हैं\n"
+"* डेफर्ड या इलेक्ट्रॉनिक चेक का इस्तेमाल करें.\n"
+"  * प्रिंटिंग बंद है\n"
+"  * चेक नंबर उपयोगकर्ताओं के ज़रिए मैन्युअल रूप से सेट किया गया है\n"
+"* पोस्ट-डेटेड चेक (आस्थगित भुगतान) के लिए एक वैकल्पिक \"चेक कैश-इन डेट\" जोड़ें\n"
+"* चेक ट्रैक करने के लिए मेन्यू का इस्तेमाल करें\n"
+"\n"
+"थर्ड-पार्टी चेक मैनेजमेंट\n"
+"-----------------------------\n"
+"\n"
+"\"थर्ड-पार्टी चेक मैनेजमेंट\" की नई सुविधा जोड़ें.\n"
+"\n"
+"इसमें पेमेंट के 2 मुख्य तरीके शामिल हैं::\n"
+"\n"
+"* नए थर्ड-पार्टी चेक:\n"
+"\n"
+"  * इस भुगतान विधि के भुगतान उस चेक को दर्शाते हैं जो आपको ग्राहक से भुगतान मिलने पर "
+"(चालान या मैन्युअल भुगतान से) मिलता है\n"
+"\n"
+"* मौजूदा थर्ड-पार्टी चेक.\n"
+"\n"
+"  * इस भुगतान विधि के भुगतान, चेक की हलचल को ट्रैक करने के लिए हैं, उदाहरण के लिए:\n"
+"\n"
+"    * वेंडर को भुगतान करने के लिए चेक का इस्तेमाल करें\n"
+"    * बैंक में चेक जमा करें\n"
+"    * बैंक से चेक वापस लें (अस्वीकृति)\n"
+"    * वेंडर से चेक वापस लें (अस्वीकृति या वापसी)\n"
+"    * चेक को एक थर्ड पार्टी चेक जर्नल से दूसरे में ट्रांसफर करें (एक दुकान से दूसरी दुकान में)\n"
+"\n"
+"  * एक साथ कई चेक पर ये कार्रवाइयां की जा सकती हैं\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_plm
@@ -7920,6 +8329,29 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
+"\n"
+"यह मॉड्यूल Odoo सॉफ्टवेयर में फ्रांस के नियमों के अनुसार अकाउंटिंग चार्ट को सेट करने और संभालने में मदद करता "
+"है.\n"
+"========================================================================\n"
+"\n"
+"यह मॉड्यूल फ्रांस की मुख्य कंपनियों पर लागू होता है.\n"
+"यह DOM-TOMs (ग्वाडेलोप, मार्टीनिक, गुयाना, रीयूनियन, मेयट) की कंपनियों पर लागू नहीं होता.\n"
+"\n"
+"यह लोकलाइजेशन मॉड्यूल खरीदारी के लिए 'टैक्स सहित' वैट टैक्स बनाता है\n"
+"(खासकर 'hr_expense' मॉड्यूल के साथ इसकी जरूरत होती है). ध्यान दें कि \n"
+"ये 'टैक्स सहित' वैट टैक्स इस मॉड्यूल की फ़िस्कल पोज़िशन के ज़रिए मैनेज नहीं किए जाते हैं.\n"
+"क्योंकि फ़िस्कल पोज़िशन में 'टैक्स बिना' और 'टैक्स सहित' दोनों स्थितियों को एक साथ \n"
+"मैनेज करना मुश्किल है.\n"
+"\n"
+"यह लोकलाइजेशन मॉड्यूल फ्रांस की मुख्य कंपनी के ज़रिए DOMs आधारित कंपनी को \n"
+"सेवाएं बेचने की स्थिति को ठीक से मैनेज नहीं करता है. \n"
+"हम इसे फ़िस्कल पोज़िशन में मैनेज कर सकते हैं, लेकिन इसके लिए 'प्रॉडक्ट' वैट टैक्स और \n"
+"'सर्विस' वैट टैक्स के बीच अंतर करना आवश्यक होगा. हमारा मानना है कि\n"
+"in l10n_fr_account में इसे डिफॉल्ट रूप से शामिल करना बहुत 'भारी' होगा. DOM-आधारित कंपनियों को सेवाएं "
+"बेचने वाली कंपनियां अपने टैक्स और\n"
+"फ़िस्कल पोज़िशन का कॉन्फ़िगरेशन मैनुअल तरीके से अपडेट करें.\n"
+"\n"
+"**क्रेडिट:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mn
@@ -8002,6 +8434,16 @@ msgid ""
 "Finally, the module comes with an option to display an attribute summary "
 "table in product web pages (available in Customize menu).\n"
 msgstr ""
+"\n"
+"यह मॉड्यूल आपकी ई-कॉमर्स शॉप में तुलना करने का टूल जोड़ता है, ताकि आपके खरीदार प्रॉडक्ट की विशेषताओं के आधार "
+"पर उनकी आसानी से तुलना कर सकें. यह उनकी खरीदारी के फैसले को काफी तेज़ कर देगा.\n"
+"\n"
+"प्रॉडक्ट एट्रिब्यूट्स कॉन्फ़िगर करने के लिए, वेबसाइट सेटिंग्स में एट्रिब्यूट और वैरिएंट ऐक्टिवेट करें. इससे प्रॉडक्"
+"ट फ़ॉर्म में एक खास सेक्शन जुड़ जाएगा. कॉन्फ़िगरेशन में, यह मॉड्यूल खरीदार की कंपैरिजन टेबल को व्यवस्थित करने के"
+" लिए एट्रिब्यूट्स में एक कैटेगरी फ़ील्ड जोड़ता है.\n"
+"\n"
+"आखिर में, यह मॉड्यूल प्रोडक्ट वेब पेजों पर एक एट्रिब्यूट समरी टेबल दिखाने का विकल्प देता है "
+"(कस्टमाइज़ मेन्यू में उपलब्ध है).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_dashboard
@@ -8666,6 +9108,15 @@ msgid ""
 "Schemes Limited (BPSL). For more information about the BACS standards: "
 "https://www.bacs.co.uk/\n"
 msgstr ""
+"\n"
+"यह मॉड्यूल BACS 'डायरेक्ट डेबिट' और 'डायरेक्ट क्रेडिट' मानकों के अनुसार पेमेंट ऑर्डर जेनरेट करने की सुविधा "
+"देता है. इसके द्वारा बनाई गई 'प्लेन टेक्स्ट' फ़ाइलों को प्रोसेसिंग के लिए आपके बैंक में अपलोड किया जा सकता है.\n"
+"\n"
+"डायरेक्ट डेबिट व्यवसायों को ग्राहकों के बैंक खातों से सीधे भुगतान लेने की अनुमति देता है, जबकि डायरेक्ट क्रेडिट "
+"कार्यक्षमता व्यवसायों को व्यक्तियों या अन्य व्यवसायों के बैंक खातों में सीधे भुगतान करने की सुविधा देता है.\n"
+"\n"
+"यह मॉड्यूल Bacs पेमेंट स्कीम्स लिमिटेड के दिशा निर्देशों का पालन करता है. BACS मानकों के बारे में ज़्यादा जानकारी के "
+"लिए, इस वेबसाइट पर जाएं: https://www.bacs.co.uk/\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro_saft
@@ -9093,6 +9544,31 @@ msgid ""
 "* Contingency documents not implemented\n"
 "* Future implementation will have auto synchronization of Vendor bills.\n"
 msgstr ""
+"\n"
+"यह मॉड्यूल Odoo को इंटीग्रेट करता है ताकि आप DGI को इलेक्ट्रॉनिक दस्तावेज़ (CFE) जारी करें. उदाहरण: ई-टि"
+"कट, ई-इनवॉइस और संबंधित डेबिट और क्रेडिट नोट.\n"
+"\n"
+"इलेक्ट्रॉनिक दस्तावेज़ (CFE) जारी होने के बाद, Odoo एक तय कार्रवाई चलाएगा जो CFE की स्थिति "
+"(प्रतिक्रिया की प्रतीक्षा, स्वीकृत या अस्वीकृत) जांचने/अपडेट करने के लिए DGI से जुड़ेगा.\n"
+"\n"
+"ध्यान दें: हर कनेक्शन 'Uruware' नामक थर्ड-पार्टी सॉफ़्टवेयर का उपयोग करता है\n"
+"\n"
+"कॉन्फ़िगरेशन\n"
+"-------------\n"
+"\n"
+"1. आपके पास उरुग्वेयन कंपनी हो (उरुग्वेयन COA इंस्टॉल किया हुआ)\n"
+"2. सेटिंग्स/अकाउंटिंग/उरुग्वे लोकलाइज़ेशन में जाकर UCFE (DGI से जुड़ने के लिए Uruware का प्लेटफॉर्म) के फ़ील्"
+"ड कॉन्फ़िगर करें.\n"
+"3. सेटिंग्स/कंपनियों में जाकर टैक्स आईडी नंबर, DGI मेन हाउस या ब्रांच कोड और पता संबंधित फ़ील्ड सेट करें.\n"
+"4. इनवॉइस पर जाएं और उन्हें मान्य करें. फिर सरकार को भेजने और CFE जनरेट करने के लिए 'भेजें और प्रिंट "
+"करें' इस्तेमाल करें. आप \"CFE स्थिति\" में स्टेटस देखें. यह अपने आप 'स्वीकृत'/'अस्वीकृत' में अपडेट हो जाएगा"
+". आपको CFE से संबंधित कानूनी PDF और XML फ़ाइलें भी अटैचमेंट में मिलेंगी..\n"
+"\n"
+"ज्ञात समस्याएं / रोडमैप\n"
+"======================\n"
+"\n"
+"* आकस्मिक दस्तावेज़ लागू नहीं किए गए\n"
+"* भविष्य में वेंडर बिलों का ऑटो सिंक्रोनाइज़ेशन होगा.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_swiggy
@@ -9267,6 +9743,13 @@ msgid ""
 "from sales order. It adds sales name and sales Reference on production "
 "order.\n"
 msgstr ""
+"\n"
+"यह मॉड्यूल यूजर को एक ही समय में एमआरपी और सेल्स मॉड्यूल इंस्टॉल करने की सुविधा देता है.\n"
+"===================================================================================="
+"\n"
+"\n"
+"इसका मुख्य इस्तेमाल सेल्स ऑर्डर से बनने वाले प्रॉडक्शन ऑर्डर को ट्रैक करने के लिए किया जाता है. \n"
+"यह प्रॉडक्शन ऑर्डर पर सेल्स का नाम और सेल्स रेफरेंस जोड़ देता है.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_iot
@@ -10919,6 +11402,80 @@ msgid ""
 "\n"
 ".. figure:: static/description/invoice_custom_xml.png\n"
 msgstr ""
+"==========================================\n"
+"स्टॉक/लैंडिंग के लिए Odoo मेक्सिको लोकलाइज़ेशन\n"
+"==========================================\n"
+"\n"
+"यह मॉड्यूल मेक्सिकन लोकलाइज़ेशन को बेहतर बनाता है.\n"
+"इलेक्ट्रॉनिक इनवॉइस जनरेट करते समय यह लैंडेड कॉस्ट से जुड़े कस्टम्स नंबर\n"
+"की सुविधा देता है.\n"
+"\n"
+"इस्तेमाल\n"
+"=====\n"
+"\n"
+"इस मॉड्यूल का इस्तेमाल करने के लिए:\n"
+"\n"
+"* विदेश से मंगवाए गए प्रॉडक्ट का नया परचेज़ ऑर्डर जनरेट करें. लैंडेड कॉस्ट की सुविधा\n"
+"  केवल 'Automated' वैल्यूएशन और 'FIFO' कॉस्टिंग मेथड वाले प्रॉडक्ट के लिए है.\n"
+"  'यह सेटिंग आप प्रॉडक्ट की कैटेगरी वाले सेक्शन में \n"
+"  जाकर बदल सकते हैं.\n"
+"\n"
+".. figure:: static/description/purchase_order_new.png\n"
+"\n"
+"* परचेज़ ऑर्डर का प्रॉडक्ट पाएं\n"
+"\n"
+".. figure:: static/description/picking_done_purchase.png\n"
+"\n"
+"* इन्वेंट्री -> इन्वेंट्री कंट्रोल -> लैंडेड कॉस्ट पर जाएं\n"
+"\n"
+"* परचेज़ ऑर्डर की पिकिंग और कस्टम सूचना संख्या दर्ज करते हुए\n"
+"   एक नई लैंडेड कॉस्ट बनाएं. लैंडेड कॉस्ट सिर्फ़\n"
+"  उन प्रॉडक्ट के लिए संभव है जो 'रीयल टाइम वैल्यूएशन' और 'रीयल प्राइस' कॉस्टिंग मेथड \n"
+"  के साथ कॉन्फ़िगर किए गए हैं. कॉस्टिंग मेथड को प्रॉडक्ट कैटेगरी में \n"
+"  कॉन्फ़िगर करें\n"
+"\n"
+".. figure:: static/description/landed_cost_picking.png\n"
+"\n"
+"* भाड़ा, इंश्योरेंस या सीमा शुल्क जैसे अपने अलग-अलग लैंडेड कॉस्ट \n"
+"  दिखाने के लिए खास प्रॉडक्ट बनाकर शुरुआत करें.\n"
+"\n"
+"  इन्वेंट्री -> कॉन्फ़िगरेशन -> लैंडेड कॉस्ट टाइप पर जाएं. लैंडेड कॉस्ट\n"
+"  उन प्रॉडक्ट के लिए संभव है जो 'रीयल टाइम वैल्यूएशन' और 'रीयल प्राइस' कॉस्टिंग मेथड\n"
+"  के साथ कॉन्फ़िगर किए गए हैं. कॉस्टिंग मेथड को प्रॉडक्ट कैटेगरी में\n"
+"  कॉन्फ़िगर करें.\n"
+"\n"
+".. figure:: static/description/product_landed_cost.png\n"
+"\n"
+"* लैंडेड कॉस्ट पिकिंग लाइन्स के बीच कैसे बांटी जाएगी, यह देखने के लिए 'गणना करें' बटन\n"
+"   पर क्लिक करें.\n"
+"\n"
+".. figure:: static/description/compute_landed_cost.png\n"
+"\n"
+"* लैंडेड कॉस्ट के एट्रिब्यूशन की पुष्टि करने के लिए 'पुष्टि करें' बटन पर क्लिक करें.\n"
+"\n"
+".. figure:: static/description/validate_landed_cost.png\n"
+"\n"
+"* विदेश से खरीदे गए प्रॉडक्ट के लिए सेल्स ऑर्डर बनाएं\n"
+"\n"
+".. figure:: static/description/sale_order_new.png\n"
+"\n"
+"* सेल्स ऑर्डर से संबंधित प्रॉडक्ट की डिलीवरी करें\n"
+"\n"
+".. figure:: static/description/picking_done_sale.png\n"
+"\n"
+"* सेल्स ऑर्डर से जुड़ा एक नया इनवॉइस बनाएं और उसकी पुष्टि करें\n"
+"\n"
+".. figure:: static/description/validate_invoice_customs.png\n"
+"\n"
+"* कस्टम सूचना हर प्रॉडक्ट से जुड़े इनवॉइस की लाइनों में\n"
+"  पाई जाती है.\n"
+"\n"
+".. figure:: static/description/invoice_custom_pedimento.png\n"
+"\n"
+"* प्रॉडक्ट से जुड़े इलेक्ट्रॉनिक इनवॉइस को चेक करें\n"
+"  जहां कस्टम सूचना का नोड दिखाई देता है.\n"
+"\n"
+".. figure:: static/description/invoice_custom_xml.png\n"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_A
@@ -11555,7 +12112,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__name
 #: model:ir.model.fields,field_description:base.field_ir_cron__name
 msgid "Action Name"
-msgstr ""
+msgstr "ऐक्शन का नाम"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__target
@@ -11600,7 +12157,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr ""
+msgstr "ऐक्शन विंडो व्यू"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_actions
@@ -13620,7 +14177,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "An email is required for find_or_create to work"
-msgstr ""
+msgstr "find_or_create के काम करने के लिए एक ईमेल ज़रूरत है"
 
 #. module: base
 #. odoo-python
@@ -14032,7 +14589,7 @@ msgstr ""
 #: model_terms:res.partner,website_description:base.res_partner_12
 #: model_terms:res.partner,website_description:base.res_partner_5
 msgid "As a team, we are happy to contribute to this event."
-msgstr ""
+msgstr "एक टीम के तौर पर, हमें इस इवेंट में योगदान देकर खुशी हो रही है।"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__asia/aden
@@ -15211,7 +15768,7 @@ msgstr ""
 #. module: base
 #: model:res.currency,currency_subunit_label:base.MDL
 msgid "Ban"
-msgstr ""
+msgstr "बैन करें"
 
 #. module: base
 #: model:res.country,name:base.bd
@@ -15802,7 +16359,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bookstore
 msgid "Bookstore"
-msgstr ""
+msgstr "बुकस्टोर"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_boolean_value
@@ -17215,7 +17772,7 @@ msgstr ""
 #: model_terms:res.partner,website_description:base.res_partner_12
 #: model_terms:res.partner,website_description:base.res_partner_5
 msgid "Come see us live, we hope to meet you!"
-msgstr ""
+msgstr "हमें लाइव देखें, हम आपसे मिलने की उम्मीद करते हैं!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__comm10e
@@ -17379,7 +17936,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__company_type
 #: model:ir.model.fields,field_description:base.field_res_users__company_type
 msgid "Company Type"
-msgstr ""
+msgstr "कंपनी टाइप"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__report_header
@@ -18306,7 +18863,7 @@ msgstr "इस तारीख को बनाया गया"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "Creation"
-msgstr ""
+msgstr "क्रिएशन"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__create_date
@@ -18345,7 +18902,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_cron_progress__cron_id
 #: model:ir.model.fields,field_description:base.field_ir_cron_trigger__cron_id
 msgid "Cron"
-msgstr ""
+msgstr "क्रॉन"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_trigger_view_form
@@ -19228,7 +19785,7 @@ msgstr ""
 #: model:ir.model,name:base.model_res_device
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Devices"
-msgstr ""
+msgstr "डिवाइस"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest_enterprise
@@ -21705,7 +22262,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__field_description
 msgid "Field Label"
-msgstr ""
+msgstr "फ़ील्ड लेबल"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_exports_line__name
@@ -21791,7 +22348,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_path
 #: model:ir.model.fields,field_description:base.field_ir_cron__update_path
 msgid "Field to Update Path"
-msgstr ""
+msgstr "पाथ अपडेट करने के लिए फ़ील्ड"
 
 #. module: base
 #. odoo-python
@@ -22163,6 +22720,11 @@ msgid ""
 "For Static values, the value will be used directly without evaluation, "
 "e.g.`42` or `My custom name` or the selected record."
 msgstr ""
+"Python एक्सप्रेशन के लिए, इस फ़ील्ड में वही वैल्यू इस्तेमाल करें जो सर्वर एक्शन के कोड फ़ील्ड में होती हैं. जैसे"
+" env.user.name से यूज़र का नाम या record.id से रिकॉर्ड की आईडी सेट करें.\n"
+"\n"
+"स्टैटिक वैल्यू के लिए, वैल्यू को बिना किसी बदलाव के सीधे इस्तेमाल किया जाएगा, जैसे 42 या My custom name या "
+"चुना गया रिकॉर्ड।"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -22235,13 +22797,13 @@ msgstr "फ़ॉर्मैट"
 #: model:ir.model.fields,help:base.field_res_partner__email_formatted
 #: model:ir.model.fields,help:base.field_res_users__email_formatted
 msgid "Format email address \"Name <email@domain>\""
-msgstr ""
+msgstr "ईमेल पता \"Name <email@domain>\" फ़ॉर्मैट करें"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__email_formatted
 #: model:ir.model.fields,field_description:base.field_res_users__email_formatted
 msgid "Formatted Email"
-msgstr ""
+msgstr "फ़ॉर्मैट किया गया ईमेल"
 
 #. module: base
 #. odoo-python
@@ -22778,7 +23340,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Global"
-msgstr ""
+msgstr "ग्लोबल"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -23199,7 +23761,7 @@ msgstr "हैंडीमैन सर्विस"
 #: model_terms:res.partner,website_description:base.res_partner_12
 #: model_terms:res.partner,website_description:base.res_partner_5
 msgid "Happy to be Sponsor"
-msgstr ""
+msgstr "स्पॉन्सर बनकर खुशी हुई"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
@@ -24847,12 +25409,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__interval_number
 msgid "Interval Number"
-msgstr ""
+msgstr "इंटरवल नंबर"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__interval_type
 msgid "Interval Unit"
-msgstr ""
+msgstr "इंटरवल यूनिट"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_recruitment
@@ -25032,6 +25594,8 @@ msgid ""
 "Invalid server name!\n"
 " %s"
 msgstr ""
+"अमान्य सर्वर का नाम!\n"
+" %s"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_filters_check_sort_json
@@ -26010,7 +26574,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__installed_version
 msgid "Latest Version"
-msgstr ""
+msgstr "सबसे नया वर्शन"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login_date
@@ -26046,7 +26610,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Launch"
-msgstr ""
+msgstr "लॉन्च करें"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
@@ -26072,7 +26636,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_enrich
 msgid "Lead Enrichment"
-msgstr ""
+msgstr "लीड एनरिचमेंट"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_mine
@@ -26097,7 +26661,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Learn More"
-msgstr ""
+msgstr "ज़्यादा जानें"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_hr_holidays
@@ -26261,7 +26825,7 @@ msgstr "लाइऩें"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__link_field_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__link_field_id
 msgid "Link Field"
-msgstr ""
+msgstr "लिंक फ़ील्ड"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_stock
@@ -26475,7 +27039,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__code
 msgid "Locale Code"
-msgstr ""
+msgstr "लोकल कोड"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localization
@@ -26701,7 +27265,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_group
 msgid "Mail Group"
-msgstr ""
+msgstr "मेल ग्रुप"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_mobile
@@ -27001,6 +27565,9 @@ msgid ""
 "assigned to specific groups in order to make them accessible to some users "
 "within the system."
 msgstr ""
+"आपके Odoo सिस्टम मेन्यू में उपलब्ध और दिखाए गए आइटम को मैनेज और कस्टमाइज़ करें. आप हर लाइन की शुरु"
+"आत में बॉक्स पर क्लिक करके और फिर दिखाई दिए बटन के ज़रिए उसे मिटा सकते हैं. सिस्टम के भीतर कुछ "
+"उपयोगकर्ताओं के लिए उन्हें ऐक्सेस करने के लिए, आइटम को खास ग्रुप में असाइन करें।"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides
@@ -27978,7 +28545,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_actions_server__model_id
 #: model:ir.model.fields,help:base.field_ir_cron__model_id
 msgid "Model on which the server action runs."
-msgstr ""
+msgstr "मॉडल जिस पर सर्वर ऐक्शन चलता है।"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__model_id
@@ -28051,7 +28618,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_base_module_uninstall
 msgid "Module Uninstall"
-msgstr ""
+msgstr "मॉड्यूल अनइंस्टॉल करें"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_update
@@ -29334,6 +29901,71 @@ msgid ""
 "manufacturing operations.\n"
 "\n"
 msgstr ""
+"Odoo मैन्युफ़ैक्चरिंग रिसोर्स प्लानिंग\n"
+"------------------------------------\n"
+"\n"
+"बिल ऑफ मटेरियल्स मैनेज करें, मैन्युफ़ैक्चरिंग ऑर्डर्स की योजना बनाएं, वर्क ऑर्डर्स को ट्रैक करें और ये सभी का"
+"म\n"
+"Odoo <a href=\"https://www.odoo.com/app/manufacturing\">Open Source MRP</a> "
+"ऐप्लिकेशन के साथ करें.\n"
+"\n"
+"Odoo के साथ अपने सभी असेंबली या मैन्युफ़ैक्चरिंग ऑपरेशन्स मैनेज करें. \n"
+"मैन्युफ़ैक्चरिंग और वर्क ऑर्डर्स को ऑटोमैटिक शेड्यूल करें. स्मार्ट कानबान\n"
+"और गॉन्ट व्यू के साथ प्लानिंग की समीक्षा करें. संसाधनों और इन्वेंट्री में\n"
+"आ रही दिक्कतों को पता लगाने के लिए एडवांस एनालिटिक्स का इस्तेमाल करें.\n"
+"\n"
+"मैन्युफ़ैक्चरिंग ऑर्डर को आसानी से शेड्यूल करें\n"
+"-----------------------------------------\n"
+"\n"
+"अपने खरीद नियमों, अनुमानित मात्रा और निर्भर मांग (एक पुर्जे की मांग दूसरे पुर्जे की खपत पर आधारित)\n"
+"के आधार पर मैन्युफ़ैक्चरिंग और वर्क ऑर्डर\n"
+"को ऑटोमैटिक शेड्यूल करें.\n"
+"\n"
+"जरूरत के हिसाब से बदलने वाला मास्टर डेटा तय करें\n"
+"---------------------------\n"
+"\n"
+"मल्टी-लेवल बिल ऑफ मटेरियल्स, वैकल्पिक राउटिंग, वर्शन बदलाव,\n"
+"और फैंटम बिल ऑफ मटेरियल्स बनाने का लचीलापन पाएं.\n"
+"आप किट या मैन्युफ़ैक्चरिंग ऑर्डर के लिए BoM (बिल ऑफ मटेरियल्स) का उपयोग कर सकते हैं.\n"
+"\n"
+"हर काम में बदलाव की सुविधा पाएं\n"
+"---------------------------------\n"
+"\n"
+"काम किसी भी स्टेज पर हो, आप अपनी ज़रूरत के हिसाब से बदलाव कर सकते हैं. \n"
+"Odoo का सिस्टम बहुत लचीला है, इसलिए आपको तय नियमों में बंधे रहने की मजबूरी नहीं होगी.\n"
+"\n"
+"वर्क ऑर्डर शेड्यूल करें\n"
+"--------------------\n"
+"\n"
+"अपनी मशीनों और कर्मचारियों की क्षमता देखें और काम में आने वाली रुकावटों को ठीक करें.\n"
+"राउटिंग तय करें और अपने संसाधनों के कार्य समय और क्षमता की योजना बनाएं.\n"
+"काम का रास्ता और समय तय करें ताकि आप जान सकें कि डिलीवरी समय पर देने के लिए \n"
+"आपको किस चीज़ की ज़रूरत है.\n"
+"\n"
+"\n"
+"काम आसान बनाने वाला यूज़र इंटरफेस\n"
+"---------------------------\n"
+"\n"
+"मैन्युफ़ैक्चरिंग और वर्क ऑर्डर को अपनी पसंद के अनुसार व्यवस्थित करें.\n"
+"लिस्ट व्यू से अगले ऑर्डर प्रोसेस करें, कैलेंडर व्यू में कंट्रोल करें.\n"
+"और गॉन्ट व्यू में प्रस्तावित शेड्यूल में बदलाव करें.\n"
+"\n"
+"\n"
+"इन्वेंट्री और मैन्युफ़ैक्चरिंग एनालिटिक्स\n"
+"-----------------------------------\n"
+"\n"
+"ट्रांसफॉर्मेशन प्रक्रिया में मैन्युफ़ैक्चरिंग गतिविधियों की प्रगति के अनुसार,\n"
+"स्टॉक वैल्यू के बदलाव को ट्रैक करें.\n"
+"\n"
+"सभी कामों का आपस में जुड़ा होना\n"
+"--------------------------------\n"
+"\n"
+"सेल्स और परचेज़ ऐप्लिकेशन के साथ पूरी तरह से जुड़े होने का फ़ायदा यह है कि आप अपनी मैन्युफ़ैक्चरिंग \n"
+"रिसोर्स प्लानिंग को सटीक बना सकते हैं. अकाउंटिंग से जुड़े होने की वजह से आपको वास्तविक समय में अकाउंटिंग वैल्यूएशन "
+"और \n"
+"आपके मैन्युफ़ैक्चरिंग ऑपरेशन्स की लागत और रेवेन्यू पर\n"
+"पूरी रिपोर्टिंग मिलती है.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing
@@ -30414,6 +31046,49 @@ msgid ""
 "You can activate a blog for each event allowing you to communicate on "
 "specific events. Visitors can subscribe to news to get informed."
 msgstr ""
+"इवेंट, ट्रेनिंग और वेबिनार व्यवस्थित करें\n"
+"-------------------------------------\n"
+"\n"
+"### शेड्यूल करें, प्रमोट करें, बेचें, व्यवस्थित करें\n"
+"\n"
+"हर इवेंट के लिए अतिरिक्त सुविधाएं पाएं; जैसे मल्टीपल पेज, स्पॉन्सर्स, कई टॉक्स (भाषण), टॉक प्रपोज़ल फॉर्म, "
+"एजेंडा, इवेंट से जुड़ी खबरें, डॉक्यूमेंट्स और इवेंट के खास मेन्यू.\n"
+"\n"
+"अपने ट्रैक्स व्यवस्थित करें\n"
+"--------------------\n"
+"\n"
+"### बातचीत प्रस्ताव से लेकर प्रकाशन तक\n"
+"\n"
+"विज़िटर को बातचीत और वक्ताओं को सबमिट करने की अनुमति देने के लिए अपने इवेंट पर एक बातचीत प्रस्ताव फ़ॉर्म जोड़ें"
+". हर बातचीत की सत्यापन प्रक्रिया व्यवस्थित करें, और आसानी से शेड्यूल करें.\n"
+"\n"
+"Odoo का फ्रंटएंड और बैकएंड इंटीग्रेशन इसे बहुत आसान बनाता है. स्पीकर्स की सुंदर बायोग्राफी और टॉक्स का वि"
+"वरण आसानी से डिज़ाइन करें.\n"
+"\n"
+"एजेंडा और भाषणों की सूची\n"
+"------------------------\n"
+"\n"
+"### बेहतरीन यूज़र इंटरफेस\n"
+"\n"
+"अपनी वेबसाइट पर हर इवेंट के लिए ऑटोमैटिक रूप से पब्लिश होने वाला सुंदर एजेंडा पाएं. अपने विजिटर्स को आसानी से "
+"टॉक्स खोजने, ब्राउज़ करने और टैग, लोकेशन या स्पीकर्स के आधार पर फ़िल्टर करने की सुविधा दें.\n"
+"\n"
+"स्पॉन्सर्स मैनेज करें\n"
+"---------------\n"
+"\n"
+"### स्पॉन्सरशिप बेचें और प्रमोट करें\n"
+"\n"
+"इवेंट्स में स्पॉन्सर्स जोड़ें और उन्हें लेवल (जैसे ब्रोंज, सिल्वर, गोल्ड) के हिसाब से हर पेज के नीचे पब्लिश करें.\n"
+"\n"
+"पूरे सेल्स साइकिल के लिए Odoo ई-कॉमर्स के जरिए ऑनलाइन स्पॉन्सरशिप पैकेज बेचें.\n"
+"\n"
+"बेहतर तरीके से कम्यूनिकेट करें\n"
+"-----------------------\n"
+"\n"
+"### इवेंट्स के लिए ब्लॉग ऐक्टिवेट करें\n"
+"\n"
+"आप खास इवेंट्स पर जानकारी देने के लिए ब्लॉग ऐक्टिवेट कर सकते हैं. विजिटर्स जानकारी पाने के लिए न्यूज़ सब्सक्रा"
+"इब कर सकते हैं।"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event
@@ -30556,6 +31231,139 @@ msgid ""
 "\n"
 "Create a great \"About us\" page by presenting your team efficiently.\n"
 msgstr ""
+"इवेंट्स, ट्रेनिंग और वेबिनार आयोजित करें\n"
+"-------------------------------------\n"
+"\n"
+"### शेड्यूल करें, प्रमोट करें, बेचें, व्यवस्थित करें\n"
+"\n"
+"ऑनलाइन इवेंट आयोजित करें, उनका प्रमोशन करें और उन्हें बेचें. चाहे आप मीटिंग्स, कॉन्फ्रेंस, ट्रेनिंग या वेबिनार आयोजि"
+"त करें, Odoo आपको अपने इवेंट्स मैनेज करने के लिए ज़रूरी सभी फीचर्स देता है.\n"
+"\n"
+"शानदार इवेंट पेज बनाएं\n"
+"--------------------------\n"
+"\n"
+"### पुराने WYSIWYG एडिटर्स से छुटकारा पाएं\n"
+"\n"
+"अच्छी तरह से डिज़ाइन किए गए 'बिल्डिंग ब्लॉक्स' को ड्रैग और ड्रॉप करके सुंदर इवेंट पेज बनाएं. इवेंट की तस्वीरें"
+", स्पीकर्स, शेड्यूल वगैरह पब्लिश करें.\n"
+"\n"
+"Odoo का यूनीक 'एडिट इनलाइन' तरीका वेबसाइट बनाना बेहद आसान बनाता है. \"किसी स्पीकर का परिचय देना है? टि"
+"कट की कीमत बदलनी है? बैनर अपडेट करना है? प्रायोजकों (स्पॉन्सर्स) को प्रमोट करना है?\" बस क्लिक करें और "
+"बदलें.\n"
+"\n"
+"ऑनलाइन टिकट बेचें\n"
+"-------------------\n"
+"\n"
+"### रजिस्ट्रेशन और पेमेंट प्रक्रिया को ऑटोमेट करें\n"
+"\n"
+"मल्टी-टिकटिंग सुविधा से इवेंट टिकट बेचें. इवेंट फ्री रखें या पैसे लें. लोग अपनी सुविधानुसार क्रेडिट कार्ड या बिल "
+"(इनवॉइस) के ज़रिए पेमेंट कर सकते हैं.\n"
+"\n"
+"बुकिंग पर डिस्काउंट, मेंबर्स के लिए खास ऑफर या एक साथ कई टिकट लेने पर एक्स्ट्रा सर्विस देकर अपनी सेल "
+"बढ़ाएं.\n"
+"\n"
+"Google Analytics से इंटिग्रेशन का आसान तरीका\n"
+"------------------------------------\n"
+"\n"
+"### Google Analytics के साथ अपनी सेल्स फनल को कंट्रोल करें\n"
+"\n"
+"अपनी सेल्स की पूरी प्रक्रिया को साफ तौर पर देखें. Odoo के Google Analytics ट्रैकर्स शॉपिंग कार्ट, "
+"कॉल-टू-एक्शन वगैरह से संबंधित सभी प्रकार के इवेंट्स को ट्रैक करने के लिए डिफ़ॉल्ट रूप से कॉन्फ़िगर किए गए हैं."
+"\n"
+"\n"
+"जैसा कि Odoo मार्केटिंग टूल्स (मास मेलिंग, कैंपेन वगैरह) भी Google Analytics से जुड़े हुए हैं, इसलिए आपको"
+" अपने बिज़नेस की पूरी जानकारी एक ही जगह पर मिलती है.\n"
+"\n"
+"आसानी से इवेंट प्रमोट करें\n"
+"--------------------------\n"
+"\n"
+"### मास मेलिंग और सोशल मीडिया \n"
+"\n"
+"सही दर्शकों तक अपने इवेंट्स का प्रमोशन करने के लिए सेगमेंटेशन, सोशल नेटवर्क इंटीग्रेशन और मास मेलिंग फ़ीचर्स "
+"का इस्तेमाल करें. प्रतिभागियों को आखिरी समय की जानकारी भेजने के लिए ऑटोमेटेड ईमेल सेटअप करें.\n"
+"\n"
+"डिज़ाइनर-फ्रेंडली थीम\n"
+"------------------------\n"
+"\n"
+"### डिज़ाइनर्स के लिए Odoo पर काम करना आसान और मजेदार है\n"
+"\n"
+"थीम शानदार हैं और इन्हें डिज़ाइन करना आसान है. नए पेज, थीम या बिल्डिंग ब्लॉक्स बनाने के लिए आपको डेवलपमेंट "
+"(कोडिंग) की ज़रूरत नहीं है. हम एक क्लीन HTML स्ट्रक्चर और bootstrap "
+"(http://getbootstrap.com/) CSS का इस्तेमाल करते हैं, और हमारी मोडुलरिटी आपकी थीम को आसानी से "
+"डिस्ट्रीब्यूट करने की सुविधा देती है.\n"
+"\n"
+"ब्लॉक्स की मदद से वेबसाइट बनाना इतना व्यवस्थित है कि जब कोई नया व्यक्ति इसमें कुछ जोड़ता है, तब भी वेबसाइट "
+"का डिज़ाइन बिगड़ता नहीं और वह साफ-सुथरी दिखती है.\n"
+"\n"
+"अपने इवेंट को और ज़्यादा लोगों की नज़रों में लाएं\n"
+"----------------------------\n"
+"\n"
+"### SEO टूल्स आपकी उंगलियों पर\n"
+"\n"
+"SEO टूल्स इस्तेमाल के लिए तैयार हैं, किसी कॉन्फ़िगरेशन की ज़रूरत नहीं है. Odoo गूगल के सबसे अधिक खोजे गए "
+"शब्दों के अनुसार कीवर्ड्स सुझाता है, Google Analytics आपके शॉपिंग कार्ट इवेंट्स को ट्रैक करता है और साइटमै"
+"प अपने-आप बन जाते हैं.\n"
+"\n"
+"हम आपके इवेंट और सामान को Google सर्च में ऊपर लाने के लिए 'स्ट्रक्चर्ड कॉन्टेंट' अपने आप तैयार करते हैं"
+", जिससे आपका प्रमोशन बेहतर होता है.\n"
+"\n"
+"सोशल मीडिया का फ़ायदा उठाएं\n"
+"---------------------\n"
+"\n"
+"### ऑप्टिमाइज़ करें: विज्ञापनों से लेकर कन्वर्जन तक\n"
+"\n"
+"Odoo इनलाइन एडिटिंग फीचर के साथ आसानी से नए लैंडिंग पेज बनाएं. कन्वर्जन को ऑप्टिमाइज़ करने के लिए अपने "
+"अलग-अलग मार्केटिंग कैंपेन के विज़िटर्स को इवेंट लैंडिंग पेज पर भेजें.\n"
+"\n"
+"और इससे भी कहीं ज़्यादा...\n"
+"----------------\n"
+"\n"
+"### शेड्यूल करें\n"
+"\n"
+"-   इवेंट का कैलेंडर\n"
+"-   इससे जुड़े हुए दस्तावेज़ पब्लिश करें\n"
+"-   रिसोर्स का बंटवारा\n"
+"-   परचेज़ प्रक्रिया को ऑटोमेट करें (कैटरिंग वगैरह...)\n"
+"-   एक से ज़्यादा जगहों और अलग-अलग आयोजकों को मैनेज करना\n"
+"-   मोबाइल इंटरफ़ेस\n"
+"\n"
+"### बेचें\n"
+"\n"
+"-   ऑनलाइन या ऑफ़लाइन सेल्स\n"
+"-   ऑटोमेटेड इनवॉइसिंग\n"
+"-   बुकिंग रद्द करने से संबंधित नियम और शर्तें\n"
+"-   मेंबर्स के लिए खास कीमतें\n"
+"-   डैशबोर्ड और रिपोर्टिंग\n"
+"\n"
+"### व्यवस्थित करें\n"
+"\n"
+"-   एडवांस प्लानिंग\n"
+"-   बैज प्रिंट करना\n"
+"-   फॉलो-अप ईमेल को ऑटोमेट करना\n"
+"-   मिनिमम/मैक्सिमम कैपेसिटी\n"
+"-   क्लास और रिसोर्स मैनेज करना\n"
+"-   अटेंडीज़ (प्रतिभागियों) के ग्रुप बनाएं\n"
+"-   फीडबैक सर्वे ऑटोमेट करें\n"
+"\n"
+"अन्य ऐप्लिकेशन के साथ पूरी तरह से इंटिग्रेशन\n"
+"---------------------------------\n"
+"\n"
+"### सैकड़ों ओपन सोर्स ऐप्लिकेशन मुफ़्त में पाएं\n"
+"\n"
+"\n"
+"### ई-कॉमर्स\n"
+"\n"
+"प्रॉडक्ट प्रमोट करें, ऑनलाइन बेचें, और विज़िटर्स के शॉपिंग अनुभव को बेहतर बनाएं.\n"
+"\n"
+"\n"
+"### ब्लॉग\n"
+"\n"
+"न्यूज़ आर्टिकल लिखें, नए लोगों को जोड़ें और ग्राहकों का भरोसा बनाएं.\n"
+"\n"
+"\n"
+"### हमारी टीम\n"
+"\n"
+"अपनी टीम की जानकारी अच्छे से दें और एक बेहतरीन \"हमारे बारे में\" पेज तैयार करें.\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project
@@ -30680,7 +31488,7 @@ msgstr "आउटडोर ऐक्टिविटी"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
 msgid "Outgoing Mail Server"
-msgstr ""
+msgstr "आउटगोइंग मेल सर्वर"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ir_mail_server_list
@@ -31519,7 +32327,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_actions_server__update_path
 #: model:ir.model.fields,help:base.field_ir_cron__update_path
 msgid "Path to the field to update, e.g. 'partner_id.name'"
-msgstr ""
+msgstr "अपडेट किए जाने वाले फ़ील्ड का पाथ, जैसे 'partner_id.name'"
 
 #. module: base
 #. odoo-python
@@ -32552,6 +33360,76 @@ msgid ""
 "accurate reports on your team's performance.\n"
 "\n"
 msgstr ""
+"प्रोजेक्ट मैनेजमेंट\n"
+"------------------\n"
+"\n"
+"### पूरी तरह फ्लेक्सिबल और इस्तेमाल करने में बहुत आसान.\n"
+"\n"
+"\n"
+"Odoo का सहयोगी और रीयल-टाइम <a href=\"https://www.odoo.com/app/project\">ओपन सोर्स "
+"प्रोजेक्ट मैनेजमेंट</a>\n"
+"आपकी टीम को काम पूरा करने में मदद करता है. बड़ी योजनाओं से लेकर छोटी बारीकियों\n"
+"और बिलिंग तक, हर चीज़ ट्रैक करें.\n"
+"\n"
+"आपके अपने तरीके के अनुसार डिज़ाइन किया गया\n"
+"--------------------------------\n"
+"\n"
+"प्रोजेक्ट्स को अपनी प्रक्रियाओं के अनुसार व्यवस्थित करें. कानबन व्यू के साथ टास्क और समस्याओं\n"
+"पर काम करें, गैंट चार्ट का उपयोग करके शेड्यूल बनाएं और\n"
+"कैलेंडर व्यू में समय सीमा कंट्रोल करें. हर प्रोजेक्ट के अपने स्टेज हो सकते हैं,\n"
+"जिससे टीमें अपना काम बेहतर बना सकें.\n"
+"\n"
+"इस्तेमाल करने में आसान\n"
+"-----------\n"
+"\n"
+"अपनी सोच की रफ़्तार से चीज़ों को व्यवस्थित करें. इस्तेमाल में आसान इंटरफ़ेस को सीखने में समय नहीं लगता\n"
+"और हर काम तुरंत होता है, ताकि आपकी प्रोडक्टिविटी\n"
+"में कोई बाधा न आए.\n"
+"\n"
+"साथ मिलकर काम करें\n"
+"-------------\n"
+"\n"
+"### रीयल-टाइम चैट, डॉक्यूमेंट शेयरिंग, ईमेल इंटीग्रेशन\n"
+"\n"
+"टीम या ग्राहकों से बात करने के लिए चैटर का इस्तेमाल करें और टास्क पर कमेंट और डॉक्यूमेंट शेयर करें\n"
+"ईमेल इंटीग्रेशन के साथ चर्चा को\n"
+" तेज़ी से जोड़ें.\n"
+"\n"
+"वेबसाइट लाइव चैट फीचर के साथ अन्य उपयोगकर्ताओं या ग्राहकों से बात करें.\n"
+"\n"
+"अपनी टीम के साथ मिलकर लिखें\n"
+"---------------------\n"
+"\n"
+"### ईथरपैड की मदद से टास्क पर टीम के साथ मिलकर लिखें\n"
+"\n"
+"ऐप्लिकेशन के भीतर ही स्पेसिफिकेशन या मीटिंग मिनट्स को मिलकर एडिट करें.\n"
+"इंटीग्रेटेड ईथरपैड फीचर कई लोगों को एक ही समय में एक ही \n"
+"टास्क पर काम करने की अनुमति देता है.\n"
+"\n"
+"यह फीचर मीटिंग के मुख्य बिंदुओं और ज़रूरी डिटेल्स को नोट करने के लिए बेहतरीन है.\n"
+"हर व्यक्ति के लिखे हुए हिस्से को अलग रंग से पहचाना जा सकता है और पूरी हिस्ट्री \n"
+"को 'रिप्ले' करके देखा जा सकता है.\n"
+"\n"
+"काम पूरा करें\n"
+"-------------\n"
+"\n"
+"अपनी पसंद की चीज़ों से अपडेट रहने के लिए फ़ॉलो किए गए इवेंट्स पर अलर्ट पाएं.\n"
+"क्या पूरा हो गया है और किन चीज़ों पर ध्यान देने की ज़रूरत है, इसे तुरंत स्कैन करने के लिए हरे/लाल विज़ुअल\n"
+"संकेतकों का इस्तेमाल करें.\n"
+"\n"
+"टाइमशीट, कॉन्ट्रैक्ट और इनवॉइसिंग\n"
+"---------------------------------\n"
+"\n"
+"प्रोजेक्ट्स अपने-आप ही कस्टमर कॉन्ट्रैक्ट के साथ इंटीग्रेट किए गए हैं,\n"
+"जिससे आप समय और सामग्री के आधार पर इनवॉइस बना सकते हैं और टाइमशीट आसानी से रिकॉर्ड कर सकते हैं.\n"
+"\n"
+"समस्याओं को ट्रैक करें\n"
+"------------\n"
+"\n"
+"प्रोजेक्ट में आने वाली समस्याओं को अलग करें, ताकि उन्हें सुलझाने पर बेहतर ध्यान दिया जा सके\n"
+"हर समस्या पर ग्राहकों के साथ होने वाली बातचीत को शामिल करें और अपनी \n"
+"टीम के पर्फ़ामेंस की सटीक रिपोर्ट हासिल करें.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_project
@@ -33285,7 +34163,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__crud_model_id
 msgid "Record to Create"
-msgstr ""
+msgstr "बनाने के लिए रिकॉर्ड करें"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_recruitment
@@ -33389,7 +34267,7 @@ msgstr "रेफ़रल"
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_id
 #: model:ir.model.fields,field_description:base.field_res_users__parent_id
 msgid "Related Company"
-msgstr ""
+msgstr "संबंधित कंपनी"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__related_field_id
@@ -33447,7 +34325,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation_field_id
 msgid "Relation field"
-msgstr ""
+msgstr "संबंधित फ़ील्ड"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment_use
@@ -33549,7 +34427,7 @@ msgstr "रिपेयर"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__interval_number
 msgid "Repeat every x."
-msgstr ""
+msgstr "हर x के बाद दोहराएं।"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__replace
@@ -33619,7 +34497,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view_tree
 msgid "Report xml"
-msgstr ""
+msgstr "रिपोर्ट xml"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_reporting
@@ -33946,7 +34824,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Run"
-msgstr ""
+msgstr "चलाएं"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_form
@@ -34090,7 +34968,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_host
 msgid "SMTP Server"
-msgstr ""
+msgstr "SMTP सर्वर"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase_stock
@@ -34423,7 +35301,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_sales_team
 #: model:ir.module.module,summary:base.module_sales_team
 msgid "Sales Teams"
-msgstr ""
+msgstr "सेल्स टीम"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet
@@ -37018,7 +37896,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_hidden_tests
 #: model:ir.ui.menu,name:base.menu_tests
 msgid "Tests"
-msgstr ""
+msgstr "टेस्ट"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_apikeys
@@ -37157,6 +38035,9 @@ msgid ""
 "1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
 "106,500. Provided as the thousand separator in each case."
 msgstr ""
+"सेपरेटर फ़ॉर्मेट [,n] जैसा होना चाहिए, जहाँ 0 < n : यूनिट अंक से शुरू हो. -1 से सेपरेशन ख़त्म हो जाएगा. उदा"
+"हरण के लिए. [3,2,-1] 106500 को 1,06,500 के रूप में दिखाएगा. [1,2,-1] इसे 106,50,0 के रूप में"
+" दिखाएगा. [3] इसे 106,500 के रूप में दिखाएगा. हर मामले में हज़ार सेपरेटर के तौर पर दिया गया है।"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__vat
@@ -37913,6 +38794,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_res_lang__code
 msgid "This field is used to set/get locales for user"
 msgstr ""
+"उपयोगकर्ता के लिए लोकेल (भाषा और क्षेत्र) सेट करने या हासिल करने के लिए इस फ़ील्ड का उपयोग करें"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch
@@ -38916,7 +39798,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Type:"
-msgstr ""
+msgstr "टाइप:"
 
 #. module: base
 #: model:res.country,name:base.tr
@@ -39693,6 +40575,9 @@ msgid ""
 "display addresses (in reports for example), while this field is used to "
 "modify the input form for addresses."
 msgstr ""
+"अगर आप पूरा पता दर्ज करने के सामान्य तरीके को बदलना चाहते हैं, तो इस फ़ील्ड का उपयोग करें. ध्यान दें कि "
+"address_format फ़ील्ड का उपयोग पते दिखाने के तरीके (उदाहरण के लिए रिपोर्ट में) को बदलने के लिए किया जाता "
+"है, जबकि इस फ़ील्ड का उपयोग पते के इनपुट फ़ॉर्म को बदलने के लिए किया जाता है।"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation_table
@@ -40714,6 +41599,10 @@ msgid ""
 "number upon assignment, there can still be gaps in the sequence if records "
 "are deleted. The 'no gap' implementation is slower than the standard one."
 msgstr ""
+"किसी रिकॉर्ड को सीक्वेंस संख्या असाइन करते समय, 'नो गैप' सीक्वेंस इंप्लिमेंटेशन यह सुनिश्चित करता है कि प्रत्येक "
+"पिछली सीक्वेंस संख्या पहले ही असाइन की जा चुकी है. हालांकि, यह सीक्वेंस इंप्लिमेंटेशन असाइनमेंट पर कोई भी सीक्वेंस "
+"संख्या नहीं छोड़ेगा, फिर भी रिकॉर्ड हटाए जाने पर सीक्वेंस में गैप हो सकते हैं. 'नो गैप' इंप्लिमेंटेशन स्टैंडर्ड वाले की "
+"तुलना में धीमा है।"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_G
@@ -40724,7 +41613,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "Width"
-msgstr ""
+msgstr "चौड़ाई"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_window
@@ -40770,7 +41659,7 @@ msgstr ""
 #: model:res.currency,currency_unit_label:base.KPW
 #: model:res.currency,currency_unit_label:base.KRW
 msgid "Won"
-msgstr ""
+msgstr "जीता गया"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_1
@@ -41788,7 +42677,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "month"
-msgstr ""
+msgstr "महीना"
 
 #. module: base
 #. odoo-python

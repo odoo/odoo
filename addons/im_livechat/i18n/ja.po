@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-01-10 09:06+0000\n"
+"PO-Revision-Date: 2026-01-24 09:03+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
 "im_livechat/ja/>\n"
@@ -159,7 +159,7 @@ msgstr ""
 "<span>ヒント: ボットがより複雑なアクション(オペレータに転送、...)を実行する前"
 "に、少なくとも1回の対話(質問、Eメール、...)が必要です。 </span>\n"
 "                    <span>オペレータが利用できない場合にのみボットに訪問者と"
-"対話させたい場合は、チャネル規則を使用します。</span>"
+"対話させたい場合は、チャネルルールを使用します。</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
@@ -374,12 +374,12 @@ msgstr "チャネル名"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "Channel Rule"
-msgstr "チャネル規則"
+msgstr "チャネルルール"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Channel Rules"
-msgstr "チャネル規則"
+msgstr "チャネルルール"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__channel_type
@@ -639,9 +639,9 @@ msgid ""
 "installed on your server, otherwise, the countries of the rule will not be "
 "taken into account."
 msgstr ""
-"ライブサポートチャネルの規則を定義します。与えられたURLと国ごとにアクションを"
-"適用することができます。<br/>国を特定するには、GeoIPをサーバーにインストール"
-"する必要があります。そうでない場合は、規則上の国が考慮されません。"
+"ライブサポートチャネルのルールを定義します。与えられたURLと国ごとにアクション"
+"を適用することができます。<br/>国を特定するには、GeoIPをサーバーにインストー"
+"ルする必要があります。そうでない場合は、ルール上の国が考慮されません。"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
@@ -798,9 +798,8 @@ msgstr "自由入力 (複数行)"
 msgid ""
 "Given the order to find a matching rule. If 2 rules are matching for the "
 "given url/country, the one with the lowest sequence will be chosen."
-msgstr ""
-"一致する規則を見つけるための順序が与えられます。与えられた URL/国に一致する規"
-"則が2つある場合、順序が最も低いものが選択されます。"
+msgstr "一致するルールを見つけるための順序が与えられます。与えられた URL/国に一致する"
+"ルールが2つある場合、順序が最も低いものが選択されます。"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1113,7 +1112,7 @@ msgstr "ライブチャットチャネルカウント"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
 msgid "Livechat Channel Rules"
-msgstr "ライブチャットチャネル規則"
+msgstr "ライブチャットチャネルルール"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__discuss_channel__channel_type__livechat
@@ -1509,7 +1508,7 @@ msgstr "リダイレクトリンク"
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid ""
 "Regular expression specifying the web pages this rule will be applied on."
-msgstr "この規則を適用するウェブページを指定する正規表現。"
+msgstr "このルールを適用するウェブページを指定する正規表現。"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__mail_message_id
@@ -1543,7 +1542,7 @@ msgstr "会話を再開しています..."
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rule_ids
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_tree
 msgid "Rules"
-msgstr "規則"
+msgstr "ルール"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_has_sms_error
@@ -1747,7 +1746,7 @@ msgstr "ご意見頂きありがとうございます"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
 msgid "The channel of the rule"
-msgstr "規則のチャネル"
+msgstr "ルールのチャネル"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1763,7 +1762,7 @@ msgid ""
 "chat button will be hidden on the specified URL from the visitors located in "
 "these 2 countries. This feature requires GeoIP installed on your server."
 msgstr ""
-"規則はこれらの国にのみ適用されます。例: 'ベルギー' と '米国' を選択し、アク"
+"ルールはこれらの国にのみ適用されます。例: 'ベルギー' と '米国' を選択し、アク"
 "ションを '隠す' に設定した場合、これらの 2 つの国にいる訪問者に対しては指定さ"
 "れたURLのチャットボタンが非表示になります。この機能を使用するには、サーバに "
 "GeoIP がインストールされている必要があります。"
