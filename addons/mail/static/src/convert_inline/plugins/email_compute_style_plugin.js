@@ -80,8 +80,8 @@ export class EmailComputeStylePlugin extends BasePlugin {
         }
     }
 
-    updateLayoutDimensions({ width, height }) {
-        this.dimensionsKey = `${width}x${height}`;
+    updateLayoutDimensions({ width }) {
+        this.dimensionsKey = `${width}`;
         this.computedStylesMap.set(this.dimensionsKey, new WeakMap());
     }
 

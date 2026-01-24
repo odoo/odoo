@@ -1,6 +1,6 @@
 import { BasePlugin } from "@html_editor/base_plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { parseSelector } from "@mail/convert_inline/css_selector_parser";
+import { parseSelector } from "@mail/convert_inline/css_parsers";
 import { splitSelectorList } from "@mail/convert_inline/style_utils";
 import { registry } from "@web/core/registry";
 import { useShorthands } from "@mail/convert_inline/plugins/hooks";

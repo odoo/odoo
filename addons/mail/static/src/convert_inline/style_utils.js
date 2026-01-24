@@ -1,4 +1,4 @@
-import { parseSelector } from "@mail/convert_inline/css_selector_parser";
+import { parseSelector } from "@mail/convert_inline/css_parsers";
 
 /**
  * @param {string} propertyName shorthand property e.g. "border"

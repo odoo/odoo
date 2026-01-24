@@ -1,4 +1,4 @@
-import { parseSelector } from "@mail/convert_inline/css_selector_parser";
+import { parseSelector } from "@mail/convert_inline/css_parsers";
 import { describe, expect, test } from "@odoo/hoot";
 
 describe("CSS selector to AST and specificity computation (parseSelector)", () => {

@@ -303,9 +303,9 @@ export function parseSelector(selector) {
     };
 
     for (let i = 0; i < selector.length; i++) {
-        currentSpace = false;
         const char = selector[i];
         let escaped = undefined;
+        currentSpace = false;
         registerChar = true;
         switch (char) {
             // Escaped sequence
@@ -481,4 +481,129 @@ export function parseSelector(selector) {
 
     selectorListCache.set(selector, selectorList);
     return selectorList;
+}
+
+class Property {
+    constructor() {
+        this.name = "";
+        this.value = "";
+    }
+    toString() {
+        return `${this.name}: ${this.value};`;
+    }
+    trim() {
+        this.name = this.name.trim();
+        this.value = this.value.trim();
+    }
+}
+
+class PropertyList extends Array {
+    toString() {
+        return this.join(" ");
+    }
+}
+
+/**
+ * cssText style property parser, to list propertyNames used in a
+ * CSSStyleSheet -> CSSStyleRule -> CSSStyleProperties.
+ * This is required because looping over rule.style gives browser standardized
+ * keys which are not necessarily the ones used in the written rule, and
+ * therefore that loop can not be used to consistently extract values from the
+ * written rule.
+ * E.g. written `border-radius` will be converted to longhand propertyNames such
+ * as `border-top-left-radius` when looped over, then reading the value of that
+ * longhand property will return an empty string, which results in a loss of
+ * information.
+ *
+ * @param {string} cssText
+ * @returns {PropertyList}
+ */
+export function parseCssText(cssText) {
+    cssText = cssText.trim();
+
+    const firstProperty = new Property();
+    const propertyList = new PropertyList(firstProperty);
+    const parens = [0, 0]; // parentheses [opening, closing]
+
+    let currentProperty = firstProperty;
+    let currentQuote = null;
+    let currentValue = false;
+    let registerChar = true;
+
+    const addProperty = () => {
+        currentProperty = new Property();
+        propertyList.push(currentProperty);
+    };
+
+    const closeProperty = () => {
+        if (!currentProperty) {
+            return;
+        }
+        currentProperty.trim();
+        if (!currentProperty.name) {
+            propertyList.pop();
+        }
+        currentProperty = null;
+    };
+
+    for (let i = 0; i < cssText.length; i++) {
+        const char = cssText[i];
+        let escaped = undefined;
+        registerChar = true;
+        switch (char) {
+            // Escaped sequence
+            case "\\": {
+                ({ escaped, lastIndexConsumed: i } = consumeEscaped(cssText, i));
+                break;
+            }
+            // Quote delimiters
+            case `'`:
+            case `"`: {
+                if (char === currentQuote) {
+                    currentQuote = null;
+                } else if (!currentQuote) {
+                    currentQuote = char;
+                }
+                break;
+            }
+            // Parentheses
+            case "(": {
+                if (!currentQuote) {
+                    parens[0]++;
+                }
+                break;
+            }
+            case ")": {
+                if (!currentQuote) {
+                    parens[1]++;
+                }
+                break;
+            }
+            // PropertyName terminator
+            case ":": {
+                if (!currentQuote && !currentValue) {
+                    currentValue = true;
+                    registerChar = false;
+                }
+                break;
+            }
+            // PropertyValue terminator
+            case ";": {
+                if (!currentQuote && parens[0] === parens[1]) {
+                    currentValue = false;
+                    closeProperty();
+                    registerChar = false;
+                }
+                break;
+            }
+        }
+        if (registerChar) {
+            if (!currentProperty) {
+                addProperty();
+            }
+            currentProperty[currentValue ? "value" : "name"] += escaped ?? cssText[i];
+        }
+    }
+    closeProperty();
+    return propertyList;
 }
