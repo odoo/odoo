@@ -6,6 +6,7 @@ import { CUSTOMIZE_MAILING_VARIABLES } from "@mass_mailing/builder/plugins/custo
 import { CUSTOMIZE_MAILING_VARIABLES_DEFAULTS } from "./customize_mailing_variables";
 import { splitSelectorList } from "@mail/convert_inline/style_utils";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
+import { parseCssText } from "@mail/convert_inline/css_parsers";
 
 const RE_SELECTOR_ENDS_WITH_GT_STAR = />\s*\*\s*$/;
 export const PRIORITY_STYLES = {
@@ -115,7 +116,10 @@ export class CustomizeMailingPlugin extends Plugin {
         const rules = [...styleEl.sheet.cssRules];
         for (const rule of rules) {
             for (const selector of splitSelectorList(rule.selectorText)) {
-                for (const property of rule.style) {
+                const propertyNames = parseCssText(rule.style.cssText).map(
+                    (property) => property.name
+                );
+                for (const property of propertyNames) {
                     const selectors =
                         property !== "font-family"
                             ? [selector]
