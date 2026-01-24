@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-16 18:36+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
 "PO-Revision-Date: 2026-01-16 05:57+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -192,9 +192,21 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(name)s - Draft at (%(currency_amount)s)"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "%(name)s installment #%(number)s"
 msgstr "%(name)s osamakse #%(number)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(name)s%(ref)s at %(currency_amount)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -221,12 +233,6 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "%(partner_name)s has reached its credit limit of: %(credit_limit)s"
 msgstr "%(partner_name)s krediidilimiit on täitunud: %(credit_limit)s"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "%(ref)s (%(currency_amount)s)"
-msgstr "%(ref)s (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
@@ -1157,6 +1163,16 @@ msgstr ""
 "kaardil muuta .\n"
 "                        Lisaks on võimalus keelata funktsioon kõigi "
 "tarnijate jaoks raamatupidamise seadete alt."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"<i class=\"fa fa-trash text-danger\"/>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length == 1\">Delete all duplicates</span>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length &gt; 1\">Delete duplicate</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -10622,6 +10638,12 @@ msgstr "lõpetatud"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__is_domestic
 #: model:ir.model.fields,field_description:account.field_account_tax__is_domestic
 msgid "Is Domestic"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_draft_duplicated_ref_ids
+#: model:ir.model.fields,field_description:account.field_account_move__is_draft_duplicated_ref_ids
+msgid "Is Draft Duplicated Ref"
 msgstr ""
 
 #. module: account
@@ -21240,6 +21262,9 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid "%(ref)s (%(currency_amount)s)"
+#~ msgstr "%(ref)s (%(currency_amount)s)"
 
 #~ msgid ""
 #~ "This will update all taxes and accounts based on the currently selected "

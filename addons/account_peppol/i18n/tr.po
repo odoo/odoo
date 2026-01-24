@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-16 18:36+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
 "PO-Revision-Date: 2026-01-15 20:28+0000\n"
 "Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -393,6 +393,7 @@ msgstr "Hesap Hareketi Gönderme Sihirbazı"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_contact_email
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
 msgid "Account Peppol Contact Email"
 msgstr "Hesap Peppol İletişim E-postası"
 
@@ -805,6 +806,11 @@ msgstr "Bağlantıyı Kes"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Disconnect Peppol"
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Disconnect this database"
 msgstr "Bu veritabanının bağlantısını kesin"
 
@@ -991,8 +997,8 @@ msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Incoming Invoices Journal"
-msgstr "Gelen Faturalar Günlüğü"
+msgid "Incoming Accounting Journal"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1194,6 +1200,11 @@ msgid "Peppol Configuration Wizard"
 msgstr "Peppol Yapılandırma Sihirbazı"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Peppol Contact Email"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_endpoint
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_endpoint
@@ -1243,6 +1254,12 @@ msgstr "Peppol Ana Şirketi"
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_parent_company_name
 msgid "Peppol Parent Company Name"
 msgstr "Peppol Ana Şirket Adı"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_participation_role
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Peppol Participation Role"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_purchase_journal_id
@@ -1413,14 +1430,12 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_contact_email
-#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
 msgid "Primary contact email"
 msgstr "Birincil iletişim e-postası"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
-#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
 msgid ""
 "Primary contact email for Peppol connection related communications and "
 "notifications.\n"
@@ -1544,6 +1559,16 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_parent
 msgid "Send from parent company"
 msgstr "Ana şirketten gönder"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__peppol_participation_role__sending_and_receiving
+msgid "Sending & Receiving"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__peppol_participation_role__sending_only
+msgid "Sending Only"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__service_ids
@@ -2117,7 +2142,6 @@ msgstr "İletişim e-postasını değiştirme yetkiniz yoktur."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "You are sending and receiving your e-invoices via Odoo with this Peppol ID"
 msgstr ""
@@ -2131,7 +2155,6 @@ msgstr "Gönderdiğiniz yer"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "You are sending your e-invoices via Odoo with this Peppol ID"
 msgstr "Bu Peppol kimliği ile Odoo üzerinden e-faturalarınızı gönderiyorsunuz."
 
@@ -2193,6 +2216,11 @@ msgstr ""
 "Kaydınız reddedildi, nedeni size e-posta yoluyla iletildi.\n"
 "                            Daha fazla yardıma ihtiyacınız varsa lütfen "
 "destek ekibimizle iletişime geçin."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Your Peppol ID"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2307,6 +2335,9 @@ msgstr "fatura göndermek için, ancak bu"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "kullanır"
+
+#~ msgid "Incoming Invoices Journal"
+#~ msgstr "Gelen Faturalar Günlüğü"
 
 #~ msgid "Receive your electronic invoices in Odoo"
 #~ msgstr "Odoo'da elektronik faturalarınızı alın"

@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-16 18:36+0000\n"
-"PO-Revision-Date: 2026-01-16 08:22+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
+"PO-Revision-Date: 2026-01-24 12:31+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-1/"
 "point_of_sale/de/>\n"
@@ -1527,6 +1527,12 @@ msgstr "Barcode-Scanner"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_basic_receipt
 msgid "Basic Receipt"
 msgstr "Standardbeleg"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
+msgid "Be aware that reloading data will delete unsaved orders."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
@@ -3343,7 +3349,7 @@ msgstr "Anzeigename"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 msgid "Display QR"
-msgstr ""
+msgstr "QR-Code anzeigen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3758,7 +3764,7 @@ msgstr "Für ungenaue Industrie-Touchscreens."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force Cancel"
-msgstr ""
+msgstr "Stornierung erzwingen"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3777,7 +3783,7 @@ msgstr "Erledigt erzwingen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force cancel"
-msgstr ""
+msgstr "Stornierung erzwingen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5447,6 +5453,12 @@ msgstr "Keine Sitzungen gefunden"
 #: code:addons/point_of_sale/static/src/app/components/popups/preset_slots_popup/preset_slots_popup.xml:0
 msgid "No slot available for this day"
 msgstr "Kein Zeitraum für diesen Tag verfügbar"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
+msgid "No valid orders were selected. No new invoices could be generated"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__barcode_nomenclature_id
@@ -7604,6 +7616,8 @@ msgstr "Verknüpfte Sitzung: %(link)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.js:0
+#: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
 msgid "Reload Data"
 msgstr "Daten neu laden"
 
@@ -7928,7 +7942,7 @@ msgstr "Scannen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 msgid "Scan QR"
-msgstr ""
+msgstr "QR-Code scannen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9582,7 +9596,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 msgid "This device"
-msgstr ""
+msgstr "Dieses Gerät"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -10084,20 +10098,6 @@ msgstr ""
 "%s"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
-msgid ""
-"Unable to create consolidated invoice/s because the following orders can't "
-"be invoiced.\n"
-"\n"
-"%s"
-msgstr ""
-"Es können keine konsolidierten Rechnungen erstellt werden, da die folgenden "
-"Aufträge nicht in Rechnung gestellt werden können.\n"
-"\n"
-"%s"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/invoice_button/invoice_button.js:0
 msgid "Unable to download invoice."
@@ -10295,15 +10295,10 @@ msgstr "UUID"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/receipt/receipt_header/receipt_header.xml:0
 msgid "VAT"
 msgstr "MwSt."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
-msgid "VAT:"
-msgstr "USt."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10515,6 +10510,8 @@ msgid ""
 "You can either use it on this device or scan the QR code to display it on "
 "another device"
 msgstr ""
+"Sie können es entweder auf diesem Gerät verwenden oder den QR-Code scannen, "
+"um es auf einem anderen Gerät anzuzeigen."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11106,6 +11103,20 @@ msgstr ", um die Schaltflächen zu aktivieren."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "unter Anwendung von"
+
+#~ msgid ""
+#~ "Unable to create consolidated invoice/s because the following orders "
+#~ "can't be invoiced.\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Es können keine konsolidierten Rechnungen erstellt werden, da die "
+#~ "folgenden Aufträge nicht in Rechnung gestellt werden können.\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid "VAT:"
+#~ msgstr "USt."
 
 #~ msgid "Barcode Scanner/Card Reader"
 #~ msgstr "Barcode-Scanner/Kartenleser"

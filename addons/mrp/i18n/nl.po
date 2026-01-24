@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-16 05:45+0000\n"
+"PO-Revision-Date: 2026-01-24 12:32+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/mrp/nl/>"
 "\n"
@@ -426,7 +426,7 @@ msgstr "<span class=\"o_stat_text\">Onderliggende productieorder</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">Copy Existing Operations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Bestaande bewerkingen kopiëren</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -517,6 +517,12 @@ msgid ""
 "quantity later.\n"
 "                    </span>"
 msgstr ""
+"<span class=\"text-muted\">\n"
+"                        Als je de te produceren hoeveelheid wijzigt, worden "
+"ook de hoeveelheid onderdelen die voor deze productieorder moeten worden "
+"verbruikt, gewijzigd. <br/>Splits de PO als je van plan bent de resterende "
+"hoeveelheid later te produceren.\n"
+"                   </span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -767,7 +773,7 @@ msgstr "Activiteit uitzondering decoratie"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__activity_plans_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Activiteitenplannen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_state
@@ -1000,6 +1006,8 @@ msgid ""
 "Are you sure you want to cancel these manufacturing orders?\n"
 "This action cannot be undone."
 msgstr ""
+"Weet je zeker dat je deze productieorders wilt annuleren?\n"
+"Deze actie kan niet ongedaan worden gemaakt."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1007,6 +1015,8 @@ msgid ""
 "Are you sure you want to cancel this manufacturing order?\n"
 "This action cannot be undone."
 msgstr ""
+"Weet je zeker dat je deze productieorder wilt annuleren?\n"
+"Deze actie kan niet ongedaan worden gemaakt."
 
 #. module: mrp
 #. odoo-python
@@ -1522,22 +1532,22 @@ msgstr "Annuleren"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Cancel Manufacturing Order"
-msgstr ""
+msgstr "Productieorder annuleren"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Cancel Manufacturing Orders"
-msgstr ""
+msgstr "Productieorders annuleren"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Cancel these Orders"
-msgstr ""
+msgstr "Deze orders annuleren"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Cancel this Order"
-msgstr ""
+msgstr "Deze order annuleren"
 
 #. module: mrp
 #. odoo-javascript
@@ -3137,7 +3147,7 @@ msgstr "Voorraadverplaatsingen"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "Voorraadroute"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
@@ -3531,7 +3541,7 @@ msgstr "Productieorder in behandeling"
 #. module: mrp
 #: model:mail.message.subtype,name:mrp.mrp_mo_planned
 msgid "MO Planned"
-msgstr ""
+msgstr "PO gepland"
 
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_progress
@@ -4249,7 +4259,7 @@ msgstr "Bewerking"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__code
 msgid "Operation Category"
-msgstr ""
+msgstr "Bewerkingscategorie"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__allow_operation_dependencies
@@ -4513,7 +4523,7 @@ msgstr "Orders plannen"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_plan_at_date
 msgid "Plan at Date"
-msgstr ""
+msgstr "Plannen op datum"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4571,7 +4581,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/wizard/change_production_qty.py:0
 msgid "Please specify a quantity bigger than 0."
-msgstr ""
+msgstr "Geef een hoeveelheid op die groter is dan 0."
 
 #. module: mrp
 #. odoo-python
@@ -5413,6 +5423,8 @@ msgid ""
 "Set a quantity that is smaller than the intial demand to split the "
 "manufacturing order."
 msgstr ""
+"Stel een hoeveelheid in die kleiner is dan de oorspronkelijke vraag om de "
+"productieorder te splitsen."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_replenishment_tree_view
@@ -5480,7 +5492,7 @@ msgstr "Stuklijst-tabblad weergeven"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__show_copy_operations_button
 msgid "Show Copy Operations Button"
-msgstr ""
+msgstr "Knop 'Bewerkingen kopiëren' weergeven"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -5725,7 +5737,7 @@ msgstr "Voorraadverplaatsing"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_dest_ids
 msgid "Stock Movements of Produced Goods"
-msgstr "Voorraadverplaatsingen van geproduceerde producten"
+msgstr "Voorraadmutaties van geproduceerde producten"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_unbuild_moves
@@ -5858,6 +5870,8 @@ msgid ""
 "Technical field used to control the visibility of the 'Copy Existing "
 "Operations' button."
 msgstr ""
+"Technisch veld dat wordt gebruikt om de zichtbaarheid van de knop 'Bestaande "
+"werkzaamheden kopiëren' te regelen."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
@@ -5884,7 +5898,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/wizard/change_production_qty.py:0
 msgid "The backorder %s has been created."
-msgstr ""
+msgstr "De backorder %s is aangemaakt."
 
 #. module: mrp
 #. odoo-python
@@ -5918,13 +5932,13 @@ msgstr "De volgende aanvulopdracht is gegenereerd"
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "The manufacturing order has been planned."
-msgstr ""
+msgstr "De productieorder is gepland."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "The manufacturing order has been unplanned."
-msgstr ""
+msgstr "De productieorder is uit de planning gehaald."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
@@ -6741,7 +6755,7 @@ msgstr "Websiteberichten"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__website_message_ids
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__website_message_ids
 msgid "Website communication history"
-msgstr "Website communicatie geschiedenis"
+msgstr "Website communicatiegeschiedenis"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__picking_type_id
@@ -7062,7 +7076,7 @@ msgstr "Werkorder"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss_type
 msgid "Workorder Productivity Loss Type"
-msgstr ""
+msgstr "Type productiviteitsverlies bij werkorders"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__yesterday

@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2026-01-08 07:55+0000\n"
+"PO-Revision-Date: 2026-01-24 12:17+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "delivery/ja/>\n"
@@ -189,7 +189,7 @@ msgstr "可能な配送業者"
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
 msgid "Based on Rules"
-msgstr "計算規則に基づく"
+msgstr "計算ルールに基づく"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__can_generate_return
@@ -266,7 +266,7 @@ msgstr "国"
 #. module: delivery
 #: model:ir.model,website_form_label:delivery.model_res_partner
 msgid "Create a Customer"
-msgstr "顧客を作成する"
+msgstr "顧客を作成"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__create_uid
@@ -338,7 +338,7 @@ msgstr "配送方法"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_carrier
 msgid "Delivery Method Selection Wizard"
-msgstr ""
+msgstr "配送方法選択ウィザード"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
@@ -356,7 +356,7 @@ msgstr "送料"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr "配送価格規則"
+msgstr "配送価格ルール"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__product_id
@@ -385,14 +385,15 @@ msgstr "送料の再計算が必要です。"
 msgid ""
 "Delivery method %(name)s cannot have the same tag in both Must Have Tags and "
 "Excluded Tags."
-msgstr ""
+msgstr "配送方法%(name)s は、必須タグと除外タグの両方に同じタグを設定できません。"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "Delivery method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
-msgstr ""
+msgstr "配送方法の詳細は、見積書や受注確認メールの下部に表示されます(例：お客様向けの"
+"案内や指示など)。"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
@@ -400,6 +401,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery methods to restrict\n"
 "            which zips it is available to."
 msgstr ""
+"配送先郵便番号プレフィックスは配送方法に割り当てられ、\n"
+"            利用可能な郵便番号を制限します。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
@@ -447,7 +450,7 @@ msgid ""
 msgstr ""
 "各配送会社（例：UPS）は、複数の配送方法\n"
 "　　　（例：UPSエクスプレス、UPSスタンダード）\n"
-"　　　  を持つことができ、各配送方法に料金規則が紐づけられています。"
+"　　　  を持つことができ、各配送方法に料金ルールが紐づけられています。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -499,7 +502,8 @@ msgstr ""
 msgid ""
 "Filling this form allows you to make the delivery method available according "
 "to the content of the order or its destination."
-msgstr ""
+msgstr "このフォームに記入することで、オーダ内容や配送先に応じて配送方法を選択できる"
+"ようになります。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -797,6 +801,10 @@ msgid ""
 "lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. "
 "'100$' will only match '100' and not '1000')"
 msgstr ""
+"この配送方法を適用する郵便番号のプレフィクス(接頭辞)を指定します。国によって"
+"郵便番号の桁数が異なる場合に対応するため、正規表現を使用することもできます。"
+"たとえば、末尾に $ を付けることで完全一致を指定できます(例：100$ は 100 にの"
+"み一致し、1000 には一致しません)"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -808,7 +816,7 @@ msgstr "価格"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
-msgstr "価格規則"
+msgstr "価格ルール"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -818,7 +826,7 @@ msgstr "価格設定"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
 msgid "Pricing Rules"
-msgstr "価格設定規則"
+msgstr "価格設定ルール"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_category

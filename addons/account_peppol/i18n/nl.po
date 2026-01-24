@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-16 18:36+0000\n"
-"PO-Revision-Date: 2026-01-14 16:32+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
+"PO-Revision-Date: 2026-01-24 12:15+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
 "account_peppol/nl/>\n"
@@ -398,6 +398,7 @@ msgstr "Wizard voor Boeking verzenden"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_contact_email
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
 msgid "Account Peppol Contact Email"
 msgstr "E-mail van het Peppol-account"
 
@@ -463,7 +464,7 @@ msgstr "Actief moederbedrijf"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__active_parent_company_name
 msgid "Active Parent Company Name"
-msgstr ""
+msgstr "Naam van actief bovenliggend bedrijf"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -672,13 +673,13 @@ msgstr "Annuleren"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "Cancel Peppol"
-msgstr ""
+msgstr "Peppol annuleren"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move.py:0
 msgid "Cannot cancel an entry that has already been sent to Peppol"
-msgstr ""
+msgstr "Kan geen boeking annuleren die reeds naar Peppol werd verzonden"
 
 #. module: account_peppol
 #. odoo-python
@@ -820,6 +821,11 @@ msgstr "Verbinding verbreken"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Disconnect Peppol"
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Disconnect this database"
 msgstr "Ontkoppel deze database"
 
@@ -850,7 +856,7 @@ msgstr "Schermnaam"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_use_parent_connection_selection
 msgid "Display Use Parent Connection Selection"
-msgstr ""
+msgstr "Selectie 'Gebruik bovenliggende verbinding' weergeven"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_identifier
@@ -1006,8 +1012,8 @@ msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Incoming Invoices Journal"
-msgstr "Dagboek inkomende facturen"
+msgid "Incoming Accounting Journal"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1162,7 +1168,7 @@ msgstr "PEPPOL-status"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_id
 msgid "Parent Company"
-msgstr ""
+msgstr "Bovenliggend bedrijf"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
@@ -1193,7 +1199,7 @@ msgstr "In afwachting van ontvangst"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
 msgid "Peppol"
-msgstr ""
+msgstr "Peppol"
 
 #. module: account_peppol
 #. odoo-python
@@ -1210,6 +1216,11 @@ msgstr "Peppol kan verzenden"
 #: model:ir.model,name:account_peppol.model_peppol_config_wizard
 msgid "Peppol Configuration Wizard"
 msgstr "Peppol-configuratiewizard"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Peppol Contact Email"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1263,6 +1274,12 @@ msgid "Peppol Parent Company Name"
 msgstr "Peppol Naam van het moederbedrijf"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_participation_role
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Peppol Participation Role"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_purchase_journal_id
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_purchase_journal_id
 msgid "Peppol Purchase Journal"
@@ -1294,6 +1311,8 @@ msgstr "Peppol Gebruik Moederbedrijf"
 msgid ""
 "Peppol allows for complete automation of sending and receiving e-invoices."
 msgstr ""
+"Peppol maakt volledige automatisering van het verzenden en ontvangen van e-"
+"facturen mogelijk."
 
 #. module: account_peppol
 #. odoo-python
@@ -1333,12 +1352,14 @@ msgstr "Peppol-factuur ontvangen"
 msgid ""
 "Peppol is the secure standard for e-invoices used in EU and across the world."
 msgstr ""
+"Peppol is de veilige standaard voor e-facturen die in de EU en de rest van "
+"de wereld wordt gebruikt."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_message_uuid
 msgid "Peppol message ID"
-msgstr ""
+msgstr "Peppol-bericht-ID"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_metadata_updated_at
@@ -1373,22 +1394,22 @@ msgstr "Peppol: Registratie-update"
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_new_documents_ir_actions_server
 msgid "Peppol: retrieve new documents"
-msgstr ""
+msgstr "Peppol: nieuwe documenten ophalen"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_message_status_ir_actions_server
 msgid "Peppol: update message status"
-msgstr ""
+msgstr "Peppol: berichtstatus bijwerken"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_participant_status_ir_actions_server
 msgid "Peppol: update participant status"
-msgstr ""
+msgstr "Peppol: deelnemersstatus bijwerken"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_webhook_keepalive_ir_actions_server
 msgid "Peppol: webhook keep alive"
-msgstr ""
+msgstr "Peppol: webhook keep-alive"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -1431,14 +1452,12 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_contact_email
-#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
 msgid "Primary contact email"
 msgstr "E-mailadres hoofdcontactpersoon"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
-#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
 msgid ""
 "Primary contact email for Peppol connection related communications and "
 "notifications.\n"
@@ -1560,6 +1579,16 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_parent
 msgid "Send from parent company"
 msgstr "Sturen vanuit moedermaatschappij"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__peppol_participation_role__sending_and_receiving
+msgid "Sending & Receiving"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__peppol_participation_role__sending_only
+msgid "Sending Only"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__service_ids
@@ -2076,7 +2105,7 @@ msgstr "Controleer Peppol"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify partner's Peppol endpoint"
-msgstr ""
+msgstr "Controleer het Peppol-eindpunt van de partner"
 
 #. module: account_peppol
 #. odoo-python
@@ -2149,7 +2178,6 @@ msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "You are sending and receiving your e-invoices via Odoo with this Peppol ID"
 msgstr "Je verstuurt en ontvangt je e-facturen via Odoo met deze Peppol-ID"
@@ -2161,7 +2189,6 @@ msgstr "Je verstuurt vanaf"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "You are sending your e-invoices via Odoo with this Peppol ID"
 msgstr "Je verstuurt je e-facturen via Odoo met deze Peppol-ID"
 
@@ -2224,6 +2251,11 @@ msgstr ""
 "toegestuurd.\n"
 "                            Neem contact op met onze supportafdeling als je "
 "meer hulp nodig hebt."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Your Peppol ID"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2340,6 +2372,9 @@ msgstr "om facturen te versturen, maar deze"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "gebruikt"
+
+#~ msgid "Incoming Invoices Journal"
+#~ msgstr "Dagboek inkomende facturen"
 
 #~ msgid "Receive your electronic invoices in Odoo"
 #~ msgstr "Ontvang je elektronische facturen in Odoo"

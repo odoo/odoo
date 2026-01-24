@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-16 18:36+0000\n"
-"PO-Revision-Date: 2026-01-15 20:28+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
+"PO-Revision-Date: 2026-01-24 12:15+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "account_peppol/ja/>\n"
@@ -394,6 +394,7 @@ msgstr "会計仕訳がウィザードを送信"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_contact_email
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
 msgid "Account Peppol Contact Email"
 msgstr "アカウント Peppol 連絡先メール"
 
@@ -459,7 +460,7 @@ msgstr "有効な親会社"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__active_parent_company_name
 msgid "Active Parent Company Name"
-msgstr ""
+msgstr "アクティブ親会社名"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -657,13 +658,13 @@ msgstr "キャンセル"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "Cancel Peppol"
-msgstr ""
+msgstr "Peppolをキャンセル"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move.py:0
 msgid "Cannot cancel an entry that has already been sent to Peppol"
-msgstr ""
+msgstr "Peppolに送信済みの仕訳はキャンセルできません"
 
 #. module: account_peppol
 #. odoo-python
@@ -745,7 +746,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model,website_form_label:account_peppol.model_res_partner
 msgid "Create a Customer"
-msgstr "顧客を作成する"
+msgstr "顧客を作成"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -787,7 +788,7 @@ msgstr "デモ"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Disable the reception."
-msgstr ""
+msgstr "受信を無効にします。"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -798,6 +799,11 @@ msgstr "破棄"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Disconnect"
 msgstr "終了"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Disconnect Peppol"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -831,7 +837,7 @@ msgstr "表示名"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_use_parent_connection_selection
 msgid "Display Use Parent Connection Selection"
-msgstr ""
+msgstr "表示 使用 親接続 選択"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_identifier
@@ -889,7 +895,7 @@ msgstr "Eメール"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Enable reception"
-msgstr ""
+msgstr "受信を有効化"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__enabled
@@ -986,8 +992,8 @@ msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Incoming Invoices Journal"
-msgstr "受入請求仕訳帳"
+msgid "Incoming Accounting Journal"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1141,7 +1147,7 @@ msgstr "PEPPOLステータス"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_id
 msgid "Parent Company"
-msgstr ""
+msgstr "親会社"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
@@ -1172,7 +1178,7 @@ msgstr "受領保留中"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
 msgid "Peppol"
-msgstr ""
+msgstr "Peppol"
 
 #. module: account_peppol
 #. odoo-python
@@ -1189,6 +1195,11 @@ msgstr "Peppolで送信可能"
 #: model:ir.model,name:account_peppol.model_peppol_config_wizard
 msgid "Peppol Configuration Wizard"
 msgstr "Peppol設定ウィザード"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Peppol Contact Email"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1240,6 +1251,12 @@ msgstr "Peppol親会社"
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_parent_company_name
 msgid "Peppol Parent Company Name"
 msgstr "Peppol親会社名"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_participation_role
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Peppol Participation Role"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_purchase_journal_id
@@ -1312,12 +1329,13 @@ msgstr "Peppol請求書を受領しました"
 msgid ""
 "Peppol is the secure standard for e-invoices used in EU and across the world."
 msgstr ""
+"Peppolは、EUおよび世界中で使用されている電子請求書の安全な標準規格です。"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_message_uuid
 msgid "Peppol message ID"
-msgstr ""
+msgstr "PeppolメッセージID"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_metadata_updated_at
@@ -1352,7 +1370,7 @@ msgstr "Peppol: 登録更新"
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_new_documents_ir_actions_server
 msgid "Peppol: retrieve new documents"
-msgstr ""
+msgstr "Peppol：新しいドキュメントを取得"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_message_status_ir_actions_server
@@ -1409,14 +1427,12 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_contact_email
-#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
 msgid "Primary contact email"
 msgstr "主な連絡先メールアドレス"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
-#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
 msgid ""
 "Primary contact email for Peppol connection related communications and "
 "notifications.\n"
@@ -1537,6 +1553,16 @@ msgstr "電子請求書を送信し、Peppol経由で仕入先請求書を自動
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_parent
 msgid "Send from parent company"
 msgstr "親会社から送信"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__peppol_participation_role__sending_and_receiving
+msgid "Sending & Receiving"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__peppol_participation_role__sending_only
+msgid "Sending Only"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__service_ids
@@ -1740,7 +1766,7 @@ msgid ""
 "conform to the ebMS packaging rules."
 msgstr ""
 "ebMSヘッダーはXMLドキュメントとしてうまく形成されていないか、ebMSパッケージン"
-"グ 規則に準拠していません。"
+"グ ルールに準拠していません。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1852,7 +1878,7 @@ msgstr "フラグメント・メッセージのデータ部分のサイズが %s
 msgid ""
 "The structure of a received bundle is not in accordance with the bundling "
 "rules."
-msgstr "受信したバンドルの構造がバンドル規則に従っていません。"
+msgstr "受信したバンドルの構造がバンドルルールに従っていません。"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -2106,7 +2132,6 @@ msgstr "連絡先メールアドレスを変更する権限がありません。
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "You are sending and receiving your e-invoices via Odoo with this Peppol ID"
 msgstr ""
@@ -2119,7 +2144,6 @@ msgstr "送信元は"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "You are sending your e-invoices via Odoo with this Peppol ID"
 msgstr "このPeppol IDを使用して、Odoo経由で電子顧客請求書を送付しています。"
 
@@ -2180,6 +2204,11 @@ msgstr ""
 "登録は拒否されました。その理由はメールでお知らせしています。\n"
 "                            サポートが必要な場合は、当社サポートまでご連絡下"
 "さい。"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Your Peppol ID"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2292,6 +2321,9 @@ msgstr "請求書を送信するには、しかし、この請求書は"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "ユーザー"
+
+#~ msgid "Incoming Invoices Journal"
+#~ msgstr "受入請求仕訳帳"
 
 #~ msgid "Receive your electronic invoices in Odoo"
 #~ msgstr "Odooで電子請求書を受取ることができます"

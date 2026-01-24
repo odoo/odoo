@@ -32,8 +32,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-16 18:36+0000\n"
-"PO-Revision-Date: 2026-01-16 05:57+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
+"PO-Revision-Date: 2026-01-24 12:47+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-1/"
 "account/es/>\n"
@@ -196,9 +196,21 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(name)s - Draft at (%(currency_amount)s)"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "%(name)s installment #%(number)s"
 msgstr "%(name)s cuota #%(number)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(name)s%(ref)s at %(currency_amount)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -225,12 +237,6 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "%(partner_name)s has reached its credit limit of: %(credit_limit)s"
 msgstr "%(partner_name)s llegó al crédito concedido de: %(credit_limit)s"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "%(ref)s (%(currency_amount)s)"
-msgstr "%(ref)s (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
@@ -1168,6 +1174,16 @@ msgstr ""
 "después en el formulario del proveedor.\n"
 "                        También puede desactivar la función para todos los "
 "proveedores en los ajustes de Contabilidad."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"<i class=\"fa fa-trash text-danger\"/>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length == 1\">Delete all duplicates</span>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length &gt; 1\">Delete duplicate</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -9181,9 +9197,9 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
-"Fórmula en el formulario line_code.expression_label. Esto permite establecer "
-"el objetivo del traspaso para esta expresión (en una expresión etiquetada "
-"como  _carryover_* ), en caso de que sea diferentes de una línea padre."
+"Fórmula en el formato line_code.expression_label. Esto permite establecer el "
+"destino del traspaso para esta expresión (en una expresión etiquetada como "
+"_carryover_* ), en caso de que sea diferente del de la línea padre."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -11009,6 +11025,12 @@ msgstr "Está completo"
 #: model:ir.model.fields,field_description:account.field_account_tax__is_domestic
 msgid "Is Domestic"
 msgstr "Es doméstico"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_draft_duplicated_ref_ids
+#: model:ir.model.fields,field_description:account.field_account_move__is_draft_duplicated_ref_ids
+msgid "Is Draft Duplicated Ref"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__is_mail_template_editor
@@ -13906,7 +13928,7 @@ msgstr "Importe de pago:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Payment Communication:"
-msgstr "Comunicaciones de pago"
+msgstr "Comunicación de pago:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -22004,6 +22026,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Factura de autofacturación (ref. {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "%(ref)s (%(currency_amount)s)"
+#~ msgstr "%(ref)s (%(currency_amount)s)"
 
 #~ msgid ""
 #~ "This will update all taxes and accounts based on the currently selected "

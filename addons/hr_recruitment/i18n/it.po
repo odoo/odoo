@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-16 14:22+0000\n"
+"PO-Revision-Date: 2026-01-24 12:21+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_recruitment/it/>\n"
@@ -631,6 +631,7 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-envelope flex-shrink-0 me-1 text-center\" title=\"Email\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope flex-shrink-0 me-1 text-center\" title=\"E-mail\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -653,6 +654,9 @@ msgid ""
 "                                    All applications will lose their hired "
 "date and hired status."
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle pe-1\"/>\n"
+"                                    Tutte le candidature perderanno la data "
+"di assunzione e lo stato di assunzione."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -677,7 +681,7 @@ msgstr "<span invisible=\"not salary_proposed_extra\"> + </span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span> / </span>"
-msgstr ""
+msgstr "<span>/</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -712,7 +716,7 @@ msgstr "<span>Vista</span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "<span>days</span>"
-msgstr ""
+msgstr "<span>giorni</span>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_defaults
@@ -1104,7 +1108,7 @@ msgstr "Archivia"
 #: code:addons/hr_recruitment/static/src/views/recruitment_kanban_view.js:0
 #: code:addons/hr_recruitment/static/src/views/recruitment_list_controller.js:0
 msgid "Archive job position"
-msgstr ""
+msgstr "Archivia offerte di lavoro"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__archived
@@ -1177,7 +1181,7 @@ msgstr "Laurea"
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__schedule_pay__biweekly
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_job__payment_interval__biweekly
 msgid "Bi-Week"
-msgstr ""
+msgstr "Bisettimanale"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__is_blacklisted
@@ -1244,7 +1248,7 @@ msgstr "Campagna"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_utm_campaigns
 msgid "Campaigns"
-msgstr ""
+msgstr "Campagne"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__can_edit_body
@@ -1349,7 +1353,7 @@ msgstr "Contratto firmato"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_contract_type
 msgid "Contract Types"
-msgstr ""
+msgstr "Tipologie contratto"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1470,7 +1474,7 @@ msgstr "Data creazione"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__currency_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__no_of_employee
@@ -1486,7 +1490,7 @@ msgstr "Messaggio personalizzato di non recapito"
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__schedule_pay__daily
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_job__payment_interval__daily
 msgid "Day"
-msgstr ""
+msgstr "Giorno"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__rotting_threshold_days
@@ -1912,7 +1916,7 @@ msgstr "Primo colloquio"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Fold by Default"
-msgstr ""
+msgstr "Minimizza per impostazione predefinita"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__fold
@@ -2006,7 +2010,7 @@ msgstr "Data di assunzione"
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__schedule_pay__hourly
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_job__payment_interval__hourly
 msgid "Hour"
-msgstr ""
+msgstr "Ora"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
@@ -2144,6 +2148,8 @@ msgid ""
 "If you archive these job positions, all their applicants will be archived "
 "too. Are you sure?"
 msgstr ""
+"Se archivi queste posizioni lavorative, verranno archiviati anche tutti i "
+"relativi candidati. Sei sicuro?"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2154,6 +2160,8 @@ msgid ""
 "If you archive this job position, all its applicants will be archived too. "
 "Are you sure?"
 msgstr ""
+"Se archivi questa posizione lavorativa, anche tutti i candidati saranno "
+"archiviati. Sei sicuro?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__kanban_state__normal
@@ -2172,6 +2180,9 @@ msgid ""
 "Incoming emails create applications automatically. Use it for direct "
 "applications or when posting job opportunities on LinkedIn, Monster, etc."
 msgstr ""
+"Le e-mail in arrivo creano automaticamente le candidature. Utilizzabile per "
+"candidature dirette o per pubblicare offerte di lavoro su LinkedIn, Monster, "
+"ecc."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__phone_blacklisted
@@ -2288,7 +2299,7 @@ msgstr "Pagina lavoro"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job_platform
 msgid "Job Platform"
-msgstr ""
+msgstr "Piattaforma di lavoro"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
@@ -2341,7 +2352,7 @@ msgstr "Specifica per lavori"
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_tag_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_tag_menu
 msgid "Job Tags"
-msgstr ""
+msgstr "Tag lavoro"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_5
@@ -2514,7 +2525,7 @@ msgstr "Laurea magistrale"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__salary_max
 msgid "Maximum Salary"
-msgstr ""
+msgstr "Salario massimo"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__medium_id
@@ -2562,14 +2573,14 @@ msgstr "Messaggi"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__salary_min
 msgid "Minimum Salary"
-msgstr ""
+msgstr "Salario minimo"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__schedule_pay__monthly
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_job__payment_interval__monthly
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Month"
-msgstr ""
+msgstr "Mese"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
@@ -2727,7 +2738,7 @@ msgstr "Ancora nessun dato."
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "No email"
-msgstr ""
+msgstr "Nessuna e-mail"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
@@ -2990,7 +3001,7 @@ msgstr "Retribuzione aggiuntiva proposta"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Publish job opportunities on your website"
-msgstr ""
+msgstr "Pubblica le opportunità di lavoro sul tuo sito web"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
@@ -3006,7 +3017,7 @@ msgstr "Valutazioni"
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__kanban_state__done
 msgid "Ready"
-msgstr ""
+msgstr "Pronto"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -3069,7 +3080,7 @@ msgstr "Piani di assunzione"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
 msgid "Recruitment Stage"
-msgstr ""
+msgstr "Fase di reclutamento"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_congratulations
@@ -3226,7 +3237,7 @@ msgstr "Inattività"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Rotting in"
-msgstr ""
+msgstr "Inattività"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -3272,7 +3283,7 @@ msgstr "Retribuzione proposta dall'organizzazione, benefici aggiuntivi"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Salary Range"
-msgstr ""
+msgstr "Fascia retributiva"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_sanitized
@@ -3298,7 +3309,7 @@ msgstr "Programma colloquio"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__schedule_pay
 msgid "Schedule Pay"
-msgstr ""
+msgstr "Programma paga"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__scheduled_date
@@ -3308,7 +3319,7 @@ msgstr "Data pianificata"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__payment_interval
 msgid "Scheduled Pay"
-msgstr ""
+msgstr "Paga programmata"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__score
@@ -3449,7 +3460,7 @@ msgstr "Mostra tutti i record con data prossima azione nel passato"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Show for all positions"
-msgstr ""
+msgstr "Mostra per tutte le posizioni"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__source_id
@@ -3541,7 +3552,7 @@ msgstr "Fasi"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 msgid "State"
-msgstr ""
+msgstr "Stato"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_state
@@ -3576,7 +3587,7 @@ msgstr "Oggetto..."
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job_tag
 msgid "Tag"
-msgstr ""
+msgstr "Tag"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__name
@@ -3834,7 +3845,7 @@ msgstr "Prova a inviare un'e-mail"
 #. module: hr_recruitment
 #: model_terms:web_tour.tour,rainbow_man_message:hr_recruitment.hr_recruitment_tour
 msgid "Try the Website app to publish job opportunities online."
-msgstr ""
+msgstr "Prova l'app Sito web per pubblicare online le opportunità di lavoro."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -3961,12 +3972,12 @@ msgstr "Cronologia comunicazioni sito web"
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__schedule_pay__weekly
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_job__payment_interval__weekly
 msgid "Week"
-msgstr ""
+msgstr "Settimana"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "What are the requirements to move an applicant to this stage?"
-msgstr ""
+msgstr "Quali sono i requisiti per passare a questa fase?"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -4000,7 +4011,7 @@ msgstr "Scrivi il tuo messaggio qui..."
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__schedule_pay__yearly
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_job__payment_interval__yearly
 msgid "Year"
-msgstr ""
+msgstr "Anno"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -4091,7 +4102,7 @@ msgstr "ad es. Master"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "e.g. Qualification"
-msgstr ""
+msgstr "ad es. Qualifica"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -4152,12 +4163,12 @@ msgstr "ID"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "in<br/><span class=\"text-nowrap\">progress</span>"
-msgstr ""
+msgstr "in<br/><span class=\"text-nowrap\">avanzamento</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "new<br/><span class=\"text-nowrap\">applications</span>"
-msgstr ""
+msgstr "new<br/><span class=\"text-nowrap\">candidature</span>"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -4182,7 +4193,7 @@ msgstr "gruppo talenti"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "to<br/><span class=\"text-nowrap\">recruit</span>"
-msgstr ""
+msgstr "to<br/><span class=\"text-nowrap\">assunzione</span>"
 
 #~ msgid ""
 #~ "<span invisible=\"not is_warning_visible\">\n"

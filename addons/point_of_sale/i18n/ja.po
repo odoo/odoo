@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-16 18:36+0000\n"
-"PO-Revision-Date: 2026-01-16 05:48+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
+"PO-Revision-Date: 2026-01-24 12:33+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "point_of_sale/ja/>\n"
@@ -768,7 +768,7 @@ msgstr "例外の活動を示す装飾"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "活動計画"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_state
@@ -844,13 +844,13 @@ msgstr "新規プリセットを追加"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
 msgid "Add a new printer"
-msgstr ""
+msgstr "新しいプリンタを追加"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.xml:0
 msgid "Add a tip"
-msgstr ""
+msgstr "チップを追加"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -872,7 +872,7 @@ msgstr "一つを追加"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Add tip after payment"
-msgstr ""
+msgstr "支払後にチップを追加"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -920,6 +920,8 @@ msgid ""
 "Adjust the amount authorized by payment terminals to add a tip after the "
 "customers left or at the end of the day."
 msgstr ""
+"支払端末で許可された金額を調整し、顧客が帰った後、またはその日の終わりにチッ"
+"プを追加します。"
 
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
@@ -1060,7 +1062,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 msgid "Amount of guests"
-msgstr ""
+msgstr "ゲスト人数"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
@@ -1106,6 +1108,9 @@ msgid ""
 "orders will be available in the next session.\n"
 "The page will now, be reloaded."
 msgstr ""
+"セッションの終了中にエラーが発生しました。ただし、同期されていないオーダは次"
+"回のセッションで利用可能です。\n"
+"ページはこれから再読み込みされます。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1120,6 +1125,8 @@ msgid ""
 "An error occurred while trying to generate an invoice. Try again from the "
 "order tab or generate the invoice from the backend."
 msgstr ""
+"請求書の生成中にエラーが発生しました。オーダタブから再度お試しいただくか、管"
+"理画面から請求書を生成してください。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -1463,12 +1470,12 @@ msgstr "バーコード"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Barcode Nomenclature"
-msgstr "バーコード表現規則"
+msgstr "バーコード表現ルール"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_barcode_rule
 msgid "Barcode Rule"
-msgstr "バーコード規則"
+msgstr "バーコードルール"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1481,6 +1488,12 @@ msgstr "バーコードスキャナ"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_basic_receipt
 msgid "Basic Receipt"
 msgstr "基本の領収書"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
+msgid "Be aware that reloading data will delete unsaved orders."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
@@ -2612,7 +2625,7 @@ msgstr "プロダクトを作成"
 #. module: point_of_sale
 #: model:ir.model,website_form_label:point_of_sale.model_res_partner
 msgid "Create a Customer"
-msgstr "顧客を作成する"
+msgstr "顧客を作成"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
@@ -5317,6 +5330,12 @@ msgid "No slot available for this day"
 msgstr "その日に空きがありません"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
+msgid "No valid orders were selected. No new invoices could be generated"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__barcode_nomenclature_id
 msgid "Nomenclature"
 msgstr "体系"
@@ -6840,7 +6859,7 @@ msgstr "価格表"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_pricelist_item
 msgid "Pricelist Rule"
-msgstr "価格表規則"
+msgstr "価格表ルール"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_config_menu_action_product_pricelist
@@ -7446,6 +7465,8 @@ msgstr "関連セッション:%(link)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.js:0
+#: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
 msgid "Reload Data"
 msgstr "データを再読み込みする"
 
@@ -8398,7 +8419,7 @@ msgstr "在庫移動"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_rule
 msgid "Stock Rule"
-msgstr "在庫規則"
+msgstr "在庫ルール"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
@@ -9837,19 +9858,6 @@ msgstr ""
 "してください:%s"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
-msgid ""
-"Unable to create consolidated invoice/s because the following orders can't "
-"be invoiced.\n"
-"\n"
-"%s"
-msgstr ""
-"以下のオーダに請求書を作成できないため、統合請求書を作成できません。\n"
-"\n"
-"%s"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/invoice_button/invoice_button.js:0
 msgid "Unable to download invoice."
@@ -10042,15 +10050,10 @@ msgstr "UUID"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/receipt/receipt_header/receipt_header.xml:0
 msgid "VAT"
 msgstr "VAT（Value Added Tax）"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
-msgid "VAT:"
-msgstr "消費税:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10318,9 +10321,8 @@ msgid ""
 "the form view in studio if no PoS order exist"
 msgstr ""
 "POSオーダが存在しない場合は、バックエンドのインターフェイスからPOSオーダを作"
-"成したり、プライスリストを解除したり、フォームツールを使ってPythonテストで"
-"pos.orderを作成したり、スタジオでフォームビューを編集したりすることはできませ"
-"ん。"
+"成したり、価格表を解除したり、フォームツールを使ってPythonテストでpos.orderを"
+"作成したり、スタジオでフォームビューを編集したりすることはできません。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10820,6 +10822,19 @@ msgstr "ボタンを有効化します。"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "支払方法:"
+
+#~ msgid ""
+#~ "Unable to create consolidated invoice/s because the following orders "
+#~ "can't be invoiced.\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "以下のオーダに請求書を作成できないため、統合請求書を作成できません。\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid "VAT:"
+#~ msgstr "消費税:"
 
 #~ msgid "Barcode Scanner/Card Reader"
 #~ msgstr "バーコードスキャナ/カードリーダー"
