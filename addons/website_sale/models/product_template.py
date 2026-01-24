@@ -1113,3 +1113,8 @@ class ProductTemplate(models.Model):
             url = f'{url}?{urls.url_encode(query_params)}'
 
         return url
+
+    def _can_be_added_to_comparison(self):
+        self.ensure_one()
+
+        return bool(self.valid_product_template_attribute_line_ids)

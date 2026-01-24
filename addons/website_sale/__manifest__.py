@@ -30,6 +30,7 @@
         'report/sale_report_views.xml',
 
         # QWeb templates
+        'templates/comparison_templates.xml',
         'templates/product_tile_templates.xml',
         'templates/gmc_templates.xml',
         'templates/product_page_templates.xml',
@@ -37,6 +38,7 @@
         'templates/shop_page_templates.xml',
         'templates/svg_templates.xml',
         'templates/website_templates.xml',
+        'templates/wishlist_templates.xml',
 
         # Qweb templates -> checkout
         'templates/checkout/checkout_templates.xml',  # Shared templates first
@@ -50,6 +52,7 @@
         'views/account_move_views.xml',
         'views/delivery_carrier_views.xml',
         'views/digest_views.xml',
+        'views/product_attribute_category_views.xml',
         'views/product_attribute_views.xml',
         'views/product_document_views.xml',
         'views/product_feed_views.xml',
@@ -89,6 +92,9 @@
     ],
     'demo': [
         'data/demo.xml',
+        # TODO merge both files
+        'data/product_attribute_category_data.xml',
+        'data/product_attribute_category_demo.xml',
     ],
     'application': True,
     'post_init_hook': '_post_init_hook',
@@ -101,7 +107,11 @@
             'website_sale/static/src/scss/product_tile.scss',
             'website_sale/static/src/scss/website_sale.scss',
             'website_sale/static/src/scss/website_sale_frontend.scss',
+            'website_sale/static/src/scss/website_sale_comparison.scss',
+            'website_sale/static/src/scss/website_sale_comparison.options.scss',
             'website_sale/static/src/scss/website_sale_delivery.scss',
+            'website_sale/static/src/scss/website_sale_wishlist.scss',
+            'website_sale/static/src/scss/website_sale_wishlist.options.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_categories/000.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_categories/000.xml',
             'website/static/lib/multirange/multirange_custom.scss',
@@ -112,6 +122,8 @@
             'website_sale/static/src/js/cart_service.js',
             'website_sale/static/src/xml/website_sale.xml',
             'website_sale/static/src/js/website_sale_utils.js',
+            'website_sale/static/src/js/wishlist_utils.js',
+            'website_sale/static/src/js/comparison_utils.js',
             'website_sale/static/src/xml/website_sale_utils.xml',
             'website/static/lib/multirange/multirange_custom.js',
             'website/static/src/interactions/multirange_input.js',
@@ -139,6 +151,10 @@
             'website_sale/static/src/js/product_list/*',
             'website_sale/static/src/js/product_template_attribute_line/*',
             'website_sale/static/src/js/quantity_buttons/*',
+
+            # comparison
+            'website_sale/static/src/js/product_row/*',
+            'website_sale/static/src/js/product_comparison_bottom_bar/*',
 
             # Location selector components are defined in `delivery` to share the codebase with the
             # backend.
@@ -187,6 +203,7 @@
         'web.assets_tests': [
             'website_sale/static/tests/tours/**/*',
             'website_sale/static/src/js/tours/product_configurator_tour_utils.js',
+            'website_sale/static/src/js/tours/wishlist_tour_utils.js',
         ],
         'web.assets_unit_tests': [
             'website_sale/static/tests/interactions/**/*',
@@ -195,7 +212,11 @@
         'web.assets_unit_tests_setup': [
             'delivery/static/src/js/location_selector/**/*',
             'website_sale/static/src/interactions/**/*',
+            'website_sale/static/src/js/product_row/*',
+            'website_sale/static/src/js/product_comparison_bottom_bar/*',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/dynamic_snippet_products.js',
+            'website_sale/static/src/js/comparison_utils.js',
+            'website_sale/static/src/js/wishlist_utils.js',
             'website_sale/static/src/js/website_sale_utils.js',
             'website_sale/static/src/js/components/website_sale_image_viewer.js',
             # TODO Find out why these do not work:

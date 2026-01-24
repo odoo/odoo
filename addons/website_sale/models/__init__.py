@@ -1,38 +1,43 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import account_move
-from . import crm_team
-from . import delivery_carrier
-from . import digest
-from . import ir_http
-from . import ir_module_module
-from . import payment_token
-from . import payment_transaction
-from . import product_attribute
-from . import product_document
-from . import product_feed
-from . import product_image
-from . import product_pricelist
-from . import product_pricelist_item
-from . import product_product
-from . import product_public_category
-from . import product_ribbon
-from . import product_tag
-from . import product_template
-from . import product_template_attribute_line
-from . import product_template_attribute_value
-from . import res_company
-from . import res_config_settings
-from . import res_partner
-from . import sale_order
-from . import sale_order_line
-from . import theme_utils
-from . import website
-from . import website_base_unit
-from . import website_checkout_step
-from . import website_menu
-from . import website_page
-from . import website_sale_extra_field
-from . import website_snippet_filter
-from . import website_track
-from . import website_visitor
+from . import (
+    account_move,
+    crm_team,
+    delivery_carrier,
+    digest,
+    ir_http,
+    ir_module_module,
+    payment_token,
+    payment_transaction,
+    product_attribute,
+    product_attribute_category,
+    product_document,
+    product_feed,
+    product_image,
+    product_pricelist,
+    product_pricelist_item,
+    product_product,
+    product_public_category,
+    product_ribbon,
+    product_tag,
+    product_template,
+    product_template_attribute_line,
+    product_template_attribute_value,
+    product_wishlist,
+    res_company,
+    res_config_settings,
+    res_partner,
+    res_users,
+    sale_order,
+    sale_order_line,
+    theme_utils,
+    website,
+    website_base_unit,
+    website_checkout_step,
+    website_menu,
+    website_page,
+    website_sale_extra_field,
+    website_snippet_filter,
+    website_track,
+    website_visitor,
+)
