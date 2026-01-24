@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2026-01-13 15:31+0000\n"
+"PO-Revision-Date: 2026-01-23 07:31+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "base_automation/ja/>\n"
@@ -47,9 +47,8 @@ msgstr "\"%s\"タグが追加されました"
 msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
-msgstr ""
-"\"本番更新時 \"の自動化規則は、\"Pythonコードの実行 \"アクションタイプでのみ"
-"使用できます。"
+msgstr "\"本番更新時 \"の自動化ルールは、\"Pythonコードの実行 \"アクションタイプでの"
+"み使用できます。"
 
 #. module: base_automation
 #. odoo-javascript
@@ -116,9 +115,9 @@ msgid ""
 "be executed <em>every time</em> the watched fields change, <em>whether you "
 "save or not</em>."
 msgstr ""
-"<i class=\"fa fa-warning\"/> UIの変更によってトリガされる自動化規則は監視され"
-"ているフィールドが変更されるたびに<em>常に</em>、<em>保存の有無にかかわらず</"
-"em>実行されます。"
+"<i class=\"fa fa-warning\"/> UIの変更によってトリガされる自動化ルールは監視さ"
+"れているフィールドが変更されるたびに<em>常に</em>、<em>保存の有無にかかわらず"
+"</em>実行されます。"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_server_action_form
@@ -204,7 +203,7 @@ msgstr "添付数"
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Automate <em>everything</em> with Automation Rules"
-msgstr "自動化規則で<em>すべて</em>を自動化"
+msgstr "自動化ルールで<em>すべて</em>を自動化"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -213,12 +212,12 @@ msgstr "自動化規則で<em>すべて</em>を自動化"
 #: model:ir.model.fields.selection,name:base_automation.selection__ir_actions_server__usage__base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Automation Rule"
-msgstr "自動化規則"
+msgstr "自動化ルール"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
 msgid "Automation Rule Name"
-msgstr "自動化規則名"
+msgstr "自動化ルール名"
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
@@ -226,12 +225,12 @@ msgstr "自動化規則名"
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation Rules"
-msgstr "自動化規則"
+msgstr "自動化ルール"
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 msgid "Automation Rules: check and execute"
-msgstr "自動化規則:チェックして実行する"
+msgstr "自動化ルール:チェックして実行する"
 
 #. module: base_automation
 #. odoo-javascript
@@ -425,8 +424,7 @@ msgstr "有効にすると、一部のメッセージに配信エラーが発生
 msgid ""
 "If present, this condition must be satisfied before executing the automation "
 "rule."
-msgstr ""
-"存在する場合、この条件は、自動化規則を実行する前に満たされなければなりませ"
+msgstr "存在する場合、この条件は、自動化ルールを実行する前に満たされなければなりませ"
 "ん。"
 
 #. module: base_automation
@@ -528,9 +526,8 @@ msgstr "モデル名"
 msgid ""
 "Model of action %(action_name)s should match the one from automated rule %"
 "(rule_name)s."
-msgstr ""
-"アクションモデル%(action_name)sは自動化規則%(rule_name)sからのモデルに一致す"
-"る必要があります。"
+msgstr "アクションモデル%(action_name)sは自動化ルール%(rule_name)sからのモデルに一致"
+"する必要があります。"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
@@ -739,8 +736,8 @@ msgid ""
 "added.<br>With Automation Rules, you can automate any workflow."
 msgstr ""
 "オブジェクトのステータスが変更された際にEメールを送信したり、1か月間操作がな"
-"い場合にレコードをアーカイブしたり、特定のタグが追加された際にタスクのフォ"
-"ローアップをリマインドする機能です。<br>自動化規則であらゆるワークフローを自"
+"い場合にレコードをアーカイブしたり、特定のタグが追加された際にタスクのフォロ"
+"ーアップをリマインドする機能です。<br>自動化ルールであらゆるワークフローを自"
 "動化できます。"
 
 #. module: base_automation
@@ -814,7 +811,7 @@ msgstr "ターゲットレコード"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "Target model of actions %(action_names)s are different from rule model."
-msgstr "アクション%(action_names)sのターゲットモデルは規則モデルとは異なります"
+msgstr "アクション%(action_names)sのターゲットモデルはルールモデルとは異なります"
 
 #. module: base_automation
 #. odoo-python
@@ -831,9 +828,8 @@ msgstr ""
 msgid ""
 "The automation rule will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
-msgstr ""
-"これらのフィールドの1つが更新された場合にのみ、自動化規則がトリガされます。空"
-"の場合、すべてのフィールドが監視されます。"
+msgstr "これらのフィールドの1つが更新された場合にのみ、自動化ルールがトリガされます。"
+"空の場合、すべてのフィールドが監視されます。"
 
 #. module: base_automation
 #. odoo-javascript
@@ -856,8 +852,7 @@ msgstr "自動化ルールのスケジュール済みアクションが消えて
 msgid ""
 "This code will be run to find on which record the automation rule should be "
 "run."
-msgstr ""
-"このコードは、自動化規則を実行すべきレコードを見つけるために実行されます。"
+msgstr "このコードは、自動化ルールを実行すべきレコードを見つけるために実行されます。"
 
 #. module: base_automation
 #. odoo-javascript
@@ -869,7 +864,7 @@ msgstr "タイミング条件"
 #: model:digest.tip,name:base_automation.digest_tip_base_automation_0
 #: model_terms:digest.tip,tip_description:base_automation.digest_tip_base_automation_0
 msgid "Tip: Automate everything with Automation Rules"
-msgstr "ヒント: 自動化規則であらゆることを自動化しましょう。"
+msgstr "ヒント: 自動化ルールであらゆることを自動化しましょう。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -994,7 +989,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr "チェックを外すと、規則が隠され、実行できません。"
+msgstr "チェックを外すと、ルールが隠され、実行できません。"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -1007,7 +1002,7 @@ msgid ""
 "With Automation Rules, you can automate\n"
 "                <em>any</em> workflow."
 msgstr ""
-"自動化規則により、\n"
+"自動化ルールにより、\n"
 "                <em>あらゆる</em>ワークフローを自動化できます。"
 
 #. module: base_automation
