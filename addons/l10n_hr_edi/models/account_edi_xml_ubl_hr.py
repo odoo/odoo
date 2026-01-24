@@ -34,6 +34,7 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
                                     'cbc:ID': {},
                                     'cbc:Name': {},
                                     'cbc:Percent': {},
+                                    'cbc:TaxExemptionReasonCode': {},
                                     'cbc:TaxExemptionReason': {},
                                     'hrextac:HRTaxScheme': {
                                         'cbc:ID': {},
@@ -42,7 +43,7 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
                             }
                         },
                         'hrextac:HRLegalMonetaryTotal': {
-                            'hrextac:HRTaxExclusiveAmount': {},
+                            'cbc:TaxExclusiveAmount': {},
                             'hrextac:OutOfScopeOfVATAmount': {},
                         }
                     }
@@ -140,14 +141,17 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
                         '_text': invoice.invoice_date_due
                     }
                 })
-        # HR-BR-6: Each previous invoice reference (BG-3) must have the date of issue of the previous invoice (BT-26).
         # HR-BT-3: Note on previous invoice
-        if invoice.reversed_entry_id:
-            document_node['cac:BillingReference'].update({
+        # HR-BR-6: Each previous invoice reference (BG-3) must have the date of issue of the previous invoice (BT-26).
+        if 'refund' in invoice.move_type and invoice.reversed_entry_id:
+            document_node['cac:BillingReference'] = {
+                'cac:InvoiceDocumentReference': {
+                    'cbc:ID': {'_text': invoice.ref},
+                },
                 'cbc:IssueDate': {
                     '_text': invoice.reversed_entry_id.invoice_date
-                    }
-                })
+                }
+            }
         # Document Type Codes and Process Type Logic
         if invoice.l10n_hr_process_type in ('P4', 'P6'):
             if invoice.move_type == 'out_invoice':
@@ -179,11 +183,16 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
                     'cbc:ID': tax_subtotals[i]['cac:TaxCategory'][0]['cbc:ID'],
                     'cbc:Name': hr_tax_name,
                     'cbc:Percent': tax_subtotals[i]['cac:TaxCategory'][0]['cbc:Percent'],
+                    'cbc:TaxExemptionReasonCode': tax_subtotals[i]['cac:TaxCategory'][0]['cbc:TaxExemptionReasonCode'],
                     'cbc:TaxExemptionReason': tax_subtotals[i]['cac:TaxCategory'][0]['cbc:TaxExemptionReason'],
                     'hrextac:HRTaxScheme': tax_subtotals[i]['cac:TaxCategory'][0]['cac:TaxScheme'] if hr_tax_name['_text'] != "HR:POVNAK" else {'_text': "OTH"},
                 }
             }
             hr_tax_subtotals.append(new_item)
+        out_of_scope_node = {
+            'currencyID': document_node['cac:LegalMonetaryTotal']['cbc:TaxExclusiveAmount'].get('currencyID'),
+            '_text': '0.00'     # Currently unsupported, a HR-specific workaround can potentially be made
+        }
         document_node.update({
             'ext:UBLExtensions': {
                 'ext:UBLExtension': {
@@ -195,8 +204,8 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
                                 'hrextac:HRTaxSubtotal': hr_tax_subtotals,
                             },
                             'hrextac:HRLegalMonetaryTotal': {
-                                'hrextac:HRTaxExclusiveAmount': document_node['cac:LegalMonetaryTotal']['cbc:TaxExclusiveAmount'],
-                                'hrextac:OutOfScopeOfVATAmount': False,     # Currently unsupported, a HR-specific workaround can potentially be made
+                                'cbc:TaxExclusiveAmount': document_node['cac:LegalMonetaryTotal']['cbc:TaxExclusiveAmount'],
+                                'hrextac:OutOfScopeOfVATAmount': out_of_scope_node,
                             }
                         }
                     },
@@ -273,9 +282,10 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
                 'name': hr_category.name,
             })
             if tax.amount == 0:
-                res.update({
-                    'tax_exemption_reason': hr_category.description,
-                })
+                tax_extension = 'ubl_cii_tax_exemption_reason_code' in tax._fields and tax.ubl_cii_tax_exemption_reason_code
+                # If account_edi_ubl_cii_tax_extension is installed and a value is specified, use that data, if not, override with HR data
+                if not tax_extension:
+                    res.update({'tax_exemption_reason': hr_category.description, 'tax_exemption_reason_code': False})
         return res
 
     def _ubl_default_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
@@ -317,7 +327,7 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
             'cbc:ID': {'_text': tax_category['tax_category_code']},
             'cbc:Name': {'_text': tax_category.get('name')},
             'cbc:Percent': {'_text': tax_category['percent']},
-            # 'cbc:TaxExemptionReasonCode': {'_text': tax_category.get('tax_exemption_reason_code')},   # Behavior inconsistency between 18.3 and 18.4
+            'cbc:TaxExemptionReasonCode': {'_text': tax_category.get('tax_exemption_reason_code')},   # Behavior inconsistency between 18.3 and 18.4
             'cbc:TaxExemptionReason': {'_text': tax_category.get('tax_exemption_reason')},
             'cac:TaxScheme': {
                 'cbc:ID': {'_text': tax_category['scheme_id']},
@@ -331,6 +341,7 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
             'cbc:ID': {'_text': tax_category['tax_category_code']},
             'cbc:Name': {'_text': tax_category.get('name')},
             'cbc:Percent': {'_text': tax_category['percent']},
+            'cbc:TaxExemptionReasonCode': {'_text': tax_category.get('tax_exemption_reason_code')},
             'cbc:TaxExemptionReason': {'_text': tax_category.get('tax_exemption_reason')},
             'cac:TaxScheme': {
                 'cbc:ID': {'_text': tax_category['scheme_id']},
