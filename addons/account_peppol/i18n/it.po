@@ -6,23 +6,23 @@
 # Wil Odoo, 2024
 # Marianna Ciofani, 2025
 #
-# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-15 18:37+0000\n"
-"PO-Revision-Date: 2026-01-17 17:00+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-01-22 18:36+0000\n"
+"PO-Revision-Date: 2026-01-24 08:07+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-17/"
 "account_peppol/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: account_peppol
@@ -170,20 +170,6 @@ msgid ""
 msgstr ""
 "Impossibile annullare una registrazione attiva. Richiedi una migrazione o "
 "annulla la registrazione."
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
-msgid "Can't cancel registration with this status: %s"
-msgstr "Impossibile annullare la registrazione con questo stato: %s"
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
-msgid "Can't deregister with this status: %s"
-msgstr "Impossibile cancellare la registrazione con questo stato: %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -861,6 +847,8 @@ msgid ""
 "This peppol identification is already used by %(parent_name)s. Please use "
 "something else."
 msgstr ""
+"Questa identificazione Peppol è già utilizzata da %(parent_name)s. Usane "
+"un'altra."
 
 #. module: account_peppol
 #. odoo-python
@@ -1039,6 +1027,14 @@ msgstr "per inviare fatture, ma"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "usa"
+
+#, python-format
+#~ msgid "Can't cancel registration with this status: %s"
+#~ msgstr "Impossibile annullare la registrazione con questo stato: %s"
+
+#, python-format
+#~ msgid "Can't deregister with this status: %s"
+#~ msgstr "Impossibile cancellare la registrazione con questo stato: %s"
 
 #~ msgid "Cannot receive this format"
 #~ msgstr "Impossibile ricevere il formato"

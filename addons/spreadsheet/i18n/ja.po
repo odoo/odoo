@@ -6,15 +6,15 @@
 # Wil Odoo, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
 # Junko Augias, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-01-10 08:06+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"POT-Creation-Date: 2026-01-22 18:37+0000\n"
+"PO-Revision-Date: 2026-01-24 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/"
 "spreadsheet/ja/>\n"
 "Language: ja\n"
@@ -146,7 +146,7 @@ msgstr "(空欄)"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "+ Add another rule"
-msgstr "+ 規則を1つ追加"
+msgstr "+ ルールを1つ追加"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -460,6 +460,13 @@ msgstr "絶対値"
 #, python-format
 msgid "Absolute value of a number."
 msgstr "数字の絶対値"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
+#, python-format
+msgid "Access Error"
+msgstr "アクセスエラー"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -799,7 +806,7 @@ msgstr ""
 msgid ""
 "An expression or reference to a cell holding an expression that represents "
 "some logical value."
-msgstr "ある論理値を表す式を保持するセルへの式または参照。"
+msgstr "論理値を表す式、またはそのような式を含むセルへの参照。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -865,7 +872,7 @@ msgstr "その行列式を計算するマトリクスを表す、行と列の数
 msgid ""
 "An range with an equal number of rows and columns representing a matrix "
 "whose multiplicative inverse will be calculated."
-msgstr "乗法逆行列を計算するマトリクスを表す、行と列の数が等しい範囲。"
+msgstr "乗法逆行列を計算する対象となる、行と列の数が等しい範囲(正方行列)。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -936,42 +943,42 @@ msgstr "匿名"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic cosecant of."
-msgstr "そのハイパボリックコセカントを計算するための任意の実数値"
+msgstr "双曲線余割を計算するための任意の実数値。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic cosine of."
-msgstr "そのハイパボリックコサインを計算するための任意の実数値"
+msgstr "双曲線余弦を計算するための任意の実数値。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic cotangent of."
-msgstr "そのハイパボリックコタンジェントを計算するための任意の実数値"
+msgstr "双曲線余接を計算するための任意の実数値。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic secant of."
-msgstr "そのハイパボリックセカントを計算するための任意の実数値"
+msgstr "双曲線正割を計算するための任意の実数値。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic sine of."
-msgstr "そのハイパボリックサインを計算するための任意の実数値"
+msgstr "双曲線正弦を計算するための任意の実数値。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Any real value to calculate the hyperbolic tangent of."
-msgstr "そのハイパボリックタンジェントを計算するための任意の実数値"
+msgstr "双曲線正接を計算するための任意の実数値。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1333,7 +1340,8 @@ msgstr "2つの配列の値の2乗の差の和を計算します。"
 msgid ""
 "Calculates the sum of the products of corresponding entries in equal-sized "
 "ranges."
-msgstr "等しいサイズの範囲内の対応するエントリの積の合計を計算します。"
+msgstr ""
+"同じサイズの範囲にある対応する要素同士を掛け算し、その積の合計を計算します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1341,7 +1349,7 @@ msgstr "等しいサイズの範囲内の対応するエントリの積の合計
 #, python-format
 msgid ""
 "Calculates the sum of the sum of the squares of the values in two array."
-msgstr "この注文の製品バリアントのマトリクスがあれば、ここに表示されます。"
+msgstr "2つの配列内の値の2乗の合計をさらに合計して返します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1436,7 +1444,7 @@ msgstr "中央"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Chart"
-msgstr "チャート"
+msgstr "グラフ"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2587,10 +2595,7 @@ msgid "Does not contain"
 msgstr "有価証券の価格に基づく値引率"
 
 #. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.js:0
 #: model_terms:ir.ui.view,arch_db:spreadsheet.public_spreadsheet_layout
-#, python-format
 msgid "Download"
 msgstr "ダウンロード"
 
@@ -6860,7 +6865,7 @@ msgid ""
 "cell:\n"
 "%s"
 msgstr ""
-" %sに入力したデータは以下のセルに設定された検証規則に反します:\n"
+"%sに入力したデータは以下のセルに設定された検証ルールに反します:\n"
 "%s"
 
 #. module: spreadsheet
@@ -7266,7 +7271,8 @@ msgstr "最初の加数"
 msgid ""
 "The first and second arguments of [[FUNCTION_NAME]] must be non-empty "
 "matrices."
-msgstr "[[FUNCTION_NAME]] の第1引数と第2引数は、空でない行列である必要があります。"
+msgstr ""
+"[[FUNCTION_NAME]] の第1引数と第2引数は、空でない行列である必要があります。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8901,7 +8907,7 @@ msgstr "返される行のインデックス"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The rule is invalid for an unknown reason"
-msgstr "規則は不明な理由で無効です。"
+msgstr "ルールは不明な理由で無効です。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9416,7 +9422,7 @@ msgstr "値 (%s)は必ず正の値にして下さい。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value does not match the custom formula data validation rule"
-msgstr "値がカスタム式のデータ検証規則に一致しません。"
+msgstr "値がカスタム式のデータ検証ルールに一致しません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11051,6 +11057,14 @@ msgstr "重複するフィルタは作成できません"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
+#, python-format
+msgid ""
+"You don't have the rights to export data. Please contact an Administrator."
+msgstr "データをエクスポートする権限がありません。管理者に連絡してください。"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 #, python-format
 msgid "[[FUNCTION_NAME]] cannot be called from the spreadsheet."
@@ -11091,7 +11105,8 @@ msgstr "[[FUNCTION_NAME]]には数値が入ります"
 msgid ""
 "[[FUNCTION_NAME]] expects the provided values of %(argName)s to be a non-"
 "empty matrix."
-msgstr "[[FUNCTION_NAME]] は、%(argName)s に指定された値が空でない行列であることを前"
+msgstr ""
+"[[FUNCTION_NAME]] は、%(argName)s に指定された値が空でない行列であることを前"
 "提としています。"
 
 #. module: spreadsheet
