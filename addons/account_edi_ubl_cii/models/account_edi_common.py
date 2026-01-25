@@ -696,7 +696,7 @@ class AccountEdiCommon(models.AbstractModel):
                 mimetype = attachment_data.attrib.get('mimeCode')
                 if not (extension := SUPPORTED_FILE_TYPES.get(mimetype)):
                     continue
-                text = attachment_data.text
+                text = (attachment_data.text or '').strip()
                 # Normalize the name of the file : some e-fff emitters put the full path of the file
                 # (Windows or Linux style) and/or the name of the xml instead of the pdf.
                 # Get only the filename with the right extension.
@@ -705,7 +705,7 @@ class AccountEdiCommon(models.AbstractModel):
                     'name': name,
                     'res_id': invoice.id,
                     'res_model': 'account.move',
-                    'datas': text + '=' * (len(text) % 3),  # Fix incorrect padding
+                    'raw': text + '=' * (len(text) % 4),  # Fix incorrect padding
                     'type': 'binary',
                     'mimetype': mimetype,
                 })

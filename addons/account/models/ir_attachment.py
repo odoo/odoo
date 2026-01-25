@@ -38,14 +38,14 @@ class IrAttachment(models.Model):
                 raise ue
 
     def write(self, vals):
-        if vals.keys() & {'res_id', 'res_model', 'raw', 'datas', 'store_fname', 'db_datas', 'company_id'}:
+        if vals.keys() & {'res_id', 'res_model', 'raw', 'store_fname', 'db_datas', 'company_id'}:
             try:
                 self._except_audit_trail()
             except UserError as e:
                 if (
                     not hasattr(e, '_audit_trail')
                     or vals.get('res_model') != 'documents.document'
-                    or vals.keys() & {'raw', 'datas', 'store_fname', 'db_datas'}
+                    or vals.keys() & {'raw', 'store_fname', 'db_datas'}
                 ):
                     raise  # do not raise if trying to version the attachment through a document
                 vals.pop('res_model', None)

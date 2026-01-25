@@ -124,7 +124,6 @@ async function mail_attachment_upload(request) {
     const model = is_pending ? "mail.compose.message" : body.get("thread_model");
     const id = is_pending ? 0 : parseInt(body.get("thread_id"));
     const attachmentId = IrAttachment.create({
-        // datas,
         mimetype: ufile.type,
         name: ufile.name,
         res_id: id,

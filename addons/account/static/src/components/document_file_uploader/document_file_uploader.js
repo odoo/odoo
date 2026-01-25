@@ -24,7 +24,7 @@ export const AbstractDocumentFileUploader = (T = Component)  => class AbstractDo
         const att_data = {
             name: file.name,
             mimetype: file.type,
-            datas: file.data,
+            raw: file.data,
         };
         const [att_id] = await this.orm.create("ir.attachment", [att_data], {context: this.cleanContext});
         this.attachmentIdsToProcess.push(att_id);

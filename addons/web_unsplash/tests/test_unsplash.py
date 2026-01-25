@@ -10,7 +10,7 @@ class TestUnsplash(common.TransactionCase):
             {
                 "name": "attachment",
                 "url": "/unsplash/xyz",
-                "datas": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+                "raw": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
             },
         )
 
@@ -19,6 +19,6 @@ class TestUnsplash(common.TransactionCase):
                 {
                     "name": "attachment",
                     "url": "/unsplash/xyz",
-                    "datas": "dGVzdA==",
+                    "raw": "dGVzdA==",
                 },
             )

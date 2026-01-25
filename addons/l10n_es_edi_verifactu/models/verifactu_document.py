@@ -136,10 +136,6 @@ class L10nEsEdiVerifactuDocument(models.Model):
         string="JSON",
         related='json_attachment_id.raw',
     )
-    json_attachment_base64 = fields.Binary(
-        string="JSON base64 (deprecated)",
-        related='json_attachment_id.datas',
-    )
     json_attachment_filename = fields.Char(
         string="JSON Filename",
         compute='_compute_json_attachment_filename',

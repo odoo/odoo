@@ -201,7 +201,7 @@ class PosOrder(models.Model):
                     "res_id": invoice.id,
                     "res_field": "l10n_jo_edi_xml_attachment_file",
                     "name": f'{self.name}_edi.xml',
-                    "datas": self.l10n_jo_edi_pos_xml_attachment_id.datas,
+                    "raw": self.l10n_jo_edi_pos_xml_attachment_id.raw,
                 }
             )
         if invoice and self.l10n_jo_edi_pos_qr:

@@ -35,7 +35,7 @@ export class L10nTrEreceiptUploader extends Component {
         const file_data = {
             name: file.name,
             mimetype: file.type,
-            datas: file.data,
+            raw: file.data,
         };
         const [attachmentId] = await this.orm.create("ir.attachment", [file_data]);
         this.attachmentIdsToProcess.push(attachmentId);

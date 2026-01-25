@@ -60,7 +60,7 @@ class TestAttachmentController(HttpCase):
             # ensure we can not skip them in RPC
             self.env["ir.attachment"].with_user(self.portal_user).create({
                 'name': 'test.png',
-                'datas': 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+                'raw': 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
                 'res_model': 'forum.post',
                 'res_id': post.id,
             })

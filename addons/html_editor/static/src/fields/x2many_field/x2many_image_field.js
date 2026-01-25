@@ -37,11 +37,11 @@ export class X2ManyImageField extends ImageField {
         const attachmentRecord = await this.orm.searchRead(
             "ir.attachment",
             [["id", "=", attachment[0].id]],
-            ["id", "datas", "name"],
+            ["id", "raw", "name"],
             {}
         );
-        if (!attachmentRecord[0].datas) {
-            // URL type attachments are mostly demo records which don't have any ir.attachment datas
+        if (!attachmentRecord[0].raw) {
+            // URL type attachments are mostly demo records which don't have any ir.attachment raw
             // TODO: make it work with URL type attachments
             return this.notification.add(
                 `Cannot add URL type attachment "${attachmentRecord[0].name}". Please try to reupload this image.`,
@@ -51,7 +51,7 @@ export class X2ManyImageField extends ImageField {
             );
         }
         await this.props.record.update({
-            [this.props.name]: attachmentRecord[0].datas,
+            [this.props.name]: attachmentRecord[0].raw,
             name: attachmentRecord[0].name,
         });
     }

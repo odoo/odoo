@@ -75,7 +75,7 @@ class TestControllers(tests.HttpCase):
     def test_03_website_image(self):
         attachment = self.env['ir.attachment'].create({
             'name': 'one_pixel.png',
-            'datas': 'iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAJElEQVQI'
+            'raw': 'iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAJElEQVQI'
                      'mWP4/b/qPzbM8Pt/1X8GBgaEAJTNgFcHXqOQMV4dAMmObXXo1/BqAAAA'
                      'AElFTkSuQmCC',
             'public': True,

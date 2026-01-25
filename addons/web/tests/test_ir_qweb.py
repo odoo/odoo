@@ -1,8 +1,11 @@
 import base64
+
 from lxml import etree
 
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 from odoo.tools.mimetypes import guess_mimetype
+
+from odoo.addons.base.tests.files import JPG_RAW
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -61,7 +64,7 @@ class TestIrQweb(TransactionCase):
             "name": "webpcopy.jpg",
             "res_model": "ir.attachment",
             "res_id": attachment.id,
-            "datas": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAF0lEQVR4nGJxKFrEwMDAxAAGgAAAAP//D+IBWx9K7TUAAAAASUVORK5CYII=",
+            "raw": JPG_RAW,
         })
 
         html = view.with_context(webp_as_jpg=False)._render_template(view.id, {"is_raw_image": True, "record": lang_record})
@@ -72,7 +75,7 @@ class TestIrQweb(TransactionCase):
         html = view.with_context(webp_as_jpg=True)._render_template(view.id, {"is_raw_image": True, "record": lang_record})
         tree = etree.fromstring(html)
         img = tree.find("img")
-        self.assertEqual(img.get("src"), f"data:image/png;base64,{jpeg_attach.raw.to_base64()}")
+        self.assertEqual(img.get("src"), f"data:image/jpg;base64,{jpeg_attach.raw.to_base64()}")
 
     def test_image_svg(self):
         image = """<?xml version='1.0' encoding='UTF-8' ?>

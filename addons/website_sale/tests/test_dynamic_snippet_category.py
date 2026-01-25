@@ -45,7 +45,7 @@ class TestDynamicSnippetCategory(WebsiteSaleCommon):
         """Test setting a cover image via JSON-RPC route"""
         attachment = self.env['ir.attachment'].create({
             'name': "test.png",
-            'datas': 'iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAJElEQVQI'
+            'raw': 'iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAJElEQVQI'
                      'mWP4/b/qPzbM8Pt/1X8GBgaEAJTNgFcHXqOQMV4dAMmObXXo1/BqAAAA'
                      'AElFTkSuQmCC',
             'public': True,

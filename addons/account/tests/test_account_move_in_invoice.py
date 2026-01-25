@@ -2943,7 +2943,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(receipt.invoice_line_ids.tax_ids, account_tax)
 
     def test_reverse_and_create_invoice_copied_main_attachment(self):
-        attachment_vals = [{'name': 'Attachment', 'mimetype': 'text/plain', 'res_model': 'account.move', 'datas': b''}]
+        attachment_vals = [{'name': 'Attachment', 'mimetype': 'text/plain', 'res_model': 'account.move'}]
         attachment = self.env['ir.attachment'].create(attachment_vals)
         move1, move2 = self.env['account.move'].create([
             {

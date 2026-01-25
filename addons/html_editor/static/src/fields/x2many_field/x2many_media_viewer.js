@@ -46,13 +46,13 @@ export class X2ManyMediaViewer extends X2ManyField {
         const attachmentRecords = await this.orm.searchRead(
             "ir.attachment",
             [["id", "in", attachmentIds]],
-            ["id", "datas", "name", "mimetype"],
+            ["id", "raw", "name", "mimetype"],
             {}
         );
         for (const attachment of attachmentRecords) {
             const imageList = this.props.record.data[this.props.name];
-            if (!attachment.datas) {
-                // URL type attachments are mostly demo records which don't have any ir.attachment datas
+            if (!attachment.raw) {
+                // URL type attachments are mostly demo records which don't have any ir.attachment raw
                 // TODO: make it work with URL type attachments
                 return this.notification.add(
                     `Cannot add URL type attachment "${attachment.name}". Please try to reupload this image.`,
@@ -70,7 +70,7 @@ export class X2ManyMediaViewer extends X2ManyField {
                 // to be applied on both sides.
                 // Generate alternate sizes and format for reports.
                 const image = document.createElement("img");
-                image.src = `data:${attachment.mimetype};base64,${attachment.datas}`;
+                image.src = `data:${attachment.mimetype};base64,${attachment.raw}`;
                 await new Promise((resolve) => image.addEventListener("load", resolve));
 
                 const originalSize = Math.max(image.width, image.height);
@@ -102,7 +102,7 @@ export class X2ManyMediaViewer extends X2ManyField {
                             {
                                 name: attachment.name.replace(/\.[^/.]+$/, ".webp"),
                                 description: size === originalSize ? "" : `resize: ${size}`,
-                                datas: webpData,
+                                raw: webpData,
                                 res_id: referenceId,
                                 res_model: "ir.attachment",
                                 mimetype: "image/webp",
@@ -119,7 +119,7 @@ export class X2ManyMediaViewer extends X2ManyField {
                             {
                                 name: attachment.name.replace(/\.[^/.]+$/, ".jpg"),
                                 description: `resize: ${size} - format: jpeg`,
-                                datas: jpegData,
+                                raw: jpegData,
                                 res_id: resizedId,
                                 res_model: "ir.attachment",
                                 mimetype: "image/jpeg",
@@ -134,7 +134,7 @@ export class X2ManyMediaViewer extends X2ManyField {
                 ctx.drawImage(image, 0, 0, image.width, image.height);
 
                 const webpData = canvas.toDataURL("image/webp").split(",")[1];
-                attachment.datas = webpData;
+                attachment.raw = webpData;
                 attachment.mimetype = "image/webp";
                 attachment.name = attachment.name.replace(/\.[^/.]+$/, ".webp");
             }
@@ -143,8 +143,8 @@ export class X2ManyMediaViewer extends X2ManyField {
                 const activeFields = imageList.activeFields;
                 const updateData = {};
                 for (const field in activeFields) {
-                    if (attachment.datas && this.supportedFields.includes(field)) {
-                        updateData[field] = attachment.datas;
+                    if (attachment.raw && this.supportedFields.includes(field)) {
+                        updateData[field] = attachment.raw;
                         updateData["name"] = attachment.name;
                     }
                 }

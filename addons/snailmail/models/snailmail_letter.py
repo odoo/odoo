@@ -44,7 +44,6 @@ class SnailmailLetter(models.Model):
 
     attachment_id = fields.Many2one('ir.attachment', string='Attachment', ondelete='cascade', index='btree_not_null')
     attachment_raw = fields.Binary('Document', related='attachment_id.raw')
-    attachment_datas = fields.Binary('Document (deprecated)', related='attachment_id.datas')
     attachment_fname = fields.Char('Attachment Filename', related='attachment_id.name')
     color = fields.Boolean(string='Color', default=lambda self: self.env.company.snailmail_color)
     cover = fields.Boolean(string='Cover Page', default=lambda self: self.env.company.snailmail_cover)
