@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
+import contextvars
 import json
 import logging
 import logging.handlers
@@ -30,6 +31,52 @@ def log(logger, level, prefix, msg, depth=None):
         indent=indent_after
 
 
+class ExecutionInfo:
+    """ Storage for globals about the current request/cron/execution. """
+    def __init__(self, name, *, db_name='', database_stats=True):
+        self.name = name + ('-' + db_name if db_name else '')
+        self.db_name = db_name
+        self.uid = None
+        self.cursor_mode = None
+        self.sess_id = None
+        self.url = ''
+        self.rpc_model_method = ''
+        self.perf_t0 = tools.real_time()
+        self._db_stats = sql_db.DatabaseStats() if database_stats else None
+
+    @property
+    def db_stats(self):
+        return self._db_stats or sql_db.database_stats_var.get()
+
+    def total_time(self):
+        return tools.real_time() - self.perf_t0
+
+    _execution_var = contextvars.ContextVar['ExecutionInfo']('execution')
+
+    def __enter__(self):
+        self.__reset = self._execution_var.set(self)
+        if self.db_stats:
+            self.__reset_database_stats = sql_db.database_stats_var.set(self.db_stats)
+        threading.current_thread().dumpstack_info = self
+        return self
+
+    def __exit__(self, *args):
+        if self.db_stats:
+            sql_db.database_stats_var.reset(self.__reset_database_stats)
+        self._execution_var.reset(self.__reset)
+        threading.current_thread().dumpstack_info = self._execution_var.get(None)
+
+    @classmethod
+    def get(cls):
+        try:
+            return cls._execution_var.get()
+        except LookupError:
+            info = ExecutionInfo(name='(unknown)')
+            info.__enter__()  # noqa: PLC2801
+            _logger.warning("creating new execution", exc_info=True, stack_info=True)  # XXX test
+            return info
+
+
 class WatchedFileHandler(logging.handlers.WatchedFileHandler):
     def __init__(self, filename):
         self.errors = None  # py38
@@ -54,8 +101,8 @@ class PostgreSQLHandler(logging.Handler):
                 self._support_metadata = bool(cr.fetchone())
 
     def emit(self, record):
-        ct = threading.current_thread()
-        ct_db = getattr(ct, 'dbname', None)
+        execution = ExecutionInfo._execution_var.get(None)
+        ct_db = execution.db_name if execution else None
         dbname = tools.config['log_db'] if tools.config['log_db'] and tools.config['log_db'] != '%d' else ct_db
         if not dbname:
             return
@@ -131,7 +178,8 @@ class LogRecord(logging.LogRecord):
         super().__init__(name, level, pathname, lineno, msg, args, exc_info, func=func, sinfo=sinfo, **kwargs)
         self.perf_info = ""
         self.thread_native = threading.get_native_id()
-        self.dbname = getattr(threading.current_thread(), 'dbname', '?')
+        execution = ExecutionInfo._execution_var.get(None)
+        self.dbname = execution.db_name if execution else '?'
 
 
 showwarning = None

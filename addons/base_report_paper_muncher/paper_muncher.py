@@ -8,7 +8,6 @@ import re
 import selectors
 import subprocess as sp
 import sys
-import threading
 import time
 from collections.abc import Sequence
 from email.utils import format_datetime
@@ -21,7 +20,7 @@ import h11
 
 from odoo.http.router import root
 from odoo.http.server import SERVER_AGENT, SERVER_SOFTWARE
-from odoo.http.server_log import http_log, run_in_isolated_context, reset_thread_info
+from odoo.http.server_log import http_log, run_in_isolated_context
 from odoo.tools.misc import find_in_path
 
 __all__ = ['PaperMuncherInfo', 'PaperMuncherServer', 'paper_muncher']
@@ -96,11 +95,6 @@ class PaperMuncherServer:
         if not self._process:
             e = "this function cannot be called outside of the context manager"
             raise RuntimeError(e)
-
-        # HTTP worker threads have query_count set by HTTPSocket.process_request();
-        # other callers (e.g. tests) do not, so initialise once before the loop.
-        if not hasattr(threading.current_thread(), 'query_count'):
-            reset_thread_info()
 
         _logger.info("Starting request loop, %d documents available", len(documents))
         self._deadline = time.monotonic() + timeout

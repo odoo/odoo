@@ -19,7 +19,7 @@ import odoo.release
 from odoo.tools import config
 
 from .router import root
-from .server_log import _logger, http_log, reset_thread_info
+from .server_log import _logger, http_log
 
 if typing.TYPE_CHECKING:
     from collections.abc import Buffer
@@ -190,7 +190,8 @@ class HTTPSocket:
         return environ
 
     def process_request(self):
-        reset_thread_info()
+        execution = odoo.netsvc.ExecutionInfo('http')
+        execution.__enter__()  # noqa: PLC2801
 
         # Receive the HTTP request
         try:

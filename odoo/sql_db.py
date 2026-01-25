@@ -7,6 +7,7 @@ the ORM does, in fact.
 """
 from __future__ import annotations
 
+import contextvars
 import functools
 import logging
 import os
@@ -87,6 +88,15 @@ def categorize_query(decoded_query: str) -> tuple[typing.Literal['from', 'into']
 sql_counter: int = 0
 
 MAX_IDLE_TIMEOUT = 60 * 10
+
+
+class DatabaseStats:
+    def __init__(self):
+        self.count = 0
+        self.time = 0.0
+
+
+database_stats_var = contextvars.ContextVar[DatabaseStats]('db_stats', default=DatabaseStats())
 
 
 class Savepoint:
@@ -373,6 +383,7 @@ class Cursor(_CursorProtocol):
     def execute(self, query, params=None, log_exceptions: bool = True) -> None:
         """ Execute a query inside the current transaction. """
         global sql_counter
+        stats = database_stats_var.get()
 
         if isinstance(query, SQL):
             assert params is None, "Unexpected parameters for SQL query object"
@@ -396,15 +407,12 @@ class Cursor(_CursorProtocol):
         # simple query count is always computed
         self.sql_log_count += 1
         sql_counter += 1
-
-        current_thread = threading.current_thread()
-        if hasattr(current_thread, 'query_count'):
-            current_thread.query_count += 1
-        if hasattr(current_thread, 'query_time'):
-            current_thread.query_time += delay
+        stats.count += 1
+        stats.time += delay
 
         # optional hooks for performance and tracing analysis
-        for hook in getattr(current_thread, 'query_hooks', ()):
+        hooks = getattr(threading.current_thread(), 'query_hooks', ())
+        for hook in hooks:
             hook(self, query, params, start, delay)
 
         # advanced stats

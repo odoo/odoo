@@ -54,7 +54,7 @@ except ImportError:
     def setproctitle(x):
         return None
 
-from odoo import api, sql_db
+from odoo import api, netsvc, sql_db
 from odoo.http.server import HTTPSocket
 from odoo.modules.registry import Registry
 from odoo.orm.cache import log_ormcache_stats
@@ -1510,8 +1510,7 @@ def preload_registries(dbnames):
                 collectors.append('sql')
             preload_profiler = profiler.Profiler(db=dbname, collectors=collectors)
         try:
-            with preload_profiler:
-                threading.current_thread().dbname = dbname
+            with netsvc.ExecutionInfo('preload', db_name=dbname), preload_profiler:
                 update_module = config['init'] or config['update'] or config['reinit']
 
                 registry = Registry.new(dbname, update_module=update_module, install_modules=config['init'], upgrade_modules=config['update'], reinit_modules=config['reinit'])

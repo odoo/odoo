@@ -18,7 +18,7 @@ from requests import RequestException
 from urllib.parse import urlparse, urlsplit
 from werkzeug import urls
 
-from odoo import api, fields, models, tools, release
+from odoo import api, fields, models, netsvc, tools, release
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import similarity_score, text_from_html, get_base_domain
 from odoo.addons.portal.controllers.portal import pager

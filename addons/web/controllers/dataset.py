@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import threading
 
 from werkzeug.exceptions import NotFound
 
-from odoo import http
+from odoo import http, netsvc
 from odoo.http import request
 from odoo.service.model import call_kw
 
@@ -28,13 +27,13 @@ class DataSet(http.Controller):
     @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='jsonrpc', auth="user", readonly=_call_kw_readonly)
     def call_kw(self, model, method, args, kwargs, path=None):
         if path != f'{model}.{method}':
-            threading.current_thread().rpc_model_method = f'{model}.{method}'
+            netsvc.ExecutionInfo.get().rpc_model_method = f'{model}.{method}'
         return call_kw(request.env[model], method, args, kwargs)
 
     @http.route(['/web/dataset/call_button', '/web/dataset/call_button/<path:path>'], type='jsonrpc', auth="user", readonly=_call_kw_readonly)
     def call_button(self, model, method, args, kwargs, path=None):
         if path != f'{model}.{method}':
-            threading.current_thread().rpc_model_method = f'{model}.{method}'
+            netsvc.ExecutionInfo.get().rpc_model_method = f'{model}.{method}'
         action = call_kw(request.env[model], method, args, kwargs)
         if isinstance(action, dict) and action.get('type') != '':  # noqa: PLC1901
             return clean_action(action, env=request.env)

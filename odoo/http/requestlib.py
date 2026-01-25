@@ -5,7 +5,6 @@ import hashlib
 import hmac
 import json
 import logging
-import threading
 import time
 import typing
 import warnings
@@ -22,6 +21,7 @@ from werkzeug.exceptions import NotFound
 from werkzeug.urls import URL, url_encode, url_parse
 from werkzeug.utils import redirect
 
+from odoo.netsvc import ExecutionInfo
 from odoo.tools import consteq, json_default
 
 from . import request
@@ -103,7 +103,7 @@ class Request:
         cr = None  # None is a sentinel, it keeps the same cursor
         self.env = self.env(cr, user, context, su)
         self.env.transaction.default_env = self.env
-        threading.current_thread().uid = self.env.uid
+        ExecutionInfo.get().uid = self.env.uid
 
     def update_context(self, **overrides) -> None:
         """
@@ -365,5 +365,5 @@ class Request:
 
         # Create and expose a new request from the modified WSGI env
         httprequest = HTTPRequest(environ)
-        threading.current_thread().url = httprequest.url
+        ExecutionInfo.get().url = httprequest.url
         self.httprequest = httprequest
