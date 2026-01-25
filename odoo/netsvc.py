@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
+import contextvars
 import json
 import logging
 import logging.config
@@ -14,21 +15,101 @@ import traceback
 import warnings
 from unittest import mock
 
-from . import release, tools
+from . import release, sql_db, tools
 from .logging import *  # noqa: F403
 from .logging import ColoredFormatter, PostgreSQLHandler
+from .tools import real_time
 
 _logger = logging.getLogger(__name__)
 
 
-real_time = time.time.__call__  # ensure we have a non patched time when using freezegun
+class ExecutionInfo:
+    """ Storage for globals about the current request/cron/execution.
+
+    An instance can be entered multiple times sequentially, but not while it
+    is already entered (nested or concurrently): the reset tokens are stored on
+    the instance. When running in a new Context, enter it inside that Context;
+    the previous thread information is restored on exit.
+    """
+    def __init__(self, name, *, db_name='', database_stats=True):
+        self.name = name + ('-' + db_name if db_name else '')
+        self.db_name = db_name
+        self.uid = None
+        self.cursor_mode = None
+        self.req_ident = None
+        self.url = ''
+        self.rpc_model_method = ''
+        self.perf_t0 = real_time()
+        self._db_stats = sql_db.DatabaseStats() if database_stats else None
+        self.__reset = None
+        self.__reset_database_stats = None
+        self.__previous_dumpstack_info = None
+
+    @property
+    def db_stats(self):
+        return self._db_stats or sql_db.database_stats_var.get()
+
+    def total_time(self):
+        return real_time() - self.perf_t0
+
+    _execution_var = contextvars.ContextVar['ExecutionInfo']('execution')
+
+    def __enter__(self):
+        self.__reset = self._execution_var.set(self)
+        if self._db_stats is not None:
+            self.__reset_database_stats = sql_db.database_stats_var.set(self.db_stats)
+        # we need to store the information on the thread so that we can dump it
+        # from outside of the context
+        thread = threading.current_thread()
+        self.__previous_dumpstack_info = getattr(thread, 'dumpstack_info', None)
+        thread.dumpstack_info = self
+        return self
+
+    def __exit__(self, *args):
+        if self._db_stats is not None:
+            sql_db.database_stats_var.reset(self.__reset_database_stats)
+        self._execution_var.reset(self.__reset)
+        threading.current_thread().dumpstack_info = self.__previous_dumpstack_info
+
+    @classmethod
+    def run_in_isolated_context(cls, callback, /, *a, isolated_name='isolated', **kw):
+        """Run in a separated context with only the same database info."""
+        info = cls.get()
+        sub_info = ExecutionInfo(isolated_name, db_name=info.db_name)
+
+        def isolated():
+            with sub_info:
+                return callback(*a, **kw)
+
+        try:
+            return contextvars.Context().run(isolated)
+        finally:
+            db_stats = info.db_stats
+            sub_db = sub_info.db_stats
+            db_stats.count += sub_db.count
+            db_stats.time += sub_db.time
+
+    @classmethod
+    def get(cls):
+        """Get the current information."""
+        try:
+            return cls._execution_var.get()
+        except LookupError:
+            info = ExecutionInfo(name='(unknown)')
+            info.__enter__()  # noqa: PLC2801
+            _logger.warning("creating new execution context", stack_info=True)
+            return info
+
+
+ExecutionInfo('root', database_stats=False).__enter__()  # noqa: PLC2801
 
 
 class LogRecord(logging.LogRecord):
     def __init__(self, name, level, pathname, lineno, msg, args, exc_info, func=None, sinfo=None, **kwargs):
         super().__init__(name, level, pathname, lineno, msg, args, exc_info, func=func, sinfo=sinfo, **kwargs)
         self.thread_native = threading.get_native_id()
-        self.dbname = getattr(threading.current_thread(), 'dbname', '?')
+        execution = ExecutionInfo._execution_var.get(None)
+        self.dbname = (execution and execution.db_name) or '?'
         from . import modules  # noqa: PLC0415
         self.test = None
         if time.time.__call__ != real_time:
@@ -37,6 +118,7 @@ class LogRecord(logging.LogRecord):
         if modules.module.current_test:
             with contextlib.suppress(Exception):
                 self.test = modules.module.current_test.get_log_metadata(self)
+
 
 showwarning = None
 def init_logger():
