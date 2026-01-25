@@ -213,6 +213,8 @@ class MailActivityMixin(models.AbstractModel):
     def _search_activity_user_id(self, operator, operand):
         if isinstance(operand, bool) and ((operator == '=' and not operand) or (operator == '!=' and operand)):
             return [('activity_ids', '=', False)]
+        if self.env.context.get('exclude_done_activities'):
+            return [('activity_ids', 'any', [('active', '=', True), ('user_id', operator, operand)])]
         return [('activity_ids', 'any', [('active', 'in', [True, False]), ('user_id', operator, operand)])]
 
     @api.model
