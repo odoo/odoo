@@ -1,17 +1,20 @@
 from __future__ import annotations
 
 import typing
+import logging
 from operator import attrgetter
 from xmlrpc.client import MAXINT  # TODO change this
 
 from odoo.exceptions import AccessError
 from odoo.tools import float_compare, float_is_zero, float_repr, float_round
-from odoo.tools.misc import SENTINEL, Sentinel
+from odoo.tools.misc import OrderedSet, SENTINEL, Sentinel
 
 from .fields import Field
 
 if typing.TYPE_CHECKING:
     from .types import BaseModel, Environment
+
+_logger = logging.getLogger(__name__)
 
 
 class Integer(Field[int]):
@@ -214,49 +217,64 @@ class Monetary(Field[float]):
         assert self.get_currency_field(model) in model._fields, \
             "Field %s with unknown currency_field %r" % (self, self.get_currency_field(model))
 
+    def get_currency_local_depends(self, record, field_name: str) -> OrderedSet[str]:
+        # get depends fields from current model
+        # TODO: cache results
+        direct_depends = OrderedSet[str]()
+        todo = [field_name]
+        while todo:
+            todo = OrderedSet(
+                d.split('.')[0]
+                for field in todo
+                for d in record.env.registry.field_depends[record._fields[field]]
+            )
+            direct_depends.update(todo)
+        return direct_depends
+
     def convert_to_column_insert(self, value, record, values=None, validate=True):
+        if not value:
+            return 0.0
         # retrieve currency from values or record
         currency_field_name = self.get_currency_field(record)
-        currency_field = record._fields[currency_field_name]
-        if values and currency_field_name in values:
-            dummy = record.new({currency_field_name: values[currency_field_name]})
-            currency = dummy[currency_field_name]
-        elif values and currency_field.related and currency_field.related.split('.')[0] in values:
-            related_field_name = currency_field.related.split('.')[0]
-            dummy = record.new({related_field_name: values[related_field_name]})
+        if values:
+            if currency_field_name in values:
+                dummy = record.new({currency_field_name: values[currency_field_name]})
+            else:
+                # best effort to precompute the currency field if possible
+                local_depends = self.get_currency_local_depends(record, currency_field_name)
+                dummy = record.new({k: v for k, v in values.items() if k in local_depends})
             currency = dummy[currency_field_name]
         else:
             # Note: this is wrong if 'record' is several records with different
             # currencies, which is functional nonsense and should not happen.
             # sudo and only fetch the currency record in case the user doesn't
-            # have the read permission of the currency field.
-            currency = record[:1].sudo().with_context(prefetch_fields=False)[currency_field_name]
+            # have the read permission of the currency field, and also during
+            # ``_init_column`` some columns haven't been initialized yet.
+            currency = record.sudo().with_context(prefetch_fields=False)[currency_field_name]
+            if len(currency) > 1:
+                _logger.warning("Multiple currency records found for record %r", record, stack_info=True)
+                currency = currency[:1]
             currency = currency.with_env(record.env)
+        if not currency:
+            currency_field = record._fields[currency_field_name]
+            if (record._ids and not record._ids[0]) or (not record): # new record or simple convert
+            #     or record._abstract or record._transient or not self.store \
+                return float(value)
+            if (
+                not currency_field.compute or  # computed and related are rerounded in _reround_monetary_fields in _create
+                record.env.context.get('check_monetary_non_computed_currency', True)  # not called in _create to fill cache after INSERT
+            ):  # no way to detect inversed
+                _logger.warning("Currency field %s for monetary field %s is not set for record %r", currency_field_name, self, record, stack_info=True)
+            return float(value)
 
         value = float(value or 0.0)
-        if currency:
-            return float_repr(currency.round(value), currency.decimal_places)
-        return value
+        return float_repr(currency.round(value), currency.decimal_places)
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: float
         value = float(value or 0.0)
         if value and validate:
-            # FIXME @rco-odoo: currency may not be already initialized if it is
-            # a function or related field!
-            currency_field = self.get_currency_field(record)
-            # sudo and only fetch the currency record in case the user doesn't
-            # have the read permission of the currency field.
-            currency = record.sudo().with_context(prefetch_fields=False)[currency_field]
-            currency = currency.with_env(record.env)
-            if len(currency) > 1:
-                raise ValueError("Got multiple currencies while assigning values of monetary field %s" % str(self))
-            elif currency:
-                value = currency.round(value)
-                # convert the rounded value to ``str`` and then to ``float`` to mimic the data flow of flushing and
-                # fetching, which promises ``value_written_to_cache == value_fetched_from_database`` even if the
-                # ``round`` method is not perfect.
-                value = float(float_repr(value, currency.decimal_places))
+            return float(self.convert_to_column_insert(value, record))
         return value
 
     def convert_to_record(self, value, record):

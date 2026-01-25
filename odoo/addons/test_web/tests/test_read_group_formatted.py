@@ -4,6 +4,7 @@ from zoneinfo import ZoneInfo
 import babel
 
 from odoo.tests import tagged, common, new_test_user
+from odoo.tools import mute_logger
 from odoo import Command, fields
 
 
@@ -2049,57 +2050,58 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
             },
             {
                 "stored_currency_id": cls.stn.id,
-            },
+            }, 
         ])
 
-        cls.monetary_records = cls.MonetaryAgg.create([
-            {
-                "name": "key1",
-                "currency_id": cls.usd.id,
-                "total_in_currency_id": 1.00,  # 1 $
+        with mute_logger('odoo.orm.fields_numeric'):
+            cls.monetary_records = cls.MonetaryAgg.create([
+                {
+                    "name": "key1",
+                    "currency_id": cls.usd.id,
+                    "total_in_currency_id": 1.00,  # 1 $
 
-                "related_model_id": usd_parent.id,
-                "total_in_related_stored_currency_id": 4.00,  # 4 $
-            },
-            {
-                "name": "key3",
-                "currency_id": cls.usd.id,
-                "total_in_currency_id": 2.00,  # 2 $
+                    "related_model_id": usd_parent.id,
+                    "total_in_related_stored_currency_id": 4.00,  # 4 $
+                },
+                {
+                    "name": "key3",
+                    "currency_id": cls.usd.id,
+                    "total_in_currency_id": 2.00,  # 2 $
 
-                "related_model_id": eur_parent.id,
-                "total_in_related_stored_currency_id": 1.00,  # 1 €
-            },
-            {
-                "name": "key1",
-                "currency_id": cls.eur.id,
-                "total_in_currency_id": 1.00,  # 1 €
+                    "related_model_id": eur_parent.id,
+                    "total_in_related_stored_currency_id": 1.00,  # 1 €
+                },
+                {
+                    "name": "key1",
+                    "currency_id": cls.eur.id,
+                    "total_in_currency_id": 1.00,  # 1 €
 
-                "related_model_id": usd_parent.id,
-                "total_in_related_stored_currency_id": 3.00,  # 3 $
-            },
-            {
-                "name": "key2",
-                "currency_id": cls.eur.id,
-                "total_in_currency_id": 2.00,  # 2 €
+                    "related_model_id": usd_parent.id,
+                    "total_in_related_stored_currency_id": 3.00,  # 3 $
+                },
+                {
+                    "name": "key2",
+                    "currency_id": cls.eur.id,
+                    "total_in_currency_id": 2.00,  # 2 €
 
-                "related_model_id": eur_parent.id,
-                "total_in_related_stored_currency_id": 3.00,  # 3 €
-            },
-            {
-                "name": "key1",
-                "total_in_currency_id": 1.00,  # 1 (no currency)
+                    "related_model_id": eur_parent.id,
+                    "total_in_related_stored_currency_id": 3.00,  # 3 €
+                },
+                {
+                    "name": "key1",
+                    "total_in_currency_id": 1.00,  # 1 (no currency)
 
-                "total_in_related_stored_currency_id": 1.00,
-            },
-            {
-                "name": "key2",
-                "currency_id": cls.stn.id,
-                "total_in_currency_id": 1.00,  # 1 Db (no active currency)
+                    "total_in_related_stored_currency_id": 1.00,
+                },
+                {
+                    "name": "key2",
+                    "currency_id": cls.stn.id,
+                    "total_in_currency_id": 1.00,  # 1 Db (no active currency)
 
-                "related_model_id": stn_parent.id,
-                "total_in_related_stored_currency_id": 1.00,  # 1 Db (no active currency)
-            },
-        ])
+                    "related_model_id": stn_parent.id,
+                    "total_in_related_stored_currency_id": 1.00,  # 1 Db (no active currency)
+                },
+            ])
         cls.env['res.currency.rate'].search([]).unlink()  # Avoid demo mess up tests
 
     def test_monetary_fields_agg_in_fields_get(self):
