@@ -366,6 +366,8 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
         respo_user = self.user_hrresponsible
         self.employee_emp.leave_manager_id = respo_user
 
+        leave_day = date_utils.start_of(date.today() + relativedelta(days=1), 'week')
+
         for validatation_type in ['manager', 'both']:
             self.leave_type.write({'leave_validation_type': validatation_type})
             values = {
@@ -374,7 +376,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
                 'holiday_status_id': self.leave_type.id,
                 'state': 'confirm',
             }
-            leave = self.request_leave(self.user_employee, date.today(), 1, values)
+            leave = self.request_leave(self.user_employee, leave_day, 1, values)
             leave.with_user(respo_user).action_refuse()
             leave.with_user(self.user_hrmanager_id).action_reset_confirm()
             leave.with_user(respo_user).action_approve()
