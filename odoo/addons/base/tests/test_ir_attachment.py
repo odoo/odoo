@@ -30,7 +30,6 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         # Blob1
         self.blob1 = b'blob1'
         self.blob1_v = BinaryBytes(self.blob1)
-        self.blob1_b64 = base64.b64encode(self.blob1)
         self.blob1_hash = hashlib.sha1(self.blob1).hexdigest()
         self.blob1_fname = self.blob1_hash[:HASH_SPLIT] + '/' + self.blob1_hash
 
@@ -51,7 +50,7 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
 
         # 'ir_attachment.location' is undefined test database storage
         a1 = self.Attachment.create({'name': 'a1', 'raw': self.blob1_v})
-        self.assertEqual(a1.datas.content, self.blob1_b64)
+        self.assertEqual(a1.raw.content, self.blob1)
 
         self.assertEqual(a1.db_datas.content, self.blob1)
 
@@ -188,13 +187,12 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         document = self.Attachment.create({'name': 'document', 'raw': self.blob2})
         document2 = document.copy({'name': "document (copy)"})
         self.assertEqual(document2.name, "document (copy)")
-        self.assertEqual(document2.datas.content, document.datas.content)
+        self.assertEqual(document2.raw.content, document.raw.content)
         self.assertEqual(document2.db_datas.content, document.db_datas.content)
         self.assertEqual(document2.store_fname, document.store_fname)
         self.assertEqual(document2.checksum, document.checksum)
 
         document3 = document.copy({'raw': self.blob1})
-        self.assertEqual(document3.datas.content, self.blob1_b64)
         self.assertEqual(document3.raw.content, self.blob1)
         self.assertTrue(self.filestore)  # no data in db but has a store_fname
         self.assertEqual(document3.db_datas.content, b'')
@@ -276,37 +274,37 @@ class TestPermissions(TransactionCaseWithUserDemo):
         If the attachment has no res_model/res_id, it can be read by its author and admins only
         """
         # check that the information can be read out of the box
-        self.attachment.datas
+        self.attachment.raw
         # prevent read access on record
         self.rule.perm_read = True
         self.attachment.invalidate_recordset()
         with self.assertRaises(AccessError):
-            self.attachment.datas
+            self.attachment.raw
 
         # Make the attachment public
         self.attachment.sudo().public = True
         # Check the information can be read again
-        self.attachment.datas
+        self.attachment.raw
         # Remove the public access
         self.attachment.sudo().public = False
         # Check the record can no longer be accessed
         with self.assertRaises(AccessError):
-            self.attachment.datas
+            self.attachment.raw
 
         # Create an attachment as user without res_model/res_id
         attachment_user = self.Attachments.create({'name': 'foo'})
         # Check the user can access his own attachment
-        attachment_user.datas
+        attachment_user.raw
         # Create an attachment as superuser without res_model/res_id
         attachment_admin = self.Attachments.with_user(SUPERUSER_ID).create({'name': 'foo'})
         # Check the record cannot be accessed by a regular user
         with self.assertRaises(AccessError):
-            attachment_admin.with_user(self.env.user).datas
+            attachment_admin.with_user(self.env.user).raw
         # Check the record can be accessed by an admin (other than superuser)
         admin_user = self.env.ref('base.user_admin')
         # Safety assert that base.user_admin is not the superuser, otherwise the test is useless
         self.assertNotEqual(SUPERUSER_ID, admin_user.id)
-        attachment_admin.with_user(admin_user).datas
+        attachment_admin.with_user(admin_user).raw
 
     @mute_logger("odoo.addons.base.models.ir_rule", "odoo.models")
     def test_field_read_permission(self):
@@ -322,7 +320,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
             ('res_id', '=', main_partner.id),
             ('res_field', '=', 'image_128')
         ])
-        self.assertTrue(attachment.datas)
+        self.assertTrue(attachment.raw)
         with self.assertQueries([
             # security SQL contains public check or accessible field with
             # res_id IN accessible corecords for a given res_model
@@ -362,7 +360,7 @@ class TestPermissions(TransactionCaseWithUserDemo):
             main_partner.image_128
         # Assert the attachment related to the field can't be read
         with self.assertRaises(AccessError):
-            attachment.datas
+            attachment.raw
 
     def test_with_write_permissions(self):
         """With write permissions to the linked record, attachment can be

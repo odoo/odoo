@@ -52,7 +52,7 @@ class testAttachmentAccess(TransactionCase):
         # As user, ensure the attachment itself cannot be read
         self.env.invalidate_all()
         with self.assertRaises(AccessError):
-            attachment.with_user(self.user).datas
+            attachment.with_user(self.user).raw
         # But, as user, the content of the attachment can be read through the letter
         self.assertEqual(letter.with_user(self.user).attachment_raw.content, b'foo')
 
@@ -79,7 +79,7 @@ class testAttachmentAccess(TransactionCase):
         # As user, make sure this is indeed not possible to access that attachment data directly
         self.env.invalidate_all()
         with self.assertRaises(AccessError):
-            attachment_forbidden.with_user(self.user).datas
+            attachment_forbidden.with_user(self.user).raw
         # As user, create a letter pointing to that attachment
         # and make sure it raises an access error
         with self.assertRaises(AccessError):

@@ -251,7 +251,7 @@ export class AddFontDialog extends Component {
                     {
                         name: uploadedFontName,
                         description: `CSS font face for ${uploadedFontName}`,
-                        datas: btoa(uploadedFontFaces),
+                        raw: btoa(uploadedFontFaces),
                         res_model: "ir.attachment",
                         mimetype: "text/css",
                         public: true,

@@ -491,10 +491,6 @@ class MailMail(models.Model):
                                                                 {'attachments': record_owned_attachments})
                 body = tools.mail.append_content_to_html(body, attachments_links, plaintext=False)
                 attachments -= record_owned_attachments
-        # Prepare the remaining attachment (those not embedded as link)
-        # load attachment binary data with a separate read(), as prefetching all
-        # `datas` (binary field) could bloat the browse cache, triggering
-        # soft/hard mem limits with temporary data.
         # attachments sorted by increasing ID to match front-end and upload ordering
         attachments.sudo().fetch(['name', 'raw', 'mimetype'])
         email_attachments = [

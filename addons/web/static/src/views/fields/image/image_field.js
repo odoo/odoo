@@ -212,7 +212,7 @@ export class ImageField extends Component {
                         {
                             name: info.name,
                             description: size === originalSize ? "" : `resize: ${size}`,
-                            datas:
+                            raw:
                                 size === originalSize
                                     ? info.data
                                     : canvas.toDataURL("image/webp").split(",")[1],
@@ -229,7 +229,7 @@ export class ImageField extends Component {
                         {
                             name: info.name.replace(/\.webp$/, ".jpg"),
                             description: "format: jpeg",
-                            datas: canvas.toDataURL("image/jpeg").split(",")[1],
+                            raw: canvas.toDataURL("image/jpeg").split(",")[1],
                             res_id: resizedId,
                             res_model: "ir.attachment",
                             mimetype: "image/jpeg",

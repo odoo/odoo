@@ -67,7 +67,7 @@ class IrBinary(models.AbstractModel):
             from.
         :rtype: odoo.http.stream.Stream
         """
-        if record._name == 'ir.attachment' and field_name in ('raw', 'datas', 'db_datas'):
+        if record._name == 'ir.attachment' and field_name in ('raw', 'db_datas'):
             return record._to_http_stream()
 
         field = record._fields[field_name]

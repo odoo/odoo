@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
 
-import base64
 import contextlib
 import hashlib
 import logging
@@ -71,7 +70,7 @@ class IrAttachment(models.Model):
     External attachment storage
     ---------------------------
 
-    The computed field ``datas`` is implemented using ``_file_read``,
+    The computed field ``raw`` is implemented using ``_file_read``,
     ``_file_write`` and ``_file_delete``, which can be overridden to implement
     other storage engines. Such methods should check for other location pseudo
     uri (example: hdfs://hadoopserver).
@@ -257,14 +256,6 @@ class IrAttachment(models.Model):
 
         _logger.info("filestore gc %d checked, %d removed", len(checklist), removed)
 
-    @api.depends('raw')
-    def _compute_datas(self):
-        for attach in self:
-            value = attach.raw
-            if value:
-                value = BinaryBytes(base64.b64encode(value))
-            attach.datas = value
-
     @api.depends('store_fname', 'db_datas')
     def _compute_raw(self):
         for attach in self:
@@ -276,16 +267,12 @@ class IrAttachment(models.Model):
     def _inverse_raw(self):
         self._set_attachment_data(lambda a: a.raw or EMPTY_BINARY)
 
-    def _inverse_datas(self):
-        warnings.warn("Since 20.0, assign directly to ir.attachment.raw instead of datas", DeprecationWarning)
-        self._set_attachment_data(lambda attach: BinaryBytes(base64.b64decode(attach.datas or b'')))
-
     def _set_attachment_data(self, get_data):
         old_fnames = []
         checksum_raw_map = {}
 
         for attach in self:
-            # compute the fields that depend on datas
+            # compute the fields that depend on raw
             bin_data = get_data(attach)
             vals = self._get_datas_related_values(bin_data, attach.mimetype)
             if bin_data:
@@ -329,8 +316,8 @@ class IrAttachment(models.Model):
         return values
 
     def _compute_checksum(self, bin_data):
-        """ compute the checksum for the given datas
-            :param bin_data : datas in its binary form
+        """ compute the checksum for the given data
+            :param bin_data : data in its binary form
         """
         # an empty file has a checksum too (for caching)
         return hashlib.sha1(bin_data or b'').hexdigest()
@@ -413,17 +400,10 @@ class IrAttachment(models.Model):
         return values
 
     @api.model
-    def _check_contents(self, values, *, accept_datas=False):
-        # get raw and remove db_datas and datas
-        datas = values.pop('datas', None)
-        if datas and not accept_datas:
-            warnings.warn(
-                "Passing `datas` to `_check_contents` is deprecated, decode and move it to `raw`",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
+    def _check_contents(self, values):
+        # get raw and remove db_datas
         raw = values.pop('db_datas', None)
-        raw = values.get('raw', raw) or base64.b64decode(datas or b'')
+        raw = values.get('raw', raw) or b''
         # make sure we have a BinaryValue in raw (if we have data)
         raw = self._fields['raw'].convert_to_cache(raw, self) or EMPTY_BINARY
         if raw or 'raw' in values:
@@ -480,9 +460,7 @@ class IrAttachment(models.Model):
     # for external access
     access_token = fields.Char('Access Token', groups="base.group_user")
 
-    # the field 'datas' is computed and may use the other fields below
     raw = fields.Binary(string="File Content (raw)", compute='_compute_raw', inverse='_inverse_raw')
-    datas = fields.Binary(string='File Content (base64, deprecated)', compute='_compute_datas', inverse='_inverse_datas')
     db_datas = fields.Binary('Database Data', attachment=False)
     store_fname = fields.Char('Stored Filename', index=True)
     file_size = fields.Integer('File Size', readonly=True)
@@ -498,7 +476,7 @@ class IrAttachment(models.Model):
         for attachment in self:
             # restrict writing on attachments that could be served by the
             # ir.http's dispatch exception handling
-            # XDO note: if read on sudo, read twice, one for constraints, one for _inverse_datas as user
+            # XDO note: if read on sudo, read twice, one for constraints, one for _inverse_raw as user
             if attachment.type == 'binary' and attachment.url:
                 has_group = self.env.user.has_group
                 if not any(has_group(g) for g in attachment.get_serving_groups()):
@@ -728,7 +706,7 @@ class IrAttachment(models.Model):
         # remove computed field depending of raw
         for field in ('file_size', 'checksum', 'store_fname'):
             vals.pop(field, False)
-        if 'mimetype' in vals or 'datas' in vals or 'raw' in vals:
+        if 'mimetype' in vals or 'raw' in vals:
             vals = self._check_contents(vals)
         res = super().write(vals)
         if 'url' in vals or 'type' in vals:
@@ -739,7 +717,7 @@ class IrAttachment(models.Model):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
         for attachment, vals in zip(self, vals_list):
-            if not default.keys() & {'datas', 'db_datas', 'raw'}:
+            if not default.keys() & {'db_datas', 'raw'}:
                 # ensure the content is kept and recomputes checksum/store_fname
                 vals['raw'] = attachment.raw
         return vals_list
@@ -760,7 +738,7 @@ class IrAttachment(models.Model):
     def create(self, vals_list):
         record_tuple_set = set()
 
-        # remove computed field depending of datas
+        # remove computed field depending of raw
         vals_list = [{
             key: value
             for key, value
@@ -770,7 +748,7 @@ class IrAttachment(models.Model):
         checksum_raw_map = {}
 
         for values in vals_list:
-            values = self._check_contents(values, accept_datas=True)
+            values = self._check_contents(values)
             if raw := values.pop('raw', None):
                 values.update(self._get_datas_related_values(raw, values['mimetype']))
                 checksum_raw_map[values['checksum']] = raw.content
@@ -823,7 +801,7 @@ class IrAttachment(models.Model):
         result = self.browse()
         for vals in vals_list:
             try:
-                vals = self._check_contents(vals, accept_datas=True)
+                vals = self._check_contents(vals)
             except ValueError:
                 raise UserError(_("Attachment is not encoded in base64."))
             checksum = self._compute_checksum(vals['raw'] or b'')

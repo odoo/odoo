@@ -112,8 +112,6 @@ class Binary(Field[BinaryValue]):
             # supposes that this is base64 encoded and requests the image
             return human_size(value.size)
         # we read bytes in base64 format for RPC
-        if (self.related_field or self).name == 'datas':
-            return value.decode(encoding='ascii')
         return value.to_base64()
 
     def read(self, records):
