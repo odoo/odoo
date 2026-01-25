@@ -12,7 +12,7 @@ from datetime import datetime
 import psutil
 from psycopg2 import OperationalError
 
-from odoo import tools
+from odoo import netsvc, tools
 from odoo.tools import SQL
 
 from .gc import disabling_gc
@@ -499,7 +499,7 @@ class Profiler:
 
         if db is ...:
             # determine database from current thread
-            db = getattr(threading.current_thread(), 'dbname', None)
+            db = netsvc.ExecutionInfo.get().db_name
             if not db:
                 # only raise if path is not given and db is not explicitely disabled
                 raise Exception('Database name cannot be defined automaticaly. \n Please provide a valid/falsy dbname or path parameter')
