@@ -7,6 +7,7 @@ the ORM does, in fact.
 """
 from __future__ import annotations
 
+import contextvars
 import functools
 import logging
 import os
@@ -108,6 +109,15 @@ def categorize_query(decoded_query: str) -> tuple[typing.Literal['from', 'into']
 sql_counter: int = 0
 
 MAX_IDLE_TIMEOUT = int(os.getenv("ODOO_DB_MAX_IDLE_TIMEOUT", "600"))
+
+
+class DatabaseStats:
+    def __init__(self):
+        self.count = 0
+        self.time = 0.0
+
+
+database_stats_var = contextvars.ContextVar[DatabaseStats]('db_stats', default=DatabaseStats())
 
 
 class Savepoint:
@@ -398,6 +408,7 @@ class Cursor(_CursorProtocol):
     def execute(self, query: SQL | typing.LiteralString | psql.Composable, params=None, log_exceptions: bool = True) -> None:
         """ Execute a query inside the current transaction. """
         global sql_counter
+        stats = database_stats_var.get()
 
         if isinstance(query, SQL):
             assert params is None, "Unexpected parameters for SQL query object"
@@ -431,11 +442,8 @@ class Cursor(_CursorProtocol):
         # simple query count is always computed
         self.sql_log_count += 1
         sql_counter += 1
-
-        if hasattr(current_thread, 'query_count'):
-            current_thread.query_count += 1
-        if hasattr(current_thread, 'query_time'):
-            current_thread.query_time += delay
+        stats.count += 1
+        stats.time += delay
 
         # advanced stats
         if _logger.isEnabledFor(logging.DEBUG):
