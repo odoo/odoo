@@ -5,7 +5,6 @@ import functools
 import logging
 import os.path
 import re
-import threading
 import typing
 from contextlib import nullcontext
 from http import HTTPStatus
@@ -40,6 +39,7 @@ from odoo.modules.module import (
     initialize_sys_path,
 )
 from odoo.modules.registry import Registry
+from odoo.netsvc import ExecutionInfo
 from odoo.tools import config, file_open, file_path, profiler
 from odoo.tools.misc import submap
 
@@ -143,13 +143,15 @@ def dispatch_rpc(service_name: str, method: str, params: Mapping[str, typing.Any
         raise ValueError(f"Invalid service name: {service_name}")
 
     # Remove the request to simulate that the call does not come from HTTP
+    info = ExecutionInfo.get()
+    uid, dbname = info.uid, info.db_name
     request_reset = request_var.set(None)
     try:
-        threading.current_thread().uid = None
-        threading.current_thread().dbname = None
+        info.uid = info.db_name = None
         return dispatch(method, params)
     finally:
         request_var.reset(request_reset)
+        info.uid, info.db_name = uid, dbname
 
 
 class RegistryError(RuntimeError):
@@ -255,6 +257,15 @@ class Application:
             server that this application must call in order to send the
             HTTP response status line and the response headers.
         """
+        try:
+            execution = ExecutionInfo._execution_var.get()
+        except LookupError:
+            # Called from a WSGI serer, setup the execution info context.
+            # Never exit as request is processed in a separate context and will
+            # propagate to the caller.
+            execution = ExecutionInfo('http')
+            execution.__enter__()
+
         if config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
             # It is done in our wsgi server already, but people might be
             # using another wsgi server.
@@ -271,7 +282,7 @@ class Application:
             request_reset = request_var.set(request)
             try:
                 _set_session_and_dbname(request)
-                threading.current_thread().url = httprequest.url
+                execution.url = httprequest.url
 
                 if self.get_static_file(httprequest.path):
                     response = serve_static(request)
@@ -418,7 +429,7 @@ def serve_db(request: Request) -> Response:
         # and for serve fallback
         if request.bearer_readonly or (replica and cr.readonly):
             assert cr.readonly, "readonly bearer must not use a read/write cursor"
-            threading.current_thread().cursor_mode = 'ro'
+            ExecutionInfo.get().cursor_mode = 'ro'
             try:
                 return retrying(serve_func, env=request.env)
             except ReadOnlySqlTransaction as exc:
@@ -427,11 +438,11 @@ def serve_db(request: Request) -> Response:
                 # although the controller is marked replica, it
                 # attempted a write operation, try again on the primary
                 _logger.warning("%s, retrying with a read/write cursor", exc.args[0].rstrip(), exc_info=True)
-                threading.current_thread().cursor_mode = 'ro->rw'
+                ExecutionInfo.get().cursor_mode = 'ro->rw'
             except Exception as exc:  # noqa: BLE001
                 raise _update_served_exception(request, exc)
         else:
-            threading.current_thread().cursor_mode = 'rw'
+            ExecutionInfo.get().cursor_mode = 'rw'
 
         # we must use a RW cursor when a non replica route matched, or
         # there was a ReadOnlySqlTransaction error
@@ -539,7 +550,7 @@ def _set_session_and_dbname(request: Request) -> None:
     session.is_dirty = False
     request.session = session
     request.db = dbname
-    threading.current_thread().req_ident = ('session', request.session.sid[:8])
+    ExecutionInfo.get().req_ident = ('session', request.session.sid[:8])
 
 
 def _set_request_dispatcher(request: Request, rule: werkzeug.routing.Rule):

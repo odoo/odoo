@@ -1,8 +1,7 @@
-import threading
-
 import odoo.release
 from odoo.exceptions import AccessDenied
 from odoo.modules.registry import Registry
+from odoo.netsvc import ExecutionInfo
 
 
 RPC_VERSION_1 = {
@@ -18,11 +17,9 @@ def exp_login(db, login, password):
 def exp_authenticate(db, login, password, user_agent_env):
     if not user_agent_env:
         user_agent_env = {}
-    thread = threading.current_thread()
     with Registry(db).cursor() as cr:
         env = odoo.api.Environment(cr, None, {})
-        if hasattr(thread, 'url'):
-            domain = thread.url
+        if domain := ExecutionInfo.get().url:
             host_id = env["ir.http"]._get_host_id_from_domain(domain)
             env = odoo.api.Environment(cr, None, {'host_id': host_id})
 
