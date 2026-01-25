@@ -86,6 +86,11 @@
                                     Close Register
                                 </DropdownItem>
                             </div>
+                            <div class="border-top p-2">
+                                <span t-on-click="openLnaPopup" t-attf-class="btn btn-{{this.pos.lnaState.type}} btn-sm rounded" title="Local Network Access">
+                                    <i class="fa fa-wifi" aria-hidden="true" /> Local Network Access
+                                </span>
+                            </div>
                         </t>
                     </Dropdown>
                 </div>

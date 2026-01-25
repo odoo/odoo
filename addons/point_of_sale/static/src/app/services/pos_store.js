@@ -142,6 +142,10 @@ export class PosStore extends WithLazyGetterTrap {
         });
 
         this.orderCounter = new Counter(0);
+        this.lnaState = {
+            type: "pending",
+            message: _t("Checking Local Network Access permission..."),
+        };
 
         this.syncingOrders = new Set();
         await this.initServerData();
@@ -439,7 +443,14 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         if (useLna) {
-            initLNA(this.notification);
+            initLNA(this.notification, (type, message) => {
+                this.lnaState = { type, message };
+            });
+        } else {
+            this.lnaState = {
+                type: "info",
+                message: _t("Local Network Access is not configured for this POS."),
+            };
         }
 
         this.models["product.pricelist.item"].addEventListener("create", () => {
