@@ -24,8 +24,12 @@ class ResUsers(models.Model):
             for conf in Ldap._get_ldap_dicts():
                 entry = Ldap._authenticate(conf, login, credential['password'])
                 if entry:
+                    uid = Ldap._get_or_create_user(conf, login, entry)
+                    # Update last_login as it would be done in base _login method
+                    user = self.env['res.users'].browse(uid)
+                    user.with_user(user)._update_last_login()
                     return {
-                        'uid': Ldap._get_or_create_user(conf, login, entry),
+                        'uid': uid,
                         'auth_method': 'ldap',
                         'mfa': 'default',
                     }
