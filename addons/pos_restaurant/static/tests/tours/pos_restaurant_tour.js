@@ -20,6 +20,7 @@ import {
     negate,
     negateStep,
     assertCurrentOrderDirty,
+    refresh,
 } from "@point_of_sale/../tests/generic_helpers/utils";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -446,7 +447,7 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             ProductScreen.clickDisplayedProduct("Water"),
             ProductScreen.selectPreset("Eat in", "Takeaway"),
             Chrome.presetTimingSlotHourNotExists("09:00"),
-            Chrome.selectPresetTimingSlotHour("12:00"),
+            Chrome.selectPresetTimingSlot("12:00"),
             Chrome.presetTimingSlotIs("12:00"),
             checkPreparationTicketData([{ name: "Water", qty: 1 }], {
                 visibleInDom: ["Takeaway", "12:00"],
@@ -615,11 +616,9 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
             Chrome.freezeDateTime(1749981600000), // June 15, 2025 - 10:00
             FloorScreen.clickTable("5"),
             Chrome.presetTimingSlotHourNotExists("09:00"),
-            Chrome.selectPresetTimingSlotHour("12:20"),
+            Chrome.selectPresetTimingSlot("12:20"),
             Chrome.presetTimingSlotIs("12:20"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
-            ProductScreen.clickControlButton("Cancel Order"),
-            Dialog.cancel(),
             ProductScreen.clickControlButton("Cancel Order"),
             Dialog.confirm(),
             FloorScreen.isShown(),
@@ -627,8 +626,8 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
             TextInputPopup.inputText("John"),
             Dialog.confirm(),
             Chrome.presetTimingSlotHourNotExists("09:00"),
-            Chrome.selectPresetTimingSlotHour("12:00"),
-            Chrome.presetTimingSlotIs("12:00"),
+            Chrome.selectPresetTimingSlot("15:00"),
+            Chrome.presetTimingSlotIs("15:00"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
@@ -645,11 +644,36 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
             FloorScreen.clickTable("5"),
             Chrome.selectPresetDateButton("06/16/2025"),
             Chrome.presetTimingSlotHourExists("09:00"),
-            Chrome.selectPresetTimingSlotHour("11:00"),
+            Chrome.selectPresetTimingSlot("11:00"),
             Chrome.presetTimingSlotIs("11:00"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             Chrome.clickOrders(),
             TicketScreen.nthRowContains(3, "06/16/2025", false),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_cancel_future_order", {
+    steps: () =>
+        [
+            Chrome.freezeDateTime(1739370000000),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickNewOrder(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.selectPreset("Eat in", "Takeaway"),
+            TextInputPopup.inputText("John"),
+            Dialog.confirm(),
+            Chrome.selectPresetTimingSlot("02/13/2025"),
+            Chrome.selectPresetTimingSlot("15:00"),
+            Chrome.presetTimingSlotIs("15:00"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Chrome.clickOrders(),
+            TicketScreen.deleteOrder("001"),
+            Dialog.confirm(),
+            refresh(),
+            negateStep(...TicketScreen.selectOrder("001")),
         ].flat(),
 });
 
@@ -1027,5 +1051,16 @@ registry.category("web_tour.tours").add("test_combo_synchronisation", {
                     }
                 },
             },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_futur_orders_are_not_cancelled", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickMenuOption("Close Register"),
+            Dialog.confirm("Close Register"),
+            Dialog.confirm("Cancel Orders", ".btn-secondary"),
         ].flat(),
 });
