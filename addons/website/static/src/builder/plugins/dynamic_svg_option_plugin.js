@@ -7,6 +7,7 @@ import { loadImage } from "@html_editor/utils/image_processing";
 import { withSequence } from "@html_editor/utils/resource";
 import { DYNAMIC_SVG } from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { DEFAULT_PALETTE } from "@html_editor/utils/color";
 
 class DynamicSvgOptionPlugin extends Plugin {
     static id = "DynamicSvgOption";
@@ -42,7 +43,15 @@ export class SvgColorAction extends BuilderAction {
     }
     async load({ editingElement: imgEl, params: { mainParam: colorName }, value: color }) {
         const newURL = new URL(imgEl.src, window.location.origin);
-        newURL.searchParams.set(colorName, this.colorToSearchParams(color));
+        let colorValue = color ? this.colorToSearchParams(color) : "";
+        if (!colorValue) {
+            // Reset uses theme palette colors to keep dynamic SVGs valid.
+            const colorId = colorName.slice(1);
+            colorValue =
+                getCSSVariableValue(`o-color-${colorId}`, getHtmlStyle(this.document)) ||
+                DEFAULT_PALETTE[colorId];
+        }
+        newURL.searchParams.set(colorName, colorValue);
         const src = newURL.pathname + newURL.search;
         await loadImage(src);
         return src;
