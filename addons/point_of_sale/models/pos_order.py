@@ -1104,6 +1104,9 @@ class PosOrder(models.Model):
     def _get_invoice_post_context(self):
         return {"skip_invoice_sync": True}
 
+    def _get_payments(self):
+        return self.payment_ids.sudo().with_company(self.company_id)
+
     def _generate_pos_order_invoice(self):
         if not self.env['res.company']._with_locked_records(self, allow_raising=False):
             raise UserError(_("Some orders are already being invoiced. Please try again later."))
@@ -1120,7 +1123,7 @@ class PosOrder(models.Model):
         for session, orders in self.grouped('session_id').items():
             is_session_closed = session.state == 'closed'
             for order in orders:
-                order_payments = order.payment_ids.sudo().with_company(company)
+                order_payments = order._get_payments()
                 payment_moves = order_payments._create_payment_moves(is_session_closed)
                 all_payment_moves |= payment_moves
                 if is_session_closed:
