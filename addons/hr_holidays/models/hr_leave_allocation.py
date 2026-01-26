@@ -75,6 +75,7 @@ class HrLeaveAllocation(models.Model):
         'hr.employee', string='Employee', default=lambda self: self.env.user.employee_id,
         index=True, ondelete="restrict", required=True, tracking=True, domain=_domain_employee_id)
     employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True, store=True)
+    employee_contract_date_start = fields.Date(related='employee_id.contract_date_start', string='First contract date', readonly=True, copy=False)
     active_employee = fields.Boolean('Active Employee', related='employee_id.active', readonly=True)
     manager_id = fields.Many2one('hr.employee', compute='_compute_manager_id', store=True, string='Manager')
     notes = fields.Text('Reasons', readonly=False)
@@ -127,6 +128,10 @@ class HrLeaveAllocation(models.Model):
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
     virtual_remaining_leaves = fields.Float(compute='_compute_leaves', string='Available Time Off')
     expiring_carryover_days = fields.Float("The number of carried over days that will expire on carried_over_days_expiration_date")
+    is_anniversary = fields.Boolean(
+        related='accrual_plan_id.is_anniversary',
+        readonly=True
+    )
     carried_over_days_expiration_date = fields.Date("Carried over days expiration date")
     _duration_check = models.Constraint(
         "CHECK( ( number_of_days > 0 AND allocation_type='regular') or (allocation_type != 'regular'))",
@@ -934,6 +939,8 @@ class HrLeaveAllocation(models.Model):
     # call of the cron job.
     @api.onchange('date_from', 'accrual_plan_id', 'date_to', 'employee_id')
     def _onchange_date_from(self):
+        if self.is_anniversary and self.employee_contract_date_start:
+            self.date_from = self.employee_contract_date_start
         if not self.date_from or self.allocation_type != 'accrual' or self.state == 'validate' or not self.accrual_plan_id\
            or not self.employee_id:
             return

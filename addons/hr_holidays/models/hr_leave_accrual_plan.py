@@ -57,6 +57,10 @@ class HrLeaveAccrualPlan(models.Model):
     ], export_string_translation=False, default=lambda self: str((fields.Date.today()).month))
     added_value_type = fields.Selection([('day', 'Days'), ('hour', 'Hours')],
         export_string_translation=False, default="day", store=True)
+    is_anniversary = fields.Boolean(
+        export_string_translation=False,
+        help="An anniversary plan will be based on the first contract date by default."
+    )
 
     @api.depends('level_ids')
     def _compute_show_transition_mode(self):
