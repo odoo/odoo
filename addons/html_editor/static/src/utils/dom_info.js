@@ -278,6 +278,8 @@ export const selfClosingHtmlTags = [
     "SOURCE",
     "TRACK",
     "WBR",
+    "V:IMAGE",
+    "V:FILL",
 ];
 export const selfClosingXmlTags = ["T"];
 export const selfClosingElementTags = [...selfClosingHtmlTags, ...selfClosingXmlTags];
