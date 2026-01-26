@@ -7,28 +7,29 @@
         <field name="arch" type="xml">
             <sheet position="before">
                 <div
+                    name="payment_to_collect_warning"
                     class="alert alert-warning"
                     role="alert"
-                    invisible="not display_confirm_delivery_payment_action"
+                    invisible="not display_action_confirm_payment_on_delivery"
                 >
                     Payment to collect:
-                    <field name="order_amount_at_delivery" widget="monetary"/>
+                    <field name="order_amount_on_delivery" widget="monetary"/>
                     <field name="order_currency_id" invisible="1"/>
                 </div>
             </sheet>
             <!-- Mark the "Validate" button as secondary if a payment should be collected first. -->
             <button name="button_validate" position="attributes">
                 <attribute
-                    name="invisible" add="display_confirm_delivery_payment_action" separator=" or "
+                    name="invisible" add="display_action_confirm_payment_on_delivery" separator="or"
                 />
             </button>
             <button name="button_validate" position="before">
                 <button
-                    name="action_confirm_delivery_payment"
+                    name="action_confirm_payment_on_delivery"
                     type="object"
                     string="Confirm Payment"
                     class="oe_highlight"
-                    invisible="not display_confirm_delivery_payment_action"
+                    invisible="not display_action_confirm_payment_on_delivery"
                 />
                 <button
                     string="Validate"
@@ -36,7 +37,7 @@
                     type="object"
                     invisible="
                         state in ('draft', 'confirmed', 'done', 'cancel')
-                        or not display_confirm_delivery_payment_action
+                        or not display_action_confirm_payment_on_delivery
                     "
                     groups="stock.group_stock_user"
                     data-hotkey="v"

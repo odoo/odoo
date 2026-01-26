@@ -86,7 +86,7 @@
         <record id="mail_template_sale_confirmation" model="mail.template">
             <field name="name">Sales: Order Confirmation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
-            <field name="subject">{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state == 'pending') and 'Pending Order' or 'Order' }} {{ object.name or 'n/a' }}</field>
+            <field name="subject">{{ object.company_id.name }} Order {{ object.name or 'n/a' }}</field>
             <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
@@ -308,7 +308,9 @@
                                     <td style="width: 20%; padding-top: 4px; border-top: 1px solid #343a40; opacity: 0.9;" align="left"><strong>Total</strong></td>
                                     <td style="width: 80%; padding-top: 4px; border-top: 1px solid #343a40; font-weight: bold; " align="right">
                                         <span style="display: inline-block; margin-right: 4px; padding: 4px 8px; border: 1px solid #dee2e6; border-radius: 4px;">
-                                            <span style="opacity: 0.9;">Paid with</span>
+                                            <span t-if="tx_sudo.state != 'pending'" style="opacity: 0.9;">
+                                                Paid with
+                                            </span>
                                             <span t-attf-style="color: #{color}; font-weight: bold;">
                                                 <t t-out="tx_sudo.provider_id.sudo().name or ''"></t>
                                             </span>

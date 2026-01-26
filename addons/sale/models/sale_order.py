@@ -292,6 +292,13 @@ class SaleOrder(models.Model):
         string="Has Authorized Transactions",
         compute='_compute_authorized_transaction_ids',
         compute_sudo=True)
+    amount_pending = fields.Float(
+        string="Pending Transaction Amount",
+        help="Sum of transactions made in through the online payment form that are in the pending"
+        " state and linked to this order.",
+        compute='_compute_amount_pending',
+        compute_sudo=True,
+    )
     amount_paid = fields.Float(
         string="Payment Transactions Amount",
         help="Sum of transactions made in through the online payment form that are in the state"
@@ -723,6 +730,14 @@ class SaleOrder(models.Model):
         for trans in self:
             trans.authorized_transaction_ids = trans.transaction_ids.filtered(lambda t: t.state == 'authorized')
             trans.has_authorized_transaction_ids = bool(trans.authorized_transaction_ids)
+
+    @api.depends('transaction_ids')
+    def _compute_amount_pending(self):
+        """Sum of the amount pending through all transactions for this SO."""
+        for order in self:
+            order.amount_pending = sum(
+                tx.amount for tx in order.transaction_ids if tx.state == 'pending'
+            )
 
     @api.depends('transaction_ids')
     def _compute_amount_paid(self):
@@ -1968,12 +1983,13 @@ class SaleOrder(models.Model):
         if self.state in ('draft', 'sent') and self.require_payment:
             suggested_amount = prepayment_amount  # Suggest the amount needed to confirm the quote.
         else:  # The order is confirmed or doesn't require payment.
-            suggested_amount = remaining_balance
+            suggested_amount = max(remaining_balance - self.amount_pending, 0)
         return {
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_invoice_id.id,
             'amount': suggested_amount,
             'amount_max': remaining_balance,
+            'amount_pending': self.amount_pending,
             'amount_paid': self.amount_paid,
             'prepayment_amount': prepayment_amount,
         }

@@ -9,6 +9,7 @@ class PaymentLinkWizard(models.TransientModel):
 
     amount_paid = fields.Monetary(string="Already Paid", readonly=True)
     prepayment_amount = fields.Monetary(string="Prepayment Amount", currency_field='currency_id')
+    amount_pending = fields.Monetary(currency_field='currency_id')
     confirmation_message = fields.Char(
         string="Confirmation Message", compute='_compute_confirmation_message'
     )

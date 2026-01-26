@@ -10,6 +10,27 @@
                 <!-- modified through an onchange, must be present but not readonly -->
                 <field name="recompute_delivery_price" invisible="1"/>
             </header>
+            <button name="payment_action_void" position="after">
+                <button
+                    name="action_confirm_payment_on_delivery"
+                    type="object"
+                    string="Confirm Payment"
+                    class="oe_highlight"
+                    invisible="not pending_delivery_transaction_ids"
+                />
+            </button>
+            <sheet position="before">
+                <div
+                    name="payment_to_collect_warning"
+                    class="alert alert-warning"
+                    role="alert"
+                    invisible="not pending_delivery_transaction_ids"
+                >
+                    Payment to collect:
+                    <field name="amount_on_delivery" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                </div>
+            </sheet>
             <div name="so_button_below_order_lines" position="inside">
                 <button
                     string="Add shipping"

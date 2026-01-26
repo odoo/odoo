@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_form_with_carrier" model="ir.ui.view">
+        <field name="name">delivery.sale.order.form.view.with_carrier</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="delivery.view_order_form_with_carrier"/>
+        <field name="arch" type="xml">
+            <!-- Move the action & warning to the picking form when stock is installed. -->
+            <button name="action_confirm_payment_on_delivery" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </button>
+            <div name="payment_to_collect_warning" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </div>
+        </field>
+    </record>
+
+</odoo>

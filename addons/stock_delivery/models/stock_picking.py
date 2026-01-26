@@ -31,11 +31,11 @@ class StockPicking(models.Model):
     destination_country_code = fields.Char(related='partner_id.country_id.code', string="Destination Country")
     integration_level = fields.Selection(related='carrier_id.integration_level')
 
-    display_confirm_delivery_payment_action = fields.Boolean(
-        compute='_compute_display_confirm_delivery_payment_action'
+    display_action_confirm_payment_on_delivery = fields.Boolean(
+        compute='_compute_display_action_confirm_payment_on_delivery'
     )
-    order_amount_at_delivery = fields.Monetary(
-        related='sale_id.amount_at_delivery', currency_field='order_currency_id'
+    order_amount_on_delivery = fields.Monetary(
+        related='sale_id.amount_on_delivery', currency_field='order_currency_id'
     )
     order_currency_id = fields.Many2one(related='sale_id.currency_id')
 
@@ -65,15 +65,16 @@ class StockPicking(models.Model):
             else:
                 picking.return_label_ids = False
 
-    @api.depends('sale_id.transaction_ids', 'location_dest_id.usage')
-    def _compute_display_confirm_delivery_payment_action(self):
+    @api.depends('location_dest_id.usage', 'state', 'sale_id.pending_delivery_transaction_ids')
+    def _compute_display_action_confirm_payment_on_delivery(self):
         for picking in self:
-            picking.display_confirm_delivery_payment_action = (
-                self.sale_id.pending_delivery_transaction_ids
-                and self.location_dest_id.usage == 'customer'
+            picking.display_action_confirm_payment_on_delivery = (
+                picking.location_dest_id.usage == 'customer'
+                and picking.state not in {'draft', 'cancel'}
+                and picking.sale_id.pending_delivery_transaction_ids
             )
 
-    def action_confirm_delivery_payment(self):
+    def action_confirm_payment_on_delivery(self):
         """Collect the pending payments of the linked sale order, if any, and log a message on both
         the current picking and the linked sale order to trace the action.
 
@@ -88,13 +89,13 @@ class StockPicking(models.Model):
         if not self.sale_id:
             raise UserError(self.env._("The picking is not linked to a sale order."))
 
-        res = self.sale_id.action_confirm_delivery_payment()
+        res = self.sale_id.action_confirm_payment_on_delivery(
+            message=self.env._("Payment collected on the delivery of %s.", self._get_html_link())
+        )
         self.message_post(
             body=self.env._("Payment collected for %s.", self.sale_id._get_html_link())
         )
-        self.sale_id.message_post(
-            body=self.env._("Payment collected on %s.", self._get_html_link())
-        )
+
         return res
 
     def get_multiple_carrier_tracking(self):

@@ -19,9 +19,11 @@ class SaleOrder(models.Model):
     shipping_weight = fields.Float("Shipping Weight", compute="_compute_shipping_weight", store=True, readonly=False)
 
     pending_delivery_transaction_ids = fields.Many2many(
-        comodel_name='payment.transaction', compute='_compute_pending_delivery_transaction_ids',
+        comodel_name='payment.transaction',
+        compute='_compute_pending_delivery_transaction_ids',
+        compute_sudo=True,
     )
-    amount_at_delivery = fields.Monetary(compute='_compute_amount_at_delivery')
+    amount_on_delivery = fields.Monetary(compute='_compute_amount_on_delivery', compute_sudo=True)
 
     def _compute_partner_shipping_id(self):
         """ Override to reset the delivery address when a pickup location was selected. """
@@ -48,43 +50,18 @@ class SaleOrder(models.Model):
     @api.depends('transaction_ids')
     def _compute_pending_delivery_transaction_ids(self):
         pms_at_delivery = self.env['payment.method']._get_payment_method_at_delivery_codes()
-        predicate = Domain([
+        domain = Domain([
             ('payment_method_id.code', 'in', pms_at_delivery),
             ('state', '=', 'pending'),
-        ])._as_predicate(self.transaction_ids)
+        ])
 
         for order in self:
-            order.pending_delivery_transaction_ids = order.transaction_ids.filtered(predicate)
+            order.pending_delivery_transaction_ids = order.transaction_ids.filtered_domain(domain)
 
-    @api.depends('transaction_ids')
-    def _compute_amount_at_delivery(self):
+    @api.depends('pending_delivery_transaction_ids')
+    def _compute_amount_on_delivery(self):
         for order in self:
-            order.amount_at_delivery = sum(order.pending_delivery_transaction_ids.mapped('amount'))
-
-    def action_confirm_delivery_payment(self):
-        """Mark pending delivery transactions as done and trigger post-processing so payment
-        records are created immediately.
-
-        :raises UserError: If no pending delivery transaction is found.
-        :return: An action dict to display a notification.
-        :rtype: dict
-        """
-        if not self.pending_delivery_transaction_ids:
-            raise UserError(self.env._("No pending transaction found."))
-
-        self.pending_delivery_transaction_ids._set_done(
-            state_message=self.env._("Payment collected on delivery."),
-        )
-        self.pending_delivery_transaction_ids._post_process()
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'type': 'success',
-                'message': self.env._("The payment was collected successfully!"),
-                'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
-            },
-        }
+            order.amount_on_delivery = order.pending_delivery_transaction_ids._get_last().amount
 
     @api.onchange('order_line', 'partner_id', 'partner_shipping_id')
     def onchange_order_line(self):
@@ -245,6 +222,42 @@ class SaleOrder(models.Model):
             })
             order.with_context(update_delivery_shipping_partner=True).write({'partner_shipping_id': shipping_partner})
         return super()._action_confirm()
+
+    def action_confirm_payment_on_delivery(self, message=None):
+        """Mark the last pending delivery transaction as done and trigger post-processing so payment
+        records are created immediately. Other pending transactions are canceled.
+
+        :param str message: Optionally, a message to be posted on related records of the last
+            transaction.
+        :raises UserError: If no pending delivery transaction is found.
+        :return: An action dict to display a notification of confirmation.
+        :rtype: dict
+        """
+        if not self.pending_delivery_transaction_ids:
+            raise UserError(self.env._("No pending transaction found."))
+
+        last_tx = self.pending_delivery_transaction_ids._get_last()
+        last_tx._set_done()
+        if other_txs := self.pending_delivery_transaction_ids - last_tx:
+            other_txs._set_canceled(
+                state_message=self.env._(
+                    "Canceled in favor of transaction %s", last_tx.display_name
+                )
+            )
+
+        self.pending_delivery_transaction_ids._post_process()
+        if message:
+            last_tx._log_message_on_linked_documents(message)
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': self.env._("The payment was collected successfully!"),
+                'next': {'type': 'ir.actions.client', 'tag': 'soft_reload'},
+            },
+        }
 
     def _prepare_delivery_line_vals(self, carrier, price_unit):
         context = {}

@@ -11,11 +11,11 @@ class PaymentProvider(models.Model):
 
     custom_mode = fields.Selection(selection_add=[('on_site', "Pay on site")])
 
-    def _get_provider_payment_method(self, code):
+    def _get_code(self):
         """Override to allow the post processing of transactions to create payments."""
-        if self.code == code == 'custom' and self.custom_mode == 'on_site':
-            code = 'on_site'
-        return super()._get_provider_payment_method(code)
+        if self.code == 'custom' and self.custom_mode == 'on_site':
+            return 'on_site'
+        return super()._get_code()
 
     # === CRUD METHODS === #
 
