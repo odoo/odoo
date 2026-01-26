@@ -2,24 +2,67 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, Command, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
+from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 
+RRULE_WEEKDAYS = {'SUN': 'SU', 'MON': 'MO', 'TUE': 'TU', 'WED': 'WE', 'THU': 'TH', 'FRI': 'FR', 'SAT': 'SA'}
+REPEAT_UNIT_TO_RRULE = {
+    'day': rrule.DAILY,
+    'week': rrule.WEEKLY,
+    'weekday': rrule.WEEKLY,
+    'month': rrule.MONTHLY,
+    'monthday': rrule.MONTHLY,
+    'year': rrule.YEARLY,
+}
+MONTH_BY_SELECTION = [
+    ('date', 'Date of month'),
+    ('day', 'Day of month'),
+]
+BYDAY_SELECTION = [
+    ('1', 'First'),
+    ('2', 'Second'),
+    ('3', 'Third'),
+    ('4', 'Fourth'),
+    ('-1', 'Last'),
+]
+WEEKDAY_SELECTION = [
+    ('MON', 'Monday'),
+    ('TUE', 'Tuesday'),
+    ('WED', 'Wednesday'),
+    ('THU', 'Thursday'),
+    ('FRI', 'Friday'),
+    ('SAT', 'Saturday'),
+    ('SUN', 'Sunday'),
+]
+REPEAT_UNIT_SELECTION = [
+    ('day', 'Days'),
+    ('week', 'Weeks'),
+    ('weekday', 'Week Days'),
+    ('month', 'Months'),
+    ('monthday', 'Month Days'),
+    ('year', 'Years'),
+]
 
 class ProjectTaskRecurrence(models.Model):
     _name = 'project.task.recurrence'
     _description = 'Task Recurrence'
 
     task_ids = fields.One2many('project.task', 'recurrence_id', copy=False)
-
+    mon = fields.Boolean()
+    tue = fields.Boolean()
+    wed = fields.Boolean()
+    thu = fields.Boolean()
+    fri = fields.Boolean()
+    sat = fields.Boolean()
+    sun = fields.Boolean()
+    month_by = fields.Selection(MONTH_BY_SELECTION, default='date')
+    repeat_date_of_month = fields.Integer(default=1)
+    repeat_by_day_month = fields.Selection(BYDAY_SELECTION, string='By day')
+    repeat_by_weekday_month = fields.Selection(WEEKDAY_SELECTION, string='Weekday')
     repeat_interval = fields.Integer(string='Repeat Every', default=1)
-    repeat_unit = fields.Selection([
-        ('day', 'Days'),
-        ('week', 'Weeks'),
-        ('month', 'Months'),
-        ('year', 'Years'),
-    ], default='week', export_string_translation=False)
+    repeat_unit = fields.Selection(REPEAT_UNIT_SELECTION, default='week', export_string_translation=False)
     repeat_type = fields.Selection([
         ('forever', 'Forever'),
         ('until', 'Until'),
@@ -49,6 +92,22 @@ class ProjectTaskRecurrence(models.Model):
             'date_deadline',
         ]
 
+    def _get_week_list(self):
+        return tuple(
+            rrule.weekday(index)
+            for index, isScheduled in {
+            rrule.MO.weekday: self.mon,
+            rrule.TU.weekday: self.tue,
+            rrule.WE.weekday: self.wed,
+            rrule.TH.weekday: self.thu,
+            rrule.FR.weekday: self.fri,
+            rrule.SA.weekday: self.sat,
+            rrule.SU.weekday: self.sun
+            }.items() if isScheduled)
+
+    def _get_scheduling_field(self):
+        return ['date_deadline']
+
     def _get_last_task_id_per_recurrence_id(self):
         return {} if not self else {
             recurrence.id: max_task_id
@@ -58,19 +117,13 @@ class ProjectTaskRecurrence(models.Model):
                 ['id:max'],
             )
         }
-
-    def _get_recurrence_delta(self):
-        return relativedelta(**{
-            f"{self.repeat_unit}s": self.repeat_interval
-        })
-
     @api.model
     def _create_next_occurrences(self, occurrences_from):
         tasks_copy = self.env['project.task']
         occurrences_from = occurrences_from.filtered(lambda task:
             task.recurrence_id.repeat_type != 'until' or
             not task.date_deadline or task.recurrence_id.repeat_until and
-            (task.date_deadline + task.recurrence_id._get_recurrence_delta()).date() <= task.recurrence_id.repeat_until
+            (task.date_deadline + task.recurrence_id.get_delta(task.date_deadline)).date() <= task.recurrence_id.repeat_until
         )
         if occurrences_from:
             recurrence_by_task = {task: task.recurrence_id for task in occurrences_from}
@@ -87,15 +140,18 @@ class ProjectTaskRecurrence(models.Model):
         list_copy_data = tasks.with_context(copy_project=True, active_test=False).sudo().copy_data()
         list_fields_to_copy = tasks._read_format(self._get_recurring_fields_to_copy())
         list_fields_to_postpone = tasks._read_format(self._get_recurring_fields_to_postpone())
+        list_field_for_schedule = tasks._read_format(self._get_scheduling_field())
 
-        for task, copy_data, fields_to_copy, fields_to_postpone in zip(
+        for task, copy_data, fields_to_copy, fields_to_postpone, field_for_schedule in zip(
             tasks,
             list_copy_data,
             list_fields_to_copy,
-            list_fields_to_postpone
+            list_fields_to_postpone,
+            list_field_for_schedule,
         ):
             recurrence = recurrence_by_task[task]
             fields_to_postpone.pop('id', None)
+            field_for_schedule.pop('id', None)
             create_values = {
                 'priority': '0',
                 'stage_id': task.sudo().project_id.type_ids[0].id if task.sudo().project_id.type_ids else task.stage_id.id,
@@ -105,11 +161,44 @@ class ProjectTaskRecurrence(models.Model):
                 field: value[0] if isinstance(value, tuple) else value
                 for field, value in fields_to_copy.items()
             })
+
+            delta = recurrence.get_delta(next(iter(field_for_schedule.values())))
             create_values.update({
-                field: value and value + recurrence._get_recurrence_delta()
+                field: value and value + delta
                 for field, value in fields_to_postpone.items()
             })
             copy_data.update(create_values)
             list_create_values.append(copy_data)
 
         return list_create_values
+
+    def get_delta(self, dtstart):
+        self.ensure_one()
+        rrule_params = dict(
+            dtstart=dtstart,
+            interval=self.repeat_interval,
+        )
+        if self.repeat_unit == 'weekday':
+            weekdays = self._get_week_list()
+            if not weekdays:
+                raise UserError(_("You have to choose at least one day in the week to schedule taskes based on days of the week"))
+            rrule_params['byweekday'] = weekdays
+            rrule_params['wkst'] = rrule.weekday(int(self.env['res.lang']._get_data(code=self.env.user.lang).week_start) - 1)
+            rrule_params['interval'] = 1
+            # If you schedule on specific days of the week no intervl should be added
+        elif self.repeat_unit == 'monthday':
+            if self.month_by == 'date':
+                rrule_params['bymonthday'] = self.repeat_date_of_month
+            elif self.month_by == 'day':
+                rrule_params['byweekday'] = getattr(rrule, RRULE_WEEKDAYS[self.repeat_by_weekday_month])(int(self.repeat_by_day_month))
+        rrule_params["count"] = 2
+        rrule_date = rrule.rrule(
+            REPEAT_UNIT_TO_RRULE[self.repeat_unit], **rrule_params)
+        for date in rrule_date:
+            print(date)
+        # rrule will give out the start date if it is considered valid, which is unwhanted since we want the next date from rrule
+        # we therefroe calculate 2 dates and take the one that is the earliest and is not equal or smaller than the start date.
+        if (rrule_date[0] <= dtstart):
+            return rrule_date[1] - dtstart
+        else:
+            return rrule_date[0] - dtstart
