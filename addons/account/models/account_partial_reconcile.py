@@ -660,6 +660,7 @@ class AccountPartialReconcile(models.Model):
 
         # Reconcile the tax lines being on a reconcile tax basis transfer account.
         reconciliation_plan = []
+        exchange_account_per_move = self.env.context.get('exchange_account_per_move', {})
         for lines, move_index, sequence in to_reconcile_after:
 
             # In expenses, all move lines are created manually without any grouping on tax lines.
@@ -675,6 +676,7 @@ class AccountPartialReconcile(models.Model):
                 continue
 
             reconciliation_plan.append(counterpart_line + lines)
+            exchange_account_per_move[moves[move_index]] = exchange_account_per_move.get(lines.move_id)
 
         # passing add_caba_vals in the context to make sure that any exchange diff that would be created for
         # this cash basis move would set the field draft_caba_move_vals accordingly on the partial

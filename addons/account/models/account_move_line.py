@@ -2485,6 +2485,8 @@ class AccountMoveLine(models.Model):
             'debit_move_id': debit_aml.id,
             'credit_move_id': credit_aml.id,
         }
+        res['debit_aml'] = debit_aml
+        res['credit_aml'] = credit_aml
 
         debit_values['amount_residual'] = remaining_debit_amount
         debit_values['amount_residual_currency'] = remaining_debit_amount_curr
@@ -2810,6 +2812,7 @@ class AccountMoveLine(models.Model):
         partials_values_list = []
         exchange_diff_values_list = []
         all_plan_results = []
+        exchange_account_per_move = {}
         for plan in plan_list:
             plan_results = self\
                 .with_context(
@@ -2820,8 +2823,12 @@ class AccountMoveLine(models.Model):
             all_plan_results.append(plan_results)
             for results in plan_results:
                 partials_values_list.append(results['partial_values'])
-                if results.get('exchange_values') and results['exchange_values']['move_values']['line_ids']:
-                    exchange_diff_values_list.append(results['exchange_values'])
+                exchange_values = results.get('exchange_values')
+                if exchange_values and exchange_values['move_values']['line_ids']:
+                    exchange_diff_values_list.append(exchange_values)
+                    exchange_account_id = exchange_values['move_values']['line_ids'][1][2]['account_id']
+                    for move in (results['debit_aml'] + results['credit_aml']).move_id:
+                        exchange_account_per_move[move] = exchange_account_id
 
         # ==== Create the partials ====
         # Link the newly created partials to the plan. There are needed later for caba exchange entries.
@@ -2860,7 +2867,9 @@ class AccountMoveLine(models.Model):
         if not self.env.context.get('move_reverse_cancel') and not self.env.context.get('no_cash_basis'):
             for plan in plan_list:
                 if is_cash_basis_needed(plan['amls']):
-                    plan['partials'].with_context(no_exchange_difference_no_recursive=False)._create_tax_cash_basis_moves()
+                    plan['partials']\
+                        .with_context(no_exchange_difference_no_recursive=False, exchange_account_per_move=exchange_account_per_move)\
+                        ._create_tax_cash_basis_moves()
                     plan['partials']._set_draft_caba_move_vals()
 
         # ==== Prepare full reconcile creation ====
@@ -2988,8 +2997,13 @@ class AccountMoveLine(models.Model):
             'line_ids': [],
             'always_tax_exigible': True,
         }
+
+        exchange_account_per_move = self.env.context.get('exchange_account_per_move', {})
         to_reconcile = []
+        refs = set()
         for line, amounts in zip(self, amounts_list):
+            if line.move_id.name:
+                refs.add(line.move_id.name)
 
             move_vals['date'] = max(move_vals['date'], line.date)
 
@@ -3010,7 +3024,10 @@ class AccountMoveLine(models.Model):
             else:
                 continue
 
-            exchange_line_account = self._get_exchange_account(company, amount_residual_to_fix)
+            exchange_line_account_id = (
+                exchange_account_per_move.get(line.move_id)
+                or self._get_exchange_account(company, amount_residual_to_fix).id
+            )
 
             sequence = len(move_vals['line_ids'])
             line_vals = [
@@ -3031,7 +3048,7 @@ class AccountMoveLine(models.Model):
                     'debit': amount_residual if amount_residual > 0.0 else 0.0,
                     'credit': -amount_residual if amount_residual < 0.0 else 0.0,
                     'amount_currency': amount_residual_currency,
-                    'account_id': exchange_line_account.id,
+                    'account_id': exchange_line_account_id,
                     'currency_id': line.currency_id.id,
                     'partner_id': line.partner_id.id,
                     'sequence': sequence + 1,
@@ -3043,6 +3060,8 @@ class AccountMoveLine(models.Model):
 
             move_vals['line_ids'] += [Command.create(vals) for vals in line_vals]
             to_reconcile.append((line, sequence))
+
+        move_vals['ref'] = ','.join(refs) or None
 
         return {'move_values': move_vals, 'to_reconcile': to_reconcile}
 
