@@ -355,11 +355,11 @@ class MailMessage(models.Model):
         """ Helper returning records on which 'operation' on mail.message is
         allowed, based on '_get_mail_message_access' behavior and potential
         model override. """
-        documents_all = self.env[doc_model].with_context(active_test=False).browse(doc_res_ids)
+        DocumentModel = self.env[doc_model].with_context(active_test=False).with_prefetch(doc_res_ids)
         documents_per_operation = defaultdict(self.env[doc_model].browse)
-        for document in documents_all:
+        for document in DocumentModel.browse(doc_res_ids):
             if hasattr(document, '_get_mail_message_access'):
-                doc_operation = self.env[document._name]._get_mail_message_access(document.ids, operation)  # why not giving model here?
+                doc_operation = DocumentModel._get_mail_message_access(document.ids, operation)  # why not giving model here?
             else:
                 doc_operation = self.env['mail.thread']._get_mail_message_access(document.ids, operation, model_name=document._name)
             documents_per_operation[doc_operation] |= document
