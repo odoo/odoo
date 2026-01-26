@@ -80,7 +80,7 @@ export class LoyaltyProgram extends models.ServerModel {
             portal_point_name: "Gift Card Points",
             trigger_product_ids: [],
             rule_ids: [1],
-            reward_ids: [],
+            reward_ids: [4],
         },
         {
             id: 4,
