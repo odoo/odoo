@@ -135,6 +135,77 @@ class TestSaleStockReports(TestReportsCommon):
             (2.0, True, False)
         )
 
+    def test_report_forecast_in_transit_for_unreserved_qty(self):
+        """
+        Check that unreserve quantities are not tagged as "in transit" in forecasted report
+        """
+        warehouse = self.env.ref("stock.warehouse0")
+        warehouse.write({'reception_steps': 'three_steps'})
+
+        location_stock, location_quality, location_input = (
+            warehouse.lot_stock_id,
+            warehouse.wh_qc_stock_loc_id,
+            warehouse.wh_input_stock_loc_id,
+        )
+
+        self.env['stock.quant'].create([
+            {
+                'product_id': self.product.id,
+                'location_id': location.id,
+                'quantity': qty,
+            }
+            for location, qty in (
+                (location_stock, 5),
+                (location_quality, 1),
+                (location_input, 6),
+            )
+        ])
+
+        picking_internal = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.int_type_id.id,
+            'location_id': location_input.id,
+            'location_dest_id': location_quality.id,
+            'move_ids_without_package': [
+                Command.create({
+                    'name': self.product.name,
+                    'product_id': self.product.id,
+                    'product_uom': self.product.uom_id.id,
+                    'product_uom_qty': 5,
+                    'location_id': location_input.id,
+                    'location_dest_id': location_quality.id,
+                })
+            ],
+        })
+        picking_internal.action_confirm()
+
+        sales = self.env['sale.order'].create([
+            {
+                'partner_id': self.partner.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product.id,
+                        'product_uom_qty': qty,
+                        'price_unit': 20,
+                    })
+                ],
+            }
+            for qty in (12, 12)
+        ])
+        sales.action_confirm()
+
+        sale_moves = sales.picking_ids.move_ids
+        expected_values = [
+            (sale_moves[0].id, 5, False, True),
+            (sale_moves[0].id, 5, True, True),
+            (sale_moves[0].id, 2, False, False),
+            (sale_moves[1].id, 12, False, False),
+        ]
+        for li, expected in zip(
+                self.env['stock.forecasted_product_product'].with_context(warehouse=warehouse.id).get_report_values(docids=self.product.ids)['docs']['lines'],
+                expected_values,
+            ):
+            self.assertEqual((li['move_out']['id'], li['quantity'], li['in_transit'], li['replenishment_filled']), expected)
+
     def test_report_forecast_4_so_from_another_salesman(self):
         """ Try accessing the forecast with a user that has only access to his SO while another user has created:
             - A draft Sale Order

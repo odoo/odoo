@@ -325,17 +325,19 @@ class StockForecasted(models.AbstractModel):
                 dest_ids_to_in_ids[dest].add(in_.id)
 
         qties = self.env['stock.quant']._read_group([('location_id', 'in', wh_location_ids), ('quantity', '>', 0), ('product_id', 'in', outs.product_id.ids)],
-                                                    ['product_id', 'location_id'], ['quantity:sum'])
+                                                    ['product_id', 'location_id'], ['quantity:sum', 'reserved_quantity:sum'])
         wh_stock_sub_location_ids = set(
             wh_stock_location.search([('id', 'child_of', wh_stock_location.id)])._ids
         )
         currents = defaultdict(float)
-        for product, location, quantity in qties:
+        reserved_quantity = defaultdict(float)
+        for product, location, quantity, res_quantity in qties:
             location_id = location.id
             # any sublocation qties will be added to the main stock location qty
             if location_id in wh_stock_sub_location_ids:
                 location_id = wh_stock_location.id
             currents[(product.id, location_id)] += quantity
+            reserved_quantity[product.id, location_id] += res_quantity
         moves_data = {}
         for _, out_moves in outs_per_product.items():
             # to handle multiple out wtih same in (ex: same pick/pack for 2 outs)
@@ -350,15 +352,18 @@ class StockForecasted(models.AbstractModel):
                 data = _get_out_move_taken_from_stock_data(out, currents, moves_data[out])
                 moves_data[out].update(data)
         product_sum = defaultdict(float)
-        for product_loc, quantity in currents.items():
-            product_sum[product_loc[0]] += quantity
+        for product_loc, reserved_quantity in reserved_quantity.items():
+            product_sum[product_loc[0]] += reserved_quantity
+        reserved_sum = defaultdict(float)
+        for product_id, out_moves in outs_per_product.items():
+            reserved_sum[product_id] += sum(moves_data[m].get('reserved') for m in out_moves)
         lines = []
         for product in (ins | outs).product_id:
             product_rounding = product.uom_id.rounding
             unreconciled_outs = []
             # remaining stock
             free_stock = currents[product.id, wh_stock_location.id]
-            transit_stock = product_sum[product.id] - free_stock
+            transit_stock = product_sum[product.id] - reserved_sum[product.id]
             # add report lines and see if remaining demand can be reconciled by unreservable stock or ins
             for out in outs_per_product[product.id]:
                 reserved_out = moves_data[out].get('reserved')
