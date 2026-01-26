@@ -1066,15 +1066,28 @@ class PosOrder(models.Model):
         })
         reversal_entry.action_post()
 
-        pos_account_receivable = self.company_id.account_default_pos_receivable_account_id
-        account_receivable = self.payment_ids.payment_method_id.receivable_account_id
-        reversal_entry_receivable = reversal_entry.line_ids.filtered(lambda l: l.account_id in (pos_account_receivable + account_receivable))
-        payment_receivable = payment_moves.line_ids.filtered(lambda l: l.account_id in (pos_account_receivable + account_receivable))
-        lines_to_reconcile = defaultdict(lambda: self.env['account.move.line'])
-        for line in (reversal_entry_receivable | payment_receivable):
-            lines_to_reconcile[line.account_id] |= line
-        for line in lines_to_reconcile.values():
-            line.filtered(lambda l: not l.reconciled).reconcile()
+        partner = self.partner_id.commercial_partner_id
+        accounts = (
+            self.company_id.account_default_pos_receivable_account_id |
+            self.payment_ids.mapped('payment_method_id.receivable_account_id') |
+            partner.property_account_receivable_id
+        )
+
+        candidate_lines = reversal_entry.line_ids
+        if payment_moves.line_ids:
+            candidate_lines |= payment_moves.line_ids
+        else:
+            candidate_lines |= self.session_move_id.line_ids.filtered(
+                lambda l: l.partner_id == partner and l.account_id == partner.property_account_receivable_id
+            )
+
+        lines_by_account = {}
+        for line in candidate_lines:
+            if line.account_id in accounts and not line.reconciled:
+                lines_by_account.setdefault(line.account_id, self.env['account.move.line'])
+                lines_by_account[line.account_id] |= line
+        for lines in lines_by_account.values():
+            lines.reconcile()
 
     def action_pos_order_invoice(self):
         self.ensure_one()
