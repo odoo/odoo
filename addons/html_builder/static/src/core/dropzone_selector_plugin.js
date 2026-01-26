@@ -7,7 +7,7 @@ import { Plugin } from "@html_editor/plugin";
  */
 
 const card_parent_handlers =
-    ".s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div, .s_newsletter_centered .row > div, .s_company_team_spotlight .row > div, .s_comparisons_horizontal .row > div, .s_company_team_grid .row > div, .s_company_team_card .row > div, .s_carousel_cards_item";
+    ".s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div, .s_newsletter_centered .row > div, .s_company_team_spotlight .row > div, .s_comparisons_horizontal .row > div, .s_company_team_grid .row > div, .s_company_team_card .row > div, .s_carousel_cards_item, .s_carousel_multiple_item";
 const special_cards_selector = `.s_card.s_timeline_card, div:is(${card_parent_handlers}) > .s_card`;
 
 const so_snippet_addition_drop_in =

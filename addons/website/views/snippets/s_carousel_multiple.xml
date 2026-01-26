@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_carousel_multiple" name="Carousel">
+    <section class="s_carousel_multiple_wrapper pt48 pb48 overflow-hidden" style="--o-carousel-multiple-items-gap: 16px;">
+        <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
+        <div t-attf-id="myCarousel{{uniq}}" class="s_carousel_multiple s_carousel_default carousel carousel-dark slide container o_displayed_items_4" data-bs-ride="false" data-bs-interval="0">
+            <!-- Content -->
+            <div class="carousel-inner d-flex h-auto">
+                <!-- #01 -->
+                <div class="s_carousel_multiple_item carousel-item active d-block flex-shrink-0 h-auto m-0 p-0 float-none" data-name="Slide">
+                    <div class="s_card s_carousel_multiple_card card o_cc o_cc5 align-items-stretch w-100 h-100 m-0 rounded-3 border oe_unremovable oe_img_bg o_bg_img_center o_bg_img_origin_border_box o_colored_level" style="--box-border-left-width: 0px; --box-border-bottom-width: 0px; --box-border-right-width: 0px; --box-border-top-width: 0px; background-image: url(/web/image/website.s_carousel_multiple_default_image_1)" data-vxml="001" data-snippet="s_card">
+                        <div class="o_we_bg_filter bg-black-50" contenteditable="false"/>
+                        <div class="card-body" style="text-align: center;">
+                            <p><br/></p>
+                            <h2 class="card-title h3-fs" style="text-align: center;">#1</h2>
+                            <p class="card-text" style="text-align: center;">A card is a flexible and extensible content container. It includes colors and powerful display options.</p>
+                            <a href="#" class="btn btn-secondary">Read More</a>
+                            <p><br/></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- #02 -->
+                <div class="s_carousel_multiple_item carousel-item d-block flex-shrink-0 h-auto m-0 p-0 float-none" data-name="Slide">
+                    <div class="s_card s_carousel_multiple_card card o_cc o_cc5 align-items-stretch w-100 h-100 m-0 rounded-3 border oe_unremovable oe_img_bg o_bg_img_center o_bg_img_origin_border_box o_colored_level" style="--box-border-left-width: 0px; --box-border-bottom-width: 0px; --box-border-right-width: 0px; --box-border-top-width: 0px; background-image: url(/web/image/website.s_carousel_multiple_default_image_2)" data-vxml="001" data-snippet="s_card">
+                        <div class="o_we_bg_filter bg-black-50" contenteditable="false"/>
+                        <div class="card-body" style="text-align: center;">
+                            <p><br/></p>
+                            <h2 class="card-title h3-fs" style="text-align: center;">#2</h2>
+                            <p class="card-text" style="text-align: center;">A card is a flexible and extensible content container. It includes colors and powerful display options.</p>
+                            <a href="#" class="btn btn-secondary">Read More</a>
+                            <p><br/></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- #03 -->
+                <div class="s_carousel_multiple_item carousel-item d-block flex-shrink-0 h-auto m-0 p-0 float-none" data-name="Slide">
+                    <div class="s_card s_carousel_multiple_card card o_cc o_cc5 align-items-stretch w-100 h-100 m-0 rounded-3 border oe_unremovable oe_img_bg o_bg_img_center o_bg_img_origin_border_box o_colored_level" style="--box-border-left-width: 0px; --box-border-bottom-width: 0px; --box-border-right-width: 0px; --box-border-top-width: 0px; background-image: url(/web/image/website.s_carousel_multiple_default_image_3)" data-vxml="001" data-snippet="s_card">
+                        <div class="o_we_bg_filter bg-black-50" contenteditable="false"/>
+                        <div class="card-body" style="text-align: center;">
+                            <p><br/></p>
+                            <h2 class="card-title h3-fs" style="text-align: center;">#3</h2>
+                            <p class="card-text" style="text-align: center;">A card is a flexible and extensible content container. It includes colors and powerful display options.</p>
+                            <a href="#" class="btn btn-secondary">Read More</a>
+                            <p><br/></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- #04 -->
+                <div class="s_carousel_multiple_item carousel-item d-block flex-shrink-0 h-auto m-0 p-0 float-none" data-name="Slide">
+                    <div class="s_card s_carousel_multiple_card card o_cc o_cc5 align-items-stretch w-100 h-100 m-0 rounded-3 border oe_unremovable oe_img_bg o_bg_img_center o_bg_img_origin_border_box o_colored_level" style="--box-border-left-width: 0px; --box-border-bottom-width: 0px; --box-border-right-width: 0px; --box-border-top-width: 0px; background-image: url(/web/image/website.s_carousel_multiple_default_image_4)" data-vxml="001" data-snippet="s_card">
+                        <div class="o_we_bg_filter bg-black-50" contenteditable="false"/>
+                        <div class="card-body" style="text-align: center;">
+                            <p><br/></p>
+                            <h2 class="card-title h3-fs" style="text-align: center;">#4</h2>
+                            <p class="card-text" style="text-align: center;">A card is a flexible and extensible content container. It includes colors and powerful display options.</p>
+                            <a href="#" class="btn btn-secondary">Read More</a>
+                            <p><br/></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- #05 -->
+                <div class="s_carousel_multiple_item carousel-item d-block flex-shrink-0 h-auto m-0 p-0 float-none" data-name="Slide">
+                    <div class="s_card s_carousel_multiple_card card o_cc o_cc5 align-items-stretch w-100 h-100 m-0 rounded-3 border oe_unremovable oe_img_bg o_bg_img_center o_bg_img_origin_border_box o_colored_level" style="--box-border-left-width: 0px; --box-border-bottom-width: 0px; --box-border-right-width: 0px; --box-border-top-width: 0px; background-image: url(/web/image/website.s_carousel_multiple_default_image_5)" data-vxml="001" data-snippet="s_card">
+                        <div class="o_we_bg_filter bg-black-50" contenteditable="false"/>
+                        <div class="card-body" style="text-align: center;">
+                            <p><br/></p>
+                            <h2 class="card-title h3-fs" style="text-align: center;">#5</h2>
+                            <p class="card-text" style="text-align: center;">A card is a flexible and extensible content container. It includes colors and powerful display options.</p>
+                            <a href="#" class="btn btn-secondary">Read More</a>
+                            <p><br/></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- #06 -->
+                <div class="s_carousel_multiple_item carousel-item d-block flex-shrink-0 h-auto m-0 p-0 float-none" data-name="Slide">
+                    <div class="s_card s_carousel_multiple_card card o_cc o_cc5 align-items-stretch w-100 h-100 m-0 rounded-3 border oe_unremovable oe_img_bg o_bg_img_center o_bg_img_origin_border_box o_colored_level" style="--box-border-left-width: 0px; --box-border-bottom-width: 0px; --box-border-right-width: 0px; --box-border-top-width: 0px; background-image: url(/web/image/website.s_carousel_multiple_default_image_6)" data-vxml="001" data-snippet="s_card">
+                        <div class="o_we_bg_filter bg-black-50" contenteditable="false"/>
+                        <div class="card-body" style="text-align: center;">
+                            <p><br/></p>
+                            <h2 class="card-title h3-fs" style="text-align: center;">#6</h2>
+                            <p class="card-text" style="text-align: center;">A card is a flexible and extensible content container. It includes colors and powerful display options.</p>
+                            <a href="#" class="btn btn-secondary">Read More</a>
+                            <p><br/></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="o_horizontal_controllers container w-100 mt-3 o_not_editable d-none d-md-block">
+                <div class="o_horizontal_controllers_row row gap-3 gap-lg-5 justify-content-between flex-nowrap flex-row-reverse mx-0">
+                    <!-- Controls -->
+                    <div class="o_arrows_wrapper d-contents d-md-flex gap-2 w-auto p-0">
+                        <button class="carousel-control-prev o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarouselIntro{{uniq}}" data-bs-slide="prev" aria-label="Previous" title="Previous">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarouselIntro{{uniq}}" data-bs-slide="next" aria-label="Next" title="Next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"/>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                    <!-- Indicators -->
+                    <div class="s_carousel_indicators_numbers carousel-indicators position-relative align-items-center flex-shrink-1 w-100 w-md-auto">
+                        <button type="button" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide-to="0" class="active" aria-label="Carousel indicator"/>
+                        <button type="button" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide-to="1" aria-label="Carousel indicator"/>
+                        <button type="button" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide-to="2" aria-label="Carousel indicator"/>
+                        <button type="button" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide-to="3" aria-label="Carousel indicator"/>
+                        <button type="button" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide-to="4" aria-label="Carousel indicator"/>
+                        <button type="button" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide-to="5" aria-label="Carousel indicator"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<record id="website.s_carousel_multiple_000_scss" model="ir.asset">
+    <field name="name">Carousel 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_carousel_multiple/000.scss</field>
+</record>
+
+</odoo>

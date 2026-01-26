@@ -64,6 +64,7 @@
         'views/snippets/s_image_punchy.xml',
         'views/snippets/s_bento_grid.xml',
         'views/snippets/s_carousel.xml',
+        'views/snippets/s_carousel_multiple.xml',
         'views/snippets/s_carousel_intro.xml',
         'views/snippets/s_carousel_cards.xml',
         'views/snippets/s_alert.xml',
