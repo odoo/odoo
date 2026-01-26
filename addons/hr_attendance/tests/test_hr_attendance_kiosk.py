@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from unittest.mock import patch
 
+from odoo.exceptions import UserError
 from odoo.http.requestlib import Request
 from odoo.tests.common import HttpCase, tagged
 
@@ -38,3 +39,19 @@ class TestHrAttendanceKiosk(HttpCase):
         kiosk_info = kiosk_info['kiosk_backend_info']
         self.assertEqual(kiosk_info['company_name'], 'company_B')
         self.assertEqual(kiosk_info['departments'][0]['count'], 1)
+
+    def test_Attendance_using_Kiosk_disabled(self):
+        """All kiosk-related features should be disabled when "Attendance using Kiosk" is turned off."""
+
+        self.company_B.attendance_using_kiosk = False
+        # case 1: Accessing the Kiosk menu or onboarding action raises a UserError
+        with self.assertRaises(UserError):
+            self.company_B.with_company(self.company_B)._action_open_kiosk_mode()
+        with self.assertRaises(UserError):
+            self.env['hr.attendance'].with_company(self.company_B).action_try_kiosk()
+        # case 2: Direct access to an existing Kiosk URL is blocked (403 or 404)
+        response = self.url_open(
+            self.company_B.attendance_kiosk_url,
+            allow_redirects=False,
+        )
+        self.assertEqual(response.status_code, 404)

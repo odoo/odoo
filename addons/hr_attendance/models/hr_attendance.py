@@ -11,7 +11,7 @@ from dateutil.relativedelta import MO, SU, relativedelta
 from dateutil.rrule import DAILY, rrule
 
 from odoo import _, api, exceptions, fields, models
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import convert, format_datetime, format_duration, format_time
@@ -526,6 +526,12 @@ class HrAttendance(models.Model):
         }
 
     def action_try_kiosk(self):
+        if not self.env.company.attendance_using_kiosk:
+            raise UserError(self.env._(
+                "Kiosk Mode is disabled.\n"
+                "Please enable 'Attendances using Kiosk' in "
+                "Attendance settings to use this feature."
+            ))
         if not self.env.user.has_group("hr_attendance.group_hr_attendance_user"):
             return {
                     'type': 'ir.actions.client',
