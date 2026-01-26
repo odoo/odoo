@@ -160,7 +160,7 @@ test("add an emoji", async () => {
     await contains(".o-mail-Composer-html.odoo-editor-editable:text('😤')");
 });
 
-test("emojis are auto-substituted from text", async () => {
+test("[text composer] emojis are auto-substituted from text", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "swamp-safari" });
     await start();
@@ -172,6 +172,33 @@ test("emojis are auto-substituted from text", async () => {
     await press("Enter");
     await contains(".o-mail-Message-body:text('😂')");
     await insertText(".o-mail-Composer-input", ">:)");
+    await press("Enter");
+    await contains(".o-mail-Message-body:text('😈')");
+});
+
+test.tags("html composer");
+test("emojis are auto-substituted from text", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    await start();
+    await openDiscuss(channelId);
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, ":)");
+    await contains(".o-mail-Composer-html.odoo-editor-editable:text('😊')");
+    await press("Enter");
+    await contains(".o-mail-Message-body:text('😊')");
+    await htmlInsertText(editor, "x'D");
+    await contains(".o-mail-Composer-html.odoo-editor-editable:text('😂')");
+    await press("Enter");
+    await contains(".o-mail-Message-body:text('😂')");
+    await htmlInsertText(editor, ">:)");
+    await contains(".o-mail-Composer-html.odoo-editor-editable:text('😈')");
     await press("Enter");
     await contains(".o-mail-Message-body:text('😈')");
 });
