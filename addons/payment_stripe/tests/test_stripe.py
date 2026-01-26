@@ -86,6 +86,26 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             self._make_json_request(url, data=self.payment_data)
         self.assertEqual(tx.state, 'done')
 
+    def test_validate_amount_succeeds_for_special_currencies(self):
+        for currency_code in const.CURRENCY_DECIMALS:
+            currency = self._enable_currency(currency_code)
+            tx = self._create_transaction(
+                'dummy',
+                operation='online_direct',
+                amount=15,
+                currency_id=currency.id,
+                reference=f'test_{currency_code}'
+            )
+            data = self.payment_data['data']
+            with patch(
+                'odoo.addons.payment_stripe.models.payment_transaction.PaymentTransaction'
+                '._stripe_create_customer',
+                return_value={'id': 'cus_1234567890ABCDE'},
+            ):
+                data['payment_intent'] = tx._stripe_prepare_payment_intent_payload()
+            tx._validate_amount(data)
+            self.assertNotEqual(tx.state, 'error')
+
     def test_extract_token_values_maps_fields_correctly(self):
         tx = self._create_transaction('direct')
         payment_data = {
