@@ -42,10 +42,6 @@ export const barcodeService = {
 
         function handleBarcode(barcode, target) {
             bus.trigger('barcode_scanned', {barcode,target});
-            if (target.getAttribute('barcode_events') === "true") {
-                const barcodeScannedEvent = new CustomEvent("barcode_scanned", { detail: { barcode, target } });
-                target.dispatchEvent(barcodeScannedEvent);
-            }
         }
 
         /**
@@ -94,8 +90,7 @@ export const barcodeService = {
             // have no way of redispatching 'genuine' key events. Resent events
             // don't trigger native event handlers of elements. So this means that
             // our fake events will not appear in eg. an <input> element.
-            if (currentTarget !== barcodeInput && isEditable(currentTarget) &&
-                currentTarget.getAttribute("barcode_events") !== "true") {
+            if (currentTarget !== barcodeInput && isEditable(currentTarget)) {
                 return;
             }
 
