@@ -16,8 +16,8 @@
         <t t-set="categories" t-value="getCategorySelection()" />
         <t t-set="filters" t-value="getFilterSelection()" />
         <div class="d-flex">
-            <button class="btn btn-light btn-sm m-1 mb-2 p-2">
-                <i class="oi oi-fw oi-panel-right fa-flip-horizontal"/>
+            <button class="btn btn-light btn-sm m-2 p-1 py-2">
+                <i class="oi oi-panel-right fa-flip-horizontal"/>
             </button>
             <div class="o_search_panel_current_selection text-truncate mx-auto">
                 <t t-if="!categories.length and !filters.length">
@@ -54,7 +54,7 @@
          t-attf-class="#{env.isSmall ? 'px-3' : 'pe-1 ps-3'}"
          t-ref="root">
         <button t-if="!env.isSmall" class="btn btn-light btn-sm end-0 m-2 position-absolute px-2 py-1 top-0 z-1" t-on-click="toggleSidebar">
-            <i class="oi oi-fw oi-panel-right fa-flip-horizontal"/>
+            <i class="oi oi-panel-right fa-flip-horizontal"/>
         </button>
         <div t-if="!sections or sections.length === 0" class="o_search_panel_empty_state me-3">
             <button class="btn mt-2 w-100 overflow-visible">
