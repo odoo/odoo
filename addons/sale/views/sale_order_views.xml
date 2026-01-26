@@ -430,9 +430,10 @@
                                                 readonly="not product_updatable"
                                                 required="not display_type and not is_downpayment"
                                                 force_save="1"
-                                                widget="many2one_barcode"
+                                                widget="sol_product_many2one_barcode"
                                             />
                                         </div>
+                                        <field name="product_template_id" invisible="1"/>
                                         <field name="product_type" invisible="1"/>
                                         <field name="invoice_status" invisible="1"/>
                                         <field name="qty_to_invoice" invisible="1"/>
