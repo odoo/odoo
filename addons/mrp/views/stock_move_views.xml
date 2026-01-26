@@ -17,6 +17,9 @@
                 <xpath expr="//label[@for='product_uom_qty']" position="attributes">
 		            <attribute name="string">Total To Consume</attribute>
                 </xpath>
+                <xpath expr="//field[@name='show_lots_m2o']" position="after">
+                    <field name="quantity" invisible="1"/>
+               </xpath>
             </field>
         </record>
 
