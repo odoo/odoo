@@ -9122,6 +9122,7 @@ test(`form view is not broken if save operation fails with redirect warning`, as
 
 test.tags("desktop");
 test("Redirect Warning full feature: additional context, action_id, leaving while dirty", async function () {
+    expect.errors(1);
     defineActions([
         {
             id: 1,

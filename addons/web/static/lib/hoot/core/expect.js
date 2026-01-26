@@ -619,10 +619,10 @@ export function makeExpect(params) {
             return false;
         }
         const { errors, options } = resolver;
-        const actualErrors = currentResult.currentErrors;
+        const { currentErrors } = currentResult;
         const pass =
-            actualErrors.length === errors.length &&
-            actualErrors.every(
+            currentErrors.length === errors.length &&
+            currentErrors.every(
                 (error, i) =>
                     match(error, errors[i]) || (error.cause && match(error.cause, errors[i]))
             );
@@ -643,7 +643,7 @@ export function makeExpect(params) {
                 reportMessage,
             };
             if (!pass) {
-                const fActual = actualErrors.map(formatError);
+                const fActual = currentErrors.map(formatError);
                 const fExpected = errors.map(formatError);
                 assertion.failedDetails = detailsFromValuesWithDiff(fExpected, fActual);
                 assertion.stack = getStack(1);
@@ -772,6 +772,11 @@ export function makeExpect(params) {
             throw scopeError("expect.verifyErrors");
         }
         ensureArguments(arguments, "any[]", ["object", null]);
+        if (errors.length > currentResult.expectedErrors) {
+            throw new HootError(
+                `cannot call \`expect.verifyErrors()\` without calling \`expect.errors()\` beforehand`
+            );
+        }
 
         return checkErrors({ errors, options }, true);
     }
