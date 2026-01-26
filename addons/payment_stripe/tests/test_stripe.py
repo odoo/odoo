@@ -216,3 +216,22 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         data['payment_intent'] = self._mock_payment_intent_request()
         tx._compare_notification_data(data)
         self._assert_does_not_raise(ValidationError, tx._compare_notification_data, data)
+
+    def test_compare_notification_data_succeeds_for_currencies_with_non_standard_decimals(self):
+        for currency_code in const.CURRENCY_DECIMALS:
+            currency = self.currency.search([('name', '=', currency_code)])
+            tx = self._create_transaction(
+                'dummy',
+                operation='online_direct',
+                amount=15,
+                currency_id=currency.id,
+                reference=f'test_{currency_code}'
+            )
+            data = self.notification_data['data']
+            with patch(
+                'odoo.addons.payment_stripe.models.payment_transaction.PaymentTransaction'
+                '._stripe_create_customer',
+                return_value={'id': 'cus_1234567890ABCDE'},
+            ):
+                data['payment_intent'] = tx._stripe_prepare_payment_intent_payload()
+            self._assert_does_not_raise(ValidationError, tx._compare_notification_data, data)

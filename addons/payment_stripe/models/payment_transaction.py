@@ -391,7 +391,9 @@ class PaymentTransaction(models.Model):
         else:  # 'online_direct', 'online_token', 'offline'
             payment_data = notification_data['payment_intent']
         amount = payment_utils.to_major_currency_units(
-            payment_data.get('amount', 0), self.currency_id
+            payment_data.get('amount', 0),
+            self.currency_id,
+            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
         )
         currency_code = payment_data.get('currency', '').upper()
         precision_digits = CURRENCY_MINOR_UNITS.get(
