@@ -319,6 +319,8 @@ class MrpWorkorder(models.Model):
 
         for workorder in self:
             workorder.blocked_by_workorder_ids.needed_by_workorder_ids = workorder.needed_by_workorder_ids
+
+        self.end_all()
         res = super().unlink()
         # We need to go through `_action_confirm` for all workorders of the current productions to
         # make sure the links between them are correct (`next_work_order_id` could be obsolete now).
