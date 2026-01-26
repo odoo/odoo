@@ -33,7 +33,7 @@ class TestCursor(BaseCursor):
     def __init__(self, cursor: Cursor, lock: threading.RLock, readonly: bool):
         assert isinstance(cursor, BaseCursor)
         super().__init__()
-        self._now: datetime | None = None
+        self._now = datetime.now()
         self._closed: bool = False
         self._cursor = cursor
         self.readonly = readonly
