@@ -136,6 +136,15 @@ class AccountJournal(models.Model):
             codes = usual_codes + mipyme_codes
         elif afip_pos_system in ['FEERCEL', 'FEEWS', 'FEERCELP']:
             codes = expo_codes
+        elif afip_pos_system in ['WSMTXCAWS']:
+            codes = usual_codes + invoice_m_code + mipyme_codes
+            # NOTA: Lo hacemos asi para limpiar de manera rapida,
+            # debemos mejorar luego como se define este metodo
+            # excluimos el uso de la factura C en este WS
+            values_to_remove = ['11', '12', '13', '211', '212', '213']
+            for value in values_to_remove:
+                if value in codes:
+                    codes.remove(value)
         return [('code', 'in', codes)]
 
     @api.constrains('l10n_ar_afip_pos_system')
