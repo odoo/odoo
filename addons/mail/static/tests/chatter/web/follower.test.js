@@ -127,7 +127,7 @@ test("edit follower and close subtype dialog", async () => {
     await click("[title='Edit subscription']");
     await contains(".o-mail-FollowerSubtypeDialog");
     await expect.waitForSteps(["fetch_subtypes"]);
-    await click(".o-mail-FollowerSubtypeDialog button:text('Cancel')");
+    await click(".o-mail-FollowerSubtypeDialog button:text('Discard')");
     await contains(".o-mail-FollowerSubtypeDialog", { count: 0 });
 });
 

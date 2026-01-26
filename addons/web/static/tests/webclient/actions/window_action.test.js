@@ -997,7 +997,7 @@ test("execute_action of type object: disable buttons (2)", async () => {
     Pony._views["form,44"] = `
         <form>
             <field name="name"/>
-            <button string="Cancel" class="cancel-btn" special="cancel"/>
+            <button class="cancel-btn" special="cancel"/>
         </form>`;
 
     defineActions([

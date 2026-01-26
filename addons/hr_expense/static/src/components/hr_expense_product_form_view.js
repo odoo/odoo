@@ -30,7 +30,6 @@ export class ProductExpenseFormController extends FormController {
                 body: warning,
                 confirmLabel: _t("Update cost"),
                 confirm: () => super.save(params),
-                cancelLabel: _t("Discard"),
                 cancel: () => {},
             });
         }

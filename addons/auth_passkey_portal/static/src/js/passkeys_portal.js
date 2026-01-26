@@ -34,7 +34,6 @@ export class PortalPasskey extends Interaction {
                     location.reload();
                 }
             },
-            cancelLabel: _t("Discard"),
             cancel: () => {},
         });
     }

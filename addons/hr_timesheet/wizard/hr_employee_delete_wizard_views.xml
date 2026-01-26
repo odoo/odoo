@@ -27,11 +27,11 @@
                             invisible="has_active_employee" data-hotkey="w"/>
                         <button string="See Timesheets" type="object" name="action_open_timesheets" class="btn btn-secondary" groups="hr_timesheet.group_hr_timesheet_approver"
                             invisible="not has_active_employee" data-hotkey="w"/>
-                        <button string="Discard" special="cancel" data-hotkey="x"/>
+                        <button special="cancel" data-hotkey="x"/>
                     </footer>
                     <footer invisible="has_timesheet">
                         <button string="Ok" type="object" name="action_confirm_delete" class="btn btn-primary" data-hotkey="q"/>
-                        <button string="Discard" special="cancel" data-hotkey="x"/>
+                        <button special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
             </field>

@@ -24,7 +24,7 @@ beforeEach(() => {
                 </group>
                 <footer>
                     <button class="btn btn-primary" type="object" name="create_todo_activity" close="1">Add To-Do</button>
-                    <button class="btn btn-secondary" special="cancel" close="1">Discard</button>
+                    <button class="btn btn-secondary" special="cancel" close="1"/>
                 </footer>
             </form>`,
     };

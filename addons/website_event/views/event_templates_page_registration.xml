@@ -363,7 +363,7 @@
                         </div>
                     </t>
                     <div class="modal-footer border-top">
-                        <button type="button" class="btn btn-secondary js_goto_event" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-secondary js_goto_event" data-bs-dismiss="modal">Discard</button>
                         <button type="submit" class="btn btn-primary" t-if="availability_check and limit_check">Confirm Registration</button>
                     </div>
                 </div>
@@ -576,7 +576,7 @@
                         </div>
                         <div class="modal-footer flex-lg-row border-top">
                             <button type="button" class="btn btn-light js_goto_event" data-bs-dismiss="modal">
-                                <t t-if="event.is_multi_slots">Cancel</t>
+                                <t t-if="event.is_multi_slots">Discard</t>
                                 <t t-else="">Close</t>
                             </button>
                             <button type="submit" class="btn btn-primary a-submit" disabled="" t-attf-id="#{event.id}">
@@ -653,7 +653,7 @@
                         </div>
                         <div class="modal-footer flex-lg-row border-top">
                             <button type="button" class="btn btn-light js_goto_event" data-bs-dismiss="modal">
-                                <t t-if="event.is_multi_slots">Cancel</t>
+                                <t t-if="event.is_multi_slots">Discard</t>
                                 <t t-else="">Close</t>
                             </button>
                             <button type="submit" class="btn btn-primary a-submit" t-attf-id="#{event.id}" disabled="disabled">

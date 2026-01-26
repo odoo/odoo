@@ -22,7 +22,6 @@ export class AnalyticAccountFormController extends FormController {
                         }
                     ),
                     confirmLabel: _t("Archive Account"),
-                    cancelLabel: _t("Discard"),
                 });
             };
         }

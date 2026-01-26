@@ -27,7 +27,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_single_custom
             }
         },
         {
-            trigger: '.modal button:contains("Cancel")',
+            trigger: '.modal button:contains("Discard")',
             run: "click",
         },
         ...stepUtils.discardForm(),

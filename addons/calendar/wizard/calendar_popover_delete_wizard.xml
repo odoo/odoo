@@ -8,7 +8,7 @@
                 <field name="delete" widget="radio"/>
                 <footer>
                     <button name="close" string="Submit" type="object" class="btn-primary" data-hotkey="q"/>
-                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    <button class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
         </field>
@@ -44,8 +44,7 @@
                             name="action_delete"
                             type="object"
                             class="btn-primary mx-1"/>
-                    <button string="Discard"
-                            class="btn-secondary"
+                    <button class="btn-secondary"
                             special="cancel"/>
                 </footer>
             </form>
@@ -53,7 +52,7 @@
     </record>
 
     <record id="action_event_delete_wizard" model="ir.actions.act_window">
-        <field name="name">Event Cancel Wizard</field>
+        <field name="name">Event Delete Wizard</field>
         <field name="res_model">calendar.popover.delete.wizard</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_event_delete_wizard_form"/>
