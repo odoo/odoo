@@ -6,7 +6,7 @@ from odoo.orm.fields import Field
 
 from odoo.orm.fields_misc import Id, Json, Boolean
 from odoo.orm.fields_numeric import Integer, Float, Monetary
-from odoo.orm.fields_textual import Char, Text, Html
+from odoo.orm.fields_textual import Char, Text, Html, StoredTranslations
 from odoo.orm.fields_selection import Selection
 from odoo.orm.fields_temporal import Date, Datetime
 

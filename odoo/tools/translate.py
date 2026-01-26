@@ -1969,10 +1969,10 @@ def _get_translation_upgrade_queries(cr, field):
                 continue
             # new_translations contains translations updated from the latest po files
             src_value = new_translations.pop('en_US')
-            src_terms = field.get_trans_terms(src_value)
+            src_terms = field.get_trans_terms(src_value)[0]
             for lang, dst_value in new_translations.items():
                 terms_mapping = translations.setdefault(lang, {})
-                dst_terms = field.get_trans_terms(dst_value)
+                dst_terms = field.get_trans_terms(dst_value)[0]
                 for src_term, dst_term in zip(src_terms, dst_terms):
                     if src_term == dst_term or noupdate:
                         terms_mapping.setdefault(src_term, dst_term)
