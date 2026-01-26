@@ -56,4 +56,5 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
             'server_url': chatbot_script.get_base_url(),
             'chatbot_script': chatbot_script,
             'chatbot_test_store': store.get_result(),
+            'title': self.env._("Test %s", chatbot_script.title),
         })

@@ -12,5 +12,5 @@ class ChatbotScript(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'url': '/chatbot/%s/test' % self.id,
-            'target': 'self',
+            'target': 'new',
         }
