@@ -9037,6 +9037,7 @@ test(`form view is not broken if save operation fails with redirect warning`, as
 
 test.tags("desktop");
 test("Redirect Warning full feature: additional context, action_id, leaving while dirty", async function () {
+    expect.errors(1);
     defineActions([
         {
             id: 1,
@@ -9096,7 +9097,7 @@ test("Redirect Warning full feature: additional context, action_id, leaving whil
     expect.verifySteps(["web_save"]);
 
     await waitFor(".o_error_dialog");
-    expect.verifyErrors(["RPC_ERROR: Odoo Server Error"])
+    expect.verifyErrors(["RPC_ERROR: Odoo Server Error"]);
 
     expect(".o_error_dialog .btn-primary").toHaveCount(1);
     expect(".o_error_dialog .btn-secondary").toHaveCount(1);
