@@ -2059,13 +2059,15 @@ export class Matcher {
      * - contain file objects matching the given `files` list.
      *
      * @param {ReturnType<typeof getNodeValue>} [value]
-     * @param {ExpectOptions} [options]
+     * @param {ExpectOptions & { raw?: boolean }} [options]
      * @example
-     *  expect("input[type=email]").toHaveValue("john@doe.com");
+     *  expect("input[name=age]").toHaveValue(29);
      * @example
      *  expect("input[type=file]").toHaveValue(new File(["foo"], "foo.txt"));
      * @example
      *  expect("select[multiple]").toHaveValue(["foo", "bar"]);
+     * @example
+     *  expect("input[name=age]").toHaveValue("29", { raw: true });
      */
     toHaveValue(value, options) {
         this._ensureArguments(arguments, [
@@ -2082,7 +2084,7 @@ export class Matcher {
         return this._resolve(() => ({
             name: "toHaveValue",
             acceptedType: ["string", "node", "node[]"],
-            mapElements: (el) => getNodeValue(el),
+            mapElements: (el) => getNodeValue(el, options?.raw),
             predicate: (elValue, el) => {
                 if (isCheckable(el)) {
                     throw new HootError(
