@@ -428,7 +428,12 @@ describe(parseUrl(import.meta.url), () => {
         });
 
         test("verifyErrors", async () => {
-            expect.assertions(1);
+            expect.assertions(2);
+
+            expect(() => expect.verifyErrors(["event", "promise", "timeout"])).toThrow(
+                "cannot call `expect.verifyErrors()` without calling `expect.errors()` beforehand"
+            );
+
             expect.errors(3);
 
             const boom = (msg) => {
