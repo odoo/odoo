@@ -128,7 +128,7 @@ class ResourceCalendarLeaves(models.Model):
         resource_calendars = self._get_resource_calendars()
         employees_groups = self.env['hr.employee']._read_group(
             [
-                ('company_id', 'in', self.env.companies.ids),
+                ('company_id', 'in', self.company_id.ids if self.company_id else self.env.companies.ids),
                 '|',
                     ('resource_calendar_id', 'in', resource_calendars.ids),
                     '&',
