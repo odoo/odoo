@@ -30,7 +30,7 @@ class LotLabelLayout(models.TransientModel):
             for move_line in self.move_line_ids:
                 if not move_line.lot_id:
                     continue
-                if move_line.product_uom_id._has_common_reference(uom_unit):
+                if move_line.uom_id._has_common_reference(uom_unit):
                     quantity_by_lot[move_line.lot_id.id] += int(move_line.quantity)
                 else:
                     quantity_by_lot[move_line.lot_id.id] += 1

@@ -5,6 +5,7 @@ import logging
 import os
 import platform
 import shutil
+import warnings
 from collections import OrderedDict, defaultdict
 from textwrap import dedent
 
@@ -14,6 +15,7 @@ from docutils import nodes
 from docutils.core import publish_string
 from docutils.transforms import Transform, writer_aux
 from docutils.writers.html4css1 import Writer
+from markupsafe import Markup
 
 import odoo
 from odoo import _, api, fields, models, modules, tools
@@ -21,7 +23,7 @@ from odoo.exceptions import AccessDenied, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.module import Manifest, MissingDependency
-from odoo.tools import config
+from odoo.tools import config, SQL
 from odoo.tools.misc import get_flag, topological_sort
 from odoo.tools.parse_version import parse_version
 from odoo.tools.translate import (
@@ -125,7 +127,7 @@ class MyFilterMessages(Transform):
             nodes_iter = self.document.traverse(nodes.system_message)
 
         for node in nodes_iter:
-            _logger.warning("docutils' system message present: %s", str(node))
+            _logger.debug("docutils' system message present: %s", str(node))
             node.parent.remove(node)
 
 
@@ -199,7 +201,14 @@ class IrModuleModule(models.Model):
                     'xml_declaration': False,
                     'file_insertion_enabled': False,
                 }
-                output = publish_string(source=module.description if not module.application and module.description else '', settings_overrides=overrides, writer=MyWriter())
+                raw_description = module.description or ''
+
+                try:
+                    output = publish_string(source=raw_description, settings_overrides=overrides, writer=MyWriter())
+                except Exception as e:  # noqa: BLE001
+                    _logger.warning("Failed to render module description for %s: %s. Falling back to raw description.", module.name, e)
+                    output = Markup('<pre><code>%s</code></pre>') % raw_description
+
                 module.description_html = _apply_description_images(output)
 
     @api.depends('name')
@@ -223,7 +232,7 @@ class IrModuleModule(models.Model):
 
             # then, search and group ir.model.data records
             imd_models = defaultdict(list)
-            imd_domain = [('module', '=', module.name), ('model', 'in', tuple(dmodels))]
+            imd_domain = [('module', '=', module.name), ('model', 'in', tuple(dmodels)), ('res_id', '!=', False)]
             for data in IrModelData.sudo().search(imd_domain):
                 imd_models[data.model].append(data.res_id)
 
@@ -552,23 +561,34 @@ class IrModuleModule(models.Model):
         """
         if not self:
             return self
+        if known_deps is not None:
+            warnings.warn(
+                "The `known_deps` parameter is deprecated since Odoo 20.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
         self.flush_model(['name', 'state'])
         self.env['ir.module.module.dependency'].flush_model(['module_id', 'name'])
-        known_deps = known_deps or self.browse()
-        query = """ SELECT DISTINCT m.id
-                    FROM ir_module_module_dependency d
-                    JOIN ir_module_module m ON (d.module_id=m.id)
-                    WHERE
-                        m.name IN (SELECT name from ir_module_module_dependency where module_id in %s) AND
-                        m.state NOT IN %s AND
-                        m.id NOT IN %s """
-        self.env.cr.execute(query, (tuple(self.ids), tuple(exclude_states), tuple(known_deps.ids or self.ids)))
-        new_deps = self.browse([row[0] for row in self.env.cr.fetchall()])
-        missing_mods = new_deps - known_deps
-        known_deps |= new_deps
-        if missing_mods:
-            known_deps |= missing_mods.upstream_dependencies(known_deps, exclude_states)
-        return known_deps
+        self.env.cr.execute(SQL(
+            """
+            WITH RECURSIVE dependencies AS (
+                SELECT m.id
+                FROM ir_module_module_dependency d
+                JOIN ir_module_module m ON (d.name = m.name)
+                WHERE d.module_id = any(%(ids)s) AND m.state != all(%(states)s)
+            UNION
+                SELECT m.id
+                FROM dependencies
+                JOIN ir_module_module_dependency d ON (d.module_id = dependencies.id)
+                JOIN ir_module_module m ON (d.name = m.name)
+                WHERE m.state != all(%(states)s)
+            )
+            SELECT id FROM dependencies WHERE id != any(%(ids)s)
+            """,
+            ids=self.ids,
+            states=list(exclude_states),
+        ))
+        return self.browse(row[0] for row in self.env.cr.fetchall())
 
     def next(self):
         """

@@ -36,7 +36,7 @@ class TestMrpCommon(TestStockCommon):
         bom_1 = cls.env['mrp.bom'].create({
             'product_id': product_to_build.id,
             'product_tmpl_id': product_to_build.product_tmpl_id.id,
-            'product_uom_id': cls.uom_unit.id,
+            'uom_id': cls.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'consumption': consumption if consumption else 'flexible',
@@ -117,9 +117,9 @@ class TestMrpCommon(TestStockCommon):
             notification_type='inbox',
             groups='mrp.group_mrp_manager, stock.group_stock_user, mrp.group_mrp_byproducts, uom.group_uom',
         )
-        # Both groups below are required to make fields `product_uom_id` and
+        # Both groups below are required to make fields `uom_id` and
         # `workorder_ids` to be visible in the view of `mrp.production`. The
-        # field `product_uom_id` must be set by many tests, and subviews of
+        # field `uom_id` must be set by many tests, and subviews of
         # `workorder_ids` must be present in many tests to create records.
         cls.env.user.group_ids += cls.group_uom + cls.group_mrp_routings
         cls.picking_type_manu = cls.warehouse_1.manu_type_id
@@ -147,7 +147,7 @@ class TestMrpCommon(TestStockCommon):
         for (workcenter, default_capacity) in [(cls.workcenter_1, 2), (cls.workcenter_2, 1), (cls.workcenter_3, 2)]:
             cls.env['mrp.workcenter.capacity'].create({
                 'workcenter_id': workcenter.id,
-                'product_uom_id': cls.uom_unit.id,
+                'uom_id': cls.uom_unit.id,
                 'capacity': default_capacity,
                 'time_start': workcenter.time_start,
                 'time_stop': workcenter.time_stop,
@@ -155,7 +155,7 @@ class TestMrpCommon(TestStockCommon):
         cls.bom_1 = cls.env['mrp.bom'].create({
             'product_id': cls.product_4.id,
             'product_tmpl_id': cls.product_4.product_tmpl_id.id,
-            'product_uom_id': cls.uom_unit.id,
+            'uom_id': cls.uom_unit.id,
             'product_qty': 4.0,
             'consumption': 'flexible',
             'operation_ids': [
@@ -168,7 +168,7 @@ class TestMrpCommon(TestStockCommon):
         cls.bom_2 = cls.env['mrp.bom'].create({
             'product_id': cls.product_5.id,
             'product_tmpl_id': cls.product_5.product_tmpl_id.id,
-            'product_uom_id': cls.product_5.uom_id.id,
+            'uom_id': cls.product_5.uom_id.id,
             'consumption': 'flexible',
             'product_qty': 1.0,
             'operation_ids': [
@@ -183,7 +183,7 @@ class TestMrpCommon(TestStockCommon):
         cls.bom_3 = cls.env['mrp.bom'].create({
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
-            'product_uom_id': cls.uom_dozen.id,
+            'uom_id': cls.uom_dozen.id,
             'ready_to_produce': 'asap',
             'consumption': 'flexible',
             'product_qty': 2.0,
@@ -256,12 +256,12 @@ class TestMrpCommon(TestStockCommon):
                 "product_id": p.id,
                 "product_qty": 1,
                 "type": "phantom",
-                "product_uom_id": cls.uom_unit.id,
+                "uom_id": cls.uom_unit.id,
                 "bom_line_ids": [
                     Command.create({
                         "product_id": c.id,
                         "product_qty": 1,
-                        "product_uom_id": cls.uom_unit.id
+                        "uom_id": cls.uom_unit.id
                     })
                     for c in cs
                 ],

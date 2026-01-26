@@ -61,7 +61,7 @@ class StockWarehouseOrderpoint(models.Model):
             values['bom'] = self.bom_id
         return values
 
-    @api.depends('bom_id', 'bom_id.product_uom_id', 'product_id.bom_ids', 'product_id.bom_ids.product_uom_id')
+    @api.depends('bom_id', 'bom_id.uom_id', 'product_id.bom_ids', 'product_id.bom_ids.uom_id')
     def _compute_qty_to_order_computed(self):
         """ Extend to add more depends values """
         super()._compute_qty_to_order_computed()
@@ -70,7 +70,7 @@ class StockWarehouseOrderpoint(models.Model):
         super()._compute_allowed_replenishment_uom_ids()
         for orderpoint in self:
             if 'manufacture' in orderpoint.rule_ids.mapped('action'):
-                orderpoint.allowed_replenishment_uom_ids += orderpoint.product_id.bom_ids.product_uom_id
+                orderpoint.allowed_replenishment_uom_ids += orderpoint.product_id.bom_ids.uom_id
 
     def _compute_show_supply_warning(self):
         for orderpoint in self:
@@ -147,7 +147,7 @@ class StockWarehouseOrderpoint(models.Model):
         if not any(r.action == 'manufacture' for r in routes.rule_ids):
             return super()._get_replenishment_multiple_alternative(qty_to_order)
         bom = self.bom_id or self.env['mrp.bom']._bom_find(self.product_id, picking_type=False, bom_type='normal', company_id=self.company_id.id)[self.product_id]
-        return bom.product_uom_id
+        return bom.uom_id
 
     def _quantity_in_progress(self):
         bom_kits = self.env['mrp.bom']._bom_find(self.product_id, bom_type='phantom')
@@ -165,10 +165,10 @@ class StockWarehouseOrderpoint(models.Model):
             ratios_total = []
             for bom_line, bom_line_data in bom_sub_lines:
                 component = bom_line.product_id
-                if not component.is_storable or bom_line.product_uom_id.is_zero(bom_line_data['qty']):
+                if not component.is_storable or bom_line.uom_id.is_zero(bom_line_data['qty']):
                     continue
                 uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
+                qty_per_kit = bom_line.uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
                 if not qty_per_kit:
                     continue
                 qty_by_product_location, dummy = component._get_quantity_in_progress(orderpoint.location_id.ids)
@@ -179,7 +179,7 @@ class StockWarehouseOrderpoint(models.Model):
             # For a kit, the quantity in progress is :
             #  (the quantity if we have received all in-progress components) - (the quantity using only available components)
             product_qty = min(ratios_total or [0]) - min(ratios_qty_available or [0])
-            res[orderpoint.id] = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.product_uom, round=False)
+            res[orderpoint.id] = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.uom_id, round=False)
 
         bom_manufacture = self.env['mrp.bom']._bom_find(orderpoints_without_kit.product_id, bom_type='normal')
         bom_manufacture = self.env['mrp.bom'].concat(*bom_manufacture.values())
@@ -191,11 +191,11 @@ class StockWarehouseOrderpoint(models.Model):
                 ('orderpoint_id', 'in', orderpoints_without_kit.ids),
                 ('id', 'not in', self.env.context.get('ignore_mo_ids', [])),
             ],
-            ['orderpoint_id', 'product_uom_id'],
+            ['orderpoint_id', 'uom_id'],
             ['product_qty:sum'])
         for orderpoint, uom, product_qty_sum in productions_group:
             res[orderpoint.id] += uom._compute_quantity(
-                product_qty_sum, orderpoint.product_uom, round=False)
+                product_qty_sum, orderpoint.uom_id, round=False)
 
         # add quantities coming from confirmed MO to be started but not finished
         # by the end of the stock forecast
@@ -209,8 +209,8 @@ class StockWarehouseOrderpoint(models.Model):
             date_start, date_finished, orderpoint = prod.date_start, prod.date_finished, prod.orderpoint_id
             lead_horizon_date = datetime.combine(orderpoint.lead_horizon_date, time.max)
             if date_start <= lead_horizon_date < date_finished:
-                res[orderpoint.id] += prod.product_uom_id._compute_quantity(
-                        prod.product_qty, orderpoint.product_uom, round=False)
+                res[orderpoint.id] += prod.uom_id._compute_quantity(
+                        prod.product_qty, orderpoint.uom_id, round=False)
         return res
 
     def _prepare_procurement_values(self, date=False):

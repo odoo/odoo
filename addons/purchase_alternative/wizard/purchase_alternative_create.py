@@ -92,7 +92,7 @@ class PurchaseAlternativeCreate(models.TransientModel):
         return {
             'product_id': order_line.product_id.id,
             'product_qty': order_line.product_qty,
-            'product_uom_id': order_line.product_uom_id.id,
+            'uom_id': order_line.uom_id.id,
             'display_type': order_line.display_type,
             'analytic_distribution': order_line.analytic_distribution,
             **({'name': order_line.name} if order_line.display_type in ('line_section', 'line_subsection', 'line_note') or not has_product_description else {}),

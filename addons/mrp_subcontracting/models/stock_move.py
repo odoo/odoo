@@ -22,7 +22,7 @@ class StockMove(models.Model):
         for move in self:
             if not move.is_subcontract:
                 continue
-            if not move.move_line_ids or move.product_uom.is_zero(move.quantity):
+            if not move.move_line_ids or move.uom_id.is_zero(move.quantity):
                 continue
             productions = move._get_subcontract_production().filtered(lambda m: m.state != 'cancel')
             if not productions:
@@ -240,7 +240,7 @@ class StockMove(models.Model):
             if not productions:
                 continue
             if move.has_tracking == 'none':
-                if productions.product_uom_id.compare(productions.product_qty, move.quantity) != 0:
+                if productions.uom_id.compare(productions.product_qty, move.quantity) != 0:
                     self.sudo().env['change.production.qty'].with_context(skip_activity=True).create([{
                         'mo_id': productions.id,
                         'product_qty': move.quantity or move.product_uom_qty,
@@ -256,7 +256,7 @@ class StockMove(models.Model):
                     lot_mo = productions.filtered(lambda p: (p.lot_producing_ids and p.lot_producing_ids[0] == lot_id) or (not lot_id and not p.lot_producing_ids))
                     if not lot_mo:
                         mos_to_create[lot_id] = ml_qty
-                    elif lot_mo.product_uom_id.compare(lot_mo.product_qty, ml_qty) != 0:
+                    elif lot_mo.uom_id.compare(lot_mo.product_qty, ml_qty) != 0:
                         self.sudo().env['change.production.qty'].with_context(skip_activity=True).create([{
                             'mo_id': lot_mo.id,
                             'product_qty': ml_qty

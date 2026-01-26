@@ -1,14 +1,15 @@
 import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { normalize } from "@web/core/l10n/utils";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { mergeClasses } from "@web/core/utils/classname";
 import { useChildRef } from "@web/core/utils/hooks";
+import { highlightText, odoomark } from "@web/core/utils/html";
 import { scrollTo } from "@web/core/utils/scrolling";
-import { fuzzyLookup } from "@web/core/utils/search";
 import { useDebounced } from "@web/core/utils/timing";
-import { hasTouch } from "@web/core/browser/feature_detection";
 
 let selectMenuId = 0;
 
@@ -57,6 +58,7 @@ export class SelectMenu extends Component {
             element: {
                 type: Object,
                 shape: {
+                    enabled: { type: Boolean, optional: true },
                     value: true,
                     label: { type: String },
                     "*": true,
@@ -313,11 +315,10 @@ export class SelectMenu extends Component {
     }
 
     getItemClass(choice) {
-        if (this.isOptionSelected(choice)) {
-            return "o_select_menu_item fw-bolder selected";
-        } else {
-            return "o_select_menu_item";
-        }
+        return mergeClasses("o_select_menu_item text-wrap", {
+            "fw-bolder selected": this.isOptionSelected(choice),
+            "text-muted": !choice.enabled,
+        });
     }
 
     async onInput(searchString) {
@@ -386,13 +387,18 @@ export class SelectMenu extends Component {
 
         for (const group of groupsList) {
             let filteredOptions = group.choices || [];
+            const normalizedSearchString = searchString && normalize(searchString);
 
-            if (searchString) {
-                filteredOptions = fuzzyLookup(
-                    searchString.trim(),
-                    filteredOptions,
-                    (choice) => choice.label
+            if (normalizedSearchString) {
+                filteredOptions = filteredOptions.filter((choice) =>
+                    normalize(choice.label).includes(normalizedSearchString)
                 );
+                // Fuzzy filtering commented in case we want it back
+                // filteredOptions = fuzzyLookup(
+                //     searchString.trim(),
+                //     filteredOptions,
+                //     (choice) => choice.label
+                // );
             } else {
                 if (this.props.autoSort) {
                     filteredOptions.sort((optionA, optionB) =>
@@ -414,7 +420,20 @@ export class SelectMenu extends Component {
             if (group.label) {
                 _choices.push({ ...group, isGroup: true });
             }
-            _choices.push(...filteredOptions);
+            _choices.push(
+                ...filteredOptions.map((choice) => ({
+                    ...choice,
+                    enabled: choice.enabled ?? true,
+                    label: choice.label
+                        ? highlightText(
+                              searchString,
+                              odoomark(choice.label),
+                              "text-primary fw-bold"
+                          )
+                        : choice.value,
+                    value: choice.value,
+                }))
+            );
         }
 
         this.state.choices = _choices;

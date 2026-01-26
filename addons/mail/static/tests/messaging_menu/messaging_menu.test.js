@@ -1041,10 +1041,7 @@ test("render message preview with message seen indicator in messaging menu", asy
         res_id: channelId,
     });
     const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
-    pyEnv["discuss.channel.member"].write(memberIds, {
-        fetched_message_id: messageId,
-        seen_message_id: false,
-    });
+    pyEnv["discuss.channel.member"].write(memberIds, { seen_message_id: false });
     const [memberId_1] = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
         ["partner_id", "=", thomas],

@@ -158,7 +158,7 @@
 <template id="event_time" inherit_id="website_event.index_topbar" name="Filter by Date">
     <xpath expr="//div[hasclass('o_wevent_search')]" position="before">
         <div class="dropdown d-none d-lg-block">
-            <button role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" title="Filter by Date" aria-label="Filter by date" aria-expanded="false">
+            <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" title="Filter by Date" aria-label="Filter by date" aria-expanded="false">
                 <t t-if="current_date" t-out="current_date"/>
                 <t t-else="">Scheduled Events</t>
             </button>

@@ -1,7 +1,7 @@
 import { rpc } from '@web/core/network/rpc';
 import { isEmail } from '@web/core/utils/strings';
 import { patch } from '@web/core/utils/patch';
-import { renderToFragment } from '@web/core/utils/render';
+import { renderToElement, renderToFragment } from '@web/core/utils/render';
 import { formatFloat } from '@web/core/utils/numbers';
 import { setElementContent } from '@web/core/utils/html';
 import { patchDynamicContent } from '@web/public/utils';
@@ -20,6 +20,12 @@ patch(ProductPage.prototype, {
             },
             'button[name="add_to_cart"]': {
                 't-on-product_added_to_cart': this._getCombinationInfo.bind(this),
+            },
+            '#wishlist_stock_notification_message': {
+                't-on-click': this.onClickWishlistStockNotificationMessage.bind(this),
+            },
+            '#wishlist_stock_notification_form_submit_button': {
+                't-on-click': this.onClickSubmitWishlistStockNotificationForm.bind(this),
             },
         });
     },
@@ -69,12 +75,23 @@ patch(ProductPage.prototype, {
         incorrectIconEl.classList.remove('d-none');
     },
 
+    onClickWishlistStockNotificationMessage(ev) {
+        this._handleClickStockNotificationMessage(ev);
+    },
+
+    onClickSubmitWishlistStockNotificationForm(ev) {
+        const productId = ev.currentTarget.closest('article').dataset.productId;
+        this._handleClickSubmitStockNotificationForm(ev, productId);
+    },
+
     /**
      * Override of `website_sale` to check the product's stock.
      *
      * This will prevent the user from selecting a quantity that is not in stock for that product.
      *
      * It will also display various info/warning messages regarding the select product's stock.
+     * In case of unavailability, user will be able to add the product to their wishlist and/or
+     * subscribe to mail reminders when the product is back in stock.
      *
      * @param {Event} ev
      * @param {Element} parent
@@ -143,6 +160,17 @@ patch(ProductPage.prototype, {
         this.el.querySelector('div.availability_messages').append(renderToFragment(
             'website_sale_stock.product_availability', combination
         ));
+        if (this.el.querySelector('.o_add_wishlist_dyn')) {
+            const messageEl = this.el.querySelector('div.availability_messages');
+            if (messageEl && !this.el.querySelector('#stock_wishlist_message')) {
+                this.services['public.interactions'].stopInteractions(messageEl);
+                messageEl.append(
+                    renderToElement('website_sale_stock.product_availability_wishlist', combination)
+                    || ''
+                );
+                this.services['public.interactions'].startInteractions(messageEl);
+            }
+        }
     },
 
     async _getUnavailableQty(combination) {

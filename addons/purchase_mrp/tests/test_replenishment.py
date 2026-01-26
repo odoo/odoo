@@ -95,7 +95,7 @@ class TestReplenishment(TestStockCommon):
             return self.env['product.replenish'].create({
                 'product_id': product.id,
                 'product_tmpl_id': product.product_tmpl_id.id,
-                'product_uom_id': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'quantity': 1,
                 'warehouse_id': warehouse.id,
             })

@@ -1,8 +1,6 @@
+import { describe, expect, test } from "@odoo/hoot";
 import { htmlEscape, markup } from "@odoo/owl";
 
-const Markup = markup().constructor;
-
-import { describe, expect, test } from "@odoo/hoot";
 import {
     createDocumentFragmentFromContent,
     createElementWithContent,
@@ -17,6 +15,8 @@ import {
     odoomark,
     setElementContent,
 } from "@web/core/utils/html";
+
+const Markup = markup().constructor;
 
 describe.current.tags("headless");
 
@@ -114,9 +114,7 @@ test("htmlSprintf escapes list params", () => {
         markup`<span>test 1</span>`,
         `<span>test 2</span>`
     );
-    expect(res.toString()).toBe(
-        "<p><span>test 1</span>,&lt;span&gt;test 2&lt;/span&gt;</p>undefined"
-    );
+    expect(res.toString()).toBe("<p><span>test 1</span></p>&lt;span&gt;test 2&lt;/span&gt;");
     expect(res).toBeInstanceOf(Markup);
 });
 
@@ -302,10 +300,10 @@ test("htmlReplaceAll with html/text does not find, keeps all", () => {
 
 test("htmlReplace/htmlReplaceAll only accept functions replacement when search is a RegExp", () => {
     expect(() => htmlReplace("test", /test/, "$1")).toThrow(
-        "htmlReplace: replacement must be a function when search is a RegExp."
+        "htmlReplace: replacer must be a function when search is a RegExp."
     );
     expect(() => htmlReplaceAll("test", /test/, "$1")).toThrow(
-        "htmlReplaceAll: replacement must be a function when search is a RegExp."
+        "htmlReplaceAll: replacer must be a function when search is a RegExp."
     );
 });
 
@@ -327,9 +325,9 @@ test("odoomark", () => {
     expect(odoomark("**test** something else **test**").toString()).toBe(
         "<b>test</b> something else <b>test</b>"
     );
-    expect(odoomark("--test--").toString()).toBe("<span class='text-muted'>test</span>");
+    expect(odoomark("--test--").toString()).toBe(`<span class="text-muted">test</span>`);
     expect(odoomark("--test-- something else --test--").toString()).toBe(
-        "<span class='text-muted'>test</span> something else <span class='text-muted'>test</span>"
+        `<span class="text-muted">test</span> something else <span class="text-muted">test</span>`
     );
     expect(odoomark("`test`").toString()).toBe(
         `<span class="o_tag position-relative d-inline-flex align-items-center align-baseline mw-100 o_badge badge rounded-pill lh-1 o_tag_color_0">test</span>`
@@ -340,7 +338,7 @@ test("odoomark", () => {
     expect(odoomark("test\ttest2").toString()).toBe(
         `test<span style="margin-left: 2em"></span>test2`
     );
-    expect(odoomark("test\ntest2").toString()).toBe("test<br/>test2");
+    expect(odoomark("test\ntest2").toString()).toBe("test<br>test2");
     expect(odoomark("<p>**test**</p>").toString()).toBe("&lt;p&gt;<b>test</b>&lt;/p&gt;");
     expect(odoomark(markup`<p>**test**</p>`).toString()).toBe("<p><b>test</b></p>");
 

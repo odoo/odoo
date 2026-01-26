@@ -51,7 +51,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         self.assertEqual(move1.state, 'draft')
@@ -87,7 +87,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
             'picking_type_id': self.picking_type_in.id,
         })
@@ -129,7 +129,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
             'picking_type_id': self.picking_type_in.id,
         })
@@ -183,7 +183,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         self.assertEqual(move1.state, 'draft')
@@ -231,7 +231,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         self.assertEqual(move1.state, 'draft')
@@ -284,21 +284,21 @@ class TestStockMove(TestStockCommon):
             'move_ids': [
                 Command.create({
                     'product_id': productA.id,
-                    'product_uom': self.uom_unit.id,
+                    'uom_id': self.uom_unit.id,
                     'product_uom_qty': 1.0,
                     'location_id': self.stock_location.id,
                     'location_dest_id': self.customer_location.id,
                 }),
                 Command.create({
                     'product_id': productB.id,
-                    'product_uom': self.uom_unit.id,
+                    'uom_id': self.uom_unit.id,
                     'product_uom_qty': 1.0,
                     'location_id': self.stock_location.id,
                     'location_dest_id': self.customer_location.id,
                 }),
                 Command.create({
                     'product_id': productC.id,
-                    'product_uom': self.uom_unit.id,
+                    'uom_id': self.uom_unit.id,
                     'product_uom_qty': 1.0,
                     'location_id': self.stock_location.id,
                     'location_dest_id': self.customer_location.id,
@@ -339,7 +339,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
         move1._action_confirm()
@@ -377,7 +377,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 4.0,
             'picking_id': picking.id,
         })
@@ -442,7 +442,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move1._action_confirm()
@@ -465,7 +465,7 @@ class TestStockMove(TestStockCommon):
             'move_id': move1.id,
             'product_id': move1.product_id.id,
             'quantity': 1,
-            'product_uom_id': move1.product_uom.id,
+            'uom_id': move1.uom_id.id,
             'location_id': move1.location_id.id,
             'location_dest_id': move1.location_dest_id.id,
             'lot_id': lot3.id,
@@ -474,7 +474,7 @@ class TestStockMove(TestStockCommon):
             'move_id': move1.id,
             'product_id': move1.product_id.id,
             'quantity': 1,
-            'product_uom_id': move1.product_uom.id,
+            'uom_id': move1.uom_id.id,
             'location_id': move1.location_id.id,
             'location_dest_id': move1.location_dest_id.id,
             'lot_id': lot4.id
@@ -509,7 +509,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move1._action_confirm()
@@ -540,7 +540,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -559,7 +559,7 @@ class TestStockMove(TestStockCommon):
             'move_id': move1.id,
             'product_id': move1.product_id.id,
             'quantity': 1,
-            'product_uom_id': move1.product_uom.id,
+            'uom_id': move1.uom_id.id,
             'location_id': move1.location_id.id,
             'location_dest_id': move1.location_dest_id.id,
             'lot_id': lot1.id
@@ -580,7 +580,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -632,7 +632,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move1._action_confirm()
@@ -665,7 +665,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'warehouse_id': self.warehouse_1.id,
         })
@@ -695,7 +695,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -734,7 +734,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_out._action_confirm()
@@ -765,7 +765,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -795,7 +795,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -832,7 +832,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -870,7 +870,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -901,7 +901,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -944,7 +944,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -978,7 +978,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'warehouse_id': self.warehouse_1.id,
         })
@@ -1015,7 +1015,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'warehouse_id': self.warehouse_1.id,
         })
@@ -1076,7 +1076,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.warehouse_1.wh_input_stock_loc_id.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'warehouse_id': self.warehouse_1.id,
         })
@@ -1111,7 +1111,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 12.0,
         })
         sm.packaging_uom_id = self.uom_dozen
@@ -1147,7 +1147,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1189,7 +1189,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1204,7 +1204,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move2._action_confirm()
@@ -1242,7 +1242,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1262,7 +1262,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move2._action_confirm()
@@ -1302,7 +1302,7 @@ class TestStockMove(TestStockCommon):
         })
         self.env['stock.quant'].create({
             'product_id': product2.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'location_id': self.shelf_1.id,
             'quantity': 1,
             'reserved_quantity': 0,
@@ -1312,7 +1312,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1366,7 +1366,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1429,7 +1429,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1457,7 +1457,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move2._action_confirm()
@@ -1524,7 +1524,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1552,7 +1552,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move2._action_confirm()
@@ -1618,7 +1618,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1651,7 +1651,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': product2.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move2._action_confirm()
@@ -1697,7 +1697,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
@@ -1712,7 +1712,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
         move2._action_confirm()
@@ -1747,7 +1747,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -1762,7 +1762,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move2._action_confirm()
@@ -1783,7 +1783,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.supplier_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
 
@@ -1803,7 +1803,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.supplier_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
 
@@ -1826,7 +1826,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -1840,7 +1840,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 15.0,
         })
         move1._action_confirm()
@@ -1851,7 +1851,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 15.0,
         })
         move2._action_confirm()
@@ -1892,7 +1892,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 4.0,
             'picking_id': picking.id,
         })
@@ -1921,7 +1921,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1,
         })
         move._action_confirm()
@@ -1966,14 +1966,14 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1,
         })
         move._action_confirm()
         move._action_assign()
         self.assertEqual(move.state, 'assigned')
-        self.assertEqual(len(move.move_line_ids.mapped('product_uom_id')), 1)
-        self.assertEqual(move.move_line_ids.mapped('product_uom_id'), self.uom_unit)
+        self.assertEqual(len(move.move_line_ids.mapped('uom_id')), 1)
+        self.assertEqual(move.move_line_ids.mapped('uom_id'), self.uom_unit)
 
         for move_line in move.move_line_ids:
             move_line.quantity = 1
@@ -1981,7 +1981,7 @@ class TestStockMove(TestStockCommon):
         move._action_done()
 
         self.assertEqual(move.product_uom_qty, 1)
-        self.assertEqual(move.product_uom.id, self.uom_dozen.id)
+        self.assertEqual(move.uom_id.id, self.uom_dozen.id)
         self.assertEqual(move.state, 'done')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.customer_location), 12.0)
         self.assertEqual(len(self.gather_relevant(self.product_serial, self.customer_location)), 12)
@@ -1998,7 +1998,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
 
@@ -2027,7 +2027,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.product_lot.uom_id.id,
+            'uom_id': self.product_lot.uom_id.id,
             'product_uom_qty': 1.0,
         })
 
@@ -2067,7 +2067,7 @@ class TestStockMove(TestStockCommon):
             "location_id": self.stock_location.id,
             "location_dest_id": self.customer_location.id,
             "product_id": self.productA.id,
-            "product_uom": self.uom_unit.id,
+            "uom_id": self.uom_unit.id,
             "product_uom_qty": 2.0,
         })
         move_partial._action_confirm()
@@ -2090,7 +2090,7 @@ class TestStockMove(TestStockCommon):
             "location_id": self.stock_location.id,
             "location_dest_id": self.customer_location.id,
             "product_id": self.productA.id,
-            "product_uom": self.uom_dozen.id,
+            "uom_id": self.uom_dozen.id,
             "product_uom_qty": 1.0,
         })
         move._action_confirm()
@@ -2156,7 +2156,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1.0,
         })
 
@@ -2180,7 +2180,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.supplier_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 10.0,
         })
 
@@ -2217,7 +2217,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.supplier_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100.0,
         })
 
@@ -2253,7 +2253,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         self.assertEqual(move1.state, 'draft')
@@ -2293,7 +2293,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
         self.assertEqual(move1.state, 'draft')
@@ -2338,7 +2338,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
         self.assertEqual(move1.state, 'draft')
@@ -2381,7 +2381,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         move1._action_confirm()
@@ -2410,14 +2410,14 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_pack_cust = self.env['stock.move'].create({
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
@@ -2451,14 +2451,14 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_pack_cust = self.env['stock.move'].create({
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
@@ -2496,21 +2496,21 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_stock_pack_2 = self.env['stock.move'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_pack_cust = self.env['stock.move'].create({
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move_stock_pack_1.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
@@ -2571,21 +2571,21 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_stock_pack_2 = self.env['stock.move'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_pack_cust = self.env['stock.move'].create({
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move_stock_pack_1.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
@@ -2631,21 +2631,21 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move_pack_cust_1 = self.env['stock.move'].create({
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_pack_cust_2 = self.env['stock.move'].create({
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust_1.id, 0), (4, move_pack_cust_2.id, 0)]})
@@ -2679,21 +2679,21 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
         move_supp_stock_2 = self.env['stock.move'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move_stock_stock_1 = self.env['stock.move'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
         move_stock_stock_1.write({'move_orig_ids': [(4, move_supp_stock_1.id, 0), (4, move_supp_stock_2.id, 0)]})
@@ -2701,7 +2701,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
         move_stock_stock_2.write({'move_orig_ids': [(4, move_supp_stock_1.id, 0), (4, move_supp_stock_2.id, 0)]})
@@ -2736,7 +2736,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1.0,
             'picking_id': picking_stock_pack.id,
         })
@@ -2750,7 +2750,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1.0,
             'picking_id': picking_pack_cust.id,
         })
@@ -2767,7 +2767,7 @@ class TestStockMove(TestStockCommon):
         # move the 6 units by adding an unreserved move line
         move_stock_pack.write({'move_line_ids': [(0, 0, {
             'product_id': self.productA.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': 6,
             'lot_id': False,
             'package_id': False,
@@ -2792,13 +2792,13 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(move_pack_cust.state, 'partially_available')
         move_line_pack_cust = move_pack_cust.move_line_ids
         self.assertEqual(move_line_pack_cust.quantity, 0.5)
-        self.assertEqual(move_line_pack_cust.product_uom_id.id, self.uom_dozen.id)
+        self.assertEqual(move_line_pack_cust.uom_id.id, self.uom_dozen.id)
 
         # move a dozen on the backorder to see how we handle the extra move
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_stock_pack.id)])
         backorder.move_ids.write({'move_line_ids': [(0, 0, {
             'product_id': self.productA.id,
-            'product_uom_id': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'quantity': 1,
             'lot_id': False,
             'package_id': False,
@@ -2813,13 +2813,13 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(backorder_move.state, 'done')
         self.assertEqual(backorder_move.quantity, 1)
         self.assertEqual(backorder_move.product_uom_qty, 0.5)
-        self.assertEqual(backorder_move.product_uom, self.uom_dozen)
+        self.assertEqual(backorder_move.uom_id, self.uom_dozen)
 
         # the second move should now be reservable
         move_pack_cust._action_assign()
         self.assertEqual(move_pack_cust.state, 'assigned')
         self.assertEqual(move_line_pack_cust.quantity, 1)
-        self.assertEqual(move_line_pack_cust.product_uom_id.id, self.uom_dozen.id)
+        self.assertEqual(move_line_pack_cust.uom_id.id, self.uom_dozen.id)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, move_stock_pack.location_dest_id), 6)
 
     def test_link_assign_8(self):
@@ -2846,7 +2846,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1.0,
             'picking_id': picking_stock_pack.id,
         })
@@ -2860,7 +2860,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1.0,
             'picking_id': picking_pack_cust.id,
         })
@@ -2880,7 +2880,7 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(move_pack_cust.state, 'assigned')
         for ml in move_pack_cust.move_line_ids:
             self.assertEqual(ml.quantity, 1)
-            self.assertEqual(ml.product_uom_id.id, self.uom_unit.id)
+            self.assertEqual(ml.uom_id.id, self.uom_unit.id)
             self.assertTrue(bool(ml.lot_id.id))
 
     def test_link_assign_9(self):
@@ -2911,7 +2911,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': uom_3units.id,
+            'uom_id': uom_3units.id,
             'product_uom_qty': 1.0,
             'picking_id': picking_stock_pack.id,
         })
@@ -2925,7 +2925,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': uom_3units.id,
+            'uom_id': uom_3units.id,
             'product_uom_qty': 1.0,
             'picking_id': picking_pack_cust.id,
         })
@@ -2956,7 +2956,7 @@ class TestStockMove(TestStockCommon):
         lot3 = self.env['stock.lot'].search([('name', '=', "lot3")])
         backorder.write({'move_line_ids': [(0, 0, {
             'product_id': self.product_serial.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': 1,
             'lot_id': lot3.id,
             'package_id': False,
@@ -2984,7 +2984,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move_out._action_confirm()
@@ -2998,14 +2998,14 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move_pack_cust = self.env['stock.move'].create({
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
@@ -3030,14 +3030,14 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
         move2 = self.env['stock.move'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
         move1._action_confirm()
@@ -3048,7 +3048,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 0.0,
             'quantity': 1.0,
         })
@@ -3070,7 +3070,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 12,
         })
         move1._action_confirm()
@@ -3085,7 +3085,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1,
         })
         move2._action_confirm()
@@ -3113,14 +3113,14 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move2 = self.env['stock.move'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
 
@@ -3136,7 +3136,7 @@ class TestStockMove(TestStockCommon):
         # use the product from the first one
         move2.write({'move_line_ids': [(0, 0, {
             'product_id': self.productA.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': 1,
             'lot_id': False,
             'package_id': False,
@@ -3168,14 +3168,14 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move2 = self.env['stock.move'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
 
@@ -3191,7 +3191,7 @@ class TestStockMove(TestStockCommon):
         # use the product from the first one
         move2.write({'move_line_ids': [(0, 0, {
             'product_id': self.productA.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': 1,
             'lot_id': lot1.id,
             'package_id': False,
@@ -3217,7 +3217,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
         move1._action_confirm()
@@ -3227,7 +3227,7 @@ class TestStockMove(TestStockCommon):
         # add a forced move line in `move1`
         move1.write({'move_line_ids': [(0, 0, {
             'product_id': self.productA.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': 2,
             'lot_id': False,
             'package_id': False,
@@ -3266,7 +3266,7 @@ class TestStockMove(TestStockCommon):
             'picking_id': picking.id,
             'product_id': product_01.id,
             'product_uom_qty': 1,
-            'product_uom': product_01.uom_id.id,
+            'uom_id': product_01.uom_id.id,
         })
         self.env['stock.move'].create({
             'location_id': picking.location_id.id,
@@ -3274,7 +3274,7 @@ class TestStockMove(TestStockCommon):
             'picking_id': picking.id,
             'product_id': product_02.id,
             'product_uom_qty': 1,
-            'product_uom': product_02.uom_id.id,
+            'uom_id': product_02.uom_id.id,
         })
 
         picking.action_confirm()
@@ -3300,7 +3300,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3339,7 +3339,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3374,7 +3374,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3405,7 +3405,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3447,7 +3447,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3478,7 +3478,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3516,7 +3516,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
         self.assertEqual(move1.state, 'draft')
@@ -3569,7 +3569,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
         self.assertEqual(move1.state, 'draft')
@@ -3626,7 +3626,7 @@ class TestStockMove(TestStockCommon):
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
         })
         out_move._action_confirm()
         out_move._action_assign()
@@ -3654,7 +3654,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3696,7 +3696,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3732,7 +3732,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3765,7 +3765,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3809,7 +3809,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3842,7 +3842,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3877,7 +3877,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3890,7 +3890,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move2._action_confirm()
@@ -3923,7 +3923,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3958,7 +3958,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -3988,7 +3988,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         move1._action_confirm()
@@ -4022,7 +4022,7 @@ class TestStockMove(TestStockCommon):
             'location_dest_id': self.stock_location.id,
             'picking_id': picking.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         picking.action_confirm()
@@ -4036,7 +4036,7 @@ class TestStockMove(TestStockCommon):
             'move_id': move1.move_line_ids.move_id.id,
             'product_id': move1.move_line_ids.product_id.id,
             'quantity': move1.move_line_ids.quantity,
-            'product_uom_id': move1.product_uom.id,
+            'uom_id': move1.uom_id.id,
             'location_id': move1.move_line_ids.location_id.id,
             'location_dest_id': move1.move_line_ids.location_dest_id.id,
         })
@@ -4063,7 +4063,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -4097,7 +4097,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -4127,12 +4127,12 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 12.0,
         })
         move1._action_confirm()
         move1._action_assign()
-        move1.move_line_ids.product_uom_id = self.uom_dozen
+        move1.move_line_ids.uom_id = self.uom_dozen
         move1.move_line_ids.quantity = 1
         move1.picked = True
         move1._action_done()
@@ -4143,13 +4143,13 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(move1.product_uom_qty, 12.0)
         self.assertEqual(move1.product_qty, 12.0)
 
-        move1.move_line_ids.product_uom_id = self.uom_unit
+        move1.move_line_ids.uom_id = self.uom_unit
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, self.stock_location), 2.0)
         self.assertEqual(move1.product_uom_qty, 12.0)
         self.assertEqual(move1.product_qty, 12.0)
 
         with self.assertRaises(UserError):
-            move1.product_uom = self.uom_dozen
+            move1.uom_id = self.uom_dozen
 
     def test_immediate_validate_1(self):
         """ In a picking with a single available move, clicking on validate without filling any
@@ -4167,7 +4167,7 @@ class TestStockMove(TestStockCommon):
             'location_dest_id': self.stock_location.id,
             'picking_id': picking.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         picking.action_confirm()
@@ -4195,7 +4195,7 @@ class TestStockMove(TestStockCommon):
             'location_dest_id': self.customer_location.id,
             'picking_id': picking.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         picking.action_confirm()
@@ -4243,7 +4243,7 @@ class TestStockMove(TestStockCommon):
             'location_dest_id': self.pack_location.id,
             'picking_id': picking.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100,
         })
         product5_move = self.env['stock.move'].create({
@@ -4251,7 +4251,7 @@ class TestStockMove(TestStockCommon):
             'location_dest_id': self.pack_location.id,
             'picking_id': picking.id,
             'product_id': product5.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 100,
         })
         picking.action_confirm()
@@ -4299,7 +4299,7 @@ class TestStockMove(TestStockCommon):
             'location_dest_id': self.customer_location.id,
             'picking_id': picking.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
         picking.action_confirm()
@@ -4328,7 +4328,7 @@ class TestStockMove(TestStockCommon):
             'picking_id': picking.id,
             'picking_type_id': picking_type.id,
             'product_id': product_id.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
         })
 
@@ -4379,7 +4379,7 @@ class TestStockMove(TestStockCommon):
             'location_dest_id': self.stock_location.id,
             'picking_id': picking.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1,
         })
         product3_move = self.env['stock.move'].create({
@@ -4387,7 +4387,7 @@ class TestStockMove(TestStockCommon):
             'location_dest_id': self.stock_location.id,
             'picking_id': picking.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1,
         })
         picking.action_confirm()
@@ -4421,7 +4421,7 @@ class TestStockMove(TestStockCommon):
             'location_dest_id': self.customer_location.id,
             'picking_id': picking.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         picking.action_confirm()
@@ -4452,7 +4452,7 @@ class TestStockMove(TestStockCommon):
             'location_dest_id': receipt1.location_dest_id.id,
             'picking_id': receipt1.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         receipt1.action_confirm()
@@ -4468,7 +4468,7 @@ class TestStockMove(TestStockCommon):
             'location_dest_id': receipt2.location_dest_id.id,
             'picking_id': receipt2.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         receipt2.action_confirm()
@@ -4541,14 +4541,14 @@ class TestStockMove(TestStockCommon):
             'move_ids': [
                 Command.create({
                     'product_id': self.product_consu.id,
-                    'product_uom': self.product_consu.uom_id.id,
+                    'uom_id': self.product_consu.uom_id.id,
                     'product_uom_qty': 1.0,
                     'location_id': self.stock_location.id,
                     'location_dest_id': self.customer_location.id,
                 }),
                 Command.create({
                     'product_id': self.productA.id,
-                    'product_uom': self.productA.uom_id.id,
+                    'uom_id': self.productA.uom_id.id,
                     'product_uom_qty': 1.0,
                     'location_id': self.stock_location.id,
                     'location_dest_id': self.customer_location.id,
@@ -4571,14 +4571,14 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         move2 = self.env['stock.move'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
         })
         (move1 + move2)._action_confirm()
@@ -4594,7 +4594,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
         })
         self.assertEqual(move1.state, 'draft')
         self.assertEqual(move1.product_uom_qty, 0)
@@ -4649,7 +4649,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move1._action_confirm()
@@ -4687,7 +4687,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_id': picking.id,
         })
@@ -4731,7 +4731,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 1.0,
             'picking_id': picking.id,
         })
@@ -4760,7 +4760,7 @@ class TestStockMove(TestStockCommon):
         scrap = self.env['stock.move'].create({
             'is_scrap': True,
             'product_id': self.productA.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'quantity': 1,
             'location_id': self.stock_location.id,
             'location_dest_id': self.scrap_location.id,
@@ -4774,7 +4774,7 @@ class TestStockMove(TestStockCommon):
         move = self.env['stock.move'].search([('product_id', '=', self.productA.id), ('is_scrap', '=', True)])
         self.assertEqual(self.env['stock.quant']._gather(self.productA, self.stock_location).quantity, -11)
         self.assertEqual(move.quantity, 1)
-        self.assertEqual(move.product_uom, self.uom_dozen)
+        self.assertEqual(move.uom_id, self.uom_dozen)
         self.assertEqual(move.state, 'done')
 
     def test_scrap_7_sn_warning(self):
@@ -4826,7 +4826,7 @@ class TestStockMove(TestStockCommon):
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.scrap_location.id,
                 'product_id': product.id,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'product_uom_qty': 1.0,
                 'picking_type_id': self.picking_type_int.id,
             }) for product in products],
@@ -4987,7 +4987,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_type_id': self.picking_type_in.id,
         })
@@ -5008,7 +5008,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move2._action_confirm()
@@ -5038,7 +5038,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_type_id': self.picking_type_in.id,
         })
@@ -5053,7 +5053,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_type_id': self.picking_type_in.id,
         })
@@ -5085,7 +5085,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move3._action_confirm()
@@ -5143,7 +5143,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_type_id': self.picking_type_in.id,
         })
@@ -5159,7 +5159,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_type_id': self.picking_type_in.id,
         })
@@ -5194,7 +5194,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move3._action_confirm()
@@ -5208,7 +5208,7 @@ class TestStockMove(TestStockCommon):
             'move_id': move3.id,
             'product_id': move3.product_id.id,
             'quantity': 1,
-            'product_uom_id': move3.product_uom.id,
+            'uom_id': move3.uom_id.id,
             'location_id': move3.location_id.id,
             'location_dest_id': move3.location_dest_id.id,
             'lot_id': lot2.id,
@@ -5234,7 +5234,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'picking_type_id': self.picking_type_in.id,
         })
@@ -5255,7 +5255,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'picking_type_id': self.picking_type_in.id,
         })
@@ -5280,7 +5280,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': 10.0,
             'picking_id': picking.id,
         })
@@ -5304,7 +5304,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'picking_id': picking.id,
         })
@@ -5329,7 +5329,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.customer_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5,
             'picking_type_id': self.picking_type_out.id,
         })
@@ -5348,7 +5348,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': self.productA.qty_available,
             'picking_type_id': self.picking_type_out.id,
         })
@@ -5382,7 +5382,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5,
             'picking_type_id': self.picking_type_out.id,
         })
@@ -5425,7 +5425,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'picking_id': picking.id,
         })
@@ -5442,7 +5442,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': 2.0,
             'picking_id': picking.id,
         })
@@ -5467,7 +5467,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
             'picking_id': picking.id,
             'picking_type_id': self.picking_type_out.id,
@@ -5513,7 +5513,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_id': picking.id,
         })
@@ -5521,7 +5521,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
             'picking_id': picking.id,
         })
@@ -5558,7 +5558,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_id': picking.id,
             'picking_type_id': self.picking_type_out.id,
@@ -5567,7 +5567,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
             'picking_id': picking.id,
             'picking_type_id': self.picking_type_out.id,
@@ -5660,9 +5660,9 @@ class TestStockMove(TestStockCommon):
         sml1 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.productA)
         sml2 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2)
         sml3 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product4)
-        aggregate_val_1 = aggregate_values[f'{self.productA.id}_{self.productA.name}__{sml1.product_uom_id.id}_{sml1.move_id.packaging_uom_id.id}']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}_Description2_{sml2.product_uom_id.id}_{sml2.move_id.packaging_uom_id.id}']
-        aggregate_val_3 = aggregate_values[f'{product4.id}_{product4.name}__{sml3.product_uom_id.id}_{sml3.move_id.packaging_uom_id.id}']
+        aggregate_val_1 = aggregate_values[f'{self.productA.id}_{self.productA.name}__{sml1.uom_id.id}_{sml1.move_id.packaging_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}_Description2_{sml2.uom_id.id}_{sml2.move_id.packaging_uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product4.id}_{product4.name}__{sml3.uom_id.id}_{sml3.move_id.packaging_uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 10)
         self.assertEqual(aggregate_val_1['quantity'], 6)
         self.assertEqual(aggregate_val_2['qty_ordered'], 10)
@@ -5687,9 +5687,9 @@ class TestStockMove(TestStockCommon):
         sml1 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.productA)
         sml2 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2)
         sml3 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product4)
-        aggregate_val_1 = aggregate_values[f'{self.productA.id}_{self.productA.name}__{sml1.product_uom_id.id}_{sml1.move_id.packaging_uom_id.id}']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}_Description2_{sml2.product_uom_id.id}_{sml2.move_id.packaging_uom_id.id}']
-        aggregate_val_3 = aggregate_values[f'{product4.id}_{product4.name}__{sml3.product_uom_id.id}_{sml3.move_id.packaging_uom_id.id}']
+        aggregate_val_1 = aggregate_values[f'{self.productA.id}_{self.productA.name}__{sml1.uom_id.id}_{sml1.move_id.packaging_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}_Description2_{sml2.uom_id.id}_{sml2.move_id.packaging_uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product4.id}_{product4.name}__{sml3.uom_id.id}_{sml3.move_id.packaging_uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 10)
         self.assertEqual(aggregate_val_1['quantity'], 6)
         self.assertEqual(aggregate_val_2['qty_ordered'], 10)
@@ -5703,10 +5703,10 @@ class TestStockMove(TestStockCommon):
         sml2 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product2)
         sml3 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3)
         sml4 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product4)
-        aggregate_val_1 = aggregate_values[f'{self.productA.id}_{self.productA.name}__{sml1.product_uom_id.id}_{sml1.move_id.packaging_uom_id.id}']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}_Description2_{sml2.product_uom_id.id}_{sml2.move_id.packaging_uom_id.id}']
-        aggregate_val_3 = aggregate_values[f'{product3.id}_{product3.name}_Description3_{sml3.product_uom_id.id}_{sml3.move_id.packaging_uom_id.id}']
-        aggregate_val_4 = aggregate_values[f'{product4.id}_{product4.name}__{sml4.product_uom_id.id}_{sml4.move_id.packaging_uom_id.id}']
+        aggregate_val_1 = aggregate_values[f'{self.productA.id}_{self.productA.name}__{sml1.uom_id.id}_{sml1.move_id.packaging_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}_Description2_{sml2.uom_id.id}_{sml2.move_id.packaging_uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product3.id}_{product3.name}_Description3_{sml3.uom_id.id}_{sml3.move_id.packaging_uom_id.id}']
+        aggregate_val_4 = aggregate_values[f'{product4.id}_{product4.name}__{sml4.uom_id.id}_{sml4.move_id.packaging_uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 4)
         self.assertEqual(aggregate_val_1['quantity'], 4)
         self.assertEqual(aggregate_val_2['qty_ordered'], 8)
@@ -5734,9 +5734,9 @@ class TestStockMove(TestStockCommon):
         sml1 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == self.productA)
         sml2 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product2)
         sml3 = delivery.move_line_ids.filtered(lambda ml: ml.product_id == product4)
-        aggregate_val_1 = aggregate_values[f'{self.productA.id}_{self.productA.name}__{sml1.product_uom_id.id}_{sml1.move_id.packaging_uom_id.id}']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}_Description2_{sml2.product_uom_id.id}_{sml2.move_id.packaging_uom_id.id}']
-        aggregate_val_3 = aggregate_values[f'{product4.id}_{product4.name}__{sml3.product_uom_id.id}_{sml3.move_id.packaging_uom_id.id}']
+        aggregate_val_1 = aggregate_values[f'{self.productA.id}_{self.productA.name}__{sml1.uom_id.id}_{sml1.move_id.packaging_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}_Description2_{sml2.uom_id.id}_{sml2.move_id.packaging_uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product4.id}_{product4.name}__{sml3.uom_id.id}_{sml3.move_id.packaging_uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 10)
         self.assertEqual(aggregate_val_1['quantity'], 6)
         self.assertEqual(aggregate_val_2['qty_ordered'], 10)
@@ -5750,10 +5750,10 @@ class TestStockMove(TestStockCommon):
         sml2 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product2)
         sml3 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3)
         sml4 = first_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product4)
-        aggregate_val_1 = aggregate_values[f'{self.productA.id}_{self.productA.name}__{sml1.product_uom_id.id}_{sml1.move_id.packaging_uom_id.id}']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}_Description2_{sml2.product_uom_id.id}_{sml2.move_id.packaging_uom_id.id}']
-        aggregate_val_3 = aggregate_values[f'{product3.id}_{product3.name}_Description3_{sml3.product_uom_id.id}_{sml3.move_id.packaging_uom_id.id}']
-        aggregate_val_4 = aggregate_values[f'{product4.id}_{product4.name}__{sml4.product_uom_id.id}_{sml4.move_id.packaging_uom_id.id}']
+        aggregate_val_1 = aggregate_values[f'{self.productA.id}_{self.productA.name}__{sml1.uom_id.id}_{sml1.move_id.packaging_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}_Description2_{sml2.uom_id.id}_{sml2.move_id.packaging_uom_id.id}']
+        aggregate_val_3 = aggregate_values[f'{product3.id}_{product3.name}_Description3_{sml3.uom_id.id}_{sml3.move_id.packaging_uom_id.id}']
+        aggregate_val_4 = aggregate_values[f'{product4.id}_{product4.name}__{sml4.uom_id.id}_{sml4.move_id.packaging_uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 4)
         self.assertEqual(aggregate_val_1['quantity'], 4)
         self.assertEqual(aggregate_val_2['qty_ordered'], 8)
@@ -5767,8 +5767,8 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(len(aggregate_values), 2)
         sml1 = second_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product3)
         sm2 = second_backorder.move_ids.filtered(lambda ml: ml.product_id == product2)
-        aggregate_val_1 = aggregate_values[f'{product3.id}_{product3.name}_Description3_{sml1.product_uom_id.id}_{sml1.move_id.packaging_uom_id.id}']
-        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}_Description2_{sm2.product_uom.id}_{sml2.move_id.packaging_uom_id.id}']
+        aggregate_val_1 = aggregate_values[f'{product3.id}_{product3.name}_Description3_{sml1.uom_id.id}_{sml1.move_id.packaging_uom_id.id}']
+        aggregate_val_2 = aggregate_values[f'{product2.id}_{product2.name}_Description2_{sm2.uom_id.id}_{sml2.move_id.packaging_uom_id.id}']
         self.assertEqual(aggregate_val_1['qty_ordered'], 3)
         self.assertEqual(aggregate_val_1['quantity'], 3)
         self.assertEqual(aggregate_val_2['qty_ordered'], 2)
@@ -5789,7 +5789,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
             'picking_id': picking.id,
             'picking_type_id': self.picking_type_out.id,
@@ -5798,7 +5798,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
             'picking_id': picking.id,
             'picking_type_id': self.picking_type_out.id,
@@ -5807,7 +5807,7 @@ class TestStockMove(TestStockCommon):
             'move_id': move1.id,
             'product_id': move1.product_id.id,
             'quantity': 10,
-            'product_uom_id': move1.product_uom.id,
+            'uom_id': move1.uom_id.id,
             'picking_id': picking.id,
             'location_id': move1.location_id.id,
             'location_dest_id': move1.location_dest_id.id,
@@ -5816,7 +5816,7 @@ class TestStockMove(TestStockCommon):
             'move_id': move2.id,
             'product_id': move2.product_id.id,
             'quantity': 5,
-            'product_uom_id': move2.product_uom.id,
+            'uom_id': move2.uom_id.id,
             'picking_id': picking.id,
             'location_id': move2.location_id.id,
             'location_dest_id': move2.location_dest_id.id,
@@ -5844,7 +5844,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 15.0,
             'picking_id': picking.id,
             'picking_type_id': self.picking_type_out.id,
@@ -5893,7 +5893,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 15.0,
             'picking_id': picking.id,
             'picking_type_id': self.picking_type_out.id,
@@ -5949,7 +5949,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
 
@@ -5957,7 +5957,7 @@ class TestStockMove(TestStockCommon):
             'move_id': move.id,
             'product_id': move.product_id.id,
             'quantity': 1,
-            'product_uom_id': move.product_uom.id,
+            'uom_id': move.uom_id.id,
             'location_id': move.location_id.id,
             'location_dest_id': move.location_dest_id.id,
             'lot_name': lot1.name,
@@ -6000,7 +6000,7 @@ class TestStockMove(TestStockCommon):
         })
         move = self.env['stock.move'].create({
             'product_id': self.productA.id,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'product_uom_qty': 2.0,
             'picking_id': picking_out.id,
             'location_id': self.stock_location.id,
@@ -6032,7 +6032,7 @@ class TestStockMove(TestStockCommon):
         })
         self.env['stock.move'].create({
             'product_id': self.product_consu.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 2.0,
             'picking_id': picking.id,
             'location_id': picking.location_id.id,
@@ -6058,7 +6058,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': dest_wh.lot_stock_id.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         self.assertEqual(move.forecast_availability, -1)
@@ -6072,8 +6072,8 @@ class TestStockMove(TestStockCommon):
             'location_dest_id': self.customer_location.id,
             'move_line_ids': [(0, 0, {})]
         })
-        self.assertEqual(move.product_uom, self.productA.uom_id)
-        self.assertEqual(move.move_line_ids.product_uom_id, self.productA.uom_id)
+        self.assertEqual(move.uom_id, self.productA.uom_id)
+        self.assertEqual(move.move_line_ids.uom_id, self.productA.uom_id)
         uom_kg = self.env.ref('uom.product_uom_kgm')
         product1 = self.env['product.product'].create({
             'name': 'product1',
@@ -6081,7 +6081,7 @@ class TestStockMove(TestStockCommon):
             'uom_id': uom_kg.id,
         })
         move.product_id = product1
-        self.assertEqual(move.product_uom, product1.uom_id)
+        self.assertEqual(move.uom_id, product1.uom_id)
 
     def test_move_line_compute_locations(self):
         move = self.env['stock.move'].create({
@@ -6117,7 +6117,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
         move._action_confirm()
@@ -6184,7 +6184,7 @@ class TestStockMove(TestStockCommon):
                 'location_id': self.customer_location.id,
                 'location_dest_id': self.stock_location.id,
                 'product_id': self.productA.id,
-                'product_uom': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
                 'product_uom_qty': 2.0,
             })],
         })
@@ -6263,7 +6263,7 @@ class TestStockMove(TestStockCommon):
         move = self.env['stock.move'].create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
         })
@@ -6275,10 +6275,10 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(quant.reserved_quantity, 1)
 
         # Firstly, we test changing the quantity and the uom together: 2 dozens = 24 reserved units
-        ml.write({'quantity': 2, 'product_uom_id': self.uom_dozen.id})
+        ml.write({'quantity': 2, 'uom_id': self.uom_dozen.id})
         self.assertEqual(quant.reserved_quantity, 24)
         # Secondly, we test changing only the uom: 2 units -> expected 2 units
-        ml.write({'product_uom_id': self.uom_unit.id})
+        ml.write({'uom_id': self.uom_unit.id})
         self.assertEqual(quant.reserved_quantity, 2)
         self.assertEqual(ml.quantity * self.uom_unit.factor, 2)
 
@@ -6298,7 +6298,7 @@ class TestStockMove(TestStockCommon):
         move = self.env['stock.move'].create({
             'product_id': self.product_lot.id,
             'product_uom_qty': 1,
-            'product_uom': self.uom_dozen.id,
+            'uom_id': self.uom_dozen.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
         })
@@ -6336,7 +6336,7 @@ class TestStockMove(TestStockCommon):
             'move_ids': [Command.create({
                 'product_id': product.id,
                 'product_uom_qty': 2.0,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
             })],
@@ -6350,7 +6350,7 @@ class TestStockMove(TestStockCommon):
             'move_ids': [Command.create({
                 'product_id': product.id,
                 'product_uom_qty': 200.0,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
             })],
@@ -6381,7 +6381,7 @@ class TestStockMove(TestStockCommon):
         move = self.env['stock.move'].create({
             'product_id': self.productA.id,
             'product_uom_qty': 2,
-            'product_uom': self.env.ref('uom.product_uom_kgm').id,
+            'uom_id': self.env.ref('uom.product_uom_kgm').id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
         })
@@ -6411,7 +6411,7 @@ class TestStockMove(TestStockCommon):
         move_1, move_2 = self.env['stock.move'].create([{
             'product_id': self.productA.id,
             'product_uom_qty': qty,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
         } for qty in [2, 3]])
@@ -6447,7 +6447,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product_lot.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
             'picking_type_id': self.picking_type_in.id,
         })
@@ -6464,7 +6464,7 @@ class TestStockMove(TestStockCommon):
                 'location_id': self.customer_location.id,
                 'location_dest_id': self.stock_location.id,
                 'product_id': self.productA.id,
-                'product_uom': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
                 'product_uom_qty': 2.0,
             })],
         })
@@ -6507,7 +6507,7 @@ class TestStockMove(TestStockCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product_serial.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
         sm._action_confirm()
@@ -6565,7 +6565,7 @@ class TestStockMove(TestStockCommon):
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.customer_location.id,
                 'product_id': self.productA.id,
-                'product_uom': gram_uom.id,
+                'uom_id': gram_uom.id,
                 'product_uom_qty': 150.0,
             })],
         })
@@ -6668,14 +6668,14 @@ class TestStockMove(TestStockCommon):
                 Command.create({
                     'product_id': self.productA.id,
                     'product_uom_qty': 1,
-                    'product_uom': pack_of_6.id,
+                    'uom_id': pack_of_6.id,
                     'location_id': self.stock_location.id,
                     'location_dest_id': self.customer_location.id,
                 }),
                 Command.create({
                     'product_id': self.productB.id,
                     'product_uom_qty': 1,
-                    'product_uom': pack_of_6.id,
+                    'uom_id': pack_of_6.id,
                     'location_id': self.stock_location.id,
                     'location_dest_id': self.customer_location.id,
                 }),

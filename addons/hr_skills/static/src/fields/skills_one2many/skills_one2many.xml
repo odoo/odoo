@@ -22,7 +22,7 @@
                         </p>
                         <button t-on-click="skillTypesAction"
                             class="btn btn-secondary align-self-center"
-                            role="button" t-if="isEditable">
+                            t-if="isEditable">
                             Create Skills
                         </button>
                     </div>
@@ -34,7 +34,7 @@
                         </p>
                         <button t-on-click="props.onAdd"
                             class="btn btn-secondary align-self-center"
-                            role="button" t-if="isEditable">
+                            t-if="isEditable">
                             Pick a skill from the list
                         </button>
                     </div>
@@ -51,8 +51,7 @@
                         <span t-esc="skill_group[1].name"/>
                         <button id="add_button" class="btn btn-secondary btn-sm"
                             t-if="isEditable"
-                            t-on-click="() => props.onAdd({ context: { default_skill_type_id: skill_group[1].id }})"
-                            role="button">ADD</button>
+                            t-on-click="() => props.onAdd({ context: { default_skill_type_id: skill_group[1].id }})">ADD</button>
                     </div>
                 </th>
             </tr>

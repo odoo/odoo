@@ -16,6 +16,7 @@ class WebsiteSaleVariantController(Controller):
     def get_combination_info_website(
         self, product_template_id, product_id, combination, add_qty, uom_id=None, **kwargs
     ):
+        request.update_context(website_sale_product_page=True)
         product_template_id = product_template_id and int(product_template_id)
         product_id = product_id and int(product_id)
         add_qty = (add_qty and float(add_qty)) or 1.0

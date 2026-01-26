@@ -11,7 +11,7 @@ class ProductTemplate(models.Model):
         reward_products = rewards.discount_line_product_id | rewards.reward_product_ids | rewards.reward_product_id
         trigger_products = config._get_program_ids().trigger_product_ids
 
-        loyalty_product_tmpl_ids = set((reward_products.product_tmpl_id | trigger_products.product_tmpl_id).ids)
+        loyalty_product_tmpl_ids = set((reward_products | trigger_products)._filtered_access('read').product_tmpl_id.ids)
         already_loaded_product_tmpl_ids = {template['id'] for template in read_data}
 
         missing_product_tmpl_ids = list(loyalty_product_tmpl_ids - already_loaded_product_tmpl_ids)
@@ -37,7 +37,7 @@ class ProductTemplate(models.Model):
         special_display_products += self.env['loyalty.program'].search([
             ('program_type', 'in', ['ewallet']),
             ('pos_config_ids', 'in', [False, config.id]),
-        ]).trigger_product_ids
+        ]).trigger_product_ids._filtered_access('read')
 
         config_data['_pos_special_display_products_ids'] = special_display_products.product_tmpl_id.ids
 

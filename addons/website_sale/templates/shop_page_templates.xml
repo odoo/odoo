@@ -460,6 +460,7 @@
                                                 <t t-set="col_is_custom_portrait"
                                                    t-value="not col_is_stretched and (col_height &gt; td_product['x'])"/>
                                                 <t t-set="product" t-value="td_product['product']"/>
+                                                <t t-set="product_variant" t-value="product_variants[product]"/>
                                                 <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
                                                 <t
                                                     t-set="ribbon"

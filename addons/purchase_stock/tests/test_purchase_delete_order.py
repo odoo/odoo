@@ -53,7 +53,7 @@ class TestDeleteOrder(PurchaseTestCommon):
         move = self.env['stock.move'].create({
             'product_id': self.product_2.id,
             'product_uom_qty': 1,
-            'product_uom': self.product_2.uom_id.id,
+            'uom_id': self.product_2.uom_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.picking_type_out.id,
@@ -67,7 +67,7 @@ class TestDeleteOrder(PurchaseTestCommon):
                 Command.create({
                     'product_id': self.product_2.id,
                     'product_qty': 1.0,
-                    'product_uom_id': self.product_2.uom_id.id,
+                    'uom_id': self.product_2.uom_id.id,
                     'propagate_cancel': False,
                 })],
         })

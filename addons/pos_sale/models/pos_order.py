@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools import float_compare, float_is_zero, format_date
 
 
 class PosOrder(models.Model):
@@ -106,7 +105,7 @@ class PosOrder(models.Model):
 
                     qty_delivered = max(so_line.qty_delivered, get_expected_qty_to_ship_later())
                     new_qty = so_line.product_uom_qty - qty_delivered
-                    if stock_move.product_uom.compare(new_qty, 0) <= 0:
+                    if stock_move.uom_id.compare(new_qty, 0) <= 0:
                         new_qty = 0
                     stock_move.product_uom_qty = so_line.compute_uom_qty(new_qty, stock_move, False)
                     # If the product is delivered with more than one step, we need to update the quantity of the other steps
@@ -116,7 +115,7 @@ class PosOrder(models.Model):
                     waiting_picking_ids.add(picking.id)
 
             def is_product_uom_qty_zero(move):
-                return move.product_uom.is_zero(move.product_uom_qty)
+                return move.uom_id.is_zero(move.product_uom_qty)
 
             # cancel the waiting pickings if each product_uom_qty of move is zero
             for picking in self.env['stock.picking'].browse(waiting_picking_ids):
@@ -153,54 +152,3 @@ class PosOrder(models.Model):
         if 'crm_team_id' in vals:
             vals['crm_team_id'] = vals['crm_team_id'] if vals.get('crm_team_id') else self.session_id.crm_team_id.id
         return super().write(vals)
-
-
-class PosOrderLine(models.Model):
-    _inherit = 'pos.order.line'
-
-    sale_order_origin_id = fields.Many2one('sale.order', string="Linked Sale Order", index='btree_not_null')
-    sale_order_line_id = fields.Many2one('sale.order.line', string="Source Sale Order Line", index='btree_not_null')
-    down_payment_details = fields.Text(string="Down Payment Details")
-    qty_delivered = fields.Float(
-        string="Delivery Quantity",
-        compute="_compute_qty_delivered",
-        store=True, readonly=False, copy=False)
-
-    @api.depends('order_id.state', 'order_id.picking_ids', 'order_id.picking_ids.state', 'order_id.picking_ids.move_ids.quantity')
-    def _compute_qty_delivered(self):
-        product_qty_left_to_assign = {}
-        for order_line in self:
-            if order_line.order_id.state in ['paid', 'done']:
-                outgoing_pickings = order_line.order_id.picking_ids.filtered(
-                    lambda pick: pick.state == 'done' and pick.picking_type_code == 'outgoing'
-                )
-
-                if outgoing_pickings and order_line.order_id.shipping_date:
-                    moves = outgoing_pickings.move_ids.filtered(
-                        lambda m: m.state == 'done' and m.product_id == order_line.product_id
-                    )
-                    qty_left = product_qty_left_to_assign.get(order_line.product_id.id, False)
-                    if (qty_left):
-                        order_line.qty_delivered = min(order_line.qty, qty_left)
-                        product_qty_left_to_assign[order_line.product_id.id] -= order_line.qty_delivered
-                    else:
-                        order_line.qty_delivered = min(order_line.qty, sum(moves.mapped('quantity')))
-                        product_qty_left_to_assign[order_line.product_id.id] = sum(moves.mapped('quantity')) - order_line.qty_delivered
-
-                elif outgoing_pickings:
-                    # If the order is not delivered later, and in a "paid", "done" or "invoiced" state, it fully delivered
-                    order_line.qty_delivered = order_line.qty
-                else:
-                    order_line.qty_delivered = 0
-
-    @api.model
-    def _load_pos_data_fields(self, config):
-        params = super()._load_pos_data_fields(config)
-        params += ['sale_order_origin_id', 'sale_order_line_id', 'down_payment_details']
-        return params
-
-    def _launch_stock_rule_from_pos_order_lines(self):
-        orders = self.mapped('order_id')
-        for order in orders:
-            self.env['stock.move'].browse(order.lines.sale_order_line_id.move_ids._rollup_move_origs()).filtered(lambda ml: ml.state not in ['cancel', 'done'])._action_cancel()
-        return super()._launch_stock_rule_from_pos_order_lines()

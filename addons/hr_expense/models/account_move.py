@@ -1,6 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from markupsafe import Markup
-
 from odoo import Command, models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import frozendict
@@ -77,19 +75,19 @@ class AccountMove(models.Model):
         for move in self:
             if move.expense_ids and 'company_account' in move.expense_ids.mapped('payment_mode'):
                 term_lines = move.line_ids.filtered(lambda l: l.display_type != 'payment_term')
-                move.needed_terms = {
+                move.needed_terms = [(
                     frozendict(
                         {
                             "move_id": move.id,
                             "date_maturity": fields.Date.context_today(move.expense_ids),
                         }
-                    ): {
+                    ), {
                         "balance": -sum(term_lines.mapped("balance")),
                         "amount_currency": -sum(term_lines.mapped("amount_currency")),
                         "name": "",
                         "account_id": move.expense_ids._get_expense_account_destination(),
                     }
-                }
+                )]
 
     def _prepare_product_base_line_for_taxes_computation(self, product_line):
         # EXTENDS 'account'

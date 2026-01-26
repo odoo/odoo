@@ -91,7 +91,7 @@ class StockQuant(models.Model):
         if not self.env.context.get('inventory_name'):
             force_period_date = self.env.context.get('force_period_date', False)
             if force_period_date:
-                if self.product_uom_id.is_zero(qty):
+                if self.uom_id.is_zero(qty):
                     name = _('Product Quantity Confirmed')
                 else:
                     name = _('Product Quantity Updated')

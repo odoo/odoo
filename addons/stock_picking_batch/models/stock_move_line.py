@@ -56,14 +56,14 @@ class StockMoveLine(models.Model):
             for line in lines:
                 move = line.move_id
                 line_by_move[move] |= line
-                qty = line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id, rounding_method='HALF-UP')
+                qty = line.uom_id._compute_quantity(line.quantity, line.product_id.uom_id, rounding_method='HALF-UP')
                 qty_by_move[line.move_id] += qty
 
             # If all moves are to be transferred to the wave, link the picking to the wave
             if lines == picking.move_line_ids and lines.move_id == picking.move_ids:
                 add_all_moves = True
                 for move, qty in qty_by_move.items():
-                    if move.product_uom.is_zero(qty):
+                    if move.uom_id.is_zero(qty):
                         add_all_moves = False
                         break
                 if add_all_moves:
@@ -121,7 +121,7 @@ class StockMoveLine(models.Model):
     def _is_auto_waveable(self):
         self.ensure_one()
         if not self.picking_id \
-           or (self.picking_id.state != 'assigned' or self.product_uom_id.is_zero(self.quantity)) and not self.env.context.get('skip_auto_waveable')  \
+           or (self.picking_id.state != 'assigned' or self.uom_id.is_zero(self.quantity)) and not self.env.context.get('skip_auto_waveable')  \
            or self.batch_id.is_wave \
            or not self.picking_type_id._is_auto_wave_grouped() \
            or (self.picking_type_id.wave_group_by_category and self.product_id.categ_id not in self.picking_type_id.wave_category_ids):  # noqa: SIM103

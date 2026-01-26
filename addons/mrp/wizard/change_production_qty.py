@@ -52,7 +52,7 @@ class ChangeProductionQty(models.TransientModel):
 
     @api.model
     def _need_quantity_propagation(self, move, qty):
-        return move.move_dest_ids and not move.product_uom.is_zero(qty)
+        return move.move_dest_ids and not move.uom_id.is_zero(qty)
 
     def change_prod_qty(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit')
@@ -76,7 +76,7 @@ class ChangeProductionQty(models.TransientModel):
             production._log_manufacture_exception(documents)
             self._update_finished_moves(production, new_production_qty, old_production_qty)
             production.write({'product_qty': new_production_qty})
-            if not production.product_uom_id.is_zero(production.qty_producing) and not production.workorder_ids:
+            if not production.uom_id.is_zero(production.qty_producing) and not production.workorder_ids:
                 production.qty_producing = new_production_qty
                 production._set_qty_producing()
 

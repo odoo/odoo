@@ -8,7 +8,8 @@
                   t-if="this.env.searchModel.searchMenuTypes.size"
                   bottomSheet="false">
             <button
-                class="o_searchview_dropdown_toggler d-print-none btn btn-outline-secondary o-dropdown-caret rounded-start-0"
+                t-ref="searchview_dropdown_toggler"
+                class="o_searchview_dropdown_toggler abcdddd d-print-none btn btn-outline-secondary o-dropdown-caret rounded-start-0"
                 data-hotkey="shift+q"
                 title="Toggle Search Panel"
                 data-available-offline=""

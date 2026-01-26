@@ -16,18 +16,18 @@ class StockReturnPickingLine(models.TransientModel):
     wizard_id = fields.Many2one('stock.return.picking', string="Wizard")
     move_id = fields.Many2one('stock.move', "Move")
 
-    @api.depends('move_id.product_uom', 'product_id.uom_id')
+    @api.depends('move_id.uom_id', 'product_id.uom_id')
     def _compute_uom_id(self):
         """ Compute the UoM based on the move's product UoM or the product's default UoM. """
         for line in self:
-            line.uom_id = line.move_id.product_uom or line.product_id.uom_id
+            line.uom_id = line.move_id.uom_id or line.product_id.uom_id
 
     def _prepare_move_default_values(self, new_picking):
         picking = new_picking or self.wizard_id.picking_id
         vals = {
             'product_id': self.product_id.id,
             'product_uom_qty': self.quantity,
-            'product_uom': self.uom_id.id,
+            'uom_id': self.uom_id.id,
             'picking_id': picking.id,
             'state': 'draft',
             'date': fields.Datetime.now(),
@@ -230,7 +230,7 @@ class StockReturnPicking(models.TransientModel):
                 if not move.origin_returned_move_id or move.origin_returned_move_id != stock_move:
                     continue
                 quantity -= move.quantity
-            quantity = stock_move.product_uom.round(quantity)
+            quantity = stock_move.uom_id.round(quantity)
             return_move.quantity = quantity
         return self.action_create_returns()
 

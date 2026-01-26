@@ -118,7 +118,7 @@ class StockPicking(models.Model):
             'subcontractor_id': subcontract_move.picking_id.partner_id.commercial_partner_id.id,
             'picking_ids': [subcontract_move.picking_id.id],
             'product_id': product.id,
-            'product_uom_id': subcontract_move.product_uom.id,
+            'uom_id': subcontract_move.uom_id.id,
             'bom_id': bom.id,
             'location_src_id': subcontracting_location.id,
             'location_dest_id': subcontracting_location.id,
@@ -158,7 +158,7 @@ class StockPicking(models.Model):
                     # do not create extra production for move that have their quantity updated
                     return
             quantity = move.product_qty or move.quantity
-            if move.product_uom.compare(quantity, 0) <= 0:
+            if move.uom_id.compare(quantity, 0) <= 0:
                 # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
                 continue
 

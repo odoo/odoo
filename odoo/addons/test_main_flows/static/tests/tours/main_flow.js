@@ -266,7 +266,7 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: ".o_field_widget[name=min_qty] + .o_field_widget[name=product_uom_id] input",
+    trigger: ".o_field_widget[name=min_qty] + .o_field_widget[name=uom_id] input",
     run: "click",
 },
 {
@@ -433,7 +433,7 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: ".o_field_widget[name=min_qty] + .o_field_widget[name=product_uom_id] input",
+    trigger: ".o_field_widget[name=min_qty] + .o_field_widget[name=uom_id] input",
     run: "click",
 },
 {

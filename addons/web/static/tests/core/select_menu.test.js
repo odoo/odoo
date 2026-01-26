@@ -1,6 +1,5 @@
-import { expect, test } from "@odoo/hoot";
+import { animationFrame, expect, runAllTimers, test } from "@odoo/hoot";
 import { click, edit, press, queryAllTexts, queryOne, queryAll } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import {
     contains,
@@ -1158,10 +1157,8 @@ test("Groups can be member of sections", async () => {
     expect(queryAllTexts(".o_select_menu_group")).toEqual([
         "Group A",
         "Subgroup 2",
-        "Group B",
-        "Subgroup 1B",
     ]);
-    expect(queryAllTexts(".o_select_menu_item")).toEqual(["Option 2.I", "Option B.2"]);
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["Option 2.I"]);
 });
 
 test("Can add custom data to choices", async () => {
@@ -1352,4 +1349,19 @@ test("Space bar key opens the dropdown", async () => {
     await animationFrame();
     expect(".o_select_menu_menu").toHaveCount(1);
     expect(".o_select_menu_input").toHaveValue("World");
+});
+
+test("Disabled choice", async () => {
+    class ParentWithDisabledChoice extends Parent {
+        setup() {
+            super.setup();
+            this.choices[0].enabled = false;
+        }
+    }
+
+    await mountSingleApp(ParentWithDisabledChoice);
+    await click(".o_select_menu_toggler");
+    await animationFrame();
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["Hello", "World"]);
+    expect(".o_select_menu_item:eq(0)").toHaveClass("text-muted");
 });

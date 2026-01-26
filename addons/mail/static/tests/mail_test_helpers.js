@@ -1008,6 +1008,19 @@ export function patchVoiceMessageAudio() {
     return res;
 }
 
+export function mockPermissionsPrompt() {
+    patchWithCleanup(browser.navigator.permissions, {
+        async query() {
+            return {
+                state: "prompt",
+                addEventListener: () => {},
+                removeEventListener: () => {},
+                onchange: null,
+            };
+        },
+    });
+}
+
 /**
  * Assert IM status on chat bubble and chat window of given `conversationName` with `count`.
  * The conversation should be present as a bubble initially, becomes open and folded again

@@ -51,6 +51,7 @@ async function mockLang(lang) {
     await makeMockEnv();
 }
 
+test.tags("headless");
 test("lang is given by the user context", async () => {
     onRpc("/web/webclient/translations", (request) => {
         const urlParams = new URLSearchParams(new URL(request.url).search);
@@ -60,6 +61,7 @@ test("lang is given by the user context", async () => {
     expect.verifySteps(["fr_FR"]);
 });
 
+test.tags("headless");
 test("lang is given by an attribute on the DOM root node", async () => {
     serverState.lang = null;
     onRpc("/web/webclient/translations", (request) => {
@@ -74,6 +76,7 @@ test("lang is given by an attribute on the DOM root node", async () => {
     expect.verifySteps(["fr_FR"]);
 });
 
+test.tags("headless");
 test("url is given by the session", async () => {
     patchWithCleanup(session, {
         translationURL: "/get_translations",
@@ -310,56 +313,67 @@ test("can lazy translate", async () => {
     expect("#main").toHaveText("Bonjour");
 });
 
+test.tags("headless");
 test("luxon is configured in the correct lang", async () => {
     await mockLang("fr_BE");
     expect(DateTime.utc(2021, 12, 10).toFormat("MMMM")).toBe("décembre");
 });
 
+test.tags("headless");
 test("arabic has the correct numbering system (generic)", async () => {
     await mockLang("ar_001");
     expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("١٠/١٢/٢٠٢١ ١٢:٠٠:٠٠");
 });
 
+test.tags("headless");
 test("arabic has the correct numbering system (Algeria)", async () => {
     await mockLang("ar_DZ");
     expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("10/12/2021 12:00:00");
 });
 
+test.tags("headless");
 test("arabic has the correct numbering system (Lybia)", async () => {
     await mockLang("ar_LY");
     expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("10/12/2021 12:00:00");
 });
 
+test.tags("headless");
 test("arabic has the correct numbering system (Morocco)", async () => {
     await mockLang("ar_MA");
     expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("10/12/2021 12:00:00");
 });
 
+test.tags("headless");
 test("arabic has the correct numbering system (Saudi Arabia)", async () => {
     await mockLang("ar_SA");
     expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("١٠/١٢/٢٠٢١ ١٢:٠٠:٠٠");
 });
 
+test.tags("headless");
 test("arabic has the correct numbering system (Tunisia)", async () => {
     await mockLang("ar_TN");
     expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("10/12/2021 12:00:00");
 });
 
+test.tags("headless");
 test("bengalese has the correct numbering system", async () => {
     await mockLang("bn");
     expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("১০/১২/২০২১ ১২:০০:০০");
 });
 
+test.tags("headless");
 test("punjabi (gurmukhi) has the correct numbering system", async () => {
     await mockLang("pa_IN");
     expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("੧੦/੧੨/੨੦੨੧ ੧੨:੦੦:੦੦");
 });
 
+test.tags("headless");
 test("tamil has the correct numbering system", async () => {
     await mockLang("ta");
     expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("௧௦/௧௨/௨௦௨௧ ௧௨:௦௦:௦௦");
 });
 
+test.tags("headless");
 test("_t fills the format specifiers in translated terms with its extra arguments", async () => {
     patchTranslations({
         web: {
@@ -370,6 +384,7 @@ test("_t fills the format specifiers in translated terms with its extra argument
     expect(translatedStr).toBe("Échéance dans 513 jours");
 });
 
+test.tags("headless");
 test("_t fills the format specifiers in translated terms with formatted lists", async () => {
     await mockLang("fr_FR");
     patchTranslations({
@@ -388,6 +403,7 @@ test("_t fills the format specifiers in translated terms with formatted lists", 
     expect(translatedStr2).toBe("Échéance dans 30, 60 et 90 jours pour Mitchell");
 });
 
+test.tags("headless");
 test("_t fills the format specifiers in lazy translated terms with its extra arguments", async () => {
     translatedTerms[translationLoaded] = false;
     const translatedStr = _t("Due in %s days", 513);
@@ -399,6 +415,7 @@ test("_t fills the format specifiers in lazy translated terms with its extra arg
     expect(translatedStr.toString()).toBe("Échéance dans 513 jours");
 });
 
+describe.tags("headless");
 describe("_t with markups", () => {
     test("non-markup values are escaped", () => {
         translatedTerms[translationLoaded] = true;

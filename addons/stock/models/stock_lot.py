@@ -46,7 +46,7 @@ class StockLot(models.Model):
         domain=("[('tracking', '!=', 'none'), ('is_storable', '=', True)] +"
             " ([('product_tmpl_id', '=', context['default_product_tmpl_id'])] if context.get('default_product_tmpl_id') else [])"),
         required=True, check_company=True, tracking=True)
-    product_uom_id = fields.Many2one(
+    uom_id = fields.Many2one(
         'uom.uom', 'Unit',
         related='product_id.uom_id')
     quant_ids = fields.One2many('stock.quant', 'lot_id', 'Quants', readonly=True)

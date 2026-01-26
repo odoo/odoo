@@ -101,11 +101,6 @@ export class DiscussCoreCommon {
                 }
             }
         }
-        if (channel.channel_type !== "channel" && this.store.self_user && channel.self_member_id) {
-            // disabled on non-channel threads and
-            // on "channel" channels for performance reasons
-            channel.markAsFetched();
-        }
         if (
             !channel.loadNewer &&
             !message.isSelfAuthored &&

@@ -272,7 +272,8 @@ class AccountMove(models.Model):
         # OVERRIDE 'account'
         super()._compute_tax_totals()
         for move in self:
-            if move.tax_totals and move._get_name_invoice_report() == 'l10n_cl.report_invoice_document':
+            if (tax_totals := move.tax_totals) and move._get_name_invoice_report() == 'l10n_cl.report_invoice_document':
                 # Disable the recap of tax totals in company currency at the bottom right of the invoice,
                 # since this info is already present in our custom tax totals grid.
-                move.tax_totals['display_in_company_currency'] = False
+                tax_totals['display_in_company_currency'] = False
+                move.tax_totals = tax_totals

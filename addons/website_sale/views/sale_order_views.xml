@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <!-- Views -->
     <record id="view_sales_order_filter_ecommerce" model="ir.ui.view">
         <field name="name">sale.order.ecommerce.search.view</field>
         <field name="model">sale.order</field>
@@ -14,6 +16,10 @@
                 <filter string="Order Date" name="order_date" date="date_order"/>
                 <separator/>
                 <filter string="From Website" name="from_website" domain="[('website_id', '!=', False)]"/>
+                <separator/>
+                <filter string="To Fulfill" name="to_fulfill" domain="[('is_unfulfilled', '=', True)]"/>
+                <filter string="To Confirm" name="to_confirm" domain="[('state', '=', 'sent')]"/>
+                <filter string="To Invoice" name="to_invoice" domain="[('invoice_status', '=', 'to invoice')]"/>
                 <separator/>
                 <!-- Dashboard filter - used by context -->
                 <filter string="Last Week" invisible="1" name="week" domain="[('date_order', '&gt;', 'today -7d')]"/>
@@ -40,6 +46,117 @@
         </field>
     </record>
 
+    <record id="sale_order_list_view_ecommerce" model="ir.ui.view">
+        <field name="name">website.sale.order.list.dashboard</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <list
+                class="o_sale_order"
+                string="Orders"
+                sample="1"
+                decoration-muted="state == 'cancel'"
+                js_class="website_sale_dashboard_list"
+            >
+                <header>
+                    <button
+                        string="Create Invoices"
+                        name="%(sale.action_view_sale_advance_payment_inv)d"
+                        type="action"
+                        class="btn-secondary"
+                    />
+                    <button
+                        string="Confirm Orders"
+                        name="%(sale.model_sale_order_action_quotation_confirm)d"
+                        type="action"
+                        class="btn-secondary"
+                    />
+                </header>
+                <field name="message_needaction" column_invisible="True"/>  <!--for JS side widgets-->
+                <field name="currency_id" column_invisible="True"/> <!--for JS side widgets-->
+
+                <field name="name" string="Number" readonly="1" decoration-bf="1"/>
+                <field name="date_order" readonly="state in ['cancel', 'sale']"/>
+                <field name="commitment_date"/>
+                <field name="partner_id" readonly="1"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="hide"/>
+                <field name="team_id" optional="hide"/>
+                <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/>  <!--for JS widgets-->
+                <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="hide"
+                    readonly="1"
+                />
+                <field
+                    name="amount_untaxed"
+                    sum="Total Tax Excluded"
+                    widget="monetary"
+                    optional="hide"
+                />
+                <field
+                    name="amount_tax"
+                    sum="Tax Total"
+                    widget="monetary"
+                    optional="hide"
+                />
+                <field
+                    name="amount_total"
+                    sum="Total Tax Included"
+                    widget="monetary"
+                    decoration-bf="1"
+                    decoration-info="invoice_status == 'to invoice'"
+                />
+                <field
+                    name="state"
+                    decoration-success="state == 'sale'"
+                    decoration-info="state == 'draft'"
+                    decoration-primary="state == 'sent'"
+                    widget="badge"
+                />
+                <field
+                    name="tag_ids"
+                    widget="many2many_tags"
+                    options="{'color_field': 'color'}"
+                    optional="hide"
+                />
+                <field
+                    name="invoice_status"
+                    decoration-success="invoice_status == 'invoiced'"
+                    decoration-info="invoice_status == 'to invoice'"
+                    decoration-warning="invoice_status == 'upselling'"
+                    widget="badge"
+                />
+                <field name="activity_ids" widget="list_activity" optional="show"/>
+                <field name="client_order_ref" optional="hide"/>
+                <field name="validity_date" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- override to add website_id in sale.order related views -->
+    <record id="sale_order_tree" model="ir.ui.view">
+        <field name="name">sale.order.list.inherit.website.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="before">
+                <field name="website_id" groups="website.group_multi_website" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="sale_order_kanban_view_ecommerce" model="ir.ui.view">
+        <field name="name">sale.order.kanban.inherit.website.sale.dashboard</field>
+        <field name="model">sale.order</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="sale.view_sale_order_kanban"/>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" position="attributes">
+                <attribute name="js_class">website_sale_dashboard_kanban</attribute>
+            </kanban>
+        </field>
+    </record>
+
     <record id="action_orders_ecommerce" model="ir.actions.act_window">
         <field name="name">Orders</field>
         <field name="res_model">sale.order</field>
@@ -53,6 +170,17 @@
                 There is no confirmed order from the website
             </p>
         </field>
+    </record>
+
+    <record id="website_sale_order_list" model="ir.actions.act_window.view">
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="sale_order_list_view_ecommerce"/>
+        <field name="act_window_id" ref="action_orders_ecommerce"/>
+    </record>
+    <record id="website_sale_order_kanban" model="ir.actions.act_window.view">
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="sale_order_kanban_view_ecommerce"/>
+        <field name="act_window_id" ref="action_orders_ecommerce"/>
     </record>
 
     <!-- Dashboard Action -->
@@ -167,17 +295,6 @@
             </field>
             <field name="team_id" position="after">
                 <field name="website_id" invisible="not website_id" groups="website.group_multi_website"/>
-            </field>
-        </field>
-    </record>
-
-    <record id="sale_order_tree" model="ir.ui.view">
-        <field name="name">sale.order.list.inherit.website.sale</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.sale_order_tree"/>
-        <field name="arch" type="xml">
-            <field name="user_id" position="before">
-                <field name="website_id" groups="website.group_multi_website" optional="show"/>
             </field>
         </field>
     </record>

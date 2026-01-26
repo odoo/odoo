@@ -363,7 +363,27 @@
         </BuilderButton>
     </BuilderRow>
     <BuilderRow id="'o_we_actions_opt'" label.translate="Actions">
-        <!-- Filled by other modules -->
+        <BuilderButton title.translate="Compare"
+            action="'websiteConfig'"
+            actionParam="{views:['website_sale.product_add_to_compare']}"
+        >
+            <i class="fa fa-fw fa-exchange"/>
+            Compare
+        </BuilderButton>
+        <BuilderButton title.translate="Wishlist"
+            action="'websiteConfig'"
+            actionParam="{views:['website_sale.product_add_to_wishlist']}"
+        >
+            <i class="fa fa-fw fa-heart"/>
+            Wishlist
+        </BuilderButton>
+    </BuilderRow>
+    <BuilderRow label.translate="Specification">
+        <BuilderSelect action="'websiteConfig'">
+            <BuilderSelectItem actionParam="{views:[]}">None</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{views:['website_sale.product_attributes_body']}">Bottom of Page</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{views:['website_sale.accordion_specs_item']}">In accordion</BuilderSelectItem>
+        </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Separators">
         <BuilderCheckbox

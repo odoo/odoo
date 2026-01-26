@@ -166,7 +166,7 @@ class StockWarehouseOrderpoint(models.Model):
         """ Extend to add more depends values """
         super()._compute_deadline_date()
 
-    @api.depends('product_id.purchase_order_line_ids.product_qty', 'product_id.purchase_order_line_ids.state', 'supplier_id', 'supplier_id.product_uom_id', 'product_id.seller_ids', 'product_id.seller_ids.product_uom_id')
+    @api.depends('product_id.purchase_order_line_ids.product_qty', 'product_id.purchase_order_line_ids.state', 'supplier_id', 'supplier_id.uom_id', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
     def _compute_qty_to_order_computed(self):
         """ Extend to add more depends values
         TODO: Probably performance costly due to x2many in depends
@@ -262,7 +262,7 @@ class StockWarehouseOrderpoint(models.Model):
         self.ensure_one()
         if self.show_supplier and self.product_id:
             return self._get_default_rule()._pick_supplier(
-                self.company_id, self.product_id, qty=self.qty_to_order, uom=self.product_uom
+                self.company_id, self.product_id, qty=self.qty_to_order, uom=self.uom_id
             )
         else:
             return self.env['product.supplierinfo']
@@ -315,16 +315,16 @@ class StockWarehouseOrderpoint(models.Model):
         supplier = self.supplier_id or self.product_id.with_company(self.company_id)._select_seller(
             quantity=qty_to_order,
             date=max(dates_info['date_order'].date(), fields.Date.today()),
-            uom_id=self.product_uom
+            uom_id=self.uom_id
         )
-        return supplier.product_uom_id
+        return supplier.uom_id
 
     def _quantity_in_progress(self):
         res = super()._quantity_in_progress()
         qty_by_product_location, dummy = self.product_id._get_quantity_in_progress(self.location_id.ids)
         for orderpoint in self:
             product_qty = qty_by_product_location.get((orderpoint.product_id.id, orderpoint.location_id.id), 0.0)
-            product_uom_qty = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.product_uom, round=False)
+            product_uom_qty = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.uom_id, round=False)
             res[orderpoint.id] += product_uom_qty
         return res
 

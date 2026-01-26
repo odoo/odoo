@@ -29,9 +29,9 @@ class MrpUnbuild(models.Model):
         digits='Product Unit',
         compute='_compute_product_qty', store=True, precompute=True, readonly=False,
         required=True)
-    product_uom_id = fields.Many2one(
+    uom_id = fields.Many2one(
         'uom.uom', 'Unit',
-        compute='_compute_product_uom_id', store=True, readonly=False, precompute=True,
+        compute='_compute_uom_id', store=True, readonly=False, precompute=True,
         required=True)
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',
@@ -86,12 +86,12 @@ class MrpUnbuild(models.Model):
     )
 
     @api.depends('mo_id', 'product_id')
-    def _compute_product_uom_id(self):
+    def _compute_uom_id(self):
         for record in self:
             if record.mo_id.product_id and record.mo_id.product_id == record.product_id:
-                record.product_uom_id = record.mo_id.product_uom_id.id
+                record.uom_id = record.mo_id.uom_id.id
             else:
-                record.product_uom_id = record.product_id.uom_id.id
+                record.uom_id = record.product_id.uom_id.id
 
     @api.depends('company_id')
     def _compute_location_id(self):
@@ -146,7 +146,7 @@ class MrpUnbuild(models.Model):
             'lot_id': self.lot_id.id,
             'quantity': finished_move.product_uom_qty - finished_move.quantity,
             'product_id': finished_move.product_id.id,
-            'product_uom_id': finished_move.product_uom.id,
+            'uom_id': finished_move.uom_id.id,
             'location_id': finished_move.location_id.id,
             'location_dest_id': finished_move.location_dest_id.id,
         }
@@ -157,7 +157,7 @@ class MrpUnbuild(models.Model):
             'lot_id': origin_move_line.lot_id.id,
             'quantity': taken_quantity,
             'product_id': move.product_id.id,
-            'product_uom_id': origin_move_line.product_uom_id.id,
+            'uom_id': origin_move_line.uom_id.id,
             'location_id': move.location_id.id,
             'location_dest_id': move.location_dest_id.id,
         }
@@ -196,19 +196,19 @@ class MrpUnbuild(models.Model):
             raise UserError(error_message)
 
         for finished_move in finished_moves:
-            if float_compare(finished_move.product_uom_qty, finished_move.quantity, precision_rounding=finished_move.product_uom.rounding) > 0:
+            if float_compare(finished_move.product_uom_qty, finished_move.quantity, precision_rounding=finished_move.uom_id.rounding) > 0:
                 finished_move_line_vals = self._prepare_finished_move_line_vals(finished_move)
                 self.env['stock.move.line'].create(finished_move_line_vals)
 
         # TODO: Will fail if user do more than one unbuild with lot on the same MO. Need to check what other unbuild has aready took
         qty_already_used = defaultdict(float)
         for move in produce_moves | consume_moves:
-            if float_compare(move.product_uom_qty, move.quantity, precision_rounding=move.product_uom.rounding) < 1:
+            if float_compare(move.product_uom_qty, move.quantity, precision_rounding=move.uom_id.rounding) < 1:
                 continue
             original_move = move in produce_moves and self.mo_id.move_raw_ids or self.mo_id.move_finished_ids
             original_move = original_move.filtered(lambda m: m.product_id == move.product_id)
             if not original_move:
-                move.quantity = move.product_uom.round(move.product_uom_qty)
+                move.quantity = move.uom_id.round(move.product_uom_qty)
                 continue
             needed_quantity = move.product_uom_qty
             moves_lines = original_move.mapped('move_line_ids')
@@ -219,7 +219,7 @@ class MrpUnbuild(models.Model):
             for move_line in moves_lines:
                 # Iterate over all move_lines until we unbuilded the correct quantity.
                 taken_quantity = min(needed_quantity, move_line.quantity - qty_already_used[move_line])
-                taken_quantity = move.product_uom.round(taken_quantity)
+                taken_quantity = move.uom_id.round(taken_quantity)
                 if taken_quantity:
                     move_line_vals = self._prepare_move_line_vals(move, move_line, taken_quantity)
                     if move_line.owner_id:
@@ -238,7 +238,7 @@ class MrpUnbuild(models.Model):
         if self.mo_id:
             unbuild_msg = _("%(qty)s %(measure)s unbuilt in %(order)s",
                 qty=self.product_qty,
-                measure=self.product_uom_id.name,
+                measure=self.uom_id.name,
                 order=self._get_html_link(),
             )
             self.mo_id.message_post(
@@ -252,17 +252,17 @@ class MrpUnbuild(models.Model):
         for unbuild in self:
             if unbuild.mo_id:
                 finished_moves = unbuild.mo_id.move_finished_ids.filtered(lambda move: move.state == 'done')
-                factor = unbuild.product_qty / unbuild.mo_id.product_uom_id._compute_quantity(unbuild.mo_id.qty_produced, unbuild.product_uom_id)
+                factor = unbuild.product_qty / unbuild.mo_id.uom_id._compute_quantity(unbuild.mo_id.qty_produced, unbuild.uom_id)
                 for finished_move in finished_moves:
                     moves += unbuild._generate_move_from_existing_move(finished_move, factor, unbuild.location_id, finished_move.location_id)
             else:
-                factor = unbuild.product_uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.product_uom_id) / unbuild.bom_id.product_qty
-                moves += unbuild._generate_move_from_bom_line(self.product_id, self.product_uom_id, unbuild.product_qty)
+                factor = unbuild.uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.uom_id) / unbuild.bom_id.product_qty
+                moves += unbuild._generate_move_from_bom_line(self.product_id, self.uom_id, unbuild.product_qty)
                 for byproduct in unbuild.bom_id.byproduct_ids:
                     if byproduct._skip_byproduct_line(unbuild.product_id):
                         continue
                     quantity = byproduct.product_qty * factor
-                    moves += unbuild._generate_move_from_bom_line(byproduct.product_id, byproduct.product_uom_id, quantity, byproduct_id=byproduct.id)
+                    moves += unbuild._generate_move_from_bom_line(byproduct.product_id, byproduct.uom_id, quantity, byproduct_id=byproduct.id)
         return moves
 
     def _generate_produce_moves(self):
@@ -270,14 +270,14 @@ class MrpUnbuild(models.Model):
         for unbuild in self:
             if unbuild.mo_id:
                 raw_moves = unbuild.mo_id.move_raw_ids.filtered(lambda move: move.state == 'done')
-                factor = unbuild.product_qty / unbuild.mo_id.product_uom_id._compute_quantity(unbuild.mo_id.qty_produced, unbuild.product_uom_id)
+                factor = unbuild.product_qty / unbuild.mo_id.uom_id._compute_quantity(unbuild.mo_id.qty_produced, unbuild.uom_id)
                 for raw_move in raw_moves:
                     moves += unbuild._generate_move_from_existing_move(raw_move, factor, raw_move.location_dest_id, self.location_dest_id)
             else:
-                factor = unbuild.product_uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.product_uom_id) / unbuild.bom_id.product_qty
+                factor = unbuild.uom_id._compute_quantity(unbuild.product_qty, unbuild.bom_id.uom_id) / unbuild.bom_id.product_qty
                 boms, lines = unbuild.bom_id.explode(unbuild.product_id, factor, picking_type=unbuild.bom_id.picking_type_id)
                 for line, line_data in lines:
-                    moves += unbuild._generate_move_from_bom_line(line.product_id, line.product_uom_id, line_data['qty'], bom_line_id=line.id)
+                    moves += unbuild._generate_move_from_bom_line(line.product_id, line.uom_id, line_data['qty'], bom_line_id=line.id)
         return moves
 
     def _generate_move_from_existing_move(self, move, factor, location_id, location_dest_id):
@@ -285,7 +285,7 @@ class MrpUnbuild(models.Model):
             'date': self.create_date,
             'product_id': move.product_id.id,
             'product_uom_qty': move.quantity * factor,
-            'product_uom': move.product_uom.id,
+            'uom_id': move.uom_id.id,
             'procure_method': 'make_to_stock',
             'location_dest_id': location_dest_id.id,
             'location_id': location_id.id,
@@ -306,7 +306,7 @@ class MrpUnbuild(models.Model):
             'byproduct_id': byproduct_id,
             'product_id': product.id,
             'product_uom_qty': quantity,
-            'product_uom': product_uom.id,
+            'uom_id': product_uom.id,
             'procure_method': 'make_to_stock',
             'location_dest_id': location_dest_id.id,
             'location_id': location_id.id,
@@ -319,7 +319,7 @@ class MrpUnbuild(models.Model):
         self.ensure_one()
         precision = self.env['decimal.precision'].precision_get('Product Unit')
         available_qty = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, strict=True)
-        unbuild_qty = self.product_uom_id._compute_quantity(self.product_qty, self.product_id.uom_id)
+        unbuild_qty = self.uom_id._compute_quantity(self.product_qty, self.product_id.uom_id)
         if float_compare(available_qty, unbuild_qty, precision_digits=precision) >= 0:
             return self.action_unbuild()
         else:

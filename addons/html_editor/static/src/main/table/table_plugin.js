@@ -5,7 +5,6 @@ import {
     fillEmpty,
     fillShrunkPhrasingParent,
     removeClass,
-    splitTextNode,
 } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
@@ -240,22 +239,6 @@ export class TablePlugin extends Plugin {
 
     _insertTable({ rows = 2, cols = 2 } = {}) {
         const newTable = this.createTable({ rows, cols });
-        let sel = this.dependencies.selection.getEditableSelection();
-        if (!sel.isCollapsed) {
-            this.dependencies.delete.deleteSelection();
-        }
-        while (!isBlock(sel.anchorNode)) {
-            const anchorNode = sel.anchorNode;
-            const isTextNode = anchorNode.nodeType === Node.TEXT_NODE;
-            const newAnchorNode = isTextNode
-                ? splitTextNode(anchorNode, sel.anchorOffset, DIRECTIONS.LEFT) + 1 && anchorNode
-                : this.dependencies.split.splitElement(anchorNode, sel.anchorOffset).shift();
-            const newPosition = rightPos(newAnchorNode);
-            sel = this.dependencies.selection.setSelection(
-                { anchorNode: newPosition[0], anchorOffset: newPosition[1] },
-                { normalize: false }
-            );
-        }
         const [table] = this.dependencies.dom.insert(newTable);
         return table;
     }

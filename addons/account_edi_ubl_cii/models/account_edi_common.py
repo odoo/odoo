@@ -149,6 +149,8 @@ TAX_EXEMPTION_MAPPING = {
     'VATEX-EU-143-1J': 'Exempt based on article 143, section 1 (j) of Council Directive 2006/112/EC',
     'VATEX-EU-143-1K': 'Exempt based on article 143, section 1 (k) of Council Directive 2006/112/EC',
     'VATEX-EU-143-1L': 'Exempt based on article 143, section 1 (l) of Council Directive 2006/112/EC',
+    'VATEX-EU-144': 'Exempt based on article 144 of Council Directive 2006/112/EC',
+    'VATEX-EU-146-1E': 'Exempt based on article 146 section 1 (e) of Council Directive 2006/112/EC',
     'VATEX-EU-148': 'Exempt based on article 148 of Council Directive 2006/112/EC',
     'VATEX-EU-148-A': 'Exempt based on article 148, section (a) of Council Directive 2006/112/EC',
     'VATEX-EU-148-B': 'Exempt based on article 148, section (b) of Council Directive 2006/112/EC',
@@ -164,6 +166,8 @@ TAX_EXEMPTION_MAPPING = {
     'VATEX-EU-151-1C': 'Exempt based on article 151, section 1 (c) of Council Directive 2006/112/EC',
     'VATEX-EU-151-1D': 'Exempt based on article 151, section 1 (d) of Council Directive 2006/112/EC',
     'VATEX-EU-151-1E': 'Exempt based on article 151, section 1 (e) of Council Directive 2006/112/EC',
+    'VATEX-EU-153': 'Exempt based on article 153 of Council Directive 2006/112/EC',
+    'VATEX-EU-159': 'Exempt based on article 159 of Council Directive 2006/112/EC',
     'VATEX-EU-309': 'Exempt based on article 309 of Council Directive 2006/112/EC',
     'VATEX-EU-AE': 'Reverse charge',
     'VATEX-EU-D': 'Intra-Community acquisition from second hand means of transport',
@@ -175,6 +179,30 @@ TAX_EXEMPTION_MAPPING = {
     'VATEX-EU-J': 'Intra-Community acquisition of collectors items and antiques',
     'VATEX-FR-FRANCHISE': 'France domestic VAT franchise in base',
     'VATEX-FR-CNWVAT': 'France domestic Credit Notes without VAT, due to supplier forfeit of VAT for discount',
+    'VATEX-FR-CGI261-1': 'Exempt based on 1 of article 261 of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261-2': 'Exempt based on 2 of article 261 of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261-3': 'Exempt based on 3 of article 261 of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261-4': 'Exempt based on 4 of article 261 of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261-5': 'Exempt based on 5 of article 261 of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261-7': 'Exempt based on 7 of article 261 of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261-8': 'Exempt based on 8 of article 261 of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261A': 'Exempt based on article 261 A of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261B': 'Exempt based on article 261 B of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261C-1': 'Exempt based on 1° of article 261 C of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261C-2': 'Exempt based on 2° of article 261 C of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261C-3': 'Exempt based on 3° of article 261 C of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261D-1': 'Exempt based on 1° of article 261 D of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261D-1BIS': 'Exempt based on 1°bis of article 261 D of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261D-2': 'Exempt based on 2° of article 261 D of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261D-3': 'Exempt based on 3° of article 261 D of the Code Général des Impôts (CGI ; General tax code) Exonération de TVA - Article 261 D-3° du Code Général des Impôts',
+    'VATEX-FR-CGI261D-4': 'Exempt based on 4° of article 261 D of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261E-1': 'Exempt based on 1° of article 261 E of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI261E-2': 'Exempt based on 2° of article 261 E of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI277A': 'Exempt based on article 277 A of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI275': 'Exempt based on article 275 of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-298SEXDECIESA': 'Exempt based on article 298 sexdecies A of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-CGI295': 'Exempt based on article 295 of the Code Général des Impôts (CGI ; General tax code)',
+    'VATEX-FR-AE': 'Exempt based on 2 of article 283 of the Code Général des Impôts (CGI ; General tax code)',
 }
 
 # -------------------------------------------------------------------------
@@ -877,6 +905,40 @@ class AccountEdiCommon(models.AbstractModel):
             **deferred_values,
         }
 
+    @api.model
+    def _retrieve_rebate_val(self, tree, xpath_dict, quantity):
+        # Discount. /!\ as no percent discount can be set on a line, need to infer the percentage
+        # from the amount of the actual amount of the discount (the allowance charge)
+        rebate = 0
+        rebate_node = tree.find(xpath_dict['rebate'])
+        net_price_unit_node = tree.find(xpath_dict['net_price_unit'])
+        gross_price_unit_node = tree.find(xpath_dict['gross_price_unit'])
+        if rebate_node is not None:
+            rebate = float(rebate_node.text)
+        elif net_price_unit_node is not None and gross_price_unit_node is not None:
+            rebate = float(gross_price_unit_node.text) - float(net_price_unit_node.text)
+        return rebate
+
+    @api.model
+    def _retrieve_charge_allowance_vals(self, tree, xpath_dict, quantity):
+        charges = []
+        discount_amount = 0
+        for allowance_charge_node in tree.iterfind(xpath_dict['allowance_charge']):
+            charge_indicator = allowance_charge_node.findtext(xpath_dict['allowance_charge_indicator'])
+            amount = float(allowance_charge_node.findtext(xpath_dict['allowance_charge_amount'], default='0'))
+            reason_code = allowance_charge_node.findtext(xpath_dict['allowance_charge_reason_code'], default='')
+            reason = allowance_charge_node.findtext(xpath_dict['allowance_charge_reason'], default='')
+            if charge_indicator.lower() == 'true':
+                charges.append({
+                    'amount': amount,
+                    'line_quantity': quantity,
+                    'reason': reason,
+                    'reason_code': reason_code,
+                })
+            else:
+                discount_amount += amount
+        return discount_amount, charges
+
     def _retrieve_line_vals(self, record, tree, document_type=False, qty_factor=1):
         """
         Read the xml invoice, extract the invoice line values, compute the odoo values
@@ -927,19 +989,9 @@ class AccountEdiCommon(models.AbstractModel):
         if gross_price_unit_node is not None:
             gross_price_unit = float(gross_price_unit_node.text)
 
-        # rebate (optional)
-        # Discount. /!\ as no percent discount can be set on a line, need to infer the percentage
-        # from the amount of the actual amount of the discount (the allowance charge)
-        rebate = 0
-        rebate_node = tree.find(xpath_dict['rebate'])
-        net_price_unit_node = tree.find(xpath_dict['net_price_unit'])
-        if rebate_node is not None:
-            rebate = float(rebate_node.text)
-        elif net_price_unit_node is not None and gross_price_unit_node is not None:
-            rebate = float(gross_price_unit_node.text) - float(net_price_unit_node.text)
-
         # net_price_unit (mandatory)
         net_price_unit = None
+        net_price_unit_node = tree.find(xpath_dict['net_price_unit'])
         if net_price_unit_node is not None:
             net_price_unit = float(net_price_unit_node.text)
 
@@ -971,23 +1023,11 @@ class AccountEdiCommon(models.AbstractModel):
         # quantity
         quantity = delivered_qty * qty_factor
 
+        # rebate (optional)
+        rebate = self._retrieve_rebate_val(tree, xpath_dict, quantity)
+
         # Charges are collected (they are used to create new lines), Allowances are transformed into discounts
-        charges = []
-        discount_amount = 0
-        for allowance_charge_node in tree.iterfind(xpath_dict['allowance_charge']):
-            charge_indicator = allowance_charge_node.findtext(xpath_dict['allowance_charge_indicator'])
-            amount = float(allowance_charge_node.findtext(xpath_dict['allowance_charge_amount'], default='0'))
-            reason_code = allowance_charge_node.findtext(xpath_dict['allowance_charge_reason_code'], default='')
-            reason = allowance_charge_node.findtext(xpath_dict['allowance_charge_reason'], default='')
-            if charge_indicator.lower() == 'true':
-                charges.append({
-                    'amount': amount,
-                    'line_quantity': quantity,
-                    'reason': reason,
-                    'reason_code': reason_code,
-                })
-            else:
-                discount_amount += amount
+        discount_amount, charges = self._retrieve_charge_allowance_vals(tree, xpath_dict, quantity)
 
         # price_unit
         charge_amount = sum(d['amount'] for d in charges)

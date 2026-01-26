@@ -152,7 +152,7 @@
 
                                     <div
                                         class="o_wsale_product_details_content_section o_wsale_product_details_content_section_accordion mb-4"
-                                        t-if="is_view_active('website_sale_comparison.accordion_specs_item') or is_view_active('website_sale.accordion_more_information')"
+                                        t-if="is_view_active('website_sale.accordion_specs_item') or is_view_active('website_sale.accordion_more_information')"
                                     >
                                         <t t-call="website_sale.product_accordion"/>
                                     </div>
@@ -683,7 +683,7 @@
 
     <template id="website_sale.product_accordion" name="Accordion On Product Page">
         <div
-            t-if="is_view_active('website_sale_comparison.accordion_specs_item')
+            t-if="is_view_active('website_sale.accordion_specs_item')
                   or is_view_active('website_sale.accordion_more_information')"
             id="product_accordion"
             class="o_accordion_not_initialized accordion accordion-flush my-4"
@@ -1252,6 +1252,210 @@
                 </p>
             </t>
         </xpath>
+    </template>
+
+    <template
+        id="product_add_to_compare"
+        name="Add to comparison in product page"
+        inherit_id="website_sale.cta_wrapper"
+        priority="8"
+    >
+        <xpath expr="//div[@id='product_option_block']" position="inside">
+            <t t-if="product._can_be_added_to_comparison()">
+                <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
+                <t
+                    t-set="_button_classes"
+                    t-valuef="o_add_compare_dyn btn btn-outline-primary order-last flex-grow-1 flex-sm-grow-0"
+                />
+                <t
+                    t-if="not is_view_active('website_sale.product_add_to_wishlist') and not is_view_active('website_sale.cta_wrapper_default')"
+                    t-set="_button_classes"
+                    t-value="_button_classes + ' w-100'"
+                />
+                <t
+                    t-if="is_view_active('website_sale.cta_wrapper_large')"
+                    t-set="_button_classes"
+                    t-value="_button_classes + ' btn-lg px-lg-0'"
+                />
+                <button
+                    t-if="product_variant"
+                    t-att-class="_button_classes"
+                    aria-label="Add to compare"
+                    title="Add to compare"
+                    t-att-data-product-id="product_variant.id"
+                    t-att-data-product-template-id="product.id"
+                >
+                    <span class="fa fa-exchange"/>
+                    <span t-att-class="'d-inline ms-2' + (' d-lg-none' if website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) or is_view_active('website_sale.product_add_to_wishlist') else '')">Add to compare</span>
+                </button>
+            </t>
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale.product_add_to_wishlist"
+        inherit_id="website_sale.cta_wrapper"
+        name="Wishlist Button"
+        priority="20"
+    >
+        <xpath expr="//div[@id='product_option_block']" position="inside">
+            <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
+            <t
+                t-set="_button_classes"
+                t-valuef="o_add_wishlist_dyn btn btn-outline-primary text-nowrap"
+            />
+            <t
+                t-if="website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large'))"
+                t-set="_button_classes"
+                t-value="_button_classes + ' flex-grow-1 flex-sm-grow-0'"
+            />
+            <t
+                t-else=""
+                t-set="_button_classes"
+                t-value="_button_classes + ' flex-grow-1'"
+            />
+            <t
+                t-if="is_view_active('website_sale.cta_wrapper_large')"
+                t-set="_button_classes"
+                t-value="_button_classes + ' btn-lg px-lg-0'"
+            />
+            <button
+                t-if="product_variant"
+                t-att-class="_button_classes"
+                t-att-disabled="product_variant._is_in_wishlist()"
+                t-att-data-product-id="product_variant.id"
+                t-att-data-product-template-id="product.id"
+                title="Add to wishlist"
+            >
+                <i class="fa fa-heart-o me-2 me-lg-0" role="img" aria-label="Add to wishlist"/>
+                <t
+                    t-set="_span_classes"
+                    t-valuef="d-inline"
+                />
+                <t
+                    t-if="website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large'))"
+                    t-set="_span_classes"
+                    t-value="_span_classes + ' d-lg-none'"
+                />
+                <span t-att-class="_span_classes">Add to wishlist</span>
+            </button>
+        </xpath>
+    </template>
+
+    <template id="product_attributes_body" inherit_id="website_sale.product" name="Product attributes table">
+        <xpath expr="//div[@id='product_attributes_simple']" position="replace"/>
+        <xpath expr="//div[@id='product_full_description']" position="after">
+            <t t-set="attrib_categories" t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"/>
+            <t t-if="attrib_categories">
+                <section class="pt32 pb32" id="product_full_spec">
+                    <div class="container">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="m-0 h3">Specifications</h2>
+                        </div>
+                        <div id="product_specifications">
+                            <div class="row">
+                                <t t-foreach="attrib_categories" t-as="category">
+                                    <div class="col-lg-6">
+                                        <t t-call="website_sale.specifications_table"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale.accordion_specs_item"
+        name="Specifications Accordion Item"
+        inherit_id="website_sale.product_accordion"
+        active="False"
+    >
+        <xpath expr="//div[@id='more_information_accordion_item']" position="before">
+            <t
+                t-set="attrib_categories"
+                t-value="product.valid_product_template_attribute_line_ids._prepare_categories_for_display()"
+            />
+            <t t-if="attrib_categories">
+                <t t-foreach="attrib_categories" t-as="category">
+                    <div class="accordion-item">
+                        <div class="accordion-header my-0 h6">
+                            <button
+                                t-out="category.name"
+                                class="accordion-button collapsed fw-medium"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                t-attf-data-bs-target="#category_accordion_{{category_index}}"
+                                aria-expanded="false"
+                                aria-controls="specifications"
+                            >
+                                <t t-if="category_size == 1">Specifications</t>
+                                <t t-else="">Others</t>
+                            </button>
+                        </div>
+                        <div
+                            t-attf-id="category_accordion_{{category_index}}"
+                            class="accordion-collapse collapse"
+                            data-bs-parent="#product_accordion"
+                        >
+                            <div class="accordion-body pt-0">
+                                <t t-call="website_sale.specifications_table" is_accordion="True"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="specifications_table" name="Specifications Table">
+        <table t-attf-class="table {{is_accordion and 'table-sm mb-0'}}">
+            <t t-if="len(attrib_categories) > 1 and not is_accordion">
+                <tr>
+                    <th class="text-start" colspan="2">
+                        <span t-if="category" t-field="category.name"/>
+                        <span t-else="">Others</span>
+                    </th>
+                </tr>
+            </t>
+            <tr
+                t-foreach="attrib_categories[category].filtered(lambda l: len(l.value_ids) > 1)"
+                t-as="ptal"
+            >
+                <t
+                    t-set="hide_border_bottom_classes"
+                    t-value="'border-bottom-0' if ptal_last and is_accordion else ''"
+                />
+                <td t-attf-class="w-25 {{hide_border_bottom_classes}} ps-0">
+                    <span t-field="ptal.attribute_id.name"/>
+                </td>
+                <td t-attf-class="w-75 {{hide_border_bottom_classes}} pe-0 text-muted text-end">
+                    <t t-foreach="ptal.value_ids" t-as="pav">
+                        <span t-field="pav.name"/><t t-if="not pav_last">, </t>
+                    </t>
+                </td>
+            </tr>
+            <t
+                t-set="single_value_attributes"
+                t-value="attrib_categories[category]._prepare_single_value_for_display()"
+            />
+            <tr t-foreach="single_value_attributes" t-as="attribute">
+                <t
+                    t-set="hide_border_bottom_classes"
+                    t-value="'border-bottom-0' if attribute_last and is_accordion else ''"
+                />
+                <td t-attf-class="w-25 {{hide_border_bottom_classes}} ps-0 ">
+                    <span t-field="attribute.name"/>
+                </td>
+                <td t-attf-class="w-75 {{hide_border_bottom_classes}} pe-0 text-muted text-end">
+                    <t t-foreach="single_value_attributes[attribute]" t-as="ptal">
+                        <span t-field="ptal.product_template_value_ids._only_active().name"/><t t-if="not ptal_last">, </t>
+                    </t>
+                </td>
+            </tr>
+        </table>
     </template>
 
 </odoo>

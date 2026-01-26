@@ -52,7 +52,7 @@ class ReportStockReport_Reception(models.AbstractModel):
         for move in move_ids:
             move_quantity = (
                 move.product_qty or
-                move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
+                move.uom_id._compute_quantity(move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
             )
             qty_already_assigned = 0
             if move.move_dest_ids:
@@ -106,7 +106,7 @@ class ReportStockReport_Reception(models.AbstractModel):
                 qty_to_reserve = out.product_qty
                 product_uom = out.product_id.uom_id
                 if 'done' not in doc_states and out.state == 'partially_available':
-                    qty_to_reserve -= out.product_uom._compute_quantity(out.quantity, product_uom)
+                    qty_to_reserve -= out.uom_id._compute_quantity(out.quantity, product_uom)
                 moves_in_ids = []
                 quantity = 0
                 for move_in_qty, move_in in product_to_qty_to_assign[out.product_id]:
@@ -251,15 +251,15 @@ class ReportStockReport_Reception(models.AbstractModel):
                         if assigned_amount + move_line_id.quantity_product_uom > qty_to_link:
                             new_move_line = move_line_id.copy({'quantity': 0})
                             new_move_line.quantity = move_line_id.quantity
-                            move_line_id.quantity = out.product_id.uom_id._compute_quantity(qty_to_link - assigned_amount, out.product_uom, rounding_method='HALF-UP')
-                            new_move_line.quantity -= out.product_id.uom_id._compute_quantity(move_line_id.quantity_product_uom, out.product_uom, rounding_method='HALF-UP')
+                            move_line_id.quantity = out.product_id.uom_id._compute_quantity(qty_to_link - assigned_amount, out.uom_id, rounding_method='HALF-UP')
+                            new_move_line.quantity -= out.product_id.uom_id._compute_quantity(move_line_id.quantity_product_uom, out.uom_id, rounding_method='HALF-UP')
                         move_line_id.move_id = out
                         assigned_amount += move_line_id.quantity_product_uom
                         if out.product_id.uom_id.compare(assigned_amount, qty_to_link) == 0:
                             break
 
             for in_move in reversed(potential_ins):
-                move_quantity = in_move.product_qty or in_move.product_uom._compute_quantity(in_move.quantity, in_move.product_id.uom_id, rounding_method='HALF-UP')
+                move_quantity = in_move.product_qty or in_move.uom_id._compute_quantity(in_move.quantity, in_move.product_id.uom_id, rounding_method='HALF-UP')
                 quantity_remaining = move_quantity - sum(in_move.move_dest_ids.mapped('product_qty'))
                 if in_move.product_id != out.product_id or in_move.product_id.uom_id.compare(0, quantity_remaining) >= 0:
                     # in move is already completely linked (e.g. during another assign click) => don't count it again
@@ -293,7 +293,7 @@ class ReportStockReport_Reception(models.AbstractModel):
         for in_move in ins:
             if out.id not in in_move.move_dest_ids.ids:
                 continue
-            move_quantity = in_move.product_qty or in_move.product_uom._compute_quantity(in_move.quantity, in_move.product_id.uom_id, rounding_method='HALF-UP')
+            move_quantity = in_move.product_qty or in_move.uom_id._compute_quantity(in_move.quantity, in_move.product_id.uom_id, rounding_method='HALF-UP')
             in_move.move_dest_ids -= out
             self._action_unassign(in_move, out)
             amount_unassigned += min(qty, move_quantity)
@@ -321,7 +321,7 @@ class ReportStockReport_Reception(models.AbstractModel):
                             break
                         if move_line_id.quantity_product_uom > reserved_amount_to_remain:
                             new_move_line = move_line_id.copy({'quantity': 0})
-                            new_move_line.quantity = out.product_id.uom_id._compute_quantity(move_line_id.quantity_product_uom - reserved_amount_to_remain, move_line_id.product_uom_id, rounding_method='HALF-UP')
+                            new_move_line.quantity = out.product_id.uom_id._compute_quantity(move_line_id.quantity_product_uom - reserved_amount_to_remain, move_line_id.uom_id, rounding_method='HALF-UP')
                             move_line_id.quantity -= new_move_line.quantity
                             move_line_id.move_id = out
                             break

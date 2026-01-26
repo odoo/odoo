@@ -10,7 +10,7 @@
                         <div class="category_list d-flex mw-100 mx-kiosk-p-auto py-3 px-kiosk-p-4 gap-0 gap-kiosk-p-3 overflow-x-auto overflow-y-hidden position-relative" t-ref="category_list">
                             <t t-foreach="state.topCategories" t-as="category" t-key="category.id">
                                 <t t-set="isSelectedCategory" t-value="category === topSelectedCategory"/>
-                                <button t-on-click="() => this.selectCategory(category)" role="button" class="category_btn btn d-flex flex-column align-items-center p-0 border-0 "  t-att-data-category-pill="category.id">
+                                <button t-on-click="() => this.selectCategory(category)" class="category_btn btn d-flex flex-column align-items-center p-0 border-0 "  t-att-data-category-pill="category.id">
                                     <img class="d-none d-kiosk-p-block mb-2 rounded-4 object-fit-cover transition-base" style="height: 110px; width: 110px;" t-attf-src="/web/image/pos.category/#{category.id}/image_128?unique=#{category.write_date}" draggable="false"/>
                                     <div class="text-nowrap fw-medium rounded-pill px-3 py-1 d-flex align-items-center" t-att-class="{'text-bg-primary btn border-0': isSelectedCategory}" >
                                        <span class="text-nowrap fw-medium" t-esc="category.name" />
@@ -34,12 +34,12 @@
                     <div class="container o_self_container px-kiosk-p-0 d-flex">
                         <div class="category_list d-flex mw-100 mx-kiosk-p-auto py-3 px-kiosk-p-4 gap-0 gap-kiosk-p-3 overflow-x-auto overflow-y-hidden" t-ref="sub_category_list">
                             <t t-set="isAllSelected" t-value="!selectedCategory.parent_id "/>
-                            <button t-on-click="() => this.selectCategory(topSelectedCategory)" role="button" class="child_category_btn child_category_all btn px-3 py-1 rounded-pill border-0" t-att-class="{'btn-light': isAllSelected, 'btn-link text-reset': !isAllSelected}" >
+                            <button t-on-click="() => this.selectCategory(topSelectedCategory)" class="child_category_btn child_category_all btn px-3 py-1 rounded-pill border-0" t-att-class="{'btn-light': isAllSelected, 'btn-link text-reset': !isAllSelected}" >
                                 All
                             </button>
                             <t t-foreach="state.subCategories" t-as="child_category" t-key="child_category.id">
                                 <t t-set="isSelectedChildCategory" t-value="child_category === selectedCategory "/>
-                                <button t-on-click="() => this.selectCategory(child_category)" role="button" class="child_category_btn btn d-flex align-items-center gap-2 px-3 py-1 rounded-pill border-0" t-att-class="{'btn-light': isSelectedChildCategory, 'btn-link text-reset': !isSelectedChildCategory}">
+                                <button t-on-click="() => this.selectCategory(child_category)" class="child_category_btn btn d-flex align-items-center gap-2 px-3 py-1 rounded-pill border-0" t-att-class="{'btn-light': isSelectedChildCategory, 'btn-link text-reset': !isSelectedChildCategory}">
                                     <img class="d-none d-kiosk-p-block object-cover flex-shrink-0 rounded-3 my-1" t-attf-src="/web/image/pos.category/#{child_category.id}/image_128?unique=#{child_category.write_date}" draggable="false"/>
                                     <span class="text-nowrap" t-esc="child_category.name"/>
                                 </button>

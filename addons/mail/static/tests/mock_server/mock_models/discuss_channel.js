@@ -297,60 +297,6 @@ export class DiscussChannel extends models.ServerModel {
         return data;
     }
 
-    /** @param {number[]} ids */
-    channel_fetched(ids) {
-        const kwargs = getKwArgs(arguments, "ids");
-        ids = kwargs.ids;
-        delete kwargs.ids;
-
-        /** @type {import("mock_models").BusBus} */
-        const BusBus = this.env["bus.bus"];
-        /** @type {import("mock_models").DiscussChannelMember} */
-        const DiscussChannelMember = this.env["discuss.channel.member"];
-        /** @type {import("mock_models").MailMessage} */
-        const MailMessage = this.env["mail.message"];
-
-        const channels = this.browse(ids);
-        for (const channel of channels) {
-            if (!["chat", "whatsapp"].includes(channel.channel_type)) {
-                continue;
-            }
-            const channelMessages = MailMessage._filter([
-                ["model", "=", "discuss.channel"],
-                ["res_id", "=", channel.id],
-            ]);
-            const lastMessage = channelMessages.reduce((lastMessage, message) => {
-                if (message.id > lastMessage.id) {
-                    return message;
-                }
-                return lastMessage;
-            }, channelMessages[0]);
-            if (!lastMessage) {
-                continue;
-            }
-            const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
-            DiscussChannelMember.write([memberOfCurrentUser.id], {
-                fetched_message_id: lastMessage.id,
-            });
-            BusBus._sendone(
-                channel,
-                "mail.record/insert",
-                new mailDataHelpers.Store()
-                    .add(
-                        DiscussChannelMember.browse(memberOfCurrentUser.id),
-                        makeKwArgs({
-                            fields: [
-                                "channel_id",
-                                "fetched_message_id",
-                                ...DiscussChannelMember._to_store_persona([]),
-                            ],
-                        })
-                    )
-                    .get_result()
-            );
-        }
-    }
-
     /**
      * @param {number[]} partners_to
      */

@@ -22,8 +22,8 @@ class ProductSupplierinfo(models.Model):
         help="This vendor's product code will be used when printing a request for quotation. Keep empty to use the internal one.")
     sequence = fields.Integer(
         'Sequence', default=1, help="Assigns the priority to the list of product vendor.")
-    product_uom_id = fields.Many2one(
-        'uom.uom', 'Unit', compute='_compute_product_uom_id', store=True, readonly=False, required=True, precompute=True)
+    uom_id = fields.Many2one(
+        'uom.uom', 'Unit', compute='_compute_uom_id', store=True, readonly=False, required=True, precompute=True)
     min_qty = fields.Float(
         'Quantity', default=1.0, required=True, digits="Product Unit",
         help="The quantity to purchase from this vendor to benefit from the unit price. If a vendor unit is set, quantity should be specified in this unit, otherwise it should be specified in the default unit of the product.")
@@ -57,10 +57,10 @@ class ProductSupplierinfo(models.Model):
         readonly=False)
 
     @api.depends('product_id', 'product_tmpl_id')
-    def _compute_product_uom_id(self):
+    def _compute_uom_id(self):
         for rec in self:
-            if not rec.product_uom_id:
-                rec.product_uom_id = rec.product_id.uom_id if rec.product_id else rec.product_tmpl_id.uom_id
+            if not rec.uom_id:
+                rec.uom_id = rec.product_id.uom_id if rec.product_id else rec.product_tmpl_id.uom_id
 
     @api.depends('product_id', 'product_tmpl_id')
     def _compute_price(self):
@@ -71,7 +71,7 @@ class ProductSupplierinfo(models.Model):
     def _compute_price_discounted(self):
         for rec in self:
             product_uom = (rec.product_id or rec.product_tmpl_id).uom_id
-            rec.price_discounted = rec.product_uom_id._compute_price(rec.price, product_uom) * (1 - rec.discount / 100)
+            rec.price_discounted = rec.uom_id._compute_price(rec.price, product_uom) * (1 - rec.discount / 100)
 
     @api.depends('product_id')
     def _compute_product_tmpl_id(self):

@@ -2924,7 +2924,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(record_bin_size.image_256, b'424.00 bytes')
         # non-attachment binary fields: value returned as str in a different
         # form, because coming from PostgreSQL instead of filestore
-        self.assertEqual(record_bin_size.image_64, '148 bytes')
+        self.assertEqual(record_bin_size.image_64, '111 bytes')
 
         # ensure image_data_uri works (value must be bytes and not string)
         self.assertEqual(record.image_256[:8], b'iVBORw0K')
@@ -2991,16 +2991,6 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         assertBinaryValue(record, binary_value)
         assertBinaryValue(record_no_bin_size, binary_value)
         assertBinaryValue(record_bin_size, binary_size)
-
-        # check computed binary field with arbitrary Python value
-        record = self.env['test_orm.model_binary'].create({})
-        record_no_bin_size = record.with_context(bin_size=False)
-        record_bin_size = record.with_context(bin_size=True)
-
-        expected_value = [(record.id, False)]
-        self.assertEqual(record.binary_computed, expected_value)
-        self.assertEqual(record_no_bin_size.binary_computed, expected_value)
-        self.assertEqual(record_bin_size.binary_computed, expected_value)
 
     def test_95_binary_bin_size_write(self):
         binary_value = base64.b64encode(b'content')

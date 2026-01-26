@@ -27,7 +27,7 @@ class TestStockLandedCostsLots(TestLotValuation):
             'move_ids': [Command.create({
                 'product_id': self.product1.id,
                 'product_uom_qty': 15,
-                'product_uom': self.ref('uom.product_uom_unit'),
+                'uom_id': self.ref('uom.product_uom_unit'),
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.env.ref('stock.stock_location_stock').id,
                 'price_unit': 10,
@@ -45,7 +45,7 @@ class TestStockLandedCostsLots(TestLotValuation):
             'move_ids': [Command.create({
                 'product_id': product2.id,
                 'product_uom_qty': 10,
-                'product_uom': self.ref('uom.product_uom_unit'),
+                'uom_id': self.ref('uom.product_uom_unit'),
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.env.ref('stock.stock_location_stock').id,
                 'price_unit': 11,
@@ -142,7 +142,7 @@ class TestStockLandedCostsLots(TestLotValuation):
             'move_ids': [Command.create({
                 'product_id': product1.id,
                 'product_uom_qty': 5,
-                'product_uom': self.ref('uom.product_uom_unit'),
+                'uom_id': self.ref('uom.product_uom_unit'),
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.env.ref('stock.stock_location_stock').id,
                 'price_unit': 10000,

@@ -3,7 +3,7 @@ export const purchaseForm = {
         const fieldAndLabelDict = {
             product: { fieldName: "product_id", label: "product" },
             quantity: { fieldName: "product_qty", label: "quantity" },
-            unit: { fieldName: "product_uom_id", label: "unit of measure" },
+            unit: { fieldName: "uom_id", label: "unit of measure" },
             unitPrice: { fieldName: "price_unit", label: "unit price" },
             discount: { fieldName: "discount", label: "discount" },
             totalPrice: { fieldName: "price_subtotal", label: "subtotal price" },

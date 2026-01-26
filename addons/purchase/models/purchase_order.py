@@ -137,7 +137,7 @@ class PurchaseOrder(models.Model):
     date_calendar_start = fields.Datetime(compute='_compute_date_calendar_start', readonly=True, store=True)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=True)
-    tax_totals = fields.Binary(compute='_compute_tax_totals', exportable=False)
+    tax_totals = fields.Json(compute='_compute_tax_totals', exportable=False)
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
     amount_total_cc = fields.Monetary(string="Total in currency", store=True, readonly=True, compute="_amount_all", currency_field="company_currency_id")
@@ -281,13 +281,14 @@ class PurchaseOrder(models.Model):
             base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
             AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
             AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
-            order.tax_totals = AccountTax._get_tax_totals_summary(
+            tax_totals = AccountTax._get_tax_totals_summary(
                 base_lines=base_lines,
                 currency=order.currency_id or order.company_id.currency_id,
                 company=order.company_id,
             )
             if order.currency_id != order.company_currency_id:
-                order.tax_totals['amount_total_cc'] = f"({formatLang(self.env, order.amount_total_cc, currency_obj=order.company_currency_id)})"
+                tax_totals['amount_total_cc'] = f"({formatLang(self.env, order.amount_total_cc, currency_obj=order.company_currency_id)})"
+            order.tax_totals = tax_totals
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
@@ -723,9 +724,9 @@ class PurchaseOrder(models.Model):
             if line.product_id and not already_seller and len(line.product_id.seller_ids) <= 10:
                 price = line.price_unit
                 # Compute the price for the template's UoM, because the supplier's UoM is related to that UoM.
-                if line.product_id.product_tmpl_id.uom_id != line.product_uom_id:
+                if line.product_id.product_tmpl_id.uom_id != line.uom_id:
                     default_uom = line.product_id.product_tmpl_id.uom_id
-                    price = line.product_uom_id._compute_price(price, default_uom)
+                    price = line.uom_id._compute_price(price, default_uom)
 
                 supplierinfo = self._prepare_supplier_info(partner, line, price, line.currency_id)
                 # In case the order partner is a contact address, a new supplierinfo is created on
@@ -733,7 +734,7 @@ class PurchaseOrder(models.Model):
                 if line.selected_seller_id:
                     supplierinfo['product_name'] = line.selected_seller_id.product_name
                     supplierinfo['product_code'] = line.selected_seller_id.product_code
-                    supplierinfo['product_uom_id'] = line.product_uom.id
+                    supplierinfo['uom_id'] = line.uom_id.id
                 vals = {
                     'seller_ids': [(0, 0, supplierinfo)],
                 }
@@ -896,7 +897,7 @@ class PurchaseOrder(models.Model):
                 for rfq_line in rfqs.order_line:
                     existing_line = oldest_rfq.order_line.filtered(lambda l: l.display_type not in ['line_section', 'line_subsection', 'line_note'] and
                                                                                 l.product_id == rfq_line.product_id and
-                                                                                l.product_uom_id == rfq_line.product_uom_id and
+                                                                                l.uom_id == rfq_line.uom_id and
                                                                                 l.analytic_distribution == rfq_line.analytic_distribution and
                                                                                 l.discount == rfq_line.discount and
                                                                                 abs(l.date_planned - rfq_line.date_planned).total_seconds() <= 86400  # 24 hours in seconds
@@ -1249,15 +1250,15 @@ class PurchaseOrder(models.Model):
             price = seller.price_discounted
             if seller.currency_id != self.currency_id:
                 price = seller.currency_id._convert(price, self.currency_id)
-            if seller.product_uom_id != product_uom:
+            if seller.uom_id != product_uom:
                 # The discounted price is expressed in the product's UoM, not in the vendor
                 # price's UoM, so we need to convert it into to match the displayed UoM.
-                price = product_uom._compute_price(price, seller.product_uom_id)
-                product_infos.update(uomFactor=seller.product_uom_id.factor / product_uom.factor)
+                price = product_uom._compute_price(price, seller.uom_id)
+                product_infos.update(uomFactor=seller.uom_id.factor / product_uom.factor)
             product_infos.update(
                 price=price,
                 min_qty=seller.min_qty,
-                uomDisplayName=seller.product_uom_id.display_name,
+                uomDisplayName=seller.uom_id.display_name,
             )
 
         return product_infos

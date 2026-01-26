@@ -12,7 +12,7 @@
 
         <record id="mrp_production_drawer_1" model="mrp.production">
             <field name="product_id" ref="product.product_product_27"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="product_qty">5</field>
             <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_stock"/>
@@ -20,7 +20,7 @@
         </record>
         <record id="mrp_production_dinning_table_2" model="mrp.production">
             <field name="product_id" ref="project_mrp_account.product_product_dinning_table"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="product_qty">5</field>
             <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_stock"/>

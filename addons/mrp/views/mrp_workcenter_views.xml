@@ -346,7 +346,7 @@
                                     <list editable="bottom">
                                         <field name="product_id" widget="stock.forced_placeholder" placeholder="All Products" decoration-it="not product_id"/>
                                         <field name="capacity"/>
-                                        <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom" readonly="product_id != False"/>
+                                        <field name="uom_id" groups="uom.group_uom" widget="many2one_uom" readonly="product_id != False"/>
                                         <field name="time_start" widget="float_time"/>
                                         <field name="time_stop" widget="float_time"/>
                                     </list>

@@ -160,5 +160,3 @@ class ResUsers(models.Model):
                 "is_livechat_manager",
                 lambda u: u.has_group("im_livechat.im_livechat_group_manager"),
             )
-        if self.env.user.has_access_livechat:
-            res.many("livechat_expertise_ids", ["name"])

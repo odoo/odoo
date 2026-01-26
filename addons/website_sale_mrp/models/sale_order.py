@@ -31,14 +31,14 @@ class SaleOrder(models.Model):
                 if not bom_line.product_id.is_storable:
                     # Relevant only for storable components.
                     continue
-                if float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
+                if float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.uom_id.rounding):
                     # As BoMs allow components with a quantity of 0 (i.e., optional components), we
                     # skip those to avoid a division by zero.
                     continue
                 component = bom_line.product_id
                 unavailable_component_qties[component] = sum(self.order_line.filtered(lambda sol: sol.product_id == component).mapped('product_uom_qty'))
                 uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit[component] += bom_line.product_uom_id._compute_quantity(uom_qty_per_kit / kit_bom.product_qty, component.uom_id, round=False)
+                qty_per_kit[component] += bom_line.uom_id._compute_quantity(uom_qty_per_kit / kit_bom.product_qty, component.uom_id, round=False)
 
         for line in self.order_line:
             if not line.product_id.is_kits or line.product_id == product:

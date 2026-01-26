@@ -34,7 +34,7 @@ class TestCreatePicking(ProductVariantsCommon):
                     'name': cls.product_id_1.name,
                     'product_id': cls.product_id_1.id,
                     'product_qty': 5.0,
-                    'product_uom_id': cls.product_id_1.uom_id.id,
+                    'uom_id': cls.product_id_1.uom_id.id,
                     'price_unit': 500.0,
                 })],
         }
@@ -66,7 +66,7 @@ class TestCreatePicking(ProductVariantsCommon):
                 'name': self.product_id_2.name,
                 'product_id': self.product_id_2.id,
                 'product_qty': 5.0,
-                'product_uom_id': self.product_id_2.uom_id.id,
+                'uom_id': self.product_id_2.uom_id.id,
                 'price_unit': 250.0,
                 })]})
         self.assertEqual(self.po.incoming_picking_count, 2, 'New picking should be created')
@@ -127,7 +127,7 @@ class TestCreatePicking(ProductVariantsCommon):
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 100.0,
             'procure_method': 'make_to_order',
             'picking_type_id': picking_type_out.id,
@@ -156,7 +156,7 @@ class TestCreatePicking(ProductVariantsCommon):
                     'name': product.name,
                     'product_id': product.id,
                     'product_qty': 100.0,
-                    'product_uom_id': product.uom_id.id,
+                    'uom_id': product.uom_id.id,
                     'price_unit': 11.0,
                 })],
         })
@@ -196,23 +196,23 @@ class TestCreatePicking(ProductVariantsCommon):
         with po_form.order_line.new() as po_line:
             po_line.product_id = self.product_id_1
             po_line.product_qty = 1
-            po_line.product_uom_id = uom_dozen
+            po_line.uom_id = uom_dozen
         po = po_form.save()
         po.button_confirm()
 
         # the move should be 12 units
         # note: move.product_qty = computed field, always in the uom of the quant
-        #       move.product_uom_qty = stored field representing the initial demand in move.product_uom
+        #       move.product_uom_qty = stored field representing the initial demand in move.uom_id
         move1 = po.picking_ids.move_ids.sorted()[0]
         self.assertEqual(move1.product_uom_qty, 12)
-        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.uom_id.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 12)
 
         # edit the po line, buy 2 dozen, the move should now be 24 units
         po.order_line.product_qty = 2
         move1 = po.picking_ids.move_ids.sorted()[0]
         self.assertEqual(move1.product_uom_qty, 24)
-        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.uom_id.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 24)
 
         # force the propagation of the uom, sell 3 dozen
@@ -220,9 +220,9 @@ class TestCreatePicking(ProductVariantsCommon):
         with po_form.order_line.edit(0) as po_line:
             po_line.product_qty = 3
         po_form.save()
-        move2 = po.picking_ids.move_ids.filtered(lambda m: m.product_uom.id == uom_dozen.id)
+        move2 = po.picking_ids.move_ids.filtered(lambda m: m.uom_id.id == uom_dozen.id)
         self.assertEqual(move2.product_uom_qty, 1)
-        self.assertEqual(move2.product_uom.id, uom_dozen.id)
+        self.assertEqual(move2.uom_id.id, uom_dozen.id)
         self.assertEqual(move2.product_qty, 12)
 
         # deliver everything
@@ -347,7 +347,7 @@ class TestCreatePicking(ProductVariantsCommon):
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 80.0,
             'procure_method': 'make_to_order',
             'picking_id': customer_picking.id,
@@ -369,7 +369,7 @@ class TestCreatePicking(ProductVariantsCommon):
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 20.0,
             'procure_method': 'make_to_order',
             'picking_id': customer_picking.id,
@@ -412,13 +412,13 @@ class TestCreatePicking(ProductVariantsCommon):
         # the move should be 1.0 units
         move1 = po.picking_ids.move_ids[0]
         self.assertEqual(move1.product_uom_qty, 1.0)
-        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.uom_id.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 1.0)
 
         # edit the po line, buy 2.4 units, the move should now be 2.0 units
         po.order_line.product_qty = 2.4
         self.assertEqual(move1.product_uom_qty, 2.0)
-        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.uom_id.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 2.0)
 
         # deliver everything
@@ -442,22 +442,22 @@ class TestCreatePicking(ProductVariantsCommon):
         # buy 1.3 dozen
         po = self.env['purchase.order'].create(self.po_vals)
 
-        po.order_line.product_uom_id = uom_dozen.id
+        po.order_line.uom_id = uom_dozen.id
         po.order_line.product_qty = 1.3
         po.button_confirm()
 
         # the move should be 12.0 units
         move1 = po.picking_ids.move_ids[0]
         self.assertEqual(move1.product_uom_qty, 12.0)
-        self.assertEqual(move1.product_uom.id, uom_unit.id)
+        self.assertEqual(move1.uom_id.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 12.0)
 
         # force the propagation of the uom, buy 2.6 dozen, the move 2 should have 2 dozen
         self.env['ir.config_parameter'].sudo().set_bool('stock.propagate_uom', True)
         po.order_line.product_qty = 2.6
-        move2 = po.picking_ids.move_ids.filtered(lambda m: m.product_uom.id == uom_dozen.id)
+        move2 = po.picking_ids.move_ids.filtered(lambda m: m.uom_id.id == uom_dozen.id)
         self.assertEqual(move2.product_uom_qty, 2)
-        self.assertEqual(move2.product_uom.id, uom_dozen.id)
+        self.assertEqual(move2.uom_id.id, uom_dozen.id)
         self.assertEqual(move2.product_qty, 24)
 
     def create_delivery_order(self):
@@ -494,7 +494,7 @@ class TestCreatePicking(ProductVariantsCommon):
             'location_id': stock_location.id,
             'location_dest_id': customer_location.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 10.0,
             'procure_method': 'make_to_order',
             'picking_id': delivery_order.id,
@@ -796,7 +796,7 @@ class TestCreatePicking(ProductVariantsCommon):
             'move_ids': [(0, 0, {
                 'product_id': self.product_id_2.id,
                 'product_uom_qty': 10,
-                'product_uom': self.product_id_2.uom_id.id,
+                'uom_id': self.product_id_2.uom_id.id,
                 'location_id': self.env.ref('stock.stock_location_suppliers').id,
                 'location_dest_id': self.env.ref('stock.stock_location_stock').id,
             })]

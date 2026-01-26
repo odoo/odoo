@@ -117,7 +117,7 @@ class StockPackage(models.Model):
 
         display_uom = self.env.user.has_group('uom.group_uom')
         for package in self:
-            package_content = package.contained_quant_ids.grouped(lambda q: (q.product_uom_id, q.product_id))
+            package_content = package.contained_quant_ids.grouped(lambda q: (q.uom_id, q.product_id))
             package_content = [(uom.name, product.display_name, sum(quants.mapped('quantity'))) for ((uom, product), quants) in package_content.items()]
             package.content_description = format_list(self.env, [format_content(qty, uom_name, product_name, display_uom) for (uom_name, product_name, qty) in package_content])
 
@@ -158,7 +158,7 @@ class StockPackage(models.Model):
         for package in self:
             package.location_id = False
             package.company_id = False
-            quants = package.quant_ids.filtered(lambda q: q.product_uom_id.compare(q.quantity, 0) > 0)
+            quants = package.quant_ids.filtered(lambda q: q.uom_id.compare(q.quantity, 0) > 0)
             if quants:
                 package.location_id = quants[0].location_id
                 if all(q.company_id == quants[0].company_id for q in package.quant_ids):
@@ -446,13 +446,13 @@ class StockPackage(models.Model):
 
             res_groups = self.env['stock.move.line']._read_group(
                 [('result_package_id', 'in', all_pack_ids), ('product_id', '!=', False), ('picking_id', '=', picking_id)],
-                ['result_package_id', 'product_id', 'product_uom_id', 'quantity'],
+                ['result_package_id', 'product_id', 'uom_id', 'quantity'],
                 ['__count'],
             )
-            for result_package, product, product_uom, quantity, count in res_groups:
+            for result_package, product, uom_id, quantity, count in res_groups:
                 package_weights[result_package.id] += (
                     count
-                    * product_uom._compute_quantity(quantity, product.uom_id)
+                    * uom_id._compute_quantity(quantity, product.uom_id)
                     * product.weight
                 )
         for package in self:
@@ -494,7 +494,7 @@ class StockPackage(models.Model):
             if len(new_location) > 1:
                 raise UserError(self.env._("Packages %(duplicate_names)s are moved to different locations while being in the same container %(container_name)s.",
                                             duplicate_names=packages.mapped('name'), container_name=container_package.name))
-            contained_quants = container_package.contained_quant_ids.filtered(lambda q: not float_is_zero(q.quantity, precision_rounding=q.product_uom_id.rounding))
+            contained_quants = container_package.contained_quant_ids.filtered(lambda q: not float_is_zero(q.quantity, precision_rounding=q.uom_id.rounding))
             if contained_quants and contained_quants.location_id != new_location:
                 old_location = contained_quants.location_id - new_location
                 raise UserError(self.env._("Can't move a container having packages in another location (%(old_location)s) to a different location (%(new_location)s).",

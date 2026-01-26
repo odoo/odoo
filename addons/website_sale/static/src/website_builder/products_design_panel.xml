@@ -169,7 +169,10 @@
                                     suggestedClasses: style.suggestedClasses,
                                 }
                             },
-                            {action: 'setGap', actionValue: style.gap + 'px'}
+                            {
+                                action: (props.recordName === 'wishlist_opt_products_design_classes' ? 'wishlistSetGap' : 'setGap'),
+                                actionValue: style.gap + 'px'
+                            }
                         ]">
 
                         <div
@@ -288,8 +291,17 @@
                 </BuilderSelect>
             </BuilderRow>
 
-            <BuilderRow label.translate="Gap" t-if="!this.isActiveItem('wsale_design_grid_list')">
+            <BuilderRow label.translate="Gap">
                 <BuilderRange
+                    t-if="props.recordName === 'wishlist_opt_products_design_classes'"
+                    action="'wishlistSetGap'"
+                    min="0"
+                    max="28"
+                    unit="'px'"
+                    displayRangeValue="true"
+                />
+                <BuilderRange
+                    t-else=""
                     action="'setGap'"
                     min="0"
                     max="28"
@@ -570,6 +582,13 @@
                     classAction="'o_wsale_products_opt_has_cta'"
                     id="'wsale_products_opt_add_to_cart'"
                 />
+                <BuilderButton
+                    t-if="props.recordName === 'shop_opt_products_design_classes'"
+                    title.translate="Compare"
+                    icon="'fa-exchange'"
+                    classAction="'o_wsale_products_opt_has_comparison'"
+                />
+                <span/><!-- Spacer -->
                 <BuilderSelect t-if="isOnHoverAvailable || this.isActiveItem('wsale_design_bento_catalog')">
                     <BuilderSelectItem
                         classAction="'o_wsale_products_opt_actions_inline'"
@@ -577,12 +596,49 @@
                     >
                         Inline
                     </BuilderSelectItem>
-                    <!-- Note: Will be replaced by website_sale_wishlist when installed  -->
                     <BuilderSelectItem
                         id="'wsale_products_opt_actions_onhover'"
-                        classAction="'o_wsale_products_opt_actions_onhover'"
+                        classAction="'o_wsale_products_opt_actions_onhover o_wsale_products_opt_wishlist_fixed'"
                     >
                         On Hover
+                    </BuilderSelectItem>
+                </BuilderSelect>
+                <div t-else="" class="d-content pe-none flex-grow-1 opacity-75">
+                    <!--
+                        Fake controller to showcase the user that the option is locked to "Inline"
+                    -->
+                    <BuilderSelect>
+                        <BuilderSelectItem classAction="''">
+                            <span class="opacity-50">Inline</span>
+                        </BuilderSelectItem>
+                    </BuilderSelect>
+                </div>
+            </BuilderRow>
+
+            <BuilderRow
+                t-if="props.recordName === 'shop_opt_products_design_classes'"
+                label.translate="Wishlist"
+                level="1"
+            >
+                <BuilderButton
+                    title.translate="Wishlist"
+                    icon="'fa-heart'"
+                    classAction="'o_wsale_products_opt_has_wishlist'"
+                />
+                <BuilderSelect t-if="isOnHoverAvailable">
+                    <BuilderSelectItem
+                        classAction="''"
+                        t-if="this.isActiveItem('wsale_products_opt_actions_inline')"
+                    >
+                        Inline
+                    </BuilderSelectItem>
+                    <BuilderSelectItem classAction="'o_wsale_products_opt_wishlist_fixed'">
+                        Fixed
+                    </BuilderSelectItem>
+                    <BuilderSelectItem
+                        classAction="'o_wsale_products_opt_wishlist_fixed o_wsale_products_opt_wishlist_fixed_onhover'"
+                    >
+                        Fixed - On Hover
                     </BuilderSelectItem>
                 </BuilderSelect>
                 <div t-else="" class="d-content pe-none flex-grow-1 opacity-75">
@@ -618,7 +674,7 @@
                     </BuilderSelectItem>
                 </BuilderSelect>
             </BuilderRow>
-        </BuilderSlidingPanel>    
+        </BuilderSlidingPanel>
     </BuilderRow>
 </t>
 

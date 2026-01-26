@@ -225,8 +225,8 @@ class L10nInEwaybill(models.Model):
                 'productDesc': line.description_picking[:100] if line.description_picking else "",
                 'quantity': line.quantity,
                 'qtyUnit': (
-                    line.product_uom.l10n_in_code
-                    and line.product_uom.l10n_in_code.split('-')[0]
+                    line.uom_id.l10n_in_code
+                    and line.uom_id.l10n_in_code.split('-')[0]
                     or 'OTH'
                 ),
                 'taxableAmount': AccountMove._l10n_in_round_value(tax_details['total_excluded']),

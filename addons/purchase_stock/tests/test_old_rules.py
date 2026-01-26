@@ -20,7 +20,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         self.env['stock.move'].create({
             'product_id': self.product.id,
             'product_uom_qty': 10,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'picking_id': picking_out.id,
             'reference_ids': [Command.link(self.reference.id)],
             'location_id': warehouse.out_type_id.default_location_src_id.id,

@@ -39,7 +39,6 @@
                 <button
                     t-if="ancestors.length === 1"
                     class="btn px-2 fs-4"
-                    role="button"
                     data-tooltip="Add nested rule"
                     aria-label="Add nested rule"
                     t-on-click="() => this.addNewConnector(parent, node)"
@@ -51,7 +50,6 @@
                 <button
                     t-else=""
                     class="btn px-2 fs-4"
-                    role="button"
                     data-tooltip="Add rule"
                     aria-label="Add rule"
                     t-on-click="() => this.addNewCondition(parent, node)"
@@ -63,7 +61,6 @@
             </t>
             <button
                 class="btn btn-link px-2 text-danger fs-4"
-                role="button"
                 data-tooltip="Delete rule"
                 aria-label="Delete rule"
                 t-on-click="() => this.delete(ancestors, node)"

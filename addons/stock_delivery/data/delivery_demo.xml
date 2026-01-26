@@ -14,7 +14,7 @@
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'product_id': ref('product.product_product_6'),
-                'product_uom': ref('uom.product_uom_unit'),
+                'uom_id': ref('uom.product_uom_unit'),
                 'product_uom_qty': 1.0,
                 'picking_type_id': ref('stock.picking_type_out'),
                 'location_id': ref('stock.stock_location_stock'),
@@ -33,7 +33,7 @@
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'product_id': ref('product.product_product_6'),
-                'product_uom': ref('uom.product_uom_unit'),
+                'uom_id': ref('uom.product_uom_unit'),
                 'product_uom_qty': 1.0,
                 'picking_type_id': ref('stock.picking_type_out'),
                 'location_id': ref('stock.stock_location_stock'),
@@ -52,7 +52,7 @@
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
             <field name="move_ids" model="stock.move" eval="[(0, 0, {
                 'product_id': ref('product.product_product_6'),
-                'product_uom': ref('uom.product_uom_unit'),
+                'uom_id': ref('uom.product_uom_unit'),
                 'product_uom_qty': 1.0,
                 'picking_type_id': ref('stock.picking_type_out'),
                 'location_id': ref('stock.stock_location_stock'),

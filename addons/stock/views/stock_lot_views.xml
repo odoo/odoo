@@ -50,7 +50,7 @@
                         <label for="product_qty" invisible="not display_complete"/>
                         <div invisible="not display_complete">
                             <field name="product_qty" class="oe_inline me-1"/>
-                            <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"
+                            <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"
                                    options="{'no_open': True}" class="oe_inline"/>
                         </div>
                         <field name="location_id" invisible="not location_id" groups="stock.group_stock_multi_locations"/>

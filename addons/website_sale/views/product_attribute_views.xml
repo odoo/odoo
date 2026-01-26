@@ -10,6 +10,7 @@
                 <page name="ecommerce_attributes" string="eCommerce">
                     <group>
                         <group name="ecommerce_main_fields">
+                            <field name="category_id"/>
                             <field
                                 name="visibility"
                                 string="Filter"
@@ -44,6 +45,9 @@
         <field name="arch" type="xml">
             <field name="create_variant" position="after">
                 <field name="visibility" string="eCommerce Filter Visibility"/>
+            </field>
+            <field name="name" position="after">
+               <field name="category_id"/>
             </field>
         </field>
     </record>

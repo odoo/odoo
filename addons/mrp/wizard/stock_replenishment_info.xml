@@ -6,7 +6,7 @@
         <field name="mode">primary</field>
         <field name="priority">100</field>
         <field name="arch" type="xml">
-            <field name="product_uom_id" position="after">
+            <field name="uom_id" position="after">
                 <field name="show_set_bom_button" column_invisible="True"/>
                 <button name="action_set_bom_on_orderpoint" type="object" string="Set as Bill of Materials" class="btn btn-link" invisible="not show_set_bom_button"/>
             </field>

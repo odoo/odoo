@@ -76,10 +76,18 @@
 </t>
 
 <t t-name="mass_mailing.DesignLinkOption">
-    <t t-call="mass_mailing.DesignTextOption">
-        <t t-set="label">Links</t>
-        <t t-set="prefix" t-value="`--link-`"/>
-    </t>
+    <BuilderContext action="'mass_mailing.CustomizeMailingVariable'">
+        <BuilderRow label.translate="Link Style" extraLabelClass="'fw-bolder'">
+            <BuilderColorPicker noTransparency="true" title.translate="Text Color" enabledTabs="['solid', 'custom']"
+                actionParam="{ variable: `--link-color` }"/>
+            <BuilderButton icon="'fa-fw fa-bold'" actionParam="{ variable: `--link-font-weight` }" actionValue="'bolder'"/>
+            <BuilderButton icon="'fa-fw fa-italic'" actionParam="{ variable: `--link-font-style` }" actionValue="'italic'"/>
+            <BuilderButton icon="'fa-fw fa-underline'" actionParam="{ variable: `--link-text-decoration-line`}" actionValue="'underline'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Font Family" level="1">
+            <FontFamilyPicker action="'mass_mailing.CustomizeMailingVariable'" actionParam="{variable: `--link-font-family`}"/>
+        </BuilderRow>
+    </BuilderContext>
 </t>
 
 <t t-name="mass_mailing.DesignTextOption">

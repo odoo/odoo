@@ -29,12 +29,12 @@ class StockMove(models.Model):
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
         return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_purchase_line_ids']
 
-    @api.depends('purchase_line_id', 'purchase_line_id.product_uom_id')
+    @api.depends('purchase_line_id', 'purchase_line_id.uom_id')
     def _compute_packaging_uom_id(self):
         super()._compute_packaging_uom_id()
         for move in self:
             if move.purchase_line_id:
-                move.packaging_uom_id = move.purchase_line_id.product_uom_id
+                move.packaging_uom_id = move.purchase_line_id.uom_id
 
     def _compute_partner_id(self):
         # dropshipped moves should have their partner_ids directly set
@@ -84,7 +84,7 @@ class StockMove(models.Model):
                 'order_id': purchase_order.id,
                 'product_id': product.id,
                 'product_qty': 0,
-                'product_uom_id': move.product_uom.id,
+                'uom_id': move.uom_id.id,
                 'qty_received': quantity
             }
             if product.purchase_method == 'purchase':
@@ -202,7 +202,7 @@ class StockMove(models.Model):
             elif move.is_out:
                 other_candidates_qty -= -move._get_valued_qty()
 
-        if self.product_uom.compare(aml_quantity, other_candidates_qty) <= 0:
+        if self.uom_id.compare(aml_quantity, other_candidates_qty) <= 0:
             return valuation_data
 
         # Remove quantity from prior moves.
@@ -230,7 +230,7 @@ class StockMove(models.Model):
         if not self.purchase_line_id:
             return super()._get_value_from_quotation(quantity, at_date)
         price_unit = self.purchase_line_id._get_stock_move_price_unit(self.date)
-        uom_quantity = self.product_uom._compute_quantity(quantity, self.product_id.uom_id)
+        uom_quantity = self.uom_id._compute_quantity(quantity, self.product_id.uom_id)
         quantity = min(quantity, uom_quantity)
         cost_ratio = self._get_cost_ratio(quantity)
         value = price_unit * cost_ratio

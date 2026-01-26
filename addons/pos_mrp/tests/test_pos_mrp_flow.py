@@ -75,7 +75,7 @@ class TestPosMrp(CommonPosMrpTest):
 
         # Edit kit product quantity
         self.bom_one_line.bom_line_ids[0].product_qty = 6.0
-        self.bom_one_line.bom_line_ids[0].product_uom_id = self.env.ref('uom.product_uom_unit').id
+        self.bom_one_line.bom_line_ids[0].uom_id = self.env.ref('uom.product_uom_unit').id
         self.bom_one_line.product_qty = 2.0
 
         order, _ = self.create_backend_pos_order({

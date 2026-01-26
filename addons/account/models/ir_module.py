@@ -24,7 +24,7 @@ TEMPLATE_REGISTER = {}
 class IrModuleModule(models.Model):
     _inherit = "ir.module.module"
 
-    account_templates = fields.Binary(compute='_compute_account_templates', exportable=False)
+    account_templates = fields.Json(compute='_compute_account_templates', exportable=False)
 
     @api.depends('state')
     def _compute_account_templates(self):
@@ -119,7 +119,12 @@ class IrModuleModule(models.Model):
             del self.env.registry._auto_install_template
 
     def module_uninstall(self):
-        unlinked_templates = [code for template in self.mapped('account_templates') for code in template]
+        unlinked_templates = [
+            code
+            for template in self.mapped('account_templates')
+            if template
+            for code in template
+        ]
         if unlinked_templates:
             companies = self.env['res.company'].search([
                 ('chart_template', 'in', unlinked_templates),

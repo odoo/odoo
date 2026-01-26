@@ -3,10 +3,24 @@
 
     <t t-name="website_sale.ShowEmptyOption">
         <BuilderContext action="'websiteConfig'">
-            <BuilderRow label.translate="Show Empty" tooltip.translate="Show the button even if the Cart/Wishlist is empty" id="'show_empty_opt'">
-                <BuilderButton title.translate="Shopping Cart" icon="'fa-shopping-cart'"
+            <BuilderRow
+                id="'show_empty_opt'"
+                label.translate="Show Empty"
+                tooltip.translate="Show the button even if the Cart/Wishlist is empty"
+            >
+                <BuilderButton
+                    title.translate="Shopping Cart"
+                    icon="'fa-shopping-cart'"
                     className="'o_btn_show_empty_cart flex-grow-1'"
-                    actionParam="{ views: ['!website_sale.header_hide_empty_cart_link'] }"/>
+                    actionParam="{ views: ['!website_sale.header_hide_empty_cart_link'] }"
+                />
+
+                <BuilderButton
+                    title.translate="Wishlist"
+                    icon="'fa-heart'"
+                    className="'flex-grow-1'"
+                    actionParam="{views: ['!website_sale.header_hide_empty_wishlist_link']}"
+                />
             </BuilderRow>
         </BuilderContext>
     </t>

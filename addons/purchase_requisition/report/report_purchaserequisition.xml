@@ -62,7 +62,7 @@
                                 <span t-field="line_id.qty_ordered">5</span>
                             </td>
                             <td class="text-start" groups="uom.group_uom">
-                                <span t-field="line_id.product_uom_id.name">Unit</span>
+                                <span t-field="line_id.uom_id.name">Unit</span>
                             </td>
                             <td class="text-end">
                                 <span t-field="line_id.price_unit" t-options='{"widget": "monetary", "display_currency": line_id.requisition_id.currency_id}'>$50</span>

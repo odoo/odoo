@@ -145,8 +145,8 @@
                                             </td>
                                             <td class="o_td_quantity text-end">
                                                 <span t-out="format_number(move.quantity)" class="text-nowrap">3.00</span>
-                                                <span t-field="move.product_uom" groups="uom.group_uom">units</span>
-                                                <span t-if="move.packaging_uom_id and move.packaging_uom_id != move.product_uom">
+                                                <span t-field="move.uom_id" groups="uom.group_uom">units</span>
+                                                <span t-if="move.packaging_uom_id and move.packaging_uom_id != move.uom_id">
                                                     (<span t-field="move.packaging_uom_qty" t-options='{"widget": "integer"}'/> <span t-field="move.packaging_uom_id.name"/>)
                                                 </span>
                                             </td>
@@ -188,7 +188,7 @@
                                                 </td>
                                                 <td class="text-end">
                                                     <span t-out="format_number(line.quantity)">3.00</span>
-                                                    <span t-field="line.product_uom_id" groups="uom.group_uom">units</span>
+                                                    <span t-field="line.uom_id" groups="uom.group_uom">units</span>
                                                 </td>
                                                 <td class="text-start" t-if="from_col_exists" groups="stock.group_stock_multi_locations">
                                                     <span t-field="line.location_id.display_name">WH/Stock</span>

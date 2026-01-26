@@ -53,7 +53,7 @@ class AccountFiscalPosition(models.Model):
         string='Company', required=True, readonly=True, index=True,
         default=lambda self: self.env.company)
     account_ids = fields.One2many('account.fiscal.position.account', 'position_id', string='Account Mapping', copy=True)
-    account_map = fields.Binary(compute='_compute_account_map')
+    account_map = fields.Json(compute='_compute_account_map')
     tax_ids = fields.Many2many(
         comodel_name='account.tax',
         relation='account_fiscal_position_account_tax_rel',
@@ -61,7 +61,7 @@ class AccountFiscalPosition(models.Model):
         column2='account_tax_id',
         string='Taxes',
     )
-    tax_map = fields.Binary(compute='_compute_tax_map')
+    tax_map = fields.Json(compute='_compute_tax_map')
     note = fields.Html('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
     auto_apply = fields.Boolean(string='Detect Automatically', help="Apply tax & account mappings on invoices automatically if the matching criterias (VAT/Country) are met.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
@@ -171,11 +171,12 @@ class AccountFiscalPosition(models.Model):
         self.ensure_one()
         if not self.tax_ids:  # empty fiscal positions (like those created by tax units) remove all taxes
             return self.env['account.tax']
+        tax_map = self.tax_map or {}
         return self.env['account.tax'].browse(unique(
             tax_id
             for tax in taxes
-            for tax_id in self.tax_map.get(
-                tax.id,
+            for tax_id in tax_map.get(
+                str(tax.id),
                 # If not in tax_map, a tax is mapped to itself if it has 'self' as fiscal position
                 # or it has no fiscal position. Else it's removed.
                 [tax.id] if self in tax.fiscal_position_ids or not tax.fiscal_position_ids else [],
@@ -183,7 +184,7 @@ class AccountFiscalPosition(models.Model):
         ))
 
     def map_account(self, account):
-        return self.env['account.account'].browse((self.account_map or {}).get(account.id, account.id))
+        return self.env['account.account'].browse((self.account_map or {}).get(str(account.id), account.id))
 
     @api.onchange('country_id')
     def _onchange_country_id(self):

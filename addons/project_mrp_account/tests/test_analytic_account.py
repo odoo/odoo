@@ -249,14 +249,14 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_no_company = self.env['mrp.production'].create({
             'product_id': self.product.id,
             'project_id': project_aa_no_company.id,
-            'product_uom_id': self.bom.product_uom_id.id,
+            'uom_id': self.bom.uom_id.id,
         })
 
         mo_no_c_form = Form(mo_no_company)
         wo = self.env['mrp.workorder'].create({
             'name': 'Work_order',
             'workcenter_id': self.workcenter.id,
-            'product_uom_id': self.bom.product_uom_id.id,
+            'uom_id': self.bom.uom_id.id,
             'production_id': mo_no_c_form.id,
             'duration': 60,
         })
@@ -284,12 +284,12 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         bom = self.env['mrp.bom'].create({
                 'product_tmpl_id': product.product_tmpl_id.id,
                 'product_qty': 1,
-                'product_uom_id': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'type': 'normal',
                 'bom_line_ids': [(0, 0, {
                     'product_id': component.id,
                     'product_qty': 1,
-                    'product_uom_id': component.uom_id.id,
+                    'uom_id': component.uom_id.id,
                 })],
         })
         analytic_account = self.env['account.analytic.account'].create({

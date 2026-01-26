@@ -121,6 +121,7 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             name: template
             for mapping in modules.mapped('account_templates')
+            if mapping
             for name, template in mapping.items()
             if get_all or template['visible']
         }
@@ -528,8 +529,9 @@ class AccountChartTemplate(models.AbstractModel):
         if not company.country_id:
             vals['country_id'] = fiscal_country.id
 
-        # Ensure that we write on 'anglo_saxon_accounting' when changing to a CoA that relies on the default of `False`.
-        vals.setdefault('anglo_saxon_accounting', False)
+        if template_data:
+            # Ensure that we write on 'anglo_saxon_accounting' when changing to a CoA that relies on the default of `False`.
+            vals.setdefault('anglo_saxon_accounting', False)
 
         # This write method is important because it's overridden and has additional triggers
         # e.g it activates the currency

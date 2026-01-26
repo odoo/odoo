@@ -626,6 +626,7 @@ patch(PosStore.prototype, {
                         'The reward "%s" contain an error in its domain, your domain must be compatible with the PoS client',
                         this.models["loyalty.reward"].getAll()[index].description
                     ),
+                    showReloadButton: true,
                 });
 
                 reward.delete();
@@ -855,13 +856,15 @@ patch(PosStore.prototype, {
                     }
                 }
             }
-            if (payload.coupon_report) {
+            if (payload.coupon_report && Object.keys(payload.coupon_report).length > 0) {
                 for (const [actionId, active_ids] of Object.entries(payload.coupon_report)) {
                     await this.env.services.report.doAction(actionId, active_ids);
                 }
                 order.has_pdf_gift_card = Object.keys(payload.coupon_report).length > 0;
             }
-            order.new_coupon_info = payload.new_coupon_info;
+            if (payload.new_coupon_info?.length) {
+                order.new_coupon_info = payload.new_coupon_info;
+            }
         }
     },
 });

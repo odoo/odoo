@@ -209,7 +209,7 @@ class TestSaleMrpProcurement(TransactionCase):
         self.env['mrp.bom'].create({
             'product_id': product.id,
             'product_tmpl_id': product.product_tmpl_id.id,
-            'product_uom_id': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
@@ -305,7 +305,7 @@ class TestSaleMrpProcurement(TransactionCase):
         self.env['mrp.bom'].create({
             'product_id': product.id,
             'product_tmpl_id': product.product_tmpl_id.id,
-            'product_uom_id': uom_gram.id,
+            'uom_id': uom_gram.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
@@ -329,11 +329,11 @@ class TestSaleMrpProcurement(TransactionCase):
 
         mo = self.env['mrp.production'].search([('product_id', '=', product.id)], order='id desc', limit=1)
         self.assertIn(so.name, mo.origin)
-        self.assertEqual(mo.product_uom_id, uom_gram)
+        self.assertEqual(mo.uom_id, uom_gram)
         self.assertEqual(mo.product_qty, 510)
 
         so.order_line.product_uom_qty = 510 * 2
-        self.assertEqual(mo.product_uom_id, uom_gram)
+        self.assertEqual(mo.uom_id, uom_gram)
         self.assertEqual(mo.product_qty, 1020)
 
     def test_sale_mrp_avoid_multiple_pickings(self):

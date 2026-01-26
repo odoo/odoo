@@ -80,6 +80,26 @@ class TestWebsiteSaleMail(HttpCaseWithUserPortal):
             self.assertEqual(res.status_code, 200)
             self.assertEqual(res.request.path_url, shop_url)
 
+    def test_product_review_highlight(self):
+        self.env["ir.ui.view"].with_context(active_test=False).search([
+            ("key", "=", "website_sale.product_comment")
+        ]).write({"active": True})
+        product_template = self.env['product.template'].create({
+            'name': 'Test Product',
+            'sale_ok': True,
+            'website_published': True,
+        })
+        product_message = self.env["mail.message"].create(
+            {
+                "author_id": self.env.ref("base.user_admin").partner_id.id,
+                "body": "Test Message",
+                "model": product_template._name,
+                "res_id": product_template.id,
+                "subtype_id": self.ref("mail.mt_comment"),
+            }
+        )
+        self.start_tour(f"/mail/message/{product_message.id}", "product_review_highlight_tour", login="portal")
+
 
 @tagged('post_install', '-at_install', 'mail_thread')
 class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):

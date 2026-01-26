@@ -442,7 +442,7 @@ class TestStockQuant(TestStockCommon):
             'location_id': stock_location.id,
             'location_dest_id': dst_location.id,
             'product_uom_qty': 5,
-            'product_uom': self.product_consu.uom_id.id,
+            'uom_id': self.product_consu.uom_id.id,
         })
         move._action_confirm()
         move.quantity = 5
@@ -705,7 +705,7 @@ class TestStockQuant(TestStockCommon):
         move = self.env['stock.move'].create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
         })
@@ -720,7 +720,7 @@ class TestStockQuant(TestStockCommon):
             move = self.env['stock.move'].create({
                 'product_id': self.productA.id,
                 'product_uom_qty': 1,
-                'product_uom': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
             })
@@ -742,7 +742,7 @@ class TestStockQuant(TestStockCommon):
         move = self.env['stock.move'].create({
             'product_id': self.productA.id,
             'product_uom_qty': 1,
-            'product_uom': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.shelf_2.id,
         })
@@ -772,7 +772,7 @@ class TestStockQuant(TestStockCommon):
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
                 'product_uom_qty': 10,
-                'product_uom': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
             })],
             'state': 'draft',
         })
@@ -834,7 +834,7 @@ class TestStockQuant(TestStockCommon):
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
                 'product_uom_qty': 1,
-                'product_uom': self.product_serial.uom_id.id,
+                'uom_id': self.product_serial.uom_id.id,
             })],
         })
         receipt01.action_confirm()
@@ -869,7 +869,7 @@ class TestStockQuant(TestStockCommon):
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
                 'product_uom_qty': 1,
-                'product_uom': self.product_serial.uom_id.id,
+                'uom_id': self.product_serial.uom_id.id,
             })],
         })
         receipt02.action_confirm()
@@ -1278,7 +1278,7 @@ class TestStockQuant(TestStockCommon):
                 'location_id': stock_location.id,
                 'location_dest_id': dst_location.id,
                 'product_uom_qty': 5,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
             })],
         })
         picking.action_confirm()
@@ -1313,7 +1313,7 @@ class TestStockQuant(TestStockCommon):
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.stock_location.id,
                 'product_uom_qty': 5,
-                'product_uom': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
             })],
         })
         picking.action_confirm()
@@ -1404,7 +1404,7 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
     def _generate_data(self, packages_data):
         move = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
         })
@@ -1414,7 +1414,7 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
         ml_common_vals = {
             'move_id': move.id,
             'product_id': self.product.id,
-            'product_uom_id': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
         }
@@ -1454,7 +1454,7 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
         # Out 1000 should selecte a package with 1000 units inside
         move = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_uom_qty': 1000,
@@ -1482,7 +1482,7 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
         # Out 1000 should select a package with 1000 units inside
         move = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_uom_qty': 1280,
@@ -1512,7 +1512,7 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
 
         move = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_uom_qty': 13,
@@ -1545,7 +1545,7 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
 
         move = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_uom_qty': 90,
@@ -1571,7 +1571,7 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
         move = self.env['stock.move'].create({
             'product_id': self.product.id,
             'product_uom_qty': 1,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
         })

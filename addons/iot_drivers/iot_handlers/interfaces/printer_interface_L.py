@@ -33,6 +33,7 @@ class PrinterInterface(Interface):
     def __init__(self):
         super().__init__()
         self.start_time = time.time()
+        self.printer_devices = {}
 
     def get_devices(self):
         discovered_devices = {}
@@ -74,13 +75,28 @@ class PrinterInterface(Interface):
             self._loop_delay = 120
             self.start_time = None  # Reset start_time to avoid changing the loop delay again
 
-        return self.deduplicate_printers(discovered_devices)
+        self.printer_devices.update(self.deduplicate_printers(discovered_devices))
+
+        # Devices previously discovered but not found this call
+        # When the printer disconnects it can still be listed in cups and print after reconnecting
+        # Wait for 3 consecutive misses before removing it from the list allows us to avoid errors and unnecessary double prints
+        missing = set(self.printer_devices) - set(discovered_devices)
+        for identifier in missing:
+            printer = self.printer_devices[identifier]
+            if printer["disconnect_counter"] >= 2:
+                _logger.warning('Printer %s not found 3 times in a row, disconnecting.', identifier)
+                self.printer_devices.pop(identifier, None)
+            else:
+                printer["disconnect_counter"] += 1
+
+        return self.printer_devices.copy()
 
     def process_device(self, path, device):
         identifier = self.get_identifier(path)
         device.update({
             'identifier': identifier,
             'url': path,
+            'disconnect_counter': 0,
         })
         if device['device-class'] == 'direct':
             device.update(self.get_usb_info(path))

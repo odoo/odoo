@@ -83,19 +83,19 @@ class TestAutoWaving(TransactionCase):
                 Command.create({
                     'product_id': cls.product_1.id,
                     'product_uom_qty': 3,
-                    'product_uom': cls.product_1.uom_id.id,
+                    'uom_id': cls.product_1.uom_id.id,
                     'location_id': cls.child_location_1.id,
                 }),
                 Command.create({
                     'product_id': cls.product_1.id,
                     'product_uom_qty': 2,
-                    'product_uom': cls.product_1.uom_id.id,
+                    'uom_id': cls.product_1.uom_id.id,
                     'location_id': cls.child_location_2.id,
                 }),
                 Command.create({
                     'product_id': cls.product_2.id,
                     'product_uom_qty': 2,
-                    'product_uom': cls.product_2.uom_id.id,
+                    'uom_id': cls.product_2.uom_id.id,
                     'location_id': cls.child_location_1.id,
                 })
             ]
@@ -108,19 +108,19 @@ class TestAutoWaving(TransactionCase):
                 Command.create({
                     'product_id': cls.product_1.id,
                     'product_uom_qty': 3,
-                    'product_uom': cls.product_1.uom_id.id,
+                    'uom_id': cls.product_1.uom_id.id,
                     'location_id': cls.grandchild_location.id,
                 }),
                 Command.create({
                     'product_id': cls.product_1.id,
                     'product_uom_qty': 2,
-                    'product_uom': cls.product_1.uom_id.id,
+                    'uom_id': cls.product_1.uom_id.id,
                     'location_id': cls.child_location_2.id,
                 }),
                 Command.create({
                     'product_id': cls.product_2.id,
                     'product_uom_qty': 2,
-                    'product_uom': cls.product_2.uom_id.id,
+                    'uom_id': cls.product_2.uom_id.id,
                     'location_id': cls.child_location_1.id,
                 })
             ]
@@ -133,19 +133,19 @@ class TestAutoWaving(TransactionCase):
                 Command.create({
                     'product_id': cls.product_1.id,
                     'product_uom_qty': 2,
-                    'product_uom': cls.product_1.uom_id.id,
+                    'uom_id': cls.product_1.uom_id.id,
                     'location_id': cls.stock_location.id,
                 }),
                 Command.create({
                     'product_id': cls.product_2.id,
                     'product_uom_qty': 2,
-                    'product_uom': cls.product_2.uom_id.id,
+                    'uom_id': cls.product_2.uom_id.id,
                     'location_id': cls.child_location_2.id,
                 }),
                 Command.create({
                     'product_id': cls.product_3.id,
                     'product_uom_qty': 3,
-                    'product_uom': cls.product_3.uom_id.id,
+                    'uom_id': cls.product_3.uom_id.id,
                     'location_id': cls.grandchild_location.id,
                 })
             ]
@@ -158,7 +158,7 @@ class TestAutoWaving(TransactionCase):
                 Command.create({
                     'product_id': cls.product_4.id,
                     'product_uom_qty': 3,
-                    'product_uom': cls.product_4.uom_id.id,
+                    'uom_id': cls.product_4.uom_id.id,
                     'location_id': cls.child_location_1.id,
                 })
             ]
@@ -171,19 +171,19 @@ class TestAutoWaving(TransactionCase):
                 Command.create({
                     'product_id': cls.product_1.id,
                     'product_uom_qty': 3,
-                    'product_uom': cls.product_1.uom_id.id,
+                    'uom_id': cls.product_1.uom_id.id,
                     'location_id': cls.child_location_1.id,
                 }),
                 Command.create({
                     'product_id': cls.product_1.id,
                     'product_uom_qty': 2,
-                    'product_uom': cls.product_1.uom_id.id,
+                    'uom_id': cls.product_1.uom_id.id,
                     'location_id': cls.child_location_2.id,
                 }),
                 Command.create({
                     'product_id': cls.product_2.id,
                     'product_uom_qty': 2,
-                    'product_uom': cls.product_2.uom_id.id,
+                    'uom_id': cls.product_2.uom_id.id,
                     'location_id': cls.sibling_location.id,
                 })
             ]

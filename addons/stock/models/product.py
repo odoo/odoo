@@ -209,7 +209,7 @@ class ProductProduct(models.Model):
             domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
             domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
 
-            groupby = ['product_id', 'product_uom']
+            groupby = ['product_id', 'uom_id']
             for product, uom, quantity in Move._read_group(domain_move_in_done, groupby, ['quantity:sum']):
                 moves_in_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
 
@@ -707,7 +707,7 @@ class ProductProduct(models.Model):
     def _update_uom(self, to_uom_id):
         for uom, product, moves in self.env['stock.move']._read_group(
             [('product_id', 'in', self.ids)],
-            ['product_uom', 'product_id'],
+            ['uom_id', 'product_id'],
             ['id:recordset'],
         ):
             if uom != product.product_tmpl_id.uom_id:
@@ -715,11 +715,11 @@ class ProductProduct(models.Model):
                 'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
                 'If you want to change it, please archive the product and create a new one.',
                 problem_uom=uom.name, uom=product.product_tmpl_id.uom_id.name))
-            moves.product_uom = to_uom_id
+            moves.uom_id = to_uom_id
 
         for uom, product, move_lines in self.env['stock.move.line']._read_group(
             [('product_id', 'in', self.ids)],
-            ['product_uom_id', 'product_id'],
+            ['uom_id', 'product_id'],
             ['id:recordset'],
         ):
             if uom != product.product_tmpl_id.uom_id:
@@ -727,7 +727,7 @@ class ProductProduct(models.Model):
                 'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
                 'If you want to change it, please archive the product and create a new one.',
                 problem_uom=uom.name, uom=product.product_tmpl_id.uom_id.name))
-            move_lines.product_uom_id = to_uom_id
+            move_lines.uom_id = to_uom_id
         return super()._update_uom(to_uom_id)
 
     def filter_has_routes(self):
@@ -1219,12 +1219,12 @@ class UomUom(models.Model):
                     " or are currently reserved."
                 )
                 if self.env['stock.move'].sudo().search_count([
-                    ('product_uom', 'in', changed.ids),
+                    ('uom_id', 'in', changed.ids),
                     ('state', 'not in', ('cancel', 'done'))
                 ]):
                     raise UserError(error_msg)
                 if self.env['stock.move.line'].sudo().search_count([
-                    ('product_uom_id', 'in', changed.ids),
+                    ('uom_id', 'in', changed.ids),
                     ('state', 'not in', ('cancel', 'done')),
                 ]):
                     raise UserError(error_msg)

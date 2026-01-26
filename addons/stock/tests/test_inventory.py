@@ -192,14 +192,14 @@ class TestInventory(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.pack_location.id,
             'product_id': self.product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         move_pack_cust = self.env['stock.move'].create({
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 10.0,
         })
         move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
@@ -267,7 +267,7 @@ class TestInventory(TransactionCase):
         owner1 = self.env['res.partner'].create({'name': 'test_inventory_7'})
         vals = {
             'product_id': self.product1.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'owner_id': owner1.id,
             'location_id': self.stock_location.id,
             'quantity': 1,
@@ -399,7 +399,7 @@ class TestInventory(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 3.0,
         })
         move_out._action_confirm()
@@ -429,7 +429,7 @@ class TestInventory(TransactionCase):
         # Set initial quantity to 7
         vals = {
             'product_id': self.product1.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
             'quantity': 7,
             'inventory_quantity': 7
@@ -441,7 +441,7 @@ class TestInventory(TransactionCase):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 4.0,
         })
         quant.invalidate_recordset()
@@ -465,7 +465,7 @@ class TestInventory(TransactionCase):
         # Set initial quantity to 10
         vals = {
             'product_id': self.product1.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
             'quantity': 10,
         }
@@ -483,7 +483,7 @@ class TestInventory(TransactionCase):
         # Set initial quantity to 7 and create inventory adjustment for product1
         inventory_quant = self.env['stock.quant'].create({
             'product_id': self.product1.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
             'quantity': 7,
             'inventory_quantity': 5
@@ -496,7 +496,7 @@ class TestInventory(TransactionCase):
         })
         self.env['stock.quant'].create({
             'product_id': product3.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'location_id': self.stock_location.id,
             'inventory_quantity': 22,
             'reserved_quantity': 0,

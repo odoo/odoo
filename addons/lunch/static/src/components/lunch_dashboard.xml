@@ -40,7 +40,6 @@
             <div t-if="props.isToOrder" class="d-flex justify-content-between">
                 <div class="o_lunch_order_line_quantity input-group">
                     <button
-                        role="button"
                         type="button"
                         t-attf-class="o_lunch_qty_btn btn btn-sm btn-outline-secondary border-end-0 {{canEdit ? '' : 'opacity-100 disabled'}}"
                         t-on-click="() => this.updateQuantity(-1)"
@@ -55,7 +54,6 @@
                         disabled="true"
                     />
                     <button
-                        role="button"
                         type="button"
                         t-attf-class="o_lunch_qty_btn btn btn-sm btn-outline-secondary border-start-0 {{canAdd ? '' : 'opacity-100 disabled'}}"
                         t-on-click="() => this.updateQuantity(1)"
@@ -146,7 +144,6 @@
                             class="accordion-button collapsed py-2 px-0 bg-view shadow-none"
                             data-bs-toggle="collapse"
                             href="#o_lunch_passed_orders"
-                            role="button"
                             aria-expanded="false"
                             aria-controls="o_lunch_passed_orders"
                         >

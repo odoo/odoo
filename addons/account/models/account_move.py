@@ -406,7 +406,7 @@ class AccountMove(models.Model):
         inverse='_inverse_invoice_payment_term_id',
         check_company=True,
     )
-    needed_terms = fields.Binary(compute='_compute_needed_terms', exportable=False)
+    needed_terms = fields.Json(compute='_compute_needed_terms', exportable=False)
     needed_terms_dirty = fields.Boolean(compute='_compute_needed_terms')
     tax_calculation_rounding_method = fields.Selection(
         related='company_id.tax_calculation_rounding_method',
@@ -486,7 +486,7 @@ class AccountMove(models.Model):
     )
 
     # === Payment widget fields === #
-    invoice_outstanding_credits_debits_widget = fields.Binary(
+    invoice_outstanding_credits_debits_widget = fields.Json(
         groups="account.group_account_invoice,account.group_account_readonly",
         compute='_compute_payments_widget_to_reconcile_info',
         exportable=False,
@@ -495,7 +495,7 @@ class AccountMove(models.Model):
         groups="account.group_account_invoice,account.group_account_readonly",
         compute='_compute_invoice_has_outstanding',
     )
-    invoice_payments_widget = fields.Binary(
+    invoice_payments_widget = fields.Json(
         groups="account.group_account_invoice,account.group_account_readonly",
         compute='_compute_payments_widget_reconciled_info',
         exportable=False,
@@ -587,7 +587,7 @@ class AccountMove(models.Model):
         compute='_compute_amount', store=True,
         currency_field='company_currency_id',
     )
-    tax_totals = fields.Binary(
+    tax_totals = fields.Json(
         string="Invoice Totals",
         compute='_compute_tax_totals',
         inverse='_inverse_tax_totals',
@@ -757,7 +757,7 @@ class AccountMove(models.Model):
     show_update_fpos = fields.Boolean(string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
 
     # used to display the various dates and amount dues on the invoice's PDF
-    payment_term_details = fields.Binary(compute="_compute_payment_term_details", exportable=False)
+    payment_term_details = fields.Json(compute="_compute_payment_term_details", exportable=False)
     show_payment_term_details = fields.Boolean(compute="_compute_show_payment_term_details")
     show_discount_details = fields.Boolean(compute="_compute_show_payment_term_details")
 
@@ -1072,10 +1072,9 @@ class AccountMove(models.Model):
     def _compute_invoice_date_due(self):
         today = fields.Date.context_today(self)
         for move in self:
-            move.invoice_date_due = move.needed_terms and max(
-                (k['date_maturity'] for k in move.needed_terms.keys() if k),
-                default=False,
-            ) or move.invoice_date_due or today
+            needed_terms = move.needed_terms or ()
+            due_date = max((k['date_maturity'] for k, _ in needed_terms if k), default=False)
+            move.invoice_date_due = due_date or move.invoice_date_due or today
 
     def _compute_delivery_date(self):
         pass
@@ -1359,7 +1358,7 @@ class AccountMove(models.Model):
         AccountTax = self.env['account.tax']
         for invoice in self.with_context(bin_size=False):
             is_draft = invoice.id != invoice._origin.id
-            invoice.needed_terms = {}
+            needed_terms = {}
             invoice.needed_terms_dirty = True
             sign = 1 if invoice.is_inbound(include_receipts=True) else -1
             if invoice.is_invoice(True) and invoice.invoice_line_ids:
@@ -1408,13 +1407,13 @@ class AccountMove(models.Model):
                             'discount_balance': invoice_payment_terms.get('discount_balance') or 0.0,
                             'discount_amount_currency': invoice_payment_terms.get('discount_amount_currency') or 0.0,
                         }
-                        if key not in invoice.needed_terms:
-                            invoice.needed_terms[key] = values
+                        if key not in needed_terms:
+                            needed_terms[key] = values
                         else:
-                            invoice.needed_terms[key]['balance'] += values['balance']
-                            invoice.needed_terms[key]['amount_currency'] += values['amount_currency']
+                            needed_terms[key]['balance'] += values['balance']
+                            needed_terms[key]['amount_currency'] += values['amount_currency']
                 else:
-                    invoice.needed_terms[frozendict({
+                    needed_terms[frozendict({
                         'move_id': invoice.id,
                         'date_maturity': fields.Date.to_date(invoice.invoice_date_due),
                         'discount_date': False,
@@ -1424,6 +1423,7 @@ class AccountMove(models.Model):
                         'balance': invoice.amount_total_signed,
                         'amount_currency': invoice.amount_total_in_currency_signed,
                     }
+            invoice.needed_terms = list(needed_terms.items())
 
     @api.depends('suitable_journal_ids')
     def _compute_show_journal(self):
@@ -1798,18 +1798,19 @@ class AccountMove(models.Model):
         for move in self:
             if move.is_invoice(include_receipts=True):
                 base_lines, _tax_lines = move._get_rounded_base_and_tax_lines()
-                move.tax_totals = self.env['account.tax']._get_tax_totals_summary(
+                tax_totals = self.env['account.tax']._get_tax_totals_summary(
                     base_lines=base_lines,
                     currency=move.currency_id,
                     company=move.company_id,
                     cash_rounding=move.invoice_cash_rounding_id,
                 )
-                move.tax_totals['display_in_company_currency'] = (
+                tax_totals['display_in_company_currency'] = (
                     move.company_id.display_invoice_tax_company_currency
                     and move.company_currency_id != move.currency_id
-                    and move.tax_totals['has_tax_groups']
+                    and tax_totals['has_tax_groups']
                     and move.is_sale_document(include_receipts=True)
                 )
+                move.tax_totals = tax_totals
             else:
                 # Non-invoice moves don't support that field (because of multicurrency: all lines of the invoice share the same currency)
                 move.tax_totals = None
@@ -3197,9 +3198,10 @@ class AccountMove(models.Model):
     def _sync_dynamic_line_needed_values(self, values_list):
         res = {}
         for computed_needed in values_list:
-            if computed_needed is False:
+            if not computed_needed:
                 continue  # there was an invalidation, let's hope nothing needed to be changed...
-            for key, values in computed_needed.items():
+            for key, values in computed_needed:
+                key = frozendict(key)
                 if key not in res:
                     res[key] = dict(values)
                 else:
@@ -3528,9 +3530,9 @@ class AccountMove(models.Model):
     def _sync_dynamic_line(self, existing_key_fname, needed_vals_fname, needed_dirty_fname, line_type, container):
         def existing():
             return {
-                line: line[existing_key_fname]
+                line: frozendict(line_value)
                 for line in container['records'].line_ids
-                if line[existing_key_fname]
+                if (line_value := line[existing_key_fname])
             }
 
         def needed():

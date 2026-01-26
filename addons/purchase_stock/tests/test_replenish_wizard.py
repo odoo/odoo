@@ -61,7 +61,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product1.product_tmpl_id.id).create({
             'product_id': self.product1.id,
             'product_tmpl_id': self.product1.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': self.product_uom_qty,
             'warehouse_id': self.wh.id,
         })
@@ -107,7 +107,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product_to_buy.product_tmpl_id.id).create({
             'product_id': product_to_buy.id,
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': 10,
             'warehouse_id': self.wh.id,
         })
@@ -156,7 +156,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product_to_buy.product_tmpl_id.id).create({
             'product_id': product_to_buy.id,
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': 10,
             'warehouse_id': self.wh.id,
         })
@@ -196,7 +196,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product_to_buy.product_tmpl_id.id).create({
             'product_id': product_to_buy.id,
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': 10,
             'warehouse_id': self.wh.id,
         })
@@ -241,7 +241,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product_to_buy.product_tmpl_id.id).create({
             'product_id': product_to_buy.id,
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': 10,
             'warehouse_id': self.wh.id,
         })
@@ -272,7 +272,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product1.product_tmpl_id.id).create({
             'product_id': self.product1.id,
             'product_tmpl_id': self.product1.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': 1,
             'warehouse_id': self.wh.id,
         })
@@ -307,7 +307,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             wizard = self.env['product.replenish'].create({
                 'product_id': product_to_buy.id,
                 'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'quantity': 1,
                 'warehouse_id': self.wh.id,
                 'route_id': self.route_buy.id,
@@ -346,7 +346,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             wizard = self.env['product.replenish'].create({
                 'product_id': product_to_buy.id,
                 'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'quantity': 1,
                 'warehouse_id': self.wh.id,
                 'route_id': self.route_buy.id,
@@ -377,7 +377,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             wizard = self.env['product.replenish'].create({
                 'product_id': product_to_buy.id,
                 'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'quantity': 1,
                 'warehouse_id': self.wh.id,
                 'route_id': self.route_buy.id,
@@ -400,7 +400,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': product.id,
             'product_tmpl_id': product.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': 1,
             'warehouse_id': self.wh.id,
             'route_id': self.route_buy.id,
@@ -434,7 +434,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': product.id,
             'product_tmpl_id': product.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': 1,
             'warehouse_id': self.wh.id,
             'route_id': self.route_buy.id,
@@ -450,7 +450,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': self.product1.id,
             'product_tmpl_id': self.product1.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
         })
         self.assertTrue(replenish_wizard._get_route_domain(self.product1.product_tmpl_id))
 
@@ -486,7 +486,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': self.fuzzy_drink.id,
             'product_tmpl_id': self.fuzzy_drink.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': 10,
             'warehouse_id': self.wh.id,
             'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
@@ -495,14 +495,14 @@ class TestReplenishWizard(PurchaseTestCommon):
         po = self._get_purchase_order_from_replenishment(replenish_wizard)
 
         self.assertEqual(po.order_line.product_qty, 10, 'Generated PO line must respect the requested quantity from the wizard')
-        self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
+        self.assertEqual(po.order_line.uom_id, replenish_wizard.uom_id, 'Generated PO line must respect the requested UOM from the wizard')
         self.assertEqual(po.order_line.price_unit, 1, 'Generated PO line must respect the supplier price of UoM "Unit"')
         po.button_cancel()
 
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': self.fuzzy_drink.id,
             'product_tmpl_id': self.fuzzy_drink.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'quantity': 15,
             'warehouse_id': self.wh.id,
             'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
@@ -511,14 +511,14 @@ class TestReplenishWizard(PurchaseTestCommon):
         po = self._get_purchase_order_from_replenishment(replenish_wizard)
 
         self.assertEqual(po.order_line.product_qty, 15, 'Generated PO line must respect the requested quantity from the wizard')
-        self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
+        self.assertEqual(po.order_line.uom_id, replenish_wizard.uom_id, 'Generated PO line must respect the requested UOM from the wizard')
         self.assertEqual(po.order_line.price_unit, 1, 'Generated PO line must respect the supplier price of UoM "Unit"')
         po.button_cancel()
 
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': self.fuzzy_drink.id,
             'product_tmpl_id': self.fuzzy_drink.product_tmpl_id.id,
-            'product_uom_id': self.uom_pack_6.id,
+            'uom_id': self.uom_pack_6.id,
             'quantity': 1,
             'warehouse_id': self.wh.id,
             'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
@@ -527,14 +527,14 @@ class TestReplenishWizard(PurchaseTestCommon):
         po = self._get_purchase_order_from_replenishment(replenish_wizard)
 
         self.assertEqual(po.order_line.product_qty, 1, 'Generated PO line must respect the requested quantity from the wizard')
-        self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
+        self.assertEqual(po.order_line.uom_id, replenish_wizard.uom_id, 'Generated PO line must respect the requested UOM from the wizard')
         self.assertEqual(po.order_line.price_unit, 6, 'Generated PO line must respect the supplier price of UoM "Unit" because the quantity doesn\'t match the "Pack of 6" pricelist')
         po.button_cancel()
 
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': self.fuzzy_drink.id,
             'product_tmpl_id': self.fuzzy_drink.product_tmpl_id.id,
-            'product_uom_id': self.uom_pack_6.id,
+            'uom_id': self.uom_pack_6.id,
             'quantity': 2,
             'warehouse_id': self.wh.id,
             'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
@@ -543,7 +543,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         po = self._get_purchase_order_from_replenishment(replenish_wizard)
 
         self.assertEqual(po.order_line.product_qty, 2, 'Generated PO line must respect the requested quantity from the wizard')
-        self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
+        self.assertEqual(po.order_line.uom_id, replenish_wizard.uom_id, 'Generated PO line must respect the requested UOM from the wizard')
         self.assertEqual(po.order_line.price_unit, 5, 'Generated PO line must respect the supplier price of UoM "Pack of 6" because the quantity matches the "Pack of 6" pricelist')
         po.button_cancel()
 
@@ -560,7 +560,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': product_to_buy.id,
             'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'route_id': self.route_buy.id,
             'partner_id': self.vendor1.id,
             'quantity': 1,

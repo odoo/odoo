@@ -160,17 +160,3 @@ class AccountPaymentMethodLine(models.Model):
         (self - unused_payment_method_lines).write({'journal_id': False})
 
         return super(AccountPaymentMethodLine, unused_payment_method_lines).unlink()
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        # OVERRIDE
-        for vals in vals_list:
-            if vals.get('payment_account_id'):
-                self._auto_toggle_account_to_reconcile(vals['payment_account_id'])
-        return super().create(vals_list)
-
-    def write(self, vals):
-        # OVERRIDE
-        if vals.get('payment_account_id'):
-            self._auto_toggle_account_to_reconcile(vals['payment_account_id'])
-        return super().write(vals)

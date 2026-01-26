@@ -314,7 +314,7 @@ class IrModuleModule(models.Model):
             :return: recordset of themes ``ir.module.module``
         """
         self.ensure_one()
-        return self.upstream_dependencies(exclude_states=('',)).filtered(lambda x: x.name.startswith('theme_'))
+        return self.upstream_dependencies(exclude_states=()).filtered(lambda x: x.name.startswith('theme_'))
 
     def _theme_get_downstream(self):
         """

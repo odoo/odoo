@@ -3,7 +3,7 @@
     <!-- Create extra MOs that will have stock.valuation.layers + can be used to populate reports -->
     <record id="mrp_production_drawer_2" model="mrp.production">
         <field name="product_id" ref="product.product_product_27"/>
-        <field name="product_uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
         <field name="product_qty">5</field>
         <field name="location_src_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_stock"/>
@@ -14,7 +14,7 @@
 
     <record id="mrp_production_drawer_3" model="mrp.production">
         <field name="product_id" ref="product.product_product_27"/>
-        <field name="product_uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
         <field name="product_qty">3</field>
         <field name="location_src_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_stock"/>

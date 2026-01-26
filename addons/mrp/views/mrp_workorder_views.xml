@@ -65,7 +65,7 @@
                 <field name="company_id" column_invisible="True"/>
                 <field name="is_produced" column_invisible="True"/>
                 <field name="is_user_working" column_invisible="True"/>
-                <field name="product_uom_id" readonly="0" column_invisible="True"/>
+                <field name="uom_id" readonly="0" column_invisible="True"/>
                 <field name="production_state" column_invisible="True"/>
                 <field name="production_bom_id" column_invisible="True"/>
                 <field name="qty_producing" column_invisible="True"/>
@@ -338,7 +338,7 @@
             <kanban class="o_mrp_workorder_kanban" create="0" sample="1">
                 <field name="last_working_user_id"/>
                 <field name="workcenter_id" invisible="True"/>
-                <field name="product_uom_id" invisible="True" force_save="True"/>
+                <field name="uom_id" invisible="True" force_save="True"/>
                 <field name="working_user_ids"/>
                 <field name="working_state"/>
                 <field name="date_start"/>
@@ -361,7 +361,7 @@
                         </div>
                         <footer>
                             <h5>
-                                <field name="product_id"/>, <field name="qty_production" class="ms-1"/> <field name="product_uom_id" groups="uom.group_uom"/><t t-if="record.finished_lot_ids.value">, </t> <field t-if="record.finished_lot_ids.value" name="finished_lot_ids" class="ms-1"/>
+                                <field name="product_id"/>, <field name="qty_production" class="ms-1"/> <field name="uom_id" groups="uom.group_uom"/><t t-if="record.finished_lot_ids.value">, </t> <field t-if="record.finished_lot_ids.value" name="finished_lot_ids" class="ms-1"/>
                             </h5>
                             <div class="o_kanban_workorder_status d-flex ms-auto" t-if="record.state.raw_value == 'progress'">
                                 <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length > 0" class="fa fa-play fs-6" role="img" aria-label="Is running" title="Is running"/>

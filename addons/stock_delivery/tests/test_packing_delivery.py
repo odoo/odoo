@@ -51,7 +51,7 @@ class TestPackingDelivery(TestPackingCommon):
         })
         move_line = self.env['stock.move.line'].create({
             'product_id': self.product_aw.id,
-            'product_uom_id': self.uom_kg.id,
+            'uom_id': self.uom_kg.id,
             'picking_id': picking_ship.id,
             'quantity': 5,
             'location_id': self.stock_location.id,
@@ -60,7 +60,7 @@ class TestPackingDelivery(TestPackingCommon):
         })
         self.env['stock.move.line'].create({
             'product_id': self.product_bw.id,
-            'product_uom_id': self.uom_kg.id,
+            'uom_id': self.uom_kg.id,
             'picking_id': picking_ship.id,
             'quantity': 5,
             'location_id': self.stock_location.id,
@@ -166,7 +166,7 @@ class TestPackingDelivery(TestPackingCommon):
         })
         self.env['stock.move.line'].create({
             'product_id': self.product_aw.id,
-            'product_uom_id': self.uom_kg.id,
+            'uom_id': self.uom_kg.id,
             'picking_id': picking_ship.id,
             'quantity': 5,
             'location_id': self.stock_location.id,
@@ -241,7 +241,7 @@ class TestPackingDelivery(TestPackingCommon):
         })
         ml_1 = self.env['stock.move.line'].create({
             'product_id': self.productA.id,
-            'product_uom_id': self.productA.uom_id.id,
+            'uom_id': self.productA.uom_id.id,
             'picking_id': delivery_1.id,
             'quantity': 1,
             'location_id': self.stock_location.id,
@@ -303,7 +303,7 @@ class TestPackingDelivery(TestPackingCommon):
                 'product_id': self.productA.id,
                 'product_uom_qty': 5.0,
                 'location_id': self.stock_location.id,
-                'product_uom': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
                 'location_dest_id': self.customer_location.id,
             })],
             'move_line_ids': [Command.create({
@@ -312,7 +312,7 @@ class TestPackingDelivery(TestPackingCommon):
                 'quantity': 5.0,
                 'product_id': self.productA.id,
                 'location_dest_id': self.customer_location.id,
-                'product_uom_id': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
             })],
         })
         delivery_company_a.action_confirm()
@@ -329,7 +329,7 @@ class TestPackingDelivery(TestPackingCommon):
                 'product_uom_qty': 3.0,
                 'location_id': wh_b.lot_stock_id.id,
                 'location_dest_id': wh_b.lot_stock_id.id,
-                'product_uom': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
             })],
             'move_line_ids': [Command.create({
                 'location_id': wh_b.lot_stock_id.id,
@@ -337,7 +337,7 @@ class TestPackingDelivery(TestPackingCommon):
                 'result_package_id': reusable_box.id,
                 'quantity': 3.0,
                 'product_id': self.productA.id,
-                'product_uom_id': self.productA.uom_id.id,
+                'uom_id': self.productA.uom_id.id,
             })],
         })
         other_picking_company_b.action_confirm()
@@ -364,7 +364,7 @@ class TestPackingDelivery(TestPackingCommon):
         })
         move_line_1 = self.env['stock.move.line'].create({
             'product_id': self.product_aw.id,
-            'product_uom_id': self.uom_kg.id,
+            'uom_id': self.uom_kg.id,
             'picking_id': picking_ship.id,
             'quantity': 5,
             'location_id': self.stock_location.id,
@@ -373,7 +373,7 @@ class TestPackingDelivery(TestPackingCommon):
         })
         move_line_2 = self.env['stock.move.line'].create({
             'product_id': self.product_bw.id,
-            'product_uom_id': self.uom_kg.id,
+            'uom_id': self.uom_kg.id,
             'picking_id': picking_ship.id,
             'quantity': 5,
             'location_id': self.stock_location.id,

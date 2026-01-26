@@ -851,18 +851,18 @@ class StockPicking(models.Model):
             else:
                 picking.scheduled_date = max(moves_dates, default=picking.scheduled_date or fields.Datetime.now())
 
-    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.quantity')
+    @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.uom_id', 'move_line_ids.quantity')
     def _compute_bulk_weight(self):
         picking_weights = defaultdict(float)
         res_groups = self.env['stock.move.line']._read_group(
             [('picking_id', 'in', self.ids), ('product_id', '!=', False), ('result_package_id', '=', False)],
-            ['picking_id', 'product_id', 'product_uom_id', 'quantity'],
+            ['picking_id', 'product_id', 'uom_id', 'quantity'],
             ['__count'],
         )
-        for picking, product, product_uom, quantity, count in res_groups:
+        for picking, product, uom_id, quantity, count in res_groups:
             picking_weights[picking.id] += (
                 count
-                * product_uom._compute_quantity(quantity, product.uom_id)
+                * uom_id._compute_quantity(quantity, product.uom_id)
                 * product.weight
             )
         for picking in self:
@@ -890,7 +890,7 @@ class StockPicking(models.Model):
         for picking in self:
             volume = 0
             for move in picking.move_ids:
-                volume += move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id) * move.product_id.volume
+                volume += move.uom_id._compute_quantity(move.quantity, move.product_id.uom_id) * move.product_id.volume
             picking.shipping_volume = volume
 
     @api.depends('move_ids.date_deadline', 'move_type')
@@ -954,7 +954,7 @@ class StockPicking(models.Model):
                 continue
             picking.show_check_availability = any(
                 move.state in ('waiting', 'confirmed', 'partially_available') and
-                move.product_uom.compare(move.product_uom_qty, 0)
+                move.uom_id.compare(move.product_uom_qty, 0)
                 for move in picking.move_ids
             )
 
@@ -1312,7 +1312,7 @@ class StockPicking(models.Model):
 
         def get_line_with_done_qty_ids(move_lines):
             # Get only move_lines that has some quantity set.
-            return move_lines.filtered(lambda ml: ml.product_id and ml.product_id.tracking != 'none' and ml.picked and ml.product_uom_id.compare(ml.quantity, 0)).ids
+            return move_lines.filtered(lambda ml: ml.product_id and ml.product_id.tracking != 'none' and ml.picked and ml.uom_id.compare(ml.quantity, 0)).ids
 
         if separate_pickings:
             # If pickings are checked independently, get full/partial move_lines depending if each picking has no quantity set.
@@ -1378,7 +1378,7 @@ class StockPicking(models.Model):
         draft_picking = self.filtered(lambda p: p.state == 'draft')
         draft_picking.action_confirm()
         for move in draft_picking.move_ids:
-            if move.product_uom.is_zero(move.quantity) and not move.product_uom.is_zero(move.product_uom_qty):
+            if move.uom_id.is_zero(move.quantity) and not move.uom_id.is_zero(move.product_uom_qty):
                 move.quantity = move.product_uom_qty
 
         # Sanity checks.
@@ -1436,11 +1436,11 @@ class StockPicking(models.Model):
         return True
 
     def action_split_transfer(self):
-        if all(m.product_uom.is_zero(m.quantity) for m in self.move_ids):
+        if all(m.uom_id.is_zero(m.quantity) for m in self.move_ids):
             raise UserError(_("%s: Nothing to split. Fill the quantities you want in a new transfer in the done quantities", self.display_name))
-        if all(m.product_uom.compare(m.quantity, m.product_uom_qty) == 0 for m in self.move_ids):
+        if all(m.uom_id.compare(m.quantity, m.product_uom_qty) == 0 for m in self.move_ids):
             raise UserError(_("%s: Nothing to split, all demand is done. For split you need at least one line not fully fulfilled", self.display_name))
-        if any(m.product_uom.compare(m.quantity, m.product_uom_qty) > 0 for m in self.move_ids):
+        if any(m.uom_id.compare(m.quantity, m.product_uom_qty) > 0 for m in self.move_ids):
             raise UserError(_("%s: Can't split: quantities done can't be above demand", self.display_name))
 
         moves = self.move_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.quantity != 0)
@@ -2137,7 +2137,7 @@ class StockPicking(models.Model):
             move_line_vals.append({
                 'product_id': package_quant.product_id.id,
                 'quantity': package_quant.quantity,
-                'product_uom_id': package_quant.product_uom_id.id,
+                'uom_id': package_quant.uom_id.id,
                 'location_id': package_quant.location_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'picking_id': self.id,

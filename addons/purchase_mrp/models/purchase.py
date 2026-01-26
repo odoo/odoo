@@ -62,7 +62,7 @@ class PurchaseOrderLine(models.Model):
             kit_bom = kits_by_company[line.company_id].get(line.product_id)
             if kit_bom:
                 moves = line.move_ids.filtered(lambda m: m.state == 'done' and m.location_dest_usage != 'inventory')
-                order_qty = line.product_uom_id._compute_quantity(line.product_uom_qty, kit_bom.product_uom_id)
+                order_qty = line.uom_id._compute_quantity(line.product_uom_qty, kit_bom.uom_id)
                 filters = {
                     'incoming_moves': lambda m:
                         m._is_incoming() and

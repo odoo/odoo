@@ -421,12 +421,12 @@ class AccountMoveLine(models.Model):
     deductible_amount = fields.Float("Deductibility", default=100)
 
     # === Invoice sync fields === #
-    term_key = fields.Binary(compute='_compute_term_key', exportable=False)
-    epd_key = fields.Binary(compute='_compute_epd_key', exportable=False)
-    epd_needed = fields.Binary(compute='_compute_epd_needed', exportable=False)
+    term_key = fields.Json(compute='_compute_term_key', exportable=False)
+    epd_key = fields.Json(compute='_compute_epd_key', exportable=False)
+    epd_needed = fields.Json(compute='_compute_epd_needed', exportable=False)
     epd_dirty = fields.Boolean(compute='_compute_epd_needed')
-    discount_allocation_key = fields.Binary(compute='_compute_discount_allocation_key', exportable=False)
-    discount_allocation_needed = fields.Binary(compute='_compute_discount_allocation_needed', exportable=False)
+    discount_allocation_key = fields.Json(compute='_compute_discount_allocation_key', exportable=False)
+    discount_allocation_needed = fields.Json(compute='_compute_discount_allocation_needed', exportable=False)
     discount_allocation_dirty = fields.Boolean(compute='_compute_discount_allocation_needed')
 
     # === Analytic fields === #
@@ -943,7 +943,7 @@ class AccountMoveLine(models.Model):
             # vendor bills should have the product purchase UOM
             if line.move_id.is_purchase_document():
                 seller_ids = line.product_id.seller_ids._get_filtered_supplier(line.company_id, line.product_id, False)
-                line.product_uom_id = seller_ids[:1].product_uom_id or line.product_id.uom_id
+                line.product_uom_id = seller_ids[:1].uom_id or line.product_id.uom_id
             else:
                 line.product_uom_id = line.product_id.uom_id
 
@@ -1094,7 +1094,12 @@ class AccountMoveLine(models.Model):
                 })
                 dist = distribution_totals[key]
                 total = sum(dist.values()) or 1  # avoid division by zero
-                discount_allocation_needed[key] = frozendict({
+                key_needed = frozendict({
+                    'move_id': line.move_id._origin.id,
+                    'account_id': account._origin.id,
+                    'currency_rate': line.currency_rate,
+                }) if not line.move_id.id else key
+                discount_allocation_needed[key_needed] = frozendict({
                     'display_type': 'discount',
                     'name': _("Discount"),
                     'amount_currency': amount,
@@ -1103,7 +1108,7 @@ class AccountMoveLine(models.Model):
                         for account_id, value in dist.items()
                     }
                 })
-            line.discount_allocation_needed = discount_allocation_needed
+            line.discount_allocation_needed = list(discount_allocation_needed.items())
 
     @api.depends('tax_ids', 'account_id', 'company_id')
     def _compute_epd_key(self):
@@ -1141,8 +1146,8 @@ class AccountMoveLine(models.Model):
             taxes = line.tax_ids.filtered(lambda t: t.amount_type != 'fixed')
             epd_needed_vals = epd_needed.setdefault(
                 frozendict({
-                    'move_id': line.move_id.id,
-                    'account_id': line.account_id.id,
+                    'move_id': line.move_id._origin.id,
+                    'account_id': line.account_id._origin.id,
                     'analytic_distribution': line.analytic_distribution,
                     'tax_ids': [Command.set(taxes.ids)],
                     'display_type': 'epd',
@@ -1161,8 +1166,8 @@ class AccountMoveLine(models.Model):
             epd_needed_vals['balance'] -= balance
             epd_needed_vals = epd_needed.setdefault(
                 frozendict({
-                    'move_id': line.move_id.id,
-                    'account_id': line.account_id.id,
+                    'move_id': line.move_id._origin.id,
+                    'account_id': line.account_id._origin.id,
                     'display_type': 'epd',
                 }),
                 {
@@ -1174,7 +1179,7 @@ class AccountMoveLine(models.Model):
             )
             epd_needed_vals['amount_currency'] += amount_currency
             epd_needed_vals['balance'] += balance
-            line.epd_needed = {k: frozendict(v) for k, v in epd_needed.items()}
+            line.epd_needed = list(epd_needed.items())
 
     @api.depends('move_id.move_type', 'balance', 'tax_repartition_line_id', 'tax_ids')
     def _compute_is_refund(self):
@@ -1205,7 +1210,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.display_type == 'payment_term':
                 line.term_key = frozendict({
-                    'move_id': line.move_id.id,
+                    'move_id': line.move_id._origin.id,
                     'date_maturity': fields.Date.to_date(line.date_maturity),
                     'discount_date': line.discount_date,
                 })

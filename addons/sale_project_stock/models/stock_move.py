@@ -17,7 +17,7 @@ class StockMove(models.Model):
             return order.pricelist_id._get_product_price(
                 self.product_id,
                 1.0,
-                uom=self.product_uom,
+                uom=self.uom_id,
                 date=order.date_order,
             )
 

@@ -58,7 +58,7 @@ class TestTRNilveraEreceiptUpload(TestStockCommon):
             [
                 {
                     'product_uom_qty': quantity,
-                    'product_uom': uom,
+                    'uom_id': uom,
                     'location_id': self.supplier_location.id,
                     'location_dest_id': warehouse_id.lot_stock_id.id,
                 }

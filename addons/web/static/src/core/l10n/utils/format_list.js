@@ -1,6 +1,10 @@
 import { user } from "@web/core/user";
 
 /**
+ * @typedef {keyof typeof LIST_STYLES} FormatListStyle
+ */
+
+/**
  * Maps Unicode UTS-35 list pattern types to Intl.ListFormat options
  */
 const LIST_STYLES = {
@@ -43,7 +47,8 @@ const LIST_STYLES = {
 };
 
 /**
- * Format the items in `list` as a list in a locale-dependent manner with the chosen style.
+ * Format the items in `values` as a list in a locale-dependent manner with the
+ * chosen style.
  *
  * The available styles are defined in the Unicode Technical Standard 35:
  * * standard:
@@ -61,7 +66,7 @@ const LIST_STYLES = {
  * * or-short:
  *   A short version of an "or" list.
  *   e.g. "Jan., Feb., or Mar."
- *   or-narrow:
+ * * or-narrow:
  *   A yet shorter version of a short 'or' list (where possible)
  *   e.g. "Jan., Feb., or Mar."
  * * unit:
@@ -74,16 +79,17 @@ const LIST_STYLES = {
  *   A list suitable for narrow units, where space on the screen is very limited.
  *   e.g. "3′ 7″"
  *
- * See https://www.unicode.org/reports/tr35/tr35-general.html#ListPatterns for more details.
+ * @see https://www.unicode.org/reports/tr35/tr35-general.html#ListPatterns for more details.
  *
- * @param {string[]} list The array of values to format into a list.
- * @param {Object} [param0]
- * @param {string} [param0.localeCode] The locale to use (e.g. en-US).
- * @param {"standard"|"standard-short"|"standard-narrow"|"or"|"or-short"|"or-narrow"|"unit"|"unit-short"|"unit-narrow"} [param0.style="standard"] The style to format the list with.
- * @returns {string} The formatted list.
+ * @param {Iterable<string>} values values to format into a list.
+ * @param {{
+ *  localeCode?: string;
+ *  style?: FormatListStyle;
+ * }} [options]
+ * @returns {string} formatted list.
  */
-export function formatList(list, { localeCode = "", style = "standard" } = {}) {
+export function formatList(values, { localeCode, style } = {}) {
     const locale = localeCode || user.lang || "en-US";
-    const formatter = new Intl.ListFormat(locale, LIST_STYLES[style]);
-    return formatter.format(Array.from(list, String));
+    const formatter = new Intl.ListFormat(locale, LIST_STYLES[style || "standard"]);
+    return formatter.format(Array.from(values, String));
 }

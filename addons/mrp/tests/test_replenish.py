@@ -16,7 +16,7 @@ class TestMrpReplenish(TestMrpCommon):
     def _create_wizard(self, product, warehouse):
         return self.env['product.replenish'].with_context(default_product_tmpl_id=product.product_tmpl_id.id).create({
                 'product_id': product.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'quantity': 1,
                 'warehouse_id': warehouse.id,
             })

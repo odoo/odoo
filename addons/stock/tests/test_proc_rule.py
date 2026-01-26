@@ -105,7 +105,7 @@ class TestProcRule(TransactionCase):
             'location_dest_id': self.ref('stock.stock_location_customers'),
             'move_ids': [(0, 0, {
                 'product_id': product.id,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'product_uom_qty': 10.00,
                 'procure_method': 'make_to_order',
                 'location_id': self.ref('stock.stock_location_output'),
@@ -189,7 +189,7 @@ class TestProcRule(TransactionCase):
         deadline = datetime.now()
         move_dest = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'date_deadline': deadline,
             'location_id': self.ref('stock.stock_location_output'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -197,7 +197,7 @@ class TestProcRule(TransactionCase):
 
         move_orig = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'date_deadline': deadline,
             'move_dest_ids': [(4, move_dest.id)],
             'location_id': self.ref('stock.stock_location_stock'),
@@ -239,7 +239,7 @@ class TestProcRule(TransactionCase):
         delivery_move = self.env['stock.move'].create({
             'date': datetime.today() + timedelta(days=5),
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 12.0,
             'location_id': warehouse.lot_stock_id.id,
             'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -306,7 +306,7 @@ class TestProcRule(TransactionCase):
         })
         delivery_move = self.env['stock.move'].create({
             'product_id': self.productA.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 12.0,
             'location_id': warehouse.lot_stock_id.id,
             'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -326,7 +326,7 @@ class TestProcRule(TransactionCase):
 
         delivery_picking.write({'move_ids': [(0, 0, {
             'product_id': self.productB.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 5.0,
             'location_id': warehouse.lot_stock_id.id,
             'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -432,13 +432,13 @@ class TestProcRule(TransactionCase):
             'location_id': warehouse_2.lot_stock_id.id,
             'location_dest_id': self.partner.property_stock_customer.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 1,
         }, {
             'location_id': warehouse_3.lot_stock_id.id,
             'location_dest_id': self.partner.property_stock_customer.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 1,
         }])
         moves._action_confirm()
@@ -475,7 +475,7 @@ class TestProcRule(TransactionCase):
             'location_id': replenish_loc.id,
             'location_dest_id': self.partner.property_stock_customer.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 3,
         })
         move._action_confirm()
@@ -541,7 +541,7 @@ class TestProcRule(TransactionCase):
                 'location_id': stock_location.id,
                 'location_dest_id': self.partner.property_stock_customer.id,
                 'product_id': product.id,
-                'product_uom': product.uom_id.id,
+                'uom_id': product.uom_id.id,
                 'product_uom_qty': 1,
             } for product in products
         ])
@@ -635,7 +635,7 @@ class TestProcRule(TransactionCase):
         product = self.env['product.product'].create({'name': 'Test Product', 'is_storable': True})
         stock_move = self.env['stock.move'].create({
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'product_uom_qty': 1,
             'location_id': shelf1.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
@@ -660,7 +660,7 @@ class TestProcRule(TransactionCase):
         self.assertEqual(orderpoint.qty_to_order, 5)
         stock_move = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'product_uom_qty': 1,
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -780,7 +780,7 @@ class TestProcRule(TransactionCase):
         # product 0: 15 OUT in 15 days, 10 IN in 25 days -> deadline in 15 days
         stock_moves |= self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'product_uom_qty': 15,
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -788,7 +788,7 @@ class TestProcRule(TransactionCase):
         })
         stock_moves |= self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom': self.product.uom_id.id,
+            'uom_id': self.product.uom_id.id,
             'product_uom_qty': 10,
             'location_id': self.ref('stock.stock_location_suppliers'),
             'location_dest_id': self.ref('stock.stock_location_stock'),
@@ -797,7 +797,7 @@ class TestProcRule(TransactionCase):
         # product 1: 10 OUT in 25, 5 OUT in 35 days -> deadline in 35 days
         stock_moves |= self.env['stock.move'].create({
             'product_id': product_1.id,
-            'product_uom': product_1.uom_id.id,
+            'uom_id': product_1.uom_id.id,
             'product_uom_qty': 10,
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -805,7 +805,7 @@ class TestProcRule(TransactionCase):
         })
         stock_moves |= self.env['stock.move'].create({
             'product_id': product_1.id,
-            'product_uom': product_1.uom_id.id,
+            'uom_id': product_1.uom_id.id,
             'product_uom_qty': 5,
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -814,7 +814,7 @@ class TestProcRule(TransactionCase):
         # product 2: 15 OUT in 15 days, 15 IN in 15 days, 15 OUT in 25 days -> deadline in 25 days
         stock_moves |= self.env['stock.move'].create({
             'product_id': product_2.id,
-            'product_uom': product_2.uom_id.id,
+            'uom_id': product_2.uom_id.id,
             'product_uom_qty': 15,
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -822,7 +822,7 @@ class TestProcRule(TransactionCase):
         })
         stock_moves |= self.env['stock.move'].create({
             'product_id': product_2.id,
-            'product_uom': product_2.uom_id.id,
+            'uom_id': product_2.uom_id.id,
             'product_uom_qty': 15,
             'location_id': self.ref('stock.stock_location_suppliers'),
             'location_dest_id': self.ref('stock.stock_location_stock'),
@@ -830,7 +830,7 @@ class TestProcRule(TransactionCase):
         })
         stock_moves |= self.env['stock.move'].create({
             'product_id': product_2.id,
-            'product_uom': product_2.uom_id.id,
+            'uom_id': product_2.uom_id.id,
             'product_uom_qty': 15,
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -865,7 +865,7 @@ class TestProcRule(TransactionCase):
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         out_move = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 15.0,
             'location_id': warehouse.lot_stock_id.id,
             'location_dest_id': self.ref('stock.stock_location_customers'),
@@ -899,7 +899,7 @@ class TestProcRule(TransactionCase):
 
         late_out_move = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_uom_qty': 15.0,
             'location_id': warehouse.lot_stock_id.id,
             'location_dest_id': self.ref('stock.stock_location_customers'),

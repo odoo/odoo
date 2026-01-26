@@ -1,12 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import _, api, fields, models
 from odoo.fields import Domain
-from odoo.http import request
 
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
+
+    wishlist_ids = fields.One2many(
+        string="Wishlist",
+        comodel_name='product.wishlist',
+        inverse_name='partner_id',
+        domain=[('active', '=', True)],
+    )
 
     @api.onchange('property_product_pricelist')
     def _onchange_property_product_pricelist(self):

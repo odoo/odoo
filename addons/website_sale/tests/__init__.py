@@ -40,6 +40,8 @@ from . import (
     test_technical_page,
     test_website_editor,
     test_website_sale_checkout_steps,
+    test_website_sale_comparison,
     test_website_sequence,
     test_website_visitor,
+    test_wishlist_ui,
 )

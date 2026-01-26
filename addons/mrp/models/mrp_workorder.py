@@ -39,7 +39,7 @@ class MrpWorkorder(models.Model):
         string='Workcenter Status', related='workcenter_id.working_state') # technical: used in views only
     product_id = fields.Many2one(related='production_id.product_id')
     product_tracking = fields.Selection(related="product_id.tracking")
-    product_uom_id = fields.Many2one(related='production_id.product_uom_id')
+    uom_id = fields.Many2one(related='production_id.uom_id')
     product_variant_attributes = fields.Many2many('product.template.attribute.value', related='product_id.product_template_attribute_value_ids')
     production_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True, check_company=True, readonly=True, index='btree')
     production_availability = fields.Selection(
@@ -149,9 +149,9 @@ class MrpWorkorder(models.Model):
     @api.depends('qty_ready')
     def _compute_state(self):
         for workorder in self:
-            if not workorder.product_uom_id or workorder.state not in ('blocked', 'ready'):
+            if not workorder.uom_id or workorder.state not in ('blocked', 'ready'):
                 continue
-            has_qty_ready = workorder.product_uom_id.compare(workorder.qty_ready, 0) > 0
+            has_qty_ready = workorder.uom_id.compare(workorder.qty_ready, 0) > 0
             if has_qty_ready:
                 workorder.write({'state': 'ready'})
             else:
@@ -325,11 +325,11 @@ class MrpWorkorder(models.Model):
         mo_dirty.workorder_ids._action_confirm()
         return res
 
-    @api.depends('production_id.product_qty', 'qty_produced', 'production_id.product_uom_id')
+    @api.depends('production_id.product_qty', 'qty_produced', 'production_id.uom_id')
     def _compute_is_produced(self):
         self.is_produced = False
-        for order in self.filtered(lambda p: p.production_id and p.production_id.product_uom_id):
-            order.is_produced = order.production_id.product_uom_id.compare(order.qty_produced, order.qty_production) >= 0
+        for order in self.filtered(lambda p: p.production_id and p.production_id.uom_id):
+            order.is_produced = order.production_id.uom_id.compare(order.qty_produced, order.qty_production) >= 0
 
     @api.depends('operation_id', 'workcenter_id', 'qty_producing', 'qty_production')
     def _compute_duration_expected(self):
@@ -476,7 +476,7 @@ class MrpWorkorder(models.Model):
             for wo in self:
                 if wo.state in ['done', 'cancel']:
                     raise UserError(_('You cannot change the quantity produced of a work order that is in done or cancel state.'))
-                elif wo.product_uom_id.compare(values['qty_produced'], 0) < 0:
+                elif wo.uom_id.compare(values['qty_produced'], 0) < 0:
                     raise UserError(_('The quantity produced must be positive.'))
 
         if 'production_id' in values and any(values['production_id'] != w.production_id.id for w in self):
@@ -521,12 +521,12 @@ class MrpWorkorder(models.Model):
 
         res = super().write(values)
         productions = self.production_id.filtered(
-            lambda p: p.product_uom_id.compare(values.get('qty_produced', 0), 0) > 0
+            lambda p: p.uom_id.compare(values.get('qty_produced', 0), 0) > 0
         )
         if 'qty_produced' in values and productions:
             for production in productions:
                 min_wo_qty = min(production.workorder_ids.mapped('qty_produced'))
-                if production.product_uom_id.compare(min_wo_qty, 0) > 0:
+                if production.uom_id.compare(min_wo_qty, 0) > 0:
                     production.workorder_ids.filtered(lambda w: w.state != 'done').qty_producing = min_wo_qty
             self._set_qty_producing()
 
@@ -693,11 +693,11 @@ class MrpWorkorder(models.Model):
 
         for move in moves_to_pick:
             production_id = move.raw_material_production_id or move.production_id
-            if production_id.product_uom_id.is_zero(production_id.qty_producing):
+            if production_id.uom_id.is_zero(production_id.qty_producing):
                 qty_available = production_id.product_qty
             else:
                 qty_available = production_id.qty_producing
-            new_qty = move.product_uom.round(qty_available * move.unit_factor)
+            new_qty = move.uom_id.round(qty_available * move.unit_factor)
             move._set_quantity_done(new_qty)
 
         moves_to_pick.picked = True
@@ -760,11 +760,11 @@ class MrpWorkorder(models.Model):
         action['res_id'] = self.id
         return action
 
-    @api.depends('qty_production', 'qty_reported_from_previous_wo', 'qty_produced', 'production_id.product_uom_id')
+    @api.depends('qty_production', 'qty_reported_from_previous_wo', 'qty_produced', 'production_id.uom_id')
     def _compute_qty_remaining(self):
         for wo in self:
-            if wo.production_id.product_uom_id:
-                wo.qty_remaining = max(wo.production_id.product_uom_id.round(wo.qty_production - wo.qty_reported_from_previous_wo - wo.qty_produced), 0)
+            if wo.production_id.uom_id:
+                wo.qty_remaining = max(wo.production_id.uom_id.round(wo.qty_production - wo.qty_reported_from_previous_wo - wo.qty_produced), 0)
             else:
                 wo.qty_remaining = 0
 
@@ -772,7 +772,7 @@ class MrpWorkorder(models.Model):
         self.ensure_one()
         if not self.workcenter_id:
             return self.duration_expected
-        capacity, setup, cleanup = self.workcenter_id._get_capacity(self.product_id, self.product_uom_id, self.production_bom_id.product_qty or 1)
+        capacity, setup, cleanup = self.workcenter_id._get_capacity(self.product_id, self.uom_id, self.production_bom_id.product_qty or 1)
         if not self.operation_id:
             duration_expected_working = (self.duration_expected - setup - cleanup) * self.workcenter_id.time_efficiency / 100.0
             if duration_expected_working < 0:
@@ -789,7 +789,7 @@ class MrpWorkorder(models.Model):
             duration_expected_working = (self.duration_expected - setup - cleanup) * self.workcenter_id.time_efficiency / (100.0 * cycle_number)
             if duration_expected_working < 0:
                 duration_expected_working = 0
-            capacity, setup, cleanup = alternative_workcenter._get_capacity(self.product_id, self.product_uom_id, self.production_bom_id.product_qty or 1)
+            capacity, setup, cleanup = alternative_workcenter._get_capacity(self.product_id, self.uom_id, self.production_bom_id.product_qty or 1)
             cycle_number = float_round(qty_production / capacity, precision_digits=0, rounding_method='UP')
             return setup + cleanup + cycle_number * duration_expected_working * 100.0 / alternative_workcenter.time_efficiency
         time_cycle = self.operation_id.time_cycle

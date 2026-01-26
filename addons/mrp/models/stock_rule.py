@@ -53,11 +53,11 @@ class StockRule(models.Model):
         for procurement in procurements:
             bom_kit = kits_by_company[procurement.company_id].get(procurement.product_id)
             if bom_kit:
-                order_qty = procurement.product_uom._compute_quantity(procurement.product_qty, bom_kit.product_uom_id, round=False)
+                order_qty = procurement.uom_id._compute_quantity(procurement.product_qty, bom_kit.uom_id, round=False)
                 qty_to_produce = (order_qty / bom_kit.product_qty)
                 _dummy, bom_sub_lines = bom_kit.explode(procurement.product_id, qty_to_produce, never_attribute_values=procurement.values.get("never_product_template_attribute_value_ids"))
                 for bom_line, bom_line_data in bom_sub_lines:
-                    bom_line_uom = bom_line.product_uom_id
+                    bom_line_uom = bom_line.uom_id
                     quant_uom = bom_line.product_id.uom_id
                     # recreate dict of values since each child has its own bom_line_id
                     values = dict(procurement.values, bom_line_id=bom_line.id)
@@ -81,7 +81,7 @@ class StockRule(models.Model):
     def _run_manufacture(self, procurements):
         new_productions_values_by_company = defaultdict(lambda: defaultdict(list))
         for procurement, rule in procurements:
-            if procurement.product_uom.compare(procurement.product_qty, 0) <= 0:
+            if procurement.uom_id.compare(procurement.product_qty, 0) <= 0:
                 # If procurement contains negative quantity, don't create a MO that would be for a negative value.
                 continue
             bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
@@ -93,20 +93,20 @@ class StockRule(models.Model):
             is_batch_size = bom and bom.enable_batch_size
             if not mo or is_batch_size:
                 procurement_qty = procurement.product_qty
-                batch_size = bom.product_uom_id._compute_quantity(bom.batch_size, procurement.product_uom) if is_batch_size else procurement_qty
+                batch_size = bom.uom_id._compute_quantity(bom.batch_size, procurement.uom_id) if is_batch_size else procurement_qty
                 vals = rule._prepare_mo_vals(*procurement, bom)
-                while procurement.product_uom.compare(procurement_qty, 0) > 0:
+                while procurement.uom_id.compare(procurement_qty, 0) > 0:
                     new_productions_values_by_company[procurement.company_id.id]['values'].append({
                         **vals,
-                        'product_qty': procurement.product_uom._compute_quantity(batch_size, bom.product_uom_id) if bom else procurement_qty,
+                        'product_qty': procurement.uom_id._compute_quantity(batch_size, bom.uom_id) if bom else procurement_qty,
                     })
                     new_productions_values_by_company[procurement.company_id.id]['procurements'].append(procurement)
                     procurement_qty -= batch_size
             else:
-                procurement_product_uom_qty = procurement.product_uom._compute_quantity(procurement.product_qty, procurement.product_id.uom_id)
+                procurement_product_uom_qty = procurement.uom_id._compute_quantity(procurement.product_qty, procurement.product_id.uom_id)
                 self.env['change.production.qty'].sudo().with_context(skip_activity=True).create({
                     'mo_id': mo.id,
-                    'product_qty': mo.product_id.uom_id._compute_quantity((mo.product_uom_qty + procurement_product_uom_qty), mo.product_uom_id),
+                    'product_qty': mo.product_id.uom_id._compute_quantity((mo.product_uom_qty + procurement_product_uom_qty), mo.uom_id),
                 }).change_prod_qty()
 
         for company_id in new_productions_values_by_company:
@@ -173,8 +173,8 @@ class StockRule(models.Model):
             'product_id': product_id.id,
             'product_description_variants': values.get('product_description_variants'),
             'never_product_template_attribute_value_ids': values.get('never_product_template_attribute_value_ids'),
-            'product_qty': product_uom._compute_quantity(product_qty, bom.product_uom_id) if bom else product_qty,
-            'product_uom_id': bom.product_uom_id.id if bom else product_uom.id,
+            'product_qty': product_uom._compute_quantity(product_qty, bom.uom_id) if bom else product_qty,
+            'uom_id': bom.uom_id.id if bom else product_uom.id,
             'location_src_id': picking_type.default_location_src_id.id,
             'location_dest_id': picking_type.default_location_dest_id.id or location_dest_id.id,
             'location_final_id': location_dest_id.id,

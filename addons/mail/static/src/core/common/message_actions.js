@@ -128,11 +128,7 @@ registerMessageAction("reactions", {
     icon: "fa fa-smile-o",
     name: _t("View Reactions"),
     onSelected: ({ message, owner, store }) => {
-        store.env.services.dialog.add(
-            MessageReactionMenu,
-            { message: toRaw(message) },
-            { context: owner }
-        );
+        store.env.services.dialog.add(MessageReactionMenu, { message }, { context: owner });
     },
     sequence: 50,
 });

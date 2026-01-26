@@ -2,8 +2,10 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { memoize } from "@web/core/utils/functions";
-import { CUSTOMIZE_MAILING_VARIABLES } from "@mass_mailing/builder/plugins/customize_mailing_variables";
-import { CUSTOMIZE_MAILING_VARIABLES_DEFAULTS } from "./customize_mailing_variables";
+import {
+    CUSTOMIZE_MAILING_VARIABLES,
+    CUSTOMIZE_MAILING_VARIABLES_DEFAULTS,
+} from "@mass_mailing/builder/plugins/customize_mailing_variables";
 import { splitSelectorAroundCommasOutsideParentheses } from "@mail/views/web/fields/html_mail_field/convert_inline";
 
 const RE_SELECTOR_ENDS_WITH_GT_STAR = />\s*\*\s*$/;

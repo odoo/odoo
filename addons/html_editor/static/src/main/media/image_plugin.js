@@ -389,7 +389,7 @@ export class ImagePlugin extends Plugin {
     getImageTransformProps() {
         return {
             id: "image_transform",
-            icon: "fa-object-ungroup",
+            icon: "fa-repeat",
             title: _t("Transform the picture (click twice to reset transformation)"),
             getTargetedImage: this.getTargetedImage.bind(this),
             resetImageTransformation: this.resetImageTransformation.bind(this),

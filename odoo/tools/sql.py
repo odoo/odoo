@@ -401,10 +401,12 @@ def get_depending_views(cr, table, column):
         JOIN pg_class as dependent ON pg_depend.refobjid = dependent.oid
         JOIN pg_attribute ON pg_depend.refobjid = pg_attribute.attrelid
             AND pg_depend.refobjsubid = pg_attribute.attnum
+        JOIN pg_namespace n ON dependee.relnamespace = n.oid
         WHERE dependent.relname = %s
         AND pg_attribute.attnum > 0
         AND pg_attribute.attname = %s
         AND dependee.relkind in ('v', 'm')
+        AND n.nspname = current_schema
     """, table, column))
     return cr.fetchall()
 
@@ -434,8 +436,10 @@ def constraint_definition(cr, tablename, constraintname):
         SELECT COALESCE(d.description, pg_get_constraintdef(c.oid))
         FROM pg_constraint c
         JOIN pg_class t ON t.oid = c.conrelid
+        JOIN pg_namespace n ON t.relnamespace = n.oid
         LEFT JOIN pg_description d ON c.oid = d.objoid
         WHERE t.relname = %s AND conname = %s
+          AND n.nspname = current_schema
     """, tablename, constraintname))
     return cr.fetchone()[0] if cr.rowcount else None
 
@@ -486,12 +490,14 @@ def get_foreign_keys(cr, tablename1, columnname1, tablename2, columnname2, ondel
             JOIN pg_class AS c2 ON fk.confrelid = c2.oid
             JOIN pg_attribute AS a1 ON a1.attrelid = c1.oid AND fk.conkey[1] = a1.attnum
             JOIN pg_attribute AS a2 ON a2.attrelid = c2.oid AND fk.confkey[1] = a2.attnum
+            JOIN pg_namespace n ON c1.relnamespace = n.oid
             WHERE fk.contype = 'f'
             AND c1.relname = %s
             AND a1.attname = %s
             AND c2.relname = %s
             AND a2.attname = %s
             AND fk.confdeltype = %s
+            AND n.nspname = current_schema
         """,
         tablename1, columnname1, tablename2, columnname2, deltype,
     ))
@@ -507,12 +513,14 @@ def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondele
     cr.execute(SQL(
         """ SELECT con.conname, c2.relname, a2.attname, con.confdeltype as deltype
               FROM pg_constraint as con, pg_class as c1, pg_class as c2,
-                   pg_attribute as a1, pg_attribute as a2
+                   pg_attribute as a1, pg_attribute as a2, pg_namespace n
              WHERE con.contype='f' AND con.conrelid=c1.oid AND con.confrelid=c2.oid
                AND array_lower(con.conkey, 1)=1 AND con.conkey[1]=a1.attnum
                AND array_lower(con.confkey, 1)=1 AND con.confkey[1]=a2.attnum
                AND a1.attrelid=c1.oid AND a2.attrelid=c2.oid
-               AND c1.relname=%s AND a1.attname=%s """,
+               AND c1.relname=%s AND a1.attname=%s
+               AND c1.relnamespace = n.oid
+               AND n.nspname = current_schema """,
         tablename1, columnname1,
     ))
     found = False
@@ -543,8 +551,10 @@ def index_definition(cr, indexname):
         SELECT idx.indexdef, d.description
         FROM pg_class c
         JOIN pg_indexes idx ON c.relname = idx.indexname
+        JOIN pg_namespace n ON c.relnamespace = n.oid
         LEFT JOIN pg_description d ON c.oid = d.objoid
         WHERE c.relname = %s AND c.relkind = 'i'
+          AND n.nspname = current_schema
     """, indexname))
     return cr.fetchone() if cr.rowcount else (None, None)
 

@@ -88,7 +88,7 @@ export class ImageTransformation extends Component {
     }
 
     mouseMove(ev) {
-        if (!this.transfo.active) {
+        if (!this.transfo.active?.type) {
             return;
         }
         ev.preventDefault();
@@ -126,23 +126,6 @@ export class ImageTransformation extends Component {
 
             // reset position : don't move center
             this.positionTransfoContainer();
-            const new_center = this.getOffset(this.transfoCenter.el);
-            const x = center.left - new_center.left;
-            const y = center.top - new_center.top;
-            const angle = ang * rad;
-            settings.translatex += x * Math.cos(angle) - y * Math.sin(-angle);
-            settings.translatey += -x * Math.sin(angle) + y * Math.cos(-angle);
-        } else if (this.transfo.active.type == "position") {
-            const angle = settings.angle * rad;
-            const x = pageX - this.transfo.active.pageX;
-            const y = pageY - this.transfo.active.pageY;
-            this.transfo.active.pageX = pageX;
-            this.transfo.active.pageY = pageY;
-            const dx = x * Math.cos(angle) - y * Math.sin(-angle);
-            const dy = -x * Math.sin(angle) + y * Math.cos(-angle);
-
-            settings.translatex += dx;
-            settings.translatey += dy;
         } else if (this.transfo.active.type.length === 2) {
             const width = this.transfo.active.width;
             const height = this.transfo.active.height;
@@ -193,8 +176,6 @@ export class ImageTransformation extends Component {
         }
 
         settings.angle = Math.round(settings.angle);
-        settings.translatex = Math.round(settings.translatex);
-        settings.translatey = Math.round(settings.translatey);
 
         // When rotating, the offset used for the rotation center must be stable.
         // getOffset normally includes CSS transforms, which would move the
@@ -227,7 +208,7 @@ export class ImageTransformation extends Component {
             return;
         }
         this.isCurrentlyTransforming = true;
-        let type = "position";
+        let type;
         const target = ev.target.closest("div");
 
         if (target.classList.contains("transfo-rotator")) {
@@ -278,25 +259,6 @@ export class ImageTransformation extends Component {
         this.transfo.settings.width = parseFloat(getComputedStyle(this.image).width);
         this.transfo.settings.height = parseFloat(getComputedStyle(this.image).height);
 
-        const translatex = transform.match(/translateX\(([0-9.-]+)(%|px)\)/);
-        const translatey = transform.match(/translateY\(([0-9.-]+)(%|px)\)/);
-        this.transfo.settings.translate = "%";
-
-        if (translatex && translatex[2] === "%") {
-            this.transfo.settings.translatexp = parseFloat(translatex[1]);
-            this.transfo.settings.translatex =
-                (this.transfo.settings.translatexp / 100) * this.transfo.settings.width;
-        } else {
-            this.transfo.settings.translatex = translatex ? parseFloat(translatex[1]) : 0;
-        }
-        if (translatey && translatey[2] === "%") {
-            this.transfo.settings.translateyp = parseFloat(translatey[1]);
-            this.transfo.settings.translatey =
-                (this.transfo.settings.translateyp / 100) * this.transfo.settings.height;
-        } else {
-            this.transfo.settings.translatey = translatey ? parseFloat(translatey[1]) : 0;
-        }
-
         this.transfo.settings.css = window.getComputedStyle(this.image, null);
         this.transfo.settings.rotationStep = 5;
     }
@@ -305,8 +267,6 @@ export class ImageTransformation extends Component {
         const settings = this.transfo.settings;
         const width = parseFloat(getComputedStyle(this.image).width);
         const height = parseFloat(getComputedStyle(this.image).height);
-        settings.translatexp = Math.round((settings.translatex / width) * 1000) / 10;
-        settings.translateyp = Math.round((settings.translatey / height) * 1000) / 10;
 
         this.setImageTransformation(this.image);
 
@@ -321,29 +281,12 @@ export class ImageTransformation extends Component {
         this.setImageTransformation(controls);
         controls.style.width = width + "px";
         controls.style.height = height + "px";
-        controls.style.cursor = "move";
     }
 
     setImageTransformation(element) {
         let transform = "";
         if (this.transfo.settings.angle !== 0) {
             transform += " rotate(" + this.transfo.settings.angle + "deg) ";
-        }
-        if (this.transfo.settings.translatex) {
-            transform +=
-                " translateX(" +
-                (this.transfo.settings.translate === "%"
-                    ? this.transfo.settings.translatexp + "%"
-                    : this.transfo.settings.translatex + "px") +
-                ") ";
-        }
-        if (this.transfo.settings.translatey) {
-            transform +=
-                " translateY(" +
-                (this.transfo.settings.translate === "%"
-                    ? this.transfo.settings.translateyp + "%"
-                    : this.transfo.settings.translatey + "px") +
-                ") ";
         }
         element.style.transform = transform;
     }

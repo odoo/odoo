@@ -226,7 +226,7 @@ class DeliveryCarrier(models.Model):
         product_lines = move_lines.filtered(lambda line: line.product_id.type == 'consu')
         for product, lines in groupby(product_lines, lambda x: x.product_id):
             unit_quantity = sum(
-                line.product_uom_id._compute_quantity(
+                line.uom_id._compute_quantity(
                     line.quantity,
                     product.uom_id)
                 for line in lines)

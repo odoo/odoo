@@ -11,7 +11,7 @@ import pywintypes
 import ghostscript
 
 from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
-from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
+from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import EscposNotAvailableError, PrinterDriverBase
 from odoo.addons.iot_drivers.tools import system
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_W import win32print_lock
@@ -63,9 +63,12 @@ class PrinterDriver(PrinterDriverBase):
         super().disconnect()
 
     def print_raw(self, data, action_unique_id=None):
-        if not self.check_printer_status(action_unique_id):
-            _logger.warning("Printer %s is not ready, aborting raw print", self.device_name)
-            raise Exception("Printer not ready")
+        if self.escpos_device:
+            try:
+                return self.print_raw_escpos(data, action_unique_id)
+            except EscposNotAvailableError:
+                _logger.warning("Failed to print via python-escpos, falling back to Windows printing")
+
         job_id = False
         page_started = False
         try:

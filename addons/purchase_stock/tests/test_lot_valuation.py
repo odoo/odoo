@@ -21,7 +21,7 @@ class TestLotValuationPurchase(TestLotValuation):
                 (0, 0, {
                     'product_id': self.product1.id,
                     'product_qty': 10,
-                    'product_uom_id': self.product1.uom_id.id,
+                    'uom_id': self.product1.uom_id.id,
                 }),
             ],
         })

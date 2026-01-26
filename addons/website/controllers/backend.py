@@ -43,7 +43,7 @@ class WebsiteBackend(http.Controller):
         show the progress between installed and yet to install features.
         """
         features_not_installed = request.env['website.configurator.feature']\
-            .browse(selected_features).module_id.upstream_dependencies(exclude_states=('',))\
+            .browse(selected_features).module_id.upstream_dependencies(exclude_states=())\
             .filtered(lambda feature: feature.state != 'installed')
 
         # On the 1st run, the total tallies the targeted, not yet installed

@@ -24,9 +24,9 @@
                     </button>
                     <button
                             class="h-100 button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
-                            t-on-click="() => doSubmitOrder.call()"
+                            t-on-click="() => doReprintOrder.call()"
                             t-elif="this.pos.kitchenPrinters.length and this.currentOrder.uiState.lastPrints.length"
-                            t-att-disabled="doSubmitOrder.status === 'loading'">
+                            t-att-disabled="doReprintOrder.status === 'loading'">
                         <i class="fa fa-cutlery" aria-hidden="true"></i>
                     </button>
                     <button

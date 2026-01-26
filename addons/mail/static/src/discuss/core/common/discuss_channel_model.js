@@ -578,12 +578,6 @@ export class DiscussChannel extends Record {
         ]);
     }
 
-    async markAsFetched() {
-        await this.store.env.services.orm.silent.call("discuss.channel", "channel_fetched", [
-            [this.id],
-        ]);
-    }
-
     messagePin(message) {
         this.store.env.services.dialog.add(MessageConfirmDialog, {
             confirmText: _t("Yeah, pin it!"),

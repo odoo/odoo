@@ -139,7 +139,7 @@
                     <button name="action_receive" class="btn-primary" type="object" string="Receive" data-hotkey="e" invisible="not show_receive_button"/>
                     <widget name="purchase_file_uploader" invisible="state != 'purchase'"/>
                     <button name="action_rfq_send" invisible="state != 'purchase'" string="Send PO" type="object" context="{'send_rfq':False}" data-hotkey="g"/>
-                    <button name="action_acknowledge" string="Acknowledge" type="object" invisible="acknowledged or state != 'purchase'"/>
+                    <button name="action_acknowledge" string="Acknowledge" type="object" invisible="acknowledged or state != 'purchase'" data-hotkey="a"/>
                     <button name="button_draft" invisible="state != 'cancel'" string="Set to Draft" type="object" data-hotkey="o"/>
                     <button name="print_quotation" string="Print" type="object" groups="base.group_user" data-hotkey="k" invisible="state == 'purchase'"/>
                     <button name="%(purchase.action_report_purchase_order)d" string="Print" type="action" groups="base.group_user" data-hotkey="k" invisible="state != 'purchase'"/>
@@ -290,7 +290,7 @@
                                     <field name="qty_received_method" column_invisible="True"/>
                                     <field name="qty_received" string="Received" column_invisible="parent.state != 'purchase'" readonly="qty_received_method != 'manual' or is_downpayment" optional="show"/>
                                     <field name="qty_invoiced" string="Billed" column_invisible="parent.state != 'purchase'" optional="show"/>
-                                    <field name="product_uom_id" groups="uom.group_uom"
+                                    <field name="uom_id" groups="uom.group_uom"
                                         readonly="state in ('purchase', 'cancel') or is_downpayment"
                                         required="not display_type and not is_downpayment"
                                         options="{'no_create': True, 'no_open': True, 'quantity_field': 'product_qty'}"
@@ -317,7 +317,7 @@
                                                 <label for="product_qty"/>
                                                 <div class="o_row">
                                                     <field name="product_qty"/>
-                                                    <field name="product_uom_id" groups="uom.group_uom" required="not display_type and not is_downpayment" widget="many2one_uom"/>
+                                                    <field name="uom_id" groups="uom.group_uom" required="not display_type and not is_downpayment" widget="many2one_uom"/>
                                                 </div>
                                                 <field name="qty_received_method" invisible="1"/>
                                                 <field name="qty_received" string="Received Quantity" invisible="parent.state != 'purchase'" readonly="qty_received_method != 'manual'"/>
@@ -364,7 +364,7 @@
                                                     <span class="col-8 text-muted">
                                                         Quantity:
                                                         <field name="product_qty" />
-                                                        <field name="product_uom_id" groups="uom.group_uom" class="small"/>
+                                                        <field name="uom_id" groups="uom.group_uom" class="small"/>
                                                     </span>
                                                     <span class="fw-bold col-4" t-if="record.tax_calculation_rounding_method.raw_value === 'round_per_line'">
                                                         Tax incl.: <field name="price_total" />
@@ -761,7 +761,7 @@
                     <field name="product_id"/>
                     <field name="price_unit"/>
                     <field name="product_qty"/>
-                    <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
+                    <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                     <field name="price_subtotal" widget="monetary"/>
                     <field name="currency_id" column_invisible="True"/>
                     <field name="date_planned"/>
@@ -790,7 +790,7 @@
                                 <label for="product_qty"/>
                                 <div class="o_row">
                                     <field name="product_qty" readonly="1"/>
-                                    <field name="product_uom_id" readonly="1" groups="uom.group_uom"/>
+                                    <field name="uom_id" readonly="1" groups="uom.group_uom"/>
                                 </div>
                                 <field name="price_unit"/>
                             </group>

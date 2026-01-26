@@ -1,8 +1,8 @@
-from contextlib import contextmanager
-from unittest.mock import patch
-from urllib.parse import parse_qs, quote_plus
+import requests
 
-from odoo.tools import DotDict
+from contextlib import contextmanager
+from unittest.mock import Mock, patch
+from urllib.parse import parse_qs, quote_plus
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -10,6 +10,11 @@ ID_CLIENT = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 
 
 class PeppolConnectorCommon(AccountTestInvoicingCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['ir.config_parameter'].sudo().set_str('account_peppol.edi.mode', 'test')
 
     @staticmethod
     def forge_id_client(company_id):
@@ -30,22 +35,42 @@ class PeppolConnectorCommon(AccountTestInvoicingCommon):
         else:
             return self._default_error_code()
 
-    def _mock_create_user(self, success=True):
-
+    def _mock_can_connect(self, with_auth=False):
         def replacement_method(url, **kwargs):
-            if success:
-                company_id = kwargs['json']['params']['company_id']
-                return {
-                    'result': {
-                        'id_client': PeppolConnectorCommon.forge_id_client(company_id),
-                        'refresh_token': 'test_refresh_token'
-                    },
-                }
-            else:
-                return self._default_error_code()
+            auth_vals = {
+                'available_auths': {
+                    'itsme': {'authorization_url': 'test_authorization_url'},
+                },
+            } if with_auth else {}
+            return {
+                'auth_required': with_auth,
+                **auth_vals,
+            }
 
         return (
-            'https://peppol.test.odoo.com/iap/account_edi/2/create_user',
+            'https://peppol.test.odoo.com/api/peppol/2/can_connect',
+            replacement_method,
+        )
+
+    def _mock_connect(self, success=True, peppol_state='smp_registration', id_client='test_id_client'):
+        def replacement_method(url, **kwargs):
+            if peppol_state == 'rejected':
+                return {
+                    'status_code': 403,
+                    'code': 201,
+                    'message': 'Unable to register, please contact our support team at peppol.support@odoo.com.'
+                }
+            if success:
+                return {'id_client': id_client, 'refresh_token': 'test_refresh_token', 'peppol_state': peppol_state}
+            else:
+                return {
+                    'status_code': 401,
+                    'code': 208,
+                    'message': 'The Authentication failed',
+                }
+
+        return (
+            'https://peppol.test.odoo.com/api/peppol/2/connect',
             replacement_method,
         )
 
@@ -61,10 +86,10 @@ class PeppolConnectorCommon(AccountTestInvoicingCommon):
             lambda url, **kwargs: self._empty_result_or_error(success=success),
         )
 
-    def _mock_lookup_participant(self, success=True):
+    def _mock_lookup_participant(self, already_exists=False):
 
         def replacement_method(url, **kwargs):
-            if success:
+            if not already_exists:
                 return {
                     'status_code': 404,
                     'error': {
@@ -139,10 +164,19 @@ class PeppolConnectorCommon(AccountTestInvoicingCommon):
                         'kwargs': kwargs,
                     }
                     results = replacement_method(url, **kwargs)
-                    return DotDict({**results, 'json': lambda: results, 'raise_for_status': lambda: None})
+                    mocked_request = Mock()
+                    mocked_request.status_code = results.get('status_code', 200)
+                    results.pop('status_code', None)
+                    if not (200 <= mocked_request.status_code < 300):
+                        mocked_request.raise_for_status.side_effect = requests.exceptions.HTTPError()
+                    mocked_request.json.return_value = results
+                    return mocked_request
             self.assertFalse(url, "Missing mock!")
 
-        with patch('requests.get', mock_request), patch('requests.post', mock_request):
+        def mock_request_2(method, url, **kwargs):
+            return mock_request(url, **kwargs)
+
+        with patch('requests.get', mock_request), patch('requests.post', mock_request), patch('requests.request', mock_request_2):
             yield mock_results
 
-        self.assertFalse([url for url in mocks if url not in called_urls])
+        self.assertFalse([url for url in mocks if url not in called_urls], "URLs mocked but not called")

@@ -4952,7 +4952,7 @@ class AccountTaxRepartitionLine(models.Model):
         compute='_compute_use_in_tax_closing', store=True, readonly=False, precompute=True,
     )
 
-    tag_ids_domain = fields.Binary(string="tag domain", help="Dynamic domain used for the tag that can be set on tax", compute="_compute_tag_ids_domain")
+    tag_ids_domain = fields.Json(string="tag domain", help="Dynamic domain used for the tag that can be set on tax", compute="_compute_tag_ids_domain")
 
     @api.depends('company_id.multi_vat_foreign_country_ids', 'company_id.account_fiscal_country_id')
     def _compute_tag_ids_domain(self):

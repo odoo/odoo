@@ -100,7 +100,7 @@ class StockRule(models.Model):
             po = self.env['purchase.order'].sudo().search([dom for dom in domain], limit=1)
             company_id = rules[0].company_id or procurements[0].company_id
             if not po:
-                positive_values = [p.values for p in procurements if p.product_uom.compare(p.product_qty, 0.0) >= 0]
+                positive_values = [p.values for p in procurements if p.uom_id.compare(p.product_qty, 0.0) >= 0]
                 if positive_values:
                     # We need a rule to generate the PO. However the rule generated
                     # the same domain for PO and the _prepare_purchase_order method
@@ -140,11 +140,11 @@ class StockRule(models.Model):
                     # If the procurement can be merge in an existing line. Directly
                     # write the new values on it.
                     vals = self._update_purchase_order_line(procurement.product_id,
-                        procurement.product_qty, procurement.product_uom, company_id,
+                        procurement.product_qty, procurement.uom_id, company_id,
                         procurement.values, po_line)
                     po_line.sudo().write(vals)
                 else:
-                    if procurement.product_uom.compare(procurement.product_qty, 0) <= 0:
+                    if procurement.uom_id.compare(procurement.product_qty, 0) <= 0:
                         # If procurement contains negative quantity, don't create a new line that would contain negative qty
                         continue
                     # If it does not exist a PO line for current procurement.
@@ -213,7 +213,7 @@ class StockRule(models.Model):
         # generated from the order line has the orderpoint's location as
         # destination location. In case of move_dest_ids those two points are not
         # necessary anymore since those values are taken from destination moves.
-        return procurement.product_id, procurement.product_uom, procurement.values['propagate_cancel'],\
+        return procurement.product_id, procurement.uom_id, procurement.values['propagate_cancel'],\
             procurement.values.get('product_description_variants'),\
             (procurement.values.get('orderpoint_id') and not procurement.values.get('move_dest_ids')) and procurement.values['orderpoint_id']
 
@@ -256,7 +256,7 @@ class StockRule(models.Model):
                 'orderpoint_id': orderpoint_id,
             })
             merged_procurement = self.env['stock.rule'].Procurement(
-                procurement.product_id, quantity, procurement.product_uom,
+                procurement.product_id, quantity, procurement.uom_id,
                 procurement.location_id, procurement.name, procurement.origin,
                 procurement.company_id, values
             )
@@ -264,12 +264,12 @@ class StockRule(models.Model):
         return merged_procurements
 
     def _update_purchase_order_line(self, product_id, product_qty, product_uom, company_id, values, line):
-        procurement_uom_po_qty = product_uom._compute_quantity(product_qty, line.product_uom_id, rounding_method='HALF-UP')
+        procurement_uom_po_qty = product_uom._compute_quantity(product_qty, line.uom_id, rounding_method='HALF-UP')
         seller = product_id.with_company(company_id)._select_seller(
             partner_id=line.selected_seller_id.partner_id or line.partner_id,
             quantity=line.product_qty + procurement_uom_po_qty,
             date=line.order_id.date_order and line.order_id.date_order.date(),
-            uom_id=line.product_uom_id,
+            uom_id=line.uom_id,
             params={'force_uom': values.get('force_uom')})
 
         price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.sudo().tax_ids, company_id) if seller else 0.0
@@ -282,9 +282,9 @@ class StockRule(models.Model):
             'price_unit': price_unit,
             'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
         }
-        if seller.product_uom_id != line.product_uom_id and not values.get('force_uom'):
-            res['product_qty'] = line.product_uom_id._compute_quantity(res['product_qty'], seller.product_uom_id, rounding_method='HALF-UP')
-            res['product_uom_id'] = seller.product_uom_id
+        if seller.uom_id != line.uom_id and not values.get('force_uom'):
+            res['product_qty'] = line.uom_id._compute_quantity(res['product_qty'], seller.uom_id, rounding_method='HALF-UP')
+            res['uom_id'] = seller.uom_id
         orderpoint_id = values.get('orderpoint_id')
         if orderpoint_id:
             res['orderpoint_id'] = orderpoint_id.id
@@ -381,7 +381,7 @@ class StockRule(models.Model):
                 procurement.product_id,
                 partner=procurement.values.get('procurement_partner'),
                 qty=procurement.product_qty,
-                uom=procurement.product_uom,
+                uom=procurement.uom_id,
                 date=max(procurement_date_planned.date(), fields.Date.today()),
                 params={"force_uom": procurement.values.get('force_uom')},
             )

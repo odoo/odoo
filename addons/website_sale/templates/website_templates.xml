@@ -27,7 +27,33 @@
         </xpath>
     </template>
 
-        <!-- Insert JSON-LD markup data for SEO. -->
+    <template id="website_sale.header_wishlist_link" name="Header Wishlist Link">
+        <t t-set="wishcount" t-value="len(request.env['product.wishlist'].current())"/>
+        <t t-set="show_wishes" t-value="website.has_ecommerce_access()"/>
+        <li t-attf-class="o_wsale_my_wish #{not show_wishes and 'd-none'} #{_item_class}">
+            <a href="/shop/wishlist" t-attf-class="#{_link_class}">
+                <div t-attf-class="#{_icon_wrap_class}">
+                    <i t-if="_icon" class="fa fa-1x fa-heart fa-stack"/>
+                    <sup
+                        t-out="wishcount"
+                        t-attf-class="my_wish_quantity o_animate_blink badge bg-primary #{_badge_class} #{'d-none' if (wishcount == 0) else ''}"
+                    />
+                </div>
+                <span t-if="_text" t-attf-class="#{_text_class}">Wishlist</span>
+            </a>
+        </li>
+    </template>
+
+    <template id="website_sale.header_hide_empty_wishlist_link" inherit_id="website_sale.header_wishlist_link">
+        <xpath expr="//t[@t-set='show_wishes']" position="after">
+            <t t-set="show_wishes" t-value="show_wishes and wishcount > 0"/>
+        </xpath>
+        <xpath expr="//li[contains(@t-attf-class, 'o_wsale_my_wish')]" position="attributes">
+            <attribute name="t-attf-class" add="o_wsale_my_wish_hide_empty" separator=" "/>
+        </xpath>
+    </template>
+
+    <!-- Insert JSON-LD markup data for SEO. -->
     <template id="website_sale.website_sale_layout" inherit_id="website.layout" priority="1">
         <body position="before">
             <t
@@ -229,6 +255,10 @@
                 _icon="True"
                 _link_class.f="o_navlink_background_hover btn position-relative rounded-circle border-0 p-1 text-reset"
                 _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _icon="True"
+                _link_class.f="o_navlink_background_hover btn position-relative rounded-circle border-0 p-1 text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1"/>
         </xpath>
     </template>
 
@@ -238,12 +268,20 @@
                 _icon="True"
                 _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-center text-reset"
                 _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-center text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
         </xpath>
     </template>
 
     <template id="website_sale.template_header_hamburger" inherit_id="website.template_header_hamburger">
         <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
             <t t-call="website_sale.header_cart_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-pill p-1 text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded"/>
+            <t t-call="website_sale.header_wishlist_link"
                 _icon="True"
                 _link_class.f="o_navlink_background btn position-relative rounded-pill p-1 text-reset"
                 _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded"/>
@@ -257,12 +295,21 @@
                 _item_class.f="border-start o_border_contrast"
                 _link_class.f="o_navlink_background_hover btn position-relative d-flex align-items-center h-100 rounded-0 p-2 text-reset"
                 _badge_class.f="rounded"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _icon="True"
+                _item_class.f="border-start o_border_contrast"
+                _link_class.f="o_navlink_background_hover btn position-relative d-flex align-items-center h-100 rounded-0 p-2 text-reset"
+                _badge_class.f="rounded"/>
         </xpath>
     </template>
 
     <template id="website_sale.template_header_vertical" inherit_id="website.template_header_vertical">
         <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
             <t t-call="website_sale.header_cart_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+            <t t-call="website_sale.header_wishlist_link"
                 _icon="True"
                 _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-reset"
                 _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
@@ -276,6 +323,11 @@
                 _item_class.f="border-start o_border_contrast"
                 _link_class.f="o_navlink_background_hover btn btn-sm d-flex align-items-center gap-1 h-100 rounded-0 p-2 text-reset"
                 _badge_class.f="rounded"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _text="True"
+                _item_class.f="border-start o_border_contrast"
+                _link_class.f="o_navlink_background_hover btn btn-sm d-flex align-items-center gap-1 h-100 rounded-0 p-2 text-reset"
+                _badge_class.f="rounded"/>
         </xpath>
     </template>
 
@@ -285,12 +337,23 @@
                 _icon="True"
                 _link_class.f="btn position-relative rounded-circle p-1 text-reset o_navlink_background"
                 _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
         </xpath>
     </template>
 
     <template id="website_sale.template_header_sales_two" inherit_id="website.template_header_sales_two">
         <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
             <t t-call="website_sale.header_cart_link"
+                _icon="True"
+                _text="True"
+                _icon_wrap_class.f="o_navlink_background position-relative me-2 rounded-circle p-2 transition-base"
+                _link_class.f="o_navlink_trigger_hover btn d-flex align-items-center fw-bold text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"
+                _text_class.f="small"/>
+            <t t-call="website_sale.header_wishlist_link"
                 _icon="True"
                 _text="True"
                 _icon_wrap_class.f="o_navlink_background position-relative me-2 rounded-circle p-2 transition-base"
@@ -308,12 +371,22 @@
                 _link_class.f="nav-link d-flex flex-row-reverse align-items-center text-uppercase fw-bold"
                 _icon_wrap_class.f="d-contains"
                 _badge_class.f="top-0 d-block ms-2"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _text="True"
+                _item_class.f="position-relative"
+                _link_class.f="nav-link d-flex flex-row-reverse align-items-center text-uppercase fw-bold"
+                _icon_wrap_class.f="d-contains"
+                _badge_class.f="top-0 d-block ms-2"/>
         </xpath>
     </template>
 
     <template id="website_sale.template_header_sales_four" inherit_id="website.template_header_sales_four">
         <xpath expr="//t[@t-call='website.placeholder_header_call_to_action']" position="before">
             <t t-call="website_sale.header_cart_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-pill p-1 text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+            <t t-call="website_sale.header_wishlist_link"
                 _icon="True"
                 _link_class.f="o_navlink_background btn position-relative rounded-pill p-1 text-reset"
                 _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
@@ -327,6 +400,10 @@
                     _icon="True"
                     _link_class.f="o_navlink_background btn position-relative p-1 rounded-circle text-reset"
                     _badge_class.f="position-absolute top-0 end-0 rounded-pill mt-n1 me-n1"/>
+                <t t-call="website_sale.header_wishlist_link"
+                    _icon="True"
+                    _link_class.f="o_navlink_background btn position-relative p-1 rounded-circle text-reset"
+                    _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
             </ul>
         </xpath>
     </template>
@@ -334,6 +411,10 @@
     <template id="website_sale.template_header_boxed" inherit_id="website.template_header_boxed">
         <xpath expr="//t[@t-call='website.placeholder_header_search_box']" position="before">
             <t t-call="website_sale.header_cart_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-center text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+            <t t-call="website_sale.header_wishlist_link"
                 _icon="True"
                 _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-center text-reset"
                 _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>

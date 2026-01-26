@@ -73,7 +73,7 @@ class TestMrpOrder(TestMrpCommon):
         man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
         man_order_form.product_id = self.product_4
         man_order_form.bom_id = self.bom_1
-        man_order_form.product_uom_id = self.product_4.uom_id
+        man_order_form.uom_id = self.product_4.uom_id
         man_order_form.product_qty = test_quantity
         man_order_form.date_start = date_start
         man_order_form.location_src_id = self.shelf_1
@@ -88,7 +88,7 @@ class TestMrpOrder(TestMrpCommon):
         production_move = man_order.move_finished_ids
         self.assertAlmostEqual(production_move.date, date_start + timedelta(hours=1), delta=timedelta(seconds=10))
         self.assertEqual(production_move.product_id, self.product_4)
-        self.assertEqual(production_move.product_uom, man_order.product_uom_id)
+        self.assertEqual(production_move.uom_id, man_order.uom_id)
         self.assertEqual(production_move.product_qty, man_order.product_qty)
         self.assertEqual(production_move.location_id, self.product_4.property_stock_production)
         self.assertEqual(production_move.location_dest_id, man_order.location_dest_id)
@@ -143,7 +143,7 @@ class TestMrpOrder(TestMrpCommon):
         production_form.product_id = self.product_6
         production_form.bom_id = self.bom_3
         production_form.product_qty = 5.0
-        production_form.product_uom_id = self.product_6.uom_id
+        production_form.uom_id = self.product_6.uom_id
         production_2 = production_form.save()
 
         production_2.action_confirm()
@@ -353,7 +353,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': self.product_6.id,
             'product_tmpl_id': self.product_6.product_tmpl_id.id,
             'product_qty': 1,
-            'product_uom_id': self.product_6.uom_id.id,
+            'uom_id': self.product_6.uom_id.id,
             'type': 'normal',
             'bom_line_ids': [
                 Command.create({'product_id': self.product_2.id, 'product_qty': 2.03}),
@@ -372,7 +372,7 @@ class TestMrpOrder(TestMrpCommon):
         production_form.product_id = self.product_6
         production_form.bom_id = bom
         production_form.product_qty = 1
-        production_form.product_uom_id = self.product_6.uom_id
+        production_form.uom_id = self.product_6.uom_id
         production = production_form.save()
         self.assertEqual(production.workorder_ids.duration_expected, 90)
         self.assertEqual([production.date_finished], production.move_finished_ids.mapped('date'))
@@ -386,7 +386,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': self.product_6.id,
             'bom_id': bom.id,
             'product_qty': 1,
-            'product_uom_id': self.product_6.uom_id.id,
+            'uom_id': self.product_6.uom_id.id,
         })
         self.assertEqual(production.workorder_ids.duration_expected, 90)
         production.product_qty = 3
@@ -400,7 +400,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': self.product_6.id,
             'product_tmpl_id': self.product_6.product_tmpl_id.id,
             'product_qty': 1,
-            'product_uom_id': self.product_6.uom_id.id,
+            'uom_id': self.product_6.uom_id.id,
             'type': 'normal',
             'bom_line_ids': [
                 Command.create({'product_id': self.product_2.id, 'product_qty': 2.03}),
@@ -411,7 +411,7 @@ class TestMrpOrder(TestMrpCommon):
         production_form.product_id = self.product_6
         production_form.bom_id = bom
         production_form.product_qty = 1
-        production_form.product_uom_id = self.product_6.uom_id
+        production_form.uom_id = self.product_6.uom_id
         production = production_form.save()
         production_form = Form(production)
         with production_form.workorder_ids.new() as wo:
@@ -438,10 +438,10 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': self.product_6.id,
             'bom_id': bom.id,
             'product_qty': 1,
-            'product_uom_id': self.product_6.uom_id.id,
+            'uom_id': self.product_6.uom_id.id,
             'workorder_ids': [Command.create({
                 'name': 'OP1',
-                'product_uom_id': self.product_6.uom_id.id,
+                'uom_id': self.product_6.uom_id.id,
                 'workcenter_id': self.workcenter_1.id,
                 'duration_expected': 40,
             })],
@@ -466,7 +466,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': self.product_6.id,
             'product_tmpl_id': self.product_6.product_tmpl_id.id,
             'product_qty': 1,
-            'product_uom_id': self.product_6.uom_id.id,
+            'uom_id': self.product_6.uom_id.id,
             'type': 'normal',
             'bom_line_ids': [
                 Command.create({'product_id': self.product_2.id, 'product_qty': 2.00}),
@@ -476,7 +476,7 @@ class TestMrpOrder(TestMrpCommon):
         production_form.product_id = self.product_6
         production_form.bom_id = bom
         production_form.product_qty = 5
-        production_form.product_uom_id = self.product_6.uom_id
+        production_form.uom_id = self.product_6.uom_id
         production = production_form.save()
         production_form = Form(production)
         with production_form.workorder_ids.new() as wo:
@@ -504,13 +504,13 @@ class TestMrpOrder(TestMrpCommon):
         """
         mo_no_company = self.env['mrp.production'].create({
             'product_id': self.product.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
         })
         values = [
             {
                 'name': f'Work order {n}',
                 'workcenter_id': self.workcenter_1.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'production_id': mo_no_company.id,
                 'duration': 60,
             } for n in range(300)
@@ -524,7 +524,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': self.product_6.id,
             'product_tmpl_id': self.product_6.product_tmpl_id.id,
             'product_qty': 1,
-            'product_uom_id': self.product_6.uom_id.id,
+            'uom_id': self.product_6.uom_id.id,
             'type': 'normal',
             'bom_line_ids': [
                 Command.create({'product_id': self.product_2.id, 'product_qty': 3}),
@@ -534,7 +534,7 @@ class TestMrpOrder(TestMrpCommon):
         production_form.product_id = self.product_6
         production_form.bom_id = bom
         production_form.product_qty = 1
-        production_form.product_uom_id = self.product_6.uom_id
+        production_form.uom_id = self.product_6.uom_id
         production = production_form.save()
         production.action_confirm()
         production.action_assign()
@@ -575,7 +575,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': self.product_6.id,
             'product_tmpl_id': self.product_6.product_tmpl_id.id,
             'product_qty': 1,
-            'product_uom_id': self.product_6.uom_id.id,
+            'uom_id': self.product_6.uom_id.id,
             'type': 'normal',
             'bom_line_ids': [
                 Command.create({'product_id': self.product_2.id, 'product_qty': 2.03}),
@@ -587,7 +587,7 @@ class TestMrpOrder(TestMrpCommon):
         production_form.product_id = self.product_6
         production_form.bom_id = bom_eff
         production_form.product_qty = 20
-        production_form.product_uom_id = self.product_6.uom_id
+        production_form.uom_id = self.product_6.uom_id
         production = production_form.save()
         production.action_confirm()
         #Check the production order has the right quantities
@@ -1035,7 +1035,7 @@ class TestMrpOrder(TestMrpCommon):
             with bom.byproduct_ids.new() as bp:
                 bp.product_id = self.byproduct3
                 bp.product_qty = 2.0
-                bp.product_uom_id = self.uom_dozen
+                bp.uom_id = self.uom_dozen
 
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product_4
@@ -1059,7 +1059,7 @@ class TestMrpOrder(TestMrpCommon):
         move_byproduct_3 = mo.move_finished_ids.filtered(lambda l: l.product_id == self.byproduct3)
         self.assertEqual(move_byproduct_3.product_uom_qty, 4.0)
         self.assertEqual(move_byproduct_3.quantity, 4)
-        self.assertEqual(move_byproduct_3.product_uom, self.uom_dozen)
+        self.assertEqual(move_byproduct_3.uom_id, self.uom_dozen)
         self.assertEqual(len(move_byproduct_3.move_line_ids), 1)
 
         mo_form = Form(mo)
@@ -1081,7 +1081,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(move_byproduct_3.product_uom_qty, 4.0)
         self.assertEqual(move_byproduct_3.quantity, 2.0)
         self.assertFalse(move_byproduct_3.picked)
-        self.assertEqual(move_byproduct_3.product_uom, self.uom_dozen)
+        self.assertEqual(move_byproduct_3.uom_id, self.uom_dozen)
 
         details_operation_form = Form(move_byproduct_1, view=self.env.ref('stock.view_stock_move_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
@@ -1116,7 +1116,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(move_byproduct_3.product_uom_qty, 2.0)
         self.assertEqual(move_byproduct_3.quantity, 2.0)
         self.assertFalse(move_byproduct_3.picked)
-        self.assertEqual(move_byproduct_3.product_uom, self.uom_dozen)
+        self.assertEqual(move_byproduct_3.uom_id, self.uom_dozen)
 
         details_operation_form = Form(move_byproduct_1, view=self.env.ref('stock.view_stock_move_operations'))
         with details_operation_form.move_line_ids.edit(0) as ml:
@@ -1141,7 +1141,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(move_lines_byproduct_2.filtered(lambda ml: ml.lot_id == self.lot_1).quantity, 2.0)
         self.assertEqual(move_lines_byproduct_2.filtered(lambda ml: ml.lot_id == self.lot_2).quantity, 2.0)
         self.assertEqual(sum(move_lines_byproduct_3.mapped('quantity')), 5.0)
-        self.assertEqual(move_lines_byproduct_3.mapped('product_uom_id'), self.uom_dozen)
+        self.assertEqual(move_lines_byproduct_3.mapped('uom_id'), self.uom_dozen)
 
     def test_product_produce_11(self):
         """ Checks that, for a BOM with two components, when creating a manufacturing order for one
@@ -1313,14 +1313,14 @@ class TestMrpOrder(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_id': finished_product.id,
             'product_tmpl_id': finished_product.product_tmpl_id.id,
-            'product_uom_id': finished_product.uom_id.id,
+            'uom_id': finished_product.uom_id.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
                 Command.create({'product_id': component.id, 'product_qty': 1}),
             ],
             'byproduct_ids': [
-                Command.create({'product_id': byproduct.id, 'product_qty': 1, 'product_uom_id': byproduct.uom_id.id}),
+                Command.create({'product_id': byproduct.id, 'product_qty': 1, 'uom_id': byproduct.uom_id.id}),
             ]})
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = finished_product
@@ -1535,7 +1535,7 @@ class TestMrpOrder(TestMrpCommon):
             'location_id': scrap.location_dest_id.id,
             'location_dest_id': scrap.location_id.id,
             'product_id': product.id,
-            'product_uom': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'picking_id': unscrap_picking.id,
         })
         unscrap_picking.action_confirm()
@@ -1544,7 +1544,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': unscrap_move.product_id.id,
             'lot_id': sn.id,
             'quantity': 1,
-            'product_uom_id': unscrap_move.product_uom.id,
+            'uom_id': unscrap_move.uom_id.id,
             'picking_id': unscrap_move.picking_id.id,
         })
         unscrap_picking.button_validate()
@@ -1579,7 +1579,7 @@ class TestMrpOrder(TestMrpCommon):
         mo = mo_form.save()
         move = self.env['stock.move'].create({
             'product_id': self.product_2.id,
-            'product_uom': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'production_id': mo.id,
             'location_dest_id': self.output_location.id,
         })
@@ -1614,7 +1614,7 @@ class TestMrpOrder(TestMrpCommon):
         for i in range(2):
             move = self.env['stock.move'].create({
                 'product_id': self.product_2.id,
-                'product_uom': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'production_id': mo.id,
                 'location_id': self.stock_location.id,
                 'location_dest_id': self.output_location.id,
@@ -1657,7 +1657,7 @@ class TestMrpOrder(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_id': demo.id,
             'product_tmpl_id': demo.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'operation_ids': [
@@ -1763,12 +1763,12 @@ class TestMrpOrder(TestMrpCommon):
         })
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': plastic_laminate.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'sequence': 1,
             'bom_line_ids': [Command.create({
                 'product_id': ply_veneer.id,
                 'product_qty': 1,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'sequence': 1,
             })]
         })
@@ -1776,7 +1776,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = plastic_laminate
         mo_form.bom_id = bom
-        mo_form.product_uom_id = self.uom_dozen
+        mo_form.uom_id = self.uom_dozen
         mo_form.product_qty = 1
         mo = mo_form.save()
 
@@ -1796,12 +1796,12 @@ class TestMrpOrder(TestMrpCommon):
 
         move_line_raw = mo.move_raw_ids.mapped('move_line_ids').filtered(lambda m: m.quantity)
         self.assertEqual(move_line_raw.quantity, 1)
-        self.assertEqual(move_line_raw.product_uom_id, self.uom_unit, 'Should be 1 unit since the tracking is serial.')
+        self.assertEqual(move_line_raw.uom_id, self.uom_unit, 'Should be 1 unit since the tracking is serial.')
 
         mo._post_inventory()
         move_line_finished = mo.move_finished_ids.move_line_ids.filtered(lambda m: m.state == 'done' and m.quantity)
         self.assertEqual(move_line_finished.quantity, 1)
-        self.assertEqual(move_line_finished.product_uom_id, self.uom_unit, 'Should be 1 unit since the tracking is serial.')
+        self.assertEqual(move_line_finished.uom_id, self.uom_unit, 'Should be 1 unit since the tracking is serial.')
 
     def test_product_type_service_1(self):
         # Create finished product
@@ -1820,7 +1820,7 @@ class TestMrpOrder(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_id': finished_product.id,
             'product_tmpl_id': finished_product.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [Command.clear(), Command.create({'product_id': product_raw.id})],
@@ -1829,7 +1829,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = finished_product
         mo_form.bom_id = bom
-        mo_form.product_uom_id = self.uom_unit
+        mo_form.uom_id = self.uom_unit
         mo_form.product_qty = 1
         mo = mo_form.save()
 
@@ -2018,7 +2018,7 @@ class TestMrpOrder(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_id': p_final.id,
             'product_tmpl_id': p_final.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'consumption': 'flexible',
@@ -2027,7 +2027,7 @@ class TestMrpOrder(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(component, self.stock_location_components, 25.0)
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = bom
-        mo_form.product_uom_id = self.uom_dozen
+        mo_form.uom_id = self.uom_dozen
         mo_form.product_qty = 1
         mo = mo_form.save()
         mo.action_confirm()
@@ -2075,7 +2075,7 @@ class TestMrpOrder(TestMrpCommon):
                 'bom_line_ids': [Command.create({
                     'product_id': component.id,
                     'product_qty': 0.2,
-                    'product_uom_id': uom_L.id,
+                    'uom_id': uom_L.id,
                 })],
             })
 
@@ -2164,20 +2164,20 @@ class TestMrpOrder(TestMrpCommon):
         test_bom = self.env['mrp.bom'].create({
             'product_id': product_final.id,
             'product_tmpl_id': product_final.product_tmpl_id.id,
-            'product_uom_id': uom_L.id,
+            'uom_id': uom_L.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [Command.create({
                 'product_id': product_comp.id,
                 'product_qty': 375.00,
-                'product_uom_id': uom_ml.id
+                'uom_id': uom_ml.id
             })],
         })
 
         # create a MO for this BOM
         mo_product_final_form = Form(self.env['mrp.production'])
         mo_product_final_form.product_id = product_final
-        mo_product_final_form.product_uom_id = uom_L
+        mo_product_final_form.uom_id = uom_L
         mo_product_final_form.bom_id = test_bom
         mo_product_final_form.product_qty = 0.5
         mo_product_final_form = mo_product_final_form.save()
@@ -2438,7 +2438,7 @@ class TestMrpOrder(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_id': self.product_4.id,
             'product_tmpl_id': self.product_4.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'consumption': 'flexible',
             'type': 'normal',
@@ -2644,11 +2644,11 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(mo2.move_finished_ids), 1, 'Wrong number of finish product moves created')
         self.assertEqual(mo2.move_finished_ids.product_qty, 5, 'Wrong qty to produce for the finished product move')
 
-        # ===== product_uom_id onchange checks ===== #
+        # ===== uom_id onchange checks ===== #
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = product1
         mo_form.product_qty = 1
-        mo_form.product_uom_id = self.env['uom.uom'].browse(self.ref('uom.product_uom_dozen'))
+        mo_form.uom_id = self.env['uom.uom'].browse(self.ref('uom.product_uom_dozen'))
         mo3 = mo_form.save()
         self.assertEqual(len(mo3.move_finished_ids), 1, 'Wrong number of finish product moves created')
         self.assertEqual(mo3.move_finished_ids.product_qty, 12, 'Wrong qty to produce for the finished product move')
@@ -3046,7 +3046,7 @@ class TestMrpOrder(TestMrpCommon):
         for workcenter in [workcenter_1, workcenter_2]:
             self.env['mrp.workcenter.capacity'].create({
                 'workcenter_id': workcenter.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'capacity': 2,
                 'time_start': workcenter.time_start,
                 'time_stop': workcenter.time_stop,
@@ -3065,7 +3065,7 @@ class TestMrpOrder(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_id': product_to_build.id,
             'product_tmpl_id': product_to_build.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'consumption': 'flexible',
@@ -3092,7 +3092,7 @@ class TestMrpOrder(TestMrpCommon):
         self.env['mrp.workcenter.capacity'].search([
             ('workcenter_id', '=', workcenter_2.id),
             ('product_id', '=', False),
-            ('product_uom_id', '=', self.uom_unit.id)
+            ('uom_id', '=', self.uom_unit.id)
         ]).capacity = 4
 
         #MO_2
@@ -3128,7 +3128,7 @@ class TestMrpOrder(TestMrpCommon):
         production_form.product_id = self.bom_4.product_id
         production_form.bom_id = self.bom_4
         production_form.product_qty = 1
-        production_form.product_uom_id = self.bom_4.product_id.uom_id
+        production_form.uom_id = self.bom_4.product_id.uom_id
 
         production = production_form.save()
         production.action_confirm()
@@ -3399,7 +3399,7 @@ class TestMrpOrder(TestMrpCommon):
         clicking Update BoM in MO should update MO workorder planning accordingly.
         """
 
-        self.bom_3.write({'product_uom_id': self.uom_unit.id})
+        self.bom_3.write({'uom_id': self.uom_unit.id})
         self.env.company.tz = 'UTC'
 
         # Create an MO.
@@ -3461,7 +3461,7 @@ class TestMrpOrder(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_id': self.product_6.id,
             'product_tmpl_id': self.product_6.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'ready_to_produce': 'asap',
             'consumption': 'flexible',
             'product_qty': 1.0,
@@ -3571,7 +3571,7 @@ class TestMrpOrder(TestMrpCommon):
         })
         self.assertEqual(order.product_id, self.bom_1.product_id)
 
-    def test_compute_product_uom_id(self):
+    def test_compute_uom_id(self):
         """
             Tests the creation of a production order automatically sets the uom when the bom is provided,
             without the need to put it in the vals of the create nor to call onchanges.
@@ -3579,7 +3579,7 @@ class TestMrpOrder(TestMrpCommon):
         order = self.env['mrp.production'].create({
             'bom_id': self.bom_1.id,
         })
-        self.assertEqual(order.product_uom_id, self.bom_1.product_uom_id)
+        self.assertEqual(order.uom_id, self.bom_1.uom_id)
 
     def test_compute_bom_id(self):
         """
@@ -3605,11 +3605,11 @@ class TestMrpOrder(TestMrpCommon):
 
         test_bom = self.env['mrp.bom'].create({
             'product_tmpl_id': self.product_7_template.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 250.0,
             'type': 'normal',
             'bom_line_ids': [
-                Command.create({'product_id': self.product_2.id, 'product_qty': 1.0, 'product_uom_id': self.box250.id}),
+                Command.create({'product_id': self.product_2.id, 'product_qty': 1.0, 'uom_id': self.box250.id}),
             ]
         })
         self.env['stock.quant'].create({
@@ -3645,7 +3645,7 @@ class TestMrpOrder(TestMrpCommon):
         consumed quantity is updated again. The test ensures that this update
         respects the rounding precisions
         """
-        self.bom_4.product_uom_id = self.uom_dozen
+        self.bom_4.uom_id = self.uom_dozen
 
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = self.bom_4
@@ -3753,7 +3753,7 @@ class TestMrpOrder(TestMrpCommon):
         bom_wh01, bom_wh02 = self.env['mrp.bom'].create([{
             'product_id': finished_product.id,
             'product_tmpl_id': finished_product.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'bom_line_ids': [Command.create({'product_id': self.product.id, 'product_qty': 1})],
             'picking_type_id': wh.manu_type_id.id,
@@ -3812,7 +3812,7 @@ class TestMrpOrder(TestMrpCommon):
         self.env['mrp.workcenter.capacity'].search([
             ('workcenter_id', '=', self.workcenter_2.id),
             ('product_id', '=', False),
-            ('product_uom_id', '=', self.product_5.uom_id.id)
+            ('uom_id', '=', self.product_5.uom_id.id)
         ]).write({
             'time_start': 10,
             'time_stop': 20,
@@ -3820,7 +3820,7 @@ class TestMrpOrder(TestMrpCommon):
         self.env['mrp.workcenter.capacity'].create({
             'workcenter_id': self.workcenter_2.id,
             'product_id': self.product_4.id,
-            'product_uom_id': self.product_4.uom_id.id,
+            'uom_id': self.product_4.uom_id.id,
             'time_start': 5,
             'time_stop': 10,
         })
@@ -3919,7 +3919,7 @@ class TestMrpOrder(TestMrpCommon):
                 move.unlink()
             elif move.product_id == p1:
                 # p1 = qty_base_1 = 12 => now 12 dozens instead of units
-                move.product_uom = self.uom_dozen
+                move.uom_id = self.uom_dozen
         mo2.action_confirm()
         mo2_form = Form(mo2)
         mo2_form.qty_producing = 4
@@ -3974,7 +3974,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': p_final.id,
             'bom_id': bom.id,
             'product_qty': 1,
-            'product_uom_id': p_final.uom_id.id,
+            'uom_id': p_final.uom_id.id,
         })
         mo3_form = Form(mo3)
         with mo3_form.move_raw_ids.new() as line:
@@ -4175,7 +4175,7 @@ class TestMrpOrder(TestMrpCommon):
 
         self.env['mrp.bom'].create({
             'product_tmpl_id': self.product_7_template.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 4.0,
             'type': 'normal',
             'bom_line_ids': [
@@ -4273,21 +4273,21 @@ class TestMrpOrder(TestMrpCommon):
         self.env.company.tz = 'Europe/Brussels'
         mo = self.env['mrp.production'].create({
             'product_id': self.product.id,
-            'product_uom_id': self.bom_1.product_uom_id.id,
+            'uom_id': self.bom_1.uom_id.id,
         })
 
         wos = self.env['mrp.workorder'].create([
             {
                 'name': 'Test order',
                 'workcenter_id': self.workcenter_1.id,
-                'product_uom_id': self.bom_1.product_uom_id.id,
+                'uom_id': self.bom_1.uom_id.id,
                 'production_id': mo.id,
                 'duration_expected': 1.0
             },
             {
                 'name': 'Test order2',
                 'workcenter_id': self.workcenter_2.id,
-                'product_uom_id': self.bom_1.product_uom_id.id,
+                'uom_id': self.bom_1.uom_id.id,
                 'production_id': mo.id,
                 'duration_expected': 2.0
             }
@@ -4338,13 +4338,13 @@ class TestMrpOrder(TestMrpCommon):
         workcenter_2 = workcenter_1.copy({'name': 'wc2'})
 
         workcenter_1.alternative_workcenter_ids = workcenter_2
-        workcenter_1.capacity_ids = [Command.create({'product_id': self.product_1.id, 'product_uom_id': self.product_1.uom_id.id, 'capacity': 1, 'time_start': 10})]
-        workcenter_2.capacity_ids = [Command.create({'product_id': self.product_1.id, 'product_uom_id': self.product_1.uom_id.id, 'capacity': 1, 'time_start': 5})]
+        workcenter_1.capacity_ids = [Command.create({'product_id': self.product_1.id, 'uom_id': self.product_1.uom_id.id, 'capacity': 1, 'time_start': 10})]
+        workcenter_2.capacity_ids = [Command.create({'product_id': self.product_1.id, 'uom_id': self.product_1.uom_id.id, 'capacity': 1, 'time_start': 5})]
 
         bom = self.env['mrp.bom'].create({
             'product_id': self.product_1.id,
             'product_tmpl_id': self.product_1.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'operation_ids': [
@@ -4472,7 +4472,7 @@ class TestMrpOrder(TestMrpCommon):
 
         mo = self.env['mrp.production'].create({
             'product_id': self.product.id,
-            'product_uom_id': self.bom_1.product_uom_id.id,
+            'uom_id': self.bom_1.uom_id.id,
         })
 
         dt = datetime(2024, 1, 17, 8)
@@ -4480,7 +4480,7 @@ class TestMrpOrder(TestMrpCommon):
             {
                 'name': 'Test order',
                 'workcenter_id': self.workcenter_4.id,
-                'product_uom_id': self.bom_1.product_uom_id.id,
+                'uom_id': self.bom_1.uom_id.id,
                 'production_id': mo.id,
                 'duration_expected': 30.0,
                 'date_start': dt,
@@ -4610,7 +4610,7 @@ class TestMrpOrder(TestMrpCommon):
         bom_1 = self.env['mrp.bom'].create({
             'product_id': product_to_build.id,
             'product_tmpl_id': product_to_build.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
             'bom_line_ids': [
@@ -4623,7 +4623,7 @@ class TestMrpOrder(TestMrpCommon):
             self.env['mrp.bom'].create({
                 'product_id': product_to_use_2.id,
                 'product_tmpl_id': product_to_use_2.product_tmpl_id.id,
-                'product_uom_id': self.uom_unit.id,
+                'uom_id': self.uom_unit.id,
                 'product_qty': 1.0,
                 'type': 'normal',
                 'bom_line_ids': [
@@ -4765,27 +4765,27 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(self.bom_3.bom_line_ids, kit_bom_line)
         mo.action_update_bom()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 4, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
-            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 6, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 4, 'uom_id': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 6, 'uom_id': kit_bom.bom_line_ids[1].product_id.uom_id.id},
         ])
         # Check propagation upon update of the kit quantity
         kit_bom_line.product_qty = 3
         kit_bom.bom_line_ids[0].product_qty = 4
         mo.action_update_bom()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 12, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
-            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 9, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 12, 'uom_id': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 9, 'uom_id': kit_bom.bom_line_ids[1].product_id.uom_id.id},
         ])
         # Check with multiple kits with different UOMs
         with Form(self.bom_3) as main_bom:
             with main_bom.bom_line_ids.new() as bom_line:
                 bom_line.product_id = self.product_5
                 bom_line.product_qty = 1
-                bom_line.product_uom_id = self.uom_dozen
+                bom_line.uom_id = self.uom_dozen
         mo.action_update_bom()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 60, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
-            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 45, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 60, 'uom_id': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 45, 'uom_id': kit_bom.bom_line_ids[1].product_id.uom_id.id},
         ])
 
     def test_update_mo_from_bom_with_kit_variants(self):
@@ -4922,7 +4922,7 @@ class TestMrpOrder(TestMrpCommon):
         Checks that the expected duration calculation is correct when the BoM has a different UoM than the product.
         """
         # Change the BoM UoM to be Dozens instead of Units
-        self.bom_4.product_uom_id = self.uom_dozen
+        self.bom_4.uom_id = self.uom_dozen
 
         self.env.user.group_ids += self.env.ref('mrp.group_mrp_routings')
         production_form = Form(self.env['mrp.production'])
@@ -4948,7 +4948,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': self.product_1.id,
             'workorder_ids': [Command.create({
                 'name': 'Test Workorder',
-                'product_uom_id': self.product_1.uom_id.id,
+                'uom_id': self.product_1.uom_id.id,
                 'workcenter_id': self.workcenter_1.id,
             })],
         })
@@ -5157,7 +5157,7 @@ class TestMrpOrder(TestMrpCommon):
             'produce_delay': 17,
             'product_id': finished_product.id,
             'product_tmpl_id': finished_product.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'bom_line_ids': [Command.create({'product_id': self.product.id, 'product_qty': 1})],
         })
@@ -5248,7 +5248,7 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_product_qty_digits_precision(self):
         self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 5
-        self.bom_1.product_uom_id.rounding = 0.00001
+        self.bom_1.uom_id.rounding = 0.00001
         mo = self.env['mrp.production'].create({
             'bom_id': self.bom_1.id,
             'product_qty': 1.23456,
@@ -5366,13 +5366,13 @@ class TestMrpOrder(TestMrpCommon):
             {
                 'name': 'Test order1',
                 'workcenter_id': self.workcenter_1.id,
-                'product_uom_id': self.product_1.uom_id.id,
+                'uom_id': self.product_1.uom_id.id,
                 'production_id': mo1.id,
             },
             {
                 'name': 'Test order2',
                 'workcenter_id': self.workcenter_1.id,
-                'product_uom_id': self.product_3.uom_id.id,
+                'uom_id': self.product_3.uom_id.id,
                 'production_id': mo2.id,
             }
         ])
@@ -5383,7 +5383,7 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertEqual(mo1.state, 'done')
         self.assertEqual(mo2.state, 'done')
-        self.assertNotEqual(mo1.workorder_ids.product_uom_id, mo2.workorder_ids.product_uom_id)
+        self.assertNotEqual(mo1.workorder_ids.uom_id, mo2.workorder_ids.uom_id)
         self.assertEqual(mo1.product_qty, mo2.product_qty)
         self.assertEqual(wo1.qty_produced, wo2.qty_produced)
 
@@ -5514,7 +5514,7 @@ class TestTourMrpOrder(HttpCase):
                 Command.create({'product_id': component.id, 'product_qty': 5}),
             ],
             'byproduct_ids': [
-                Command.create({'product_id': by_product.id, 'product_qty': 2, 'product_uom_id': by_product.uom_id.id}),
+                Command.create({'product_id': by_product.id, 'product_qty': 2, 'uom_id': by_product.uom_id.id}),
             ],
         })
 

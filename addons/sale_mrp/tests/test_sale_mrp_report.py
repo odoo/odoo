@@ -84,7 +84,7 @@ class TestSaleMrpInvoices(TestSaleCommon):
         product.bom_ids = [Command.create({
             'product_id': product.id,
             'product_tmpl_id': product.product_tmpl_id.id,
-            'product_uom_id': product.uom_id.id,
+            'uom_id': product.uom_id.id,
             'bom_line_ids': [Command.create({
                 'product_id': self.product_by_lot.id,
                 'product_qty': 1,

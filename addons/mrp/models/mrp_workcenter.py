@@ -425,14 +425,14 @@ class MrpWorkcenter(models.Model):
 
     def _get_capacity(self, product, unit, default_capacity=1):
         capacity = self.capacity_ids.sorted(lambda c: (
-            not (c.product_id == product and c.product_uom_id == product.uom_id),
-            not (not c.product_id and c.product_uom_id == unit),
-            not (not c.product_id and c.product_uom_id == product.uom_id),
+            not (c.product_id == product and c.uom_id == product.uom_id),
+            not (not c.product_id and c.uom_id == unit),
+            not (not c.product_id and c.uom_id == product.uom_id),
         ))[:1]
-        if capacity and capacity.product_id in [product, self.env['product.product']] and capacity.product_uom_id in [product.uom_id, unit]:
+        if capacity and capacity.product_id in [product, self.env['product.product']] and capacity.uom_id in [product.uom_id, unit]:
             if float_is_zero(capacity.capacity, 0):
                 return (default_capacity, capacity.time_start, capacity.time_stop)
-            return (capacity.product_uom_id._compute_quantity(capacity.capacity, unit), capacity.time_start, capacity.time_stop)
+            return (capacity.uom_id._compute_quantity(capacity.capacity, unit), capacity.time_start, capacity.time_stop)
         return (default_capacity, self.time_start, self.time_stop)
 
 
@@ -624,8 +624,8 @@ class MrpWorkcenterCapacity(models.Model):
 
     workcenter_id = fields.Many2one('mrp.workcenter', string='Work Center', required=True, index=True)
     product_id = fields.Many2one('product.product', string='Product')
-    product_uom_id = fields.Many2one('uom.uom', string='Unit',
-        compute="_compute_product_uom_id", precompute=True, store=True, readonly=False, required=True)
+    uom_id = fields.Many2one('uom.uom', string='Unit',
+        compute="_compute_uom_id", precompute=True, store=True, readonly=False, required=True)
     capacity = fields.Float('Capacity', help="Number of pieces that can be produced in parallel for this product or for all, depending on the unit.")
     time_start = fields.Float('Setup Time (minutes)', default=_default_time_start, help="Time in minutes for the setup.")
     time_stop = fields.Float('Cleanup Time (minutes)', default=_default_time_stop, help="Time in minutes for the cleaning.")
@@ -635,11 +635,11 @@ class MrpWorkcenterCapacity(models.Model):
         'Capacity should be a non-negative number.',
     )
     _workcenter_product_product_uom_unique = models.UniqueIndex(
-        '(workcenter_id, COALESCE(product_id, 0), product_uom_id)',
+        '(workcenter_id, COALESCE(product_id, 0), uom_id)',
         'Product/Unit capacity should be unique for each workcenter.'
     )
 
     @api.depends('product_id')
-    def _compute_product_uom_id(self):
+    def _compute_uom_id(self):
         for capacity in self:
-            capacity.product_uom_id = capacity.product_id.uom_id or self.env.ref('uom.product_uom_unit')
+            capacity.uom_id = capacity.product_id.uom_id or self.env.ref('uom.product_uom_unit')

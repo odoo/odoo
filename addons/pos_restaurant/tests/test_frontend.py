@@ -588,6 +588,11 @@ class TestFrontend(TestFrontendCommon):
         self.assertEqual(line_1.tax_ids, self.tax_sale_a)
         self.assertEqual(line_2.tax_ids, self.tax_sale_a)
 
+    def test_no_ghost_floor(self):
+        self.pos_config.use_order_printer = False
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('no_ghost_floor', login="pos_admin")
+
     def test_multiple_preparation_printer_different_categories(self):
         """This test make sure that no empty receipt are sent when using multiple printer with different categories
            The tour will check that we tried did not try to print two receipt. We can achieve that by checking the content
@@ -806,7 +811,7 @@ class TestFrontend(TestFrontendCommon):
         """
         self.start_pos_tour('test_direct_sales', login="pos_user")
         orders = self.env['pos.order'].search([], limit=3, order='id desc')
-        self.assertEqual(orders[2].floating_order_name, orders[2].pos_reference)
+        self.assertEqual(orders[2].floating_order_name, orders[2].tracking_number)
         self.assertEqual(orders[1].floating_order_name, "Test")
         self.assertEqual(orders[0].floating_order_name, False)
         self.assertIsNotNone(orders[0].table_id)

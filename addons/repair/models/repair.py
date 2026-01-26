@@ -89,9 +89,9 @@ class RepairOrder(models.Model):
         'Product Quantity', compute='_compute_product_qty', readonly=False, store=True,
         default=1.0, digits='Product Unit')
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
-    product_uom = fields.Many2one(
+    uom_id = fields.Many2one(
         'uom.uom', 'Unit', domain="[('id', 'in', allowed_uom_ids)]",
-        compute='compute_product_uom', store=True, precompute=True, readonly=False)
+        compute='compute_uom_id', store=True, precompute=True, readonly=False)
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',
         compute="compute_lot_id", store=True,
@@ -215,10 +215,10 @@ class RepairOrder(models.Model):
             else:
                 repair.product_qty = 1.0
 
-    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.product_uom_id')
+    @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.uom_id')
     def _compute_allowed_uom_ids(self):
         for repair in self:
-            repair.allowed_uom_ids = repair.product_id.uom_id | repair.product_id.uom_ids | repair.product_id.seller_ids.product_uom_id
+            repair.allowed_uom_ids = repair.product_id.uom_id | repair.product_id.uom_ids | repair.product_id.seller_ids.uom_id
 
     @api.depends('picking_id')
     def _compute_partner_id(self):
@@ -239,12 +239,12 @@ class RepairOrder(models.Model):
             repair.allowed_lot_ids = self.env['stock.lot'].search(domain)
 
     @api.depends('product_id', 'product_id.uom_id')
-    def compute_product_uom(self):
+    def compute_uom_id(self):
         for repair in self:
             if not repair.product_id:
-                repair.product_uom = False
-            elif not repair.product_uom:
-                repair.product_uom = repair.product_id.uom_id
+                repair.uom_id = False
+            elif not repair.uom_id:
+                repair.uom_id = repair.product_id.uom_id
 
     @api.depends('product_id', 'lot_id', 'lot_id.product_id', 'picking_id')
     def compute_lot_id(self):
@@ -317,10 +317,10 @@ class RepairOrder(models.Model):
             elif repair.parts_availability_state == 'late':
                 repair.is_parts_late = True
 
-    @api.depends('move_ids.quantity', 'move_ids.product_uom_qty', 'move_ids.product_uom.rounding')
+    @api.depends('move_ids.quantity', 'move_ids.product_uom_qty', 'move_ids.uom_id.rounding')
     def _compute_has_uncomplete_moves(self):
         for repair in self:
-            repair.has_uncomplete_moves = any(move.product_uom and move.product_uom.compare(move.quantity, move.product_uom_qty) < 0 for move in repair.move_ids)
+            repair.has_uncomplete_moves = any(move.uom_id and move.uom_id.compare(move.quantity, move.product_uom_qty) < 0 for move in repair.move_ids)
 
     @api.depends('move_ids', 'state', 'move_ids.product_uom_qty')
     def _compute_unreserve_visible(self):
@@ -342,10 +342,10 @@ class RepairOrder(models.Model):
             for item in value
         )
 
-    @api.onchange('product_uom')
-    def onchange_product_uom(self):
+    @api.onchange('uom_id')
+    def onchange_uom_id(self):
         res = {}
-        if not self.product_id or not self.product_uom:
+        if not self.product_id or not self.uom_id:
             return res
         return res
 
@@ -495,7 +495,7 @@ class RepairOrder(models.Model):
         product_move_vals = []
 
         # Cancel moves with 0 quantity
-        self.move_ids.filtered(lambda m: m.product_uom.is_zero(m.quantity))._action_cancel()
+        self.move_ids.filtered(lambda m: m.uom_id.is_zero(m.quantity))._action_cancel()
 
         no_service_policy = 'service_policy' not in self.env['product.template']
         #SOL qty delivered = repair.move_ids.quantity
@@ -524,7 +524,7 @@ class RepairOrder(models.Model):
 
             product_move_vals.append({
                 'product_id': repair.product_id.id,
-                'product_uom': repair.product_uom.id or repair.product_id.uom_id.id,
+                'uom_id': repair.uom_id.id or repair.product_id.uom_id.id,
                 'product_uom_qty': repair.product_qty,
                 'partner_id': repair.partner_id.id,
                 'location_id': repair.product_location_src_id.id,
@@ -534,7 +534,7 @@ class RepairOrder(models.Model):
                 'move_line_ids': [(0, 0, {
                     'product_id': repair.product_id.id,
                     'lot_id': repair.lot_id.id,
-                    'product_uom_id': repair.product_uom.id or repair.product_id.uom_id.id,
+                    'uom_id': repair.uom_id.id or repair.product_id.uom_id.id,
                     'quantity': repair.product_qty,
                     'package_id': False,
                     'result_package_id': False,
@@ -570,7 +570,7 @@ class RepairOrder(models.Model):
         partial_moves = set()
         picked_moves = set()
         for move in self.move_ids:
-            if move.product_uom.compare(move.quantity, move.product_uom_qty) < 0:
+            if move.uom_id.compare(move.quantity, move.product_uom_qty) < 0:
                 partial_moves.add(move.id)
             if move.picked:
                 picked_moves.add(move.id)

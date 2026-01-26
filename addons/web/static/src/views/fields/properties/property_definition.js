@@ -1,19 +1,19 @@
-import { _t } from "@web/core/l10n/translation";
-import { PropertyValue } from "./property_value";
+import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
-import { DomainSelector } from "@web/core/domain_selector/domain_selector";
 import { Domain } from "@web/core/domain";
+import { DomainSelector } from "@web/core/domain_selector/domain_selector";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
 import { ModelSelector } from "@web/core/model_selector/model_selector";
+import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { uuid } from "@web/core/utils/strings";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { useService, useOwnedDialogs } from "@web/core/utils/hooks";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { PropertyDefinitionSelection } from "./property_definition_selection";
 import { PropertyTags } from "./property_tags";
-import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-import { uuid } from "@web/core/utils/strings";
-
-import { Component, useState, onWillUpdateProps, useEffect, useRef } from "@odoo/owl";
+import { PropertyValue } from "./property_value";
 
 export const PROPERTIES_INFO = {
     char: {
@@ -92,6 +92,7 @@ export class PropertyDefinition extends Component {
         ModelSelector,
         PropertyDefinitionSelection,
         PropertyTags,
+        SelectMenu,
     };
     static props = {
         fieldName: { type: String },
@@ -170,7 +171,16 @@ export class PropertyDefinition extends Component {
      * @returns {array}
      */
     get availablePropertyTypes() {
-        return Object.entries(PROPERTIES_INFO).map(([key, { label }]) => [key, label]);
+        const defaultCurrencyField = this.defaultCurrencyField;
+        return Object.entries(PROPERTIES_INFO).map(([value, { label }]) => {
+            const isEnabled = value !== "monetary" || !!defaultCurrencyField;
+            return {
+                enabled: isEnabled,
+                label,
+                tooltip: isEnabled ? "" : _t("Not possible to create monetary field because there is no currency on current model."),
+                value,
+            };
+        });
     }
 
     get currencyFields() {

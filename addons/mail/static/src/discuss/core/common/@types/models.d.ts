@@ -15,7 +15,6 @@ declare module "models" {
         channelMemberHaveSeen: Readonly<ChannelMember[]>;
         hasEveryoneSeen: boolean|undefined;
         hasNewMessageSeparator: boolean;
-        hasSomeoneFetched: boolean|undefined;
         hasSomeoneSeen: boolean|undefined;
         isMessagePreviousToLastSelfMessageSeenByEveryone: boolean;
         linkedSubChannel: DiscussChannel;

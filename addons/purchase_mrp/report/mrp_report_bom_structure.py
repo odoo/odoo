@@ -19,7 +19,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             parent_bom = self.env.context.get('parent_bom')
             purchase_lead = parent_bom.company_id.days_to_purchase if parent_bom and parent_bom.company_id else 0
             if supplier:
-                qty_supplier_uom = product.uom_id._compute_quantity(quantity, supplier.product_uom_id)
+                qty_supplier_uom = product.uom_id._compute_quantity(quantity, supplier.uom_id)
                 return {
                     'route_type': 'buy',
                     'route_name': buy_rules[0].route_id.display_name,

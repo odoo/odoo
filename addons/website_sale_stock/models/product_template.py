@@ -41,7 +41,7 @@ class ProductTemplate(models.Model):
     def _get_additionnal_combination_info(self, product_or_template, quantity, uom, date, website):
         res = super()._get_additionnal_combination_info(product_or_template, quantity, uom, date, website)
 
-        if not self.env.context.get('website_sale_stock_get_quantity'):
+        if not self.env.context.get('website_sale_product_page'):
             return res
 
         if product_or_template.type == 'combo':
@@ -103,6 +103,10 @@ class ProductTemplate(models.Model):
                 'free_qty': 0,
                 'cart_qty': 0,
             })
+
+        if product_or_template.is_product_variant:
+            product_sudo = product_or_template.sudo()
+            res['is_in_wishlist'] = product_sudo._is_in_wishlist()
 
         return res
 

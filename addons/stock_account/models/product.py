@@ -288,7 +288,7 @@ class ProductProduct(models.Model):
             order='date, id'
         )
         # TODO convert to company UoM
-        product_value_domain = Domain([('product_id', '=', self.id)])
+        product_value_domain = Domain([('product_id', '=', self.id), ('move_id', '=', False)])
         if lot:
             product_value_domain &= Domain(['|', ('lot_id', '=', lot.id), ('lot_id', '=', False)])
         else:

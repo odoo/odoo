@@ -688,7 +688,7 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
         })
         purchase_order.button_confirm()
         # changing the uom to a higher number
-        purchase_order.order_line.product_uom_id = self.env.ref("uom.product_uom_dozen")
+        purchase_order.order_line.uom_id = self.env.ref("uom.product_uom_dozen")
         purchase_order.action_create_invoice()
         self.assertDictEqual(
             self.project._get_profitability_items(False)['costs'],

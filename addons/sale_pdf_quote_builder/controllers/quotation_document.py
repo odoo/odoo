@@ -1,13 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import io
 import json
 import logging
+import traceback
+from http import HTTPStatus
 
 from odoo import _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 from odoo.http import Controller, request, route
-from odoo.tools import pdf
 
 logger = logging.getLogger(__name__)
 
@@ -42,20 +42,24 @@ class QuotationDocumentController(Controller):
             try:
                 mimetype = ufile.content_type
                 pdf_bytes = ufile.read()
-                # pypdf will also catch malformed document
-                if pdf.PdfFileReader(io.BytesIO(pdf_bytes), strict=False).isEncrypted:
-                    raise ValidationError(_(  # noqa: TRY301
-                        "It seems that we're not able to process this pdf inside a quotation. It is either"
-                        " encrypted, or encoded in a format we do not support."
-                    ))
                 request.env['quotation.document'].create({
                     'name': ufile.filename,
                     'mimetype': mimetype,
                     'raw': pdf_bytes,
                     **additional_vals,
-                })
+                }).flush_recordset()
+            except UserError as e:
+                request.env.cr.rollback()
+                return request.make_json_response(
+                    {'error': e},
+                    status=e.http_status,
+                )
             except Exception as e:
+                request.env.cr.rollback()
                 logger.exception("Failed to upload document %s", ufile.filename)
-                result = {'error': str(e)}
+                return request.make_json_response(
+                    {'error': traceback.format_exception(e, limit=0)[0].rstrip()},
+                    status=HTTPStatus.INTERNAL_SERVER_ERROR,
+                )
 
-        return json.dumps(result)
+        return request.make_json_response(result)

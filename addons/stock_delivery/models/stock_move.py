@@ -31,7 +31,7 @@ class StockMove(models.Model):
 
     weight = fields.Float(compute='_cal_move_weight', digits='Stock Weight', store=True, compute_sudo=True)
 
-    @api.depends('product_id', 'product_uom_qty', 'product_uom')
+    @api.depends('product_id', 'product_uom_qty', 'uom_id')
     def _cal_move_weight(self):
         moves_with_weight = self.filtered(lambda moves: moves.product_id.weight > 0.00)
         for move in moves_with_weight:
@@ -41,16 +41,7 @@ class StockMove(models.Model):
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()
         carrier_id = self.reference_ids.sale_ids.carrier_id.id
-        carrier_tracking_ref = False
-        if self.move_orig_ids.picking_id.carrier_id:
-            # check if previous picking have carrier_id take carrier from that
-            # earlier we were taking carrier from sale but since carrier can be changed  or updated in next steps so now we take carrier from prev picking
-            carrier_id = self.move_orig_ids.picking_id.carrier_id.id
-            carrier_tracking_ref = self.move_orig_ids.picking_id.carrier_tracking_ref
-        # propagating carrier and tracking ref only if carrier propagation rule allow
-        if any(rule.propagate_carrier for rule in self.rule_id):
-            vals['carrier_tracking_ref'] = carrier_tracking_ref
-            vals['carrier_id'] = carrier_id
+        vals['carrier_id'] = any(rule.propagate_carrier for rule in self.rule_id) and carrier_id
         return vals
 
     def _key_assign_picking(self):
@@ -65,17 +56,17 @@ class StockMoveLine(models.Model):
     destination_country_code = fields.Char(related='picking_id.destination_country_code')
     carrier_id = fields.Many2one(related='picking_id.carrier_id')
 
-    @api.depends('quantity', 'product_uom_id', 'product_id', 'move_id.sale_line_id', 'move_id.sale_line_id.price_reduce_taxinc', 'move_id.sale_line_id.product_uom_id')
+    @api.depends('quantity', 'uom_id', 'product_id', 'move_id.sale_line_id', 'move_id.sale_line_id.price_reduce_taxinc', 'move_id.sale_line_id.product_uom_id')
     def _compute_sale_price(self):
         for move_line in self:
             sale_line_id = move_line.move_id.sale_line_id
             if sale_line_id and sale_line_id.product_id == move_line.product_id:
                 unit_price = sale_line_id.price_reduce_taxinc
-                qty = move_line.product_uom_id._compute_quantity(move_line.quantity, sale_line_id.product_uom_id)
+                qty = move_line.uom_id._compute_quantity(move_line.quantity, sale_line_id.product_uom_id)
             else:
                 # For kits, use the regular unit price
                 unit_price = move_line.product_id.list_price
-                qty = move_line.product_uom_id._compute_quantity(move_line.quantity, move_line.product_id.uom_id)
+                qty = move_line.uom_id._compute_quantity(move_line.quantity, move_line.product_id.uom_id)
             move_line.sale_price = unit_price * qty
         super(StockMoveLine, self)._compute_sale_price()
 

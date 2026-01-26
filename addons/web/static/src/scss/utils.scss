@@ -150,12 +150,6 @@
 // Cursor
 //-------------------------------------------------------------------
 
-@mixin o-grab-cursor() {
-    // Use a custom cursor for the open hand icon as "grab" is not properly
-    // working on Chrome Linux (at least)
-    cursor: url(/web/static/img/openhand.cur), grab;
-}
-
 @mixin o-field-pointer() {
     // Force `pointer`cursor on  inputs and labels
     .form-check-input:not(:disabled), .form-check-input:not(:disabled) + label {

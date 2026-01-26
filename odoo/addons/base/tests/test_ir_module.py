@@ -21,3 +21,27 @@ class IrModuleCase(TransactionCase):
             {"name": "wrong_icon", "icon": "/not/valid.png"}
         )
         self.assertFalse(module.icon_image)
+
+    @mute_logger("odoo.modules.module")
+    def test_falsy_res_id(self):
+        module = self.env["ir.module.module"].create(
+            {"name": "get_views_test", "state": "installed"},
+        )
+        report = self.env['ir.actions.report'].create({
+            'name': 'good_data_report',
+            'report_name': 'web_studio.test_duplicate_foo',
+            'model': 'res.users',
+        })
+        self.env["ir.model.data"].create({
+            "module": "get_views_test",
+            "name": "bad_data",
+            "model": "ir.actions.report",
+            "res_id": 0,
+        })
+        self.env["ir.model.data"].create({
+            "module": "get_views_test",
+            "name": "good_data",
+            "model": "ir.actions.report",
+            "res_id": report.id,
+        })
+        self.assertEqual(module.reports_by_module, "good_data_report")

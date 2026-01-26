@@ -870,7 +870,7 @@ test("Internal user should be displayed first", async () => {
     await contains(".o-mail-Composer-suggestion:eq(3) strong:text('Person A')");
 });
 
-test("[text composer] Current user that is a follower should be considered as such", async () => {
+test("[text composer] Current user is last suggested partner", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({});
     pyEnv["res.partner"].create([
@@ -890,8 +890,8 @@ test("[text composer] Current user that is a follower should be considered as su
     await click("button:text('Send message')");
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion", { count: 5 });
-    await contains(".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))", {
-        before: [".o-mail-Composer-suggestion:has(:text('Person B (b@test.com)'))"],
+    await contains(".o-mail-Composer-suggestion:has(:text('Person B (b@test.com)'))", {
+        before: [".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))"],
     });
     await contains(".o-mail-Composer-suggestion:has(:text('Person B (b@test.com)'))", {
         before: [".o-mail-Composer-suggestion:has(:text('Person A (a@test.com)'))"],
@@ -899,7 +899,7 @@ test("[text composer] Current user that is a follower should be considered as su
 });
 
 test.tags("html composer");
-test("Current user that is a follower should be considered as such", async () => {
+test("Current user is last suggested partner", async () => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({});
     pyEnv["res.partner"].create([
@@ -927,8 +927,8 @@ test("Current user that is a follower should be considered as such", async () =>
     await focus(".o-mail-Composer-html.odoo-editor-editable");
     await htmlInsertText(editor, "@");
     await contains(".o-mail-Composer-suggestion", { count: 5 });
-    await contains(".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))", {
-        before: [".o-mail-Composer-suggestion:has(:text('Person B (b@test.com)'))"],
+    await contains(".o-mail-Composer-suggestion:has(:text('Person B (b@test.com)'))", {
+        before: [".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))"],
     });
     await contains(".o-mail-Composer-suggestion:has(:text('Person B (b@test.com)'))", {
         before: [".o-mail-Composer-suggestion:has(:text('Person A (a@test.com)'))"],

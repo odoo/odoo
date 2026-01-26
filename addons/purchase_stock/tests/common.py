@@ -67,11 +67,11 @@ class PurchaseTestCommon(TestStockCommon):
             'route_ids': [Command.set([cls.route_buy.id, cls.route_mto.id])],
             'seller_ids': [Command.create({
                 'partner_id': cls.partner_1.id,
-                'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
+                'uom_id': cls.env.ref('uom.product_uom_unit').id,
                 'price': 1.0,
             }), Command.create({
                 'partner_id': cls.partner_1.id,
-                'product_uom_id': cls.env.ref('uom.product_uom_pack_6').id,
+                'uom_id': cls.env.ref('uom.product_uom_pack_6').id,
                 'price': 5.0,
                 'min_qty': 2,
             })]

@@ -151,14 +151,14 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
             {
                 'product_id': self.place_prdct.id,
                 'price_unit': 30.0,
-                'product_uom_id': self.uom_units.id,
+                'uom_id': self.uom_units.id,
                 'product_qty': 10.0,
                 'tax_ids': self.purchase_tax.ids,
                 'discount': 10.0,
             }, {
                 'product_id': self.displace_prdct.id,
                 'price_unit': 30.0,
-                'product_uom_id': self.uom_units.id,
+                'uom_id': self.uom_units.id,
                 'product_qty': 50.0,
                 'tax_ids': self.purchase_tax.ids,
                 'discount': 0.0,
@@ -181,6 +181,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         for line in po_line_vals:
             line_product = self.env['product.product'].browse(line['product_id'])
             line['product_uom_qty'] = line.pop('product_qty')
+            line['product_uom_id'] = line.pop('uom_id')
             line['discount'] = 0.0
             # Set sales tax related to purchase tax
             line['tax_ids'] = related_sale_tax.ids
@@ -221,6 +222,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         for line in so_line_vals:
             line_product = self.env['product.product'].browse(line['product_id'])
             line['product_qty'] = line.pop('product_uom_qty')
+            line['uom_id'] = line.pop('product_uom_id')
             # Set purchase tax related to sale tax
             line['tax_ids'] = related_purchase_tax.ids
             line['price_unit'] = line_product.list_price
@@ -231,7 +233,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         po_line_vals = [{
             'product_id': self.displace_prdct.id,
             'price_unit': 1100.0,
-            'product_uom_id': self.uom_dozens.id,
+            'uom_id': self.uom_dozens.id,
             'product_qty': 5.0,
         }]
         xml_attachment = self.get_purchase_xml(po_line_vals)
@@ -239,10 +241,10 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         # Update lines vals depending on sale order field names
         for line in po_line_vals:
             line_product = self.env['product.product'].browse(line['product_id'])
-            product_uom = self.env['uom.uom'].browse(line['product_uom_id'])
-            line['product_uom_qty'] = line['product_qty']
+            product_uom = self.env['uom.uom'].browse(line['uom_id'])
+            line['product_uom_qty'] = line.pop('product_qty')
+            line['product_uom_id'] = line.pop('uom_id')
             line['price_unit'] = line_product.uom_id._compute_price(line_product.list_price, product_uom)
-            del line['product_qty']
 
         self.assertRecordValues(so.order_line, po_line_vals)
 
@@ -257,6 +259,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         po = self.env['purchase.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
         # Update lines vals depending on purchase order field names
         for line in so_line_vals:
+            line['uom_id'] = line.pop('product_uom_id')
             line['product_qty'] = line.pop('product_uom_qty')
 
         self.assertRecordValues(po.order_line, so_line_vals)
@@ -265,7 +268,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         line_vals = [{
             'product_id': self.displace_prdct.id,
             'price_unit': 80.0,
-            'product_uom_id': self.uom_dozens.id,
+            'uom_id': self.uom_dozens.id,
         }]
         xml_attachment = self.get_purchase_xml(line_vals)
         self.displace_prdct.active = False
@@ -274,6 +277,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
             # Raise user error if line does not have product set
             so.action_confirm()
         line_vals[0]['product_id'] = False
+        line_vals[0]['product_uom_id'] = line_vals[0].pop('uom_id')
         # Should set other values properly
         self.assertRecordValues(so.order_line, line_vals)
         # Should create an activity if product is not found
@@ -289,6 +293,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         self.displace_prdct.active = False
         po = self.env['purchase.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
         line_vals[0]['product_id'] = False
+        line_vals[0]['uom_id'] = line_vals[0].pop('product_uom_id')
         # Should set other values properly
         self.assertRecordValues(po.order_line, line_vals)
         # Should create an activity if product is not found

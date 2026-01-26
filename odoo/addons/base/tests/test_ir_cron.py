@@ -115,6 +115,21 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.assertEqual(self.cron.lastcall, fields.Datetime.now())
         self.assertEqual(self.partner.name, 'You have been CRONWNED')
 
+    def test_cron_direct_trigger_exception(self):
+        self.cron.code = textwrap.dedent("raise UserError('oops')")
+        with (
+            self.enter_registry_test_mode(),
+            self.assertLogs('odoo.addons.base.models.ir_cron', 40),  # logging.ERROR
+            self.registry.cursor() as cron_cr,
+        ):
+            action = self.cron.with_env(self.env(cr=cron_cr)).method_direct_trigger()
+
+        self.assertNotEqual(action, True)
+        action_params = action.pop('params')
+        self.assertEqual(action, {'type': 'ir.actions.client', 'tag': 'display_exception'})
+        self.assertEqual(list(action_params), ['code', 'message', 'data'])
+        self.assertEqual(list(action_params['data']), ['name', 'message', 'arguments', 'context', 'debug'])
+
     def test_cron_no_job_ready(self):
         self.cron.nextcall = fields.Datetime.now() + timedelta(days=1)
         self.cron.flush_recordset()
