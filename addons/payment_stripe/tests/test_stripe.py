@@ -146,6 +146,20 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             self.assertEqual(signature_check_mock.call_count, 1)
 
     @mute_logger('odoo.addons.payment_stripe.controllers.main')
+    @mute_logger('odoo.addons.payment_stripe.models.payment_transaction')
+    def test_webhook_notification_skips_signature_verification_for_missing_transactions(self):
+        """ Test that the webhook ignores signature verification for unknown transactions (e.g. POS). """
+        url = self._build_url(StripeController._webhook_url)
+        payload = dict(self.payment_data)
+        payload['data']['object']['description'] = None
+
+        with patch(
+            'odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature'
+        ) as signature_check_mock:
+            self._make_json_request(url, data=payload)
+            self.assertEqual(signature_check_mock.call_count, 0)
+
+    @mute_logger('odoo.addons.payment_stripe.controllers.main')
     def test_return_from_tokenization_request(self):
         tx = self._create_transaction('direct', amount=0, operation='validation', tokenize=True)
         url = self._build_url(StripeController._return_url)
