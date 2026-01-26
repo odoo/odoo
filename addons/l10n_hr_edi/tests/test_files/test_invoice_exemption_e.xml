@@ -5,14 +5,15 @@
       <ext:ExtensionContent>
         <hrextac:HRFISK20Data>
           <hrextac:HRTaxTotal>
-            <cbc:TaxAmount currencyID="EUR">25.00</cbc:TaxAmount>
+            <cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>
             <hrextac:HRTaxSubtotal>
               <cbc:TaxableAmount currencyID="EUR">100.00</cbc:TaxableAmount>
-              <cbc:TaxAmount currencyID="EUR">25.00</cbc:TaxAmount>
+              <cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>
               <hrextac:HRTaxCategory>
-                <cbc:ID>S</cbc:ID>
-                <cbc:Name>HR:PDV25</cbc:Name>
-                <cbc:Percent>25.0</cbc:Percent>
+                <cbc:ID>E</cbc:ID>
+                <cbc:Name>HR:E</cbc:Name>
+                <cbc:Percent>0.0</cbc:Percent>
+                <cbc:TaxExemptionReason>Exempt from VAT due to a specified reason</cbc:TaxExemptionReason>
                 <hrextac:HRTaxScheme>
                   <cbc:ID>VAT</cbc:ID>
                 </hrextac:HRTaxScheme>
@@ -31,23 +32,19 @@
   <cbc:ProfileID>P1</cbc:ProfileID>
   <cbc:ID>1/1/1</cbc:ID>
   <cbc:CopyIndicator>false</cbc:CopyIndicator>
-  <cbc:IssueDate>___ignore___</cbc:IssueDate>
-  <cbc:IssueTime>___ignore___</cbc:IssueTime>
-  <cbc:DueDate>___ignore___</cbc:DueDate>
+  <cbc:IssueDate>2025-01-02</cbc:IssueDate>
+  <cbc:IssueTime>00:00:00</cbc:IssueTime>
+  <cbc:DueDate>2025-01-01</cbc:DueDate>
   <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
   <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
   <cac:OrderReference>
     <cbc:ID>INV-2025-0001/1/1</cbc:ID>
   </cac:OrderReference>
-  <cac:AdditionalDocumentReference>
-    <cbc:ID>INV-2025-0001_1_1.pdf</cbc:ID>
-    <cac:Attachment>___ignore___</cac:Attachment>
-  </cac:AdditionalDocumentReference>
   <cac:AccountingSupplierParty>
     <cac:Party>
       <cbc:EndpointID schemeID="9934">HR68139364755</cbc:EndpointID>
       <cac:PartyIdentification>
-				<cbc:ID>9934:68139364755</cbc:ID>
+				<cbc:ID>9934:68139364755::HR99:12345</cbc:ID>
 			</cac:PartyIdentification>
       <cac:PartyName>
         <cbc:Name>company_1_data</cbc:Name>
@@ -141,13 +138,14 @@
     <cbc:Note>Payment terms: Immediate Payment</cbc:Note>
   </cac:PaymentTerms>
   <cac:TaxTotal>
-    <cbc:TaxAmount currencyID="EUR">25.00</cbc:TaxAmount>
+    <cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>
     <cac:TaxSubtotal>
       <cbc:TaxableAmount currencyID="EUR">100.00</cbc:TaxableAmount>
-      <cbc:TaxAmount currencyID="EUR">25.00</cbc:TaxAmount>
+      <cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>
       <cac:TaxCategory>
-        <cbc:ID>S</cbc:ID>
-        <cbc:Percent>25.0</cbc:Percent>
+        <cbc:ID>E</cbc:ID>
+        <cbc:Percent>0.0</cbc:Percent>
+        <cbc:TaxExemptionReason>Exempt from VAT due to a specified reason</cbc:TaxExemptionReason>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
@@ -157,9 +155,9 @@
   <cac:LegalMonetaryTotal>
     <cbc:LineExtensionAmount currencyID="EUR">100.00</cbc:LineExtensionAmount>
     <cbc:TaxExclusiveAmount currencyID="EUR">100.00</cbc:TaxExclusiveAmount>
-    <cbc:TaxInclusiveAmount currencyID="EUR">125.00</cbc:TaxInclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="EUR">100.00</cbc:TaxInclusiveAmount>
     <cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
-    <cbc:PayableAmount currencyID="EUR">125.00</cbc:PayableAmount>
+    <cbc:PayableAmount currencyID="EUR">100.00</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
   <cac:InvoiceLine>
     <cbc:ID>1</cbc:ID>
@@ -172,9 +170,10 @@
         <cbc:ItemClassificationCode listID="CG">01.11.11</cbc:ItemClassificationCode>
       </cac:CommodityClassification>
       <cac:ClassifiedTaxCategory>
-        <cbc:ID>S</cbc:ID>
-        <cbc:Name>HR:PDV25</cbc:Name>
-        <cbc:Percent>25.0</cbc:Percent>
+        <cbc:ID>E</cbc:ID>
+        <cbc:Name>HR:E</cbc:Name>
+        <cbc:Percent>0.0</cbc:Percent>
+        <cbc:TaxExemptionReason>Exempt from VAT due to a specified reason</cbc:TaxExemptionReason>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
