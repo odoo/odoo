@@ -6,7 +6,7 @@
     'website': 'https://www.odoo.com/app/project',
     'category': 'Services/Project',
     'sequence': 45,
-    'summary': 'Organize and plan your projects',
+    'summary': 'Manage tasks and collaborate on projects',
     'depends': [
         'analytic',
         'base_setup',
