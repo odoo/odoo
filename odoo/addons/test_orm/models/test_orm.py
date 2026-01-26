@@ -2259,6 +2259,16 @@ class TestOrmRelated_Translation_3(models.Model):
     html = fields.Html('HTML Related', related='related_id.html', readonly=False)
 
 
+class TestOrmRelated_Translation_4(models.Model):
+    _name = 'test_orm.related_translation_4'
+    _description = 'A model to test translation for inherited translated fields'
+    _inherits = {
+        'test_orm.related_translation_1': 'related_id',
+    }
+
+    related_id = fields.Many2one('test_orm.related_translation_1', string='Parent Model', required=True, ondelete='cascade')
+
+
 class TestOrmIndexed_Translation(models.Model):
     _name = 'test_orm.indexed_translation'
     _description = 'A model to indexed translated fields'

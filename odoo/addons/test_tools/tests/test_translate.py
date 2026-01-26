@@ -9,10 +9,12 @@ from psycopg2 import IntegrityError
 from psycopg2.extras import Json
 import io
 
-from odoo.exceptions import UserError
+from odoo import fields
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import sql
-from odoo.tools.translate import quote, unquote, xml_translate, html_translate, TranslationImporter, TranslationModuleReader
-from odoo.tests.common import TransactionCase, BaseCase, new_test_user, tagged
+from odoo.tools.translate import ParsedTranslation, StoredTranslations, TranslationImporter, TranslationModuleReader
+from odoo.tools.translate import quote, unquote, xml_translate, html_translate
+from odoo.tests.common import TransactionCase, BaseCase, tagged
 
 _stats_logger = logging.getLogger('odoo.tests.stats')
 
@@ -2002,6 +2004,484 @@ class TestHTMLTranslation(TransactionCase):
                     html,
                     f'report_footer for {lang} should be {html} when check_translations'
                 )
+
+
+@tagged('at_install', '-post_install')
+class TestStoredTranslations(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['res.lang']._activate_lang('fr_FR')
+        cls.env['res.lang']._activate_lang('nl_NL')
+
+    # use methods instead of cls.field because of `Field.__get__` descriptor
+    def _get_char_field(self):
+        """Get name field with translate=True"""
+        char_field = fields.Char()
+        char_field.translate = True
+        return char_field
+
+    def _get_xml_field(self):
+        """Get xml field with translate=xml_translate (callable)"""
+        xml_field = fields.Text()
+        xml_field.translate = xml_translate
+        return xml_field
+
+    def _get_html_field(self):
+        """Get html field with translate=html_translate (callable)"""
+        html_field = fields.Html()
+        html_field.translate = html_translate
+        return html_field
+
+    # --- fallback_langs() tests ---
+
+    def test_fallback_langs(self):
+        """fallback_langs returns the correct fallback languages."""
+        self.assertEqual(StoredTranslations.fallback_langs('en_US'), ('en_US',))
+        self.assertEqual(StoredTranslations.fallback_langs('fr_FR'), ('fr_FR', 'en_US'))
+        self.assertEqual(StoredTranslations.fallback_langs('_en_US'), ('_en_US', 'en_US'))
+        self.assertEqual(StoredTranslations.fallback_langs('_fr_FR'), ('_fr_FR', 'fr_FR', '_en_US', 'en_US'))
+
+    # --- __getitem__ tests ---
+    # --- __contains__ tests ---
+
+    def test_getitem_no_en_us(self):
+        """StoredTranslations.__getitem__ returns None and logs warning when en_US is missing."""
+        st = StoredTranslations({'fr_FR': 'French'})
+        with self.assertLogs('odoo.tools.translate', level='WARNING') as cm:
+            result = st['en_US']
+        self.assertIsNone(result)
+        self.assertTrue(any("no translation for 'en_US'" in m for m in cm.output))
+
+    def test_contains_and_get(self):
+        """__contains__ always returns True and get() uses fallback values."""
+        st = StoredTranslations({
+            'en_US': 'English',
+            'fr_FR': 'French',
+        })
+        self.assertIn('nl_NL', st)
+        self.assertEqual(st['fr_FR'], 'French')
+        self.assertEqual(st['nl_NL'], 'English')
+        self.assertEqual(st['_en_US'], 'English')
+        self.assertEqual(st['_fr_FR'], 'French')
+        self.assertEqual(st['_nl_NL'], 'English')
+        self.assertEqual(st.get('nl_NL'), 'English')
+
+    # --- validate() tests ---
+    # --- normalize() tests ---
+
+    def test_validate_success(self):
+        """validated with valid data passes without modification."""
+        char_field = self._get_char_field()
+        st = StoredTranslations({
+            'en_US': 'English',
+            'fr_FR': 'French'
+        })
+        st.validate(self.env, char_field)
+        result = st.normalize(self.env, char_field)
+        self.assertEqual(dict(result), {
+            'en_US': 'English',
+            'fr_FR': 'French'
+        })
+
+        html_field = self._get_html_field()
+        st = StoredTranslations({
+            'en_US': '<div>English</div>',
+            '_en_US': '<p>English</p>',
+            'fr_FR': '<p>French</p>'
+        })
+        st.validate(self.env, html_field)
+        result = st.normalize(self.env, html_field)
+        self.assertEqual(dict(result), {
+            'en_US': '<div>English</div>',
+            '_en_US': '<p>English</p>',
+            'fr_FR': '<p>French</p>'
+        })
+
+        st = StoredTranslations({
+            'en_US': '<div>English</div>',
+            'fr_FR': '<div>English</div>',
+        })
+        with patch.object(html_field, 'translate', wraps=html_field.translate) as mocked_translate:
+            st.validate(self.env, html_field)
+            self.assertEqual(mocked_translate.call_count, 0)
+
+    def test_validate_languages(self):
+        """validated with invalid languages."""
+        char_field = self._get_char_field()
+        st = StoredTranslations({
+            'en_US': 'English',
+            'fr_FR': 'French',
+            'fr_BE': 'Invalid',  # non-active language
+        })
+        with self.assertRaises(ValidationError):
+            st.validate(self.env, char_field)
+        result = st.normalize(self.env, char_field)
+        self.assertEqual(dict(result), {
+            'en_US': 'English',
+            'fr_FR': 'French',
+            # fr_BE should be popped since the it is not active language
+        })
+
+        st = StoredTranslations({
+            'en_US': 'English',
+            '_en_US': 'Invalid',  # technical language
+            'fr_FR': 'French',
+        })
+        with self.assertRaises(ValidationError):
+            st.validate(self.env, char_field)
+        result = st.normalize(self.env, char_field)
+        self.assertEqual(dict(result), {
+            'en_US': 'English',
+            # _en_US should be popped for `field.translate is True`
+            'fr_FR': 'French'
+        })
+
+        html_field = self._get_html_field()
+        st = StoredTranslations({
+            'en_US': '<div>English</div>',
+            'fr_FR': '<div>French</div>',
+            'fr_BE': '<div>Invalid</div>',  # non-active language
+        })
+        with self.assertRaises(ValidationError):
+            st.validate(self.env, html_field)
+        result = st.normalize(self.env, html_field)
+        self.assertEqual(dict(result), {
+            'en_US': '<div>English</div>',
+            'fr_FR': '<div>French</div>',
+            # fr_BE should be popped since the it is not active language
+        })
+
+        st = StoredTranslations({
+            'en_US': '<p>Old English</p>',
+            'fr_FR': '<div>French</div>',
+            '_en_US': '<div>English</div>',  # technical language
+        })
+        st.validate(self.env, html_field)  # no error should be raised
+        result = st.normalize(self.env, html_field)
+        self.assertEqual(dict(result), {
+            'en_US': '<p>Old English</p>',
+            'fr_FR': '<div>French</div>',
+            '_en_US': '<div>English</div>',  # should be kept for callable(field.translate)
+        })
+
+    def test_validate_none_value(self):
+        """validated with None value."""
+        char_field = self._get_char_field()
+        st = StoredTranslations({
+            'en_US': 'English',
+            'fr_FR': None,
+        })
+        with self.assertRaises(ValidationError):
+            st.validate(self.env, char_field)
+        result = st.normalize(self.env, char_field)
+        self.assertEqual(dict(result), {
+            'en_US': 'English',
+            # fr_FR should be popped since it has None value
+        })
+
+        st = StoredTranslations({
+            'en_US': None,
+            'fr_FR': 'French',
+        })
+        with self.assertRaises(ValidationError):
+            st.validate(self.env, char_field)
+        result = st.normalize(self.env, char_field)
+        self.assertEqual(dict(result), {
+            'en_US': 'French',  # en_US should be popped and refilled
+            'fr_FR': 'French',
+        })
+
+        st = StoredTranslations({
+            'en_US': None,
+            'fr_FR': None,
+        })
+        with self.assertRaises(ValidationError):
+            st.validate(self.env, char_field)
+        result = st.normalize(self.env, char_field)
+        self.assertIsNone(result)
+
+    def test_validate_missing_en_us(self):
+        """validated with missing en_US."""
+        char_field = self._get_char_field()
+        st = StoredTranslations({
+            'fr_FR': 'French',
+            'nl_NL': 'Dutch',
+        })
+        with self.assertRaises(ValidationError):
+            st.validate(self.env, char_field)
+        result = st.normalize(self.env, char_field)
+        self.assertEqual(dict(result), {
+            'en_US': 'French',  # en_US should be added
+            'fr_FR': 'French',
+            'nl_NL': 'Dutch',
+        })
+
+        st = StoredTranslations({})
+        with self.assertRaises(ValidationError):
+            st.validate(self.env, char_field)
+        result = st.normalize(self.env, char_field)
+        self.assertIsNone(result)
+
+    def test_validate_technical_languages(self):
+        """validated with technical languages"""
+        html_field = self._get_html_field()
+        st = StoredTranslations({
+            'en_US': '<div>Hello</div>',
+            '_en_US': '<p>Hello</p>',
+            '_fr_FR': '<p>Bonjour</p>',  # has _fr_FR but not fr_FR
+            'nl_NL': '<p>Hallo</p>',
+        })
+        with self.assertRaises(ValidationError):
+            st.validate(self.env, html_field)
+        result = st.normalize(self.env, html_field)
+        self.assertEqual(dict(result), {
+            'en_US': '<div>Hello</div>',
+            '_en_US': '<p>Hello</p>',
+            'fr_FR': '<div>Hello</div>',  # _fr_FR should be added with en_US value
+            '_fr_FR': '<p>Bonjour</p>',
+            'nl_NL': '<p>Hallo</p>',
+        })
+
+    def test_validate_callable_translate(self):
+        """validated with callable(field.translate)"""
+        html_field = self._get_html_field()
+        st = StoredTranslations({
+            'en_US': '<div>Hello</div>',
+            'fr_FR': '<div>Bonjour</div>',
+            '_fr_FR': '<p>Bonjour</p>',  # different structure from en_US
+        })
+        with self.assertRaises(ValidationError):
+            st.validate(self.env, html_field)
+        result = st.normalize(self.env, html_field)
+        self.assertEqual(dict(result), {
+            'en_US': '<div>Hello</div>',
+            # fr_FR and _fr_FR are popped since they have different structure from en_US
+        })
+
+    # --- written() tests ---
+
+    def test_written_empty_translation_dict(self):
+        """written with empty translation_dict returns early."""
+        html_field = self._get_html_field()
+        st = StoredTranslations({})
+        result = st.written(self.env, html_field, {})
+        self.assertIsNone(result)
+
+        st = StoredTranslations({'fr_FR': '<div>French</div>'})
+        result = st.written(self.env, html_field, {})
+        self.assertEqual(dict(result), {'en_US': '<div>French</div>', 'fr_FR': '<div>French</div>'})  # should auto fix en_US
+
+    def test_written_to_empty_stored_translations(self):
+        """written to empty StoredTranslations updates values."""
+        html_field = self._get_html_field()
+        st = StoredTranslations({})
+        translation_dict = {
+            'fr_FR': ParsedTranslation('<div>New French</div>', html_field),
+            'nl_NL': ParsedTranslation('<div>New Dutch</div>', html_field),
+        }
+        result = st.written(self.env, html_field, translation_dict)
+        self.assertEqual(dict(result), {
+            'en_US': '<div>New French</div>',
+            'fr_FR': '<div>New French</div>',
+            'nl_NL': '<div>New Dutch</div>',
+        })
+
+        st = StoredTranslations({})
+        result = st.written(self.env, html_field, {})
+        self.assertIsNone(result)
+
+    def test_written_model_terms_translations_terms_only(self):
+        """written for model terms translated fields (`callable(field.translate)`) without terms updated only"""
+        html_field = self._get_html_field()
+        st = StoredTranslations({
+            'en_US': '<p>Old Knife</p>',
+            '_en_US': '<div>Knife</div>',
+            'fr_FR': '<p>Vieux Couteau</p>',
+            '_fr_FR': '<div>Couteau</div>',
+        })
+        translation_dict = {
+            'nl_NL': ParsedTranslation('<div>Mes</div>', html_field),  # new translation for nl_NL
+            'fr_FR': ParsedTranslation('<div>Couteau</div>', html_field),  # confirm the fr_FR translation is not changed
+        }
+        result = st.written(self.env, html_field, translation_dict)
+        self.assertEqual(dict(result), {
+            'en_US': '<p>Old Knife</p>',  # delay translation for en_US is kept
+            '_en_US': '<div>Knife</div>',  # en_US term translation shouldn't be lost
+            'fr_FR': '<div>Couteau</div>',  # confirms old value
+            'nl_NL': '<div>Mes</div>',  # use new translation mapping Knife -> Mes
+        })
+
+    def test_written_model_terms_translations_content_change(self):
+        """written for model terms translated fields (`callable(field.translate)`) with content changes"""
+        html_field = self._get_html_field()
+        st = StoredTranslations({
+            'en_US': '<div>Knife</div>',
+            'fr_FR': '<p>Couteau</p>',
+            '_fr_FR': '<div>Couteau</div>',
+            'nl_NL': '<p>Mes</p>',
+            '_nl_NL': '<div>Mes</div>',
+        })
+        translation_dict = {
+            'en_US': ParsedTranslation('<div>Knife</div><div>Fork</div>', html_field),
+            'fr_FR': ParsedTranslation('<div>Couteau</div><div>Fourchette</div>', html_field),
+        }
+        result = st.written(self.env, html_field, translation_dict)
+        self.assertEqual(dict(result), {
+            'en_US': '<div>Knife</div><div>Fork</div>',
+            'fr_FR': '<div>Couteau</div><div>Fourchette</div>',
+            'nl_NL': '<div>Mes</div><div>Fork</div>',
+        })
+
+    def test_written_model_terms_translations_content_change_delay_translations(self):
+        """written for model terms translated fields (`callable(field.translate)`) with `delay_translations=True`"""
+        html_field = self._get_html_field()
+        st = StoredTranslations({
+            'en_US': '<p>Knife</p>',
+            'fr_FR': '<div>Couteau</div>',
+            '_fr_FR': '<p>Couteau</p>',
+            'nl_NL': '<div>Mes</div>',
+            '_nl_NL': '<p>Mes</p>',
+        })
+        translation_dict = {
+            'en_US': ParsedTranslation('<div>Fork</div>', html_field),
+            'fr_FR': ParsedTranslation('<div>Fourchette</div>', html_field),
+        }
+        result = st.written(self.env, html_field, translation_dict, delay_translations=True)
+        self.assertEqual(dict(result), {
+            'en_US': '<div>Fork</div>',
+            'fr_FR': '<div>Fourchette</div>',
+            'nl_NL': '<div>Mes</div>',  # delay translation for nl_NL is kept
+            '_nl_NL': '<div>Fork</div>',
+        })
+
+        st = StoredTranslations({
+            'en_US': '<p>Knife</p>',
+            'fr_FR': '<div>Couteau</div>',
+            '_fr_FR': '<p>Couteau</p>',
+            'nl_NL': '<div>Mes</div>',
+            '_nl_NL': '<p>Mes</p>',
+        })
+        translation_dict = {
+            'en_US': ParsedTranslation('<div>Knife</div>', html_field),
+            'fr_FR': ParsedTranslation('<div>Couteau</div>', html_field),
+        }
+        result = st.written(self.env, html_field, translation_dict, delay_translations=True)
+        self.assertEqual(dict(result), {
+            'en_US': '<div>Knife</div>',
+            'fr_FR': '<div>Couteau</div>',
+            'nl_NL': '<div>Mes</div>',  # new _nl_NL is the same as the old nl_NL, merge them into nl_NL
+        })
+
+    def test_written_model_terms_translations_close_match(self):
+        """written can migrate term translations from an old term to a new close term"""
+        html_field = self._get_html_field()
+        st = StoredTranslations({
+            'en_US': '<p>placeholder</p>',
+            '_en_US': '<div>Hella World</div>',  # typo "Hella"
+            'fr_FR': '<p>Bonjour le monde</p>',
+            '_fr_FR': '<div>Bonjour le monde</div>',
+        })
+        translation_dict = {
+            'en_US': ParsedTranslation('<div>Hello World</div>', html_field),
+        }
+        result = st.written(self.env, html_field, translation_dict)
+        self.assertEqual(dict(result), {
+            'en_US': '<div>Hello World</div>',
+            'fr_FR': '<div>Bonjour le monde</div>',
+        })
+
+        st = StoredTranslations({
+            'en_US': '<p>placeholder</p>',
+            '_en_US': '<div>Hella World</div><div>Hello World</div>',  # typo "Hella"
+            'fr_FR': '<p>Bonjaur le monde</p><div>Bonjour le monde</div>',  # typo "Bonjaur"
+            '_fr_FR': '<p>Bonjaur le monde</p><div>Bonjour le monde</div>',
+        })
+        translation_dict = {
+            'en_US': ParsedTranslation('<div>Hello World</div><div>Hello World</div>', html_field),
+        }
+        result = st.written(self.env, html_field, translation_dict)
+        self.assertEqual(dict(result), {
+            'en_US': '<div>Hello World</div><div>Hello World</div>',
+            'fr_FR': '<div>Bonjour le monde</div><div>Bonjour le monde</div>',
+        })
+
+    def test_written_model_terms_translations_close_match_term_adapter(self):
+        """written with `adapt_close_terms=True` adapts close terms with term_adapter."""
+        xml_field = self._get_xml_field()
+        st = StoredTranslations({
+            'en_US': '<form>English<div><i>English</i></div><div><span invisible="1">English</span></div></form>',
+            'fr_FR': '<form>French<div><i>French</i></div><div><span invisible="1">French</span></div></form>',
+        })
+        translation_dict = {
+            # old text term 'English' is removed
+            # old xml term '<i>English</i>' is removed
+            # old xml term '<span invisible="1">English</span>' is removed
+            # new xml term '<span invisible="0">English</span>' shares the same text with all old terms
+            # but is close to '<span invisible="1">English</span>' and shares the same html structure
+            # should reuse and adapt the translation mapping for the old xml term '<span invisible="1">English</span>'
+            'en_US': ParsedTranslation('<form><div><span invisible="0">English</span></div></form>', xml_field),
+        }
+        result = st.written(self.env, xml_field, translation_dict, adapt_close_terms=True)
+        self.assertEqual(dict(result), {
+            'en_US': '<form><div><span invisible="0">English</span></div></form>',
+            'fr_FR': '<form><div><span invisible="0">French</span></div></form>',  # <span invisible="1">French</span> is adapted to <span invisible="1">French</span>
+        })
+
+    def test_written_model_terms_translations_term_no_get_text_content(self):
+        """Ensure terms without text content do not trigger incorrect translation migration."""
+        html_field = self._get_html_field()
+        self.assertEqual(html_field.translate.get_text_content('<span help="Knife"></span>'), '')
+        self.assertEqual(html_field.translate.get_text_content('<span title="Knife"></span>'), '')
+        st = StoredTranslations({
+            'en_US': '<div><span help="Knife"></span></div><div><span help="Fork"></span></div>',
+            'fr_FR': '<div><span help="Couteau"></span></div><div><span help="Fourchette"></span></div>',
+        })
+        result = st.written(self.env, html_field, ({
+            'fr_FR': ParsedTranslation('<div><span title="Couteau"></span></div><div><span title="Fourchette"></span></div>', html_field)
+        }))
+        self.assertEqual(dict(result), {
+            'en_US': '<div><span title="Couteau"></span></div><div><span title="Fourchette"></span></div>',
+            'fr_FR': '<div><span title="Couteau"></span></div><div><span title="Fourchette"></span></div>',
+        })
+
+    def test_written_model_terms_translations_close_match_term_adapter_skip(self):
+        """written with `adapt_close_terms=True` skips migration."""
+        field = self._get_xml_field()
+        st = StoredTranslations({
+            'en_US': '<form><i>English</i><div><span invisible="1">English</span></div></form>',
+            'fr_FR': '<form><i>French</i><div><span invisible="1">French</span></div></form>',
+        })
+        translation_dict = {
+            # old xml text term '<i>English</i>' is removed
+            # old xml term '<span invisible="1">English</span></div>' is removed
+            # new text term 'English' used in attribute and text and shares the same text with all old terms
+            # it shouldn't reuse the translation mapping for the old xml term '<i>English</i>' and '<span invisible="1">English</span>'
+            'en_US': ParsedTranslation('<form><div title="English"/>English</form>', field),
+        }
+        result = st.written(self.env, field, translation_dict, adapt_close_terms=True)
+        self.assertEqual(dict(result), {
+            'en_US': '<form><div title="English"/>English</form>',
+            'fr_FR': '<form><div title="English"/>English</form>',
+        })
+
+        st = StoredTranslations({
+            'en_US': '<form><i>English</i><div><span invisible="1">English</span></div></form>',
+            'fr_FR': '<form><i>French</i><div><span invisible="1">French</span></div></form>',
+        })
+        translation_dict = {
+            # old text term '<i>English</i>' is removed
+            # old xml term '<span invisible="1">English</span>' is removed
+            # new xml term '<b>English</b>' shares the same text with all old terms
+            # it shouldn't reuse the translation mapping because it has different structure
+            'en_US': ParsedTranslation('<form><b>English</b></form>', field),
+        }
+        result = st.written(self.env, field, translation_dict, adapt_close_terms=True)
+        self.assertEqual(dict(result), {
+            'en_US': '<form><b>English</b></form>',
+            'fr_FR': '<form><b>English</b></form>',
+        })
 
 
 @tagged('post_install', '-at_install')
