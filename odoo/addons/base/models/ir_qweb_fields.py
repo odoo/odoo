@@ -209,8 +209,10 @@ class FloatConverter(models.AbstractModel):
             _, precision = record._fields[field_name].get_digits(record.env) or (None, None)
             options = dict(options, precision=precision)
         if 'min_precision' not in options:
-            min_precision = record._fields[field_name].get_min_display_digits(record.env)
-            options = dict(options, min_precision=min_precision)
+            field = record._fields[field_name]
+            if hasattr(field, 'get_min_display_digits'):
+                min_precision = field.get_min_display_digits(record.env)
+                options = dict(options, min_precision=min_precision)
         return super(FloatConverter, self).record_to_html(record, field_name, options)
 
 
