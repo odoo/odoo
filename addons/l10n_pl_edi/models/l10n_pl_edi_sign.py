@@ -1,11 +1,12 @@
 import base64
 import uuid
 from datetime import datetime, timezone
-from lxml import etree
+
 from cryptography import x509
-from cryptography.hazmat.primitives import serialization, hashes
-from cryptography.hazmat.primitives.asymmetric import ec, rsa, padding
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import ec, padding, rsa
 from cryptography.hazmat.primitives.asymmetric.utils import decode_dss_signature
+from lxml import etree
 
 
 class XadesSigner:

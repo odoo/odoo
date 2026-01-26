@@ -1,11 +1,10 @@
 import base64
 
-from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.l10n_pl_edi.models.l10n_pl_edi_sign import XadesSigner
 from odoo.addons.l10n_pl_edi.models.l10n_pl_ksef_api import KsefApiService
-from odoo.exceptions import UserError
 
 
 class ResConfigSettings(models.TransientModel):

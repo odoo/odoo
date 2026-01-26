@@ -1,10 +1,13 @@
 import base64
 import logging
 from xml.dom.minidom import parseString
-from odoo import models, fields
-from odoo.tools import float_compare, float_repr, float_is_zero
-from odoo.exceptions import UserError
+
 from stdnum.pl.nip import compact
+
+from odoo import api, fields, models
+from odoo.exceptions import UserError
+from odoo.tools import float_compare, float_is_zero, float_repr
+
 from odoo.addons.l10n_pl_edi.models.l10n_pl_ksef_api import KsefApiService
 
 _logger = logging.getLogger(__name__)
@@ -86,19 +89,18 @@ class AccountMove(models.Model):
         ksef_type = self._l10n_pl_edi_get_ksef_invoice_type()
         related_numbers = set()
 
-        if ksef_type in ['ROZ', 'ZAL']:
-            if hasattr(self.line_ids, 'sale_line_ids'):
-                sale_orders = self.line_ids.sale_line_ids.order_id
+        if ksef_type in ['ROZ', 'ZAL'] and hasattr(self.line_ids, 'sale_line_ids'):
+            sale_orders = self.line_ids.sale_line_ids.order_id
 
-                for so in sale_orders:
-                    previous_invoices = so.invoice_ids.filtered(
-                        lambda x: x.id != self.id and x.state == 'posted'
-                    )
+            for so in sale_orders:
+                previous_invoices = so.invoice_ids.filtered(
+                    lambda x: x.id != self.id and x.state == 'posted'
+                )
 
-                    for prev in previous_invoices:
-                        # Recursively check the type of the previous invoice
-                        if prev._l10n_pl_edi_get_ksef_invoice_type() == 'ZAL':
-                            related_numbers.add(prev.name)
+                for prev in previous_invoices:
+                    # Recursively check the type of the previous invoice
+                    if prev._l10n_pl_edi_get_ksef_invoice_type() == 'ZAL':
+                        related_numbers.add(prev.name)
 
         return list(related_numbers)
 
@@ -125,7 +127,7 @@ class AccountMove(models.Model):
                 return - sum(self.line_ids.filtered(lambda line: any(tag in tax_tags for tag in line.tax_tag_ids)).mapped('amount_currency'))
 
         def get_amounts_from_tag_in_PLN_currency(tax_group_id):
-            conversion_line = self.invoice_line_ids.sorted(lambda l: abs(l.balance), reverse=True)[0] if self.invoice_line_ids else None
+            conversion_line = self.invoice_line_ids.sorted(lambda line: abs(line.balance), reverse=True)[0] if self.invoice_line_ids else None
             conversion_rate = abs(conversion_line.balance / conversion_line.amount_currency) if self.currency_id != self.env.ref('base.PLN') and conversion_line else 1
             return get_amounts_from_tag(tax_group_id) * conversion_rate
 
@@ -191,7 +193,7 @@ class AccountMove(models.Model):
         tax_summary_vals = {}
 
         for group in self.tax_totals.get('groups_by_subtotal', {}).values():
-            tax_rate_str = str(int(group['tax_group_amount_type'] == 'percent' and group['tax_group_amount'] or 0))
+            tax_rate_str = str(int((group['tax_group_amount_type'] == 'percent' and group['tax_group_amount']) or 0))
             tax_summary_vals[tax_rate_str] = {
                 'net': float_repr(group['tax_group_base_amount'], 2),
                 'tax': float_repr(group['tax_group_amount'], 2),
@@ -355,7 +357,7 @@ class AccountMove(models.Model):
             upo_xml_content = service.get_invoice_upo(self.l10n_pl_move_reference_number)
         except UserError as e:
             self.message_post(body=self.env._("Failed to download UPO: %s", str(e)))
-            return
+            return None
 
         if not upo_xml_content:
             raise UserError(self.env._("The KSeF service returned empty UPO content."))
@@ -397,7 +399,38 @@ class AccountMove(models.Model):
         }
 
     def _cron_checks_the_polish_invoice_status(self):
-        """get all moves that are in state sent run action_update_invoice_status on all of them"""
-        to_update_moves = self.env['account.move'].search([*self.env['account.move']._check_company_domain(self.env.company), ('l10n_pl_ksef_status', '=', 'sent')])
+        """ Get all moves that are in state sent run action_update_invoice_status on all of them """
+        to_update_moves = self.env['account.move'].search([
+            *self.env['account.move']._check_company_domain(self.env.company),
+            ('l10n_pl_ksef_status', '=', 'sent')
+        ])
         for move in to_update_moves:
             move.action_update_invoice_status()
+
+    def button_draft(self):
+        """
+            When going from canceled => draft, we ensure to clear the edi fields
+            so that the invoice can be resent if required.
+        """
+        # EXTEND account
+        res = super().button_draft()
+        moves = self.filtered(lambda move: move.country_code == 'PL' and move.l10n_pl_ksef_status == 'rejected')
+        moves.write({
+            'l10n_pl_ksef_status': 'to_send',
+            'l10n_pl_ksef_number': False,
+            'l10n_pl_edi_header': False,
+        })
+        return res
+
+    @api.depends('l10n_pl_ksef_status')
+    def _compute_show_reset_to_draft_button(self):
+        """
+            Invoices currently or correctly sent to the KSeF cannot be reset to draft.
+        """
+        # EXTENDS 'account'
+        super()._compute_show_reset_to_draft_button()
+        for move in self:
+            move.show_reset_to_draft_button = (
+                move.l10n_pl_ksef_status not in ('sent', 'accepted')
+                and move.show_reset_to_draft_button
+            )

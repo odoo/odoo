@@ -1,6 +1,8 @@
 import base64
 import logging
-from odoo import models, fields
+
+from odoo import fields, models
+
 from odoo.addons.l10n_pl_edi.models.l10n_pl_ksef_api import KsefApiService
 
 _logger = logging.getLogger(__name__)
@@ -27,9 +29,11 @@ class AccountMoveSend(models.AbstractModel):
     def _get_alerts(self, moves, moves_data):
         # EXTENDS 'account'
         alerts = super()._get_alerts(moves, moves_data)
-        if pl_moves := moves.filtered(lambda m: 'pl_ksef' in moves_data[m]['extra_edis'] or moves_data[m]['invoice_edi_format'] == 'fa3_pl'):
-            if it_alerts := pl_moves._check_mandatory_fields():
-                alerts.update(**it_alerts)
+        if (
+            (pl_moves := moves.filtered(lambda m: 'pl_ksef' in moves_data[m]['extra_edis'] or moves_data[m]['invoice_edi_format'] == 'fa3_pl'))
+            and (it_alerts := pl_moves._check_mandatory_fields())
+        ):
+            alerts.update(**it_alerts)
         return alerts
 
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
@@ -58,9 +62,8 @@ class AccountMoveSend(models.AbstractModel):
             for move in moves:
                 try:
                     if move.invoice_date > fields.Date.context_today(self):
-                        if move.invoice_date > fields.Date.context_today(self):
-                            set_error(move, self.env._("The move was skipped because it is future-dated"))
-                            continue
+                        set_error(move, self.env._("The move was skipped because it is future-dated"))
+                        continue
                     xml_content = move._l10n_pl_ksef_render_xml()
                     xml_content = xml_content.encode('utf-8')
                     response_data = service.send_invoice(xml_content)

@@ -13,11 +13,14 @@
                          invisible="not l10n_pl_edi_header or state == 'draft' or l10n_pl_ksef_status == 'accepted'">
                         <div class="d-flex align-items-center">
                             <field name="l10n_pl_edi_header" class="oe_inline" readonly="1"/>
-                            <a name="action_update_invoice_status"
-                               type="object"
-                               class="alert-link fw-bold ms-1"
-                               invisible="l10n_pl_ksef_status == 'accepted' or not l10n_pl_move_reference_number"
-                               data-hotkey="shift+K">Check Sending</a>
+                            <button
+                                name="action_update_invoice_status"
+                                type="object"
+                                class="btn btn-secondary fw-bold ms-1"
+                                invisible="l10n_pl_ksef_status == 'accepted' or not l10n_pl_move_reference_number"
+                                data-hotkey="shift+K">
+                                    Check Sending
+                            </button>
                         </div>
                     </div>
 
@@ -28,11 +31,14 @@
                         <i class="fa fa-check-circle text-success me-2" role="img" title="Success"/>
                         <span>Invoice accepted by KSeF.</span>
 
-                        <a name="action_get_invoice_UPO"
-                           type="object"
-                            class="alert-link fw-bold ms-1"
-                           invisible="not l10n_pl_move_reference_number"
-                           data-hotkey="shift+U">Download UPO</a>
+                        <button
+                            name="action_get_invoice_UPO"
+                            type="object"
+                            class="btn btn-secondary fw-bold ms-1"
+                            invisible="not l10n_pl_move_reference_number"
+                            data-hotkey="shift+U">
+                            Download UPO
+                        </button>
                     </div>
                 </xpath>
         </field>

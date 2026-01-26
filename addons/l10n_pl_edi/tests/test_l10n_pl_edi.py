@@ -1,7 +1,9 @@
 from lxml import etree
+
+from odoo import Command, fields, tools
 from odoo.tests import tagged
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo import fields, Command, tools
 
 
 @tagged('post_install', '-at_install', 'post_install_l10n')

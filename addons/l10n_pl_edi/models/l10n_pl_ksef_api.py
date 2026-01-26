@@ -1,16 +1,17 @@
 import base64
-import os
 import hashlib
 import logging
+import os
 import time
 
 import requests
-from odoo.exceptions import UserError
 from cryptography import x509
-from cryptography.hazmat.primitives import serialization, hashes
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives import padding as sym_padding
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.primitives import padding as sym_padding
+
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 TIMEOUT = 10
@@ -56,13 +57,13 @@ class KsefApiService:
                 self.refresh_access_token()
                 # Pass is_auth_retry=True to prevent looping
                 return self._make_request(method, endpoint, is_auth_retry=True, **kwargs)
-
-            response.raise_for_status()
-            return response
+            else:
+                response.raise_for_status()
+                return response
 
         except requests.exceptions.RequestException as e:
             error_text = e.response.text if e.response is not None else str(e)
-            _logger.error("KSeF API request failed: %s", error_text)
+            _logger.exception("KSeF API request failed: %s", error_text)
             raise UserError(self.company.env._("KSeF API Error: %s", error_text))
 
     def _get_public_keys(self):
@@ -172,7 +173,7 @@ class KsefApiService:
 
         except requests.exceptions.RequestException as e:
             error_text = e.response.text if e.response else str(e)
-            _logger.error("Failed to refresh KSeF access token: %s", error_text)
+            _logger.exception("Failed to refresh KSeF access token: %s", error_text)
             raise UserError(self.company.env._("Failed to refresh KSeF access token. You may need to re-authenticate manually. Error: %s", error_text))
 
     def send_invoice(self, xml_content_bytes):
@@ -293,7 +294,7 @@ class KsefApiService:
         endpoint = f"{self.api_url}/auth/{ref_number}"
         headers = self._make_headers(temp_token)
 
-        for attempt in range(5):
+        for _attempt in range(5):
             try:
                 response = requests.get(endpoint, headers=headers, timeout=TIMEOUT)
                 response.raise_for_status()
