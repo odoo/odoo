@@ -99,6 +99,7 @@
 
     <t t-name="web.DateTimePicker">
         <div
+            t-att-class="{'o_datetime_picker_reduced': !props.showWeekNumbers}"
             class="o_datetime_picker d-flex flex-column gap-2 user-select-none p-2"
             t-attf-style="--DateTimePicker__Day-template-columns: {{ props.showWeekNumbers ? 8 : 7 }}"
         >

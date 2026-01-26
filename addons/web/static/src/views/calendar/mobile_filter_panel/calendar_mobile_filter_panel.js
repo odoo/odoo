@@ -6,11 +6,11 @@ export class CalendarMobileFilterPanel extends Component {
     static template = "web.CalendarMobileFilterPanel";
     static props = {
         model: Object,
-        sideBarShown: Boolean,
-        toggleSideBar: Function,
+        sidePanelShown: Boolean,
+        toggleSidePanel: Function,
     };
     get caretDirection() {
-        return this.props.sideBarShown ? "down" : "left";
+        return this.props.sidePanelShown ? "down" : "left";
     }
     getFilterColor(filter) {
         return `o_color_${getColor(filter.colorIndex)}`;

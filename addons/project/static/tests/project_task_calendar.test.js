@@ -200,7 +200,7 @@ test("tasks to plan should be visible in the sidebar when `default_project_id` i
     expect(".o_calendar_view").toHaveCount(1);
     expect(".o_event_to_schedule_draggable").toHaveCount(2);
     expect(queryAllTexts(".o_event_to_schedule_draggable")).toEqual(["Task-10", "Task-11"]);
-    expect(".o_calendar_view .o_calendar_sidebar h5").toHaveText("To Schedule");
+    expect(".o_calendar_view .o_calendar_sidepanel h5").toHaveText("2 to schedule");
     expect.verifySteps(["search_read", "fetch tasks to schedule"]);
 });
 
@@ -220,7 +220,7 @@ test("search domain should be taken into account in Tasks to Schedule", async ()
     expect(".o_calendar_view").toHaveCount(1);
     expect(".o_event_to_schedule_draggable").toHaveCount(1);
     expect(".o_event_to_schedule_draggable").toHaveText("Task-10");
-    expect(".o_calendar_view .o_calendar_sidebar h5").toHaveText("To Schedule");
+    expect(".o_calendar_view .o_calendar_sidepanel h5").toHaveText("1 to schedule");
     expect.verifySteps(["search_read", "fetch tasks to schedule"]);
 });
 
@@ -243,7 +243,7 @@ test("planned dates used in search domain should not be taken into account in Ta
     expect(".o_calendar_view").toHaveCount(1);
     expect(".o_event_to_schedule_draggable").toHaveCount(1);
     expect(".o_event_to_schedule_draggable").toHaveText("Task-10");
-    expect(".o_calendar_view .o_calendar_sidebar h5").toHaveText("To Schedule");
+    expect(".o_calendar_view .o_calendar_sidepanel h5").toHaveText("1 to schedule");
     expect.verifySteps(["search_read", "fetch tasks to schedule"]);
 });
 

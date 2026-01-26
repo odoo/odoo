@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.CalendarSidePanel">
-        <div class="o_calendar_sidebar_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto">
+        <div t-if="props.sidePanelExpanded" class="o_calendar_sidepanel_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto">
             <div t-if="props.model.meta.canScheduleEvents and state.isDragging" class="d-flex o_calendar_unschedule_zone m-3 align-items-center justify-content-center">
                 <b>Drop here to unschedule</b>
             </div>
-            <div class="o_calendar_sidebar" t-att-class="{ 'd-none': props.model.meta.canScheduleEvents and state.isDragging }">
+            <div class="o_calendar_sidepanel" t-att-class="{ 'd-none': props.model.meta.canScheduleEvents and state.isDragging }">
+                <button t-if="!env.isSmall" class="btn btn-light btn-sm end-0 m-2 position-absolute px-2 py-1 top-0 z-1" t-on-click="() => this.props.toggleSidePanel()">
+                    <i class="oi oi-panel-right fa-flip-horizontal"/>
+                </button>
                 <DatePicker t-if="showDatePicker" t-props="datePickerProps" />
-                <t t-foreach="props.model.filterSections" t-as="section" t-key="section.fieldName">
-                    <FilterSection model="props.model" section="section"/>
+                <div class="o_calendar_sidepanel_content px-3">
+                    <t t-foreach="props.model.filterSections" t-as="section" t-key="section.fieldName">
+                        <FilterSection model="props.model" section="section"/>
+                    </t>
+                    <ScheduleSection
+                        t-if="props.model.meta.canScheduleEvents"
+                        model="props.model"
+                        editRecord="props.editRecord"
+                    />
+                </div>
+            </div>
+        </div>
+        <div t-elif="!env.isSmall" class="o_calendar_sidebar flex-grow-0 flex-shrink-0 bg-view h-100 cursor-pointer d-print-none" t-on-click="() => this.props.toggleSidePanel()">
+            <div class="d-flex">
+                <button class="btn btn-light btn-sm m-2 p-1 py-2">
+                    <i class="oi oi-panel-right fa-flip-horizontal"/>
+                </button>
+                <t t-foreach="filters" t-as="filter" t-key="filter_index">
+                    <div class="m-2 mt-0 p-1" t-att-class="{ 'text-muted': !filter.active }">
+                        <i class="fa fa-filter fa-rotate-90"/>
+                    </div>
+                    <div class="text-truncate mx-auto mb-2" t-out="filter.label" t-att-class="{ 'text-muted': !filter.active }"/>
                 </t>
-                <ScheduleSection
-                    t-if="props.model.meta.canScheduleEvents"
-                    model="props.model"
-                    editRecord="props.editRecord"
-                />
+                <div t-if="props.model.meta.canScheduleEvents" class="text-truncate mx-auto mb-2" t-out="toScheduleString"/>
             </div>
         </div>
     </t>
