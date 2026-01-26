@@ -1549,7 +1549,11 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
 
-        section_lines = self.order_id.order_line.filtered(self._is_line_in_section)
+        billable_lines = self.order_id.order_line.filtered(
+            lambda line:
+                line.product_type != 'combo'
+                and self._is_line_in_section(line)
+        )
 
         if display_taxes:
             res = [
@@ -1558,13 +1562,13 @@ class SaleOrderLine(models.Model):
                     'price_subtotal': sum(lines.mapped('price_subtotal')),
                     'price_total': sum(lines.mapped('price_total')),
                 }
-                for taxes, lines in section_lines.grouped('tax_ids').items()
+                for taxes, lines in billable_lines.grouped('tax_ids').items()
             ]
         else:
             res = [{
                 'tax_labels': [],
-                'price_subtotal': sum(section_lines.mapped('price_subtotal')),
-                'price_total': sum(section_lines.mapped('price_total')),
+                'price_subtotal': sum(billable_lines.mapped('price_subtotal')),
+                'price_total': sum(billable_lines.mapped('price_total')),
             }]
         return res or [{
             'tax_labels': [],
