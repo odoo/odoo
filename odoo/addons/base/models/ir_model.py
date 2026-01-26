@@ -1199,19 +1199,40 @@ class IrModelFields(models.Model):
         for (field_model, field_name), field_id in field_ids.items():
             model = self.env[field_model]
             field = model._fields.get(field_name)
-            if field and (
-                module == model._original_module
-                or module in field._modules
-                or any(
-                    # module introduced field on model by inheritance
-                    field_name in self.env[parent]._fields
-                    for parent, parent_module in model._inherit_module.items()
-                    if module == parent_module
-                )
-            ):
-                xml_id = field_xmlid(module, field_model, field_name)
-                record = self.browse(field_id)
-                data_list.append({'xml_id': xml_id, 'record': record})
+            if not field:
+                continue
+            record = self.browse(field_id)
+            if module == model._original_module:
+                # `model` is a new model introduced by this `module`
+                if field._modules:
+                    # Multiple entries in `field._modules` mean that field has been seen in other modules,
+                    # it must come from _inherit or _inheritS. Single entry means a new field.
+                    for parent_module in field._modules:
+                        xml_id = field_xmlid(parent_module, field_model, field_name)
+                        data_list.append({'xml_id': xml_id, 'record': record})
+                else:
+                    # AFU: this only happens for manual fields?
+                    xml_id = field_xmlid(module, field_model, field_name)
+                    data_list.append({'xml_id': xml_id, 'record': record})
+            else:
+                # `model` is an existing model before `module` is installed
+                if module in field._modules:
+                    # `field` is added as direct definition in the current `model` or
+                    # in a parent model
+                    xml_id = field_xmlid(module, field_model, field_name)
+                    data_list.append({'xml_id': xml_id, 'record': record})
+                elif any(
+                        field_name in self.env[parent]._fields
+                        for parent, parent_module in model._inherit_module.items()
+                        if module == parent_module
+                    ):
+                    # `field` is coming from a new parent in _inherit (!= _name)
+                    xml_id = field_xmlid(module, field_model, field_name)
+                    data_list.append({'xml_id': xml_id, 'record': record})
+                else:
+                    # The model is not touched
+                    pass
+
         self.env['ir.model.data']._update_xmlids(data_list)
 
     @tools.ormcache()
