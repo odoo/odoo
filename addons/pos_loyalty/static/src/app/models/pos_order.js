@@ -1186,11 +1186,16 @@ patch(PosOrder.prototype, {
                     special_mode: "total_included",
                 },
             });
+            const priceUnit =
+                price.total_excluded +
+                price.taxes_data
+                    .filter((taxData) => taxData.tax.price_include)
+                    .reduce((sum, taxData) => sum + taxData.tax_amount, 0);
 
             return [
                 {
                     product_id: discountProduct,
-                    price_unit: price.total_excluded,
+                    price_unit: priceUnit,
                     qty: 1,
                     reward_id: reward,
                     is_reward_line: true,
