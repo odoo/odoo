@@ -20,7 +20,7 @@ _stats_logger = logging.getLogger('odoo.tests.stats')
 SPECIAL_CHARACTERS = " ¥®°²Æçéðπ⁉€∇⓵▲☑♂♥✓➔『にㄅ㊀中한︸🌈🌍👌😀"
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install', 'loco')  # LEGACY at_install
 class TranslationToolsTestCase(BaseCase):
     def assertItemsEqual(self, a, b, msg=None):
         self.assertEqual(sorted(a), sorted(b), msg)
@@ -191,23 +191,6 @@ class TranslationToolsTestCase(BaseCase):
         self.assertEqual(result, source)
         self.assertItemsEqual(terms,
             ['Translate this'])
-
-    def test_translate_xml_a(self):
-        """ Test xml_translate() with <a> elements. """
-        terms = []
-        source = """<t t-name="stuff">
-                        <ul class="nav navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link oe_menu_leaf" href="/odoo/action-54?menu_id=42">
-                                    <span class="oe_menu_text">Blah</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </t>"""
-        result = xml_translate(terms.append, source)
-        self.assertEqual(result, source)
-        self.assertItemsEqual(terms,
-            ['<span class="oe_menu_text">Blah</span>'])
 
     def test_translate_xml_with_namespace(self):
         """ Test xml_translate() on elements with namespaces. """

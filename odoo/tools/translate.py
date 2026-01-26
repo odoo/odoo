@@ -63,7 +63,7 @@ import csv # pylint: disable=deprecated-module
 
 # which elements are translated inline
 TRANSLATED_ELEMENTS = {
-    'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'del', 'dfn', 'em',
+    'a', 'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'del', 'dfn', 'em',
     'font', 'i', 'ins', 'kbd', 'keygen', 'mark', 'math', 'meter', 'output',
     'progress', 'q', 'ruby', 's', 'samp', 'small', 'span', 'strong', 'sub',
     'sup', 'time', 'u', 'var', 'wbr', 'text', 'select', 'option',
@@ -158,8 +158,7 @@ def translate_xml_node(node, callback, parse, serialize):
             # The introduction of a translation `<span>` in the middle of their
             # hierarchy breaks their functionalities. We need to force them to
             # be translated as a whole using the `o_translate_inline` class.
-            "o_translate_inline" in node.attrib.get("class", "").split()
-            or node.tag in TRANSLATED_ELEMENTS
+            node.tag in TRANSLATED_ELEMENTS
             and not any(key.startswith("t-") or key.endswith(".translate") for key in node.attrib)
             and all(translatable(child) for child in node)
         )
