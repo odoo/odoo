@@ -102,17 +102,17 @@ def _mock_check_peppol_participant_exists(func, self, *args, **kwargs):
 
 
 def _mock_create_connection(func, self, *args, **kwargs):
-    edi_mode, peppol_identifier, _db_uuid, company = args
+    peppol_identifier, _db_uuid, company = args
     dummy_response = {'id_client': 'demo4peppol', 'refresh_token': 'demo', 'peppol_state': 'receiver'}
     private_key_sudo = self.env['certificate.key'].sudo()._generate_rsa_private_key(
         company,
-        name=f"peppol_{edi_mode}_{company.id}.key",
+        name=f"peppol_demo_{company.id}.key",
     )
     edi_user = self.env['account_edi_proxy_client.user'].create({
         'id_client': dummy_response['id_client'],
         'company_id': company.id,
         'proxy_type': 'peppol',
-        'edi_mode': edi_mode,
+        'edi_mode': 'demo',
         'edi_identification': peppol_identifier,
         'refresh_token': dummy_response['refresh_token'],
         'private_key_id': private_key_sudo.id,
