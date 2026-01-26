@@ -10,6 +10,12 @@ import { patch } from "@web/core/utils/patch";
 // when the user closes the sidebar or switches to another app, wait for 5
 // minutes before unsubscribing.
 export const LFH_UNSUBSCRIBE_DELAY = 5 * 60 * 1000;
+<<<<<<< 3f85a62033b864453f6f7ee8de3fd62eb7a61252:addons/im_livechat/static/src/core/public_web/discuss_app/discuss_app_model_patch.js
+||||||| 424f1fb67f343eb76b7b2393dfed6dac03b32ad8:addons/im_livechat/static/src/core/public_web/discuss_app_model_patch.js
+const LIVECHAT_INFO_DEFAULT_OPEN_LS = "im_livechat.isInfoPanelOpenByDefault";
+=======
+export const LIVECHAT_INFO_DEFAULT_OPEN_LS = "im_livechat.isInfoPanelOpenByDefault";
+>>>>>>> 0367efa1c0fa43e543d9b9f9c49a553058577c88:addons/im_livechat/static/src/core/public_web/discuss_app_model_patch.js
 
 const discussAppStaticPatch = {
     new() {
@@ -80,9 +86,37 @@ patch(DiscussApp.prototype, {
             },
             eager: true,
         });
+<<<<<<< 3f85a62033b864453f6f7ee8de3fd62eb7a61252:addons/im_livechat/static/src/core/public_web/discuss_app/discuss_app_model_patch.js
         this.lastThread = fields.One("mail.thread");
         this.livechats = fields.Many("discuss.channel", { inverse: "appAsLivechats" });
         this.isLivechatInfoPanelOpenByDefault = fields.Attr(true, { localStorage: true });
+||||||| 424f1fb67f343eb76b7b2393dfed6dac03b32ad8:addons/im_livechat/static/src/core/public_web/discuss_app_model_patch.js
+        this.lastThread = fields.One("Thread");
+        this.livechats = fields.Many("Thread", { inverse: "appAsLivechats" });
+        this.isLivechatInfoPanelOpenByDefault = fields.Attr(true, {
+            compute() {
+                return browser.localStorage.getItem(LIVECHAT_INFO_DEFAULT_OPEN_LS) !== "false";
+            },
+            /** @this {import("models").DiscussApp} */
+            onUpdate() {
+                if (this.isLivechatInfoPanelOpenByDefault) {
+                    browser.localStorage.removeItem(LIVECHAT_INFO_DEFAULT_OPEN_LS);
+                } else {
+                    browser.localStorage.setItem(LIVECHAT_INFO_DEFAULT_OPEN_LS, "false");
+                }
+            },
+        });
+=======
+        this.lastThread = fields.One("Thread");
+        this.livechats = fields.Many("Thread", { inverse: "appAsLivechats" });
+        this._recomputeIsLivechatInfoPanelOpenedByDefault = 0;
+        this.isLivechatInfoPanelOpenByDefault = fields.Attr(true, {
+            compute() {
+                void this._recomputeIsLivechatInfoPanelOpenedByDefault;
+                return browser.localStorage.getItem(LIVECHAT_INFO_DEFAULT_OPEN_LS) !== "false";
+            },
+        });
+>>>>>>> 0367efa1c0fa43e543d9b9f9c49a553058577c88:addons/im_livechat/static/src/core/public_web/discuss_app_model_patch.js
     },
 
     shouldDisableMemberPanelAutoOpenFromClose(nextActiveAction) {
@@ -106,4 +140,22 @@ patch(DiscussApp.prototype, {
         this.lastThread = this.thread;
         super._threadOnUpdate();
     },
+<<<<<<< 3f85a62033b864453f6f7ee8de3fd62eb7a61252:addons/im_livechat/static/src/core/public_web/discuss_app/discuss_app_model_patch.js
+||||||| 424f1fb67f343eb76b7b2393dfed6dac03b32ad8:addons/im_livechat/static/src/core/public_web/discuss_app_model_patch.js
+
+    onStorage(ev) {
+        super.onStorage(ev);
+        if (ev.key === LIVECHAT_INFO_DEFAULT_OPEN_LS) {
+            this.isLivechatInfoPanelOpenByDefault = ev.newValue !== "false";
+        }
+    },
+=======
+
+    onStorage(ev) {
+        super.onStorage(ev);
+        if (ev.key === LIVECHAT_INFO_DEFAULT_OPEN_LS) {
+            this._recomputeIsLivechatInfoPanelOpenedByDefault++;
+        }
+    },
+>>>>>>> 0367efa1c0fa43e543d9b9f9c49a553058577c88:addons/im_livechat/static/src/core/public_web/discuss_app_model_patch.js
 });
