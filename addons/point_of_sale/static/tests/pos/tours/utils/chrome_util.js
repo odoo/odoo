@@ -193,11 +193,18 @@ export function clickOrders() {
 export function clickPresetTimingSlot() {
     return { trigger: ".pos-leftheader .preset-time-btn", run: "click" };
 }
-export function presetTimingSlotIs(hour) {
-    return { trigger: `.pos-leftheader .preset-time-btn:contains('${hour}')` };
-}
-export function selectPresetTimingSlotHour(hour) {
-    return { trigger: `.modal button:contains('${hour}')`, run: "click" };
+export function selectPresetTimingSlotHour({ title, hour } = {}) {
+    return [
+        {
+            content: `Click on the slot hour ${hour} in the modal`,
+            trigger: `.modal:has(.modal-header:contains(${title})) button:contains('${hour}')`,
+            run: "click",
+        },
+        {
+            content: `Wait the slot hour ${hour} is set and loading is done (to avoid currency error)`,
+            trigger: `body:not(:has(.modal)):not(:has(.oe_status .fa-spin)) .pos-leftheader .preset-time-btn:contains(${hour})`,
+        },
+    ];
 }
 export function presetTimingSlotHourNotExists(hour) {
     return { trigger: negate(`.modal button:visible:contains('${hour}')`) };
