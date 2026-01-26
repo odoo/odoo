@@ -36,7 +36,9 @@ function commonParentGet(node1, node2, root = undefined) {
 //--------------------------------------------------------------------------
 
 const RE_COL_MATCH = /(^| )col(-[\w\d]+)*( |$)/;
-const RE_OFFSET_MATCH = /(^| )offset(-[\w\d]+)*( |$)/;
+const RE_COL_MD_MATCH = /(^| )col-md(-\d+)*( |$)/;
+const RE_OFFSET_MATCH = /(^| )offset(-[\w\d]+)+( |$)/;
+const RE_OFFSET_MD_MATCH = /(^| )offset-md(-\d+)+( |$)/;
 const RE_PADDING_MATCH = /[ ]*padding[^;]*;/g;
 const RE_PADDING = /([\d.]+)/;
 const RE_WHITESPACE = /[\s\u200b]*/;
@@ -374,7 +376,7 @@ export function bootstrapToTable(element) {
                     grid = _createColumnGrid();
                     currentCol = grid[0];
                     _applyColspan(currentCol, columnSize, containerWidth);
-                    gridIndex = columnSize;
+                    gridIndex = columnSize % 12;
                     if (columnIndex === bootstrapColumns.length - 1 && gridIndex < 12) {
                         // We handled all the columns but there is still space
                         // in the row. Insert the columns and fill the row.
@@ -1718,7 +1720,10 @@ function _createTable(attributes = []) {
  * @returns {number}
  */
 function _getColumnSize(column) {
-    const colMatch = column.className.match(RE_COL_MATCH);
+    let colMatch = column.className.match(RE_COL_MD_MATCH);
+    if (!colMatch) {
+        colMatch = column.className.match(RE_COL_MATCH);
+    }
     const colOptions = colMatch[2] && colMatch[2].substr(1).split("-");
     const colSize =
         (colOptions && (colOptions.length === 2 ? +colOptions[1] : +colOptions[0])) || 0;
@@ -1733,7 +1738,10 @@ function _getColumnSize(column) {
  * @returns {number}
  */
 function _getColumnOffsetSize(column) {
-    const offsetMatch = column.className.match(RE_OFFSET_MATCH);
+    let offsetMatch = column.className.match(RE_OFFSET_MD_MATCH);
+    if (!offsetMatch) {
+        offsetMatch = column.className.match(RE_OFFSET_MATCH);
+    }
     const offsetOptions = offsetMatch && offsetMatch[2] && offsetMatch[2].substr(1).split("-");
     const offsetSize =
         (offsetOptions && (offsetOptions.length === 2 ? +offsetOptions[1] : +offsetOptions[0])) ||
