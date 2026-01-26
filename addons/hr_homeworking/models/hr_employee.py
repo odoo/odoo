@@ -40,8 +40,9 @@ class HrEmployeeBase(models.AbstractModel):
         dayfield = self._get_current_day_location_field()
         if 'search' in res['views']:
             res['views']['search']['arch'] = res['views']['search']['arch'].replace('today_location_name', dayfield)
-        if 'list' in res['views']:
-            res['views']['list']['arch'] = res['views']['list']['arch'].replace('name_work_location_display', dayfield)
+        if 'tree' in res['views']:
+            res['views']['tree']['arch'] = res['views']['tree']['arch'].replace('name_work_location_display', dayfield)
+        res["models"][self._name].update(self.fields_get([dayfield]))
         return res
 
     @api.depends('exceptional_location_id', *DAYS)
