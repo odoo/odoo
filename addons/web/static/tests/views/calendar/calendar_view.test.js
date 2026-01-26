@@ -377,7 +377,7 @@ test(`simple calendar rendering on desktop`, async () => {
 
     await changeScale("day");
     expect(`.o_event`).toHaveCount(2);
-    expect(`.o_calendar_sidebar .o_datetime_picker .o_selected`).toHaveCount(1);
+    expect(`.o_calendar_sidepanel .o_datetime_picker .o_selected`).toHaveCount(1);
 
     await changeScale("month");
     await toggleSectionFilter("attendee_ids");
@@ -389,7 +389,7 @@ test(`simple calendar rendering on desktop`, async () => {
     });
 
     // test filters
-    expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(2);
+    expect(`.o_calendar_sidepanel .o_calendar_filter`).toHaveCount(2);
     expect(`.o_calendar_filter:eq(1)`).toBeVisible();
     expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item`).toHaveCount(3);
 
@@ -410,14 +410,14 @@ test(`simple calendar rendering on desktop`, async () => {
     expect(`.o_event`).toHaveCount(0);
 
     // test search bar in filter
-    await contains(`.o_calendar_sidebar input[type=text]`).click();
+    await contains(`.o_calendar_sidepanel input[type=text]`).click();
     expect(`.dropdown-item`).toHaveCount(2);
     expect(queryAllTexts`.dropdown-item`).toEqual(["partner 3", "partner 4"]);
 
     await contains(`.dropdown-item:eq(0)`).click();
     expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
 
-    await contains(`.o_calendar_sidebar input[type=text]`).click();
+    await contains(`.o_calendar_sidepanel input[type=text]`).click();
     expect(`.dropdown-item`).toHaveCount(1);
     expect(`.dropdown-item`).toHaveText("partner 4");
 
@@ -491,7 +491,7 @@ test(`simple calendar rendering on mobile`, async () => {
 
     // test filters
     await displayCalendarPanel();
-    expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(2);
+    expect(`.o_calendar_sidepanel .o_calendar_filter`).toHaveCount(2);
     expect(`.o_calendar_filter:eq(1)`).toBeVisible();
     expect(`.o_calendar_filter:eq(1) .o_calendar_filter_item`).toHaveCount(3);
 
@@ -513,14 +513,14 @@ test(`simple calendar rendering on mobile`, async () => {
 
     // test search bar in filter
     await displayCalendarPanel();
-    await contains(`.o_calendar_sidebar input[type=text]`).click();
+    await contains(`.o_calendar_sidepanel input[type=text]`).click();
     expect(`.dropdown-item`).toHaveCount(2);
     expect(queryAllTexts`.dropdown-item`).toEqual(["partner 3", "partner 4"]);
 
     await contains(`.dropdown-item:eq(0)`).click();
     expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
 
-    await contains(`.o_calendar_sidebar input[type=text]`).click();
+    await contains(`.o_calendar_sidepanel input[type=text]`).click();
     expect(`.dropdown-item`).toHaveCount(1);
     expect(`.dropdown-item`).toHaveText("partner 4");
 
@@ -596,7 +596,7 @@ test(`check the avatar of the attendee in the calendar filter panel`, async () =
     await displayCalendarPanel();
     const section = `.o_calendar_filter[data-name="attendee_ids"]`;
 
-    expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
+    expect(`.o_calendar_sidepanel .o_calendar_filter`).toHaveCount(1);
     expect(`.o_calendar_filter:eq(0) .o-autocomplete`).toHaveCount(1);
     expect(".o_calendar_filter_item:eq(-2)").not.toHaveText("partner 3");
 
@@ -640,7 +640,7 @@ test(`Select multiple attendees in the calendar filter panel autocomplete on des
     });
 
     const section = `.o_calendar_filter[data-name="attendee_ids"]`;
-    expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
+    expect(`.o_calendar_sidepanel .o_calendar_filter`).toHaveCount(1);
     await checkFilterItems(2);
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual(["partner 1", "partner 2"]);
 
@@ -667,7 +667,7 @@ test(`Select multiple attendees in the calendar filter panel autocomplete on des
     await contains(".o_dialog .o_select_button").click();
     expect("o_dialog").toHaveCount(0);
 
-    expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
+    expect(`.o_calendar_sidepanel .o_calendar_filter`).toHaveCount(1);
     await checkFilterItems(4);
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
         "partner 1",
@@ -770,7 +770,7 @@ test(`add a filter with the search more dialog on desktop`, async () => {
     await contains(".o_dialog .o_select_button").click();
     expect("o_dialog").toHaveCount(0);
 
-    expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
+    expect(`.o_calendar_sidepanel .o_calendar_filter`).toHaveCount(1);
     await checkFilterItems(4);
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
         "foo partner 5",
@@ -983,7 +983,7 @@ test(`add a filter with the search more dialog on mobile`, async () => {
     await contains(".o_data_row:eq(0)").click();
     expect("o_dialog").toHaveCount(0);
 
-    expect(`.o_calendar_sidebar .o_calendar_filter`).toHaveCount(1);
+    expect(`.o_calendar_sidepanel .o_calendar_filter`).toHaveCount(1);
     expect(`.o_calendar_filter_item`).toHaveCount(4);
     expect(queryAllTexts`.o_calendar_filter_item`).toEqual([
         "foo partner 5",
@@ -4939,8 +4939,7 @@ test(`calendar with option show_date_picker set to false and no filter`, async (
         `,
     });
     expect(`.o_datetime_picker`).toHaveCount(0);
-    expect(`.o_calendar_sidebar`).toHaveCount(0);
-    expect(`.o_sidebar_toggler`).toHaveCount(0);
+    expect(`.o_calendar_sidepanel`).toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -4956,8 +4955,11 @@ test(`calendar with option show_date_picker set to false and filters`, async () 
         `,
     });
     expect(`.o_datetime_picker`).toHaveCount(0);
+    expect(`.o_calendar_sidepanel`).toHaveCount(1);
+    await contains(".o_calendar_sidepanel button").click();
+    expect(`.o_calendar_sidepanel`).toHaveCount(0);
     expect(`.o_calendar_sidebar`).toHaveCount(1);
-    expect(`.o_sidebar_toggler`).toHaveCount(1);
+    expect(`.o_calendar_sidebar`).toHaveText("Partner");
 });
 
 test(`calendar with option month_overflow not set (default)`, async () => {
@@ -5228,31 +5230,38 @@ test(`calendar show past events with background blur`, async () => {
 });
 
 test.tags("desktop");
-test(`calendar sidebar state is saved on session storage`, async () => {
-    patchWithCleanup(sessionStorage, {
+test(`calendar sidepanel can be collapsed/expanded`, async () => {
+    patchWithCleanup(localStorage, {
         setItem(key, value) {
-            if (key === "calendar.showSideBar") {
-                expect.step(`${key}-${value}`);
+            if (key.startsWith("calendar_sidepanel_expanded")) {
+                expect.step(["setItem", key, value]);
             }
-        },
-        getItem(key) {
-            if (key === "calendar.showSideBar") {
-                expect.step(`${key}-read`);
-                return false;
-            }
+            super.setItem(...arguments);
         },
     });
-
     await mountView({
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" mode="week"/>`,
     });
     expect(`.o_calendar_sidebar`).toHaveCount(0);
+    await contains(`.o_calendar_sidepanel button`).click();
+    expect(`.o_calendar_sidepanel`).toHaveCount(0);
+    expect.verifySteps([["setItem", "calendar_sidepanel_expanded,-1,false", false]]);
+    await contains(`.o_calendar_sidebar button`).click();
+    expect(`.o_calendar_sidebar`).toHaveCount(0);
+    expect.verifySteps([["setItem", "calendar_sidepanel_expanded,-1,false", true]]);
+});
 
-    await contains(`.o_sidebar_toggler .oi-panel-right`).click();
-    expect(`.o_calendar_sidebar`).toHaveCount(1);
-    expect.verifySteps(["calendar.showSideBar-read", "calendar.showSideBar-true"]);
+test.tags("desktop");
+test(`calendar sidepanel can be collapsed by default if it was set in local storage beforehand`, async () => {
+    localStorage.setItem("calendar_sidepanel_expanded,-1,false", false);
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" mode="week"/>`,
+    });
+    expect(`.o_calendar_sidepanel`).toHaveCount(0);
 });
 
 test(`calendar should show date information on header`, async () => {
@@ -5519,13 +5528,13 @@ test("update time while drag and drop on month mode", async () => {
     await contains(".modal-body .o_field_widget[name=start] button").click();
     await contains(".modal-body .o_field_widget[name=start] input").edit("2016-12-20 08:00:00");
     await contains(".modal-body .o_field_widget[name=stop] button").click();
-    await contains(".modal-body .o_field_widget[name=stop] input").edit("2016-12-23 10:00:00");
+    await contains(".modal-body .o_field_widget[name=stop] input").edit("2016-12-24 10:00:00");
     await contains(".modal .o_form_button_save").click();
     await moveEventToDate(8, "2016-12-27");
     await clickEvent(8);
     await contains(".o_cw_popover_edit").click();
 
-    expect(".o_field_widget[name='start']").toHaveText("Dec 26, 8:00 AM");
+    expect(".o_field_widget[name='start']").toHaveText("Dec 25, 8:00 AM");
     expect(".o_field_widget[name='stop']").toHaveText("Dec 29, 10:00 AM");
 });
 
@@ -5649,7 +5658,7 @@ test("calendar: show and change other calendar", async () => {
         message: "should contain 2 child nodes -> 2 resources",
     });
 
-    expect(".o_calendar_sidebar").toHaveCount(1);
+    expect(".o_calendar_sidepanel").toHaveCount(1);
     expect(".o_calendar_renderer").toHaveCount(0);
     expect(".o_calendar_filter").toHaveCount(1);
     expect(".o_calendar_filter[data-name=partner_id]").toHaveCount(1);
@@ -5664,7 +5673,7 @@ test("calendar: show and change other calendar", async () => {
 
     // Toggle again the other calendar panel should hide the sidebar and show the calendar view
     await contains(".o_other_calendar_panel").click();
-    expect(".o_calendar_sidebar").toHaveCount(0);
+    expect(".o_calendar_sidepanel").toHaveCount(0);
     expect(".o_calendar_renderer").toHaveCount(1);
 });
 
@@ -6197,10 +6206,10 @@ test(`load more events to schedule`, async () => {
         `,
     });
     expect(".o_event_to_schedule_draggable").toHaveCount(20);
-    expect(".o_calendar_sidebar button:contains(Load More)").toHaveCount(1);
+    expect(".o_calendar_sidepanel button:contains(Load More)").toHaveCount(1);
     expect.verifySteps(["search_read", "fetch events to schedule"]);
     expectedLimit += 20;
-    await contains(".o_calendar_sidebar button:contains(Load More)").click();
+    await contains(".o_calendar_sidepanel button:contains(Load More)").click();
     expect.verifySteps(["fetch events to schedule"]);
     expect(".o_event_to_schedule_draggable").toHaveCount(33);
 });
@@ -6224,7 +6233,7 @@ test(`no event to schedule`, async () => {
         `,
     });
     expect(".o_event_to_schedule_draggable").toHaveCount(0);
-    expect(".o_calendar_sidebar div:contains(Good job, everything is scheduled!)").toHaveCount(1);
+    expect(".o_calendar_sidepanel h5").toHaveText("Nothing to schedule");
     expect.verifySteps(["search_read", "fetch events to schedule"]);
 });
 
@@ -6254,21 +6263,17 @@ test(`drag and drop to unschedule`, async () => {
         `,
     });
     expect(".o_calendar_unschedule_zone").toHaveCount(0);
-    expect(
-        ".o_calendar_sidebar div.text-muted:contains(Good job, everything is scheduled!)"
-    ).toBeVisible();
+    expect(".o_calendar_sidepanel h5").toBeVisible();
+    expect(".o_calendar_sidepanel h5").toHaveText("Nothing to schedule");
     expect.verifySteps(["search_read", "fetch events to schedule"]);
     const { drop } = await contains('.o_event[data-event-id="2"]').drag();
     expect(".o_calendar_unschedule_zone").toHaveCount(1);
     expect(".o_calendar_unschedule_zone").toHaveText("Drop here to unschedule");
-    expect(
-        ".o_calendar_sidebar div.text-muted:contains(Good job, everything is scheduled!)"
-    ).not.toBeVisible();
+    expect(".o_calendar_sidepanel h5").not.toBeVisible();
     await drop(queryFirst(".o_calendar_unschedule_zone"));
     expect.verifySteps(["write", "search_read", "fetch events to schedule"]);
     expect(".o_event_to_schedule_draggable").toHaveCount(1);
     expect(".o_event_to_schedule_draggable").toHaveText("event 2");
-    expect(
-        ".o_calendar_sidebar div.text-muted:contains(Good job, everything is scheduled!)"
-    ).toHaveCount(0);
+    expect(".o_calendar_sidepanel h5").toBeVisible();
+    expect(".o_calendar_sidepanel h5").toHaveText("1 to schedule");
 });

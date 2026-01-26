@@ -75,16 +75,16 @@ export class CalendarController extends Component {
         useSetupAction({
             getLocalState: () => this.model.exportedState,
         });
-
-        const sessionShowSidebar = browser.sessionStorage.getItem("calendar.showSideBar");
+        this.keyExpandSidebar = `calendar_sidepanel_expanded,${this.env.config.viewId},${this.env.config.actionId}`;
+        const localSidePanelExpanded = browser.localStorage.getItem(this.keyExpandSidebar);
         this.state = useState({
             isWeekendVisible:
                 browser.localStorage.getItem("calendar.isWeekendVisible") != null
                     ? JSON.parse(browser.localStorage.getItem("calendar.isWeekendVisible"))
                     : true,
-            showSideBar:
+            sidePanelExpanded:
                 !this.env.isSmall &&
-                Boolean(sessionShowSidebar != null ? JSON.parse(sessionShowSidebar) : true),
+                Boolean(localSidePanelExpanded != null ? JSON.parse(localSidePanelExpanded) : true),
         });
 
         this.searchBarToggler = useSearchBarToggler();
@@ -183,9 +183,9 @@ export class CalendarController extends Component {
     get mobileFilterPanelProps() {
         return {
             model: this.model,
-            sideBarShown: this.state.showSideBar,
-            toggleSideBar: () => {
-                this.state.showSideBar = !this.state.showSideBar;
+            sidePanelShown: this.state.sidePanelExpanded,
+            toggleSidePanel: () => {
+                this.state.sidePanelExpanded = !this.state.sidePanelExpanded;
             },
         };
     }
@@ -194,24 +194,26 @@ export class CalendarController extends Component {
         return {
             model: this.model,
             editRecord: this.editRecord.bind(this),
+            sidePanelExpanded: this.state.sidePanelExpanded,
+            toggleSidePanel: this.toggleSidePanel.bind(this),
         };
     }
 
-    toggleSideBar() {
-        this.state.showSideBar = !this.state.showSideBar;
-        browser.sessionStorage.setItem("calendar.showSideBar", this.state.showSideBar);
+    toggleSidePanel() {
+        this.state.sidePanelExpanded = !this.state.sidePanelExpanded;
+        browser.localStorage.setItem(this.keyExpandSidebar, this.state.sidePanelExpanded);
     }
 
     get showCalendar() {
-        return !this.env.isSmall || !this.state.showSideBar;
+        return !this.env.isSmall || !this.state.sidePanelExpanded;
     }
 
-    get hasSideBar() {
+    get hasSidePanel() {
         return this.model.showDatePicker || this.model.filterSections.length > 0;
     }
 
-    get showSideBar() {
-        return this.state.showSideBar;
+    get sidePanelExpanded() {
+        return this.state.sidePanelExpanded;
     }
 
     get className() {

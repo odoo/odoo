@@ -2,9 +2,14 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CalendarScheduleSection">
-        <h5>To Schedule</h5>
-        <div t-if="!props.model.data.eventsToSchedule.records.length" class="text-muted">Good job, everything is scheduled!</div>
-        <div t-ref="eventsToSchedule" class="d-flex flex-column">
+        <div class="d-flex align-items-center cursor-pointer mt-3 mb-2" t-on-click="() => this.state.collapsed = !this.state.collapsed">
+            <h5 t-out="toScheduleString" class="flex-grow-1 m-0"/>
+            <i
+                class="fa"
+                t-attf-class="fa-caret-{{ state.collapsed ? 'left' : 'down' }}"
+            />
+        </div>
+        <div t-ref="eventsToSchedule" class="d-flex flex-column" t-att-class="{ 'd-none': this.state.collapsed }">
             <div 
                 class="align-items-center cursor-pointer o_event_to_schedule_draggable py-1"
                 t-foreach="props.model.data.eventsToSchedule.records"
@@ -13,7 +18,7 @@
                 t-att-data-res-id="event.id" 
                 t-on-click="() => this.openRecord(event)"
             >
-                <i class="text-muted oi oi-draggable"/>
+                <i class="oi oi-draggable o_event_to_schedule_handle"/>
                 <span class="ps-1 text-truncate" t-out="event.display_name" t-att-title="event.display_name"/>
             </div>
         </div>
