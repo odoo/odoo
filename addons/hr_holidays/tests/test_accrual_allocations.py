@@ -4505,6 +4505,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 self.assert_remaining_leaves_equal(self.leave_type_day, remaining_leaves, self.employee_emp, test_date, digits=3)
                 self.assertAlmostEqual(allocation.expiring_carryover_days, expiring_days, 2, msg=f'Incorrect number of expiring days for {test_date}')
 
+    @freeze_time("2026-01-26")
     def test_get_future_leaves_on(self):
         today = fields.Date.today()
         future_date = today + relativedelta(months=1, day=15)
@@ -4540,6 +4541,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         start_date = date(2026, 1, 1)
         future_date = date(2026, 2, 2)
+
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Standard 40h Test Calendar',
+            'hours_per_day': 8.0,
+        })
+        self.employee_emp.resource_calendar_id = calendar
 
         leave_type_hour = self.env['hr.leave.type'].create({
             'name': 'Hourly Leave Type',
