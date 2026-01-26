@@ -171,7 +171,7 @@ class PrinterInterface(Interface):
                 if device.device_type == 'printer' and ip and ip == device.ip
             ), None)
             if already_registered_identifier:
-                result.append({'identifier': already_registered_identifier})
+                result.append({'identifier': already_registered_identifier, 'disconnect_counter': 0})
                 continue
 
             printers_with_same_ip = sorted(printers_with_same_ip, key=lambda printer: printer['identifier'])
