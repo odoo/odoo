@@ -315,7 +315,7 @@ test("hotkey sharing copies simple domain + groupBy to clipboard", async () => {
     // as when saving favorite filters to encode the search params in the url
     patchWithCleanup(browser.navigator.clipboard, {
         async writeText(url) {
-            expect.step(url.split("&domain=")[1]);
+            expect.step(url.split("?domain=")[1]);
         },
     });
 
@@ -355,7 +355,7 @@ test("hotkey sharing copies complex search to clipboard", async () => {
     // as when saving favorite filters to encode the search params in the url
     patchWithCleanup(browser.navigator.clipboard, {
         async writeText(url) {
-            expect.step(url.split("&domain=")[1]);
+            expect.step(url.split("?domain=")[1]);
         },
     });
 
