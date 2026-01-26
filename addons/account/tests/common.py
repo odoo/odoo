@@ -992,19 +992,30 @@ class AccountTestInvoicingCommon(ProductCommon):
             current_amounts = {}
         self.assertDictEqual(current_amounts, expected_amounts)
 
-    def assert_invoice_outstanding_reconciled_widget(self, invoice, expected_amounts):
+    def assert_invoice_outstanding_reconciled_widget(self, invoice, expected_amounts, expected_exchange_info=None):
         """ Check the outstanding widget after the reconciliation.
-        :param invoice:             An invoice.
-        :param expected_amounts:    A map <move_id> -> <amount>
+        :param invoice:                     An invoice.
+        :param expected_amounts:            A map <move_id> -> <amount>
+        :param expected_exchange_info:      (Optional) Dictionary containing:
+            line_ids            List of Reconciled exchange IDs (integers)
+            exchange_amount     Total exchange amount
         """
         invoice.invalidate_recordset(['invoice_payments_widget'])
         widget_vals = invoice.invoice_payments_widget
 
         if widget_vals:
             current_amounts = {vals['move_id']: vals['amount'] for vals in widget_vals['content']}
+            expected_exchange_info = expected_exchange_info or {'line_ids': [], 'exchange_amount': 0.0}
+            current_exchange_info = {
+                'line_ids': widget_vals['exchange_info']['line_ids'],
+                'exchange_amount': widget_vals['exchange_info']['exchange_amount'],
+            }
         else:
             current_amounts = {}
+            current_exchange_info = {}
+
         self.assertDictEqual(current_amounts, expected_amounts)
+        self.assertDictEqual(current_exchange_info, expected_exchange_info or {})
 
     def _assert_tax_totals_summary(self, tax_totals, expected_results, soft_checking=False):
         """ Assert the tax totals.

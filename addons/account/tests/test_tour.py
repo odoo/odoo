@@ -116,3 +116,40 @@ class TestUi(AccountTestInvoicingHttpCommon):
             'test_add_section_from_product_catalog_on_invoice',
             login='admin',
         )
+
+    def test_invoice_payment_widget_total_exchange_tour(self):
+        self.env.company.tax_exigibility = True
+        self.env.ref('base.user_admin').write({
+            'company_id': self.env.company.id,
+            'company_ids': [(4, self.env.company.id)],
+        })
+        # Rates of 1:1 in 1900-01-01, 3:1 in 2015-12-31 and 2:1 in 2016-12-31
+        # EUR to USD
+        currency = self.setup_other_currency('EUR')
+        dates = (
+            '2015-01-01',  # 1:1 - 300 EUR -> 300 USD
+            '2016-01-01',  # 3:1 - 300 EUR -> 100 USD
+        )
+
+        # Create Invoices
+        invoices = [
+            self._create_invoice(
+                post=True,
+                date=date,
+                partner_id=self.partner_a,
+                currency_id=currency,
+                invoice_line_ids=[
+                    self._prepare_invoice_line(
+                        product_id=self.product_a,
+                        price_unit=300,
+                        tax_ids=False,
+                    )
+                ]
+            )
+            for date in dates
+        ]
+        # Rate of 2:1 - 300 EUR -> 150 USD
+        for invoice in invoices:
+            self._register_payment(invoice, payment_date='2017-01-01')
+
+        self.start_tour("/odoo", 'invoice_payments_widget_exchange_tour', login="admin")

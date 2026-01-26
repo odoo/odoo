@@ -535,7 +535,7 @@ class AccountMove(models.Model):
         if is_allowance:
             # Check if the credit note has exchange difference, we need to add it to the sale amount
             reconciled_partials = self._get_all_reconciled_invoice_partials()
-            exchange_difference = sum(item["amount"] for item in reconciled_partials if item.get("is_exchange"))
+            exchange_difference = sum(item["amount"] for item in reconciled_partials if item.get("is_exchange") and not item.get('is_caba'))
             if exchange_difference and self.l10n_tw_edi_is_b2b and tax_type != "4":
                 tax_rate = abs(self.amount_untaxed_signed) / abs(self.amount_total_signed)
                 exchange_difference = self.company_id.currency_id.round(exchange_difference * tax_rate)  # Use untaxed amount for B2B and non special type credit notes

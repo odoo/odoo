@@ -1497,44 +1497,89 @@ class AccountMove(models.Model):
             else:
                 move.preferred_payment_method_line_id = partner.property_outbound_payment_method_line_id
 
+    def _prepare_payments_widget_reconciled_info(self, partial_info):
+        """ Build an entry in invoice_payments_widget['content'].
+
+        :param partial_info:    One of the elements returned by '_get_all_reconciled_invoice_partials'.
+        :return:                A dictionary.
+        """
+        self.ensure_one()
+        counterpart_line = partial_info['aml']
+        if counterpart_line.move_id.ref:
+            reconciliation_ref = '%s (%s)' % (counterpart_line.move_id.name, counterpart_line.move_id.ref)
+        else:
+            reconciliation_ref = counterpart_line.move_id.name
+        if counterpart_line.amount_currency and counterpart_line.currency_id != counterpart_line.company_id.currency_id:
+            foreign_currency = counterpart_line.currency_id
+        else:
+            foreign_currency = False
+
+        return {
+            'name': counterpart_line.name,
+            'journal_name': counterpart_line.journal_id.name,
+            'company_name': counterpart_line.journal_id.company_id.name if counterpart_line.journal_id.company_id != self.company_id else False,
+            'amount': partial_info['amount'],
+            'currency_id': partial_info['currency'].id,
+            'date': counterpart_line.date,
+            'partial_id': partial_info['partial_id'],
+            'account_payment_id': counterpart_line.payment_id.id,
+            'payment_method_name': counterpart_line.payment_id.payment_method_line_id.name,
+            'move_id': counterpart_line.move_id.id,
+            'is_refund': counterpart_line.move_id.move_type in {'in_refund', 'out_refund'},
+            'ref': reconciliation_ref,
+            # these are necessary for the views to change depending on the values
+            'is_exchange': partial_info['is_exchange'],
+            'amount_company_currency': formatLang(
+                self.env,
+                abs(counterpart_line.balance),
+                currency_obj=counterpart_line.company_id.currency_id,
+            ),
+            'amount_foreign_currency': formatLang(
+                self.env,
+                abs(counterpart_line.amount_currency),
+                currency_obj=foreign_currency
+            ) if foreign_currency else None,
+        }
+
     @api.depends('move_type', 'line_ids.amount_residual')
     def _compute_payments_widget_reconciled_info(self):
         for move in self:
-            payments_widget_vals = {'title': _('Less Payment'), 'outstanding': False, 'content': []}
+            payments_widget_vals = {
+                'title': _('Less Payment'),
+                'outstanding': False,
+                'content': [],
+                'exchange_info': {
+                    'line_ids': [],
+                    'exchange_amount': 0.0,
+                },
+            }
+            payments_widget_vals_content = payments_widget_vals['content']
 
             if move.state in {'draft', 'posted'} and move.is_invoice(include_receipts=True):
-                reconciled_vals = []
-                reconciled_partials = move.sudo()._get_all_reconciled_invoice_partials()
-                for reconciled_partial in reconciled_partials:
-                    counterpart_line = reconciled_partial['aml']
-                    if counterpart_line.move_id.ref:
-                        reconciliation_ref = '%s (%s)' % (counterpart_line.move_id.name, counterpart_line.move_id.ref)
-                    else:
-                        reconciliation_ref = counterpart_line.move_id.name
-                    if counterpart_line.amount_currency and counterpart_line.currency_id != counterpart_line.company_id.currency_id:
-                        foreign_currency = counterpart_line.currency_id
-                    else:
-                        foreign_currency = False
+                partial_info_list = move.sudo()._get_all_reconciled_invoice_partials()
+                for partial_info in partial_info_list:
+                    counterpart_line = partial_info['aml']
 
-                    reconciled_vals.append({
-                        'name': counterpart_line.name,
-                        'journal_name': counterpart_line.journal_id.name,
-                        'company_name': counterpart_line.journal_id.company_id.name if counterpart_line.journal_id.company_id != move.company_id else False,
-                        'amount': reconciled_partial['amount'],
-                        'currency_id': move.company_id.currency_id.id if reconciled_partial['is_exchange'] else reconciled_partial['currency'].id,
-                        'date': counterpart_line.date,
-                        'partial_id': reconciled_partial['partial_id'],
-                        'account_payment_id': counterpart_line.payment_id.id,
-                        'payment_method_name': counterpart_line.payment_id.payment_method_line_id.name,
-                        'move_id': counterpart_line.move_id.id,
-                        'is_refund': counterpart_line.move_id.is_refund(),
-                        'ref': reconciliation_ref,
-                        # these are necessary for the views to change depending on the values
-                        'is_exchange': reconciled_partial['is_exchange'],
-                        'amount_company_currency': formatLang(self.env, abs(counterpart_line.balance), currency_obj=counterpart_line.company_id.currency_id),
-                        'amount_foreign_currency': foreign_currency and formatLang(self.env, abs(counterpart_line.amount_currency), currency_obj=foreign_currency)
-                    })
-                payments_widget_vals['content'] = reconciled_vals
+                    if partial_info['is_exchange']:
+                        payments_widget_vals['exchange_info']['line_ids'].append(counterpart_line.id)
+                        payments_widget_vals['exchange_info']['exchange_amount'] += counterpart_line.balance
+                        continue
+
+                    payments_widget_vals_content.append(move._prepare_payments_widget_reconciled_info(partial_info))
+
+                comparison = move.company_currency_id.compare_amounts(payments_widget_vals['exchange_info']['exchange_amount'], 0)
+                if comparison == 0:
+                    exchange_label = _('See exchange information') if payments_widget_vals['exchange_info']['line_ids'] else ''
+                elif comparison > 0:
+                    exchange_label = _('Exchange Profit')
+                else:
+                    exchange_label = _('Exchange Loss')
+
+                payments_widget_vals['exchange_info']['label'] = exchange_label
+                payments_widget_vals['exchange_info']['exchange_amount_formatted'] = formatLang(
+                    self.env, abs(payments_widget_vals['exchange_info']['exchange_amount']),
+                    currency_obj=move.company_currency_id,
+                )
 
             if payments_widget_vals['content']:
                 move.invoice_payments_widget = payments_widget_vals
@@ -5294,84 +5339,233 @@ class AccountMove(models.Model):
 
     def _get_all_reconciled_invoice_partials(self):
         self.ensure_one()
-        reconciled_lines = self.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
-        if not reconciled_lines.ids:
-            return {}
+
+        # Partials linked to the receivable / payable + partials linked to a CABA entry.
+        queries = []
+        reconciled_lines = self.line_ids.filtered(lambda l: l.account_type in ('asset_receivable', 'liability_payable'))
+        tax_lines = self.line_ids.filtered('tax_repartition_line_id')
+        if reconciled_lines.ids:
+            reconciled_line_ids = tuple(reconciled_lines.ids)
+            queries += [
+                # Partials linked to the receivable / payable including the exchange diff.
+                # and exchange diff on receivable / payable but linked to the counterpart lines.
+                SQL(
+                    """
+                        SELECT
+                            part.id AS partial_id,
+                            counterpart_line.id AS aml_id,
+                            counterpart_line.move_id AS aml_move_id,
+                            'undefined' AS is_exchange,
+                            FALSE AS is_caba,
+                            part.exchange_move_id,
+                            part.amount AS part_amount,
+                            part.debit_amount_currency AS part_amount_currency,
+                            part.debit_currency_id AS part_currency_id,
+                            counterpart_line.company_currency_id AS part_company_currency_id
+                        FROM account_partial_reconcile part
+                        JOIN account_move_line counterpart_line ON counterpart_line.id = part.credit_move_id
+                        WHERE part.debit_move_id IN %(reconciled_line_ids)s
+
+                        UNION ALL
+
+                        SELECT
+                            part.id AS partial_id,
+                            counterpart_line.id AS aml_id,
+                            counterpart_line.move_id AS aml_move_id,
+                            'undefined' AS is_exchange,
+                            FALSE AS is_caba,
+                            part.exchange_move_id,
+                            part.amount AS part_amount,
+                            part.credit_amount_currency AS part_amount_currency,
+                            part.credit_currency_id AS part_currency_id,
+                            counterpart_line.company_currency_id AS part_company_currency_id
+                        FROM account_partial_reconcile part
+                        JOIN account_move_line counterpart_line ON counterpart_line.id = part.debit_move_id
+                        WHERE part.credit_move_id IN %(reconciled_line_ids)s
+
+                        UNION ALL
+
+                        SELECT
+                            part2.id AS partial_id,
+                            exchange_line.id AS aml_id,
+                            exchange_line.move_id AS aml_move_id,
+                            'true' AS is_exchange,
+                            FALSE AS is_caba,
+                            NULL AS exchange_move_id,
+                            part2.amount AS part_amount,
+                            part2.debit_amount_currency AS part_amount_currency,
+                            part2.debit_currency_id AS part_currency_id,
+                            counterpart_line.company_currency_id AS part_company_currency_id
+                        FROM account_partial_reconcile part
+                        JOIN account_move_line counterpart_line ON counterpart_line.id = part.credit_move_id
+                        JOIN account_partial_reconcile part2 ON part2.credit_move_id = counterpart_line.id
+                        JOIN account_move_line exchange_line ON
+                            exchange_line.id = part2.debit_move_id
+                            AND exchange_line.move_id = part.exchange_move_id
+                        WHERE
+                            part.debit_move_id IN %(reconciled_line_ids)s
+                            AND part.exchange_move_id IS NOT NULL
+
+                        UNION ALL
+
+                        SELECT
+                            part2.id AS partial_id,
+                            exchange_line.id AS aml_id,
+                            exchange_line.move_id AS aml_move_id,
+                            'true' AS is_exchange,
+                            FALSE AS is_caba,
+                            NULL AS exchange_move_id,
+                            part2.amount AS part_amount,
+                            part2.credit_amount_currency AS part_amount_currency,
+                            part2.credit_currency_id AS part_currency_id,
+                            counterpart_line.company_currency_id AS part_company_currency_id
+                        FROM account_partial_reconcile part
+                        JOIN account_move_line counterpart_line ON counterpart_line.id = part.debit_move_id
+                        JOIN account_partial_reconcile part2 ON part2.debit_move_id = counterpart_line.id
+                        JOIN account_move_line exchange_line ON
+                            exchange_line.id = part2.credit_move_id
+                            AND exchange_line.move_id = part.exchange_move_id
+                        WHERE
+                            part.credit_move_id IN %(reconciled_line_ids)s
+                            AND part.exchange_move_id IS NOT NULL
+                    """,
+                    reconciled_line_ids=reconciled_line_ids,
+                ),
+            ]
+        if tax_lines.ids:
+            tax_line_ids = tuple(tax_lines.ids)
+            queries += [
+                SQL(
+                    """
+                        SELECT
+                            part.id AS partial_id,
+                            counterpart_line.id AS aml_id,
+                            counterpart_line.move_id AS aml_move_id,
+                            'undefined' AS is_exchange,
+                            TRUE AS is_caba,
+                            part.exchange_move_id,
+                            part.amount AS part_amount,
+                            part.debit_amount_currency AS part_amount_currency,
+                            part.debit_currency_id AS part_currency_id,
+                            counterpart_line.company_currency_id AS part_company_currency_id
+                        FROM account_partial_reconcile part
+                        JOIN account_move_line counterpart_line ON counterpart_line.id = part.credit_move_id
+                        WHERE part.debit_move_id IN %(tax_line_ids)s
+
+                        UNION ALL
+
+                        SELECT
+                            part.id AS partial_id,
+                            counterpart_line.id AS aml_id,
+                            counterpart_line.move_id AS aml_move_id,
+                            'undefined' AS is_exchange,
+                            TRUE AS is_caba,
+                            part.exchange_move_id,
+                            part.amount AS part_amount,
+                            part.credit_amount_currency AS part_amount_currency,
+                            part.credit_currency_id AS part_currency_id,
+                            counterpart_line.company_currency_id AS part_company_currency_id
+                        FROM account_partial_reconcile part
+                        JOIN account_move_line counterpart_line ON counterpart_line.id = part.debit_move_id
+                        WHERE part.credit_move_id IN %(tax_line_ids)s
+
+                        UNION ALL
+
+                        SELECT
+                            part2.id AS partial_id,
+                            exchange_line.id AS aml_id,
+                            exchange_line.move_id AS aml_move_id,
+                            'true' AS is_exchange,
+                            TRUE AS is_caba,
+                            NULL AS exchange_move_id,
+                            part2.amount AS part_amount,
+                            part2.debit_amount_currency AS part_amount_currency,
+                            part2.debit_currency_id AS part_currency_id,
+                            counterpart_line.company_currency_id AS part_company_currency_id
+                        FROM account_partial_reconcile part
+                        JOIN account_move_line counterpart_line ON counterpart_line.id = part.credit_move_id
+                        JOIN account_partial_reconcile part2 ON part2.credit_move_id = counterpart_line.id
+                        JOIN account_move_line exchange_line ON
+                            exchange_line.id = part2.debit_move_id
+                            AND exchange_line.move_id = part.exchange_move_id
+                        WHERE
+                            part.debit_move_id IN %(tax_line_ids)s
+                            AND part.exchange_move_id IS NOT NULL
+
+                        UNION ALL
+
+                        SELECT
+                            part2.id AS partial_id,
+                            exchange_line.id AS aml_id,
+                            exchange_line.move_id AS aml_move_id,
+                            'true' AS is_exchange,
+                            TRUE AS is_caba,
+                            NULL AS exchange_move_id,
+                            part2.amount AS part_amount,
+                            part2.credit_amount_currency AS part_amount_currency,
+                            part2.credit_currency_id AS part_currency_id,
+                            counterpart_line.company_currency_id AS part_company_currency_id
+                        FROM account_partial_reconcile part
+                        JOIN account_move_line counterpart_line ON counterpart_line.id = part.debit_move_id
+                        JOIN account_partial_reconcile part2 ON part2.debit_move_id = counterpart_line.id
+                        JOIN account_move_line exchange_line ON
+                            exchange_line.id = part2.credit_move_id
+                            AND exchange_line.move_id = part.exchange_move_id
+                        WHERE
+                            part.credit_move_id IN %(tax_line_ids)s
+                            AND part.exchange_move_id IS NOT NULL
+                    """,
+                    tax_line_ids=tax_line_ids,
+                ),
+            ]
+
+        if not queries:
+            return []
 
         self.env['account.partial.reconcile'].flush_model([
-            'credit_amount_currency', 'credit_move_id', 'debit_amount_currency',
-            'debit_move_id', 'exchange_move_id',
+            'credit_amount_currency', 'credit_move_id',
+            'debit_amount_currency', 'debit_move_id',
+            'exchange_move_id', 'amount',
         ])
-        sql = SQL('''
-            SELECT
-                part.id,
-                part.exchange_move_id,
-                part.debit_amount_currency AS amount,
-                part.credit_move_id AS counterpart_line_id
-            FROM account_partial_reconcile part
-            WHERE part.debit_move_id IN %(line_ids)s
+        self.env['account.move.line'].flush_model(['move_id', 'company_currency_id'])
 
-            UNION ALL
+        rows = self.env.execute_query_dict(
+            SQL(" UNION ALL ").join(queries)
+        )
 
-            SELECT
-                part.id,
-                part.exchange_move_id,
-                part.credit_amount_currency AS amount,
-                part.debit_move_id AS counterpart_line_id
-            FROM account_partial_reconcile part
-            WHERE part.credit_move_id IN %(line_ids)s
-        ''', line_ids=tuple(reconciled_lines.ids))
-
-        partial_values_list = []
-        counterpart_line_ids = set()
+        aml_ids = set()
+        currency_ids = set()
         exchange_move_ids = set()
-        for values in self.env.execute_query_dict(sql):
-            partial_values_list.append({
-                'aml_id': values['counterpart_line_id'],
-                'partial_id': values['id'],
-                'amount': values['amount'],
-                'currency': self.currency_id,
-            })
-            counterpart_line_ids.add(values['counterpart_line_id'])
-            if values['exchange_move_id']:
-                exchange_move_ids.add(values['exchange_move_id'])
+        for row in rows:
+            if row['exchange_move_id']:
+                exchange_move_ids.add(row['exchange_move_id'])
+            if row['aml_id']:
+                aml_ids.add(row['aml_id'])
+            currency_ids.add(row['part_currency_id'])
+            currency_ids.add(row['part_company_currency_id'])
 
-        if exchange_move_ids:
-            self.env['account.move.line'].flush_model(['move_id'])
-            sql = SQL('''
-                SELECT
-                    part.id,
-                    part.credit_move_id AS counterpart_line_id
-                FROM account_partial_reconcile part
-                JOIN account_move_line credit_line ON credit_line.id = part.credit_move_id
-                WHERE credit_line.move_id IN %(exchange_move_ids)s AND part.debit_move_id IN %(counterpart_line_ids)s
+        aml_ids_mapping = {record.id: record for record in self.env['account.move.line'].browse(aml_ids)}
+        currency_ids_mapping = {record.id: record for record in self.env['res.currency'].browse(currency_ids)}
 
-                UNION ALL
+        for row in rows:
+            row['aml'] = aml_ids_mapping[row['aml_id']]
 
-                SELECT
-                    part.id,
-                    part.debit_move_id AS counterpart_line_id
-                FROM account_partial_reconcile part
-                JOIN account_move_line debit_line ON debit_line.id = part.debit_move_id
-                WHERE debit_line.move_id IN %(exchange_move_ids)s AND part.credit_move_id IN %(counterpart_line_ids)s
-            ''', exchange_move_ids=tuple(exchange_move_ids), counterpart_line_ids=tuple(counterpart_line_ids))
+            if row['is_exchange'] == 'undefined':
+                row['is_exchange'] = 'true' if row['aml_move_id'] in exchange_move_ids else 'false'
+            if row['is_exchange'] == 'false':
+                row['is_exchange'] = False
+                row['amount'] = row['part_amount_currency']
+                row['currency'] = currency_ids_mapping[row['part_currency_id']]
+            elif row['is_exchange'] == 'true':
+                row['is_exchange'] = True
+                row['amount'] = row['part_amount']
+                row['currency'] = currency_ids_mapping[row['part_company_currency_id']]
 
-            for part_id, line_ids in self.env.execute_query(sql):
-                counterpart_line_ids.add(line_ids)
-                partial_values_list.append({
-                    'aml_id': line_ids,
-                    'partial_id': part_id,
-                    'currency': self.company_id.currency_id,
-                })
-
-        counterpart_lines = {x.id: x for x in self.env['account.move.line'].browse(counterpart_line_ids)}
-        for partial_values in partial_values_list:
-            partial_values['aml'] = counterpart_lines[partial_values['aml_id']]
-            partial_values['is_exchange'] = partial_values['aml'].move_id.id in exchange_move_ids
-            if partial_values['is_exchange']:
-                partial_values['amount'] = abs(partial_values['aml'].balance)
-
-        return partial_values_list
+        return [
+            row
+            for row in rows
+            if row['is_exchange'] or not row['is_caba']
+        ]
 
     def _get_reconciled_invoices_partials(self):
         ''' Helper to retrieve the details about reconciled invoices.
@@ -5792,6 +5986,12 @@ class AccountMove(models.Model):
 
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
+
+    @api.model
+    def action_open_exchange_items(self, line_ids):
+        action = self.env['ir.actions.act_window']._for_xml_id('account.action_account_moves_all_grouped_matching')
+        action['domain'] = [('id', 'in', line_ids)]
+        return action
 
     def action_open_business_doc(self):
         self.ensure_one()
