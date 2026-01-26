@@ -736,6 +736,7 @@ class IrQweb(models.AbstractModel):
         """
         root_values = values['__qweb_root_values']
         loaded_functions = self.env.context['__qweb_loaded_functions']
+        loaded_options = self.env.context['__qweb_loaded_options']
 
         params = QwebCallParameters(
             context={},
@@ -792,7 +793,7 @@ class IrQweb(models.AbstractModel):
                         loaded_functions.update(template_functions)
                         render_template = template_functions[params.method or def_name]
                     else:
-                        options = irQweb._compile(params.view_ref)[2]
+                        options = loaded_options[params.view_ref]
 
                     # Apply a new scope if needed
                     if params.scope:
@@ -1131,6 +1132,7 @@ class IrQweb(models.AbstractModel):
         compile_context['template_functions'][f'{def_name}_content'] = (
             [f"def {def_name}_content(self, values):"]
             + [indent_code('attrs = None', 1)]
+            + [indent_code('if False: yield ""', 1)]
             + self._compile_root(element, compile_context)
             + self._flush_text(compile_context, 1, rstrip=True))
 
@@ -1396,6 +1398,8 @@ class IrQweb(models.AbstractModel):
             self._rstrip_text(compile_context)
         text = ''.join(text_concat)
         text_concat.clear()
+        if not text:
+            return []
         return [f"{'    ' * level}yield {text!r}"]
 
     def _is_static_node(self, el, compile_context):
@@ -2024,8 +2028,6 @@ class IrQweb(models.AbstractModel):
         # open the open tag
         self._append_text(f"<{el_tag}", compile_context)
 
-        code = self._flush_text(compile_context, level)
-
         # Generates the part of the code that prost process and output the
         # attributes from ``attrs`` dictionary. Consumes `attrs` dictionary
         # and reset it.
@@ -2034,6 +2036,7 @@ class IrQweb(models.AbstractModel):
         # to avoid the escaping of the other html content.
 
         if compile_context.get('qweb_attrs_created'):
+            code = self._flush_text(compile_context, level)
             code.append(indent_code(f"""
                 if attrs:
                     tagName = {el.tag!r}
@@ -2042,6 +2045,8 @@ class IrQweb(models.AbstractModel):
                             yield f' {{escape(str(name))}}="{{escape(str(value))}}"'
                     attrs = None
             """, level))
+        else:
+            code = []
 
         # close the open tag
         if 't-tag-close' in el.attrib:
@@ -2113,6 +2118,7 @@ class IrQweb(models.AbstractModel):
                     def_name = compile_context['make_name']('t_set')
                     def_code = [f"def {def_name}(self, values):"]
                     def_code.append(indent_code('attrs = None', 1))
+                    def_code.append(indent_code('if False: yield ""', 1))
                     def_code.append(indent_code(f'# element: {path!r} , {xml!r}', 1))
                     def_code.extend(content)
                     compile_context['template_functions'][def_name] = def_code
@@ -2599,6 +2605,7 @@ class IrQweb(models.AbstractModel):
             def_name = compile_context['make_name']('t_call')
             code_content = [f"def {def_name}(self, values):"]
             code_content.append(indent_code('attrs = None', 1))
+            code_content.append(indent_code('if False: yield ""', 1))
             code_content.append(indent_code(f'# element: {path!r} , {xml!r}', 1))
             code_content.extend(self._compile_directive(el, dict(compile_context, qweb_attrs_created=False), 'inner-content', 1))
             self._append_text('', compile_context)  # To ensure the template function is a generator and doesn't become a regular function
@@ -2729,6 +2736,7 @@ class IrQweb(models.AbstractModel):
         def_name = compile_context['make_name']('t_log')
         def_code = [f"def {def_name}(self, values):"]
         def_code.append(indent_code('attrs = None', 1))
+        def_code.append(indent_code('if False: yield ""', 1))
         def_code.append(indent_code(f'# element: {path!r} , {xml!r}', 1))
         def_code.extend(self._compile_directives(el, dict(compile_context, qweb_attrs_created=False), 1))
         def_code.extend(self._flush_text(compile_context, 1) or [indent_code('yield ""', 1)])
