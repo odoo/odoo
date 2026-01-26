@@ -1671,7 +1671,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
             rendering_values['signup_url'] = signup_url._replace(
                 query=urlencode(
-                    dict(parse_qs(signup_url.query), redirect='/shop/unarchive_user_addresses')
+                    dict(parse_qs(signup_url.query), redirect='/shop/unarchive_user_addresses'),
+                    doseq=True,
                 )
             ).geturl()
 
