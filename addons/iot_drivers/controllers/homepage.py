@@ -228,7 +228,7 @@ class IotBoxOwlHomePage(Controller):
 
     @route.iot_route('/iot_drivers/load_iot_handlers', type="http", cors='*')
     def load_iot_handlers(self):
-        helpers.download_iot_handlers(False)
+        helpers.download_iot_handlers()
         helpers.odoo_restart(0)
         return json.dumps({
             'status': 'success',
@@ -374,14 +374,7 @@ class IotBoxOwlHomePage(Controller):
 
     @route.iot_route('/iot_drivers/enable_custom_handlers', type="jsonrpc", methods=['POST'], cors='*')
     def enable_custom_handlers(self, enable):
-        if enable:
-            system.update_conf({'custom_handlers': True})
-            helpers.download_iot_handlers(False)
-        else:
-            system.update_conf({'custom_handlers': False})
-            # Reset to the default handlers and restart
-            system.git("clean", "-dfx")
-            helpers.odoo_restart()
+        helpers.toggle_custom_handlers(enable)
         return {'status': 'success'}
 
     # ---------------------------------------------------------- #
