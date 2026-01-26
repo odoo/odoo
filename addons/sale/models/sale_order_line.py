@@ -9,7 +9,7 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
-from odoo.tools import float_compare, float_is_zero, format_date, groupby
+from odoo.tools import float_compare, float_round, float_is_zero, format_date, groupby
 from odoo.tools.translate import _
 
 
@@ -601,7 +601,7 @@ class SaleOrderLine(models.Model):
             fiscal_position=line.order_id.fiscal_position_id,
         )
         line.update({
-            'price_unit': price_unit,
+            'price_unit': float_round(price_unit, precision_digits=self.env['decimal.precision'].precision_get('Product Price')),
             'technical_price_unit': price_unit,
         })
 

@@ -7,7 +7,7 @@ import re
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.osv import expression
-from odoo.tools import frozendict, format_date, float_compare, format_list, Query
+from odoo.tools import frozendict, float_compare, float_round, format_list, Query
 from odoo.tools.sql import create_index, SQL
 from odoo.addons.web.controllers.utils import clean_action
 
@@ -854,7 +854,7 @@ class AccountMoveLine(models.Model):
                 document_type = 'purchase'
             else:
                 document_type = 'other'
-            line.price_unit = line.product_id._get_tax_included_unit_price(
+            price_unit = line.product_id._get_tax_included_unit_price(
                 line.move_id.company_id,
                 line.move_id.currency_id,
                 line.move_id.date,
@@ -862,6 +862,7 @@ class AccountMoveLine(models.Model):
                 fiscal_position=line.move_id.fiscal_position_id,
                 product_uom=line.product_uom_id,
             )
+            line.price_unit = float_round(price_unit, precision_digits=self.env['decimal.precision'].precision_get('Product Price'))
 
     @api.depends('product_id', 'product_uom_id')
     def _compute_tax_ids(self):
