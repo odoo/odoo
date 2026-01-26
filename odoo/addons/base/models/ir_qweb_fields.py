@@ -210,7 +210,21 @@ class IrQwebFieldFloat(models.AbstractModel):
         if 'precision' not in options and 'decimal_precision' not in options:
             _, precision = record._fields[field_name].get_digits(record.env) or (None, None)
             options = dict(options, precision=precision)
+<<<<<<< 5bc1ab57ba0a8b80314f6ac828b48f3b0eec07be
         return super().record_to_html(record, field_name, options)
+||||||| c9b732a21bb2dd5531565fd4bbadf96732fb102d
+        if 'min_precision' not in options:
+            min_precision = record._fields[field_name].get_min_display_digits(record.env)
+            options = dict(options, min_precision=min_precision)
+        return super(FloatConverter, self).record_to_html(record, field_name, options)
+=======
+        if 'min_precision' not in options:
+            field = record._fields[field_name]
+            if hasattr(field, 'get_min_display_digits'):
+                min_precision = field.get_min_display_digits(record.env)
+                options = dict(options, min_precision=min_precision)
+        return super(FloatConverter, self).record_to_html(record, field_name, options)
+>>>>>>> bad05365cf60254cf564ebb11fdd898b53dcccf4
 
 
 class IrQwebFieldDate(models.AbstractModel):
