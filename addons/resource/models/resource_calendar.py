@@ -516,7 +516,10 @@ class ResourceCalendar(models.Model):
         resources_work_intervals = self._work_intervals_batch(start_dt, end_dt, resources_per_tz, domain)
         result = {}
         for resource in all_resources:
-            if resource and resource._is_fully_flexible():
+            if resource and resource._is_flexible():
+                leaves = self._leave_intervals_batch(start_dt, end_dt, resources_per_tz, domain)
+                if res_leaves := leaves.get(resource.id, []):
+                    result[resource.id] = [(i[0], i[1]) for i in res_leaves]
                 continue
             work_intervals = resources_work_intervals[resource.id]
             utc_work_intervals = []
