@@ -864,12 +864,13 @@ class TestChannelInternals(MailCommon, HttpCase):
                     "payload": {
                         "body":
                             "<span class='o_mail_notification'>"
-                            "You are in channel <b>#&lt;strong&gt;R&amp;D&lt;/strong&gt;</b>."
-                            "<br><br>Type <b>@username</b> to mention someone, and grab their attention."
-                            "<br>Type <b>#channel</b> to mention a channel."
-                            "<br>Type <b>/command</b> to execute a command."
-                            "<br>Type <b>::shortcut</b> to insert a canned response in your message."
-                            "<br>Type <b>:emoji:</b> to insert an emoji in your message."
+                            "You are in <b>#&lt;strong&gt;R&amp;D&lt;/strong&gt;</b>."
+                            "<br><br><b>@username</b> to mention someone"
+                            "<br><b>@role</b> to notify multiple people"
+                            "<br><b>#channel</b> to link a channel"
+                            "<br><b>/command</b> to run a command"
+                            "<br><b>::shortcut</b> to insert a canned response"
+                            "<br><b>:emoji:</b> to insert an emoji"
                             "</span>",
                         "channel_id": channel.id,
                     },
@@ -903,11 +904,12 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "You are in a private conversation with "
                             f"<a href=# data-oe-model='res.partner' data-oe-id='{test_user.partner_id.id}'>@Mario</a> "
                             f"and <a href=# data-oe-model='res.partner' data-oe-id='{self.partner_employee_nomail.id}'>@&lt;strong&gt;Evita Employee NoEmail&lt;/strong&gt;</a>."
-                            "<br><br>Type <b>@username</b> to mention someone, and grab their attention."
-                            "<br>Type <b>#channel</b> to mention a channel."
-                            "<br>Type <b>/command</b> to execute a command."
-                            "<br>Type <b>::shortcut</b> to insert a canned response in your message."
-                            "<br>Type <b>:emoji:</b> to insert an emoji in your message."
+                            "<br><br><b>@username</b> to mention someone"
+                            "<br><b>@role</b> to notify multiple people"
+                            "<br><b>#channel</b> to link a channel"
+                            "<br><b>/command</b> to run a command"
+                            "<br><b>::shortcut</b> to insert a canned response"
+                            "<br><b>:emoji:</b> to insert an emoji"
                             "</span>",
                         "channel_id": test_group.id,
                     },

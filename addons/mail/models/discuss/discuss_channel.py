@@ -1547,7 +1547,7 @@ class DiscussChannel(models.Model):
         self.ensure_one()
         if self.channel_type == 'channel':
             msg = _(
-                "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s.",
+                "You are in %(bold_start)s#%(channel_name)s%(bold_end)s.",
                 bold_start=Markup("<b>"),
                 bold_end=Markup("</b>"),
                 channel_name=self.name,
@@ -1570,11 +1570,12 @@ class DiscussChannel(models.Model):
     def _execute_command_help_message_extra(self):
         msg = _(
             "%(new_line)s"
-            "%(new_line)sType %(bold_start)s@username%(bold_end)s to mention someone, and grab their attention."
-            "%(new_line)sType %(bold_start)s#channel%(bold_end)s to mention a channel."
-            "%(new_line)sType %(bold_start)s/command%(bold_end)s to execute a command."
-            "%(new_line)sType %(bold_start)s::shortcut%(bold_end)s to insert a canned response in your message."
-            "%(new_line)sType %(bold_start)s:emoji:%(bold_end)s to insert an emoji in your message.",
+            "%(new_line)s%(bold_start)s@username%(bold_end)s to mention someone"
+            "%(new_line)s%(bold_start)s@role%(bold_end)s to notify multiple people"
+            "%(new_line)s%(bold_start)s#channel%(bold_end)s to link a channel"
+            "%(new_line)s%(bold_start)s/command%(bold_end)s to run a command"
+            "%(new_line)s%(bold_start)s::shortcut%(bold_end)s to insert a canned response"
+            "%(new_line)s%(bold_start)s:emoji:%(bold_end)s to insert an emoji",
             bold_start=Markup("<b>"),
             bold_end=Markup("</b>"),
             new_line=Markup("<br>"),
