@@ -20,7 +20,7 @@ class TestWebsiteSaleMail(HttpCaseWithUserPortal):
             'website_published': True,
         })
         self.env['res.partner'].create({
-            'name': 'Azure Interior',
+            'name': 'Azure Interior (Test)',
             'email': 'azure.Interior24@example.com',
         })
 
