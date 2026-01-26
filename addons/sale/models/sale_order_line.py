@@ -1597,6 +1597,8 @@ class SaleOrderLine(models.Model):
     def _is_line_in_section(self, line):
         """Return whether the line is a direct or indirect child of the section."""
         self.ensure_one()
+        if line.product_type == 'combo':
+            return False
         is_direct_child = line.parent_id == self and not line.display_type
         is_indirect_child = (
             self.display_type == 'line_section'
