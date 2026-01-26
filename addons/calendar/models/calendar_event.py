@@ -929,7 +929,7 @@ class CalendarEvent(models.Model):
     @api.model
     def _get_mail_message_access(self, res_ids, operation, model_name=None):
         if operation == 'read' and (not model_name or model_name == 'event.event'):
-            for event in self.browse(res_ids):
+            for event in self.browse(res_ids).with_prefetch(self._prefetch_ids):  # force prefetch, lost otherwise with rebrowsing
                 if event.privacy == "private" and self.env.user.partner_id not in event.attendee_ids.partner_id:
                     return 'write'
         return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
