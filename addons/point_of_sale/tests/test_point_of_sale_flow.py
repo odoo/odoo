@@ -2101,3 +2101,34 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.env['pos.order'].sync_from_ui([product_order])
         order = self.env['pos.order'].search([])
         self.assertEqual(order.name, f"/AA - {order.pos_reference.split('-')[-1]} - 1.B")
+
+    def test_order_invoiced_customer_account_after_session_closed(self):
+        """Test that an order paid via customer account can be invoiced after its session is closed.
+           Then make sure that the reversal move is reconciled with the PoS session account move line so that only the invoice remains open.
+        """
+        order_data = {
+            'line_data': [
+                {'product_id': self.twenty_dollars_with_10_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.credit_payment_method.id, 'amount': 20},
+            ],
+            'order_data': {
+                'partner_id': self.partner.id,
+            },
+        }
+
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+
+        order_no_invoice, _ = self.create_backend_pos_order({**order_data, 'to_invoice': False})
+
+        current_session.close_session_from_ui()
+        self.assertEqual(current_session.state, 'closed')
+
+        order_no_invoice.action_pos_order_invoice()
+        customer_account_receivable_entry = current_session.move_id.line_ids.filtered(lambda l: l.partner_id == self.partner)
+        reversal_receivable_entry = order_no_invoice.reversed_move_ids.line_ids.filtered(lambda l: l.account_id == self.partner.property_account_receivable_id)
+        self.assertTrue(customer_account_receivable_entry.reconciled)
+        self.assertTrue(reversal_receivable_entry.reconciled)
+        self.assertEqual(customer_account_receivable_entry.reconciled_lines_ids, reversal_receivable_entry)
