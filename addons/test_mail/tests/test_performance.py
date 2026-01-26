@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import nullcontext
 from markupsafe import Markup
 from unittest.mock import patch
 
@@ -1129,6 +1130,120 @@ class TestMailAPIPerformance(BaseMailPerformance):
         self.assertEqual(rec1.message_ids[2].subtype_id, self.env.ref('test_mail.st_mail_test_ticket_container_upd'))
         self.assertEqual(rec1.message_ids[2].notified_partner_ids, self.partners | self.user_portal.partner_id)
         self.assertEqual(len(rec1.message_ids), 3)
+
+
+@tagged('mail_performance', 'WIP', 'post_install', '-at_install')
+class TestMailAccessPerformance(BaseMailPerformance):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.records_access = cls.env['mail.test.access'].create([
+            {'name': 'Access.1', 'access': 'public'},
+            {'name': 'Access.2', 'access': 'logged'},
+            {'name': 'Access.3', 'access': 'followers'},
+        ])
+        cls.records_access_custo = cls.env['mail.test.access.custo'].create([
+            {'name': 'Custo.1'},
+            {'name': 'Custo.2', 'is_readonly': True},  # read access, should be able to read messages / activities
+            {'name': 'Custo.3', 'is_locked': True},  # not able to read messages / activities
+        ])
+        cls.records_mc = cls.env['mail.test.multi.company'].create([
+            {'name': 'MC.1'},
+            {'name': 'MC.2'},
+            {'name': 'MC.3'},
+        ])
+
+        # messages to check access
+        cls.messages = cls.env['mail.message']
+        for records_model in [cls.records_access, cls.records_access_custo, cls.records_mc]:
+            for record in records_model:
+                cls.messages += record.with_user(cls.user_admin).message_post(
+                    body=f'Posting on {record.name}',
+                    message_type='comment',
+                    subtype_xmlid='mail.mt_comment',
+                )
+        # message employee cannot read due to specific rules (aka locked record)
+        cls.messages_emp_nope = cls.messages[5]
+
+        # activities to check access
+        cls.activities = cls.env['mail.activity']
+        for records_model in [cls.records_access, cls.records_access_custo, cls.records_mc]:
+            cls.activities += cls.env['mail.activity'].create([
+                {
+                    'res_id': record.id,
+                    'res_model_id': cls.env['ir.model']._get_id(record._name),
+                    'summary': f'TestActivity {idx} on {record._name},{record.id} for {user.name}',
+                    'user_id': user.id,
+                }
+                for record in records_model
+                for user in (cls.user_admin + cls.user_employee)
+                for idx in range(2)
+            ])
+            records_model.message_unsubscribe(partner_ids=(cls.user_admin + cls.user_employee).partner_id.ids)
+        # activities employee cannot read due to specific rules (other user on non open custo)
+        # TDE FIXME: should be only for Custo.3
+        cls.activities_emp_nope = cls.activities.filtered(
+            lambda a: a.res_model == 'mail.test.access.custo' and a.res_id != cls.records_access_custo[0].id and a.user_id == cls.user_admin
+        )
+
+    @users('employee')
+    @warmup
+    def test_activity_read(self):
+        # queries
+        # fetch messages: 1
+        # filter records: 4
+        #  * 1 / model without _get_mail_message_access override (_filter_access_rule)
+        #  * 2 for model with _get_mail_message_access override (_get_mail_message_access)
+        #    as there is no prefetching (one / record, 2 records in loop)
+        # 'read': 1
+        profile = self.profile() if self.warm else nullcontext()
+        with self.assertQueryCount(employee=5), profile:
+            content = (self.activities - self.activities_emp_nope).with_env(self.env).read(['summary'])
+        self.assertEqual(len(content), len(self.activities - self.activities_emp_nope))
+
+    @users('employee')
+    @warmup
+    def test_activity_search(self):
+        # queries
+        # select mail.activity: 1
+        # filter records: 3
+        #  * 1 / model
+        profile = self.profile() if self.warm else nullcontext()
+        with self.assertQueryCount(employee=4), profile:
+            found = self.activities.with_env(self.env).search([('summary', 'ilike', 'TestActivity')])
+        self.assertEqual(found, self.activities - self.activities_emp_nope)
+
+    @users('employee')
+    @warmup
+    def test_message_read(self):
+        # queries
+        # fetch messages: 1
+        # filter records: 4
+        #  * 1 / model without _get_mail_message_access override (_filter_access_rule)
+        #  * 2 for model with _get_mail_message_access override (_get_mail_message_access)
+        #    as there is no prefetching (one / record, 2 records in loop)
+        # 'read': 1
+        profile = self.profile() if self.warm else nullcontext()
+        with self.assertQueryCount(employee=6), profile:
+            content = (self.messages - self.messages_emp_nope).with_env(self.env).read(['body'])
+        self.assertEqual(len(content), len(self.messages - self.messages_emp_nope))
+
+    @users('employee')
+    @warmup
+    def test_message_search(self):
+        # queries
+        # select mail.message: 1
+        # filter records: 4
+        #  * 1 / model without _get_mail_message_access override (_filter_access_rule)
+        #  * 3 for model with _get_mail_message_access override (_get_mail_message_access + _filter_access_rule)
+        #    as there is no prefetching (one / record, 3 records in loop)
+        # _get_mail_message_access: 3 on custom implementation, no prefetching
+        profile = self.profile() if self.warm else nullcontext()
+        with self.assertQueryCount(employee=7), profile:
+            found = self.messages.with_env(self.env).search([('body', 'ilike', 'Posting on ')])
+        self.assertEqual(found, self.messages - self.messages_emp_nope)
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
