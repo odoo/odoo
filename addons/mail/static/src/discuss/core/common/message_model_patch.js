@@ -52,20 +52,6 @@ const messagePatch = {
         );
     },
     /**
-     * @override
-     */
-    async edit(
-        body,
-        attachments = [],
-        { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
-    ) {
-        return await super.edit(body, attachments, {
-            mentionedChannels,
-            mentionedPartners,
-            mentionedRoles,
-        });
-    },
-    /**
      * @param {Thread} thread the thread being viewed
      * @returns {boolean}
      */
