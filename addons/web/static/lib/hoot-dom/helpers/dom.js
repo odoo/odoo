@@ -90,6 +90,10 @@ import { waitUntil } from "./time";
  *  raw?: boolean;
  * }} QueryTextOptions
  *
+ * @typedef {{
+ *  raw?: boolean;
+ * }} QueryValueOptions
+ *
  * @typedef {"both" | "x" | "y"} ScrollAxis
  *
  * @typedef {import("./time").WaitOptions} WaitOptions
@@ -344,7 +348,7 @@ function getNodeContent(node) {
         case "textarea":
             return getNodeValue(node);
         case "select":
-            return [...node.selectedOptions].map(getNodeValue).join(",");
+            return [...node.selectedOptions].map((node) => getNodeValue(node)).join(",");
     }
     return getNodeText(node);
 }
@@ -377,6 +381,13 @@ function getQueryFilter(pseudoClass, content) {
         }
         throw new HootDomError(message);
     }
+}
+
+/**
+ * @param {Node} node
+ */
+function getRawValue(node) {
+    return node.value;
 }
 
 /**
@@ -512,7 +523,7 @@ function isWhiteSpace(char) {
 }
 
 /**
- * @param {(node: Node) => NodeValue} getContent
+ * @param {(node: Node) => string} getContent
  * @param {boolean} exact
  */
 function makePseudoClassMatcher(getContent, exact) {
@@ -520,17 +531,17 @@ function makePseudoClassMatcher(getContent, exact) {
         const regex = parseRegExp(content);
         if (isInstanceOf(regex, RegExp)) {
             return function stringMatches(node) {
-                return regex.test(String(getContent(node)));
+                return regex.test(getContent(node));
             };
         } else {
             const lowerContent = content.toLowerCase();
             if (exact) {
                 return function stringEquals(node) {
-                    return String(getContent(node)).toLowerCase() === lowerContent;
+                    return getContent(node).toLowerCase() === lowerContent;
                 };
             } else {
                 return function stringContains(node) {
-                    return String(getContent(node)).toLowerCase().includes(lowerContent);
+                    return getContent(node).toLowerCase().includes(lowerContent);
                 };
             }
         }
@@ -1138,7 +1149,7 @@ customPseudoClasses
     .set("selected", () => isNodeSelected)
     .set("shadow", () => getNodeShadowRoot)
     .set("text", makePseudoClassMatcher(getInlineNodeText, true))
-    .set("value", makePseudoClassMatcher(getNodeValue, false))
+    .set("value", makePseudoClassMatcher(getRawValue, false))
     .set("viewPort", () => isNodeInViewPort)
     .set("visible", () => isNodeVisible);
 
@@ -1202,9 +1213,13 @@ export function getNodeAttribute(node, attribute) {
 
 /**
  * @param {Node} node
+ * @param {QueryValueOptions} [options]
  * @returns {NodeValue}
  */
-export function getNodeValue(node) {
+export function getNodeValue(node, options) {
+    if (options?.raw) {
+        return getRawValue(node);
+    }
     switch (node.type) {
         case "checkbox":
         case "radio":
@@ -1220,8 +1235,9 @@ export function getNodeValue(node) {
         case "time":
         case "week":
             return node.valueAsDate.toISOString();
+        default:
+            return node.value || "";
     }
-    return node.value;
 }
 
 /**
@@ -2025,12 +2041,12 @@ export function queryAllTexts(target, options) {
  * *values* of the matching nodes.
  *
  * @param {Target} target
- * @param {QueryOptions} [options]
+ * @param {QueryOptions & QueryValueOptions} [options]
  * @returns {NodeValue[]}
  */
 export function queryAllValues(target, options) {
     [target, options] = parseRawArgs(arguments);
-    return _guardedQueryAll(target, options).map(getNodeValue);
+    return _guardedQueryAll(target, options).map((node) => getNodeValue(node, options));
 }
 
 /**
@@ -2130,12 +2146,12 @@ export function queryText(target, options) {
  * the matching node.
  *
  * @param {Target} target
- * @param {QueryOptions} [options]
+ * @param {QueryOptions & QueryValueOptions} [options]
  * @returns {NodeValue}
  */
 export function queryValue(target, options) {
     [target, options] = parseRawArgs(arguments);
-    return getNodeValue(_queryOne(target, options));
+    return getNodeValue(_queryOne(target, options), options);
 }
 
 /**
