@@ -112,7 +112,7 @@ def update_requirements():
     """Update the Python requirements of the IoT Box, installing the ones
     listed in the requirements.txt file.
     """
-    requirements_file = path_file('odoo', 'addons', 'iot_box_image', 'configuration', 'requirements.txt')
+    requirements_file = path_file('odoo', 'setup', 'iot_box_builder', 'configuration', 'requirements.txt')
     if not requirements_file.exists():
         _logger.info("No requirements file found, not updating.")
         return
@@ -127,7 +127,7 @@ def update_packages():
     the packages.txt file.
     Requires ``writable`` context manager.
     """
-    packages_file = path_file('odoo', 'addons', 'iot_box_image', 'configuration', 'packages.txt')
+    packages_file = path_file('odoo', 'setup', 'iot_box_builder', 'configuration', 'packages.txt')
     if not packages_file.exists():
         _logger.info("No packages file found, not updating.")
         return
