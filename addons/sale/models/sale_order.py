@@ -1849,15 +1849,7 @@ class SaleOrder(models.Model):
             pass
         else:
             access_opt = customer_portal_group[2].setdefault('button_access', {})
-            is_tx_pending = self.get_portal_last_transaction().state == 'pending'
-            if self._has_to_be_signed():
-                if self._has_to_be_paid():
-                    access_opt['title'] = _("View Quotation") if is_tx_pending else _("Sign & Pay Quotation")
-                else:
-                    access_opt['title'] = _("Review & Sign Quotation")
-            elif self._has_to_be_paid() and not is_tx_pending:
-                access_opt['title'] = _("Review & Pay Quotation")
-            elif self.state in ('draft', 'sent'):
+            if self.state in ('draft', 'sent'):
                 access_opt['title'] = _("View Quotation")
 
         return groups
