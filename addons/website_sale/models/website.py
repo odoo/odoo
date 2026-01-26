@@ -674,6 +674,9 @@ class Website(models.Model):
     def _get_geoip_country_code(self):
         return request and request.geoip.country_code or False
 
+    def get_country_in_country_group(self):
+        return self.env['res.country'].search([], limit=1)
+
     def sale_product_domain(self):
         website_domain = self.get_current_website().website_domain()
         if self.env.user._is_internal():
