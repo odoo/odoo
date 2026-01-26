@@ -1220,13 +1220,12 @@ class TestMailAccessPerformance(BaseMailPerformance):
     def test_message_read(self):
         # queries
         # fetch messages: 1
-        # filter records: 4
+        # filter records: 3
         #  * 1 / model without _get_mail_message_access override (_filter_access_rule)
-        #  * 2 for model with _get_mail_message_access override (_get_mail_message_access)
-        #    as there is no prefetching (one / record, 2 records in loop)
+        #  * 1 for model with _get_mail_message_access override (_get_mail_message_access)
         # 'read': 1
         profile = self.profile() if self.warm else nullcontext()
-        with self.assertQueryCount(employee=6), profile:
+        with self.assertQueryCount(employee=5), profile:
             content = (self.messages - self.messages_emp_nope).with_env(self.env).read(['body'])
         self.assertEqual(len(content), len(self.messages - self.messages_emp_nope))
 
@@ -1237,11 +1236,9 @@ class TestMailAccessPerformance(BaseMailPerformance):
         # select mail.message: 1
         # filter records: 4
         #  * 1 / model without _get_mail_message_access override (_filter_access_rule)
-        #  * 3 for model with _get_mail_message_access override (_get_mail_message_access + _filter_access_rule)
-        #    as there is no prefetching (one / record, 3 records in loop)
-        # _get_mail_message_access: 3 on custom implementation, no prefetching
+        #  * 2 for model with _get_mail_message_access override (_get_mail_message_access + _filter_access_rule)
         profile = self.profile() if self.warm else nullcontext()
-        with self.assertQueryCount(employee=7), profile:
+        with self.assertQueryCount(employee=5), profile:
             found = self.messages.with_env(self.env).search([('body', 'ilike', 'Posting on ')])
         self.assertEqual(found, self.messages - self.messages_emp_nope)
 
