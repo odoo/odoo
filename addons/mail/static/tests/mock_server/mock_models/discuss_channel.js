@@ -601,7 +601,7 @@ export class DiscussChannel extends models.ServerModel {
         const [channel] = this.search_read([["id", "=", id]]);
         const notifBody = /* html */ `
             <span class="o_mail_notification">You are in ${
-                channel.channel_type === "channel" ? "channel" : "a private conversation with"
+                channel.channel_type === "channel" ? "" : "a private conversation with"
             }
             <b>${
                 channel.channel_type === "channel"
@@ -611,9 +611,12 @@ export class DiscussChannel extends models.ServerModel {
                       )
             }</b>.<br><br>
 
-            Type <b>@username</b> to mention someone, and grab their attention.<br>
-            Type <b>#channel</b> to mention a channel.<br>
-            Type <b>/command</b> to execute a command.<br></span>
+            <b>@username</b> to mention someone<br>
+            <b>@role</b> to notify multiple people<br>
+            <b>#channel</b> to link a channel<br>
+            <b>/command</b> to run a command<br>
+            <b>::shortcut</b> to insert a canned response<br>
+            <b>:emoji:</b> to insert an emoji</span>
         `;
         const [partner] = ResPartner.read(this.env.user.partner_id);
         BusBus._sendone(partner, "discuss.channel/transient_message", {
