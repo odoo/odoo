@@ -166,7 +166,23 @@ patch(PaymentForm.prototype, {
             if (err.error_code === 'API_VALIDATION_ERROR') {  // Invalid user input
                 errMessage = err.errors[0].message; // Wrong field format
             }
-            this._displayErrorDialog(_t("Payment processing failed"), errMessage);
+            // Some errors reported for input error is unclear and therefore
+            // require clarification for them to update the input
+
+            let inputErrorMessage = ""
+            for (const e of err.errors) {
+                if (e.context.key == "card_holder_phone_number") {
+                    inputErrorMessage += _t("Invalid format!. Format of phone number is: +[country code][number]. For example: +621234512345\n");
+                }
+                else if (e.context.key == "card_holder_email") {
+                    inputErrorMessage += _t("Invalid format!. Format of email address is: [name]@[domain]. For example: john.doe@example.com\n");
+                }
+            }
+
+            // if there's any invalid input error, should prioritize for reporting
+            let message = inputErrorMessage || errMessage;
+
+            this._displayErrorDialog(_t("Payment processing failed"), message);
             this._enableButton();
             return;
         }
