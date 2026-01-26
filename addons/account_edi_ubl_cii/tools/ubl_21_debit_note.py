@@ -35,6 +35,7 @@ DebitNote = {
     'cbc:UUID': {},
     'cbc:IssueDate': {},
     'cbc:IssueTime': {},
+    'cbc:InvoiceTypeCode': {},
     'cbc:Note': {},
     'cbc:DocumentCurrencyCode': {},
     'cbc:TaxCurrencyCode': {},
