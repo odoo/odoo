@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import nullcontext
 from markupsafe import Markup
 from unittest.mock import patch
 
@@ -1300,6 +1301,70 @@ class TestMailAPIPerformance(BaseMailPerformance):
             }
         )
         self.assertEqual(len(rec1.message_ids), 3)
+
+
+@tagged('mail_performance', 'WIP', 'post_install', '-at_install')
+class TestMailAccessPerformance(BaseMailPerformance):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.records_access = cls.env['mail.test.access'].create([
+            {'name': 'Access.1', 'access': 'public'},
+            {'name': 'Access.2', 'access': 'logged'},
+            {'name': 'Access.3', 'access': 'followers'},
+        ])
+        cls.records_access_custo = cls.env['mail.test.access.custo'].create([
+            {'name': 'Custo.1'},
+            {'name': 'Custo.2', 'is_locked': True},
+            {'name': 'Custo.3', 'is_readonly': True},
+        ])
+        cls.records_mc = cls.env['mail.test.multi.company'].create([
+            {'name': 'MC.1'},
+            {'name': 'MC.2'},
+            {'name': 'MC.3'},
+        ])
+
+        cls.messages = cls.env['mail.message']
+        for records_model in [cls.records_access, cls.records_access_custo, cls.records_mc]:
+            for record in records_model:
+                cls.messages += record.with_user(cls.user_admin).message_post(
+                    body=f'Posting on {record.name}',
+                    message_type='comment',
+                    subtype_xmlid='mail.mt_comment',
+                )
+        # message employee cannot read due to specific rules
+        cls.messages_emp_nope = cls.messages[4]
+
+    @users('employee')
+    @warmup
+    def test_message_read(self):
+        # queries
+        # fetch messages: 1
+        # filter records: 1 / model (except the one with _get_mail_message_access)
+        # _get_mail_message_access: 2 on custom implementation, no prefetching (one unreachable)
+        # 'read': 1
+        self.env.invalidate_all()
+        self.env.transaction.clear_access_cache()
+        profile = self.profile() if self.warm else nullcontext()
+        with self.assertQueryCount(employee=5), profile:
+            content = (self.messages - self.messages_emp_nope).with_env(self.env).read(['body'])
+        self.assertEqual(len(content), len(self.messages - self.messages_emp_nope))
+
+    @users('employee')
+    @warmup
+    def test_message_search(self):
+        self.env.invalidate_all()
+        self.env.transaction.clear_access_cache()
+        # queries
+        # select mail.message: 1
+        # filter records: 1 / model (access rules done in batch)
+        # _get_mail_message_access: 3 on custom implementation, no prefetching
+        profile = self.profile() if self.warm else nullcontext()
+        with self.assertQueryCount(employee=7), profile:
+            found = self.messages.with_env(self.env).search([('body', 'ilike', 'Posting on ')])
+        self.assertEqual(found, self.messages - self.messages_emp_nope)
 
 
 @tagged('mail_performance', 'mail_store', 'post_install', '-at_install')

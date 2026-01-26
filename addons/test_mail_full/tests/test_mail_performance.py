@@ -75,7 +75,7 @@ class TestMailPerformance(FullBaseMailPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=108):  # test_mail_full: 106
+        with self.assertQueryCount(employee=106):  # test_mail_full: 106
             new_message = record_ticket.message_post(
                 attachment_ids=attachments.ids,
                 body=Markup('<p>Test Content</p>'),
@@ -232,7 +232,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_norating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=14):
+        with self.assertQueryCount(employee=10):
             # res = messages_all.portal_message_format(options=None)
             res = messages_all.portal_message_format(options={'rating_include': False})
 
@@ -285,7 +285,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_rating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=28):  # sometimes +1
+        with self.assertQueryCount(employee=25):  # 24, sometimes +1
             res = messages_all.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), len(messages_all))
@@ -307,7 +307,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_monorecord(self):
         message = self.messages_all[0].with_user(self.env.user)
 
-        with self.assertQueryCount(employee=19):  # randomness: 18+1
+        with self.assertQueryCount(employee=16):  # randomness: 15+1
             res = message.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), 1)
