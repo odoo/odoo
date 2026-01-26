@@ -9,7 +9,6 @@ class SaleOrderLine(models.Model):
     _inherit = ['sale.order.line', 'website.checkout.alert.mixin']
 
     name_short = fields.Char(compute='_compute_name_short')
-    alerts = fields.Json()
 
     #=== COMPUTE METHODS ===#
 

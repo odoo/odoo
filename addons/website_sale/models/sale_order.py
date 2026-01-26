@@ -30,7 +30,6 @@ class SaleOrder(models.Model):
     )
 
     cart_recovery_email_sent = fields.Boolean(string="Cart recovery email already sent")
-    alerts = fields.Json()
 
     # Computed fields
     website_order_line = fields.One2many(

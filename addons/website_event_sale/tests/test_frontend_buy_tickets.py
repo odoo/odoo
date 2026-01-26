@@ -103,7 +103,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         #  Ensure the use of USD (company currency)
         self.env['product.pricelist'].create({'name': "Public Pricelist"})
 
-        self.start_tour("/", 'event_buy_tickets', login="demo")
+        self.start_tour("/", 'event_buy_tickets', login="demo", debug=True)
 
     def test_buy_last_ticket(self):
         transfer_provider = self.env.ref('payment.payment_provider_transfer')

@@ -1616,35 +1616,33 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
         if not order_sudo:
             return request.redirect(self._get_shop_path())
 
-        if order_sudo.state != 'sale' and (
-            redirection := self._validate_previous_checkout_steps(
-                step_href='/shop/payment',
-                order_sudo=order_sudo.with_context(
-                    skip_draft_check=True, block_on_price_change=True
-                ),
-            )
-        ):
-            message = request.env._(
-                "An unexpected error occurred, and we could not process your order."
-                " Please contact us to resolve the issue (Order reference: %(order_ref)s)."
-                " We apologize for any inconvenience caused.",
-                order_ref=order_sudo.name,
-            )
-            if redirection.location == SHOP_PATH:
-                if error := order_sudo._join_alert_messages():
-                    message += request.env._("\n\nError details: %s", error)
-                # The /shop page won't show the alerts. Fallback to an Exception page with the error
-                # as last resort.
-                raise ValidationError(message)
-            order_sudo._add_alert('danger', message)
-            return redirection
-
         tx_sudo = order_sudo.get_portal_last_transaction()
         if order_sudo.amount_total and not tx_sudo:
             return request.redirect(self._get_shop_path())
 
-        if not order_sudo.amount_total and not tx_sudo and order_sudo.state != 'sale':
-            # Only confirm the order if it wasn't already confirmed.
+        if not order_sudo.amount_total and not tx_sudo and order_sudo.state == 'draft':
+            # Customer didn't go though /shop/payment/transaction since there is nothing to pay,
+            # confirm the order if it is valid.
+            if redirection := self._validate_previous_checkout_steps(
+                step_href='/shop/payment',
+                order_sudo=order_sudo.with_context(block_on_price_change=True),
+            ):
+                message = request.env._(
+                    "An unexpected error occurred, and we could not process your order."
+                    " Please contact us to resolve the issue (Order reference: %(order_ref)s)."
+                    " We apologize for any inconvenience caused.",
+                    order_ref=order_sudo.name,
+                )
+                if redirection.location == SHOP_PATH:
+                    # The /shop page won't show the alerts. Fallback to an Exception page with the
+                    # error as last resort.
+                    message += request.env._(
+                        "\n\nError details: %s", order_sudo._join_alert_messages()
+                    )
+                    raise ValidationError(message)
+                order_sudo._add_alert('danger', message)
+                return redirection
+
             order_sudo._validate_order()
 
         # clean context and session, then redirect to the confirmation page

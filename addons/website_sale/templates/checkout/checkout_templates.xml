@@ -196,16 +196,14 @@
                             <t t-call="website_sale.wizard_checkout"/>
                         </div>
                         <div id="checkout_alerts" class="col-12">
-                            <t t-if="website_sale_order">
-                                <t
-                                    t-foreach="website_sale_order._get_alerts()"
-                                    t-as="alert"
-                                    t-call="website_sale.alert_banner"
-                                    level="alert['level']"
-                                    message="alert['message']"
-                                    classes.f="col-12"
-                                />
-                            </t>
+                            <t
+                                t-foreach="website_sale_order._get_alerts()"
+                                t-as="alert"
+                                t-call="website_sale.alert_banner"
+                                level="alert['level']"
+                                message="alert['message']"
+                                classes.f="col-12"
+                            />
                         </div>
 
                         <!-- Checkout Page Content | Left Column -->
@@ -509,19 +507,13 @@
         </tbody>
     </template>
 
-    <template id="alert_banner">
+    <template id="website_sale.alert_banner">
         <div
             t-attf-class="alert alert-#{level or 'danger'} alert-dismissible #{classes}"
             role="alert"
         >
             <div t-out="message" class="text-prewrap"/>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"/>
-        </div>
-    </template>
-
-    <template id="alert_block">
-        <div t-attf-class="alert alert-#{level or 'danger'} #{classes}" role="alert">
-            <div t-out="message" class="text-prewrap"/>
         </div>
     </template>
 

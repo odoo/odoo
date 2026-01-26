@@ -3,15 +3,14 @@
 import bisect
 from typing import Literal
 
-from odoo import models
+from odoo import fields, models
 
 
 class WebsiteCheckoutAlertMixin(models.AbstractModel):
     _name = 'website.checkout.alert.mixin'
     _description = "Website Checkout Alert Mixin"
 
-    _alerts = 'alerts'
-    """Json field name where the alerts will be stored."""
+    alerts = fields.Json()
 
     def _add_alert(self, level: Literal['info', 'warning', 'danger'], message: str, /, **kwargs):
         """Add an alert to the current records.
@@ -30,22 +29,22 @@ class WebsiteCheckoutAlertMixin(models.AbstractModel):
                 alerts, level_sequence, key=lambda alert: LEVEL_SEQUENCE_MAPPING[alert['level']]
             )
             alerts.insert(idx, {'level': level, 'message': message, **kwargs})
-            record[self._alerts] = alerts
+            record.alerts = alerts
 
     def _get_alerts(self) -> list[dict]:
-        self.ensure_one()
-        return self[self._alerts] or []
+        self = self and self.ensure_one()  # At most one
+        return self.alerts or []
 
-    def _join_alert_messages(self, sep="\n\n"):
+    def _join_alert_messages(self):
         """Return the alert messages of the current records joined by `sep`."""
-        return sep.join(alert['message'] for record in self for alert in record._get_alerts())
+        return "\n\n".join(alert['message'] for record in self for alert in record._get_alerts())
 
     def _get_max_alert_level(self):
         """Return the highest severity level (`danger` > `warning` > `info`). Defaults to `info`."""
         self.ensure_one()
         if alerts := self._get_alerts():
-            return alerts[0].get('level', 'info')
+            return alerts[0].get('level', 'info')  # Assumed to be ordered
         return 'info'
 
     def _clear_alerts(self):
-        self[self._alerts] = False
+        self.alerts = False

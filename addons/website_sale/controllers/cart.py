@@ -237,7 +237,18 @@ class Cart(PaymentPortal):
     )
     def quick_add(self, product_template_id, product_id, quantity=1.0, **kwargs):
         values = self.add_to_cart(product_template_id, product_id, quantity=quantity, **kwargs)
-        values.update(self._get_update_cart_ui_values(request.cart))
+
+        order_sudo = request.cart
+        values.update(self._get_update_cart_ui_values(order_sudo))
+        values['website_sale.shorter_cart_summary'] = request.env['ir.ui.view']._render_template(
+            'website_sale.shorter_cart_summary',
+            {
+                'website_sale_order': order_sudo,
+                'show_shorter_cart_summary': True,
+                **self._get_express_shop_payment_values(order_sudo),
+                **request.website._get_checkout_step_values(),
+            },
+        )
         return values
 
     def _get_express_shop_payment_values(self, order, **kwargs):

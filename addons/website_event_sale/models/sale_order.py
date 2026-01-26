@@ -139,27 +139,21 @@ class SaleOrder(models.Model):
             ('event_ticket_id', '!=', False),
             ('state', '!=', 'cancel'),
         ]
-        registrations_per_event = (
-            self.env['event.registration']
-            .sudo()
-            ._read_group(registration_domain, ['event_id'], ['id:recordset'])
+        registrations_per_event = self.env['event.registration'].sudo()._read_group(
+            registration_domain,
+            ['event_id'], ['id:recordset']
         )
         for event, registrations in registrations_per_event:
-            count_per_slot_ticket = (
-                self.env['event.registration']
-                .sudo()
-                ._read_group(
-                    [('id', 'in', registrations.ids)],
-                    ['event_slot_id', 'event_ticket_id'],
-                    ['__count'],
-                )
+            count_per_slot_ticket = self.env['event.registration'].sudo()._read_group(
+                [('id', 'in', registrations.ids)],
+                ['event_slot_id', 'event_ticket_id'], ['__count']
             )
             try:
                 event._verify_seats_availability(count_per_slot_ticket)
             except ValidationError as exc:
                 self._add_alert(
-                    'warning', str(exc)
-                )  # TODO: should we mark it as 'danger' and block?
+                    'danger', str(exc)
+                )
                 # Displayed in a little sign next to the order line.
                 registrations.sale_order_line_id._add_alert('warning', str(exc))
                 ready = False
