@@ -135,12 +135,11 @@ def get_token():
 
 @toggleable
 @require_db
-def download_iot_handlers(auto=True, server_url=None):
+def download_iot_handlers(server_url=None):
     """Get the drivers from the configured Odoo server.
     If drivers did not change on the server, download
     will be skipped.
 
-    :param auto: If True, the download will depend on the parameter set in the database
     :param server_url: The URL of the connected Odoo database (provided by decorator).
     """
     if not system.get_conf('custom_handlers'):
@@ -151,7 +150,7 @@ def download_iot_handlers(auto=True, server_url=None):
     try:
         response = requests.post(
             server_url + '/iot/get_handlers',
-            data={'identifier': IOT_IDENTIFIER, 'auto': auto},
+            data={'identifier': IOT_IDENTIFIER, 'auto': True},  # TODO: remove `auto` when v19.0 is deprecated
             timeout=8,
             headers={'If-None-Match': etag} if etag else None,
         )
@@ -349,3 +348,18 @@ def check_network(host=None):
     if avg_latency < thresholds["normal"] and packet_loss < 5:
         return "normal"
     return "slow"
+
+
+def toggle_custom_handlers(enable: bool):
+    """Enable or disable custom IoT Box handlers download in Odoo.
+
+    :param enable: True to enable, False to disable
+    """
+    if enable:
+        system.update_conf({'custom_handlers': True})
+        download_iot_handlers()
+    else:
+        system.update_conf({'custom_handlers': False})
+        # Reset to the default handlers and restart
+        system.git("clean", "-dfx")  # remove only non-standard handlers
+        odoo_restart()

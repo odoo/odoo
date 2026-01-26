@@ -88,6 +88,8 @@ def handle_message(message_type: str, **kwargs: dict) -> dict:
                     'wan_quality': helpers.check_network("www.odoo.com"),
                 }
             }
+        case "toggle_custom_handlers":
+            helpers.toggle_custom_handlers(kwargs.get("use_custom_handlers"))
         case _:
             pass
     return {}
