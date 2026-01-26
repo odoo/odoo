@@ -7,7 +7,7 @@ import hmac
 import json
 import logging
 import odoo
-from urllib.parse import urlencode, urlparse, parse_qs
+from urllib.parse import urlencode, urlparse, parse_qsl
 
 from odoo import _, http
 from odoo.http import request
@@ -43,15 +43,15 @@ class Authenticate(http.Controller):
         versions of the mail plugin but necessary for supporting older versions
         """
         parsed_redirect = urlparse(redirect)
-        params = parse_qs(parsed_redirect.query)
+        params = parse_qsl(parsed_redirect.query)
         if do:
             name = friendlyname if not info else f'{friendlyname}: {info}'
             auth_code = self._generate_auth_code(scope, name)
-            # params is a MultiDict which does not support .update() with kwargs
+            # params is a list[tuple[str, str]]
             # the state attribute is needed for the gmail connector
-            params.update({'success': 1, 'auth_code': auth_code, 'state': kw.get('state', '')})
+            params.extend([('success', 1), ('auth_code', auth_code), ('state', kw.get('state', ''))])
         else:
-            params.update({'success': 0, 'state': kw.get('state', '')})
+            params.extend([('success', 0), ('state', kw.get('state', ''))])
         updated_redirect = parsed_redirect._replace(query=urlencode(params))
         return request.redirect(updated_redirect.geturl(), local=False)
 

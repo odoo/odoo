@@ -1991,7 +1991,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: The filtered query string.
         :rtype: str
         """
-        query = parse_qs(urlparse(f'?{query_string}').query)
+        query = parse_qs(query_string)
         for key in keys_to_remove:
             query.pop(key, False)
         return urlencode(query, doseq=True)
