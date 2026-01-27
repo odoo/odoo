@@ -180,6 +180,10 @@ export function setupCombo(products, addToCart = true) {
             steps.push(...setupAttribute(product.attributes));
             negateStep(Utils.checkMissingRequiredsExists());
         }
+
+        if (product.extraSteps?.length) {
+            steps.push(...product.extraSteps);
+        }
     }
 
     if (addToCart) {
