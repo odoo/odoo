@@ -861,8 +861,7 @@ class TestCrmPlsSides(CrmPlsCommon):
         self.assertEqual(len(existing_noteam), len(final_noteam))
 
 
-@tagged('lead_manage', 'crm_lead_pls')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('post_install', '-at_install', 'crm_lead_pls', 'lead_manage')
 class TestLeadLost(TestCrmCommon):
 
     @classmethod
@@ -907,7 +906,7 @@ class TestLeadLost(TestCrmCommon):
                 'notified_partner_ids': self.env['res.partner'],
                 'partner_ids': self.env['res.partner'],
                 'subtype_id': self.env.ref('mail.mt_note'),
-                'tracking_field_names': ['user_id'],
+                'tracking_values': [('user_id', 'many2one', self.user_sales_leads, self.user_sales_salesman)],
             }
         )
 
@@ -934,11 +933,10 @@ class TestLeadLost(TestCrmCommon):
                 'notified_partner_ids': self.env['res.partner'],
                 'partner_ids': self.env['res.partner'],
                 'subtype_id': self.env.ref('crm.mt_lead_lost'),
-                'tracking_field_names': ['active', 'lost_reason_id', 'won_status'],
                 'tracking_values': [
                     ('active', 'boolean', True, False),
                     ('lost_reason_id', 'many2one', False, self.lost_reason),
-                    ('won_status', 'char', 'Pending', 'Lost'),
+                    ('won_status', 'selection', 'Pending', 'Lost'),
                 ],
             }
         )
@@ -951,10 +949,11 @@ class TestLeadLost(TestCrmCommon):
         self.assertEqual(len(leads), 10)
         self.flush_tracking()
 
+        feedback_str = '<p>I cannot find it. It was in my closet and pouf, disappeared.</p>'
         lost_wizard = self.env['crm.lead.lost'].create({
             'lead_ids': leads.ids,
             'lost_reason_id': self.lost_reason.id,
-            'lost_feedback': '<p>I cannot find it. It was in my closet and pouf, disappeared.</p>',
+            'lost_feedback': feedback_str,
         })
         lost_wizard.action_lost_reason_apply()
         self.flush_tracking()
@@ -969,14 +968,16 @@ class TestLeadLost(TestCrmCommon):
             self.assertEqual(len(lead.message_ids), 2, 'Should have 2 messages: creation, lost with log')
             lost_message = lead.message_ids.filtered(lambda msg: msg.subtype_id == self.env.ref('crm.mt_lead_lost'))
             self.assertTrue(lost_message)
-            self.assertTracking(
-                lost_message,
-                [('active', 'boolean', True, False),
-                 ('lost_reason_id', 'many2one', False, self.lost_reason)
-                ]
+            self.assertMessageFields(
+                lost_message, {
+                    'body': f'<div style="margin-bottom:4px"><p>Lost Comment:</p>{feedback_str}<br></div>',
+                    'tracking_values': [
+                        ('active', 'boolean', True, False),
+                        ('lost_reason_id', 'many2one', False, self.lost_reason),
+                        ('won_status', 'selection', 'Pending', 'Lost'),
+                    ],
+                }
             )
-            self.assertIn('<p>I cannot find it. It was in my closet and pouf, disappeared.</p>', lost_message.body,
-                          'Feedback should be included directly within tracking message')
 
     @users('user_sales_salesman')
     @mute_logger('odoo.addons.base.models')

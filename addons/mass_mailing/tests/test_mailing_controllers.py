@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from freezegun import freeze_time
-from markupsafe import Markup
 from requests import Session, PreparedRequest, Response
 
 import datetime
@@ -64,7 +63,7 @@ class TestMailingControllersCommon(MassMailCommon, HttpCase):
         return super()._request_handler(s, r, **kw)
 
 
-@tagged('mailing_portal', 'post_install', '-at_install')
+@tagged('mailing_portal', 'mail_track', 'post_install', '-at_install')
 class TestMailingControllers(TestMailingControllersCommon):
 
     @classmethod
@@ -219,9 +218,11 @@ class TestMailingControllers(TestMailingControllersCommon):
                 # partner (document): new message for blocklist addition with feedback
                 self.assertEqual(len(test_partner.message_ids), len(previous_messages) + 1)
                 msg_fb = test_partner.message_ids[0]
-                self.assertEqual(
-                    msg_fb.body,
-                    Markup(f'<p>Feedback from {test_email_normalized}<br>{test_feedback}</p>')
+                self.assertMessageFields(
+                    msg_fb, {
+                        'body': f'<p>Feedback from {test_email_normalized}<br>{test_feedback}</p>',
+                        'tracking_values': [],
+                    }
                 )
 
                 # posted messages on exclusion list record: activated, feedback, deactivated, activated again
@@ -229,30 +230,42 @@ class TestMailingControllers(TestMailingControllersCommon):
                 self.assertEqual(len(bl_record.message_ids), 5)
                 self.assertEqual(bl_record.opt_out_reason_id, opt_out_reasons[-1])
                 msg_bl2, msg_unbl, msg_fb, msg_bl, msg_create = bl_record.message_ids
-                self.assertEqual(
-                    msg_bl2.body,
-                    Markup(f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
-                           f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
-                           f'data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>')
+                self.assertMessageFields(
+                    msg_bl2, {
+                        'body': f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
+                                f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                                f'data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>',
+                        'tracking_values': [('active', 'boolean', False, True)],
+                    }
                 )
-                self.assertEqual(
-                    msg_unbl.body,
-                    Markup(f'<p>Blocklist removal request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
-                           f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
-                           f'data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>')
+                self.assertMessageFields(
+                    msg_unbl, {
+                        'body': f'<p>Blocklist removal request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
+                                f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                                f'data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>',
+                        'tracking_values': [('active', 'boolean', True, False)],
+                    }
                 )
-                self.assertEqual(
-                    msg_fb.body,
-                    Markup(f'<p>Feedback from {test_email_normalized}<br>{test_feedback}</p>')
+                self.assertMessageFields(
+                    msg_fb, {
+                        'body': f'<p>Feedback from {test_email_normalized}<br>{test_feedback}</p>',
+                        'tracking_values': [('opt_out_reason_id', 'many2one', False, opt_out_reasons[-1])],
+                    }
                 )
-                self.assertTracking(msg_fb, [('opt_out_reason_id', 'many2one', False, opt_out_reasons[-1])])
-                self.assertEqual(
-                    msg_bl.body,
-                    Markup(f'<p>Blocklist request from unsubscribe link of mailing <a href="#" data-oe-model="{test_mailing._name}" '
-                           f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
-                           f'data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>')
+                self.assertMessageFields(
+                    msg_bl, {
+                        'body': f'<p>Blocklist request from unsubscribe link of mailing <a href="#" data-oe-model="{test_mailing._name}" '
+                                f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                                f'data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>',
+                        'tracking_values': [],
+                    }
                 )
-                self.assertEqual(msg_create.body, Markup('<p>Mail Blacklist created</p>'))
+                self.assertMessageFields(
+                    msg_create, {
+                        'body': '<p>Mail Blacklist created</p>',
+                        'tracking_values': [],
+                    }
+                )
 
     def test_mailing_unsubscribe_from_document_tour_mailing_user(self):
         """ Test portal unsubscribe on mailings performed on documents (not
@@ -339,12 +352,12 @@ class TestMailingControllers(TestMailingControllersCommon):
         message_feedback = contact_l1.message_ids[0]
         self.assertEqual(
             message_feedback.body,
-            Markup(f'<p>Feedback from {contact_l1.email_normalized}<br>{test_feedback}</p>')
+            f'<p>Feedback from {contact_l1.email_normalized}<br>{test_feedback}</p>'
         )
         message_unsub = contact_l1.message_ids[1]
         self.assertEqual(
             message_unsub.body,
-            Markup(f'<p>{contact_l1.display_name} unsubscribed from the following mailing list(s)</p><ul><li>{self.mailing_list_1.name}</li></ul>')
+            f'<p>{contact_l1.display_name} unsubscribed from the following mailing list(s)</p><ul><li>{self.mailing_list_1.name}</li></ul>'
         )
 
         # posted messages on exclusion list record: activated, deactivated, activated again
@@ -354,11 +367,11 @@ class TestMailingControllers(TestMailingControllersCommon):
         msg_bl, msg_create = bl_record.message_ids
         self.assertEqual(
             msg_bl.body,
-            Markup(f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
-                   f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
-                   f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>')
+            f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
+            f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+            f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>'
         )
-        self.assertEqual(msg_create.body, Markup('<p>Mail Blacklist created</p>'))
+        self.assertEqual(msg_create.body, '<p>Mail Blacklist created</p>')
 
     def test_mailing_unsubscribe_from_list_with_update_tour(self):
         """ Test portal unsubscribe on mailings performed on mailing lists. Their
@@ -411,29 +424,37 @@ class TestMailingControllers(TestMailingControllersCommon):
 
         # posted messages on contact record for mailing list 1: subscription update, feedback, unsubscription
         message_update = contact_l1.message_ids[0]
-        self.assertEqual(
-            message_update.body,
-            Markup(f'<p>{contact_l1.display_name} subscribed to the following mailing list(s)</p>'
-                   f'<ul><li>{self.mailing_list_2.name}</li></ul>')
+        self.assertMessageFields(
+            message_update, {
+                'body': f'<p>{contact_l1.display_name} subscribed to the following mailing list(s)</p>'
+                        f'<ul><li>{self.mailing_list_2.name}</li></ul>',
+                'tracking_values': [],
+            }
         )
         message_feedback = contact_l1.message_ids[1]
-        self.assertEqual(
-            message_feedback.body,
-            Markup(f'<p>Feedback from {contact_l1.email_normalized}<br>{test_feedback}</p>')
+        self.assertMessageFields(
+            message_feedback, {
+                'body': f'<p>Feedback from {contact_l1.email_normalized}<br>{test_feedback}</p>',
+                'tracking_values': [],
+            }
         )
         message_unsub = contact_l1.message_ids[2]
-        self.assertEqual(
-            message_unsub.body,
-            Markup(f'<p>{contact_l1.display_name} unsubscribed from the following mailing list(s)</p>'
-                   f'<ul><li>{self.mailing_list_1.name}</li></ul>')
+        self.assertMessageFields(
+            message_unsub, {
+                'body': f'<p>{contact_l1.display_name} unsubscribed from the following mailing list(s)</p>'
+                        f'<ul><li>{self.mailing_list_1.name}</li></ul>',
+                'tracking_values': [],
+            }
         )
 
         # posted messages on contact record for mailing list 3: subscription
         message_sub = contact_l3.message_ids[0]
-        self.assertEqual(
-            message_sub.body,
-            Markup(f'<p>{contact_l3.display_name} subscribed to the following mailing list(s)</p>'
-                   f'<ul><li>{self.mailing_list_3.name}</li><li>{self.mailing_list_2.name}</li></ul>')
+        self.assertMessageFields(
+            message_sub, {
+                'body': f'<p>{contact_l3.display_name} subscribed to the following mailing list(s)</p>'
+                        f'<ul><li>{self.mailing_list_3.name}</li><li>{self.mailing_list_2.name}</li></ul>',
+                'tracking_values': [],
+            }
         )
 
         # posted messages on exclusion list record: activated, deactivated, activated again, feedback
@@ -441,27 +462,43 @@ class TestMailingControllers(TestMailingControllersCommon):
         self.assertEqual(bl_record.opt_out_reason_id, opt_out_reasons[0])
         self.assertEqual(len(bl_record.message_ids), 5)
         msg_fb, msg_bl2, msg_unbl, msg_bl, msg_create = bl_record.message_ids
-        self.assertTracking(msg_fb, [('opt_out_reason_id', 'many2one', False, opt_out_reasons[0])])
+        self.assertMessageFields(
+            msg_fb, {
+                'body': '',
+                'tracking_values': [('opt_out_reason_id', 'many2one', False, opt_out_reasons[0])],
+            }
+        )
         self.assertFalse(msg_fb.body)
-        self.assertEqual(
-            msg_bl2.body,
-            Markup(f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
-                   f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
-                   f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>')
+        self.assertMessageFields(
+            msg_bl2, {
+                'body': f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
+                        f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                        f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>',
+                'tracking_values': [('active', 'boolean', False, True)],
+            }
         )
-        self.assertEqual(
-            msg_unbl.body,
-            Markup(f'<p>Blocklist removal request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
-                   f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
-                   f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>')
+        self.assertMessageFields(
+            msg_unbl, {
+                'body': f'<p>Blocklist removal request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
+                        f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                        f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>',
+                'tracking_values': [('active', 'boolean', True, False)],
+            }
         )
-        self.assertEqual(
-            msg_bl.body,
-            Markup(f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
-                   f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
-                   f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>')
+        self.assertMessageFields(
+            msg_bl, {
+                'body': f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
+                        f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                        f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>',
+                'tracking_values': [],
+            }
         )
-        self.assertEqual(msg_create.body, Markup('<p>Mail Blacklist created</p>'))
+        self.assertMessageFields(
+            msg_create, {
+                'body': '<p>Mail Blacklist created</p>',
+                'tracking_values': [],
+            }
+        )
 
     def test_mailing_unsubscribe_from_my(self):
         """ Test portal unsubscribe using the 'my' mailing-specific portal page.
@@ -550,28 +587,28 @@ class TestMailingControllers(TestMailingControllersCommon):
         msg_fb, msg_sub, msg_uns = contact_l1.message_ids
         self.assertEqual(
             msg_fb.body,
-            Markup(f'<p>Feedback from {portal_user.name} ({test_email_normalized})<br>{test_feedback}</p>')
+            f'<p>Feedback from {portal_user.name} ({test_email_normalized})<br>{test_feedback}</p>'
         )
         self.assertEqual(
             msg_sub.body,
-            Markup(f'<p>{contact_l1.name} subscribed to the following mailing list(s)</p>'
-                   f'<ul><li>{self.mailing_list_2.name}</li></ul>')
+            f'<p>{contact_l1.name} subscribed to the following mailing list(s)</p>'
+            f'<ul><li>{self.mailing_list_2.name}</li></ul>'
         )
         self.assertEqual(
             msg_uns.body,
-            Markup(f'<p>{contact_l1.name} unsubscribed from the following mailing list(s)</p>'
-                   f'<ul><li>{self.mailing_list_1.name}</li></ul>')
+            f'<p>{contact_l1.name} unsubscribed from the following mailing list(s)</p>'
+            f'<ul><li>{self.mailing_list_1.name}</li></ul>'
         )
         # message on contact for list 2: opt-in L3 and L2
         msg_fb, msg_sub = contact_l3.message_ids
         self.assertEqual(
             msg_fb.body,
-            Markup(f'<p>Feedback from {portal_user.name} ({test_email_normalized})<br>{test_feedback}</p>')
+            f'<p>Feedback from {portal_user.name} ({test_email_normalized})<br>{test_feedback}</p>'
         )
         self.assertEqual(
             msg_sub.body,
-            Markup(f'<p>{contact_l3.name} subscribed to the following mailing list(s)</p>'
-                   f'<ul><li>{self.mailing_list_3.name}</li><li>{self.mailing_list_2.name}</li></ul>')
+            f'<p>{contact_l3.name} subscribed to the following mailing list(s)</p>'
+            f'<ul><li>{self.mailing_list_3.name}</li><li>{self.mailing_list_2.name}</li></ul>'
         )
 
         # block list record created, feedback logged
@@ -579,8 +616,12 @@ class TestMailingControllers(TestMailingControllersCommon):
         self.assertEqual(bl_record.opt_out_reason_id, opt_out_reasons[0])
         self.assertEqual(len(bl_record.message_ids), 3)
         msg_fb, msg_bl, _msg_create = bl_record.message_ids
-        self.assertTracking(msg_fb, [('opt_out_reason_id', 'many2one', False, opt_out_reasons[0])])
-        self.assertEqual(msg_bl.body, Markup('<p>Blocklist request from portal</p>'))
+        self.assertMessageFields(
+            msg_fb, {
+                'tracking_values': [('opt_out_reason_id', 'many2one', False, opt_out_reasons[0])],
+            }
+        )
+        self.assertEqual(msg_bl.body, '<p>Blocklist request from portal</p>')
 
     @mute_logger('odoo.http', 'odoo.addons.website.models.ir_ui_view')
     def test_mailing_view(self):
