@@ -10,6 +10,8 @@ class AccountAccount(models.Model):
     
     @api.ondelete(at_uninstall=False)
     def _unlink_bank_cash_accounts(self):
+        if self.env.context.get('force_delete'):
+            return
         nb_account_to_delete_per_company = defaultdict(self.env['account.account'].browse)
         for account in self:
             for company in account.company_ids:
@@ -19,9 +21,9 @@ class AccountAccount(models.Model):
         if not nb_account_to_delete_per_company:
             return
 
-        grouped_counts = self.read_group(
+        grouped_counts = self._read_group(
             domain=[('company_ids.account_fiscal_country_id.code', '=', 'DK'), ('account_type', '=', 'asset_cash')],
-            fields=['company_ids', 'id:count'],
+            aggregates=['company_ids', 'id:count'],
             groupby=['company_ids'],
         )
         nb_account_per_company = {self.env['res.company'].browse(entry['company_ids'][0]): entry['company_ids_count'] for entry in grouped_counts}
