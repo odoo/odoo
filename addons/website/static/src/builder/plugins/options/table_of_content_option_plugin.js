@@ -171,7 +171,7 @@ export class TableOfContentOptionPlugin extends Plugin {
             itemEl.textContent = title;
             itemEl.setAttribute("href", `#${tocHeadingId}`);
 
-            itemEl.className = `o_translate_inline table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0 table_of_content_link_depth_${depthLevel}`;
+            itemEl.className = `table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0 table_of_content_link_depth_${depthLevel}`;
             tableOfContentNavbar.appendChild(itemEl);
             el.setAttribute("id", tocHeadingId);
         }
