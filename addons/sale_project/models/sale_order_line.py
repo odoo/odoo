@@ -38,7 +38,8 @@ class SaleOrderLine(models.Model):
                     del res['order_id']
 
             if 'order_id' in fields and not res.get('order_id'):
-                assert (partner_id := self.env.context.get('default_partner_id'))
+                if not (partner_id := self.env.context.get('default_partner_id')):
+                    pass
                 project_id = self.env.context.get('link_to_project')
                 sale_order = None
                 so_create_values = {
