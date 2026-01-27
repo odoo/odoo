@@ -343,7 +343,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             # voip module read activity_type during create leading to one less query in enterprise on action_feedback
             _category = activity.activity_type_id.category
 
-        with self.assertQueryCount(admin=10, employee=9):  # tm: 7 / 7
+        with self.assertQueryCount(admin=9, employee=9):  # tm: 7 / 7
             activity.action_feedback(feedback='Zizisse Done !')
 
     @warmup
@@ -378,7 +378,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=14, employee=13):  # tm: 11 / 11
+        with self.assertQueryCount(admin=13, employee=13):  # tm: 11 / 11
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
@@ -404,7 +404,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=14, employee=14):  # tm 10 / 10
+        with self.assertQueryCount(admin=15, employee=15):  # tm 10 / 10
             record.action_close('Dupe feedback', attachment_ids=attachments.ids)
 
         # notifications
@@ -475,7 +475,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 composer_form.attachment_ids.add(attachment)
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=56, employee=57):  # tm 53/53
+        with self.assertQueryCount(admin=55, employee=55):  # tm 53/53
             composer._action_send_mail()
 
         # notifications
@@ -597,7 +597,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=51, employee=52):
+        with self.assertQueryCount(admin=49, employee=49):
             composer._action_send_mail()
 
         # notifications
@@ -627,7 +627,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=68, employee=69):
+        with self.assertQueryCount(admin=66, employee=66):
             composer._action_send_mail()
 
         # notifications
@@ -1151,7 +1151,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id)
 
-        with self.assertQueryCount(admin=42, employee=42):
+        with self.assertQueryCount(admin=41, employee=42):
             rec.write({'user_id': self.user_portal.id})
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
