@@ -3,6 +3,7 @@ import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
     fillEmpty,
     removeClass,
+    removeEmptyTextNodes,
     removeStyle,
     toggleClass,
     unwrapContents,
@@ -1129,6 +1130,9 @@ export class ListPlugin extends Plugin {
         }
         const cursors = this.dependencies.selection.preserveSelection();
         for (const listItem of listItems) {
+            // Remove empty text nodes without breaking the current selection.
+            removeEmptyTextNodes(listItem, cursors);
+
             if (this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
                 const listItemDescendants = descendants(listItem);
                 for (const node of [
@@ -1209,6 +1213,9 @@ export class ListPlugin extends Plugin {
             if (!hasOnlyBaseBlocks || (!applyStyle && !hasExistingFontSize)) {
                 continue;
             }
+
+            // Remove empty text nodes without breaking the current selection.
+            removeEmptyTextNodes(listItem, cursors);
 
             if (this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
                 const listItemDescendants = descendants(listItem);
