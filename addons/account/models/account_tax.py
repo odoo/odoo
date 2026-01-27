@@ -4397,7 +4397,7 @@ class AccountTax(models.Model):
 
     @api.model
     def _import_retrieve_tax(self, search_plan, company, tax_values_list):
-        cache = {}
+        cache = self.env.cr.cache.setdefault('retrieved_tax_map', {})
 
         static_domain = expression.OR([
             [*self._check_company_domain(company), ('company_id', '!=', False)],
@@ -4453,9 +4453,9 @@ class AccountTax(models.Model):
                             'static_domain': expression.AND([tax_domain, static_domain]),
                         })
 
+                    if cache_key:
+                        cache[cache_key] = tax
                     if tax:
-                        if cache_key:
-                            cache[cache_key] = tax
                         tax_values['tax'] = tax
                         break
 
