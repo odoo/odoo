@@ -245,8 +245,9 @@ class LivechatController(http.Controller):
                 },
             )
         )
+        timestamp = channel.create_date.astimezone(tz).strftime("%b %d, %I:%M %p")
         headers = [
-            ("Content-Disposition", content_disposition(f"transcript_{channel.id}.pdf", "inline")),
+            ("Content-Disposition", content_disposition(f"Live Chat - {request.env.company.name} - {timestamp}.pdf", "inline")),
             ("Content-Length", len(pdf)),
             ("Content-Type", "application/pdf"),
         ]
