@@ -7,12 +7,19 @@ export class TranslateLinkInlinePlugin extends Plugin {
     resources = {
         create_link_handlers: (linkEl) => linkEl.classList.add("o_translate_inline"),
         before_insert_processors: (container) => {
-            for (const linkEl of container.querySelectorAll("a")) {
-                linkEl.classList.add("o_translate_inline");
-            }
+            this.markTranslateInline(container);
             return container;
         },
+        on_replaced_media_handlers: ({ newMediaEl }) => {
+            this.markTranslateInline(newMediaEl);
+        },
     };
+
+    markTranslateInline(containerEl) {
+        for (const linkEl of containerEl.querySelectorAll("a")) {
+            linkEl.classList.add("o_translate_inline");
+        }
+    }
 }
 
 registry.category("website-plugins").add(TranslateLinkInlinePlugin.id, TranslateLinkInlinePlugin);
