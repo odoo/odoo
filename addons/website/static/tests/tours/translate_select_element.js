@@ -5,7 +5,7 @@ import {
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 
-function changeLanguageAndOpenTranslateMode() {
+export function changeLanguageAndOpenTranslateMode() {
     return [
         {
             content: "Change the language to French",
