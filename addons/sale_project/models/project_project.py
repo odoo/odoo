@@ -225,7 +225,7 @@ class ProjectProject(models.Model):
         }
         if len(all_sale_order_lines) <= 1:
             action_window['res_id'] = all_sale_order_lines.id
-        else:
+        if len(all_sale_order_lines) > 1 or not self.partner_id:
             action_window.update({
                 'domain': [('id', 'in', all_sale_order_lines.ids)],
                 'views': [
@@ -233,6 +233,8 @@ class ProjectProject(models.Model):
                     (self.env.ref('sale_project.sale_order_line_view_form_editable').id, 'form'),
                 ],
             })
+            if not self.partner_id:
+                action_window['context'].update({'create': False})
         return action_window
 
     def action_view_sos(self):
