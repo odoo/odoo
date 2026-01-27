@@ -2958,15 +2958,17 @@ class AccountEdiUBL(models.AbstractModel):
         if not self.module_installed('account_accountant'):
             # _predict_specific_account is defined in account_accountant
             return
+
+        accounts_map = {}
         lines_collected_values = collected_values['lines_collected_values']
         for line_collected_values in lines_collected_values:
             account_values = line_collected_values['account_values']
             if predictive := account_values.get('invoice_predictive'):
-                account_id = self.env['account.move.line']._predict_specific_account(
-                    move=predictive['invoice'],
-                    name=predictive['name'],
-                    partner=predictive['partner'],
-                )
+                account_params = {'move': predictive['invoice'], 'name': predictive['name'], 'partner': predictive['partner']}
+                account_key = tuple(account_params.values())
+                if account_key not in accounts_map:
+                    accounts_map[account_key] = self.env['account.move.line']._predict_specific_account(**account_params)
+                account_id = accounts_map.get(account_key)
                 if account_id:
                     account_values['account'] = self.env['account.account'].browse(account_id)
 
