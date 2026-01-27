@@ -303,18 +303,24 @@ test("Members are partitioned by online/offline", async () => {
 test("Shows owner / admin in members panel + member actions", async () => {
     const pyEnv = await startServer();
     const [demoPid, johnPid] = pyEnv["res.partner"].create([{ name: "Demo" }, { name: "John" }]);
+    const marioGid = pyEnv["mail.guest"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChannel",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
             Command.create({ partner_id: demoPid, channel_role: "admin" }),
             Command.create({ partner_id: johnPid }),
+            Command.create({ guest_id: marioGid }),
         ],
         channel_type: "channel",
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-discuss-ChannelMember", { count: 3 });
+    await contains(".o-discuss-ChannelMember", { count: 4 });
+    await contains(`.o-discuss-ChannelMember:has(:text(${serverState.partnerName}))`);
+    await contains(".o-discuss-ChannelMember:has(:text(Demo))");
+    await contains(".o-discuss-ChannelMember:has(:text(John))");
+    await contains(".o-discuss-ChannelMember:has(:text(Mario))");
     await contains(
         ".o-discuss-ChannelMember:text('" +
             serverState.partnerName +
@@ -344,4 +350,7 @@ test("Shows owner / admin in members panel + member actions", async () => {
     await contains(".o-dropdown-item:eq(0):has(:text(Set Admin))");
     await contains(".o-dropdown-item:eq(1):has(:text(Set Owner))");
     await contains(".o-dropdown-item:eq(2):has(:text(Remove Member))");
+    await click(".o-discuss-ChannelMember:text('Mario') [title='Member Actions']");
+    await contains(".o-dropdown-item", { count: 1 });
+    await contains(".o-dropdown-item:has(:text(Remove Member))");
 });
