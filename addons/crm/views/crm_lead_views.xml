@@ -9,7 +9,7 @@
                         <button name="action_set_won_rainbowman" string="Won"
                             type="object" class="oe_highlight" data-hotkey="w" title="Mark as won"
                             invisible="won_status == 'won' or type == 'lead' or not active"/>
-                        <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
+                        <button name="action_convert_to_opportunity" string="Convert to Opportunity" type="object"
                             class="oe_highlight" invisible="type == 'opportunity' or not active" data-hotkey="v"/>
                         <button name="action_restore" string="Restore" type="object" data-hotkey="x"
                             invisible="won_status != 'lost'"/>
@@ -308,7 +308,8 @@
             <field name="model">crm.lead</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <list string="Leads" sample="1" multi_edit="1" js_class="crm_list">
+                <list string="Leads" sample="1" multi_edit="1" js_class="crm_list"
+                      decoration-muted="won_status == 'lost'">
                     <header>
                         <button name="%(action_crm_send_mass_convert)d" type="action" string="Convert to Opportunities"/>
                         <button name="%(crm.crm_lead_lost_action)d" type="action" string="Mark Lost"/>
