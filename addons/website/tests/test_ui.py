@@ -548,6 +548,16 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_website_media_dialog_insert_media(self):
         self.start_tour(self.env['website'].get_client_action_url("/", True), "website_media_dialog_insert_media", login="admin")
 
+    def test_website_media_dialog_insert_file(self):
+        # Ensure at least one document exists for the step that chooses one
+        self.env['ir.attachment'].create({
+            'name': 'doc.txt',
+            'raw': b'Text',
+            'mimetype': 'text/plain',
+            'public': True,
+        })
+        self.start_tour(self.env['website'].get_client_action_url('/', True), "website_media_dialog_insert_file", login="admin")
+
     def test_website_text_font_size(self):
         self.start_tour(self.env['website'].get_client_action_url("/", True), 'website_text_font_size', login='admin', timeout=300)
 
