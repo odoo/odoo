@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from dateutil import rrule
 from odoo import _, api, Command, fields, models
 from odoo.exceptions import ValidationError, UserError
-
-from dateutil import rrule
-from dateutil.relativedelta import relativedelta
-
-RRULE_WEEKDAYS = {'SUN': 'SU', 'MON': 'MO', 'TUE': 'TU', 'WED': 'WE', 'THU': 'TH', 'FRI': 'FR', 'SAT': 'SA'}
+RRULE_WEEKDAYS = {'SUN': rrule.SU, 'MON': rrule.MO, 'TUE': rrule.TU, 'WED': rrule.WE, 'THU': rrule.TH, 'FRI': rrule.FR, 'SAT': rrule.SA}
 REPEAT_UNIT_TO_RRULE = {
     'day': rrule.DAILY,
     'week': rrule.WEEKLY,
@@ -117,6 +113,7 @@ class ProjectTaskRecurrence(models.Model):
                 ['id:max'],
             )
         }
+
     @api.model
     def _create_next_occurrences(self, occurrences_from):
         tasks_copy = self.env['project.task']
@@ -173,6 +170,8 @@ class ProjectTaskRecurrence(models.Model):
         return list_create_values
 
     def get_delta(self, dtstart):
+        if (not dtstart):
+            return 0
         self.ensure_one()
         rrule_params = dict(
             dtstart=dtstart,
@@ -190,12 +189,10 @@ class ProjectTaskRecurrence(models.Model):
             if self.month_by == 'date':
                 rrule_params['bymonthday'] = self.repeat_date_of_month
             elif self.month_by == 'day':
-                rrule_params['byweekday'] = getattr(rrule, RRULE_WEEKDAYS[self.repeat_by_weekday_month])(int(self.repeat_by_day_month))
+                rrule_params['byweekday'] = RRULE_WEEKDAYS[self.repeat_by_weekday_month](int(self.repeat_by_day_month))
         rrule_params["count"] = 2
         rrule_date = rrule.rrule(
             REPEAT_UNIT_TO_RRULE[self.repeat_unit], **rrule_params)
-        for date in rrule_date:
-            print(date)
         # rrule will give out the start date if it is considered valid, which is unwhanted since we want the next date from rrule
         # we therefroe calculate 2 dates and take the one that is the earliest and is not equal or smaller than the start date.
         if (rrule_date[0] <= dtstart):
