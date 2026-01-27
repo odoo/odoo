@@ -7,6 +7,7 @@ from odoo.tools import float_is_zero, float_repr, format_list
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import clean_context, formatLang, html_escape
 from odoo.tools.xml_utils import find_xml_value
+from collections import defaultdict
 from datetime import datetime
 
 # -------------------------------------------------------------------------
@@ -615,14 +616,27 @@ class AccountEdiCommon(models.AbstractModel):
     def _import_invoice_lines(self, invoice, tree, xpath, qty_factor):
         logs = []
         lines_values = []
+        all_product_vals = []
         for line_tree in tree.iterfind(xpath):
-            line_values = self.with_company(invoice.company_id)._retrieve_invoice_line_vals(line_tree, invoice.move_type, qty_factor)
+            xpath_dict = self._get_line_xpaths(invoice.move_type, qty_factor)
+            product_vals = {k: self._find_value(v, line_tree) for k, v in xpath_dict['product'].items()}
+            all_product_vals.append(product_vals)
+
+        all_products = self._import_products_batched(all_product_vals)
+
+        all_taxes = defaultdict()
+        for line_tree in tree.iterfind(xpath):
+            line_values = self.with_company(invoice.company_id).with_context(prefetched_products=all_products)._retrieve_invoice_line_vals(
+                line_tree, invoice.move_type, qty_factor
+            )
             if line_values is None:
                 continue
 
-            line_values['tax_ids'], tax_logs = self._retrieve_taxes(
-                invoice, line_values, invoice.journal_id.type,
+            line_values['tax_ids'], tax_logs = self.with_context(stored_taxes=all_taxes)._retrieve_taxes(
+                invoice, line_values, invoice.journal_id.type
             )
+            for tax in self.env['account.tax'].browse(line_values.get('tax_ids', [])):
+                all_taxes[tax.amount] = tax
             logs += tax_logs
             if not line_values['product_uom_id']:
                 line_values.pop('product_uom_id')  # if no uom, pop it so it's inferred from the product_id
@@ -747,8 +761,15 @@ class AccountEdiCommon(models.AbstractModel):
 
         # delivered_qty (mandatory)
         delivered_qty = 1
+        prefetched_products = self.env.context.get('prefetched_products', {})
         product_vals = {k: self._find_value(v, tree) for k, v in xpath_dict['product'].items()}
-        product = self._import_product(**product_vals)
+        if not prefetched_products:
+            product = self._import_product(**product_vals)
+        else:
+            barcode = product_vals.get('barcode')
+            default_code = product_vals.get('default_code')
+            name = product_vals.get('name')
+            product = prefetched_products.get(barcode) or prefetched_products.get(default_code) or prefetched_products.get(name) or self.env['product.product']
         product_uom = self.env['uom.uom']
         quantity_node = tree.find(xpath_dict['delivered_qty'])
         if quantity_node is not None:
@@ -828,6 +849,9 @@ class AccountEdiCommon(models.AbstractModel):
             'charges': charges,  # see `_retrieve_line_charges`
         }
 
+    def _import_products_batched(self, product_vals):
+        return self.env['product.product']._retrieve_products_batched(product_vals)
+
     def _import_product(self, **product_vals):
         return self.env['product.product']._retrieve_product(**product_vals)
 
@@ -864,6 +888,7 @@ class AccountEdiCommon(models.AbstractModel):
         # if no results, try to fetch the price_include=True taxes. If results, need to adapt the price_unit.
         logs = []
         taxes = []
+        stored_taxes = self.env.context.get('stored_taxes', defaultdict())
         for tax_node in line_values.pop('tax_nodes'):
             amount = float(tax_node.text)
             domain = [
@@ -872,8 +897,8 @@ class AccountEdiCommon(models.AbstractModel):
                 ('type_tax_use', '=', tax_type),
                 ('amount', '=', amount),
             ]
-            tax = self.env['account.tax']
-            if hasattr(record, '_get_specific_tax'):
+            tax = stored_taxes.get(amount, self.env['account.tax'])
+            if not tax and hasattr(record, '_get_specific_tax'):
                 tax = record._get_specific_tax(line_values['name'], 'percent', amount, tax_type)
             if tax_exigibility:
                 if not tax and tax_exigibility:
@@ -899,6 +924,7 @@ class AccountEdiCommon(models.AbstractModel):
                 )
             else:
                 taxes.append(tax.id)
+                stored_taxes[amount] = tax
                 if tax.price_include:
                     line_values['price_unit'] *= (1 + tax.amount / 100)
         return taxes, logs

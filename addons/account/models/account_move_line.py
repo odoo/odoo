@@ -601,6 +601,7 @@ class AccountMoveLine(models.Model):
                 line.account_id = account_id
 
         product_lines = self.filtered(lambda line: line.display_type == 'product' and line.move_id.is_invoice(True))
+        all_frequent_account_id_dict = defaultdict()
         for line in product_lines:
             if line.product_id:
                 fiscal_position = line.move_id.fiscal_position_id
@@ -611,12 +612,22 @@ class AccountMoveLine(models.Model):
                 elif line.move_id.is_purchase_document(include_receipts=True):
                     line.account_id = accounts['expense'] or line.account_id
             elif line.partner_id:
-                account_id = self.env['account.account']._get_most_frequent_account_for_partner(
-                    company_id=line.company_id.id,
-                    partner_id=line.partner_id.id,
-                    move_type=line.move_id.move_type,
-                    journal_id=line.journal_id.id,
-                )
+                company_id = line.company_id.id
+                partner_id = line.partner_id.id
+                move_type = line.move_id.move_type
+                journal_id = line.journal_id.id
+                key = (company_id, partner_id, move_type, journal_id)
+                if key in all_frequent_account_id_dict:
+                    account_id = all_frequent_account_id_dict[key]
+                else:
+                    account_id = self.env['account.account']._get_most_frequent_account_for_partner(
+                        company_id=company_id,
+                        partner_id=partner_id,
+                        move_type=move_type,
+                        journal_id=journal_id,
+                    )
+                    all_frequent_account_id_dict[key] = account_id
+
                 if account_id:
                     line.account_id = account_id
         for line in self:

@@ -3005,6 +3005,7 @@ class AccountMove(models.Model):
 
         to_delete = []
         to_create = []
+        grouped_update = defaultdict(set)
         for move in container['records']:
             if move.state != 'draft':
                 continue
@@ -3064,7 +3065,8 @@ class AccountMove(models.Model):
             for base_line, to_update in tax_results['base_lines_to_update']:
                 line = base_line['record']
                 if is_write_needed(line, to_update):
-                    line.write(to_update)
+                    to_update = self._clean_command(to_update)
+                    grouped_update[line.currency_id.id, frozenset(to_update.items())].add(line.id)
 
             for tax_line_vals in tax_results['tax_lines_to_delete']:
                 to_delete.append(tax_line_vals['record'].id)
@@ -3079,12 +3081,34 @@ class AccountMove(models.Model):
             for tax_line_vals, grouping_key, to_update in tax_results['tax_lines_to_update']:
                 line = tax_line_vals['record']
                 if is_write_needed(line, to_update):
-                    line.write(to_update)
+                    to_update = self._clean_command(to_update)
+                    grouped_update[line.currency_id.id, frozenset(to_update.items())].add(line.id)
+
+        for (currency_id, values), lines in grouped_update.items():
+            self.env['account.move.line'].browse(lines).write(dict(values))
 
         if to_delete:
             self.env['account.move.line'].browse(to_delete).with_context(dynamic_unlink=True).unlink()
         if to_create:
             self.env['account.move.line'].create(to_create)
+
+    def _clean_command(self, dict_to_clean):
+        clean_to_update = {}
+        for key, value in dict_to_clean.items():
+            if isinstance(value, (list, tuple)) and len(value) > 0 and isinstance(value[0], (list, tuple)):
+                command = value[0]
+                cmd_type = command[0]
+
+                if cmd_type == Command.SET:
+                    clean_to_update[key] = tuple(sorted(command[2]))
+                elif cmd_type == Command.LINK:
+                    clean_to_update[key] = command[1]
+                else:
+                    clean_to_update[key] = tuple(command)
+            else:
+                clean_to_update[key] = tuple(value) if isinstance(value, list) else value
+
+        return clean_to_update
 
     @contextmanager
     def _sync_dynamic_line(self, existing_key_fname, needed_vals_fname, needed_dirty_fname, line_type, container):
@@ -3201,9 +3225,13 @@ class AccountMove(models.Model):
         yield
         after = existing()
 
+        partner_id_to_update = defaultdict(set)
         for move in after:
             if changed('commercial_partner_id'):
-                move.line_ids.partner_id = after[move]['commercial_partner_id']
+                partner_id_to_update[after[move]['commercial_partner_id']].update(move.line_ids.ids)
+
+        for partner_id, line_ids in partner_id_to_update.items():
+            self.env['account.move.line'].browse(line_ids).partner_id = partner_id
 
     @contextmanager
     def _sync_dynamic_lines(self, container):
