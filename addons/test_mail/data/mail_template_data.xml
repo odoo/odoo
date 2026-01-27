@@ -2,7 +2,7 @@
 <odoo>
     <record id="mail_test_ticket_tracking_tpl" model="mail.template">
         <field name="name">Mail Test Full: Tracking Template</field>
-        <field name="subject">Test Template</field>
+        <field name="subject">Test Template on {{ object.name }}</field>
         <field name="partner_to">{{ object.customer_id.id }}</field>
         <field name="use_default_to" eval="False"/>
         <field name="body_html" type="html"><p>Hello <t t-out="object.name or ''"/></p></field>

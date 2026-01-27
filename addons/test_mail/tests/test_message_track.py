@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 from unittest.mock import patch
+from markupsafe import Markup
 
 from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
@@ -9,73 +11,197 @@ from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.tests import Form, tagged, users
 from odoo.tools import mute_logger
+from odoo.tools.mail import formataddr
 
 
-@tagged('mail_track')
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class TestTracking(MailCommon):
+class TestTrackingCommon(MailCommon):
+    """ Test main API and methods of tracking, to be called in py code. """
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
-        record = cls.env['mail.test.ticket'].with_user(
-            cls.user_employee
-        ).with_context(cls._test_context).create({
-            'name': 'Test',
+        cls.dt_ref = datetime(2025, 9, 30, 9, 28, 15)
+        cls.tracking_parent_for_properties = cls.env['mail.test.track.all.properties.parent'].with_user(cls.user_admin).create({
+            'definition_properties': [
+                {'name': 'property_char', 'string': 'Property Char', 'type': 'char', 'default': 'char value'},
+                {'name': 'property_m2o', 'string': 'Property M2O', 'type': 'many2one', 'comodel': 'mail.test.ticket'},
+            ],
+            'name': 'PropDefinition',
         })
-        cls.record = record.with_context(mail_notrack=False)
+        cls.test_tracking_records = cls.env['mail.test.track.all'].with_user(cls.user_employee).create([
+            {
+                'datetime_field': cls.dt_ref,
+                'name': f'Test Tracking {idx}',
+                'properties_parent_id': cls.tracking_parent_for_properties.id,
+            } for idx in range(5)
+        ])
 
-    def test_message_track_author(self):
-        """ Check that the author of the log note matches the user at the time
-        of writing. """
-        with self.mock_mail_gateway():
-            self.record._track_set_author(self.partner_admin)
-            self.record.write({
-                'customer_id': self.partner_employee.id,
+        # ticket-like record, for advanced tests with templates, subtypes, ...
+        cls.test_ticket_record = cls.env['mail.test.ticket'].with_user(cls.user_employee).create({'name': 'Test'})
+
+
+@tagged('mail_track')
+class TestTrackingAPI(TestTrackingCommon):
+    """ Test main API and methods of tracking, to be called in py code. """
+
+    @users('employee')
+    def test_tracking_create(self):
+        records = self.test_tracking_records.with_env(self.env)
+        for record in records:
+            record_su = record.sudo()  # to check for tracking values directly
+            self.assertEqual(len(record_su.message_ids), 1, 'Should have creation message only')
+            # no tracking at create
+            self.assertMessageFields(record_su.message_ids, {'tracking_values': []})
+
+    @users('employee')
+    def test_tracking_default_subtype(self):
+        """ Update some tracked fields not linked to some subtype -> message with onchange """
+        customer = self.env['res.partner'].create({'name': 'Customer', 'email': 'cust@example.com'})
+        test_record = self.test_ticket_record.with_env(self.env)
+        test_record.message_subscribe(
+            partner_ids=self.user_admin.partner_id.ids,
+            subtype_ids=self.env.ref('test_mail.st_mail_test_ticket_container_upd').ids,
+        )
+        self.assertEqual(len(test_record.message_ids), 1)
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            test_record.write({
+                'name': 'Test2',
+                'customer_id': customer.id,
             })
             self.flush_tracking()
 
-        self.assertEqual(len(self.record.message_ids), 1)
-        self.assertEqual(len(self.record.message_ids.sudo().tracking_value_ids), 1)
+        # one new message containing tracking; without subtype linked to tracking, a note is generated
+        self.assertEqual(len(test_record.message_ids), 2)
+        track_msg = self._new_msgs
+        self.assertMessageFields(
+            track_msg, {
+                'author_id': self.partner_employee,
+                'notified_partner_ids': self.env['res.partner'],
+                'partner_ids': self.env['res.partner'],  # no sepcific recipients except those following notes
+                'subtype_id': self.env.ref('mail.mt_note'),
+                'tracking_values': [('customer_id', 'many2one', False, customer)],  # onchange tracked field
+            }
+        )
+        # no specific recipients except those following notes, no email
+        self.assertNotSentEmail()
 
-        self.assertEqual(self.record.message_ids.author_id, self.partner_admin)
+        # change container_id field, linked to a subtype through _track_subtype override
+        container = self.env['mail.test.container'].create({'name': 'Container'})
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            test_record.write({
+                'name': 'Test2',
+                'email_from': 'noone@example.com',
+                'container_id': container.id,
+            })
+            self.flush_tracking()
+        # one new message containing tracking; subtype linked to tracking
+        self.assertEqual(len(test_record.message_ids), 3)
+        track_msg = self._new_msgs
+        self.assertMessageFields(
+            track_msg, {
+                'author_id': self.partner_employee,
+                'notified_partner_ids': self.partner_admin,
+                'partner_ids': self.env['res.partner'],  # no sepcific recipients except those following subtype
+                'subtype_id': self.env.ref('test_mail.st_mail_test_ticket_container_upd'),
+                'tracking_values': [
+                    ('email_from', 'char', False, 'noone@example.com'),
+                    ('container_id', 'many2one', False, container),
+                ],
+            }
+        )
 
     @users('employee')
-    def test_message_track_default_message(self):
+    def test_tracking_get_fields(self):
+        """ Just be sure `_track_get_fields` can be accessed as classic user, check
+        returned result """
+        records = self.test_tracking_records.with_env(self.env)[0]
+        fieldnames = records._track_get_fields()
+        self.assertEqual(fieldnames, {
+            'selection_field', 'text_field', 'many2one_field_id', 'char_field', 'float_field', 'properties',
+            'boolean_field', 'date_field', 'integer_field', 'many2many_field', 'datetime_field', 'one2many_field',
+            'float_field_with_digits', 'monetary_field', 'properties_parent_id'
+        })
+
+    @users('employee')
+    def test_tracking_tweak_author(self):
+        record = self.test_tracking_records.with_env(self.env)[0]
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            record._track_set_author(self.partner_admin)
+            record.write({
+                'many2one_field_id': self.partner_employee.id,
+            })
+            self.flush_tracking()
+        self.assertEqual(len(record.message_ids), 2)
+        self.assertEqual(len(self._new_msgs), 1)
+        track_msg = self._new_msgs
+        self.assertMessageFields(
+            track_msg, {
+                'author_id': self.partner_admin,
+                'tracking_values': [('many2one_field_id', 'many2one', False, self.partner_employee)],
+            }
+        )
+
+    @users('employee')
+    def test_tracking_tweak_default_message(self):
         """Check that the default tracking log message defined on the model is used
         and that setting a log message overrides it. See `_track_get_default_log_message`"""
-
-        record = self.env['mail.test.track'].with_context(self._test_context).create({
+        record = self.env['mail.test.track'].create({
             'name': 'Test',
             'track_enable_default_log': True,
-        }).with_context(mail_notrack=False)
+        })
         self.flush_tracking()
+        self.assertEqual(len(record.message_ids), 1)
 
-        with self.mock_mail_gateway():
+        with self.mock_mail_gateway(), self.mock_mail_app():
             record.user_id = self.user_admin
             self.flush_tracking()
+        self.assertEqual(len(record.message_ids), 2)
+        track_msg = self._new_msgs.filtered(lambda m: m.message_type != "user_notification")
+        self.assertMessageFields(
+            track_msg, {
+                'author_id': self.partner_employee,
+                # default message (`_track_get_default_log_message`) should be used
+                'body': '<p>There was a change on Test for fields "user_id"</p>',
+                'tracking_values': [('user_id', 'many2one', False, self.user_admin)],
+            }
+        )
 
-        messages = record.message_ids
-        self.assertEqual(len(messages), 1)
-        self.assertEqual(messages.body, '<p>There was a change on Test for fields "user_id"</p>',
-                         'Default message should be used')
-
-        with self.mock_mail_gateway():
-            record._track_set_log_message('Hi')
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            record._track_set_log_message('<p>Forced Log</p>')
             record.user_id = False
             self.flush_tracking()
+        self.assertEqual(len(record.message_ids), 3)
+        track_msg = self._new_msgs
+        self.assertMessageFields(
+            track_msg, {
+                'author_id': self.partner_employee,
+                # _track_set_log_message should take priority over default message
+                # and escapes content by default
+                'body': '<p>&lt;p&gt;Forced Log&lt;/p&gt;</p>',
+                'tracking_values': [('user_id', 'many2one', self.user_admin, False)],
+            }
+        )
 
-        messages = record.message_ids - messages
-        self.assertEqual(len(messages), 1)
-        self.assertEqual(messages.body, '<p>Hi</p>', '_track_set_log_message should take priority over default message')
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            record._track_set_log_message(Markup('<p>Forced Log</p>'))
+            record.user_id = self.user_admin.id
+            self.flush_tracking()
+        self.assertEqual(len(record.message_ids), 4)
+        _assign_msg, track_msg = self._new_msgs  # tracking and user_notification for admin
+        self.assertMessageFields(
+            track_msg, {
+                'author_id': self.partner_employee,
+                # Markup content is valid html
+                'body': '<p>Forced Log</p>',
+                'tracking_values': [('user_id', 'many2one', False, self.user_admin)],
+            }
+        )
 
     @users('employee')
-    def test_message_track_filter_for_display(self):
-        """Check that tracked fields filtered for display are not present
-        in the front-end and email formatting methods. See `_track_filter_for_display`"""
-        field_dname = 'Responsible'
-        field_type = 'many2one'
+    def test_tracking_tweak_filter_for_display(self):
+        """Check that tracked fields filtered for display are not present in the front-end and
+        email formatting methods. See `_track_filter_for_display`"""
         original_user = self.user_admin
         new_user = self.user_employee
 
@@ -95,9 +221,10 @@ class TestTracking(MailCommon):
 
         for record in records:
             self.assertEqual(len(record.message_ids), 2, 'Should be a creation message and a tracking message')
-            self.assertTracking(
-                record.message_ids[0],
-                [('user_id', 'many2one', original_user, new_user)]
+            self.assertMessageFields(
+                record.message_ids[0], {
+                    'tracking_values': [('user_id', 'many2one', original_user, new_user)],
+                }
             )
         # first record: tracking value should be hidden
         message_0 = records[0].message_ids[0]
@@ -115,231 +242,190 @@ class TestTracking(MailCommon):
             {
                 'id': message_1.sudo().tracking_value_ids.id,
                 'fieldInfo': {
-                    'changedField': field_dname,
+                    'changedField': 'Responsible',
                     'currencyId': False,
                     'floatPrecision': None,
-                    'fieldType': field_type,
+                    'fieldType': 'many2one',
                     'isPropertyField': False,
                 },
                 'newValue': new_user.display_name,
                 'oldValue': original_user.display_name,
             })
         mail_render = records[1]._notify_by_email_prepare_rendering_context(message_1, {})
-        self.assertEqual(mail_render['tracking_values'], [(field_dname, original_user.display_name, new_user.display_name)])
-
-    def test_message_track_message_type(self):
-        """Check that the right message type is applied for track templates."""
-        self.record.message_subscribe(
-            partner_ids=[self.user_admin.partner_id.id],
-            subtype_ids=[self.env.ref('mail.mt_comment').id]
-        )
-        mail_templates = self.env['mail.template'].create([{
-            'name': f'Template {n}',
-            'subject': f'Template {n}',
-            'model_id': self.env.ref('test_mail.model_mail_test_ticket').id,
-            'body_html': f'<p>Template {n}</p>',
-        } for n in range(2)])
-
-        def _track_subtype(self, init_values):
-            return self.env.ref('mail.mt_note')
-        self.patch(self.registry['mail.test.ticket'], '_track_subtype', _track_subtype)
-
-        def _track_template(self, changes):
-            if 'email_from' in changes:
-                return {'email_from': (mail_templates[0], {})}
-            elif 'container_id' in changes:
-                return {'container_id': (mail_templates[1], {'message_type': 'notification'})}
-            return {}
-        self.patch(self.registry['mail.test.ticket'], '_track_template', _track_template)
-
-        container = self.env['mail.test.container'].create({'name': 'Container'})
-
-        # default is auto_comment
-        with self.mock_mail_gateway():
-            self.record.email_from = 'test@test.lan'
-            self.flush_tracking()
-
-        first_message = self.record.message_ids.filtered(lambda message: message.subject == 'Template 0')
-        self.assertEqual(len(self.record.message_ids), 2, 'Should be one change message and one automated template')
-        self.assertEqual(first_message.message_type, 'auto_comment')
-
-        # auto_comment can be overriden by _track_template
-        with self.mock_mail_gateway(mail_unlink_sent=False):
-            self.record.container_id = container
-            self.flush_tracking()
-
-        second_message = self.record.message_ids.filtered(lambda message: message.subject == 'Template 1')
-        self.assertEqual(len(self.record.message_ids), 4, 'Should have added one change message and one automated template')
-        self.assertEqual(second_message.message_type, 'notification')
-
-    def test_message_track_multiple(self):
-        """ check that multiple updates generate a single tracking message """
-        container = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Container'})
-        self.record.name = 'Zboub'
-        self.record.customer_id = self.user_admin.partner_id
-        self.record.user_id = self.user_admin
-        self.record.container_id = container
-        self.flush_tracking()
-
-        # should have a single message with all tracked fields
-        self.assertEqual(len(self.record.message_ids), 1, 'should have 1 tracking message')
-        self.assertEqual(self.record.message_ids.author_id, self.partner_employee)
-        self.assertTracking(self.record.message_ids[0], [
-            ('customer_id', 'many2one', False, self.user_admin.partner_id),
-            ('user_id', 'many2one', False, self.user_admin),
-            ('container_id', 'many2one', False, container),
-        ])
-
-    def test_message_track_no_subtype(self):
-        """ Update some tracked fields not linked to some subtype -> message with onchange """
-        customer = self.env['res.partner'].create({'name': 'Customer', 'email': 'cust@example.com'})
-        with self.mock_mail_gateway():
-            self.record.write({
-                'name': 'Test2',
-                'customer_id': customer.id,
-            })
-            self.flush_tracking()
-
-        # one new message containing tracking; without subtype linked to tracking, a note is generated
-        self.assertEqual(len(self.record.message_ids), 1)
-        self.assertEqual(self.record.message_ids.author_id, self.partner_employee)
-        self.assertEqual(self.record.message_ids.subtype_id, self.env.ref('mail.mt_note'))
-
-        # no specific recipients except those following notes, no email
-        self.assertEqual(self.record.message_ids.partner_ids, self.env['res.partner'])
-        self.assertEqual(self.record.message_ids.notified_partner_ids, self.env['res.partner'])
-        self.assertNotSentEmail()
-
-        # verify tracked value
-        self.assertTracking(
-            self.record.message_ids,
-            [('customer_id', 'many2one', False, customer)  # onchange tracked field
-             ])
+        self.assertEqual(mail_render['tracking_values'], [('Responsible', original_user.display_name, new_user.display_name)])
 
     @users('employee')
-    def test_message_track_no_tracking(self):
-        """ Update a set of non tracked fields -> no message, no tracking, or
-        use dedicated context key """
-        record = self.record.with_env(self.env)
-        record.write({
-            'name': 'Tracking or not',
-            'count': 32,
-        })
+    def test_tracking_update(self):
+        test_record = self.test_tracking_records[0].with_env(self.env)
+        original_messages = test_record.message_ids
+        test_record.write({'name': 'Tracking or not'})
         self.flush_tracking()
-        self.assertFalse(record.message_ids)
+        self.assertEqual(test_record.message_ids, original_messages)
 
         # check context key allowing to skip tracking
-        record.with_context(mail_notrack=True).write({'email_from': 'new.from@test.example.com'})
+        test_record.with_context(mail_notrack=True).write({'char_field': 'new.from@test.example.com'})
         self.flush_tracking()
-        self.assertFalse(record.message_ids)
+        self.assertEqual(test_record.message_ids, original_messages)
 
-    def test_message_track_subtype(self):
-        """ Update some tracked fields linked to some subtype -> message with onchange """
-        self.record.message_subscribe(
-            partner_ids=[self.user_admin.partner_id.id],
-            subtype_ids=[self.env.ref('test_mail.st_mail_test_ticket_container_upd').id]
+        with self.mock_mail_app():
+            test_record.name = 'Zboub'
+            test_record.float_field_with_digits = 15.285
+            test_record.many2one_field_id = self.partner_admin
+            test_record.selection_field = 'first'
+            self.flush_tracking()
+        # should have a single message with all tracked fields
+        self.assertEqual(len(self._new_msgs), 1)
+        self.assertMessageFields(
+            self._new_msgs, {
+                'author_id': self.partner_employee,
+                'subtype_id': self.env.ref('mail.mt_note'),  # by default, trackings are notes
+                'tracking_values': [
+                    ('many2one_field_id', 'many2one', False, self.partner_admin),
+                    ('float_field_with_digits', 'float', False, 15.285),
+                    ('selection_field', 'selection', '', 'FIRST'),
+                ],
+            }
         )
 
-        container = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Container'})
-        self.record.write({
-            'name': 'Test2',
-            'email_from': 'noone@example.com',
-            'container_id': container.id,
-        })
-        self.flush_tracking()
-        # one new message containing tracking; subtype linked to tracking
-        self.assertEqual(len(self.record.message_ids), 1)
-        self.assertEqual(self.record.message_ids.author_id, self.partner_employee)
-        self.assertEqual(self.record.message_ids.subtype_id, self.env.ref('test_mail.st_mail_test_ticket_container_upd'))
 
-        # no specific recipients except those following container
-        self.assertEqual(self.record.message_ids.partner_ids, self.env['res.partner'])
-        self.assertEqual(self.record.message_ids.notified_partner_ids, self.user_admin.partner_id)
+@tagged('mail_track')
+class TestTrackingTemplate(TestTrackingCommon):
+    """ Test template-based message generation based on tracking """
 
-        # verify tracked value
-        self.assertTracking(
-            self.record.message_ids,
-            [('container_id', 'many2one', False, container)  # onchange tracked field
-             ])
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # for multi-enabled tests
+        cls.test_ticket_records = cls.test_ticket_record + cls.env['mail.test.ticket'].with_user(cls.user_employee).create([
+            {'name': 'Test 2', 'mail_template': False},
+            {'name': 'Test 3', 'mail_template': cls.env.ref('test_mail.mail_test_ticket_tracking_tpl').id},
+        ])
 
+    @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_track_template(self):
-        """ Update some tracked fields linked to some template -> message with onchange """
-        self.record.write({'mail_template': self.env.ref('test_mail.mail_test_ticket_tracking_tpl').id})
-        self.assertEqual(self.record.message_ids, self.env['mail.message'])
+        """ Update some tracked fields linked to some template -> message with onchange on
+        each updated record. """
+        test_records = self.test_ticket_records.with_env(self.env)
+        test_records.write({'mail_template': self.env.ref('test_mail.mail_test_ticket_tracking_tpl').id})
+        self.flush_tracking()
+        for test_record in test_records:
+            self.assertEqual(len(test_record.message_ids), 1, 'Creation message')
 
-        with self.mock_mail_gateway():
-            self.record.write({
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            test_records.write({
                 'name': 'Test2',
                 'customer_id': self.user_admin.partner_id.id,
             })
             self.flush_tracking()
-
-        self.assertEqual(len(self.record.message_ids), 2, 'should have 2 new messages: one for tracking, one for template')
-
-        # one new message containing the template linked to tracking
-        self.assertEqual(self.record.message_ids[0].author_id, self.partner_employee)
-        self.assertEqual(self.record.message_ids[0].subject, 'Test Template')
-        self.assertEqual(self.record.message_ids[0].body, '<p>Hello Test2</p>')
-
-        # one email send due to template
-        self.assertSentEmail(self.record.env.user.partner_id, [self.partner_admin], body='<p>Hello Test2</p>')
-
-        # one new message containing tracking; without subtype linked to tracking
-        self.assertEqual(self.record.message_ids[1].subtype_id, self.env.ref('mail.mt_note'))
-        self.assertTracking(
-            self.record.message_ids[1],
-            [('customer_id', 'many2one', False, self.user_admin.partner_id)  # onchange tracked field
-             ])
+        for test_record in test_records:
+            self.assertEqual(len(test_record.message_ids), 3, 'should have 2 new messages: one for tracking, one for template')
+            tpl_msg, track_msg, _create_msg = test_record.message_ids
+            self.assertMessageFields(
+                tpl_msg, {
+                    'author_id': self.partner_employee,
+                    'body': f'<p>Hello {test_record.name}</p>',
+                    'notified_partner_ids': self.partner_admin,
+                    'subject': f'Test Template on {test_record.name}',
+                    'subtype_id': self.env['mail.message.subtype'],  # tde: to check ?
+                    'tracking_values': [],  # no tracking sent with template
+                }
+            )
+            self.assertMessageFields(
+                track_msg, {
+                    'author_id': self.partner_employee,
+                    'body': '',
+                    'notified_partner_ids': self.env['res.partner'],
+                    'subject': False,
+                    'subtype_id': self.env.ref('mail.mt_note'),
+                    'tracking_values': [
+                        ('customer_id', 'many2one', False, self.user_admin.partner_id),
+                    ],
+                }
+            )
+            # one email sent due to template
+            self.assertMailMail(
+                [self.partner_admin],
+                'sent',
+                author=self.partner_employee,
+                email_values={
+                    'email_from': self.partner_employee.email_formatted,
+                    'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
+                },
+                fields_values={
+                    'body': '<p>Hello Test2</p>',
+                }
+            )
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_track_template_at_create(self):
-        """ Create a record with tracking template on create, template should be sent."""
-
-        Model = self.env['mail.test.ticket'].with_user(self.user_employee).with_context(self._test_context)
-        Model = Model.with_context(mail_notrack=False)
+        """ Create records in batch with tracking template on create, template should be sent
+        on all records. """
         with self.mock_mail_gateway():
-            record = Model.create({
-                'name': 'Test',
-                'customer_id': self.user_admin.partner_id.id,
-                'mail_template': self.env.ref('test_mail.mail_test_ticket_tracking_tpl').id,
-            })
+            test_tickets = self.env['mail.test.ticket'].with_user(self.user_employee).create([
+                {
+                    'name': f'Create Test {idx}',
+                    'customer_id': self.user_admin.partner_id.id,
+                    'mail_template': self.env.ref('test_mail.mail_test_ticket_tracking_tpl').id,
+                } for idx in range(2)
+            ])
             self.flush_tracking()
 
-        self.assertEqual(len(record.message_ids), 1, 'should have 1 new messages for template')
-        # one new message containing the template linked to tracking
-        self.assertEqual(record.message_ids[0].author_id, self.partner_employee)
-        self.assertEqual(record.message_ids[0].subject, 'Test Template')
-        self.assertEqual(record.message_ids[0].body, '<p>Hello Test</p>')
-        # one email send due to template
-        self.assertSentEmail(self.record.env.user.partner_id, [self.partner_admin], body='<p>Hello Test</p>')
+        for test_ticket in test_tickets:
+            self.assertEqual(len(test_ticket.message_ids), 2, 'should have 1 creation message and 1 template message')
+            # one new message containing the template linked to tracking
+            tpl_msg = test_ticket.message_ids[0]
+            self.assertMessageFields(
+                tpl_msg, {
+                    'author_id': self.partner_employee,
+                    'body': f'<p>Hello {test_ticket.name}</p>',
+                    'subject': f'Test Template on {test_ticket.name}',
+                }
+            )
+            # one email send due to template
+            self.assertMailMail(
+                [self.partner_admin],
+                'sent',
+                author=self.partner_employee,
+                content=f'<p>Hello {test_ticket.name}</p>',  # used to distinguish outgoing mails
+                email_values={
+                    'email_from': self.partner_employee.email_formatted,
+                    'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
+                    'subject': f'Test Template on {test_ticket.name}',
+                },
+                fields_values={
+                    'body': f'<p>Hello {test_ticket.name}</p>',
+                    'subject': f'Test Template on {test_ticket.name}',
+                }
+            )
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
-    def test_message_track_template_at_create_from_message(self):
+    def test_message_track_template_at_create_from_mailgateway(self):
         """Make sure records created through aliasing show the original message before the template"""
         # setup
-        test_model = self.env['ir.model']._get('mail.test.ticket')
         original_sender = self.user_admin.partner_id
-        custom_values = {'name': 'Test', 'customer_id': original_sender.id,
-                         'mail_template': self.env.ref('test_mail.mail_test_ticket_tracking_tpl').id}
+        custom_values = {
+            'customer_id': original_sender.id,
+            'name': 'Test',
+            'mail_template': self.env.ref('test_mail.mail_test_ticket_tracking_tpl').id,
+        }
         self.env['mail.alias'].create({
             'alias_name': 'groups',
-            'alias_model_id': test_model.id,
+            'alias_model_id': self.env['ir.model']._get_id('mail.test.ticket'),
             'alias_contact': 'everyone',
             'alias_defaults': custom_values})
-        record = self.format_and_process(MAIL_TEMPLATE, '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>',
-                                         'groups@test.mycompany.com', target_field='customer_id', subject=custom_values['customer_id'],
-                                         target_model='mail.test.ticket')
+        record = self.format_and_process(
+            MAIL_TEMPLATE, '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', 'groups@test.mycompany.com',
+            target_field='customer_id', subject=custom_values['customer_id'],
+            target_model='mail.test.ticket',
+        )
 
         with self.mock_mail_gateway(mail_unlink_sent=False):
             self.flush_tracking()
 
         # Should be trigger message and response template
         self.assertEqual(len(record.message_ids), 2)
-        messages = list(record.message_ids)
-        messages.sort(key=lambda msg: msg.id)
-        trigger = messages[0]
-        template = messages[1]
+        trigger, template = sorted(record.message_ids, key=lambda msg: msg.id)
         self.assertIn('Please call me as soon as possible this afternoon!', trigger.body)
         self.assertIn(f"Hello {custom_values['name']}", template.body)
         self.assertMailMail(
@@ -351,20 +437,21 @@ class TestTracking(MailCommon):
             }
         )
 
+    @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_track_template_create_partner_multicompany(self):
         """ Test partner created due to usage of a mail.template, triggered by
         a tracking, in a multi company environment. """
-        company1 = self.env['res.company'].create({'name': 'company1'})
-        self.env.user.write({'company_ids': [(4, company1.id, False)]})
-        self.assertNotEqual(self.env.company, company1)
+        self.env.user.write({'company_ids': [(4, self.company_2.id, False)]})
+        self.assertNotEqual(self.env.company, self.company_2)
+        self.assertEqual(self.env.company, self.company_admin)
 
-        email_new_partner = "diamonds@rust.com"
-        Partner = self.env['res.partner']
-        self.assertFalse(Partner.search([('email', '=', email_new_partner)]))
+        email_new_partner = '"Raoulette Mobylette" <diamonds@rust.example.com>'
+        email_new_partner_normalized = 'diamonds@rust.example.com'
+        self.assertFalse(self.env['res.partner'].search([('email_normalized', '=', email_new_partner_normalized)]))
 
         template = self.env['mail.template'].create({
-            'model_id': self.env['ir.model']._get('mail.test.track').id,
+            'model_id': self.env['ir.model']._get_id('mail.test.track'),
             'name': 'AutoTemplate',
             'subject': 'autoresponse',
             'email_from': self.env.user.email_formatted,
@@ -380,54 +467,95 @@ class TestTracking(MailCommon):
         with patch('odoo.addons.mail.models.mail_thread.MailThread._message_track_post_template', patched_message_track_post_template):
             self.env['mail.test.track'].create({
                 'email_from': email_new_partner,
-                'company_id': company1.id,
-                'user_id': self.env.user.id, # trigger track template
+                'company_id': self.company_2.id,
+                'user_id': self.env.user.id,  # trigger track template
             })
             self.flush_tracking()
 
-        new_partner = Partner.search([('email', '=', email_new_partner)])
-        self.assertTrue(new_partner)
-        self.assertEqual(new_partner.company_id, company1)
+        new_partner = self.env['res.partner'].search([('email_normalized', '=', email_new_partner_normalized)])
+        self.assertEqual(new_partner.company_id, self.company_2)
+        self.assertEqual(new_partner.email, email_new_partner_normalized)
+        self.assertEqual(new_partner.name, email_new_partner_normalized,
+                        "TDE fixme: should be 'Raoulette Mobylette'")
 
-    def test_message_track_template_defaults(self):
-        """ Check that default_* keys are not taken into account in
-        _message_track_post_template """
-        magic_code = 'Up-Up-Down-Down-Left-Right-Left-Right-Square-Triangle'
+    @users('employee')
+    def test_message_track_template_message_type_subtype(self):
+        """ Check that the right message_type / subtype_id are applied when tempalates
+        are posting based on tracking. """
+        test_record = self.test_ticket_record.with_env(self.env)
+        test_record.message_subscribe(
+            partner_ids=[self.user_admin.partner_id.id],
+            subtype_ids=[self.env.ref('mail.mt_comment').id]
+        )
+        mail_templates = self.env['mail.template'].create([{
+            'name': f'Template {n}',
+            'subject': f'Template {n}',
+            'model_id': self.env['ir.model']._get_id(self.test_ticket_record._name),
+            'body_html': f'<p>Template {n}</p>',
+            'use_default_to': True,
+        } for n in range(2)])
 
-        mt_name_changed = self.env['mail.message.subtype'].create({
-            'name': 'MAGIC CODE WOOP WOOP',
-            'description': 'SPECIAL CONTENT UNLOCKED'
-        })
-        self.env['ir.model.data'].create({
-            'name': 'mt_name_changed',
-            'model': 'mail.message.subtype',
-            'module': 'mail',
-            'res_id': mt_name_changed.id
-        })
-        mail_template = self.env['mail.template'].create({
-            'name': 'SPECIAL CONTENT UNLOCKED',
-            'subject': 'SPECIAL CONTENT UNLOCKED',
-            'model_id': self.env.ref('test_mail.model_mail_test_container').id,
-            'auto_delete': True,
-            'body_html': '''<div>WOOP WOOP</div>''',
-        })
+        def _track_subtype(self, init_values):
+            if 'container_id' in init_values and self.container_id:
+                return self.env.ref('test_mail.st_mail_test_ticket_container_upd')
+            return self.env.ref('mail.mt_note')
+        self.patch(self.registry['mail.test.ticket'], '_track_subtype', _track_subtype)
 
-        ContainerModel = self.registry['mail.test.container']
-        self.assertFalse(hasattr(ContainerModel.name, 'tracking'))
-        ContainerModel.name.tracking = True
-        self.addCleanup(delattr, ContainerModel.name, 'tracking')
-        self.patch(ContainerModel, '_track_subtype', lambda self, init_values: 'mail.mt_name_changed' if 'name' in init_values and init_values['name'] == magic_code else False)
-        self.patch(ContainerModel, '_track_template', lambda self, changes: {'name': (mail_template, {'composition_mode': 'mass_mail'})} if 'name' in changes else {})
+        def _track_template(self, changes):
+            if 'email_from' in changes:
+                return {'email_from': (mail_templates[0], {})}
+            elif 'container_id' in changes:
+                return {'container_id': (
+                    mail_templates[1], {
+                        'message_type': 'notification',
+                        'subtype_id': self.env.ref('mail.mt_comment').id,
+                    }
+                )}
+            return {}
+        self.patch(self.registry['mail.test.ticket'], '_track_template', _track_template)
 
-        test_mail_record = self.env['mail.test.container'].create({
-            'name': 'Zizizatestmailname',
-            'description': 'Zizizatestmaildescription',
-        })
-        test_mail_record.with_context(default_parent_id=2147483647).write({'name': magic_code})
+        container = self.env['mail.test.container'].create({'name': 'Container'})
+
+        # default is auto_comment
+        with self.mock_mail_gateway():
+            test_record.email_from = 'test@test.lan'
+            self.flush_tracking()
+
+        self.assertEqual(len(test_record.message_ids), 3, 'Should be one creation message, one change message and one automated template')
+        first_message = test_record.message_ids.filtered(lambda message: message.subject == 'Template 0')
+        self.assertMessageFields(
+            first_message, {
+                'message_type': 'auto_comment',  # default
+                'subtype_id': self.env.ref('mail.mt_note'),  # default
+            }
+        )
+
+        # auto_comment can be overriden by _track_template
+        with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
+            test_record.container_id = container
+            self.flush_tracking()
+        self.assertEqual(len(test_record.message_ids), 5, 'Should have added one change message and one automated template')
+        track_msg, tpl_msg = self._new_msgs
+        self.assertMessageFields(
+            tpl_msg, {
+                'message_type': 'notification',  # defined in _track_template override
+                'subject': 'Template 1',
+                'subtype_id': self.env.ref('mail.mt_comment'),  # defined in _track_template override
+            }
+        )
+        self.assertMessageFields(
+            track_msg, {
+                'message_type': 'notification',
+                'subject': False,
+                'subtype_id': self.env.ref('test_mail.st_mail_test_ticket_container_upd'),
+                'tracking_values': [
+                    ('container_id', 'many2one', False, container),
+                ],
+            }
+        )
 
 
 @tagged('mail_track')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTrackingInternals(MailCommon):
 
     @classmethod
@@ -453,6 +581,7 @@ class TestTrackingInternals(MailCommon):
                 {'name': 'property_m2o', 'string': 'Property M2O', 'type': 'many2one',
                  'default': (cls.properties_linked_records[0].id, cls.properties_linked_records[0].display_name), 'comodel': 'mail.test.ticket'},
             ],
+            'name': 'Properties Parent 1',
         }, {
             'definition_properties': [
                 {'name': 'property_m2m', 'string': 'Property M2M', 'type': 'many2many',
@@ -463,6 +592,7 @@ class TestTrackingInternals(MailCommon):
                 {'name': 'property_datetime', 'string': 'Property Datetime', 'type': 'datetime', 'default': '2024-01-02 12:59:01'},
                 {'name': 'property_date', 'string': 'Property Date', 'type': 'date', 'default': '2024-01-03'},
             ],
+            'name': 'Properties Parent 2',
         }])
         cls.properties_record_1, cls.properties_record_2 = cls.env['mail.test.track.all'].create([{
             'properties_parent_id': cls.properties_parent_1.id,
@@ -488,7 +618,12 @@ class TestTrackingInternals(MailCommon):
 
         # no tracked field, no tracking at create
         last_message = test_record.message_ids[0]
-        self.assertFalse(last_message.sudo().tracking_value_ids)
+        self.assertMessageFields(
+            last_message, {
+                'message_type': 'notification',
+                'tracking_values': [],
+            }
+        )
 
         # update m2m
         test_record.write({
@@ -496,9 +631,10 @@ class TestTrackingInternals(MailCommon):
         })
         self.flush_tracking()
         last_message = test_record.message_ids[0]
-        self.assertTracking(
-            last_message,
-            [('many2many_field', 'many2many', '', ', '.join(test_tags[:2].mapped('name')))]
+        self.assertMessageFields(
+            last_message, {
+                'tracking_values': [('many2many_field', 'many2many', '', ', '.join(test_tags[:2].mapped('name')))],
+            }
         )
 
         # update m2m + o2m
@@ -514,21 +650,25 @@ class TestTrackingInternals(MailCommon):
         child4_tracking = f'Unnamed Sub-model: pseudo tags for tracking ({test_record.one2many_field[3].id})'
         self.flush_tracking()
         last_message = test_record.message_ids[0]
-        self.assertTracking(
-            last_message,
-            [
-                ('many2many_field', 'many2many', ', '.join(test_tags[:2].mapped('name')), ', '.join((test_tags[1] + test_tags[2]).mapped('name'))),
-                ('one2many_field', 'one2many', '', f'Child1, Child2, Child3, {child4_tracking}'),
-            ]
+        self.assertMessageFields(
+            last_message, {
+                'tracking_values': [
+                    ('many2many_field', 'many2many', ', '.join(test_tags[:2].mapped('name')), ', '.join((test_tags[1] + test_tags[2]).mapped('name'))),
+                    ('one2many_field', 'one2many', '', f'Child1, Child2, Child3, {child4_tracking}'),
+                ],
+            }
         )
 
         # remove from o2m
         test_record.write({'one2many_field': [(3, test_record.one2many_field[0].id)]})
         self.flush_tracking()
         last_message = test_record.message_ids[0]
-        self.assertTracking(
-            last_message,
-            [('one2many_field', 'one2many', f'Child1, Child2, Child3, {child4_tracking}', f'Child2, Child3, {child4_tracking}')]
+        self.assertMessageFields(
+            last_message, {
+                'tracking_values': [
+                    ('one2many_field', 'one2many', f'Child1, Child2, Child3, {child4_tracking}', f'Child2, Child3, {child4_tracking}')
+                ],
+            }
         )
 
     @users('employee')
@@ -574,7 +714,11 @@ class TestTrackingInternals(MailCommon):
             ('selection_field', 'selection', '', 'FIRST'),
             ('text_field', 'text', False, 'text_value'),
         ]
-        self.assertTracking(new_message, tracking_value_list, strict=True)
+        self.assertMessageFields(
+            new_message, {
+                'tracking_values': tracking_value_list,
+            }
+        )
         # check formatting for all field types
         formatted_values_all = new_message.sudo().tracking_value_ids._tracking_value_format()
         for (field_name, field_type, _, _), formatted_vals in zip(tracking_value_list, formatted_values_all):
@@ -584,6 +728,23 @@ class TestTrackingInternals(MailCommon):
                 self.assertEqual(formatted_vals['fieldInfo']['currencyId'], currency)
                 self.assertEqual(formatted_vals['fieldInfo']['floatPrecision'], precision)
 
+        # check if the tracking value have the correct currency and values after
+        # changing the value and the company at the same time
+        self.assertEqual(self.company_2.currency_id, self.env.ref('base.CAD'))
+        test_record.write({
+            'monetary_field': 200.25,
+            'company_id': self.company_2.id,
+        })
+        self.flush_tracking()
+        self.assertEqual(len(test_record.message_ids), 3)
+        self.assertMessageFields(
+            test_record.message_ids[0], {
+                'tracking_values': [
+                    ('monetary_field', 'monetary', 42.42, (200.25, self.company_2.currency_id)),
+                ],
+            }
+        )
+
     @users('employee')
     def test_mail_track_compute(self):
         """ Test tracking of computed fields """
@@ -591,7 +752,12 @@ class TestTrackingInternals(MailCommon):
         compute_record = self.env['mail.test.track.compute'].create({})
         self.flush_tracking()
         self.assertEqual(len(compute_record.message_ids), 1)
-        self.assertEqual(len(compute_record.message_ids[0].sudo().tracking_value_ids), 0)
+        self.assertMessageFields(
+            compute_record.message_ids, {
+                'author_id': self.partner_employee,
+                'tracking_values': [],
+            }
+        )
 
         # assign partner_id: one tracking message for the modified field and all
         # the stored and non-stored computed fields on the record
@@ -603,23 +769,30 @@ class TestTrackingInternals(MailCommon):
         compute_record.partner_id = partner_su
         self.flush_tracking()
         self.assertEqual(len(compute_record.message_ids), 2)
-        self.assertEqual(len(compute_record.message_ids[0].sudo().tracking_value_ids), 4)
-        self.assertEqual(compute_record.message_ids.author_id, self.partner_employee)
-        self.assertTracking(compute_record.message_ids[0], [
-            ('partner_id', 'many2one', False, partner_su),
-            ('partner_name', 'char', False, 'Foo'),
-            ('partner_email', 'char', False, 'foo@example.com'),
-            ('partner_phone', 'char', False, '1234567890'),
-        ])
+        self.assertMessageFields(
+            compute_record.message_ids[0], {
+                'author_id': self.partner_employee,
+                'tracking_values': [
+                    ('partner_id', 'many2one', False, partner_su),
+                    ('partner_name', 'char', False, 'Foo'),
+                    ('partner_email', 'char', False, 'foo@example.com'),
+                    ('partner_phone', 'char', False, '1234567890'),
+                ],
+            }
+        )
 
         # modify partner: one tracking message for the only recomputed field
         partner_su.write({'name': 'Fool'})
         self.flush_tracking()
         self.assertEqual(len(compute_record.message_ids), 3)
-        self.assertEqual(len(compute_record.message_ids[0].sudo().tracking_value_ids), 1)
-        self.assertTracking(compute_record.message_ids[0], [
-            ('partner_name', 'char', 'Foo', 'Fool'),
-        ])
+        self.assertMessageFields(
+            compute_record.message_ids[0], {
+                'author_id': self.partner_employee,
+                'tracking_values': [
+                    ('partner_name', 'char', 'Foo', 'Fool'),
+                ],
+            }
+        )
 
         # modify partner: one tracking message for both stored computed fields;
         # the non-stored computed fields have no tracking
@@ -633,50 +806,39 @@ class TestTrackingInternals(MailCommon):
         self.assertEqual(compute_record.partner_phone, '0987654321')
         self.flush_tracking()
         self.assertEqual(len(compute_record.message_ids), 4)
-        self.assertEqual(len(compute_record.message_ids[0].sudo().tracking_value_ids), 2)
-        self.assertTracking(compute_record.message_ids[0], [
-            ('partner_name', 'char', 'Fool', 'Bar'),
-            ('partner_email', 'char', 'foo@example.com', 'bar@example.com'),
-        ])
+        self.assertMessageFields(
+            compute_record.message_ids[0], {
+                'author_id': self.partner_employee,
+                'tracking_values': [
+                    ('partner_name', 'char', 'Fool', 'Bar'),
+                    ('partner_email', 'char', 'foo@example.com', 'bar@example.com'),
+                ],
+            }
+        )
 
     @users('employee')
-    def test_mail_track_monetary(self):
-        """ Update a record with a tracked monetary field """
-        monetary_record = self.env['mail.test.track.monetary'].with_user(self.user_employee).create({
-            'company_id': self.user_employee.company_id.id,
-        })
-        self.flush_tracking()
-        self.assertEqual(len(monetary_record.message_ids), 1)
-
-        # Check if the tracking value have the correct currency and values
-        monetary_record.write({
-            'revenue': 100,
-        })
-        self.flush_tracking()
-        self.assertEqual(len(monetary_record.message_ids), 2)
-        self.assertTracking(monetary_record.message_ids[0], [
-            ('revenue', 'monetary', 0, (100, self.env.company.currency_id)),
-        ])
-
-        # Check if the tracking value have the correct currency and values after changing the value and the company
-        monetary_record.write({
-            'revenue': 200,
-            'company_id': self.company_2.id,
-        })
-        self.flush_tracking()
-        self.assertEqual(len(monetary_record.message_ids), 3)
-        self.assertTracking(monetary_record.message_ids[0], [
-            ('revenue', 'monetary', 100, (200, self.company_2.currency_id)),
-            ('company_currency', 'many2one', self.user_employee.company_id.currency_id, self.company_2.currency_id)
-        ])
-
     def test_mail_track_properties(self):
         """Test that the old properties values are logged when the parent changes."""
-        record = self.properties_record_2
+        properties_record_2 = self.properties_record_2.with_env(self.env)
+
         # change the parent, it will change the properties values
-        record.properties_parent_id = self.properties_parent_1
-        self.flush_tracking()
-        formatted_values = [t._tracking_value_format()[0] for t in record.mapped("message_ids.tracking_value_ids")]
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            properties_record_2.properties_parent_id = self.properties_parent_1
+            self.flush_tracking()
+        self.assertMessageFields(
+            self._new_msgs, {
+                'author_id': self.partner_employee,
+                'tracking_values': [
+                    ('properties_parent_id', 'many2one', self.properties_parent_2, self.properties_parent_1),
+                    ('properties', ('properties', 'Properties: Property Date', 'date'), datetime(2024, 1, 3, 0, 0, 0), False),
+                    ('properties', ('properties', 'Properties: Property Datetime', 'datetime'), datetime(2024, 1, 2, 12, 59, 1), False),
+                    ('properties', ('properties', 'Properties: Property Tags', 'tags'), 'AA, BB', ''),
+                    ('properties', ('properties', 'Properties: Property M2M', 'many2many'), 'Record 0, Record 1, Record 2', ''),
+                ],
+            }
+        )
+
+        formatted_values = [t._tracking_value_format()[0] for t in self._new_msgs.sudo().tracking_value_ids]
         self.assertEqual(len(formatted_values), 5)
         self.assertFalse(formatted_values[0]['fieldInfo']['isPropertyField'])
         self.assertTrue(all(not f['newValue'] for f in formatted_values[1:]))
@@ -691,10 +853,23 @@ class TestTrackingInternals(MailCommon):
         self.assertEqual(formatted_values[4]['fieldInfo']['changedField'], 'Properties: Property M2M')
         self.assertEqual(formatted_values[4]['oldValue'], 'Record 0, Record 1, Record 2')
 
-        record = self.properties_record_1
-        record.properties_parent_id = self.properties_parent_2
-        self.flush_tracking()
-        formatted_values = [t._tracking_value_format()[0] for t in record.mapped("message_ids.tracking_value_ids")]
+        properties_record_1 = self.properties_record_1.with_env(self.env)
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            properties_record_1.properties_parent_id = self.properties_parent_2
+            self.flush_tracking()
+        self.assertMessageFields(
+            self._new_msgs, {
+                'author_id': self.partner_employee,
+                'tracking_values': [
+                    ('properties_parent_id', 'many2one', self.properties_parent_1, self.properties_parent_2),
+                    ('properties', ('properties', 'Properties: Property M2O', 'many2one'), self.properties_linked_records[0], False),
+                    ('properties', ('properties', 'Properties: Property Int', 'integer'), 1337, False),
+                    ('properties', ('properties', 'Properties: Property Char', 'char'), 'char value', False),
+                ],
+            }
+        )
+
+        formatted_values = [t._tracking_value_format()[0] for t in self._new_msgs.sudo().tracking_value_ids]
         self.assertEqual(len(formatted_values), 4)
         self.assertFalse(formatted_values[0]['fieldInfo']['isPropertyField'])
         self.assertTrue(all(not f['newValue'] for f in formatted_values[1:]))
@@ -709,26 +884,38 @@ class TestTrackingInternals(MailCommon):
 
         # changing the parent and then changing again
         # to the original one to not create tracking values
-        with self.mock_mail_gateway():
-            record.properties_parent_id = self.properties_parent_1
-            record.properties_parent_id = self.properties_parent_2
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            properties_record_1.properties_parent_id = self.properties_parent_1
+            properties_record_1.properties_parent_id = self.properties_parent_2
             self.flush_tracking()
         self.assertFalse(self._new_mails)
+        self.assertFalse(self._new_msgs)
 
         # do not create tracking if the value was false
-        record.properties = {
-            'property_m2m': False,
-            'property_tags': ['aa'],
-            'property_datetime': False,
-            'property_date': False,
-        }
-        self.flush_tracking()
-        record.message_ids.unlink()
-        record.properties_parent_id = self.properties_parent_1
-        self.flush_tracking()
-        self.assertEqual(len(record.mapped("message_ids.tracking_value_ids")), 2,
-            "Only the parent and the tags property should have been tracked")
-        self.assertEqual(record._mail_track_get_field_sequence("properties"), 100,
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            properties_record_1.properties = {
+                'property_m2m': False,
+                'property_tags': ['aa'],
+                'property_datetime': False,
+                'property_date': False,
+            }
+            self.flush_tracking()
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            properties_record_1.properties_parent_id = self.properties_parent_1
+            self.flush_tracking()
+        self.assertEqual(len(self._new_msgs), 1)
+        # Only the parent and the tags property should have been tracked
+        self.assertMessageFields(
+            self._new_msgs, {
+                'author_id': self.partner_employee,
+                'tracking_values': [
+                    ('properties_parent_id', 'many2one', self.properties_parent_2, self.properties_parent_1),
+                    ('properties', ('properties', 'Properties: Property Tags', 'tags'), 'AA', ''),
+                ],
+            }
+        )
+        self.assertEqual(properties_record_1._mail_track_get_field_sequence("properties"), 100,
             "Properties field should have the same sequence as their parent")
 
     @users('employee')
@@ -754,12 +941,14 @@ class TestTrackingInternals(MailCommon):
         self.assertEqual(record.selection_type, invalid_value)
 
         # Write a valid selection value
-        record.selection_type = "second"
-
-        self.flush_tracking()
-        self.assertTracking(record.message_ids, [
-            ('selection_type', 'char', invalid_value, 'Second'),
-        ])
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            record.selection_type = "second"
+            self.flush_tracking()
+        self.assertMessageFields(
+            self._new_msgs, {'tracking_values': [
+                ('selection_type', 'selection', invalid_value, 'Second'),
+            ]}
+        )
 
     def test_track_groups(self):
         """ Test field groups and filtering when using standard helpers """
@@ -858,14 +1047,14 @@ class TestTrackingInternals(MailCommon):
         })
         self.flush_tracking()
         self.assertEqual(len(main_track.message_ids), 1)
-        self.assertFalse(main_track.message_ids.sudo().tracking_value_ids)
+        self.assertMessageFields(main_track.message_ids.sudo(), {'tracking_values': []})
 
         sub_track = self.env['mail.test.track.groups'].create({
             'name': 'Groups',
             'secret': 'secret',
         })
         # some custom code generates tracking values on main_track
-        main_track.message_post(
+        new_message = main_track.message_post(
             body='Custom Log with Tracking',
             tracking_value_ids=[
                 (0, 0, {
@@ -891,8 +1080,12 @@ class TestTrackingInternals(MailCommon):
                 }),
             ],
         )
-        trackings = main_track.message_ids.sudo().tracking_value_ids
-        self.assertEqual(len(trackings), 3)
+        self.assertMessageFields(new_message, {'tracking_values': [
+            ('secret', 'char', False, 'secret'),
+            ('', 'integer', 0, self.env.uid),
+            (('', {'name': 'Removed'}), 'integer', 30, 35),
+        ]})
+        trackings = new_message.sudo().tracking_value_ids
 
         # check groups, as it depends on model
         for tracking, exp_groups in zip(trackings, ['base.group_user', 'base.group_system', 'base.group_system']):
@@ -1015,10 +1208,8 @@ class TestTrackingInternals(MailCommon):
         record = self.record.with_env(self.env)
         record.write({'email_from': 'new_value'})  # create a tracking value
         self.flush_tracking()
-        self.assertTracking(
-            record.message_ids[0],
-            [('email_from', 'char', False, 'new_value')],
-            strict=True,
+        self.assertMessageFields(
+            record.message_ids[0], {'tracking_values': [('email_from', 'char', False, 'new_value')]},
         )
 
         fields_to_remove = self.env['ir.model.fields'].sudo().search([
@@ -1051,22 +1242,18 @@ class TestTrackingInternals(MailCommon):
         })
         self.flush_tracking()
 
-        self.assertTracking(
-            record.message_ids[0],
-            [('email_from', 'char', False, 'new_value')],
-            strict=True,
+        self.assertMessageFields(
+            record.message_ids[0], {'tracking_values': [('email_from', 'char', False, 'new_value')]}
         )
-        self.assertTracking(
-            record_other.message_ids[0],
-            [('customer_id', 'integer', False, self.test_partner.id),
-             ('email_from', 'char', 'email.from.1@example.com', 'email.from.2@example.com'),
-             ('user_id', 'integer', False, self.env.user.id)],
-            strict=True,
+        self.assertMessageFields(
+            record_other.message_ids[0], {'tracking_values': [
+                ('customer_id', 'many2one', False, self.test_partner),
+                ('email_from', 'char', 'email.from.1@example.com', 'email.from.2@example.com'),
+                ('user_id', 'many2one', False, self.env.user)
+            ]}
         )
-        self.assertTracking(
-            record_other.message_ids[1],
-            [('email_from', 'char', False, 'email.from.1@example.com')],
-            strict=True,
+        self.assertMessageFields(
+            record_other.message_ids[1], {'tracking_values': [('email_from', 'char', False, 'email.from.1@example.com')]}
         )
 
         # check display / format

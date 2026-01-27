@@ -105,16 +105,17 @@ class TestPartner(MailCommon):
         company_partner.city = 'Some Other City Name'
         self.env.flush_all()
         self.cr.precommit.run()
-        for partner, original_messages in zip(partners, partner_original_messages):
+        for partner, original_messages, expected_address_log in zip(partners, partner_original_messages, [
+            ('contact_address_inline', 'char', 'Some Street Name, Some City Name CA 94134, United States', 'Some Other Street Name, Some Other City Name CA 94134, United States'),
+            ('contact_address_inline', 'char', 'YourCompany, Some Street Name, Some City Name CA 94134, United States', 'YourCompany, Some Other Street Name, Some Other City Name CA 94134, United States'),
+        ], strict=True):
             change_messages = partner.message_ids - original_messages
             self.assertEqual(len(change_messages), 1)
-            tracking_values = change_messages.tracking_value_ids
-            self.assertIn('Some Street Name, Some City Name CA 94134, United States',
-                          tracking_values.old_value_char)
-            self.assertIn('Some Other Street Name, Some Other City Name CA 94134, United States',
-                          tracking_values.new_value_char)
+            self.assertMessageFields(change_messages, {
+                'tracking_values': [expected_address_log],
+            })
             # none of the address fields are logged at the same time
-            self.assertEqual(set(), set(partner._address_fields()) & set(tracking_values.sudo().field_id.mapped('name')))
+            self.assertEqual(set(), set(partner._address_fields()) & set(change_messages.sudo().tracking_value_ids.field_id.mapped('name')))
 
     def test_discuss_mention_suggestions_priority(self):
         name = uuid4()  # unique name to avoid conflict with already existing users

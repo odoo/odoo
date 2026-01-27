@@ -1279,14 +1279,26 @@ class TestMailAPIPerformance(BaseMailPerformance):
             })
 
         # write template message (sent to customer, mass mailing kept for history)
-        self.assertEqual(rec1.message_ids[0].subtype_id, self.env['mail.message.subtype'])
-        self.assertEqual(rec1.message_ids[0].subject, 'Test Template')
+        self.assertMessageFields(
+            rec1.message_ids[0], {
+                'subject': f'Test Template on {rec1.name}',
+                'subtype_id': self.env['mail.message.subtype'],
+            }
+        )
         # write tracking message
-        self.assertEqual(rec1.message_ids[1].subtype_id, self.env.ref('mail.mt_note'))
-        self.assertEqual(rec1.message_ids[1].notified_partner_ids, self.env['res.partner'])
+        self.assertMessageFields(
+            rec1.message_ids[1], {
+                'notified_partner_ids': self.env['res.partner'],
+                'subtype_id': self.env.ref('mail.mt_note'),
+            }
+        )
         # creation message
-        self.assertEqual(rec1.message_ids[2].subtype_id, self.env.ref('test_mail.st_mail_test_ticket_container_upd'))
-        self.assertEqual(rec1.message_ids[2].notified_partner_ids, self.partners | self.user_portal.partner_id)
+        self.assertMessageFields(
+            rec1.message_ids[2], {
+                'notified_partner_ids': self.partners | self.user_portal.partner_id,
+                'subtype_id': self.env.ref('test_mail.st_mail_test_ticket_container_upd'),
+            }
+        )
         self.assertEqual(len(rec1.message_ids), 3)
 
 

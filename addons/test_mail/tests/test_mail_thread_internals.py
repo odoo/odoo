@@ -1110,8 +1110,7 @@ class TestChatterTweaks(ThreadRecipients):
         self.flush_tracking()
         self.assertEqual(len(rec.message_ids), 1,
                          "A creation message without tracking values should have been posted")
-        self.assertEqual(len(rec.message_ids.sudo().tracking_value_ids), 0,
-                         "A creation message without tracking values should have been posted")
+        self.assertMessageFields(rec.message_ids, {'tracking_values': []})
 
         rec.with_context({'mail_notrack': True}).write({'user_id': self.user_admin.id})
         self.flush_tracking()
@@ -1121,31 +1120,33 @@ class TestChatterTweaks(ThreadRecipients):
         rec.with_context({'mail_notrack': False}).write({'user_id': self.user_employee.id})
         self.flush_tracking()
         self.assertEqual(len(rec.message_ids), 2,
-                         "A tracking message should have been posted")
-        self.assertEqual(len(rec.message_ids.sudo().mapped('tracking_value_ids')), 1,
                          "New tracking message should have tracking values")
+        self.assertMessageFields(rec.message_ids[0], {
+            'tracking_values': [('user_id', 'many2one', self.user_admin, self.user_employee)],
+        })
 
     def test_chatter_tracking_disable(self):
         """ Test disable of all chatter features at create and write """
         rec = self.env['mail.test.track'].with_user(self.user_employee).with_context({'tracking_disable': True}).create({'name': 'Test', 'user_id': self.user_employee.id})
         self.flush_tracking()
         self.assertEqual(rec.sudo().message_ids, self.env['mail.message'])
-        self.assertEqual(rec.sudo().mapped('message_ids.tracking_value_ids'), self.env['mail.tracking.value'])
 
         rec.write({'user_id': self.user_admin.id})
         self.flush_tracking()
-        self.assertEqual(rec.sudo().mapped('message_ids.tracking_value_ids'), self.env['mail.tracking.value'])
+        self.assertEqual(rec.sudo().message_ids, self.env['mail.message'])
 
         rec.with_context({'tracking_disable': False}).write({'user_id': self.user_employee.id})
         self.flush_tracking()
-        self.assertEqual(len(rec.sudo().mapped('message_ids.tracking_value_ids')), 1)
+        self.assertEqual(len(rec.sudo().message_ids), 1)
+        self.assertMessageFields(rec.sudo().message_ids[0], {
+            'tracking_values': [('user_id', 'many2one', self.user_admin, self.user_employee)],
+        })
 
         rec = self.env['mail.test.track'].with_user(self.user_employee).with_context({'tracking_disable': False}).create({'name': 'Test', 'user_id': self.user_employee.id})
         self.flush_tracking()
         self.assertEqual(len(rec.sudo().message_ids), 1,
                          "Creation message without tracking values should have been posted")
-        self.assertEqual(len(rec.sudo().mapped('message_ids.tracking_value_ids')), 0,
-                         "Creation message without tracking values should have been posted")
+        self.assertMessageFields(rec.sudo().message_ids[0], {'tracking_values': []})
 
     def test_cache_invalidation(self):
         """ Test that creating a mail-thread record does not invalidate the whole cache. """
