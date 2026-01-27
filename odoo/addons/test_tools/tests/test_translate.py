@@ -285,7 +285,9 @@ class TranslationToolsTestCase(BaseCase):
         result = xml_translate(terms.append, source)
         self.assertEqual(result, source)
         self.assertItemsEqual(terms,
-            ['<span class="oe_menu_text">Blah</span>'])
+            ["""<a class="nav-link oe_menu_leaf" href="/odoo/action-54?menu_id=42">
+                                    <span class="oe_menu_text">Blah</span>
+                                </a>"""])
 
     def test_translate_xml_with_namespace(self):
         """ Test xml_translate() on elements with namespaces. """
