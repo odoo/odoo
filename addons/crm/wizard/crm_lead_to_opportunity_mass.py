@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class CrmLead2opportunityPartnerMass(models.TransientModel):
@@ -9,30 +9,32 @@ class CrmLead2opportunityPartnerMass(models.TransientModel):
     _description = 'Convert Lead to Opportunity (in mass)'
     _inherit = ['crm.lead2opportunity.partner']
 
+    force_assignment = fields.Boolean(default=False)
+    lead_count_message = fields.Char('Lead Count', compute='_compute_lead_count_message', readonly=True)
     lead_id = fields.Many2one(required=False)
     lead_tomerge_ids = fields.Many2many(
         'crm.lead', 'crm_convert_lead_mass_lead_rel',
         string='Active Leads', context={'active_test': False},
         default=lambda self: self.env.context.get('active_ids', []),
     )
+    name = fields.Selection(selection_add=[('convert_and_deduplicate', 'Convert & deduplicate')],
+                            ondelete={'convert_and_deduplicate': 'set convert_and_merge'})
     user_ids = fields.Many2many('res.users', string='Salespersons')
-    deduplicate = fields.Boolean('Apply deduplication', default=True, help='Merge with existing leads/opportunities of each partner')
-    action = fields.Selection(selection_add=[
-        ('each_exist_or_create', 'Use existing partner or create'),
-    ], string='Related Customer', ondelete={
-        'each_exist_or_create': lambda recs: recs.write({'action': 'exist'}),
-    })
-    force_assignment = fields.Boolean(default=False)
 
-    @api.depends('duplicated_lead_ids')
-    def _compute_name(self):
+    @api.depends('lead_tomerge_ids')
+    def _compute_lead_count_message(self):
         for convert in self:
-            convert.name = 'convert'
+            count = len(convert.lead_tomerge_ids)
+            duplicate_count = len(convert.duplicated_lead_ids)
+            if count == 1:
+                convert.lead_count_message = _("Found %(duplicate_count)s potential duplicate(s) with your selected lead. Choose a deduplication option to clean your data before converting", duplicate_count=duplicate_count)
+            else:
+                convert.lead_count_message = _("Found %(duplicate_count)s potential duplicates within your %(count)s selected leads. Choose a deduplication option to clean your data before converting", count=count, duplicate_count=duplicate_count)
 
     @api.depends('lead_tomerge_ids')
     def _compute_action(self):
         for convert in self:
-            convert.action = 'each_exist_or_create'
+            convert.action = 'create'
 
     @api.depends('lead_tomerge_ids')
     def _compute_partner_id(self):
@@ -43,13 +45,17 @@ class CrmLead2opportunityPartnerMass(models.TransientModel):
         """Setting a company for each lead in mass mode is not supported."""
         self.commercial_partner_id = False
 
+    def _compute_user_id(self):
+        for convert in self:
+            convert.user_id = False
+
     @api.depends('lead_id', 'user_ids')
     def _compute_team_id(self):
         """ When changing the user, also set a team_id or restrict team id
         to the ones user_id is member of. """
         for convert in self:
             # setting user as void should not trigger a new team computation
-            if not convert.user_id and not convert.user_ids and convert.team_id:
+            if not convert.user_id and not convert.user_ids:
                 continue
             user = convert.user_id or convert.user_ids and convert.user_ids[0] or self.env.user
             if convert.team_id and user in convert.team_id.member_ids | convert.team_id.user_id:
@@ -65,11 +71,11 @@ class CrmLead2opportunityPartnerMass(models.TransientModel):
         for convert in self:
             duplicated = self.env['crm.lead']
             for lead in convert.lead_tomerge_ids:
-                duplicated_leads = self.env['crm.lead']._get_lead_duplicates(
+                duplicate_leads = self.env['crm.lead']._get_lead_duplicates(
                     partner=lead.partner_id,
                     email=lead.partner_id and lead.partner_id.email or lead.email_from,
                     include_lost=False)
-                if len(duplicated_leads) > 1:
+                if len(duplicate_leads) > 1:
                     duplicated += lead
             convert.duplicated_lead_ids = duplicated.ids
 
@@ -86,7 +92,7 @@ class CrmLead2opportunityPartnerMass(models.TransientModel):
 
     def action_mass_convert(self):
         self.ensure_one()
-        if self.name == 'convert' and self.deduplicate:
+        if self.name == 'convert_and_deduplicate':
             # TDE CLEANME: still using active_ids from context
             active_ids = self.env.context.get('active_ids', [])
             merged_lead_ids = set()
@@ -110,7 +116,6 @@ class CrmLead2opportunityPartnerMass(models.TransientModel):
         return self.action_apply()
 
     def _convert_handle_partner(self, lead, action, partner_id):
-        if self.action == 'each_exist_or_create':
+        if self.action == 'create':
             partner_id = lead._find_matching_partner().id
-            action = 'create'
         return super()._convert_handle_partner(lead, action, partner_id)

@@ -44,7 +44,7 @@ class TestLeadConvertForm(crm_common.TestLeadConvertCommon):
             'active_ids': lead.ids,
         }))
 
-        self.assertEqual(wizard.name, 'merge')
+        self.assertEqual(wizard.name, 'convert_and_merge')
         self.assertEqual(wizard.action, 'exist')
         self.assertEqual(wizard.partner_id, customer)
         self.assertEqual(wizard.duplicated_lead_ids[:], lead + lead_dup)
@@ -519,7 +519,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertEqual(convert.user_id, self.lead_1.user_id)
         self.assertEqual(convert.team_id, self.lead_1.team_id)
         self.assertFalse(convert.partner_id)
-        self.assertEqual(convert.name, 'merge')
+        self.assertEqual(convert.name, 'convert_and_merge')
         self.assertEqual(convert.action, 'create')
 
         convert.write({'user_id': self.user_sales_salesman.id})
@@ -583,7 +583,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
 
         # test internals of convert wizard
         self.assertEqual(convert.duplicated_lead_ids, leads)
-        self.assertEqual(convert.name, 'merge')
+        self.assertEqual(convert.name, 'convert_and_merge')
         self.assertEqual(convert.action, 'create')
 
         convert.write({'user_id': self.user_sales_salesman.id})

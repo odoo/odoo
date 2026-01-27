@@ -26,12 +26,13 @@ class CrmLead2opportunityPartner(models.TransientModel):
         return result
 
     name = fields.Selection([
-        ('convert', 'Convert to opportunity'),
-        ('merge', 'Merge with existing opportunities')
+        ('convert', 'Convert to opportunities'),
+        ('convert_and_merge', 'Convert & Merge')
     ], 'Conversion Action', compute='_compute_name', readonly=False, store=True, compute_sudo=False)
     action = fields.Selection([
-        ('create', 'Create a new customer'),
-        ('exist', 'Link to an existing customer'),
+        ('create', 'Link to new new/matching customer(s)'),
+        ('do_not_link', 'Do not link to customers'),
+        ('exist', 'Link to specific customer'),
     ], string='Related Customer', compute='_compute_action',
     precompute=True, readonly=False, required=True, store=True, compute_sudo=False)
     lead_id = fields.Many2one('crm.lead', 'Associated Lead', required=True)
@@ -60,7 +61,7 @@ class CrmLead2opportunityPartner(models.TransientModel):
     def _compute_name(self):
         for convert in self:
             if not convert.name:
-                convert.name = 'merge' if convert.duplicated_lead_ids and len(convert.duplicated_lead_ids) >= 2 else 'convert'
+                convert.name = 'convert_and_merge' if convert.duplicated_lead_ids and len(convert.duplicated_lead_ids) >= 2 else 'convert'
 
     @api.depends('lead_id')
     def _compute_action(self):
@@ -122,14 +123,14 @@ class CrmLead2opportunityPartner(models.TransientModel):
             convert.team_id = team.id
 
     def action_apply(self):
-        if self.name == 'merge':
-            result_opportunity = self._action_merge()
+        if self.name == 'convert_and_merge':
+            result_opportunity = self._action_convert_and_merge()
         else:
             result_opportunity = self._action_convert()
 
         return result_opportunity.redirect_lead_opportunity_view()
 
-    def _action_merge(self):
+    def _action_convert_and_merge(self):
         to_merge = (self.duplicated_lead_ids | self.lead_id)
         result_opportunity = to_merge.merge_opportunity(auto_unlink=False)
         result_opportunity.action_unarchive()
