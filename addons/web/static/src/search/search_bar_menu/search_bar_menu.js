@@ -1,4 +1,4 @@
-import { Component, useRef, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -57,13 +57,10 @@ export class SearchBarMenu extends Component {
 
         // Add Share command
         if (this.env.config.actionId && !this.env.inDialog) {
-            const uiService = useService("ui");
-            const togglerRef = useRef("searchview_dropdown_toggler"); // To double check searchBar is in DOM
+            // TODO JESC FIXME BUG CLOSING SOME DIALOG (LIKE INVOICE), WRONG ACTIVE ELEMENT
             useCommand(_t("Share"), () => this.shareViewUrl(), {
                 hotkey: "alt+shift+h",
                 hotkeyOptions: { bypassEditableProtection: true },
-                global: true, // We decide ourself when to add command
-                isAvailable: () => uiService.activeElement.contains(togglerRef.el),
             });
         }
     }
