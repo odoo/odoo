@@ -585,6 +585,23 @@ class CustomerPortal(Controller):
             elif value:  # The value cannot be saved on the `res.partner` model.
                 extra_form_data[key] = value
 
+<<<<<<< 70a6ea43022b81460614a6d80ea4b01926ae3961
+||||||| a44d0f79a57b4b54e6954d405f98779068c8f63e
+        if (
+            hasattr(ResPartner, 'check_vat')  # The `base_vat` module is installed.
+            and address_values.get('vat')
+            and address_values.get('country_id')
+        ):
+            address_values['vat'] = ResPartner.fix_eu_vat_number(
+                address_values['country_id'],
+                address_values['vat'],
+            )
+
+=======
+        if address_values.get('vat'):
+            address_values['vat'] = self._fix_eu_vat_number(address_values['vat'], address_values.get('country_id'))
+
+>>>>>>> 96f7a7caa3afb6eb6bf2bdca54de0076107051fc
         if 'zipcode' in form_data and not form_data.get('zip'):
             address_values['zip'] = form_data.pop('zipcode', '')
 
@@ -682,11 +699,16 @@ class CustomerPortal(Controller):
                 # fields returned by _commercial_fields.
                 address_values.pop('company_name', None)
 
+            if vat := partner_sudo.vat:
+                vat = self._fix_eu_vat_number(
+                    vat,
+                    partner_sudo.country_id.id or address_values['country_id'],
+                )
             # Prevent changing the VAT number on a commercial partner if documents have been issued.
             elif (
                 'vat' in address_values
                 and partner_sudo.vat
-                and address_values['vat'] != partner_sudo.vat
+                and address_values['vat'] != vat
                 and not partner_sudo.can_edit_vat()
             ):
                 invalid_fields.add('vat')
@@ -1010,6 +1032,22 @@ class CustomerPortal(Controller):
             filename = "%s.pdf" % (re.sub(r'\W+', '_', model._get_report_base_filename()))
             headers['Content-Disposition'] = content_disposition(filename, disposition_type='attachment' if download else 'inline')
         return headers
+
+    # Static Methods
+
+    @staticmethod
+    def _fix_eu_vat_number(vat, country_id):
+        ResPartner = request.env['res.partner']
+        if (
+            hasattr(ResPartner, 'check_vat')  # The `base_vat` module is installed.
+            and country_id
+        ):
+            vat = ResPartner.fix_eu_vat_number(
+                country_id,
+                vat,
+            )
+        return vat
+
 
 def get_error(e, path=''):
     """ Recursively dereferences `path` (a period-separated sequence of dict
