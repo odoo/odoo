@@ -222,7 +222,7 @@ class Cart(PaymentPortal):
 
         if warning:
             # Store the warning on the order line so the cart page can show its source to the user.
-            (updated_line or order_sudo)._add_alert('warning', warning)
+            (updated_line or order_sudo)._add_warning_alert(warning)
             notifications.append({'type': 'warning', 'data': {'warning_message': warning}})
 
         return {

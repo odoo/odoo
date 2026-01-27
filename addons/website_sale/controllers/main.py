@@ -1643,7 +1643,7 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
                         "\n\nError details: %s", order_sudo._join_alert_messages()
                     )
                     raise ValidationError(message)
-                order_sudo._add_alert('danger', message)
+                order_sudo._add_blocking_alert(message)
                 return redirection
 
             order_sudo._validate_order()
@@ -1746,7 +1746,7 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
 
     # === CHECK METHODS === #
 
-    def _check_checkout_step(self, step_href, order_sudo, **kwargs):
+    def _check_post_checkout_step(self, step_href, order_sudo, /, **kwargs):
         """Check that the given step is finished and valid; otherwise, redirect to the page where
         actions are still required.
 
@@ -1760,15 +1760,15 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
         """
         match step_href:
             case '/shop/cart':
-                return self._check_shop_cart_step_ready(order_sudo, **kwargs)
+                return self._check_post_shop_cart_step(order_sudo, **kwargs)
             case '/shop/address':
-                return self._check_shop_address_step_ready(order_sudo, **kwargs)
+                return self._check_post_shop_address_step(order_sudo, **kwargs)
             case '/shop/checkout':
-                return self._check_shop_checkout_step_ready(order_sudo, **kwargs)
+                return self._check_post_shop_checkout_step(order_sudo, **kwargs)
 
-        return super()._check_checkout_step(step_href, order_sudo, **kwargs)
+        return super()._check_post_checkout_step(step_href, order_sudo, **kwargs)
 
-    def _check_shop_cart_step_ready(self, order_sudo, **kwargs):
+    def _check_post_shop_cart_step(self, order_sudo, /, **_kwargs):
         """Check whether the `/shop/cart` step is valid, and redirect to the appropriate page
         otherwise.
 
@@ -1784,10 +1784,7 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
         :rtype: None | http.Response
         """
         # Check that the cart exists and is in the draft state.
-        if not order_sudo or (
-            # Allow checkout validation even after the order was confirmed.
-            not order_sudo.env.context.get('skip_draft_check') and order_sudo.state != 'draft'
-        ):
+        if not order_sudo or order_sudo.state != 'draft':
             request.session['sale_order_id'] = None
             request.session['sale_transaction_id'] = None
             return request.redirect(self._get_shop_path())
@@ -1796,10 +1793,10 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
         if request.env.user._is_public() and request.website.account_on_checkout == 'mandatory':
             return request.redirect('/web/login?redirect=/shop/checkout')
 
-        if not order_sudo._is_cart_ready_for_checkout(**kwargs):
+        if not order_sudo._is_cart_ready_for_checkout():
             return request.redirect('/shop/cart')
 
-    def _check_shop_address_step_ready(self, order_sudo, **kwargs):
+    def _check_post_shop_address_step(self, order_sudo, /, **_kwargs):
         """Check whether the `/shop/address` step is valid, and redirect to the appropriate page
         otherwise.
 
@@ -1824,12 +1821,11 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
             and delivery_partner_sudo._can_be_edited_by_current_customer(order_sudo=order_sudo)
             and not self._check_delivery_address(delivery_partner_sudo, order_sudo=order_sudo)
         ):
-            order_sudo._add_alert(
-                'warning',
+            order_sudo._add_warning_alert(
                 request.env._(
                     "Your delivery address appears to be incomplete or invalid."
                     " Please ensure all required fields are correctly filled and try again."
-                ),
+                )
             )
             return request.redirect(
                 f'/shop/address?partner_id={delivery_partner_sudo.id}&address_type=delivery'
@@ -1839,18 +1835,17 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
         if invoice_partner_sudo._can_be_edited_by_current_customer(
             order_sudo=order_sudo
         ) and not self._check_billing_address(invoice_partner_sudo, order_sudo=order_sudo):
-            order_sudo._add_alert(
-                'warning',
+            order_sudo._add_warning_alert(
                 request.env._(
                     "Your billing address appears to be incomplete or invalid."
                     " Please ensure all required fields are correctly filled and try again."
-                ),
+                )
             )
             return request.redirect(
                 f'/shop/address?partner_id={invoice_partner_sudo.id}&address_type=billing'
             )
 
-    def _check_shop_checkout_step_ready(self, order_sudo, **kwargs):
+    def _check_post_shop_checkout_step(self, order_sudo, /, **kwargs):
         """Check whether the `/shop/checkout` step is valid, and redirect to the appropriate page
         otherwise.
 
@@ -1861,10 +1856,12 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
         :return: None if the step is valid; otherwise, a redirection to the appropriate page.
         :rtype: None | http.Response
         """
-        if not order_sudo._is_cart_ready_for_payment(**kwargs):
-            if kwargs.get('block_on_price_change'):
-                return request.redirect('/shop/payment')
+        if not order_sudo._is_cart_ready_for_payment():
             return request.redirect('/shop/checkout')
+
+        # Ensure prices are correct before loading /shop/payment
+        if order_sudo._update_cart_taxes_and_prices() and kwargs.get('block_on_price_change'):
+            return request.redirect('/shop/payment')
 
     # ------------------------------------------------------
     # Edit

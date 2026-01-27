@@ -890,7 +890,7 @@ class SaleOrder(models.Model):
 
         return res
 
-    def _is_cart_ready_for_checkout(self, **kwargs):
+    def _is_cart_ready_for_checkout(self):
         """Whether the cart is ready to proceed to the checkout "Address" step: `/shop/checkout`.
 
         This method performs the necessary validations and may add user-facing messages
@@ -905,12 +905,12 @@ class SaleOrder(models.Model):
         self.ensure_one()
 
         if not self.order_line:
-            self._add_alert('info', self.env._("Your cart is empty!"))
+            self._add_info_alert(self.env._("Your cart is empty!"))
             return False  # Block the customer
 
         return True
 
-    def _is_cart_ready_for_payment(self, *, block_on_price_change=False, **kwargs):
+    def _is_cart_ready_for_payment(self):
         """Whether the cart is ready to be confirmed and proceed to the checkout "Payment" step:
         `/shop/payment`.
 
@@ -926,43 +926,57 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
 
-        if self._has_deliverable_products() and not self.carrier_id:
-            self._add_alert('warning', self.env._("No shipping method is selected."))
+        if not self._has_deliverable_products():
+            return True
+
+        if not self.carrier_id:
+            self._add_warning_alert(self.env._("No shipping method is selected."))
             return False
+
+        if self.carrier_id not in self._get_delivery_methods():
+            self._add_warning_alert(
+                self.env._(
+                    "Unfortunately, the delivery method that you selected is no longer available."
+                    " Please update your choice. We apologize for any inconvenience."
+                )
+            )
+
+        return True
+
+    def _update_cart_taxes_and_prices(self):
+        """Update the taxes and prices and return True if the total amount changed.
+
+        :rtype: bool
+        """
+        self.ensure_one()
 
         initial_amount = self.amount_total
         self._recompute_taxes()
         self._recompute_prices()
-
         if self.currency_id.compare_amounts(self.amount_total, initial_amount):
-            self._add_alert(
-                'warning',
-                self.env._(
-                    "Prices have changed. Please review your cart."
-                    "\nYou might need to refresh the page."
-                ),
-            )
-            if block_on_price_change:
-                return False
-
-        return True
+            self._add_warning_alert(self.env._("Prices have changed. Please review your cart."))
+            return True
+        return False
 
     def _is_cart_ready(self):
         """Whether the cart is free of errors or should the customer be blocked at the current
         checkout step to fix them.
 
-        :return: True if the cart does not have an alert of 'danger' level, False otherwise.
+        :return: True if the cart does not have a blocking alert, False otherwise.
         :rtype: bool
         """
-        return self._get_max_alert_level() != 'danger'
+        return not any(alert.get('blocking') for alert in self._get_alerts())
+
+    def _add_blocking_alert(self, message: str, /, **kwargs):
+        """Add an alert of 'danger' level blocking the navigation to the next checkout step."""
+        return self._add_danger_alert(message, blocking=True, **kwargs)
 
     def _add_alert(self, level: Literal['info', 'warning', 'danger'], message: str, /, **kwargs):
         """Add a global alert to the order shown at the top of the checkout page.
 
         Note: alerts are transient, they are cleared after being rendered.
 
-        :param level: Severity of the alert. A 'danger' alert will block the main checkout
-            navigation button.
+        :param level: Severity/style of the alert.
         :param message: The message text to display to the customer.
         :param kwargs: Extra info added in the alert dictionary.
         """

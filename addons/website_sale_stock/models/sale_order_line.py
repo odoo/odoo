@@ -50,6 +50,6 @@ class SaleOrderLine(models.Model):
         if self.product_id.is_storable and not self.product_id.allow_out_of_stock_order:
             cart_qty, avl_qty = self.order_id._get_cart_and_free_qty(self.product_id)
             if cart_qty > avl_qty:
-                self._add_alert('warning', self._get_shop_warning_stock(cart_qty, max(avl_qty, 0)))
+                self._add_warning_alert(self._get_shop_warning_stock(cart_qty, max(avl_qty, 0)))
                 return False
         return True

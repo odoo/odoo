@@ -56,7 +56,5 @@ class WebsiteSaleCollect(WebsiteSale):
                 order_sudo.pickup_location_data.get('id')
             )
             for ol, available_qty in res['insufficient_stock_data'].items():
-                ol._add_alert(
-                    'warning', ol._get_shop_warning_stock(ol.product_uom_qty, available_qty)
-                )
+                ol._add_warning_alert(ol._get_shop_warning_stock(ol.product_uom_qty, available_qty))
         return res

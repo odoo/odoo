@@ -16,9 +16,9 @@ export class ExpressCheckout extends Interaction {
 
     async willStart() {
         const expressCheckoutForm = this._getExpressCheckoutForm();
-        const providerData = expressCheckoutForm.dataset;
-        this._updatePaymentContext(providerData)
         if (expressCheckoutForm) {
+            const providerData = expressCheckoutForm.dataset;
+            this._updatePaymentContext(providerData)
             await this._prepareExpressCheckoutForm(providerData);
         }
     }

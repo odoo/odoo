@@ -23,7 +23,7 @@ registry.category('web_tour.tours').add('website_sale_collect_widget', {
         ...tourUtils.addToCartFromProductPage(),
         tourUtils.goToCart({ quantity: 1 }),
         tourUtils.goToCheckout(),
-        ...tourUtils.fillAdressForm(undefined, true),
+        ...tourUtils.fillAddressForm(),
         {
             content: "Check standard deliveries are marked as unavailable for the order",
             trigger: 'input[name="o_delivery_radio"][data-delivery-type="fixed"] ~ label:contains("Not available")',

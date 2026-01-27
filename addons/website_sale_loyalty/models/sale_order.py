@@ -258,22 +258,20 @@ class SaleOrder(models.Model):
             lambda sol: not sol.is_reward_line
         )
 
-    def _is_cart_ready_for_payment(self, *, block_on_price_change=False, **kwargs):
+    def _update_cart_taxes_and_prices(self, **kwargs):
         """Override of `website_sale` to ensure rewards are up to date before paying."""
-        ready = super()._is_cart_ready_for_payment(**kwargs)
+        changed = super()._update_cart_taxes_and_prices(**kwargs)
 
         initial_amount = self.amount_total
         # self._update_programs_and_rewards() is already called by self._recompute_prices()
         self._auto_apply_rewards()
         if self.currency_id.compare_amounts(self.amount_total, initial_amount):
-            self._add_alert(
-                'warning',
+            self._add_warning_alert(
                 self.env._(
                     "Applied rewards have changed or expired. Please review your cart."
                     "\nYou might need to refresh the page."
-                ),
+                )
             )
-            if block_on_price_change:
-                return False
+            return True
 
-        return ready
+        return changed

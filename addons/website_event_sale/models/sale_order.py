@@ -126,10 +126,10 @@ class SaleOrder(models.Model):
             lambda so: all(ticket.sale_available for ticket in so.order_line.event_ticket_id),
         )
 
-    def _is_cart_ready_for_checkout(self, **kwargs):
+    def _is_cart_ready_for_checkout(self):
         """Override of `website_sale` to check if the user is trying to order a ticket that is no
         longer available."""
-        ready = super()._is_cart_ready_for_checkout(**kwargs)
+        ready = super()._is_cart_ready_for_checkout()
         if not self.order_line.event_id:
             return ready
 
@@ -151,11 +151,9 @@ class SaleOrder(models.Model):
             try:
                 event._verify_seats_availability(count_per_slot_ticket)
             except ValidationError as exc:
-                self._add_alert(
-                    'danger', str(exc)
-                )
+                self._add_blocking_alert(str(exc))
                 # Displayed in a little sign next to the order line.
-                registrations.sale_order_line_id._add_alert('warning', str(exc))
+                registrations.sale_order_line_id._add_warning_alert(str(exc))
                 ready = False
 
         return ready

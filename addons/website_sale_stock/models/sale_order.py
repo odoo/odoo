@@ -115,17 +115,16 @@ class SaleOrder(models.Model):
         """Get all the lines of the current order with the given product."""
         return self.order_line.filtered(lambda sol: sol.product_id.id == product_id)
 
-    def _is_cart_ready_for_checkout(self, **kwargs):
+    def _is_cart_ready_for_checkout(self):
         """Override of `website_sale` to prevent the user from proceeding if there is not enough
         stock for some order lines."""
-        ready = super()._is_cart_ready_for_checkout(**kwargs)
+        ready = super()._is_cart_ready_for_checkout()
         if not self._has_deliverable_products():
             return ready
 
         if not self._all_product_available():
-            self._add_alert(
-                'warning',
-                self.env._("Unfortunately, there is no longer enough stock to fulfill your order."),
+            self._add_warning_alert(
+                self.env._("Unfortunately, there is no longer enough stock to fulfill your order.")
             )
             return False
 

@@ -6,12 +6,16 @@ from odoo import models
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    def _is_cart_ready_for_payment(self, **kwargs):
+    def _is_cart_ready_for_payment(self):
         """Override of `website_sale` to check that Point Relais® is used with the correct delivery
         method, and vice versa."""
-        ready = super()._is_cart_ready_for_payment(**kwargs)
+        ready = super()._is_cart_ready_for_payment()
         if not self._has_deliverable_products():
             return ready
+
+        if self.carrier_id.is_mondialrelay and not self.partner_shipping_id.is_mondialrelay:
+            self._add_warning_alert(self.env._("Please select a Point Relais®."))
+            return False
 
         if (
             self.partner_shipping_id.is_mondialrelay
@@ -19,14 +23,11 @@ class SaleOrder(models.Model):
             and self.carrier_id
             and not self.carrier_id.is_mondialrelay
         ):
-            self._add_alert(
-                'danger', "Point Relais® can only be used with the delivery method Mondial Relay."
-            )
-            return False
-
-        if not self.partner_shipping_id.is_mondialrelay and self.carrier_id.is_mondialrelay:
-            self._add_alert(
-                'danger', "Delivery method Mondial Relay can only ship to Point Relais®."
+            self._add_warning_alert(
+                self.env._(
+                    "Please update the address of delivery, Point Relais® can only be used with the"
+                    " delivery method Mondial Relay."
+                )
             )
             return False
 

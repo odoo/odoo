@@ -1,16 +1,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
+from odoo.http.router import root
 from odoo.tests import tagged
+from odoo.tests.common import HttpCase
 
+from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.website_sale.controllers.cart import Cart as CartController
 from odoo.addons.website_sale.controllers.main import WebsiteSale as CheckoutController
+from odoo.addons.website_sale.models.website import CART_SESSION_CACHE_KEY
 from odoo.addons.website_sale.tests.common import MockRequest
 from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleStockDeliveryController(WebsiteSaleStockCommon):
+class TestWebsiteSaleStockDeliveryController(WebsiteSaleStockCommon, PaymentCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls):
@@ -46,13 +50,24 @@ class TestWebsiteSaleStockDeliveryController(WebsiteSaleStockCommon):
             )
             self.assertNotEqual(request.cart.partner_id, self.public_partner)
 
-        with MockRequest(
-            website.env, website=website, path='/shop/payment/validate', sale_order_id=cart.id
-        ):
-            # Attempt to validate the payment a little too quickly
-            response = self.CheckoutController.shop_payment_validate()
+        # Attempt to pay a little too quickly
+        session = self.authenticate(None, None)
+        session[CART_SESSION_CACHE_KEY] = cart.id
+        root.session_store.save(session)
+        response = self.make_jsonrpc_request(
+            f'/shop/payment/transaction/{cart.id}',
+            params={
+                'provider_id': self.provider.id,
+                'payment_method_id': self.payment_method.id,
+                'token_id': None,
+                'flow': 'direct',
+                'tokenization_requested': False,
+                'landing_route': '/shop/payment/validate',
+                'access_token': cart._portal_ensure_token(),
+            },
+        )
 
-            self.assertEqual(response.location, '/shop/checkout')
+        self.assertEqual(response['redirect'], '/shop/checkout')
 
     def test_validate_order_out_of_stock_zero_price(self):
         """The user should be redirected to the cart overview page if they try to buy a product out

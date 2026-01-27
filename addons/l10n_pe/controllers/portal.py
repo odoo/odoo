@@ -20,8 +20,8 @@ class L10nPEPortalAccount(L10nLatamBasePortalAccount):
             })
         return rendering_values
 
-    def _get_mandatory_address_fields(self, country_sudo):
-        mandatory_fields = super()._get_mandatory_address_fields(country_sudo)
+    def _get_mandatory_address_fields(self, country_sudo, **kwargs):
+        mandatory_fields = super()._get_mandatory_address_fields(country_sudo, **kwargs)
         if self._is_peru_company() and country_sudo.code == 'PE':
             mandatory_fields.add('l10n_pe_district')
         return mandatory_fields

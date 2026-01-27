@@ -328,7 +328,6 @@ export function payWithTransfer({
                 trigger:
                     '[name="order_confirmation"]:contains("Please use the following transfer details")',
                 timeout: 30000,
-                pause: true,
             },
         ];
     } else {

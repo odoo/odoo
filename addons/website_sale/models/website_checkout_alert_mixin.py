@@ -12,6 +12,15 @@ class WebsiteCheckoutAlertMixin(models.AbstractModel):
 
     alerts = fields.Json()
 
+    def _add_info_alert(self, message: str, /, **kwargs):
+        return self._add_alert('info', message, **kwargs)
+
+    def _add_warning_alert(self, message: str, /, **kwargs):
+        return self._add_alert('warning', message, **kwargs)
+
+    def _add_danger_alert(self, message: str, /, **kwargs):
+        return self._add_alert('danger', message, **kwargs)
+
     def _add_alert(self, level: Literal['info', 'warning', 'danger'], message: str, /, **kwargs):
         """Add an alert to the current records.
 
@@ -32,7 +41,7 @@ class WebsiteCheckoutAlertMixin(models.AbstractModel):
             record.alerts = alerts
 
     def _get_alerts(self) -> list[dict]:
-        self = self and self.ensure_one()  # At most one
+        _ = self and self.ensure_one()  # At most one
         return self.alerts or []
 
     def _join_alert_messages(self):

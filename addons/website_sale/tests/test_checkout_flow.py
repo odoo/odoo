@@ -205,25 +205,25 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
 
         with (
             patch(
-                'odoo.addons.website_sale.controllers.main.WebsiteSale._check_shop_cart_step_ready',
+                'odoo.addons.website_sale.controllers.main.WebsiteSale._check_post_shop_cart_step',
                 return_value=None,
-            ) as _check_shop_cart_step_ready,
+            ) as _check_post_shop_cart_step,
             patch(
-                'odoo.addons.website_sale.controllers.main.WebsiteSale._check_shop_address_step_ready',
+                'odoo.addons.website_sale.controllers.main.WebsiteSale._check_post_shop_address_step',
                 return_value=None,
-            ) as _check_shop_address_step_ready,
+            ) as _check_post_shop_address_step,
             patch(
-                'odoo.addons.website_sale.controllers.main.WebsiteSale._check_shop_checkout_step_ready',
+                'odoo.addons.website_sale.controllers.main.WebsiteSale._check_post_shop_checkout_step',
                 return_value=None,
-            ) as _check_shop_checkout_step_ready,
+            ) as _check_post_shop_checkout_step,
         ):
             self.url_open('/shop/payment')
 
-            _check_shop_cart_step_ready.assert_called_once()
-            _check_shop_address_step_ready.assert_called_once()
-            _check_shop_checkout_step_ready.assert_called_once()
+            _check_post_shop_cart_step.assert_called_once()
+            _check_post_shop_address_step.assert_called_once()
+            _check_post_shop_checkout_step.assert_called_once()
             self.assertEqual(
-                _check_shop_checkout_step_ready.call_args[1],
+                _check_post_shop_checkout_step.call_args[1],
                 {},
                 'block_on_price_change should not be truthy when loading the payment page',
             )
@@ -241,11 +241,11 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
                 },
             )
 
-            self.assertEqual(_check_shop_cart_step_ready.call_count, 2)
-            self.assertEqual(_check_shop_address_step_ready.call_count, 2)
-            self.assertEqual(_check_shop_checkout_step_ready.call_count, 2)
+            self.assertEqual(_check_post_shop_cart_step.call_count, 2)
+            self.assertEqual(_check_post_shop_address_step.call_count, 2)
+            self.assertEqual(_check_post_shop_checkout_step.call_count, 2)
             self.assertEqual(
-                _check_shop_checkout_step_ready.call_args[1],
+                _check_post_shop_checkout_step.call_args[1],
                 {'block_on_price_change': True},
                 'price changes should be blocking when starting the payment',
             )

@@ -103,7 +103,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         #  Ensure the use of USD (company currency)
         self.env['product.pricelist'].create({'name': "Public Pricelist"})
 
-        self.start_tour("/", 'event_buy_tickets', login="demo", debug=True)
+        self.start_tour("/", 'event_buy_tickets', login="demo")
 
     def test_buy_last_ticket(self):
         transfer_provider = self.env.ref('payment.payment_provider_transfer')
@@ -187,8 +187,10 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         }
 
         # Payment should fail due to exceeding the VIP ticket limit
-        with self.assertRaisesRegex(JsonRpcException, r'odoo\.exceptions\.ValidationError'):
-            self.make_jsonrpc_request(url, route_kwargs)
+        result = self.make_jsonrpc_request(url, route_kwargs)
+        self.assertEqual(result['state'], 'error')
+        self.assertTrue(result['state_message'].startswith("There are not enough seats available"))
+
         # Double check that we hit the correct limit for ticket
         with self.assertRaises(ValidationError):
             self.event._verify_seats_availability([
@@ -219,8 +221,10 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         self.assertEqual(self.event.seats_available, 1)
 
         # Payment should fail due to exceeding the event seat limit
-        with self.assertRaisesRegex(JsonRpcException, r'odoo\.exceptions\.ValidationError'):
-            self.make_jsonrpc_request(url, route_kwargs)
+        result = self.make_jsonrpc_request(url, route_kwargs)
+        self.assertEqual(result['state'], 'error')
+        self.assertTrue(result['state_message'].startswith("There are not enough seats available"))
+
         # Double check that we hit the correct limit for event
         with self.assertRaises(ValidationError):
             self.event._verify_seats_availability([
