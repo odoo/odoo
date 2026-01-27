@@ -30,9 +30,8 @@ export function useEmailHtmlConverter({ Plugins, bundles, targetRef, isVisible }
     });
 
     const updateLayoutDimensions = ({ width, height } = EMAIL_DESKTOP_DIMENSIONS) => {
-        referenceIframe.style.setProperty("width", `${width}px`, "important");
+        referenceIframe.style.setProperty("max-width", `${width}px`, "important");
         referenceIframe.style.setProperty("min-width", `${width}px`, "important");
-        referenceIframe.style.setProperty("height", `${height}px`, "important");
         referenceIframe.style.setProperty("min-height", `${height}px`, "important");
         if (converter) {
             converter.updateLayoutDimensions({ width, height });
