@@ -38,7 +38,7 @@ class DriverController(http.Controller):
         message_type = data.get('action', 'test_protocol') if device_identifier == IOT_IDENTIFIER else 'iot_action'
 
         return communication.handle_message(
-            message_type, session_id=session_id, device_identifier=device_identifier, **data
+            message_type, 'lp', session_id=session_id, device_identifier=device_identifier, **data
         )
 
     @helpers.toggleable
