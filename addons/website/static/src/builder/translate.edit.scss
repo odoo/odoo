@@ -1,10 +1,10 @@
 html[lang] > body.editor_enable [data-oe-translation-state] {
-    &, &[data-oe-field="mega_menu_content"] * {
+    &, &[data-oe-field="mega_menu_content"] *, a[role] {
         background-color: rgba($o-we-content-to-translate-color, 0.5) !important;
     }
 
     &[data-oe-translation-state="translated"] {
-        &, &[data-oe-field="mega_menu_content"] * {
+        &, &[data-oe-field="mega_menu_content"] *, a[role] {
             background-color: rgba($o-we-translated-content-color, 0.5) !important;
         }
     }
@@ -12,7 +12,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
     &.o_dirty, &.oe_translated, .oe_translated {
         background-color: rgba($o-we-translated-content-color, 0.25) !important;
 
-        &[data-oe-field="mega_menu_content"] * {
+        &[data-oe-field="mega_menu_content"] *, a[role] {
             background-color: rgba($o-we-translated-content-color, 0.25) !important;
         }
     }
