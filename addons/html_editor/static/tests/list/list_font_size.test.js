@@ -27,6 +27,16 @@ test("should apply font-size to completely selected multiple list items", async 
     });
 });
 
+test("should replace list item inline font-size with font-size class", async () => {
+    await testEditor({
+        contentBefore:
+            '<ul><li style="font-size: 18px; list-style-position: inside;">[abc]</li></ul>',
+        stepFunction: (editor) =>
+            execCommand(editor, "formatFontSizeClassName", { className: "h2-fs" }),
+        contentAfter: '<ul><li style="list-style-position: inside;" class="h2-fs">[abc]</li></ul>',
+    });
+});
+
 test("should apply font-size to completely selected and partially selected list items", async () => {
     await testEditor({
         contentBefore: "<ol><li>[abc</li><li>def</li><li>gh]i</li></ol>",
@@ -154,7 +164,7 @@ test("should change font-size of a list item", async () => {
             '<ul><li style="font-size: 18px; list-style-position: inside;">[abc]</li><li style="font-size: 18px; list-style-position: inside;">ghi</li></ul>',
         stepFunction: setFontSize("32px"),
         contentAfter:
-            '<ul><li style="font-size: 32px; list-style-position: inside;">[abc]</li><li style="font-size: 18px; list-style-position: inside;">ghi</li></ul>',
+            '<ul><li style="list-style-position: inside; font-size: 32px;">[abc]</li><li style="font-size: 18px; list-style-position: inside;">ghi</li></ul>',
     });
 });
 
@@ -164,7 +174,7 @@ test("should change font-size of a list item (2)", async () => {
             '<ol><li style="font-size: 18px; list-style-position: inside;">[abc</li><li style="font-size: 18px; list-style-position: inside;">ghi]</li></ol>',
         stepFunction: setFontSize("32px"),
         contentAfter:
-            '<ol><li style="font-size: 32px; list-style-position: inside;">[abc</li><li style="font-size: 32px; list-style-position: inside;">ghi]</li></ol>',
+            '<ol><li style="list-style-position: inside; font-size: 32px;">[abc</li><li style="list-style-position: inside; font-size: 32px;">ghi]</li></ol>',
     });
 });
 
