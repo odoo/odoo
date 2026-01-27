@@ -111,6 +111,9 @@ describe("Popup options: popup in page before edit", () => {
             contains(".o_we_invisible_entry .fa-eye-slash").click()
         );
         // Sometimes bootstrap.js takes a bit of time to display the popup
+        expect(":iframe .s_popup").not.toHaveClass("d-none");
+        expect(":iframe .s_popup .modal").toHaveClass("show");
+        expect(":iframe .s_popup .modal").toHaveStyle({ display: "block" });
         await waitFor(":iframe .s_popup .modal", { timeout: 1000, visible: true });
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
         expect(":iframe .s_popup .modal").toBeVisible();
@@ -130,6 +133,9 @@ describe("Popup options: popup in page before edit", () => {
             contains(".o_we_invisible_entry .fa-eye-slash").click()
         );
         // Sometimes bootstrap.js takes a bit of time to display the popup
+        expect(":iframe .s_popup").not.toHaveClass("d-none");
+        expect(":iframe .s_popup .modal").toHaveClass("show");
+        expect(":iframe .s_popup .modal").toHaveStyle({ display: "block" });
         await waitFor(":iframe .s_popup .modal", { timeout: 1000, visible: true });
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
         expect(":iframe .s_popup .modal").toBeVisible();
