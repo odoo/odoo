@@ -104,7 +104,7 @@ class HrLeave(models.Model):
                 else:
                     leave.l10n_fr_date_to_changed = False
 
-    def _get_durations(self, check_leave_type=True, resource_calendar=None):
+    def _get_durations(self, check_leave_type=True, resource_calendar=None, additional_domain=[]):
         """
         In french time off laws, if an employee has a part time contract, when taking time off
         before one of his off day (compared to the company's calendar) it should also count the time
@@ -167,4 +167,4 @@ class HrLeave(models.Model):
                     duration_by_leave_id[leave.id] = (legal_days, hours)
 
             return duration_by_leave_id
-        return super()._get_durations(resource_calendar=resource_calendar)
+        return super()._get_durations(check_leave_type, resource_calendar, additional_domain)
