@@ -658,6 +658,51 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             "Tax should no longer change after order confirmation",
         )
 
+    def test_13_shop_address_submit_eu_vat_number(self):
+        if not hasattr(self.env['res.partner'], 'check_vat'):
+            self.skipTest("base_vat is not installed")
+
+        partner = self.env['res.partner'].create({
+            'name': 'test partner',
+            'vat': '0477472701',
+            'country_id': self.country_id,
+        })
+        user = self.env['res.users'].create({
+            'name': 'test user',
+            'login': 'test',
+            'email': 'test@test.com',
+            'partner_id': partner.id,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product.id,
+                })
+            ],
+        })
+        invoice.action_post()
+        self.assertFalse(partner.can_edit_vat())
+
+        so = self._create_so(partner_id=partner.id)
+        address_values = {
+            **self.default_address_values,
+            'vat': '0477472701',
+            'name': partner.name,
+            'email': partner.email,
+        }
+        env = api.Environment(self.env.cr, user.id, {})
+        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+            req.httprequest.method = "POST"
+            self.WebsiteSaleController.shop_address_submit(
+                partner_id=partner.id,
+                **address_values,
+            )
+
+        self.assertEqual(partner.vat, 'BE0477472701')
+
     def test_imported_user_with_trailing_name_can_checkout(self):
         """Ensure that an imported user with trailing spaces in their name can complete checkout without error."""
 
