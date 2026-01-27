@@ -93,20 +93,3 @@ class StripeCommon(PaymentCommon):
             }},
             'status': 'succeeded',
         }
-
-    def _mock_payment_intent_request(self, *args, **kwargs):
-        return {
-            'object': 'payment_intent',
-            'id': 'pi_XXXX',
-            'customer': 'cus_XXXX',
-            'description': self.reference,
-            'payment_method': {
-                'id': 'pm_XXXX',
-                'type': 'card',
-                'card': {'brand': 'dummy'},
-            },
-            'amount': self.amount,
-            'amount_received': self.amount,
-            'status': 'succeeded',
-            'currency': self.currency.name.lower(),
-        }

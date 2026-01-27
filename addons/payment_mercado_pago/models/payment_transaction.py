@@ -10,6 +10,7 @@ from odoo import _, api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
 
+from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 from odoo.addons.payment_mercado_pago import const
 from odoo.addons.payment_mercado_pago.controllers.main import MercadoPagoController
 
@@ -66,7 +67,9 @@ class PaymentTransaction(models.Model):
         )  # Append the reference to identify the transaction from the webhook notification data.
 
         unit_price = self.amount
-        decimal_places = const.CURRENCY_DECIMALS.get(self.currency_id.name)
+        decimal_places = const.CURRENCY_DECIMALS.get(
+            self.currency_id.name, CURRENCY_MINOR_UNITS.get(self.currency_id.name)
+        )
         if decimal_places is not None:
             unit_price = float_round(unit_price, decimal_places, rounding_method='DOWN')
 
