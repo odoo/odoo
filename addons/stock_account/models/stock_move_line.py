@@ -11,6 +11,11 @@ class StockMoveLine(models.Model):
         return mls
 
     def write(self, vals):
+        analytic_move_to_recompute = set()
+        if 'quantity' in vals or 'move_id' in vals:
+            for move_line in self:
+                move_id = vals.get('move_id') or move_line.move_id.id
+                analytic_move_to_recompute.add(move_id)
         valuation_fields = ['quantity', 'location_id', 'location_dest_id', 'owner_id', 'quant_id', 'lot_id']
         valuation_trigger = any(field in vals for field in valuation_fields)
         qty_by_ml = {}
@@ -19,6 +24,14 @@ class StockMoveLine(models.Model):
         res = super().write(vals)
         if valuation_trigger and qty_by_ml:
             self._update_stock_move_value(qty_by_ml)
+        if analytic_move_to_recompute:
+            self.env['stock.move'].browse(analytic_move_to_recompute).sudo()._create_analytic_move()
+        return res
+
+    def unlink(self):
+        analytic_move_to_recompute = self.move_id
+        res = super().unlink()
+        analytic_move_to_recompute.sudo()._create_analytic_move()
         return res
 
     @api.model
