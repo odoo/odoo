@@ -737,6 +737,10 @@ a.no-decoration {
                 border-radius: 0;
                 background-color: var(--o-cc1-bg) !important;
                 color: inherit;
+
+                .text-muted {
+                    color: adjust-color-to-background($text-muted, $body-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark)) !important;
+                }
             }
         }
     }
