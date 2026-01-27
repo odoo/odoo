@@ -1,8 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import odoo
 from odoo.http.router import root
 from odoo.http.session import get_default_session
-from odoo.tests.common import HOST, HttpCase, Opener, get_db_name, new_test_user, tagged
+from odoo.tests.common import (
+    HOST,
+    HttpCase,
+    Opener,
+    get_db_name,
+    new_test_user,
+    tagged,
+)
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
@@ -11,13 +19,14 @@ class TestWebLoginCommon(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        new_test_user(cls.env, 'internal_user', context={'lang': 'en_US'})
-        new_test_user(cls.env, 'portal_user', groups='base.group_portal')
+        cls.internal_user = new_test_user(cls.env, 'internal_user', context={'lang': 'en_US'})
+        cls.portal_user = new_test_user(cls.env, 'portal_user', groups='base.group_portal')
 
     def setUp(self):
         super().setUp()
         self.session = root.session_store.new()
         self.session.update(get_default_session(), db=get_db_name())
+        root.session_store.save(self.session)
         self.opener = Opener(self)
         self.opener.cookies.set('session_id', self.session.sid, domain=HOST, path='/')
 
@@ -62,6 +71,36 @@ class TestWebLogin(TestWebLoginCommon):
 
         # log in using the above form, it should still be valid
         self.login('internal_user', 'internal_user', csrf_token)
+
+    def test_web_switch_to_admin(self):
+        session = self.authenticate(None, None)
+        res = self.url_open('/web/become', allow_redirects=False)
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 303)
+        self.assertURLEqual(res.headers['Location'], '/web/login?redirect=/web/become?')
+        sid = res.cookies.get('session_id', session.sid)
+        self.assertEqual(sid, session.sid, "it should not have a new session")
+        self.assertIsNone(root.session_store.get(sid)['uid'], "it should still not be connected")
+
+        session = self.authenticate('internal_user', 'internal_user')
+        res = self.url_open('/web/become', allow_redirects=False)
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 303)
+        self.assertURLEqual(res.headers['Location'], '/odoo')
+        sid = res.cookies.get('session_id', session.sid)
+        self.assertEqual(sid, session.sid, "it should not have a new session")
+        self.assertEqual(root.session_store.get(sid)['uid'], self.internal_user.id,
+            "it should not had become SUPERUSER")
+
+        session = self.authenticate('admin', 'admin')
+        res = self.url_open('/web/become', allow_redirects=False)
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 303)
+        self.assertURLEqual(res.headers['Location'], '/odoo')
+        sid = res.cookies.get('session_id', session.sid)
+        # self.assertNotEqual(sid, session.sid, "it should have a new session")
+        self.assertEqual(root.session_store.get(sid)['uid'], odoo.SUPERUSER_ID,
+            "it should had become SUPERUSER")
 
 
 @tagged('post_install', '-at_install')
