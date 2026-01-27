@@ -267,6 +267,10 @@ export class Thread extends Record {
         return attachments;
     }
 
+    get canPostMessage() {
+        return this.hasWriteAccess || (this.hasReadAccess && this.canPostOnReadonly);
+    }
+
     get isUnread() {
         return this.needactionMessages.length > 0;
     }

@@ -5044,7 +5044,7 @@ class MailThread(models.AbstractModel):
         if res.is_for_current_user():
             res.attr("hasReadAccess", lambda t: t.sudo(False).has_access("read"))
             res.attr("hasWriteAccess", lambda t: t.sudo(False).has_access("write"))
-            res.attr("canPostOnReadonly", self._mail_post_access == "read")
+            res.attr("canPostOnReadonly", self._mail_get_operation_for_mail_message_operation('create').get(self) == "read")
         if "activities" in request_list and isinstance(self, self.env.registry["mail.activity.mixin"]):
             res.many(
                 "activities",
