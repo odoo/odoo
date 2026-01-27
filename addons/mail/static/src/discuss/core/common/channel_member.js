@@ -1,12 +1,16 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
+import { useChannelMemberActions } from "@mail/discuss/core/common/channel_member_actions";
 
 import { Component, useState } from "@odoo/owl";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 import { useService } from "@web/core/utils/hooks";
+import { ActionList } from "@mail/core/common/action_list";
 
 export class ChannelMember extends Component {
-    static components = { ActionPanel, DiscussAvatar };
+    static components = { ActionList, ActionPanel, DiscussAvatar, Dropdown };
     static props = ["member"];
     static template = "discuss.ChannelMember";
 
@@ -14,6 +18,8 @@ export class ChannelMember extends Component {
         super.setup();
         this.state = useState({});
         this.store = useService("mail.store");
+        this.actions = useChannelMemberActions({ member: () => this.props.member });
+        this.showingActions = useDropdownState();
     }
 
     /** @return {import("models").ChannelMember} */

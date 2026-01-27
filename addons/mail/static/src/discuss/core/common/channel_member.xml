@@ -14,6 +14,19 @@
                 <span t-elif="member.rtcSession?.is_deaf" class="p-1 fa fa-deaf opacity-75"/>
                 <span t-if="member.rtcSession?.raisingHand" class="p-1 fa fa-hand-paper-o"/>
             </span>
+            <div class="o-discuss-ChannelMember-actions" t-att-class="{
+                'd-none': !showingActions.isOpen and !store.useMobileView,
+                'd-flex': showingActions.isOpen or store.useMobileView,
+            }">
+                <Dropdown state="showingActions" position="'bottom-end'" menuClass="'my-1 ' + store.discussDropdownMenuClass(this)">
+                    <button class="btn btn-light rounded-circle d-flex o-p-0_5 align-items-center justify-content-center o-mail-discussSidebarBgColor border" t-att-class="{ 'o-showingActions': showingActions.isOpen }" title="Member Actions">
+                        <i role="img" class="oi oi-fw oi-lg oi-ellipsis-h"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <ActionList actions="actions.actions" dropdown="true"/>
+                    </t>
+                </Dropdown>
+            </div>
         </div>
     </t>
 </templates>

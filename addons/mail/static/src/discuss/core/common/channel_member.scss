@@ -9,6 +9,21 @@
     }
 
     &.cursor-pointer:hover, &.o-active {
-        background-color: var(--discuss-ChannelMember-hoverBg, mix($gray-100, $gray-200));
+        &:not(:has(.o-discuss-ChannelMember-actions:hover)) {
+            background-color: var(--discuss-ChannelMember-hoverBg, mix($gray-100, $gray-200));
+        }
+    }
+    &:hover .o-discuss-ChannelMember-actions {
+        display: flex !important;
+    }
+}
+
+.o-discuss-ChannelMember-actions button {
+    aspect-ratio: 1;
+
+
+    &:hover, &:active, &:focus-visible, &.o-showingActions {
+        --border-opacity: 1;
+        --border-color: #{rgba($o-action, var(--o-mail-DiscussSidebar-borderOpacity, 1))};
     }
 }
