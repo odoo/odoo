@@ -766,6 +766,37 @@ PAYMENT_METHOD_SELECTION = [
     ('7', '7 - POS / e-POS'),
 ]
 
+MOVE_PURPOSE_SELECTION = [
+    ('1', '1 - Sale'),
+    ('2', '2 - Sales on Behalf of Third Parties'),
+    ('3', '3 - Sampling'),
+    ('4', '4 - Exhibition'),
+    ('5', '5 - Return'),
+    ('6', '6 - Keeping'),
+    ('7', '7 - Edit - Assembly'),
+    ('8', '8 - Between Entity Branches'),
+    ('9', '9 - Purchase'),
+    ('10', '10 - Supply of ships and aircraft'),
+    ('11', '11 - Free distribution'),
+    ('12', '12 - Warranty'),
+    ('13', '13 - Loan'),
+    ('14', '14 - Storage by Third Party'),
+    ('15', '15 - Return from Custody'),
+    ('16', '16 - Recycling'),
+    ('17', '17 - Destruction of waste material'),
+    ('18', '18 - Fixed Asset Movement (Internal Circulation)'),
+    ('19', '19 - Other Movements'),
+]
+
+MEASUREMENT_UNIT_SELECTION = [
+    ('1', "Units"),
+    ('2', "kg"),
+    ('3', "L"),
+    ('4', "m"),
+    ('5', "m²"),
+    ('6', "m³"),
+]
+
 INVOICE_TYPES_HAVE_INCOME = (
     '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '2.1', '2.2', '2.3', '2.4', '3.1', '3.2', '5.1', '5.2', '6.1', '6.2',
     '7.1', '8.1', '8.2', '11.1', '11.2', '11.3', '11.4', '11.5', '17.3', '17.4',

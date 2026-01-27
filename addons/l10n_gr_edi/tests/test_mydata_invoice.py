@@ -2,6 +2,7 @@ from lxml import etree
 
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.l10n_gr_edi import utils
 from odoo.tests import tagged
 from odoo.tools import misc
 
@@ -115,7 +116,7 @@ class TestMyDATAInvoice(AccountTestInvoicingCommon):
             xml_template = 'l10n_gr_edi.mydata_invoice'
             xml_vals = invoice._l10n_gr_edi_get_invoices_xml_vals()
 
-        xml_content = self.env['account.move']._l10n_gr_edi_generate_xml_content(xml_template, xml_vals)
+        xml_content = self.env['l10n_gr_edi.document']._l10n_gr_edi_generate_xml_content(xml_template, xml_vals)
         xml_etree = self.get_xml_tree_from_string(xml_content)
 
         expected_file_full_path = misc.file_path(f'{self.test_module}/tests/test_files/{expected_file_path}')
@@ -226,7 +227,7 @@ class TestMyDATAInvoice(AccountTestInvoicingCommon):
         allowed_inv_type_category = (('1.1', 'category1_95'), ('3.2', 'category1_95'), ('5.1', 'category1_95'))
         for inv_type, category in allowed_inv_type_category:
             invoice = self._create_mydata_invoice(inv_type=inv_type, cls_category=category, cls_type=False)
-            self.assertFalse(invoice._l10n_gr_edi_get_pre_error_string())
+            self.assertFalse(utils.get_pre_error_string(invoice._l10n_gr_edi_get_pre_error_dict()))
 
     def test_l10n_gr_edi_try_send_invoices_invalid_tax_amount(self):
         """ Invalid tax amount should raises error. """
