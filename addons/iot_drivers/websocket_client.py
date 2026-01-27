@@ -61,7 +61,7 @@ class WebsocketClient(Thread):
             if payload.get('iot_identifier') != IOT_IDENTIFIER:
                 continue
 
-            result = communication.handle_message(message_type, **payload)
+            result = communication.handle_message(message_type, 'ws', **payload)
             if result:
                 send_to_controller(result)
 
