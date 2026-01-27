@@ -4941,28 +4941,25 @@ class AccountTax(models.Model):
 
     @api.model
     def _import_retrieve_tax(self, search_plan, company, tax_values_list):
-        cache = {}
+        cache = self.env.cr.cache.setdefault('retrieved_tax_map', {})
 
-        static_domain = Domain.OR([
-            [*self._check_company_domain(company), ('company_id', '!=', False)],
-            [('company_id', '=', False)],
-        ])
+        static_domain = Domain(self._check_company_domain(company))
         for tax_values in tax_values_list:
-            tax_domain = [
-               ('amount_type', '=', tax_values['amount_type']),
-               ('type_tax_use', '=', tax_values['type_tax_use']),
-               ('amount', '=', tax_values['amount']),
-            ]
+            tax_domain = (
+               Domain('amount_type', '=', tax_values['amount_type']) &
+               Domain('type_tax_use', '=', tax_values['type_tax_use']) &
+               Domain('amount', '=', tax_values['amount'])
+            )
             orders = ['sequence', 'id']
             if name := tax_values.get('name'):
-                tax_domain.append(('name', '=', name))
+                tax_domain &= Domain('name', '=', name)
             if tax_exigibility := tax_values.get('tax_exigibility'):
-                tax_domain.append(('tax_exigibility', '=', tax_exigibility))
+                tax_domain &= Domain('tax_exigibility', '=', tax_exigibility)
             if (
                 (ubl_cii_tax_category_code := tax_values.get('ubl_cii_tax_category_code'))
                 and 'ubl_cii_tax_category_code' in self._fields
             ):
-                tax_domain.append(('ubl_cii_tax_category_code', 'in', (ubl_cii_tax_category_code, False)))
+                tax_domain &= Domain('ubl_cii_tax_category_code', 'in', (ubl_cii_tax_category_code, False))
                 orders.insert(0, 'ubl_cii_tax_category_code')
 
             for plan in search_plan:
@@ -4975,8 +4972,8 @@ class AccountTax(models.Model):
                     domain = criteria.get('domain')
                     search_method = criteria.get('search_method')
                     if domain:
-                        domain = Domain.AND([tax_domain, domain])
-                        cache_key = str(domain)
+                        domain = tax_domain & Domain(domain)
+                        cache_key = repr(domain.optimize(self.env['account.tax']))
                     else:
                         cache_key = criteria.get('cache_key')
 
@@ -4989,17 +4986,17 @@ class AccountTax(models.Model):
                             continue
 
                     if domain:
-                        full_domain = Domain.AND([static_domain, domain])
+                        full_domain = static_domain & Domain(domain)
                         tax = self.search(full_domain, order=','.join(orders), limit=1)
                     elif search_method:
                         tax = search_method({
                             **criteria,
-                            'static_domain': Domain.AND([tax_domain, static_domain]),
+                            'static_domain': tax_domain & static_domain,
                         })
 
+                    if cache_key:
+                        cache[cache_key] = tax
                     if tax:
-                        if cache_key:
-                            cache[cache_key] = tax
                         tax_values['tax'] = tax
                         break
 
