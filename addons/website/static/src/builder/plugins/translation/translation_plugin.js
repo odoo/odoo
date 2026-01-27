@@ -97,8 +97,7 @@ export class TranslationPlugin extends Plugin {
         this.websiteService = this.services.website;
         this.notificationService = this.services.notification;
         this.dialogService = this.services.dialog;
-        this.nonTranslatedSelector =
-            `:not(${this.config.translatedElements.join(", ")})` + `:not(.o_translate_inline)`;
+        this.nonTranslatedSelector = `:not(${this.config.translatedElements.join(", ")})`;
     }
 
     prepareTranslation() {
