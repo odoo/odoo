@@ -9,8 +9,11 @@
         </xpath>
     </t>
     <t t-name="website_crm_partner_assign.PartnersPageOption">
-        <BuilderRow t-if="this.state.has_google_maps_api_key" label.translate="World Map">
-            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_crm_partner_assign.ref_country']}" />
+        <BuilderRow label.translate="World Map">
+            <BuilderCheckbox id="'partners_world_map_opt'" action="'websiteConfig'" actionParam="{views: ['website_crm_partner_assign.ref_country']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Google Map" level="1" t-if="this.isActiveItem('partners_world_map_opt') and !this.state.has_google_maps_api_key">
+            <BuilderButton title.translate="Custom Key" action="'configureApiKey'" preview="false">Custom Key</BuilderButton>
         </BuilderRow>
     </t>
 
