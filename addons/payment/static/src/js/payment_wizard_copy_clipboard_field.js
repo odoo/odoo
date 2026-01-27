@@ -24,7 +24,7 @@ const paymentWizardCopyClipboardButtonField = {
     component: PaymentWizardCopyClipboardButtonField,
     extractProps: (fieldInfo, dynamicInfo) => ({
         ...copyClipboardButtonField.extractProps(fieldInfo, dynamicInfo),
-        string: fieldInfo.string,
+        copyText: fieldInfo.string,
     }),
 };
 

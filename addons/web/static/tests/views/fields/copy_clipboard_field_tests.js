@@ -195,6 +195,29 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["copied tooltip"]);
     });
 
+    QUnit.test("CopyClipboardField: use custom copy text from options", async function (assert) {
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="char_field" 
+                               widget="CopyClipboardChar" 
+                               options="{'copyText': 'Custom Copy Text'}"/>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_clipboard_button").textContent,
+            "Custom Copy Text",
+            "The button should display the copy text from the options"
+        );
+    });
+
     QUnit.module("CopyClipboardButtonField");
 
     QUnit.test("CopyClipboardButtonField in form view", async function (assert) {

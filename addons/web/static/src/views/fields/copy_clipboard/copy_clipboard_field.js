@@ -17,12 +17,12 @@ class CopyClipboardField extends Component {
     static template = "web.CopyClipboardField";
     static props = {
         ...standardFieldProps,
-        string: { type: String, optional: true },
+        copyText: { type: String, optional: true },
         disabledExpr: { type: String, optional: true },
     };
 
     setup() {
-        this.copyText = this.props.string || _t("Copy");
+        this.copyText = this.props.copyText || _t("Copy");
         this.successText = _t("Copied");
     }
 
@@ -30,7 +30,7 @@ class CopyClipboardField extends Component {
         return `o_btn_${this.type}_copy btn-sm`;
     }
     get fieldProps() {
-        return omit(this.props, "string", "disabledExpr");
+        return omit(this.props, "copyText", "disabledExpr");
     }
     get type() {
         return this.props.record.fields[this.props.name].type;
@@ -68,9 +68,9 @@ export class CopyClipboardURLField extends CopyClipboardField {
 
 // ----------------------------------------------------------------------------
 
-function extractProps({ attrs }) {
+function extractProps({ attrs, options}) {
     return {
-        string: attrs.string,
+        copyText: options.copyText,
         disabledExpr: attrs.disabled,
     };
 }
