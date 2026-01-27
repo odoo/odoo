@@ -161,9 +161,10 @@ class ImLivechatChannelMemberHistory(models.Model):
         agent_histories = self.filtered(lambda h: h.livechat_member_type in ("agent", "bot"))
         (self - agent_histories).rating_id = None
         for history in agent_histories:
-            history.rating_id = history.channel_id.rating_ids.filtered(
-                lambda r: r.rated_partner_id == history.partner_id
-            )[:1]  # Live chats only allow one rating.
+            livechat_rating = history.channel_id.livechat_rating
+            history.rating_id = (
+                livechat_rating if livechat_rating.rated_partner_id == history.partner_id else None
+            )
 
     @api.depends("create_date", "channel_id.livechat_end_dt", "channel_id.message_ids")
     def _compute_session_duration_hour(self):
