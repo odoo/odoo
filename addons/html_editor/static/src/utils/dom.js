@@ -280,6 +280,23 @@ export function cleanTextNode(node, char, cursors) {
 }
 
 /**
+ * Remove all empty text nodes within the given root element
+ * and update cursors for later selection restore.
+ *
+ * This prevents the editor from keeping unnecessary empty text
+ * nodes that may create extra nodes during split operations.
+ *
+ * @param {HTMLElement} root
+ * @param {Cursors} [cursors]
+ */
+export function removeEmptyTextNodes(root, cursors) {
+    for (const node of childNodes(root).filter((n) => isEmptyTextNode(n))) {
+        cursors?.update(callbacksForCursorUpdate.remove(node));
+        node.remove();
+    }
+}
+
+/**
  * Splits a text node in two parts.
  * If the split occurs at the beginning or the end, the text node stays
  * untouched and unsplit. If a split actually occurs, the original text node
