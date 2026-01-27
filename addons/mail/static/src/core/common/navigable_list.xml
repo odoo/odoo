@@ -11,6 +11,7 @@
                     t-foreach="sortedOptions" t-as="option" t-key="option_index"
                     class="o-mail-NavigableList-item"
                     t-att-class="option.classList"
+                    t-att-title="option.title"
                     t-on-mouseenter="() => this.onOptionMouseEnter(option_index)"
                     t-on-click="(ev) => this.selectOption(ev, option_index)"
                 >
