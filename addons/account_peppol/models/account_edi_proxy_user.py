@@ -227,8 +227,11 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         if 'is_in_extractable_state' in move._fields:
             move.is_in_extractable_state = False
 
-        move._extend_with_attachments([file_data], new=True)
-        move._autopost_bill()
+        try:
+            move._extend_with_attachments([file_data], new=True)
+            move._autopost_bill()
+        except Exception:
+            _logger.exception("Unexpected error occurred during the import of bill with id %s", move.id)
         attachment.write({'res_model': 'account.move', 'res_id': move.id})
         return {'uuid': uuid, 'move': move}
 
