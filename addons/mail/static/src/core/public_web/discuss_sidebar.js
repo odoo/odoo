@@ -1,7 +1,10 @@
+import { DISCUSS_SIDEBAR_COMPACT_LS } from "@mail/core/public_web/discuss_app_model";
+
 import { Component } from "@odoo/owl";
+
+import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -23,5 +26,15 @@ export class DiscussSidebar extends Component {
 
     get discussSidebarItems() {
         return discussSidebarItemsRegistry.getAll();
+    }
+
+    enableSidebarCompact() {
+        browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, true);
+        this.store.discuss._recomputeIsSidebarCompact++;
+    }
+
+    disableSidebarCompact() {
+        browser.localStorage.removeItem(DISCUSS_SIDEBAR_COMPACT_LS);
+        this.store.discuss._recomputeIsSidebarCompact++;
     }
 }

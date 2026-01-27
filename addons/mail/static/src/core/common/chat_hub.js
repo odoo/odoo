@@ -1,5 +1,7 @@
+import { CHAT_HUB_COMPACT_LS } from "@mail/core/common/chat_hub_model";
 import { ChatWindow } from "@mail/core/common/chat_window";
 import { useHover, useMovable } from "@mail/utils/common/hooks";
+
 import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
@@ -79,7 +81,8 @@ export class ChatHub extends Component {
     }
 
     expand() {
-        this.chatHub.compact = false;
+        browser.localStorage.removeItem(CHAT_HUB_COMPACT_LS);
+        this.chatHub._recomputeCompact++;
         Object.assign(this.compactPosition, { left: "auto", top: "auto" });
         this.more.isOpen = this.chatHub.folded.length > this.chatHub.maxFolded;
     }

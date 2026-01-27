@@ -1,7 +1,6 @@
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
-import { ChannelMemberList } from "@mail/discuss/core/common/channel_member_list";
 import { NotificationSettings } from "@mail/discuss/core/common/notification_settings";
 
 import { useComponent } from "@odoo/owl";
@@ -106,40 +105,5 @@ threadActionsRegistry
                 });
             }
         },
-        toggle: true,
-    })
-    .add("member-list", {
-        component: ChannelMemberList,
-        condition(component) {
-            return (
-                component.thread?.hasMemberList &&
-                (!component.props.chatWindow || component.props.chatWindow.isOpen)
-            );
-        },
-        componentProps(action, component) {
-            return {
-                openChannelInvitePanel({ keepPrevious } = {}) {
-                    component.threadActions.actions
-                        .find(({ id }) => id === "invite-people")
-                        ?.open({ keepPrevious });
-                },
-            };
-        },
-        panelOuterClass: "o-discuss-ChannelMemberList bg-inherit",
-        icon: "fa fa-fw fa-users",
-        iconLarge: "fa fa-fw fa-lg fa-users",
-        name: _t("Members"),
-        close(component) {
-            if (component.env.inDiscussApp) {
-                component.store.discuss.isMemberPanelOpenByDefault = false;
-            }
-        },
-        open(component) {
-            if (component.env.inDiscussApp) {
-                component.store.discuss.isMemberPanelOpenByDefault = true;
-            }
-        },
-        sequence: 30,
-        sequenceGroup: 10,
         toggle: true,
     });
