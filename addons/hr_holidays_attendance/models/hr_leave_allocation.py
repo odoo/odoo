@@ -23,17 +23,23 @@ class HrLeaveAllocation(models.Model):
         return res
 
     overtime_deductible = fields.Boolean(compute='_compute_overtime_deductible')
-    employee_overtime = fields.Float(related='employee_id.total_overtime', groups='base.group_user')
+    employee_overtime = fields.Float(compute='_compute_employee_overtime', groups='base.group_user')
 
     @api.depends('holiday_status_id')
     def _compute_overtime_deductible(self):
         for allocation in self:
             allocation.overtime_deductible = allocation.holiday_status_id.overtime_deductible
 
+    @api.depends('employee_id')
+    def _compute_employee_overtime(self):
+        diff_by_employee = self.employee_id._get_deductible_employee_overtime()
+        for allocation in self:
+            allocation.employee_overtime = diff_by_employee.get(allocation.employee_id, 0)
+
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
-        deductible = self.env['hr.leave']._get_deductible_employee_overtime(res.employee_id)
+        deductible = res.employee_id._get_deductible_employee_overtime()
         for allocation in res:
             if allocation.overtime_deductible:
                 if deductible[allocation.employee_id] < 0:
@@ -46,7 +52,7 @@ class HrLeaveAllocation(models.Model):
             return res
         if not self.env.user.has_group("hr_holidays.group_hr_holidays_user") and any(allocation.state not in ('draft', 'confirm') for allocation in self):
             raise ValidationError(_('Only an Officer or Administrator is allowed to edit the allocation duration in this status.'))
-        deductible = self.env['hr.leave']._get_deductible_employee_overtime(self.employee_id)
+        deductible = self.employee_id._get_deductible_employee_overtime()
         for allocation in self.sudo().filtered('overtime_deductible'):
             if deductible[allocation.employee_id] < 0:
                 raise ValidationError(_('The employee does not have enough overtime hours to request this leave.'))
