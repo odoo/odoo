@@ -45,3 +45,6 @@ class IrModuleCase(TransactionCase):
             "res_id": report.id,
         })
         self.assertEqual(module.reports_by_module, "good_data_report")
+        self.assertEqual(module.state, "installed")
+        module.module_uninstall()
+        self.assertEqual(module.state, "uninstalled")
