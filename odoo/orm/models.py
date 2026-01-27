@@ -6186,7 +6186,7 @@ class BaseModel(metaclass=MetaModel):
 
         # then traverse dependencies backwards, and proceed recursively
         for field, subtree in tree.items():
-            if create and field.type in ('many2one', 'many2one_reference'):
+            if create and field.type in ('many2one', 'many2one_reference') and field.store:
                 # upon creation, no other record has a reference to self
                 continue
 
@@ -6216,12 +6216,10 @@ class BaseModel(metaclass=MetaModel):
                         except MissingError:
                             records = self.exists()[invf.name]
 
-                    # TODO: find a better fix
-                    if field.model_name == records._name:
-                        if not any(self._ids):
-                            # if self are new, records should be new as well
-                            records = records.browse(it and NewId(it) for it in records._ids)
-                        break
+                    if not any(self._ids):
+                        # if self are new, records should be new as well
+                        records = records.browse(it and NewId(it) for it in records._ids)
+                    break
             else:
                 new_records = self.filtered(lambda r: not r.id)
                 real_records = self - new_records
