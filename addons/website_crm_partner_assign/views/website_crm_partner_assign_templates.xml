@@ -283,32 +283,30 @@
     </xpath>
 </template>
 
-<template id="ref_country" inherit_id="website_crm_partner_assign.index" name="World Map">
+<template id="ref_country" inherit_id="website_crm_partner_assign.index" name="World Map" active="False">
     <xpath expr="//div[hasclass('o_wcrm_search')]" position="inside">
-        <t t-if="google_maps_api_key">
-            <!-- modal for large map -->
-            <div role="dialog" class="modal fade partner_map_modal" tabindex="-1">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <header class="modal-header">
-                        <h4 class="modal-title">World Map</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
-                    </header>
-                    <iframe loading="lazy" t-attf-src="/google_map?height=485&amp;dom=website_crm_partner_assign.partners&amp;current_grade=#{ current_grade and current_grade.id }&amp;current_country=#{ current_country and current_country.id }&amp;partner_url=/partners/&amp;limit=1000"
-                    style="height:485px;"/>
-                </div>
-              </div>
+        <!-- modal for large map -->
+        <div role="dialog" class="modal fade partner_map_modal">
+            <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <h4 class="modal-title">World Map</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+                </header>
+                <iframe loading="lazy" t-attf-src="/google_map?height=485&amp;dom=website_crm_partner_assign.partners&amp;current_grade=#{ current_grade and current_grade.id }&amp;current_country=#{ current_country and current_country.id }&amp;partner_url=/partners/&amp;limit=1000"
+                style="height:485px;"/>
             </div>
-            <!-- modal end -->
-            <div class="btn-group ms-2">
-                <button class="btn btn-light border-primary active">
-                    <i class="fa fa-th-large"/>
-                </button>
-                <button class="btn btn-light" data-bs-toggle="modal" data-bs-target=".partner_map_modal">
-                    <i class="fa fa-map-marker" role="img" aria-label="Open map" title="Open map"/>
-                </button>
             </div>
-        </t>
+        </div>
+        <!-- modal end -->
+        <div class="btn-group ms-2">
+            <button class="btn btn-light border-primary active">
+                <i class="fa fa-th-large"/>
+            </button>
+            <button class="btn btn-light" data-bs-toggle="modal" data-bs-target=".partner_map_modal">
+                <i class="fa fa-map-marker" role="img" aria-label="Open map" title="Open map"/>
+            </button>
+        </div>
     </xpath>
 </template>
 
