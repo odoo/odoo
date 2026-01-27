@@ -38,7 +38,7 @@ const response_from_qfpay_on_pos_refund_webhook = (uuid, sessionID, paymentMetho
     out_trade_no: "2cccf6c02d4835bdb79d7c96beb95cbf",
     syssn: "20250821155400847635342115",
     respcd: "0000",
-    notify_type: "cancel",
+    notify_type: "refund",
 });
 
 // Once request for payment/refund has been sent to the qfpay terminal
