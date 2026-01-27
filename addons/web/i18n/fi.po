@@ -37,14 +37,14 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Saara Hakanen <sahak@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:37+0000\n"
-"PO-Revision-Date: 2025-11-27 16:38+0000\n"
+"POT-Creation-Date: 2026-01-09 18:38+0000\n"
+"PO-Revision-Date: 2026-01-13 15:35+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/web/fi/>"
 "\n"
@@ -511,17 +511,17 @@ msgid ""
 "Temporal mode will merge all samples.<br/>It can lead to partially invalid "
 "result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
-"<select class=\"form-select\" name=\"profile_aggregation_mode\" id="
-"\"profile_aggregation_mode\">\n"
-"                                <option value=\"tabs\">Eroteltu "
-"(yksi per välilehti)</option>\n"
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" "
+"id=\"profile_aggregation_mode\">\n"
+"                                <option value=\"tabs\">Eroteltu (yksi per "
+"välilehti)</option>\n"
 "                                <option value=\"temporal\">Väliaikainen "
 "(kokeellinen)</option>\n"
 "                            </select>\n"
-"                            <span id=\"temporal_warning\" class="
-"\"alert alert-warning\" style=\"display:none\"><b>Varoitus:</b> Väliaikainen-"
-"tila yhdistää kaikki näytteet.<br/>Se voi johtaa osittain virheelliseen "
-"tulokseen samanaikaisten profiilien tapauksessa.<br/>Käytä harkiten </span>"
+"                            <span id=\"temporal_warning\" class=\"alert "
+"alert-warning\" style=\"display:none\"><b>Varoitus:</b> Väliaikainen-tila "
+"yhdistää kaikki näytteet.<br/>Se voi johtaa osittain virheelliseen tulokseen "
+"samanaikaisten profiilien tapauksessa.<br/>Käytä harkiten </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -2774,7 +2774,7 @@ msgstr "Piirrä"
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_record.xml:0
 msgid "Dropdown menu"
-msgstr "Alasvetovalikko"
+msgstr "Pudotusvalikko"
 
 #. module: web
 #. odoo-javascript
@@ -2782,7 +2782,7 @@ msgstr "Alasvetovalikko"
 #: code:addons/web/static/src/views/kanban/kanban_controller.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 msgid "Duplicate"
-msgstr "Kopioi"
+msgstr "Monista"
 
 #. module: web
 #. odoo-javascript
@@ -2795,13 +2795,13 @@ msgstr "Kopioi"
 #: code:addons/web/static/src/views/fields/text/text_field.js:0
 #: code:addons/web/static/src/views/fields/url/url_field.js:0
 msgid "Dynamic Placeholder"
-msgstr "Dynaaminen paikanvaraaja"
+msgstr "Dynaaminen paikkamerkki"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 msgid "Dynamic placeholder"
-msgstr "Dynaaminen paikanvaraaja"
+msgstr "Dynaaminen paikkamerkki"
 
 #. module: web
 #. odoo-javascript
@@ -3255,8 +3255,8 @@ msgid ""
 "For example, if the value is \"1\" and you enter \"+=2\", it will be updated "
 "to \"3\"."
 msgstr ""
-"Esimerkiksi, jos arvo on \"1\" ja syötät \"+=2\", se päivitetään arvoon \"3\""
-"."
+"Esimerkiksi, jos arvo on \"1\" ja syötät \"+=2\", se päivitetään arvoon "
+"\"3\"."
 
 #. module: web
 #. odoo-javascript
@@ -4987,6 +4987,12 @@ msgid "No data to display"
 msgstr "Ei näytettävää dataa"
 
 #. module: web
+#. odoo-python
+#: code:addons/web/controllers/pivot.py:0
+msgid "No data to export"
+msgstr "Ei vietäviä tietoja"
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 msgid "No debug command found"
@@ -5496,7 +5502,7 @@ msgstr "Sivu <span class=\"page\"/> / <span class=\"topage\"/>"
 #. odoo-javascript
 #: code:addons/web/static/src/core/pager/pager.xml:0
 msgid "Pager"
-msgstr "Sivutus"
+msgstr "Sivut"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__paperformat_id
@@ -6707,7 +6713,7 @@ msgstr "Jotain kamalaa tapahtui"
 msgid ""
 "Something went wrong... If you really are stuck, share the report with your "
 "friendly support service"
-msgstr "Jokin meni pieleen. Lähetä raportti tukipalvelulle tiedoksi"
+msgstr "Jotain meni pieleen. Jos olet jumissa, lähetä raportti tukipalvelulle"
 
 #. module: web
 #. odoo-javascript
@@ -6902,7 +6908,7 @@ msgstr "TV"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Tagline"
-msgstr "Sivuston kuvaus"
+msgstr "Kuvaus"
 
 #. module: web
 #. odoo-javascript
@@ -7062,8 +7068,8 @@ msgid ""
 "The ids in %(field_name)s must only be integers or \"false\": “%"
 "(action_ids)s”"
 msgstr ""
-"%(field_name)s -kentän tunnusten on oltava kokonaislukuja tai \"false\": "
-"\"%(action_ids)s\""
+"%(field_name)s -kentän tunnusten on oltava kokonaislukuja tai \"false\": \"%"
+"(action_ids)s\""
 
 #. module: web
 #. odoo-javascript
@@ -7309,7 +7315,7 @@ msgstr "Kytke"
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 msgid "Toggle Search Panel"
-msgstr "Vaihda hakupaneelia"
+msgstr "Näytä/piilota hakupaneeli"
 
 #. module: web
 #. odoo-javascript

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_cancel']" position="before">
+                    <button string="MER: Reject eRacun"
+                        name="l10n_hr_edi_mer_action_reject"
+                        class="oe_highlight"
+                        type="object"
+                        groups="account.group_account_invoice"
+                        invisible="(move_type not in ('in_invoice', 'in_refund') or state != 'draft' or l10n_hr_business_document_status == '1' or l10n_hr_mer_document_eid == False)"
+                    />
+                </xpath>
+                <xpath expr="//button[@name='button_cancel']" position="after">
+                    <button string="MER: Fetch status"
+                        name="l10n_hr_edi_mer_action_fetch_status"
+                        class="oe_highlight"
+                        type="object"
+                        groups="account.group_account_invoice"
+                        invisible="not l10n_hr_mer_document_eid"
+                    />
+                    <button string="MER: Report payments"
+                        name="l10n_hr_edi_mer_action_report_paid"
+                        class="oe_highlight"
+                        type="object"
+                        groups="account.group_account_invoice"
+                        invisible="not l10n_hr_mer_document_eid or (amount_total - amount_residual) == l10n_hr_payment_reported_amount or move_type not in ('out_invoice', 'out_refund')"
+                    />
+                </xpath>
+                <xpath expr="//header" position="after">
+                    <div class="alert alert-warning w-100 d-flex align-items-center gap-1" invisible="move_type not in ('in_invoice', 'in_refund') or not l10n_hr_mer_document_eid or l10n_hr_fiscalization_status == '0' or invoice_date &gt;= '2026-01-01 00:00:00'"  role="alert">
+                        <span>This document is dated before 01.01.2026 and is not fiscalized by MojEracun</span>
+                    </div>
+                    <div class="alert alert-danger w-100 d-flex align-items-center gap-1" invisible="move_type not in ('in_invoice', 'in_refund') or not l10n_hr_mer_document_eid or l10n_hr_fiscalization_status == '0' or invoice_date &lt; '2026-01-01 00:00:00'"  role="alert">
+                        <span>This document is not successfully fiscalized by MojEracun</span>
+                    </div>
+                    <div class="alert alert-warning w-100 d-flex align-items-center gap-1" invisible="not l10n_hr_mer_document_eid or l10n_hr_fiscalization_channel_type != '1'"  role="alert">
+                        <span>Warning: this document was not successfully delivered to the recepient via EDI and needs to be sent manually (ex. via e-mail)</span>
+                    </div>
+                    <div class="alert alert-warning w-100 d-flex align-items-center gap-1" invisible="not l10n_hr_mer_document_eid or l10n_hr_payment_reported_amount == (amount_total - amount_residual)"  role="alert">
+                        <span>Warning: some payments for this document are not reported to the Tax Autority</span>
+                    </div>
+                </xpath>
+                <xpath expr="//page[@id='other_tab_entry']" position="after">
+                    <page id="l10n_hr_edi_tab"
+                          string="Croatia: Fiscalization 2.0"
+                          name="page_hr_edi_tab"
+                          invisible="country_code != 'HR'">
+                        <group string="Accounting information"
+                                name="l10n_hr_accounting_info_group">
+                            <field name="l10n_hr_invoice_sending_time"
+                                invisible="move_type not in ('out_invoice', 'out_refund')"
+                                readonly="True"
+                            />
+                            <field name="l10n_hr_process_type"
+                                readonly="state in ['cancel', 'posted']"
+                            />
+                            <field name="l10n_hr_customer_defined_process_name"
+                                invisible="l10n_hr_process_type != 'P99'"
+                                readonly="state in ['cancel', 'posted']"
+                            />
+                            <field name="l10n_hr_fiscal_user_id"
+                                invisible="move_type not in ('out_invoice', 'out_refund')"
+                                readonly="state in ['cancel', 'posted']"
+                            />
+                            <field name="l10n_hr_operator_name"
+                                invisible="move_type not in ('out_invoice', 'out_refund')"
+                                readonly="True"
+                            />
+                            <field name="l10n_hr_operator_oib"
+                                invisible="move_type not in ('out_invoice', 'out_refund')"
+                                readonly="True"
+                            />
+                        </group>
+                        <group string="Fiscalization"
+                                name="l10n_hr_fiscalization_info_group"
+                                invisible="not l10n_hr_edi_addendum_id">
+                            <field name="l10n_hr_business_document_status"
+                                readonly="True"
+                            />
+                            <field name="l10n_hr_business_status_reason"
+                                invisible="l10n_hr_business_status_reason == 'None'"
+                                readonly="True"
+                            />
+                            <field name="l10n_hr_fiscalization_number"
+                                readonly="True"
+                            />
+                            <field name="l10n_hr_fiscalization_status"
+                                readonly="True"
+                            />
+                            <field name="l10n_hr_fiscalization_error"
+                                invisible="l10n_hr_fiscalization_status != '1'"
+                                readonly="True"
+                            />
+                            <field name="l10n_hr_fiscalization_request"
+                                invisible="not l10n_hr_fiscalization_request"
+                                readonly="True"
+                            />
+                            <field name="l10n_hr_fiscalization_channel_type"
+                                readonly="True"
+                            />
+                        </group>
+                        <group string="Payment reporting"
+                                name="l10n_hr_payment_info_group"
+                                invisible="not l10n_hr_edi_addendum_id or move_type not in ('out_invoice', 'out_refund')">
+                            <field name="l10n_hr_payment_reported_amount"
+                                readonly="True"
+                            />
+                            <field name="l10n_hr_payment_method_type"/>
+                        </group>
+                        <group string="MojEracun"
+                                name="l10n_hr_mojeracun_info_group"
+                                invisible="not l10n_hr_mer_document_eid">
+                            <field name="l10n_hr_mer_document_eid"
+                                readonly="True"
+                            />
+                            <field name="l10n_hr_mer_document_status"
+                                readonly="True"
+                            />
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='invoice_line_ids']//list/field[@name='product_id']" position="after">
+                    <field name="l10n_hr_kpd_category_id"
+                        coloumn_invisible="parent.country_code != 'HR'"
+                        options="{'no_create': True, 'readonly': False}"
+                    />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_invoice_tree_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.list.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_force_register_payment']" position="after">
+                    <button string="MER: Report payments"
+                        name="l10n_hr_edi_mer_action_report_paid"
+                        class="oe_highlight"
+                        type="object"
+                        groups="account.group_account_invoice"
+                    />
+                </xpath>
+                <xpath expr="//field[@name='abnormal_date_warning']" position="after">
+                    <field name="l10n_hr_mer_document_eid"
+                        string="MojEracun eID"
+                        readonly="True"
+                        widget="badge"
+                        optional="hide"
+                    />
+                    <field name="l10n_hr_mer_document_status"
+                        string="MojEracun Status"
+                        readonly="True"
+                        widget="badge"
+                        decoration-success="l10n_hr_mer_document_status in ['30', '40', '70']"
+                        decoration-warning="l10n_hr_mer_document_status == '20'"
+                        decoration-danger="l10n_hr_mer_document_status in ['45', '50']"
+                        optional="hide"
+                    />
+                    <field name="l10n_hr_business_document_status"
+                        string="Business Document Status"
+                        readonly="True"
+                        widget="badge"
+                        decoration-success="l10n_hr_business_document_status in ['0', '2', '4', '99']"
+                        decoration-warning="l10n_hr_business_document_status == '3'"
+                        decoration-danger="l10n_hr_business_document_status == '1'"
+                        optional="hide"
+                    />
+                    <field name="l10n_hr_fiscalization_status"
+                        string="Fiscalization 2.0 Status"
+                        readonly="True"
+                        widget="badge"
+                        decoration-success="l10n_hr_fiscalization_status == '0'"
+                        decoration-warning="l10n_hr_fiscalization_status == '2'"
+                        decoration-danger="l10n_hr_fiscalization_status == '1'"
+                        optional="hide"
+                    />
+                    <field name="l10n_hr_payment_reported_amount"
+                        string="Reported Paid"
+                        readonly="True"
+                        decoration-success="l10n_hr_payment_reported_amount == (amount_total - amount_residual) and amount_total != amount_residual"
+                        decoration-warning="l10n_hr_payment_reported_amount &lt; (amount_total - amount_residual)"
+                        decoration-danger="l10n_hr_payment_reported_amount &gt; (amount_total - amount_residual)"
+                        invisible="not l10n_hr_mer_document_eid or state in ('draft', 'cancelled')"
+                        optional="hide"
+                    />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_filter_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.select.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search/group" position="before">
+                    <filter string="Is a MER document" name="l10n_hr_is_mer" domain="[('l10n_hr_mer_document_eid', '!=', False)]"/>
+                    <filter string="Has unreported payments" name="l10n_hr_has_unreported_payments" domain="[('l10n_hr_payment_unreported', '!=', False)]"/>
+                    <separator/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -46,7 +46,7 @@ class Delivery(WebsiteSale):
             return {}
 
         dm_id = int(dm_id)
-        if dm_id != order_sudo.carrier_id.id:
+        if dm_id in order_sudo._get_delivery_methods().ids and dm_id != order_sudo.carrier_id.id:
             for tx_sudo in order_sudo.transaction_ids:
                 if tx_sudo.state not in ('draft', 'cancel', 'error'):
                     raise UserError(_(

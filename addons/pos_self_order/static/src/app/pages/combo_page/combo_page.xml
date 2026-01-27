@@ -103,13 +103,13 @@
                                 <img class="object-fit-cover" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}"  loading="lazy"/>
                             </div>
                             <div class="o_self_variant_description d-flex flex-column justify-content-center">
-                                <h2 t-esc="product.name" class="mb-0 text-white"/>
+                                <h2 t-esc="formatProductName(product)" class="mb-0 text-white"/>
                                 <span t-if="product.public_description" t-out="product.productDescriptionMarkup" class="product-description mt-1"/>
                             </div>
                         </div>
                         <!-- Attributes -->
                         <div class="">
-                            <AttributeSelection t-if="product.attribute_line_ids.length" productTemplate="product" onSelection="onAttributeSelection" />
+                            <AttributeSelection t-if="product.attribute_line_ids.length" productTemplate="product" onSelection="onAttributeSelection" isCombo="true"/>
                         </div>
                         <t t-if="hasMissingAttributeValues(currentChoiceState.displayAttributesOfItem) and shouldShowMissingDetails()" t-call="pos_self_order.MissingRequiredDetails" />
                     </div>
@@ -129,7 +129,8 @@
                                         </div>
                                         <div class="d-flex flex-column gap-1">
                                             <div class="fs-4 fw-bold text-break">
-                                                <span t-if="item_qty &gt; 1" class="fw-normal"><t t-esc="item_qty"/>x </span><t t-esc="product.name"/>
+                                                <span t-if="item_qty &gt; 1" class="fw-normal"><t t-esc="item_qty"/>x </span>
+                                                <span t-esc="formatProductName(product)"/>
                                             </div>
                                             <div class="text-muted fw-medium" t-foreach="attributes" t-as="attrVal" t-key="attrVal.attribute_line_id.id">
                                                 <t t-esc="attrVal.attribute_line_id.attribute_id.name" />:

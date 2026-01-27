@@ -170,6 +170,10 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                         'cbc:ID': {'_text': commercial_partner.peppol_endpoint}
                     }
                 ]
+        elif commercial_partner.country_code == 'BE' and commercial_partner.company_registry:
+            party_node['cac:PartyIdentification'] = {
+                'cbc:ID': {'_text': commercial_partner.company_registry}
+            }
 
         party_node['cac:PartyTaxScheme'] = party_tax_scheme = [
             {
@@ -211,6 +215,10 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = {
                 '_text': ''.join(char for char in commercial_partner.company_registry if char.isdigit
                 ())
+            }
+        elif commercial_partner.country_code == 'BE' and commercial_partner.company_registry:
+            party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = {
+                '_text': commercial_partner.company_registry
             }
         else:
             party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = {
@@ -296,9 +304,6 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         # Add 'tax_currency_code'.
         self._ubl_add_values_tax_currency_code(vals)
 
-        # Add 'tax_totals'.
-        self._ubl_add_values_tax_totals(vals)
-
         # Add 'payable_rounding_amount' to manage cash rounding.
         self._ubl_add_values_payable_rounding_amount(vals)
 
@@ -308,6 +313,9 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             for base_line in vals['base_lines']
             if base_line not in vals['_ubl_values']['payable_rounding_base_lines']
         ]
+
+        # Add 'tax_totals'.
+        self._ubl_add_values_tax_totals(vals)
 
         # Add 'allowance_charge_early_payment' to manage the early payment discount.
         self._ubl_add_values_allowance_charge_early_payment(vals)

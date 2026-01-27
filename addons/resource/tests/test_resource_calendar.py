@@ -47,20 +47,81 @@ class TestResourceCalendar(TransactionCase):
         """
         Test that the duration of an attendance interval for flexible calendar is correctly computed.
         """
-        calendar = self.env['resource.calendar'].create({
+        flexible_calendar = self.env['resource.calendar'].create({
             'name': 'Flexible Calendar',
             'hours_per_day': 7.0,
-            'full_time_required_hours': 7.0,
+            'full_time_required_hours': 30,
             'flexible_hours': True,
+            'tz': 'UTC',
         })
-        UTC = pytz.timezone('UTC')
-        start_dt = datetime(2025, 6, 4, 0, 0, 0).astimezone(UTC)
-        end_dt = datetime(2025, 6, 4, 12, 0, 0).astimezone(UTC)
-        result_per_resource_id = calendar._attendance_intervals_batch(
+
+        # Case 1: get attendances for the full week.
+        # Expected: 7-7-7-7-2 (30 hours total)
+        expected_hours = [7, 7, 7, 7, 2]
+
+        start_dt = datetime(2025, 6, 2, 0, 0, 0).astimezone(pytz.UTC)
+        end_dt = datetime(2025, 6, 7, 23, 59, 59).astimezone(pytz.UTC)
+        result_per_resource_id = flexible_calendar._attendance_intervals_batch(
             start_dt, end_dt
         )
-        start, end, _ = result_per_resource_id[0]._items[0]
+        self.assertEqual(expected_hours, [(end - start).total_seconds() / 3600 for start, end, dummy_attendance in result_per_resource_id[0]._items])
+        self.assertEqual(expected_hours, [dummy_attendance.duration_hours for start, end, dummy_attendance in result_per_resource_id[0]._items])
 
-        actual_duration = end - start
+        # Case 2: check attendances are all contained between start_dt and end_dt
+        start_dt = datetime(2025, 6, 2, 11, 0, 0).astimezone(pytz.UTC)
+        end_dt = datetime(2025, 6, 7, 13, 0, 0).astimezone(pytz.UTC)
+        result_per_resource_id = flexible_calendar._attendance_intervals_batch(
+            start_dt, end_dt
+        )
 
-        self.assertEqual(actual_duration.seconds / 3600, calendar.full_time_required_hours, "For a full day, the interval must match full time required hours")
+        self.assertTrue(start_dt <= result_per_resource_id[0]._items[0][0], "First attendance interval should not start before start_dt")
+        self.assertTrue(end_dt >= result_per_resource_id[0]._items[4][1], "Last attendance interval should not end after end_dt")
+
+    def test_working_time_holiday_multicompany(self):
+        """
+        This test checks that there is no issue computing the "working time to assign" even if a holiday has been set
+        for this moment, but on another company.
+        """
+        company_0, company_1 = self.env['res.company'].create([
+            {
+                "name": "Test company 0",
+            },
+            {
+                "name": "Test company 1",
+            },
+        ])
+
+        self.env['resource.calendar.leaves'].create([{
+            'name': "Public Holiday for company 0",
+            'calendar_id': company_1.resource_calendar_ids.id,
+            'company_id': company_1.id,
+            'date_from': datetime(2019, 6, 27, 0, 0, 0),
+            'date_to': datetime(2019, 6, 27, 23, 0, 0),
+            'resource_id': False,
+            'time_type': "leave",
+        }, {
+            'name': "Public Holiday without company",
+            'calendar_id': False,
+            'company_id': False,
+            'date_from': datetime(2019, 6, 29, 0, 0, 0),
+            'date_to': datetime(2019, 6, 29, 23, 59, 59),
+            'resource_id': False,
+            'time_type': "leave",
+        }])
+        duration_company_0 = company_0.resource_calendar_ids.with_company(company_0).get_work_duration_data(
+            datetime(2019, 6, 27, 0, 0, 0),
+            datetime(2019, 6, 29, 23, 59, 59),
+            compute_leaves=True)
+        self.assertEqual(
+            duration_company_0,
+            {'days': 2.0, 'hours': 16.0},
+            "The public holiday for company_1 should not have been taken into account",
+        )
+        duration_company_1 = company_1.resource_calendar_ids.with_company(company_1).get_work_duration_data(
+            datetime(2019, 6, 27, 0, 0, 0),
+            datetime(2019, 6, 29, 23, 59, 59),
+            compute_leaves=True)
+        self.assertEqual(
+            duration_company_1,
+            {'days': 1.0, 'hours': 8.0},
+        )

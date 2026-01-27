@@ -77,12 +77,12 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         pager_values = portal_pager(
             url=url,
-            total=SaleOrder.search_count(domain),
+            total=SaleOrder.search_count(domain) if SaleOrder.has_access('read') else 0,
             page=page,
             step=self._items_per_page,
             url_args=url_args,
         )
-        orders = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager_values['offset'])
+        orders = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager_values['offset']) if SaleOrder.has_access('read') else SaleOrder
 
         values.update({
             'date': date_begin,
@@ -145,7 +145,9 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 download=download,
             )
 
-        if request.env.user.share and access_token:
+        # If the route is fetched from the link previewer avoid triggering that quotation is viewed.
+        is_link_preview = request.httprequest.headers.get('Odoo-Link-Preview')
+        if request.env.user.share and access_token and is_link_preview != 'True':
             # If a public/portal user accesses the order with the access token
             # Log a note on the chatter.
             today = fields.Date.today().isoformat()

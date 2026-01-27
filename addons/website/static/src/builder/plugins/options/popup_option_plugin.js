@@ -45,6 +45,13 @@ class PopupOptionPlugin extends Plugin {
             CopyAnchorAction,
             SetPopupDelayAction,
         },
+        empty_node_predicates: (el) => {
+            if (!el.matches?.(".s_popup")) {
+                return false;
+            }
+            const popupModalChildrenEls = [...(el.querySelector(".modal-content")?.children ?? [])];
+            return popupModalChildrenEls.every((child) => child.matches(".s_popup_close"));
+        },
         on_cloned_handlers: this.onCloned.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         on_will_remove_handlers: this.onWillRemove.bind(this),

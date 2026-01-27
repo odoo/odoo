@@ -3,6 +3,7 @@
 import base64
 import io
 import re
+import textwrap
 import time
 import uuid
 import zipfile
@@ -13,6 +14,7 @@ from requests import RequestException
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import float_round, float_repr
 
 SINVOICE_API_URL = 'https://api-vinvoice.viettel.vn/services/einvoiceapplication/api/'
 SINVOICE_TIMEOUT = 60  # They recommend between 60 and 90 seconds, but 60s is already quite long.
@@ -588,12 +590,14 @@ class AccountMove(models.Model):
 
         # When invoicing in a foreign currency, we need to provide the rate, or it will default to 1.
         if self.currency_id.name != 'VND':
-            invoice_data['exchangeRate'] = self.env['res.currency']._get_conversion_rate(
+            # Sinvoice only allow upto 2 decimal place for exchange rate
+            exchange_rate = self.env['res.currency']._get_conversion_rate(
                 from_currency=self.currency_id,
                 to_currency=self.env.ref('base.VND'),
                 company=self.company_id,
                 date=self.invoice_date or self.date,
             )
+            invoice_data['exchangeRate'] = float_repr(float_round(exchange_rate, 2), 2)
 
         adjustment_origin_invoice = None
         if self.move_type == 'out_refund':  # Credit note are used to adjust an existing invoice
@@ -691,10 +695,11 @@ class AccountMove(models.Model):
         for line in self.invoice_line_ids.filtered(lambda ln: ln.display_type == 'product'):
             # For credit notes amount, we send negative values (reduces the amount of the original invoice)
             sign = 1 if self.move_type == 'out_invoice' else -1
+            item_name = line.name.replace('\n', ' ')
             item_information = {
-                'itemCode': line.product_id.code,
-                'itemName': line.product_id.name,
-                'unitName': line.product_uom_id.name,
+                'itemCode': line.product_id.code or '',
+                'itemName': textwrap.shorten(item_name, width=500, placeholder='...'),
+                'unitName': line.product_uom_id.name or 'Units',
                 'unitPrice': line.price_unit * sign,
                 'quantity': line.quantity,
                 # This amount should be without discount applied.
@@ -703,7 +708,7 @@ class AccountMove(models.Model):
                 # Values are either: -2 (no tax), -1 (not declaring/paying taxes), 0,5,8,10 (the tax %)
                 # Most use cases will be -2 or a tax percentage, so we limit the support to these.
                 'taxPercentage': line.tax_ids and line.tax_ids[0].amount or -2,
-                'taxAmount': (line.price_total - line.price_subtotal),
+                'taxAmount': line.currency_id.round(line.price_total - line.price_subtotal),
                 'discount': line.discount,
                 'itemTotalAmountAfterDiscount': line.price_subtotal,
                 'itemTotalAmountWithTax': line.price_total,

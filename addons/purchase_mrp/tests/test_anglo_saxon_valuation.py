@@ -1,15 +1,16 @@
 from unittest import skip
 
-from odoo.fields import Date, Datetime
+from odoo.exceptions import UserError
+from odoo.fields import Command, Date, Datetime
 from odoo.tools import float_is_zero, mute_logger
 from odoo.tests import Form, tagged
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
 
 @tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
 class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
 
+    @skip('Temporary to fast merge new valuation')
     def test_kit_anglo_saxo_price_diff(self):
         """
         Suppose an automated-AVCO configuration and a Price Difference Account defined on
@@ -55,6 +56,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         input_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)])
         self.assertEqual(sum(input_amls.mapped('balance')), 0)
 
+    @skip('Temporary to fast merge new valuation')
     def test_buy_deliver_and_return_kit_with_auto_avco_components(self):
         """
         A kit K with two AVCO components
@@ -161,6 +163,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         self.assertEqual(component01.stock_valuation_layer_ids.mapped('value'), [25, -25, 25])
         self.assertEqual(component02.stock_valuation_layer_ids.mapped('value'), [75, -75, 75])
 
+    @skip('Temporary to fast merge new valuation')
     def test_valuation_multicurrency_with_kits(self):
         """ Purchase a Kit in multi-currency and verify that the amount_currency is correctly computed.
         """
@@ -210,6 +213,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         self.assertEqual(input_aml.amount_currency, 100)  # EUR
         self.assertEqual(input_aml.balance, 50)  # USD
 
+    @skip('Temporary to fast merge new valuation')
     def test_fifo_cost_adjust_mo_quantity(self):
         """ An MO using a FIFO cost method product as a component should not zero-out the std cost
         of the product if we unlock it once it is in a validated state and adjust the quantity of
@@ -251,6 +255,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
 
         self.assertEqual(self.product_a.standard_price, 100)
 
+    @skip('Temporary to fast merge new valuation')
     def test_average_cost_unbuild_valuation(self):
         """ Ensure that an unbuild for some avg cost product won't leave the `Cost of Production`
         journal in an imbalanced state if the std price of that product has changed since the MO
@@ -322,3 +327,343 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             ]).mapped('balance')),
             precision_rounding=self.env.company.currency_id.rounding
         ))
+
+    def test_avco_purchase_nested_kit_explode_cost_share(self):
+        """
+        Test the cost share calculation when purchasing a nested kit with several levels of BoMs
+
+        Giga Kit:
+            - C01, cost share 0%
+            - Super Kit, cost share 100%:
+                - C02, cost share 10%
+                - Kit, cost share 60%:
+                    - C02, cost share 25%
+                    - C03, cost share 25%
+                    - Sub Kit, cost share 50%
+                        - C04, cost share 0%
+                        - C05, cost share 0%
+                - Sub Kit, cost share 20%
+                    - C04, cost share 0%
+                    - C05, cost share 0%
+                - Phantom Kit, cost share 0%
+                    - C05, cost share 100%
+                - Triple Kit, cost share 10%
+                    - C01, cost share 0%
+                    - C02, cost share 0%
+                    - C03, cost share 0% (Last line should round to reach 100%)
+        Buy and receive 1 kit Giga Kit @ 1000
+        """
+        avco_category = self.env['product.category'].create({
+            'name': 'AVCO',
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time',
+        })
+        component01, component02, component03, component04, component05 = self.env['product.product'].create([{
+            'name': 'Component %s' % name,
+            'categ_id': avco_category.id,
+        } for name in ('01', '02 ', '03', '04', '05')])
+
+        giga_kit, super_kit, kit, sub_kit, phantom_kit, triple_kit = self.env['product.product'].create([{
+            'name': name,
+        } for name in ('Giga Kit', 'Super Kit', 'Kit', 'Sub Kit', 'Phantom Kit', 'Triple Kit')])
+
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': giga_kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': component01.id, 'product_qty': 1, 'cost_share': 0}),
+                Command.create({'product_id': super_kit.id, 'product_qty': 1, 'cost_share': 100}),
+            ],
+        }, {
+            'product_tmpl_id': super_kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': component02.id, 'product_qty': 1, 'cost_share': 10}),
+                Command.create({'product_id': kit.id, 'product_qty': 1, 'cost_share': 60}),
+                Command.create({'product_id': sub_kit.id, 'product_qty': 1, 'cost_share': 20}),
+                Command.create({'product_id': phantom_kit.id, 'product_qty': 1, 'cost_share': 0}),
+                Command.create({'product_id': triple_kit.id, 'product_qty': 2, 'cost_share': 10}),
+            ],
+        }, {
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': component02.id, 'product_qty': 1, 'cost_share': 25}),
+                Command.create({'product_id': component03.id, 'product_qty': 1, 'cost_share': 25}),
+                Command.create({'product_id': sub_kit.id, 'product_qty': 1, 'cost_share': 50}),
+            ],
+        }, {
+            'product_tmpl_id': sub_kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': component04.id, 'product_qty': 1, 'cost_share': 0}),
+                Command.create({'product_id': component05.id, 'product_qty': 1, 'cost_share': 0}),
+            ],
+        }, {
+            'product_tmpl_id': phantom_kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': component05.id, 'product_qty': 1, 'cost_share': 100}),
+            ],
+        }, {
+            'product_tmpl_id': triple_kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': component01.id, 'product_qty': 1, 'cost_share': 0}),
+                Command.create({'product_id': component02.id, 'product_qty': 1, 'cost_share': 0}),
+                Command.create({'product_id': component03.id, 'product_qty': 2, 'cost_share': 0}),
+            ],
+        }])
+        vendor = self.env['res.partner'].create({'name': 'Super vendor'})
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': vendor.id,
+            'order_line': [
+                Command.create({'product_id': super_kit.id, 'product_qty': 1, 'price_unit': 1000})
+            ],
+        })
+        purchase_order.button_confirm()
+
+        # Actual cost shares:
+        # Component01:
+        #   0 -> No stock valuation for that line
+        #   1.0 * 0.1 * 0.333... (O%) = 0.0333... -> 3.33%
+        # Component02:
+        #   1.0 * 0.1  = 0.1 -> 10%
+        #   1.0 * 0.6 * 0.25 = 0.15 -> 15%
+        #   1.0 * 0.1 * 0.333... (O%) = 0.0333... -> 3.33%
+        # Component03:
+        #   1.0 * 0.6 * 0.25 = 0.15 -> 15%
+        #   1.0 * 0.1 * 0.333... (O%) = 0.0333... -> 3.34% (last exploded line rounded)
+        # Component04:
+        #   1.0 * 0.6 * 0.5 * 0.5 (0%) = 0.15 -> 15%
+        #   1.0 * 0.2 * 0.5 (0%) = 0.1 -> 10%
+        # Component05:
+        #   1.0 * 0.6 * 0.5 * 0.5 (0%) = 0.15 -> 15%
+        #   1.0 * 0.2 * 0.5 (0%) = 0.1 -> 10%
+        #   1.0 * 0.0 * 1.0 = 0.0 -> 0%
+        self.assertEqual(sum(purchase_order.order_line.move_ids.mapped('cost_share')), 100.0)
+        receipt = purchase_order.picking_ids
+        receipt.button_validate()
+        self.assertRecordValues(receipt.move_ids.sorted(lambda m: (m.product_id.id, m.cost_share)), [
+            {'product_id': component01.id, 'cost_share': 3.33, 'value': 33.3},
+            {'product_id': component02.id, 'cost_share': 3.33, 'value': 33.3},
+            {'product_id': component02.id, 'cost_share': 10.0, 'value': 100.0},
+            {'product_id': component02.id, 'cost_share': 15.0, 'value': 150.0},
+            {'product_id': component03.id, 'cost_share': 3.34, 'value': 33.4},
+            {'product_id': component03.id, 'cost_share': 15.0, 'value': 150.0},
+            {'product_id': component04.id, 'cost_share': 10.0, 'value': 100.0},
+            {'product_id': component04.id, 'cost_share': 15.0, 'value': 150.0},
+            {'product_id': component05.id, 'cost_share': 0.0, 'value': 0.0},
+            {'product_id': component05.id, 'cost_share': 10.0, 'value': 100.0},
+            {'product_id': component05.id, 'cost_share': 15.0, 'value': 150.0},
+        ])
+
+    def test_kit_bom_cost_share_constraint_with_variants(self):
+        """
+        Check that the cost share constraint is well behaved with respect to product attribute values:
+        the sum of the cost share's of the bom of any product variant should either be 0% or 100%
+        """
+        avco_category = self.env['product.category'].create({
+            'name': 'AVCO',
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time',
+        })
+        attributes = self.env['product.attribute'].create([
+            {'name': name} for name in ('Size', 'Color')
+        ])
+        attributes_values = ((attributes[0], ('S', 'M')), (attributes[1], ('Blue', 'Red')))
+        self.env['product.attribute.value'].create([{
+            'name': name,
+            'attribute_id': attribute.id
+        } for attribute, names in attributes_values for name in names])
+        product_template = self.env['product.template'].create({
+            'name': "lovely product",
+            'is_storable': True,
+        })
+        size_attribute_lines, color_attribute_lines = self.env['product.template.attribute.line'].create([{
+            'product_tmpl_id': product_template.id,
+            'attribute_id': attribute.id,
+            'value_ids': [Command.set(attribute.value_ids.ids)]
+        } for attribute in attributes])
+        self.assertEqual(product_template.product_variant_count, 4)
+        c1, c2, c3 = self.env['product.product'].create([
+            {'name': f'Comp {i + 1}', 'categ_id': avco_category.id} for i in range(3)
+        ])
+
+        # Total cost share is 100% but in reality it is either 25% or 75% depending on the variant -> Invalid
+        with self.assertRaises(UserError):
+            self.env['mrp.bom'].create({
+                'product_tmpl_id': product_template.id,
+                'product_uom_id': product_template.uom_id.id,
+                'product_qty': 1.0,
+                'type': 'phantom',
+                'bom_line_ids': [
+                    Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 25, 'bom_product_template_attribute_value_ids': [Command.link(size_attribute_lines.product_template_value_ids[0].id)]}),  # S size
+                    Command.create({'product_id': c2.id, 'product_qty': 1, 'cost_share': 75, 'bom_product_template_attribute_value_ids': [Command.link(size_attribute_lines.product_template_value_ids[1].id)]}),  # M size
+                ]
+            })
+
+        # The total cost share for Blue is 100% but for Red is 105% -> Invalid
+        with self.assertRaises(UserError):
+            self.env['mrp.bom'].create({
+                'product_tmpl_id': product_template.id,
+                'product_uom_id': product_template.uom_id.id,
+                'product_qty': 1.0,
+                'type': 'phantom',
+                'bom_line_ids': [
+                    Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 25, 'bom_product_template_attribute_value_ids': [Command.link(color_attribute_lines.product_template_value_ids[0].id)]}),  # Blue
+                    Command.create({'product_id': c2.id, 'product_qty': 1, 'cost_share': 30, 'bom_product_template_attribute_value_ids': [Command.link(color_attribute_lines.product_template_value_ids[1].id)]}),  # Red
+                    Command.create({'product_id': c3.id, 'product_qty': 1, 'cost_share': 75}),  # All attributes
+                ]
+            })
+
+        # Check that optional lines (with a product_qty of 0) are ignored -> Valid
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_template.id,
+            'product_uom_id': product_template.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 100}),  # All attributes
+                Command.create({'product_id': c2.id, 'product_qty': 0, 'cost_share': 100}),  # All attributes - Qty 0 are Optional so the cost share should not impact the validation
+            ]
+        })
+
+        # Variant with S attribute sum up to 100% others to 0% -> Valid
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_template.id,
+            'product_uom_id': product_template.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 35, 'bom_product_template_attribute_value_ids': [Command.link(size_attribute_lines.product_template_value_ids[0].id)]}),  # S size
+                Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 65, 'bom_product_template_attribute_value_ids': [Command.link(size_attribute_lines.product_template_value_ids[0].id)]}),  # S size
+                Command.create({'product_id': c2.id, 'product_qty': 1, 'cost_share': 0}),  # All attributes
+            ]
+        })
+
+        # All attribute values of a given attribute are equi-distributed -> Valid
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_template.id,
+            'product_uom_id': product_template.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 30, 'bom_product_template_attribute_value_ids': [Command.link(size_attribute_lines.product_template_value_ids[0].id)]}),  # S
+                Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 15, 'bom_product_template_attribute_value_ids': [Command.link(size_attribute_lines.product_template_value_ids[1].id)]}),  # M
+                Command.create({'product_id': c2.id, 'product_qty': 1, 'cost_share': 15, 'bom_product_template_attribute_value_ids': [Command.link(size_attribute_lines.product_template_value_ids[1].id)]}),  # M
+                Command.create({'product_id': c2.id, 'product_qty': 1, 'cost_share': 70}),  # All attributes
+            ]
+        })
+
+        # Keep only the S Blue and the M Red variant
+        product_template.product_variant_ids[1:3].action_archive()
+        self.assertEqual(product_template.product_variant_count, 2)
+
+        # Set up is fine for S Blue and M Red but fails for other non existing combination -> Valid
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_template.id,
+            'product_uom_id': product_template.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 30, 'bom_product_template_attribute_value_ids': [
+                    Command.link(size_attribute_lines.product_template_value_ids[0].id),  # S
+                    Command.link(color_attribute_lines.product_template_value_ids[0].id),  # Blue
+                ]}),  # S or Blue
+                Command.create({'product_id': c2.id, 'product_qty': 1, 'cost_share': 30, 'bom_product_template_attribute_value_ids': [
+                    Command.link(size_attribute_lines.product_template_value_ids[1].id),  # M
+                    Command.link(color_attribute_lines.product_template_value_ids[1].id),  # Red
+                ]}),  # M or Red
+                Command.create({'product_id': c3.id, 'product_qty': 1, 'cost_share': 70}),  # All attributes
+            ]
+        })
+
+    def test_kit_cost_share_variant_and_optional_lines(self):
+        """
+        Ensure the cost share is well computed when purchasing a kit with optional or variant specific lines
+        """
+        avco_category = self.env['product.category'].create({
+            'name': 'AVCO',
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time',
+        })
+        size_attribute = self.env['product.attribute'].create({'name': 'Size'})
+        self.env['product.attribute.value'].create([{
+            'name': name,
+            'attribute_id': size_attribute.id
+        } for name in ('S', 'M', 'L')])
+        product_template = self.env['product.template'].create({
+            'name': "Lovely product",
+            'is_storable': True,
+        })
+        attribute_lines = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_template.id,
+            'attribute_id': size_attribute.id,
+            'value_ids': [Command.set(size_attribute.value_ids.ids)]
+        })
+        self.assertEqual(product_template.product_variant_count, 3)
+        c1, c2, c3, c4, c5, c6 = self.env['product.product'].create([
+            {
+                'name': f'Comp {i + 1}',
+                'categ_id': avco_category.id,
+            } for i in range(6)
+        ])
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_template.id,
+            'product_uom_id': product_template.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': c1.id, 'product_qty': 1, 'cost_share': 25, 'bom_product_template_attribute_value_ids': [Command.link(attribute_lines[0].product_template_value_ids[0].id)]}),  # S size
+                Command.create({'product_id': c2.id, 'product_qty': 1, 'cost_share': 75, 'bom_product_template_attribute_value_ids': [Command.link(attribute_lines[0].product_template_value_ids[0].id)]}),  # S size
+                Command.create({'product_id': c3.id, 'product_qty': 1, 'cost_share': 100, 'bom_product_template_attribute_value_ids': [Command.link(attribute_lines[0].product_template_value_ids[1].id)]}),  # M size
+                Command.create({'product_id': c4.id, 'product_qty': 1, 'cost_share': 0, 'bom_product_template_attribute_value_ids': [Command.link(attribute_lines[0].product_template_value_ids[2].id)]}),  # L sizes
+                Command.create({'product_id': c5.id, 'product_qty': 1, 'cost_share': 0}),  # All sizes
+                Command.create({'product_id': c6.id, 'product_qty': 0, 'cost_share': 100}),  # All sizes
+            ]
+        })
+        # Purchase one variant for each sizes
+        vendor = self.env['res.partner'].create({'name': 'Super vendor'})
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': vendor.id,
+            'order_line': [
+                Command.create({'product_id': variant.id, 'product_qty': 1, 'price_unit': 1000}) for variant in product_template.product_variant_ids
+            ],
+        })
+        purchase_order.button_confirm()
+
+        self.assertEqual(sum(purchase_order.order_line.move_ids.mapped('cost_share')), 300.0, 'There are 3 lines and each line should be associated with a total cost_share of 100%')
+        self.assertRecordValues(purchase_order.order_line.move_ids.sorted(lambda m: m.product_id.id), [
+            {'product_id': c1.id, 'cost_share': 25.0},
+            {'product_id': c2.id, 'cost_share': 75.0},
+            {'product_id': c3.id, 'cost_share': 100.0},
+            {'product_id': c4.id, 'cost_share': 50.0},
+            {'product_id': c5.id, 'cost_share': 0.0},
+            {'product_id': c5.id, 'cost_share': 0.0},
+            {'product_id': c5.id, 'cost_share': 50.0},
+            {'product_id': c6.id, 'cost_share': 0.0},
+            {'product_id': c6.id, 'cost_share': 0.0},
+            {'product_id': c6.id, 'cost_share': 0.0},
+        ])
+
+        receipt = purchase_order.picking_ids
+        receipt.button_validate()
+
+        self.assertRecordValues(receipt.move_ids.sorted(lambda m: (m.purchase_line_id.product_id.id, m.product_id.id)), [
+            # S attribute
+            {'product_id': c1.id, 'value': 250.0},
+            {'product_id': c2.id, 'value': 750.0},
+            {'product_id': c5.id, 'value': 0.0},
+            {'product_id': c6.id, 'value': 0.0},
+
+            # M attribute
+            {'product_id': c3.id, 'value': 1000.0},
+            {'product_id': c5.id, 'value': 0.0},
+            {'product_id': c6.id, 'value': 0.0},
+
+            # L attribute - Cost share 0% automatically splitted
+            {'product_id': c4.id, 'value': 500.0},
+            {'product_id': c5.id, 'value': 500.0},
+            {'product_id': c6.id, 'value': 0.0},
+        ])

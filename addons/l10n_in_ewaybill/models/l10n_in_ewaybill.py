@@ -465,30 +465,42 @@ class L10nInEwaybill(models.Model):
         self._write_error(error_message, blocking_level)
 
     def _create_and_post_response_attachment(self, ewb_name, response, is_cancel=False):
-        if not is_cancel:
-            name = f'ewaybill_{ewb_name}.json'
-        else:
-            name = f'ewaybill_{ewb_name}_cancel.json'
-        attachment = self.env['ir.attachment'].create({
-            'name': name,
-            'mimetype': 'application/json',
-            'raw': json.dumps(response),
-            'res_model': self._name,
-            'res_id': self.id,
-            'res_field': 'attachment_file',
-            'company_id': self.company_id.id
-        })
+        def _create_attachment_vals(name, raw_data, res_field=False):
+            vals = {
+                'name': name,
+                'mimetype': 'application/json',
+                'raw': json.dumps(raw_data, indent=4),
+                'res_model': self._name,
+                'res_id': self.id,
+                'res_field': res_field,
+                'company_id': self.company_id.id,
+            }
+            return vals
+
+        attachment_vals_list = []
+        request_json = self._get_cancellation_request_vals() if is_cancel else self._ewaybill_generate_direct_json()
+        request_type = 'cancel_request' if is_cancel else 'request'
+        request_name = f'ewaybill_{ewb_name}_{request_type}.json'
+        attachment_vals_list.append(_create_attachment_vals(request_name, request_json))
+        name = f'ewaybill_{ewb_name}_cancel.json' if is_cancel else f'ewaybill_{ewb_name}.json'
+        attachment_vals_list.append(_create_attachment_vals(name, response, res_field='attachment_file'))
+        attachments = self.env['ir.attachment'].create(attachment_vals_list)
         self.message_post(
             author_id=self.env.ref('base.partner_root').id,
-            attachment_ids=attachment.ids
+            attachment_ids=attachments.ids,
+            body=self.env._("E-waybill has been successfully %s.", 'cancelled' if is_cancel else 'sent')
         )
 
-    def _ewaybill_cancel(self):
-        cancel_json = {
+    def _get_cancellation_request_vals(self):
+        cancel_json_vals = {
             'ewbNo': int(self.name),
             'cancelRsnCode': int(self.cancel_reason),
             'cancelRmrk': self.cancel_remarks,
         }
+        return cancel_json_vals
+
+    def _ewaybill_cancel(self):
+        cancel_json = self._get_cancellation_request_vals()
         ewb_api = EWayBillApi(self.company_id)
         if self.error_message and self.blocking_level == 'error':
             self.message_post(body=_(
@@ -673,6 +685,15 @@ class L10nInEwaybill(models.Model):
         invoice_line_tax_details = tax_details.get("tax_details_per_record")
         sign = self.account_move_id.is_inbound() and -1 or 1
         rounding_amount = sum(line.balance for line in self.account_move_id.line_ids if line.display_type == 'rounding') * sign
+        total_invoice_value = tax_details.get("base_amount", 0.00) + tax_details.get("tax_amount", 0.00) + rounding_amount
+        if self.account_move_id.l10n_in_gst_treatment == 'overseas' and self.partner_ship_to_id.country_id.code != 'IN':
+            # For exports without LUT, the e-waybill total invoice value must include Reverse Charges.
+            # Reverse charge amounts are stored as a negative value,
+            # so we subtract it here to effectively add it to the total. (i.e. -(-x) = +x).
+            adjusting_rc_amount = sum(
+                tax_details_by_code.get(code, 0.00) for code in ("cgst_rc_amount", "sgst_rc_amount", "igst_rc_amount")
+            )
+            total_invoice_value -= adjusting_rc_amount
         return {
             "itemList": list(starmap(self._get_l10n_in_ewaybill_line_details, invoice_line_tax_details.items())),
             "totalValue": round_value(tax_details.get("base_amount", 0.00)),
@@ -682,7 +703,7 @@ class L10nInEwaybill(models.Model):
             },
             "cessNonAdvolValue": round_value(tax_details_by_code.get("cess_non_advol_amount", 0.00)),
             "otherValue": round_value(tax_details_by_code.get("other_amount", 0.00) + rounding_amount),
-            "totInvValue": round_value(tax_details.get("base_amount", 0.00) + tax_details.get("tax_amount", 0.00) + rounding_amount),
+            "totInvValue": round_value(total_invoice_value),
         }
 
     def _ewaybill_generate_direct_json(self):

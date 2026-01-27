@@ -378,8 +378,8 @@ export function clickPartnerButton() {
     ];
 }
 
-export function clickCustomer(name) {
-    return [...PartnerList.searchCustomerValue(name), PartnerList.clickPartner(name)];
+export function clickCustomer(name, pressEnter = false) {
+    return [...PartnerList.searchCustomerValue(name, pressEnter), PartnerList.clickPartner(name)];
 }
 
 export function shippingLaterHighlighted() {
@@ -404,6 +404,15 @@ export function syncCurrentOrder() {
                     throw new Error("Order ID is not a number after sync.");
                 }
             },
+        },
+    ];
+}
+
+export function isInvoiceButtonUnchecked() {
+    return [
+        {
+            content: "check invoice button is not highlighted",
+            trigger: ".js_invoice:not(.highlight)",
         },
     ];
 }

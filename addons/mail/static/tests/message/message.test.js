@@ -258,6 +258,24 @@ test("Editing message keeps the mentioned channels", async () => {
     await contains(".o-mail-DiscussContent-threadName", { value: "other" });
 });
 
+test("Editing message keeps the mentioned roles", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.role"].create([{ name: "admin" }]);
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@");
+    await click(".o-mail-Composer-suggestion strong", { text: "admin" });
+    await press("Enter");
+    await contains(".o-discuss-mention", { text: "@admin" });
+    await click(".o-mail-Message [title='Edit']");
+    await contains(".o-mail-Message .o-mail-Composer-input", { value: "@admin" });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "@admin edit", { replace: true });
+    await click(".o-mail-Message button", { text: "save" });
+    await contains(".o-mail-Message-content", { text: "@admin edit (edited)" });
+    await contains(".o-discuss-mention", { text: "@admin" });
+});
+
 test("Can edit message comment in chatter", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
@@ -292,6 +310,25 @@ test("Can edit message comment in chatter", async () => {
     await contains(".o-mail-Message:contains('Escape to cancel, CTRL-Enter to save')");
     await webContains(".o-mail-Message .o-mail-Composer-input").press(["Control", "Enter"]);
     await contains(".o-mail-Message-content", { text: "edited again (edited)" });
+});
+
+test("Basic list of edit message actions in chatter", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "original message",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Message [title='Edit']");
+    await contains(".o-mail-Message .o-mail-Composer.o-focused");
+    await click(".o-mail-Message .o-mail-Composer button[title='More Actions']");
+    await contains(".dropdown-menu .dropdown-item", { count: 1 });
+    await contains(".dropdown-menu .dropdown-item:has(:text('Attach Files'))");
 });
 
 test("Cursor is at end of composer input on edit", async () => {

@@ -496,7 +496,7 @@
                                 <strong style="color:#2c2431;">Files included:</strong> the original document(s) are attached for your convenience.
                             </div>
 
-                            <div style="margin-top:32px; text-align:center;">
+                            <div style="margin-top:32px; text-align:center;" t-if="object.move_type != 'in_invoice'">
                                 <a t-if="portal_url" t-attf-href="{{ portal_url }}"
                                    style="display:inline-block; margin:0 10px 14px; padding:13px 30px; min-width:210px; background:linear-gradient(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-decoration:none; border-radius:12px; font-weight:600; font-size:14px;"
                                    target="_blank">

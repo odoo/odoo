@@ -92,10 +92,11 @@ export class ImageTransformation extends Component {
             return;
         }
         ev.preventDefault();
+        const { pageX, pageY } = this.normalizeCoordinates(ev);
         const settings = this.transfo.settings;
         const center = this.transfo.active.center;
-        const cdx = center.left - ev.pageX;
-        const cdy = center.top - ev.pageY;
+        const cdx = center.left - pageX;
+        const cdy = center.top - pageY;
         if (this.transfo.active.type == "rotator") {
             let ang;
             const dang = Math.atan(settings.width / settings.height) / rad;
@@ -105,11 +106,11 @@ export class ImageTransformation extends Component {
             } else {
                 ang = 0;
             }
-            if (ev.pageY >= center.top && ev.pageX >= center.left) {
+            if (pageY >= center.top && pageX >= center.left) {
                 ang += 180;
-            } else if (ev.pageY >= center.top && ev.pageX < center.left) {
+            } else if (pageY >= center.top && pageX < center.left) {
                 ang += 180;
-            } else if (ev.pageY < center.top && ev.pageX < center.left) {
+            } else if (pageY < center.top && pageX < center.left) {
                 ang += 360;
             }
 
@@ -133,10 +134,10 @@ export class ImageTransformation extends Component {
             settings.translatey += -x * Math.sin(angle) + y * Math.cos(-angle);
         } else if (this.transfo.active.type == "position") {
             const angle = settings.angle * rad;
-            const x = ev.pageX - this.transfo.active.pageX;
-            const y = ev.pageY - this.transfo.active.pageY;
-            this.transfo.active.pageX = ev.pageX;
-            this.transfo.active.pageY = ev.pageY;
+            const x = pageX - this.transfo.active.pageX;
+            const y = pageY - this.transfo.active.pageY;
+            this.transfo.active.pageX = pageX;
+            this.transfo.active.pageY = pageY;
             const dx = x * Math.cos(angle) - y * Math.sin(-angle);
             const dy = -x * Math.sin(angle) + y * Math.cos(-angle);
 
@@ -145,8 +146,8 @@ export class ImageTransformation extends Component {
         } else if (this.transfo.active.type.length === 2) {
             const width = this.transfo.active.width;
             const height = this.transfo.active.height;
-            const deltaX = ev.pageX - this.transfo.active.pageX;
-            const deltaY = ev.pageY - this.transfo.active.pageY;
+            const deltaX = pageX - this.transfo.active.pageX;
+            const deltaY = pageY - this.transfo.active.pageY;
 
             let newWidth = width;
             let newHeight = height;
@@ -187,9 +188,8 @@ export class ImageTransformation extends Component {
                 }
             }
             this.image.style.width = newWidth + "px";
-            this.image.style.height = newHeight + "px";
+            this.image.style.height = "auto";
             settings.width = newWidth;
-            settings.height = newHeight;
         }
 
         settings.angle = Math.round(settings.angle);
@@ -208,9 +208,16 @@ export class ImageTransformation extends Component {
         this.positionTransfoContainer();
     }
 
+    convertPixelWidthToPercentage() {
+        const currentPixelWidth = this.image.offsetWidth;
+        const widthPercent = (currentPixelWidth / this.image.parentElement.offsetWidth) * 100;
+        this.image.style.width = widthPercent.toFixed(2) + "%";
+    }
+
     mouseUp() {
         this.isCurrentlyTransforming = false;
         this.transfo.active = null;
+        this.convertPixelWidthToPercentage();
         this.props.onApply?.();
         this.props.onChange();
     }
@@ -243,10 +250,11 @@ export class ImageTransformation extends Component {
             type = "mr";
         }
 
+        const { pageX, pageY } = this.normalizeCoordinates(ev);
         this.transfo.active = {
             type: type,
-            pageX: ev.pageX,
-            pageY: ev.pageY,
+            pageX: pageX,
+            pageY: pageY,
             width: parseFloat(getComputedStyle(this.image).width),
             height: parseFloat(getComputedStyle(this.image).height),
             center: this.getOffset(this.transfoCenter.el),
@@ -340,6 +348,20 @@ export class ImageTransformation extends Component {
         element.style.transform = transform;
     }
 
+    normalizeCoordinates(ev) {
+        const evView = ev.view;
+        const iframeWindow = this.document.defaultView;
+        const frameElement = iframeWindow.frameElement;
+        if (evView === iframeWindow && frameElement) {
+            const frameRect = frameElement.getBoundingClientRect();
+            return {
+                pageX: ev.clientX + frameRect.left + frameElement.clientLeft + window.pageXOffset,
+                pageY: ev.clientY + frameRect.top + frameElement.clientTop + window.pageYOffset,
+            };
+        }
+        return { pageX: ev.pageX, pageY: ev.pageY };
+    }
+
     getOffset(target) {
         if (!target.getClientRects().length) {
             return { top: 0, left: 0 };
@@ -349,8 +371,8 @@ export class ImageTransformation extends Component {
             const offset = { top: 0, left: 0 };
             if (frameElement) {
                 const frameRect = frameElement.getBoundingClientRect();
-                offset.left += frameRect.left;
-                offset.top += frameRect.top;
+                offset.left += frameRect.left + frameElement.clientLeft;
+                offset.top += frameRect.top + frameElement.clientTop;
             }
             return {
                 top: rect.top + window.pageYOffset + offset.top,

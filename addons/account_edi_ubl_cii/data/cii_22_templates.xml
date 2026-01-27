@@ -195,7 +195,11 @@
                             </t>
 
                             <!-- VAT. -->
-                            <ram:SpecifiedTaxRegistration t-if="record.company_id.vat">
+                            <ram:SpecifiedTaxRegistration t-if="record.fiscal_position_id.foreign_vat">
+                                <ram:ID schemeID="VA" t-out="record.fiscal_position_id.foreign_vat"/>
+                            </ram:SpecifiedTaxRegistration>
+
+                            <ram:SpecifiedTaxRegistration t-elif="record.company_id.vat">
                                 <ram:ID schemeID="VA" t-out="record.company_id.vat"/>
                             </ram:SpecifiedTaxRegistration>
                         </ram:SellerTradeParty>
@@ -325,7 +329,7 @@
                 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
                     <rdf:Description xmlns:pdfaid="http://www.aiim.org/pdfa/ns/id/" rdf:about="">
                         <pdfaid:part>3</pdfaid:part>
-                        <pdfaid:conformance>B</pdfaid:conformance>
+                        <pdfaid:conformance>A</pdfaid:conformance>
                     </rdf:Description>
                     <rdf:Description xmlns:dc="http://purl.org/dc/elements/1.1/" rdf:about="">
                         <dc:title>

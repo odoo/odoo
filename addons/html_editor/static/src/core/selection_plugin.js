@@ -59,6 +59,7 @@ import { weakMemoize } from "@html_editor/utils/functions";
  * @property {() => void} restore
  * @property {(callback: (cursor: Cursor) => void) => Cursors} update
  * @property {(node: Node, newNode: Node) => Cursors} remapNode
+ * @property {(callback: (cursor: Cursor) => void) => Cursors} setCursor
  * @property {(node: Node, newOffset: number) => Cursors} setOffset
  * @property {(node: Node, shiftOffset: number) => Cursors} shiftOffset
  */
@@ -278,6 +279,7 @@ export class SelectionPlugin extends Plugin {
             this.addDomListener(this.document, "pointerdown", focusEditable, { capture: true });
             this.addDomListener(document, "pointerdown", unFocusEditable, { capture: true });
         }
+        this.preservedCursors = [];
     }
 
     selectAll() {
@@ -710,49 +712,71 @@ export class SelectionPlugin extends Plugin {
         const selection = selectionData.editableSelection;
         const anchor = { node: selection.anchorNode, offset: selection.anchorOffset };
         const focus = { node: selection.focusNode, offset: selection.focusOffset };
-
-        return {
+        const cursor = {
+            anchor,
+            focus,
             restore: () => {
+                const index = this.preservedCursors.findIndex((ref) => ref.deref() === cursor);
+                if (index !== -1) {
+                    this.preservedCursors.splice(index, 1);
+                }
                 if (!hadSelection) {
                     return;
                 }
                 this.setSelection(
                     {
-                        anchorNode: anchor.node,
-                        anchorOffset: anchor.offset,
-                        focusNode: focus.node,
-                        focusOffset: focus.offset,
+                        anchorNode: cursor.anchor.node,
+                        anchorOffset: cursor.anchor.offset,
+                        focusNode: cursor.focus.node,
+                        focusOffset: cursor.focus.offset,
                     },
                     { normalize: false }
                 );
             },
-            update(callback) {
-                callback(anchor);
-                callback(focus);
-                return this;
+            update: (callback) => {
+                this.preservedCursors.forEach((ref) => {
+                    const liveCursor = ref.deref();
+                    if (liveCursor) {
+                        callback(liveCursor.anchor);
+                        callback(liveCursor.focus);
+                    }
+                });
+                return cursor;
             },
             remapNode(node, newNode) {
-                return this.update((cursor) => {
+                return cursor.update((cursor) => {
                     if (cursor.node === node) {
                         cursor.node = newNode;
                     }
                 });
             },
             setOffset(node, newOffset) {
-                return this.update((cursor) => {
+                return cursor.update((cursor) => {
                     if (cursor.node === node) {
                         cursor.offset = newOffset;
                     }
                 });
             },
             shiftOffset(node, shiftOffset) {
-                return this.update((cursor) => {
+                return cursor.update((cursor) => {
                     if (cursor.node === node) {
                         cursor.offset += shiftOffset;
                     }
                 });
             },
+            setCursor: (callback) => {
+                this.preservedCursors.forEach((ref) => {
+                    const liveCursor = ref.deref();
+                    if (liveCursor) {
+                        callback(liveCursor);
+                    }
+                });
+                return cursor;
+            },
         };
+        this.preservedCursors = this.preservedCursors.filter((c) => c.deref()); // filter out dead cursors.
+        this.preservedCursors.push(new WeakRef(cursor));
+        return cursor;
     }
 
     areNodeContentsFullySelected(node) {

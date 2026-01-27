@@ -111,12 +111,29 @@ class Test_Base_AutomationTask(models.Model):
         'test_base_automation.project',
         compute='_compute_project_id', recursive=True, store=True, readonly=False,
     )
+    allocated_hours = fields.Float()
+    trigger_hours = fields.Float("Save time to trigger effective hours")
+    remaining_hours = fields.Float("Time Remaining", compute='_compute_remaining_hours', store=True, readonly=True, help="Number of allocated hours minus the number of hours spent.")
+    effective_hours = fields.Float("Time Spent", compute='_compute_effective_hours', compute_sudo=True, store=True)
 
     @api.depends('parent_id.project_id')
     def _compute_project_id(self):
         for task in self:
             if not task.project_id:
                 task.project_id = task.parent_id.project_id
+
+    @api.depends('trigger_hours')
+    def _compute_effective_hours(self):
+        for task in self:
+            task.effective_hours = task.trigger_hours
+
+    @api.depends('effective_hours')
+    def _compute_remaining_hours(self):
+        for task in self:
+            if not task.allocated_hours:
+                task.remaining_hours = 0.0
+            else:
+                task.remaining_hours = task.allocated_hours - task.effective_hours
 
 
 class Test_Base_AutomationStage(models.Model):

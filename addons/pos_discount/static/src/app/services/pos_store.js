@@ -55,7 +55,7 @@ patch(PosStore.prototype, {
         for (const baseLine of globalDiscountBaseLines) {
             const extra_tax_data = accountTaxHelpers.export_base_line_extra_tax_data(baseLine);
             extra_tax_data.discount_percentage = percent;
-            const line = await this.addLineToOrder(
+            const line = await this.addLineToCurrentOrder(
                 {
                     product_id: baseLine.product_id,
                     price_unit: baseLine.price_unit,
@@ -64,7 +64,6 @@ patch(PosStore.prototype, {
                     product_tmpl_id: baseLine.product_id.product_tmpl_id,
                     extra_tax_data: extra_tax_data,
                 },
-                order,
                 { merge: false }
             );
             if (line) {

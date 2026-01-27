@@ -148,29 +148,6 @@ export function createExtraField(record, extraFields, serverData, vals) {
     }
 }
 
-/**
- * Returns a function that computes backlinks for a given field.
- * This function iterates over related records and returns those that reference the current record's ID.
- */
-export function computeBackLinks(field) {
-    const isOneToMany = field.type === "one2many";
-    return function () {
-        // "this" is reactive instance
-        const result = [];
-        const recordsMap = this[STORE_SYMBOL].getRecordsMap(field.relation, "id");
-        for (const record of recordsMap.values()) {
-            const values = record[RAW_SYMBOL][field.inverse_name];
-            if (!values) {
-                continue;
-            }
-            if (isOneToMany ? values === this.id : values.has(this.id)) {
-                result.push(record);
-            }
-        }
-        return result || [];
-    };
-}
-
 function unmodifiableArray(arr, message) {
     return new Proxy(arr, {
         set(target, prop, value) {

@@ -94,7 +94,8 @@ export class ClonePlugin extends Plugin {
 
         // Scroll to the clone if required and if it is not visible.
         if (scrollToClone && !isElementInViewport(cloneEl)) {
-            cloneEl.scrollIntoView({ behavior: "smooth", block: "center" });
+            // Firefox mis-scrolls with block "center" on tall snippets; keep "start".
+            cloneEl.scrollIntoView({ behavior: "smooth", block: "start" });
         }
 
         for (const onCloned of this.getResource("on_cloned_handlers")) {
@@ -110,7 +111,9 @@ export class CloneItemAction extends BuilderAction {
     static dependencies = ["clone", "history"];
     async apply({ editingElement, params: { mainParam: itemSelector }, value: position }) {
         const itemEl = editingElement.querySelector(itemSelector);
-        await this.dependencies.clone.cloneElement(itemEl, { position, scrollToClone: true });
-        this.dependencies.history.addStep();
+        if (itemEl) {
+            await this.dependencies.clone.cloneElement(itemEl, { position, scrollToClone: true });
+            this.dependencies.history.addStep();
+        }
     }
 }

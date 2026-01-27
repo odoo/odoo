@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_pos_dpopay" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.pos.dpopay</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook invisible="use_payment_terminal != 'dpopay'">
+                    <page name="settings" string="DPO Pay">
+                        <group>
+                            <group>
+                                <field name="dpopay_client_id" required="use_payment_terminal == 'dpopay'"/>
+                                <field name="dpopay_client_secret" required="use_payment_terminal == 'dpopay'" password="1"/>
+                                <field name="dpopay_mid" required="use_payment_terminal == 'dpopay'"/>
+                                <field name="dpopay_tid" required="use_payment_terminal == 'dpopay'"/>
+                                <field name="dpopay_chain_id" required="use_payment_terminal == 'dpopay'" password="1"/>
+                            </group>
+                            <group>
+                                <field name="dpopay_payment_mode" required="use_payment_terminal == 'dpopay'"/>
+                                <field name="dpopay_test_mode" required="use_payment_terminal == 'dpopay'"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -12,14 +12,16 @@ import {
     isEmptyBlock,
     isRedundantElement,
     isTextNode,
+    isVisibleTextNode,
     isWhitespace,
-    isZwnbsp,
+    isZWS,
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { isColorGradient, rgbaToHex } from "@web/core/utils/colors";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { isBlock } from "@html_editor/utils/blocks";
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 const COLOR_COMBINATION_CLASSES = [1, 2, 3, 4, 5].map((i) => `o_cc${i}`);
 const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`).join(", ");
@@ -152,29 +154,32 @@ export class ColorPlugin extends Plugin {
         if (this.delegateTo("color_apply_overrides", color, mode, previewMode)) {
             return;
         }
-        let selection = this.dependencies.selection.getEditableSelection();
+        const selection = this.dependencies.selection.getEditableSelection();
+        let cursors;
         let targetedNodes;
         // Get the <font> nodes to color
         if (selection.isCollapsed) {
             let zws;
             if (
-                selection.anchorNode.nodeType !== Node.TEXT_NODE &&
-                selection.anchorNode.textContent !== "\u200b"
+                selection.anchorNode.nodeType === Node.TEXT_NODE &&
+                selection.anchorNode.textContent === "\u200b"
             ) {
                 zws = selection.anchorNode;
             } else {
                 zws = this.dependencies.format.insertAndSelectZws();
             }
-            selection = this.dependencies.selection.setSelection(
+            this.dependencies.selection.setSelection(
                 {
                     anchorNode: zws,
                     anchorOffset: 0,
                 },
                 { normalize: false }
             );
+            cursors = this.dependencies.selection.preserveSelection();
             targetedNodes = [zws];
         } else {
-            selection = this.dependencies.split.splitSelection();
+            this.dependencies.split.splitSelection();
+            cursors = this.dependencies.selection.preserveSelection();
             targetedNodes = this.dependencies.selection
                 .getTargetedNodes()
                 .filter(
@@ -219,11 +224,6 @@ export class ColorPlugin extends Plugin {
 
         const getFonts = (selectedNodes) =>
             selectedNodes.flatMap((node) => {
-                // Invisible nodes like `feff`s can be removed during `splitAroundUntil`
-                // so we filter them out.
-                if (!node.isConnected) {
-                    return [];
-                }
                 let font =
                     closestElement(node, "font") ||
                     closestElement(
@@ -231,7 +231,10 @@ export class ColorPlugin extends Plugin {
                         '[style*="color"]:not(li), [style*="background-color"]:not(li), [style*="background-image"]:not(li)'
                     ) ||
                     closestElement(node, "span") ||
-                    closestElement(node, (node) => hasTextColorClass(node, mode));
+                    closestElement(
+                        node,
+                        (node) => node.nodeName !== "LI" && hasTextColorClass(node, mode)
+                    );
 
                 const faNodes = font?.querySelectorAll(".fa");
                 if (faNodes && Array.from(faNodes).some((faNode) => faNode.contains(node))) {
@@ -261,8 +264,8 @@ export class ColorPlugin extends Plugin {
                     !this.dependencies.split.isUnsplittable(font)
                 ) {
                     // Partially selected <font>: split it.
-                    const selectedChildren = children.filter((child) =>
-                        selectedNodes.includes(child)
+                    const selectedChildren = children.filter(
+                        (child) => child.isConnected && selectedNodes.includes(child)
                     );
                     if (selectedChildren.length) {
                         if (isBlock(font)) {
@@ -291,13 +294,10 @@ export class ColorPlugin extends Plugin {
                         );
                         const isGradientBeingUpdated = closestGradientEl && isColorGradient(color);
                         const splitnode = isGradientBeingUpdated ? closestGradientEl : font;
-                        const cursors = this.dependencies.selection.preserveSelection();
                         font = this.dependencies.split.splitAroundUntil(
                             selectedChildren,
-                            splitnode,
-                            cursors
+                            splitnode
                         );
-                        cursors.restore();
                         if (isGradientBeingUpdated) {
                             const classRegex =
                                 mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX;
@@ -329,7 +329,8 @@ export class ColorPlugin extends Plugin {
                         font = [];
                     }
                 } else if (
-                    (node.nodeType === Node.TEXT_NODE && !isZwnbsp(node)) ||
+                    (node.nodeType === Node.TEXT_NODE &&
+                        (isVisibleTextNode(node) || isZWS(node))) ||
                     (node.nodeName === "BR" && isEmptyBlock(node.parentNode)) ||
                     (node.nodeType === Node.ELEMENT_NODE &&
                         ["inline", "inline-block"].includes(getComputedStyle(node).display) &&
@@ -395,14 +396,12 @@ export class ColorPlugin extends Plugin {
                 ["FONT", "SPAN"].includes(font.nodeName) &&
                 (!font.hasAttribute("style") || !color)
             ) {
-                for (const child of [...font.childNodes]) {
-                    font.parentNode.insertBefore(child, font);
-                }
-                font.parentNode.removeChild(font);
+                cursors.update(callbacksForCursorUpdate.unwrap(font));
+                unwrapContents(font);
                 fontsSet.delete(font);
             }
         }
-        this.dependencies.selection.setSelection(selection, { normalize: false });
+        cursors.restore();
     }
 
     /**

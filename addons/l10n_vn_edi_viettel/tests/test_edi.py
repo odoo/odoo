@@ -133,7 +133,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
                 'payments': [{'paymentMethodName': 'TM/CK'}],
                 'itemInfo': [{
                     'itemCode': 'BN/1035',
-                    'itemName': 'product_a',
+                    'itemName': '[BN/1035] product_a',
                     'unitName': 'Units',
                     'unitPrice': 1000.0,
                     'quantity': 1.0,
@@ -149,6 +149,76 @@ class TestVNEDI(AccountTestInvoicingCommon):
                     'taxPercentage': 10.0,
                     'taxableAmount': 1000.0,
                     'taxAmount': 100.0,
+                    'taxableAmountPos': True,
+                    'taxAmountPos': True
+                }]
+            }
+        )
+
+    @freeze_time('2024-01-01')
+    def test_json_data_generation_no_product(self):
+        """ Test the data dict generated to ensure consistency with the data we set in the system. """
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            amounts=[250],
+            taxes=self.tax_sale_a,
+            post=True,
+        )
+        self.assertDictEqual(
+            invoice._l10n_vn_edi_generate_invoice_json(),
+            {
+                'generalInvoiceInfo': {
+                    'transactionUuid': mock.ANY,  # Random, not important.
+                    'invoiceType': '1',
+                    'templateCode': '1/001',
+                    'invoiceSeries': 'K24TUT',
+                    'invoiceIssuedDate': 1704067200000,
+                    'currencyCode': 'VND',
+                    'adjustmentType': '1',
+                    'paymentStatus': False,
+                    'cusGetInvoiceRight': True,
+                    'validation': 1,
+                },
+                'buyerInfo': {
+                    'buyerName': 'partner_a',
+                    'buyerLegalName': 'partner_a',
+                    'buyerTaxCode': '0100109106-505',
+                    'buyerAddressLine': '121 Hang Bac Street',
+                    'buyerPhoneNumber': '38257670',
+                    'buyerEmail': 'partner_a@gmail.com',
+                    'buyerCityName': 'Hà Nội',
+                    'buyerCountryCode': 'VN',
+                    'buyerNotGetInvoice': 0,
+                },
+                'sellerInfo': {
+                    'sellerLegalName': 'company_1_data',
+                    'sellerTaxCode': '0100109106-506',
+                    'sellerAddressLine': '3 Alley 45 Phan Dinh Phung, Quan Thanh Ward',
+                    'sellerPhoneNumber': '62661275',
+                    'sellerEmail': 'test_company@gmail.com',
+                    'sellerDistrictName': 'Hà Nội',
+                    'sellerCountryCode': 'VN',
+                    'sellerWebsite': 'http://test_company.com',
+                },
+                'payments': [{'paymentMethodName': 'TM/CK'}],
+                'itemInfo': [{
+                    'itemCode': '',
+                    'itemName': 'test line',
+                    'unitName': 'Units',
+                    'unitPrice': 250.0,
+                    'quantity': 1.0,
+                    'itemTotalAmountWithoutTax': 250.0,
+                    'taxPercentage': 10.0,
+                    'taxAmount': 25.0,
+                    'discount': 0.0,
+                    'itemTotalAmountAfterDiscount': 250.0,
+                    'itemTotalAmountWithTax': 275.0,
+                    'selection': 1,
+                }],
+                'taxBreakdowns': [{
+                    'taxPercentage': 10.0,
+                    'taxableAmount': 250.0,
+                    'taxAmount': 25.0,
                     'taxableAmountPos': True,
                     'taxAmountPos': True
                 }]
@@ -268,7 +338,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
             currency=self.other_currency,
         )
         json_data = invoice._l10n_vn_edi_generate_invoice_json()
-        self.assertEqual(json_data['generalInvoiceInfo']['exchangeRate'], 0.5)
+        self.assertEqual(json_data['generalInvoiceInfo']['exchangeRate'], "0.50")
 
     @freeze_time('2024-01-01')
     def test_send_and_print(self):
@@ -383,3 +453,17 @@ class TestVNEDI(AccountTestInvoicingCommon):
              patch('odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_fetch_invoice_xml_file_data', return_value=xml_response), \
              patch('odoo.addons.l10n_vn_edi_viettel.models.account_move._l10n_vn_edi_send_request', return_value=(request_response, None)):
             self.env['account.move.send.wizard'].with_context(active_model=invoice._name, active_ids=invoice.ids).create({}).action_send_and_print()
+
+    @freeze_time('2024-01-01')
+    def test_decimal_rounding(self):
+        """ Test that taxAmount are correctly rounded in the JSON data. """
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            amounts=[1000.25],
+            taxes=self.tax_sale_a,
+            currency=self.other_currency,
+            post=True,
+        )
+        json_values = invoice._l10n_vn_edi_generate_invoice_json()
+        itemInfo = json_values['itemInfo'][0]
+        self.assertEqual(itemInfo['taxAmount'], 100.03, "Tax amount should be correctly rounded to 2 decimals.")

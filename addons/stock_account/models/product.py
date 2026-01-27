@@ -34,6 +34,7 @@ class ProductTemplate(models.Model):
         compute='_compute_lot_valuated', store=True, readonly=False,
         help="If checked, the valuation will be specific by Lot/Serial number.",
     )
+    # TODO remove in master
     property_price_difference_account_id = fields.Many2one(
         'account.account', 'Price Difference Account', company_dependent=True, ondelete='restrict',
         check_company=True,
@@ -229,10 +230,10 @@ class ProductProduct(models.Model):
         return last_in
 
     def _get_value_from_lots(self):
-        lots = self.env['stock.lot'].search([
-            ('product_id', 'in', self.ids),
-            ('product_qty', '!=', 0),
-        ])
+        domain = Domain([('product_id', 'in', self.ids)])
+        if not self.env.context.get('warehouse_id'):
+            domain &= Domain([('product_qty', '!=', 0)])
+        lots = self.env['stock.lot'].search(domain)
         return sum(lots.mapped('total_value'))
 
     def _with_valuation_context(self):
@@ -288,7 +289,7 @@ class ProductProduct(models.Model):
             order='date, id'
         )
         # TODO convert to company UoM
-        product_value_domain = Domain([('product_id', '=', self.id)])
+        product_value_domain = Domain([('product_id', '=', self.id), ('move_id', '=', False)])
         if lot:
             product_value_domain &= Domain(['|', ('lot_id', '=', lot.id), ('lot_id', '=', False)])
         else:
@@ -300,13 +301,11 @@ class ProductProduct(models.Model):
 
         # If the last value was defined by the user just return it
         if product_values and not moves_in:
-            quantity = self._with_valuation_context().with_context(to_date=at_date).qty_available
+            quantity = self._with_valuation_context().with_context(to_date=at_date, lot_id=lot.id if lot else None, warehouse_id=False).qty_available
             last_value = product_values[-1]
             return last_value.value, last_value.value * quantity
         if product_values and moves_in and product_values[-1].date > moves_in[-1].date:
-            quantity = self._with_valuation_context().with_context(to_date=at_date).qty_available
-            if lot:
-                quantity = lot.product_qty
+            quantity = self._with_valuation_context().with_context(to_date=at_date, lot_id=lot.id if lot else None, warehouse_id=False).qty_available
             avco_value = product_values[-1].value
             return avco_value, avco_value * quantity
 
@@ -344,14 +343,16 @@ class ProductProduct(models.Model):
                     lot_qty = move._get_valued_qty(lot)
                     in_value = (in_value * lot_qty / in_qty) if in_qty else 0
                     in_qty = lot_qty
-                if quantity < 0 and quantity + in_qty >= 0:
-                    positive_qty = quantity + in_qty
-                    ratio = positive_qty / in_qty
-                    avco_total_value = ratio * in_value
-                else:
-                    avco_total_value += in_value
+                previous_qty = quantity
                 quantity += in_qty
-                avco_value = avco_total_value / quantity if quantity else 0
+                # Regular case, value from accumulation
+                if previous_qty > 0:
+                    avco_total_value += in_value
+                    avco_value = avco_total_value / quantity
+                # From negative quantity case, value from last_in
+                elif previous_qty <= 0:
+                    avco_value = in_value / in_qty if in_qty else avco_value
+                    avco_total_value = avco_value * quantity
             if move.is_out or move.is_dropship:
                 out_qty = move._get_valued_qty()
                 out_value = out_qty * avco_value

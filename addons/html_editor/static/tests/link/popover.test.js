@@ -1739,6 +1739,17 @@ describe("hidden label field", () => {
     });
 });
 
+describe("Selection in input/textarea", () => {
+    test("Should not show link preview", async () => {
+        await setupEditor(
+            `<p><a href="http://test.com/">a[]b</a><span contenteditable="false" data-oe-protected="true"><input></span></p>`
+        );
+        await waitFor(".o-we-linkpopover");
+        queryOne("input").focus();
+        await expectElementCount(".o-we-linkpopover", 0);
+    });
+});
+
 describe("link popover with empty URL", () => {
     test("should not close the popover when pressing Enter with an empty URL", async () => {
         const { editor } = await setupEditor("<p>ab[]</p>");
@@ -1941,4 +1952,21 @@ describe("label is a valid URL", () => {
             message: "should focus label input by default, when we don't have a label",
         });
     });
+});
+
+test("Should properly show the preview if fetching metadata fails", async () => {
+    const id = Math.random().toString();
+    onRpc("/html_editor/link_preview_internal", () => Promise.reject(new Error(`No data ${id}`)));
+    onRpc("/contactus", () => ({}));
+    const originalConsoleWarn = console.warn.bind(console);
+    patchWithCleanup(console, {
+        warn: (msg, error, ...args) => {
+            if (!error?.message?.includes?.(id)) {
+                originalConsoleWarn(msg, error, ...args);
+            }
+        },
+    });
+    const { el } = await setupEditor('<p><a href="/contactus">a[]b</a></p>');
+    await waitFor(".o-we-linkpopover");
+    expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="/contactus">a[]b</a></p>');
 });

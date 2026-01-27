@@ -12,10 +12,20 @@ class StockWarehouse(models.Model):
     )
 
     def _prepare_pickup_location_data(self):
-        # Prepare the warehouse location.
+
+        def are_coordinates_missing(loc_):
+            return (loc_.partner_latitude, loc_.partner_longitude) == (0, 0)
+
+        # Find the longitude and latitude of the warehouse.
         wh_location = self.partner_id
-        if not wh_location.partner_latitude or not wh_location.partner_longitude:
-            wh_location.geo_localize()  # Find the longitude and latitude of the warehouse.
+        if are_coordinates_missing(wh_location):
+            wh_location.geo_localize()
+            if are_coordinates_missing(wh_location):  # Geolocation failed.
+                # Assign invalid coordinates to skip future geolocation attempts. As coordinates are
+                # only updated when *both* latitude and longitude are zero, this prevents a spam of
+                # OpenStreetMap's API when warehouses with an invalid address are loaded in the
+                # location selector of Click and Collect.
+                wh_location.write({'partner_latitude': 1000, 'partner_longitude': 1000})
 
         # Format the pickup location values of the warehouse.
         try:

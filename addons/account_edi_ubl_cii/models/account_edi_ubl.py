@@ -58,6 +58,7 @@ class AccountEdiUBL(models.AbstractModel):
         if tax_data and (
             tax_data['tax'].amount_type != 'percent'
             or self._ubl_is_recycling_contribution_tax(tax_data)
+            or self._ubl_is_excise_tax(tax_data)
         ):
             return
         elif tax_data:
@@ -316,14 +317,6 @@ class AccountEdiUBL(models.AbstractModel):
                 + sum(
                     allowance_charges_excise['amount']
                     for allowance_charges_excise in ubl_values[f'allowance_charges_excise{suffix}']
-                )
-                + (
-                    ubl_values[f'allowance_charge_discount{suffix}']['amount']
-                    if (
-                        ubl_values[f'allowance_charge_discount{suffix}']
-                        and ubl_values[f'allowance_charge_discount{suffix}']['amount'] < 0.0
-                    )
-                    else 0.0
                 )
             )
             ubl_values['line_extension_amount'] = amount
@@ -720,10 +713,14 @@ class AccountEdiUBL(models.AbstractModel):
         currency = recycling_contribution_values['currency']
         amount = recycling_contribution_values['amount']
         tax = recycling_contribution_values['tax']
+        if 'bebat' in tax.name.lower():
+            charge_reason_code = 'CAV'
+        else:
+            charge_reason_code = 'AEO'
         return {
             '_currency': currency,
             'cbc:ChargeIndicator': {'_text': 'true' if amount > 0.0 else 'false'},
-            'cbc:AllowanceChargeReasonCode': {'_text': 'AEO'},
+            'cbc:AllowanceChargeReasonCode': {'_text': charge_reason_code},
             'cbc:AllowanceChargeReason': {'_text': tax.name},
             'cbc:Amount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
@@ -754,7 +751,7 @@ class AccountEdiUBL(models.AbstractModel):
             '_currency': currency,
             'cbc:ChargeIndicator': {'_text': 'true' if amount < 0.0 else 'false'},
             'cbc:MultiplierFactorNumeric': {'_text': abs(percent)},
-            'cbc:AllowanceChargeReasonCode': {'_text': '95'},
+            'cbc:AllowanceChargeReasonCode': {'_text': '95' if amount > 0.0 else 'ADK'},
             'cbc:AllowanceChargeReason': {'_text': _("Discount")},
             'cbc:Amount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
@@ -773,7 +770,7 @@ class AccountEdiUBL(models.AbstractModel):
         return {
             '_currency': currency,
             'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
-            'cbc:AllowanceChargeReasonCode': {'_text': 'ZZZ' if is_charge else '66'},
+            'cbc:AllowanceChargeReasonCode': {'_text': 'ZZZ' if is_charge else '64'},
             'cbc:AllowanceChargeReason': {'_text': _("Conditional cash/payment discount")},
             'cbc:Amount': {
                 '_text': currency.round(abs(amount)),

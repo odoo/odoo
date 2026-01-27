@@ -172,7 +172,6 @@ export class ClipboardPlugin extends Plugin {
         for (const processor of this.getResource("clipboard_text_processors")) {
             textContent = processor(textContent);
         }
-        ev[transferObjectProperty].setData("text/plain", textContent);
 
         // Prepare html content for clipboard.
         for (const processor of this.getResource("clipboard_content_processors")) {
@@ -183,6 +182,7 @@ export class ClipboardPlugin extends Plugin {
             setEditorTransferData:
                 isContentEditable(selection.commonAncestorContainer) ||
                 this.dependencies.selection.isNodeEditable(selection.commonAncestorContainer),
+            textContent,
         });
     }
 
@@ -199,9 +199,8 @@ export class ClipboardPlugin extends Plugin {
         }
         ev.preventDefault();
 
-        this.dependencies.history.stageSelection();
-
         this.dispatchTo("before_paste_handlers", selection, ev);
+        this.dependencies.history.stageSelection();
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.dependencies.selection.getEditableSelection();
 
@@ -675,6 +674,7 @@ export class ClipboardPlugin extends Plugin {
         }
         if (odooEditorHtml) {
             const fragment = parseHTML(this.document, odooEditorHtml);
+            this.dependencies.sanitize.sanitize(fragment);
             if (fragment.hasChildNodes()) {
                 this.dependencies.dom.insert(fragment);
                 this.dependencies.history.addStep();

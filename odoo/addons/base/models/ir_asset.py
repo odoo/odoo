@@ -166,11 +166,13 @@ class IrAsset(models.Model):
 
         :param bundle: name of the bundle from which to fetch the file paths
         :param addons: list of addon names as strings
-        :param css: boolean: whether or not to include style files
-        :param js: boolean: whether or not to include script files
-        :param xml: boolean: whether or not to include template files
         :param asset_paths: the AssetPath object to fill
         :param seen: a list of bundles already checked to avoid circularity
+        :param assets_params: Keyword arguments:
+
+            * css: bool: whether or not to include style files
+            * js: bool: whether or not to include script files
+            * xml: bool: whether or not to include template files
         """
         if bundle in seen:
             raise Exception("Circular assets bundle declaration: %s" % " > ".join(seen + [bundle]))

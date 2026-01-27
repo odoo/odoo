@@ -119,6 +119,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 WHERE payment.payment_method_id = method.id
                     AND payment.id IN %(payment_ids)s
                 GROUP BY method.name, method.is_cash_count, payment.session_id, method.id, journal_id
+                ORDER BY method.id, payment.session_id
             """, method_name=method_name, payment_ids=tuple(payment_ids)))
             payments = self.env.cr.dictfetchall()
         else:
@@ -222,7 +223,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                     })
 
                 # If there is a cash difference, we remove the last cash move which is the cash difference
-                if cash_difference != 0:
+                if session.currency_id.round(cash_difference) != 0:
                     cash_moves = cash_moves[:-1]
 
                 for cash_move in cash_moves:
@@ -386,7 +387,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 base_amounts[tax['id']] = tax['base']
 
             for tax_id, base_amount in base_amounts.items():
-                taxes['taxes'][tax_id]['base_amount'] += base_amount
+                taxes['taxes'][tax_id]['base_amount'] += currency.round(base_amount)
         else:
             taxes['taxes'].setdefault(0, {'name': _('No Taxes'), 'tax_amount': 0.0, 'base_amount': 0.0})
             taxes['taxes'][0]['base_amount'] += line.price_subtotal_incl

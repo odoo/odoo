@@ -60,6 +60,9 @@ class AccountMove(models.Model):
             warnings = OrderedSet()
             if partner_msg := move.partner_id.sale_warn_msg:
                 warnings.add((move.partner_id.name or move.partner_id.display_name) + ' - ' + partner_msg)
+            if partner_parent_msg := move.partner_id.parent_id.sale_warn_msg:
+                parent = move.partner_id.parent_id
+                warnings.add((parent.name or parent.display_name) + ' - ' + partner_parent_msg)
             for product in move.invoice_line_ids.product_id:
                 if product_msg := product.sale_line_warn_msg:
                     warnings.add(product.display_name + ' - ' + product_msg)

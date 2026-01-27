@@ -99,6 +99,8 @@ class TestHolidaysOvertime(TransactionCase):
 
             overtime_leave_data = self.leave_type_no_alloc.get_allocation_data(self.employee)
             self.assertEqual(overtime_leave_data[self.employee][0][1]['virtual_remaining_leaves'], 8.0)
+            # `employee_company` must be present to avoid traceback when opening the Time Off Type
+            self.assertTrue(overtime_leave_data[self.employee][0][1].get('employee_company'))
 
     def test_leave_adjust_overtime(self):
         self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
@@ -289,7 +291,7 @@ class TestHolidaysOvertime(TransactionCase):
             })
 
         self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime')
-        self.assertEqual(self.manager.total_overtime, 0, "Should have 0 hours of overtime (because the employee ruleset doesn't have any timing rule)")
+        self.assertEqual(self.manager.total_overtime, 9, "Should have 9 hours of overtime (because of the quantity rule)")
 
     def test_worked_leave_type_overtime(self):
         """ Test that an attendance during a worked time off doesn't count as overtime. """

@@ -63,9 +63,7 @@ class EventManager:
         }
         send_to_controller({
             **event,
-            'session_id': data.get('action_args', {}).get('session_id', ''),
             'iot_box_identifier': helpers.get_identifier(),
-            **data,
         })
         if webrtc_client:
             webrtc_client.send(event)

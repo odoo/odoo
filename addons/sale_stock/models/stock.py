@@ -29,6 +29,8 @@ class StockMove(models.Model):
         for move in self:
             if move.sale_line_id and not move.description_picking_manual:
                 sale_line_id = move.sale_line_id.with_context(lang=move.sale_line_id.order_id.partner_id.lang)
+                if move.description_picking == move.product_id.display_name:
+                    move.description_picking = ''
                 move.description_picking = (sale_line_id._get_sale_order_line_multiline_description_variants() + '\n' + move.description_picking).strip()
 
     def _action_synch_order(self):
@@ -184,7 +186,8 @@ class StockPicking(models.Model):
         for picking in self:
             # picking and move should have a link to the SO to see the picking on the stat button.
             # This will filter the move chain to the delivery moves only.
-            picking.sale_id = picking.move_ids.sale_line_id.order_id
+            sales_order = picking.move_ids.sale_line_id.order_id
+            picking.sale_id = sales_order[0] if sales_order else False
 
     @api.depends('move_ids.sale_line_id')
     def _compute_move_type(self):

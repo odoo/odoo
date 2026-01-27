@@ -23,10 +23,6 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
             "background_color": 'rgb(249,250,251)',
             "table_ids": [(0, 0, {
                 "table_number": 1,
-            }), (0, 0, {
-                "table_number": 2,
-            }), (0, 0, {
-                "table_number": 3,
             })],
         })
 
@@ -38,7 +34,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
+        self_route = self.pos_config._get_self_order_route(table_id=floor.table_ids[0].id)
 
         # Test selection of different presets
         self.start_tour(self_route, "self_mobile_each_table_takeaway_in")
@@ -172,7 +168,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
+        self_route = self.pos_config._get_self_order_route(floor.table_ids[0].id)
 
         # Zero priced order
         self.start_tour(self_route, "self_order_mobile_0_price_order")

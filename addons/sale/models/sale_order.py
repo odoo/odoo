@@ -826,6 +826,9 @@ class SaleOrder(models.Model):
             warnings = OrderedSet()
             if partner_msg := order.partner_id.sale_warn_msg:
                 warnings.add((order.partner_id.name or order.partner_id.display_name) + ' - ' + partner_msg)
+            if partner_parent_msg := order.partner_id.parent_id.sale_warn_msg:
+                parent = order.partner_id.parent_id
+                warnings.add((parent.name or parent.display_name) + ' - ' + partner_parent_msg)
             for line in order.order_line:
                 if product_msg := line.sale_line_warn_msg:
                     warnings.add(line.product_id.display_name + ' - ' + product_msg)
@@ -914,7 +917,7 @@ class SaleOrder(models.Model):
 
     @api.onchange('pricelist_id')
     def _onchange_pricelist_id_show_update_prices(self):
-        self.show_update_pricelist = bool(self.order_line)
+        self.show_update_pricelist = bool(self.order_line and self._origin.pricelist_id != self.pricelist_id)
 
     @api.onchange('prepayment_percent')
     def _onchange_prepayment_percent(self):
@@ -1460,7 +1463,6 @@ class SaleOrder(models.Model):
                 'default_partner_id': self.partner_id.id,
                 'default_partner_shipping_id': self.partner_shipping_id.id,
                 'default_invoice_payment_term_id': self.payment_term_id.id or self.partner_id.property_payment_term_id.id or self.env['account.move'].default_get(['invoice_payment_term_id']).get('invoice_payment_term_id'),
-                'default_invoice_origin': self.name,
             })
         action['context'] = context
         return action

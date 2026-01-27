@@ -30,7 +30,7 @@ const StorePatch = {
                 acc + (thread.model === "discuss.channel" ? thread.message_needaction_counter : 0),
             0
         );
-        return super.computeGlobalCounter() + channelsContribution + channelsNeedactionCounter;
+        return super.computeGlobalCounter() + channelsContribution - channelsNeedactionCounter;
     },
     /** @returns {import("models").Thread[]} */
     getSelfImportantChannels() {

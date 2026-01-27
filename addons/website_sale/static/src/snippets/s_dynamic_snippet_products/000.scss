@@ -1,4 +1,9 @@
 .s_dynamic_snippet_products {
+    // RTL chevron rotation
+    .o_rtl & {
+        --o-chevron-rtl-rotate: 180deg;
+    }
+
     // Adjusts carousel arrows' aligments
     @mixin o-aligns-controlers {
 
@@ -12,7 +17,7 @@
             padding-top: 1rem;
 
             .oi {
-                transform: scaleX(5);
+                transform: scaleX(5) rotate(var(--o-chevron-rtl-rotate, 0deg));
             }
         }
 

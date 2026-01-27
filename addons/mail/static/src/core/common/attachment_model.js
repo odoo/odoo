@@ -117,7 +117,7 @@ export class Attachment extends FileModelMixin(Record) {
                 assignDefined({}, { access_token: this.ownership_token })
             )
         );
-        if (isPdfValid !== undefined) {
+        if (isPdfValid) {
             rpc(
                 `/mail/attachment/update_thumbnail`,
                 assignDefined(

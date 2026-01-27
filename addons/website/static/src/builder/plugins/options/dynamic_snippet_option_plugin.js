@@ -49,6 +49,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
  */
 
 export const DYNAMIC_SNIPPET = SNIPPET_SPECIFIC_END;
+export const CONTAINER_CLASSES = ["container", "container-fluid", "o_container_small"];
 
 class DynamicSnippetOptionPlugin extends Plugin {
     static id = "dynamicSnippetOption";
@@ -103,6 +104,13 @@ class DynamicSnippetOptionPlugin extends Plugin {
     async onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(DynamicSnippetOption.selector)) {
             await this.setOptionsDefaultValues(snippetEl, this.modelNameFilter);
+        }
+        // TODO (adapt for master): Dynamic snippets should display the
+        // placeholder by default. Their visibility should then be controlled
+        // by the interaction behavior.
+        if (snippetEl.classList.contains("s_dynamic")) {
+            snippetEl.classList.remove("o_dynamic_snippet_empty");
+            snippetEl.classList.add("o_dynamic_snippet_loading");
         }
     }
     async setOptionsDefaultValues(snippetEl, modelNameFilter, contextualFilterDomain = []) {
@@ -208,9 +216,7 @@ class DynamicSnippetOptionPlugin extends Plugin {
         if (oldTemplate) {
             const snippetContainerEl = el.querySelector(".s_dynamic_snippet_container");
             const snippetContentEl = el.querySelector(".s_dynamic_snippet_content");
-            snippetContainerEl.classList.remove(
-                ...(oldTemplate.containerClasses?.split(" ") || [])
-            );
+            snippetContainerEl.classList.remove(...CONTAINER_CLASSES);
             snippetContainerEl.classList.add(
                 ...(template.containerClasses || "container").split(" ")
             );

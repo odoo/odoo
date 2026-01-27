@@ -1402,6 +1402,31 @@ class TestCompute(common.TransactionCase):
         r.parent_id = company2
         self.assertEqual(r.display_name, 'Awiclo, Bob')
 
+    def test_computation_sequence(self):
+        """ This test ensure sequential computation is done and all fields are correctly set
+        when a filter_pre_domain trigger computation of one of the chain element
+        """
+        project = self.env['test_base_automation.project'].create({})
+        task = self.env['test_base_automation.task'].create({
+            'project_id': project.id,
+            'allocated_hours': 100,
+        })
+
+        # this action is executed every time a task is modified
+        create_automation(
+            self,
+            model_id=self.env.ref('test_base_automation.model_test_base_automation_task').id,
+            trigger='on_create_or_write',
+            filter_pre_domain="[('remaining_hours', '>', 0)]",
+            _actions={'state': 'code'},  # no-op action
+        )
+
+        task.trigger_hours = 5
+        self.assertRecordValues(task, [{
+            'effective_hours': 5,
+            'remaining_hours': 95,
+        }])
+
     def test_recursion(self):
         project = self.env['test_base_automation.project'].create({})
 
@@ -1710,6 +1735,63 @@ class TestCompute(common.TransactionCase):
         expected.insert(0, {
             "code": "pass",
             "display_name": WhitespaceInsensitive(f"May 12, 2025, 11:30:00 AM - {self.env.ref('base.user_root').name}"),
+        })
+        assert_history(action, expected)
+
+    def test_server_action_code_history_wizard_with_no_timezone(self):
+        self.env.user.tz = False
+
+        def get_history(action):
+            return self.env["ir.actions.server.history"].search([("action_id", "=", action.id)])
+
+        def assert_history(action, expected):
+            history = get_history(action)
+            self.assertRecordValues(history, expected)
+
+        expected = []
+
+        with freeze_time("2025-05-01 10:00:00"):
+            self.env.cr._now = datetime.datetime.now()  # reset transaction's NOW
+            action = self.env["ir.actions.server"].create({
+                "name": "Test Action",
+                "model_id": self.env["ir.model"]._get("res.partner").id,
+                "state": "code",
+                "code": "pass",
+            })
+        expected.insert(0, {
+            "code": "pass",
+            "display_name": WhitespaceInsensitive(f"May 1, 2025, 10:00:00 AM - {self.env.ref('base.user_root').name}"),
+        })
+        assert_history(action, expected)
+
+        with freeze_time("2025-05-01 10:00:00"):
+            self.env.cr._now = datetime.datetime.now()  # reset transaction's NOW
+            action.with_user(self.env.ref('base.user_admin')).write({"code": "hello"})
+        expected.insert(0, {
+            "code": "hello",
+            "display_name": WhitespaceInsensitive(f"May 1, 2025, 10:00:00 AM - {self.env.ref('base.user_admin').name}"),
+        })
+        assert_history(action, expected)
+
+        with freeze_time("2025-05-12 10:00:00"):
+            self.env.cr._now = datetime.datetime.now()  # reset transaction's NOW
+            with Form(self.env['server.action.history.wizard'].with_context(default_action_id=action.id)) as wizard_form:
+                self.assertRecordValues(wizard_form.revision, [
+                    {
+                        "code": "pass",
+                        "display_name": WhitespaceInsensitive(f"May 1, 2025, 10:00:00 AM - {self.env.ref('base.user_root').name}"),
+                    }
+                ])
+                first_diff = str(wizard_form.code_diff)
+                wizard_form.revision = get_history(action)[-1]
+                second_diff = str(wizard_form.code_diff)
+                self.assertNotEqual(first_diff, second_diff)
+            wizard_form.record.restore_revision()
+
+        self.assertEqual(action.code, "pass")
+        expected.insert(0, {
+            "code": "pass",
+            "display_name": WhitespaceInsensitive(f"May 12, 2025, 10:00:00 AM - {self.env.ref('base.user_root').name}"),
         })
         assert_history(action, expected)
 

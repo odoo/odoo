@@ -8,6 +8,7 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged, RecordCapturer
+from odoo.tools.misc import mute_logger
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
@@ -953,3 +954,16 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
                 }
             },
         )
+
+    def test_import_with_traceback(self):
+        # Verify that even an Exception does not cause the import to fail, and that we log the attachment in the chatter
+        attachment = self.env['ir.attachment'].create(self.xml1_vals)
+
+        with (
+            self._patch_import_methods(),
+            patch('odoo.addons.account.models.partner.ResPartner.search', side_effect=ValueError('We want to test an unexpected error')),
+            mute_logger('odoo.addons.account.models.account_document_import_mixin'),
+        ):
+            move_id = self.journal.create_document_from_attachment(attachment.ids).get('res_id')
+
+        self.assertEqual(self.env['account.move'].browse(move_id).attachment_ids, attachment)
