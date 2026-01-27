@@ -808,6 +808,18 @@ class TestMailMessageAccess(MessageAccessCommon):
             res_id=self.record_public.id,
             subtype_id=self.ref('mail.mt_comment'),
         ))
+        msg_record_public_with_tracking = self.env['mail.message'].create(dict(base_msg_vals,
+            body='Public Comment with Trackings',
+            message_type='notification',
+            model=self.record_public._name,
+            res_id=self.record_public.id,
+            subtype_id=self.ref('mail.mt_comment'),
+            tracking_value_ids=[(0, 0, {
+                'field_id': self.env['ir.model.fields']._get('mail.test.access', 'name').id,
+                'new_value_char': 'Tracked',
+                'old_value_char': False,
+            })],
+        ))
         msg_record_public_internal = self.env['mail.message'].create(dict(base_msg_vals,
             body='Internal Comment on Public',
             is_internal=True,
@@ -824,13 +836,13 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.user_admin, []),
         ], [
             # public: record with access
-            msg_record_public,
+            msg_record_public + msg_record_public_with_tracking,
             # portal: mentionned + record with access, if published
-            msgs[0] + msgs[3] + msg_record_portal + msg_record_public,
+            msgs[0] + msgs[3] + msg_record_portal + msg_record_public + msg_record_public_with_tracking,
             # employee
-            msgs[1:6] + msg_record_portal + msg_record_portal_internal + msg_record_public + msg_record_public_internal,
+            msgs[1:6] + msg_record_portal + msg_record_portal_internal + msg_record_public + msg_record_public_with_tracking + msg_record_public_internal,
             msgs[1:6] + msg_record_portal_internal + msg_record_public_internal,
-            msgs[1:] + msg_record_admin + msg_record_portal + msg_record_portal_internal + msg_record_public + msg_record_public_internal,
+            msgs[1:] + msg_record_admin + msg_record_portal + msg_record_portal_internal + msg_record_public + msg_record_public_with_tracking + msg_record_public_internal,
         ]):
             with self.subTest(test_user=test_user.name, add_domain=add_domain):
                 self.env.invalidate_all()
