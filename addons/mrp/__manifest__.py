@@ -30,7 +30,6 @@
         'views/mrp_bom_views.xml',
         'views/mrp_production_views.xml',
         'views/mrp_routing_views.xml',
-        'views/product_document_views.xml',
         'views/product_views.xml',
         'views/stock_orderpoint_views.xml',
         'views/stock_warehouse_views.xml',
