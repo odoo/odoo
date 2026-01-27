@@ -1862,6 +1862,8 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
         :rtype: None | http.Response
         """
         if not order_sudo._is_cart_ready_for_payment(**kwargs):
+            if kwargs.get('block_on_price_change'):
+                return request.redirect('/shop/payment')
             return request.redirect('/shop/checkout')
 
     # ------------------------------------------------------

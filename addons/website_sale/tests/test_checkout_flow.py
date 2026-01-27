@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http
+from odoo.fields import Command
 from odoo.http.router import root
 from odoo.tests import patch, tagged
 from odoo.tests.common import HttpCase
@@ -222,6 +222,11 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
             _check_shop_cart_step_ready.assert_called_once()
             _check_shop_address_step_ready.assert_called_once()
             _check_shop_checkout_step_ready.assert_called_once()
+            self.assertEqual(
+                _check_shop_checkout_step_ready.call_args[1],
+                {},
+                'block_on_price_change should not be truthy when loading the payment page',
+            )
 
             self.make_jsonrpc_request(
                 f'/shop/payment/transaction/{self.cart.id}',
@@ -239,3 +244,34 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
             self.assertEqual(_check_shop_cart_step_ready.call_count, 2)
             self.assertEqual(_check_shop_address_step_ready.call_count, 2)
             self.assertEqual(_check_shop_checkout_step_ready.call_count, 2)
+            self.assertEqual(
+                _check_shop_checkout_step_ready.call_args[1],
+                {'block_on_price_change': True},
+                'price changes should be blocking when starting the payment',
+            )
+
+    def test_redirect_on_price_change_on_payment(self):
+        session = self.authenticate(None, None)
+        session[CART_SESSION_CACHE_KEY] = self.cart.id
+        root.session_store.save(session)
+
+        self.cart.set_delivery_line(self.carrier, 0.0)
+
+        self.pricelist.item_ids = [
+            Command.create({'percent_price': 50, 'compute_price': 'percentage'})
+        ]
+
+        response = self.make_jsonrpc_request(
+            f'/shop/payment/transaction/{self.cart.id}',
+            params={
+                'provider_id': self.provider.id,
+                'payment_method_id': self.payment_method.id,
+                'token_id': None,
+                'flow': 'direct',
+                'tokenization_requested': False,
+                'landing_route': '/shop/payment/validate',
+                'access_token': self.cart._portal_ensure_token(),
+            },
+        )
+
+        self.assertEqual(response['redirect'], '/shop/payment')  # Redirected back to the checkout
