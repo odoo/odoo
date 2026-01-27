@@ -116,7 +116,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                 channelInfo["livechat_status"] = channel.livechat_status;
                 channelInfo["livechat_expertise_ids"] = mailDataHelpers.Store.many(
                     this.env["im_livechat.expertise"].browse(channel.livechat_expertise_ids),
-                    makeKwArgs({ fields: ["name"] })
+                    makeKwArgs({ fields: ["name", "color"] })
                 );
                 channelInfo.livechat_channel_id = mailDataHelpers.Store.one(
                     this.env["im_livechat.channel"].browse(channel.livechat_channel_id),

@@ -12,6 +12,7 @@ class Im_LivechatExpertise(models.Model):
     _description = "Live Chat Expertise"
     _order = "name"
 
+    color = fields.Integer("Color")
     name = fields.Char("Name", required=True, translate=True)
     user_ids = fields.Many2many(
         "res.users",
