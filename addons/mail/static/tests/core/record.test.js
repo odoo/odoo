@@ -1,14 +1,15 @@
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { defineMailModels, start as start2 } from "@mail/../tests/mail_test_helpers";
-import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
+import { afterEach, beforeEach, describe, expect, test, tick } from "@odoo/hoot";
 import { markup, reactive, toRaw } from "@odoo/owl";
-import { mockService } from "@web/../tests/web_test_helpers";
+import { mockService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { Record, Store, makeStore } from "@mail/model/export";
 import { AND, fields, makeRecordFieldLocalId } from "@mail/model/misc";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { effect } from "@web/core/utils/reactive";
+import { browser } from "@web/core/browser/browser";
 
 const Markup = markup().constructor;
 
@@ -1496,6 +1497,38 @@ test("Fields with { localStorage: true } are restored from local storage", async
     const store = await start();
     const message = store.Message.insert(1);
     expect(message.body).toBe("test");
+});
+
+test("Fields updated from the local storage do not trigger another storage event", async () => {
+    class Message extends Record {
+        static id = "id";
+        id;
+        body = fields.Attr("", { localStorage: true });
+    }
+    Message.register(localRegistry);
+    const bodyLocalId = makeRecordFieldLocalId(Message.localId(1), "body");
+    patchWithCleanup(browser.localStorage, {
+        setItem(key, value) {
+            if (key === bodyLocalId) {
+                expect.step(`setItem ${JSON.parse(value).value}`);
+            }
+            return super.setItem(key, value);
+        },
+    });
+    localStorage.setItem(bodyLocalId, toRawValue("1"));
+    await expect.waitForSteps(["setItem 1"]);
+    const store = await start();
+    const message = store.Message.insert(1);
+    expect(message.body).toBe("1");
+    message.body = "2";
+    expect(message.body).toBe("2");
+    await expect.waitForSteps(["setItem 2"]);
+    browser.dispatchEvent(
+        new StorageEvent("storage", { key: bodyLocalId, newValue: toRawValue("3") })
+    );
+    await tick();
+    expect(message.body).toBe("3");
+    await expect.waitForSteps([]);
 });
 
 test("Record exists is reactive", async () => {

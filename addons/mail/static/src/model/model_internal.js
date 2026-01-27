@@ -77,7 +77,9 @@ export class ModelInternal {
                     const lse = record._.fieldsLocalStorage.get(fieldName);
                     const value = lse.get();
                     if (value === undefined) {
-                        lse.remove();
+                        if (!this._rawStore._.isUpdatingFromStorageEvent) {
+                            lse.remove();
+                        }
                         return this[fieldName];
                     }
                     return value;
@@ -89,6 +91,9 @@ export class ModelInternal {
                 /** @this {import("./record").Record}*/
                 function fieldLocalStorageOnChange(value) {
                     const record = toRaw(this)._raw;
+                    if (this._rawStore._.isUpdatingFromStorageEvent) {
+                        return;
+                    }
                     const lse = record._.fieldsLocalStorage.get(fieldName);
                     if (value === record._.fieldsDefault.get(fieldName)) {
                         lse.remove();
