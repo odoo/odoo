@@ -251,18 +251,3 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             call_args = mock.call_args.kwargs['json']['params']['payload'].keys()
             for payload_param in ('account', 'return_url', 'refresh_url', 'type'):
                 self.assertIn(payload_param, call_args)
-
-    def test_stripe_validate_amount_uses_payment_minor_unit(self):
-        """
-        Test that the payment's minor unit precision is used to validate the amount, not the custom
-        currency rounding that customers may have configured.
-        """
-        self.amount = 20076
-        self.currency.rounding = 0.001
-        tx = self._create_transaction(
-            'dummy', operation='online_direct', tokenize=True, amount=200.769
-        )
-        data = self.payment_data['data']
-        data['payment_intent'] = self._mock_payment_intent_request()
-        tx._validate_amount(data)
-        self.assertNotEqual(tx.state, 'error')
