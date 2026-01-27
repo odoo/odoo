@@ -366,3 +366,31 @@ test("cancelBackendOrder", async () => {
     expect(order.state).toBe("cancel");
     expect(store.router.activeSlot).toBe("default");
 });
+
+test("resetCategorySelection", async () => {
+    const store = await setupSelfPosEnv();
+    store.computeAvailableCategories();
+    const [ctg1, ctg2] = store.availableCategories.slice(0, 2);
+
+    // Kiosk Mode
+    store.config.self_ordering_mode = "kiosk";
+    expect(store.currentCategory.id).toBe(ctg1.id);
+    store.currentCategory = ctg2;
+    expect(store.currentCategory.id).toBe(ctg2.id);
+    store.resetCategorySelection();
+    expect(store.currentCategory.id).toBe(ctg1.id);
+
+    // Mobile Mode
+    store.config.self_ordering_mode = "mobile";
+    store.currentCategory = ctg2;
+    expect(store.currentCategory.id).toBe(ctg2.id);
+    store.resetCategorySelection();
+    expect(store.currentCategory.id).toBe(ctg2.id);
+
+    // On Order Confirmation
+    await getFilledSelfOrder(store);
+    store.config.self_ordering_mode = "kiosk";
+    expect(store.currentCategory.id).toBe(ctg2.id);
+    await store.confirmOrder();
+    expect(store.currentCategory.id).toBe(ctg1.id);
+});
