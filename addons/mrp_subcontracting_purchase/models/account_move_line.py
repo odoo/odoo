@@ -26,5 +26,5 @@ class AccountMoveLine(models.Model):
         finished_moves = set()
         for m in moves:
             if mo := m._get_subcontract_production():
-                finished_moves.add(mo.move_finished_ids.filtered(lambda mf: mf.product_id == m.product_id).id)
+                finished_moves |= set(mo.move_finished_ids.filtered(lambda mf: mf.product_id == m.product_id).ids)
         return moves | self.env['stock.move'].browse(finished_moves)
