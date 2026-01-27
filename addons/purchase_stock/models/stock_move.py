@@ -348,7 +348,7 @@ class StockMove(models.Model):
                 layers_values, to_curr, related_aml.company_id, valuation_date, round=False,
             )
             valuation_total_qty += layers_qty
-        if related_aml.product_uom_id.rounding or related_aml.product_id.uom_id.is_zero(valuation_total_qty):
+        if (related_aml.product_uom_id or related_aml.product_id.uom_id).is_zero(valuation_total_qty):
             raise UserError(
                 _('Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero.',
                   related_aml.product_id.display_name))
