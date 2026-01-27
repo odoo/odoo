@@ -37,84 +37,141 @@ class LeaveReport(models.Model):
 
         self._cr.execute("""
             CREATE or REPLACE view hr_leave_employee_type_report as (
-                SELECT row_number() over(ORDER BY leaves.employee_id) as id,
-                leaves.employee_id as employee_id,
-                leaves.active_employee as active_employee,
-                leaves.number_of_days as number_of_days,
-                leaves.number_of_hours as number_of_hours,
-                leaves.department_id as department_id,
-                leaves.leave_type as leave_type,
-                leaves.holiday_status as holiday_status,
-                leaves.state as state,
-                leaves.date_from as date_from,
-                leaves.date_to as date_to,
-                leaves.company_id as company_id
-                FROM (SELECT
-                    allocation.employee_id as employee_id,
-                    employee.active as active_employee,
-                    CASE
-                        WHEN allocation.id = min_allocation_id.min_id
-                            THEN aggregate_allocation.number_of_days - COALESCE(aggregate_leave.number_of_days, 0)
-                            ELSE 0
-                    END as number_of_days,
-                    CASE
-                        WHEN allocation.id = min_allocation_id.min_id
-                            THEN aggregate_allocation.number_of_hours - COALESCE(aggregate_leave.number_of_hours, 0)
-                            ELSE 0
-                    END as number_of_hours,
-                    allocation.department_id as department_id,
-                    allocation.holiday_status_id as leave_type,
-                    allocation.state as state,
-                    allocation.date_from as date_from,
-                    allocation.date_to as date_to,
-                    'left' as holiday_status,
-                    allocation.employee_company_id as company_id
-                FROM hr_leave_allocation as allocation
-                INNER JOIN hr_employee as employee ON (allocation.employee_id = employee.id)
+                WITH
+                /* Validated leaves */
+                validated_leaves as (
+                    SELECT
+						l.employee_id as employee_id,
+						l.number_of_days as number_of_days,
+						l.number_of_hours as number_of_hours,
+						l.holiday_status_id as leave_type,
+						l.date_from as date_from,
+						l.date_to as date_to
+                    FROM hr_leave l
+                    WHERE l.state IN ('validate', 'validate1')
+                ),
 
-                /* Obtain the minimum id for a given employee and type of leave */
-                LEFT JOIN
-                    (SELECT employee_id, holiday_status_id, min(id) as min_id
-                    FROM hr_leave_allocation GROUP BY employee_id, holiday_status_id) min_allocation_id
-                on (allocation.employee_id=min_allocation_id.employee_id and allocation.holiday_status_id=min_allocation_id.holiday_status_id)
+                /* FIFO-ordered validated allocations */
+                ordered_allocations as (
+                    SELECT
+						allocation.id as allocation_id,
+						allocation.employee_id as employee_id,
+						employee.active as active_employee,
+						allocation.number_of_days as number_of_days,
+						allocation.number_of_hours_display as number_of_hours,
+						allocation.department_id as department_id,
+						allocation.holiday_status_id as leave_type,
+						allocation.state as state,
+						allocation.date_from as date_from,
+						allocation.date_to as date_to,
+						allocation.employee_company_id as company_id,
+						ROW_NUMBER() OVER (
+							PARTITION BY allocation.employee_id, allocation.holiday_status_id
+							ORDER BY allocation.date_from, allocation.id
+						) as fifo_rank,
+						SUM(allocation.number_of_days) OVER (
+							PARTITION BY allocation.employee_id, allocation.holiday_status_id
+							ORDER BY allocation.date_from, allocation.id
+							ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+						) as cumulative_allocated_days,
+						SUM(allocation.number_of_hours_display) OVER (
+							PARTITION BY allocation.employee_id, allocation.holiday_status_id
+							ORDER BY allocation.date_from, allocation.id
+							ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+						) as cumulative_allocated_hours
+                    FROM hr_leave_allocation allocation
+                    JOIN hr_employee employee ON (allocation.employee_id = employee.id)
+                    WHERE allocation.state = 'validate'
+                ),
 
-                /* Obtain the sum of allocations (validated) */
-                LEFT JOIN
-                    (SELECT employee_id, holiday_status_id,
-                        sum(CASE WHEN state = 'validate' THEN number_of_days ELSE 0 END) as number_of_days,
-                        sum(CASE WHEN state = 'validate' THEN number_of_hours_display ELSE 0 END) as number_of_hours
-                    FROM hr_leave_allocation
-                    GROUP BY employee_id, holiday_status_id) aggregate_allocation
-                on (allocation.employee_id=aggregate_allocation.employee_id and allocation.holiday_status_id=aggregate_allocation.holiday_status_id)
+                /* Leaves applicable to each allocation */
+                taken_per_allocation as (
+                    SELECT
+                        oa.allocation_id,
+                        SUM(vl.number_of_days) as taken_days,
+						SUM(vl.number_of_hours) as taken_hours
+                    FROM ordered_allocations oa
+                    LEFT JOIN validated_leaves vl
+                        ON vl.employee_id = oa.employee_id
+                        AND vl.leave_type = oa.leave_type
+                        AND vl.date_from <= COALESCE(oa.date_to, 'infinity')
+                        AND vl.date_to   >= oa.date_from
+                    GROUP BY oa.allocation_id
+                ),
 
-                /* Obtain the sum of requested leaves (validated) */
-                LEFT JOIN
-                    (SELECT employee_id, holiday_status_id,
-                        sum(CASE WHEN state IN ('validate', 'validate1') THEN number_of_days ELSE 0 END) as number_of_days,
-                        sum(CASE WHEN state IN ('validate', 'validate1') THEN number_of_hours ELSE 0 END) as number_of_hours
-                    FROM hr_leave
+                /* FIFO remaining balance per allocation */
+                fifo_balances as (
+                    SELECT
+                        oa.employee_id as employee_id,
+                        oa.active_employee as active_employee,
+                        GREATEST(oa.number_of_days - GREATEST(
+							COALESCE(tpa.taken_days, 0) - (oa.cumulative_allocated_days - oa.number_of_days), 0),
+						0) as number_of_days,
+						GREATEST(oa.number_of_hours - GREATEST(
+							COALESCE(tpa.taken_hours, 0) - (oa.cumulative_allocated_hours - oa.number_of_hours), 0),
+						0) as number_of_hours,
+                        oa.department_id as department_id,
+                        oa.leave_type as leave_type,
+                        oa.state as state,
+                        oa.date_from as date_from,
+                        oa.date_to as date_to,
+                        oa.company_id as company_id
+                    FROM ordered_allocations oa
+                    LEFT JOIN taken_per_allocation tpa
+                        ON tpa.allocation_id = oa.allocation_id
+                )
 
-                    GROUP BY employee_id, holiday_status_id) aggregate_leave
-                on (allocation.employee_id=aggregate_leave.employee_id and allocation.holiday_status_id = aggregate_leave.holiday_status_id)
+                /* Final unified result */
+                SELECT
+                    row_number() OVER (ORDER BY leaves.employee_id, leaves.date_from) as id,
+					leaves.employee_id as employee_id,
+					leaves.active_employee as active_employee,
+					leaves.number_of_days as number_of_days,
+					leaves.number_of_hours as number_of_hours,
+					leaves.department_id as department_id,
+					leaves.leave_type as leave_type,
+					leaves.state as state,
+					leaves.date_from as date_from,
+					leaves.date_to as date_to,
+					leaves.holiday_status as holiday_status,
+					leaves.company_id as company_id
+                FROM (
+                    /* Remaining leave balances */
+                    SELECT
+						fb.employee_id as employee_id,
+						fb.active_employee as active_employee,
+						fb.number_of_days as number_of_days,
+						fb.number_of_hours as number_of_hours,
+						fb.department_id as department_id,
+						fb.leave_type as leave_type,
+						fb.state as state,
+						fb.date_from as date_from,
+						fb.date_to as date_to,
+						'left' as holiday_status,
+						fb.company_id as company_id
+                    FROM fifo_balances fb
+                    WHERE fb.number_of_days >= 0
 
-                UNION ALL SELECT
-                    request.employee_id as employee_id,
-                    employee.active as active_employee,
-                    request.number_of_days as number_of_days,
-                    request.number_of_hours as number_of_hours,
-                    request.department_id as department_id,
-                    request.holiday_status_id as leave_type,
-                    request.state as state,
-                    request.date_from as date_from,
-                    request.date_to as date_to,
-                    CASE
-                        WHEN request.state IN ('validate1', 'validate') THEN 'taken'
-                        WHEN request.state = 'confirm' THEN 'planned'
-                    END as holiday_status,
-                    request.employee_company_id as company_id
-                FROM hr_leave as request
-                INNER JOIN hr_employee as employee ON (request.employee_id = employee.id)
-                WHERE request.state IN ('confirm', 'validate', 'validate1')) leaves
+                    /* Planned and taken leave requests */
+                    UNION ALL SELECT
+						request.employee_id as employee_id,
+						employee.active as active_employee,
+						request.number_of_days as number_of_days,
+						request.number_of_hours as number_of_hours,
+						request.department_id as department_id,
+						request.holiday_status_id as leave_type,
+						request.state as state,
+						request.date_from as date_from,
+						request.date_to as date_to,
+						CASE
+							WHEN request.state IN ('validate', 'validate1') THEN 'taken'
+							WHEN request.state = 'confirm' THEN 'planned'
+						END as holiday_status,
+						request.employee_company_id as company_id
+                    FROM hr_leave as request
+                    JOIN hr_employee as employee ON (request.employee_id = employee.id)
+                    WHERE request.state IN ('confirm', 'validate', 'validate1')
+                ) leaves
             );
         """)
 
