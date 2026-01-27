@@ -627,32 +627,6 @@ class BaseCase(case.TestCase):
             )
 
     @contextmanager
-    def assertQueriesContain(self, expected, flush=True):
-        """ Check the queries made by the current cursor. ``expected`` is a list
-        of strings representing the expected queries being made. Query strings
-        are matched against each other, ignoring case and whitespaces.
-        """
-        actual_queries = []
-
-        yield from self._patchExecute(actual_queries, flush)
-
-        if not self.warm:
-            return
-
-        self.assertEqual(
-            len(actual_queries), len(expected),
-            "\n---- actual queries:\n%s\n---- expected queries:\n%s" % (
-                "\n".join(actual_queries), "\n".join(expected),
-            )
-        )
-        for actual_query, expect_query in zip(actual_queries, expected):
-            self.assertIn(
-                "".join(expect_query.lower().split()),
-                "".join(actual_query.lower().split()),
-                "\n---- actual query:\n%s\n---- doesn't contain:\n%s" % (actual_query, expect_query),
-            )
-
-    @contextmanager
     def assertQueryCount(self, default=0, flush=True, **counters):
         """ Context manager that counts queries. It may be invoked either with
             one value, or with a set of named arguments like ``login=value``::

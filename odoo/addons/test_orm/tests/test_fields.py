@@ -1,9 +1,9 @@
 import base64
 import io
-import threading
 from collections import OrderedDict
 from datetime import date, datetime
 from unittest.mock import patch
+from contextlib import contextmanager
 
 import psycopg2
 from PIL import Image
@@ -1723,24 +1723,10 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             field = model._fields[field_name]
             field_fallback = field.get_company_dependent_fallback(model)
             record_fallback[field_name] = field_fallback
-            current_thread = threading.current_thread()
 
             for operator, values in operations.items():
                 for value in values:
                     domain = [(field_name, operator, value)]
-                    company_dependent_column_not_null = not record_fallback.filtered_domain(domain)
-                    if company_dependent_column_not_null:
-                        with self.subTest(domain=domain, default=default):
-                            Model.search([('id', 'in', records.ids)] + domain)
-                            current_thread.query_count = 0
-                            current_thread.query_time = 0
-                            Model.search([('id', 'in', records.ids)] + domain)  # warmup
-                            if current_thread.query_count:
-                                # parent_of and child_of may need extra queries
-                                expected_contained_sqls = [''] * (current_thread.query_count - 1) + [f'"test_orm_company"."{field_name}" IS NOT NULL']
-                                with self.assertQueriesContain(expected_contained_sqls):
-                                    Model.search([('id', 'in', records.ids)] + domain)
-
                     with self.subTest(domain=domain, default=default):
                         self._search(
                             Model,
@@ -1748,6 +1734,15 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
                             [('id', 'in', records.ids)],
                             test_complement=True,
                         )
+                    if record_fallback.filtered_domain(domain):
+                        continue
+                    with self.subTest(domain=domain, default=default, check_not_null=True):
+                        Model.search([('id', 'in', records.ids)] + domain)  # warmup
+                        queries = []
+                        with contextmanager(lambda: self._patchExecute(queries))():
+                            Model.search([('id', 'in', records.ids)] + domain)
+                        if queries:
+                            self.assertIn(f'"test_orm_company"."{field_name}" IS NOT NULL', queries[-1])
 
         # boolean fields
         test_field('truth', [True, True], {
