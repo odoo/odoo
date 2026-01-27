@@ -1,6 +1,7 @@
 declare module "plugins" {
     import { CarouselOptionShared } from "@website/builder/plugins/carousel_option_plugin";
     import { CustomizeWebsiteShared } from "@website/builder/plugins/customize_website_plugin";
+    import { DiscardPluginShared } from "@website/builder/plugins/discard_plugin";
     import { content_manually_updated_handlers, EditInteractionShared } from "@website/builder/plugins/edit_interaction_plugin";
     import { WebsiteFontShared } from "@website/builder/plugins/font/font_plugin";
     import { FormOptionShared } from "@website/builder/plugins/form/form_option_plugin";
@@ -43,6 +44,7 @@ declare module "plugins" {
         chartOptionPlugin: ChartOptionShared;
         CookiesBarOptionPlugin: CookiesBarOptionShared;
         customizeWebsite: CustomizeWebsiteShared;
+        discard: DiscardPluginShared;
         dynamicSnippetCarouselOption: DynamicSnippetCarouselOptionShared;
         dynamicSnippetOption: DynamicSnippetOptionShared;
         edit_interaction: EditInteractionShared;

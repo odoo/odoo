@@ -1137,10 +1137,13 @@ class Website(Home):
         """
         if disable:
             records = self._get_customize_data(disable, is_view_data).filtered('active')
+            original_view_ids = []
             if reset_view_arch:
+                original_view_ids = records.ids
                 records.reset_arch(mode='hard')
             records.write({'active': False})
-
+            if original_view_ids:
+                return {'original_view_ids': original_view_ids}
         if enable:
             records = self._get_customize_data(enable, is_view_data)
             records.filtered(lambda x: not x.active).write({'active': True})
@@ -1196,6 +1199,36 @@ class Website(Home):
                                   enable=views_enable,
                                   disable=views_disable,
                                   reset_view_arch=False)
+
+    @http.route(['/website/rollback'], type='jsonrpc', auth='user', website=True)
+    def rollback(self, **kwargs):
+        """
+        In the website editor, editing some options cause changes to happen directly
+        in the backend; this function allows those changes to be reverted.
+
+        Every time an option that causes a backend change is modified the client
+        generates the required steps to revert that change and saves them in
+        localStorage. When the discard button is pressed, those steps are sent to the
+        backend and handled with this function.
+        """
+        footer = kwargs.get('footer')
+        if footer:
+            self.update_footer_template(footer['template_key'], footer['possible_values'])
+
+        scss = kwargs.get('scss', {})
+        for url, values in scss.items():
+            self.env['website.assets'].make_scss_customization(url, values)
+
+        theme = kwargs.get('theme', {})
+        if "views" in theme:
+            self.theme_customize_data(True, theme["views"]['enable'], theme["views"]['disable'])
+        if "assets" in theme:
+            self.theme_customize_data(False, theme["assets"]['enable'], theme["assets"]['disable'])
+
+        views = kwargs.get('views', [])
+        for view in views:
+            view_id, args = view[0], view[1:]
+            self.env['ir.ui.view'].browse(view_id).save(*args)
 
     # ------------------------------------------------------
     # Server actions

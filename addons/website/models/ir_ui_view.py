@@ -495,10 +495,14 @@ class IrUiView(models.Model):
             if value is not None:
                 # TODO: batch writes?
                 record = Model.browse(int(el.get('data-oe-id')))
+                vals = {field: value}
+                if model == 'website.menu':
+                    vals['mega_menu_classes'] = [c for c in el.classes if c not in ['dropdown-menu', 'o_mega_menu', 'o_savable']]
+
                 if not self.env.context.get('lang') and self.get_default_lang_code():
-                    record.with_context(lang=self.get_default_lang_code()).write({field: value})
+                    record.with_context(lang=self.get_default_lang_code()).write(vals)
                 else:
-                    record.write({field: value})
+                    record.write(vals)
 
                 if callable(Model._fields[field].translate):
                     self._copy_custom_snippet_translations(record, field)

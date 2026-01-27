@@ -193,7 +193,7 @@ class FooterOptionPlugin extends Plugin {
 
 export class WebsiteConfigFooterAction extends BuilderAction {
     static id = "websiteConfigFooter";
-    static dependencies = ["builderActions", "customizeWebsite"];
+    static dependencies = ["builderActions", "customizeWebsite", "discard"];
     setup() {
         this.reload = {};
     }
@@ -211,12 +211,22 @@ export class WebsiteConfigFooterAction extends BuilderAction {
     }
     async apply({ params: { vars, view }, selectableContext }) {
         const possibleValues = new Set();
+        let currentView = null;
         for (const item of selectableContext.items) {
             for (const a of item.getActions()) {
                 if (a.actionId === "websiteConfigFooter") {
                     possibleValues.add(a.actionParam.view);
+                    if (item.isApplied()) {
+                        currentView = a.actionParam.view;
+                    }
                 }
             }
+        }
+        if (currentView && !this.dependencies.discard.getRollback("footer")) {
+            this.dependencies.discard.setRollback("footer", {
+                template_key: currentView,
+                possible_values: [...possibleValues],
+            });
         }
         await Promise.all([
             this.dependencies.customizeWebsite.makeSCSSCusto(
