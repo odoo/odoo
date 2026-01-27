@@ -1477,7 +1477,7 @@ class AccountMove(models.Model):
                     'move_id': line.move_id.id,
                     'date': fields.Date.to_string(line.date),
                     'account_payment_id': line.payment_id.id,
-                    'move_ref': line.ref or "",
+                    'ref': line.ref or "",
                 })
 
             if payments_widget_vals['content']:

@@ -19,7 +19,7 @@
                         <t t-if="info.outstanding">
                             <td t-out="line.formattedDate"/>
                             <td style="max-width: 9rem;">
-                                <a t-att-title="(line.bank_label ? line.bank_label + ' - ' : '') + (line.move_ref ? line.move_ref : '')"
+                                <a t-att-title="line.bank_label ? (line.ref ? line.bank_label + ' - ' + line.ref : line.bank_label) : (line.ref or '')"
                                    role="button"
                                    class="open_account_move oe_form_field btn btn-link w-100 text-start"
                                    t-on-click="() => this.openMove(line.move_id)"
@@ -30,7 +30,7 @@
                             <td class="ps-2">
                                 <a title="assign to invoice"
                                    role="button"
-                                   class="oe_form_field btn btn-secondary outstanding_credit_assign d-print-none text-truncate w-100 text-start"
+                                   class="oe_form_field btn btn-secondary outstanding_credit_assign d-print-none"
                                    t-att-data-id="line.id"
                                    href="#"
                                    data-bs-toggle="tooltip"
@@ -104,7 +104,7 @@
                         <tr>
                             <td class="fw-bolder">Journal:</td>
                             <td class="ps-1">
-                                <t t-out="props.move_name"/>
+                                <t t-out="props.journal_name"/>
                                 <span t-if="props.payment_method_name">
                                     (<t t-out="props.payment_method_name"/>)
                                 </span>
