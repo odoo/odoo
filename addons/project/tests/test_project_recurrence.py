@@ -316,12 +316,13 @@ class TestProjectRecurrence(TransactionCase):
             },
         ])
         tasks_copy = self.env['project.task.recurrence']._create_next_occurrences(tasks)
-        # Every date should be 1 week later
+        # Every date should be 1 week later if planned on weekend
         self.assertEqual(datetime(2023, 1, 8, 0, 0), tasks_copy[0].date_deadline)
         self.assertEqual(datetime(2023, 1, 9, 0, 0), tasks_copy[0].child_ids.date_deadline)
         self.assertEqual(datetime(2023, 1, 10, 0, 0), tasks_copy[0].child_ids.child_ids.date_deadline)
-        self.assertEqual(datetime(2023, 1, 11, 0, 0), tasks_copy[1].date_deadline)
-        self.assertEqual(datetime(2023, 1, 12, 0, 0), tasks_copy[1].child_ids.date_deadline)
+        # Every date should be 1 week later on a working day and hour if planned durring the week
+        self.assertEqual(datetime(2023, 1, 11, 7, 0), tasks_copy[1].date_deadline)
+        self.assertEqual(datetime(2023, 1, 12, 7, 0), tasks_copy[1].child_ids.date_deadline)
 
     def test_recurrent_tasks_without_archive_user(self):
         task = self.env['project.task'].create({

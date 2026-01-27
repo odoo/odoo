@@ -109,7 +109,7 @@ class ProjectTaskRecurrence(models.Model):
             })
 
             if (fields_to_postpone["date_deadline"]):
-                original_task = self._get_original_task(task)
+                original_task = self._get_original_task(recurrence)
                 date_begin, date_deadline, planed_task_val, fields_to_postpone = self._plan_task(fields_to_postpone, original_task, task, recurrence)
                 create_values.update(planed_task_val)
                 copy_data = self._filter_non_working_employees(copy_data, original_task, task, date_begin, date_deadline)
@@ -198,19 +198,27 @@ class ProjectTaskRecurrence(models.Model):
         new_data = {}
         date_deadline = False
         recurrence_cal = False
-        old_dead_line = field_data.pop('date_deadline')
-
-        if (last_task.user_ids.resource_calendar_id and len(last_task.user_ids.resource_calendar_id) == 1):
-            recurrence_cal = last_task.user_ids.resource_calendar_id
-        else:
-            recurrence_cal = self.env.user.company_id.resource_calendar_id
-        date_deadline = recurrence_cal.plan_hours(0, old_dead_line + recurrence._get_recurrence_delta(), True)
-        date_deadline.replace(tzinfo=timezone.utc)
-        new_data.update({
-            'date_deadline': date_deadline
+        if (original_task.date_deadline.weekday() in [5, 6]):
+            new_data.update({
+            field: value and value + recurrence._get_recurrence_delta()
+            for field, value in field_data.items()
             })
+            field_data = {}
+            date_deadline = new_data['date_deadline']
+        else:
+            old_dead_line = field_data.pop('date_deadline')
+            if (last_task.user_ids.resource_calendar_id and len(last_task.user_ids.resource_calendar_id) == 1):
+                recurrence_cal = last_task.user_ids.resource_calendar_id
+            else:
+                recurrence_cal = self.env.user.company_id.resource_calendar_id
+
+            date_deadline = recurrence_cal.plan_hours(0, old_dead_line + recurrence._get_recurrence_delta(), True)
+            date_deadline.replace(tzinfo=timezone.utc)
+            new_data.update({
+                'date_deadline': date_deadline
+                })
 
         return (None, date_deadline, new_data, field_data)
 
-    def _get_original_task(self, task):
-        return task.recurrence_id.task_ids[0]
+    def _get_original_task(self, recurrence):
+        return recurrence.task_ids[0]
