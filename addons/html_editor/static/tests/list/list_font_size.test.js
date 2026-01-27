@@ -99,6 +99,15 @@ test("should not apply font size to list item when selection excludes trailing e
     });
 });
 
+test("should replace list item inline font-size with font-size class", async () => {
+    await testEditor({
+        contentBefore: '<ul><li style="font-size: 18px;">[abc]</li></ul>',
+        stepFunction: (editor) =>
+            execCommand(editor, "formatFontSizeClassName", { className: "h2-fs" }),
+        contentAfter: '<ul><li class="h2-fs">[abc]</li></ul>',
+    });
+});
+
 test("should apply font-size to completely selected and partially selected list items", async () => {
     await testEditor({
         contentBefore: "<ol><li>[abc</li><li>def</li><li>gh]i</li></ol>",
