@@ -78,6 +78,7 @@ TRANSLATED_ELEMENTS = {
     'font', 'i', 'ins', 'kbd', 'keygen', 'mark', 'math', 'meter', 'output',
     'progress', 'q', 'ruby', 's', 'samp', 'small', 'span', 'strong', 'sub',
     'sup', 'time', 'u', 'var', 'wbr', 'text',
+    # for `a`, see `is_translatable_link`
 }
 
 # Attributes from QWeb views that must be translated.
@@ -124,6 +125,9 @@ def _get_frame(stack_level: int = 0) -> types.FrameType | None:
     )
     return None
 
+
+def is_translatable_link(node):
+    return not ('type' in node.attrib or node.attrib.get('role') == 'button')
 
 def is_translatable_attrib(key, node):
     if not key:
@@ -204,7 +208,7 @@ def translate_xml_node(node, callback, parse, serialize):
         # translated as a whole using the `o_translate_inline` class.
         force_inline = force_inline or is_force_inline(node)
         return (
-            (force_inline or node.tag in TRANSLATED_ELEMENTS)
+            (force_inline or node.tag in TRANSLATED_ELEMENTS or (node.tag == 'a' and is_translatable_link(node)))
             # Nodes with directives are not translatable. Directives usually
             # start with `t-`, but this prefix is optional for `groups` (see
             # `_compile_directive_groups` which reads `t-groups` and `groups`)
