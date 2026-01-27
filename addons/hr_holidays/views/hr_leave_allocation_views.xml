@@ -129,30 +129,32 @@
                             <field name="already_accrued" invisible="1"/>
                             <field name="holiday_status_id"
                                 context="{'employee_id':employee_id, 'default_date_from':current_date, 'request_type':'allocation'}"
-                                readonly="state == 'validate'"/>
+                                readonly="state in ['refuse', 'validate']"/>
                             <field name="allocation_type"
                                 widget="radio"
                                 invisible="1"
-                                readonly="not is_officer or state == 'validate'"/>
+                                readonly="not is_officer or state in ['refuse', 'validate']"/>
                             <field name="is_officer" invisible="1"/>
                             <field name="accrual_plan_id"
                                 invisible="allocation_type == 'regular'"
                                 required="allocation_type == 'accrual'"
-                                readonly="not is_officer or state == 'validate'"/>
+                                readonly="not is_officer or state in ['refuse', 'validate']"/>
                             <div class="o_td_label" name="validity_label" invisible="not is_officer">
                                 <label for="date_from" string="Validity Period"
                                     invisible="allocation_type == 'accrual' or state != 'confirm'"/>
                                 <label for="date_from" string="Start Date" invisible="allocation_type == 'regular'"/>
                             </div>
                             <div class="o_row" name="validity" invisible="not is_officer">
-                                <field name="date_from" nolabel="1" readonly="allocation_type == 'accrual' and state != 'confirm'"
+                                <field name="date_from" nolabel="1"
+                                    readonly="state == 'refuse' or (allocation_type == 'accrual' and state != 'confirm')"
                                     invisible="allocation_type == 'regular' and state != 'confirm'"/>
                                 <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"
                                     invisible="allocation_type == 'accrual' or state != 'confirm'"/>
                                 <label class="mx-2" for="date_to" string="Run until"
                                     invisible="allocation_type == 'regular'"/>
                                 <field name="date_to" nolabel="1"
-                                    placeholder="No Limit" readonly="allocation_type == 'accrual' and state != 'confirm'"
+                                    placeholder="No Limit"
+                                    readonly="state == 'refuse' or (allocation_type == 'accrual' and state != 'confirm')"
                                     invisible="allocation_type == 'regular' and state != 'confirm'"/>
                                 <div id="no_limit_label" class="oe_read_only"
                                     invisible="not id or date_to or state != 'confirm'">No limit</div>
@@ -169,10 +171,10 @@
                             <div name="duration_display">
                                 <field name="number_of_days_display" nolabel="1" style="width: 6ch;"
                                     invisible="type_request_unit == 'hour'"
-                                    readonly="state != 'confirm' and not is_officer"/>
+                                    readonly="state == 'refuse' or (state != 'confirm' and not is_officer)"/>
                                 <field name="number_of_hours_display" nolabel="1" style="width: 6ch;"
                                     invisible="type_request_unit != 'hour'"
-                                    readonly="state != 'confirm' and not is_officer"/>
+                                    readonly="state == 'refuse' or (state != 'confirm' and not is_officer)"/>
                                 <span class="ml8" invisible="type_request_unit == 'hour'">Days</span>
                                 <span class="ml8" invisible="type_request_unit != 'hour'">Hours</span>
                             </div>
@@ -197,7 +199,11 @@
         <field name="arch" type="xml">
             <div id="title" position="replace">
                 <div class="oe_title">
-                    <h2><field name="name" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" required="1"/></h2>
+                    <h2>
+                        <field name="name"
+                            placeholder="e.g. Time Off type (From validity start to validity end / no limit)"
+                            required="1" readonly="state == 'refuse'"/>
+                    </h2>
                 </div>
             </div>
             <field name="employee_id" position="replace">
