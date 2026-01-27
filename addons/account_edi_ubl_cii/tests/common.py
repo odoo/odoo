@@ -168,10 +168,3 @@ class TestUblBis3Common(TestUblCiiCommon):
     def _create_partner_lu_dig(cls, **kwargs):
         kwargs.setdefault('invoice_edi_format', 'ubl_bis3')
         return super()._create_partner_lu_dig(**kwargs)
-
-    # -------------------------------------------------------------------------
-    # EXPORT HELPERS
-    # -------------------------------------------------------------------------
-
-    def subfolder(self):
-        return super().subfolder().replace('export', 'export/bis3/invoice')
