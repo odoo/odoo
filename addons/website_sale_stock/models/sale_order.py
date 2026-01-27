@@ -115,10 +115,10 @@ class SaleOrder(models.Model):
         """Get all the lines of the current order with the given product."""
         return self.order_line.filtered(lambda sol: sol.product_id.id == product_id)
 
-    def _is_cart_ready_for_checkout(self):
+    def _is_cart_ready_for_checkout(self, **kwargs):
         """Override of `website_sale` to prevent the user from proceeding if there is not enough
         stock for some order lines."""
-        ready = super()._is_cart_ready_for_checkout()
+        ready = super()._is_cart_ready_for_checkout(**kwargs)
         if not self._has_deliverable_products():
             return ready
 

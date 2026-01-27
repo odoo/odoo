@@ -1628,7 +1628,7 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
             # confirm the order if it is valid.
             if redirection := self._validate_previous_checkout_steps(
                 step_href='/shop/payment',
-                order_sudo=order_sudo.with_context(block_on_price_change=True),
+                block_on_price_change=True,
             ):
                 message = request.env._(
                     "An unexpected error occurred, and we could not process your order."
@@ -1746,7 +1746,7 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
 
     # === CHECK METHODS === #
 
-    def _check_checkout_step(self, step_href, order_sudo):
+    def _check_checkout_step(self, step_href, order_sudo, **kwargs):
         """Check that the given step is finished and valid; otherwise, redirect to the page where
         actions are still required.
 
@@ -1760,15 +1760,15 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
         """
         match step_href:
             case '/shop/cart':
-                return self._check_shop_cart_step_ready(order_sudo)
+                return self._check_shop_cart_step_ready(order_sudo, **kwargs)
             case '/shop/address':
-                return self._check_shop_address_step_ready(order_sudo)
+                return self._check_shop_address_step_ready(order_sudo, **kwargs)
             case '/shop/checkout':
-                return self._check_shop_checkout_step_ready(order_sudo)
+                return self._check_shop_checkout_step_ready(order_sudo, **kwargs)
 
-        return super()._check_checkout_step(step_href, order_sudo)
+        return super()._check_checkout_step(step_href, order_sudo, **kwargs)
 
-    def _check_shop_cart_step_ready(self, order_sudo):
+    def _check_shop_cart_step_ready(self, order_sudo, **kwargs):
         """Check whether the `/shop/cart` step is valid, and redirect to the appropriate page
         otherwise.
 
@@ -1796,10 +1796,10 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
         if request.env.user._is_public() and request.website.account_on_checkout == 'mandatory':
             return request.redirect('/web/login?redirect=/shop/checkout')
 
-        if not order_sudo._is_cart_ready_for_checkout():
+        if not order_sudo._is_cart_ready_for_checkout(**kwargs):
             return request.redirect('/shop/cart')
 
-    def _check_shop_address_step_ready(self, order_sudo):
+    def _check_shop_address_step_ready(self, order_sudo, **kwargs):
         """Check whether the `/shop/address` step is valid, and redirect to the appropriate page
         otherwise.
 
@@ -1850,7 +1850,7 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
                 f'/shop/address?partner_id={invoice_partner_sudo.id}&address_type=billing'
             )
 
-    def _check_shop_checkout_step_ready(self, order_sudo):
+    def _check_shop_checkout_step_ready(self, order_sudo, **kwargs):
         """Check whether the `/shop/checkout` step is valid, and redirect to the appropriate page
         otherwise.
 
@@ -1861,7 +1861,7 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
         :return: None if the step is valid; otherwise, a redirection to the appropriate page.
         :rtype: None | http.Response
         """
-        if not order_sudo._is_cart_ready_for_payment():
+        if not order_sudo._is_cart_ready_for_payment(**kwargs):
             return request.redirect('/shop/checkout')
 
     # ------------------------------------------------------

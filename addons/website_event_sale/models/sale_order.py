@@ -126,10 +126,10 @@ class SaleOrder(models.Model):
             lambda so: all(ticket.sale_available for ticket in so.order_line.event_ticket_id),
         )
 
-    def _is_cart_ready_for_checkout(self):
+    def _is_cart_ready_for_checkout(self, **kwargs):
         """Override of `website_sale` to check if the user is trying to order a ticket that is no
         longer available."""
-        ready = super()._is_cart_ready_for_checkout()
+        ready = super()._is_cart_ready_for_checkout(**kwargs)
         if not self.order_line.event_id:
             return ready
 

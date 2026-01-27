@@ -86,11 +86,11 @@ class SaleOrder(models.Model):
             country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
         return super()._get_pickup_locations(country=country, **kwargs)
 
-    def _is_cart_ready_for_payment(self):
+    def _is_cart_ready_for_payment(self, **kwargs):
         """Override of `website_sale` to include errors if no pickup location is selected and to
         ensure the cart is available in the selected store, even if out-of-stock orders are
         allowed."""
-        ready = super()._is_cart_ready_for_payment()
+        ready = super()._is_cart_ready_for_payment(**kwargs)
         if not self._has_deliverable_products():
             return ready
 

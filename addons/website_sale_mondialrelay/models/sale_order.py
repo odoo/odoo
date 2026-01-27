@@ -6,10 +6,10 @@ from odoo import models
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    def _is_cart_ready_for_payment(self):
+    def _is_cart_ready_for_payment(self, **kwargs):
         """Override of `website_sale` to check that Point Relais® is used with the correct delivery
         method, and vice versa."""
-        ready = super()._is_cart_ready_for_payment()
+        ready = super()._is_cart_ready_for_payment(**kwargs)
         if not self._has_deliverable_products():
             return ready
 

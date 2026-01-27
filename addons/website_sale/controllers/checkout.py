@@ -6,14 +6,14 @@ class Checkout(Controller):
 
     # === CHECK METHODS === #
 
-    def _validate_previous_checkout_steps(self, *, step_href=None, order_sudo=None):
+    def _validate_previous_checkout_steps(self, *, step_href=None, **kwargs):
         """Check that the checkout steps prior to the current step are valid; otherwise,
         redirect to the page where actions are still required.
 
         Note: prior checkout steps, including non-published steps.
 
         :param str step_href: The current step href. Defaults to `request.httprequest.path`.
-        :param sale.order order_sudo: The cart to check. Defaults to `request.cart`.
+        :param dict kwargs: Additional arguments, forwarded to `_check_checkout_step`.
         :return: None if the user can be on the current step; otherwise, a redirection.
         :rtype: None | http.Response
         """
@@ -21,18 +21,21 @@ class Checkout(Controller):
         step_href = step_href or request.env['ir.http'].url_unrewrite(
             request.httprequest.path, website.id
         )
-        order_sudo = order_sudo or request.cart
 
         current_step = website._get_checkout_step(step_href)
         previous_steps = current_step._get_previous_checkout_steps(
             Domain('website_id', '=', website.id)
         )
 
-        for prev_step_href in previous_steps.sorted('sequence').mapped('step_href'):
-            if redirection := self._check_checkout_step(prev_step_href, order_sudo):
+        for previous_step in previous_steps.sorted('sequence'):
+            if redirection := self._check_checkout_step(
+                previous_step.step_href,
+                request.cart,
+                **kwargs,
+            ):
                 return redirection
 
-    def _check_checkout_step(self, step_href, order_sudo):
+    def _check_checkout_step(self, step_href, order_sudo, **kwargs):
         """Check that the given step is finished and valid; otherwise, redirect to the page where
         actions are still required.
 

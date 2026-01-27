@@ -258,9 +258,9 @@ class SaleOrder(models.Model):
             lambda sol: not sol.is_reward_line
         )
 
-    def _is_cart_ready_for_payment(self):
+    def _is_cart_ready_for_payment(self, *, block_on_price_change=False, **kwargs):
         """Override of `website_sale` to ensure rewards are up to date before paying."""
-        ready = super()._is_cart_ready_for_payment()
+        ready = super()._is_cart_ready_for_payment(**kwargs)
 
         initial_amount = self.amount_total
         # self._update_programs_and_rewards() is already called by self._recompute_prices()
@@ -273,7 +273,7 @@ class SaleOrder(models.Model):
                     "\nYou might need to refresh the page."
                 ),
             )
-            if self.env.context.get('block_on_price_change'):
+            if block_on_price_change:
                 return False
 
         return ready

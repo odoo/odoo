@@ -890,7 +890,7 @@ class SaleOrder(models.Model):
 
         return res
 
-    def _is_cart_ready_for_checkout(self):
+    def _is_cart_ready_for_checkout(self, **kwargs):
         """Whether the cart is ready to proceed to the checkout "Address" step: `/shop/checkout`.
 
         This method performs the necessary validations and may add user-facing messages
@@ -910,7 +910,7 @@ class SaleOrder(models.Model):
 
         return True
 
-    def _is_cart_ready_for_payment(self):
+    def _is_cart_ready_for_payment(self, *, block_on_price_change=False, **kwargs):
         """Whether the cart is ready to be confirmed and proceed to the checkout "Payment" step:
         `/shop/payment`.
 
@@ -942,13 +942,13 @@ class SaleOrder(models.Model):
                     "\nYou might need to refresh the page."
                 ),
             )
-            if self.env.context.get('block_on_price_change'):
+            if block_on_price_change:
                 return False
 
         return True
 
     def _is_cart_ready(self):
-        """Wheter the cart is free of errors or should the customer be blocked at the current
+        """Whether the cart is free of errors or should the customer be blocked at the current
         checkout step to fix them.
 
         :return: True if the cart does not have an alert of 'danger' level, False otherwise.

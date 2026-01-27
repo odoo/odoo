@@ -56,7 +56,7 @@ class PaymentPortal(payment_portal.PaymentPortal, Checkout):
         # Ensure the cart is still valid before proceeding any further.
         if redirection := self._validate_previous_checkout_steps(
             step_href='/shop/payment',
-            order_sudo=order_sudo.with_context(block_on_price_change=True),
+            block_on_price_change=True,
         ):
             return {
                 'state': 'error',
