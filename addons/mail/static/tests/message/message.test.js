@@ -497,6 +497,13 @@ test("Do not call server on save if no changes", async () => {
     await click(".o-mail-Message [title='Edit']");
     await click(".o-mail-Message button:text('save')");
     await expect.waitForSteps([]);
+    await click(".o-mail-Message [title='Edit']");
+    await insertText(".o-mail-Message .o-mail-Composer-input", " - updated");
+    await click(".o-mail-Message button:text('save')");
+    await expect.waitForSteps(["update_content"]);
+    await click(".o-mail-Message [title='Edit']");
+    await click(".o-mail-Message button:text('save')");
+    await expect.waitForSteps([]);
 });
 
 test("Update the link previews when a message is edited", async () => {
