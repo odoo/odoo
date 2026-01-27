@@ -901,6 +901,49 @@ class IrModelFields(models.Model):
 
         return True
 
+    def _get_inherit_to_remove(self, modules_to_remove):
+        modules_to_remove = set(modules_to_remove)
+        inherit_fields_to_remove_ids = OrderedSet()
+        model_name_to_field_records = self.grouped('model')
+
+        for model_name, field_records in model_name_to_field_records.items():
+            if model_name not in self.env:
+                continue
+
+            models_to_check = OrderedSet()
+
+            inherit_children_models = list(self.pool[model_name]._inherit_children)
+            while inherit_children_models:
+                current_model = inherit_children_models.pop()
+                models_to_check.add(current_model)
+                inherit_children_models.extend(m for m in self.pool[current_model]._inherit_children if m not in models_to_check)
+
+            for model_name_ in models_to_check:
+                model_class = self.pool[model_name_]
+                for field_record in field_records:
+                    field = model_class._fields.get(field_record.name)
+                    if field and all(m in modules_to_remove for m in field._modules):
+                        inherit_fields_to_remove_ids.add(self._get(model_name_, field_record.name).id)
+
+        inherit_fields_to_remove = self.browse(inherit_fields_to_remove_ids) - self
+        if inherit_fields_to_remove:
+            # when upgrade some customzied modules may not be loaded which may also override the fields
+            self.env['ir.model.data'].flush_model()
+            self.env['ir.module.module'].flush_model()
+            fields_not_loaded_ids = self.env.execute_query(SQL("""
+                SELECT array_agg(imd.res_id)
+                  FROM ir_model_data imd
+                  JOIN ir_module_module imm
+                    ON imd.module = imm.name
+                   AND imd.module NOT IN %s
+                   AND imm.state IN ('to upgrade', 'installed')
+                   AND imd.res_id IN %s
+                   AND imd.model = 'ir.model.fields'
+            """, tuple(self.pool._init_modules), tuple(inherit_fields_to_remove.ids)))
+            inherit_fields_to_remove -= self.browse(fields_not_loaded_ids or [])
+
+        return self.browse(inherit_fields_to_remove_ids) - self
+
     def _prepare_update(self):
         """ Check whether the fields in ``self`` may be modified or removed.
             This method prevents the modification/deletion of many2one fields
@@ -2503,7 +2546,7 @@ class IrModelData(models.Model):
         # methods is not in cache it will be fetched, and fields that exist in the registry but not
         # in the database will be prefetched, this will of course fail and prevent the uninstall.
         has_shared_field = False
-        for ir_field in self.env['ir.model.fields'].browse(field_ids):
+        for ir_field in self.env['ir.model.fields'].browse(field_ids).exists():
             model = self.pool.get(ir_field.model)
             if model is not None:
                 field = model._fields.get(ir_field.name)
@@ -2556,6 +2599,7 @@ class IrModelData(models.Model):
                     f.name in models.LOG_ACCESS_COLUMNS and
                     f.model in self.env and self.env[f.model]._log_access
                 ))
+                records += records._get_inherit_to_remove(modules_to_remove)
 
             # now delete the records
             _logger.info('Deleting %s', records)
