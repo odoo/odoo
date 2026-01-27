@@ -18,6 +18,7 @@ export const projectProjectKanbanGroupStageView = {
     Controller: ProjectKanbanGroupStageController,
     Renderer: ProjectProjectKanbanGroupStageRenderer,
     Model: ProjectRelationalModel,
+    buttonTemplate: "project.ProjectKanbanView.Buttons",
 };
 
 registry.category("views").add("project_project_kanban", projectProjectKanbanView);
