@@ -396,6 +396,7 @@ class TestCreateEvents(TestCommon):
         mock_get_events.return_value = ([], None)
 
         # Synchronize local event with Outlook after updating it locally.
+        self.organizer_user.microsoft_last_sync_date = fields.datetime.now()
         self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
         self.call_post_commit_hooks()
         event.invalidate_recordset()
