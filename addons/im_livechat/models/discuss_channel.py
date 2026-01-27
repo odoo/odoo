@@ -214,7 +214,7 @@ class DiscussChannel(models.Model):
         store.add(need_help_after - need_help_before, "_store_channel_fields")
         store.add(need_help_before - need_help_after, ["livechat_status"])
         if "livechat_expertise_ids" in vals:
-            store.add(need_help_after, lambda res: res.many("livechat_expertise_ids", ["name"]))
+            store.add(need_help_after, lambda res: res.many("livechat_expertise_ids", ["name", "color"]))
         store.bus_send()
         return result
 
@@ -418,7 +418,7 @@ class DiscussChannel(models.Model):
         res["internal_users"].attr("livechat_looking_for_help_since_dt", predicate=is_livechat_channel)
         res["internal_users"].many(
             "livechat_expertise_ids",
-            ["name"],
+            ["name", "color"],
             predicate=is_livechat_channel,
         )
 
@@ -441,7 +441,7 @@ class DiscussChannel(models.Model):
             res.attr("livechat_outcome", predicate=is_livechat_channel)
             res.attr("livechat_status", predicate=is_livechat_channel)
             res.attr("livechat_looking_for_help_since_dt", predicate=is_livechat_channel)
-            res.many("livechat_expertise_ids", ["name"], predicate=is_livechat_channel)
+            res.many("livechat_expertise_ids", ["name", "color"], predicate=is_livechat_channel)
 
     def _to_store(self, store: Store, res: Store.FieldList):
         """Extends the channel header by adding the livechat operator and the 'anonymous' profile"""

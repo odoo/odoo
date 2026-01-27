@@ -5,6 +5,8 @@ export class LivechatExpertise extends Record {
     static _name = "im_livechat.expertise";
 
     /** @type {number} */
+    color;
+    /** @type {number} */
     id;
     /** @type {string} */
     name;

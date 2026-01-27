@@ -60,7 +60,7 @@ export class ResPartner extends mailModels.ResPartner {
                         "is_in_call",
                         mailDataHelpers.Store.one(
                             "main_user_id",
-                            mailDataHelpers.Store.many("livechat_expertise_ids", "name")
+                            mailDataHelpers.Store.many("livechat_expertise_ids", ["name", "color"])
                         ),
                     ],
                 })

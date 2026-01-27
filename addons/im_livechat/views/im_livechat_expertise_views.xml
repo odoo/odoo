@@ -8,6 +8,7 @@
                 <list editable="bottom">
                     <field name="name"/>
                     <field name="user_ids" widget="many2many_tags" options="{'no_create': True}" domain="[['all_group_ids', 'in', %(im_livechat.im_livechat_group_user)d]]"/>
+                    <field name="color" widget="color_picker"/>
                 </list>
             </field>
         </record>
@@ -21,6 +22,7 @@
                         <group>
                             <field name="name"/>
                             <field name="user_ids" widget="many2many_tags" options="{'no_create': True}" domain="[['all_group_ids', 'in', %(im_livechat.im_livechat_group_user)d]]"/>
+                            <field name="color" widget="color_picker"/>
                         </group>
                     </sheet>
                 </form>
