@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import contextmanager
+from datetime import datetime
+from freezegun import freeze_time
 from lxml import etree
 
 from odoo.tests import Form, TransactionCase
@@ -489,3 +491,42 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
             with self.assertRaises(AccessError):
                 with Form(task) as task_form:
                     task_form.name = "Testing changing name in a company I can not read/write"
+
+    def test_elapsed_time_multi_company(self):
+        """Check only public holidays of the company of the project are taken into account when
+        the working schedule used by the project has no company set."""
+
+        self.env['resource.calendar.leaves'].with_company(self.company_a).create([{
+            'name': "Public Holiday for company A",
+            'date_from': datetime(2025, 1, 19, 1, 0, 0),
+            'date_to': datetime(2025, 1, 20, 23, 0, 0),
+            'resource_id': False,
+        }])
+        self.env['resource.calendar.leaves'].with_company(self.company_b).create([{
+            'name': "Public Holiday for company B",
+            'date_from': datetime(2025, 5, 21, 1, 0, 0),
+            'date_to': datetime(2025, 5, 23, 23, 0, 0),
+            'resource_id': False,
+        }])
+        self.project_company_a.company_id.resource_calendar_id = False
+
+        task = self.env['project.task'].create({
+            'project_id': self.project_company_a.id,
+            'name': 'Task in project of company A',
+            'user_ids': False,
+        })
+        self.env.cr.execute("UPDATE project_task SET create_date = %s WHERE id=%s", ("2025-01-19 03:00:00", task.id))  # need to bypass the ORM to write on create_date
+        task.invalidate_recordset(['create_date'])
+
+        with freeze_time("2025-01-23 12:00:00"):
+            task.user_ids = self.user_employee_company_a
+
+        self.assertAlmostEqual(task.working_days_open, 2.5, 1, "Only public holidays of the project's company should be taken into account")
+        self.assertAlmostEqual(task.working_hours_open, 20, 1, "Only public holidays of the project's company should be taken into account")
+
+        with freeze_time("2025-01-30 12:00:00"):
+            folded_stage = self.env['project.task.type'].create({'name': 'Folded stage', 'project_ids': task.project_id.ids, 'fold': True})
+            task.write({'stage_id': folded_stage.id})
+
+        self.assertAlmostEqual(task.working_days_close, 7.5, 1)
+        self.assertAlmostEqual(task.working_hours_close, 60, 1)

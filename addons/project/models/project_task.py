@@ -583,10 +583,13 @@ class Task(models.Model):
         )
         for task in task_linked_to_calendar:
             dt_create_date = fields.Datetime.from_string(task.create_date)
+            leave_domain = [('time_type', '=', 'leave')]  # default used by get_work_duration_data if none provided
+            if task.project_id.company_id:
+                leave_domain += [('company_id', '=', task.project_id.company_id.id)]
 
             if task.date_assign:
                 dt_date_assign = fields.Datetime.from_string(task.date_assign)
-                duration_data = task.project_id.resource_calendar_id.get_work_duration_data(dt_create_date, dt_date_assign, compute_leaves=True)
+                duration_data = task.project_id.resource_calendar_id.get_work_duration_data(dt_create_date, dt_date_assign, domain=leave_domain, compute_leaves=True)
                 task.working_hours_open = duration_data['hours']
                 task.working_days_open = duration_data['days']
             else:
@@ -595,7 +598,7 @@ class Task(models.Model):
 
             if task.date_end:
                 dt_date_end = fields.Datetime.from_string(task.date_end)
-                duration_data = task.project_id.resource_calendar_id.get_work_duration_data(dt_create_date, dt_date_end, compute_leaves=True)
+                duration_data = task.project_id.resource_calendar_id.get_work_duration_data(dt_create_date, dt_date_end, domain=leave_domain, compute_leaves=True)
                 task.working_hours_close = duration_data['hours']
                 task.working_days_close = duration_data['days']
             else:
