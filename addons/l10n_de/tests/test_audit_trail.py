@@ -3,7 +3,7 @@ from odoo.exceptions import UserError
 from odoo.tests.common import tagged
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
+@tagged('post_install_l10n', 'post_install', '-at_install', 'mail_track')
 class TestAuditTrailDE(AccountTestInvoicingHttpCommon):
     @classmethod
     @AccountTestInvoicingCommon.setup_chart_template('de_skr03')

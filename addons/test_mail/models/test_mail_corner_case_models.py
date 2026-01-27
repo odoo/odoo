@@ -99,6 +99,34 @@ class MailTestLang(models.Model):
 # ------------------------------------------------------------
 
 
+class MailTestTrack(models.Model):
+    """ This model can be used in tests when automatic subscription and simple
+    tracking is necessary. Most features are present in a simple way. """
+    _description = 'Standard Tracked Model'
+    _name = "mail.test.track"
+    _inherit = ['mail.thread']
+
+    name = fields.Char()
+    email_from = fields.Char()
+    user_id = fields.Many2one('res.users', 'Responsible', tracking=True)
+    container_id = fields.Many2one('mail.test.container', tracking=True)
+    company_id = fields.Many2one('res.company')
+    track_fields_tofilter = fields.Char()  # comma-separated list of field names
+    track_enable_default_log = fields.Boolean(default=False)
+    parent_id = fields.Many2one('mail.test.track', string='Parent')
+
+    def _track_filter_for_display(self, tracking_values):
+        values = super()._track_filter_for_display(tracking_values)
+        filtered_fields = set(self.track_fields_tofilter.split(',') if self.track_fields_tofilter else '')
+        return values.filtered(lambda val: val.field_id.name not in filtered_fields)
+
+    def _track_get_default_log_message(self, changes):
+        filtered_fields = set(self.track_fields_tofilter.split(',') if self.track_fields_tofilter else '')
+        if self.track_enable_default_log and not all(change in filtered_fields for change in changes):
+            return f'There was a change on {self.name} for fields "{",".join(changes)}"'
+        return super()._track_get_default_log_message(changes)
+
+
 class MailTestTrackAllM2m(models.Model):
     _description = 'Sub-model: pseudo tags for tracking'
     _name = "mail.test.track.all.m2m"
@@ -120,6 +148,7 @@ class MailTestTrackAllPropertiesParent(models.Model):
     _description = 'Properties Parent'
     _name = "mail.test.track.all.properties.parent"
 
+    name = fields.Char()
     definition_properties = fields.PropertiesDefinition()
 
 
@@ -172,14 +201,32 @@ class MailTestTrackCompute(models.Model):
 class MailTestTrackDurationMixin(models.Model):
     _description = 'Fake model to test the mixin mail.tracking.duration.mixin'
     _name = "mail.test.track.duration.mixin"
-    _track_duration_field = 'customer_id'
+    _track_duration_field = 'stage_id'
     _inherit = ['mail.tracking.duration.mixin']
 
     name = fields.Char()
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=True)
+    stage_id = fields.Many2one(
+        'mail.test.track.duration.mixin.stage', compute='_compute_stage_id',
+        readonly=False, store=True, tracking=True,
+    )
+
+    @api.depends('name')
+    def _compute_stage_id(self):
+        default = self.env['mail.test.track.duration.mixin.stage'].search([], limit=1)
+        for duration_track in self.filtered(lambda t: not t.stage_id):
+            duration_track.stage_id = default.id
 
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
+
+
+class MailTestTrackDurationMixinStage(models.Model):
+    _description = 'Fake stage model for duration mixin'
+    _name = "mail.test.track.duration.mixin.stage"
+
+    name = fields.Char()
+    fold = fields.Boolean(default=False)
 
 
 class MailTestTrackGroups(models.Model):

@@ -2,12 +2,13 @@
 
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import tagged
 from odoo.exceptions import UserError
 
 
-@tagged('post_install', '-at_install')
-class TestAccountTax(AccountTestInvoicingCommon):
+@tagged('post_install', '-at_install', 'mail_track')
+class TestAccountTax(AccountTestInvoicingCommon, MailCase):
 
     @classmethod
     def setUpClass(cls):
@@ -76,41 +77,60 @@ class TestAccountTax(AccountTestInvoicingCommon):
 
     def test_logging_of_tax_update_when_tax_is_used(self):
         """ Modifications of a used tax should be logged. """
-
         self.set_up_and_use_tax()
-
-        self.company_data['default_tax_sale'].write({
-            'name': self.company_data['default_tax_sale'].name + ' MODIFIED',
-            'amount': 21,
-            'amount_type': 'fixed',
-            'type_tax_use': 'purchase',
-            'price_include_override': 'tax_included',
-            'include_base_amount': True,
-            'is_base_affected': False,
-        })
         self.flush_tracking()
-        self.assertEqual(len(self.company_data['default_tax_sale'].message_ids), 1,
+        old_amount = self.company_data['default_tax_sale'].amount
+        old_name = self.company_data['default_tax_sale'].name
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            self.company_data['default_tax_sale'].write({
+                'name': self.company_data['default_tax_sale'].name + ' MODIFIED',
+                'amount': 21,
+                'amount_type': 'fixed',
+                'type_tax_use': 'purchase',
+                'price_include_override': 'tax_included',
+                'include_base_amount': True,
+                'is_base_affected': False,
+            })
+            self.flush_tracking()
+        track_msg = self._new_msgs
+        self.assertEqual(len(track_msg), 1,
                          "Only 1 message should have been created when updating all the values.")
         # There are 7 tracked values in account.tax and we update each of them, each on should be included in the message
-        self.assertEqual(len(self.company_data['default_tax_sale'].message_ids.tracking_value_ids), 7,
-                         "The number of updated value should be 7.")
+        self.assertMessageFields(
+            track_msg, {
+                'tracking_values': [
+                    ('amount', 'float', old_amount, 21.0),
+                    ('amount_type', 'selection', 'Percentage', 'Fixed'),
+                    ('include_base_amount', 'boolean', False, True),
+                    ('is_base_affected', 'boolean', True, False),
+                    ('name', 'char', old_name, old_name + ' MODIFIED'),
+                    ('price_include_override', 'selection', '', 'Tax Included'),
+                    ('type_tax_use', 'selection', 'Sales', 'Purchases'),
+                ],
+            }
+        )
 
     def test_logging_of_repartition_lines_addition_when_tax_is_used(self):
         """ Adding repartition lines in a used tax should be logged. """
 
         self.set_up_and_use_tax()
 
-        self.company_data['default_tax_sale'].write({
-            'invoice_repartition_line_ids': [
-                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
-            ],
-            'refund_repartition_line_ids': [
-                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
-            ],
-        })
-        self.flush_tracking()
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            self.company_data['default_tax_sale'].write({
+                'invoice_repartition_line_ids': [
+                    Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+                ],
+                'refund_repartition_line_ids': [
+                    Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+                ],
+            })
+            self.flush_tracking()
 
-        previews = self.company_data['default_tax_sale'].message_ids.mapped('preview')
+        # manual log, no tracking
+        for msg in self._new_msgs:
+            self.assertMessageFields(msg, {'tracking_values': []})
+        previews = self._new_msgs.mapped('preview')
         self.assertIn(
             "New Invoice repartition line 4: -100.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
             previews
@@ -130,23 +150,27 @@ class TestAccountTax(AccountTestInvoicingCommon):
         last_refund_rep_line = self.company_data['default_tax_sale'].refund_repartition_line_ids\
             .filtered(lambda tax_rep: not tax_rep.factor_percent)
 
-        self.company_data['default_tax_sale'].write({
-            "invoice_repartition_line_ids": [
-                Command.update(last_invoice_rep_line.id, {
-                    'factor_percent': -100,
-                    'tag_ids': [Command.create({'name': 'TaxTag12345'})]
-                }),
-            ],
-            "refund_repartition_line_ids": [
-                Command.update(last_refund_rep_line.id, {
-                    'factor_percent': -100,
-                    'account_id': self.company_data['default_account_tax_purchase'].id,
-                }),
-            ],
-        })
-        self.flush_tracking()
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            self.company_data['default_tax_sale'].write({
+                "invoice_repartition_line_ids": [
+                    Command.update(last_invoice_rep_line.id, {
+                        'factor_percent': -100,
+                        'tag_ids': [Command.create({'name': 'TaxTag12345'})]
+                    }),
+                ],
+                "refund_repartition_line_ids": [
+                    Command.update(last_refund_rep_line.id, {
+                        'factor_percent': -100,
+                        'account_id': self.company_data['default_account_tax_purchase'].id,
+                    }),
+                ],
+            })
+            self.flush_tracking()
 
-        previews = self.company_data['default_tax_sale'].message_ids.mapped('preview')
+        # manual log, no tracking
+        for msg in self._new_msgs:
+            self.assertMessageFields(msg, {'tracking_values': []})
+        previews = self._new_msgs.mapped('preview')
         self.assertIn("Invoice repartition line 3: 0.0 -100.0 (Factor Percent) None ['TaxTag12345'] (Tax Grids)", previews)
         self.assertIn("Refund repartition line 3: 0.0 -100.0 (Factor Percent) None 131000 Tax Paid (Account) False True (Use in tax closing)", previews)
 
@@ -160,17 +184,21 @@ class TestAccountTax(AccountTestInvoicingCommon):
         last_refund_rep_line = self.company_data['default_tax_sale'].refund_repartition_line_ids\
             .filtered(lambda tax_rep: not tax_rep.factor_percent)
 
-        self.company_data['default_tax_sale'].write({
-            "invoice_repartition_line_ids": [
-                Command.update(last_invoice_rep_line.id, {'sequence': 0}),
-            ],
-            "refund_repartition_line_ids": [
-                Command.update(last_refund_rep_line.id, {'sequence': 0}),
-            ],
-        })
-        self.flush_tracking()
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            self.company_data['default_tax_sale'].write({
+                "invoice_repartition_line_ids": [
+                    Command.update(last_invoice_rep_line.id, {'sequence': 0}),
+                ],
+                "refund_repartition_line_ids": [
+                    Command.update(last_refund_rep_line.id, {'sequence': 0}),
+                ],
+            })
+            self.flush_tracking()
 
-        previews = self.company_data['default_tax_sale'].message_ids.mapped('preview')
+        # manual log, no tracking
+        for msg in self._new_msgs:
+            self.assertMessageFields(msg, {'tracking_values': []})
+        previews = self._new_msgs.mapped('preview')
         self.assertIn("Invoice repartition line 1: 100.0 0.0 (Factor Percent)", previews)
         self.assertIn("Invoice repartition line 3: 0.0 100.0 (Factor Percent) None 251000 Tax Received (Account) False True (Use in tax closing)", previews)
 
@@ -182,16 +210,21 @@ class TestAccountTax(AccountTestInvoicingCommon):
         last_invoice_rep_line = self.company_data['default_tax_sale'].invoice_repartition_line_ids.sorted(key=lambda r: r.sequence)[-1]
         last_refund_rep_line = self.company_data['default_tax_sale'].refund_repartition_line_ids.sorted(key=lambda r: r.sequence)[-1]
 
-        self.company_data['default_tax_sale'].write({
-            "invoice_repartition_line_ids": [
-                Command.delete(last_invoice_rep_line.id),
-            ],
-            "refund_repartition_line_ids": [
-                Command.delete(last_refund_rep_line.id),
-            ],
-        })
-        self.flush_tracking()
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            self.company_data['default_tax_sale'].write({
+                "invoice_repartition_line_ids": [
+                    Command.delete(last_invoice_rep_line.id),
+                ],
+                "refund_repartition_line_ids": [
+                    Command.delete(last_refund_rep_line.id),
+                ],
+            })
+            self.flush_tracking()
 
+        # manual log, no tracking
+        for msg in self._new_msgs:
+            self.assertMessageFields(msg, {'tracking_values': []})
+        previews = self._new_msgs.mapped('preview')
         previews = self.company_data['default_tax_sale'].message_ids.mapped('preview')
         self.assertIn(
             "Removed Invoice repartition line 3: 0.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
