@@ -1203,6 +1203,9 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
         :return: A JSON-encoded feedback, with either the success URL or an error message.
         :rtype: str
         """
+        # FIXME LIPI: customer fills his address, clicks on submit and then there is no stock left
+        # > gets redirected to cart page without anything saved > has to re-encode their address
+        # from the start
         if redirection := self._validate_previous_checkout_steps(step_href='/shop/address'):
             return json.dumps({'redirectUrl': redirection.location})
 
