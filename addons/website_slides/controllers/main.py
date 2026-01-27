@@ -19,6 +19,7 @@ from odoo.exceptions import AccessError, ValidationError, UserError, MissingErro
 from odoo.http import request, Response
 from odoo.osv import expression
 from odoo.tools import consteq, email_split
+from odoo.addons.web.controllers.binary import Binary
 
 _logger = logging.getLogger(__name__)
 
@@ -1600,3 +1601,16 @@ class WebsiteSlides(WebsiteProfile):
         values.update(self._prepare_user_values(channel=channels[0] if len(channels) == 1 else True, **post))
         values.update(self._prepare_user_slides_profile(user))
         return values
+
+    # --------------------------------------------------
+    # FILE DOWNLOAD
+    # --------------------------------------------------
+
+    @http.route('/slides/content/<string:model>/<int:id>/<string:field>', type='http', auth="public")
+    def slide_content_common(self, xmlid=None, model='ir.attachment', id=None, field='raw',
+                    filename=None, filename_field='name', mimetype=None, unique=False,
+                    download=False, access_token=None, nocache=False):
+        return Binary.content_common(self, xmlid, model, id,
+                                        field, filename, filename_field,
+                                        mimetype, unique, download,
+                                    access_token, nocache)
