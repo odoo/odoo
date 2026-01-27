@@ -146,34 +146,6 @@ class MailTestGatewayGroups(models.Model):
         return ['customer_id']
 
 
-class MailTestTrack(models.Model):
-    """ This model can be used in tests when automatic subscription and simple
-    tracking is necessary. Most features are present in a simple way. """
-    _description = 'Standard Chatter Model'
-    _name = "mail.test.track"
-    _inherit = ['mail.thread']
-
-    name = fields.Char()
-    email_from = fields.Char()
-    user_id = fields.Many2one('res.users', 'Responsible', tracking=True)
-    container_id = fields.Many2one('mail.test.container', tracking=True)
-    company_id = fields.Many2one('res.company')
-    track_fields_tofilter = fields.Char()  # comma-separated list of field names
-    track_enable_default_log = fields.Boolean(default=False)
-    parent_id = fields.Many2one('mail.test.track', string='Parent')
-
-    def _track_filter_for_display(self, tracking_values):
-        values = super()._track_filter_for_display(tracking_values)
-        filtered_fields = set(self.track_fields_tofilter.split(',') if self.track_fields_tofilter else '')
-        return values.filtered(lambda val: val.field_id.name not in filtered_fields)
-
-    def _track_get_default_log_message(self, changes):
-        filtered_fields = set(self.track_fields_tofilter.split(',') if self.track_fields_tofilter else '')
-        if self.track_enable_default_log and not all(change in filtered_fields for change in changes):
-            return f'There was a change on {self.name} for fields "{",".join(changes)}"'
-        return super()._track_get_default_log_message(changes)
-
-
 class MailTestActivity(models.Model):
     """ This model can be used to test activities in addition to simple chatter
     features. """
