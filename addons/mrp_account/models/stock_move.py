@@ -41,4 +41,4 @@ class StockMove(models.Model):
             price_unit = super(StockMove, valuated_moves)._get_price_unit()
             qty_per_kit = component_qty_per_kit[component] / kit_bom.product_qty
             total_price_unit += price_unit * qty_per_kit
-        return total_price_unit
+        return total_price_unit / valuated_quantity if not product.uom_id.is_zero(valuated_quantity) else 0
