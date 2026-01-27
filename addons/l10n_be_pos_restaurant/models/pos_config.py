@@ -10,14 +10,22 @@ class PosConfig(models.Model):
         tax_6 = ChartTemplate.ref('attn_VAT-OUT-06-L', raise_if_not_found=False)
 
         if tax_21 and tax_12 and tax_6:
-            fp = self.env['account.fiscal.position'].create({
-                'name': 'Take out',
-            })
-            tax_6.copy({
-                'name': f"{tax_6.name} Take out",
-                'fiscal_position_ids': [Command.set(fp.ids)],
-                'original_tax_ids': [Command.set((tax_12 | tax_21).ids)],
-            })
+            fp = self.env['account.fiscal.position'].with_company(self.env.company).search([
+                ('name', '=', 'Take out'),
+            ])
+            if not fp:
+                fp = self.env['account.fiscal.position'].create({
+                    'name': 'Take out',
+                })
+            existing_tax = self.env['account.tax'].with_company(self.env.company).search([
+                ('name', '=', f"{tax_6.name} Take out"),
+            ])
+            if not existing_tax:
+                tax_6.copy({
+                    'name': f"{tax_6.name} Take out",
+                    'fiscal_position_ids': [Command.set(fp.ids)],
+                    'original_tax_ids': [Command.set((tax_12 | tax_21).ids)],
+                })
             takeaway_preset = self.env.ref('pos_restaurant.pos_takeout_preset', raise_if_not_found=False)
             if takeaway_preset:
                 takeaway_preset.write({'fiscal_position_id': fp.id})
