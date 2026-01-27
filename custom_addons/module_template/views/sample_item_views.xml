@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===============================
+         ツリー（一覧）ビューの定義
+         =============================== -->
+    <record id="view_sample_item_tree" model="ir.ui.view">
+        <field name="name">sample.item.tree</field>
+        <field name="model">sample.item</field>
+        <field name="arch" type="xml">
+            <tree string="Sample Items">
+                <!-- ツリーに表示したいカラム -->
+                <field name="name"/>
+                <field name="value"/>
+                <field name="date"/>
+                <field name="state"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ===============================
+         フォームビューの定義
+         =============================== -->
+    <record id="view_sample_item_form" model="ir.ui.view">
+        <field name="name">sample.item.form</field>
+        <field name="model">sample.item</field>
+        <field name="arch" type="xml">
+            <form string="Sample Item">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                    <group>
+                        <field name="value"/>
+                        <field name="date"/>
+                        <field name="state"/>
+                    </group>
+
+                    <!-- 説明欄を Notebook（タブ）に -->
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <!-- フッター（アクションボタン） -->
+                <footer>
+                    <button name="action_confirm"
+                            string="Confirm"
+                            type="object"
+                            class="btn-primary"
+                            states="draft"/>
+                    <button name="action_done"
+                            string="Done"
+                            type="object"
+                            class="btn-secondary"
+                            states="confirmed"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+
+            </form>
+        </field>
+    </record>
+
+    <!-- ===============================
+         メニューから呼び出されるアクション
+         =============================== -->
+    <record id="action_sample_item" model="ir.actions.act_window">
+        <field name="name">Sample Items</field>
+        <field name="res_model">sample.item</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>開発・デバッグ用のサンプルモデルです。</p>
+        </field>
+    </record>
+
+</odoo>
