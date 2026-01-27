@@ -5,11 +5,7 @@ export function editShopConfiguration(shop) {
             expectUnloadPage: true,
         },
         {
-            trigger: ".o_main_navbar span:contains('Configuration')",
-            run: "click",
-        },
-        {
-            trigger: ".dropdown-item:contains('Point of Sales')",
+            trigger: "button.o_switch_view.o_list",
             run: "click",
         },
         {
