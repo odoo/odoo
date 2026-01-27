@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="stock_picking_form_inherit_l10n_gr_edi" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.l10n_gr_edi</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+
+            <header position="inside">
+                <button name="action_l10n_gr_edi_try_send_delivery_note"
+                        type="object"
+                        string="Send to myDATA"
+                        invisible="not (is_greek_company and state == 'done')"/>
+            </header>
+
+            <header position="after">
+                <div class="m-0" role="alert" invisible="not (l10n_gr_edi_enable_send_invoices and l10n_gr_edi_alerts)">
+                    <field name="l10n_gr_edi_alerts" class="o_field_html" widget="actionable_errors"/>
+                </div>
+            </header>
+
+            <xpath expr="//field[@name='picking_type_id']" position="after">
+                <label for="l10n_gr_edi_loading_address_street"
+                       string="myDATA Loading Address"
+                       invisible="not is_greek_company"/>
+                <div invisible="not is_greek_company">
+                    <div class="o_row">
+                        <field name="l10n_gr_edi_loading_address_street"
+                            placeholder="Street"
+                            readonly="state == 'done'"
+                            required="is_greek_company"/>
+                        <field name="l10n_gr_edi_loading_address_number"
+                            placeholder="Number"
+                            readonly="state == 'done'"
+                            required="is_greek_company"/>
+                    </div>
+                    <div class="o_row">
+                        <field name="l10n_gr_edi_loading_address_zip"
+                            placeholder="Postal Code"
+                            readonly="state == 'done'"
+                            required="is_greek_company"/>
+                        <field name="l10n_gr_edi_loading_address_city"
+                            placeholder="City"
+                            readonly="state == 'done'"
+                            required="is_greek_company"/>
+                    </div>
+                </div>
+                <label for="l10n_gr_edi_delivery_address_street"
+                    string="myDATA Delivery Address"
+                    invisible="not is_greek_company"/>
+                <div invisible="not is_greek_company">
+                    <div class="o_row">
+                        <field name="l10n_gr_edi_delivery_address_street"
+                            placeholder="Street"
+                            readonly="state == 'done'"
+                            required="is_greek_company"/>
+                        <field name="l10n_gr_edi_delivery_address_number"
+                            placeholder="Number"
+                            readonly="state == 'done'"
+                            required="is_greek_company"/>
+                    </div>
+                    <div class="o_row">
+                        <field name="l10n_gr_edi_delivery_address_zip"
+                            placeholder="Postal Code"
+                            readonly="state == 'done'"
+                            required="is_greek_company"/>
+                        <field name="l10n_gr_edi_delivery_address_city"
+                            placeholder="City"
+                            readonly="state == 'done'"
+                            required="is_greek_company"/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='owner_id']" position="after">
+                <field name="l10n_gr_edi_move_purpose"
+                       invisible="not is_greek_company"
+                       readonly="state == 'done'"
+                       required="is_greek_company"/>
+                <field name="l10n_gr_edi_other_move_purpose"
+                       invisible="l10n_gr_edi_move_purpose != '19'"
+                       readonly="state == 'done'"
+                       required="l10n_gr_edi_move_purpose == '19'"/>
+            </xpath>
+            <!-- myDATA Documents Tab -->
+            <!-- <xpath expr="//page[@id='other_tab_entry']" position="after">
+                <page id="l10n_gr_edi_documents"
+                      string="myDATA"
+                      invisible="not l10n_gr_edi_document_ids">
+                    <field name="l10n_gr_edi_document_ids">
+                        <list create="false" delete="false" edit="false" no_open="1"
+                              decoration-danger="state in ('invoice_error', 'bill_error')"
+                              decoration-success="state in ('invoice_sent', 'bill_sent')">
+                            <field name="message" column_invisible="1"/>
+                            <field name="attachment_id" column_invisible="1"/>
+                            <field name="datetime"/>
+                            <field name="state" widget="account_document_state"/>
+                            <button name="action_download"
+                                    type="object"
+                                    string="Download"
+                                    invisible="not attachment_id"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath> -->
+
+        </field>
+    </record>
+
+    <!-- <record id="l10n_gr_edi_action_try_send_batch" model="ir.actions.server">
+        <field name="name">Send to myDATA</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records._l10n_gr_edi_try_send_batch()
+        </field>
+    </record> -->
+
+</odoo>
