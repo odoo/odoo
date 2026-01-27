@@ -12,7 +12,6 @@ import json
 import lxml
 import logging
 import time
-import re
 from collections import defaultdict, namedtuple
 from collections.abc import Iterable
 from email import message_from_string
@@ -35,7 +34,7 @@ from odoo.fields import Domain
 from odoo.tools import (
     is_html_empty, html_escape, html2plaintext,
     clean_context, split_every, SQL,
-    ormcache, is_list_of, misc, file_open
+    ormcache, is_list_of,
 )
 from odoo.tools.mail import (
     append_content_to_html, decode_message_header,
@@ -3746,31 +3745,6 @@ class MailThread(models.AbstractModel):
             'subtitles_highlight_index': self.env.context.get('email_notification_subtitles_highlight_index', 0),
         }
 
-    def _inject_css_in_head(self, html, css):
-        """Inject CSS into <head>, or after <html>, or at top of file."""
-        if not css:
-            return html
-
-        is_markup = isinstance(html, Markup)
-        html_str = str(html)
-
-        style_tag = '<style type="text/css">\n%s\n</style>' % css
-
-        head_match = re.search(r'<head\b[^>]*>', html_str, re.IGNORECASE | re.DOTALL)
-        if head_match:
-            insert_pos = head_match.end()
-            result = html_str[:insert_pos] + style_tag + html_str[insert_pos:]
-            return Markup(result) if is_markup else result
-
-        html_match = re.search(r'<html\b[^>]*>', html_str, re.IGNORECASE | re.DOTALL)
-        if html_match:
-            insert_pos = html_match.end()
-            result = html_str[:insert_pos] + style_tag + html_str[insert_pos:]
-            return Markup(result) if is_markup else result
-
-        result = style_tag + html_str
-        return Markup(result) if is_markup else result
-
     def _notify_by_email_render_layout(self, message, recipients_group,
                                        msg_vals=False,
                                        render_values=None):
@@ -3813,21 +3787,6 @@ class MailThread(models.AbstractModel):
         if not mail_body:
             _logger.warning('QWeb template %s not found or is empty when sending notification emails. Sending without layouting.', template_xmlid)
             mail_body = message.body
-
-        if template_xmlid == 'mail.mail_notification_light':
-            try:
-                css_path = misc.file_path('addons/web/static/src/css/mail_darkmode.css')
-
-                css_content = ''
-                with file_open(css_path, encoding='utf-8') as f:
-                    css_content = f.read()
-
-                if css_content:
-                    mail_body = self._inject_css_in_head(mail_body, css_content)
-
-            except FileNotFoundError as e:
-                _logger.warning("Could not inject CSS: %s", e)
-
         return mail_body
 
     def _notify_by_email_get_base_mail_values(self, message, recipients_data, additional_values=None):

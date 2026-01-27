@@ -102,17 +102,18 @@
     <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
     <meta name="color-scheme" content="light dark" />
     <meta name="supported-color-schemes" content="light dark" />
+    <t t-call="mail.mail_darkmode_style"/>
 </head>
 <body>
 <t t-set="subtype_internal" t-value="False"/>
 <t t-call="mail.notification_preview"/>
-<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;" class="darkmode-bg-and-text"><tr><td align="center">
-<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;" class="darkmode-bg-and-text">
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;" class="o-email-darkmode-bg-and-text"><tr><td align="center">
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;" class="o-email-darkmode-bg-and-text">
 <tbody>
     <!-- HEADER -->
     <tr>
         <td align="center" style="min-width: 590px;">
-            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: white; padding: 0; border-collapse:separate;" class="darkmode-bg-and-text">
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: white; padding: 0; border-collapse:separate;" class="o-email-darkmode-bg-and-text">
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Your <t t-out="model_description or 'document'"/></span>
                     <br/>
