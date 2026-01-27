@@ -6,7 +6,7 @@ from zipfile import ZipFile
 from lxml import etree
 from odoo import fields, Command
 from odoo.tests import HttpCase, tagged
-from odoo.tools import file_open
+from odoo.tools import file_open, misc
 from odoo.tools.safe_eval import datetime
 
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblCiiCommon
@@ -780,3 +780,13 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         xml_tree = etree.fromstring(xml_content)
         partner_name = xml_tree.find('.//cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name', self.ubl_namespaces)
         self.assertEqual(partner_name.text, 'partner_a')
+
+    def test_import_vendor_bill_empty_description(self):
+        with misc.file_open(f'{self.test_module}/tests/test_files/bis3/test_vendor_bill_empty_description.xml', 'rb') as file:
+            file_read = file.read()
+        attachment_id = self.env['ir.attachment'].create({
+            'name': 'test_file_no_item_description.xml',
+            'raw': file_read,
+        }).id
+        imported_bill = self.company_data['default_journal_purchase']._create_document_from_attachment(attachment_id)
+        self.assertTrue(imported_bill)
