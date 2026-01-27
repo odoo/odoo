@@ -44,23 +44,33 @@ export class StoreInternal extends RecordInternal {
         this.onStorage = this.onStorage.bind(this);
         browser.addEventListener("storage", this.onStorage);
     }
-
+    /**
+     * Indicates whether the current update cycle was triggered by a
+     * `storage` event. Used to prevent writing back to the local
+     * storage and creating a feedback loop.
+     */
+    isUpdatingFromStorageEvent = false;
     onStorage(ev) {
         const entryMap = this.localStorageKeyToRecordFields.get(ev.key);
         if (!entryMap) {
             return;
         }
-        for (const [record, fieldName] of entryMap.entries()) {
-            if (ev.newValue === null) {
-                record._proxy[fieldName] = record._.fieldsDefault.get(fieldName);
-            } else {
-                const parsed = parseRawValue(ev.newValue);
-                if (!parsed) {
+        this.isUpdatingFromStorageEvent = true;
+        try {
+            for (const [record, fieldName] of entryMap.entries()) {
+                if (ev.newValue === null) {
                     record._proxy[fieldName] = record._.fieldsDefault.get(fieldName);
                 } else {
-                    record._proxy[fieldName] = parsed.value;
+                    const parsed = parseRawValue(ev.newValue);
+                    if (!parsed) {
+                        record._proxy[fieldName] = record._.fieldsDefault.get(fieldName);
+                    } else {
+                        record._proxy[fieldName] = parsed.value;
+                    }
                 }
             }
+        } finally {
+            this.isUpdatingFromStorageEvent = false;
         }
     }
 
@@ -235,11 +245,13 @@ export class StoreInternal extends RecordInternal {
         for (const [fieldName, value] of fieldEntries) {
             if (record.Model._.fieldsLocalStorage.has(fieldName)) {
                 // should immediately write in local storage, for immediately correct next compute
-                const lse = record._.fieldsLocalStorage.get(fieldName);
-                if (value === record._.fieldsDefault.get(fieldName)) {
-                    lse.remove();
-                } else {
-                    lse.set(value);
+                if (!this.isUpdatingFromStorageEvent) {
+                    const lse = record._.fieldsLocalStorage.get(fieldName);
+                    if (value === record._.fieldsDefault.get(fieldName)) {
+                        lse.remove();
+                    } else {
+                        lse.set(value);
+                    }
                 }
             }
             if (!record.Model._.fields.get(fieldName) || record.Model._.fieldsAttr.get(fieldName)) {
