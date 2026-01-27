@@ -2,6 +2,8 @@ import { contains, mailModels } from "@mail/../tests/mail_test_helpers";
 import { MailTestActivity } from "@test_mail/../tests/mock_server/models/mail_test_activity";
 import { MailTestMultiCompany } from "@test_mail/../tests/mock_server/models/mail_test_multi_company";
 import { MailTestMultiCompanyRead } from "@test_mail/../tests/mock_server/models/mail_test_multi_company_read";
+import { MailTestMultiCompanyWithActivity } from "@test_mail/../tests/mock_server/models/mail_test_multi_company_with_activity";
+import { MailTestMultiCompanyWithActivityRead } from "@test_mail/../tests/mock_server/models/mail_test_multi_company_with_activity_read";
 import { MailTestProperties } from "@test_mail/../tests/mock_server/models/mail_test_properties";
 import { MailTestSimpleMainAttachment } from "./mock_server/models/mail_test_simple_main_attachment";
 import { MailTestSimple } from "@test_mail/../tests/mock_server/models/mail_test_simple";
@@ -13,6 +15,8 @@ export const testMailModels = {
     MailTestActivity,
     MailTestMultiCompany,
     MailTestMultiCompanyRead,
+    MailTestMultiCompanyWithActivity,
+    MailTestMultiCompanyWithActivityRead,
     MailTestProperties,
     MailTestSimpleMainAttachment,
     MailTestSimple,
