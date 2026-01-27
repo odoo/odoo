@@ -1,15 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
+from odoo.http.router import root
 from odoo.tests import patch, tagged
 from odoo.tests.common import HttpCase
 
+from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.website_sale.controllers.cart import Cart as CartController
 from odoo.addons.website_sale.controllers.main import WebsiteSale as CheckoutController
 from odoo.addons.website_sale.controllers.payment import PaymentPortal as PaymentController
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 from odoo.addons.website_sale.models.website import CART_SESSION_CACHE_KEY
-from odoo.addons.payment.tests.common import PaymentCommon
+from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -91,10 +92,25 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
         (self.cart.partner_shipping_id, self.cart.partner_invoice_id) = self.env[
             'res.partner'
         ].create([
-            dict(self.dummy_partner_address_values, name='dummy', type='delivery'),
+            dict(
+                self.dummy_partner_address_values,
+                name='dummy',
+                type='delivery',
+                parent_id=self.partner.id,
+            ),
             # Invalid billing address
-            dict(self.dummy_partner_address_values, name='dummy', type='invoice', email=False),
+            dict(
+                self.dummy_partner_address_values,
+                name='dummy',
+                type='invoice',
+                parent_id=self.partner.id,
+                email=False,
+            ),
         ])
+
+        self.assertFalse(self.cart.partner_invoice_id.email)
+        self.assertIn(self.cart.partner_shipping_id, self.cart.partner_id.child_ids)
+        self.assertIn(self.cart.partner_invoice_id, self.cart.partner_id.child_ids)
 
         website = self.website.with_user(self.public_user)
         with MockRequest(
@@ -112,9 +128,20 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
             'res.partner'
         ].create([
             # Invalid delivery address
-            dict(self.dummy_partner_address_values, name='dummy', type='delivery', email=False),
+            dict(
+                self.dummy_partner_address_values,
+                name='dummy',
+                type='delivery',
+                parent_id=self.partner.id,
+                email=False,
+            ),
             # Invalid billing address
-            dict(self.dummy_partner_address_values, name='dummy', type='invoice'),
+            dict(
+                self.dummy_partner_address_values,
+                name='dummy',
+                type='invoice',
+                parent_id=self.partner.id,
+            ),
         ])
 
         website = self.website.with_user(self.public_user)
@@ -162,7 +189,7 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
     def test_alerts_cleared_when_rendering_a_checkout_step(self):
         session = self.authenticate(None, None)
         session[CART_SESSION_CACHE_KEY] = self.cart.id
-        http.root.session_store.save(session)
+        root.session_store.save(session)
 
         with patch(
             'odoo.addons.website_sale.models.sale_order.SaleOrder._clear_alerts', autospec=True
@@ -174,7 +201,7 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
     def test_final_payment_step_check_all_checkout_steps(self):
         session = self.authenticate(None, None)
         session[CART_SESSION_CACHE_KEY] = self.cart.id
-        http.root.session_store.save(session)
+        root.session_store.save(session)
 
         with (
             patch(
