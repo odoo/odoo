@@ -358,7 +358,7 @@ describe("Selection collapsed", () => {
 
         test("should remove a link to uploaded document", async () => {
             await testEditor({
-                contentBefore: `<p>[]<a href="#" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a>abc</p>`,
+                contentBefore: `<p>[]<span class="o_file_box" contenteditable="false"><a href="#" title="document" data-mimetype="application/pdf"></a></span>abc</p>`,
                 stepFunction: deleteForward,
                 contentAfter: `<p>[]abc</p>`,
             });
@@ -366,7 +366,7 @@ describe("Selection collapsed", () => {
 
         test("should remove a link to uploaded document at the end of the editable", async () => {
             await testEditor({
-                contentBefore: `<p>[]<a href="#" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a></p>`,
+                contentBefore: `<p>[]<span class="o_file_box" contenteditable="false"><a href="#" title="document" data-mimetype="application/pdf"></a></span></p>`,
                 stepFunction: deleteForward,
                 contentAfter: `<p>[]<br></p>`,
             });

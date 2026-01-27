@@ -7,10 +7,10 @@ export class DocumentAttachment extends Attachment {
 }
 
 export class DocumentSelector extends FileSelector {
-    static mediaSpecificClasses = ["o_image"];
+    static mediaSpecificClasses = ["o_file_box"];
     static mediaSpecificStyles = [];
     static mediaExtraClasses = [];
-    static tagNames = ["A"];
+    static tagNames = ["SPAN"];
     static attachmentsListTemplate = "html_editor.DocumentsListTemplate";
     static components = {
         ...FileSelector.components,
@@ -48,7 +48,7 @@ export class DocumentSelector extends FileSelector {
             for (const attachment of attachments) {
                 if (
                     `/web/content/${attachment.id}` ===
-                    this.props.media.getAttribute("href").replace(/[?].*/, "")
+                    this.props.media.querySelector("a").getAttribute("href").replace(/[?].*/, "")
                 ) {
                     this.selectAttachment(attachment);
                 }
