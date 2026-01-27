@@ -1,0 +1,726 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================== -->
+    <!-- 1. お客さん向け セルフオーダー画面 -->
+    <!-- ============================== -->
+    <template id="self_order_page" name="Self Order Page" inherit_id="website.layout">
+        <xpath expr="//main" position="replace">
+            <main id="wrap" class="oe_structure">
+                <section class="py-5">
+                    <div class="container">
+
+                        <!-- ヘッダ -->
+                        <div class="row mb-4">
+                            <div class="col-12 text-center">
+                                <h1 class="mb-2">セルフオーダー</h1>
+                                <t t-if="table">
+                                    <p class="lead">
+                                        テーブル：
+                                        <strong t-esc="table.name"/>
+                                    </p>
+                                </t>
+                                <t t-if="not table">
+                                    <p class="text-muted">
+                                        テーブル情報が取得できませんでした。
+                                        スタッフをお呼びください。
+                                    </p>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- メニュー一覧 -->
+                        <t t-if="products">
+                            <form action="/self_order/submit" method="post">
+                                <input type="hidden" name="table_code" t-att-value="table_code"/>
+
+                                <div class="row">
+                                    <t t-foreach="products" t-as="p">
+                                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                                            <div class="card h-100 shadow-sm">
+                                                <div class="card-body d-flex flex-column">
+                                                    <h5 class="card-title" t-esc="p.display_name"/>
+                                                    <p class="card-text text-muted mb-2">
+                                                        <t t-if="p.lst_price">
+                                                            ¥<t t-esc="('%.0f' % p.lst_price)"/>
+                                                        </t>
+                                                        <t t-if="not p.lst_price">
+                                                            価格未設定
+                                                        </t>
+                                                    </p>
+                                                    <t t-if="p.description_sale">
+                                                        <p class="card-text small text-muted mb-3"
+                                                           t-esc="p.description_sale"/>
+                                                    </t>
+
+                                                    <div class="mt-auto">
+                                                        <label class="form-label mb-1">
+                                                            数量
+                                                        </label>
+                                                        <div class="input-group mb-2">
+                                                            <input type="number"
+                                                                   class="form-control"
+                                                                   min="0"
+                                                                   step="1"
+                                                                   value="0"
+                                                                   t-att-name="'product_%s' % p.id"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+
+                                <!-- 全体メモ -->
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <label class="form-label">
+                                            全体へのご要望（アレルギー・席指定など）
+                                        </label>
+                                        <textarea name="global_note"
+                                                  class="form-control"
+                                                  rows="3"
+                                                  placeholder="例）ネギ抜きでお願いします。"></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- 送信ボタン -->
+                                <div class="row mt-4">
+                                    <div class="col-12 text-center">
+                                        <button type="submit" class="btn btn-primary btn-lg px-5">
+                                            この内容で注文する
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </t>
+
+                        <t t-if="not products">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <p>現在、注文可能なメニューがありません。</p>
+                                </div>
+                            </div>
+                        </t>
+
+                    </div>
+                </section>
+            </main>
+        </xpath>
+    </template>
+
+    <!-- ============================== -->
+    <!-- 2. お客さん向け 注文完了画面 -->
+    <!-- ============================== -->
+    <template id="self_order_thanks_page" name="Self Order Thanks Page" inherit_id="website.layout">
+        <xpath expr="//main" position="replace">
+            <main id="wrap" class="oe_structure">
+                <section class="py-5">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-md-8 text-center">
+                                <h1 class="mb-3">ご注文ありがとうございました</h1>
+                                <p class="lead mb-4">
+                                    ご注文を受け付けました。スタッフが確認し、順次ご提供いたします。
+                                </p>
+                                <t t-if="table">
+                                    <p class="mb-2">
+                                        テーブル：
+                                        <strong t-esc="table.name"/>
+                                    </p>
+                                </t>
+                                <t t-if="order">
+                                    <p class="text-muted small">
+                                        受付番号：
+                                        <t t-esc="order.name"/>
+                                    </p>
+                                </t>
+                                <p class="mt-4">
+                                    追加でご注文がある場合は、同じQRコードから再度アクセスしてください。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </xpath>
+    </template>
+    <!-- ============================== -->
+    <!-- 3. 厨房向け キッチン画面（エリア別カラム） -->
+    <!-- ============================== -->
+    <template id="kitchen_screen_page" name="Kitchen Screen Page" inherit_id="web.layout">
+        <xpath expr="//main" position="replace">
+            <main id="wrap" class="oe_structure">
+                <section class="py-3">
+                    <div class="container-fluid">
+
+                        <!-- ヘッダ（タイトル & 更新ボタン） -->
+                        <div class="row align-items-center mb-3">
+                            <div class="col-12 col-md-6">
+                                <h1 class="h3 mb-0">🍽 Kitchen Screen</h1>
+                                <p class="text-muted mb-0 small">
+                                    セルフオーダーの厨房向け画面です（エリア別表示）。
+                                </p>
+                            </div>
+                            <div class="col-12 col-md-6 text-md-end mt-2 mt-md-0">
+                                <span class="me-3 small">
+                                    自動更新：<span id="rsk-auto-refresh-status">オン</span>
+                                    （10秒ごと）
+                                </span>
+                                <button type="button"
+                                        class="btn btn-sm btn-secondary"
+                                        id="rsk-manual-refresh">
+                                    手動更新
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- エリア別にチケットをグルーピング -->
+                        <t t-set="kitchen_new" t-value="[t for t in tickets_new if any(ln.area == 'kitchen' for ln in t.line_ids)]"/>
+                        <t t-set="kitchen_in_progress" t-value="[t for t in tickets_in_progress if any(ln.area == 'kitchen' for ln in t.line_ids)]"/>
+
+                        <t t-set="drink_new" t-value="[t for t in tickets_new if any(ln.area == 'drink' for ln in t.line_ids)]"/>
+                        <t t-set="drink_in_progress" t-value="[t for t in tickets_in_progress if any(ln.area == 'drink' for ln in t.line_ids)]"/>
+
+                        <t t-set="dessert_new" t-value="[t for t in tickets_new if any(ln.area == 'dessert' for ln in t.line_ids)]"/>
+                        <t t-set="dessert_in_progress" t-value="[t for t in tickets_in_progress if any(ln.area == 'dessert' for ln in t.line_ids)]"/>
+
+                        <!-- 3カラム：キッチン / ドリンク / デザート -->
+                        <div class="row">
+                            <!-- キッチンエリア -->
+                            <div class="col-12 col-lg-4 mb-4">
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                                        <div>👨‍🍳 キッチン</div>
+                                        <div class="small">
+                                            新規: <t t-esc="len(kitchen_new)"/> /
+                                            調理中: <t t-esc="len(kitchen_in_progress)"/>
+                                        </div>
+                                    </div>
+                                    <div class="card-body p-2" style="max-height: 80vh; overflow-y: auto;">
+
+                                        <!-- 新規 -->
+                                        <h6 class="mt-1 mb-2">🔵 新規</h6>
+                                        <t t-if="kitchen_new">
+                                            <t t-foreach="kitchen_new" t-as="tkt">
+                                                <t t-set="lines" t-value="[ln for ln in tkt.line_ids if ln.area == 'kitchen']"/>
+                                                <t t-if="lines">
+                                                    <div class="card mb-2 shadow-sm rsk-ticket-card rsk-ticket-new">
+                                                        <div class="card-body p-2">
+                                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                <div>
+                                                                    <strong t-esc="tkt.name"/>
+                                                                    <t t-if="tkt.table_id">
+                                                                        （<t t-esc="tkt.table_id.name"/>）
+                                                                    </t>
+                                                                </div>
+                                                                <div class="small text-muted">
+                                                                    <t t-esc="tkt.create_date"/>
+                                                                </div>
+                                                            </div>
+                                                            <hr class="my-2"/>
+
+                                                            <ul class="mb-2 ps-3">
+                                                                <t t-foreach="lines" t-as="ln">
+                                                                    <li class="small">
+                                                                        <strong t-esc="ln.product_id.display_name"/> ×
+                                                                        <t t-esc="ln.qty"/>
+                                                                        <t t-if="ln.note">
+                                                                            －
+                                                                            <span class="text-muted" t-esc="ln.note"/>
+                                                                        </t>
+                                                                    </li>
+                                                                </t>
+                                                            </ul>
+
+                                                            <t t-if="tkt.note">
+                                                                <p class="mb-2 small">
+                                                                    <span class="fw-bold">メモ：</span>
+                                                                    <span t-esc="tkt.note"/>
+                                                                </p>
+                                                            </t>
+
+                                                            <div class="d-flex justify-content-end gap-2">
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-outline-secondary rsk-btn-set-state"
+                                                                        data-ticket-id="<t t-esc='tkt.id'/>"
+                                                                        data-target-state="in_progress">
+                                                                    調理開始
+                                                                </button>
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-outline-danger rsk-btn-set-state"
+                                                                        data-ticket-id="<t t-esc='tkt.id'/>"
+                                                                        data-target-state="done">
+                                                                    キャンセル/提供済扱い
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </t>
+                                        </t>
+                                        <t t-if="not kitchen_new">
+                                            <p class="text-muted small">新規のキッチンオーダーはありません。</p>
+                                        </t>
+
+                                        <!-- 調理中 -->
+                                        <h6 class="mt-3 mb-2">🟠 調理中</h6>
+                                        <t t-if="kitchen_in_progress">
+                                            <t t-foreach="kitchen_in_progress" t-as="tkt">
+                                                <t t-set="lines" t-value="[ln for ln in tkt.line_ids if ln.area == 'kitchen']"/>
+                                                <t t-if="lines">
+                                                    <div class="card mb-2 shadow-sm rsk-ticket-card rsk-ticket-in-progress">
+                                                        <div class="card-body p-2">
+                                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                <div>
+                                                                    <strong t-esc="tkt.name"/>
+                                                                    <t t-if="tkt.table_id">
+                                                                        （<t t-esc="tkt.table_id.name"/>）
+                                                                    </t>
+                                                                </div>
+                                                                <div class="small text-muted">
+                                                                    <t t-esc="tkt.create_date"/>
+                                                                </div>
+                                                            </div>
+                                                            <hr class="my-2"/>
+
+                                                            <ul class="mb-2 ps-3">
+                                                                <t t-foreach="lines" t-as="ln">
+                                                                    <li class="small">
+                                                                        <strong t-esc="ln.product_id.display_name"/> ×
+                                                                        <t t-esc="ln.qty"/>
+                                                                        <t t-if="ln.note">
+                                                                            －
+                                                                            <span class="text-muted" t-esc="ln.note"/>
+                                                                        </t>
+                                                                    </li>
+                                                                </t>
+                                                            </ul>
+
+                                                            <t t-if="tkt.note">
+                                                                <p class="mb-2 small">
+                                                                    <span class="fw-bold">メモ：</span>
+                                                                    <span t-esc="tkt.note"/>
+                                                                </p>
+                                                            </t>
+
+                                                            <div class="d-flex justify-content-end gap-2">
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-success rsk-btn-set-state"
+                                                                        data-ticket-id="<t t-esc='tkt.id'/>"
+                                                                        data-target-state="done">
+                                                                    提供済にする
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </t>
+                                        </t>
+                                        <t t-if="not kitchen_in_progress">
+                                            <p class="text-muted small">調理中のキッチンオーダーはありません。</p>
+                                        </t>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ドリンクエリア -->
+                            <div class="col-12 col-lg-4 mb-4">
+                                <div class="card">
+                                    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                                        <div>🥤 ドリンク</div>
+                                        <div class="small">
+                                            新規: <t t-esc="len(drink_new)"/> /
+                                            調理中: <t t-esc="len(drink_in_progress)"/>
+                                        </div>
+                                    </div>
+                                    <div class="card-body p-2" style="max-height: 80vh; overflow-y: auto;">
+
+                                        <!-- 新規 -->
+                                        <h6 class="mt-1 mb-2">🔵 新規</h6>
+                                        <t t-if="drink_new">
+                                            <t t-foreach="drink_new" t-as="tkt">
+                                                <t t-set="lines" t-value="[ln for ln in tkt.line_ids if ln.area == 'drink']"/>
+                                                <t t-if="lines">
+                                                    <div class="card mb-2 shadow-sm rsk-ticket-card rsk-ticket-new">
+                                                        <div class="card-body p-2">
+                                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                <div>
+                                                                    <strong t-esc="tkt.name"/>
+                                                                    <t t-if="tkt.table_id">
+                                                                        （<t t-esc="tkt.table_id.name"/>）
+                                                                    </t>
+                                                                </div>
+                                                                <div class="small text-muted">
+                                                                    <t t-esc="tkt.create_date"/>
+                                                                </div>
+                                                            </div>
+                                                            <hr class="my-2"/>
+
+                                                            <ul class="mb-2 ps-3">
+                                                                <t t-foreach="lines" t-as="ln">
+                                                                    <li class="small">
+                                                                        <strong t-esc="ln.product_id.display_name"/> ×
+                                                                        <t t-esc="ln.qty"/>
+                                                                        <t t-if="ln.note">
+                                                                            －
+                                                                            <span class="text-muted" t-esc="ln.note"/>
+                                                                        </t>
+                                                                    </li>
+                                                                </t>
+                                                            </ul>
+
+                                                            <t t-if="tkt.note">
+                                                                <p class="mb-2 small">
+                                                                    <span class="fw-bold">メモ：</span>
+                                                                    <span t-esc="tkt.note"/>
+                                                                </p>
+                                                            </t>
+
+                                                            <div class="d-flex justify-content-end gap-2">
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-outline-secondary rsk-btn-set-state"
+                                                                        data-ticket-id="<t t-esc='tkt.id'/>"
+                                                                        data-target-state="in_progress">
+                                                                    調理開始
+                                                                </button>
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-outline-danger rsk-btn-set-state"
+                                                                        data-ticket-id="<t t-esc='tkt.id'/>"
+                                                                        data-target-state="done">
+                                                                    キャンセル/提供済扱い
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </t>
+                                        </t>
+                                        <t t-if="not drink_new">
+                                            <p class="text-muted small">新規のドリンクオーダーはありません。</p>
+                                        </t>
+
+                                        <!-- 調理中 -->
+                                        <h6 class="mt-3 mb-2">🟠 調理中</h6>
+                                        <t t-if="drink_in_progress">
+                                            <t t-foreach="drink_in_progress" t-as="tkt">
+                                                <t t-set="lines" t-value="[ln for ln in tkt.line_ids if ln.area == 'drink']"/>
+                                                <t t-if="lines">
+                                                    <div class="card mb-2 shadow-sm rsk-ticket-card rsk-ticket-in-progress">
+                                                        <div class="card-body p-2">
+                                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                <div>
+                                                                    <strong t-esc="tkt.name"/>
+                                                                    <t t-if="tkt.table_id">
+                                                                        （<t t-esc="tkt.table_id.name"/>）
+                                                                    </t>
+                                                                </div>
+                                                                <div class="small text-muted">
+                                                                    <t t-esc="tkt.create_date"/>
+                                                                </div>
+                                                            </div>
+                                                            <hr class="my-2"/>
+
+                                                            <ul class="mb-2 ps-3">
+                                                                <t t-foreach="lines" t-as="ln">
+                                                                    <li class="small">
+                                                                        <strong t-esc="ln.product_id.display_name"/> ×
+                                                                        <t t-esc="ln.qty"/>
+                                                                        <t t-if="ln.note">
+                                                                            －
+                                                                            <span class="text-muted" t-esc="ln.note"/>
+                                                                        </t>
+                                                                    </li>
+                                                                </t>
+                                                            </ul>
+
+                                                            <t t-if="tkt.note">
+                                                                <p class="mb-2 small">
+                                                                    <span class="fw-bold">メモ：</span>
+                                                                    <span t-esc="tkt.note"/>
+                                                                </p>
+                                                            </t>
+
+                                                            <div class="d-flex justify-content-end gap-2">
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-success rsk-btn-set-state"
+                                                                        data-ticket-id="<t t-esc='tkt.id'/>"
+                                                                        data-target-state="done">
+                                                                    提供済にする
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </t>
+                                        </t>
+                                        <t t-if="not drink_in_progress">
+                                            <p class="text-muted small">調理中のドリンクオーダーはありません。</p>
+                                        </t>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- デザートエリア -->
+                            <div class="col-12 col-lg-4 mb-4">
+                                <div class="card">
+                                    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                                        <div>🍰 デザート</div>
+                                        <div class="small">
+                                            新規: <t t-esc="len(dessert_new)"/> /
+                                            調理中: <t t-esc="len(dessert_in_progress)"/>
+                                        </div>
+                                    </div>
+                                    <div class="card-body p-2" style="max-height: 80vh; overflow-y: auto;">
+
+                                        <!-- 新規 -->
+                                        <h6 class="mt-1 mb-2">🔵 新規</h6>
+                                        <t t-if="dessert_new">
+                                            <t t-foreach="dessert_new" t-as="tkt">
+                                                <t t-set="lines" t-value="[ln for ln in tkt.line_ids if ln.area == 'dessert']"/>
+                                                <t t-if="lines">
+                                                    <div class="card mb-2 shadow-sm rsk-ticket-card rsk-ticket-new">
+                                                        <div class="card-body p-2">
+                                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                <div>
+                                                                    <strong t-esc="tkt.name"/>
+                                                                    <t t-if="tkt.table_id">
+                                                                        （<t t-esc="tkt.table_id.name"/>）
+                                                                    </t>
+                                                                </div>
+                                                                <div class="small text-muted">
+                                                                    <t t-esc="tkt.create_date"/>
+                                                                </div>
+                                                            </div>
+                                                            <hr class="my-2"/>
+
+                                                            <ul class="mb-2 ps-3">
+                                                                <t t-foreach="lines" t-as="ln">
+                                                                    <li class="small">
+                                                                        <strong t-esc="ln.product_id.display_name"/> ×
+                                                                        <t t-esc="ln.qty"/>
+                                                                        <t t-if="ln.note">
+                                                                            －
+                                                                            <span class="text-muted" t-esc="ln.note"/>
+                                                                        </t>
+                                                                    </li>
+                                                                </t>
+                                                            </ul>
+
+                                                            <t t-if="tkt.note">
+                                                                <p class="mb-2 small">
+                                                                    <span class="fw-bold">メモ：</span>
+                                                                    <span t-esc="tkt.note"/>
+                                                                </p>
+                                                            </t>
+
+                                                            <div class="d-flex justify-content-end gap-2">
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-outline-secondary rsk-btn-set-state"
+                                                                        data-ticket-id="<t t-esc='tkt.id'/>"
+                                                                        data-target-state="in_progress">
+                                                                    調理開始
+                                                                </button>
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-outline-danger rsk-btn-set-state"
+                                                                        data-ticket-id="<t t-esc='tkt.id'/>"
+                                                                        data-target-state="done">
+                                                                    キャンセル/提供済扱い
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </t>
+                                        </t>
+                                        <t t-if="not dessert_new">
+                                            <p class="text-muted small">新規のデザートオーダーはありません。</p>
+                                        </t>
+
+                                        <!-- 調理中 -->
+                                        <h6 class="mt-3 mb-2">🟠 調理中</h6>
+                                        <t t-if="dessert_in_progress">
+                                            <t t-foreach="dessert_in_progress" t-as="tkt">
+                                                <t t-set="lines" t-value="[ln for ln in tkt.line_ids if ln.area == 'dessert']"/>
+                                                <t t-if="lines">
+                                                    <div class="card mb-2 shadow-sm rsk-ticket-card rsk-ticket-in-progress">
+                                                        <div class="card-body p-2">
+                                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                <div>
+                                                                    <strong t-esc="tkt.name"/>
+                                                                    <t t-if="tkt.table_id">
+                                                                        （<t t-esc="tkt.table_id.name"/>）
+                                                                    </t>
+                                                                </div>
+                                                                <div class="small text-muted">
+                                                                    <t t-esc="tkt.create_date"/>
+                                                                </div>
+                                                            </div>
+                                                            <hr class="my-2"/>
+
+                                                            <ul class="mb-2 ps-3">
+                                                                <t t-foreach="lines" t-as="ln">
+                                                                    <li class="small">
+                                                                        <strong t-esc="ln.product_id.display_name"/> ×
+                                                                        <t t-esc="ln.qty"/>
+                                                                        <t t-if="ln.note">
+                                                                            －
+                                                                            <span class="text-muted" t-esc="ln.note"/>
+                                                                        </t>
+                                                                    </li>
+                                                                </t>
+                                                            </ul>
+
+                                                            <t t-if="tkt.note">
+                                                                <p class="mb-2 small">
+                                                                    <span class="fw-bold">メモ：</span>
+                                                                    <span t-esc="tkt.note"/>
+                                                                </p>
+                                                            </t>
+
+                                                            <div class="d-flex justify-content-end gap-2">
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-success rsk-btn-set-state"
+                                                                        data-ticket-id="<t t-esc='tkt.id'/>"
+                                                                        data-target-state="done">
+                                                                    提供済にする
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </t>
+                                        </t>
+                                        <t t-if="not dessert_in_progress">
+                                            <p class="text-muted small">調理中のデザートオーダーはありません。</p>
+                                        </t>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- 簡易スタイル -->
+                    <style>
+                        .rsk-ticket-card {
+                            border-left-width: 4px;
+                        }
+                        .rsk-ticket-new {
+                            border-left-color: #0d6efd; /* new: primary */
+                        }
+                        .rsk-ticket-in-progress {
+                            border-left-color: #ffc107; /* in progress: warning */
+                        }
+                    </style>
+
+                    <!-- OWLで状態変更 & 自動更新 -->
+                    <div id="rsk-kitchen-controller"></div>
+                    <script type="module">
+                        import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+                        import { mount } from "@odoo/owl";
+                        import { useService } from "@web/core/utils/hooks";
+
+                        class KitchenController extends Component {
+                            setup() {
+                                this.rpc = useService("rpc");
+                                this.autoRefreshTimer = null;
+                                this.onClickSetState = this.onClickSetState.bind(this);
+                                this.onClickManualRefresh = this.onClickManualRefresh.bind(this);
+
+                                onMounted(() => {
+                                    this.bindButtons();
+                                    this.startAutoRefresh();
+                                });
+                                onWillUnmount(() => {
+                                    this.stopAutoRefresh();
+                                    this.unbindButtons();
+                                });
+                            }
+
+                            bindButtons() {
+                                this.buttons = Array.from(document.querySelectorAll(".rsk-btn-set-state"));
+                                this.buttons.forEach((btn) => {
+                                    btn.addEventListener("click", this.onClickSetState);
+                                });
+                                const manual = document.querySelector("#rsk-manual-refresh");
+                                if (manual) {
+                                    manual.addEventListener("click", this.onClickManualRefresh);
+                                }
+                            }
+
+                            unbindButtons() {
+                                if (this.buttons) {
+                                    this.buttons.forEach((btn) => {
+                                        btn.removeEventListener("click", this.onClickSetState);
+                                    });
+                                }
+                                const manual = document.querySelector("#rsk-manual-refresh");
+                                if (manual) {
+                                    manual.removeEventListener("click", this.onClickManualRefresh);
+                                }
+                            }
+
+                            startAutoRefresh() {
+                                this.autoRefreshTimer = setInterval(() => {
+                                    window.location.reload();
+                                }, 10000);
+                            }
+
+                            stopAutoRefresh() {
+                                if (this.autoRefreshTimer) {
+                                    clearInterval(this.autoRefreshTimer);
+                                }
+                            }
+
+                            async onClickSetState(ev) {
+                                ev.preventDefault();
+                                const btn = ev.currentTarget;
+                                const ticketId = btn.dataset.ticketId;
+                                const targetState = btn.dataset.targetState;
+                                if (!ticketId || !targetState) {
+                                    return;
+                                }
+                                if (targetState === "done") {
+                                    const ok = window.confirm("この伝票を提供済として処理しますか？");
+                                    if (!ok) {
+                                        return;
+                                    }
+                                }
+                                btn.disabled = true;
+                                try {
+                                    await this.rpc("/kitchen/ticket/set_state", {
+                                        ticket_id: parseInt(ticketId),
+                                        state: targetState,
+                                    });
+                                } finally {
+                                    window.location.reload();
+                                }
+                            }
+
+                            onClickManualRefresh(ev) {
+                                ev.preventDefault();
+                                window.location.reload();
+                            }
+                        }
+                        KitchenController.template = "restaurant_self_order_kitchen.KitchenController";
+
+                        mount(KitchenController, document.getElementById("rsk-kitchen-controller"));
+                    </script>
+
+                    <!-- OWLに渡す空テンプレート（DOM制御のみで描画は行わない） -->
+                    <templates>
+                        <t t-name="restaurant_self_order_kitchen.KitchenController">
+                            <div/>
+                        </t>
+                    </templates>
+
+                </section>
+            </main>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,75 @@
+# ======================================================================
+# Odoo 19 開発環境用 docker-compose.dev.yml
+# ======================================================================
+
+services:
+  # ====================================================================
+  # PostgreSQL データベース（開発用）
+  # ====================================================================
+  db:
+    image: postgres:16
+    container_name: odoo19-db
+
+    environment:
+      POSTGRES_DB: odoo
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+      TZ: Asia/Tokyo
+      PGTZ: Asia/Tokyo
+
+    # ★ ここで 5432 をホストに公開する
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d odoo"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+    restart: unless-stopped
+
+  # ====================================================================
+  # Odoo 19（開発・デバッグ用コンテナ）
+  # ====================================================================
+  odoo-debug:
+    build:
+      context: .
+      dockerfile: Dockerfile.debug
+    container_name: odoo19-web-debug
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    environment:
+      # DB 接続用（公式 Odoo イメージのデフォルト環境変数）
+      HOST: db
+      USER: odoo
+      PASSWORD: odoo
+      ODOO_EXTRA_ADDONS: /mnt/extra-addons
+      TZ: Asia/Tokyo
+
+    ports:
+      - "8069:8069"     # Odoo Web UI
+      - "5678:5678"     # debugpy（VSCode からアタッチ）
+
+    volumes:
+      # Odoo のデータ永続化（filestore など）
+      - odoo-data:/var/lib/odoo
+      # Odoo 設定ファイル（odoo.conf）
+      - ./config:/etc/odoo
+      # カスタムモジュールのホットリロード
+      - ./custom_addons:/mnt/extra-addons
+
+    restart: unless-stopped
+
+# ======================================================================
+# ボリューム定義
+# ======================================================================
+volumes:
+  db-data:
+  odoo-data:
