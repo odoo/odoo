@@ -287,7 +287,16 @@ export class SelfOrder extends Reactive {
             screenMode: screen_mode,
         });
         this.printKioskChanges(access_token);
+        this.resetCategorySelection();
     }
+
+    resetCategorySelection() {
+        if (!this.kioskMode) {
+            return;
+        }
+        this.currentCategory = this.availableCategories[0];
+    }
+
     hasPaymentMethod() {
         return (
             this.config.self_ordering_mode === "kiosk" &&
