@@ -73,6 +73,8 @@ export class KanbanRenderer extends Component {
     };
 
     setup() {
+        this.ui = useService("ui");
+
         this.dialogClose = [];
         /**
          * @type {{ processedIds: string[], columnQuickCreateIsFolded: boolean }}
@@ -284,7 +286,7 @@ export class KanbanRenderer extends Component {
     // ------------------------------------------------------------------------
 
     get canUseSortable() {
-        return !this.env.isSmall;
+        return !this.ui.isSmall;
     }
 
     get canMoveRecords() {
@@ -387,13 +389,13 @@ export class KanbanRenderer extends Component {
      */
     getGroupClasses(group, isGroupProcessing) {
         const classes = [];
-        if (!isGroupProcessing && this.canResequenceGroups && group.value) {
+        if (!isGroupProcessing && this.canResequenceGroups && group.value && !this.ui.isSmall) {
             classes.push("o_group_draggable");
         }
         if (!group.count) {
             classes.push("o_kanban_no_records");
         }
-        if (!this.env.isSmall && group.isFolded) {
+        if (group.isFolded) {
             classes.push("o_column_folded", "flex-basis-0");
         }
         if (this.props.progressBarState && !group.isFolded) {
