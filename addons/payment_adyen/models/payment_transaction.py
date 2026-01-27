@@ -404,7 +404,11 @@ class PaymentTransaction(models.Model):
             arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
         )
         currency_code = amount_data.get('currency')
-        self._validate_amount_and_currency(amount, currency_code)
+        self._validate_amount_and_currency(
+            amount,
+            currency_code,
+            precision_digits=const.CURRENCY_DECIMALS.get(self.currency_id.name),
+        )
 
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Adyen data.

@@ -294,3 +294,10 @@ class TestPaymentTransaction(PaymentCommon):
             'redirect', operation='validation', amount=0, reference='tx-validation',
         )
         validation_tx._validate_amount_and_currency(None, None)
+
+    def test_validate_amount_uses_payment_minor_unit(self):
+        self.currency_euro.rounding = 0.001
+        tx = self._create_transaction('direct', amount=123.452, currency_id=self.currency_euro.id)
+        self._assert_does_not_raise(
+            ValidationError, tx._validate_amount_and_currency, 123.45, self.currency_euro.name
+        )

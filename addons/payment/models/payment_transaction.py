@@ -15,6 +15,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import email_normalize_all, float_round, format_amount
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 
 
 _logger = logging.getLogger(__name__)
@@ -723,7 +724,11 @@ class PaymentTransaction(models.Model):
         # providers send a positive one.
         if self.operation == 'refund':
             amount = -amount
-        tx_amount = self.amount if precision_digits is None else float_round(
+        if precision_digits is None:
+            precision_digits = CURRENCY_MINOR_UNITS.get(
+                self.currency_id.name, self.currency_id.decimal_places
+            )
+        tx_amount = float_round(
             self.amount, precision_digits=precision_digits, rounding_method=rounding_method
         )
         if self.currency_id.compare_amounts(amount, tx_amount) != 0:
