@@ -19,6 +19,7 @@ import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 import { Widget } from "@web/views/widgets/widget";
 import { ActionHelper } from "@web/views/action_helper";
+import { useDebounced } from '@web/core/utils/timing';
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 
@@ -82,6 +83,7 @@ export class KanbanRenderer extends Component {
             processedIds: [],
             columnQuickCreateIsFolded:
                 !this.props.list.isGrouped || this.props.list.groups.length > 0,
+            isSmall: this.env.isSmall,
         });
         this.dialog = useService("dialog");
         this.exampleData = registry
@@ -236,15 +238,19 @@ export class KanbanRenderer extends Component {
         const handleAltKeyUp = () => {
             this.state.selectionAvailable = false;
         };
+
+        this.debouncedOnResize = useDebounced(this.updateSize, 300);
         useEffect(
             () => {
                 window.addEventListener("keydown", handleAltKeyDown);
                 window.addEventListener("keyup", handleAltKeyUp);
                 window.addEventListener("blur", handleAltKeyUp);
+                window.addEventListener('resize', this.debouncedOnResize);
                 return () => {
                     window.removeEventListener("keydown", handleAltKeyDown);
                     window.removeEventListener("keyup", handleAltKeyUp);
                     window.removeEventListener("blur", handleAltKeyUp);
+                    window.removeEventListener('resize', this.debouncedOnResize);
                 };
             },
             () => []
@@ -284,7 +290,7 @@ export class KanbanRenderer extends Component {
     // ------------------------------------------------------------------------
 
     get canUseSortable() {
-        return !this.env.isSmall;
+        return !this.state.isSmall;
     }
 
     get canMoveRecords() {
@@ -387,13 +393,13 @@ export class KanbanRenderer extends Component {
      */
     getGroupClasses(group, isGroupProcessing) {
         const classes = [];
-        if (!isGroupProcessing && this.canResequenceGroups && group.value) {
+        if (!isGroupProcessing && this.canResequenceGroups && group.value && !this.state.isSmall) {
             classes.push("o_group_draggable");
         }
         if (!group.count) {
             classes.push("o_kanban_no_records");
         }
-        if (!this.env.isSmall && group.isFolded) {
+        if (group.isFolded) {
             classes.push("o_column_folded", "flex-basis-0");
         }
         if (this.props.progressBarState && !group.isFolded) {
@@ -528,7 +534,7 @@ export class KanbanRenderer extends Component {
     // ------------------------------------------------------------------------
 
     async onGroupClick(group, ev) {
-        if (!this.env.isSmall && group.isFolded) {
+        if (!this.state.isSmall && group.isFolded) {
             this.lastOpenedGroupId = group.id;
             await group.toggle();
             this.props.scrollTop();
@@ -709,5 +715,13 @@ export class KanbanRenderer extends Component {
             nextCard.focus();
             return true;
         }
+    }
+
+    /**
+     *
+     * @return {void}
+     */
+    updateSize() {
+        this.state.isSmall = this.env.isSmall;
     }
 }
