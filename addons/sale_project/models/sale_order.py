@@ -191,7 +191,7 @@ class SaleOrder(models.Model):
                 'hide_allow_billable': True,
                 'default_company_id': self.company_id.id,
                 'generate_milestone': default_sale_line.product_id.service_policy == 'delivered_milestones',
-                'default_name': self.name,
+                'default_name': f"{self.name} - {self.partner_id.name}",
                 'default_allow_milestones': 'delivered_milestones' in self.order_line.product_id.mapped('service_policy'),
             },
         }
