@@ -460,8 +460,9 @@ export class Composer extends Component {
                     optionTemplate: "mail.Composer.suggestionCannedResponse",
                     options: suggestions.map((suggestion) => ({
                         cannedResponse: suggestion,
-                        source: suggestion.source,
                         label: suggestion.substitution,
+                        source: suggestion.source,
+                        title: suggestion.substitution,
                         classList: "o-mail-Composer-suggestion",
                     })),
                 };
