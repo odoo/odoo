@@ -45,11 +45,22 @@ class HrJob(models.Model):
 
     def action_search_matching_applicants(self):
         self.ensure_one()
-        help_message_1 = self.env._("No Matching Applicants")
-        help_message_2 = self.env._("We do not have any applicants who meet the skill requirements for this job position in the database at the moment.")
+        help_message_1 = self.env._("No Matching Talents")
+        help_message_2 = self.env._("We do not have any talents who meet the skill requirements for this job position in the database at the moment.")
         action = self.env['ir.actions.actions']._for_xml_id('hr_recruitment.crm_case_categ0_act_job')
         context = literal_eval(action['context'])
         context['matching_job_id'] = self.id
+        # This action always comes with search_default_applicant. However,
+        # we want talents to always be the default search.
+        del context['search_default_applicants']
+        context['search_default_talents'] = True
+        # Since matching_score is not stored, we use the sequence field to sort
+        talents = self.env['hr.applicant'].with_context(matching_job_id=self.id).search([
+            ('job_id', '!=', self.id),
+            ('skill_ids', 'in', self.job_skill_ids.skill_id.ids),
+        ])
+        for seq, talent in enumerate(talents.sorted('matching_score DESC')):
+            talent.sequence = seq
         action.update({
             'name': self.env._("Matching Applicants"),
             'views': [

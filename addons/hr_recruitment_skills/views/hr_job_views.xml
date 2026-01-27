@@ -30,6 +30,19 @@
         <field name="binding_model_id" ref="hr_recruitment.model_hr_job"/>
         <field name="binding_view_types">form</field>
         <field name="state">code</field>
-        <field name="code">action = records.action_search_matching_applicants()</field>
+        <field name="code">action = records.with_context({'search_default_talents': 1}).action_search_matching_applicants()</field>
+    </record>
+
+    <record id="view_hr_job_kanban" model="ir.ui.view">
+        <field name="name">hr.job.view.kanban.inherit.hr.recruitment.skills</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='menu_view_job_posts']" position="before">
+                <div role="menuitem" name="menu_view_matching_applicants">
+                    <a name="action_search_matching_applicants" type="object" context="{'default_job_id': id, 'search_default_talents': True}">Matching Talents</a>
+                </div>
+            </xpath>
+        </field>
     </record>
 </odoo>

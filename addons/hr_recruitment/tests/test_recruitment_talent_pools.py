@@ -94,6 +94,36 @@ class TestRecruitmentTalentPool(TransactionCase):
             "The 'talent' should belong to both talent pools",
         )
 
+        # Testing that adding an applicant to a pool with the wizard then to another pool works
+        wizard = Form(self.env["talent.pool.add.applicants"])
+        wizard.talent_pool_ids.add(self.t_talent_pool_1)
+        wizard.applicant_ids = self.t_applicant_2
+        talent_pool_applicant_1 = wizard.save()._add_applicants_to_pool()
+
+        self.assertTrue(
+            talent_pool_applicant_1, "An applicant('talent') should be created when adding an applicant to a pool",
+        )
+        self.assertEqual(
+            len(talent_pool_applicant_1), 1, "Exactly one 'talent' should be created when adding an applicant to a pool",
+        )
+        self.assertEqual(
+            talent_pool_applicant_1.talent_pool_ids, self.t_talent_pool_1, "The 'talent' should belong to the talent pool",
+        )
+
+        wizard = Form(self.env["talent.pool.add.applicants"])
+        wizard.talent_pool_ids.add(self.t_talent_pool_2)
+        wizard.applicant_ids = self.t_applicant_2
+        talent_pool_applicant_2 = wizard.save()._add_applicants_to_pool()
+
+        self.assertEqual(
+            talent_pool_applicant_2, talent_pool_applicant_1, "A second talent for the same applicant should not have been created",
+        )
+        self.assertEqual(
+            talent_pool_applicant_2.talent_pool_ids,
+            self.t_talent_pool_1 | self.t_talent_pool_2,
+            "The 'talent' should belong to both talent pools",
+        )
+
     def test_add_multiple_applicants_to_multiple_talent_pools(self):
         """
         Test that multiple applicants are only duplicated once and linked to multiple pools when creating talents.
@@ -138,14 +168,16 @@ class TestRecruitmentTalentPool(TransactionCase):
             len(tp_applicant_1), 1, "Exactly one 'talent' should be created when adding an applicant to a pool"
         )
 
-        # Try adding the same applicant to a different pool
-        # This is impossible through the UI as there is a domain on the
-        # `applicant_ids` field.
         wizard = Form(self.env["talent.pool.add.applicants"])
-        wizard.talent_pool_ids = self.t_talent_pool_2
+        wizard.talent_pool_ids = self.t_talent_pool_1
         wizard.applicant_ids = self.t_applicant_1
         tp_applicant_2 = wizard.save()._add_applicants_to_pool()
-        self.assertFalse(tp_applicant_2, "A second talent for the same applicant should not have been created")
+        self.assertEqual(tp_applicant_1, tp_applicant_2, "A second talent for the same applicant should not have been created")
+        self.assertEqual(
+            self.env['hr.applicant'].search_count([('talent_pool_ids', 'in', self.t_talent_pool_1.id)]),
+            1,
+            "Exactly one talent should be created when adding an applicant to the same pool multiple times",
+        )
 
         wizard = Form(self.env["talent.pool.add.applicants"])
         wizard.talent_pool_ids = self.t_talent_pool_2

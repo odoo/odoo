@@ -8,11 +8,6 @@ class TalentPoolAddApplicants(models.TransientModel):
         "hr.applicant",
         string="Applicants",
         required=True,
-        domain=[
-            "|",
-            ("talent_pool_ids", "!=", False),
-            ("is_applicant_in_pool", "=", False),
-        ],
     )
     talent_pool_ids = fields.Many2many("hr.talent.pool", string="Talent Pool")
     categ_ids = fields.Many2many(
@@ -23,7 +18,10 @@ class TalentPoolAddApplicants(models.TransientModel):
     def _add_applicants_to_pool(self):
         talents = self.env["hr.applicant"]
         for applicant in self.applicant_ids:
-            if applicant.talent_pool_ids:
+            if applicant.pool_applicant_id:  # already has a linked talent
+                applicant = applicant.pool_applicant_id
+
+            if applicant.talent_pool_ids:  # is a talent
                 applicant.write(
                     {
                         "talent_pool_ids": [

@@ -4,20 +4,20 @@
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <list string="Applicants" class="o_search_matching_applicant" multi_edit="1" sample="1" decoration-danger="application_status == 'refused'" default_order="stage_id">
+            <list string="Applicants" class="o_search_matching_applicant" multi_edit="1" sample="1" decoration-danger="application_status == 'refused'" default_order="priority DESC">
                 <header>
-                    <button
-                        name="action_job_add_applicants"
-                        string="Create Applications"
-                        invisible="context.get('default_job_id') or not context.get('default_talent_pool_ids')"
-                        type="object"
-                    />
                     <button
                         name="action_talent_pool_add_applicants"
                         string="Add to Pool"
                         type="object"
                         invisible="context.get('default_talent_pool_ids')"
                         groups="hr_recruitment.group_hr_recruitment_user"
+                    />
+                    <button
+                        name="action_job_add_applicants"
+                        string="Apply to Jobs"
+                        invisible="context.get('default_job_id') or not context.get('default_talent_pool_ids')"
+                        type="object"
                     />
                     <button type="object" 
                         name="archive_applicant" 

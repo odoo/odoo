@@ -23,7 +23,7 @@
             <xpath expr="//field[@name='active']" position="after">
                 <field name="survey_id"/>
             </xpath>
-            <xpath expr="//div[@name='menu_view_applications']" position="after">
+            <xpath expr="//div[@name='menu_view_job_posts']" position="after">
                 <div role="menuitem" t-if="record.survey_id.raw_value">
                     <a name="action_test_survey" type="object" title="Display Interview Form">Interviews</a>
                 </div>
