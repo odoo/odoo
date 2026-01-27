@@ -1,6 +1,7 @@
 import base64
 
 import requests
+from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -11,6 +12,7 @@ from .utils import (
     _request_ciusro_fetch_status,
     _request_ciusro_send_invoice,
     _request_ciusro_synchronize_invoices,
+    _request_ciusro_xml_to_pdf,
 )
 
 HOLDING_DAYS = 3  # Arbitrary
@@ -482,15 +484,33 @@ class AccountMove(models.Model):
                 'key_certificate': message['answer']['signature']['key_certificate'],
                 'attachment': base64.b64encode(message['answer']['signature']['attachment_raw']),
             })
+            xml_attachment_raw = message['answer']['invoice']['attachment_raw']
             xml_attachment_id = self.env['ir.attachment'].sudo().create({
                 'name': f"ciusro_{message['answer']['invoice']['name'].replace('/', '_')}.xml",
-                'raw': message['answer']['invoice']['attachment_raw'],
+                'raw': xml_attachment_raw,
                 'res_model': 'account.move',
                 'res_id': bill.id,
             }).id
             files_data = self._to_files_data(self.env['ir.attachment'].browse(xml_attachment_id))
             bill._extend_with_attachments(files_data)
-            bill.message_post(body=_("Synchronized with SPV from message %s", message['id']))
+            chatter_message = _("Synchronized with SPV from message %s", message['id'])
+            if not (bill.message_main_attachment_id.name or '').endswith('.pdf'):
+                pdf = _request_ciusro_xml_to_pdf(self.env.company, xml_attachment_raw)
+                if 'error' in pdf:
+                    bill.message_post(body=_(
+                    "It was not possible to retrieve the PDF from the SPV for the following reason: %s",
+                    pdf['error']
+                    ))
+                else:
+                    pdf_attachment_id = self.env['ir.attachment'].sudo().create({
+                        'name': f"ciusro_{message['answer']['invoice']['name'].replace('/', '_')}.pdf",
+                        'raw': pdf['content'],
+                        'res_model': 'account.move',
+                        'res_id': bill.id,
+                    }).id
+                    bill.message_main_attachment_id = pdf_attachment_id
+                    chatter_message += Markup("<br/>") + _("No PDF found: PDF imported from SPV.")
+            bill.message_post(body=chatter_message)
 
     def action_l10n_ro_edi_fetch_invoices(self):
         self._l10n_ro_edi_fetch_invoices()

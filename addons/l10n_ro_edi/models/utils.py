@@ -5,7 +5,6 @@ from datetime import datetime
 import requests
 from lxml import etree
 
-from odoo import _
 from odoo.tools.safe_eval import json
 
 NS_STATUS = {"ns": "mfp:anaf:dgti:efactura:stareMesajFactura:v1"}
@@ -23,43 +22,45 @@ def make_efactura_request(session, company, endpoint, params, data=None) -> dict
 
     :param session: ``requests`` or ``requests.Session()`` object
     :param company: ``res.company`` object containing l10n_ro_edi_test_env, l10n_ro_edi_access_token
-    :param endpoint: ``upload`` (for sending) | ``stareMesaj`` (for fetching status) | ``descarcare`` (for downloading answer) |``listaMesajeFactura`` (to obtain the latest messages from efactura)
+    :param endpoint: ``upload`` (for sending) | ``stareMesaj`` (for fetching status) | ``descarcare`` (for downloading answer) |``listaMesajeFactura`` (to obtain the latest messages from efactura) | ``transformare`` (to get the official PDF from efactura)
     :param params: Dictionary of query parameters
     :param data: XML data for ``upload`` request
     :return: Dictionary of {'error': `str`, ['timeout': True for Timeout errors]} or {'content': <response.content>} from E-Factura
     """
     send_mode = 'test' if company.l10n_ro_edi_test_env else 'prod'
     url = f"https://api.anaf.ro/{send_mode}/FCTEL/rest/{endpoint}"
-    if endpoint in ['upload', 'uploadb2c']:
+    if endpoint in ['upload', 'uploadb2c', 'transformare']:
         method = 'POST'
     elif endpoint in ['stareMesaj', 'descarcare', 'listaMesajeFactura']:
         method = 'GET'
     else:
-        return {'error': _('Unknown endpoint.')}
+        return {'error': company.env._('Unknown endpoint.')}
     headers = {'Content-Type': 'application/xml',
                'Authorization': f'Bearer {company.l10n_ro_edi_access_token}'}
-
+    if endpoint == 'transformare':
+        url = "https://webservicesp.anaf.ro/prod/FCTEL/rest/transformare/FACT1/DA"
+        headers = {'Content-Type': 'text/plain'}
     try:
         response = session.request(method=method, url=url, params=params, data=data, headers=headers, timeout=60)
     except requests.HTTPError as e:
         return {'error': e}
     except (requests.ConnectionError, requests.Timeout):
         return {
-            'error': _('Timeout while sending to SPV. Use Synchronise to SPV to update the status.'),
+            'error': company.env._('Timeout while sending to SPV. Use Synchronise to SPV to update the status.'),
             'timeout': True,
         }
 
     if response.status_code == 204:
-        return {'error': _('You reached the limit of requests. Please try again later.')}
+        return {'error': company.env._('You reached the limit of requests. Please try again later.')}
     if response.status_code == 400:
         error_json = response.json()
         return {'error': error_json['message']}
     if response.status_code == 401:
-        return {'error': _('Access token is unauthorized.')}
+        return {'error': company.env._('Access token is unauthorized.')}
     if response.status_code == 403:
-        return {'error': _('Access token is forbidden.')}
+        return {'error': company.env._('Access token is forbidden.')}
     if response.status_code == 500:
-        return {'error': _('There is something wrong with the SPV. Please try again later.')}
+        return {'error': company.env._('There is something wrong with the SPV. Please try again later.')}
 
     return {'content': response.content}
 
@@ -211,12 +212,12 @@ def _request_ciusro_download_answer(company, key_download, session):
         try:
             msg_content = json.loads(result['content'].decode())
         except ValueError:
-            return {'error': _("The SPV data could not be parsed.")}
+            return {'error': company.env._("The SPV data could not be parsed.")}
 
         if eroare := msg_content.get('eroare'):
             return {'error': eroare}
 
-    return {'error': _("The SPV data could not be parsed.")}
+    return {'error': company.env._("The SPV data could not be parsed.")}
 
 
 def _request_ciusro_synchronize_invoices(company, session, nb_days=1):
@@ -257,7 +258,7 @@ def _request_ciusro_synchronize_invoices(company, session, nb_days=1):
     try:
         msg_content = json.loads(result['content'])
     except ValueError:
-        return {'error': _("The SPV data could not be parsed.")}
+        return {'error': company.env._("The SPV data could not be parsed.")}
 
     if eroare := msg_content.get('eroare'):
         return {'error': eroare}
@@ -283,3 +284,21 @@ def _request_ciusro_synchronize_invoices(company, session, nb_days=1):
         'sent_invoices_refused_messages': sent_invoices_refused_messages,
         'received_bills_messages': received_bills_messages
     }
+
+
+def _request_ciusro_xml_to_pdf(company, xml_data):
+    """
+    This method makes a 'transformare' request to get the official PDF of an invoice.
+
+    :param company: ``res.company`` object
+    :param xml_data: String of XML data to be sent
+    :return: response dict from E-Factura
+    """
+    return make_efactura_request(
+        session=requests,
+        company=company,
+        endpoint='transformare',
+        params={'standard': 'FACT1',
+                'novld': 'DA'},
+        data=xml_data,
+    )
