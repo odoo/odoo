@@ -63,7 +63,7 @@ import csv # pylint: disable=deprecated-module
 
 # which elements are translated inline
 TRANSLATED_ELEMENTS = {
-    'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'del', 'dfn', 'em',
+    'a', 'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'del', 'dfn', 'em',
     'font', 'i', 'ins', 'kbd', 'keygen', 'mark', 'math', 'meter', 'output',
     'progress', 'q', 'ruby', 's', 'samp', 'small', 'span', 'strong', 'sub',
     'sup', 'time', 'u', 'var', 'wbr', 'text',
