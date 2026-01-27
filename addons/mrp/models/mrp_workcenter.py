@@ -370,8 +370,8 @@ class MrpWorkcenter(models.Model):
                     start_interval = start_interval or start
                     interval_minutes = (stop - start).total_seconds() / 60
                     while (interval := Intervals([(start_interval or start, start + timedelta(minutes=min(remaining, interval_minutes)), _records)])) \
-                      and (conflict := interval & workorder_intervals or interval & extra_leaves_slots_intervals):
-                        (_start, start, _records) = conflict._items[0]  # restart available interval at conflicting interval stop
+                      and (conflict := workorder_intervals.conflicting(interval) or extra_leaves_slots_intervals.conflicting(interval)):
+                        start = min(max(_stop for _start, _stop, _records in conflict), stop)  # restart available interval at conflicting interval stop
                         interval_minutes = (stop - start).total_seconds() / 60
                         start_interval, remaining = start if interval_minutes else None, duration
                     if float_compare(interval_minutes, remaining, precision_digits=3) >= 0:
@@ -388,8 +388,8 @@ class MrpWorkcenter(models.Model):
                     stop_interval = stop_interval or stop
                     interval_minutes = (stop - start).total_seconds() / 60
                     while (interval := Intervals([(stop - timedelta(minutes=min(remaining, interval_minutes)), stop_interval or stop, _records)])) \
-                      and (conflict := interval & workorder_intervals or interval & extra_leaves_slots_intervals):
-                        (stop, _stop, _records) = conflict._items[0]  # restart available interval at conflicting interval start
+                      and (conflict := workorder_intervals.conflicting(interval) or extra_leaves_slots_intervals.conflicting(interval)):
+                        stop = max(min(_start for _start, _stop, _records in conflict), start)  # restart available interval at conflicting interval start
                         interval_minutes = (stop - start).total_seconds() / 60
                         stop_interval, remaining = stop if interval_minutes else None, duration
                     if float_compare(interval_minutes, remaining, precision_digits=3) >= 0:
