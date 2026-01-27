@@ -2,6 +2,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import {
     getCurrentTextHighlight,
+    adaptHighlightPosition,
     makeHighlightSvgs,
     closestToObserve,
     getObservedEls,
@@ -54,13 +55,14 @@ export class TextHighlight extends Interaction {
         for (const closestToObserve of closestToObserves) {
             for (const el of closestToObserve.querySelectorAll(".o_text_highlight")) {
                 const highlightID = getCurrentTextHighlight(el);
-                const svgs = makeHighlightSvgs(el, highlightID);
                 const currentSVGs = el.querySelectorAll(".o_text_highlight_svg");
                 for (const svg of currentSVGs) {
                     svg.remove();
                 }
+                const svgs = makeHighlightSvgs(el, highlightID);
                 for (const svg of svgs) {
                     this.insert(svg, el);
+                    adaptHighlightPosition(el, svg);
                 }
             }
         }
