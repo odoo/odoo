@@ -8,6 +8,7 @@ import pytz
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command, api, fields, models
+from odoo.fields import Domain
 from odoo.osv import expression
 from odoo.tools import ormcache
 from odoo.tools.intervals import Intervals
@@ -380,8 +381,6 @@ class HrVersion(models.Model):
                 version_start = tz.localize(fields.Datetime.to_datetime(version.date_start)).astimezone(pytz.utc).replace(tzinfo=None)
                 version_stop = tz.localize(datetime.combine(fields.Datetime.to_datetime(version.date_end or date_stop),
                                                  datetime.max.time())).astimezone(pytz.utc).replace(tzinfo=None)
-                if version_stop < date_start:
-                    continue
                 if version_stop < date_stop:
                     if version.date_generated_from != version.date_generated_to:
                         domain_to_nullify = expression.OR([domain_to_nullify, [
@@ -395,6 +394,12 @@ class HrVersion(models.Model):
                 date_start_work_entries = max(date_start, version_start)
                 date_stop_work_entries = min(date_stop, version_stop)
                 if force:
+                    domain_to_nullify = expression.OR([domain_to_nullify, [
+                        ('version_id', '=', version.id),
+                        ('date_start', '>=', date_start_work_entries),
+                        ('date_stop', '<', date_stop_work_entries),
+                        ('state', '!=', 'validated'),
+                    ]])
                     intervals_to_generate[date_start_work_entries, date_stop_work_entries] |= version
                     continue
 
@@ -415,8 +420,9 @@ class HrVersion(models.Model):
             date_from, date_to = interval
             vals_list.extend(versions._get_work_entries_values(date_from, date_to))
 
-        work_entries_to_nullify = self.env['hr.work.entry'].search(domain_to_nullify)
-        work_entries_to_nullify.write(work_entry_null_vals)
+        if domain_to_nullify != Domain.FALSE:
+            work_entries_to_nullify = self.env['hr.work.entry'].search(domain_to_nullify)
+            work_entries_to_nullify.write(work_entry_null_vals)
 
         if not vals_list:
             return self.env['hr.work.entry']
