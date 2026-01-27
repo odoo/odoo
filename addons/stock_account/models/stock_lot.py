@@ -7,7 +7,7 @@ class StockLot(models.Model):
     _inherit = 'stock.lot'
 
     lot_valuated = fields.Boolean(related='product_id.lot_valuated', readonly=True, store=False)
-    avg_cost = fields.Monetary(string="Average Cost", currency_field='company_currency_id')
+    avg_cost = fields.Monetary(string="Average Cost", compute='_compute_value', compute_sudo=True, currency_field='company_currency_id')
     total_value = fields.Monetary(string="Total Value", compute='_compute_value', compute_sudo=True, currency_field='company_currency_id')
     company_currency_id = fields.Many2one('res.currency', 'Valuation Currency', compute='_compute_value', compute_sudo=True)
     standard_price = fields.Float(
