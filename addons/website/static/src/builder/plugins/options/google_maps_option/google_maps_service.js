@@ -32,6 +32,9 @@ registry.category("services").add("google_maps", {
                 }
                 return gMapsAPIKeyProm;
             },
+            invalidateGMapsAPIKeyProm() {
+                gMapsAPIKeyProm = null;
+            },
             /**
              * @param {boolean} [editableMode=false]
              * @param {boolean} [refetch=false]
