@@ -1,9 +1,10 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, test, waitFor, fill } from "@odoo/hoot";
 import { animationFrame, click, press, queryAllTexts } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
     fields,
+    getService,
     models,
     mockService,
     mountView,
@@ -13,11 +14,14 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
     webModels,
+    defineActions,
+    mountWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { Domain } from "@web/core/domain";
 import { redirect } from "@web/core/utils/urls";
 import { browser } from "@web/core/browser/browser";
+import { WebClient } from "@web/webclient/webclient";
 
 class MockPurchaseOrders extends models.Model {
     _name = "mock.purchase.order";
@@ -36,6 +40,8 @@ class MockPurchaseOrders extends models.Model {
         { id: 3, state: "sent" },
     ];
 }
+
+const SHARE_KEY = "Share\nALT + SHIFT + H";
 
 const { ResCompany, ResPartner, ResUsers } = webModels;
 defineModels({ MockPurchaseOrders, ResCompany, ResPartner, ResUsers });
@@ -222,6 +228,58 @@ test("Good URL does not apply default filters", async () => {
     expect(searchBar.env.searchModel.domain).toEqual([["state", "=", "sent"]]);
 });
 
+// TODO JESC Fix this after owl refactor
+test.todo("hotkey sharing available after dialog", async () => {
+    defineActions([
+        {
+            id: 1,
+            name: "Some List View",
+            type: "ir.actions.act_window",
+            views: [[false, "list"]],
+            res_model: "mock.purchase.order",
+        },
+        {
+            id: 2,
+            name: "Some Dialog",
+            type: "ir.actions.act_window",
+            target: "new",
+            views: [[false, "form"]],
+            res_model: "mock.purchase.order",
+        },
+    ]);
+
+    MockPurchaseOrders._views = {
+        form: `<form><field name="partner_id"/></form>`,
+        list: `
+            <list>
+                <header> <button type="action" name="2" string="Button"/> </header>
+                <field name="state"/>
+            </list>`,
+    };
+
+    // We need to mount with WebClient because fiber rendering behaves
+    // differently in simple MountView and the bug is harder to reproduce.
+    // (we need OverlayContainer & ListRender in the same AnimationFrame)
+    await mountWithCleanup(WebClient);
+
+    // Check that hotkey is available by default
+    await getService("action").doAction(1);
+    await press(["control", "k"]);
+    await animationFrame();
+    expect(queryAllTexts(".o_command_hotkey").some((key) => key.includes(SHARE_KEY))).toBe(true);
+    await press(["escape"]);
+
+    // Select all records (making the searchBar disapear) and then open dialog.
+    await contains(".o_list_record_selector div input").click();
+    await contains('button[name="2"]').click();
+    await contains(".btn-close").click();
+
+    // The command should still be here (but isn't due to render issues)
+    await press(["control", "k"]);
+    await animationFrame();
+    expect(queryAllTexts(".o_command_hotkey").some((key) => key.includes(SHARE_KEY))).toBe(true);
+});
+
 test.tags("desktop"); // mountView hides search Bar on mobile (but not mountWithSearch)
 test("URL with single filter triggers RPC and filters record list", async () => {
     const encodedDomain = encodeURIComponent('[["state", "=", "sent"]]');
@@ -262,8 +320,7 @@ test("hotkey sharing disabled on dynamic views", async () => {
     });
     await press(["control", "k"]);
     await animationFrame();
-    const hotkeys = queryAllTexts(`.o_command_hotkey`);
-    expect(hotkeys.some((key) => key.includes("Share \n ALT + SHIFT + H"))).toBe(false);
+    expect(queryAllTexts(".o_command_hotkey").some((key) => key.includes(SHARE_KEY))).toBe(false);
 });
 
 test.tags("desktop"); // Shortcut testing only on computer
@@ -277,8 +334,24 @@ test("hotkey sharing available on stored actions", async () => {
 
     await press(["control", "k"]);
     await animationFrame();
-    const hotkeys = queryAllTexts(`.o_command_hotkey`);
-    expect(hotkeys.some((key) => key.includes("Share \n ALT + SHIFT + H"))).toBe(false);
+    expect(queryAllTexts(".o_command_hotkey").some((key) => key.includes(SHARE_KEY))).toBe(true);
+});
+
+test.tags("desktop"); // Shortcut testing only on computer
+test("hotkey sharing after typing in command palette", async () => {
+    await mountView({
+        type: "list",
+        resModel: "mock.purchase.order",
+        arch: `<list> <field name="state"/> </list>`,
+        config: { actionId: 1 }, // Just to let the search model know this is a stored action
+    });
+
+    await press(["control", "k"]);
+    await waitFor(".o_command_palette");
+    await contains(".o_command_palette_search input").click();
+    await fill("S");
+    await animationFrame();
+    expect(queryAllTexts(".o_command_hotkey").some((key) => key.includes(SHARE_KEY))).toBe(true);
 });
 
 test.tags("desktop"); // Shortcut testing only on computer
