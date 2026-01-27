@@ -1097,6 +1097,7 @@ export class ListPlugin extends Plugin {
                 for (const node of [listItem, ...descendants(listItem)]) {
                     if (node.nodeType === Node.ELEMENT_NODE) {
                         removeClass(node, ...FONT_SIZE_CLASSES);
+                        node.style.fontSize = "";
                     }
                 }
 
