@@ -11,7 +11,6 @@ import { useDynamicInterval } from "@mail/utils/common/misc";
 import { formatLocalDateTime } from "@mail/utils/common/dates";
 import { attClassObjectToString } from "@mail/utils/common/format";
 
-import { _t } from "@web/core/l10n/translation";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { useService } from "@web/core/utils/hooks";
 
@@ -95,7 +94,6 @@ export class DiscussContent extends Component {
 
     async onFileUploaded(file) {
         await this.thread.channel?.notifyAvatarToServer(file.data);
-        this.notification.add(_t("The avatar has been updated!"), { type: "success" });
     }
 
     async renameGuest(name) {
