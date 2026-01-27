@@ -11,7 +11,7 @@ from odoo.addons.website_sale.controllers.delivery import (
     Delivery as WebsiteSaleDeliveryController,
 )
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -118,7 +118,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         )
         self.carrier.fixed_price = 20
         self.cart.set_delivery_line(self.carrier, self.carrier.fixed_price)
-        with MockRequest(self.env, sale_order_id=self.cart.id, website=self.website):
+        with self.mock_request(sale_order_id=self.cart.id):
             payment_values = Cart()._get_express_shop_payment_values(self.cart)
 
         self.assertEqual(payment_values['minor_amount'], amount_without_delivery)

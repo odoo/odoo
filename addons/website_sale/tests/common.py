@@ -156,3 +156,14 @@ class WebsiteSaleCommon(ProductCommon, DeliveryCommon):
         Image.new('RGB', (1920, 1080), color).save(f, 'JPEG')
         f.seek(0)
         return base64.b64encode(f.read())
+
+    @contextmanager
+    def mock_request(self, website=None, user=None, **kwargs):
+        website = website or self.website
+        user = user or website.user_id
+
+        request_env = self.env(user=user)
+        website = website.with_env(request_env)
+
+        with MockRequest(request_env, website=website, **kwargs) as request:
+            yield request

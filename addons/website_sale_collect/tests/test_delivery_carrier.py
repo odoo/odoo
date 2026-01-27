@@ -4,9 +4,8 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.exceptions import ValidationError
-from odoo.tests import Form, tagged
+from odoo.tests import tagged
 
-from odoo.addons.website_sale.tests.common import MockRequest
 from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
@@ -64,7 +63,7 @@ class TestDeliveryCarrier(ClickAndCollectCommon, WebsiteSaleStockCommon):
         with patch(
             'odoo.addons.base_geolocalize.models.res_partner.ResPartner.geo_localize',
             return_value=True
-        ), MockRequest(self.env, website=self.website, sale_order_id=so.id):
+        ), self.mock_request(sale_order_id=so.id):
             locations = self.in_store_dm._in_store_get_close_locations(wh_address_partner)
             country = wh_address_partner.country_id
             self.assertEqual(

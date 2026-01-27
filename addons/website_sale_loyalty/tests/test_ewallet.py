@@ -4,7 +4,7 @@ from odoo import http
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
@@ -60,7 +60,7 @@ class TestEwallet(HttpCase, WebsiteSaleCommon):
         self.ewallet_program.coupon_ids[0].partner_id = self.env.user.partner_id
 
         order = self.empty_cart
-        with MockRequest(self.env, website=self.website, sale_order_id=order.id):
+        with self.mock_request(user=self.env.user, sale_order_id=order.id):
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=self.product.product_tmpl_id,
                 product_id=self.product.id,

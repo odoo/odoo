@@ -9,7 +9,7 @@ from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -57,7 +57,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         p.active = True
         so = self._create_so(partner_id=p.id)
 
-        with MockRequest(self.env, website=self.website, sale_order_id=so.id) as req:
+        with self.mock_request(sale_order_id=so.id) as req:
             req.httprequest.method = "POST"
             self.WebsiteSaleController.shop_address_submit(**self.default_address_values)
             self.assertFalse(self._get_last_address(p).website_id, "New shipping address should not have a website set on it (no specific_user_account).")
@@ -99,8 +99,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self._setUp_multicompany_env()
         so = self._create_so(partner_id=self.demo_partner.id)
 
-        website = self.website.with_user(self.demo_user).with_context({})
-        with MockRequest(website.env, website=website, sale_order_id=so.id) as req:
+        with self.mock_request(user=self.demo_user, sale_order_id=so.id) as req:
             req.httprequest.method = "POST"
 
             # 1. Logged in user, new shipping
@@ -121,8 +120,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self._setUp_multicompany_env()
         so = self._create_so(partner_id=self.website.user_id.partner_id.id)
 
-        website = self.website.with_user(self.public_user).with_context({})
-        with MockRequest(website.env, website=website, sale_order_id=so.id) as req:
+        with self.mock_request(sale_order_id=so.id) as req:
             req.httprequest.method = "POST"
 
             # 1. Public user, new billing
@@ -150,9 +148,8 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             'carrier_id': self.carrier.id,
             'partner_shipping_id': shipping_partner.id
         })
-        website = self.website.with_user(self.public_user).with_context({})
         with (
-            MockRequest(website.env, website=website, sale_order_id=self.cart.id),
+            self.mock_request(sale_order_id=self.cart.id),
             patch(
                 'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
                 return_value={'success': True, 'price': 10, 'warning_message': ''}
@@ -177,14 +174,14 @@ class TestCheckoutAddress(WebsiteSaleCommon):
     def test_04_apply_empty_pl(self):
         """Ensure empty pl code reset the applied pl"""
         self._enable_pricelists()
-        so = self._create_so(partner_id=self.env.user.partner_id.id)
+        so = self._create_so(partner_id=self.public_partner.id)
         eur_pl = self.env['product.pricelist'].create({
             'name': 'EUR_test',
             'website_id': self.website.id,
             'code': 'EUR_test',
         })
 
-        with MockRequest(self.env, website=self.website, sale_order_id=so.id):
+        with self.mock_request(sale_order_id=so.id):
             self.WebsiteSaleController.pricelist('EUR_test')
             self.assertEqual(so.pricelist_id, eur_pl, "Ensure EUR_test is applied")
 
@@ -207,13 +204,10 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self.website.user_id.partner_id.property_product_pricelist = self.pricelist
         test_user.partner_id.property_product_pricelist = pl_with_code
 
-        public_user_env = self.env(user=self.website.user_id)
-        so = self._create_so(partner_id=public_user_env.user.partner_id.id)
+        so = self._create_so(partner_id=self.public_partner.id)
         self.assertEqual(so.pricelist_id, self.pricelist)
 
-        with MockRequest(
-            public_user_env,
-            website=self.website.with_env(public_user_env),
+        with self.mock_request(
             sale_order_id=so.id,
             website_sale_current_pl=so.pricelist_id.id
         ) as request:
@@ -254,8 +248,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self._setUp_multicompany_env()
         so = self._create_so(partner_id=self.portal_partner.id)
 
-        website = self.website.with_user(self.portal_user).with_context({})
-        with MockRequest(website.env, website=website, sale_order_id=so.id) as req:
+        with self.mock_request(user=self.portal_user, sale_order_id=so.id) as req:
             req.httprequest.method = "POST"
 
             # 1. Portal user, new shipping, same with the log in user
@@ -333,8 +326,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             [90.91, 9.09, 100.0]
         )
 
-        website = self.website.with_user(self.public_user).with_context({})
-        with MockRequest(website.env, website=website, sale_order_id=so.id) as req:
+        with self.mock_request(sale_order_id=so.id) as req:
             req.httprequest.method = "POST"
 
             self.WebsiteSaleController.shop_address_submit(**be_address_POST)
@@ -362,8 +354,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self._setUp_multicompany_env()
         so = self._create_so(partner_id=self.demo_partner.id)
 
-        website = self.website.with_user(self.demo_user).with_context({})
-        with MockRequest(website.env, website=website, sale_order_id=so.id) as req:
+        with self.mock_request(user=self.demo_user, sale_order_id=so.id) as req:
             req.httprequest.method = "POST"
 
             # check the default values
@@ -484,8 +475,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self.assertNotEqual(so.partner_shipping_id, shipping)
         self.assertNotEqual(so.partner_invoice_id, invoicing)
 
-        website = self.website.with_user(user).with_context({})
-        with MockRequest(website.env, website=website, sale_order_id=so.id):
+        with self.mock_request(user=user, sale_order_id=so.id):
 
             self.assertFalse(colleague._can_be_edited_by_current_customer(order_sudo=so))
             # Invalid addresses unaccessible to current customer
@@ -605,8 +595,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         so = self._create_so(partner_id=self.portal_partner.id)
         self.assertTrue(so.payment_term_id, "A payment term should be set by default on the sale order")
 
-        website = self.website.with_user(self.portal_user).with_context({})
-        with MockRequest(website.env, website=website) as req:
+        with self.mock_request(user=self.portal_user) as req:
             req.httprequest.method = "POST"
 
             self.default_address_values['partner_id'] = self.portal_partner.id
@@ -681,8 +670,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             }
         ])
 
-        website = self.website.with_user(user)
-        with MockRequest(website.env, website=website, sale_order_id=so.id):
+        with self.mock_request(user=user, sale_order_id=so.id):
             self.WebsiteSaleController.shop_update_address(
                 partner_id=user_address.id,
                 address_type='delivery',
@@ -701,8 +689,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         imported_partner = imported_user.partner_id
         so = self._create_so(partner_id=imported_partner.id)
 
-        website = self.website.with_user(imported_user).with_context({})
-        with MockRequest(website.env, website=website, sale_order_id=so.id) as req:
+        with self.mock_request(user=imported_user, sale_order_id=so.id) as req:
             req.httprequest.method = "POST"
 
             values = {

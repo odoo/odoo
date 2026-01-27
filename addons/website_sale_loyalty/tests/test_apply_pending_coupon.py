@@ -4,7 +4,7 @@ from odoo import http
 from odoo.tests import tagged
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponNumbersCommon
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
@@ -40,6 +40,8 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
         for _ in http.routing_map._generate_routing_rules(installed_modules, nodb_only=False):
             pass
 
+        cls.largeCabinet.website_published = True
+
     def setUp(self):
         super().setUp()
 
@@ -50,7 +52,7 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
         order = self.empty_cart
         self.env['product.pricelist.item'].search([]).unlink()
 
-        with MockRequest(self.env, website=self.website, sale_order_id=order.id) as request:
+        with self.mock_request(sale_order_id=order.id) as request:
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=self.largeCabinet.product_tmpl_id,
                 product_id=self.largeCabinet.id,
@@ -89,7 +91,7 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
         order = self.empty_cart
         self.env['product.pricelist.item'].search([]).unlink()
 
-        with MockRequest(self.env, website=self.website, sale_order_id=order.id) as request:
+        with self.mock_request(sale_order_id=order.id) as request:
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=self.largeCabinet.product_tmpl_id,
                 product_id=self.largeCabinet.id,

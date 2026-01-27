@@ -4,7 +4,7 @@ from odoo import Command, http
 from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
@@ -66,7 +66,7 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
         # This test the flow when we claim a reward in the cart page and then we
         # want to add the product again
         order = self.empty_cart
-        with MockRequest(self.website.env, website=self.website, sale_order_id=order.id):
+        with self.mock_request(sale_order_id=order.id):
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=self.sofa.product_tmpl_id,
                 product_id=self.sofa.id,
@@ -101,7 +101,7 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
         })
         coupon = self.program.coupon_ids
 
-        with MockRequest(self.website.env, website=self.website, sale_order_id=cart.id):
+        with self.mock_request(sale_order_id=cart.id):
             self.assertDictEqual(cart._get_claimable_and_showable_rewards(), {
                 coupon: self.program.reward_ids,
             })
