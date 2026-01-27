@@ -13,6 +13,8 @@ import email.utils
 from email.utils import getaddresses as orig_getaddresses
 from urllib.parse import urlparse
 import html as htmllib
+import tinycss2
+from tinycss2 import ast,color3
 
 import idna
 import markupsafe
@@ -102,6 +104,11 @@ class _Cleaner(clean.Cleaner):
             for position in ['top', 'bottom', 'left', 'right']
             for attribute in ('style', 'color', 'width', 'left-radius', 'right-radius')]
     )
+    _style_shorthand = {
+        'background': 'bg_shorthand_classification'
+    }
+
+    
 
     strip_classes = False
     sanitize_style = False
@@ -124,6 +131,43 @@ class _Cleaner(clean.Cleaner):
         if el.attrib.get('class'):
             del el.attrib['class']
 
+    _BG_REPEAT = {'repeat', 'repeat-x', 'repeat-y', 'no-repeat', 'space', 'round'}
+    _BG_POSITION = {'center', 'top', 'bottom', 'left', 'right'}
+    _BG_SIZE = {'cover', 'contain', 'auto'}
+
+    def bg_shorthand_classification(self,item):
+        if isinstance(item, ast.URLToken):
+            return ('background-image', item.serialize())
+        if isinstance(item, ast.FunctionBlock) and item.name == 'url':
+            return ('background-image', item.serialize())
+        if isinstance(item, ast.HashToken):
+            color = color3.parse_color(item)
+            if color:
+                return ('background-color',item.serialize())
+        if isinstance(item,ast.IdentToken):
+            color = color3.parse_color(item.serialize())
+            if color:
+                return ('background-color',item.value)
+            val = item.value.lower()
+            if val in self._BG_POSITION:
+                return ('background-position', item.value)
+            if val in self._BG_SIZE:
+                return ('background-size', item.value)
+            if val in self._BG_REPEAT:
+                return ('background-repeat', item.value)
+
+    def shorthand_sanitization(self,style):
+        method = getattr(self,self._style_shorthand[style[0]])
+        css = f'{style[0]}: {style[1]}'
+        rules = tinycss2.parse_blocks_contents(css,skip_comments=True,skip_whitespace=True)
+        longhands = []
+        if rules[0]: 
+            for item in rules[0].value:
+                classified_tuple = method(item)
+                if classified_tuple:
+                    longhands.append(classified_tuple)
+        return longhands
+
     def parse_style(self, el):
         attributes = el.attrib
         styling = attributes.get('style')
@@ -131,6 +175,8 @@ class _Cleaner(clean.Cleaner):
             valid_styles = collections.OrderedDict()
             styles = self._style_re.findall(styling)
             for style in styles:
+                if style[0].lower() in self._style_shorthand.keys():
+                    valid_styles.update(self.shorthand_sanitization(style))
                 if style[0].lower() in self._style_whitelist:
                     valid_styles[style[0].lower()] = style[1]
             if valid_styles:
