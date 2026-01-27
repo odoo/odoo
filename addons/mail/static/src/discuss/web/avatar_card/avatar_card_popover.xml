@@ -22,19 +22,7 @@
                                     <i class="oi oi-ellipsis-v"/>
                                 </button>
                                 <t t-set-slot="content">
-                                    <DropdownItem t-if="canSetAdmin" onSelected="() => this.setChannelRole('admin')">
-                                        Set Channel Admin
-                                    </DropdownItem>
-                                    <DropdownItem t-if="canRemoveAdmin or canRemoveOwner" onSelected="() => this.setChannelRole(false)">
-                                        <t t-if="canRemoveOwner">Remove Channel Owner</t>
-                                        <t t-if="canRemoveAdmin">Remove Channel Admin</t>
-                                    </DropdownItem>
-                                    <DropdownItem t-if="canSetOwner" onSelected="() => this.setChannelRole('owner')">
-                                        Set Channel Owner
-                                    </DropdownItem>
-                                    <DropdownItem t-if="canRemoveMember" onSelected.bind="onClickRemove">
-                                        <span class="text-danger">Remove from Channel</span>
-                                    </DropdownItem>
+                                    <ActionList actions="chanelMemberActions.actions" dropdown="true"/>
                                 </t>
                             </Dropdown>
                         </div>
