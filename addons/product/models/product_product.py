@@ -402,16 +402,7 @@ class ProductProduct(models.Model):
     def _compute_product_document_count(self):
         for product in self:
             product.product_document_count = product.env['product.document'].search_count(
-                Domain.OR([
-                    Domain.AND([
-                        Domain('res_model', '=', 'product.product'),
-                        Domain('res_id', 'in', product.ids),
-                    ]),
-                    Domain.AND([
-                        Domain('res_model', '=', 'product.template'),
-                        Domain('res_id', 'in', product.product_tmpl_id.ids),
-                    ]),
-                ])
+                product._get_product_document_domain()
             )
 
     @api.depends('product_tag_ids', 'additional_product_tag_ids')
@@ -1165,6 +1156,11 @@ class ProductProduct(models.Model):
 
     def get_contextual_price(self):
         return self._get_contextual_price()
+
+    def _get_product_document_domain(self):
+        self.ensure_one()
+        return (Domain('res_model', '=', 'product.template') & Domain('res_id', 'in', self.product_tmpl_id.ids)) \
+            | (Domain('res_model', '=', 'product.product') & Domain('res_id', 'in', self.ids))
 
     def _get_contextual_price(self):
         # FIXME VFE this won't consider ptavs extra prices, since we rely on the template price

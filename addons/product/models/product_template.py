@@ -227,9 +227,9 @@ class ProductTemplate(models.Model):
 
     def _compute_product_document_count(self):
         for template in self:
-            template.product_document_count = template.env['product.document'].search_count(
-                template._get_product_document_domain()
-            )
+            template.product_document_count = template.env[
+                'product.document'
+            ].search_count(template._get_product_document_domain())
 
     @api.depends('image_1920', 'image_1024')
     def _compute_can_image_1024_be_zoomed(self):
