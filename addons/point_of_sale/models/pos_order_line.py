@@ -168,13 +168,14 @@ class PosOrderLine(models.Model):
         )
 
         result = []
+        has_lot_expiration_date = 'expiration_date' in self.env['stock.lot']._fields
         for lot_recordset, total_quantity in groups:
             if lot_recordset:
                 result.append({
                     'id': lot_recordset.id,
                     'name': lot_recordset.name,
                     'product_qty': total_quantity,
-                    'expiration_date': lot_recordset.expiration_date,
+                    'expiration_date': lot_recordset.expiration_date if has_lot_expiration_date else False,
                 })
 
         return result
