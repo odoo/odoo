@@ -984,7 +984,7 @@ class PropertiesDefinition(Field):
     ALLOWED_KEYS = (
         'name', 'string', 'type', 'comodel', 'default', 'suffix',
         'selection', 'tags', 'domain', 'view_in_cards', 'fold_by_default',
-        'currency_field', 'hidden',
+        'currency_field', 'hidden', 'tracking',
     )
     # those keys will be removed if the types does not match
     PROPERTY_PARAMETERS_MAP = {

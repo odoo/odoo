@@ -258,20 +258,32 @@ class Base(models.AbstractModel):
                 continue
 
             if self._fields[col_name].type == "properties":
-                definition_record_field = self._fields[col_name].definition_record
-                if self[definition_record_field] == initial_values[definition_record_field]:
-                    # track the change only if the parent changed
-                    continue
-
                 updated.add(col_name)
-                tracking_value_ids.extend(
-                    [0, 0, self.env['mail.tracking.value']._create_tracking_values_property(
-                        property_, col_name, tracked_fields[col_name], self,
-                    )]
-                    # Show the properties in the same order as in the definition
-                    for property_ in initial_value[::-1]
-                    if property_['type'] not in ('separator', 'html') and property_.get('value')
-                )
+
+                initial_properties_values_map = {prop['name']: prop for prop in initial_value}
+                new_properties_values_map = {prop['name']: prop for prop in new_value}
+                property_names = set([prop['name'] for prop in initial_value] + [prop['name'] for prop in new_value])
+
+                for name in property_names:
+                    initial_property_value = initial_properties_values_map.get(name)
+                    new_property_value = new_properties_values_map.get(name)
+
+                    if initial_property_value is None:
+                        initial_property_value = dict(new_properties_values_map[name])
+                        initial_property_value.update({'value': False})
+                    if new_property_value is None:
+                        new_property_value = dict(initial_properties_values_map[name])
+                        new_property_value.update({'value': False})
+
+                    if not new_property_value.get('tracking', False) or \
+                        initial_property_value['type'] != new_property_value['type'] or \
+                        initial_property_value['type'] in ('separator', 'html', 'signature') or \
+                        initial_property_value.get('value', False) == new_property_value.get('value', False):
+                        continue
+
+                    tracking_value_ids.append([0, 0, self.env['mail.tracking.value']._create_tracking_values_property(
+                        initial_property_value, new_property_value, col_name, tracked_fields[col_name], self,
+                    )])
                 continue
 
             updated.add(col_name)
@@ -316,11 +328,11 @@ class Base(models.AbstractModel):
                 getattr(self._fields[fname], 'track_sequence', True)
             )
 
-        sequence = get_field_sequence(fname)
-        if self._fields[fname].type == 'properties' and sequence is True:
+        if self._fields[fname].type == 'properties':
             # default properties sequence is after the definition record
             parent_sequence = get_field_sequence(self._fields[fname].definition_record)
             return 100 if parent_sequence is True else parent_sequence
+        sequence = get_field_sequence(fname)
         return 100 if sequence is True else sequence
 
     def _message_add_default_recipients(self):
