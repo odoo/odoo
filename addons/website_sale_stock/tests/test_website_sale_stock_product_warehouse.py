@@ -1,29 +1,21 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged
+from odoo.tests import HttpCase, tagged
 
 from odoo.addons.product.tests.test_product_attribute_value_config import (
     TestProductAttributeValueCommon,
 )
-from odoo.addons.website_sale.tests.common import MockRequest
 from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleStockProductWarehouse(
-    TestProductAttributeValueCommon, WebsiteSaleStockCommon
+    TestProductAttributeValueCommon, WebsiteSaleStockCommon, HttpCase,
 ):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Run the tests in another company, so the tests do not rely on the
-        # database state (eg the default company's warehouse)
-        cls.company = cls.env['res.company'].create({'name': 'Company C'})
-        cls.env.user.company_id = cls.company
-        cls.website = cls.env['website'].create({'name': 'Website Company C'})
-        cls.website.company_id = cls.company
 
         # Set two warehouses (one was created on company creation)
         cls.warehouse_1 = cls.env['stock.warehouse'].search([
@@ -32,10 +24,6 @@ class TestWebsiteSaleStockProductWarehouse(
         cls.warehouse_2 = cls._create_warehouse()
         cls.product_A = cls._create_product()
         cls.product_B = cls._create_product()
-        cls.test_env = cls.env['base'].with_context(
-            website_id=cls.website.id,
-            website_sale_product_page=True,
-        ).env
 
         # Add 10 Product A in WH1 and 15 Product 1 in WH2
         cls._add_product_qty_to_wh(cls.product_A.id, 10, cls.warehouse_1.lot_stock_id.id)
@@ -46,22 +34,48 @@ class TestWebsiteSaleStockProductWarehouse(
 
     def test_get_combination_info_free_qty_when_warehouse_is_set(self):
         self.website.warehouse_id = self.warehouse_2
-        test_env = self.test_env
-        with MockRequest(test_env, website=self.website.with_env(test_env)):
-            combination_info = self.product_A.with_env(test_env)._get_combination_info_variant()
-            self.assertEqual(combination_info['free_qty'], 15)
-        with MockRequest(test_env, website=self.website.with_env(test_env)):
-            combination_info = self.product_B.with_env(test_env)._get_combination_info_variant()
-            self.assertEqual(combination_info['free_qty'], 10)
+        combination_info = self.make_jsonrpc_request(
+            "/website_sale/get_combination_info",
+            {
+                'product_template_id': self.product_A.product_tmpl_id.id,
+                'product_id': None,
+                'combination': [],
+                'add_qty': 1,
+            },
+        )
+        self.assertEqual(combination_info['free_qty'], 15)
+        combination_info = self.make_jsonrpc_request(
+            "/website_sale/get_combination_info",
+            {
+                'product_template_id': self.product_B.product_tmpl_id.id,
+                'product_id': None,
+                'combination': [],
+                'add_qty': 1,
+            },
+        )
+        self.assertEqual(combination_info['free_qty'], 10)
 
     def test_get_combination_info_free_qty_when_no_warehouse_is_set(self):
         self.website.warehouse_id = False
-        test_env = self.test_env
-        with MockRequest(test_env, website=self.website.with_env(test_env)):
-            combination_info = self.product_A.with_env(test_env)._get_combination_info_variant()
+        combination_info = self.make_jsonrpc_request(
+            "/website_sale/get_combination_info",
+            {
+                'product_template_id': self.product_A.product_tmpl_id.id,
+                'product_id': None,
+                'combination': [],
+                'add_qty': 1,
+            },
+        )
         self.assertEqual(combination_info['free_qty'], 25)
-        with MockRequest(test_env, website=self.website.with_env(test_env)):
-            combination_info = self.product_B.with_env(test_env)._get_combination_info_variant()
+        combination_info = self.make_jsonrpc_request(
+            "/website_sale/get_combination_info",
+            {
+                'product_template_id': self.product_B.product_tmpl_id.id,
+                'product_id': None,
+                'combination': [],
+                'add_qty': 1,
+            },
+        )
         self.assertEqual(combination_info['free_qty'], 10)
 
     def test_02_update_cart_with_multi_warehouses(self):
@@ -80,7 +94,7 @@ class TestWebsiteSaleStockProductWarehouse(
             })]
         })
 
-        with MockRequest(self.env, website=self.website, sale_order_id=so.id) as req:
+        with self.mock_request(sale_order_id=so.id) as req:
             website_so = req.cart
             self.assertEqual(website_so, so)
             self.assertEqual(

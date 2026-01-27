@@ -8,7 +8,6 @@ from lxml import etree
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
-from odoo.addons.website_sale.tests.common import MockRequest
 from odoo.addons.website_sale.tests.common_gmc import WebsiteSaleGMCCommon
 
 
@@ -60,11 +59,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
     def test_gmc_xml_pricelist(self):
         self.gmc_feed.pricelist_id = self.eur_pricelist
 
-        with MockRequest(
-            self.env,
-            website=self.website,
-            website_sale_current_pl=self.pricelist.id,
-        ):
+        with self.mock_request(website_sale_current_pl=self.pricelist.id):
             gmc_xml = etree.XML(self.gmc_feed._render_gmc_feed().encode())
 
         self.assertEqual(

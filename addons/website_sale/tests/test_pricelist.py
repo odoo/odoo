@@ -10,7 +10,7 @@ from odoo.tests import tagged
 from odoo.tools import SQL
 
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, TransactionCaseWithUserDemo
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 r''' /!\/!\
 Calling `get_pricelist_available` after setting `property_product_pricelist` on
@@ -308,9 +308,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             'name': 'Product Template', 'list_price': 10.0, 'standard_price': 5.0
         })
         self.assertEqual(product_template.standard_price, 5)
-        with MockRequest(
-            self.env, website=self.website, website_sale_current_pl=pricelist.id
-        ) as request:
+        with self.mock_request(website_sale_current_pl=pricelist.id) as request:
             self.assertEqual(request.pricelist, pricelist)
             price = product_template._get_sales_prices(self.website)[product_template.id]['price_reduce']
             msg = "Template has no variants, the price should be computed based on the template's cost."
@@ -365,9 +363,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
                 'product_tmpl_id': product_tmpl.id,
             })],
         })
-        with MockRequest(
-            self.website.env, website=self.website, website_sale_current_pl=self.pricelist.id
-        ) as request:
+        with self.mock_request(website_sale_current_pl=self.pricelist.id) as request:
             self.assertEqual(request.pricelist, self.pricelist)
             res = product_tmpl._get_sales_prices(self.website)
             self.assertEqual(res[product_tmpl.id]['base_price'], 75)
@@ -438,9 +434,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             'company_id': False,
             'country_id': self.env.ref('base.be').id,
         })
-        website = self.website.with_user(self.public_user)
-        with MockRequest(
-            website.env, website=website,
+        with self.mock_request(
             website_sale_current_pl=list_benelux_2.id,
             website_sale_selected_pl_id=list_benelux_2.id
         ):
@@ -647,7 +641,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         current_pl = self.w1_pl_code
         with (
             patch('odoo.addons.website_sale.models.website.Website._get_geoip_country_code', return_value=self.BE.code),
-            MockRequest(self.env, website=self.website, website_sale_current_pl=current_pl.id),
+            self.mock_request(website_sale_current_pl=current_pl.id),
         ):
             pls = self.website.get_pricelist_available(show_visible=True)
         self.assertEqual(pls, pls_to_return + current_pl, "Only pricelists for BE, accessible en website and selectable should be returned. It should also return the applied promo pl")

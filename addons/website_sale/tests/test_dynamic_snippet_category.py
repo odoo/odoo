@@ -4,7 +4,7 @@ from odoo import Command
 from odoo.tests import tagged
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -50,7 +50,7 @@ class TestDynamicSnippetCategory(WebsiteSaleCommon):
                      'AElFTkSuQmCC',
             'public': True,
         })
-        with MockRequest(self.website.env, website=self.website):
+        with self.mock_request(user=self.env.user):
             self.website_sale.set_category_image(self.category1.id, attachment.id)
             self.assertEqual(
                 self.category1.cover_image,

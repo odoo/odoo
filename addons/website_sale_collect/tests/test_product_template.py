@@ -4,7 +4,6 @@ from datetime import datetime
 
 from odoo.tests import tagged
 
-from odoo.addons.website_sale.tests.common import MockRequest
 from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 
 
@@ -14,7 +13,7 @@ class TestProductTemplate(ClickAndCollectCommon):
     def test_out_of_stock_product_available_when_allow_continue_selling(self):
         product = self._create_product(allow_out_of_stock_order=True)
         self.free_delivery.is_published = True
-        with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id):
+        with self.mock_request(sale_order_id=self.cart.id):
             comb_info = self.env['product.template']._get_additionnal_combination_info(
                 product,
                 quantity=1,

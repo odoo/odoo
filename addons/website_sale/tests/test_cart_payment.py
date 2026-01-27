@@ -7,7 +7,7 @@ from odoo.tests.common import JsonRpcException, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
@@ -34,7 +34,7 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
         """
         for unpaid_order_tx_state in ('draft', 'cancel', 'error'):
             self.tx.state = unpaid_order_tx_state
-            with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id) as request:
+            with self.mock_request(sale_order_id=self.cart.id) as request:
                 self.assertEqual(
                     request.cart,
                     self.cart,
@@ -49,7 +49,7 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
         self.tx.provider_id.support_manual_capture = 'full_only'
         for paid_order_tx_state in ('pending', 'authorized', 'done'):
             self.tx.state = paid_order_tx_state
-            with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id) as request:
+            with self.mock_request(sale_order_id=self.cart.id) as request:
                 self.assertFalse(
                     request.cart,
                     msg=f"The transaction state '{paid_order_tx_state}' should prevent retrieving "

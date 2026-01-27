@@ -4,7 +4,6 @@ from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
-from odoo.addons.website_sale.tests.common import MockRequest
 from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 
@@ -51,7 +50,7 @@ class TestWebsiteSaleStockSaleOrderLine(HttpCase, WebsiteSaleStockCommon):
             },
         ])
 
-        with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id):
+        with self.mock_request(sale_order_id=self.cart.id):
             self.assertEqual(combo_product_line._get_max_available_qty(), 2)
             self.assertEqual(combo_product_line._get_max_line_qty(), 5)
             self.assertEqual(combo_item_line_a._get_max_available_qty(), 2)
