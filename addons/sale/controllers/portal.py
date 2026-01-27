@@ -429,6 +429,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
             ):
                 raise ValidationError(_("The provided parameters are invalid."))
 
+            if order_sudo.is_expired:
+                raise ValidationError(_("The sale order has expired."))
+
             kwargs.update({
                 # To display on the payment form; will be later overwritten when creating the tx.
                 'reference': order_sudo.name,

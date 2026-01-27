@@ -253,4 +253,4 @@ class TestBomPrice(TestBomPriceCommon):
         self.dining_table.button_bom_cost()
         self.assertEqual(self.dining_table.standard_price, 137.5, "After computing price from BoM price should be 137.5")
         scrap_wood.button_bom_cost()
-        self.assertEqual(scrap_wood.standard_price, 20.63, "After computing price from BoM price should be 20.63")
+        self.assertAlmostEqual(scrap_wood.standard_price, 20.625, msg="After computing price from BoM price should be 20.63")

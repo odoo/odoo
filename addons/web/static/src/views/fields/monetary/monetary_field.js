@@ -84,6 +84,7 @@ export class MonetaryField extends Component {
         }
         return formatMonetary(this.value, {
             digits: this.currencyDigits,
+            minDigits: this.props.useFieldDigits && this.props.record.fields[this.props.name].min_display_digits,
             currencyId: this.currencyId,
             noSymbol: !this.props.readonly || this.props.hideSymbol,
         });

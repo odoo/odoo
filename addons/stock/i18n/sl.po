@@ -10,7 +10,7 @@
 # Wil Odoo, 2025
 # Aleš Pipan, 2025
 # Tadej Vengust <tadej.vengust@implex.si>, 2025.
-# Jan Zorko <jan.zorko@implex.si>, 2025.
+# Jan Zorko <jan.zorko@implex.si>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Žiga Trček <ziga.trcek@implex.si>, 2025, 2026.
 msgid ""
@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-01-17 09:09+0000\n"
-"Last-Translator: Žiga Trček <ziga.trcek@implex.si>\n"
+"PO-Revision-Date: 2026-01-24 09:15+0000\n"
+"Last-Translator: Jan Zorko <jan.zorko@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/stock/"
 "sl/>\n"
 "Language: sl\n"
@@ -699,7 +699,7 @@ msgstr "<span>Tip paketa: </span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
 msgid "<span>Products with no package assigned</span>"
-msgstr "<span>Proizvodi brez dodeljenega paketa</span>"
+msgstr "<span>Izdelki brez dodeljenega paketa</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -957,7 +957,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Add a Product"
-msgstr "Dodaj proizvod"
+msgstr "Dodaj izdelek"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
@@ -1088,7 +1088,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "All Products"
-msgstr "Vsi proizvodi"
+msgstr "Vsi izdelki"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
@@ -1199,12 +1199,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_selectable
 msgid "Applicable on Product"
-msgstr "Uporabljivo pri proizvodu"
+msgstr "Uporabljivo pri izdelku"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_categ_selectable
 msgid "Applicable on Product Category"
-msgstr "Uporabljivo pri kategoriji proizvoda"
+msgstr "Uporabljivo pri kategoriji izdelka"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__warehouse_selectable
@@ -1400,7 +1400,7 @@ msgstr "Razpoložljivo"
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Available Products"
-msgstr "Razpoložljivi proizvodi"
+msgstr "Razpoložljivi izdelki"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__available_quantity
@@ -1562,8 +1562,8 @@ msgid ""
 msgstr ""
 "Privzeto bo sistem vzel iz zaloge na izvorni lokaciji in pasivno čakal na "
 "razpoložljivost. Druga možnost omogoča neposredno ustvariti oskrbovanje na "
-"izvorni lokaciji (in tako prezreti trenutno zalogo) za zbiranje proizvodov. "
-"Če želimo verižne premike in da ta premik mora čakati prejšnjega, se izbere "
+"izvorni lokaciji (in tako prezreti trenutno zalogo) za zbiranje izdelkov. Če "
+"želimo verižne premike in da ta premik mora čakati prejšnjega, se izbere "
 "prav ta, druga, možnost."
 
 #. module: stock
@@ -2354,7 +2354,7 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"Trenutna količina proizvodov.\n"
+"Trenutna količina izdelkov.\n"
 "V kontekstu posamezne lokacije zaloge vključuje blago shranjeno na tej "
 "lokaciji ali njej podrejenih lokacijah.\n"
 "V kontekstu posameznega skladišča vključuje blago shranjeno na lokaciji "
@@ -6665,7 +6665,7 @@ msgstr "Kategorije izdelkov"
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Product Category"
-msgstr "Kategorija proizvoda"
+msgstr "Kategorija izdelka"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_report_label
@@ -6706,7 +6706,7 @@ msgstr "Premiki zaloge"
 #. module: stock
 #: model:ir.model,name:stock.model_product_packaging
 msgid "Product Packaging"
-msgstr "Pakiranje proizvoda"
+msgstr "Pakiranje izdelka"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_packaging
@@ -6717,7 +6717,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_product_packagings
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Product Packagings"
-msgstr "Pakiranja proizvoda"
+msgstr "Pakiranja izdelka"
 
 #. module: stock
 #. odoo-python
@@ -6815,7 +6815,7 @@ msgstr "Nalepka za mersko enoto izdelka"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__has_tracking
 msgid "Product with Tracking"
-msgstr "Proizvod s sledenjem"
+msgstr "Izdelek s sledenjem"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__production
@@ -6940,7 +6940,7 @@ msgstr "Dajte v paket"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Put your products in packs (e.g. parcels, boxes) and track them"
 msgstr ""
-"Polaganje proizvodov v pakiranja (npr. škatle, zaboji) in sledenje pakiranjem"
+"Polaganje izdelkov v pakiranja (npr. škatle, zaboji) in sledenje pakiranjem"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_putaway_rule
@@ -7134,7 +7134,7 @@ msgstr "Količina na zalogi, ki je še lahko rezervirana za ta premik"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__product_qty
 msgid "Quantity in the default UoM of the product"
-msgstr "Količina v privzeti EM proizvoda"
+msgstr "Količina v privzeti EM izdelka"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -7165,7 +7165,7 @@ msgstr ""
 msgid ""
 "Quantity of products in this quant, in the default unit of measure of the "
 "product"
-msgstr "Količina proizvodov v tem kvantu v privzeti EM proizvoda"
+msgstr "Količina izdelkov v tem kvantu v privzeti EM izdelka"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__reserved_quantity
@@ -7813,7 +7813,7 @@ msgid ""
 "on products and product categories"
 msgstr ""
 "Proge bodo ustvarjene za ta oskrbovalna skladišča. Lahko jih izbirate na "
-"proizvodih in kategorijah proizvodov."
+"izdelkih in kategorijah izdelkov"
 
 #. module: stock
 #. odoo-python
@@ -8055,7 +8055,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr "Prodaja in nabava proizvodov v različnih merskih enotah"
+msgstr "Prodaja in nabava izdelkov v različnih merskih enotah"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8207,7 +8207,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set owner on stored products"
-msgstr "Nastavite lastnika na uskladiščenih proizvodih"
+msgstr "Nastavite lastnika na uskladiščenih izdelkih"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9239,10 +9239,10 @@ msgid ""
 "demand flow. The requested delivery address will be the customer delivery "
 "address and not your warehouse."
 msgstr ""
-"To proizvodom doda drop-ship progo, da lahko od dobaviteljev zahtevate "
-"dostavo neposredno kupcem. Tak proizvod ob potrditvi prodajnega naloga "
-"generira zahtevo po nabavnem predračunu. To je delotok na zahtevo. Zahtevani "
-"naslov za dostavo bo kupčev naslov za dostavo in ne vaše skladišče."
+"To izdelkom doda drop-ship progo, da lahko od dobaviteljev zahtevate dostavo "
+"neposredno kupcem. Tak izdelek ob potrditvi prodajnega naloga generira "
+"zahtevo po nabavnem predračunu. To je delotok na zahtevo. Zahtevani naslov "
+"za dostavo bo kupčev naslov za dostavo in ne vaše skladišče."
 
 #. module: stock
 #. odoo-python

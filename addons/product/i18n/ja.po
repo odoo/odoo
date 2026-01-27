@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-01-10 09:08+0000\n"
+"PO-Revision-Date: 2026-01-24 09:13+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/product/"
 "ja/>\n"
@@ -254,11 +254,11 @@ msgid ""
 "                                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
-"                                            規則\n"
+"                                            ルール\n"
 "                                        </span>\n"
 "                                        <span class=\"o_stat_text\" "
 "invisible=\"pricelist_item_count != 1\">\n"
-"                                            規則\n"
+"                                            ルール\n"
 "                                        </span>"
 
 #. module: product
@@ -394,7 +394,7 @@ msgid ""
 "discounts, etc."
 msgstr ""
 "価格は、プロダクト、プロダクトカテゴリ、日付、オーダ数量に基づいて販売オーダ"
-"明細の価格を計算するための一連の販売価格または規則です。\n"
+"明細の価格を計算するための一連の販売価格またはルールです。\n"
 "　　これは、いくつかの価格設定、シーズン値引などを処理するために最適なツール"
 "です。"
 
@@ -1489,7 +1489,7 @@ msgstr "除外"
 #: model:ir.model.fields,help:product.field_product_pricelist_item__name
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price
 msgid "Explicit rule name for this pricelist line."
-msgstr "この価格表明細の明示的な規則名。"
+msgstr "この価格表明細の明示的なルール名。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__extra_html
@@ -1599,8 +1599,8 @@ msgid ""
 "the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
-"規則を適用するには、購入/販売数量は、このフィールドで指定された最小量以上でな"
-"ければなりません。\n"
+"ルールを適用するには、購入/販売数量は、このフィールドで指定された最小量以上で"
+"なければなりません。\n"
 "これは製品のデフォルトの単位です。"
 
 #. module: product
@@ -2327,7 +2327,7 @@ msgstr "配信エラーが発生されたメッセージ数"
 #: model:ir.model.fields,field_description:product.field_product_product__pricelist_item_count
 #: model:ir.model.fields,field_description:product.field_product_template__pricelist_item_count
 msgid "Number of price rules"
-msgstr "価格規則の数"
+msgstr "価格ルールの数"
 
 #. module: product
 #: model:product.template,name:product.product_delivery_01_product_template
@@ -2477,20 +2477,20 @@ msgstr "まずプロダクトを選択して下さい。"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Please specify the category for which this rule should be applied"
-msgstr "この規則を適用するカテゴリを指定して下さい。"
+msgstr "このルールを適用するカテゴリを指定して下さい。"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Please specify the product for which this rule should be applied"
-msgstr "この規則を適用するプロダクトを指定して下さい。"
+msgstr "このルールを適用するプロダクトを指定して下さい。"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
 "Please specify the product variant for which this rule should be applied"
-msgstr "この規則を適用するプロダクトバリアントを指定して下さい。"
+msgstr "このルールを適用するプロダクトバリアントを指定して下さい。"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__1
@@ -2531,7 +2531,7 @@ msgstr "価格の丸め"
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Price Rules"
-msgstr "価格規則"
+msgstr "価格ルール"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2596,14 +2596,14 @@ msgstr "価格表レポートプレビュー"
 #: model:ir.model,name:product.model_product_pricelist_item
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Pricelist Rule"
-msgstr "価格表規則"
+msgstr "価格票ルール"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__item_ids
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Pricelist Rules"
-msgstr "価格表規則"
+msgstr "価格票ルール"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -2961,7 +2961,7 @@ msgstr "プロダクト価格表"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 msgid "Products Price Rules Search"
-msgstr "プロダクト価格規則検索"
+msgstr "プロダクト価格ルール検索"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -3141,7 +3141,7 @@ msgstr "行"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
-msgstr "規則ヒント"
+msgstr "ルールヒント"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
@@ -3252,18 +3252,16 @@ msgstr ""
 msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
-msgstr ""
-"この規則が1つのプロダクトにのみ適用される場合、プロダクトを指定します。 それ"
-"以外の場合は空白にしておきます。"
+msgstr "このルールが1つのプロダクトにのみ適用される場合、プロダクトを指定します。 そ"
+"れ以外の場合は空白にしておきます。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_tmpl_id
 msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
-msgstr ""
-"この規則が1つのプロダクトテンプレートにのみ適用される場合は、テンプレートを指"
-"定します。 それ以外の場合は空白にしておきます。"
+msgstr "このルールが1つのプロダクトテンプレートにのみ適用される場合は、テンプレートを"
+"指定します。 それ以外の場合は空白にしておきます。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
@@ -3751,7 +3749,7 @@ msgstr "URL"
 msgid ""
 "Use the discount rules and activate the discount settings in order to show "
 "discount to customer."
-msgstr "割引規則を使用し、顧客に割引を表示するために割引設定を有効化します。"
+msgstr "割引ルールを使用し、顧客に割引を表示するために割引設定を有効化します。"
 
 #. module: product
 #. odoo-python
