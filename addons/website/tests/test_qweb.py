@@ -190,7 +190,7 @@ class TestQweb(TransactionCaseWithUserDemo):
 
         def invalidate(*args):
             if 'templates' in args:
-                env.registry.clear_cache('templates')
+                env.transaction.invalidate_ormcache('templates')
             if 'view' in args:
                 IrUiView.invalidate_model()
 

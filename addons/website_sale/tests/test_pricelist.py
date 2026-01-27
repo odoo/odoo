@@ -645,7 +645,7 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
                     id_text=str(self.env.user.partner_id.id),
                 )
             )
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
 
         # set different country groups on pricelists
         c_EUR = self.env.ref("base.europe")

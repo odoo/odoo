@@ -165,7 +165,7 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
         # Ensure the cache is invalidated, it is not needed at the time but some
         # code might one day go through _get_website_id_from_domain
         # before reaching this code, making this test useless
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         failed = False
         # website is added in ir.rule context only when in frontend
         with MockRequest(self.env, website=self.website):

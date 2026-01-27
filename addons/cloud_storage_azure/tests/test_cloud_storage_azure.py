@@ -81,12 +81,12 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
             get_cloud_storage_azure_user_delegation_key(self.env)
             self.assertEqual(request_num, 2, 'user_delegation_key should be reused if configuration is not changed')
 
-            self.env.registry.clear_cache()
+            self.env.transaction.invalidate_ormcache()
             get_cloud_storage_azure_user_delegation_key(self.env)
             self.assertEqual(request_num, 2, 'user_delegation_key should be reused if configuration is not changed')
 
             self.env['ir.config_parameter'].set_str('cloud_storage_azure_account_name', 'newaccountname2')
-            self.env.registry.clear_cache()
+            self.env.transaction.invalidate_ormcache()
             get_cloud_storage_azure_user_delegation_key(self.env)
             self.assertEqual(request_num, 4, '2 requests to create new user_delegation_key when the configuration is changed')
 

@@ -278,15 +278,15 @@ class TestUsers(UsersCommonCase):
         request_patch.start()
 
         self.assertEqual(user.context_get()['lang'], 'fr_FR')
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         user.lang = False
 
         self.assertEqual(user.context_get()['lang'], 'es_ES')
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         request_patch.stop()
 
         self.assertEqual(user.context_get()['lang'], 'de_DE')
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         company.lang = False
 
         self.assertEqual(user.context_get()['lang'], 'en_US')
@@ -465,7 +465,7 @@ class TestUsers2(UsersCommonCase):
         self.assertEqual(view_group_hierarchy_fr['groups'][group_system.id]['name'], 'Administrateur')
 
         # Should work the other way around too
-        self.env.registry.clear_cache('groups')
+        self.env.transaction.invalidate_ormcache('groups')
         view_group_hierarchy_fr = self.env['res.groups'].with_context(lang='fr_FR')._get_view_group_hierarchy()
         view_group_hierarchy_en = self.env['res.groups']._get_view_group_hierarchy()
         self.assertNotEqual(view_group_hierarchy_en['groups'][group_system.id]['name'], 'Administrateur')

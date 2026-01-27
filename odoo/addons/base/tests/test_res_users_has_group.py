@@ -323,7 +323,7 @@ class TestHasGroup(TransactionCase):
             cache = self.registry._Registry__caches['default']
             self.assertEqual(bool(cache.get(key)), filled, message)
 
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         check_cache(False)
 
         self.test_user.has_group('test_user_has_group.group0')

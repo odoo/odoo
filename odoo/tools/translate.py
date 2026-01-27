@@ -2063,7 +2063,7 @@ class TranslationImporter:
         self.model_translations.clear()
 
         env.invalidate_all()
-        env.registry.clear_cache()
+        env.transaction.invalidate_ormcache()
         if self.verbose:
             _logger.info("translations are loaded successfully")
 

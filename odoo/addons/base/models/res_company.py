@@ -395,7 +395,7 @@ class ResCompany(models.CachedModel):
         if any(self._ids) and not self._clear_asset_cache_on_fields.isdisjoint(vals):
             # this is used in the content of an asset (see asset_styles_company_report)
             # and thus needs to invalidate the assets cache when this is changed
-            self.env.registry.clear_cache('assets')  # not 100% it is useful a test is missing if it is the case
+            self.env.transaction.invalidate_ormcache('assets')  # not 100% it is useful a test is missing if it is the case
 
         # Archiving a company should also archive all of its branches
         if vals.get('active') is False:

@@ -144,13 +144,13 @@ class TestRules(TransactionCase):
         self.assertFalse(ObjCateg.with_context(only_media=True).search([]))
 
         # record1 is food and is accessible with an empy context
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         records = SomeObj.search([('id', '=', self.allowed.id)])
         self.assertTrue(records)
 
         # it should also be accessible as the context is not used when
         # searching for SomeObjs
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         records = SomeObj.with_context(only_media=True).search([('id', '=', self.allowed.id)])
         self.assertTrue(records)
 

@@ -63,7 +63,7 @@ class WebsiteAssets(models.AbstractModel):
             # If it was already modified, simply override the corresponding
             # attachment content
             custom_attachment.write({"raw": raw})
-            self.env.registry.clear_cache('assets')
+            self.env.transaction.invalidate_ormcache('assets')
         else:
             # If not, create a new attachment to copy the original scss/js file
             # content, with its modifications

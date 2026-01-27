@@ -181,7 +181,7 @@ class WebsitePagePropertiesBase(models.TransientModel):
 
     def write(self, vals):
         if 'is_published' in vals and any(self._ids):
-            self.env.registry.clear_cache('templates')
+            self.env.transaction.invalidate_ormcache('templates')
         return super().write(vals)
 
 

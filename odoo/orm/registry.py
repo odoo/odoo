@@ -996,9 +996,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
             for table in missing_tables:
                 _logger.error("Model %s has no table.", table2model[table])
 
-    def clear_cache(self, cache_name: str = 'default') -> None:
-        """ Clear the caches associated to methods decorated with
-        ``tools.ormcache``if cache is in `cache_name` subset. """
+    def _clear_cache(self, cache_name: str = 'default') -> None:
+        """ Implementation of Transaction.invalidate_ormcache """
         assert '.' not in cache_name
         for cache in _CACHES_BY_KEY[cache_name]:
             self.__caches[cache].clear()
