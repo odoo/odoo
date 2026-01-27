@@ -57,9 +57,13 @@ export class TableOfContentOptionPlugin extends Plugin {
         return root;
     }
 
+    getNavbarContainer(tableOfContentEl) {
+        return tableOfContentEl.querySelector(".s_table_of_content_navbar");
+    }
+
     updateTableOfContentNavbar(tableOfContentMain) {
         const tableOfContent = tableOfContentMain.closest(".s_table_of_content");
-        const tableOfContentNavbar = tableOfContent.querySelector(".s_table_of_content_navbar");
+        const tableOfContentNavbar = this.getNavbarContainer(tableOfContent);
         const currentNavbarItems = [...tableOfContentNavbar.children].map((el) => ({
             title: el.textContent,
             href: el.getAttribute("href"),
@@ -159,7 +163,7 @@ export class TableOfContentOptionPlugin extends Plugin {
             itemEl.textContent = title;
             itemEl.setAttribute("href", `#${tocHeadingId}`);
 
-            itemEl.className = `table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0 table_of_content_link_depth_${depthLevel}`;
+            itemEl.className = `o_translate_inline table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0 table_of_content_link_depth_${depthLevel}`;
             tableOfContentNavbar.appendChild(itemEl);
             el.setAttribute("id", tocHeadingId);
         }

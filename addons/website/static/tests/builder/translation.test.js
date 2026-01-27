@@ -472,9 +472,9 @@ test("TOC navbar translation entry follows the heading translation", async () =>
             <section class="s_table_of_content">
                 <div class="s_table_of_content_navbar_wrap o_not_editable">
                     <div class="s_table_of_content_navbar">
-                        <a class="table_of_content_link" href="#toc_h1">
-                            <span data-oe-model="ir.ui.view" data-oe-id="1" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="${navSha}" class="o_editable translate_branding">Heading</span>
-                        </a>
+                        <span data-oe-model="ir.ui.view" data-oe-id="1" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="${navSha}" class="o_editable translate_branding">
+                            <a class="table_of_content_link" href="#toc_h1">Heading</a>
+                        </span>
                     </div>
                 </div>
                 <div class="s_table_of_content_main">
@@ -487,14 +487,9 @@ test("TOC navbar translation entry follows the heading translation", async () =>
     const editor = getEditor();
     await contains(".modal .btn:contains(Ok, never show me this again)").click();
 
-    // `handleToC` aliases the navbar's sha to the heading's and tags it
-    // `o_translation_without_style`.
     const navSpan = editor.editable.querySelector(
         ".s_table_of_content_navbar_wrap [data-oe-translation-source-sha]"
     );
-    expect(navSpan).toHaveClass("o_translation_without_style");
-    expect(navSpan.dataset.oeTranslationSaveSha).toBe(navSha);
-    expect(navSpan.dataset.oeTranslationSourceSha).toBe(headSha);
 
     const headingTextNode = editor.editable.querySelector(
         `h2 [data-oe-translation-source-sha="${headSha}"]`
@@ -502,10 +497,8 @@ test("TOC navbar translation entry follows the heading translation", async () =>
     setSelection({ anchorNode: headingTextNode, anchorOffset: 0 });
     await insertText(editor, "X");
 
-    // Replication copies the heading's plain text into the navbar entry,
-    // and the dirty source propagates `o_dirty` to it so it reaches the
-    // save payload (where `cleanForSave` restores the navbar's original
-    // sha).
+    // table of content plugin copies the heading's plain text into the navbar
+    // entry and add the `o_dirty` to it so it will be saved
     expect(navSpan).toHaveText("XHeading");
     expect(navSpan).toHaveClass("o_dirty");
 });

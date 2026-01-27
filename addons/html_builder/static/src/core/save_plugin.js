@@ -11,6 +11,7 @@ import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
  * @property { SavePlugin['save'] } save
  * @property { SavePlugin['ignoreDirty'] } ignoreDirty
  * @property { SavePlugin['groupElements'] } groupElements
+ * @property { SavePlugin['setDirtyElement'] } setDirtyElement
  */
 
 /**
@@ -31,7 +32,7 @@ import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
-    static shared = ["save", "ignoreDirty", "groupElements"];
+    static shared = ["save", "ignoreDirty", "groupElements", "setDirtyElement"];
     static dependencies = ["history", "domReferenceMap"];
 
     /** @type {import("plugins").BuilderResources} */
@@ -192,5 +193,9 @@ export class SavePlugin extends Plugin {
         return () => {
             this.canObserve = true;
         };
+    }
+
+    setDirtyElement(el) {
+        el.classList.add("o_dirty");
     }
 }
