@@ -26,11 +26,42 @@ Railway / Cloud Run では本番構成、ローカルでは快適なデバッグ
 
 両方の環境を Docker コマンドだけで切り替えて利用できるようにする
 
+
+🔧 0. 概要（デバッグ環境構築コマンド）
+# 1) コンテナ停止 + 削除
+docker compose -f docker-compose.dev.yml down
+
+# 2) 不要な volume（DB データ）を削除
+docker volume rm odoo_local_company_db-data  # 実際の volume 名に合わせて
+# or 全削除（他プロジェクトも消えるので注意）
+# docker volume prune -f
+
+# 3) 既存イメージ削除（ビルドし直したい場合）
+docker rmi odoo19-web-debug || true
+
+# 4) 再ビルド
+docker compose -f docker-compose.dev.yml build --no-cache
+
+# 5) 再起動
+docker compose -f docker-compose.dev.yml up -d
+
+
+# 1) コンテナ停止・削除
+docker compose -f docker-compose.dev.yml down
+
+# 2) 新しい compose 設定で DB 起動
+docker compose -f docker-compose.dev.yml up -d db
+
+# 3) ポートマッピング確認
+docker inspect odoo19-db --format "{{json .NetworkSettings.Ports}}"
+
+
+
 🔧 1. デバッグ用イメージのビルド方法
 
 Dockerfile.debug を使用する場合、-f オプションで Dockerfile を指定します。
 
-docker build -t odoo-debug -f Dockerfile.debug .
+* docker build -t odoo-debug -f Dockerfile.debug .
 
 -t の意味
 
@@ -47,18 +78,22 @@ docker run --name odoo-debug \
   odoo-debug
 
 または下記コマンド
-docker run --name odoo-debug -p 8069:8069 -p 5678:5678 odoo-debug
+
+* docker run --name odoo-debug -p 8069:8069 -p 5678:5678 odoo-debug
 
 よく使うポート
 ポート	用途
 8069	Odoo Web UI
 5678	debugpy（VSCode のリモートデバッグ接続用）
 🆚 3. 本番（プロダクション）用 Dockerfile との切り替え
+
 本番用 Dockerfile からイメージをビルド
-docker build -t odoo-prod -f Dockerfile .
+
+* docker build -t odoo-prod -f Dockerfile .
 
 本番用イメージの起動
-docker run --name odoo-prod -p 8069:8069 odoo-prod
+
+* docker run --name odoo-prod -p 8069:8069 odoo-prod
 
 🔄 4. デバッグ環境と本番環境の併用
 
