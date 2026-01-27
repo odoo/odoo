@@ -18,13 +18,13 @@
                         or service_tracking not in ['no', 'task_global_project', 'task_in_project', 'project_only']"
                     class="fst-italic text-muted"
                 >
-                    Warn the salesperson for an upsell when work done exceeds
+                    Notify the salesperson about an upsell opportunity when completed work exceeds
                     <field
                         name="service_upsell_threshold"
                         widget="percentage"
-                        class="oe_inline o_field_highlight"
+                        class="fst-normal oe_inline o_field_highlight text-body"
                     />
-                    of hours sold. <field name="service_upsell_threshold_ratio" class="oe_inline" invisible="not service_upsell_threshold_ratio"/>
+                    of the hours sold. <field name="service_upsell_threshold_ratio" class="oe_inline" invisible="not service_upsell_threshold_ratio"/>
                 </div>
             </field>
         </field>
