@@ -104,10 +104,12 @@ class PrinterInterface(Interface):
     def get_identifier(self, path: str):
         """
         Necessary because the path is not always a valid Cups identifier,
-        as it may contain characters typically found in URLs or paths.
+        as it may contain characters typically found in URLs or paths,
+        or it may exceed the length limit.
 
           - Removes characters: ':', '/', '.', '\', and space.
           - Removes the exact strings: "uuid=" and "serial=".
+          - Truncates the string to 127 characters.
 
         Example 1:
             Input: "ipp://printers/printer1:1234/abcd"
@@ -122,7 +124,7 @@ class PrinterInterface(Interface):
             mac_address = self.get_mac_from_ip(ip)
             if mac_address:
                 path = path.replace(ip, mac_address)
-        return re.sub(r'[:\/\.\\ ]|(uuid=)|(serial=)', '', path)
+        return re.sub(r'[:\/\.\\ ]|(uuid=)|(serial=)', '', path)[:127]
 
     def get_ip(self, device_path):
         hostname = urlsplit(device_path).hostname
