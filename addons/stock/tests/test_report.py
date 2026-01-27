@@ -1041,8 +1041,9 @@ class TestReports(TestReportsCommon):
         delivery = delivery_form.save()
         delivery.action_confirm()
 
+        gamejoy_pocket_blue.action_archive()
         report_values, docs, lines = self.get_report_forecast(product_template_ids=product_template.ids)
-        self.assertEqual(len(lines), 8, "Still must have 8 lines.")
+        self.assertEqual(len(lines), 6, "Must exclude the archived product and therefore have 6 lines")
         self.assertEqual(docs['product_variants_ids'], product_template.product_variant_ids.ids)
         # 2 lines should be about the "Game Joy Pocket (gray)"
         # and must link the delivery with the two receipt lines.
