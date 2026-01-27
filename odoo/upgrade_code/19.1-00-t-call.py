@@ -150,7 +150,7 @@ def remove_tset_add_inherit_attribute(tset, container):
         tset.getparent().remove(tset)
 
 
-def change(root: etree._ElementTree) -> bool:
+def change(root: etree._ElementTree, path: str) -> bool:
     content_updated = False
     for tcall in root.xpath('//*[@t-call or @t-snippet-call][not(@position="inside")]'):
 
@@ -174,7 +174,8 @@ def change(root: etree._ElementTree) -> bool:
                 continue
 
             if 'rewrite' in used:
-                raise ValueError(f"Can not determine the position of the rewrited t-set: {tset.get('t-set')!r}")
+                log.info("Can not determine the position of the rewrited t-set: '%s' in '%s'", tset.get('t-set'), path)
+                break
 
             # Move the t-set if the are some content or if it's used for an
             # other t-set else we can remove it and add as an attribute.
@@ -263,7 +264,7 @@ def upgrade(file_manager: FileManager):
             content = file.content
 
             if ('t-call=' in content or 't-snippet-call=' in content) and 't-set=' in content:
-                content = update_etree(content, change)
+                content = update_etree(content, lambda root: change(root, str(file.path)))
                 content = AUTO_CLOSE_T.sub(r"\g<1>/>", content)
                 file.content = content
         except Exception as e:  # noqa: BLE001
