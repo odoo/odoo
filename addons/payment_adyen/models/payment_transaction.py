@@ -339,6 +339,7 @@ class PaymentTransaction(models.Model):
         return {
             'amount': amount,
             'currency_code': currency_code,
+            'precision_digits': const.CURRENCY_DECIMALS.get(self.currency_id.name),
         }
 
     def _apply_updates(self, payment_data):
