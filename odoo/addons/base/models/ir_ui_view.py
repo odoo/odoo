@@ -1021,7 +1021,15 @@ actual arch.
         for node in tree.xpath('//*[@groups]'):
             attrib_groups = node.attrib.pop('groups')
             if attrib_groups and not self.user_has_groups(attrib_groups):
-                node.getparent().remove(node)
+                tail = node.tail
+                parent = node.getparent()
+                previous = node.getprevious()
+                parent.remove(node)
+                if tail:
+                    if previous is not None:
+                        previous.tail = (previous.tail or '') + tail
+                    elif parent is not None:
+                        parent.text = (parent.text or '') + tail
             elif node.tag == 't' and (not node.attrib or node.get('postprocess_added')):
                 # Move content of <t groups=""> blocks
                 # and remove the <t> node.
