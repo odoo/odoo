@@ -61,6 +61,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
         this.dialog = this.services.dialog;
         this.orm = this.services.orm;
         this.notification = this.services.notification;
+        this.googleMaps = this.services.google_maps;
 
         /** @type {Map<Coordinates, Place>} */
         this.gpsMapCache = new Map();
@@ -199,6 +200,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
                         });
                         this.shouldRefetchApiKey = false;
                         isInvalidated = true;
+                        this.googleMaps.invalidateGMapsAPIKeyProm();
                     },
                 },
                 {
