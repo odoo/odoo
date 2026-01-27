@@ -72,7 +72,7 @@ class test_res_lang(TransactionCase):
         dummy_data = ResLang._get_data(id=0)
 
         # test __eq__
-        self.env.registry.clear_cache('stable')
+        self.env.transaction.invalidate_ormcache('stable')
         self.assertEqual(ResLang._get_data(id=fr_id), fr_data)
         self.assertEqual(ResLang._get_data(id=0), dummy_data)
 
@@ -96,7 +96,7 @@ class test_res_lang(TransactionCase):
 
         # test performance
         self.env.transaction.clear()
-        self.env.registry.clear_cache('stable')
+        self.env.transaction.invalidate_ormcache('stable')
         # 1 query for res_lang +
         # 1 query for ir_attachment to compute `flag_image_url`
         with self.assertQueryCount(2):

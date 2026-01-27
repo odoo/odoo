@@ -41,7 +41,7 @@ class TestOrmCache(TransactionCase):
         tx_miss = counter.tx_miss
 
         # clear the caches of ir.model.data, retrieve its key and
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         self.assertNotIn(key, cache)
 
         # lookup some reference
@@ -70,12 +70,12 @@ class TestOrmCache(TransactionCase):
 
     def test_invalidation(self):
         self.assertEqual(self.env.registry.cache_invalidated, set())
-        self.env.registry.clear_cache()
-        self.env.registry.clear_cache('templates')
+        self.env.transaction.invalidate_ormcache()
+        self.env.transaction.invalidate_ormcache('templates')
         self.assertEqual(self.env.registry.cache_invalidated, {'default', 'templates'})
         self.env.transaction.reset()
         self.assertEqual(self.env.registry.cache_invalidated, set())
-        self.env.registry.clear_cache('assets')
+        self.env.transaction.invalidate_ormcache('assets')
         self.assertEqual(self.env.registry.cache_invalidated, {'assets'})
         self.env.transaction.reset()
         self.assertEqual(self.env.registry.cache_invalidated, set())
@@ -145,8 +145,8 @@ class TestOrmCacheSignaling(BaseCase):
         self.patch(self.cr, 'commit', simulated_commit)
         self.registry.cache_invalidated.clear()
         # flush once to set the nextval from the sequence
-        self.registry.clear_cache('default')
-        self.registry.clear_cache('assets')
+        self.transaction.invalidate_ormcache('default')
+        self.transaction.invalidate_ormcache('assets')
         self.cr.commit()
         self.old_sequences = dict(self.registry.cache_sequences)
 
@@ -159,7 +159,7 @@ class TestOrmCacheSignaling(BaseCase):
         registry = self.registry
 
         with self.assertLogs('odoo.registry') as logs:
-            registry.clear_cache('assets')
+            transaction.invalidate_ormcache('assets')
             self.assertEqual(self.cache_invalidated, {'assets'})
             self.cr.commit()
             self.assertFalse(self.cache_invalidated)
@@ -194,8 +194,8 @@ class TestOrmCacheSignaling(BaseCase):
         registry = self.registry
 
         with self.assertLogs('odoo.registry') as logs:
-            registry.clear_cache('assets')
-            registry.clear_cache('default')
+            transaction.invalidate_ormcache('assets')
+            transaction.invalidate_ormcache('default')
             self.assertEqual(self.cache_invalidated, {'assets', 'default'})
             self.cr.commit()
             self.assertFalse(self.cache_invalidated)

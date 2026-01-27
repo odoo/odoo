@@ -504,7 +504,7 @@ class BaseAutomation(models.Model):
         self._update_registry()
         if base_automations._has_trigger_onchange():
             # Invalidate templates cache to update on_change attributes if needed
-            self.env.registry.clear_cache('templates')
+            self.env.transaction.invalidate_ormcache('templates')
         return base_automations
 
     def write(self, vals: dict):
@@ -516,7 +516,7 @@ class BaseAutomation(models.Model):
             clear_templates |= self._has_trigger_onchange()
             if clear_templates and any(self._ids):
                 # Invalidate templates cache to update on_change attributes if needed
-                self.env.registry.clear_cache('templates')
+                self.env.transaction.invalidate_ormcache('templates')
         elif set(vals).intersection(self.RANGE_FIELDS):
             self._update_cron()
         return res
@@ -528,7 +528,7 @@ class BaseAutomation(models.Model):
         self._update_registry()
         if clear_templates:
             # Invalidate templates cache to update on_change attributes if needed
-            self.env.registry.clear_cache('templates')
+            self.env.transaction.invalidate_ormcache('templates')
         return res
 
     def copy(self, default=None):

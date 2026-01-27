@@ -179,12 +179,12 @@ class WebsiteRewrite(models.Model):
         return res
 
     def _invalidate_routing(self):
-        # Call clear_cache for routing on all workers to reload routing table.
+        # Call invalidate_ormcache for routing on all workers to reload routing table.
         # Note that only 404 and 308 redirection alter the routing map:
         # - 404: remove entry from routing map
         # - 301/302: served as fallback later if path not found in routing map
         # - 308: add "alias" (`redirect_to`) in routing map
-        self.env.registry.clear_cache('routing')
+        self.env.transaction.invalidate_ormcache('routing')
 
     def refresh_routes(self):
         self.env['website.route']._refresh()

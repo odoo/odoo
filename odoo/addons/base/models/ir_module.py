@@ -340,7 +340,7 @@ class IrModuleModule(models.Model):
     def unlink(self):
         res = super().unlink()
         if self:
-            self.env.registry.clear_cache('stable')
+            self.env.transaction.invalidate_ormcache('stable')
         return res
 
     def _get_modules_to_load_domain(self):

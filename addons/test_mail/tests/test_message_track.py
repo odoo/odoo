@@ -1277,7 +1277,7 @@ class TestTrackingInternals(TestTrackingCommon):
 
         # test editing the record with user not in the group of the field
         self.env.invalidate_all()
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         record_form = Form(self.record.with_user(self.user_employee))
         record_form.name = 'TestDoNoCrash'
         # the employee user must be able to save the fields on which they can write

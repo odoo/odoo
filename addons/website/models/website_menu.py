@@ -126,7 +126,7 @@ class WebsiteMenu(models.Model):
                   Be careful to return correct record for ir.model.data xml_id in case
                   of default main menus creation.
         '''
-        self.env.registry.clear_cache('templates')
+        self.env.transaction.invalidate_ormcache('templates')
         # Only used when creating website_data.xml default menu
         menus = self.env['website.menu']
         for vals in vals_list:
@@ -163,7 +163,7 @@ class WebsiteMenu(models.Model):
 
     def write(self, vals):
         if any(self._ids):
-            self.env.registry.clear_cache('templates')
+            self.env.transaction.invalidate_ormcache('templates')
         res = super().write(vals)
         if 'group_ids' in vals and not self.env.context.get("adding_designer_group_to_menu"):
             self.filtered("group_ids").with_context(
@@ -172,7 +172,7 @@ class WebsiteMenu(models.Model):
         return res
 
     def unlink(self):
-        self.env.registry.clear_cache('templates')
+        self.env.transaction.invalidate_ormcache('templates')
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         menus_to_remove = self
         for menu in self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id):

@@ -627,7 +627,7 @@ class TestCustomFields(TestCommonCustomFields):
         model_id = self.env['ir.model']._get_id('res.partner')
         query_count = 52
         with self.assertQueryCount(query_count):
-            self.env.registry.clear_cache()
+            self.env.transaction.invalidate_ormcache()
             self.env['ir.model.fields'].create({
                 'model_id': model_id,
                 'name': 'x_oh_box',
@@ -638,7 +638,7 @@ class TestCustomFields(TestCommonCustomFields):
 
         # same with a related field, it only takes 8 extra queries
         with self.assertQueryCount(query_count + 8):
-            self.env.registry.clear_cache()
+            self.env.transaction.invalidate_ormcache()
             self.env['ir.model.fields'].create({
                 'model_id': model_id,
                 'name': 'x_oh_boy',
@@ -773,7 +773,7 @@ class TestCustomFieldsPostInstall(TestCommonCustomFields):
 
         # 1. Intermediate non-stored → should FAIL
         with self.assertRaises(UserError):
-            self.env.registry.clear_cache()
+            self.env.transaction.invalidate_ormcache()
             self.env['ir.model.fields'].create({
                 'model_id': model_id,
                 'name': 'x_fail_intermediate_non_stored',
@@ -784,7 +784,7 @@ class TestCustomFieldsPostInstall(TestCommonCustomFields):
             })
 
         # 2. Last non-stored → should PASS
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         field = self.env['ir.model.fields'].create({
             'model_id': model_id,
             'name': 'x_pass_last_non_stored',
@@ -796,7 +796,7 @@ class TestCustomFieldsPostInstall(TestCommonCustomFields):
         self.assertTrue(field)
 
         # 3. All stored → should PASS
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         field = self.env['ir.model.fields'].create({
             'model_id': model_id,
             'name': 'x_pass_all_stored',
@@ -808,7 +808,7 @@ class TestCustomFieldsPostInstall(TestCommonCustomFields):
         self.assertTrue(field)
 
         # 4. One non-stored → should PASS
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         field = self.env['ir.model.fields'].create({
             'model_id': model_id,
             'name': 'x_pass_single_non_stored',

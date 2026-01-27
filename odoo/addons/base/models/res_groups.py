@@ -82,7 +82,7 @@ class ResGroups(models.Model):
     @api.constrains('implied_ids', 'implied_by_ids')
     def _check_disjoint_groups(self):
         # check for users that might have two exclusive groups
-        self.env.registry.clear_cache('groups')
+        self.env.transaction.invalidate_ormcache('groups')
 
         try:
             if any(
@@ -106,7 +106,7 @@ class ResGroups(models.Model):
             self._check_user_disjoint_groups()
 
         except ValidationError:
-            self.env.registry.clear_cache('groups')
+            self.env.transaction.invalidate_ormcache('groups')
             raise
 
     @api.constrains('view_access')

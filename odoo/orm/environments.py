@@ -808,6 +808,11 @@ class Transaction:
         registry._setup_models__(cr)
         self._registry_invalidated = 0  # mark transaction with valid registry
 
+    def invalidate_ormcache(self, cache_name: str = 'default') -> None:
+        """ Clear the caches associated to methods decorated with
+        ``tools.ormcache`` if cache is in `cache_name` subset. """
+        self.registry._clear_cache(cache_name)
+
     @deprecated("Since 20.0, renamed to invalidate_access_cache")
     def clear_access_cache(self, model_name: str = '') -> None:
         self.invalidate_access_cache(model_name)

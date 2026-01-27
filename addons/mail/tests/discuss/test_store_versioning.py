@@ -43,8 +43,8 @@ class TestStoreVersioning(HttpCase, MailCase):
                     record = self.env[model_name].browse(int(record_id))
                     Store(bus_channel=record).add(record, fields)
 
-        cls.env.registry.clear_cache("routing")
-        cls.addClassCleanup(cls.env.registry.clear_cache, "routing")
+        cls.env.transaction.invalidate_ormcache("routing")
+        cls.addClassCleanup(cls.env.transaction.invalidate_ormcache, "routing")
 
     def test_store_versioning_tracks_updated_fields(self):
         self.authenticate("admin_user", "admin_user")

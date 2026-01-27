@@ -264,7 +264,7 @@ class AccountAnalyticPlan(models.Model):
         related_fields = self._find_related_field()
         res = super().unlink()
         related_fields.filtered(lambda f: not self._is_subplan_field_used(f)).unlink()
-        self.env.registry.clear_cache('stable')
+        self.env.transaction.invalidate_ormcache('stable')
         return res
 
     def _hierarchy_name(self):

@@ -327,7 +327,7 @@ class Website(models.CachedModel):
         if any(key in values for key in ["cdn_activated", "cdn_url", "cdn_filters", "domain"]):
             # invalidate the caches from static node at compile time
             if any(self._ids):
-                self.env.registry.clear_cache()
+                self.env.transaction.invalidate_ormcache()
 
         # invalidate cache for `company.website_id` to be recomputed
         if 'sequence' in values or 'company_id' in values:
@@ -400,7 +400,7 @@ class Website(models.CachedModel):
 
         companies = self.company_id
         res = super().unlink()
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         companies._compute_website_id()
         return res
 

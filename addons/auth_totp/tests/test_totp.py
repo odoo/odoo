@@ -50,7 +50,7 @@ class TestTOTPMixin:
             return token
         # because not preprocessed by ControllerType metaclass
         totp_hook.routing_type = 'json'
-        self.env.registry.clear_cache('routing')
+        self.env.transaction.invalidate_ormcache('routing')
         # patch Home to add test endpoint
         Home.totp_hook = http.route('/totphook', type='jsonrpc', auth='none')(totp_hook)
 
@@ -66,7 +66,7 @@ class TestTOTPMixin:
         def _cleanup():
             del Home.totp_hook
             auth_TOTP.match = origin_match
-            self.env.registry.clear_cache('routing')
+            self.env.transaction.invalidate_ormcache('routing')
 
 
 @tagged('post_install', '-at_install')

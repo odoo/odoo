@@ -73,8 +73,7 @@ class TestPregenerateTime(HttpCase):
     def test_logs_pregenerate_time(self):
         self.env['ir.qweb']._pregenerate_assets_bundles()
         start = time.time()
-        self.env.registry.clear_cache()
-        self.env.transaction.invalidate_field_data()
+        self.env.transaction.clear()
         with self.profile(collectors=['sql', odoo.tools.profiler.PeriodicCollector(interval=0.01)], disable_gc=True):
             self.env['ir.qweb']._pregenerate_assets_bundles()
         duration = time.time() - start

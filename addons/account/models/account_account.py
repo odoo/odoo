@@ -1462,7 +1462,7 @@ class AccountAccount(models.Model):
         ))
 
         # Clear ir.model.data ormcache
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
 
         # Step 4: Change check_company fields to only keep values compatible with the account's company, and update company_ids on account.
         write_vals = {'company_ids': [Command.set(base_company.ids)]}

@@ -40,7 +40,7 @@ class ImporterCase(common.TransactionCase):
     def setUp(self):
         super().setUp()
         self.model = self.env[self.model_name]
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         self.cr.cache.clear()
 
     def import_(self, fields, rows, context=None):
@@ -1395,7 +1395,7 @@ class test_realworld(SavepointCaseWithUserDemo):
         """The content of the o2m field's dict needs to go through conversion
         as it may be composed of convertables or other relational fields
         """
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         Model = self.env['export.one2many.recursive']
         result = Model.load(
             ['value', 'child/const', 'child/child1/str', 'child/child2/value'],
@@ -1420,7 +1420,7 @@ class test_realworld(SavepointCaseWithUserDemo):
         self.assertEqual([child.value for child in b[1].child.sorted()[1].child2], [12])
 
     def test_o2m_subfields_fail_by_implicit_id(self):
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         Model = self.env['export.one2many.recursive']
         result = Model.with_context(import_file=True).load(
             ['child/child1/parent_id'],
@@ -1444,7 +1444,7 @@ class test_realworld(SavepointCaseWithUserDemo):
 
     def test_no_install_mode(self):
         """Test that the data is imported without the `install_mode` context key"""
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         Model = self.env['export.with.non.demo.constraint']
         result = Model.with_context(import_file=True).load(
             ['name'],

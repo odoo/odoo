@@ -161,8 +161,8 @@ class TestRequestRemainingCommon(HttpCase):
                 # but this makes the test more clear and robust
                 _logger.info('B finish')
 
-        cls.env.registry.clear_cache('routing')
-        cls.addClassCleanup(cls.env.registry.clear_cache, 'routing')
+        cls.env.transaction.invalidate_ormcache('routing')
+        cls.addClassCleanup(cls.env.transaction.invalidate_ormcache, 'routing')
 
     def _test_requests_a(self, cookie=False):
 

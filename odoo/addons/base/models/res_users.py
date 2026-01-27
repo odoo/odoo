@@ -372,7 +372,7 @@ class ResUsers(models.Model):
                 self._set_encrypted_password(self.env.user.id, replacement)
                 if request and self == self.env.user:
                     self.env.flush_all()
-                    self.env.registry.clear_cache()
+                    self.env.transaction.invalidate_ormcache()
                     # update session token so the user does not get logged out
                     new_token = self.env.user._compute_session_token(request.session.sid)
                     request.session.session_token = new_token
@@ -619,14 +619,14 @@ class ResUsers(models.Model):
         if 'group_ids' in vals and any(self._ids):
             # clear caches linked to the users
             self.env.invalidate_all()
-            self.env.registry.clear_cache()
+            self.env.transaction.invalidate_ormcache()
 
         # per-method / per-model caches have been removed so the various
         # clear_cache/clear_caches methods pretty much just end up calling
-        # Registry.clear_cache
+        # Transaction.invalidate_ormcache
         invalidation_fields = self._get_invalidation_fields()
         if not invalidation_fields.isdisjoint(vals) and any(self._ids):
-            self.env.registry.clear_cache()
+            self.env.transaction.invalidate_ormcache()
 
         return res
 
@@ -648,7 +648,7 @@ class ResUsers(models.Model):
         user_admin = self.env.ref('base.user_admin', raise_if_not_found=False)
         if user_admin and user_admin in self:
             raise UserError(_('You cannot delete the admin user because it is utilized in various places (such as security configurations,...). Instead, archive it.'))
-        self.env.registry.clear_cache()
+        self.env.transaction.invalidate_ormcache()
         if portal_user_template and portal_user_template in self:
             raise UserError(_('Deleting the template users is not allowed. Deleting this profile will compromise critical functionalities.'))
         if public_user and public_user in self:
@@ -857,7 +857,7 @@ class ResUsers(models.Model):
             **self._get_session_token_query_params(),
         ))
         if self.env.cr.rowcount != 1:
-            self.env.registry.clear_cache()
+            self.env.transaction.invalidate_ormcache()
             return False
         data_fields = self.env.cr.fetchone()
         # create tuple with column name and value, allowing for overrides to manipulate the values
@@ -1546,7 +1546,7 @@ class ResUsersApikeys(models.Model):
             _logger.info("API key(s) removed: scope: <%s> for '%s' (#%s) from %s",
                self.mapped('scope'), self.env.user.login, self.env.uid, ip)
             self.sudo().unlink()
-            self.env.registry.clear_cache()
+            self.env.transaction.invalidate_ormcache()
             return {'type': 'ir.actions.act_window_close'}
         raise AccessError(_("You can not remove API keys unless they're yours or you are a system user"))
 
