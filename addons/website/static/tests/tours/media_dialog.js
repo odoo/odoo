@@ -252,3 +252,61 @@ registerWebsitePreviewTour(
         },
     ]
 );
+
+registerWebsitePreviewTour(
+    "website_media_dialog_insert_file",
+    {
+        edition: true,
+    },
+    () => [
+        ...insertSnippet({
+            id: "s_text_block",
+            name: "Text",
+            groupName: "Text",
+        }),
+        {
+            content: "Click on the first paragraph",
+            trigger: ":iframe .s_text_block p",
+            run: "editor test",
+        },
+        {
+            content: "Show the powerbox",
+            trigger: ":iframe .s_text_block p:last-child",
+            async run(actions) {
+                await actions.editor(`/`);
+                const wrapwrap = this.anchor.closest("#wrapwrap");
+                wrapwrap.dispatchEvent(
+                    new InputEvent("input", {
+                        inputType: "insertText",
+                        data: "/",
+                    })
+                );
+            },
+        },
+        {
+            content: "Click on the media item from powerbox",
+            trigger: "div.o-we-command-name:contains('Media')",
+            run: "click",
+        },
+        {
+            content: "Click on the 'Documents' tab",
+            trigger: ".o_select_media_dialog button.nav-link:contains('Documents')",
+            run: "click",
+        },
+        {
+            content: "Click on the first document",
+            trigger: ".o_select_media_dialog .o_existing_attachment_cell .o_button_area",
+            run: "click",
+        },
+        {
+            content:
+                "Verify that the document was inserted and reopen the media dialog with a double click",
+            trigger: ":iframe .s_text_block p > .o_file_box",
+            run: "dblclick",
+        },
+        {
+            content: "Verify that the dialog opened on the Documents tab",
+            trigger: ".o_select_media_dialog button.nav-link.active:contains('Documents')",
+        },
+    ]
+);
