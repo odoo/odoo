@@ -214,6 +214,11 @@ class AccountTestInvoicingCommon(ProductCommon):
             ],
         })
 
+    def setUp(self):
+        # Clear the cursor cache to avoid missing error
+        self.env.cr.cache.pop('retrieved_tax_map', None)
+        super().setUp()
+
     @classmethod
     def change_company_country(cls, company, country):
         company.country_id = country
@@ -437,6 +442,9 @@ class AccountTestInvoicingCommon(ProductCommon):
     # -------------------------------------------------------------------------
 
     def group_of_taxes(self, taxes, **kwargs):
+        # Clear the cursor cache to avoid missing error
+        self.env.cr.cache.pop('retrieved_tax_map', None)
+
         self.tax_number += 1
         return self.env['account.tax'].create({
             'name': f"group_({self.tax_number})",
@@ -446,6 +454,9 @@ class AccountTestInvoicingCommon(ProductCommon):
         })
 
     def percent_tax(self, amount, **kwargs):
+        # Clear the cursor cache to avoid missing error
+        self.env.cr.cache.pop('retrieved_tax_map', None)
+
         self.tax_number += 1
         return self.env['account.tax'].create({
             'name': f"percent_{amount}_({self.tax_number})",
@@ -455,6 +466,9 @@ class AccountTestInvoicingCommon(ProductCommon):
         })
 
     def division_tax(self, amount, **kwargs):
+        # Clear the cursor cache to avoid missing error
+        self.env.cr.cache.pop('retrieved_tax_map', None)
+
         self.tax_number += 1
         return self.env['account.tax'].create({
             'name': f"division_{amount}_({self.tax_number})",
@@ -464,6 +478,9 @@ class AccountTestInvoicingCommon(ProductCommon):
         })
 
     def fixed_tax(self, amount, **kwargs):
+        # Clear the cursor cache to avoid missing error
+        self.env.cr.cache.pop('retrieved_tax_map', None)
+
         self.tax_number += 1
         return self.env['account.tax'].create({
             'name': f"fixed_{amount}_({self.tax_number})",
@@ -474,6 +491,10 @@ class AccountTestInvoicingCommon(ProductCommon):
 
     def python_tax(self, formula, **kwargs):
         self.ensure_installed('account_tax_python')
+
+        # Clear the cursor cache to avoid missing error
+        self.env.cr.cache.pop('retrieved_tax_map', None)
+
         self.tax_number += 1
         return self.env['account.tax'].create({
             'name': f"code_({self.tax_number})",
