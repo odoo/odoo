@@ -138,7 +138,7 @@ export class NavTabsTranslationPlugin extends Plugin {
     static id = "navTabsTranslation";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        force_background_translation_state_selectors: ".s_tabs_nav a",
+        force_background_translation_state_selectors: [".s_tabs_nav a", ".o_nav_tabs_description"],
     };
 }
 
