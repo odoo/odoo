@@ -57,10 +57,12 @@ class PrinterInterface(Interface):
     def get_identifier(self, path):
         """
         Necessary because the path is not always a valid Cups identifier,
-        as it may contain characters typically found in URLs or paths.
+        as it may contain characters typically found in URLs or paths,
+        or it may exceed the length limit.
 
           - Removes characters: ':', '/', '.', '\', and space.
           - Removes the exact strings: "uuid=" and "serial=".
+          - Truncates the string to 127 characters.
 
         Example 1:
             Input: "ipp://printers/printer1:1234/abcd"
@@ -70,4 +72,4 @@ class PrinterInterface(Interface):
             Input: "uuid=1234-5678-90ab-cdef"
             Output: "1234-5678-90ab-cdef
         """
-        return sub(r'[:\/\.\\ ]|(uuid=)|(serial=)', '', path)
+        return sub(r'[:\/\.\\ ]|(uuid=)|(serial=)', '', path)[:127]
