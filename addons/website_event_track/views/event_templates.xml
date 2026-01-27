@@ -8,7 +8,7 @@
             <div class="col-12">
                 <h3>Book your seats to the best talks</h3>
                 <p>Get prepared and
-                    <a class="o_translate_inline" t-att-href="'/event/%s/track' % (slug(event))">register to your favorites talks now.</a>
+                    <a t-att-href="'/event/%s/track' % (slug(event))">register to your favorites talks now.</a>
                 </p>
             </div>
         </div>
@@ -20,7 +20,7 @@
         <div t-if="event.website_track and event._has_published_track()" class="row mt-4">
             <div class="col-12">
                 <p class="mb-0">Get prepared and
-                    <a class="o_translate_inline" t-att-href="'/event/%s/track' % (slug(event))">register to your favorites talks now.</a>
+                    <a t-att-href="'/event/%s/track' % (slug(event))">register to your favorites talks now.</a>
                 </p>
             </div>
         </div>
@@ -73,7 +73,7 @@
                             </span>
                             <p>This page hasn't been saved for offline reading yet.<br/>Please check your network connection.</p>
                             <p>
-                                <a t-att-href="url_for('/event')" class="btn btn-primary o_translate_inline">Home page</a>
+                                <a t-att-href="url_for('/event')" class="btn btn-primary">Home page</a>
                                 <button onclick="history.back();" class="btn btn-secondary">Previous page</button>
                             </p>
                         </div>
