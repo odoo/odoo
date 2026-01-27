@@ -395,7 +395,16 @@ class ProductProduct(models.Model):
         elif locations:
             alias = locations._table + '_inner'
             paths_query = Query(locations.env, alias, SQL.identifier(locations._table))
-            paths_query.add_where(alias + '.parent_path LIKE ANY(%s)', [[loc.parent_path + '%' for loc in locations]])
+            paths_query.add_where(SQL(
+                """EXISTS (
+                    SELECT 1
+                      FROM stock_location parent
+                     WHERE parent.id IN %s
+                       AND %s LIKE parent.parent_path || '%%'
+                )""",
+                tuple(locations.ids),
+                SQL.identifier(alias, 'parent_path'),
+            ))
             loc_domain = Domain('location_id', 'in', paths_query)
             # The condition should be split for done and not-done moves as the final_dest_id only make sense
             # for the part of the move chain that is not done yet.
