@@ -37,7 +37,7 @@ const discussChannelPatch = {
         return super._computeCanHide(...arguments);
     },
     get displayName() {
-        if (this.channel_type !== "livechat" || this.self_member_id?.custom_channel_name) {
+        if (this.channel_type !== "livechat") {
             return super.displayName;
         }
         const selfMemberType = this.isTransient

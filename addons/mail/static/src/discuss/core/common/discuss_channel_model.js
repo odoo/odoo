@@ -101,6 +101,14 @@ export class DiscussChannel extends Record {
     get allowedToLeaveChannelTypes() {
         return ["channel", "group"];
     }
+    get allowedToRenameChannelTypes() {
+        return ["channel", "group"];
+    }
+    get isAllowedToRename() {
+        return (
+            this.allowedToRenameChannelTypes.includes(this.channel_type) && this.thread.is_editable
+        );
+    }
     get areAllMembersLoaded() {
         return this.member_count === this.channel_member_ids.length;
     }
@@ -194,9 +202,6 @@ export class DiscussChannel extends Record {
         return this.channel_member_ids.filter(({ persona }) => persona?.notEq(this.store.self));
     }
     get displayName() {
-        if (this.supportsCustomChannelName && this.self_member_id?.custom_channel_name) {
-            return this.self_member_id.custom_channel_name;
-        }
         if (this.channel_type === "chat" && this.correspondent) {
             return this.correspondent.name;
         }
@@ -666,28 +671,17 @@ export class DiscussChannel extends Record {
     async rename(name) {
         const newName = name.trim();
         if (
+            this.isAllowedToRename &&
             newName !== this.displayName &&
-            ((newName && this.channel_type === "channel") || this.isChatChannel)
+            (newName || this.channel_type === "group")
         ) {
-            if (["channel", "group"].includes(this.channel_type)) {
-                this.name = newName;
-                await this.store.env.services.orm.call(
-                    "discuss.channel",
-                    "channel_rename",
-                    [[this.id]],
-                    { name: newName }
-                );
-            } else if (this.supportsCustomChannelName) {
-                if (this.self_member_id) {
-                    this.self_member_id.custom_channel_name = newName;
-                }
-                await this.store.env.services.orm.call(
-                    "discuss.channel",
-                    "channel_set_custom_name",
-                    [[this.id]],
-                    { name: newName }
-                );
-            }
+            this.name = newName;
+            await this.store.env.services.orm.call(
+                "discuss.channel",
+                "channel_rename",
+                [[this.id]],
+                { name: newName }
+            );
         }
     }
 

@@ -289,10 +289,6 @@ export class Thread extends Record {
         return persona?.displayName || persona?.name;
     }
 
-    get supportsCustomChannelName() {
-        return this.channel?.isChatChannel && this.channel?.channel_type !== "group";
-    }
-
     get displayName() {
         return this.channel?.displayName ?? this.display_name;
     }
