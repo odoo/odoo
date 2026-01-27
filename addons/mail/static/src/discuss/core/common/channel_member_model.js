@@ -148,6 +148,7 @@ export class ChannelMember extends Record {
 
     get canSetAdmin() {
         return (
+            this.partner_id &&
             this.channel_role !== "admin" &&
             (this.store.self_user?.is_admin ||
                 (this.channel_role === "owner" && this.channel_role !== "owner") ||
@@ -157,6 +158,7 @@ export class ChannelMember extends Record {
 
     get canSetOwner() {
         return (
+            this.partner_id &&
             this.channel_role !== "owner" &&
             (this.store.self_user?.is_admin || this.selfChannelRole === "owner")
         );
