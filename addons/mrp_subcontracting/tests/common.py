@@ -43,6 +43,11 @@ class TestMrpSubcontractingCommon(TransactionCase):
             bom_line.product_qty = 1
         cls.bom = bom_form.save()
 
+        cls.env['product.supplierinfo'].create({
+            'product_tmpl_id': cls.finished.product_tmpl_id.id,
+            'partner_id': cls.subcontractor_partner1.id,
+        })
+
         # Create a BoM for cls.comp2
         cls.comp2comp = cls.env['product.product'].create({
             'name': 'component for Component2',
@@ -55,10 +60,6 @@ class TestMrpSubcontractingCommon(TransactionCase):
             bom_line.product_id = cls.comp2comp
             bom_line.product_qty = 1
         cls.comp2_bom = bom_form.save()
-
-        cls.warehouse = cls.env['stock.warehouse'].search([
-            ('company_id', '=', cls.env.company.id),
-        ], limit=1)
 
     def _setup_category_stock_journals(self):
         """
