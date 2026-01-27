@@ -7,10 +7,21 @@ import pytz
 
 from dateutil.relativedelta import relativedelta
 
+<<<<<<< 332b7543cdd22d7cdd7523cebb461e2c8422de62
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 from odoo.tools import ormcache, float_is_zero
+||||||| 326cd20928130009d3e43260f254ed6959e3bb09
+from odoo import Command, api, fields, models
+from odoo.osv import expression
+from odoo.tools import ormcache
+=======
+from odoo import Command, api, fields, models
+from odoo.fields import Domain
+from odoo.osv import expression
+from odoo.tools import ormcache
+>>>>>>> 267f9d26119090325b49a67bb895bd685198b1f0
 from odoo.tools.intervals import Intervals
 
 
@@ -442,8 +453,6 @@ class HrVersion(models.Model):
                 version_start = tz.localize(fields.Datetime.to_datetime(version.date_start)).astimezone(pytz.utc).replace(tzinfo=None)
                 version_stop = tz.localize(datetime.combine(fields.Datetime.to_datetime(version.date_end or date_stop),
                                                  datetime.max.time())).astimezone(pytz.utc).replace(tzinfo=None)
-                if version_stop < date_start:
-                    continue
                 if version_stop < date_stop:
                     if version.date_generated_from != version.date_generated_to:
                         domain_to_nullify |= Domain([
@@ -457,12 +466,22 @@ class HrVersion(models.Model):
                 date_start_work_entries = max(date_start, version_start)
                 date_stop_work_entries = min(date_stop, version_stop)
                 if force:
+<<<<<<< 332b7543cdd22d7cdd7523cebb461e2c8422de62
                     domain_to_nullify |= Domain([
                         ('version_id', '=', version.id),
                         ('date', '>=', date_start_work_entries.astimezone(tz).date()),
                         ('date', '<=', date_stop_work_entries.astimezone(tz).date()),
                         ('state', '!=', 'validated'),
                     ])
+||||||| 326cd20928130009d3e43260f254ed6959e3bb09
+=======
+                    domain_to_nullify = expression.OR([domain_to_nullify, [
+                        ('version_id', '=', version.id),
+                        ('date_start', '>=', date_start_work_entries),
+                        ('date_stop', '<', date_stop_work_entries),
+                        ('state', '!=', 'validated'),
+                    ]])
+>>>>>>> 267f9d26119090325b49a67bb895bd685198b1f0
                     intervals_to_generate[date_start_work_entries, date_stop_work_entries] |= version
                     continue
 

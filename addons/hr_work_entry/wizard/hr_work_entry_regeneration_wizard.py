@@ -94,6 +94,7 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
     def _work_entry_fields_to_nullify(self):
         return ['active']
 
+<<<<<<< 332b7543cdd22d7cdd7523cebb461e2c8422de62
     def regenerate_work_entries(self, slots=None, record_ids=None):
         write_vals = {field: False for field in self._work_entry_fields_to_nullify()}
         if not slots:
@@ -128,3 +129,38 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
             for (date_from, date_to), employee_ids in range_by_employee.items():
                 valid_employees = self.env["hr.employee"].browse(employee_ids)
                 valid_employees.generate_work_entries(date_from, date_to, True)
+||||||| 326cd20928130009d3e43260f254ed6959e3bb09
+    def regenerate_work_entries(self):
+        self.ensure_one()
+        if not self.env.context.get('work_entry_skip_validation'):
+            if not self.valid:
+                raise ValidationError(_("In order to regenerate the work entries, you need to provide the wizard with an employee_id, a date_from and a date_to. In addition to that, the time interval defined by date_from and date_to must not contain any validated work entries."))
+
+            if self.date_from < self.earliest_available_date or self.date_to > self.latest_available_date:
+                raise ValidationError(_("The from date must be >= '%(earliest_available_date)s' and the to date must be <= '%(latest_available_date)s', which correspond to the generated work entries time interval.", earliest_available_date=self._date_to_string(self.earliest_available_date), latest_available_date=self._date_to_string(self.latest_available_date)))
+
+        date_from = max(self.date_from, self.earliest_available_date) if self.earliest_available_date else self.date_from
+        date_to = min(self.date_to, self.latest_available_date) if self.latest_available_date else self.date_to
+        work_entries = self.env['hr.work.entry'].search([
+            ('employee_id', 'in', self.employee_ids.ids),
+            ('date_stop', '>=', date_from),
+            ('date_start', '<=', date_to),
+            ('state', '!=', 'validated')])
+
+        write_vals = {field: False for field in self._work_entry_fields_to_nullify()}
+        work_entries.write(write_vals)
+        self.employee_ids.generate_work_entries(date_from, date_to, True)
+=======
+    def regenerate_work_entries(self):
+        self.ensure_one()
+        if not self.env.context.get('work_entry_skip_validation'):
+            if not self.valid:
+                raise ValidationError(_("In order to regenerate the work entries, you need to provide the wizard with an employee_id, a date_from and a date_to. In addition to that, the time interval defined by date_from and date_to must not contain any validated work entries."))
+
+            if self.date_from < self.earliest_available_date or self.date_to > self.latest_available_date:
+                raise ValidationError(_("The from date must be >= '%(earliest_available_date)s' and the to date must be <= '%(latest_available_date)s', which correspond to the generated work entries time interval.", earliest_available_date=self._date_to_string(self.earliest_available_date), latest_available_date=self._date_to_string(self.latest_available_date)))
+
+        date_from = max(self.date_from, self.earliest_available_date) if self.earliest_available_date else self.date_from
+        date_to = min(self.date_to, self.latest_available_date) if self.latest_available_date else self.date_to
+        self.employee_ids.generate_work_entries(date_from, date_to, True)
+>>>>>>> 267f9d26119090325b49a67bb895bd685198b1f0

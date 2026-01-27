@@ -92,10 +92,19 @@ class HrWorkEntry(models.Model):
 
     @api.model
     def _set_current_contract(self, vals):
+<<<<<<< 332b7543cdd22d7cdd7523cebb461e2c8422de62
         if not vals.get('version_id') and vals.get('date') and vals.get('employee_id'):
             contract_start = fields.Datetime.to_datetime(vals.get('date'))
             contract_end = contract_start
+||||||| 326cd20928130009d3e43260f254ed6959e3bb09
+        if not vals.get('version_id') and vals.get('date_start') and vals.get('date_stop') and vals.get('employee_id'):
+            contract_start = fields.Datetime.to_datetime(vals.get('date_start')).date()
+            contract_end = fields.Datetime.to_datetime(vals.get('date_stop')).date()
+=======
+        if not vals.get('version_id') and vals.get('date_start') and vals.get('date_stop') and vals.get('employee_id'):
+>>>>>>> 267f9d26119090325b49a67bb895bd685198b1f0
             employee = self.env['hr.employee'].browse(vals.get('employee_id'))
+<<<<<<< 332b7543cdd22d7cdd7523cebb461e2c8422de62
             contracts = employee._get_versions_with_contract_overlap_with_period(contract_start, contract_end)
             if not contracts:
                 raise ValidationError(_(
@@ -104,6 +113,20 @@ class HrWorkEntry(models.Model):
                     date=contract_start,
                 ))
             return dict(vals, version_id=contracts[0].id)
+||||||| 326cd20928130009d3e43260f254ed6959e3bb09
+            contracts = employee._get_versions_with_contract_overlap_with_period(contract_start, contract_end)
+            if not contracts:
+                raise ValidationError(_(
+                    "%(employee)s does not have a contract from %(date_start)s to %(date_end)s.",
+                    employee=employee.name,
+                    date_start=contract_start,
+                    date_end=contract_end,
+                ))
+            return dict(vals, version_id=contracts[0].id)
+=======
+            active_version = employee._get_version(vals['date_start'])
+            return dict(vals, version_id=active_version.id)
+>>>>>>> 267f9d26119090325b49a67bb895bd685198b1f0
         return vals
 
     @api.model

@@ -1,8 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+<<<<<<< 332b7543cdd22d7cdd7523cebb461e2c8422de62
 
 from datetime import date
 
 from odoo.exceptions import ValidationError
+||||||| 326cd20928130009d3e43260f254ed6959e3bb09
+
+=======
+from datetime import date, datetime
+>>>>>>> 267f9d26119090325b49a67bb895bd685198b1f0
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 
@@ -24,6 +30,7 @@ class TestHrWorkEntry(TransactionCase):
             'contract_date_start': '2023-01-01',
             'date_version': '2023-01-01',
         })
+        cls.employee_a_first_version = cls.employee_a.version_ids[0]
         cls.employee_b = cls.env['hr.employee'].create({
             'name': 'Employee B',
             'company_id': cls.company_b.id,
@@ -49,6 +56,7 @@ class TestHrWorkEntry(TransactionCase):
             work_entry.company_id, self.employee_b.company_id,
             "Work entry should use the employee's company not the current user's company.",
         )
+<<<<<<< 332b7543cdd22d7cdd7523cebb461e2c8422de62
 
     def test_work_entry_conflict_no_we_type(self):
         """Test that work entry conflicts with no work entry type."""
@@ -138,3 +146,50 @@ class TestHrWorkEntry(TransactionCase):
             ('date', '<=', date(2024, 1, 31)),
         ])
         self.assertEqual(january_work_entries, new_january_work_entries)
+||||||| 326cd20928130009d3e43260f254ed6959e3bb09
+=======
+
+    def test_nullify_work_entry(self):
+        """
+        Test that we correctly nullify the work entries that were previously generated when we add a new version
+        """
+        january_work_entries = self.employee_a.generate_work_entries(date(2024, 1, 1), date(2024, 1, 31))
+        self.assertTrue(all(we.version_id == self.employee_a_first_version for we in january_work_entries))
+
+        second_version = self.employee_a.create_version({
+            'date_version': date(2023, 12, 1)
+        })
+        self.employee_a.generate_work_entries(date(2024, 1, 1), date(2024, 1, 31))
+
+        all_january_work_entries = self.env['hr.work.entry'].search([
+            ('employee_id', '=', self.employee_a.id),
+            ('date_start', '>=', date(2024, 1, 1)),
+            ('date_stop', '<=', date(2024, 1, 31)),
+        ])
+
+        self.assertEqual(len(all_january_work_entries), 46)
+        self.assertTrue(all(we.version_id == second_version for we in all_january_work_entries))
+
+    def test_work_entry_version_id(self):
+        """
+        Test that we correctly set the version_id field of the work entry depending on the date
+        """
+        second_version = self.employee_a.create_version({
+            'date_version': date(2023, 12, 1)
+        })
+
+        v1_we, v2_we = self.env['hr.work.entry'].create([
+            {
+                'date_start': datetime(2023, 10, 1, 8, 0),
+                'date_stop': datetime(2023, 10, 1, 17, 0),
+                'employee_id': self.employee_a.id,
+            },
+            {
+                'date_start': datetime(2024, 1, 1, 8, 0),
+                'date_stop': datetime(2024, 1, 1, 17, 0),
+                'employee_id': self.employee_a.id,
+            }
+        ])
+        self.assertEqual(v1_we.version_id, self.employee_a_first_version)
+        self.assertEqual(v2_we.version_id, second_version)
+>>>>>>> 267f9d26119090325b49a67bb895bd685198b1f0
