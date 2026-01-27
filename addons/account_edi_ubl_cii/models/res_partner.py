@@ -129,6 +129,7 @@ class ResPartner(models.Model):
             ('EM', "Electronic mail"),
         ]
     )
+    peppol_eas_label = fields.Char(compute='_compute_peppol_eas_label')
     available_peppol_eas = fields.Json(compute='_compute_available_peppol_eas')
 
     @api.constrains('peppol_endpoint')
@@ -243,6 +244,13 @@ class ResPartner(models.Model):
                 value = partner._get_peppol_endpoint_value(country_code, field)
                 if field and value and not partner._build_error_peppol_endpoint(partner.peppol_eas, value):
                     partner.peppol_endpoint = value
+
+    @api.depends('peppol_eas')
+    def _compute_peppol_eas_label(self):
+        """Compute the readable label of the selected PEPPOL EAS"""
+        available_peppol_eas = dict(self._fields['peppol_eas']._description_selection(self.env))
+        for partner in self:
+            partner.peppol_eas_label = available_peppol_eas.get(partner.peppol_eas)
 
     @api.depends(lambda self: self._peppol_eas_endpoint_depends())
     def _compute_peppol_eas(self):
