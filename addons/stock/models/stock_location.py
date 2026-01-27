@@ -98,6 +98,7 @@ class StockLocation(models.Model):
         'check(cyclic_inventory_frequency >= 0)',
         'The inventory frequency (days) for a location must be non-negative',
     )
+    _parent_path_id_idx = models.Index("(parent_path, id)")
 
     @api.depends('name', 'location_id.complete_name', 'usage')
     @api.depends_context('formatted_display_name')

@@ -101,11 +101,12 @@ class StockLot(models.Model):
 
         :param new_price: new standard price
         """
+        product_values = []
         for lot in self:
             if lot.product_id.cost_method != 'average' or lot.standard_price == old_price:
                 continue
             product = lot.product_id
-            self.env['product.value'].sudo().create({
+            product_values.append({
                 'product_id': product.id,
                 'lot_id': lot.id,
                 'value': lot.standard_price,
@@ -114,3 +115,5 @@ class StockLot(models.Model):
                 'description': _('%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s',
                     lot=lot.name, old_price=old_price, new_price=lot.standard_price, user=self.env.user.name)
             })
+
+        self.env['product.value'].sudo().create(product_values)
