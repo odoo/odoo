@@ -73,7 +73,7 @@ export class MegaMenuDropdown extends Interaction {
      * @param {HTMLElement} megaMenuToggleEl
      */
     moveMegaMenu(megaMenuToggleEl) {
-        const hasMegaMenu = !!megaMenuToggleEl.parentElement.querySelector(".o_mega_menu");
+        const hasMegaMenu = !!this.megaMenuOfToggle(megaMenuToggleEl);
         if (hasMegaMenu) {
             return;
         }
@@ -87,12 +87,19 @@ export class MegaMenuDropdown extends Interaction {
 
         const megaMenuToggleIndex = currentNavbarToggleEls.indexOf(megaMenuToggleEl);
         const previousMegaMenuToggleEl = otherNavbarToggleEls[megaMenuToggleIndex];
-        const megaMenuEl = previousMegaMenuToggleEl.parentElement.querySelector(".o_mega_menu");
+        const megaMenuEl = this.megaMenuOfToggle(previousMegaMenuToggleEl);
 
         // Hiding the dropdown where the mega menu comes from before moving it,
         // so everything is in a consistent state.
         Dropdown.getOrCreateInstance(previousMegaMenuToggleEl).hide();
         megaMenuToggleEl.insertAdjacentElement("afterend", megaMenuEl);
+    }
+
+    /**
+     * Finds the mega menu associated with this toggle element
+     */
+    megaMenuOfToggle(megaMenuToggleEl) {
+        return megaMenuToggleEl.parentElement.querySelector(".o_mega_menu");
     }
 
     /**
