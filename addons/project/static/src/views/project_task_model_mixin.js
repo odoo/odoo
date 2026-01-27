@@ -3,6 +3,7 @@ import { Domain } from "@web/core/domain";
 
 export const ProjectTaskModelMixin = (T) => class ProjectTaskModelMixin extends T {
     _processSearchDomain(domain) {
+        console.log(this.env.searchModel.globalContext)
         const { my_tasks, subtask_action } = this.env.searchModel.globalContext;
         const showSubtasks = my_tasks || subtask_action || JSON.parse(browser.localStorage.getItem("showSubtasks"));
         if (!showSubtasks) {
@@ -12,10 +13,14 @@ export const ProjectTaskModelMixin = (T) => class ProjectTaskModelMixin extends 
             ]).toList({});
         }
         if (this.env.searchModel.context?.render_task_templates) {
-            domain = Domain.and([
-                Domain.removeDomainLeaves(domain, ['has_template_ancestor']).toList(),
-                [['has_template_ancestor', '=', true]],
-            ]).toList({});
+            domain = Domain.removeDomainLeaves(domain, ['has_template_ancestor', 'has_project_template']).toList()
+            const templateTaskDomain = ['has_template_ancestor', '=', true]
+            const finaldomain = 'default_project_id' in this.env.searchModel.globalContext ? 
+                                [templateTaskDomain] :
+                                ['|', 
+                                    templateTaskDomain,
+                                    ['has_project_template', '=', true]]
+            domain = Domain.and([domain,finaldomain]).toList({});
         }
         return domain;
     }

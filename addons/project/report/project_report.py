@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, tools
+from odoo.fields import Domain
 
 from odoo.addons.rating.models.rating_data import RATING_LIMIT_MIN
 
@@ -68,6 +69,7 @@ class ReportProjectTaskUser(models.Model):
     # We exclude template tasks, but we still need the field for the views
     is_template = fields.Boolean(readonly=True)
     has_template_ancestor = fields.Boolean(readonly=True)
+    has_project_template = fields.Boolean(search='_search_has_template_project', default=False, store=False)
 
     def _select(self):
         return """
@@ -159,3 +161,13 @@ class ReportProjectTaskUser(models.Model):
           WHERE %s
        GROUP BY %s
         """ % (self._table, self._select(), self._from(), self._where(), self._group_by()))
+
+    # has_template_project is always assumed to have a value of false inside
+    # of the report as they are not stored in the report view
+    def _search_has_template_project(self, operator, value):
+        if (operator not in ('=', 'in')):
+            return NotImplemented
+        elif (not all(value)):
+            return Domain.TRUE
+        else:
+            return Domain.FALSE
