@@ -621,12 +621,23 @@ class DiscussChannel(models.Model):
                 subtype_xmlid="mail.mt_comment",
             )
 
+    def _get_livechat_customer_timezone(self):
+        """Return the customer's timezone"""
+        self.ensure_one()
+        # sudo: discuss.channel - access partner's/guest's timezone from customer history.
+        tz_name = next(
+            (
+                tz
+                for customer in self.sudo().livechat_customer_history_ids
+                if (tz := customer.partner_id.tz or customer.guest_id.timezone)
+            ),
+            "UTC",
+        )
+        return ZoneInfo(tz_name)
+
     def _email_livechat_transcript(self, email):
         company = self.env.user.company_id
-        # sudo: discuss.channel - access partner's/guest's timezone
-        tz = next((tz
-                   for customer in self.sudo().livechat_customer_history_ids
-                   if (tz := customer.partner_id.tz or customer.guest_id.timezone)), "UTC")
+        tz = self._get_livechat_customer_timezone()
         lang = next((lang
                      for customer in self.sudo().livechat_customer_history_ids
                      if (lang := customer.partner_id.lang or customer.guest_id.lang)), self.env.lang)
@@ -641,7 +652,7 @@ class DiscussChannel(models.Model):
             "company": company,
             "channel": self,
             "is_html_empty": is_html_empty,
-            "tz": ZoneInfo(tz),
+            "tz": tz,
             "correspondent_names": correspondent_names,
         }
         mail_body = self.env['ir.qweb'].with_context(lang=lang)._render(

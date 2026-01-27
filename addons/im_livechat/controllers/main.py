@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from urllib.parse import urlsplit
-from zoneinfo import ZoneInfo
 
 from werkzeug.exceptions import NotFound
 
@@ -221,8 +220,20 @@ class LivechatController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
-        user, guest = request.env["res.users"]._get_current_persona()
-        tz = ZoneInfo(user.tz or guest.timezone or "UTC")
+        tz = channel._get_livechat_customer_timezone()
+        # sudo: discuss.channel - access customer history to derive transcript name
+        conversation_name = next(
+            (
+                name
+                for customer in channel.sudo().livechat_customer_history_ids
+                if (
+                    name := customer.partner_id.commercial_company_name
+                    or customer.partner_id.name
+                    or customer.guest_id.name
+                )
+            ),
+            False,
+        )
         pdf, _type = (
             request.env["ir.actions.report"]
             .sudo()
@@ -230,7 +241,6 @@ class LivechatController(http.Controller):
                 "im_livechat.action_report_livechat_conversation",
                 channel.ids,
                 data={
-                    "company": request.env.company,
                     "tz": tz,
                     "correspondent_names": format_list(
                         request.env,
@@ -243,8 +253,14 @@ class LivechatController(http.Controller):
                 },
             )
         )
+        timestamp = channel.create_date.astimezone(tz).strftime("%b %d, %I:%M %p")
+        filename = (
+            "Live chat - %s - %s.pdf" % (conversation_name, timestamp)
+            if conversation_name
+            else "Live chat - %s.pdf" % timestamp
+        )
         headers = [
-            ("Content-Disposition", content_disposition(f"transcript_{channel.id}.pdf", "inline")),
+            ("Content-Disposition", content_disposition(filename, "inline")),
             ("Content-Length", len(pdf)),
             ("Content-Type", "application/pdf"),
         ]
