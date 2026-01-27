@@ -31,6 +31,7 @@
                     </thead>
                     <tbody>
                         <MoOverviewLine data="state.data.summary" showOptions="state.showOptions"/>
+                        <MoOverviewLine t-if="state.data.replenishment" data="state.data.replenishment.summary" showOptions="state.showOptions"/>      
                         <MoOverviewComponentsBlock
                             components="state.data.components"
                             operations="state.data.operations"
