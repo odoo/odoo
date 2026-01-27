@@ -61,7 +61,7 @@
         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" id="nilvera_dispatch_line">
         <cac:DespatchLine>
             <cbc:ID t-out="line_id"/>
-            <cbc:DeliveredQuantity t-att-unitCode="line.product_uom._get_unece_code()" t-out="line.quantity"/>
+            <cbc:DeliveredQuantity t-att-unitCode="line.uom_id._get_unece_code()" t-out="line.quantity"/>
             <cac:OrderLineReference>
                 <cbc:LineID t-out="line_id"/>
             </cac:OrderLineReference>
