@@ -260,22 +260,26 @@ export class FormatPlugin extends Plugin {
         }
 
         const selectedTextNodes = /** @type { Text[] } **/ (
-            this.dependencies.selection
-                .getTargetedNodes()
-                .filter(
-                    (n) =>
-                        this.dependencies.selection.areNodeContentsFullySelected(n) &&
-                        ((isTextNode(n) &&
-                            (isVisibleTextNode(n) ||
-                                isZWS(n) ||
-                                (/^\n+$/.test(n.nodeValue) && !applyStyle))) ||
-                            (n.nodeName === "BR" &&
-                                (isFakeLineBreak(n) ||
-                                    previousLeaf(n, closestBlock(n))?.nodeName === "BR"))) &&
-                        isContentEditable(n)
-                )
+            this.dependencies.selection.getTargetedNodes().filter(
+                (n) =>
+                    this.dependencies.selection.areNodeContentsFullySelected(n) &&
+                    ((isTextNode(n) &&
+                        (isVisibleTextNode(n) ||
+                            isZWS(n) ||
+                            // keep FEFF for stable reselection
+                            isZwnbsp(n) ||
+                            (/^\n+$/.test(n.nodeValue) && !applyStyle))) ||
+                        (n.nodeName === "BR" &&
+                            (isFakeLineBreak(n) ||
+                                previousLeaf(n, closestBlock(n))?.nodeName === "BR"))) &&
+                    isContentEditable(n)
+            )
         );
         const unformattedTextNodes = selectedTextNodes.filter((n) => {
+            // Don't apply formatting to FEFF.
+            if (isZwnbsp(n)) {
+                return false;
+            }
             const listItem = closestElement(n, "li");
             if (listItem && this.dependencies.selection.isNodeContentsFullySelected(listItem)) {
                 const hasFontSizeStyle =

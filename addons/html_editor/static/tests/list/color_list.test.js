@@ -8,6 +8,7 @@ import {
 } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
 import { unformat } from "../_helpers/format";
+import { nodeSize } from "@html_editor/utils/position";
 
 test("should apply color to completely selected list item", async () => {
     await testEditor({
@@ -85,6 +86,34 @@ test("should not color list item when selection excludes trailing empty line", a
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter:
             '<ul><li style="color: rgb(255, 0, 0);">[abc</li><li><font style="color: rgb(255, 0, 0);">abcd]</font><br><br></li></ul>',
+    });
+});
+
+test("should apply color on fully selected list items with empty text nodes at list boundaries", async () => {
+    await testEditor({
+        contentBefore: '<ul><li><a href="#">abc</a></li><li><a href="#">abc</a></li></ul>',
+        contentBeforeEdit:
+            '<ul><li>\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li><li>\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li></ul>',
+        stepFunction: (editor) => {
+            const listItems = editor.editable.querySelectorAll("li");
+            // Set selection here because injected \ufeff can be excluded
+            // from the DOM range.
+            editor.shared.selection.setSelection({
+                anchorNode: listItems[0].firstChild,
+                anchorOffset: 0,
+                focusNode: listItems[1].lastChild,
+                focusOffset: nodeSize(listItems[1].lastChild),
+            });
+            // Empty text node at start of first <li>
+            listItems[0].insertBefore(document.createTextNode(""), listItems[0].firstChild);
+            // Empty text node at end of second <li>
+            listItems[1].appendChild(document.createTextNode(""));
+            setColor("rgb(255, 0, 0)", "color")(editor);
+        },
+        contentAfterEdit:
+            '<ul><li style="color: rgb(255, 0, 0);">[\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li><li style="color: rgb(255, 0, 0);">\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff]</li></ul>',
+        contentAfter:
+            '<ul><li style="color: rgb(255, 0, 0);">[<a href="#">abc</a></li><li style="color: rgb(255, 0, 0);"><a href="#">abc</a>]</li></ul>',
     });
 });
 

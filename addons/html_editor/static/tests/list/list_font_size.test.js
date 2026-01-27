@@ -7,6 +7,7 @@ import {
     toggleUnorderedList,
 } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
+import { nodeSize } from "@html_editor/utils/position";
 
 test("should apply font-size to completely selected list item", async () => {
     await testEditor({
@@ -24,6 +25,34 @@ test("should apply font-size to completely selected multiple list items", async 
             execCommand(editor, "formatFontSizeClassName", { className: "h2-fs" }),
         contentAfter:
             '<ul><li class="h2-fs" style="list-style-position: inside;">[abc</li><li class="h2-fs" style="list-style-position: inside;">def]</li></ul>',
+    });
+});
+
+test("should apply font-size on fully selected list items with empty text nodes at list boundaries", async () => {
+    await testEditor({
+        contentBefore: '<ul><li><a href="#">abc</a></li><li><a href="#">abc</a></li></ul>',
+        contentBeforeEdit:
+            '<ul><li>\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li><li>\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li></ul>',
+        stepFunction: (editor) => {
+            const listItems = editor.editable.querySelectorAll("li");
+            // Set selection here because injected \ufeff can be excluded
+            // from the DOM range.
+            editor.shared.selection.setSelection({
+                anchorNode: listItems[0].firstChild,
+                anchorOffset: 0,
+                focusNode: listItems[1].lastChild,
+                focusOffset: nodeSize(listItems[1].lastChild),
+            });
+            // Empty text node at start of first <li>
+            listItems[0].insertBefore(document.createTextNode(""), listItems[0].firstChild);
+            // Empty text node at end of second <li>
+            listItems[1].appendChild(document.createTextNode(""));
+            setFontSize("32px")(editor);
+        },
+        contentAfterEdit:
+            '<ul><li style="font-size: 32px; list-style-position: inside;">[\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li><li style="font-size: 32px; list-style-position: inside;">\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff]</li></ul>',
+        contentAfter:
+            '<ul><li style="font-size: 32px; list-style-position: inside;">[<a href="#">abc</a></li><li style="font-size: 32px; list-style-position: inside;"><a href="#">abc</a>]</li></ul>',
     });
 });
 
