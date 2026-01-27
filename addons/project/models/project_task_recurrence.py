@@ -41,6 +41,7 @@ REPEAT_UNIT_SELECTION = [
     ('year', 'Years'),
 ]
 
+
 class ProjectTaskRecurrence(models.Model):
     _name = 'project.task.recurrence'
     _description = 'Task Recurrence'
