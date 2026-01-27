@@ -43,9 +43,9 @@ QUnit.test("copy link immediatly after entering the amount", async (assert) => {
                 <group>
                     <field name="amount"/>
                      <field
-                        string="Generate and Copy Payment Link"
                         name="link"
                         widget="PaymentWizardCopyClipboardButtonField"
+                        options="{'copyText': 'Generate and Copy Payment Link'}"
                     />
                 </group>
             </group>
