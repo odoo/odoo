@@ -112,10 +112,10 @@ class AccountChartTemplate(models.AbstractModel):
         """
         # This function is called many times. Avoid doing a search every time by using the ORM's cache.
         # We assume that the field is always computed for all the modules at once (by this function)
-        field = self.env['ir.module.module']._fields['account_templates']
+        modules = self.env['ir.module.module'].sudo()
         modules = (
-            self.env.cache.get_records(self.env['ir.module.module'], field)
-            or self.env['ir.module.module'].sudo().search([('state', '!=', 'uninstallable')])
+            modules.browse(modules._fields['account_templates']._get_cache(self.env))
+            or modules.search([('state', '!=', 'uninstallable')])
         )
 
         return {

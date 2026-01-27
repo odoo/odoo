@@ -194,7 +194,7 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertEqual(message.attributes, {'state': 'draft'})
 
         # check cached value
-        cached_value = self.env.cache.get(message, message._fields['attributes'])
+        cached_value = message._cache['attributes']
         self.assertEqual(cached_value, {'state': 'draft'})
 
         # change the definition record, change the definition and add default values

@@ -95,7 +95,7 @@ class test_res_lang(TransactionCase):
         )
 
         # test performance
-        self.env.cache.clear()
+        self.env.transaction.clear()
         self.env.registry.clear_cache('stable')
         # 1 query for res_lang +
         # 1 query for ir_attachment to compute `flag_image_url`

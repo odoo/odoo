@@ -261,7 +261,7 @@ class IapAccount(models.Model):
                 # as self's cursor cannot see this account
                 account_token = account.sudo().account_token
             account = self.browse(account.id)
-            self.env.cache.set(account, IapAccount._fields['account_token'], account_token)
+            account._fields['account_token']._update_cache(account, account_token)
             return account
         accounts_with_company = accounts.filtered(lambda acc: acc.company_ids)
         if accounts_with_company:

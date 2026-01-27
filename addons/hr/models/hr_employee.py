@@ -16,6 +16,7 @@ from odoo.fields import Domain
 from odoo.tools import SQL, convert, email_normalize, format_date, format_time
 from odoo.tools.float_utils import float_is_zero
 from odoo.tools.intervals import Intervals
+from odoo.tools.misc import SENTINEL
 
 from odoo.addons.hr.models.hr_version import format_date_abbr
 from odoo.addons.mail.tools.discuss import Store
@@ -1314,11 +1315,18 @@ class HrEmployee(models.Model):
         # HACK: retrieve publicly available values from hr.employee.public and
         # copy them to the cache of self; non-public data will be missing from
         # cache, and interpreted as an access error
+        self_raw = self.with_context(prefetch_langs=True)
         for fname in field_names:
-            values = self.env.cache.get_values(public, public._fields[fname])
-            if self._fields[fname].translate:
-                values = [(value.copy() if value else None) for value in values]
-            self.env.cache.update_raw(self, self._fields[fname], values)
+            field = self._fields[fname]
+            cache = public._fields[fname]._get_cache(self_raw.env)
+
+            for record, recordp in zip(self_raw, public):
+                value = cache.get(recordp.id, SENTINEL)
+                if value is SENTINEL:
+                    continue
+                if field.translate:
+                    value = dict(value) if value else None
+                field._update_cache(record, value)
 
     @api.model
     def notify_expiring_contract_work_permit(self):

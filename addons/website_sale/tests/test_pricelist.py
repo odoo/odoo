@@ -758,8 +758,8 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         self.assertEqual(self.demo_user.partner_id.with_company(self.company2.id).property_product_pricelist, self.c2_pl)
         # property_product_pricelist has been cached
         field = self.env['res.partner']._fields['property_product_pricelist']
-        cache_rp1 = self.env.cache.get(self.demo_user.partner_id.with_company(self.company1.id), field)
-        cache_rp2 = self.env.cache.get(self.demo_user.partner_id.with_company(self.company2.id), field)
+        cache_rp1 = self.demo_user.partner_id.with_company(self.company1.id)._cache[field.name]
+        cache_rp2 = self.demo_user.partner_id.with_company(self.company2.id)._cache[field.name]
         self.assertEqual((cache_rp1, cache_rp2), (self.c1_pl.id, self.c2_pl.id), "Ensure the pricelist is the company specific one.")
 
     def test_property_product_pricelist_multi_company(self):

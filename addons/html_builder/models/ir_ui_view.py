@@ -176,7 +176,7 @@ class IrUiView(models.Model):
             lang: field_to.translate(lambda term: translation_dictionary.get(term, {}).get(lang), record_to[name_field_to])
             for lang in langs
         }
-        record_to.env.cache.update_raw(record_to, field_to, [new_value], dirty=True)
+        field_to._update_cache(record_to.with_context(prefetch_langs=True), new_value, dirty=True)
         # Call `write` to trigger compute etc (`modified()`)
         record_to[name_field_to] = new_value[lang_env]
 
