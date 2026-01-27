@@ -25,7 +25,6 @@ Preferences
         'views/sale_order_views.xml',
         'views/sale_order_line_views.xml',
         'views/stock_route_views.xml',
-        'views/return_reason_views.xml',  # used in res_config_settings_views.xml file
         'views/res_config_settings_views.xml',
         'views/sale_stock_portal_template.xml',
         'views/stock_lot_views.xml',

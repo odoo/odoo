@@ -180,7 +180,6 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     sale_id = fields.Many2one('sale.order', compute="_compute_sale_id", inverse="_set_sale_id", string="Sales Order", store=True, index='btree_not_null')
-    return_reason_id = fields.Many2one('return.reason')
 
     @api.depends('reference_ids.sale_ids', 'move_ids.sale_line_id.order_id')
     def _compute_sale_id(self):
