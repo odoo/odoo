@@ -77,7 +77,7 @@ class TestHolidaysOvertime(TransactionCase):
         })
 
     def _check_deductible(self, expected_hours):
-        ded = self.env['hr.leave']._get_deductible_employee_overtime(self.employee)
+        ded = self.employee._get_deductible_employee_overtime()
         self.assertAlmostEqual(ded[self.employee], expected_hours, 5)
 
     def test_check_overtime(self):
