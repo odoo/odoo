@@ -41,7 +41,6 @@ class DiscussChannelMember(models.Model):
         groups="base.group_system",
     )
     # state
-    custom_channel_name = fields.Char('Custom channel name')
     is_favorite = fields.Boolean("Favorite")
     seen_message_id = fields.Many2one('mail.message', string='Last Seen', index="btree_not_null")
     new_message_separator = fields.Integer(help="Message id before which the separator should be displayed", default=0, required=True)
@@ -275,7 +274,7 @@ class DiscussChannelMember(models.Model):
         super()._sync_field_names(res)
         # sudo: discuss.channel.member - reading channel ownership related to a member is considered acceptable
         res["channel_id", None].attr("channel_role", sudo=True)
-        res[None].extend(["custom_channel_name", "custom_notifications", "is_favorite"])
+        res[None].extend(["custom_notifications", "is_favorite"])
         res[None].extend(["is_pinned", "last_interest_dt", "message_unread_counter"])
         res[None].extend(["mute_until_dt", "new_message_separator"])
         # sudo: discuss.channel.rtc.session - each member can see who is inviting them

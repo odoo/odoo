@@ -366,7 +366,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     "channel_id": channel.id,
                     "channel_role": False,
                     "create_date": fields.Datetime.to_string(guest_member.create_date),
-                    "custom_channel_name": False,
                     "custom_notifications": False,
                     "guest_id": guest.id,
                     "id": guest_member.id,

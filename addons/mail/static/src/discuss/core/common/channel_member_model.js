@@ -15,8 +15,6 @@ export class ChannelMember extends Record {
 
     /** @type {string} */
     create_date;
-    /** @type {string} */
-    custom_channel_name;
     /**
      * false means using the custom_notifications from user settings.
      *

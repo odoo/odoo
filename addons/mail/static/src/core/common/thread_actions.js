@@ -36,8 +36,8 @@ registerThreadAction("fold-chat-window", {
 registerThreadAction("rename-thread", {
     condition: ({ channel, owner, thread }) =>
         channel &&
+        channel.isAllowedToRename &&
         owner.props.chatWindow?.isOpen &&
-        (thread.is_editable || channel.channel_type === "chat") &&
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-pencil",
     name: _t("Rename Thread"),

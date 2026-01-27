@@ -414,7 +414,6 @@ export class DiscussChannel extends models.ServerModel {
                         DiscussChannelMember.browse(memberOfCurrentUser.id),
                         makeKwArgs({
                             extra_fields: [
-                                "custom_channel_name",
                                 "last_interest_dt",
                                 "message_unread_counter",
                                 mailDataHelpers.Store.one("rtc_inviting_session_id"),
@@ -473,37 +472,6 @@ export class DiscussChannel extends models.ServerModel {
      * @param {number[]} ids
      * @param {string} name
      */
-    channel_set_custom_name(ids, name) {
-        const kwargs = getKwArgs(arguments, "ids", "name");
-        ids = kwargs.ids;
-        delete kwargs.ids;
-        name = kwargs.name || "";
-
-        /** @type {import("mock_models").BusBus} */
-        const BusBus = this.env["bus.bus"];
-        /** @type {import("mock_models").DiscussChannelMember} */
-        const DiscussChannelMember = this.env["discuss.channel.member"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-
-        const channelId = ids[0]; // simulate ensure_one.
-        const [memberIdOfCurrentUser] = DiscussChannelMember.search([
-            ["partner_id", "=", this.env.user.partner_id],
-            ["channel_id", "=", channelId],
-        ]);
-        DiscussChannelMember.write([memberIdOfCurrentUser], {
-            custom_channel_name: name,
-        });
-        const [partner] = ResPartner.read(this.env.user.partner_id);
-        BusBus._sendone(
-            partner,
-            "mail.record/insert",
-            new mailDataHelpers.Store(DiscussChannelMember.browse(memberIdOfCurrentUser), {
-                custom_channel_name: name,
-            }).get_result()
-        );
-    }
-
     /**
      * @param {number[]} partners_to
      * @param {string} [default_display_mode=undefined]

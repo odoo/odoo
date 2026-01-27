@@ -406,21 +406,6 @@ test("show date separator above mesages of similar date", async () => {
     });
 });
 
-test("sidebar: chat custom name", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
-    pyEnv["discuss.channel"].create({
-        channel_member_ids: [
-            Command.create({ custom_channel_name: "Marc", partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-        channel_type: "chat",
-    });
-    await start();
-    await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel-itemName:text('Marc')");
-});
-
 test.tags("focus required");
 test("reply to message from inbox (message linked to document)", async () => {
     const pyEnv = await startServer();
@@ -1862,15 +1847,18 @@ test("Thread avatar is not editable in DM chat", async () => {
     await contains(".o-mail-DiscussContent-threadAvatar .fa-pencil", { count: 0 });
 });
 
-test("Do not trigger chat name server update when it is unchanged", async () => {
+test("Do not trigger channel name server update when it is unchanged", async () => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "General",
+    });
 
-    onRpc("discuss.channel", "channel_set_custom_name", ({ method }) => expect.step(method));
+    onRpc("discuss.channel", "channel_rename", ({ method }) => expect.step(method));
 
     await start();
     await openDiscuss(channelId);
-    await insertText("input.o-mail-DiscussContent-threadName:enabled", "Mitchell Admin", {
+    await insertText("input.o-mail-DiscussContent-threadName:enabled", "General", {
         replace: true,
     });
     triggerHotkey("Enter");

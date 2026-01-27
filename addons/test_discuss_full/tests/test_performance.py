@@ -944,7 +944,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "channel_role": False,
                 "create_date": member_0_create_date,
-                "custom_channel_name": False,
                 "custom_notifications": False,
                 "id": member_0.id,
                 "is_favorite": False,
@@ -964,7 +963,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "channel_role": "owner",
                 "create_date": member_0_create_date,
-                "custom_channel_name": False,
                 "custom_notifications": False,
                 "id": member_0.id,
                 "is_favorite": False,
@@ -984,7 +982,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "channel_role": "owner",
                 "create_date": member_0_create_date,
-                "custom_channel_name": False,
                 "custom_notifications": False,
                 "id": member_0.id,
                 "is_favorite": False,
@@ -1004,7 +1001,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "channel_role": "owner",
                 "create_date": member_0_create_date,
-                "custom_channel_name": False,
                 "custom_notifications": False,
                 "id": member_0.id,
                 "is_favorite": False,
@@ -1030,7 +1026,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "channel_role": "owner",
                 "create_date": member_0_create_date,
-                "custom_channel_name": False,
                 "custom_notifications": False,
                 "id": member_0.id,
                 "is_favorite": False,
@@ -1050,7 +1045,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "channel_role": "owner",
                 "create_date": member_0_create_date,
-                "custom_channel_name": False,
                 "custom_notifications": False,
                 "id": member_0.id,
                 "is_favorite": False,
@@ -1080,7 +1074,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "channel_role": False,
                 "create_date": member_0_create_date,
-                "custom_channel_name": False,
                 "custom_notifications": False,
                 "id": member_0.id,
                 "is_favorite": False,
@@ -1110,7 +1103,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "channel_role": False,
                 "create_date": member_0_create_date,
-                "custom_channel_name": False,
                 "custom_notifications": False,
                 "id": member_0.id,
                 "is_favorite": False,
@@ -1140,7 +1132,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "channel_role": False,
                 "create_date": member_0_create_date,
-                "custom_channel_name": False,
                 "custom_notifications": False,
                 "id": member_0.id,
                 "is_favorite": False,
@@ -1170,7 +1161,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "channel_role": False,
                 "create_date": member_0_create_date,
-                "custom_channel_name": False,
                 "custom_notifications": False,
                 "id": member_0.id,
                 "is_favorite": False,
@@ -1200,7 +1190,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "channel_role": False,
                 "create_date": member_0_create_date,
-                "custom_channel_name": False,
                 "custom_notifications": False,
                 "id": member_0.id,
                 "is_favorite": False,
@@ -1232,7 +1221,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "channel_role": False,
                 "create_date": member_0_create_date,
-                "custom_channel_name": False,
                 "custom_notifications": False,
                 "id": member_0.id,
                 "is_favorite": False,

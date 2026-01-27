@@ -1264,7 +1264,7 @@ class DiscussChannel(models.Model):
                 "self_member_id",
                 lambda res: (
                     res.from_method("_store_member_fields"),
-                    res.extend(["custom_channel_name", "custom_notifications"]),
+                    res.extend(["custom_notifications"]),
                     res.extend(["last_interest_dt", "message_unread_counter"]),
                     res.attr("message_unread_counter_bus_id", bus_last_id),
                     res.extend(["mute_until_dt", "new_message_separator"]),
@@ -1379,13 +1379,6 @@ class DiscussChannel(models.Model):
     def _lazy_load_members_channel_types(self):
         """ Return the channel types that load members lazily. """
         return ["channel", "group"]
-
-    def channel_set_custom_name(self, name):
-        self.ensure_one()
-        self.self_member_id.custom_channel_name = name
-        store = Store(bus_channel=self.self_member_id._bus_channel())
-        store.add(self.self_member_id, ["custom_channel_name"])
-        store.bus_send()
 
     def channel_rename(self, name):
         self.ensure_one()
