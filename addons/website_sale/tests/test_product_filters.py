@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests import tagged
 from odoo.tools import SQL
 
@@ -96,65 +96,77 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             ) for recs in (cls.product_tmpls.product_variant_ids, cls.product_tmpls)
         ))
 
-    def test_latest_sold_filter(self):
-        """Check the latest sold filter after selling 1 computer and 3 different cases.
-
-        When showing variants, the computer should be the most sold product.
-        When hiding variants, the case should be the most sold product.
-        """
+    def test_latest_sold_filter_returns_latest_sold_product(self):
+        base_time = fields.Datetime.now()
         computer = self.computer.product_variant_id
-        self.empty_cart.write({
-            'website_id': self.website.id,
-            'order_line': [
-                Command.create({'product_id': product_id})
-                for product_id in (computer + self.pink_case_M + self.pink_case_L).ids
-            ],
-        })
-        self.empty_cart.action_confirm()
-
-        self.cart.order_line.unlink()
-        self.cart.write({
-            'website_id': self.website.id,
-            'order_line': [
-                Command.create({'product_id': product_id})
-                for product_id in (computer + self.black_case_M).ids
-            ],
-        })
-        self.cart.action_confirm()
-
+        so_computer = self._create_so(
+            date_order=base_time,
+            state='sale',
+            order_line=[Command.create({'product_id': computer.id})],
+        )
+        # Create a second sale order that is the most recent.
+        self._create_so(
+            date_order=fields.Datetime.add(so_computer.date_order, hours=1),
+            state='sale',
+            order_line=[Command.create({'product_id': self.pink_case_M.id})],
+        )
         dyn_filter = self.env.ref('website_sale.dynamic_filter_latest_sold_products')
         with MockRequest(self.env, website=self.website):
-            with_variants = self.WebsiteSnippetFilter.with_context(
-                dynamic_filter=dyn_filter,
-                hide_variants=False,
-                website_id=self.website.id,
+            products = self.WebsiteSnippetFilter.with_context(
+                dynamic_filter=dyn_filter, website_id=self.website.id
             )._get_products('latest_sold')
-            self.assertSetEqual(
-                {p['product_id'] for p in with_variants},
-                {computer.id, *(self.pink_case_L + self.pink_case_M + self.black_case_M).ids},
-                '"Latest sold" filter should return 4 products without hiding variants',
-            )
-            self.assertEqual(
-                with_variants[0]['product_id'],
-                computer.id,
-                "When showing variants, `computer` should be the most sold product",
-            )
+        self.assertEqual(products[0]['product_id'], self.pink_case_M.id)
 
-            no_variants = self.WebsiteSnippetFilter.with_context(
-                dynamic_filter=dyn_filter,
-                hide_variants=True,
-                website_id=self.website.id,
+    def test_latest_sold_filter_returns_all_variants_by_default(self):
+        self._create_so(
+            state='sale',
+            order_line=[
+                Command.create({'product_id': self.pink_case_M.id}),
+                Command.create({'product_id': self.pink_case_L.id}),
+            ],
+        )
+        dyn_filter = self.env.ref('website_sale.dynamic_filter_latest_sold_products')
+        with MockRequest(self.env, website=self.website):
+            products = self.WebsiteSnippetFilter.with_context(
+                dynamic_filter=dyn_filter, website_id=self.website.id, limit=2
             )._get_products('latest_sold')
-            self.assertSetEqual(
-                {p['product_id'] for p in no_variants},
-                {computer.id, self.computer_case.product_variant_id.id},
-                '"Latest sold" filter should return 2 products when hiding variants',
-            )
-            self.assertEqual(
-                no_variants[0]['product_id'],
-                self.computer_case.product_variant_id.id,
-                "When hiding variants, `computer_case` should be the most sold product",
-            )
+        product_ids = {p['product_id'] for p in products}
+        self.assertSetEqual(product_ids, {self.pink_case_M.id, self.pink_case_L.id})
+
+    def test_latest_sold_filter_hides_variants_if_context(self):
+        self._create_so(
+            state='sale',
+            order_line=[
+                Command.create({'product_id': self.pink_case_M.id}),
+                Command.create({'product_id': self.pink_case_L.id}),
+            ],
+        )
+        dyn_filter = self.env.ref('website_sale.dynamic_filter_latest_sold_products')
+        with MockRequest(self.env, website=self.website):
+            products = self.WebsiteSnippetFilter.with_context(
+                dynamic_filter=dyn_filter, hide_variants=True, website_id=self.website.id
+            )._get_products('latest_sold')
+        product_ids = {p['product_id'] for p in products}
+        self.assertSetEqual(product_ids, {self.computer_case.product_variant_id.id})
+
+    def test_latest_sold_filter_returns_only_sellable_products(self):
+        not_sellable_product = self.env['product.product'].create({
+            'name': "Not sellable product",
+            'sale_ok': False,
+        })
+        self._create_so(
+            state='sale',
+            order_line=[
+                Command.create({'product_id': self.pink_case_M.id}),
+                Command.create({'product_id': not_sellable_product.id}),
+            ],
+        )
+        dyn_filter = self.env.ref('website_sale.dynamic_filter_latest_sold_products')
+        with MockRequest(self.env, website=self.website):
+            products = self.WebsiteSnippetFilter.with_context(
+                dynamic_filter=dyn_filter, website_id=self.website.id
+            )._get_products('latest_sold')
+        self.assertTrue(all(p['_record'].sale_ok for p in products))
 
     def test_latest_viewed_filter(self):
         """Check the latest viewed filter after viewing 2 different cases and 1 computer.

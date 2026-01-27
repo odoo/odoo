@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import Counter
 from functools import partial
 
 from odoo import _, api, fields, models
@@ -182,6 +181,7 @@ class WebsiteSnippetFilter(models.Model):
             [('website_published', '=', True)] if self.env.user._is_public() or self.env.user._is_portal() else [],
             website.website_domain(),
             [('company_id', 'in', [False, website.company_id.id])],
+            [('sale_ok', '=', True)],
             search_domain or [],
         ])
         products = handler(website, limit, domain, **kwargs)
@@ -197,20 +197,12 @@ class WebsiteSnippetFilter(models.Model):
             ('state', '=', 'sale'),
         ], limit=8, order='date_order DESC')
         if sale_orders:
+            sold_products = sale_orders.order_line.product_id
             if self.env.context.get('hide_variants'):
-                sold_products = Counter(
-                    sol.product_id.product_tmpl_id.product_variant_id
-                    for sol in sale_orders.order_line
-                )
-            else:
-                sold_products = Counter(sol.product_id for sol in sale_orders.order_line)
+                sold_products = sold_products.product_tmpl_id.product_variant_id
             if sold_products:
-                domain = Domain(domain) & Domain('id', 'in', [p.id for p, _ in sold_products.most_common(limit)])
-                products = self.env['product.product'].with_context(
-                    display_default_code=False,
-                ).search(domain, limit=limit)
-                products = products.sorted(key=sold_products.get, reverse=True)
-        return products
+                products = sold_products.filtered_domain(domain)[:limit]
+        return products.with_context(display_default_code=False)
 
     def _get_products_latest_viewed(self, website, limit, domain, **kwargs):
         products = self.env['product.product']
