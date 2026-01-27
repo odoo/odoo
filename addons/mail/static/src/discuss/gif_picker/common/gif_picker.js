@@ -308,4 +308,8 @@ export class GifPicker extends Component {
         }
         this.closeCategories();
     }
+
+    onClickOpenDiscussSetting() {
+        this.env.services.action.doAction("mail.action_open_discuss_settings");
+    }
 }
