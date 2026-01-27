@@ -188,7 +188,7 @@ def toggle_remote_debug(auth_key=""):
     server_url = re.sub(r'^https?://|/|:', '', hostname + "-" + IOT_IDENTIFIER)
     args = ['sudo', 'tailscale', 'up' if auth_key else 'logout']
     if auth_key:
-        args.extend([f'--auth-key={auth_key}', f'--hostname={server_url}'])
+        args.extend([f'--auth-key={auth_key.strip()}', f'--hostname={server_url}'])
     p = subprocess.run(args, check=False)
     if auth_key and p.returncode == 0:
         # Tailscale stores its state in /var, we need to copy it in the root filesystem to persist after reboot

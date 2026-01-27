@@ -70,6 +70,7 @@ class Driver(Thread):
         except Exception as e:
             if action_unique_id:
                 self._recent_action_ids.pop(action_unique_id, None)
+            data.pop('receipt', None)  # avoid logging potentially large receipt
             _logger.exception("Error while executing action %s with params %s", action, data)
             response = {'status': 'error', 'result': str(e), 'session_id': session_id}
 
