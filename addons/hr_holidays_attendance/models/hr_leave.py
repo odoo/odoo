@@ -33,52 +33,15 @@ class HrLeave(models.Model):
         self._check_overtime_deductible(self)
         return res
 
-    @api.model
-    def _get_deductible_employee_overtime(self, employees):
-        # return dict {employee: number of hours}
-        diff_by_employee = defaultdict(lambda: 0)
-        for employee, hours in self.env['hr.attendance.overtime.line'].sudo()._read_group(
-            domain=[
-                ('compensable_as_leave', '=', True),
-                ('employee_id', 'in', employees.ids),
-                ('status', '=', 'approved'),
-            ],
-            groupby=['employee_id'],
-            aggregates=['manual_duration:sum'],
-        ):
-            diff_by_employee[employee] += hours
-        for employee, hours in self._read_group(
-            domain=[
-                ('holiday_status_id.overtime_deductible', '=', True),
-                ('holiday_status_id.requires_allocation', '=', False),
-                ('employee_id', 'in', employees.ids),
-                ('state', 'not in', ['refuse', 'cancel']),
-            ],
-            groupby=['employee_id'],
-            aggregates=['number_of_hours:sum'],
-        ):
-            diff_by_employee[employee] -= hours
-        for employee, hours in self.env['hr.leave.allocation']._read_group(
-            domain=[
-                ('holiday_status_id.overtime_deductible', '=', True),
-                ('employee_id', 'in', employees.ids),
-                ('state', 'in', ['confirm', 'validate', 'validate1']),
-            ],
-            groupby=['employee_id'],
-            aggregates=['number_of_hours_display:sum'],
-        ):
-            diff_by_employee[employee] -= hours
-        return diff_by_employee
-
     @api.depends('number_of_hours', 'employee_id', 'holiday_status_id')
     def _compute_employee_overtime(self):
-        diff_by_employee = self._get_deductible_employee_overtime(self.employee_id)
+        diff_by_employee = self.employee_id._get_deductible_employee_overtime()
         for leave in self:
             leave.employee_overtime = diff_by_employee[leave.employee_id]
 
     def _check_overtime_deductible(self, leaves):
         # If the type of leave is overtime deductible, we have to check that the employee has enough extra hours
-        hours = self._get_deductible_employee_overtime(leaves.employee_id)
+        hours = leaves.employee_id._get_deductible_employee_overtime()
         for leave in leaves.filtered('overtime_deductible'):
             if hours[leave.employee_id] < 0:
                 if leave.employee_id.user_id == self.env.user:
