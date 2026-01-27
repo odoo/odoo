@@ -924,10 +924,11 @@ class AccountAccount(models.Model):
         super().copy_translations(new, excluded=tuple(excluded)+('name',))
         if new.name == self.env._('%s (copy)', self.name):
             name_field = self._fields['name']
-            self.env.cache.update_raw(new, name_field, [{
+            assert name_field.translate
+            name_field._update_cache(new.with_context(prefetch_langs=True), {
                 lang: self.env._('%s (copy)', tr)
                 for lang, tr in name_field._get_stored_translations(self).items()
-            }], dirty=True)
+            }, dirty=True)
 
     @api.model
     def _load_precommit_update_opening_move(self):

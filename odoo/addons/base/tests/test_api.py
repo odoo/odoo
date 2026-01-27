@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from pprint import pformat
 
 from odoo import models, Command
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.tools import mute_logger, unique, lazy
+from odoo.tools import SQL, mute_logger, unique, lazy
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tests import tagged
 
@@ -249,11 +249,11 @@ class TestAPI(SavepointCaseWithUserDemo):
         # fetch data in the cache
         for p in partners:
             p.name, p.company_id.name, p.user_id.name, p.contact_address
-        self.env.cache.check(self.env)
+        self.check_cache_consistency()
 
         # change its parent
         child.write({'parent_id': partner2.id})
-        self.env.cache.check(self.env)
+        self.check_cache_consistency()
 
         # check recordsets
         self.assertEqual(child.parent_id, partner2)
@@ -261,16 +261,16 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertIn(child, partner2.child_ids)
         self.assertEqual(set(partner1.child_ids + child), set(children1))
         self.assertEqual(set(partner2.child_ids), set(children2 + child))
-        self.env.cache.check(self.env)
+        self.check_cache_consistency()
 
         # delete it
         child.unlink()
-        self.env.cache.check(self.env)
+        self.check_cache_consistency()
 
         # check recordsets
         self.assertEqual(set(partner1.child_ids), set(children1) - set([child]))
         self.assertEqual(set(partner2.child_ids), set(children2))
-        self.env.cache.check(self.env)
+        self.check_cache_consistency()
 
         # convert from the cache format to the write format
         partner = partner1
@@ -278,6 +278,57 @@ class TestAPI(SavepointCaseWithUserDemo):
         data = partner._convert_to_write(partner._cache)
         self.assertEqual(data['country_id'], partner.country_id.id)
         self.assertEqual(data['child_ids'], [Command.set(partner.child_ids.ids)])
+
+    def check_cache_consistency(self):
+        env = self.env
+        depends_context = env.registry.field_depends_context
+        invalids = []
+
+        def process(model, field, field_cache):
+            # ignore new records and records to flush
+            dirty_ids = env.transaction.field_dirty.get(field, ())
+            ids = [id_ for id_ in field_cache if id_ and id_ not in dirty_ids]
+            if not ids:
+                return
+
+            # select the column for the given ids
+            query = models.Query(model)
+            sql_id = query.table.id
+            sql_field = query.table[field.name]
+            if field.type == 'binary' and (
+                model.env.context.get('bin_size') or model.env.context.get('bin_size_' + field.name)
+            ):
+                sql_field = SQL('pg_size_pretty(length(%s)::bigint)', sql_field)
+            query.add_where(SQL("%s IN %s", sql_id, tuple(ids)))
+            env.cr.execute(query.select(sql_id, sql_field))
+
+            # compare returned values with corresponding values in cache
+            for id_, value in env.cr.fetchall():
+                cached = field_cache[id_]
+                if value == cached or (not value and not cached):
+                    continue
+                invalids.append((model.browse((id_,)), field, {'cached': cached, 'fetched': value}))
+
+        for field, field_cache in env.transaction.field_data.items():
+            # check column fields only
+            if not field.store or not field.column_type or field.translate or field.company_dependent:
+                continue
+
+            model = env[field.model_name]
+            if field in depends_context:
+                for context_keys, inner_cache in field_cache.items():
+                    context = dict(zip(depends_context[field], context_keys))
+                    if 'company' in context:
+                        # the cache key 'company' actually comes from context
+                        # key 'allowed_company_ids' (see property env.company
+                        # and method env.cache_key())
+                        context['allowed_company_ids'] = [context.pop('company')]
+                    process(model.with_context(context), field, inner_cache)
+            else:
+                process(model, field, field_cache)
+
+        if invalids:
+            self.fail("Invalid cache: %s", pformat(invalids))
 
     @mute_logger('odoo.models')
     def test_60_prefetch(self):

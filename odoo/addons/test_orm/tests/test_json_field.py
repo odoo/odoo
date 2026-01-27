@@ -18,7 +18,7 @@ class JsonFieldTest(TransactionCase):
         self.assertEqual(self.discussion_1.history, {'delete_messages': []})
 
         # Check that it is not the value of the cache return by convert_to_record
-        self.assertIsNot(self.discussion_1.history, self.env.cache.get(self.discussion_1, type(self.discussion_1).history))
+        self.assertIsNot(self.discussion_1.history, self.discussion_1._cache['history'])
 
         self.assertEqual(self.discussion_1.history, {'delete_messages': []})
 

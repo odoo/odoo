@@ -563,8 +563,9 @@ class Environment(Mapping[str, "BaseModel"]):
 class Transaction:
     """ A object holding ORM data structures for a transaction. """
     __slots__ = (
-        '_Transaction__file_open_tmp_paths', '_recent_envs', '_weak_envs',
-        'access_read', 'cache', 'default_env',
+        '_Transaction__file_open_tmp_paths',
+        '_cache', '_recent_envs', '_weak_envs',
+        'access_read', 'default_env',
         'field_data', 'field_data_patches', 'field_dirty',
         'protected', 'registry', 'tocompute',
     )
@@ -594,13 +595,19 @@ class Transaction:
         # pending computations {field: ids}
         self.tocompute = defaultdict["Field", OrderedSet["IdType"]](OrderedSet)
         # backward-compatible view of the cache
-        self.cache = Cache(self)
+        self._cache = Cache(self)
 
         # permission cache for record access by user
         # {access_context: {model_name: {record_id: bool}}}
         self.access_read = defaultdict[tuple, defaultdict[str, dict["IdType", bool]]](lambda: defaultdict(dict))
         # temporary directories (managed in odoo.tools.file_open_temporary_directory)
         self.__file_open_tmp_paths = []  # type: ignore # noqa: PLE0237
+
+    @property
+    def cache(self):
+        import warnings  # noqa: PLC0415
+        warnings.warn("Since 20.0 use fields method directly for cache manipulation", DeprecationWarning, stacklevel=2)
+        return self._cache
 
     @property
     def envs(self):

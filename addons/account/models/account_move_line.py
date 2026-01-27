@@ -524,10 +524,13 @@ class AccountMoveLine(models.Model):
 
     @api.depends('move_id')
     def _compute_display_type(self):
+        account_cache = self._fields['account_id']._get_cache(self.env)
+        tax_line_cache = self._fields['tax_line_id']._get_cache(self.env)
+
         for line in self.filtered(lambda l: not l.display_type):
             # avoid cyclic dependencies with _compute_account_id
-            account_set = self.env.cache.contains(line, line._fields['account_id'])
-            tax_set = self.env.cache.contains(line, line._fields['tax_line_id'])
+            account_set = line.id in account_cache
+            tax_set = line.id in tax_line_cache
             line.display_type = (
                 'tax' if tax_set and line.tax_line_id else
                 'payment_term' if account_set and line.account_id.account_type in ['asset_receivable', 'liability_payable'] else
@@ -1614,8 +1617,8 @@ class AccountMoveLine(models.Model):
         # Invalidate cache of related moves
         if fnames is None or 'move_id' in fnames:
             field = self._fields['move_id']
-            lines = self.env.cache.get_records(self, field)
-            move_ids = {id_ for id_ in self.env.cache.get_values(lines, field) if id_}
+            field_cache = field._get_cache(self.env)
+            move_ids = {id_ for id_ in field_cache.values() if id_}
             if move_ids:
                 self.env['account.move'].browse(move_ids).invalidate_recordset()
         return super().invalidate_model(fnames, flush)
@@ -1624,7 +1627,9 @@ class AccountMoveLine(models.Model):
         # Invalidate cache of related moves
         if fnames is None or 'move_id' in fnames:
             field = self._fields['move_id']
-            move_ids = {id_ for id_ in self.env.cache.get_values(self, field) if id_}
+            field_cache = field._get_cache(self.env)
+            line_ids = set(self._ids)
+            move_ids = {id_ for line_id, id_ in field_cache.items() if line_id in line_ids and id_}
             if move_ids:
                 self.env['account.move'].browse(move_ids).invalidate_recordset()
         return super().invalidate_recordset(fnames, flush)

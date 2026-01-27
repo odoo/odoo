@@ -5730,7 +5730,7 @@ class BaseModel(metaclass=MetaModel):
                 raise AssertionError(
                     f"Could not find all values of {record} to flush them\n"
                     f"    Context: {self.env.context}\n"
-                    f"    Cache: {self.env.cache!r}"
+                    f"    Cache: {dict(record._cache)!r}"
                 )
             model.browse(some_ids)._write_multi(vals_list)
 
