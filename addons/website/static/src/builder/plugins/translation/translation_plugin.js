@@ -122,11 +122,10 @@ export class TranslationPlugin extends Plugin {
     };
 
     setup() {
-        this.nonTranslatedSelector =
-            `:not(${[
-                ...this.config.translatedElements,
-                "a:not([type]):not([role=button])", // see is_translatable_link
-            ].join(", ")})` + `:not(.o_translate_inline)`;
+        this.nonTranslatedSelector = `:not(${[
+            ...this.config.translatedElements,
+            "a:not([type]):not([role=button])", // see is_translatable_link
+        ].join(", ")})`;
     }
 
     prepareTranslation() {
