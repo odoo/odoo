@@ -1,9 +1,46 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
 from odoo import models
 
 
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
+
+    def _get_deductible_employee_overtime(self):
+        # return dict {employee: number of hours}
+        diff_by_employee = defaultdict(lambda: 0)
+        for employee, hours in self.env['hr.attendance.overtime.line'].sudo()._read_group(
+            domain=[
+                ('compensable_as_leave', '=', True),
+                ('employee_id', 'in', self.ids),
+                ('status', '=', 'approved'),
+            ],
+            groupby=['employee_id'],
+            aggregates=['manual_duration:sum'],
+        ):
+            diff_by_employee[employee] += hours
+        for employee, hours in self.env['hr.leave']._read_group(
+            domain=[
+                ('holiday_status_id.overtime_deductible', '=', True),
+                ('holiday_status_id.requires_allocation', '=', False),
+                ('employee_id', 'in', self.ids),
+                ('state', 'not in', ['refuse', 'cancel']),
+            ],
+            groupby=['employee_id'],
+            aggregates=['number_of_hours:sum'],
+        ):
+            diff_by_employee[employee] -= hours
+        for employee, hours in self.env['hr.leave.allocation']._read_group(
+            domain=[
+                ('holiday_status_id.overtime_deductible', '=', True),
+                ('employee_id', 'in', self.ids),
+                ('state', 'in', ['confirm', 'validate', 'validate1']),
+            ],
+            groupby=['employee_id'],
+            aggregates=['number_of_hours_display:sum'],
+        ):
+            diff_by_employee[employee] -= hours
+        return diff_by_employee
 
     def get_overtime_data_by_employee(self):
         """
@@ -21,9 +58,7 @@ class HrEmployee(models.Model):
                 "unspent_compensable_overtime": 0,
             }
 
-        unspent_overtime = self.env[
-            'hr.leave'
-        ]._get_deductible_employee_overtime(self)
+        unspent_overtime = self._get_deductible_employee_overtime()
         for employee in unspent_overtime:
             overtime_data[employee.id]['unspent_compensable_overtime'] += max(
                 0, unspent_overtime[employee]
