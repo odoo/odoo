@@ -1223,11 +1223,25 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _add_invoice_header_nodes(self, document_node, vals):
         invoice = vals['invoice']
+        code = None
+        if 'process_type' in vals and vals['process_type'] == 'selfbilling':
+            code = 389
+        # if an invoice was sent before, it has a message uuid, so it's a 'corrected invoice'
+        elif 'peppol_message_uuid' in invoice._fields and invoice.peppol_message_uuid:
+            code = 384
+        elif vals['document_type'] == 'debit_note':
+            code = 383
+        elif 'is_downpayment' in invoice['invoice_line_ids']._fields and any(line.is_downpayment for line in invoice['invoice_line_ids']):
+            code = 386
+        elif vals['document_type'] == 'invoice':
+            code = 380
+        invoiceTypeCode = {'_text': code}
+
         document_node.update({
             'cbc:UBLVersionID': {'_text': '2.0'},
             'cbc:ID': {'_text': invoice.name},
             'cbc:IssueDate': {'_text': invoice.invoice_date},
-            'cbc:InvoiceTypeCode': {'_text': 380} if vals['document_type'] == 'invoice' else None,
+            'cbc:InvoiceTypeCode': invoiceTypeCode,
             'cbc:Note': {'_text': html2plaintext(invoice.narration) if invoice.narration else None},
             'cbc:DocumentCurrencyCode': {'_text': invoice.currency_id.name},
             'cac:OrderReference': {
