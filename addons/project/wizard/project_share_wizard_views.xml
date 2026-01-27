@@ -20,7 +20,13 @@
                 <p class="alert alert-warning" invisible="access_warning == ''" role="alert"><field name="access_warning"/></p>
                 <group>
                     <field options="{'horizontal': true}" name="access_mode" widget="radio" invisible="not display_access_mode" class="mb-4"/>
-                    <field name="share_link" widget="CopyClipboardChar" options="{'string': 'Copy Link'}" invisible="access_mode == 'edit'" string="Link" class="mb-4"/>
+                    <field name="share_link_copy_text" invisible="True"/>
+                    <field name="share_link" 
+                           string="Link" 
+                           widget="CopyClipboardChar" 
+                           options="{'copy_text_field': 'share_link_copy_text'}" 
+                           invisible="access_mode == 'edit'" 
+                           class="mb-4"/>
                     <div class="o_td_label mb-4">
                         <label for="partner_ids" string="Invite People" invisible="access_mode == 'read'"/>
                         <label for="partner_ids" invisible="access_mode == 'edit'"/>
