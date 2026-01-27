@@ -23,7 +23,6 @@ up a management by affair.
         'security/hr_timesheet_security.xml',
         'security/ir.model.access.csv',
         'security/ir.model.access.xml',
-        'data/digest_data.xml',
         'data/portal_entry_data.xml',
         'views/hr_timesheet_views.xml',
         'views/res_config_settings_views.xml',
