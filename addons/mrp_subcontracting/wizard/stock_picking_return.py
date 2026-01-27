@@ -19,7 +19,7 @@ class StockReturnPickingLine(models.TransientModel):
 
     def _prepare_move_default_values(self, new_picking):
         vals = super()._prepare_move_default_values(new_picking)
-        if self.move_id.is_subcontract:
+        if self.move_id.is_subcontract and not new_picking.return_id.return_id:
             vals['location_dest_id'] = new_picking.partner_id.with_company(new_picking.company_id).property_stock_subcontractor.id
         vals['is_subcontract'] = False
         return vals

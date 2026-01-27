@@ -1284,6 +1284,47 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             {'product_id': self.comp1.id, 'location_id': stock_location.id, 'location_dest_id': supplier_location.id}
         ])
 
+    def test_subcontracting_order_returned_for_exchange(self):
+        """
+        Test that the correct locations are used when returning a picking order for exchange
+        """
+        initial_picking = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'partner_id': self.subcontractor_partner1.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'move_ids': [
+                Command.create({
+                    'name': self.finished.name,
+                    'product_id': self.finished.id,
+                })
+            ]
+        })
+        initial_picking.action_confirm()
+        initial_picking.move_ids.quantity = 1
+        initial_picking.button_validate()
+        return_wizard = Form(
+            self.env['stock.return.picking'].with_context(active_id=initial_picking.id, active_model='stock.picking')
+        ).save()
+        return_wizard.product_return_moves.quantity = 1
+        res = return_wizard.action_create_exchanges()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        exchange_picking = return_picking.return_ids
+        self.assertRecordValues(initial_picking.move_ids, [{
+            'location_id': self.subcontractor_partner1.property_stock_subcontractor.id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+        }])
+        self.assertEqual(return_picking.return_id, initial_picking)
+        self.assertRecordValues(return_picking.move_ids, [{
+            'location_id': self.warehouse.lot_stock_id.id,
+            'location_dest_id': self.subcontractor_partner1.property_stock_subcontractor.id,
+        }])
+        self.assertEqual(exchange_picking.return_id.return_id, initial_picking)
+        self.assertRecordValues(exchange_picking.move_ids, [{
+            'location_id': self.subcontractor_partner1.property_stock_subcontractor.id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+        }])
+
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):
