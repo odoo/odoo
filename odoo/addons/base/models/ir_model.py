@@ -2483,7 +2483,7 @@ class IrModelData(models.Model):
         selection_ids = []
         constraint_ids = []
 
-        module_data = self.search([('module', 'in', modules_to_remove)], order='id DESC')
+        module_data = self.search([('module', 'in', modules_to_remove), ('res_id', '!=', False)], order='id DESC')
         for data in module_data:
             if data.model == 'ir.model':
                 model_ids.append(data.res_id)
