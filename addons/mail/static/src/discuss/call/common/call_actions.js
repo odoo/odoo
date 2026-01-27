@@ -86,7 +86,7 @@ registerCallAction("deafen", {
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.DANGER : undefined),
 });
 export const cameraOnAction = {
-    badge: ({ owner, store }) => !owner.env.inCallMenu && store.rtc.cameraPermission !== "granted",
+    badge: ({ owner, store, channel }) => !owner.env.inCallMenu && channel?.default_display_mode === "video_full_screen" && store.rtc.cameraPermission !== "granted",
     badgeIcon: "fa fa-exclamation",
     condition: ({ channel }) => channel?.isSelfInCall,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
@@ -102,12 +102,15 @@ export const cameraOnAction = {
     onSelected: ({ owner, store }) => store.rtc.toggleVideo("camera", { env: owner.env }),
     sequence: 10,
     sequenceGroup: 120,
-    tags: ({ action, store }) => {
+    tags: ({ action, store, channel }) => {
         const tags = [];
         if (action.isActive) {
             tags.push(ACTION_TAGS.SUCCESS);
         }
-        if (store.rtc.cameraPermission !== "granted") {
+        if (
+            channel?.default_display_mode === "video_full_screen" &&
+            store.rtc.cameraPermission !== "granted"
+        ) {
             tags.push(ACTION_TAGS.DANGER, ACTION_TAGS.WARNING_BADGE);
         }
         return tags;
