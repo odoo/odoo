@@ -2,7 +2,6 @@ from odoo import http, fields
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.service.model import call_kw
-from odoo.tools import float_round
 from werkzeug.exceptions import Forbidden, NotFound, BadRequest, Unauthorized
 from odoo.exceptions import MissingError
 from odoo.tools import consteq
@@ -80,45 +79,80 @@ class PosSelfOrderController(http.Controller):
 
     def _verify_line_price(self, lines, pos_config, preset_id):
         pricelist = preset_id.pricelist_id or pos_config.pricelist_id if preset_id else pos_config.pricelist_id
-        sale_price_digits = pos_config.env['decimal.precision'].precision_get('Product Price')
 
         for line in lines:
+            if len(line.combo_line_ids) == 0:
+                continue
+
             product = line.product_id
             lst_price = pricelist._get_product_price(product, quantity=line.qty) if pricelist else product.lst_price
             selected_attributes = line.attribute_value_ids
-            lst_price += sum(selected_attributes.mapped('price_extra'))
-            price_extra = sum(attr.price_extra for attr in selected_attributes)
+            price_extra = sum(attr.price_extra for attr in selected_attributes if attr.attribute_id.create_variant != 'always')
             lst_price += price_extra
-
             fiscal_pos = preset_id.fiscal_position_id or pos_config.default_fiscal_position_id if preset_id else pos_config.default_fiscal_position_id
-            if len(line.combo_line_ids) > 0:
-                original_total = sum(line.combo_line_ids.mapped("combo_item_id").combo_id.mapped("base_price"))
-                remaining_total = lst_price
-                factor = lst_price / original_total if original_total > 0 else 1
+            self._compute_combo_price(line, pricelist, fiscal_pos)
 
-                for i, pos_order_line in enumerate(line.combo_line_ids):
-                    child_product = pos_order_line.product_id
-                    price_unit = float_round(pos_order_line.combo_item_id.combo_id.base_price * factor, precision_digits=sale_price_digits)
-                    remaining_total -= price_unit
+    def _compute_combo_price(self, parent_line, pricelist, fiscal_position):
+        """
+        This method is a python version of odoo/addons/point_of_sale/static/src/app/models/utils/compute_combo_items.js
+        It is used to compute the price of combo items on the server side when an order is received from
+        the POS frontend. In an accounting perspective, isn't correct but we still waiting the combo
+        computation from accounting side.
+        """
+        child_lines = parent_line.combo_line_ids
+        currency = parent_line.order_id.currency_id
+        taxes = fiscal_position.map_tax(parent_line.product_id.taxes_id)
+        parent_line.tax_ids = taxes
+        parent_lst_price = pricelist._get_product_price(parent_line.product_id, parent_line.qty)
+        child_line_free = []
+        child_line_extra = []
 
-                    if i == len(line.combo_line_ids) - 1:
-                        price_unit += remaining_total
+        child_lines_by_combo = {}
+        for line in child_lines:
+            combo = line.combo_item_id.combo_id
+            child_lines_by_combo.setdefault(combo, []).append(line)
 
-                    selected_attributes = pos_order_line.attribute_value_ids
-                    price_extra_child = sum(attr.price_extra for attr in selected_attributes)
-                    price_unit += pos_order_line.combo_item_id.extra_price + price_extra_child
+        for combo, child_lines in child_lines_by_combo.items():
+            free_count = 0
+            max_free = combo.qty_free
 
-                    taxes = fiscal_pos.map_tax(child_product.taxes_id) if fiscal_pos else child_product.taxes_id
-                    pdetails = taxes.compute_all(price_unit, pos_config.currency_id, pos_order_line.qty, child_product)
+            for line in child_lines:
+                qty_free = max(0, max_free - free_count)
+                free_qty = min(line.qty, qty_free)
+                extra_qty = line.qty - free_qty
 
-                    pos_order_line.write({
-                        'price_unit': price_unit,
-                        'price_subtotal': pdetails.get('total_excluded'),
-                        'price_subtotal_incl': pdetails.get('total_included'),
-                        'price_extra': price_extra_child,
-                        'tax_ids': child_product.taxes_id,
-                    })
-                lst_price = 0
+                if free_qty > 0:
+                    child_line_free.append(line)
+                    free_count += free_qty
+
+                if extra_qty > 0:
+                    child_line_extra.append(line)
+
+        original_total = sum(line.combo_item_id.combo_id.base_price * line.qty for line in child_line_free if line.combo_item_id.combo_id.qty_free > 0)
+        remaining_total = parent_lst_price
+
+        for index, child in enumerate(child_line_free):
+            combo_item = child.combo_item_id
+            combo = combo_item.combo_id
+            unit_devision_factor = original_total or 1
+            price_unit = currency.round(combo.base_price * parent_lst_price / unit_devision_factor)
+            remaining_total -= price_unit * child.qty
+
+            if index == len(child_line_free) - 1:
+                price_unit += remaining_total
+
+            selected_attributes = child.attribute_value_ids
+            price_extra = sum(attr.price_extra for attr in selected_attributes)
+            total_price = price_unit + price_extra + child.combo_item_id.extra_price
+            child.price_unit = total_price
+
+        for child in child_line_extra:
+            combo_item = child.combo_item_id
+            price_unit = currency.round(combo_item.combo_id.base_price)
+            selected_attributes = child.attribute_value_ids
+            price_extra = sum(attr.price_extra for attr in selected_attributes)
+            total_price = price_unit + price_extra + child.combo_item_id.extra_price
+            child.price_unit = total_price
 
     @http.route('/pos-self-order/validate-partner', auth='public', type='jsonrpc', website=True)
     def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None, email=None):
