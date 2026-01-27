@@ -109,14 +109,16 @@ class TestSaleMrpFlow(test_sale_mrp_flow.TestSaleMrpFlowCommon):
             'order_line': [Command.create({
                 'product_id': kit.id,
                 'product_uom_qty': 3,
-                'product_uom_id': self.uom_unit.id
+                'product_uom_id': self.uom_ten.id
             })]
         })
-        self.assertEqual(so.order_line.purchase_price, 60)
+        self.assertEqual(so.order_line.purchase_price, 600)
         so.action_confirm()
-        self.assertEqual(so.order_line.purchase_price, 60)
+        self.assertEqual(so.order_line.purchase_price, 600)
         for move in so.picking_ids.move_ids:
             move.quantity = move.product_uom_qty
+        self.assertRecordValues(so.order_line, [{'purchase_price': 600, 'qty_delivered': 0.0}])
         so.picking_ids.button_validate()
         self.assertEqual(so.picking_ids.state, 'done')
-        self.assertEqual(so.order_line.purchase_price, 60)
+        self.assertRecordValues(so.order_line, [{'purchase_price': 600, 'qty_delivered': 3.0}])
+        self.assertEqual(so.order_line.purchase_price, 600)
