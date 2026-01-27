@@ -1,4 +1,4 @@
-html[lang] > body.editor_enable [data-oe-translation-state] {
+html[lang] > body.editor_enable [data-oe-translation-state]:is(.o_savable, .o_savable_attribute):not(.o_not_editable *) {
     --text-translate-highlight-color: #{rgba($o-we-content-to-translate-color, 0.5)};
 
     &[data-oe-translation-state="translated"],
