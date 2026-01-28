@@ -825,7 +825,7 @@ test("update existing chart to cumulate past data", async () => {
 
 test("Can insert odoo chart from a different model", async () => {
     const { model } = await createModelWithDataSource();
-    insertListInSpreadsheet(model, { model: "product", columns: ["name"] });
+    insertListInSpreadsheet(model, { model: "product", columns: [{ name: "name" }] });
     await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
     const sheetId = model.getters.getActiveSheetId();
     expect(model.getters.getChartIds(sheetId).length).toBe(0);

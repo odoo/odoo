@@ -48,11 +48,27 @@ const ODOO_LIST_HEADER = {
         const field = toString(fieldName);
         assertListsExists(id, this.getters);
         const displayName = toString(fieldDisplayName);
-        const translatedDisplayName = this.getters.getListHeaderValue(id, field);
-        return displayName || translatedDisplayName;
+        return displayName || this.getters.getListHeaderValue(id, field);
+    },
+    returns: ["NUMBER", "STRING"],
+};
+
+const ODOO_LIST = {
+    description: _t("Get a spillable odoo list function."),
+    args: [
+        arg("list_id (string)", _t("ID of the list.")),
+        arg(`row_count (number, optional)`, _t("number of rows to display")),
+    ],
+    category: "Odoo",
+    compute: function (listId, rowCount) {
+        const id = toString(listId);
+        assertListsExists(id, this.getters);
+        return this.getters.getListValuesAndFormats(id, rowCount?.value);
     },
     returns: ["NUMBER", "STRING"],
 };
 
 functionRegistry.add("ODOO.LIST.VALUE", ODOO_LIST_VALUE);
 functionRegistry.add("ODOO.LIST.HEADER", ODOO_LIST_HEADER);
+
+functionRegistry.add("ODOO.LIST", ODOO_LIST);

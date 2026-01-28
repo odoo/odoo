@@ -135,12 +135,13 @@ class SpreadsheetMixin(models.AbstractModel):
                 {
                     "id": "sheet1",
                     "name": _("Sheet1"),
-                }
+                },
             ],
             "settings": {
                 "locale": locale,
             },
             "revisionId": "START_REVISION",
+            "version": "19.1.0",
         }
 
     def _zip_xslx_files(self, files):
