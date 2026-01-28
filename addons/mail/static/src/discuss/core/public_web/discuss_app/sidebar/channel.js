@@ -1,8 +1,7 @@
 import { CountryFlag } from "@mail/core/common/country_flag";
+import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { DiscussSidebarChannelActions } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel_actions";
 import { DiscussSidebarSubchannel } from "@mail/discuss/core/public_web/discuss_app/sidebar/subchannel";
-import { ImStatus } from "@mail/core/common/im_status";
-import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 
 import { useService } from "@web/core/utils/hooks";
@@ -23,11 +22,10 @@ export class DiscussSidebarChannel extends Component {
     static props = ["channel"];
     static components = {
         CountryFlag,
+        DiscussAvatar,
         DiscussSidebarChannelActions,
         DiscussSidebarSubchannel,
         Dropdown,
-        ImStatus,
-        ThreadIcon,
         UseHoverOverlay,
     };
 
@@ -131,14 +129,6 @@ export class DiscussSidebarChannel extends Component {
         return (
             this.isSelfOrThreadActive &&
             !(this.channel.self_member_id?.mute_until_dt && sub.self_member_id?.mute_until_dt)
-        );
-    }
-
-    get showThreadIcon() {
-        return (
-            this.channel.channel_type === "chat" ||
-            (this.channel.channel_type === "channel" && !this.channel.group_public_id) ||
-            (this.channel.channel_type === "group" && this.channel.hasOtherMembersTyping)
         );
     }
 

@@ -1,3 +1,4 @@
+import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { useEffect } from "@odoo/owl";
@@ -7,7 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { MessagingMenuQuickSearch } from "@mail/core/web/messaging_menu_quick_search";
 
-Object.assign(MessagingMenu.components, { MessagingMenuQuickSearch });
+Object.assign(MessagingMenu.components, { DiscussAvatar, MessagingMenuQuickSearch });
 
 patch(MessagingMenu.prototype, {
     setup() {
@@ -77,7 +78,6 @@ patch(MessagingMenu.prototype, {
             onClick: () => {
                 this.pwa.show();
             },
-            iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,
             isShown: this.store.discuss.activeTab === "notification" && this.canPromptToInstall,
         };
@@ -86,7 +86,6 @@ patch(MessagingMenu.prototype, {
         return {
             body: _t("Stay tuned! Enable push notifications to never miss a message."),
             displayName: _t("Turn on notifications"),
-            iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,
             isShown:
                 this.store.discuss.activeTab === "notification" && this.shouldAskPushPermission,

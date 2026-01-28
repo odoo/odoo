@@ -1,4 +1,4 @@
-import { ImStatus } from "@mail/core/common/im_status";
+import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
 import { Component, onWillStart, useState } from "@odoo/owl";
@@ -9,7 +9,7 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
 export class ChannelInvitation extends Component {
-    static components = { ImStatus, ActionPanel };
+    static components = { ActionPanel, DiscussAvatar };
     static defaultProps = { hasSizeConstraints: false };
     static props = [
         "autofocus?",

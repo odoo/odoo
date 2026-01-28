@@ -1,9 +1,9 @@
-import { ImStatus } from "@mail/core/common/im_status";
+import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { UserMenu } from "@web/webclient/user_menu/user_menu";
 
-Object.assign(UserMenu.components, { ImStatus });
+Object.assign(UserMenu.components, { DiscussAvatar });
 
 patch(UserMenu.prototype, {
     setup() {

@@ -4,6 +4,7 @@ import { Component } from "@odoo/owl";
 import { Thread } from "./thread_model";
 import { _t } from "@web/core/l10n/translation";
 import { ImStatus } from "./im_status";
+import { attClassObjectToString } from "@mail/utils/common/format";
 
 /**
  * @typedef {Object} Props
@@ -20,6 +21,7 @@ export class ThreadIcon extends Component {
         size: { optional: true, validate: (size) => ["small", "medium", "large"].includes(size) },
         className: { type: String, optional: true },
         title: { type: Boolean, optional: true },
+        typing: { type: Boolean, optional: true },
     };
     static defaultProps = {
         size: "medium",
@@ -30,6 +32,7 @@ export class ThreadIcon extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.attClassObjectToString = attClassObjectToString;
     }
 
     get channel() {

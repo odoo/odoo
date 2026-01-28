@@ -7,7 +7,7 @@
         <div class="o-mail-DiscussContent-header ps-3 d-flex flex-shrink-0 align-items-center border-bottom border-dark o-border-opacity-15 gap-1 z-1 flex-grow-0" t-ref="header" t-att-class="{ 'py-1': !state.correspondentLocalDateTimeFormatted }">
             <t t-if="thread">
                 <div t-if="showThreadAvatar" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit">
-                    <img class="rounded-2 object-fit-cover" t-att-src="thread.channel?.parent_channel_id?.avatarUrl ?? thread.channel?.avatarUrl" alt="Thread Image"/>
+                    <DiscussAvatar thread="thread" size="26"/>
                     <FileUploader t-if="isThreadAvatarEditable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
                         <t t-set-slot="toggler">
                             <a href="#" class="position-absolute z-1 h-100 w-100 rounded-2 start-0 bottom-0" title="Upload Avatar">
@@ -15,7 +15,6 @@
                             </a>
                         </t>
                     </FileUploader>
-                    <ImStatus t-if="thread.channel?.showImStatus" className="'o-mail-DiscussContent-headerImStatus position-absolute'" member="thread.channel.correspondent"/>
                 </div>
                 <t t-else="">
                     <ThreadIcon className="'align-self-center fs-3 my-2 opacity-75'" size="'large'" thread="thread"/>

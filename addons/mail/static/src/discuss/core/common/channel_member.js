@@ -1,4 +1,4 @@
-import { ImStatus } from "@mail/core/common/im_status";
+import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
 import { Component, useState } from "@odoo/owl";
@@ -6,7 +6,7 @@ import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class ChannelMember extends Component {
-    static components = { ImStatus, ActionPanel };
+    static components = { ActionPanel, DiscussAvatar };
     static props = ["member"];
     static template = "discuss.ChannelMember";
 

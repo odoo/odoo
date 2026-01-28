@@ -435,6 +435,20 @@ export class DiscussChannel extends Record {
     get showImStatus() {
         return this.channel_type === "chat" && this.correspondent;
     }
+    /**
+     * @param {Object} [param0={}]
+     * @param {boolean} [param0.ignoreTyping=false] Whether the "is typing" should be ignored.
+     *   If the condition for showing of thread icon is independent of "is typing", this has no effect.
+     */
+    showThreadIcon({ ignoreTyping = false } = {}) {
+        return (
+            this.channel.channel_type === "chat" ||
+            (this.channel.channel_type === "channel" && !this.channel.group_public_id) ||
+            (this.channel.channel_type === "group" &&
+                !ignoreTyping &&
+                this.channel.hasOtherMembersTyping)
+        );
+    }
     get showUnreadBanner() {
         return this.self_member_id?.message_unread_counter_ui > 0;
     }

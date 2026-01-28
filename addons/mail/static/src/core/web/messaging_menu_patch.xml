@@ -41,15 +41,12 @@
                 <NotificationItem
                     important="1"
                     isActive="state.activeIndex === itemIndex"
-                    iconSrc="installationRequest.iconSrc"
                     onClick="installationRequest.onClick"
                     onSwipeRight="hasTouch() ? { action: () => this.pwa.decline(), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
+                    persona="installationRequest.partner"
                 >
                     <t t-set-slot="body" t-esc="installationRequest.body"/>
                     <t t-set-slot="name"><t  t-esc="installationRequest.displayName"/></t>
-                    <t t-set-slot="icon">
-                        <ImStatus persona="installationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
-                    </t>
                     <t t-set-slot="sideContent">
                         <div class="d-flex align-items-center justify-content-center o-gap-1_5" t-att-class="{ 'o-pe-0_5': !ui.isSmall }">
                             <a t-if="ui.isSmall" class="btn fa fa-cloud-download px-0"/>
@@ -66,14 +63,11 @@
                 <NotificationItem
                     important="1"
                     isActive="state.activeIndex === itemIndex"
-                    iconSrc="notificationRequest.iconSrc"
                     onClick="() => notification.requestPermission()"
+                    persona="notificationRequest.partner"
                 >
                     <t t-set-slot="body" t-esc="notificationRequest.body"/>
                     <t t-set-slot="name"><t t-esc="notificationRequest.displayName"/></t>
-                    <t t-set-slot="icon">
-                        <ImStatus persona="notificationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
-                    </t>
                     <t t-set-slot="sideContent">
                         <div class="d-flex align-items-center justify-content-center o-gap-1_5" t-att-class="{ 'o-pe-0_5': !ui.isSmall }">
                             <a t-if="ui.isSmall" class="btn fa fa-bell px-0"/>

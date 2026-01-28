@@ -1,4 +1,4 @@
-import { ImStatus } from "@mail/core/common/im_status";
+import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
@@ -9,7 +9,7 @@ import { usePosition } from "@web/core/position/position_hook";
 import { useService } from "@web/core/utils/hooks";
 
 export class NavigableList extends Component {
-    static components = { ImStatus };
+    static components = { DiscussAvatar };
     static template = "mail.NavigableList";
     static props = {
         anchorRef: { optional: true },

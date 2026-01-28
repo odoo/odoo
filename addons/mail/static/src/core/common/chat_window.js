@@ -1,11 +1,10 @@
 import { ActionList } from "@mail/core/common/action_list";
 import { Composer } from "@mail/core/common/composer";
-import { ImStatus } from "@mail/core/common/im_status";
+import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { Thread } from "@mail/core/common/thread";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { useThreadActions } from "@mail/core/common/thread_actions";
-import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { useHover, useMessageScrolling } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
 
@@ -29,11 +28,10 @@ export class ChatWindow extends Component {
     static components = {
         ActionList,
         CountryFlag,
+        DiscussAvatar,
         Dropdown,
         Thread,
         Composer,
-        ThreadIcon,
-        ImStatus,
         AutoresizeInput,
         Typing,
     };

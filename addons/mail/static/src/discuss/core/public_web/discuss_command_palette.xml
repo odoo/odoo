@@ -5,8 +5,7 @@
         <div class="o-mail-DiscussCommand o_command_default d-flex align-items-center ps-3 pe-4" t-att-class="{ 'o-uiSmall': ui.isSmall }">
             <i t-if="props.channel" class="fa-fw opacity-75 text-muted me-2" t-att-class="props.channel.parent_channel_id ? 'fa fa-comments-o' : props.channel.discussAppCategory?.icon ?? 'oi oi-user opacity-0'"/>
             <i t-elif="props.persona" class="oi fa-fw oi-user opacity-75 text-muted me-2"/>
-            <img class="o-mail-DiscussCommand-img rounded-3 me-2 object-fit-cover shadow-sm" t-if="props.imgUrl" t-att-src="props.imgUrl" t-att-class="{ 'o-uiSmall': ui.isSmall }"/>
-            <ImStatus t-if="props.persona" className="'me-1'" persona="props.persona"/>
+            <DiscussAvatar t-if="props.channel or props.persona" channel="props.channel" persona="props.persona" size="ui.isSmall ? 32 : 26" className="'me-2'"/>
             <span class="o-mail-DiscussCommand-nameContainer pe-1 text-ellipsis d-flex align-items-center fw-bold" t-att-class="{ 'o-action': props.action }">
                 <t t-if="props.channel?.parent_channel_id">
                     <span class="text-truncate flex-shrink-0 opacity-75 mw-50 small" t-esc="props.channel?.parent_channel_id.displayName"/>

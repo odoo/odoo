@@ -633,7 +633,7 @@ test("[text composer] chat: correspondent is typing", async () => {
     });
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-threadIcon");
+    await contains(".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon");
     await contains(".fa-circle.text-success");
     // simulate receive typing notification from demo "is typing"
     withUser(userId, () =>
@@ -673,7 +673,7 @@ test("chat: correspondent is typing", async () => {
     const composerService = getService("mail.composer");
     composerService.setHtmlComposer();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-threadIcon");
+    await contains(".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon");
     await contains(".fa-circle.text-success");
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
