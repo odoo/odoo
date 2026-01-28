@@ -11,8 +11,22 @@ class MailboxController(http.Controller):
         domain = [("needaction", "=", True)]
         res = request.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
         messages = res.pop("messages")
-        store = Store()
-        store.add(messages, "_store_message_fields", fields_params={"add_followers": True})
+        # sudo: bus.bus: reading non-sensitive last id
+        bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
+        store = Store().add(
+            messages,
+            lambda res: (
+                res.from_method("_store_message_fields", add_followers=True),
+                res.one(
+                    "thread",
+                    lambda res: (
+                        res.attr("message_needaction_counter"),
+                        res.attr("message_needaction_counter_bus_id", bus_last_id),
+                    ),
+                    as_thread=True,
+                ),
+            ),
+        )
         return {**res, "data": store.get_result(), "messages": messages.ids}
 
     @http.route("/mail/history/messages", methods=["POST"], type="jsonrpc", auth="user", readonly=True)
