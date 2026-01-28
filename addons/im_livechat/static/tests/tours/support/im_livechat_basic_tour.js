@@ -6,7 +6,7 @@ registry.category("web_tour.tours").add("im_livechat.basic_tour", {
             trigger: ".channel_name:contains(Support Channel)",
         },
         {
-            trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",
+            trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton[title='Chat with us']",
             run: "click",
         },
         {

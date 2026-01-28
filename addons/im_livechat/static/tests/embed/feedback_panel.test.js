@@ -116,7 +116,6 @@ test("Closing folded chat window should open it with feedback", async () => {
     await click(".o-mail-ChatBubble");
     await click("[title*='Close Chat Window']");
     await click(".o-livechat-CloseConfirmation-leave");
-    await click(".o-mail-ChatHub-bubbleBtn");
     await contains(".o-mail-ChatWindow p", { text: "Did we correctly answer your question?" });
 });
 

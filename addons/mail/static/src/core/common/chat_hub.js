@@ -73,28 +73,30 @@ export class ChatHub extends Component {
     get optionActions() {
         const actions = [];
         if (this.chatHub.showConversations && !this.chatHub.compact) {
-            actions.push(
-                new Action({
-                    owner: this,
-                    id: "hide-all",
-                    definition: {
-                        name: _t("Hide all conversations"),
-                        icon: "fa fa-eye-slash",
-                        onSelected: () => this.chatHub.hideAll(),
-                    },
-                    store: this.store,
-                }),
-                new Action({
-                    owner: this,
-                    id: "close-all",
-                    definition: {
-                        name: _t("Close all conversations"),
-                        icon: "oi oi-close",
-                        onSelected: () => this.chatHub.closeAll(),
-                    },
-                    store: this.store,
-                })
-            );
+            if (this.store.self_user?.share === false) {
+                actions.push(
+                    new Action({
+                        owner: this,
+                        id: "hide-all",
+                        definition: {
+                            name: _t("Hide all conversations"),
+                            icon: "fa fa-eye-slash",
+                            onSelected: () => this.chatHub.hideAll(),
+                        },
+                        store: this.store,
+                    }),
+                    new Action({
+                        owner: this,
+                        id: "close-all",
+                        definition: {
+                            name: _t("Close all conversations"),
+                            icon: "oi oi-close",
+                            onSelected: () => this.chatHub.closeAll(),
+                        },
+                        store: this.store,
+                    })
+                );
+            }
         }
         if (this.position.dragged) {
             actions.push(
