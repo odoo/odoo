@@ -1737,7 +1737,7 @@ class Website(models.Model):
         if len(self.env['website.rewrite'].search(redirects_domain, limit=1)) > 0:
             return True
 
-        router = request.env['ir.http'].routing_map().bind_to_environ(request.httprequest.environ)
+        router = self.env['ir.http'].routing_map().bind('')
         # If there is no rules matching this page, it does not exists
         if not router.test(path_info=page, method='GET'):
             return False
