@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ChatHub">
-    <div class="o-mail-ChatHub d-print-none" t-ref="root">
+    <div class="o-mail-ChatHub d-print-none" t-att-class="{'o-dragged': position.dragged}" t-ref="root">
         <t t-set="visibleChatWindows" t-value="chatHub.compact ? chatHub.opened.filter(({ bypassCompact }) => bypassCompact) : chatHub.opened "/>
         <t t-foreach="visibleChatWindows" t-as="cw" t-key="cw.localId">
             <ChatWindow chatWindow="cw" t-if="cw.canShow" right="chatHub.BUBBLE_START + chatHub.BUBBLE + (chatHub.BUBBLE_OUTER*2) + (visibleChatWindows.length - cw_index - 1) * (chatHub.WINDOW + chatHub.WINDOW_INBETWEEN * 2)"/>
         </t>
         <div class="o-mail-ChatHub-bubbles position-fixed d-flex flex-column align-content-start justify-content-end align-items-center" t-attf-style="top: {{position.top}}; left: {{position.left}}; right: {{position.right}}; --mail-ChatHub-bubbles-bottom: {{position.bottom}}" t-att-class="{ 'o-liftUp': busMonitoring.hasConnectionIssues, 'o-mobile': isMobileOS }" t-ref="bubbles">
             <div class="d-flex flex-column align-content-start justify-content-end align-items-center o-gap-1_5">
-                <Dropdown t-if="(chatHub.showConversations and !chatHub.compact) or position.dragged" state="options" position="'top-end'" menuClass="'m-0 mb-1 ' + store.discussDropdownMenuClass(this)">
+                <Dropdown t-if="optionActions.length" state="options" position="'top-end'" menuClass="'m-0 mb-1 ' + store.discussDropdownMenuClass(this)">
                     <button class="o-mail-ChatHub-bubbleBtn btn o-mail-ChatHub-optionsBtn bg-100 mt-1" t-att-class="{ 'opacity-0': !bubblesHover.isHover and !position.dragged and !options.isOpen and !isMobileOS, 'o-bubblesHover': (bubblesHover.isHover or position.dragged) and !isMobileOS, 'o-active': bubblesHover.isHover or options.isOpen }" title="Chat Options"><i class="oi oi-ellipsis-h"/></button>
                     <t t-set-slot="content">
                         <ActionList actions="optionActions" dropdown="true"/>

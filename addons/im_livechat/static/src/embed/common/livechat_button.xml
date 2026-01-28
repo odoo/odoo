@@ -9,7 +9,7 @@
         t-attf-style="color: {{livechatService.options.button_text_color}}; background-color: {{livechatService.options.button_background_color}};"
         t-ref="button"
         t-on-click="onClick"
-        title="Drag to Move"
+        title="Chat with us"
     >
         <i class="fa fa-commenting" style="font-size: 22px;"/>
         <div t-if="store.livechat_rule?.action === 'display_button_and_text'" class="o-livechat-LivechatButton-notification text-nowrap position-absolute bg-100 py-2 px-3 rounded" style="max-width: 75vw;" t-att-class="{'o-livechat-LivechatButton-animate': state.animateNotification}">
