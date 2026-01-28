@@ -2,8 +2,6 @@ import { compareDatetime } from "@mail/utils/common/misc";
 import { fields, Record } from "@mail/model/export";
 
 export class DiscussAppCategory extends Record {
-    static id = "id";
-
     /**
      * @param {import("models").DiscussChannel} c1
      * @param {import("models").DiscussChannel} c2

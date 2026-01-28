@@ -3,7 +3,6 @@ import { assignDefined } from "@mail/utils/common/misc";
 
 export class Activity extends Record {
     static _name = "mail.activity";
-    static id = "id";
     /**
      * @param {Object} data
      * @param {Object} [param1]

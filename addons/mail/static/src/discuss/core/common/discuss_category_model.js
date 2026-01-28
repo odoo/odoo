@@ -3,7 +3,6 @@ import { effectWithCleanup } from "@mail/utils/common/misc";
 
 export class DiscussCategory extends Record {
     static _name = "discuss.category";
-    static id = "id";
 
     static new() {
         /** @type {import("models").DiscussCategory} */

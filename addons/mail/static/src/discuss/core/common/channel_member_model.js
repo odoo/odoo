@@ -10,7 +10,6 @@ const { DateTime } = luxon;
 
 export class ChannelMember extends Record {
     static _name = "discuss.channel.member";
-    static id = "id";
 
     /** @type {string} */
     create_date;

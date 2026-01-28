@@ -21,7 +21,6 @@ import { Deferred } from "@web/core/utils/concurrency";
 
 export class RtcSession extends Record {
     static _name = "discuss.channel.rtc.session";
-    static id = "id";
     static awaitedRecords = new Map();
     static _insert() {
         /** @type {import("models").RtcSession} */

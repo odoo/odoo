@@ -1,7 +1,6 @@
 import { Record } from "@mail/model/export";
 
 export class Country extends Record {
-    static id = "id";
     static _name = "res.country";
 
     /** @type {string} */

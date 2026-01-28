@@ -17,7 +17,6 @@ import { imageUrl } from "@web/core/utils/urls";
 export class DiscussChannel extends Record {
     static _name = "discuss.channel";
     static _inherits = { "mail.thread": "thread" };
-    static id = "id";
 
     static new() {
         /** @type {import("models").DiscussChannel} */

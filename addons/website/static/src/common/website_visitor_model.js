@@ -2,7 +2,6 @@ import { fields, Record } from "@mail/model/export";
 
 export class WebsiteVisitor extends Record {
     static _name = "website.visitor";
-    static id = "id";
 
     country = fields.One("res.country", {
         /** @this {import("models").WebsiteVisitor} */

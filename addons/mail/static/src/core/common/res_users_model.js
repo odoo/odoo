@@ -3,7 +3,6 @@ import { fields, Record } from "@mail/model/export";
 export class ResUsers extends Record {
     static _name = "res.users";
     static _inherits = { "res.partner": "partner_id" };
-    static id = "id";
 
     /** @type {number} */
     id;

@@ -3,7 +3,6 @@ import { Record } from "@mail/model/record";
 
 export class MailPollVote extends Record {
     static _name = "mail.poll.vote";
-    static id = "id";
 
     /** @type {number} */
     id;

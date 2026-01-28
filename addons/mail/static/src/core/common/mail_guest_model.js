@@ -18,7 +18,6 @@ const { DateTime } = luxon;
  */
 
 export class MailGuest extends Record {
-    static id = "id";
     static _name = "mail.guest";
     static new() {
         const record = super.new(...arguments);

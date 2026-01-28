@@ -1,7 +1,6 @@
 import { fields, Record } from "@mail/model/export";
 
 export class DiscussCallHistory extends Record {
-    static id = "id";
     static _name = "discuss.call.history";
 
     /** @type {number} */

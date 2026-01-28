@@ -2,7 +2,6 @@ import { fields } from "@mail/model/misc";
 import { Record } from "@mail/model/record";
 
 export class MailPollOptionModel extends Record {
-    static id = "id";
     static _name = "mail.poll.option";
 
     /** @type {number} */

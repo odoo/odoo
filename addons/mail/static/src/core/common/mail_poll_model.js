@@ -7,7 +7,6 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 
 export class MailPollModel extends Record {
-    static id = "id";
     static _name = "mail.poll";
 
     /** @type {boolean|undefined} */
