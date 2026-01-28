@@ -17,6 +17,13 @@ export function mockIndexedDB(_name, { fn }) {
                 this.mockIndexedDB = dbs[name];
             }
 
+            async getAllEntries(table) {
+                return Object.entries(this.mockIndexedDB[table] || {}).map(([key, value]) => ({
+                    key,
+                    value,
+                }));
+            }
+
             async write(table, key, value) {
                 if (!(table in this.mockIndexedDB)) {
                     this.mockIndexedDB[table] = {};
@@ -34,6 +41,10 @@ export function mockIndexedDB(_name, { fn }) {
 
             async getAllKeys(table) {
                 return Object.keys(this.mockIndexedDB[table] || {});
+            }
+
+            async delete(table, key) {
+                delete this.mockIndexedDB[table][key];
             }
 
             async invalidate(tables = null) {

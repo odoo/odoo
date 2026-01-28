@@ -21,6 +21,16 @@ async function ensureDbIsAbsent() {
     });
 }
 
+function execute(indexeddb, cb) {
+    return indexeddb.mutex.exec(() =>
+        indexeddb._execute((db) => {
+            if (db) {
+                return cb(db);
+            }
+        })
+    );
+}
+
 test("one cache, read", async () => {
     onError(() => deleteCacheDB());
     await ensureDbIsAbsent();
@@ -165,12 +175,12 @@ test("invalidate all tables, empty cache", async () => {
 
     //The indexedDB __DBVersion__ is not invalidated
     const indexedDB = new IndexedDB(CACHE_NAME, 1);
-    await indexedDB.execute((db) => {
+    await execute(indexedDB, (db) => {
         expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
     });
     expect(await indexedDB.read("__DBVersion__", "__version__")).toBe(1);
     await indexedDB.invalidate();
-    await indexedDB.execute((db) => {
+    await execute(indexedDB, (db) => {
         expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
     });
     expect(await indexedDB.read("__DBVersion__", "__version__")).toBe(1);
@@ -184,11 +194,11 @@ test("invalidate non existing table", async () => {
     await ensureDbIsAbsent();
 
     const indexedDB = new IndexedDB(CACHE_NAME, 1);
-    await indexedDB.execute((db) => {
+    await execute(indexedDB, (db) => {
         expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
     });
     await indexedDB.invalidate("nonExistingTable");
-    await indexedDB.execute((db) => {
+    await execute(indexedDB, (db) => {
         expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
     });
 
@@ -256,12 +266,11 @@ test("two caches, new DB version", async () => {
 
     // simulate a new page, with a new version number for the given databases
     const indexedDB2 = new IndexedDB(CACHE_NAME, 2);
-    // await new Promise((r) => setTimeout(r, 1));
     // DB should not contain tables !
-    await indexedDB2.execute((db) => {
+    await execute(indexedDB2, (db) => {
         expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
     });
-    await indexedDB2.execute((db) => {
+    await execute(indexedDB2, (db) => {
         expect([...db.objectStoreNames]).toEqual(["__DBVersion__"]);
     });
     expect(await indexedDB2.read("mytable", "test")).toBe(undefined);
@@ -306,5 +315,54 @@ test("several caches, several tables", async () => {
 
     await indexedDB1.deleteDatabase();
     await indexedDB2.deleteDatabase();
+    await ensureDbIsAbsent();
+});
+
+test("getAllEntries", async () => {
+    onError(() => deleteCacheDB());
+    await ensureDbIsAbsent();
+
+    const indexedDB = new IndexedDB(CACHE_NAME, 1);
+
+    // empty table
+    expect(await indexedDB.getAllEntries("mytable")).toEqual([]);
+
+    // populate and call getAllEntries
+    await indexedDB.write("mytable", "test", "value for 'test'");
+    await indexedDB.write("mytable", "test2", "value for 'test2'");
+    expect(await indexedDB.getAllEntries("mytable")).toEqual([
+        { key: "test", value: "value for 'test'" },
+        { key: "test2", value: "value for 'test2'" },
+    ]);
+
+    // invalidate table and call getAllEntries
+    await indexedDB.invalidate("mytable");
+    expect(await indexedDB.getAllEntries("mytable")).toEqual([]);
+
+    await indexedDB.deleteDatabase();
+    await ensureDbIsAbsent();
+});
+
+test("delete value", async () => {
+    onError(() => deleteCacheDB());
+    await ensureDbIsAbsent();
+
+    const indexedDB = new IndexedDB(CACHE_NAME, 1);
+
+    // populate and call getAllEntries
+    await indexedDB.write("mytable", "test", "value for 'test'");
+    await indexedDB.write("mytable", "test2", "value for 'test2'");
+    expect(await indexedDB.getAllEntries("mytable")).toEqual([
+        { key: "test", value: "value for 'test'" },
+        { key: "test2", value: "value for 'test2'" },
+    ]);
+
+    // delete one value and call getAllEntries
+    await indexedDB.delete("mytable", "test");
+    expect(await indexedDB.getAllEntries("mytable")).toEqual([
+        { key: "test2", value: "value for 'test2'" },
+    ]);
+
+    await indexedDB.deleteDatabase();
     await ensureDbIsAbsent();
 });
