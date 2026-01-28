@@ -57,11 +57,11 @@ class MrpRoutingWorkcenter(models.Model):
     cycle_number = fields.Integer("Repetitions", compute="_compute_time_cycle")
     time_total = fields.Float('Total Duration', compute="_compute_time_cycle")
     show_time_total = fields.Boolean('Show Total Duration?', compute="_compute_time_cycle")
-    cost_mode = fields.Selection([('actual', 'Actual time'), ('estimated', 'Theorical time')],
+    cost_mode = fields.Selection([('actual', 'Actual time'), ('estimated', 'Theoretical time')],
                                  string='Cost based on', default='actual', tracking=True,
                                  help="Determines the way Odoo calculates the cost of the operation:\n"
                                  "- Based on Actual time: the cost will be calculated based on tracked time and real employee costs.\n"
-                                 "- Based on Estimated time: the cost will be calculated based on estimated time and costs.")
+                                 "- Based on Theoretical time: the cost will be calculated based on estimated time and costs.")
     cost = fields.Float('Cost', compute="_compute_cost")
 
     @api.depends('time_mode', 'time_mode_batch')
