@@ -818,6 +818,15 @@ export class Form extends Interaction {
                     ? words.some((w) => value.trim().toLowerCase().includes(w))
                     : words.every((w) => !value.trim().toLowerCase().includes(w));
             }
+            case "domain": {
+                const domains = JSON.parse(comparable).map(({ requirement_text }) =>
+                    requirement_text.trim().toLowerCase()
+                );
+                if (!domains.length) {
+                    return true;
+                }
+                return domains.some((domain) => value.toLowerCase().endsWith("@" + domain));
+            }
             case "equal":
             case "selected":
                 return value === comparable;
@@ -956,7 +965,7 @@ export class Form extends Interaction {
             requirementComparator: comparator,
             requirementBetween: between,
         } = fieldEl.dataset;
-        const value = fieldEl.querySelector(".s_website_form_input").value;
+        let value = fieldEl.querySelector(".s_website_form_input").value;
         if (!condition && comparator) {
             return true;
         }
@@ -965,6 +974,9 @@ export class Form extends Interaction {
         }
         if (!value.trim()) {
             return true;
+        }
+        if (fieldEl.dataset.type === "email" && ["substring", "!substring"].includes(comparator)) {
+            value = value.split("@")[0];
         }
         return this.compareTo(comparator, value, condition, between);
     }
