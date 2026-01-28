@@ -1,3 +1,5 @@
+import { browser } from "@web/core/browser/browser";
+import { utils } from "@web/core/ui/ui_service";
 import { renderToElement } from "@web/core/utils/render";
 import { useDebounced } from "@web/core/utils/timing";
 import {
@@ -266,12 +268,15 @@ function computeWidths(table, state, allowedWidth, startingWidths) {
         // Case 1: table overflows its parent => shrink some columns
         const shrinkableColumns = [];
         let totalAvailableSpace = 0; // total space we can gain by shrinking columns
+        // In mobile, we don't want to shrink columns more than 80% of the viewport
+        const minShrinkWidth = utils.isSmall() ? browser.innerWidth * 0.8 : null;
         for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
             const thIndex = columnIndex + columnOffset;
             const { minWidth, canShrink } = columnWidthSpecs[columnIndex];
-            if (_columnWidths[thIndex] > minWidth && canShrink) {
-                shrinkableColumns.push({ thIndex, minWidth });
-                totalAvailableSpace += _columnWidths[thIndex] - minWidth;
+            const targetWidth = minShrinkWidth || minWidth;
+            if (_columnWidths[thIndex] > targetWidth && canShrink) {
+                shrinkableColumns.push({ thIndex, minWidth: targetWidth });
+                totalAvailableSpace += _columnWidths[thIndex] - targetWidth;
             }
         }
         if (diff > totalAvailableSpace) {

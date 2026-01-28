@@ -337,6 +337,34 @@ test(`width computation: with records, lot of fields, long texts`, async () => {
     expectedColumnWidthsToBeCloseTo([40, 29, 89, 80, 102, 99, 89, 188, 114, 100]);
 });
 
+test(`width computation: with records, lot of fields, long texts (mobile)`, async () => {
+    resize({ width: 400 });
+
+    Foo._records[0].text =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt";
+    Foo._records[1].foo = "Duis aute irure dolor in reprehenderit in voluptate velit esse cillumt";
+    Bar._records[1].name = "Lorem Ipsum is not simply random text.";
+
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <field name="bar"/>
+                <field name="foo"/>
+                <field name="int_field"/>
+                <field name="m2o"/>
+                <field name="qux"/>
+                <field name="date"/>
+                <field name="text"/>
+                <field name="datetime"/>
+                <field name="amount"/>
+                <field name="currency_id"/>
+            </list>`,
+    });
+    expectedColumnWidthsToBeCloseTo([67, 329, 80, 263, 102, 99, 329, 188, 114, 100]);
+});
+
 test(`width computation: editable list, overflowing table`, async () => {
     class Abc extends models.Model {
         titi = fields.Char();
@@ -786,7 +814,7 @@ test(`width computation: button columns don't have a max width`, async () => {
     expect(tableWidth).toBeLessThan(800);
     columnWidths = getColumnWidths();
     // indices 0 and 1 because selectors aren't displayed on small screens
-    expect(columnWidths[0]).toBe(100);
+    expect(columnWidths[0]).toBe(210);
     expect(columnWidths[1]).toBeGreaterThan(330);
 });
 
