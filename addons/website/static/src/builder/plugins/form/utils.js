@@ -258,6 +258,12 @@ export function setActiveProperties(fieldEl, field) {
     if (input) {
         // textarea value has no attribute,  date/datetime timestamp property is formated
         field.value = input.getAttribute("value") || input.value;
+        if (input.hasAttribute("minLength")) {
+            field.minLength = parseInt(input.getAttribute("minLength"));
+        }
+        if (input.hasAttribute("maxLength")) {
+            field.maxLength = parseInt(input.getAttribute("maxLength"));
+        }
     } else if (field.type === "boolean") {
         field.value = !!fieldEl.querySelector('input[type="checkbox"][checked]');
     } else if (fileInputEl) {

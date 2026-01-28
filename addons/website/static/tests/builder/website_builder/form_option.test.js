@@ -620,6 +620,53 @@ test("Shouldn't have the 'Link to country' option if there's no country field", 
     expect(".options-container .hb-row[data-action-id='linkStateToCountry']").toHaveCount(0);
 });
 
+test("Min and max character limits should not contradict one another.", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilder(
+        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+            <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
+                <div class="s_website_form_rows">
+                    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char" data-translated-name="Your Name">
+                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ok0ney2v8rwf">
+                                <span class="s_website_form_label_content">Your Name</span>
+                                <span class="s_website_form_mark"> *</span>
+                            </label>
+                            <div class="col-sm">
+                                <input class="form-control s_website_form_input" type="text" name="name" required="" value="" placeholder="" id="ok0ney2v8rwf" data-fill-with="name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </section>`
+    );
+    await contains(':iframe [data-name="Field"]').click();
+    await contains('[data-action-id="toggleCharacterLimit"] input').click();
+    // By default, minlength is 0 and maxlength is 100.
+    expect("[data-attribute-action='minlength'] input").toHaveValue(0);
+    expect("[data-attribute-action='maxlength'] input").toHaveValue(100);
+
+    await contains("[data-attribute-action='minlength'] input").edit("10", { confirm: "enter" });
+    expect("[data-attribute-action='minlength'] input").toHaveValue(10);
+    expect(":iframe input[name='name']").toHaveAttribute("minlength", 10);
+
+    await contains("[data-attribute-action='maxlength'] input").edit("110", { confirm: "enter" });
+    expect("[data-attribute-action='maxlength'] input").toHaveValue(110);
+    expect(":iframe input[name='name']").toHaveAttribute("maxlength", 110);
+
+    // Ensure constraint: minlength <= maxlength and maxlength >= minlength.
+    await contains("[data-attribute-action='minlength'] input").edit("120", { confirm: "enter" });
+    expect("[data-attribute-action='minlength'] input").toHaveValue(110);
+    expect(":iframe input[name='name']").toHaveAttribute("minlength", 110);
+
+    await contains("[data-attribute-action='maxlength'] input").edit("50", { confirm: "enter" });
+    expect("[data-attribute-action='maxlength'] input").toHaveValue(110);
+    expect(":iframe input[name='name']").toHaveAttribute("maxlength", 110);
+});
+
 test("Label falls back to default value (data-translated-name) when removed", async () => {
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(
