@@ -103,7 +103,7 @@ export class CustomAccordionIconAction extends BuilderAction {
                     return;
                 }
                 const customIconsClasses =
-                    "position-absolute top-0 end-0 bottom-0 start-0 d-flex align-items-center justify-content-center";
+                    "position-absolute top-0 end-0 bottom-0 start-0 d-flex align-items-center justify-content-center o_not_editable";
                 const customIconActiveEl = document.createElement("span");
                 customIconActiveEl.className = customIconsClasses;
                 customIconActiveEl.classList.add("o_custom_icon_active");
