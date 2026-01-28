@@ -36,7 +36,7 @@
                             <div id="ecpay_carrier_type_group" t-att-class="'d-none' if default_vals['is_donate'] == 'on' else ''">
                                 <div class="row">
                                     <div id="carrier_type_selection" class="mt-3 col-md-7">
-                                        <label for="l10n_tw_edi_carrier_type" class="form-label">Carrier</label>
+                                        <label for="l10n_tw_edi_carrier_type" class="form-label">Storage Type</label>
                                         <select class="form-select" id="l10n_tw_edi_carrier_type" name="l10n_tw_edi_carrier_type">
                                             <t t-foreach="carrier_choices" t-as="choice">
                                                 <option t-attf-value="{{choice[0]}}"
@@ -49,7 +49,7 @@
                                 </div>
                                 <div id="ecpay_invoice_carrier_number" t-att-class="'d-none' if default_vals['carrier_type'] in ['0', '1'] else ''" class="row">
                                     <div class="mt-3 col-md-7">
-                                        <label for="l10n_tw_edi_carrier_number" class="form-label">Carrier Number</label>
+                                        <label for="l10n_tw_edi_carrier_number" class="form-label">Storage Code</label>
                                         <div class="d-flex">
                                             <input
                                                 class="form-control"
@@ -70,7 +70,7 @@
                                 </div>
                                 <div id="ecpay_invoice_carrier_number_2" t-att-class="'d-none' if default_vals['carrier_type'] in ['0', '1', '2', '3'] else ''" class="row">
                                     <div class="mt-3 col-md-7">
-                                        <label for="l10n_tw_edi_carrier_number_2" class="form-label">Carrier Number 2</label>
+                                        <label for="l10n_tw_edi_carrier_number_2" class="form-label">Storage Code 2</label>
                                         <div class="d-flex">
                                             <input
                                                 class="form-control"
@@ -86,7 +86,7 @@
                             </div>
                             <div id="ecpay_invoice_love_code" t-att-class="'d-none' if default_vals['is_donate'] != 'on' else ''" class="row">
                                 <div class="mt-3 col-md-7">
-                                    <label for="l10n_tw_edi_love_code" class="form-label">Love Code</label>
+                                    <label for="l10n_tw_edi_love_code" class="form-label">Donation Code</label>
                                     <div class="d-flex">
                                         <input
                                             class="form-control"
