@@ -2,7 +2,6 @@ import { Record } from "@mail/model/export";
 
 export class LivechatChannel extends Record {
     static _name = "im_livechat.channel";
-    static id = "id";
 
     /** @type {boolean} */
     are_you_inside;

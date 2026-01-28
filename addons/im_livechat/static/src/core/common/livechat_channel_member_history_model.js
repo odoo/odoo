@@ -1,7 +1,6 @@
 import { fields, Record } from "@mail/model/export";
 
 export class LivechatChannelMemberHistory extends Record {
-    static id = "id";
     static _name = "im_livechat.channel.member.history";
 
     channel_id = fields.One("discuss.channel", { inverse: "livechat_channel_member_history_ids" });

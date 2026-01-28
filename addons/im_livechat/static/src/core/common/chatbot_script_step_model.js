@@ -1,7 +1,6 @@
 import { fields, Record } from "@mail/model/export";
 
 export class ChatbotScriptStep extends Record {
-    static id = "id";
     static _name = "chatbot.script.step";
 
     /** @type {number} */

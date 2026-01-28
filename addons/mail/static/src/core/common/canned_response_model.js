@@ -2,7 +2,6 @@ import { Record } from "@mail/model/export";
 
 export class CannedResponse extends Record {
     static _name = "mail.canned.response";
-    static id = "id";
 
     /** @type {number} */
     id;

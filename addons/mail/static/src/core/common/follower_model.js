@@ -3,7 +3,6 @@ import { rpc } from "@web/core/network/rpc";
 
 export class Follower extends Record {
     static _name = "mail.followers";
-    static id = "id";
 
     thread = fields.One("mail.thread");
     /** @type {number} */

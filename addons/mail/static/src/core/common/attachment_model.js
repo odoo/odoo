@@ -9,7 +9,6 @@ import { imageUrl, url } from "@web/core/utils/urls";
 
 export class Attachment extends FileModelMixin(Record) {
     static _name = "ir.attachment";
-    static id = "id";
     static new() {
         /** @type {import("models").Attachment} */
         const attachment = super.new(...arguments);

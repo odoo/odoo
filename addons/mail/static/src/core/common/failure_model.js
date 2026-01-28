@@ -5,7 +5,6 @@ import { _t } from "@web/core/l10n/translation";
 
 export class Failure extends Record {
     static nextId = markRaw({ value: 1 });
-    static id = "id";
 
     /** @type {number} */
     id;

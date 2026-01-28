@@ -29,7 +29,7 @@ export class Record {
     static _;
     /** @type {import("./record_internal").RecordInternal} */
     _;
-    static id;
+    static id = "id";
     /** @type {import("@web/env").OdooEnv} */
     static env;
     /** @type {import("@web/env").OdooEnv} */

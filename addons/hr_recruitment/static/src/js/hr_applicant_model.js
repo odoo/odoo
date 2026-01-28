@@ -2,7 +2,6 @@ import { fields, Record } from "@mail/model/export";
 
 export class HrApplicant extends Record {
     static _name = "hr.applicant";
-    static id = "id";
 
     partner_id = fields.One("res.partner", { inverse: "applicant_ids" });
     /**

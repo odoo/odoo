@@ -2,7 +2,6 @@ import { Record } from "@mail/model/export";
 
 export class Rating extends Record {
     static _name = "rating.rating";
-    static id = "id";
 
     /** @type {number} */
     id;

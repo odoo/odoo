@@ -2,7 +2,6 @@ import { fields, Record } from "@mail/model/export";
 import { router } from "@web/core/browser/router";
 
 export class CrmLead extends Record {
-    static id = "id";
     static _name = "crm.lead";
 
     /** @type {number} */

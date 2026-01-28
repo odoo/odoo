@@ -6,7 +6,6 @@ import { debounce } from "@web/core/utils/timing";
 const { DateTime } = luxon;
 
 export class ResPartner extends Record {
-    static id = "id";
     static _name = "res.partner";
     static new() {
         const record = super.new(...arguments);

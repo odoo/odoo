@@ -5,7 +5,6 @@ const VIDEO_EXTENSIONS = new Set(["mp4", "mov", "avi", "mkv", "webm", "mpeg", "m
 
 export class LinkPreview extends Record {
     static _name = "mail.link.preview";
-    static id = "id";
 
     /** @type {number} */
     id;
