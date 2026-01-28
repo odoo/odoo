@@ -846,6 +846,8 @@ class ProjectTask(models.Model):
             active_users = self.user_ids.filtered('active')
         milestone_mapping = self.env.context.get('milestone_mapping', {})
         for task, vals in zip(self, vals_list):
+            if self.env.context.get('convert_to_template'):
+                vals['date_deadline'] = task.date_deadline
 
             if not default.get('stage_id'):
                 vals['stage_id'] = task.stage_id.id
