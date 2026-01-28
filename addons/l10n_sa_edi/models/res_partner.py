@@ -10,10 +10,10 @@ class ResPartner(models.Model):
     l10n_sa_edi_additional_identification_scheme = fields.Selection([
         ('TIN', 'Tax Identification Number'),
         ('CRN', 'Commercial Registration Number'),
-        ('MOM', 'Momra License'),
-        ('MLS', 'MLSD License'),
+        ('MOM', 'MOMRAH License'),
+        ('MLS', 'MHRSD License'),
         ('700', '700 Number'),
-        ('SAG', 'Sagia License'),
+        ('SAG', 'MISA License'),
         ('NAT', 'National ID'),
         ('GCC', 'GCC ID'),
         ('IQA', 'Iqama Number'),
