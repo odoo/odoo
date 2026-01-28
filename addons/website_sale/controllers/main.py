@@ -494,21 +494,22 @@ class WebsiteSale(payment_portal.PaymentPortal):
         )
 
         ProductAttribute = request.env["product.attribute"]
+        pavs_per_attribute = {}
         if products:
-            # get all products without limit
-            attributes_grouped = request.env["product.template.attribute.line"]._read_group(
+            grouped_pavs = request.env["product.attribute.value"]._read_group(
                 domain=[
-                    ("product_tmpl_id", "in", search_product.ids),
+                    ("pav_attribute_line_ids.product_tmpl_id", "in", search_product.ids),
                     ("attribute_id.visibility", "=", "visible"),
                 ],
                 groupby=["attribute_id"],
                 order="attribute_id",
+                aggregates=["id:recordset"],
             )
-            attribute_ids = [attribute.id for (attribute,) in attributes_grouped]
-            attributes = ProductAttribute.browse(attribute_ids)
+            pavs_per_attribute = dict(grouped_pavs)
+            # Return attributes as recordset of `product.attribute`
+            attributes = ProductAttribute.union(pavs_per_attribute.keys())
         else:
             attributes = ProductAttribute.browse(attribute_ids).sorted()
-
         products_prices = products._get_sales_prices(website)
         product_query_params = self._get_product_query_params(**post)
 
@@ -553,6 +554,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "previewed_attribute_values": lazy(
                 lambda: products._get_previewed_attribute_values(category, product_query_params)
             ),
+            "pavs_per_attribute": pavs_per_attribute,
         }
         if filter_by_price_enabled:
             values["min_price"] = min_price or available_min_price
