@@ -20,7 +20,7 @@ import {
     setupWebsiteBuilderOeId,
 } from "./website_helpers";
 import { dummyBase64Img } from "@html_builder/../tests/helpers";
-import { testGifImg, testImg, testSvgImg } from "./image_test_helpers";
+import { onRpcImg, testGifImg, testImg, testSvgImg } from "./image_test_helpers";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 
 defineWebsiteModels();
@@ -285,6 +285,7 @@ describe("Image format/optimize", () => {
         expect(img.dataset.quality).toBe("50");
     });
     test("Quality option does not disappear when a shape is applied on the image", async () => {
+        onRpcImg("/html_builder/static/image_shapes/devices/iphone_front_portrait.svg");
         onRpc("/html_editor/get_image_info", () => ({
             attachment: { id: 1 },
             original: {

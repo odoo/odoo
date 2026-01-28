@@ -50,6 +50,8 @@ const CSS_ANIMATION_RULE_REGEX =
 const SVG_DUR_TIMECOUNT_VAL_REGEX =
     /(?<attribute_name>\sdur="\s*)(?<value>(?:\d+(?:\.\d+)?)|(?:\.\d+))(?<unit>h|min|ms|s)?\s*"/gm;
 const CSS_ANIMATION_RATIO_REGEX = /(--animation_ratio: (?<ratio>\d*(\.\d+)?));/m;
+const MISSING_SHAPE_COLOR_SELECTORS =
+    "img[data-shape]:not([data-shape-colors]), img[data-shape][data-shape-colors=';;;;']";
 
 export class ImageShapeOptionPlugin extends Plugin {
     static id = "imageShapeOption";
@@ -88,6 +90,11 @@ export class ImageShapeOptionPlugin extends Plugin {
                     exclude: "[data-oe-type='image'] > img",
                 }
             ),
+        // TODO: Remove in master. Kept for stable to add default shape colors
+        // when dropping snippets.
+        on_snippet_dropped_handlers: ({ snippetEl }) => {
+            this.addShapeColorAttribute(snippetEl);
+        },
     };
     setup() {
         this.shapeSvgTextCache = {};
@@ -96,6 +103,28 @@ export class ImageShapeOptionPlugin extends Plugin {
         for (const shapeId of Object.keys(this.imageShapes)) {
             const oldShapeId = shapeId.replace("html_builder", "web_editor");
             this.imageShapes[oldShapeId] = this.imageShapes[shapeId];
+        }
+        // TODO remove in master: kept for stable.
+        this.addShapeColorAttribute(this.document);
+    }
+    /**
+     * Compute and set default shape colors for images with data-shape but
+     * missing data-shape-colors (e.g. s_cta_mockups, s_closer_look).
+     *
+     * @param {HTMLElement} editingElement - The element to search for images
+     * with missing shape colors.
+     */
+    async addShapeColorAttribute(editingElement) {
+        const missingShapeColorEls = editingElement.querySelectorAll(MISSING_SHAPE_COLOR_SELECTORS);
+        if (!missingShapeColorEls.length) {
+            return;
+        }
+        for (const imgEl of missingShapeColorEls) {
+            const shapeSvgText = await this.getShapeSvgText(imgEl.dataset.shape);
+            const themedColor = this.getThemedSvgColors(shapeSvgText).join(";");
+            if (themedColor !== ";;;;") {
+                imgEl.dataset.shapeColors = themedColor;
+            }
         }
     }
     async onMediaDialogSavedHandlers(elements, { node }) {
