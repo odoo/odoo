@@ -89,7 +89,6 @@ export class ListCorePlugin extends OdooCorePlugin {
                 const anchor = [col, row];
                 this._addList(id, definition);
                 this._insertList(sheetId, anchor, id, linesNumber, columns);
-                this.history.update("nextId", parseInt(id, 10) + 1);
                 break;
             }
             case "DUPLICATE_ODOO_LIST": {
@@ -97,7 +96,6 @@ export class ListCorePlugin extends OdooCorePlugin {
                 const duplicatedList = deepCopy(this.lists[listId].definition);
                 duplicatedList.name = duplicatedListName ?? duplicatedList.name + " (copy)";
                 this._addList(newListId, duplicatedList);
-                this.history.update("nextId", parseInt(newListId, 10) + 1);
                 break;
             }
             case "RE_INSERT_ODOO_LIST": {
@@ -216,6 +214,7 @@ export class ListCorePlugin extends OdooCorePlugin {
             definition,
         };
         this.history.update("lists", lists);
+        this.history.update("nextId", parseInt(id, 10) + 1);
     }
 
     /**
@@ -258,7 +257,7 @@ export class ListCorePlugin extends OdooCorePlugin {
                     sheetId,
                     col,
                     row,
-                    content: `=ODOO.LIST(${id},${i},"${column.name}")`,
+                    content: `=ODOO.LIST.VALUE(${id},${i},"${column.name}")`,
                 });
                 col++;
             }

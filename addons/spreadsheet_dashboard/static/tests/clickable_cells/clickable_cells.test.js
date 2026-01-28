@@ -28,7 +28,7 @@ test("Invalid pivot/list formulas should not be clickable", async () => {
             {
                 cells: {
                     A1: '=PIVOT.VALUE("1", "measure")',
-                    A2: '=ODOO.LIST("1", 1, "name")',
+                    A2: '=ODOO.LIST.VALUE("1", 1, "name")',
                 },
             },
         ],
@@ -44,7 +44,7 @@ test("pivot/list formulas should be clickable", async () => {
             {
                 cells: {
                     A1: { content: '=PIVOT.VALUE("1", "probability", "bar", "false")' },
-                    A2: { content: '=ODOO.LIST(1, 1, "foo")' },
+                    A2: { content: '=ODOO.LIST.VALUE(1, 1, "foo")' },
                 },
             },
         ],
@@ -81,7 +81,7 @@ test("list sorting clickable cell", async () => {
             {
                 cells: {
                     A1: '=ODOO.LIST.HEADER(1, "foo")',
-                    A2: '=ODOO.LIST(1, 1, "foo")',
+                    A2: '=ODOO.LIST.VALUE(1, 1, "foo")',
                 },
             },
         ],
@@ -176,7 +176,7 @@ test("Clickable ignores spill and empty cells for list sorting", async () => {
                     B1: "bar",
                     // spill cells
                     A2: "=ODOO.LIST.HEADER(1, A1:B1)",
-                    A3: '=ODOO.LIST(1, sequence(2), "foo")',
+                    A3: '=ODOO.LIST.VALUE(1, sequence(2), "foo")',
                 },
             },
         ],

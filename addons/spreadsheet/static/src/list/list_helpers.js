@@ -7,7 +7,7 @@
  * @typedef  {import("../helpers/odoo_functions_helpers").OdooFunctionDescription} OdooFunctionDescription
  * */
 
-const ALL_LIST_FUNCTIONS = ["ODOO.LIST", "ODOO.LIST.HEADER"];
+const ALL_LIST_FUNCTIONS = ["ODOO.LIST", "ODOO.LIST.HEADER", "ODOO.LIST.VALUE"];
 
 /**
  * Parse a spreadsheet formula and detect the number of LIST functions that are

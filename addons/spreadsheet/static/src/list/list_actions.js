@@ -71,6 +71,6 @@ export const SEE_RECORD_LIST_VISIBLE = (position, getters) => {
         cell &&
         cell.isFormula &&
         hasListFormula(cell.compiledFormula) &&
-        getFirstListFunction(cell.compiledFormula, getters).functionName === "ODOO.LIST"
+        getFirstListFunction(cell.compiledFormula, getters).functionName === "ODOO.LIST.VALUE"
     );
 };
