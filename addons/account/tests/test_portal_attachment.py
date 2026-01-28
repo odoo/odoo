@@ -165,6 +165,8 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         attachment.flush_recordset()
         message = self.env['mail.message'].create({
             'attachment_ids': [(6, 0, attachment.ids)],
+            "model": "res.partner",
+            "res_id": self.partner_a.id,
         })
         res = self.url_open(
             url=f'{self.invoice_base_url}/mail/attachment/delete',
@@ -177,6 +179,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         )
         self.assertEqual(res.status_code, 200)
         self.assertFalse(attachment.exists())
+        self.assertIn("o-mail-Message-edited", message.body)
         message.sudo().unlink()
 
         # Test attachment can't be associated if no attachment token.
