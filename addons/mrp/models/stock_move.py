@@ -576,8 +576,13 @@ class StockMove(models.Model):
                 qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit / kit_bom.product_qty, bom_line.product_id.uom_id, round=False)
                 if not qty_per_kit:
                     continue
-                incoming_qty = sum(bom_line_moves.filtered(filters['incoming_moves']).mapped(get_qty))
-                outgoing_qty = sum(bom_line_moves.filtered(filters['outgoing_moves']).mapped(get_qty))
+                # Due to multi-step only the last move of each chain should be considered
+                incoming_moves = bom_line_moves.filtered(filters['incoming_moves'])
+                final_incoming_moves = incoming_moves - incoming_moves.move_orig_ids
+                incoming_qty = sum(final_incoming_moves.mapped(get_qty))
+                outgoing_moves = bom_line_moves.filtered(filters['outgoing_moves'])
+                final_outgoing_moves = outgoing_moves - outgoing_moves.move_orig_ids
+                outgoing_qty = sum(final_outgoing_moves.mapped(get_qty))
                 qty_processed = incoming_qty - outgoing_qty
                 # We compute a ratio to know how many kits we can produce with this quantity of that specific component
                 qty_ratios.append(bom_line.product_id.uom_id.round(qty_processed / qty_per_kit))
