@@ -206,6 +206,10 @@ export class LinkPopover extends Component {
                     },
                     {
                         env: this.__owl__.childEnv,
+                        // `useOverlayServiceOffset` adds 1000 to each sequence value to solve
+                        // overlay visibility in `iframe`, here we increment default sequence (50)
+                        // by 1 and we add 1000 to have color picker always on top of all overlays.
+                        sequence: 1051,
                     }
                 );
             this.customTextColorPicker = createCustomColorPicker(
