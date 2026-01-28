@@ -266,7 +266,7 @@ test("from/to global filter without value is exported", async function () {
 
 test("Empty ODOO.LIST result is frozen to an empty string", async function () {
     const { model } = await createSpreadsheetWithList();
-    setCellContent(model, "A1", '=ODOO.LIST(1, 9999,"probability")'); // has no record
+    setCellContent(model, "A1", '=ODOO.LIST.VALUE(1, 9999,"probability")'); // has no record
     await waitForDataLoaded(model);
     expect(getEvaluatedCell(model, "A1").value).toBe("");
     const frozenData = await freezeOdooData(model);
@@ -336,7 +336,7 @@ test("spilled pivot table", async function () {
     );
 });
 
-test("empty string computed measure is exported as =\"\"", async function () {
+test('empty string computed measure is exported as =""', async function () {
     const { model } = await createSpreadsheetWithPivot();
     setCellContent(model, "A10", "=PIVOT(1)");
     expect(getEvaluatedCell(model, "B12").value).toBe(""); // empty value

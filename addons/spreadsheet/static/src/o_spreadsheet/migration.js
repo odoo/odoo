@@ -8,7 +8,7 @@ const MAP_V1 = {
     "PIVOT.HEADER": "ODOO.PIVOT.HEADER",
     "PIVOT.POSITION": "ODOO.PIVOT.POSITION",
     "FILTER.VALUE": "ODOO.FILTER.VALUE",
-    LIST: "ODOO.LIST",
+    LIST: "ODOO.LIST.VALUE",
     "LIST.HEADER": "ODOO.LIST.HEADER",
 };
 
@@ -156,7 +156,7 @@ migrationStepRegistry.add("18.5.10", {
                 }
             }
         }
-        const re = /ODOO\.FILTER\.VALUE/gi
+        const re = /ODOO\.FILTER\.VALUE/gi;
         for (const sheet of data.sheets || []) {
             for (const xc in sheet.cells || {}) {
                 const content = sheet.cells[xc];

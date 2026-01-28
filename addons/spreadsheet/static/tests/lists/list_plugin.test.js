@@ -55,18 +55,18 @@ test("List export", async () => {
     expect(getCellFormula(model, "B1")).toBe(`=ODOO.LIST.HEADER(1,"bar")`);
     expect(getCellFormula(model, "C1")).toBe(`=ODOO.LIST.HEADER(1,"date")`);
     expect(getCellFormula(model, "D1")).toBe(`=ODOO.LIST.HEADER(1,"product_id")`);
-    expect(getCellFormula(model, "A2")).toBe(`=ODOO.LIST(1,1,"foo")`);
-    expect(getCellFormula(model, "B2")).toBe(`=ODOO.LIST(1,1,"bar")`);
-    expect(getCellFormula(model, "C2")).toBe(`=ODOO.LIST(1,1,"date")`);
-    expect(getCellFormula(model, "D2")).toBe(`=ODOO.LIST(1,1,"product_id")`);
-    expect(getCellFormula(model, "A3")).toBe(`=ODOO.LIST(1,2,"foo")`);
-    expect(getCellFormula(model, "A11")).toBe(`=ODOO.LIST(1,10,"foo")`);
+    expect(getCellFormula(model, "A2")).toBe(`=ODOO.LIST.VALUE(1,1,"foo")`);
+    expect(getCellFormula(model, "B2")).toBe(`=ODOO.LIST.VALUE(1,1,"bar")`);
+    expect(getCellFormula(model, "C2")).toBe(`=ODOO.LIST.VALUE(1,1,"date")`);
+    expect(getCellFormula(model, "D2")).toBe(`=ODOO.LIST.VALUE(1,1,"product_id")`);
+    expect(getCellFormula(model, "A3")).toBe(`=ODOO.LIST.VALUE(1,2,"foo")`);
+    expect(getCellFormula(model, "A11")).toBe(`=ODOO.LIST.VALUE(1,10,"foo")`);
     expect(getCellFormula(model, "A12")).toBe("");
 });
 
 test("List field name should not be empty", async () => {
     const { model } = await createSpreadsheetWithList();
-    setCellContent(model, "A1", `=ODOO.LIST(1,1,"")`);
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE(1,1,"")`);
     expect(getCellValue(model, "A1")).toBe("#ERROR");
     expect(getEvaluatedCell(model, "A1").message).toBe("The field name should not be empty.");
 });
@@ -281,7 +281,7 @@ test("Can use property fields", async () => {
 
 test("Can display a field which is not in the columns", async function () {
     const { model } = await createSpreadsheetWithList();
-    setCellContent(model, "A1", `=ODOO.LIST(1,1,"active")`);
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE(1,1,"active")`);
     expect(getCellValue(model, "A1")).toBe("Loading...");
     await waitForDataLoaded(model); // Await for batching collection of missing fields
     await animationFrame();
@@ -356,8 +356,8 @@ test("Json fields are not supported in list formulas", async function () {
         columns: ["foo", "jsonField"],
         linesNumber: 2,
     });
-    setCellContent(model, "A1", `=ODOO.LIST(1,1,"foo")`);
-    setCellContent(model, "A2", `=ODOO.LIST(1,1,"jsonField")`);
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE(1,1,"foo")`);
+    setCellContent(model, "A2", `=ODOO.LIST.VALUE(1,1,"jsonField")`);
     await waitForDataLoaded(model);
     expect(getEvaluatedCell(model, "A1").value).toBe(12);
     expect(getEvaluatedCell(model, "A2").value).toBe("#ERROR");
@@ -373,14 +373,14 @@ test("can get a listId from cell formula", async function () {
 
 test("can get a listId from cell formula with '-' before the formula", async function () {
     const { model } = await createSpreadsheetWithList();
-    setCellContent(model, "A1", `=-ODOO.LIST("1","1","foo")`);
+    setCellContent(model, "A1", `=-ODOO.LIST.VALUE("1","1","foo")`);
     const sheetId = model.getters.getActiveSheetId();
     const listId = model.getters.getListIdFromPosition({ sheetId, col: 0, row: 0 });
     expect(listId).toBe("1");
 });
 test("can get a listId from cell formula with other numerical values", async function () {
     const { model } = await createSpreadsheetWithList();
-    setCellContent(model, "A1", `=3*ODOO.LIST("1","1","foo")`);
+    setCellContent(model, "A1", `=3*ODOO.LIST.VALUE("1","1","foo")`);
     const sheetId = model.getters.getActiveSheetId();
     const listId = model.getters.getListIdFromPosition({ sheetId, col: 0, row: 0 });
     expect(listId).toBe("1");
@@ -403,7 +403,7 @@ test("List datasource is loaded with correct linesNumber", async function () {
 
 test("can get a listId from cell formula within a formula", async function () {
     const { model } = await createSpreadsheetWithList();
-    setCellContent(model, "A1", `=SUM(ODOO.LIST("1","1","foo"),1)`);
+    setCellContent(model, "A1", `=SUM(ODOO.LIST.VALUE("1","1","foo"),1)`);
     const sheetId = model.getters.getActiveSheetId();
     const listId = model.getters.getListIdFromPosition({ sheetId, col: 0, row: 0 });
     expect(listId).toBe("1");
@@ -411,7 +411,7 @@ test("can get a listId from cell formula within a formula", async function () {
 
 test("can get a listId from cell formula where the id is a reference", async function () {
     const { model } = await createSpreadsheetWithList();
-    setCellContent(model, "A1", `=ODOO.LIST(G10,"1","foo")`);
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE(G10,"1","foo")`);
     setCellContent(model, "G10", "1");
     const sheetId = model.getters.getActiveSheetId();
     const listId = model.getters.getListIdFromPosition({ sheetId, col: 0, row: 0 });
@@ -442,7 +442,7 @@ test("Referencing non-existing fields does not crash", async function () {
     model.dispatch("REFRESH_ALL_DATA_SOURCES");
     await animationFrame();
     setCellContent(model, "A1", `=ODOO.LIST.HEADER("1", "${forbiddenFieldName}")`);
-    setCellContent(model, "A2", `=ODOO.LIST("1","1","${forbiddenFieldName}")`);
+    setCellContent(model, "A2", `=ODOO.LIST.VALUE("1","1","${forbiddenFieldName}")`);
 
     await animationFrame();
     expect(model.getters.getListDataSource(listId).getFields()[forbiddenFieldName]).toBe(undefined);
@@ -478,7 +478,7 @@ test("don't fetch list data if no formula use it", async function () {
     });
     expect.verifySteps([]);
 
-    setCellContent(model, "A1", `=ODOO.LIST("1", "1", "foo")`);
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE("1", "1", "foo")`);
     /*
      * Ask a first time the value => It will trigger a loading of the data source.
      */
@@ -502,7 +502,7 @@ test("user context is combined with list context to fetch data", async function 
             {
                 id: "sheet1",
                 cells: {
-                    A1: '=ODOO.LIST("1", "1", "name")',
+                    A1: '=ODOO.LIST.VALUE("1", "1", "name")',
                 },
             },
         ],
@@ -803,7 +803,7 @@ test("Cannot see record of a list in dashboard mode if wrong list formula", asyn
         col: 0,
         row: 1,
         sheetId,
-        content: "=ODOO.LIST()",
+        content: "=ODOO.LIST.VALUE()",
     });
     model.updateMode("dashboard");
     selectCell(model, "A2");
@@ -822,8 +822,8 @@ test("Can see record with link to list cell", async function () {
         sheetIdFrom: model.getters.getActiveSheetId(),
         sheetIdTo: "42",
     });
-    setCellContent(model, "A1", '=ODOO.LIST(1, 1, "foo")');
-    setCellContent(model, "A2", '=ODOO.LIST(1, 2, "foo")');
+    setCellContent(model, "A1", '=ODOO.LIST.VALUE(1, 1, "foo")');
+    setCellContent(model, "A2", '=ODOO.LIST.VALUE(1, 2, "foo")');
 
     setCellContent(model, "A3", "=A1");
     setCellContent(model, "A4", "=IF(TRUE, A2, A1)");
@@ -856,7 +856,7 @@ test("Can see record on vectorized list index", async function () {
     setCellContent(model, "C2", "2");
     setCellContent(model, "D1", "3");
     setCellContent(model, "D2", "4");
-    setCellContent(model, "A1", '=ODOO.LIST(1, C1:D2, "foo")');
+    setCellContent(model, "A1", '=ODOO.LIST.VALUE(1, C1:D2, "foo")');
     const seeRecordAction = cellMenuRegistry.getAll().find((item) => item.id === "list_see_record");
 
     selectCell(model, "A1");
@@ -946,9 +946,9 @@ test("add currency field after the list has been loaded", async function () {
     const { model } = await createSpreadsheetWithList({
         columns: ["pognon"],
     });
-    setCellContent(model, "A1", '=ODOO.LIST(1, 1, "pognon")');
+    setCellContent(model, "A1", '=ODOO.LIST.VALUE(1, 1, "pognon")');
     await waitForDataLoaded(model);
-    setCellContent(model, "A2", '=ODOO.LIST(1, 1, "currency_id")');
+    setCellContent(model, "A2", '=ODOO.LIST.VALUE(1, 1, "currency_id")');
     await waitForDataLoaded(model);
     expect(getEvaluatedCell(model, "A2").value).toBe("EUR");
 });
@@ -959,9 +959,9 @@ test("fetch all and only required fields", async function () {
             {
                 id: "sheet1",
                 cells: {
-                    A1: '=ODOO.LIST(1, 1, "foo")', // in the definition
-                    A2: '=ODOO.LIST(1, 1, "product_id")', // not in the definition
-                    A3: '=ODOO.LIST(1, 1, "invalid_field")',
+                    A1: '=ODOO.LIST.VALUE(1, 1, "foo")', // in the definition
+                    A2: '=ODOO.LIST.VALUE(1, 1, "product_id")', // not in the definition
+                    A3: '=ODOO.LIST.VALUE(1, 1, "invalid_field")',
                 },
             },
         ],
@@ -1002,8 +1002,8 @@ test("fetch all required positions, including the evaluated ones", async functio
             {
                 id: "sheet1",
                 cells: {
-                    A1: '=ODOO.LIST(1, 11, "foo")',
-                    A2: '=ODOO.LIST(1, A3, "foo")',
+                    A1: '=ODOO.LIST.VALUE(1, 11, "foo")',
+                    A2: '=ODOO.LIST.VALUE(1, A3, "foo")',
                     A3: "111",
                 },
             },
@@ -1035,8 +1035,8 @@ test("list with both a monetary field and the related currency field 1", async f
     const { model } = await createSpreadsheetWithList({
         columns: ["pognon", "currency_id"],
     });
-    setCellContent(model, "A1", '=ODOO.LIST(1, 1, "pognon")');
-    setCellContent(model, "A2", '=ODOO.LIST(1, 1, "currency_id")');
+    setCellContent(model, "A1", '=ODOO.LIST.VALUE(1, 1, "pognon")');
+    setCellContent(model, "A2", '=ODOO.LIST.VALUE(1, 1, "currency_id")');
     await animationFrame();
     expect(getEvaluatedCell(model, "A1").formattedValue).toBe("74.40€");
     expect(getEvaluatedCell(model, "A2").value).toBe("EUR");
@@ -1046,8 +1046,8 @@ test("list with both a monetary field and the related currency field 2", async f
     const { model } = await createSpreadsheetWithList({
         columns: ["currency_id", "pognon"],
     });
-    setCellContent(model, "A1", '=ODOO.LIST(1, 1, "pognon")');
-    setCellContent(model, "A2", '=ODOO.LIST(1, 1, "currency_id")');
+    setCellContent(model, "A1", '=ODOO.LIST.VALUE(1, 1, "pognon")');
+    setCellContent(model, "A2", '=ODOO.LIST.VALUE(1, 1, "currency_id")');
     await animationFrame();
     expect(getEvaluatedCell(model, "A1").formattedValue).toBe("74.40€");
     expect(getEvaluatedCell(model, "A2").value).toBe("EUR");
@@ -1059,7 +1059,7 @@ test("List record limit is computed during the import and UPDATE_CELL", async fu
             {
                 id: "sheet1",
                 cells: {
-                    A1: '=ODOO.LIST("1", "1", "foo")',
+                    A1: '=ODOO.LIST.VALUE("1", "1", "foo")',
                 },
             },
         ],
@@ -1078,7 +1078,7 @@ test("List record limit is computed during the import and UPDATE_CELL", async fu
     const ds = model.getters.getListDataSource("1");
     expect(ds.maxPosition).toBe(1);
     expect(ds.maxPositionFetched).toBe(1);
-    setCellContent(model, "A1", `=ODOO.LIST("1", "42", "foo")`);
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE("1", "42", "foo")`);
     expect(ds.maxPosition).toBe(42);
     expect(ds.maxPositionFetched).toBe(1);
     await waitForDataLoaded(model);
@@ -1119,9 +1119,9 @@ test("Spec of web_search_read is minimal", async function () {
             }
         },
     });
-    setCellContent(model, "A1", '=ODOO.LIST(1, 1, "pognon")');
-    setCellContent(model, "A2", '=ODOO.LIST(1, 1, "currency_id")');
-    setCellContent(model, "A3", '=ODOO.LIST(1, 1, "foo")');
+    setCellContent(model, "A1", '=ODOO.LIST.VALUE(1, 1, "pognon")');
+    setCellContent(model, "A2", '=ODOO.LIST.VALUE(1, 1, "currency_id")');
+    setCellContent(model, "A3", '=ODOO.LIST.VALUE(1, 1, "foo")');
     await waitForDataLoaded(model);
     expect.verifySteps(["web_search_read"]);
 });
@@ -1148,7 +1148,7 @@ test("can import (export) contextual domain", async function () {
             }
         },
     });
-    setCellContent(model, "A1", '=ODOO.LIST("1", "1", "foo")');
+    setCellContent(model, "A1", '=ODOO.LIST.VALUE("1", "1", "foo")');
     await animationFrame();
     expect(model.exportData().lists[1].domain).toBe('[("foo", "=", uid)]', {
         message: "the domain is exported with the dynamic parts",
@@ -1316,7 +1316,7 @@ test("An error is displayed if the list has invalid model", async function () {
             },
         },
     });
-    setCellContent(model, "A1", `=ODOO.LIST(1,1,"foo")`);
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE(1,1,"foo")`);
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe("#ERROR");
     expect(getEvaluatedCell(model, "A1").message).toBe(`The model "unknown" does not exist.`);
@@ -1327,7 +1327,7 @@ test("An error is displayed if the list has invalid model", async function () {
 test("Support field chaining in list", async function () {
     const { model } = await createSpreadsheetWithList();
     const listId = model.getters.getListIds()[0];
-    setCellContent(model, "A1", `=ODOO.LIST(${listId}, 1, "product_id.id")`);
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE(${listId}, 1, "product_id.id")`);
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe(37);
 });
@@ -1350,8 +1350,8 @@ test("Support many2many field chaining in list", async function () {
     ];
     const { model } = await createSpreadsheetWithList();
     const listId = model.getters.getListIds()[0];
-    setCellContent(model, "A1", `=ODOO.LIST(${listId}, 1, "user_ids.id")`);
-    setCellContent(model, "A2", `=ODOO.LIST(${listId}, 1, "user_ids.group_ids.id")`);
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE(${listId}, 1, "user_ids.id")`);
+    setCellContent(model, "A2", `=ODOO.LIST.VALUE(${listId}, 1, "user_ids.group_ids.id")`);
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe("7, 8");
     expect(getCellValue(model, "A2")).toBe("1, 2, 2, 3");
@@ -1360,7 +1360,7 @@ test("Support many2many field chaining in list", async function () {
 test("Invalid field chaining in list should be marked as such", async function () {
     const { model } = await createSpreadsheetWithList();
     const listId = model.getters.getListIds()[0];
-    setCellContent(model, "A1", `=ODOO.LIST(${listId}, 1, "product_id.id.id")`);
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE(${listId}, 1, "product_id.id.id")`);
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe("#ERROR");
     expect(getEvaluatedCell(model, "A1").message).toBe(
@@ -1371,7 +1371,7 @@ test("Invalid field chaining in list should be marked as such", async function (
 test("Field chaining can be more than 1 deep", async function () {
     const { model } = await createSpreadsheetWithList();
     const listId = model.getters.getListIds()[0];
-    setCellContent(model, "A1", `=ODOO.LIST(${listId}, 2, "product_id.template_id.name")`);
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE(${listId}, 2, "product_id.template_id.name")`);
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe("xphone");
 });
@@ -1405,7 +1405,7 @@ test("Chaining fields are fetched with the same web_search_read", async function
         },
     });
     const listId = model.getters.getListIds()[0];
-    setCellContent(model, "A1", `=ODOO.LIST(${listId}, 1, "product_id.template_id.name")`);
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE(${listId}, 1, "product_id.template_id.name")`);
     initialLoad = false;
     await animationFrame();
     expect.verifySteps(["web_search_read"]);
@@ -1443,7 +1443,7 @@ test("Chaining monetary fields includes the currency field", async function () {
         },
     });
     const listId = model.getters.getListIds()[0];
-    setCellContent(model, "A1", `=ODOO.LIST(${listId}, 1, "product_id.pognon")`);
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE(${listId}, 1, "product_id.pognon")`);
     initialLoad = false;
     await animationFrame();
     expect(getCellValue(model, "A1")).toBe(699.99);
