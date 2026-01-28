@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { cleanEmptyAncestors, cleanTextNode } from "@html_editor/utils/dom";
-import { isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
+import { isElement, isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
@@ -36,6 +36,7 @@ export class FeffPlugin extends Plugin {
     resources = {
         normalize_handlers: this.updateFeffs.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
+        merge_adjacent_siblings_handlers: this.mergeAdjacentSiblingsHandler.bind(this),
         intangible_char_for_keyboard_navigation_predicates: (ev, char, lastSkipped) =>
             // Skip first FEFF, but not the second one (unless shift is pressed).
             char === "\uFEFF" && (ev.shiftKey || lastSkipped !== "\uFEFF"),
@@ -50,6 +51,21 @@ export class FeffPlugin extends Plugin {
             cursors.restore();
         } else {
             this.removeFeffs(root, null);
+        }
+    }
+
+    mergeAdjacentSiblingsHandler(root) {
+        for (const node of [root, ...descendants(root)].filter(isElement)) {
+            if (
+                this.getResource("mergeable_feff_predicates").some((predicate) => predicate(node))
+            ) {
+                while (
+                    node.previousSibling?.nodeType === Node.TEXT_NODE &&
+                    node.previousSibling.nodeValue === "\uFEFF"
+                ) {
+                    node.previousSibling.remove();
+                }
+            }
         }
     }
 
