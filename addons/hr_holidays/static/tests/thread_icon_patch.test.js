@@ -20,7 +20,7 @@ test("thread icon of a chat when correspondent is on leave & online", async () =
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
-        contains: [".o-mail-ThreadIcon .fa-plane[title='On Leave (Online)']"],
+        contains: [".o-mail-ThreadIcon.fa-plane[title='On Leave (Online)']"],
         text: "Demo",
     });
 });
@@ -39,7 +39,7 @@ test("thread icon of a chat when correspondent is on leave & away", async () => 
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
-        contains: [".o-mail-ThreadIcon .fa-plane[title='On Leave (Idle)']"],
+        contains: [".o-mail-ThreadIcon.fa-plane[title='On Leave (Idle)']"],
         text: "Demo",
     });
 });
@@ -58,7 +58,7 @@ test("thread icon of a chat when correspondent is on leave & offline", async () 
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
-        contains: [".o-mail-ThreadIcon .fa-plane[title='On Leave']"],
+        contains: [".o-mail-ThreadIcon.fa-plane[title='On Leave']"],
         text: "Demo",
     });
 });

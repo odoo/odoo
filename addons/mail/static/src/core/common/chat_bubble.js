@@ -1,4 +1,4 @@
-import { ThreadIcon } from "@mail/core/common/thread_icon";
+import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
 import { Component, useEffect, useRef, useState, useSubEnv } from "@odoo/owl";
@@ -33,7 +33,7 @@ class ChatBubblePreview extends Component {
  * @extends {Component<Props, Env>}
  */
 export class ChatBubble extends Component {
-    static components = { CountryFlag, ThreadIcon };
+    static components = { CountryFlag, DiscussAvatar };
     static props = ["chatWindow"];
     static template = "mail.ChatBubble";
 
@@ -78,12 +78,5 @@ export class ChatBubble extends Component {
     /** @returns {import("models").Channel} */
     get channel() {
         return this.props.chatWindow.channel;
-    }
-
-    get showThreadIcon() {
-        return (
-            this.channel.channel_type === "chat" ||
-            (this.channel.channel_type === "group" && this.channel.hasOtherMembersTyping)
-        );
     }
 }

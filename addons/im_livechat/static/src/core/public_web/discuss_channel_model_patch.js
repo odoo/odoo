@@ -127,5 +127,8 @@ const discussChannelPatch = {
             await super.leaveChannel(...arguments);
         }
     },
+    showThreadIcon(...args) {
+        return this.channel_type === "livechat" || super.showThreadIcon(...args);
+    },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

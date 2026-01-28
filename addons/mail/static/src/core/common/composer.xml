@@ -196,7 +196,7 @@
 
     <t t-name="mail.Composer.suggestionPartner">
         <t t-set="partner" t-value="option.partner"/>
-        <ImStatus t-if="partner" persona="partner"/>
+        <DiscussAvatar t-if="partner" persona="partner" size="24"/>
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-esc="partner.name"/>
             <t t-if="option.thread and partner.name !== option.thread.getPersonaName(partner)">

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussAvatar">
+        <svg t-att-width="props.size" t-att-height="props.size" viewBox="0 0 32 32" class="overflow-visible">
+            <mask t-att-id="uniqueId" width="32" height="32">
+                <rect x="0" y="0" height="32" width="32" fill="white"/>
+                <rect t-if="showIcon" color="black" t-att-x="isTyping ? 15 : 19" y="19" t-att-width="isTyping ? 24 : 16" t-att-height="isTyping ? 15 : 16" rx="8" ry="8"/>
+            </mask>
+            <foreignObject x="0" y="0" width="32" height="32" t-att-mask="'url(#' + uniqueId + ')'">
+                <t t-call="mail.DiscussAvatar.avatarImg"/> <!-- FIXME: owl doesn't like and load immediate <img> below <foreignObject>, hence t-call shenanigans -->
+            </foreignObject>
+            <g t-if="showIcon" t-att-transform="'translate(' + (isTyping ? 16 : 21) + ', 20)'">
+                <svg width="25" height="15" viewBox="0 0 25 15">
+                    <foreignObject x="0" y="0" width="25" height="15">
+                        <ThreadIcon t-if="thread" thread="thread" typing="props.typing"/>
+                        <ImStatus t-elif="props.member" member="props.member" className="'d-flex'" size="'md'" typing="props.typing"/>
+                        <ImStatus t-elif="props.persona" persona="props.persona" typing="props.typing"/>
+                    </foreignObject>
+                </svg>
+            </g>
+        </svg>
+    </t>
+
+    <t t-name="mail.DiscussAvatar.avatarImg">
+        <img t-if="thread" class="w-100 h-100 object-fit-cover" t-att-class="{ [props.imgRoundedClass]: props.imgRoundedClass, 'rounded-2': !props.imgRoundedClass }" t-att-src="thread.channel?.parent_channel_id?.avatarUrl ?? thread.channel?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
+        <img t-elif="props.member" alt="" class="w-100 h-100 object-fit-cover" t-att-class="{ [props.imgRoundedClass]: props.imgRoundedClass, 'rounded-3': !props.imgRoundedClass }" t-att-src="props.member.avatarUrl"/>
+        <img t-elif="props.persona" alt="" class="w-100 h-100 object-fit-cover" t-att-class="{ [props.imgRoundedClass]: props.imgRoundedClass, 'rounded': !props.imgRoundedClass }" t-att-src="props.persona.avatarUrl"/>
+    </t>
+</templates>

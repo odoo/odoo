@@ -65,7 +65,6 @@
                         <span t-else="" t-out="message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
                     </t>
                     <t t-set-slot="icon">
-                        <ImStatus t-if="thread.channel?.channel_type === 'chat' and thread.channel.correspondent" member="thread.channel.correspondent" className="'position-absolute top-100 start-100 translate-middle mt-n1 ' + (thread.channel.correspondent.isTyping ? 'ms-n2' : 'ms-n1')"/>
                         <CountryFlag t-if="thread.channel?.showCorrespondentCountry" country="thread.channel.correspondentCountry" class="'o-mail-NotificationItem-country position-absolute border shadow-sm'"/>
                     </t>
                 </NotificationItem>

@@ -4,9 +4,9 @@ import { Component, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { ImStatus } from "@mail/core/common/im_status";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
+import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
 
 const commandSetupRegistry = registry.category("command_setup");
@@ -86,7 +86,7 @@ class CreateChannelDialog extends Component {
 }
 
 class DiscussCommand extends Component {
-    static components = { ImStatus };
+    static components = { DiscussAvatar };
     static template = "mail.DiscussCommand";
     static props = {
         counter: { type: Number, optional: true },

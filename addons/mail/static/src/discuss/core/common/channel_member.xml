@@ -2,10 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="discuss.ChannelMember">
         <div class="o-discuss-ChannelMember d-flex align-items-center p-1 bg-inherit rounded-3" t-att-class="attClass" t-on-click.stop="(ev) => this.onClickAvatar(ev)">
-            <div class="bg-inherit o-discuss-ChannelMember-avatar position-relative d-flex flex-shrink-0 rounded-3">
-                <img class="w-100 h-100 rounded-3 object-fit-cover" t-att-src="member.avatarUrl"/>
-                <ImStatus member="member" className="'position-absolute top-100 start-100 translate-middle mt-n1 ' + (member.isTyping ? 'ms-n2' : 'ms-n1')" size="'md'"/>
-            </div>
+            <DiscussAvatar member="member"/>
             <div t-ref="displayName" class="d-flex overflow-hidden flex-column lh-sm">
                 <span class="ms-2 text-truncate text-muted fw-bold" t-esc="member.name" t-att-title="member.name"/>
             </div>

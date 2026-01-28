@@ -18,21 +18,21 @@ test("change icon on change partner im_status for leave variants", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus .fa-plane[title='On Leave (Online)']"
+        ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='On Leave (Online)']"
     );
     pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
         partner_id: serverState.partnerId,
         im_status: "leave_offline",
         presence_status: "offline",
     });
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus .fa-plane[title='On Leave']");
+    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='On Leave']");
     pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
         partner_id: serverState.partnerId,
         im_status: "leave_away",
         presence_status: "away",
     });
     await contains(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus .fa-plane[title='On Leave (Idle)']"
+        ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='On Leave (Idle)']"
     );
     pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
         partner_id: serverState.partnerId,
@@ -40,6 +40,6 @@ test("change icon on change partner im_status for leave variants", async () => {
         presence_status: "online",
     });
     await contains(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus .fa-plane[title='On Leave (Online)']"
+        ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='On Leave (Online)']"
     );
 });
