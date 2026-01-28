@@ -576,9 +576,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if invoice.invoice_payment_term_id.early_pay_discount_computation != 'mixed':
             return {}
         tax_to_discount = defaultdict(lambda: 0)
+        sign = -1 if invoice.move_type == 'out_refund' else 1
         for line in invoice.line_ids.filtered(lambda l: l.display_type == 'epd'):
             for tax in line.tax_ids:
-                tax_to_discount[tax.amount] += line.amount_currency
+                tax_to_discount[tax.amount] += line.amount_currency * sign
         return tax_to_discount
 
     def _split_fixed_taxes(self, taxes_vals):
