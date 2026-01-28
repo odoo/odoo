@@ -799,3 +799,22 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
         downpayment.create_invoices()
         invoice = sale_order.invoice_ids
         self.assertEqual(invoice.invoice_line_ids.account_id, self.company_data['default_account_revenue'])
+
+    def test_downpayment_on_so_with_zero_ordered_quantity(self):
+        product = self.company_data['product_service_delivery']
+        tax_15 = self.percent_tax(15.0)
+
+        so = self._create_sale_order_one_line(
+            price_unit=1000.0,
+            product_id=product,
+            tax_ids=tax_15,
+            product_uom_qty=0,
+        )
+        so.order_line.write({'qty_delivered': 15.0})
+        invoice = self._create_down_payment_invoice(so, 'percent', 50)
+
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': 7500.0,
+            'amount_tax': 1125.0,
+            'amount_total': 8625.0,
+        }])

@@ -146,7 +146,11 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
             AccountTax = self.env['account.tax']
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
-            base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
+            base_lines = [
+                line._prepare_base_line_for_taxes_computation(
+                    quantity=line.product_uom_qty or line.qty_delivered
+                ) for line in order_lines
+            ]
             AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
             AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
 
