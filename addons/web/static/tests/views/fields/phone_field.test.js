@@ -219,3 +219,22 @@ test("New record, fill in phone field, then click on call icon and save", async 
     expect(".o_field_widget[name=foo] input").toHaveValue("+12345678900");
     expect(`.o_form_status_indicator_buttons`).toHaveClass("invisible");
 });
+
+test.tags("mobile");
+test("PhoneField in form view shows only icon on mobile screens", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="foo" widget="phone"/>
+                    </group>
+                </sheet>
+            </form>`,
+        resId: 1,
+    });
+    await click(`input[type="tel"]`);
+    expect(".o_field_phone .o_phone_form_link small").not.toBeVisible();
+});
