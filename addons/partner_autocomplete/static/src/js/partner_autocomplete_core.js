@@ -1,11 +1,12 @@
 /* global checkVATNumber */
 
-import { loadJS } from "@web/core/assets";
+import { AssetsLoadingError, loadJS } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { renderToMarkup } from "@web/core/utils/render";
 import { status, useComponent } from "@odoo/owl";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 /**
  * Get list of companies via Autocomplete API
@@ -29,7 +30,14 @@ export function usePartnerAutocomplete() {
 
     async function isVATNumber(value) {
         // Lazyload jsvat only if the component is being used.
-        await loadJS("/partner_autocomplete/static/lib/jsvat.js");
+        try {
+          await loadJS("/partner_autocomplete/static/lib/jsvat.js");
+        } catch(e) {
+          if (e instanceof AssetsLoadingError) {
+              return new Promise(() => {});
+          }
+          throw e;
+        }
 
         // Protect the method if the component is destroyed.
         // Same behaviour as : _protectMethod in web/static/src/core/utils/hooks.js
@@ -154,7 +162,14 @@ export function usePartnerAutocomplete() {
             [value, queryCountryId],
         );
 
-        const suggestions = await keepLastOdoo.add(prom);
+        let suggestions = [];
+        try {
+          suggestions = await keepLastOdoo.add(prom);
+        } catch (e) {
+          if (!(e instanceof ConnectionLostError)) {
+            throw e;
+          }
+        }
 
         if (!isVAT && suggestions.length === 0) {
             lastNoResultsQuery = value;
