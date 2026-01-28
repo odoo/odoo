@@ -80,14 +80,14 @@ class WebsiteSaleL10nTW(WebsiteSale):
         }
         if kw.get('l10n_tw_edi_is_donate') != 'on':
             if kw.get('l10n_tw_edi_carrier_type') == '2' and not kw.get('l10n_tw_edi_carrier_number'):
-                errors['carrier_number'] = request.env._('Please enter the carrier number')
+                errors['carrier_number'] = request.env._('Please enter the storage code')
             if kw.get('l10n_tw_edi_carrier_type') == '3' \
                     and not self._is_valid_mobile_barcode(kw.get('l10n_tw_edi_carrier_number'), order):
                 errors['carrier_number'] = request.env._('Mobile Barcode is invalid')
             if kw.get('l10n_tw_edi_carrier_type') in ['4', '5'] and (not kw.get('l10n_tw_edi_carrier_number') or not kw.get('l10n_tw_edi_carrier_number_2')):
-                errors['carrier_number'] = request.env._('Please enter the carrier number and carrier number 2')
+                errors['carrier_number'] = request.env._('Please enter the storage code and storage code 2')
         elif kw.get('l10n_tw_edi_is_donate') == 'on' and not self._is_valid_love_code(kw.get('l10n_tw_edi_love_code'), order):
-            errors['love_code'] = request.env._('Love Code is invalid')
+            errors['love_code'] = request.env._('Donation Code is invalid')
 
         vals_to_write = {
             'l10n_tw_edi_is_print': False,
