@@ -71,7 +71,6 @@ class PosConfig(models.Model):
     name = fields.Char(string='Point of Sale', required=True, help="An internal identification of the point of sale.")
     preparation_printer_ids = fields.Many2many('pos.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string="Preparation Printers", domain="[('use_type', '=', 'preparation')]")
     receipt_printer_ids = fields.Many2many('pos.printer', 'pos_config_receipt_printer_rel', 'config_id', 'printer_id', string="Receipt Printers", domain="[('use_type', '=', 'receipt')]")
-    default_receipt_printer_id = fields.Many2one('pos.printer', string="Default Receipt Printer")
     use_order_printer = fields.Boolean('Order Printer')
     is_installed_account_accountant = fields.Boolean(string="Is the Full Accounting Installed",
         compute="_compute_is_installed_account_accountant")
@@ -217,12 +216,6 @@ class PosConfig(models.Model):
     iface_printbill = fields.Boolean(string='Bill Printing', help="Allows to print the Bill before payment.")
 
     pos_snooze_ids = fields.One2many('pos.product.template.snooze', 'pos_config_id', string='Snoozed Products')
-
-    @api.onchange('receipt_printer_ids')
-    def _onchange_receipt_printer_ids(self):
-        """Clear default_receipt_printer_id if it's removed from receipt_printer_ids"""
-        if self.default_receipt_printer_id not in self.receipt_printer_ids:
-            self.default_receipt_printer_id = False
 
     def _get_next_order_refs(self, device_identifier='0'):
         next_number = self.order_backend_seq_id._next()

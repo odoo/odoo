@@ -70,7 +70,7 @@ class PosPrinter(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'product_categories_ids', 'printer_type', 'use_type', 'use_lna', 'printer_ip', 'iface_cashdrawer'']
+        return ['id', 'name', 'product_categories_ids', 'printer_type', 'use_type', 'use_lna', 'printer_ip', 'iface_cashdrawer']
 
     @api.constrains('printer_ip')
     def _constrains_printer_ip(self):
