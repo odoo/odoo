@@ -13,7 +13,12 @@ class TestRecruitmentSkills(TransactionCase):
         super().setUpClass()
 
         cls.t_talent_pool = cls.env["hr.talent.pool"].create({"name": "Test Talent Pool"})
-        cls.t_job = cls.env["hr.job"].create({"name": "Test Job"})
+        cls.t_job_1, cls.t_job_2 = cls.env["hr.job"].create(
+            [
+                {"name": "Test Job 1"},
+                {"name": "Test Job 2"},
+            ]
+        )
         cls.t_skill_type = cls.env["hr.skill.type"].create({"name": "Skills for tests"})
         cls.t_skill_level_1, cls.t_skill_level_2, cls.t_skill_level_3 = cls.env["hr.skill.level"].create(
             [
@@ -31,9 +36,41 @@ class TestRecruitmentSkills(TransactionCase):
         cls.t_applicant = cls.env["hr.applicant"].create(
             {
                 "partner_name": "Test Applicant",
-                "job_id": cls.t_job.id,
+                "job_id": cls.t_job_1.id,
             }
         )
+
+        def get_applicant_skills(cls, applicant):
+            return [
+                {
+                    "id": skill.skill_id,
+                    "level": skill.skill_level_id,
+                    "type": skill.skill_type_id,
+                }
+                for skill in applicant.applicant_skill_ids
+            ]
+        cls.get_applicant_skills = get_applicant_skills
+
+        def get_applicant_skill(cls, applicant):
+            assert len(applicant.applicant_skill_ids) == 1
+            return cls.get_applicant_skills(applicant)[0]
+        cls.get_applicant_skill = get_applicant_skill
+
+        def create_talent(cls, applicant, talent_pool):
+            return (
+                cls.env["talent.pool.add.applicants"]
+                .create({"applicant_ids": applicant, "talent_pool_ids": talent_pool})
+                ._add_applicants_to_pool()
+            )
+        cls.create_talent = create_talent
+
+        def create_applicant_from_talent(cls, talent, job):
+            return (
+                cls.env["job.add.applicants"]
+                .create({"applicant_ids": talent, "job_ids": job})
+                ._add_applicants_to_job()
+            )
+        cls.create_applicant_from_talent = create_applicant_from_talent
 
     def test_add_a_skill_to_applicant(self):
         """
@@ -47,11 +84,7 @@ class TestRecruitmentSkills(TransactionCase):
         app_form.save()
 
         expected_skill = {"id": self.t_skill_1, "level": self.t_skill_level_1, "type": self.t_skill_type}
-        app_skill = {
-            "id": self.t_applicant.applicant_skill_ids.skill_id,
-            "level": self.t_applicant.applicant_skill_ids.skill_level_id,
-            "type": self.t_applicant.applicant_skill_ids.skill_type_id,
-        }
+        app_skill = self.get_applicant_skill(self.t_applicant)
 
         self.assertTrue(self.t_applicant.applicant_skill_ids, "The applicant should have a skill")
         self.assertEqual(expected_skill, app_skill, "The applicant should have the test skill")
@@ -83,7 +116,7 @@ class TestRecruitmentSkills(TransactionCase):
         # Create a fresh applicant never added to any pool
         new_applicant = self.env["hr.applicant"].create({
             "partner_name": "New Applicant Access Test",
-            "job_id": self.t_job.id,
+            "job_id": self.t_job_1.id,
         })
 
         # Create a restricted user with Recruitment access only
@@ -104,329 +137,123 @@ class TestRecruitmentSkills(TransactionCase):
         talent_pool_applicants = self.t_talent_pool.talent_ids
         self.assertEqual(len(talent_pool_applicants), 1)
 
-    def test_one_skill_is_copied_from_applicant_to_talent(self):
+    def test_one_skill_is_copied_from_applicant_to_talent_and_linked_applicants(self):
         """
-        Assert that a skill is copied from the applicant to the talent when the talent is created
+        Assert that a skill is copied from the applicant to the talent and linked applicants when they are created.
         """
-        app_form = Form(self.t_applicant)
-        with app_form.current_applicant_skill_ids.new() as skill:
+        app_1_form = Form(self.t_applicant)
+        with app_1_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_1
-        app_form.save()
+        app_1_form.save()
 
-        talent = (
-            self.env["talent.pool.add.applicants"]
-            .create({"applicant_ids": self.t_applicant, "talent_pool_ids": self.t_talent_pool})
-            ._add_applicants_to_pool()
-        )
+        talent = self.create_talent(self.t_applicant, self.t_talent_pool)
+        app_2 = self.create_applicant_from_talent(talent, self.t_job_2)
 
         expected = {"id": self.t_skill_1, "level": self.t_skill_level_1, "type": self.t_skill_type}
-        talent_skill = {
-            "id": talent.applicant_skill_ids.skill_id,
-            "level": talent.applicant_skill_ids.skill_level_id,
-            "type": talent.applicant_skill_ids.skill_type_id,
-        }
-        app_skill = {
-            "id": self.t_applicant.applicant_skill_ids.skill_id,
-            "level": self.t_applicant.applicant_skill_ids.skill_level_id,
-            "type": self.t_applicant.applicant_skill_ids.skill_type_id,
-        }
-        self.assertEqual(expected, talent_skill, f"The talent should have the following skill: ${talent_skill}")
-        self.assertEqual(app_skill, talent_skill, "The skill from the applicant should have been copied to the talent")
+        talent_skill = self.get_applicant_skill(talent)
+        app_1_skill = self.get_applicant_skill(self.t_applicant)
+        app_2_skill = self.get_applicant_skill(app_2)
+        self.assertEqual(expected, talent_skill, f"The talent should have the following skill: ${expected} instead of {talent_skill}")
+        self.assertEqual(expected, app_2_skill, f"The linked applicant should have the following skill: ${expected} instead of {app_1_skill}")
+        self.assertEqual(app_1_skill, talent_skill, "The skill from the applicant should have been copied to the talent")
 
-    def test_multi_skill_is_copied_from_applicant_to_talent(self):
+    def test_multi_skill_is_copied_from_applicant_to_talent_and_linked_applicants(self):
         """
-        Assert that multiple skills are copied from the applicant to the talent when the talent is created
+        Assert that multiple skills are copied from the applicant to the talent and linked applicants when they are created.
         """
         skills = [self.t_skill_1, self.t_skill_2]
-        app_form = Form(self.t_applicant)
+        app_1_form = Form(self.t_applicant)
         for skill in skills:
-            with app_form.current_applicant_skill_ids.new() as new_skill:
+            with app_1_form.current_applicant_skill_ids.new() as new_skill:
                 new_skill.skill_type_id = self.t_skill_type
                 new_skill.skill_id = skill
                 new_skill.skill_level_id = self.t_skill_level_1
-        app_form.save()
+        app_1_form.save()
 
-        talent = (
-            self.env["talent.pool.add.applicants"]
-            .create({"applicant_ids": self.t_applicant, "talent_pool_ids": self.t_talent_pool})
-            ._add_applicants_to_pool()
-        )
+        talent = self.create_talent(self.t_applicant, self.t_talent_pool)
+        app_2 = self.create_applicant_from_talent(talent, self.t_job_2)
 
         expected = [
             {"id": self.t_skill_1, "level": self.t_skill_level_1, "type": self.t_skill_type},
             {"id": self.t_skill_2, "level": self.t_skill_level_1, "type": self.t_skill_type},
         ]
-        talent_skill = [
-            {
-                "id": skill.skill_id,
-                "level": skill.skill_level_id,
-                "type": skill.skill_type_id,
-            }
-            for skill in talent.applicant_skill_ids
-        ]
-        app_skill = [
-            {
-                "id": skill.skill_id,
-                "level": skill.skill_level_id,
-                "type": skill.skill_type_id,
-            }
-            for skill in self.t_applicant.applicant_skill_ids
-        ]
-        self.assertCountEqual(expected, talent_skill, f"The talent should have the following skills: ${talent_skill}")
+        talent_skill = self.get_applicant_skills(talent)
+        app_1_skill = self.get_applicant_skills(self.t_applicant)
+        app_2_skill = self.get_applicant_skills(app_2)
+        self.assertCountEqual(expected, talent_skill, f"The talent should have the following skills: ${expected} instead of {talent_skill}")
+        self.assertCountEqual(expected, app_2_skill, f"The linked applicant should have the following skills: ${expected} instead of {app_2_skill}")
         self.assertCountEqual(
-            app_skill, talent_skill, "The skills from the applicant should have been copied to the talent"
+            app_1_skill, talent_skill, "The skills from the applicant should have been copied to the talent"
         )
 
-    def test_add_skill_to_applicant_with_talent_without_skill(self):
+    def test_update_skill_on_applicant_with_talent_and_linked_applicants(self):
         """
-        Verify one-way skill synchronization between an applicant its linked talent.
-
-        This test ensures that when a skill is added on an applicant, the same skill is also added or updated on the talent.
-        In this test the skill does not exist on the talent prior to adding it to the applicant.
+        Assert that when a skill is updated on an applicant, the same skill is also updated on the talent and linked applicants.
         """
-        app_form = Form(self.t_applicant)
-
-        talent = (
-            self.env["talent.pool.add.applicants"]
-            .create({"applicant_ids": self.t_applicant, "talent_pool_ids": self.t_talent_pool})
-            ._add_applicants_to_pool()
-        )
-
-        with app_form.current_applicant_skill_ids.new() as skill:
+        app_1_form = Form(self.t_applicant)
+        with app_1_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_1
+        app_1_form.save()
 
-        app_form.save()
+        talent = self.create_talent(self.t_applicant, self.t_talent_pool)
+        app_2 = self.create_applicant_from_talent(talent, self.t_job_2)
 
-        expected = {"id": self.t_skill_1, "level": self.t_skill_level_1, "type": self.t_skill_type}
-        talent_skill = {
-            "id": talent.applicant_skill_ids.skill_id,
-            "level": talent.applicant_skill_ids.skill_level_id,
-            "type": talent.applicant_skill_ids.skill_type_id,
-        }
-        app_skill = {
-            "id": self.t_applicant.applicant_skill_ids.skill_id,
-            "level": self.t_applicant.applicant_skill_ids.skill_level_id,
-            "type": self.t_applicant.applicant_skill_ids.skill_type_id,
-        }
-        self.assertEqual(expected, talent_skill, f"The talent should have the following skill: ${talent_skill}")
-        self.assertEqual(
-            app_skill,
-            talent_skill,
-            "After adding a skill to the applicant, the talent and the applicant should have the same skill",
-        )
-
-    def test_add_skill_to_applicant_with_talent_with_skill(self):
-        """
-        Verify one-way skill synchronization between an applicant its linked talent.
-
-        This test ensures that when a skill is added on an applicant, the same skill is also added or updated on the talent.
-        In this test the skill exists on the talent prior to adding it to the applicant.
-        """
-        app_form = Form(self.t_applicant)
-
-        talent = (
-            self.env["talent.pool.add.applicants"]
-            .create({"applicant_ids": self.t_applicant, "talent_pool_ids": self.t_talent_pool})
-            ._add_applicants_to_pool()
-        )
-        with Form(talent) as talent_form:
-            with talent_form.current_applicant_skill_ids.new() as skill:
-                skill.skill_type_id = self.t_skill_type
-                skill.skill_id = self.t_skill_1
-                skill.skill_level_id = self.t_skill_level_1
-
-        with app_form.current_applicant_skill_ids.new() as skill:
-            skill.skill_type_id = self.t_skill_type
-            skill.skill_id = self.t_skill_1
-            skill.skill_level_id = self.t_skill_level_1
-
-        app_form.save()
-
-        expected = {"id": self.t_skill_1, "level": self.t_skill_level_1, "type": self.t_skill_type}
-        talent_skill = {
-            "id": talent.applicant_skill_ids.skill_id,
-            "level": talent.applicant_skill_ids.skill_level_id,
-            "type": talent.applicant_skill_ids.skill_type_id,
-        }
-        app_skill = {
-            "id": self.t_applicant.applicant_skill_ids.skill_id,
-            "level": self.t_applicant.applicant_skill_ids.skill_level_id,
-            "type": self.t_applicant.applicant_skill_ids.skill_type_id,
-        }
-        self.assertEqual(expected, talent_skill, f"The talent should have the following skill: ${talent_skill}")
-        self.assertEqual(
-            app_skill,
-            talent_skill,
-            "After adding a skill to the applicant that already existed on the talent, the talent and the applicant should have the same skill",
-        )
-
-    def test_update_skill_on_applicant_with_talent_without_skill(self):
-        """
-        Verify one-way skill synchronization between an applicant its linked talent.
-
-        This test ensures that when a skill is updated on an applicant, the same skill is also added or updated on the talent.
-        In this test the skill does not exist on the talent prior to updating it to the applicant.
-        """
-        app_form = Form(self.t_applicant)
-        with app_form.current_applicant_skill_ids.new() as skill:
-            skill.skill_type_id = self.t_skill_type
-            skill.skill_id = self.t_skill_1
-            skill.skill_level_id = self.t_skill_level_1
-        app_form.save()
-
-        talent = (
-            self.env["talent.pool.add.applicants"]
-            .create({"applicant_ids": self.t_applicant, "talent_pool_ids": self.t_talent_pool})
-            ._add_applicants_to_pool()
-        )
-        with Form(talent) as talent_form:
-            talent_form.current_applicant_skill_ids.remove(0)
-
-        with app_form.current_applicant_skill_ids.edit(0) as skill:
+        with app_1_form.current_applicant_skill_ids.edit(0) as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_2
-        app_form.save()
+        app_1_form.save()
 
         expected = {"id": self.t_skill_1, "level": self.t_skill_level_2, "type": self.t_skill_type}
-        talent_skill = {
-            "id": talent.applicant_skill_ids.skill_id,
-            "level": talent.applicant_skill_ids.skill_level_id,
-            "type": talent.applicant_skill_ids.skill_type_id,
-        }
-        app_skill = {
-            "id": self.t_applicant.applicant_skill_ids.skill_id,
-            "level": self.t_applicant.applicant_skill_ids.skill_level_id,
-            "type": self.t_applicant.applicant_skill_ids.skill_type_id,
-        }
-        self.assertEqual(expected, talent_skill, f"The talent should have the following skill: ${talent_skill}")
+        talent_skill = self.get_applicant_skill(talent)
+        app_1_skill = self.get_applicant_skill(self.t_applicant)
+        app_2_skill = self.get_applicant_skill(app_2)
+        self.assertEqual(expected, talent_skill, f"The talent should have the following skill: ${expected} instead of {talent_skill}")
+        self.assertEqual(expected, app_2_skill, f"The linked applicant should have the following skill: ${expected} instead of {app_2_skill}")
         self.assertEqual(
-            app_skill,
-            talent_skill,
-            "After updating a skill on the applicant, the talent and the applicant should have the same skill",
-        )
-
-    def test_update_skill_on_applicant_with_talent_with_skill(self):
-        """
-        Verify one-way skill synchronization between an applicant its linked talent.
-
-        This test ensures that when a skill is updated on an applicant, the same skill is also added or updated on the talent.
-        In this test the skill exists on the talent prior to updating it to the applicant.
-        """
-        app_form = Form(self.t_applicant)
-        with app_form.current_applicant_skill_ids.new() as skill:
-            skill.skill_type_id = self.t_skill_type
-            skill.skill_id = self.t_skill_1
-            skill.skill_level_id = self.t_skill_level_1
-        app_form.save()
-
-        talent = (
-            self.env["talent.pool.add.applicants"]
-            .create({"applicant_ids": self.t_applicant, "talent_pool_ids": self.t_talent_pool})
-            ._add_applicants_to_pool()
-        )
-
-        with app_form.current_applicant_skill_ids.edit(0) as skill:
-            skill.skill_type_id = self.t_skill_type
-            skill.skill_id = self.t_skill_1
-            skill.skill_level_id = self.t_skill_level_2
-        app_form.save()
-
-        expected = {"id": self.t_skill_1, "level": self.t_skill_level_2, "type": self.t_skill_type}
-        talent_skill = {
-            "id": talent.applicant_skill_ids.skill_id,
-            "level": talent.applicant_skill_ids.skill_level_id,
-            "type": talent.applicant_skill_ids.skill_type_id,
-        }
-        app_skill = {
-            "id": self.t_applicant.applicant_skill_ids.skill_id,
-            "level": self.t_applicant.applicant_skill_ids.skill_level_id,
-            "type": self.t_applicant.applicant_skill_ids.skill_type_id,
-        }
-        self.assertEqual(expected, talent_skill, f"The talent should have the following skill: ${talent_skill}")
-        self.assertEqual(
-            app_skill,
+            app_1_skill,
             talent_skill,
             "After updating a skill on the applicant that already existed on the talent, the talent and the applicant should have the same skill",
         )
 
-    def test_delete_skill_on_applicant_with_talent_without_skill(self):
+    def test_delete_skill_on_applicant_with_talent_and_linked_applicants(self):
         """
-        Verify one-way skill synchronization between an applicant its linked talent.
-
-        This test ensures that when a skill is deleted on an applicant, the same skill is also deleted on the talent.
-        In this test the skill does not exist on the talent prior to deleting it on the applicant.
+        This test ensures that when a skill is deleted on an applicant,
+        the same skill is also deleted on the talent and linked applicants.
         """
-        app_form = Form(self.t_applicant)
-        with app_form.current_applicant_skill_ids.new() as skill:
+        app_1_form = Form(self.t_applicant)
+        with app_1_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
             skill.skill_id = self.t_skill_1
             skill.skill_level_id = self.t_skill_level_1
-        app_form.save()
+        app_1_form.save()
 
-        talent = (
-            self.env["talent.pool.add.applicants"]
-            .create({"applicant_ids": self.t_applicant, "talent_pool_ids": self.t_talent_pool})
-            ._add_applicants_to_pool()
-        )
-        with Form(talent) as talent_form:
-            talent_form.current_applicant_skill_ids.remove(0)
+        talent = self.create_talent(self.t_applicant, self.t_talent_pool)
+        app_2 = self.create_applicant_from_talent(talent, self.t_job_2)
 
-        app_form.current_applicant_skill_ids.remove(0)
+        app_1_form.current_applicant_skill_ids.remove(0)
 
-        app_form.save()
-
-        self.assertFalse(self.t_applicant.applicant_skill_ids, "The applicant should not have any skills")
-        self.assertFalse(
-            talent.applicant_skill_ids,
-            "The talent should not have any skills",
-        )
-
-    def test_delete_skill_on_applicant_with_talent_with_skill(self):
-        """
-        Verify one-way skill synchronization between an applicant its linked talent.
-
-        This test ensures that when a skill is deleted on an applicant, the same skill is also deleted on the talent.
-        In this test the skill exists on the talent prior to deleting it on the applicant.
-        """
-        app_form = Form(self.t_applicant)
-        with app_form.current_applicant_skill_ids.new() as skill:
-            skill.skill_type_id = self.t_skill_type
-            skill.skill_id = self.t_skill_1
-            skill.skill_level_id = self.t_skill_level_1
-        app_form.save()
-
-        talent = (
-            self.env["talent.pool.add.applicants"]
-            .create({"applicant_ids": self.t_applicant, "talent_pool_ids": self.t_talent_pool})
-            ._add_applicants_to_pool()
-        )
-
-        app_form.current_applicant_skill_ids.remove(0)
-
-        app_form.save()
+        app_1_form.save()
 
         self.assertFalse(self.t_applicant.applicant_skill_ids, "The applicant should not have any skills")
         self.assertFalse(
             talent.applicant_skill_ids,
             "The talent should not have any skills after removing the skill from the applicant",
         )
-
-    def test_adding_a_skill_on_a_talent_does_not_affect_applicants(self):
-        """
-        Verify one-way skill synchronization between an applicant its linked talent.
-
-        This test ensures that when a skill is added on a talent, the linked applicants are unaffected.
-        """
-        talent = (
-            self.env["talent.pool.add.applicants"]
-            .create({"applicant_ids": self.t_applicant, "talent_pool_ids": self.t_talent_pool})
-            ._add_applicants_to_pool()
+        self.assertFalse(
+            app_2.applicant_skill_ids,
+            "The linked applicant should not have any skills after removing the skill from the applicant",
         )
+
+    def test_adding_a_skill_on_a_talent_adds_skill_on_applicants(self):
+        """
+        This test ensures that when a skill is added on a talent, it is added to the linked applicants as well.
+        """
+        talent = self.create_talent(self.t_applicant, self.t_talent_pool)
         talent_form = Form(talent)
         with talent_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
@@ -434,23 +261,18 @@ class TestRecruitmentSkills(TransactionCase):
             skill.skill_level_id = self.t_skill_level_1
         talent_form.save()
 
-        expected_talent = {"id": self.t_skill_1, "level": self.t_skill_level_1, "type": self.t_skill_type}
+        expected = {"id": self.t_skill_1, "level": self.t_skill_level_1, "type": self.t_skill_type}
 
-        talent_skill = {
-            "id": talent.applicant_skill_ids.skill_id,
-            "level": talent.applicant_skill_ids.skill_level_id,
-            "type": talent.applicant_skill_ids.skill_type_id,
-        }
+        talent_skill = self.get_applicant_skill(talent)
+        app_skill = self.get_applicant_skill(self.t_applicant)
 
-        self.assertFalse(self.t_applicant.applicant_skill_ids, "The applicant should not have any skills")
-        self.assertEqual(expected_talent, talent_skill, f"The talent should have the following skill: {talent_skill}")
+        self.assertEqual(expected, talent_skill, f"The talent should have the following skill: {expected} instead of {talent_skill}")
+        self.assertEqual(app_skill, talent_skill, "Adding a skill on a talent should add the skill on its linked applicants as well")
         return
 
-    def test_updating_a_skill_on_a_talent_does_not_affect_applicants(self):
+    def test_updating_a_skill_on_a_talent_updates_applicants(self):
         """
-        Verify one-way skill synchronization between an applicant its linked talent.
-
-        This test ensures that when a skill is updated on a talent, the linked applicants are unaffected.
+        This test ensures that when a skill is updated on a talent, the skill is updated for linked applicants as well.
         """
         app_form = Form(self.t_applicant)
         with app_form.current_applicant_skill_ids.new() as skill:
@@ -459,11 +281,7 @@ class TestRecruitmentSkills(TransactionCase):
             skill.skill_level_id = self.t_skill_level_1
         app_form.save()
 
-        talent = (
-            self.env["talent.pool.add.applicants"]
-            .create({"applicant_ids": self.t_applicant, "talent_pool_ids": self.t_talent_pool})
-            ._add_applicants_to_pool()
-        )
+        talent = self.create_talent(self.t_applicant, self.t_talent_pool)
         talent_form = Form(talent)
         with talent_form.current_applicant_skill_ids.edit(0) as skill:
             skill.skill_type_id = self.t_skill_type
@@ -471,28 +289,17 @@ class TestRecruitmentSkills(TransactionCase):
             skill.skill_level_id = self.t_skill_level_2
         talent_form.save()
 
-        expected_app = {"id": self.t_skill_1, "level": self.t_skill_level_1, "type": self.t_skill_type}
-        expected_talent = {"id": self.t_skill_1, "level": self.t_skill_level_2, "type": self.t_skill_type}
+        expected = {"id": self.t_skill_1, "level": self.t_skill_level_2, "type": self.t_skill_type}
 
-        talent_skill = {
-            "id": talent.applicant_skill_ids.skill_id,
-            "level": talent.applicant_skill_ids.skill_level_id,
-            "type": talent.applicant_skill_ids.skill_type_id,
-        }
-        app_skill = {
-            "id": self.t_applicant.applicant_skill_ids.skill_id,
-            "level": self.t_applicant.applicant_skill_ids.skill_level_id,
-            "type": self.t_applicant.applicant_skill_ids.skill_type_id,
-        }
+        talent_skill = self.get_applicant_skill(talent)
+        app_skill = self.get_applicant_skill(self.t_applicant)
 
-        self.assertEqual(expected_app, app_skill, "The skill on the applicant should not have changed")
-        self.assertEqual(expected_talent, talent_skill, "The skill on the talent should have updated")
+        self.assertEqual(expected, talent_skill, "The skill on the talent should have updated")
+        self.assertEqual(expected, app_skill, "The skill on the applicant should have updated")
 
-    def test_removing_a_skill_on_a_talent_does_not_affect_applicants(self):
+    def test_removing_a_skill_on_a_talent_removes_it_from_applicants(self):
         """
-        Verify one-way skill synchronization between an applicant its linked talent.
-
-        This test ensures that when a skill is deleted on a talent, the linked applicants are unaffected.
+        This test ensures that when a skill is deleted on a talent, it is also removed for linked applicants as well.
         """
         app_form = Form(self.t_applicant)
         with app_form.current_applicant_skill_ids.new() as skill:
@@ -501,23 +308,12 @@ class TestRecruitmentSkills(TransactionCase):
             skill.skill_level_id = self.t_skill_level_1
         app_form.save()
 
-        talent = (
-            self.env["talent.pool.add.applicants"]
-            .create({"applicant_ids": self.t_applicant, "talent_pool_ids": self.t_talent_pool})
-            ._add_applicants_to_pool()
-        )
+        talent = self.create_talent(self.t_applicant, self.t_talent_pool)
         with Form(talent) as talent_form:
             talent_form.current_applicant_skill_ids.remove(0)
 
-        expected_app = {"id": self.t_skill_1, "level": self.t_skill_level_1, "type": self.t_skill_type}
-        app_skill = {
-            "id": self.t_applicant.applicant_skill_ids.skill_id,
-            "level": self.t_applicant.applicant_skill_ids.skill_level_id,
-            "type": self.t_applicant.applicant_skill_ids.skill_type_id,
-        }
-
-        self.assertEqual(expected_app, app_skill, f"The applicant should have the expected skill: {expected_app}")
         self.assertFalse(talent.applicant_skill_ids, "The talent should not have any skills")
+        self.assertFalse(self.t_applicant.applicant_skill_ids, "The applicant should not have any skills")
 
     def test_move_applicant_to_matching_job(self):
         """
@@ -590,7 +386,7 @@ class TestRecruitmentSkills(TransactionCase):
             groups='base.group_user,hr_recruitment.group_hr_recruitment_interviewer',
             name='Recruitment Interviewer', email='itw@example.com')
 
-        self.t_job.expected_degree = self.env['hr.recruitment.degree'].create({
+        self.t_job_1.expected_degree = self.env['hr.recruitment.degree'].create({
             'name': 'Master',
             'score': 0.5,
         })
@@ -605,11 +401,7 @@ class TestRecruitmentSkills(TransactionCase):
         Verify that when an applicant is created from a talent pool applicant, the new applicant
         has the same skills as the talent and the talent retains all its skills.
         """
-        talent = (
-            self.env["talent.pool.add.applicants"]
-            .create({"applicant_ids": self.t_applicant, "talent_pool_ids": self.t_talent_pool})
-            ._add_applicants_to_pool()
-        )
+        talent = self.create_talent(self.t_applicant, self.t_talent_pool)
         talent_form = Form(talent)
         with talent_form.current_applicant_skill_ids.new() as skill:
             skill.skill_type_id = self.t_skill_type
@@ -617,12 +409,7 @@ class TestRecruitmentSkills(TransactionCase):
             skill.skill_level_id = self.t_skill_level_1
         talent_form.save()
 
-        test_job = self.env["hr.job"].create({"name": "Test Job"})
-        applicant = (
-            self.env["job.add.applicants"]
-            .create({"applicant_ids": talent.ids, "job_ids": test_job})
-            ._add_applicants_to_job()
-        )
+        applicant = self.create_applicant_from_talent(talent, self.t_job_1)
 
         self.assertEqual(applicant.applicant_skill_ids.skill_type_id, self.t_skill_type)
         self.assertEqual(applicant.applicant_skill_ids.skill_level_id, self.t_skill_level_1)
