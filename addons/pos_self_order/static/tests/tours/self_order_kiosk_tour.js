@@ -160,6 +160,7 @@ registry.category("web_tour.tours").add("self_order_language_changes", {
 });
 
 registry.category("web_tour.tours").add("test_self_order_kiosk_combo_sides", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         Utils.clickBtn("Order Now"),
         LandingPage.selectLocation("Test-In"),

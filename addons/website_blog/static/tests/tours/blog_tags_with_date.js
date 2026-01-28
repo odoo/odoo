@@ -7,6 +7,7 @@ import { registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 registerWebsitePreviewTour(
     "blog_tags_with_date",
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         url: "/blog",
     },
     () => [

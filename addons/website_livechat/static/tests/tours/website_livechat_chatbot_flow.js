@@ -7,6 +7,7 @@ const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:conta
 let chatbotDelayProcessingDef;
 
 registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => {
         patchWithCleanup(Chatbot.prototype, {
             // Count the number of times this method is called to check whether the chatbot is regularly

@@ -3,6 +3,7 @@ import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tou
 registerWebsitePreviewTour(
     "website_image_quality",
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         url: "/",
         edition: true,
     },

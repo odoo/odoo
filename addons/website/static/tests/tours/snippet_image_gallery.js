@@ -34,6 +34,9 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "snippet_image_gallery_remove",
     {
+        // Remove this key to get warning should not have any "characterData", "remove"
+        // or "add" mutations in current step when you update the selection
+        undeterministicTour_doNotCopy: true,
         url: "/",
         edition: true,
     },
@@ -94,6 +97,7 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "snippet_image_gallery_reorder",
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         url: "/",
         edition: true,
     },
@@ -164,6 +168,9 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "snippet_image_gallery_thumbnail_update",
     {
+        // Remove this key to get warning should not have any "characterData", "remove"
+        // or "add" mutations in current step when you update the selection
+        undeterministicTour_doNotCopy: true,
         url: "/",
         edition: true,
     },

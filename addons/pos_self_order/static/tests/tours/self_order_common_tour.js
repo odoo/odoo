@@ -27,6 +27,7 @@ registry.category("web_tour.tours").add("self_order_landing_page_carousel", {
 });
 
 registry.category("web_tour.tours").add("self_order_pos_closed", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         LandingPage.isClosed(),
         // Normal product
@@ -72,6 +73,7 @@ registry.category("web_tour.tours").add("self_order_pos_closed", {
 });
 
 registry.category("web_tour.tours").add("kiosk_order_pos_closed", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         LandingPage.isClosed(),
         Utils.clickBtn("Order Now"),

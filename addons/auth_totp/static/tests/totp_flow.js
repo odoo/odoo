@@ -72,6 +72,7 @@ function closePreferencesDialog({content, totp_state}) {
 }
 
 registry.category("web_tour.tours").add('totp_tour_setup', {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     url: '/odoo',
     steps: () => [
 ...openUserPreferencesAtSecurityTab(),
@@ -131,6 +132,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 ]});
 
 registry.category("web_tour.tours").add('totp_login_enabled', {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",
@@ -203,6 +205,7 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
 }]});
 
 registry.category("web_tour.tours").add('totp_login_device', {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",
@@ -328,6 +331,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
 ]});
 
 registry.category("web_tour.tours").add('totp_login_disabled', {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",

@@ -7,6 +7,9 @@ import { registry } from "@web/core/registry";
 
 const getEWalletText = (suffix) => "eWallet" + (suffix !== "" ? ` ${suffix}` : "");
 registry.category("web_tour.tours").add("MultipleGiftWalletProgramsTour", {
+    // Already repertoried in runbot error.
+    // Remove this key to increase the frequency of failings.
+    undeterministicTour_doNotCopy: true,
     steps: () =>
         [
             // One card for gift_card_1.

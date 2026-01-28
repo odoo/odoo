@@ -58,6 +58,7 @@ registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
 });
 
 registry.category("web_tour.tours").add("GiftCardProgramPriceNoTaxTour", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -73,6 +74,7 @@ registry.category("web_tour.tours").add("GiftCardProgramPriceNoTaxTour", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyPointsGiftcard", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -108,6 +110,7 @@ registry.category("web_tour.tours").add("PosLoyaltyGiftCardTaxes", {
 });
 
 registry.category("web_tour.tours").add("PhysicalGiftCardProgramSaleTour", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -131,6 +134,7 @@ registry.category("web_tour.tours").add("PhysicalGiftCardProgramSaleTour", {
 });
 
 registry.category("web_tour.tours").add("MultiplePhysicalGiftCardProgramSaleTour", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -219,6 +223,7 @@ registry.category("web_tour.tours").add("EmptyProductScreenTour", {
 });
 
 registry.category("web_tour.tours").add("test_physical_gift_card", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),

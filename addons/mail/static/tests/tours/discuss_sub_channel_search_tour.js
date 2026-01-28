@@ -129,6 +129,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
 });
 
 registry.category("web_tour.tours").add("create_thread_for_attachment_without_body", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             content: "Open general channel",

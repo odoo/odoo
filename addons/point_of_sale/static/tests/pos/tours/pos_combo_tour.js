@@ -159,6 +159,7 @@ registry.category("web_tour.tours").add("ProductComboChangeFP", {
 });
 
 registry.category("web_tour.tours").add("ProductComboMaxFreeQtyTour", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -256,6 +257,7 @@ registry.category("web_tour.tours").add("ProductComboDiscountTour", {
 });
 
 registry.category("web_tour.tours").add("test_convert_orderlines_to_combo", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),

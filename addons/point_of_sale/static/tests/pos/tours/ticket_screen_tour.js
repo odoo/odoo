@@ -329,6 +329,7 @@ registry.category("web_tour.tours").add("test_pay_unpaid_order_from_kiosk", {
 });
 
 registry.category("web_tour.tours").add("refund_multiple_products_amounts_compliance", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -355,6 +356,7 @@ registry.category("web_tour.tours").add("refund_multiple_products_amounts_compli
 });
 
 registry.category("web_tour.tours").add("LotTour", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),

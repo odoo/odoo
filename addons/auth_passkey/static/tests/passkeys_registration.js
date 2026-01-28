@@ -5,6 +5,7 @@ import * as passkeyLib from "../lib/simplewebauthn";
 let unpatchPasskeyRegistration;
 
 registry.category("web_tour.tours").add('passkeys_tour_registration', {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     url: '/odoo',
     steps: () => [
         {

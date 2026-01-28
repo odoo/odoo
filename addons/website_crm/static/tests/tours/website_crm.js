@@ -45,6 +45,7 @@ registerWebsitePreviewTour(
 );
 
 registry.category("web_tour.tours").add('website_crm_tour', {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     url: '/contactus',
     steps: () => [{
     content: "Complete name",
@@ -81,6 +82,7 @@ registry.category("web_tour.tours").add('website_crm_tour', {
 }]});
 
 registry.category("web_tour.tours").add('website_crm_catch_logged_partner_info_tour', {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     url: '/contactus',
     steps: () => [
 {

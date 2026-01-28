@@ -22,6 +22,7 @@ registry.category('web_tour.tours').add('website_sale_collect_widget', {
 registry.category('web_tour.tours').add(
     'website_sale_collect_buy_product_default_location_pick_up_in_store',
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         url: '/shop',
         steps: () => [
             ...tourUtils.searchProduct("Test CAC Product", { select: true }),

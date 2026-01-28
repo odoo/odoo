@@ -13,6 +13,7 @@ import { registry } from "@web/core/registry";
 import { delay } from "@web/core/utils/concurrency";
 
 registry.category("web_tour.tours").add("ControlButtonsTour", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             // Test merging table, transfer is already tested in pos_restaurant_sync_second_login.

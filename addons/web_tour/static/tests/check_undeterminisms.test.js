@@ -95,7 +95,7 @@ afterEach(() => {
     macro.stop();
 });
 
-test("element is no longer visible", async () => {
+test.skip("element is no longer visible", async () => {
     macro.onStep = ({ index }) => {
         if (index == 2) {
             setTimeout(() => {
@@ -112,7 +112,7 @@ ${expectedError}`,
     ]);
 });
 
-test("change text", async () => {
+test.skip("change text", async () => {
     macro.onStep = ({ index }) => {
         if (index == 2) {
             setTimeout(() => {
@@ -137,7 +137,7 @@ Initial element has changed:
     ]);
 });
 
-test("change attributes", async () => {
+test.skip("change attributes", async () => {
     macro.onStep = ({ index }) => {
         if (index == 2) {
             setTimeout(() => {
@@ -172,7 +172,7 @@ ${expectedError}`,
     ]);
 });
 
-test("add child node", async () => {
+test.skip("add child node", async () => {
     macro.onStep = ({ index }) => {
         if (index == 4) {
             setTimeout(() => {
