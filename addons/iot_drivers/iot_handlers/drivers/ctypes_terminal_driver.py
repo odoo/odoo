@@ -10,8 +10,7 @@ from time import sleep
 
 from odoo.addons.iot_drivers.driver import Driver
 from odoo.addons.iot_drivers.event_manager import event_manager
-from odoo.addons.iot_drivers.tools.system import IS_WINDOWS
-from odoo.tools.misc import file_path
+from odoo.addons.iot_drivers.tools.system import IS_WINDOWS, path_file
 
 _logger = logging.getLogger(__name__)
 
@@ -121,19 +120,14 @@ def import_ctypes_library(lib_subfolder: str, lib_name: str):
     extension (.so/.dll), otherwise ValueError will be raised
     :return: The imported ctypes library object, or None if import failed
     """
-    supported_lib_extensions = '.dll' if IS_WINDOWS else '.so'
-    import_library_method = ctypes.WinDLL if IS_WINDOWS else ctypes.CDLL
-
+    import_library = ctypes.WinDLL if IS_WINDOWS else ctypes.CDLL
+    lib_path = path_file("odoo/addons/iot_drivers/iot_handlers/drivers", lib_subfolder, lib_name)
     try:
-        lib_path = file_path(f'iot_drivers/iot_handlers/drivers/{lib_subfolder}/{lib_name}', supported_lib_extensions)
-        ctypes_lib = import_library_method(lib_path)
-        _logger.info('Successfully imported ctypes library "%s" from %s', lib_name, lib_path)
+        ctypes_lib = import_library(lib_path)
+        _logger.info("Successfully imported ctypes library '%s'", lib_path)
         return ctypes_lib
     except (OSError, ValueError, FileNotFoundError):
-        _logger.exception(
-            "Failed to import ctypes library '%s' from iot_drivers/iot_handlers/drivers/%s/",
-            lib_name, lib_subfolder
-        )
+        _logger.exception("Failed to import ctypes library '%s'", lib_path)
 
 
 def create_ctypes_string_buffer():
@@ -149,7 +143,7 @@ class CtypesTerminalDriver(Driver, ABC):
 
     DELAY_TIME_BETWEEN_TRANSACTIONS = 5  # seconds
 
-    def __init__(self, identifier, device, lib_name: str, manufacturer: str):
+    def __init__(self, identifier, device, manufacturer: str):
         super().__init__(identifier, device)
         self.device_type = 'payment'
         self.device_connection = 'network'
@@ -163,7 +157,8 @@ class CtypesTerminalDriver(Driver, ABC):
 
         self.device_manufacturer = manufacturer
         self.device_name = f"{self.device_manufacturer} terminal {self.device_identifier}"
-        self.terminal = import_ctypes_library(self.connection_type, lib_name)
+        self.terminal = device["terminal"]
+        self.manager = device["manager"]
 
     @classmethod
     def supported(cls, device):

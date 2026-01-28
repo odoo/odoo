@@ -4,7 +4,6 @@ import ctypes
 from time import sleep
 from logging import getLogger
 
-from odoo.addons.iot_drivers.tools.system import IS_WINDOWS
 from odoo.addons.iot_drivers.iot_handlers.drivers.ctypes_terminal_driver import (
     CtypesTerminalDriver,
     create_ctypes_string_buffer
@@ -18,8 +17,7 @@ class SixDriver(CtypesTerminalDriver):
     cancelled_by_pos = 2  # Error code returned when you press "cancel" in PoS
 
     def __init__(self, identifier, device):
-        lib_name = 'libsix_odoo_w.dll' if IS_WINDOWS else 'libsix_odoo_l.so'
-        super().__init__(identifier, device, lib_name=lib_name, manufacturer="Six")
+        super().__init__(identifier, device, manufacturer="Six")
 
         # int six_cancel_transaction(t_terminal_manager *terminal_manager)
         self.terminal.six_cancel_transaction.argtypes = [ctypes.c_void_p]
@@ -69,7 +67,7 @@ class SixDriver(CtypesTerminalDriver):
         try:
             _logger.info('Start transaction #%s', transaction)
             result = self.terminal.six_perform_transaction(
-                self.dev,  # t_terminal_manager *terminal_manager
+                self.manager,  # t_terminal_manager *terminal_manager
                 str(transaction['posId']).encode(),  # char *pos_id
                 ctypes.c_int(transaction['userId']),  # int user_id
                 ctypes.c_int(1) if transaction['transactionType'] == 'Payment' else ctypes.c_int(2),  # int transaction_type
@@ -129,7 +127,7 @@ class SixDriver(CtypesTerminalDriver):
             return self.send_status(stage="Cancel", request_data=transaction)
         try:
             _logger.info("cancel transaction request for %s", transaction)
-            if not self.terminal.six_cancel_transaction(ctypes.cast(self.dev, ctypes.c_void_p)):
+            if not self.terminal.six_cancel_transaction(ctypes.cast(self.manager, ctypes.c_void_p)):
                 _logger.info("Transaction #%s could not be cancelled", transaction)
                 self.send_status(stage='Cancel', error='Transaction could not be cancelled', request_data=transaction)
         except OSError:
@@ -145,7 +143,7 @@ class SixDriver(CtypesTerminalDriver):
         n_receipts = ctypes.c_int(0)
         try:
             _logger.info("Requesting terminal balance")
-            result = self.terminal.six_terminal_balance(self.dev, balance_receipt_buffer, ctypes.byref(n_receipts))
+            result = self.terminal.six_terminal_balance(self.manager, balance_receipt_buffer, ctypes.byref(n_receipts))
             if result:
                 _logger.info("Terminal balance request success")
                 # If this ever occurs the C code will need to be adapted to handle multiple receipts
