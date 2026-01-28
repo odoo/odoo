@@ -327,7 +327,7 @@ export class PosOrderline extends Base {
         if (this.qty < 0) {
             valid_lots_quantity = -valid_lots_quantity;
         }
-        this.setQuantity(valid_lots_quantity);
+        this.setQuantity(valid_lots_quantity, !!this.combo_parent_id);
     }
 
     hasValidProductLot() {
