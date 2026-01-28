@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import zipfile
@@ -8,6 +7,7 @@ from itertools import chain
 from odoo import http, _
 from odoo.exceptions import UserError
 from odoo.http import request, content_disposition
+from odoo.tools import OrderedSet
 
 
 def _get_headers(filename, filetype, content):
@@ -37,9 +37,9 @@ class AccountDocumentDownloadController(http.Controller):
             headers = _get_headers(attachments.name, attachments.mimetype, attachments.raw)
             return request.make_response(attachments.raw, headers)
         else:
-            inv_ids = attachments.mapped('res_id')
-            if len(set(inv_ids)) == 1:
-                invoice = request.env['account.move'].browse(inv_ids[0])
+            inv_ids = OrderedSet(a.res_id for a in attachments if a.res_id)
+            if len(inv_ids) == 1:
+                invoice = request.env['account.move'].browse(inv_ids)
                 filename = invoice._get_invoice_report_filename(extension='zip')
             else:
                 filename = _('invoices') + '.zip'
