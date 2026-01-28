@@ -31,6 +31,7 @@ from odoo.tools import (
     frozendict,
     is_html_empty,
     reset_cached_properties,
+    str2bool,
 )
 from odoo.tools.date_utils import all_timezones
 
@@ -1471,6 +1472,7 @@ KEY_CRYPT_CONTEXT = CryptContext(
     # attacks on API keys isn't much of a concern
     ['pbkdf2_sha512'], pbkdf2_sha512__rounds=6000,
 )
+DEFAULT_PROGRAMMATIC_API_KEYS_LIMIT = 10  # programmatic API key creation is refused if the user already has at least this amount of API keys
 
 
 class ResUsersApikeys(models.Model):
@@ -1524,6 +1526,7 @@ class ResUsersApikeys(models.Model):
             _logger.info("API key(s) removed: scope: <%s> for '%s' (#%s) from %s",
                self.mapped('scope'), self.env.user.login, self.env.uid, ip)
             self.sudo().unlink()
+            self.env.registry.clear_cache()
             return {'type': 'ir.actions.act_window_close'}
         raise AccessError(_("You can not remove API keys unless they're yours or you are a system user"))
 
@@ -1585,6 +1588,89 @@ class ResUsersApikeys(models.Model):
             self._description, scope, self.env.user.login, self.env.uid, ip)
 
         return k
+
+    def _ensure_can_manage_keys_programmatically(self):
+        # Administrators would not be restricted by the ICP check alone,
+        # as they could temporarily enable the setting via set_bool().
+        # However, this is considered bad practice because it would create a time window
+        # where anyone could manage API keys programmatically.
+        # Additionally, the enable / call / restore process involves three distinct calls,
+        # which is not atomic and prone to errors (e.g., server unavailability during restore),
+        # potentially leaving the configuration enabled for all users.
+        # To avoid this, an exception is made for Administrators.
+        # However, if programmatic API key management were to be enabled by default,
+        # this exception should be removed, as disabling the feature should be global.
+        ICP = self.env['ir.config_parameter'].sudo()
+        programmatic_api_keys_enabled = str2bool(ICP.get_bool('base.enable_programmatic_api_keys'), False)
+        if not (self.env.is_system() or programmatic_api_keys_enabled):
+            raise UserError(_("Programmatic API keys are not enabled"))
+
+    @api.model
+    def generate(self, key, scope, name, expiration_date):
+        """
+        Generate a new API key with an existing API key.
+        The provided `key` must be an existing API key that belongs to the current user.
+        Its scope must be compatible with `scope`.
+        The `expiration_date` must be allowed for the user's group.
+
+        To renew a key, generate the new one, store it, and then call `revoke` on the previous one.
+        """
+        self._ensure_can_manage_keys_programmatically()
+
+        with self.env['res.users']._assert_can_auth(user=key[:INDEX_SIZE]):
+            if not isinstance(expiration_date, datetime.datetime):
+                expiration_date = fields.Datetime.from_string(expiration_date)
+
+            nb_keys = self.search_count([('user_id', '=', self.env.uid),
+                                         '|', ('expiration_date', '=', False), ('expiration_date', '>=', self.env.cr.now())])
+            try:
+                ICP = self.env['ir.config_parameter'].sudo()
+                nb_keys_limit = int(ICP.get_int('base.programmatic_api_keys_limit', DEFAULT_PROGRAMMATIC_API_KEYS_LIMIT))
+            except ValueError:
+                _logger.warning("Invalid value for 'base.programmatic_api_keys_limit', using default value.")
+                nb_keys_limit = DEFAULT_PROGRAMMATIC_API_KEYS_LIMIT
+            if nb_keys >= nb_keys_limit:
+                raise UserError(_('Limit of %s API keys is reached for programmatic creation', nb_keys_limit))
+
+            # Scope compatibility rules:
+            # - A global key can generate credentials for any scope (including global).
+            # - A scoped key can only generate credentials for its own scope.
+            #
+            # This is enforced in _check_credentials by validating scope usage,
+            # and the validated scope is then reused when calling _generate.
+
+            uid = self.env['res.users.apikeys']._check_credentials(scope=scope or 'rpc', key=key)
+            if not uid or uid != self.env.uid:
+                raise AccessDenied(_("The provided API key is invalid or does not belong to the current user."))
+            new_key = self._generate(scope, name, expiration_date)
+            _logger.info("%s %r generated from %r", self._description, new_key[:INDEX_SIZE], key[:INDEX_SIZE])
+
+            return new_key
+
+    @api.model
+    def revoke(self, key):
+        """
+        Revoke an existing API key.
+        If it exists, the `key` will be removed from the server.
+        """
+        self._ensure_can_manage_keys_programmatically()
+        assert key, "key required"
+        with self.env['res.users']._assert_can_auth(user=key[:INDEX_SIZE]):
+            self.env.cr.execute(SQL('''
+                SELECT id, key
+                FROM %(table)s
+                WHERE
+                    index = %(index)s
+                    AND (
+                        expiration_date IS NULL OR
+                        expiration_date >= now() at time zone 'utc'
+                    )
+            ''', table=SQL.identifier(self._table), index=key[:INDEX_SIZE]))
+            for key_id, current_key in self.env.cr.fetchall():
+                if key and KEY_CRYPT_CONTEXT.verify(key, current_key):
+                    self.env['res.users.apikeys'].browse(key_id)._remove()
+                    return True
+            raise AccessDenied(_("The provided API key is invalid."))
 
     @api.autovacuum
     def _gc_user_apikeys(self):
