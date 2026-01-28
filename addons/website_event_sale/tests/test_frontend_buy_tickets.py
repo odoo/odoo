@@ -189,7 +189,7 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         # Payment should fail due to exceeding the VIP ticket limit
         result = self.make_jsonrpc_request(url, route_kwargs)
         self.assertEqual(result['state'], 'error')
-        self.assertTrue(result['state_message'].startswith("There are not enough seats available"))
+        self.assertIn("There are not enough seats available", result['state_message'])
 
         # Double check that we hit the correct limit for ticket
         with self.assertRaises(ValidationError):
@@ -223,7 +223,7 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
         # Payment should fail due to exceeding the event seat limit
         result = self.make_jsonrpc_request(url, route_kwargs)
         self.assertEqual(result['state'], 'error')
-        self.assertTrue(result['state_message'].startswith("There are not enough seats available"))
+        self.assertIn("There are not enough seats available", result['state_message'])
 
         # Double check that we hit the correct limit for event
         with self.assertRaises(ValidationError):

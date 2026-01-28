@@ -251,11 +251,8 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
             )
 
     def test_redirect_on_price_change_on_payment(self):
-        session = self.authenticate(None, None)
-        session[CART_SESSION_CACHE_KEY] = self.cart.id
-        root.session_store.save(session)
-
-        self.cart.set_delivery_line(self.carrier, 0.0)
+        self.cart.partner_id.write(self.dummy_partner_address_values.copy())
+        self.cart._set_delivery_method(self.free_delivery)
 
         self.pricelist.item_ids = [
             Command.create({'percent_price': 50, 'compute_price': 'percentage'})
@@ -274,4 +271,5 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
             },
         )
 
-        self.assertEqual(response['redirect'], '/shop/payment')  # Redirected back to the checkout
+        self.assertEqual(response['redirect'], '/shop/payment')
+        self.assertIn("Prices have changed.", response['state_message'])

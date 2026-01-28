@@ -49,27 +49,29 @@ class TestShopLoyaltyPayment(PaymentHttpCommon, TestSaleCouponCommon):
 
         with freeze_time(program.date_to + timedelta(days=2)):
             self.authenticate(self.portal_user.login, self.portal_user.login)
-            with self.assertRaises(
-                JsonRpcException,
-                msg="Payment shouldn't succeed with expired reward still applied",
-            ):
-                self.make_jsonrpc_request(
-                    self._build_url(f'/shop/payment/transaction/{order.id}'),
-                    {
-                        'order_id': order.id,
-                        'access_token': None,
-                        'amount': order.amount_total,
-                        'provider_id': self.provider.id,
-                        'payment_method_id': self.payment_method.id,
-                        'flow': 'direct',
-                        'token_id': None,
-                        'tokenization_requested': False,
-                        'landing_route': order.get_portal_url(),
-                    },
-                )
+            result = self.make_jsonrpc_request(
+                self._build_url(f'/shop/payment/transaction/{order.id}'),
+                {
+                    'order_id': order.id,
+                    'access_token': None,
+                    'amount': order.amount_total,
+                    'provider_id': self.provider.id,
+                    'payment_method_id': self.payment_method.id,
+                    'flow': 'direct',
+                    'token_id': None,
+                    'tokenization_requested': False,
+                    'landing_route': order.get_portal_url(),
+                },
+            )
 
-            # Update rewards & retry transaction
-            order._update_programs_and_rewards()
+            self.assertEqual(result['state'], 'error')
+            self.assertIn(
+                "Prices have changed.",
+                result['state_message'],
+                msg="Payment shouldn't succeed with expired reward still applied",
+            )
+            self.assertEqual(result['redirect'], '/shop/payment')
+
             tx_response = self.make_jsonrpc_request(
                 self._build_url(f'/shop/payment/transaction/{order.id}'),
                 {
@@ -87,5 +89,5 @@ class TestShopLoyaltyPayment(PaymentHttpCommon, TestSaleCouponCommon):
             self.assertEqual(
                 tx_response['amount'],
                 self.service_product.list_price,
-                "Payment should succeed after removing expired reward",
+                "Price have been updated during first try, payment should succeed on second try",
             )

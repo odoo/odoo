@@ -166,13 +166,16 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
             'order_line': [Command.clear(), Command.create({'product_id': self.product.id})],
             'carrier_id': False,
         })
+        self.partner.write(self.dummy_partner_address_values.copy())
 
         # Try processing payment with a storable product and no carrier_id
-        with self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError'):
-            self.make_jsonrpc_request(
-                f'/shop/payment/transaction/{self.cart.id}',
-                {'access_token': self.cart._portal_ensure_token()},
-            )
+        result = self.make_jsonrpc_request(
+            f'/shop/payment/transaction/{self.cart.id}',
+            {'access_token': self.cart._portal_ensure_token()},
+        )
+
+        self.assertEqual(result['state'], 'error')
+        self.assertIn("No shipping method is selected.", result['state_message'])
 
     def test_update_cart_zero_qty(self):
         # Try to remove a product that has already been removed
