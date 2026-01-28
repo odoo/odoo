@@ -502,3 +502,82 @@ class TestFrenchLeaves(TransactionCase):
             'request_date_to': '2024-12-25',
         })
         self.assertEqual(leave.number_of_days, 4.0, 'Public holidays for French part-time employees should be considered')
+
+    def test_employee_2_week_calendar(self):
+        """
+        Test Case:
+        ==========
+        - Employee has a two week calendar
+        - Company has a standard 40hr/week calendar
+        - Time off type is Paid Time Off
+        - Employee requests Monday off
+        """
+        self.time_off_type = self.env['hr.leave.type'].create({
+            'name': 'Paid Time Off',
+            'requires_allocation': 'yes',
+            'employee_requests': 'no',
+            'allocation_validation_type': 'hr',
+            'leave_validation_type': 'both',
+            'request_unit': 'day'
+        })
+        self.company.write({'l10n_fr_reference_leave_type': self.time_off_type.id})
+        self.employee.resource_calendar_id = self.env['resource.calendar'].create({
+            'name': 'Employee Calendar',
+            'two_weeks_calendar': True,
+            'attendance_ids': [
+                (0, 0, {'week_type': '0', 'name': 'First week', 'dayofweek': '0', 'hour_from': 0.0, 'hour_to': 0.0, 'day_period': 'morning', 'display_type': 'line_section'}),
+                (0, 0, {'week_type': '0', 'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '0', 'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '0', 'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'week_type': '0', 'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '0', 'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '0', 'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'week_type': '0', 'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '0', 'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '0', 'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'week_type': '0', 'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '0', 'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '0', 'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'week_type': '0', 'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '0', 'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '0', 'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+
+                (0, 0, {'week_type': '1', 'name': 'Second week', 'dayofweek': '0', 'hour_from': 0.0, 'hour_to': 0.0, 'day_period': 'morning', 'display_type': 'line_section'}),
+                (0, 0, {'week_type': '1', 'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '1', 'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '1', 'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'week_type': '1', 'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '1', 'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '1', 'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'week_type': '1', 'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '1', 'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '1', 'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'week_type': '1', 'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '1', 'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '1', 'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+                (0, 0, {'week_type': '1', 'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'week_type': '1', 'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12.0, 'hour_to': 13.0, 'day_period': 'lunch'}),
+                (0, 0, {'week_type': '1', 'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13.0, 'hour_to': 17.0, 'day_period': 'afternoon'}),
+            ],
+        })
+        self.company.resource_calendar_id = self.base_calendar
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'PTO allocation',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'date_from': '2025-01-01',
+            'number_of_days': 10.0,
+        })
+        allocation.action_approve()
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Test',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2026-01-12',
+            'request_date_to': '2026-01-12',
+        })
+        self.assertEqual(leave.number_of_days, 1, 'The duration should be equal 1 day')
+        self.assertEqual(leave.date_from.date(), date(2026, 1, 12))
+        self.assertEqual(leave.date_to.date(), date(2026, 1, 12))
+        self.assertEqual(leave.number_of_hours, 8.0, 'Duration should be 8 hours (one working day)')
