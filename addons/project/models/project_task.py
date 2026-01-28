@@ -856,6 +856,8 @@ class ProjectTask(models.Model):
         milestone_mapping = self.env.context.get('milestone_mapping', {})
         role_to_users_mapping = self.env.context.get('role_to_users_mapping')
         for task, vals in zip(self, vals_list):
+            if self.env.context.get('convert_to_template'):
+                vals['date_deadline'] = task.date_deadline
             if not default.get('stage_id'):
                 vals['stage_id'] = task.stage_id.id
             if 'active' not in default and not task['active'] and not self.env.context.get('copy_project'):
