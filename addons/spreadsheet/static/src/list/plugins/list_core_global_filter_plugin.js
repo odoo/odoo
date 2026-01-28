@@ -42,7 +42,7 @@ export class ListCoreGlobalFilterPlugin extends OdooCorePlugin {
     handle(cmd) {
         switch (cmd.type) {
             case "INSERT_ODOO_LIST": {
-                this._addList(cmd.id);
+                this._addList(cmd.listId);
                 break;
             }
             case "REMOVE_ODOO_LIST": {

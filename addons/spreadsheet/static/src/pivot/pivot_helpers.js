@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { EvaluationError, helpers } from "@odoo/o-spreadsheet";
+import { getFullFieldStringFromPath } from "../data_sources/data_source";
 
 const { isDateOrDatetimeField, parseDimension } = helpers;
 
@@ -106,12 +107,10 @@ export function addEmptyGranularity(groupBys, fields) {
 }
 
 export async function getRelationalFieldDefinition(resModel, fieldName, fieldService) {
-    const { modelsInfo, names } = await fieldService.loadPath(resModel, fieldName);
+    const fieldInfo = await fieldService.loadPath(resModel, fieldName);
     return {
-        ...modelsInfo.at(-1).fieldDefs[fieldName.split(".").at(-1)],
-        string: names
-            .map((name, i) => modelsInfo[i].fieldDefs[name]?.string || _t("Unnamed Field"))
-            .join(" > "),
+        ...fieldInfo.modelsInfo.at(-1).fieldDefs[fieldName.split(".").at(-1)],
+        string: getFullFieldStringFromPath(fieldInfo),
         name: fieldName,
     };
 }

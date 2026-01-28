@@ -59,12 +59,8 @@ export class ModelFieldSelector extends Component {
         return this.env.isSmall && hasTouch();
     }
 
-    openPopover(currentTarget) {
-        if (this.props.readonly) {
-            return;
-        }
-        this.newPath = null;
-        this.popover.open(currentTarget, {
+    getPopoverProps() {
+        return {
             resModel: this.props.resModel,
             path: this.props.path,
             readProperty: this.props.readProperty,
@@ -80,7 +76,15 @@ export class ModelFieldSelector extends Component {
             sort: this.props.sort,
             followRelations: this.props.followRelations,
             showDebugInput: this.props.showDebugInput,
-        });
+        };
+    }
+
+    openPopover(currentTarget) {
+        if (this.props.readonly) {
+            return;
+        }
+        this.newPath = null;
+        this.popover.open(currentTarget, this.getPopoverProps());
     }
 
     async updateState(params, isConcurrent) {

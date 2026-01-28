@@ -1,6 +1,5 @@
 // @ts-check
 
-
 /**
  * @typedef {import("@odoo/o-spreadsheet").CompiledFormula} CompiledFormula
  * @typedef {import("@odoo/o-spreadsheet").CoreGetters} CoreGetters
@@ -8,7 +7,6 @@
  * */
 
 const ALL_LIST_FUNCTIONS = ["ODOO.LIST", "ODOO.LIST.HEADER", "ODOO.LIST.VALUE"];
-
 /**
  * Parse a spreadsheet formula and detect the number of LIST functions that are
  * present in the given formula.
@@ -18,7 +16,7 @@ const ALL_LIST_FUNCTIONS = ["ODOO.LIST", "ODOO.LIST.HEADER", "ODOO.LIST.VALUE"];
  * @returns {boolean}
  */
 export function hasListFormula(compiledFormula) {
-    return ALL_LIST_FUNCTIONS.some(funcName => compiledFormula.usesSymbol(funcName));
+    return ALL_LIST_FUNCTIONS.some((funcName) => compiledFormula.usesSymbol(funcName));
 }
 
 /**
@@ -30,5 +28,5 @@ export function hasListFormula(compiledFormula) {
  * @returns {OdooFunctionDescription|undefined}
  */
 export function getFirstListFunction(compiledFormula, getters) {
-    return compiledFormula.getFunctionsFromTokens( ALL_LIST_FUNCTIONS, getters)[0];
+    return compiledFormula.getFunctionsFromTokens(ALL_LIST_FUNCTIONS, getters)[0];
 }

@@ -75,7 +75,6 @@
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet_extended.scss',
             'spreadsheet/static/src/o_spreadsheet/migration.js',
             'spreadsheet/static/src/helpers/odoo_functions_helpers.js',
-            'spreadsheet/static/src/pivot/pivot_helpers.js',
             'spreadsheet/static/src/o_spreadsheet/odoo_module.js',
             'spreadsheet/static/src/helpers/helpers.js',
             'spreadsheet/static/src/public_readonly_app/**/*.xml',
