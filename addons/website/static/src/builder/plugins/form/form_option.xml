@@ -241,8 +241,16 @@
     </BuilderRow>
     <BuilderRow label.translate="Requirement"
             t-if="domStateCurrentFieldInput.hasDateTimePicker or domStateCurrentFieldInput.isTextArea or canHaveTextValidationCondition.includes(domStateCurrentFieldInput.type)">
+        <BuilderSelect id="'require_condition_email_opt'"
+                t-if="domStateCurrentFieldInput.type === 'email'"
+                preview="false"
+                dataAttributeAction="'requirementComparator'"
+                action="'setRequirementComparator'">
+            <BuilderSelectItem id="'no_requirement_opt'" dataAttributeActionValue="''">None</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'domain'">Matches domain</BuilderSelectItem>
+        </BuilderSelect>
         <BuilderSelect id="'require_condition_text_opt'"
-                t-if="!domStateCurrentFieldInput.hasDateTimePicker and (domStateCurrentFieldInput.isTextArea || ['text', 'email', 'tel', 'url', 'search', 'password'].includes(domStateCurrentFieldInput.type))"
+                t-if="!domStateCurrentFieldInput.hasDateTimePicker and (domStateCurrentFieldInput.isTextArea || ['text', 'tel', 'url', 'search', 'password'].includes(domStateCurrentFieldInput.type))"
                 preview="false"
                 dataAttributeAction="'requirementComparator'"
                 action="'setRequirementComparator'">
@@ -318,14 +326,14 @@
     <BuilderRow t-if="isMultipleTextConditionForRequirementOptionVisible">
         <div class="d-flex flex-column w-100">
             <p class="hb-row-label mb-0 flex-basis-auto">
-                <t t-out="'Enter words'"/>
+                <t t-out="domStateCurrentFieldInput.type === 'email' ? 'Enter email domains (eg., gmail.com, icloud.com)' : 'Enter words'"/>
             </p>
             <BuilderList
                 dataAttributeAction="'requirementCondition'"
                 action="'setDefaultErrorMessage'"
                 addItemTitle.translate="Add"
                 itemShape="{ requirement_text: 'text'}"
-                defaultNewValue="{ requirement_text: 'example' }"
+                defaultNewValue="{ requirement_text: domStateCurrentFieldInput.type === 'email' ? 'example.com' : 'example' }"
             />
         </div>
     </BuilderRow>

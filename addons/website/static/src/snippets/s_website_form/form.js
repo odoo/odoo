@@ -819,6 +819,16 @@ export class Form extends Interaction {
                     ? words.some((w) => value.includes(w))
                     : words.every((w) => !value.includes(w));
             }
+            case "domain": {
+                // Parse domains from comparable; empty list means no restriction
+                const domains = JSON.parse(comparable)
+                    .map(({ requirement_text }) => requirement_text.trim().toLowerCase())
+                    .filter(Boolean);
+                if (!domains.length) {
+                    return true;
+                }
+                return domains.some((domain) => value.toLowerCase().endsWith("@" + domain));
+            }
             case "equal":
             case "selected":
                 return value === comparable;

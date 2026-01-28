@@ -843,7 +843,7 @@ export class FormOptionPlugin extends Plugin {
      * @returns {string} The default error message.
      */
     defaultMessage(comparator, condition, between, type) {
-        if (["substring", "!substring"].includes(comparator)) {
+        if (["substring", "!substring", "domain"].includes(comparator)) {
             condition = JSON.parse(condition)
                 .map(({ requirement_text }) => requirement_text.trim())
                 .filter(Boolean);
@@ -857,6 +857,7 @@ export class FormOptionPlugin extends Plugin {
             less: _t("Invalid: field is not less than %s.", condition),
             "greater or equal": _t("Invalid: field is not greater than or equal to %s.", condition),
             "less or equal": _t("Invalid: field is not less than or equal to %s.", condition),
+            domain: _t("This field must have one of these email domain(s): %s.", condition),
         };
 
         if (condition && textMessages[comparator]) {
