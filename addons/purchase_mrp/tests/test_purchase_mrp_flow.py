@@ -371,7 +371,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             self.component_g: 21
         }
 
-        # Check that the computed quantities are matching the theorical ones.
+        # Check that the computed quantities are matching the theoretical ones.
         # Since component_e was totally processed, this componenent shouldn't be
         # present in backorder_2
         self.assertEqual(len(backorder_2.move_ids), 6)

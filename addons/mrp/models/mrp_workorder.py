@@ -922,7 +922,7 @@ class MrpWorkorder(models.Model):
     def _compute_current_operation_cost(self):
         return (self.get_duration() / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
 
-    def _get_current_theorical_operation_cost(self, without_employee_cost=False):
+    def _get_current_theoretical_operation_cost(self, without_employee_cost=False):
         return (self.get_duration() / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)
 
     def _set_cost_mode(self):
