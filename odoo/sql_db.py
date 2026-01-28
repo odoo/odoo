@@ -533,8 +533,13 @@ class Cursor(BaseCursor):
             del self._obj
 
             # Put the connection back to the pool
-            chosen_template = tools.config['db_template']
-            keep_in_pool = self.dbname not in ('template0', 'template1', config['db_system'], chosen_template)
+            # Forget already closed connections and system-related databases
+            keep_in_pool = not self._cnx.closed and self.dbname not in (
+                'template0', 'template1',
+                # keep open if one of preloaded databases
+                config['db_system'] if config['db_system'] not in config['db_name'] else '',
+                config['db_template'],
+            )
             self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
     def commit(self) -> None:
