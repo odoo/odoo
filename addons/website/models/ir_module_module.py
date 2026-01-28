@@ -115,7 +115,11 @@ class IrModuleModule(models.Model):
         records = self_sudo.env[theme_model_name]
 
         for module in self_sudo:
-            imd_ids = IrModelData.search([('module', '=', module.name), ('model', '=', theme_model_name)]).mapped('res_id')
+            imd_ids = IrModelData.search([
+                ('module', '=', module.name),
+                ('model', '=', theme_model_name),
+                ('res_id', '!=', False),
+            ]).mapped('res_id')
             records |= self_sudo.env[theme_model_name].with_context(active_test=False).browse(imd_ids)
         return records
 
