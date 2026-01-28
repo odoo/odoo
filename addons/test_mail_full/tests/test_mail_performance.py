@@ -39,19 +39,19 @@ class FullBaseMailPerformance(BaseMailPostPerformance):
             cls.customers.ids + cls.user_admin.partner_id.ids + cls.user_follower_portal.partner_id.ids
         )
 
-        cls.tracking_values_ids = [
-            (0, 0, {
-                'field_id': cls.env['ir.model.fields']._get(cls.record_ticket._name, 'email_from').id,
-                'new_value_char': 'new_value',
-                'old_value_char': 'old_value',
-            }),
-            (0, 0, {
-                'field_id': cls.env['ir.model.fields']._get(cls.record_ticket._name, 'customer_id').id,
-                'new_value_char': 'New Fake',
-                'new_value_integer': 2,
-                'old_value_char': 'Old Fake',
-                'old_value_integer': 1,
-            }),
+        cls.tracking = [
+            {
+                'f': cls.env['ir.model.fields']._get(cls.record_ticket._name, 'email_from').id,
+                'n': 'new_value',
+                'o': 'old_value',
+            },
+            {
+                'f': cls.env['ir.model.fields']._get(cls.record_ticket._name, 'customer_id').id,
+                'nstr': 'New Fake',
+                'n': 2,
+                'ostr': 'Old Fake',
+                'o': 1,
+            },
         ]
 
 
@@ -84,7 +84,7 @@ class TestMailPerformance(FullBaseMailPerformance):
                 message_type='comment',
                 subject='Test Subject',
                 subtype_xmlid='mail.mt_comment',
-                tracking_value_ids=self.tracking_values_ids,
+                tracking=self.tracking,
             )
 
         self.assertEqual(
@@ -189,14 +189,14 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                     (4, cls.customers[(msg_idx * 2)].id),
                     (4, cls.customers[(msg_idx * 2) + 1].id),
                 ],
-                'tracking_value_ids': [
-                    (0, 0, {
-                        'field_id': user_id_field.id,
-                        'new_value_char': 'new 1',
-                        'new_value_integer': record.user_id.id,
-                        'old_value_char': 'old 1',
-                        'old_value_integer': cls.user_admin.id,
-                    }),
+                'tracking': [
+                    {
+                        'f': user_id_field.id,
+                        'nstr': 'new 1',
+                        'n': record.user_id.id,
+                        'ostr': 'old 1',
+                        'o': cls.user_admin.id,
+                    },
                 ]
             }
             for msg_idx in range(2)

@@ -157,13 +157,12 @@ class ProjectUpdate(models.Model):
         query = """
             SELECT DISTINCT pm.id as milestone_id,
                             pm.deadline as deadline,
-                            FIRST_VALUE(old_value_datetime::date) OVER w_partition as old_value,
+                            FIRST_VALUE((mtv->>'o')::date) OVER w_partition as old_value,
                             pm.deadline as new_value
                        FROM mail_message mm
-                 INNER JOIN mail_tracking_value mtv
-                         ON mm.id = mtv.mail_message_id
+                 CROSS JOIN LATERAL jsonb_array_elements(mm.tracking) mtv
                  INNER JOIN ir_model_fields imf
-                         ON mtv.field_id = imf.id
+                         ON (mtv->>'f')::int = imf.id
                         AND imf.model = 'project.milestone'
                         AND imf.name = 'deadline'
                  INNER JOIN project_milestone pm

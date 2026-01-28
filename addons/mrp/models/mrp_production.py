@@ -1703,11 +1703,16 @@ class MrpProduction(models.Model):
 
     def button_unplan(self):
         self._unplan_workorders()
+        date_start_field_id = self.env['ir.model.fields']._get(self._name, 'date_start').id
         for order in self:
             previous_date_start = None
             for message in order.message_ids:
-                if message.tracking_value_ids.field_id.mapped('name') == ['date_start']:
-                    previous_date_start = message.tracking_value_ids.old_value_datetime
+                if date_start_tracking := next((
+                    tracking
+                    for tracking in message.sudo().tracking
+                    if tracking['f'] == date_start_field_id
+                ), None):
+                    previous_date_start = date_start_tracking['o']
                     break
                 if message.subtype_id.id == self.env.ref('mrp.mrp_mo_planned').id:
                     break

@@ -114,6 +114,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/views/**/*',
             'account/static/src/js/tours/*',
             'account/static/src/js/search/search_bar/search_bar.js',
+            'account/static/src/js/form_controller.js',
             'account/static/src/helpers/*.js',
             'account/static/src/webclient/**/*',
         ],

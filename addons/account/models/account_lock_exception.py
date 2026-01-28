@@ -1,5 +1,5 @@
 from odoo import _, api, fields, models
-from odoo.fields import Command, Domain
+from odoo.fields import Domain
 from odoo.tools.misc import format_datetime
 from odoo.exceptions import UserError, ValidationError
 
@@ -191,11 +191,6 @@ class AccountLock_Exception(models.Model):
             # Create tracking values to display the lock date change in the chatter
             field = exception.lock_date_field
             value = exception.lock_date
-            field_info = exception.fields_get([field])[field]
-            tracking_values = self.env['mail.tracking.value']._create_tracking_values(
-                company[field], value, field, field_info, exception,
-            )
-            tracking_value_ids = [Command.create(tracking_values)]
 
             # In case there is no explicit end datetime "forever" is implied by not mentioning an end datetime
             end_datetime_string = _(" valid until %s", format_datetime(self.env, exception.end_datetime)) if exception.end_datetime else ""
@@ -209,7 +204,7 @@ class AccountLock_Exception(models.Model):
             )
             company.sudo().message_post(
                 body=company_chatter_message,
-                tracking_value_ids=tracking_value_ids,
+                tracking=[company._format_tracking_line(field, company[field], value)],
             )
 
         exceptions._invalidate_affected_user_lock_dates()
@@ -269,28 +264,20 @@ class AccountLock_Exception(models.Model):
         min_date = self.lock_date
         max_date = self.company_lock_date
         move_date_domain = []
-        tracking_old_datetime_domain = []
-        tracking_new_datetime_domain = []
+        tracking_domain = []
         if min_date:
             move_date_domain.append([('date', '>=', min_date)])
-            tracking_old_datetime_domain.append([('tracking_value_ids.old_value_datetime', '>=', min_date)])
-            tracking_new_datetime_domain.append([('tracking_value_ids.new_value_datetime', '>=', min_date)])
+            tracking_domain.append([('tracking.account.move,date', '>=', min_date)])
         if max_date:
             move_date_domain.append([('date', '<=', max_date)])
-            tracking_old_datetime_domain.append([('tracking_value_ids.old_value_datetime', '<=', max_date)])
-            tracking_new_datetime_domain.append([('tracking_value_ids.new_value_datetime', '<=', max_date)])
+            tracking_domain.append([('tracking.account.move,date', '<=', max_date)])
 
         return [
             ('company_id', 'child_of', self.company_id.id),
             ('audit_trail_message_ids', 'any', common_message_domain),
             '|',
                 # The date was changed from or to a value inside the excepted period
-                ('audit_trail_message_ids', 'any', [
-                    ('tracking_value_ids.field_id', '=', self.env['ir.model.fields']._get('account.move', 'date').id),
-                    '|',
-                        *Domain.AND(tracking_old_datetime_domain),
-                        *Domain.AND(tracking_new_datetime_domain),
-                ]),
+                ('audit_trail_message_ids', 'any', Domain.AND(tracking_domain)),
                 # The date of the move is inside the excepted period and sth. was changed on the move
                 *Domain.AND(move_date_domain),
         ]

@@ -1,4 +1,5 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from markupsafe import Markup
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
@@ -33,10 +34,9 @@ DOMAINS = {
 class MailMessage(models.Model):
     _inherit = 'mail.message'
 
-    account_audit_log_preview = fields.Text(
+    account_audit_log_preview = fields.Html(
         string="Description",
         compute="_compute_account_audit_log_preview",
-        search="_search_account_audit_log_preview",
     )
     account_audit_log_move_id = fields.Many2one(
         comodel_name='account.move',
@@ -73,39 +73,29 @@ class MailMessage(models.Model):
         compute="_compute_account_audit_log_restricted",
         search="_search_account_audit_log_restricted",
     )
+    account_audit_log_field_id = fields.Many2one(
+        comodel_name='ir.model.fields',
+        store=False,
+        domain=[('model', 'in', list(DOMAINS)), ('tracking', '!=', False)],
+        search='_search_account_audit_log_field_id',
+    )
 
-    @api.depends('tracking_value_ids')
+    def _search_account_audit_log_field_id(self, operator, value):
+        search_fields = self.env['ir.model.fields'].search([
+            ('display_name', operator, value) if isinstance(value, str) else ('id', operator, value)
+        ])
+        return Domain.OR([[(f'tracking.{f.id}', '!=', False)] for f in search_fields])
+
+    @api.depends('tracking_html')
     def _compute_account_audit_log_preview(self):
         audit_messages = self.filtered(lambda m: m.message_type == 'notification')
         (self - audit_messages).account_audit_log_preview = False
         for message in audit_messages:
-            title = message.subject or message.preview
-            tracking_value_ids = message.sudo().tracking_value_ids._filter_has_field_access(self.env)
-            if not title and tracking_value_ids:
-                title = self.env._("Updated")
-            if not title and message.subtype_id and not message.subtype_id.internal:
-                title = message.subtype_id.display_name
-            audit_log_preview = (title or '') + '\n'
-            audit_log_preview += "\n".join(
-                "%(old_value)s ⇨ %(new_value)s (%(field)s)" % {
-                    'old_value': fmt_vals['oldValue'],
-                    'new_value': fmt_vals['newValue'],
-                    'field': fmt_vals['fieldInfo']['changedField'],
-                }
-                for fmt_vals in tracking_value_ids._tracking_value_format()
-            )
-            message.account_audit_log_preview = audit_log_preview
-
-    def _search_account_audit_log_preview(self, operator, value):
-        if operator not in ['=', 'like', '=like', 'ilike'] or not isinstance(value, str):
-            return NotImplemented
-
-        return Domain('message_type', '=', 'notification') & Domain.OR([
-            [('tracking_value_ids.old_value_char', operator, value)],
-            [('tracking_value_ids.new_value_char', operator, value)],
-            [('tracking_value_ids.old_value_text', operator, value)],
-            [('tracking_value_ids.new_value_text', operator, value)],
-        ])
+            message.account_audit_log_preview = Markup().join(v for v in (
+                message.subtype_id.description,
+                message.body,
+                message.tracking_html,
+            ) if v)
 
     def _compute_account_audit_log_move_id(self):
         self._compute_audit_log_related_record_id('account.move', 'account_audit_log_move_id')
@@ -194,6 +184,14 @@ class MailMessage(models.Model):
             vals.keys() & {'res_id', 'res_model', 'message_type', 'subtype_id'}
             or ('subject' in vals and any(' '.join(s.subject.split()) != normalized_subject for s in self if s.subject))
             or ('body' in vals and any(self.mapped('body')))
+            or ('tracking' in vals and any(self.mapped('tracking')))
         ):
             self._except_audit_log()
         return super().write(vals)
+
+    @api.model
+    def _message_fetch(self, domain, *, thread=None, search_domain=None, before=None, after=None, around=None, limit=30):
+        context = {}
+        if thread and thread._name == 'account.move':
+            context['tracked_models'] = ['account.move', 'account.move.line']
+        return super(MailMessage, self.with_context(**context))._message_fetch(domain, thread=thread, search_domain=search_domain, before=before, after=after, around=around, limit=limit)

@@ -72,7 +72,6 @@ For more specific needs, you may also assign custom-defined actions
         'views/ir_filters_views.xml',
         'views/ir_mail_server_views.xml',
         'views/mail_message_subtype_views.xml',
-        'views/mail_tracking_value_views.xml',
         'views/mail_notification_views.xml',
         'views/mail_message_views.xml',
         'views/mail_message_schedule_views.xml',
@@ -176,6 +175,8 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/**/*.dark.scss',
         ],
         "web.assets_frontend": [
+            "web/static/src/core/commands/command_hook.js",
+            'web/static/src/search/**/*.js',
             "mail/static/src/utils/common/format.js",
             "mail/static/src/utils/common/html.js",
         ],
@@ -225,6 +226,7 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
             ('include', 'web._assets_core'),
+            'web/static/src/search/**/*.js',
             'web/static/src/views/fields/formatters.js',
             'web/static/src/views/fields/file_handler.*',
 

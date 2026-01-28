@@ -171,10 +171,10 @@ class Obfuscate(Command):
                 self.begin()
                 if self.check_pwd(opt.pwd):
                     fields = [
-                            ('mail_tracking_value', 'old_value_char'),
-                            ('mail_tracking_value', 'old_value_text'),
-                            ('mail_tracking_value', 'new_value_char'),
-                            ('mail_tracking_value', 'new_value_text'),
+                            # ('mail_tracking_value', 'old_value_char'),
+                            # ('mail_tracking_value', 'old_value_text'),
+                            # ('mail_tracking_value', 'new_value_char'),
+                            # ('mail_tracking_value', 'new_value_text'),
                             ('res_partner', 'name'),
                             ('res_partner', 'complete_name'),
                             ('res_partner', 'email'),

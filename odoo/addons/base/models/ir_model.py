@@ -1438,6 +1438,12 @@ class IrModelFields(models.Model):
             ]
         return frozendict(result)
 
+    @api.model
+    @tools.ormcache('field_id')
+    def _from_id(self, field_id: int):
+        field_rec = self.sudo().browse(field_id)
+        return self.env[field_rec.model]._fields[field_rec.name]
+
 
 class IrModelInherit(models.Model):
     _name = 'ir.model.inherit'
