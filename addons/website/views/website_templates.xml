@@ -491,8 +491,7 @@
                             _force_modal_trigger="True"
                             _modal_id.f="header_mobile"
                             _input_classes.f="border-0 rounded-start-pill text-bg-light ps-3"
-                            _submit_classes.f="rounded-end-pill bg-o-color-3 pe-3"
-                            limit.f="0"/>
+                            _submit_classes.f="rounded-end-pill bg-o-color-3 pe-3"/>
                         <!-- Navbar -->
                         <li>
                             <t t-set="is_vertical_nav" t-valuef="True"/>
@@ -699,8 +698,7 @@
                                 _force_modal_trigger="True"
                                 _modal_id.f="header_burger"
                                 _input_classes.f="border-0 rounded-start-pill text-bg-light ps-3"
-                                _submit_classes.f="rounded-end-pill bg-o-color-3 pe-3"
-                                limit.f="0"/>
+                                _submit_classes.f="rounded-end-pill bg-o-color-3 pe-3"/>
                             <!-- Navbar -->
                             <li>
                                 <t t-set="is_vertical_nav" t-valuef="True"/>
@@ -1425,8 +1423,7 @@
                                 _modal_id.f="header_sidebar"
                                 _form_classes.f="o_search_radius_pill"
                                 _input_classes.f="border-0 rounded-start-pill text-bg-light ps-3"
-                                _submit_classes.f="rounded-end-pill bg-o-color-3 pe-3"
-                                limit.f="0"/>
+                                _submit_classes.f="rounded-end-pill bg-o-color-3 pe-3"/>
                             <!-- Navbar -->
                             <li>
                                 <t t-set="is_vertical_nav" t-valuef="True"/>
@@ -3217,40 +3214,36 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
 </template>
 
 <template id="website.search_result_item">
-    <li class="o_search_result_item rounded mx-n2">
-        <a t-att-href="result['website_url']" class="o_search_result_link d-flex gap-2 p-2 text-decoration-none text-muted">
-            <t t-call="website.search_image_item_view"/>
-            <div class="o_search_result_content d-flex flex-grow-1">
-                <div>
-                    <h3 class="h6 mb-0 d-inline" t-out="result['name']"/>
-                    <span t-if="search_item_metadata" class="align-baseline text-nowrap smaller">
-                        <span> · </span>
-                        <t t-out="search_item_metadata"/>
-                    </span>
+    <t t-foreach="results['data']" t-as="result">
+        <li class="o_search_result_item rounded mx-n2">
+            <a t-att-href="result['website_url']" class="o_search_result_link d-flex gap-2 p-2 text-decoration-none text-muted">
+                <t t-call="website.search_image_item_view"/>
+                <div class="o_search_result_content d-flex flex-grow-1">
+                    <div>
+                        <h3 class="h6 mb-0 d-inline" t-out="result['name']"/>
+                        <span t-if="result.get('search_item_metadata')" class="align-baseline text-nowrap smaller">
+                            <span> · </span>
+                            <t t-out="result.get('search_item_metadata')"/>
+                        </span>
+                    </div>
+                    <div class="o_search_result_description d-empty-none w-50">
+                        <t t-if="result.get('tags')" t-out="result['tags']"/>
+                        <p
+                            t-elif="result.get('description')"
+                            class="o_line_clamp mb-0 small"
+                            style="--lines-clamp: 1;"
+                            t-out="result['description']"
+                        />
+                        <p
+                            t-elif="result.get('body')"
+                            class="o_line_clamp mb-0 small"
+                            style="--lines-clamp: 1;"
+                            t-out="result['body']"
+                        />
+                    </div>
                 </div>
-                <div class="o_search_result_description d-empty-none">
-                    <t t-if="result.get('tags')" t-out="result['tags']"/>
-                    <p
-                        t-elif="result.get('description')"
-                        class="o_line_clamp mb-0 small"
-                        style="--lines-clamp: 1;"
-                        t-out="result['description']"
-                    />
-                    <p
-                        t-elif="result.get('body')"
-                        class="o_line_clamp mb-0 small"
-                        style="--lines-clamp: 1;"
-                        t-out="result['body']"
-                    />
-                </div>
-            </div>
-        </a>
-    </li>
-</template>
-
-<template id="website.search_items_page_view">
-    <t t-foreach="bucket['data']" t-as="result">
-        <t t-call="website.search_result_item"/>
+            </a>
+        </li>
     </t>
 </template>
 
@@ -3285,8 +3278,6 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                         <div t-if="results" class="o_searchbar_result">
                             <t t-foreach="results.items()" t-as="group_result">
                                 <t t-set="bucket" t-value="group_result[1]"/>
-                                <t t-set="template_key" t-value="bucket.get('templateKey') + '_view'"/>
-
                                 <section t-att-id="bucket['groupName'].replace(' ', '_').lower()" t-attf-class="mb-4 #{'mt-4' if group_result_first else ''}">
                                     <!-- Group header -->
                                     <h2 class="mb-2 fs-6 fw-normal text-muted">
@@ -3298,7 +3289,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                                     </h2>
                                     <!-- Items -->
                                     <ul class="list-unstyled mb-0">
-                                        <t t-call="{{ template_key }}"/>
+                                        <t t-call="website.search_result_item" results="bucket"/>
                                     </ul>
                                     <t t-set="has_more" t-value="(bucket.get('searchCount') &gt; limit)"/>
                                     <div t-if="has_more" class="d-flex justify-content-center py-2">
@@ -3340,10 +3331,6 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
     <xpath expr="//input[@name='search']" position="attributes">
         <attribute name="t-att-data-search-type">search_type</attribute>
         <attribute name="t-att-data-limit">limit or '6'</attribute>
-        <attribute name="t-att-data-display-image">display_image or 'true'</attribute>
-        <attribute name="t-att-data-display-description">display_description or 'true'</attribute>
-        <attribute name="t-att-data-display-extra-link">display_extra_link or 'true'</attribute>
-        <attribute name="t-att-data-display-detail">display_detail or 'true'</attribute>
         <attribute name="t-att-data-order-by">order_by or 'name asc'</attribute>
     </xpath>
     <xpath expr="//div[@role='search']" position="attributes">
@@ -3473,11 +3460,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
     <t t-call="website.website_search_box_input"
         search_type.f="all"
         action.f="/website/search"
-        limit="limit or '6'"
-        display_image.f="true"
-        display_description.f="true"
-        display_extra_link.f="true"
-        display_detail.f="true"/>
+        limit="limit or '30'"/>
 </template>
 
 <!-- Extra element : Search -->

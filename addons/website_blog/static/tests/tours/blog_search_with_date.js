@@ -16,16 +16,21 @@ registry.category("web_tour.tours").add("blog_autocomplete_with_date", {
             trigger: '#o_wblog_posts_loop span:has(i.fa-calendar-o):has(a[href="/blog"])',
         },
         {
+            content: "Click on search input",
+            trigger: "#wrap .o_searchbar_form input",
+            run: "click",
+        },
+        {
             content: "Enter search term",
-            trigger: ".o_searchbar_form input",
+            trigger: "#o_search_modal_blogs input.search-query ",
             run: "edit a",
         },
         {
-            trigger: ".o_searchbar_form .o_dropdown_menu .o_search_result_item",
+            trigger: "#o_search_modal_blogs .o_dropdown_menu .o_search_result_item",
         },
         {
             content: "Wait for suggestions then click on search icon",
-            trigger: ".o_searchbar_form button:has(i.oi-search)",
+            trigger: "#o_search_modal_blogs button.oe_search_button",
             run: "click",
             expectUnloadPage: true,
         },

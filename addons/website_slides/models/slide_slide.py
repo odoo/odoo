@@ -1281,13 +1281,14 @@ class SlideSlide(models.Model):
     @api.model
     def _search_get_detail(self, website, order, options):
         search_fields = ['name', 'tag_ids.name', 'description']
-        fetch_fields = ['id', 'name', 'tag_ids']
+        fetch_fields = ['id', 'name', 'description']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'url', 'type': 'text', 'truncate': False},
             'extra_link': {'name': 'course', 'type': 'text'},
             'extra_link_url': {'name': 'course_url', 'type': 'text', 'truncate': False},
             'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
+            'description': {'name': 'description', 'type': 'text', 'html': True, 'match': True},
         }
         return {
             'model': 'slide.slide',
@@ -1297,7 +1298,6 @@ class SlideSlide(models.Model):
             'mapping': mapping,
             'icon': 'fa-shopping-cart',
             'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
-            'template_key': 'website_slides.search_items_slide_slides',
             'group_name': self.env._("Course Slides"),
             'sequence': 80,
         }

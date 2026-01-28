@@ -16,10 +16,6 @@ const searchTemplate = /* html */ `
             <input type="search" name="search" class="search-query form-control oe_search_box o_translatable_attribute" placeholder="Search..."
                     data-search-type="test"
                     data-limit="3"
-                    data-display-image="false"
-                    data-display-description="false"
-                    data-display-extra-link="true"
-                    data-display-detail="false"
                     data-order-by="name asc"
                     autocomplete="off"/>
             <button type="submit" aria-label="Search" title="Search" class="btn oe_search_button border border-start-0 px-4 bg-o-color-4">
@@ -30,23 +26,13 @@ const searchTemplate = /* html */ `
     </form>
 `;
 
-function supportAutocomplete(numberOfResults = 3) {
+function supportAutocomplete() {
     onRpc("/website/snippet/autocomplete", async (args) => {
         const json = JSON.parse(new TextDecoder().decode(await args.arrayBuffer()));
         expect(json.params.search_type).toBe("test");
         expect(json.params.term).toBe("xyz");
         expect(json.params.order).toBe("test desc");
         expect(json.params.limit).toBe(3);
-
-        const allData = [
-            { _fa: "fa-file-o", name: "Xyz 1", website_url: "/website/test/xyz-1" },
-            { _fa: "fa-file-o", name: "Xyz 2", website_url: "/website/test/xyz-2" },
-            { _fa: "fa-file-o", name: "Xyz 3", website_url: "/website/test/xyz-3" },
-            { _fa: "fa-file-o", name: "Xyz 4", website_url: "/website/test/xyz-1" },
-            { _fa: "fa-file-o", name: "Xyz 5", website_url: "/website/test/xyz-2" },
-            { _fa: "fa-file-o", name: "Xyz 6", website_url: "/website/test/xyz-3" },
-        ];
-
         return {
             results: {
                 pages: {
@@ -54,15 +40,25 @@ function supportAutocomplete(numberOfResults = 3) {
                     templateKey: "website.search_items_page",
                     search_count: 3,
                     limit: 3,
-                    data: allData.slice(0, numberOfResults),
+                    data: [
+                        {
+                            _fa: "fa-file-o",
+                            name: "Xyz 1",
+                            website_url: "/website/test/xyz-1",
+                        },
+                        {
+                            _fa: "fa-file-o",
+                            name: "Xyz 2",
+                            website_url: "/website/test/xyz-2",
+                        },
+                        {
+                            _fa: "fa-file-o",
+                            name: "Xyz 3",
+                            website_url: "/website/test/xyz-3",
+                        },
+                    ],
                 },
             },
-            results_count: 3,
-            parts: {
-                name: true,
-                website_url: true,
-            },
-            fuzzy_search: false,
         };
     });
 }
@@ -81,55 +77,36 @@ test("searchbar triggers a search when text is entered", async () => {
     expect(queryAll("form .o_search_result_item")).toHaveLength(3);
 });
 
-/**
- * Test keyboard navigation in search results.
- *
- * Verifies that:
- * 1. ArrowDown from input focuses the first result
- * 2. ArrowUp from input focuses the last result
- * 3. ArrowLeft/Right navigate horizontally within the grid
- * 4. ArrowDown wraps around rows to next row's first column
- */
-test.tags("desktop");
-test("search results keyboard navigation with arrow keys", async () => {
-    supportAutocomplete(6);
+test("searchbar selects first result on cursor down", async () => {
+    supportAutocomplete();
     await startInteractions(searchTemplate);
     const inputEl = queryOne("form input[type=search]");
-
-    // Setup: Type search query to trigger autocomplete
     await click(inputEl);
     await press("x");
     await press("y");
     await press("z");
     await advanceTime(400);
-
-    const resultEls = queryAll("form .o_search_result_item > a");
-    expect(resultEls).toHaveLength(6);
-    expect(inputEl).toBeFocused();
-
-    // ArrowDown from input focuses first result
+    const resultEls = queryAll("form a.o_search_result_link");
+    expect(resultEls).toHaveLength(3);
+    expect(document.activeElement).toBe(inputEl);
     await press("down");
-    expect(resultEls[0]).toBeFocused();
+    expect(document.activeElement).toBe(resultEls[0]);
+});
 
-    // ArrowDown moves to next row, same column
-    await press("down");
-    expect(resultEls[3]).toBeFocused();
-
-    // ArrowRight navigates to adjacent result (same row)
-    await press("right");
-    expect(resultEls[4]).toBeFocused();
-
-    // ArrowUp moves to previous row, same column
+test("searchbar selects last result on cursor up", async () => {
+    supportAutocomplete();
+    await startInteractions(searchTemplate);
+    const inputEl = queryOne("form input[type=search]");
+    await click(inputEl);
+    await press("x");
+    await press("y");
+    await press("z");
+    await advanceTime(400);
+    const resultEls = queryAll("form a.o_search_result_link");
+    expect(resultEls).toHaveLength(3);
+    expect(document.activeElement).toBe(inputEl);
     await press("up");
-    expect(resultEls[1]).toBeFocused();
-
-    // ArrowLeft navigates to adjacent result (same row)
-    await press("left");
-    expect(resultEls[0]).toBeFocused();
-
-    // ArrowUp moves back to input
-    await press("up");
-    expect(inputEl).toBeFocused();
+    expect(document.activeElement).toBe(resultEls[2]);
 });
 
 test("searchbar removes results on escape", async () => {
@@ -140,7 +117,7 @@ test("searchbar removes results on escape", async () => {
     await press("y");
     await press("z");
     await advanceTime(400);
-    expect(queryAll("form .o_search_result_item")).toHaveLength(3);
+    expect(queryAll("form a.o_search_result_link")).toHaveLength(3);
     await press("escape");
-    expect(queryAll("form .o_search_result_item")).toHaveLength(0);
+    expect(queryAll("form a.o_search_result_link")).toHaveLength(0);
 });

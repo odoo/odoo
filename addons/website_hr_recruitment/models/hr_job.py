@@ -132,13 +132,12 @@ spirit. To be successful, you will have solid solving problem skills.''')
             domain.append([('website_published', '=', True)])
 
         search_fields = ['name', 'description']
-        fetch_fields = ['name', 'website_url', 'no_of_recruitment']
+        fetch_fields = ['name', 'website_url', 'description']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
-            'department_name': {'name': 'department_name', 'type': 'text'},
-            'no_of_recruitment': {'name': 'no_of_recruitment', 'type': 'integer'},
-            'address': {'name': 'address', 'type': 'text'},
+            'search_item_metadata': {'name': 'address', 'type': 'text'},
+            'description': {'name': 'description', 'type': 'text', 'html': True, 'match': True},
         }
         return {
             'model': 'hr.job',
@@ -148,7 +147,6 @@ spirit. To be successful, you will have solid solving problem skills.''')
             'fetch_fields': fetch_fields,
             'mapping': mapping,
             'icon': 'fa-briefcase',
-            'template_key': 'website_hr_recruitment.search_items_jobs',
             'group_name': self.env._("Jobs"),
             'sequence': 100,
         }
@@ -156,9 +154,14 @@ spirit. To be successful, you will have solid solving problem skills.''')
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for data in results_data:
-            job = self.browse(data['id'])
-            data['department_name'] = job.department_id.name or ''
+            job_address = self.browse(data['id']).sudo().address_id
             # res.partner address_id is not available in public user group,
             # - require sudo
-            data['address'] = job.sudo().address_id.name or ''
+            if job_address:
+                data['address'] = ", ".join(filter(None, [
+                    job_address.city,
+                    job_address.state_id.name,
+                    job_address.country_id.name,
+                ]))
+
         return results_data

@@ -243,14 +243,12 @@ class WebsitePage(models.Model):
             'fetch_fields': fetch_fields,
             'mapping': mapping,
             'icon': 'fa-file-o',
-            'template_key': 'website.search_items_page',
             'group_name': self.env._("Pages"),
             'sequence': 10,
         }
 
     @api.model
     def _search_fetch(self, search_detail, search, offset, limit, order):
-        with_description = 'description' in search_detail['mapping']
         # Cannot rely on the super's _search_fetch because the search must be
         # performed among the most specific pages only.
         fields = search_detail['search_fields']
@@ -260,7 +258,7 @@ class WebsitePage(models.Model):
             domain=base_domain, order=order
         )
 
-        if with_description and search and most_specific_pages:
+        if search and most_specific_pages:
             # Perform search in translations
             # TODO Remove when domains will support xml_translate fields
             custom_view_domain = Domain.custom(
@@ -287,7 +285,7 @@ class WebsitePage(models.Model):
                 return False
             if not page.view_id.filtered_domain(Rule._compute_domain('ir.ui.view', 'read')):
                 return False
-            if search and with_description:
+            if search:
                 # Search might have matched words in the xml tags and parameters therefore we make
                 # sure the terms actually appear inside the text.
                 text = '%s %s %s' % (page.name, page.url, text_from_html(page.arch))

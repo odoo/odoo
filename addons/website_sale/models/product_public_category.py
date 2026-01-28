@@ -171,12 +171,13 @@ class ProductPublicCategory(models.Model):
     @api.model
     def _search_get_detail(self, website, order, options):
         search_fields = ['name', 'website_description']
-        fetch_fields = ['id', 'name', 'parents_and_self']
+        fetch_fields = ['id', 'name', 'parents_and_self', 'website_description']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'url', 'type': 'text', 'truncate': False},
-            'breadcrumb': {'name': 'breadcrumb', 'type': 'text', 'truncate': False},
+            'search_item_metadata': {'name': 'breadcrumb', 'type': 'text', 'truncate': False, 'match': True},
             'image_url': {'name': 'image_url', 'type': 'html'},
+            'description': {'name': 'website_description', 'type': 'text', 'html': True, 'match': True},
         }
         return {
             'model': 'product.public.category',
@@ -186,7 +187,6 @@ class ProductPublicCategory(models.Model):
             'mapping': mapping,
             'icon': 'fa-folder-o',
             'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
-            'template_key': 'website_sale.search_items_product_category',
             'group_name': self.env._("Categories"),
             'sequence': 30,
         }

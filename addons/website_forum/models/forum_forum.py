@@ -321,13 +321,13 @@ class ForumForum(models.Model):
     @api.model
     def _search_get_detail(self, website, order, options):
         search_fields = ['name', 'tag_ids.name', 'description']
-        fetch_fields = ['id', 'name', 'tag_ids', 'description']
+        fetch_fields = ['id', 'name', 'description']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
             'image_url': {'name': 'image_url', 'type': 'html'},
             'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
-            'description': {'name': 'description', 'type': 'text', 'truncate': True},
+            'description': {'name': 'description', 'type': 'text', 'truncate': True, 'match': True},
         }
         return {
             'model': 'forum.forum',
@@ -337,7 +337,6 @@ class ForumForum(models.Model):
             'mapping': mapping,
             'icon': 'fa-comments-o',
             'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
-            'template_key': 'website_forum.search_items_forum',
             'group_name': self.env._("Forum"),
             'sequence': 140,
         }
@@ -347,5 +346,5 @@ class ForumForum(models.Model):
         for forum, data in zip(self, results_data):
             data['website_url'] = forum.website_url
             data['tag_ids'] = forum.tag_ids.read(['name'])
-            data['image_url'] = 'web/image/forum.forum/%s/image_128' % data['id']
+            data['image_url'] = '/web/image/forum.forum/%s/image_128' % data['id']
         return results_data

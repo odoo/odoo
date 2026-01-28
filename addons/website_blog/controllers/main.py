@@ -117,7 +117,7 @@ class WebsiteBlog(http.Controller):
             state=state,
             **post
         )
-        total, details, fuzzy_search_term = request.website._search_with_fuzzy("blog_posts_only", search,
+        total, details, fuzzy_search_term = request.website._search_with_fuzzy('blog_post', search,
             offset=0, limit=page * self._blog_post_per_page, order="is_published desc, published_date desc, id asc", options=options)
         posts = details[0].get('results', BlogPost)
         posts = posts[offset:offset + self._blog_post_per_page]

@@ -856,17 +856,15 @@ class WebsiteSearchableMixin(models.AbstractModel):
             - resulting_type (str): 'html' if highlights were added, else 'tags'
         """
         highlighted_tags = []
-        has_highlight = False
 
         for tag in value:
             name = tag.get('name', '')
             parts, tag_highlight = self._split_for_highlight(name, term)
             tag['parts'] = parts
             if tag_highlight:
-                has_highlight = True
-            highlighted_tags.append(tag)
+                highlighted_tags.append(tag)
 
-        if has_highlight:
+        if len(highlighted_tags) > 0:
             value = self.env['ir.ui.view'].sudo()._render_template(
                 "website.search_tags_highlight",
                 {'tags': highlighted_tags}

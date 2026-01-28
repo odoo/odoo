@@ -180,8 +180,6 @@
                             <t t-if="my_profile" t-call="website.website_search_box_input"
                                 search_type.f="forums"
                                 action="'/forum/%s%s' % (forum_id or 'all', '/tag/%s/questions' % slug(tag) if tag else '')"
-                                display_description.f="false"
-                                display_detail.f="false"
                                 placeholder.f="Search Posts..."
                                 _modal_id.f="forum_votes"
                             >

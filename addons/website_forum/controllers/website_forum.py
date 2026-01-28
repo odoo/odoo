@@ -147,7 +147,7 @@ class WebsiteForum(WebsiteProfile):
 
         slug = request.env['ir.http']._slug
         question_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
-            "forum_posts_only", search, offset=0, limit=page * self._post_per_page, order=sorting, options=options)
+            'forum_post', search, offset=0, limit=page * self._post_per_page, order=sorting, options=options)
         question_ids = details[0].get('results', Post)
         question_ids = question_ids[(page - 1) * self._post_per_page:page * self._post_per_page]
 
@@ -224,7 +224,7 @@ class WebsiteForum(WebsiteProfile):
         :param string tag_char: Only tags starting with a single character `tag_char`
         :param filters: One of 'all'|'followed'|'most_used'|'unused'.
           Can be combined with `search` and `tag_char`.
-        :param string search: Search query using "forum_tags_only" `search_type`
+        :param string search: Search query using "forum_tag" `search_type`
         :param dict post: additional options passed to `_prepare_user_values`
         """
         if not isinstance(tag_char, str) or len(tag_char) > 1 or (tag_char and not tag_char.isalpha()):
@@ -245,7 +245,7 @@ class WebsiteForum(WebsiteProfile):
             values.update(search=search)
             search_domain = domain if filters in ('all', 'followed') else None
             __, details, __ = request.website._search_with_fuzzy(
-                'forum_tags_only', search, offset=0, limit=None, order=order, options={'forum': forum, 'domain': search_domain},
+                'forum_tag', search, offset=0, limit=None, order=order, options={'forum': forum, 'domain': search_domain},
             )
             tags = details[0].get('results', tags)
 

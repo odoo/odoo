@@ -240,7 +240,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def _shop_lookup_products(self, options, post, search, website):
         # No limit because attributes are obtained from complete product list
-        product_count, details, fuzzy_search_term = website._search_with_fuzzy("products_only", search,
+        product_count, details, fuzzy_search_term = website._search_with_fuzzy('product_template', search,
                                                                                offset=0,
                                                                                limit=None,
                                                                                order=self._get_search_order(post),

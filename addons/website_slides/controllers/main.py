@@ -450,7 +450,7 @@ class WebsiteSlides(WebsiteProfile):
         search = post.get('search')
         order = self._channel_order_by_criterion.get(post.get('sorting'))
         search_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
-            "slide_channels_only", search, offset=0, limit=page * page_size if page else 1000, order=order, options=options)
+            'slide_channel', search, offset=0, limit=page * page_size if page else 1000, order=order, options=options)
         channels_all = details[0].get('results', request.env['slide.channel'])
         channels = channels_all[(page - 1) * page_size:page * page_size] if page else channels_all
         tag_groups = request.env['slide.channel.tag.group'].search(

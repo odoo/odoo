@@ -851,14 +851,14 @@ class ForumPost(models.Model):
     @api.model
     def _search_get_detail(self, website, order, options):
         search_fields = ['name', 'tag_ids.name', 'content']
-        fetch_fields = ['id', 'name', 'tag_ids', 'website_url', 'content', 'write_date']
+        fetch_fields = ['id', 'name', 'website_url', 'content']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'search_item_metadata': {'name': 'created_by', 'type': 'text', 'truncate': False, 'match': True},
+            'image_url': {'name': 'image_url', 'type': 'html'},
             'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
             'description': {'name': 'content', 'type': 'text', 'html': True, 'match': True},
-            'date': {'name': 'write_date', 'type': 'date'},
-            'image_url': {'name': 'image_url', 'type': 'html'},
         }
 
         domain = website.website_domain()
@@ -907,7 +907,6 @@ class ForumPost(models.Model):
             'mapping': mapping,
             'icon': 'fa-comment-o',
             'order': order,
-            'template_key': 'website_forum.search_items_forum_post',
             'group_name': self.env._("Forum Post"),
             'sequence': 130,
         }
@@ -915,6 +914,7 @@ class ForumPost(models.Model):
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for post, data in zip(self, results_data):
+            data['search_item_metadata'] = post.create_uid.name
             data['tag_ids'] = post.tag_ids.read(['name'])
             data['image_url'] = self.env['website'].image_url(post.create_uid, 'avatar_128')
         return results_data

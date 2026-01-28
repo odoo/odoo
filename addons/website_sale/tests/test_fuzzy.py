@@ -26,15 +26,15 @@ class TestFuzzy(ProductVariantsCommon):
             'display_currency': True,
             'allowFuzzy': True
         }
-        results_count, _, fuzzy_term = website._search_with_fuzzy('products_only', 'RED234', 0, 5, 'name asc', options)
+        results_count, _, fuzzy_term = website._search_with_fuzzy('product_template', 'RED234', 0, 5, 'name asc', options)
         self.assertEqual(1, results_count, "Should have found red")
         self.assertEqual('red_12345', fuzzy_term, "Should suggest red")
-        results_count, _, fuzzy_term = website._search_with_fuzzy('products_only', 'GROEN98765', 0, 5, 'name asc', options)
+        results_count, _, fuzzy_term = website._search_with_fuzzy('product_template', 'GROEN98765', 0, 5, 'name asc', options)
         self.assertEqual(1, results_count, "Should have found green")
         self.assertEqual('green_98765', fuzzy_term, "Should suggest green")
-        results_count, _, fuzzy_term = website._search_with_fuzzy('products_only', 'BLUABCE', 0, 5, 'name asc', options)
+        results_count, _, fuzzy_term = website._search_with_fuzzy('product_template', 'BLUABCE', 0, 5, 'name asc', options)
         self.assertEqual(1, results_count, "Should have found blue")
         self.assertEqual('blue_abcde', fuzzy_term, "Should suggest blue")
-        results_count, _, fuzzy_term = website._search_with_fuzzy('products_only', 'SQWBRNZ', 0, 5, 'name asc', options)
+        results_count, _, fuzzy_term = website._search_with_fuzzy('product_template', 'SQWBRNZ', 0, 5, 'name asc', options)
         self.assertEqual(0, results_count, "Should have found none")
         self.assertIsNone(fuzzy_term, "Should have no suggestion")

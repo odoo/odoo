@@ -507,10 +507,10 @@ class EventTrack(models.Model):
             ('stage_id.is_visible_in_agenda', '=', True),
         ]
         mapping = {
-            'description': {'name': 'description', 'type': 'text', 'truncate': True, 'html': True},
             'name': {'name': 'name', 'type': 'text', 'match': True},
-            'partner_name': {'name': 'partner_name', 'type': 'text', 'match': True, 'html': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
+            'search_item_metadata': {'name': 'partner_name', 'type': 'text', 'html': True, 'match': True},
+            'description': {'name': 'description', 'type': 'text', 'truncate': True, 'html': True, 'match': True},
         }
         return {
             'model': 'event.track',
@@ -520,7 +520,6 @@ class EventTrack(models.Model):
             'mapping': mapping,
             'icon': 'fa-microphone',
             'order': order,
-            'template_key': 'website_event_track.search_items_event_track',
             'group_name': self.env._("Talks"),
         }
 

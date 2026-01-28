@@ -33,7 +33,6 @@
             'website_event_exhibitor/static/src/scss/event_templates_sponsor.scss',
             'website_event_exhibitor/static/src/scss/event_exhibitor_templates.scss',
             'website_event_exhibitor/static/src/interactions/**/*',
-            'website_event_exhibitor/static/src/snippets/**/*.xml',
             'website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/**/*',
         ],
         'web.report_assets_common': [

@@ -10,8 +10,8 @@
             <!-- Content -->
             <div class="container oe_website_jobs">
                 <!-- Topbar -->
-                <section class="o_wevent_index_topbar_filters d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
-                    <h1 class="me-auto mb-0 h4">Our Job Opportunities</h1>
+                <section class="o_wevent_index_topbar_filters row d-flex d-print-none align-items-center justify-content-lg-end flex-wrap mt-4 mb-3">
+                    <h1 class="me-auto mb-0 h4 col-12 col-lg-8">Our Job Opportunities</h1>
                     <!-- Customizations -->
                     <t t-call="website_hr_recruitment.topbar_customizations"/>
                 </section>
@@ -711,7 +711,7 @@
     <t t-set="opt_jobs_filter_count" t-value="sum([opt_jobs_filter_countries, opt_jobs_filter_departments, opt_jobs_filter_offices, opt_jobs_filter_employment_type, opt_jobs_filter_industry])"/>
     <t t-set="opt_jobs_is_filter_applied" t-value="country_id or industry_id or office_id or department_id or contract_type_id or is_remote or is_industry_untyped or is_other_department or is_untyped"/>
     <!-- Search bar -->
-    <div t-if="opt_jobs_search_bar" class="o_jobs_topbar_search_bar d-flex w-100 w-lg-25">
+    <div t-if="opt_jobs_search_bar" class="o_jobs_topbar_search_bar d-flex col-12 col-lg-4">
         <button
             t-if="opt_jobs_filter_count &gt;= 1"
             class="o_not_editable btn btn-light d-lg-none ms-2"
@@ -1041,7 +1041,6 @@
     <xpath expr="//div[hasclass('o_jobs_topbar_search_bar')]/button" position="before">
         <t t-call="website.website_search_box_input"
             search_type.f="jobs"
-            display_description.f="true"
             _modal_id.f="jobs"
             _form_classes.f="flex-grow-1">
             <input t-if="country_id" type="hidden" name="country_id" t-att-value="country_id.id"/>

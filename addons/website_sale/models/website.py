@@ -916,9 +916,9 @@ class Website(models.Model):
         result = super()._search_get_details(search_type, order, options)
         if not self.has_ecommerce_access():
             return result
-        if search_type in ['product_categories_only', 'product_public_category', 'all']:
+        if search_type in ['products', 'product_public_category', 'all']:
             result.append(self.env['product.public.category']._search_get_detail(self, order, options))
-        if search_type in ['products', 'products_only', 'product_template', 'all']:
+        if search_type in ['products', 'product_template', 'all']:
             result.append(self.env['product.template']._search_get_detail(self, order, options))
         return result
 

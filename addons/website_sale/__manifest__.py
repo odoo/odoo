@@ -39,7 +39,6 @@
         'templates/svg_templates.xml',
         'templates/website_templates.xml',
         'templates/wishlist_templates.xml',
-        'templates/website_searchbar_templates.xml',
 
         # Qweb templates -> checkout
         'templates/checkout/checkout_templates.xml',  # Shared templates first
@@ -104,7 +103,6 @@
         'web.assets_frontend': [
             'website_sale/static/src/interactions/**/*',
             'website_sale/static/src/snippets/**/*.js',
-            'website_sale/static/src/snippets/**/*.xml',
             'website_sale/static/src/js/tours/tour_utils.js',
             'website_sale/static/src/scss/product_tile.scss',
             'website_sale/static/src/scss/website_sale.scss',

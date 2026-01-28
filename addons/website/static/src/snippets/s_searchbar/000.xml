@@ -7,34 +7,30 @@
 </t>
 
 <t t-name="website.search_result_item">
-    <li class="o_search_result_item">
-        <a t-att-href="result['website_url']" class="o_search_result_link d-flex gap-2 py-2 px-3 text-decoration-none text-muted">
-            <t t-call="website.search_image_item"/>
-            <div class="o_search_result_content d-flex flex-grow-1">
-                <div>
-                    <h3 class="h6 mb-0 d-inline" t-out="result['name']"/>
-                    <span t-if="search_item_metadata" class="align-baseline text-nowrap smaller">
-                        <span> · </span>
-                        <t t-out="search_item_metadata"/>
-                    </span>
+    <t t-foreach="results.data" t-as="result" t-key="result_index">
+        <li class="o_search_result_item">
+            <a t-att-href="result['website_url']" class="o_search_result_link d-flex gap-2 py-2 px-3 text-decoration-none text-muted">
+                <t t-call="website.search_image_item"/>
+                <div class="o_search_result_content d-flex flex-grow-1">
+                    <div>
+                        <h3 class="h6 mb-0 d-inline" t-out="result['name']"/>
+                        <span t-if="result['search_item_metadata']" class="align-baseline text-nowrap smaller">
+                            <span> · </span>
+                            <t t-out="result['search_item_metadata']"/>
+                        </span>
+                    </div>
+                    <div class="o_search_result_description d-empty-none">
+                        <!-- TODO in result priority: Add a <t t-if="module_speficic_matching_area"/> -->
+                        <t t-if="result['tags']" t-out="result['tags']"/>
+                        <p
+                            t-elif="result['description'] || result['body']"
+                            class="mb-0 small"
+                            t-out="result['description'] || result['body']"
+                        />
+                    </div>
                 </div>
-                <div class="o_search_result_description d-empty-none">
-                    <!-- Add a <t t-if="module_speficic_matching_area"/> -->
-                    <t t-if="result['tags']" t-out="result['tags']"/>
-                    <p
-                        t-elif="result['description'] || result['body']"
-                        class="mb-0 small"
-                        t-out="result['description'] || result['body']"
-                    />
-                </div>
-            </div>
-        </a>
-    </li>
-</t>
-
-<t t-name="website.search_items_page">
-    <t t-foreach="bucket.data" t-as="result" t-key="result_index">
-        <t t-call="website.search_result_item"/>
+            </a>
+        </li>
     </t>
 </t>
 
@@ -74,9 +70,9 @@
     <!-- Render results -->
     <ul class="list-unstyled mb-0">
         <t t-foreach="Object.values(results)" t-as="group_result" t-key="group_result_index">
-            <t t-set="bucket" t-value="group_result"/>
+            <t t-set="results" t-value="group_result"/>
             <!-- Items -->
-            <t t-call="{{ bucket.templateKey }}"/>
+            <t t-call="website.search_result_item" results="results"/>
         </t>
     </ul>
 </div>

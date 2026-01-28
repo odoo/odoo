@@ -182,10 +182,10 @@ class TestAutoComplete(TransactionCase):
             str(result),
             "Expected matching term to be highlighted in the output"
         )
-        self.assertIn(
+        self.assertNotIn(
             '<span>Finance</span>',
             str(result),
-            "Expected non-matching tags to be present without highlighting"
+            "Expected non-matching tags to be not present in the output"
         )
 
     def test_tags_highlight_handler_no_match(self):

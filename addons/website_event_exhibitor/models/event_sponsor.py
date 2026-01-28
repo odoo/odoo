@@ -179,7 +179,7 @@ class EventSponsor(models.Model):
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
-            'description': {'name': 'website_description', 'type': 'text', 'truncate': True, 'html': True},
+            'description': {'name': 'website_description', 'type': 'text', 'truncate': True, 'html': True, 'match': True},
         }
         return {
             'model': 'event.sponsor',
@@ -189,7 +189,6 @@ class EventSponsor(models.Model):
             'mapping': mapping,
             'icon': 'fa-black-tie',
             'order': order,
-            'template_key': 'website_event_exhibitor.search_items_event_sponsor',
             'group_name': self.env._("Sponsors"),
         }
 
