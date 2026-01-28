@@ -267,10 +267,10 @@ class TestHolidaysOvertime(TransactionCase):
         })
         (self.employee.version_ids + self.manager.version_ids).ruleset_id = ruleset_with_timing_rule
         self.manager.company_id = self.env.company
-        leave = self.env['resource.calendar.leaves'].with_company(self.manager.company_id).create([{
+        leave = self.env['hr.public.holiday.leave'].with_company(self.manager.company_id).create([{
             'name': 'Public Holiday',
-            'date_from': datetime(2022, 5, 5, 6),
-            'date_to': datetime(2022, 5, 5, 18),
+            'date_start': datetime(2022, 5, 5, 6),
+            'date_end': datetime(2022, 5, 5, 18),
         }])
 
         leave.company_id.write({
@@ -288,10 +288,10 @@ class TestHolidaysOvertime(TransactionCase):
 
     def test_public_leave_overtime_without_timing_rule(self):
         self.manager.company_id = self.env.company
-        leave = self.env['resource.calendar.leaves'].with_company(self.manager.company_id).create([{
+        leave = self.env['hr.public.holiday.leave'].with_company(self.manager.company_id).create([{
             'name': 'Public Holiday',
-            'date_from': datetime(2022, 5, 5, 6),
-            'date_to': datetime(2022, 5, 5, 18),
+            'date_start': datetime(2022, 5, 5, 6),
+            'date_end': datetime(2022, 5, 5, 18),
         }])
 
         leave.company_id.write({

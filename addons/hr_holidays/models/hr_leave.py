@@ -1,5 +1,6 @@
 import logging
 
+from ast import literal_eval
 from collections import defaultdict
 
 from datetime import datetime, timedelta, time, UTC
@@ -582,15 +583,14 @@ class HrLeave(models.Model):
                 # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
                 # sudo as is_flexible is on version model and employee does not have access to it.
                 if leave.employee_id.sudo().is_flexible and leave.request_date_to == leave.request_date_from:
-                    public_holidays = self.env['resource.calendar.leaves'].search([
-                        ('resource_id', '=', False),
-                        ('date_from', '<', leave.date_to),
-                        ('date_to', '>', leave.date_from),
-                        ('calendar_id', 'in', [False, calendar.id]),
-                        ('company_id', '=', leave.company_id.id)
+                    public_holidays = self.env['hr.public.holiday.leave'].search([
+                        ('date_start', '<', leave.date_to),
+                        ('date_end', '>', leave.date_from),
+                        ('company_id', '=', leave.company_id.id),
                     ])
+                    public_holidays = public_holidays.filtered(lambda p: (not p.condition_domain) or (leave.employee_id.id in self.env['hr.employee'].search(literal_eval(p.condition_domain)).ids))
                     if public_holidays:
-                        public_holidays_intervals = Intervals([(ph.date_from, ph.date_to, ph) for ph in public_holidays])
+                        public_holidays_intervals = Intervals([(ph.date_start, ph.date_end, ph) for ph in public_holidays])
                         leave_intervals = Intervals([(leave.date_from, leave.date_to, leave)])
                         real_leave_intervals = leave_intervals - public_holidays_intervals
                         hours = 0

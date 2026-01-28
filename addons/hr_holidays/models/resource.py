@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+from collections import defaultdict
 from datetime import datetime, time, UTC
 from zoneinfo import ZoneInfo
 
@@ -8,6 +10,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.tools import babel_locale_parse
 from odoo.tools.date_utils import weeknumber
+from odoo.tools.intervals import Intervals
 
 
 class ResourceCalendarLeaves(models.Model):
@@ -165,6 +168,68 @@ class ResourceCalendar(models.Model):
         global_leave_count = result.get('global', 0)
         for calendar in self:
             calendar.associated_leaves_count = result.get(calendar.id, 0) + global_leave_count
+
+    def _leave_intervals_batch(self, start_dt, end_dt, resources_per_tz=None, domain=None):
+        res = super()._leave_intervals_batch(start_dt, end_dt, resources_per_tz=resources_per_tz, domain=domain)
+
+        assert start_dt.tzinfo and end_dt.tzinfo
+        all_resources = set()
+        if not resources_per_tz or self:
+            all_resources.add(self.env['resource.resource'])
+            resources_per_tz = resources_per_tz or {start_dt.tzinfo: self.env['resource.resource']}
+        if resources_per_tz:
+            for _, resources in resources_per_tz.items():
+                all_resources |= set(resources)
+
+        extra = defaultdict(list)
+        tz_dates = {}
+        public_holidays = self.env["hr.public.holiday.leave"].search([
+            ("company_id", "in", [self.company_id.id or self.env.company.id]),
+            ("date_start", "<=", end_dt.astimezone(UTC).replace(tzinfo=None)),
+            ("date_end", ">=", start_dt.astimezone(UTC).replace(tzinfo=None)),
+        ])
+        if self.env.context.get('employee_id'):
+            related_employee = self.env.context.get('employee_id')
+        else:
+            related_employee = self.env['hr.employee'].search([('user_id', 'in', self.env.user.id)]).id
+        allowed_public_holidays = public_holidays.filtered(lambda p: not p.condition_domain or (related_employee or self.env.user.employee_id.id) in self.env['hr.employee'].search(literal_eval(p.condition_domain)).ids)
+        for public_holiday in allowed_public_holidays:
+            tz = ZoneInfo(self.env.company.tz)
+            for resource in all_resources:
+                if (tz, start_dt) in tz_dates:
+                    start = tz_dates[tz, start_dt]
+                else:
+                    start = start_dt.astimezone(tz)
+                    tz_dates[tz, start_dt] = start
+                if (tz, end_dt) in tz_dates:
+                    end = tz_dates[tz, end_dt]
+                else:
+                    end = end_dt.astimezone(tz)
+                    tz_dates[tz, end_dt] = end
+                dt0 = public_holiday.date_start.astimezone(tz)
+                dt1 = public_holiday.date_end.astimezone(tz)
+                # Intervals unions the recordsets attached to each interval.
+                # To avoid mixing models (resource.calendar.leaves vs hr.public.holiday.leave),
+                # we create an in-memory resource.calendar.leaves record as a technical adapter.
+                virtual_leave = self.env['resource.calendar.leaves'].new({
+                    'name': public_holiday.name,
+                    'date_from': public_holiday.date_start,
+                    'date_to': public_holiday.date_end,
+                    'company_id': public_holiday.company_id.id,
+                    'time_type': 'leave',
+                    'resource_id': False,
+                    'calendar_id': False,
+                })
+                extra[resource.id].append((max(start, dt0), min(end, dt1), virtual_leave))
+        if not extra:
+            return res
+        for r in all_resources:
+            existing = res.get(r.id)
+            existing_items = list(existing) if existing else []
+            added_items = extra.get(r.id, [])
+            if added_items:
+                res[r.id] = Intervals(existing_items + added_items)
+        return res
 
 
 class ResourceResource(models.Model):

@@ -14,7 +14,7 @@ from odoo.tests import Form, tagged, users
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 @tagged('leave_requests')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('-post_install')  # LEGACY at_install
 class TestLeaveRequests(TestHrHolidaysCommon):
 
     def _check_holidays_status(self, holiday_status, employee, ml, lt, rl, vrl):
@@ -672,14 +672,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 17}),
                 (0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12}),
                 (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 17})
-            ],
-            'global_leave_ids': [(0, 0, {
-                'name': 'Christmas Time Off',
-                'date_from': fields.Datetime.from_string('2019-12-25 00:00:00'),
-                'date_to': fields.Datetime.from_string('2019-12-26 23:59:59'),
-                'resource_id': False,
-                'time_type': 'leave',
-            })]
+            ]})
+        self.env['hr.public.holiday.leave'].create({
+            'name': 'Christmas Time Off',
+            'date_start': fields.Datetime.from_string('2019-12-25 00:00:00'),
+            'date_end': fields.Datetime.from_string('2019-12-26 23:59:59'),
         })
         employee = self.employee_emp
         employee.resource_calendar_id = calendar
@@ -833,9 +830,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'Test Company 2',
         })
         # Create a public holiday for the second company
-        p_leave = self.env['resource.calendar.leaves'].create({
-            'date_from': datetime(2022, 3, 11),
-            'date_to': datetime(2022, 3, 11, 23, 59, 59),
+        p_leave = self.env['hr.public.holiday.leave'].create({
+            'date_start': datetime(2022, 3, 11),
+            'date_end': datetime(2022, 3, 11, 23, 59, 59),
+            'name': 'Public Holiday Other Company',
         })
         p_leave.company_id = other_company
 
@@ -946,19 +944,19 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         ])
         self.assertEqual(time_off[0].number_of_days, 5)
         self.assertEqual(time_off[1].number_of_days, 5)
-        self.env['resource.calendar.leaves'].create({
+        self.env['hr.public.holiday.leave'].create({
             'name': 'Global Time Off',
-            'date_from': '2021-12-07 00:00:00',
-            'date_to': '2021-12-07 23:59:59',
+            'date_start': '2021-12-07 00:00:00',
+            'date_end': '2021-12-07 23:59:59',
         })
         self.assertEqual(time_off[0].number_of_days, 4)
         self.assertEqual(time_off[1].number_of_days, 4)
 
     def test_time_off_recovery_on_write(self):
-        global_time_off = self.env['resource.calendar.leaves'].create({
+        global_time_off = self.env['hr.public.holiday.leave'].create({
             'name': 'Global Time Off',
-            'date_from': '2021-12-07 00:00:00',
-            'date_to': '2021-12-07 23:59:59',
+            'date_start': '2021-12-07 00:00:00',
+            'date_end': '2021-12-07 23:59:59',
         })
 
         time_off_1 = self.env['hr.leave'].create({
@@ -981,23 +979,23 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         # adding 1 day to the global time off
         global_time_off.write({
-            'date_to': '2021-12-08 23:59:59',
+            'date_end': '2021-12-08 23:59:59',
         })
         self.assertEqual(time_off_1.number_of_days, 3)
 
         # moving the global time off to the next week
         global_time_off.write({
-            'date_from': '2021-12-15 00:00:00',
-            'date_to': '2021-12-15 23:59:59',
+            'date_start': '2021-12-15 00:00:00',
+            'date_end': '2021-12-15 23:59:59',
         })
         self.assertEqual(time_off_1.number_of_days, 5)
         self.assertEqual(time_off_2.number_of_days, 4)
 
     def test_time_off_recovery_on_unlink(self):
-        global_time_off = self.env['resource.calendar.leaves'].create({
+        global_time_off = self.env['hr.public.holiday.leave'].create({
             'name': 'Global Time Off',
-            'date_from': '2021-12-07 00:00:00',
-            'date_to': '2021-12-07 23:59:59',
+            'date_start': '2021-12-07 00:00:00',
+            'date_end': '2021-12-07 23:59:59',
         })
         time_off = self.env['hr.leave'].create({
             'name': 'Holiday Request',
@@ -1019,10 +1017,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_to': '2021-11-19',
         })
         self.assertEqual(time_off.number_of_days, 5)
-        self.env['resource.calendar.leaves'].create({
+        self.env['hr.public.holiday.leave'].create({
             'name': 'Global Time Off',
-            'date_from': '2021-11-15 00:00:00',
-            'date_to': '2021-11-19 23:59:59',
+            'date_start': '2021-11-15 00:00:00',
+            'date_end': '2021-11-19 23:59:59',
         })
         self.assertEqual(time_off.state, 'confirm')
         self.assertEqual(time_off.number_of_days, 0)
@@ -1677,9 +1675,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'hours_per_day': 8
         })
         # Create a public holiday for the flexible calendar
-        self.env['resource.calendar.leaves'].create({
-            'date_from': datetime(2022, 3, 11),
-            'date_to': datetime(2022, 3, 11, 23, 59, 59),
+        self.env['hr.public.holiday.leave'].create({
+            'name': 'Public Holiday',
+            'date_start': datetime(2022, 3, 11),
+            'date_end': datetime(2022, 3, 11, 23, 59, 59),
         })
 
         leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
@@ -1750,21 +1749,19 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'hours_per_week': 56,
             'hours_per_day': 8,
         })
-        self.env['resource.calendar.leaves'].create([
+        self.env['hr.public.holiday.leave'].create([
             {
-                'date_from': datetime(2022, 3, 8, 0, 0, 0),
-                'date_to': datetime(2022, 3, 10, 23, 59, 59),
-                'calendar_id': False,
+                'name': 'Public Holiday 1',
+                'date_start': datetime(2022, 3, 8, 0, 0, 0),
+                'date_end': datetime(2022, 3, 10, 23, 59, 59),
                 'company_id': self.employee_emp.company_id.id,
-                'resource_id': False,
             },
             {
-                'date_from': datetime(2022, 3, 15, 0, 0, 0),
-                'date_to': datetime(2022, 3, 17, 23, 59, 59),
-                'calendar_id': False,
+                'name': 'Public Holiday 2',
+                'date_start': datetime(2022, 3, 15, 0, 0, 0),
+                'date_end': datetime(2022, 3, 17, 23, 59, 59),
                 'company_id': self.employee_emp.company_id.id,
-                'resource_id': False,
-            }
+            },
         ])
         leave_data = [
             {

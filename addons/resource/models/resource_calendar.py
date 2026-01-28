@@ -386,7 +386,7 @@ class ResourceCalendar(models.Model):
                 all_resources |= set(resources)
 
         # for the computation, express all datetimes in UTC
-        # Public leave don't have a resource_id
+        # Global leaves (!= Public Holidays) don't have a resource_id
         domain = domain + [
             ('resource_id', 'in', [False] + [r.id for r in all_resources]),
             ('date_from', '<=', end_dt.astimezone(UTC).replace(tzinfo=None)),

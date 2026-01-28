@@ -15,11 +15,10 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
         cls.company_2 = cls.env['res.company'].create({'name': 'Test company 2'})
 
     def test_unrelated_public_leave(self):
-        public_leave = self.env['resource.calendar.leaves'].create({
+        public_leave = self.env['hr.public.holiday.leave'].create({
             'name': 'Global Time Off for Company 2',
-            'resource_id': False,
-            'date_from': datetime(2024, 1, 3, 6, 0, 0),
-            'date_to': datetime(2024, 1, 3, 19, 0, 0),
+            'date_start': datetime(2024, 1, 3, 6, 0, 0),
+            'date_end': datetime(2024, 1, 3, 19, 0, 0),
         })
         public_leave.company_id = self.company_2
         leave_type = self.env['hr.leave.type'].create({

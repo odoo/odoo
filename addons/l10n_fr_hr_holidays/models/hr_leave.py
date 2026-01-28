@@ -118,23 +118,24 @@ class HrLeave(models.Model):
             duration_by_leave_id = super(HrLeave, self - fr_leaves)._get_durations(resource_calendar=resource_calendar)
             fr_leaves_by_company = fr_leaves.grouped('company_id')
             if fr_leaves:
-                public_holidays = self.env['resource.calendar.leaves'].search([
-                    ('resource_id', '=', False),
+                public_holidays = self.env['hr.public.holiday.leave'].search([
                     ('company_id', 'in', fr_leaves.company_id.ids + [False]),
-                    ('date_from', '<', max(fr_leaves.mapped('date_to')) + relativedelta(days=1)),
-                    ('date_to', '>', min(fr_leaves.mapped('date_from')) - relativedelta(days=1)),
+                    ('date_start', '<', max(fr_leaves.mapped('date_to')) + relativedelta(days=1)),
+                    ('date_end', '>', min(fr_leaves.mapped('date_from')) - relativedelta(days=1)),
                 ])
             for company, leaves in fr_leaves_by_company.items():
                 company_cal = company.resource_calendar_id
                 holidays_days_list = []
-                public_holidays_filtered = public_holidays.filtered_domain([
-                    ('calendar_id', 'in', [False, company_cal.id]),
-                    ('company_id', '=', company.id)
-                ])
+                public_holidays_filtered = public_holidays.filtered(
+                    lambda p: p.company_id == company.id
+                    and (
+                        not p.condition_domain
+                        or p._calendar_matcher(p.condition_domain)(company_cal)
+                        or p._calendar_matcher(p.condition_domain)(self.env["resource.calendar"])))
                 for holiday in public_holidays_filtered:
                     tz = ZoneInfo(holiday.write_uid.tz or 'UTC')
-                    current = holiday.date_from.replace(tzinfo=timezone.utc).astimezone(tz).date()
-                    holiday_date_to = holiday.date_to.replace(tzinfo=timezone.utc).astimezone(tz).date()
+                    current = holiday.date_start.replace(tzinfo=timezone.utc).astimezone(tz).date()
+                    holiday_date_to = holiday.date_end.replace(tzinfo=timezone.utc).astimezone(tz).date()
                     while current <= holiday_date_to:
                         holidays_days_list.append(current)
                         current += relativedelta(days=1)

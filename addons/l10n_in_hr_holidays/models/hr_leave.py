@@ -155,13 +155,12 @@ class HrLeave(models.Model):
         tz = ZoneInfo(self.env.context.get("tz") or self.env.user.tz or "UTC")
         public_holidays_dates_by_company = {
             company_id: {
-                (datetime.date(holiday.date_from.astimezone(tz)) + timedelta(days=offset)): holiday
+                (datetime.date(holiday.date_start.astimezone(tz)) + timedelta(days=offset)): holiday
                 for holiday in recs
-                for offset in range((holiday.date_to.date() - holiday.date_from.date()).days + 1)
+                for offset in range((holiday.date_end.date() - holiday.date_start.date()).days + 1)
             }
-            for company_id, recs in self.env['resource.calendar.leaves']._read_group(
+            for company_id, recs in self.env['hr.public.holiday.leave']._read_group(
                 domain=[
-                    ('resource_id', '=', False),
                     ('company_id', 'in', indian_leaves.company_id.ids),
                 ],
                 groupby=['company_id'],
