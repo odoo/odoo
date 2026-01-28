@@ -3,6 +3,7 @@ import { mockFetch } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { htmlToCanvas, renderService } from "@point_of_sale/app/services/render_service";
 import { clearRegistry, mountWithCleanup, patchTranslations } from "@web/../tests/web_test_helpers";
+import { localizationService } from "@web/core/l10n/localization_service";
 import { registry } from "@web/core/registry";
 
 test("test the render service", async () => {
@@ -15,6 +16,7 @@ test("test the render service", async () => {
     clearRegistry(registry.category("services"));
     clearRegistry(registry.category("main_components"));
     registry.category("services").add("render", renderService);
+    registry.category("services").add("localization", localizationService);
 
     patchTranslations(); // this is needed because we are not loading the localization service
     const comp = await mountWithCleanup("none");
