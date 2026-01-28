@@ -423,6 +423,39 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
             "B2B Allowances should not include AllowanceDate to avoid >6 day limit errors."
         )
 
+    @freeze_time("2026-01-05 18:00:00")
+    def test_14_tw_datetime_conversion(self):
+        """Test that datetime conversion to TW timezone works correctly.
+
+        Scenario:
+        An invoice is created and send to ecpay at "2026-01-05 18:00:00" UTC.
+        In TW timezone, this corresponds to "2026-01-06 02:00:00" (UTC+8).
+
+        Ensure the convert_utc_time_to_tw_time function works to convert the 'InvoiceDate' in the allowance JSON to TW date
+        """
+        invoice = self.init_invoice("out_invoice", partner=self.partner_a, products=self.product_a)
+        invoice.write({
+            "l10n_tw_edi_invoice_create_date": datetime(2026, 1, 5, 18, 0, 0),
+            "l10n_tw_edi_ecpay_invoice_id": "AB11100099"  # simulate it was already sent
+        })
+        invoice.action_post()
+
+        wizard_vals = {
+            "journal_id": invoice.journal_id.id,
+            "reason": "Refund",
+            "l10n_tw_edi_refund_agreement_type": "offline",
+        }
+        wizard = self.env["account.move.reversal"].with_context(
+            active_ids=invoice.ids,
+            active_model="account.move"
+        ).create(wizard_vals)
+        wizard.reverse_moves()
+        credit_note = wizard.new_move_ids
+        credit_note.action_post()
+
+        json_data = credit_note._l10n_tw_edi_generate_issue_allowance_json()
+        self.assertEqual(json_data.get("InvoiceDate"), "2026-01-06")
+
     # -------------------------------------------------------------------------
     # Patched methods
     # -------------------------------------------------------------------------
