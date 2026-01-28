@@ -220,11 +220,51 @@ export default class IndexedDB {
     }
 
     reset() {
-        if (!this.dbInstance) {
-            return false;
-        }
-        this.dbInstance.deleteDatabase(this.dbName);
-        return true;
+        return new Promise((resolve) => {
+            if (this.db) {
+                this.db.close();
+            }
+
+            if (!this.dbInstance) {
+                return resolve(true);
+            }
+
+            const timeout = setTimeout(() => {
+                logPosMessage(
+                    "IndexedDB",
+                    "reset",
+                    "Timeout: Database reset took too long",
+                    CONSOLE_COLOR
+                );
+                resolve(false);
+            }, 3000);
+
+            const request = this.dbInstance.deleteDatabase(this.dbName);
+
+            request.onsuccess = () => {
+                logPosMessage("IndexedDB", "reset", "Database deleted successfully", CONSOLE_COLOR);
+                this.db = null;
+                clearTimeout(timeout);
+                resolve(true);
+            };
+
+            request.onerror = (event) => {
+                logPosMessage(
+                    "IndexedDB",
+                    "reset",
+                    `Error deleting DB: ${event.target.error}`,
+                    CONSOLE_COLOR
+                );
+                clearTimeout(timeout);
+                resolve(false);
+            };
+
+            request.onblocked = () => {
+                logPosMessage("IndexedDB", "reset", "Blocked deleting DB", CONSOLE_COLOR);
+                clearTimeout(timeout);
+                resolve(false);
+            };
+        });
     }
 
     create(storeName, arrData) {
