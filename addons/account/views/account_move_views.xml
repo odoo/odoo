@@ -1514,7 +1514,7 @@
                                         <field name="debit" sum="Total Debit"/>
                                         <field name="credit" sum="Total Credit"/>
                                         <field name="balance" invisible="1"/>
-                                        <field name="tax_ids" string="Taxes Applied" widget="autosave_many2many_tax_tags" options="{'no_create': True}"
+                                        <field name="tax_ids" string="Taxes Applied" widget="many2many_tax_tags" options="{'no_create': True}"
                                                domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', 'parent_of', parent.company_id)]"
                                                context="{
                                                     'append_fields': not parent.invoice_filter_type_domain and ['type_tax_use'],
