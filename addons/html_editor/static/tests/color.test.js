@@ -899,7 +899,7 @@ test("should be able to apply color on icon along with text", async () => {
             '<p>a[bc\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeffde]f</p>',
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfterEdit:
-            '<p>a<font style="color: rgb(255, 0, 0);">[bc</font><font style="color: rgb(255, 0, 0);">\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</font><font style="color: rgb(255, 0, 0);">de]</font>f</p>',
+            '<p>a<font style="color: rgb(255, 0, 0);">[bc\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeffde]</font>f</p>',
         contentAfter:
             '<p>a<font style="color: rgb(255, 0, 0);">[bc<span class="fa fa-glass"></span>de]</font>f</p>',
     });
@@ -923,7 +923,7 @@ test("should be able to remove color of an icon", async () => {
             '<p><font style="color: rgb(255, 0, 0);">\ufeff<span class="fa fa-glass" contenteditable="false">[]\u200b</span>\ufeff</font></p>',
         stepFunction: setColor("", "color"),
         contentAfterEdit:
-            '<p>[\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff]</p>',
+            '<p>\ufeff[<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff]</p>',
         contentAfter: '<p>[<span class="fa fa-glass"></span>]</p>',
     });
 });

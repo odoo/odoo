@@ -33,6 +33,11 @@ export class InlineCodePlugin extends Plugin {
         }),
 
         /** Overrides */
+        are_similar_elements_overrides: ({ node, node2 }) => {
+            if (node.matches("code.o_inline_code") && node2.matches("code.o_inline_code")) {
+                return true;
+            }
+        },
         paste_overrides: (selection, clipboardData) => {
             const caretNode =
                 selection.direction === DIRECTIONS.RIGHT

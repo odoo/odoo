@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { cleanEmptyAncestors, cleanTextNode } from "@html_editor/utils/dom";
 import { isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
-import { descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "../utils/resource";
@@ -36,7 +36,11 @@ export class FeffPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         normalize_processors: withSequence(Infinity, this.updateFeffs.bind(this)),
-        clean_for_save_processors: this.cleanForSave.bind(this),
+        // Must be after link selection plugin's clean for save
+        clean_for_save_processors: withSequence(20, this.cleanForSave.bind(this)),
+        on_will_merge_adjacent_siblings_handlers:
+            this.onWillMergeAdjacentSiblingsHandler.bind(this),
+        on_merged_adjacent_siblings_handlers: this.onMergedAdjacentSiblingsHandler.bind(this),
         is_char_tangible_for_keyboard_navigation_predicates: (ev, char, lastSkipped) => {
             // Skip first FEFF, but not the second one (unless shift is pressed).
             if (char === "\uFEFF" && (ev.shiftKey || lastSkipped !== "\uFEFF")) {
@@ -50,11 +54,20 @@ export class FeffPlugin extends Plugin {
     cleanForSave(root, { preserveSelection = false } = {}) {
         if (preserveSelection) {
             const cursors = this.getCursors();
-            this.removeFeffs(root, cursors);
+            this.removeFeffs(root, cursors, { excludeLegit: false });
             cursors.restore();
         } else {
-            this.removeFeffs(root, null);
+            this.removeFeffs(root, null, { excludeLegit: false });
         }
+    }
+
+    onWillMergeAdjacentSiblingsHandler(root) {
+        const cursors = this.getCursors();
+        this.removeFeffs(root, cursors);
+        cursors.restore();
+    }
+    onMergedAdjacentSiblingsHandler(root) {
+        this.updateFeffs(root);
     }
 
     /**
@@ -62,10 +75,18 @@ export class FeffPlugin extends Plugin {
      * @param {Cursors} [cursors]
      * @param {Object} [options]
      */
-    removeFeffs(root, cursors, { exclude = () => false } = {}) {
+    removeFeffs(root, cursors, { exclude = () => false, excludeLegit = true } = {}) {
+        if (excludeLegit) {
+            const excludeParam = exclude;
+            exclude = (node) =>
+                excludeParam?.(node) ||
+                (this.checkPredicates("would_feff_be_legit_predicates", node) ?? false);
+        }
         const hasFeff = (node) => isTextNode(node) && node.textContent.includes("\ufeff");
         const isEditable = (node) => node.parentElement.isContentEditable;
-        const composedFilter = (node) => hasFeff(node) && isEditable(node) && !exclude(node);
+        const isFocusedLink = (node) => closestElement(node, "a.o_link_in_selection");
+        const composedFilter = (node) =>
+            hasFeff(node) && isEditable(node) && !exclude(node) && !isFocusedLink(node);
 
         for (const node of descendants(root).filter(composedFilter)) {
             // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
@@ -163,9 +184,7 @@ export class FeffPlugin extends Plugin {
         const customFeffNodes = this.getResource("feff_providers").flatMap((p) => p(root, cursors));
         const feffNodesToKeep = new Set([...feffNodesBasedOnSelectors, ...customFeffNodes]);
         this.removeFeffs(root, cursors, {
-            exclude: (node) =>
-                feffNodesToKeep.has(node) ||
-                (this.checkPredicates("would_feff_be_legit_predicates", node) ?? false),
+            exclude: (node) => feffNodesToKeep.has(node),
         });
         cursors.restore();
     }

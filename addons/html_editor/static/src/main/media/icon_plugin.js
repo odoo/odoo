@@ -144,6 +144,14 @@ export class IconPlugin extends Plugin {
             },
         ],
         click_overrides: this.onClickIcon.bind(this),
+        would_feff_be_legit_predicates: (node) => {
+            if (
+                (node.previousSibling && isIconElement(closestElement(node.previousSibling))) ||
+                (node.nextSibling && isIconElement(closestElement(node.nextSibling)))
+            ) {
+                return true;
+            }
+        },
     };
 
     onClickIcon(ev) {
