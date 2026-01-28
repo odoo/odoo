@@ -234,15 +234,20 @@ body {
         }
     }
 
+    // The header covers the top of <main>, keep the breadcrumb below it.
     &.o_header_overlay div.o_page_breadcrumb {
-        @include o-position-absolute(auto, auto, auto, auto);
+        @include o-position-absolute(var(--o-header-height), auto, auto, auto);
         z-index: 1 !important;
         width: 100%;
     }
 
+    > main:has(> .o_page_breadcrumb) {
+        position: relative;
+    }
+
     > main.o_breadcrumb_overlay {
         div.o_page_breadcrumb {
-            @include o-position-absolute(auto, auto, auto, auto);
+            position: absolute;
             z-index: 1 !important;
             width: 100%;
             a, .breadcrumb-item, li::before {
@@ -319,6 +324,10 @@ body {
             @include media-breakpoint-up(md) {
                 padding-top: $grid-gutter-width;
                 padding-bottom: $grid-gutter-width * 1.5;
+
+                &.o_header_overlay > main > .o_page_breadcrumb {
+                    top: calc(var(--o-header-height) - #{$grid-gutter-width});
+                }
             }
         } @else if o-website-value('layout') == 'postcard' {
             @include media-breakpoint-up(md) {
@@ -329,6 +338,16 @@ body {
                 $-inner-border-radius: $-border-radius - 0.0625rem;
                 > * {
                     margin-bottom: $spacer * 2;
+                }
+                // When breadcrumb exists, remove margin from header and apply
+                // it to breadcrumb instead.
+                &:has(> main > .o_page_breadcrumb:not(.d-none)) {
+                    > header {
+                        margin-bottom: 0;
+                    }
+                    > main > .o_page_breadcrumb {
+                        margin-bottom: $spacer * 2;
+                    }
                 }
                 > header {
                     &, &.o_header_affix {
