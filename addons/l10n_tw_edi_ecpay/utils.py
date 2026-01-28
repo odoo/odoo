@@ -10,6 +10,8 @@ import requests
 from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
+from odoo.tools.date_utils import localized
+
 
 PRODUCTION_URL = "https://einvoice.ecpay.com.tw/"
 STAGING_URL = "https://einvoice-stage.ecpay.com.tw/"
@@ -20,6 +22,16 @@ def transfer_time(time_before):
     ecpay_time = datetime.datetime.strptime(time_before, "%Y-%m-%d %H:%M:%S")
     ecpay_time = ecpay_time.replace(tzinfo=ZoneInfo('Asia/Taipei'))
     return ecpay_time.astimezone(datetime.UTC).strftime("%Y-%m-%d %H:%M:%S")
+
+
+def convert_utc_time_to_tw_time(utc_datetime):
+    """
+        Converts UTC datetime object to a TW date string.
+
+        :param utc_datetime: datetime.datetime(2026, 1, 23, 18, 0, 0)
+        :return: "2026-01-24"
+    """
+    return localized(utc_datetime).astimezone(ZoneInfo("Asia/Taipei")).strftime("%Y-%m-%d")
 
 
 def encrypt(data, cipher):
