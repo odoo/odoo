@@ -461,6 +461,8 @@ class AccountMoveSend(models.TransientModel):
         """
         # create an attachment that will become 'invoice_pdf_report_file'
         # note: Binary is used for security reason
+        if 'pdf_attachment_values' not in invoice_data:
+            return
         invoice_sudo = invoice.sudo()
         invoice_sudo.message_main_attachment_id = self.sudo().env['ir.attachment'].create(invoice_data['pdf_attachment_values'])
         invoice_sudo.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
@@ -652,7 +654,7 @@ class AccountMoveSend(models.TransientModel):
         :param invoices_data:   The collected data for invoices so far.
         """
         for invoice, invoice_data in invoices_data.items():
-            if self._need_invoice_document(invoice):
+            if self.with_context(invoice_data=invoice_data)._need_invoice_document(invoice):
                 self._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
                 invoice_data['blocking_error'] = invoice_data.get('error') \
                                                  and not (allow_fallback_pdf and invoice_data.get('error_but_continue'))
@@ -672,7 +674,7 @@ class AccountMoveSend(models.TransientModel):
             if not invoice_data.get('error') or invoice_data.get('error_but_continue')
         }
         for invoice, invoice_data in invoices_data_pdf.items():
-            if self._need_invoice_document(invoice) and not invoice_data.get('error'):
+            if self.with_context(invoice_data=invoice_data)._need_invoice_document(invoice) and not invoice_data.get('error'):
                 self._prepare_invoice_pdf_report(invoice, invoice_data)
                 self._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
 
@@ -697,7 +699,7 @@ class AccountMoveSend(models.TransientModel):
 
         # Create and link the generated documents to the invoice if the web-service didn't failed.
         for invoice, invoice_data in invoices_data_web_service.items():
-            if self._need_invoice_document(invoice) and (not invoice_data.get('error') or allow_fallback_pdf):
+            if self.with_context(invoice_data=invoice_data)._need_invoice_document(invoice) and (not invoice_data.get('error') or allow_fallback_pdf):
                 self._link_invoice_documents(invoice, invoice_data)
 
     @api.model

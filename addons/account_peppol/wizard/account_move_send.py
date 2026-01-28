@@ -236,6 +236,8 @@ class AccountMoveSend(models.TransientModel):
                         for key in ['pdf_attachment_values', 'ubl_cii_xml_attachment_values']
                         if invoice_data.get(key)
                     ]
+                    if not base_attachments and invoice.ubl_cii_xml_id:
+                        base_attachments.append((invoice.ubl_cii_xml_id.name, invoice.ubl_cii_xml_id.raw))
                     attachments_embedded = [
                         (attachment.name, attachment.raw)
                         for attachment in attachments_linked
