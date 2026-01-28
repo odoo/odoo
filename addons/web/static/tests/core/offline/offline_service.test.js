@@ -96,7 +96,6 @@ test("offlineUI: disable interactive elements except [data-available-offline]", 
             <div>
                 <button type="button" class="button_to_disable"> Disable this button </button>
                 <button type="button" class="button_available_offline" data-available-offline=""> Don't disable this button </button>
-                <input type="checkbox" name="checkbox" class="checkbox_to_disable"/>
             </div>
         `;
         static props = ["*"];
@@ -105,20 +104,16 @@ test("offlineUI: disable interactive elements except [data-available-offline]", 
     await mountWithCleanup(Root);
     expect(`.button_to_disable`).not.toHaveAttribute("disabled");
     expect(`.button_available_offline`).not.toHaveAttribute("disabled");
-    expect(`.checkbox_to_disable`).not.toHaveAttribute("disabled");
 
     getService("offline").offline = true;
     expect(`.button_to_disable`).toHaveAttribute("disabled");
     expect(`.button_available_offline`).not.toHaveAttribute("disabled");
-    expect(`.checkbox_to_disable`).toHaveAttribute("disabled");
     expect(`.button_to_disable`).toHaveClass("o_disabled_offline");
     expect(`.button_available_offline`).not.toHaveClass("o_disabled_offline");
-    expect(`.checkbox_to_disable`).toHaveClass("o_disabled_offline");
 
     getService("offline").offline = false;
     expect(`.button_to_disable`).not.toHaveAttribute("disabled");
     expect(`.button_available_offline`).not.toHaveAttribute("disabled");
-    expect(`.checkbox_to_disable`).not.toHaveAttribute("disabled");
 });
 
 test("offlineUI: don't disable already disabled elements", async () => {
@@ -286,5 +281,95 @@ test("getAvailableSearches (searches order)", async () => {
         { key: "2" }, // accessed twice (less recently)
         { key: "5" }, // accessed once
         { key: "4" }, // accessed once (less recently)
+    ]);
+});
+
+test("scheduleORM", async () => {
+    onRpc("partner", "modify", ({ model, method, args, kwargs }) => {
+        expect.step({ model, method, args, kwargs: JSON.stringify(kwargs) });
+    });
+    const env = await makeMockEnv();
+    const offline = env.services.offline;
+    expect(offline.offline).toBe(false);
+
+    // go offline
+    offline.offline = true;
+    await tick();
+    expect(offline.offline).toBe(true);
+
+    await offline.scheduleORM("partner", "create", [22, 13], { arg1: true, arg2: false }, {});
+    await offline.scheduleORM(
+        "partner",
+        "modify",
+        [22, 13],
+        { arg3: true },
+        { id: 22, extras: { toSaveMore: true } }
+    );
+
+    expect(offline.hasScheduledCalls).toBe(true);
+    expect(offline.scheduledORM).toEqual({
+        22: {
+            key: 22,
+            value: {
+                args: [22, 13],
+                extras: {
+                    toSaveMore: true,
+                },
+                kwargs: {
+                    arg3: true,
+                },
+                method: "modify",
+                model: "partner",
+            },
+        },
+        "7b1d3bb0": {
+            key: "7b1d3bb0",
+            value: {
+                args: [22, 13],
+                extras: undefined,
+                kwargs: {
+                    arg1: true,
+                    arg2: false,
+                },
+                method: "create",
+                model: "partner",
+            },
+        },
+    });
+
+    offline.removeScheduledORM("7b1d3bb0");
+    expect(offline.scheduledORM).toEqual({
+        22: {
+            key: 22,
+            value: {
+                args: [22, 13],
+                extras: {
+                    toSaveMore: true,
+                },
+                kwargs: {
+                    arg3: true,
+                },
+                method: "modify",
+                model: "partner",
+            },
+        },
+    });
+
+    // go online
+    offline.offline = false;
+    await tick();
+    expect(offline.offline).toBe(false);
+
+    //SyncORM !
+    await tick();
+    await tick();
+    await tick();
+    expect.verifySteps([
+        {
+            args: [22, 13],
+            kwargs: '{"arg3":true,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1]}}',
+            method: "modify",
+            model: "partner",
+        },
     ]);
 });

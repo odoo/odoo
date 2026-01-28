@@ -39,6 +39,7 @@ export class ProjectTaskTemplateDropdown extends Component {
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
+        this.offlineService = useService("offline");
         this.state = useState({ taskTemplates: [] });
         onWillStart(this.onWillStart);
     }
@@ -57,6 +58,19 @@ export class ProjectTaskTemplateDropdown extends Component {
                 })
                 .call("project.project", "get_template_tasks", [this.props.projectId]);
         }
+    }
+    
+    get isNewButtonAvailableOffline() {
+        const { actionId, viewType } = this.env.config;
+        if (viewType === "list") {
+            return this.offlineService.isAvailableOffline(actionId, "form", false);
+        } else if (viewType === "kanban") {
+            return (
+                this.offlineService.isAvailableOffline(actionId, "form:kanbanQC", false) ||
+                this.offlineService.isAvailableOffline(actionId, "form", false)
+            );
+        }
+        return false;
     }
 
     async createTaskFromTemplate(templateId) {

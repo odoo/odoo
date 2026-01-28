@@ -15,6 +15,7 @@
                         t-att-id="showSeparator ? props.endDateField and props.id : props.id"
                         t-on-focus="() => picker.activeInput = startDateField"
                         t-att-data-field="startDateField"
+                        data-available-offline=""
                         t-att-class="'o_input o_daterange_start w-100 text-start ' + (props.warnFuture and isDateInTheFuture(0) ? 'text-danger' : '')">
                         <t t-esc="getFormattedValue(0)" />
                     </button>
@@ -54,6 +55,7 @@
                             t-on-focus="() => picker.activeInput = endDateField" 
                             t-att-id="props.startDateField and props.id"
                             t-att-data-field="endDateField"
+                            data-available-offline=""
                             t-att-class="'o_input o_daterange_end w-100 text-start ' + (props.warnFuture and isDateInTheFuture(1) ? 'text-danger' : '')">
                             <t t-esc="getFormattedValue(1)" />
                         </button>

@@ -15,7 +15,7 @@
                         Select all <span t-if="isRecordCountTrustable"><t t-esc="nbTotal"/><t t-if="hasLimitedCount">+</t></span>
                     </button>
                 </t>
-                <button title="Unselect All" class="o_unselect_all btn btn-link ms-auto border-0" t-on-click="onUnselectAll">
+                <button title="Unselect All" class="o_unselect_all btn btn-link ms-auto border-0" data-available-offline="" t-on-click="onUnselectAll">
                     <i class="oi oi-close"/>
                 </button>
             </span>

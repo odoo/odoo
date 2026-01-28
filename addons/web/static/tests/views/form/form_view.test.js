@@ -285,11 +285,11 @@ test(`[Offline] form switches to readonly in offline mode`, async () => {
     expect(`.o_field_x2many_list_row_add`).toHaveCount(1);
 
     await setOffline(true);
-    expect(`.o_field_char[name="foo"] input`).toHaveCount(0);
-    expect(`.o_field_boolean[name="bar"] .o-checkbox input`).toHaveAttribute("disabled");
-    expect(`.o_field_integer[name="int_field"] input`).toHaveCount(0);
-    expect(`.o_field_float[name="float_field"] input`).toHaveCount(0);
-    expect(`.o_field_x2many_list_row_add`).toHaveCount(0);
+    expect(`.o_field_char[name="foo"] input`).toHaveCount(1); // We can modify char fields
+    expect(`.o_field_boolean[name="bar"] .o-checkbox input`).not.toHaveAttribute("disabled"); // We can modify boolean fields
+    expect(`.o_field_integer[name="int_field"] input`).toHaveCount(1); // We can modify int fields
+    expect(`.o_field_float[name="float_field"] input`).toHaveCount(1); // We can modify float fields
+    expect(`.o_field_x2many_list_row_add`).toHaveCount(0); // For the moment, we can't modify x2many fields
 
     await setOffline(false);
     expect(`.o_field_char[name="foo"] input`).toHaveCount(1);
@@ -338,23 +338,29 @@ test(`[Offline] save a form view offline (click save icon)`, async () => {
 
     offline = true;
     await contains(".o_form_button_save").click();
-    expect(".o_form_renderer").toHaveClass("o_form_readonly");
-    expect(".o_field_widget[name=foo]").toHaveText("new foo");
+    expect(".o_form_renderer").not.toHaveClass("o_form_readonly"); // We can create/edit offline
+    expect(".o_form_renderer").toHaveClass("o_form_editable");
+    expect(".o_field_widget[name=foo] input").toHaveValue("new foo");
     expect(getService("offline").offline).toBe(true);
     expect.verifySteps(["web_save"]);
+
+    // The edited record will be save the next time we are online
+    await contains(".o-dropdown .offline_systray").click();
+    expect(queryAllTexts`.o-dropdown--menu`).toEqual(["Partnerfirst record \nEdited"]);
 
     offline = false;
     await runAllTimers(); // execute checkConnection
     await animationFrame();
-    expect(".o_form_renderer").toHaveClass("o_form_editable");
-    await contains(".o_form_button_save").click();
-    expect.verifySteps(["web_save"]);
+
+    expect(getService("offline").offline).toBe(false);
+    expect.verifySteps(["web_save"]); // We sync when the connection returns
 
     await contains(".o_breadcrumb .o_back_button").click();
     expect(".o_data_cell:first").toHaveText("new foo");
 });
 
 test(`[Offline] save a form view offline (autosave when leaving)`, async () => {
+    expect.errors(1); // 1x ConnectionLostError
     // this test is the same as above, but in this one we don't manually save
     // the record before leaving
     let offline = false;
@@ -395,19 +401,66 @@ test(`[Offline] save a form view offline (autosave when leaving)`, async () => {
 
     offline = true;
     await contains(".o_breadcrumb .o_back_button").click();
-    expect(".o_form_renderer").toHaveClass("o_form_readonly");
-    expect(".o_field_widget[name=foo]").toHaveText("new foo");
+    expect(".o_list_view").toHaveCount(1);
+    expect(".o_data_cell:first").toHaveText("yop"); // Old value, not yet saved
     expect(getService("offline").offline).toBe(true);
     expect.verifySteps(["web_save"]);
+    expect.waitForErrors([
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+    ]);
+
+    // The edited record will be save the next time we are online
+    await contains(".o-dropdown .offline_systray").click();
+    expect(queryAllTexts`.o-dropdown--menu`).toEqual(["Partnerfirst record \nEdited"]);
 
     offline = false;
     await runAllTimers(); // execute checkConnection
     await animationFrame();
-    expect(".o_form_renderer").toHaveClass("o_form_editable");
 
-    await contains(".o_breadcrumb .o_back_button").click();
-    expect(".o_data_cell:first").toHaveText("new foo");
+    expect(getService("offline").offline).toBe(false);
+    // TODO: It should be nice to reload the current view after sync ?? For me it should be "new foo"
+    expect(".o_data_cell:first").toHaveText("yop");
     expect.verifySteps(["web_save"]);
+});
+
+test(`[Offline] open form with offline changes`, async () => {
+    Partner._views = {
+        form: `<form><field name="foo"/></form>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            views: [[false, "form"]],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    // Open record 2, blip is the value stored
+    await getService("action").doAction(1, { props: { resId: 2 } });
+    expect(`.o_field_widget[name=foo] input`).toHaveValue("blip");
+
+    // Open record 2, with the offline modifications (blip is change to Harlod Bohy)
+    getService("offline").scheduleORM(
+        "lead",
+        "web_save",
+        [[]],
+        {},
+        {
+            id: "881ba65a",
+            extras: {
+                actionId: 33,
+                actionName: "CRM",
+                viewType: "form",
+                changes: { foo: "Harold Bohy" },
+                displayName: "Display Name",
+                timeStamp: 30,
+            },
+        }
+    );
+    await getService("action").doAction(1, { props: { offlineId: "881ba65a", resId: 2 } });
+    expect(`.o_field_widget[name=foo] input`).toHaveValue("Harold Bohy");
 });
 
 test(`form rendering with class and style attributes`, async () => {

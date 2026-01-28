@@ -555,20 +555,146 @@ test(`editable list with edit="0"`, async () => {
 
 test.tags("desktop");
 test(`[Offline] editable list`, async () => {
+    onRpc("web_save", () => expect.step(`web_save`));
+    Foo._views = {
+        "list,false": `<list editable="top"><field name="foo"/></list>`,
+        "search,false": `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Action 1",
+            res_model: "foo",
+            views: [[false, "list"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
     const setOffline = mockOffline();
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `<list editable="top"><field name="foo"/></list>`,
-    });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
     expect(`tbody tr.o_data_row[data-id]`).toHaveCount(4);
+    expect(queryAllTexts(".o_data_cell")).toEqual(["yop", "blip", "gnap", "blip"]);
 
     await contains(`.o_data_cell`).click();
     expect(`tbody tr.o_selected_row`).toHaveCount(1, { message: "should have editable row" });
 
     await setOffline(true);
     await contains(`.o_data_cell`).click();
-    expect(`tbody tr.o_selected_row`).toHaveCount(0, { message: "should not have editable row" });
+    expect(`tbody tr.o_selected_row`).toHaveCount(1, { message: "should have editable row" });
+
+    await contains(`.o_field_widget[name='foo'] input`).edit("Offline");
+    await contains(`.o_control_panel`).click();
+    expect(queryAllTexts(".o_data_cell")).toEqual(["Offline", "blip", "gnap", "blip"]);
+
+    // The edited record will be save the next time we are online
+    await contains(".o-dropdown .offline_systray").click();
+    expect(queryAllTexts`.o-dropdown--menu`).toEqual(["Action 1record \nEdited"]);
+
+    expect.verifySteps([]);
+
+    await setOffline(false);
+
+    // await runAllTimers(); // execute checkConnection
+    await animationFrame();
+
+    expect(getService("offline").offline).toBe(false);
+
+    expect.verifySteps(["web_save"]);
+});
+
+test(`[Offline] disable new button if not previously visited`, async () => {
+    Foo._views = {
+        "list,false": `<list><field name="foo"/></list>`,
+        "form,false": `<form><field name="foo"/></form>`,
+        "search,false": `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Action 1",
+            res_model: "foo",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    await setOffline(true);
+
+    expect("button.o_list_button_add").toHaveClass("o_disabled_offline");
+});
+
+test(`[Offline] create record when offline`, async () => {
+    expect.errors(2); // 2x ConnectionLostError
+    onRpc("web_save", () => expect.step(`web_save`));
+    Foo._views = {
+        "list,false": `<list><field name="foo"/></list>`,
+        "form,false": `<form><field name="foo"/></form>`,
+        "search,false": `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Action 1",
+            res_model: "foo",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(`tbody tr`).toHaveCount(4);
+
+    // Put in cache the on_change
+    await contains(`button.o_list_button_add`).click();
+    await contains(`.o_back_button`).click();
+
+    await setOffline(true);
+    expect("button.o_list_button_add").not.toHaveClass("o_disabled_offline");
+
+    //Open the new record offline
+    await contains(`button.o_list_button_add`).click();
+    await contains(`.o_field_widget[name='foo'] input`).edit("test");
+    //Go Back to the list, this will save the record
+    await contains(`.o_back_button`).click();
+
+    // The edited record will be save the next time we are online
+    await contains(".o-dropdown .offline_systray").click();
+    expect(queryAllTexts`.o-dropdown--menu span`).toEqual(["Action 1", "record", "Created"]);
+
+    expect.verifyErrors([
+        `Connection to "/web/dataset/call_kw/foo/onchange" couldn't be established`,
+        `Connection to "/web/dataset/call_kw/foo/web_search_read" couldn't be established`,
+    ]);
+
+    // go online and save the record.
+    await setOffline(false);
+    await animationFrame();
+    await animationFrame();
+
+    expect(getService("offline").offline).toBe(false);
+    expect.verifySteps(["web_save"]); // We sync when the connection returns
+    //The current view is not updated when the offline is sync.
+    //In this case we don't see the newly created record, until the view is reloaded.
+    expect(`tbody tr`).toHaveCount(4, { message: "The new record is not showed in the list." });
+
+    //Relod the view
+    //The offline create record is there
+    await getService("action").doAction(1);
+    expect(`tbody tr`).toHaveCount(5);
 });
 
 test.tags("desktop");

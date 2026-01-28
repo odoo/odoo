@@ -9925,3 +9925,118 @@ test(`[Offline] use offline searchbar`, async () => {
         "/web/dataset/call_kw/partner/web_read_group",
     ]);
 });
+
+test.tags("desktop");
+test("[Offline] disable new button if not previously visited", async () => {
+    Partner._views = {
+        "kanban,false": `
+            <kanban default_group_by="product_id" on_create="quick_create" quick_create_view="some_view_ref">
+                <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        "form,false": `<form><field name="product_id" widget="statusbar" options="{'clickable': true}"/></form>`,
+        "form,some_view_ref": `<form><field name="foo"/></form>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "partner",
+            views: [
+                [false, "kanban"],
+                [false, "form"],
+            ],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    await setOffline(true);
+
+    expect("button.o-kanban-button-new").toHaveClass("o_disabled_offline");
+});
+
+test.tags("desktop");
+test("[Offline] create record when offline QuickCreate", async () => {
+    expect.errors(1); // 1x ConnectionLostError
+    onRpc("web_save", () => expect.step(`web_save`));
+    Partner._views = {
+        "kanban,false": `
+            <kanban default_group_by="product_id" on_create="quick_create" quick_create_view="some_view_ref">
+                <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        "form,false": `<form><field name="product_id" widget="statusbar" options="{'clickable': true}"/></form>`,
+        "form,some_view_ref": `<form><field name="foo"/></form>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "partner",
+            views: [
+                [false, "kanban"],
+                [false, "form"],
+            ],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
+
+    // Put in cache the on_change
+    await createKanbanRecord();
+    await contains(`.o_kanban_cancel`).click();
+
+    await setOffline(true);
+    expect("button.o-kanban-button-new").not.toHaveClass("o_disabled_offline");
+
+    //Open the quickCreate Offline
+    await createKanbanRecord();
+    await editKanbanRecordQuickCreateInput("foo", "twilight sparkle");
+    await validateKanbanRecord();
+
+    // The edited record will be save the next time we are online
+    await contains(".o-dropdown .offline_systray").click();
+    expect(queryAllTexts`.o-dropdown--menu span`).toEqual(["Partners Action", "record", "Created"]);
+
+    expect.verifyErrors([
+        `Connection to "/web/dataset/call_kw/partner/onchange" couldn't be established`,
+    ]);
+
+    // go online and save the record.
+    await setOffline(false);
+    await animationFrame();
+    await animationFrame();
+
+    expect(getService("offline").offline).toBe(false);
+    expect.verifySteps(["web_save"]); // We sync when the connection returns
+    //The current view is not updated when the offline is sync.
+    //In this case we don't see the newly created record, until the view is reloaded.
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4, {
+        message: "The new record is not showed in the list.",
+    });
+
+    //Relod the view
+    //The offline create record is there
+    await getService("action").doAction(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
+});

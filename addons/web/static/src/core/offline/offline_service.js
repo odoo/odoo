@@ -5,28 +5,29 @@ import { registry } from "@web/core/registry";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 import { Reactive } from "@web/core/utils/reactive";
 import { session } from "@web/session";
+import { hashCode } from "../utils/strings";
 
 const IS_READY = Symbol("ready");
 
 class OfflineManager extends Reactive {
-    static TABLE_NAME = "visited-ui-items";
-    static TABLE_NAME_DEBUG = "visited-ui-items-debug";
+    static VISITED_UI_TABLE_NAME = "visited-ui-items";
+    static VISITED_UI_TABLE_NAME_DEBUG = "visited-ui-items-debug";
+    static ORM_SYNC_TABLE_NAME = "orm-to-sync";
 
-    static SELECTORS_TO_DISABLE = [
-        "button:not([data-available-offline]):not([disabled])",
-        "input[type='checkbox']:not([data-available-offline]):not([disabled])",
-    ];
+    static SELECTORS_TO_DISABLE = ["button:not([data-available-offline]):not([disabled])"];
 
-    constructor(env) {
+    constructor(env, { orm }) {
         super(...arguments);
 
         this.env = env;
+        this.orm = orm;
         this._idb = markRaw(new IndexedDB("offline", session.registry_hash));
-        this._idbTable = this.env.debug
-            ? OfflineManager.TABLE_NAME_DEBUG
-            : OfflineManager.TABLE_NAME;
+        this._visitedUITable = this.env.debug
+            ? OfflineManager.VISITED_UI_TABLE_NAME_DEBUG
+            : OfflineManager.VISITED_UI_TABLE_NAME;
         this._visited = {}; // stores items that are available offline (only populated when offline)
         this._visited[IS_READY] = null;
+        this._ormToSync = {}; // store items that need to be sync once we go online.
         this._timeout = null; // used to repeatedly ping the server when offline
         this._observer = null; // used to detect DOM mutations and disable the UI when offline
         this._offline = false;
@@ -52,8 +53,18 @@ class OfflineManager extends Reactive {
         // When the "CLEAR-CACHES" event is triggered, the rpc cache is wiped out, so we must also
         // clear the information about elements that are available offline, as they aren't anymore.
         rpcBus.addEventListener("CLEAR-CACHES", () => {
-            this._idb.invalidate([OfflineManager.TABLE_NAME, OfflineManager.TABLE_NAME_DEBUG]);
+            this._idb.invalidate([
+                OfflineManager.VISITED_UI_TABLE_NAME,
+                OfflineManager.VISITED_UI_TABLE_NAME_DEBUG,
+            ]);
             this._visited = {};
+        });
+
+        this._updateScheduledORMList().then(async () => {
+            if (!this._offline) {
+                await new Promise((r) => browser.setTimeout(r, 3000)); // Waits 3 second
+                this._syncORM();
+            }
         });
     }
 
@@ -114,6 +125,7 @@ class OfflineManager extends Reactive {
             this._visited[IS_READY] = this._populateVisited();
         } else {
             this._onlineUI();
+            this._syncORM();
             this._observer?.disconnect();
             browser.clearTimeout(this._timeout);
         }
@@ -145,7 +157,7 @@ class OfflineManager extends Reactive {
         } else if (this._visited[actionId]?.views[viewType] === true) {
             // Searches for that action/view type haven't been retrieve from idb yet
             this._visited[actionId].views[viewType] = this._idb
-                .read(this._idbTable, this._generateKey(actionId, viewType))
+                .read(this._visitedUITable, this._generateKey(actionId, viewType))
                 .then((r) =>
                     Object.values(r || {})
                         .reverse() // last visited first
@@ -191,16 +203,41 @@ class OfflineManager extends Reactive {
         if (!this.offline) {
             const key = this._generateKey(actionId, viewType, resId);
             let value;
-            if (viewType === "form") {
+            if (viewType.startsWith("form")) {
                 value = true;
             } else {
-                value = (await this._idb.read(this._idbTable, key)) || {};
+                value = (await this._idb.read(this._visitedUITable, key)) || {};
                 let count = value[search.key]?.count || 0;
                 delete value[search.key]; // delete and re-add to mark it as "last visited"
                 value[search.key] = { count: ++count, search };
             }
-            return this._idb.write(this._idbTable, key, value);
+            return this._idb.write(this._visitedUITable, key, value);
         }
+    }
+
+    // -------------------------------------------------------------------------
+    // ORM Offline
+    // -------------------------------------------------------------------------
+
+    async scheduleORM(model, method, args, kwargs, options) {
+        const value = { model, method, args, kwargs, extras: options.extras };
+        const key = options.id ?? hashCode(JSON.stringify(value));
+        this._ormToSync[key] = { key, value };
+        this._idb.write(OfflineManager.ORM_SYNC_TABLE_NAME, key, JSON.stringify(value));
+        return key;
+    }
+
+    async removeScheduledORM(key) {
+        delete this._ormToSync[key];
+        this._idb.delete(OfflineManager.ORM_SYNC_TABLE_NAME, key);
+    }
+
+    get scheduledORM() {
+        return this._ormToSync;
+    }
+
+    get hasScheduledCalls() {
+        return !!Object.keys(this._ormToSync).length;
     }
 
     // -------------------------------------------------------------------------
@@ -227,7 +264,7 @@ class OfflineManager extends Reactive {
      * @private
      */
     async _populateVisited() {
-        return this._idb.getAllKeys(this._idbTable).then((keys) => {
+        return this._idb.getAllKeys(this._visitedUITable).then((keys) => {
             if (!this._offline) {
                 return; // status changed again meanwhile
             }
@@ -272,11 +309,50 @@ class OfflineManager extends Reactive {
             el.classList.remove("o_disabled_offline");
         });
     }
+
+    // -------------------------------------------------------------------------
+    // ORM Offline
+    // -------------------------------------------------------------------------
+
+    async _syncORM() {
+        await navigator.locks.request("db-sync", async () => {
+            // Only one tab can execute this block at a time
+            await this._updateScheduledORMList();
+
+            for (const [index, { key, value }] of Object.values(this._ormToSync)
+                .filter(({ value }) => !value.extras.error)
+                .entries()) {
+                if (index !== 0) {
+                    await new Promise((r) => browser.setTimeout(r, 1000)); // Waits 1 second
+                }
+                try {
+                    await this.orm.call(value.model, value.method, value.args, value.kwargs);
+                    this.removeScheduledORM(key);
+                } catch {
+                    this.scheduleORM(value.model, value.method, value.args, value.kwargs, {
+                        id: key,
+                        extras: { ...value.extras, error: true },
+                    });
+                }
+            }
+        });
+    }
+
+    async _updateScheduledORMList() {
+        const table = await this._idb.getAllEntries(OfflineManager.ORM_SYNC_TABLE_NAME);
+        Object.assign(
+            this._ormToSync,
+            Object.fromEntries(
+                table.map((v) => [v.key, { key: v.key, value: JSON.parse(v.value) }])
+            )
+        );
+    }
 }
 
 export const offlineService = {
-    async start(env) {
-        return new OfflineManager(env);
+    dependencies: ["orm"],
+    async start(env, services) {
+        return new OfflineManager(env, services);
     },
 };
 
