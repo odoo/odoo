@@ -2,7 +2,12 @@ import { click, describe, expect, test } from "@odoo/hoot";
 import { queryFirst, advanceTime, animationFrame, setInputRange } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { Plugin } from "@html_editor/plugin";
-import { addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import {
+    addPlugin,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
+} from "./website_helpers";
 import { onRpcImg, testImg, testSvgImg, testSvgImgSrc } from "./image_test_helpers";
 import { dummyCORSSrc, setupCORSProtectedImg } from "@html_builder/../tests/helpers";
 
@@ -1031,4 +1036,12 @@ test("Shape should not be applied on replaced CORS-protected image", async () =>
     expect(imgEl).toHaveAttribute("src", dummyCORSSrc);
     expect(imgEl).not.toHaveAttribute("data-shape");
     expect(imgEl).not.toHaveAttribute("data-shape-colors");
+});
+
+test("Verify that the image shape color option appears in the sidebar for s_cta_mockups", async () => {
+    await setupWebsiteBuilderWithSnippet("s_cta_mockups", {
+        loadIframeBundles: true,
+    });
+    await contains(":iframe .s_cta_mockups .o_grid_item_image img").click();
+    expect(`[data-label="Colors"] .o_we_color_preview`).toHaveCount(1);
 });
