@@ -884,7 +884,7 @@ class MailComposeMessage(models.TransientModel):
             'view_mode': 'form',
             'view_id': self.env.ref('mail.mail_compose_message_view_form_template_save').id,
             'name': _('Create a Mail Template'),
-            'res_model': 'mail.compose.message',
+            'res_model': self._name,
             'context': {'dialog_size': 'medium'},
             'target': 'new',
             'res_id': self.id,
