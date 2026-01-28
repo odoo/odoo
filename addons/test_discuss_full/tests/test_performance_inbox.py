@@ -25,7 +25,8 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #           - search ir_rule (_get_rules for mail.notification)
         #       - search ir_rule (_get_rules)
         #       - search mail_message
-        #   28 store add message:
+        #   - fetch bus_bus (_bus_last_id)
+        #   30 store add message:
         #       - search mail_message
         #       - fetch mail_message
         #       - search mail_message_schedule
@@ -58,6 +59,8 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #       6 rating stats computation:
         #           - read group rating_rating (_rating_get_stats_per_record for slide.channel)
         #           - read group rating_rating (_rating_get_stats_per_record for product.template)
+        #           - compute message_needaction for slide.channel
+        #           - compute message_needaction for product.template
         first_model_records = self.env["product.template"].create(
             [{"name": "Product A1"}, {"name": "Product A2"}]
         )
@@ -72,5 +75,5 @@ class TestInboxPerformance(HttpCase, MailCommon):
                 rating_value="4",
             )
         self.authenticate(self.user_employee.login, self.user_employee.password)
-        with self.assertQueryCount(37):
+        with self.assertQueryCount(40):
             self.make_jsonrpc_request("/mail/data", {"fetch_params": ["/mail/inbox/messages"]})
