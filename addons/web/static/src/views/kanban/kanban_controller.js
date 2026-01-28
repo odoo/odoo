@@ -461,6 +461,17 @@ export class KanbanController extends Component {
         return this.props.archInfo.activeActions.create;
     }
 
+    get isNewButtonAvailableOffline() {
+        if (this.props.archInfo.activeActions.quickCreate) {
+            return this.offlineService.isAvailableOffline(
+                this.env.config.actionId,
+                "kanban_quick_create",
+                false
+            );
+        }
+        return this.offlineService.isAvailableOffline(this.env.config.actionId, "form", false);
+    }
+
     get isNewButtonDisabled() {
         const { createGroup } = this.props.archInfo.activeActions;
         const list = this.model.root;

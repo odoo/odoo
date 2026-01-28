@@ -1,4 +1,11 @@
-import { render, onWillRender, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import {
+    render,
+    onWillRender,
+    useLayoutEffect,
+    useRef,
+    useState,
+    useSubEnv,
+} from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { user } from "@web/core/user";
@@ -261,6 +268,16 @@ export class ListController extends Component {
 
     get deleteConfirmationDialogProps() {
         return {};
+    }
+
+    get isNewButtonAvailableOffline() {
+        if (
+            !this.archInfo.editable &&
+            this.offlineService.isAvailableOffline(this.env.config.actionId, "form", false)
+        ) {
+            return true;
+        }
+        return false;
     }
 
     getExportableFields() {

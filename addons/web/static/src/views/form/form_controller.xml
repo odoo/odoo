@@ -60,7 +60,7 @@
     </t>
 
     <t t-name="web.FormView.Buttons">
-        <button t-if="canCreate" type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create">New</button>
+        <button t-if="canCreate" type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create" t-att-data-available-offline="isNewButtonAvailableOffline">New</button>
     </t>
 
     <t t-name="web.DefaultButtonsSlot">

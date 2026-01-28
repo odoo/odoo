@@ -903,7 +903,12 @@ export class ListRenderer extends Component {
     isRecordAvailable(record) {
         return (
             !this.offlineService.offline ||
-            this.offlineService.isAvailableOffline(this.env.config.actionId, "form", record.resId)
+            this.offlineService.isAvailableOffline(
+                this.env.config.actionId,
+                "form",
+                record.resId
+            ) ||
+            this.isInlineEditable(record)
         );
     }
 
@@ -2327,13 +2332,5 @@ export class ListRenderer extends Component {
             ev.preventDefault();
             this.toggleRecordSelection(record);
         }
-    }
-
-    onOptionalColumnsDropdownOpened() {
-        this.optionalColumnsDropdownRef.el
-            .querySelectorAll(".o-dropdown-item input[type='checkbox']")
-            .forEach((checkbox) => {
-                checkbox.setAttribute("data-available-offline", "");
-            });
     }
 }

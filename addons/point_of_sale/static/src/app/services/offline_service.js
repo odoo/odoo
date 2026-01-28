@@ -21,6 +21,8 @@ patch(offlineService, {
             return {
                 status: {},
                 _checkConnection: () => Promise.resolve(),
+                isAvailableOffline: () => false,
+                scheduledORM: {},
             };
         }
         return super.start(...arguments);

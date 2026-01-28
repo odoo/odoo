@@ -17,15 +17,7 @@ import { CallbackRecorder } from "@web/search/action_hook";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { PATH_KEYS, router as _router } from "@web/core/browser/router";
 
-import {
-    Component,
-    markup,
-    onMounted,
-    onWillUnmount,
-    onError,
-    xml,
-    status,
-} from "@odoo/owl";
+import { Component, markup, onMounted, onWillUnmount, onError, xml, status } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
 import { zip } from "@web/core/utils/arrays";
 import { isHtmlEmpty } from "@web/core/utils/html";
@@ -1236,7 +1228,11 @@ export function makeActionManager(env, router = _router) {
         }
         if (
             env.services.offline.offline &&
-            !env.services.offline.isAvailableOffline(action.id, view.type, action.res_id || false)
+            !env.services.offline.isAvailableOffline(
+                action.id,
+                view.type,
+                options.props?.resId || action.res_id || false
+            )
         ) {
             view =
                 views.find((v) => env.services.offline.isAvailableOffline(action.id, v.type)) ||

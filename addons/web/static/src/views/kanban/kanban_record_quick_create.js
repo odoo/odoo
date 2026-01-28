@@ -5,12 +5,7 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
-import {
-    Component,
-    EventBus,
-    onMounted,
-    onWillStart,
-} from "@odoo/owl";
+import { Component, EventBus, onMounted, onWillStart } from "@odoo/owl";
 import { RPCError } from "@web/core/network/rpc";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { useSetupAction } from "@web/search/action_hook";
@@ -79,6 +74,7 @@ export class KanbanQuickCreateController extends Component {
         super.setup();
 
         this.uiService = useService("ui");
+        this.offlineService = useService("offline");
         this.rootRef = useRef("root");
         this.state = useState({ disabled: false, paddingTop: "8px" });
         this.addDialog = useOwnedDialogs();
@@ -221,7 +217,7 @@ export class KanbanQuickCreateController extends Component {
             return true;
         }
         this.state.disabled = true;
-        const resId = await this.save();
+        const { resId, isValid } = await this.save();
         if (resId) {
             this.props.onValidate(resId, mode);
             if (mode === "add") {
@@ -232,6 +228,9 @@ export class KanbanQuickCreateController extends Component {
             this.state.disabled = false;
             return true;
         } else {
+            if (this.offlineService.offline && isValid) {
+                this.props.quickCreateState.closeQuickCreate();
+            }
             this.state.disabled = false;
             return false;
         }
@@ -239,8 +238,9 @@ export class KanbanQuickCreateController extends Component {
 
     async save() {
         let resId = this.model.root.resId;
+        let isValid = false;
         if (this.useNameCreate) {
-            const isValid = await this.model.root.checkValidity(); // needed to put the class o_field_invalid in the field
+            isValid = await this.model.root.checkValidity(); // needed to put the class o_field_invalid in the field
             if (isValid) {
                 try {
                     [resId] = await this.nameCreate(this.model.root.data.display_name);
@@ -252,13 +252,13 @@ export class KanbanQuickCreateController extends Component {
                 this.model.notification.add(_t("Invalid Display Name"), { type: "danger" });
             }
         } else {
-            await this.model.root.save({
+            isValid = await this.model.root.save({
                 reload: false,
                 onError: (e) => this.showFormDialogInError(e),
             });
             resId = this.model.root.resId;
         }
-        return resId;
+        return { resId, isValid };
     }
 
     nameCreate(name) {
@@ -321,7 +321,13 @@ export class KanbanRecordQuickCreate extends Component {
             });
         });
         useSubEnv({
-            config: getDefaultConfig(),
+            config: {
+                ...getDefaultConfig(),
+                actionId: this.env.config.actionId,
+                actionName: this.env.config.actionName,
+                viewType: "kanban_quick_create",
+                resId: false,
+            },
         });
     }
 

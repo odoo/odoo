@@ -108,6 +108,7 @@
                     class="o_previous btn btn-sm opacity-75 opacity-100-hover"
                     t-on-click="previous"
                     tabindex="-1"
+                    data-available-offline=""
                 >
                     <i class="oi oi-chevron-left" t-att-title="activePrecisionLevel.prevTitle" />
                 </button>
@@ -115,6 +116,7 @@
                     class="o_next btn btn-sm opacity-75 opacity-100-hover"
                     t-on-click="next"
                     tabindex="-1"
+                    data-available-offline=""
                 >
                     <i class="oi oi-chevron-right" t-att-title="activePrecisionLevel.nextTitle" />
                 </button>
@@ -124,6 +126,7 @@
                     t-att-class="{ 'disabled': isLastPrecisionLevel }"
                     t-att-title="!isLastPrecisionLevel and activePrecisionLevel.mainTitle"
                     t-on-click="zoomOut"
+                    data-available-offline=""
                 >
                     <t t-foreach="titles" t-as="title" t-key="title">
                         <strong

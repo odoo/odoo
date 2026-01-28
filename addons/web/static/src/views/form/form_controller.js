@@ -1,4 +1,11 @@
-import { onRendered, useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import {
+    onRendered,
+    useComponent,
+    useLayoutEffect,
+    useRef,
+    useState,
+    useSubEnv,
+} from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
@@ -34,7 +41,6 @@ import { FormCogMenu } from "./form_cog_menu/form_cog_menu";
 import { Component, onError, onMounted, onWillUnmount, status } from "@odoo/owl";
 import { FetchRecordError } from "@web/model/relational_model/errors";
 import { effect } from "@web/core/utils/reactive";
-import { ConnectionLostError } from "@web/core/network/rpc";
 
 const viewRegistry = registry.category("views");
 
@@ -139,6 +145,7 @@ export class FormController extends Component {
         preventEdit: { type: Boolean, optional: true },
         onDiscard: { type: Function, optional: true },
         onSave: { type: Function, optional: true },
+        offlineId: { type: String, optional: true },
     };
     static defaultProps = {
         preventCreate: false,
@@ -376,6 +383,7 @@ export class FormController extends Component {
                 onRecordChanged: this.onRecordChanged.bind(this),
                 onRecordSaved: this.onRecordSaved.bind(this),
                 onWillDisplayOnchangeWarning: this.onWillDisplayOnchangeWarning.bind(this),
+                onRootLoaded: this.onRootLoaded.bind(this),
             },
             useSendBeaconToSaveUrgently: true,
         };
@@ -390,8 +398,19 @@ export class FormController extends Component {
         this.duplicateId = undefined;
     }
 
+    onRootLoaded() {
+        return this.model.root.setOfflineChanges(this.props.offlineId);
+    }
+
     onRecordChanged() {
         this.disableSaveOnVisibilityChange = false;
+    }
+
+    get isNewButtonAvailableOffline() {
+        if (this.offlineService.isAvailableOffline(this.env.config.actionId, "form", false)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -427,9 +446,6 @@ export class FormController extends Component {
     async onWillSaveRecord() {}
 
     async onSaveError(error, { discard, retry }, leaving) {
-        if (error instanceof ConnectionLostError) {
-            return false;
-        }
         const suggestedCompany = error.data?.context?.suggested_company;
         const activeCompanyIds = user.activeCompanies.map((c) => c.id);
         if (
