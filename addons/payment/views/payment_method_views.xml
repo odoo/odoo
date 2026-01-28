@@ -5,7 +5,7 @@
         <field name="name">payment.method.form</field>
         <field name="model">payment.method</field>
         <field name="arch" type="xml">
-            <form string="Payment Method">
+            <form string="Payment Method" create="false">
                 <sheet>
                     <field name="is_primary" invisible="True"/>
                     <field name="image" widget="image" class="oe_avatar"/>
@@ -90,7 +90,7 @@
         <field name="name">payment.method.list</field>
         <field name="model">payment.method</field>
         <field name="arch" type="xml">
-            <list multi_edit="True" decoration-muted="not active">
+            <list multi_edit="True" decoration-muted="not active" create="false">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="active" widget="boolean_toggle"/>
@@ -103,7 +103,7 @@
         <field name="model">payment.method</field>
         <field name="priority">1</field>
         <field name="arch" type="xml">
-            <kanban>
+            <kanban create="false">
                 <templates>
                     <t t-name="card" class="flex-row">
                         <field name="name" class="fw-bolder"/>
