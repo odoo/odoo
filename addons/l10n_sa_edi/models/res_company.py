@@ -1,9 +1,11 @@
 import re
-from odoo import models, fields, _
-from odoo.exceptions import UserError
+
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
+
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
 
 
 class ResCompany(models.Model):
@@ -43,6 +45,48 @@ class ResCompany(models.Model):
         related='partner_id.l10n_sa_additional_identification_scheme', readonly=False)
     l10n_sa_additional_identification_number = fields.Char(
         related='partner_id.l10n_sa_additional_identification_number', readonly=False)
+    l10n_sa_is_vat_group_member = fields.Boolean(
+        compute='_compute_l10n_sa_is_vat_group_member',
+    )
+
+    @api.depends('vat', 'country_id')
+    def _compute_l10n_sa_is_vat_group_member(self):
+        for company in self:
+            # VAT group if 15-digit VAT with 11th digit = '1'
+            vat = re.sub(r'[^0-9]', '', company.vat or '')
+            is_vat_group = company.country_id.code == 'SA' and len(vat) == 15 and vat[10] == '1'
+            company.l10n_sa_is_vat_group_member = is_vat_group
+
+    @api.constrains('vat', 'l10n_sa_additional_identification_scheme', 'l10n_sa_additional_identification_number')
+    def _check_l10n_sa_vat_group_tin(self):
+        """
+        Validate that VAT Group members have proper TIN configuration
+        """
+        for company in self:
+            if not company.l10n_sa_is_vat_group_member:
+                continue
+            if company.l10n_sa_additional_identification_scheme != 'TIN':
+                raise ValidationError(_(
+                    "To comply with ZATCA VAT Group onboarding rules, the Additional Identification Scheme "
+                    "must be set to 'TIN' for VAT Group members (VAT numbers with 11th digit = '1')."
+                ))
+            tin = re.sub(r'[^0-9]', '', company.l10n_sa_additional_identification_number or '')
+            if len(tin) != 10:
+                raise ValidationError(_(
+                    "To comply with ZATCA VAT Group onboarding rules, the Additional Identification Number (TIN) "
+                    "must be exactly 10 digits for VAT Group members."
+                ))
+
+    @api.onchange('vat', 'country_id')
+    def _onchange_l10n_sa_vat_group_scheme(self):
+        """Auto-set identification scheme to TIN for VAT Group members"""
+        if self.l10n_sa_is_vat_group_member:
+            self.l10n_sa_additional_identification_scheme = 'TIN'
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        # Skip VAT group validation during creation to avoid errors with incomplete partner data
+        return super(ResCompany, self.with_context(l10n_sa_skip_vat_group_validation=True)).create(vals_list)
 
     def write(self, vals):
         for company in self:
@@ -52,7 +96,8 @@ class ResCompany(models.Model):
                 journals = self.env['account.journal'].search(self.env['account.journal']._check_company_domain(company))
                 journals._l10n_sa_reset_certificates()
                 journals.l10n_sa_latest_submission_hash = False
-        return super().write(vals)
+        # Skip VAT group validation during write to avoid errors with incomplete partner data
+        return super(ResCompany, self.with_context(l10n_sa_skip_vat_group_validation=True)).write(vals)
 
     def _get_company_address_field_names(self):
         """ Override to add ZATCA specific address fields """
