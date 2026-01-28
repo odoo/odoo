@@ -11,13 +11,14 @@
             <field name="use_default_to" eval="True"/>
             <field name="description">Invitation email to new attendees</field>
             <field name="body_html" type="html">
-<div style="font-size: 13px; color: #374151;">
+<div style="font-size: 13px; color: #374151;" class="o-email-darkmode-text">
+    <t t-call="mail.mail_darkmode_style" />
     <t t-set="customer" t-value=" object.event_id.find_partner_customer()"/>
     <t t-set="target_responsible" t-value="object.partner_id == object.event_id.partner_id"/>
     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')"/>
     <t t-set="is_online" t-value="'appointment_type_id' in object.event_id and object.event_id.appointment_type_id"/>
 
-    <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
+    <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;" class="o-email-darkmode-text">
         Invitation
     </h1>
     <p style="margin: 0;">
@@ -49,10 +50,10 @@
     </div>
     <div style="margin: 16px 0 0;">
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Details</h2>
-        <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #374151;">
+        <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #374151;" class="o-email-darkmode-text">
             <tr>
-                <td style="width: 100px; color: #676F7B;">Date &amp; Time</td>
-                <td style="font-weight: bold;">
+                <td style="width: 100px; color: #676F7B;" class="o-email-darkmode-text">Date &amp; Time</td>
+                <td style="font-weight: bold;" class="o-email-darkmode-text">
                     <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''">Tuesday</t>
                     <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''">4</t>
                     <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''">May 2021</t>
@@ -67,22 +68,22 @@
                 </td>
             </tr>
             <tr t-if="recurrent">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B;">When</td>
-                <td style="padding-top: 6px;"><t t-out="object.recurrence_id.get_recurrence_name() or ''">Every 1 Weeks, for 3 events</t></td>
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;" class="o-email-darkmode-text">When</td>
+                <td style="padding-top: 6px;" class="o-email-darkmode-text"><t t-out="object.recurrence_id.get_recurrence_name() or ''">Every 1 Weeks, for 3 events</t></td>
             </tr>
             <tr t-if="not object.event_id.allday and object.event_id.duration">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B;">Duration</td>
-                <td style="padding-top: 6px;"><t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></td>
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;" class="o-email-darkmode-text">Duration</td>
+                <td style="padding-top: 6px;" class="o-email-darkmode-text"><t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></td>
             </tr>
             <tr t-if="object.event_id.location">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B; vertical-align: top;">Location</td>
-                <td style="padding-top: 6px;">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B; vertical-align: top;" class="o-email-darkmode-text">Location</td>
+                <td style="padding-top: 6px;" class="o-email-darkmode-text">
                     <t t-out="object.event_id.location or ''">Bruxelles</t>
                     <a target="_blank" t-if="not is_online or is_online and object.event_id.location != object.event_id.appointment_type_id.location_id.name" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}" style="margin-left: 12px; font-size: 12px; color: #008f8c; text-decoration: underline;">View Map</a>
                 </td>
             </tr>
             <tr t-if="object.event_id.videocall_location">
-                <td style="width: 100px; padding-top: 6px;color: #676F7B;">
+                <td style="width: 100px; padding-top: 6px;color: #676F7B;" class="o-email-darkmode-text">
                     <t t-if="object.get_base_url() in object.event_id.videocall_location">Join with</t>
                     <t t-else="">Join</t>
                 </td>
@@ -136,7 +137,7 @@
             <field name="use_default_to" eval="True"/>
             <field name="description">Sent to all attendees if the schedule change</field>
             <field name="body_html" type="html">
-<div style="font-size: 13px; color: #374151;">
+<div style="font-size: 13px; color: #374151;" class="o-email-darkmode-text">
 
     <t t-set="is_online" t-value="'appointment_type_id' in object.event_id and object.event_id.appointment_type_id"/>
     <t t-set="customer" t-value="object.event_id.find_partner_customer()"/>
@@ -145,7 +146,7 @@
     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')"/>
     <t t-set="organizer" t-value="object.event_id.user_id"/>
 
-    <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
+    <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;" class="o-email-darkmode-text">
         Date Updated
         <img src="/calendar/static/src/img/sync.png" style="border:0; width: 24px; height: 24px; margin-left: 10px; text-decoration:none; vertical-align: bottom;" />
     </h1>
@@ -183,10 +184,10 @@
     </div>
     <div style="margin: 16px 0 0;">
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Details</h2>
-        <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #374151;">
+        <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #374151;" class="o-email-darkmode-text">
 		    <tr>
-                <td style="width: 100px; color: #676F7B;">Date &amp; Time</td>
-                <td style="font-weight: bold;">
+                <td style="width: 100px; color: #676F7B;" class="o-email-darkmode-text">Date &amp; Time</td>
+                <td style="font-weight: bold;" class="o-email-darkmode-text">
                     <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''">Tuesday</t>
                     <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''">4</t>
                     <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''">May 2021</t>
@@ -201,26 +202,26 @@
                 </td>
             </tr>
             <tr t-if="recurrent">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B;">When</td>
-                <td style="padding-top: 6px;"><t t-out="object.recurrence_id.get_recurrence_name() or ''">Every 1 Weeks, for 3 events</t></td>
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;" class="o-email-darkmode-text">When</td>
+                <td style="padding-top: 6px;" class="o-email-darkmode-text"><t t-out="object.recurrence_id.get_recurrence_name() or ''">Every 1 Weeks, for 3 events</t></td>
             </tr>
             <tr t-if="not object.event_id.allday and object.event_id.duration">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B;">Duration</td>
-                <td style="padding-top: 6px;"><t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></td>
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;" class="o-email-darkmode-text">Duration</td>
+                <td style="padding-top: 6px;" class="o-email-darkmode-text"><t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t></td>
             </tr>
             <tr t-if="object.event_id.location">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B; vertical-align: top;">Location</td>
-                <td style="padding-top: 6px;">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B; vertical-align: top;" class="o-email-darkmode-text">Location</td>
+                <td style="padding-top: 6px;" class="o-email-darkmode-text">
                     <t t-out="object.event_id.location or ''">Bruxelles</t>
                     <a target="_blank" t-if="not is_online or is_online and object.event_id.location != object.event_id.appointment_type_id.location_id.name" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}" style="margin-left: 12px; font-size: 12px; color: #008f8c; text-decoration: underline;">View Map</a>
                 </td>
             </tr>
             <tr t-if="object.event_id.videocall_location">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B;">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;" class="o-email-darkmode-text">
                     <t t-if="object.event_id.videocall_source == 'discuss'">Join with</t>
                     <t t-else="">Join</t>
                 </td>
-                <td style="padding-top: 6px;">
+                <td style="padding-top: 6px;" class="o-email-darkmode-text">
                     <a t-attf-href="object.event_id.videocall_location" target="_blank" style="color: #008f8c;">
                         <t t-if="object.event_id.videocall_source == 'discuss'">Odoo Discuss</t>
                         <t t-else="">Video meeting</t>
@@ -270,10 +271,10 @@
             <field name="use_default_to" eval="True"/>
             <field name="description">Sent to all attendees if a reminder is set</field>
             <field name="body_html" type="html">
-<div style="font-size: 13px; color: #374151;">
+<div style="font-size: 13px; color: #374151;" class="o-email-darkmode-text">
     <t t-set="is_online" t-value="'appointment_type_id' in object.event_id and object.event_id.appointment_type_id" />
     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')" />
-    <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
+    <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;" class="o-email-darkmode-text">
         Reminder
         <img src="/calendar/static/src/img/bell.png" style="border:0; width: 21px; height: 24px; margin-left: 10px; text-decoration:none; vertical-align: bottom;" />
     </h1>
@@ -294,10 +295,10 @@
     </div>
     <div style="margin: 16px 0 0;">
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Details</h2>
-        <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #374151;">
+        <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #374151;" class="o-email-darkmode-text">
             <tr>
-                <td style="width: 100px; color: #676F7B;">Date &amp; Time</td>
-                <td style="font-weight: bold;">
+                <td style="width: 100px; color: #676F7B;" class="o-email-darkmode-text">Date &amp; Time</td>
+                <td style="font-weight: bold;" class="o-email-darkmode-text">
                     <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''">Tuesday</t>
                     <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''">4</t>
                     <t t-out="format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''">May 2021</t>
@@ -312,26 +313,26 @@
                 </td>
             </tr>
             <tr t-if="recurrent">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B;">When</td>
-                <td style="padding-top: 6px;">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;" class="o-email-darkmode-text">When</td>
+                <td style="padding-top: 6px;" class="o-email-darkmode-text">
                     <t t-out="object.recurrence_id.get_recurrence_name() or ''">Every 1 Weeks, for 3 events</t>
                 </td>
             </tr>
             <tr t-if="not object.event_id.allday and object.event_id.duration">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B;">Duration</td>
-                <td style="padding-top: 6px;">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;" class="o-email-darkmode-text">Duration</td>
+                <td style="padding-top: 6px;" class="o-email-darkmode-text">
                     <t t-out="('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''">0H30</t>
                 </td>
             </tr>
             <tr t-if="object.event_id.location">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B; vertical-align: top;">Location</td>
-                <td style="padding-top: 6px;">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B; vertical-align: top;" class="o-email-darkmode-text">Location</td>
+                <td style="padding-top: 6px;" class="o-email-darkmode-text">
                     <t t-out="object.event_id.location or ''">Bruxelles</t>
                     <a target="_blank" t-if="not is_online or is_online and object.event_id.location != object.event_id.appointment_type_id.location_id.name" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}" style="margin-left: 12px; font-size: 12px; color: #008f8c; text-decoration: underline;">View Map</a>
                 </td>
             </tr>
             <tr t-if="object.event_id.videocall_location">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B;">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;" class="o-email-darkmode-text">
                     <t t-if="object.get_base_url() in object.event_id.videocall_location">Join with</t>
                     <t t-else="">Join</t>
                 </td>
@@ -384,11 +385,11 @@
             <field name="use_default_to" eval="True"/>
             <field name="description">Used to manually notify attendees</field>
             <field name="body_html" type="html">
-<div style="font-size: 13px; color: #374151;">
+<div style="font-size: 13px; color: #374151;" class="o-email-darkmode-text">
     <t t-set="is_online" t-value="'appointment_type_id' in object and object.appointment_type_id" />
     <t t-set="recurrent" t-value="object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')" />
     <t t-set="mail_tz" t-value="object._get_mail_tz() or ctx.get('mail_tz')" />
-    <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
+    <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;" class="o-email-darkmode-text">
         Event updated
         <img src="/calendar/static/src/img/sync.png" style="border:0; width: 24px; height: 24px; margin-left: 10px; text-decoration:none; vertical-align: bottom;" />
     </h1>
@@ -398,10 +399,10 @@
     </p>
     <div style="margin: 32px 0 0;">
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Details</h2>
-        <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #374151;">
+        <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #374151;" class="o-email-darkmode-text">
             <tr>
-                <td style="width: 100px; color: #676F7B;">Date &amp; Time</td>
-                <td style="font-weight: bold;">
+                <td style="width: 100px; color: #676F7B;" class="o-email-darkmode-text">Date &amp; Time</td>
+                <td style="font-weight: bold;" class="o-email-darkmode-text">
                     <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang)">Tuesday</t>
                     <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)">4</t>
                     <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)">May 2021</t>
@@ -416,22 +417,22 @@
                 </td>
             </tr>
             <tr t-if="recurrent">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B;">When</td>
-                <td style="padding-top: 6px;"><t t-out="object.recurrence_id.get_recurrence_name() or ''">Every 1 Weeks, for 3 events</t></td>
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;" class="o-email-darkmode-text">When</td>
+                <td style="padding-top: 6px;" class="o-email-darkmode-text"><t t-out="object.recurrence_id.get_recurrence_name() or ''">Every 1 Weeks, for 3 events</t></td>
             </tr>
             <tr t-if="not object.allday and object.duration">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B;">Duration</td>
-                <td style="padding-top: 6px;"><t t-out="('%dH%02d' % (object.duration,round(object.duration*60)%60))">0H30</t></td>
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;" class="o-email-darkmode-text">Duration</td>
+                <td style="padding-top: 6px;" class="o-email-darkmode-text"><t t-out="('%dH%02d' % (object.duration,round(object.duration*60)%60))">0H30</t></td>
             </tr>
             <tr t-if="object.location">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B;">Location</td>
-                <td style="padding-top: 6px;">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;" class="o-email-darkmode-text">Location</td>
+                <td style="padding-top: 6px;" class="o-email-darkmode-text">
                     <t t-out="object.location or ''">Bruxelles</t>
                     <a target="_blank" t-if="not is_online or is_online and object.location != object.appointment_type_id.location_id.name" t-attf-href="http://maps.google.com/maps?oi=map&amp;q={{object.location}}" style="margin-left: 12px; font-size: 12px; color: #008f8c; text-decoration: underline;">View Map</a>
                 </td>
             </tr>
             <tr t-if="object.videocall_location">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B;">
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;" class="o-email-darkmode-text">
                     <t t-if="object.videocall_source == 'discuss'">Join with</t>
                     <t t-else="">Join</t>
                 </td>
@@ -483,11 +484,11 @@
             <field name="use_default_to" eval="True"/>
             <field name="description">Used to manually notify attendees</field>
             <field name="body_html" type="html">
-<div style="font-size: 13px; color: #374151;">
+<div style="font-size: 13px; color: #374151;" class="o-email-darkmode-text">
     <t t-set="mail_tz" t-value="object._get_mail_tz() or ctx.get('mail_tz')" />
     <t t-set="event_name" t-value="object.name or ''"/>
     <t t-set="event_organizer" t-value="object.user_id.name or ''"/>
-    <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;">
+    <h1 style="font-size: 18px; font-weight: bold; color: #374151; margin-bottom: 28px;" class="o-email-darkmode-text">
         Event canceled
         <img src="/calendar/static/src/img/times-circle.png" style="border:0; width: 24px; height: 24px; margin-left: 10px; text-decoration:none; vertical-align: bottom;" />
     </h1>
@@ -499,10 +500,10 @@
     </p>
     <div style="margin: 32px 0 0;">
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Details</h2>
-        <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #374151;">
+        <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #374151;" class="o-email-darkmode-text">
             <tr>
-                <td style="width: 100px; color: #676F7B;">Date &amp; Time</td>
-                <td style="font-weight: bold;">
+                <td style="width: 100px; color: #676F7B;" class="o-email-darkmode-text">Date &amp; Time</td>
+                <td style="font-weight: bold;" class="o-email-darkmode-text">
                     <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang)">Tuesday</t>
                     <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)">4</t>
                     <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)">May 2021</t>
@@ -517,12 +518,12 @@
                 </td>
             </tr>
             <tr t-if="not object.allday and object.duration">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B;">Duration</td>
-                <td style="padding-top: 6px;"><t t-out="('%dH%02d' % (object.duration,round(object.duration*60)%60))">0H30</t></td>
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;" class="o-email-darkmode-text">Duration</td>
+                <td style="padding-top: 6px;" class="o-email-darkmode-text"><t t-out="('%dH%02d' % (object.duration,round(object.duration*60)%60))">0H30</t></td>
             </tr>
             <tr t-if="object.location">
-                <td style="width: 100px; padding-top: 6px; color: #676F7B;">Location</td>
-                <td style="padding-top: 6px;"><t t-out="object.location or ''">Bruxelles</t></td>
+                <td style="width: 100px; padding-top: 6px; color: #676F7B;" class="o-email-darkmode-text">Location</td>
+                <td style="padding-top: 6px;" class="o-email-darkmode-text"><t t-out="object.location or ''">Bruxelles</t></td>
             </tr>
         </table>
     </div>
