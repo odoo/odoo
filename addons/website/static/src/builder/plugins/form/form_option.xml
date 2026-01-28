@@ -239,6 +239,30 @@
     <BuilderRow label.translate="Placeholder" t-if="isActiveItem('otherOption')" level="1">
         <BuilderTextInput dataAttributeAction="'otherOptionPlaceholder'"/>
     </BuilderRow>
+    <BuilderRow label.translate="Character Limit" t-if="isCharacterLimitOptionVisible">
+        <BuilderCheckbox
+            id="'character_limit_opt'"
+            action="'toggleCharacterLimit'"
+            preview="false"
+            applyTo="`input, textarea`"
+        />
+    </BuilderRow>
+    <t t-if="isActiveItem('character_limit_opt')">
+        <BuilderRow label.translate="Min Characters" level="1">
+            <BuilderNumberInput
+                title.translate="The minimum number of characters required."
+                attributeAction="'minlength'"
+                applyTo="`input, textarea`"
+            />
+        </BuilderRow>   
+        <BuilderRow label.translate="Max Characters" level="1">
+            <BuilderNumberInput
+                title.translate="The maximum number of characters allowed."
+                attributeAction="'maxlength'"
+                applyTo="`input, textarea`"
+            />
+        </BuilderRow>
+    </t>
     <BuilderRow label.translate="Requirement"
             t-if="domStateCurrentFieldInput.hasDateTimePicker or domStateCurrentFieldInput.isTextArea or canHaveTextValidationCondition.includes(domStateCurrentFieldInput.type)">
         <BuilderSelect id="'require_condition_email_opt'"

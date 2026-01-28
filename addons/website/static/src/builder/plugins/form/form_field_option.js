@@ -159,6 +159,21 @@ export class FormFieldOption extends BaseOptionComponent {
         );
     }
     /**
+     * Determines the visibility of the character limit checkbox used for
+     * validation.
+     *
+     * @returns {boolean} Whether the character limit option should be visible.
+     */
+    get isCharacterLimitOptionVisible() {
+        return (
+            !this.domStateCurrentFieldInput.hasDateTimePicker &&
+            (this.domStateCurrentFieldInput.isTextArea ||
+                ["text", "email", "tel", "url", "search", "password"].includes(
+                    this.domStateCurrentFieldInput.type
+                ))
+        );
+    }
+    /**
      * Determines the visibility of the builder list input field used for
      * validation.
      *

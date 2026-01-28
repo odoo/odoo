@@ -608,6 +608,24 @@ export class Form extends Interaction {
                 } else if (this.requirementFunction(fieldEl) === false) {
                     this.updateStatusInline(fieldEl.dataset.errorMessage, inputEl);
                     return true;
+                } else if (inputEl.hasAttribute("maxlength") && inputEl.hasAttribute("minlength")) {
+                    const maxChars = parseInt(inputEl.getAttribute("maxlength"));
+                    const minChars = parseInt(inputEl.getAttribute("minlength"));
+                    const valueLength = inputEl.value.length;
+                    if (
+                        valueLength &&
+                        !(minChars > maxChars) &&
+                        (valueLength > maxChars || valueLength < minChars)
+                    ) {
+                        this.updateStatusInline(
+                            _t(
+                                "Value of this field does not lie within character limit.(Max: %(maxChars)s, Min: %(minChars)s)",
+                                { maxChars, minChars }
+                            ),
+                            inputEl
+                        );
+                        return true;
+                    }
                 }
 
                 // Note that checkValidity also takes care of the case where

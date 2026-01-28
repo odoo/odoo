@@ -199,6 +199,68 @@ const formWithRestrictedFieldsTemplate = /* html */ `
     </div>
 `;
 
+const formWithCharacterLimitRuleTemplate = /* html */ `
+    <div id="wrapwrap">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+                <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+                    <div class="s_website_form_rows row s_col_no_bgcolor">
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_dnone">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px">
+                                    <span class="s_website_form_label_content"></span>
+                                </label>
+                                <div class="col-sm">
+                                    <input type="hidden" class="form-control s_website_form_input" name="email_to" value="info@yourcompany.example.com">
+                                    <input type="hidden" value="08db0e335821ca759f38eb45c7c30f283406f390d04dcaec27402bddf24fc29a" class="form-control s_website_form_input s_website_form_custom" name="website_form_signature">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char" data-translated-name="Your Name">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ok0ney2v8rwf">
+                                    <span class="s_website_form_label_content">Your Name</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input" type="text" name="name" required="" value="" placeholder="" id="ok0ney2v8rwf" data-fill-with="name" maxlength="21" minlength="6">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email" data-translated-name="Your Email">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ooas5l5yuhg">
+                                    <span class="s_website_form_label_content">Your Email</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input" type="email" name="email_from" required="" value="" placeholder="" id="ooas5l5yuhg" data-fill-with="email">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="char" data-translated-name="Subject">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="om2bnl7eqv9c">
+                                    <span class="s_website_form_label_content">Subject</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input" type="text" name="subject" required="" value="" placeholder="" id="om2bnl7eqv9c" data-fill-with="undefined">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                            <div style="width: 200px;" class="s_website_form_label"></div>
+                            <span id="s_website_form_result"></span>
+                            <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+`;
+
 function createFileUploadForm(maxFiles = 1) {
     return `
         <div id="wrapwrap">
@@ -864,4 +926,28 @@ test("check multi-input field restrictions on email and text fields.", async () 
     await advanceTime(400);
     await click("a.s_website_form_send");
     checkField(emailEl, true, false);
+});
+
+test("checks character limit on (name) input fields", async () => {
+    const { core } = await startInteractions(formWithCharacterLimitRuleTemplate);
+    expect(core.interactions).toHaveLength(1);
+    const nameEl = queryOne("input[name=name]");
+    // Fill name with a value that doesn't meet the requirement.
+    await click(nameEl);
+    await edit("This name is definitely way too long to be accepted");
+    await advanceTime(400);
+    await click("a.s_website_form_send");
+    checkField(nameEl, true, true);
+    // Fill name with a value that meets the requirement.
+    await click(nameEl);
+    await edit("Between the limit");
+    await advanceTime(400);
+    await click("a.s_website_form_send");
+    checkField(nameEl, true, false);
+    // Fill name with a value that doesn't meet the requirement.
+    await click(nameEl);
+    await edit("short");
+    await advanceTime(400);
+    await click("a.s_website_form_send");
+    checkField(nameEl, true, true);
 });
