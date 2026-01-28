@@ -653,7 +653,7 @@ export class DiscussChannel extends Record {
         const newName = name.trim();
         if (
             newName !== this.displayName &&
-            ((newName && this.channel?.channel_type === "channel") || this.channel?.isChatChannel)
+            ((newName && this.channel_type === "channel") || this.isChatChannel)
         ) {
             if (["channel", "group"].includes(this.channel_type)) {
                 this.name = newName;
