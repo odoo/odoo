@@ -140,7 +140,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         reinit_modules: Collection[str] = (),
         new_db_demo: bool | None = None,
         models_to_check: set[str] | None = None,
-        lock_wait: bool = False,
+        lock_wait: int = 10,
     ) -> Registry:
         """Create and return a new registry for the given database name.
 
@@ -195,7 +195,13 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     exit_stack.push(lambda *a: _cr_registry_loading.reset(reset_cr))
                 if not update_module:
                     # acquire the shared lock
-                    cr.execute("SELECT pg_advisory_xact_lock_shared(hashtext('registry_loading'))")
+                    if lock_wait:
+                        wait_sql = ""
+                        if lock_wait > 0:
+                            cr.execute(f"SET LOCAL lock_timeout = '{int(lock_wait)}s'")
+                    else:
+                        wait_sql = " NOWAIT"
+                    cr.execute("SELECT pg_advisory_xact_lock_shared(hashtext('registry_loading'))" + wait_sql)
                     if db.is_initialized(cr):
                         # check whether module updates are pending
                         cr.execute("SELECT FROM ir_config_parameter WHERE key='base.partially_updated_database'")
