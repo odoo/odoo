@@ -191,7 +191,7 @@
                                     <Numpad class="'pb-2'" buttons="getNumpadButtons()"/>
                                         <ActionpadWidget
                                             partner="getSelectedOrder()?.getPartner()"
-                                            buttonClasses="!getHasItemsToRefund() ? 'disabled' : ''"
+                                            buttonClasses="buttonClasses"
                                             actionName.translate="Refund"
                                             actionToTrigger.bind="onDoRefund"
                                         />
