@@ -283,7 +283,7 @@ export class PosData extends Reactive {
                 if (serverDateTime < lastConfigChange) {
                     await this.resetIndexedDB();
                     await this.initIndexedDB(this.relations);
-                    localData = [];
+                    localData = {};
                 }
 
                 const data = await this.orm.call(
