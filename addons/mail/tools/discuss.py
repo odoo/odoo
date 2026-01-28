@@ -53,9 +53,8 @@ def get_twilio_credentials(env) -> tuple[str | None, str | None]:
 
 def get_sfu_url(env) -> str | None:
     params = env["ir.config_parameter"].sudo()
-    if not params.get_bool("mail.use_call_server") or not params.get_bool("mail.use_sfu_server"):
-        return None
-    sfu_url = params.get_str("mail.sfu_server_url")
+    use_sfu_setting = params.get_bool("mail.use_call_server") and params.get_bool("mail.use_sfu_server")
+    sfu_url = params.get_str("mail.sfu_server_url") if use_sfu_setting else None
     if not sfu_url:
         sfu_url = os.getenv("ODOO_SFU_URL")
     if sfu_url:
