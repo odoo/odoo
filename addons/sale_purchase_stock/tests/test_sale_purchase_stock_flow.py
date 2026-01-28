@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from datetime import timedelta
+
+from odoo import Command, fields
 from odoo.tests.common import TransactionCase, Form
 
 
@@ -244,3 +246,74 @@ class TestSalePurchaseStockFlow(TransactionCase):
         self.assertRecordValues(new_delivery.move_ids, [
             {'product_id': self.mto_product.id, 'product_uom_qty': 1.0},
         ])
+
+    def test_products_availability_with_mto_purchased_product_from_interwarehouse_transfer(self):
+        """
+        Confirmed SOs containing MTO + purchased products supplied from multiple 3-step delivery warehouses
+        create 7 pickings and 1 PO. The deliveries from each warehouse should have consistent forecast dates
+        and be linked to the correct IN and reserved moves.
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        grp_multi_routes = self.env.ref('stock.group_adv_location')
+        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
+
+        # Configure warehouse 1, 3 step delivery
+        wh1 = self.env.ref('stock.warehouse0')
+        wh1.code, wh1.delivery_steps = 'WH1', 'pick_pack_ship'
+        # Create warehouse 2, 3 step delivery and resupplied from WH1
+        wh2 = self.env['stock.warehouse'].create({
+            'name': 'WH2',
+            'code': 'WH2',
+            'delivery_steps': 'pick_pack_ship',
+            'resupply_wh_ids': [(6, 0, [wh1.id])]
+        })
+        # Route WH2: Supply Product from WH1, check Sale Order Line
+        route = self.env['stock.route'].search([('supplied_wh_id', '=', wh2.id), ('supplier_wh_id', '=', wh1.id)])
+        route.sale_selectable = True
+        commitment_date = fields.Date.today() + timedelta(days=10)
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [(0, 0, {
+                'name': self.mto_product.name,
+                'product_id': self.mto_product.id,
+                'product_uom_qty': 3,
+                'product_uom': self.mto_product.uom_id.id,
+                'route_id': route.id,
+            })],
+            'warehouse_id': wh2.id,
+            'picking_policy': 'one',
+            'commitment_date': commitment_date,
+        })
+        sale_order.action_confirm()
+        pickings = sale_order.picking_ids
+
+        # 7 pickings and 1 PO should have been created
+        self.assertEqual(len(sale_order.picking_ids), 7)
+        self.assertEqual(sale_order.purchase_order_count, 1)
+
+        # Confirm PO
+        purchase_order = self.env['purchase.order'].search([('origin', '=', sale_order.display_name)])
+        purchase_order.button_confirm()
+
+        # Both OUTS (WH1 -> WH2 and WH2 -> Customer) products availability should be the commitment date
+        out_pickings = pickings.filtered(lambda p: "OUT" in p.name)
+        wh2_in_picking = pickings.filtered(lambda p: "IN" in p.name)
+        for out in out_pickings:
+            self.assertEqual(out.products_availability, commitment_date.strftime('Exp %m/%d/%Y'))
+
+        # Check forecast report, two lines should have been made
+        report_lines = self.env['stock.forecasted_product_product'].with_context(warehouse=wh2.id).get_report_values(docids=self.mto_product.ids)['docs']['lines']
+        line_1, line_2 = report_lines[0], report_lines[1]
+        self.assertEqual(len(report_lines), 2)
+
+        # Check that line one's in move and reserved move is the WH2/IN, and line two is In Transit move
+        self.assertEqual(
+            [line_1.get('document_in')['name'], line_1.get('document_out')['name'], line_1.get('reservation')['name']],
+            [wh2_in_picking.name, sale_order.name, wh2_in_picking.name]
+        )
+        self.assertEqual(
+            [line_2.get('document_in'), line_2.get('document_out'), line_2.get('in_transit')],
+            [False, False, True]
+        )
