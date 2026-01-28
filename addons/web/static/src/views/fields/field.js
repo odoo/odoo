@@ -16,25 +16,25 @@ const viewRegistry = registry.category("views");
 const fieldRegistry = registry.category("fields");
 
 const validFieldTypes = [
-    "binary",
-    "boolean",
-    "json",
-    "integer",
-    "float",
-    "monetary",
-    "properties",
-    "properties_definition",
-    "reference",
-    "many2one_reference",
-    "many2one",
-    "one2many",
-    "many2many",
-    "selection",
-    "date",
-    "datetime",
-    "char",
-    "text",
-    "html",
+    { type: "binary", availableOffline: false },
+    { type: "boolean", availableOffline: true },
+    { type: "json", availableOffline: true },
+    { type: "integer", availableOffline: true },
+    { type: "float", availableOffline: true },
+    { type: "monetary", availableOffline: false },
+    { type: "properties", availableOffline: false },
+    { type: "properties_definition", availableOffline: false },
+    { type: "reference", availableOffline: false },
+    { type: "many2one_reference", availableOffline: false },
+    { type: "many2one", availableOffline: false },
+    { type: "one2many", availableOffline: false },
+    { type: "many2many", availableOffline: false },
+    { type: "selection", availableOffline: false },
+    { type: "date", availableOffline: true },
+    { type: "datetime", availableOffline: true },
+    { type: "char", availableOffline: true },
+    { type: "text", availableOffline: true },
+    { type: "html", availableOffline: true },
 ];
 
 const supportedInfoValidation = {
@@ -72,7 +72,7 @@ fieldRegistry.addValidation({
         type: Array,
         element: String,
         optional: true,
-        validate: (array) => array.every((x) => validFieldTypes.includes(x)),
+        validate: (array) => array.every((x) => validFieldTypes.find((field) => field.type === x)),
     },
     extractProps: { type: Function, optional: true },
     isEmpty: { type: Function, optional: true },
@@ -411,8 +411,14 @@ export class Field extends Component {
 
     get fieldComponentProps() {
         const record = this.props.record;
-        // disable edition in offline mode
-        let readonly = this.props.readonly || this.offlineService.offline || false;
+        // Disable edition in offline mode, except for a some fields
+        let readonly =
+            this.props.readonly ||
+            (this.offlineService.offline &&
+                !validFieldTypes.find(
+                    (x) => x.type === this.props.record.fields[this.props.name].type
+                ).availableOffline) ||
+            false;
 
         let propsFromNode = {};
         if (this.props.fieldInfo) {

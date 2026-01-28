@@ -98,7 +98,7 @@
     </t>
 
     <t t-name="web.KanbanView.Buttons">
-        <button t-if="!env.inDialog and canCreate" type="button" t-att-disabled="isNewButtonDisabled" class="btn btn-primary o-kanban-button-new" accesskey="c" t-on-click="() => this.createRecord()" data-bounce-button="">
+        <button t-if="!env.inDialog and canCreate" type="button" t-att-disabled="isNewButtonDisabled" class="btn btn-primary o-kanban-button-new" accesskey="c" t-on-click="() => this.createRecord()" data-bounce-button="" t-att-data-available-offline="isNewButtonAvailableOffline">
             New
         </button>
     </t>

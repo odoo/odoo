@@ -100,7 +100,7 @@
     </t>
 
     <t t-name="web.ListView.Buttons">
-        <button t-if="!env.inDialog and !editedRecord and activeActions.create" type="button" class="btn btn-primary o_list_button_add" data-hotkey="c" t-on-click="onClickCreate" data-bounce-button="">
+        <button t-if="!env.inDialog and !editedRecord and activeActions.create" type="button" class="btn btn-primary o_list_button_add" t-att-data-available-offline="isNewButtonAvailableOffline" data-hotkey="c" t-on-click="onClickCreate" data-bounce-button="">
             New
         </button>
         <button t-if="editedRecord" type="button" class="btn btn-primary o_list_button_save" data-hotkey="s" t-on-click.stop="onClickSave">
