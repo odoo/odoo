@@ -805,3 +805,6 @@ class TestUi(HttpCaseWithWebsiteUser):
             snippet_key='s_button',
             template_key='website.snippets')
         self.start_tour('/', 'adapt_custom_button_on_drop', login='admin')
+
+    def test_cta_mockups_shape_color_option(self):
+        self.start_tour('/', 'cta_mockups_shape_color_option', login='admin')
