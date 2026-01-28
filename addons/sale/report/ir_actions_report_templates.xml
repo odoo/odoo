@@ -12,9 +12,10 @@
                 <t t-else="">Tax ID</t>: <span t-field="doc.partner_id.vat"/>
             </p>
         </t>
-        <t t-if="doc.partner_shipping_id == doc.partner_invoice_id
+        <t t-if="env.user.has_group('account.group_delivery_invoice_address')
+                             and (doc.partner_shipping_id == doc.partner_invoice_id
                              and doc.partner_invoice_id != doc.partner_id
-                             or doc.partner_shipping_id != doc.partner_invoice_id">
+                             or doc.partner_shipping_id != doc.partner_invoice_id)">
             <t t-set="information_block">
                 <strong>
                     <t t-if="doc.partner_shipping_id == doc.partner_invoice_id">

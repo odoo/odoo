@@ -458,7 +458,8 @@
                 <!-- ======  Customer Information  ====== -->
                 <div id="customer_info" class="col-12 col-lg-6 mb-4">
                     <h4 class="mb-1">
-                        <t t-if="sale_order.partner_shipping_id == sale_order.partner_invoice_id">
+                        <t t-if="not env.user.has_group('account.group_delivery_invoice_address')
+                                 or sale_order.partner_shipping_id == sale_order.partner_invoice_id">
                             Invoicing and Shipping Address
                         </t>
                         <t t-else="">
@@ -472,7 +473,8 @@
                     </h4>
                     <hr class="mt-1 mb-2"/>
                     <div t-field="sale_order.partner_invoice_id" t-options="{'widget': 'contact', 'fields': ['name', 'address', 'phone', 'email']}"/>
-                    <span t-if="sale_order.partner_shipping_id != sale_order.partner_invoice_id"
+                    <span t-if="env.user.has_group('account.group_delivery_invoice_address')
+                                and sale_order.partner_shipping_id != sale_order.partner_invoice_id"
                             id="shipping_address"
                             class="col-lg-6">
                         <br/>
