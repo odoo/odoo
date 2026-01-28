@@ -499,7 +499,7 @@ class ResourceCalendar(models.Model):
         # for the computation, express all datetimes in UTC
         # Public leave don't have a resource_id
         domain = domain + [
-            ('resource_id', 'in', [r.id for r in resources_list]),
+            ('resource_id', 'in', [False] + [r.id for r in resources_list]),
             ('date_from', '<=', end_dt.astimezone(utc).replace(tzinfo=None)),
             ('date_to', '>=', start_dt.astimezone(utc).replace(tzinfo=None)),
         ]
