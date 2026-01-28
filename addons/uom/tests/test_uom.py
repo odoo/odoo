@@ -36,3 +36,15 @@ class TestUom(UomCommon):
 
         qty = self.uom_unit._compute_quantity(2, product_uom)
         self.assertEqual(qty, 1, "Converted quantity should be rounded up.")
+
+    def test_30_quantity(self):
+        """ _check_qty rounds the available quantity of a product. To prevent rounding issue,
+        there should be no rounding if the product uom is the same as the package uom.
+        """
+        uom = self.uom_unit
+        quantity = 22.43
+        rounding_method = 'DOWN'
+
+        result = self.uom_unit._check_qty(quantity, uom, rounding_method)
+
+        self.assertEqual(result, quantity, 'Quantity should not be rounded.')
