@@ -488,6 +488,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             attributes = ProductAttribute.browse(attribute_ids).sorted()
 
+        # Filter attribute values based on products
+        filtered_attribute_value_ids = {}
+        products_attribute_value_ids = search_product.attribute_line_ids.value_ids.ids
+        for attribute in attributes:
+            filtered_attribute_value_ids[attribute.id] = attribute.value_ids.filtered(
+                lambda pav: pav.id in products_attribute_value_ids
+            )
+
         products_prices = products._get_sales_prices(website)
         product_query_params = self._get_product_query_params(**post)
 
@@ -525,6 +533,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'previewed_attribute_values': lazy(
                 lambda: products._get_previewed_attribute_values(category, product_query_params),
             ),
+            'filtered_attribute_value_ids': filtered_attribute_value_ids,
         }
         if filter_by_price_enabled:
             values['min_price'] = min_price or available_min_price
