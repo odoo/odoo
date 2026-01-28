@@ -81,6 +81,7 @@ const formatErrorMsg =
 registerWebsitePreviewTour(
     "test_image_upload_progress",
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         url: "/test_image_progress",
         edition: true,
     },
@@ -244,6 +245,9 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "test_image_upload_progress_unsplash",
     {
+        // Remove this key to get warning should not have any "characterData", "remove"
+        // or "add" mutations in current step when you update the selection
+        undeterministicTour_doNotCopy: true,
         url: "/test_image_progress",
         edition: true,
     },

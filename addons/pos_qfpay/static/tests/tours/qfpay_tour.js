@@ -48,6 +48,7 @@ patch(QFPay.prototype, {
 let paymentUuid = "";
 
 registry.category("web_tour.tours").add("qfpay_order_and_refund", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             // Refund have to be made on the same day before 23:00 HKT.

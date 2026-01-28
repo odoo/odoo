@@ -5,6 +5,9 @@ import { clickOnSave, clickOnEditAndWaitEditMode, registerWebsitePreviewTour } f
 registerWebsitePreviewTour(
     'website_sale.category_page_and_products_snippet_edition',
     {
+        // Remove this key to get warning should not have any "characterData", "remove"
+        // or "add" mutations in current step when you update the selection
+        undeterministicTour_doNotCopy: true,
         url: '/shop',
     },
     () => [

@@ -40,6 +40,7 @@ export function assertTaxTotals(baseAmount, taxAmount, totalAmount) {
 }
 
 registry.category("web_tour.tours").add("test_point_of_sale_custom_tax_with_extra_product_field", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),

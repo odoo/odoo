@@ -26,6 +26,7 @@ const mediumValue = 'Super Specific Medium';
 const sourceValue = 'Super Specific Source';
 
 registry.category("web_tour.tours").add('website_links_tour', {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     url: '/r',
     steps: () => [
         // 1. Create a tracked URL

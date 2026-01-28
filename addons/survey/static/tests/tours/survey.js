@@ -93,6 +93,7 @@ registry.category("web_tour.tours").add("test_survey", {
 });
 
 registry.category("web_tour.tours").add("test_survey_multilang", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     url: "/survey/start/b137640d-14d4-4748-9ef6-344caaaaaae",
     steps: () => {
         return [

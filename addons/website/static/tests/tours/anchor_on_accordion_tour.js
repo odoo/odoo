@@ -11,6 +11,8 @@ import { registry } from "@web/core/registry";
 registerWebsitePreviewTour(
     "anchor_behaviour_on_accordion_same_tab",
     {
+        // should not have any "characterData", "remove" or "add" mutations in current step when you update the selection
+        undeterministicTour_doNotCopy: true,
         edition: true,
         url: "/",
     },
@@ -77,6 +79,8 @@ registerWebsitePreviewTour(
 );
 
 registry.category("web_tour.tours").add("anchor_behaviour_on_accordion_new_tab", {
+    // should not have any "characterData", "remove" or "add" mutations in current step when you update the selection
+    undeterministicTour_doNotCopy: true,
     url: "/#What-services-does-your-company-offer-%3F",
     steps: () => [
         {

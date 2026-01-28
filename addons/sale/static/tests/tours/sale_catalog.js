@@ -2,6 +2,7 @@ import { addSectionFromProductCatalog, showProductColumn } from "@account/js/tou
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('sale_catalog', {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             content: "Create a new SO",

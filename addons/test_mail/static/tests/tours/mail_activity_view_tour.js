@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 
-const setPager = value => [
+const setPager = (value) => [
     {
         content: "Click Pager",
         trigger: ".o_pager_value:first()",
@@ -14,27 +14,27 @@ const setPager = value => [
     {
         trigger: `.o_pager_value:contains('${value}')`,
     },
-]
+];
 
-
-const checkRows = values => {
-    return {
-        trigger: '.o_activity_view',
-        run: () => {
-            const dataRow = document.querySelectorAll('.o_activity_view tbody .o_data_row .o_activity_record');
-            if (dataRow.length !== values.length) {
-                throw Error(`There should be ${values.length} activities`);
-            }
-            values.forEach((value, index) => {
-                if (dataRow[index].textContent !== value) {
-                    throw Error(`Record does not match ${value} != ${dataRow[index]}`);
-                }
-            });
+const checkRows = (values) => ({
+    trigger: ".o_activity_view",
+    run: () => {
+        const dataRow = document.querySelectorAll(
+            ".o_activity_view tbody .o_data_row .o_activity_record"
+        );
+        if (dataRow.length !== values.length) {
+            throw Error(`There should be ${values.length} activities`);
         }
-    }
-}
+        values.forEach((value, index) => {
+            if (dataRow[index].textContent !== value) {
+                throw Error(`Record does not match ${value} != ${dataRow[index]}`);
+            }
+        });
+    },
+});
 
 registry.category("web_tour.tours").add("mail_activity_view", {
+    undeterministicTour_doNotCopy: true,
     steps: () => [
         {
             content: "Open the debug menu",
@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add("mail_activity_view", {
         },
         {
             trigger: ".o_searchview_input",
-            run: "edit Test Activity View"
+            run: "edit Test Activity View",
         },
         {
             trigger: ".o_searchview_autocomplete .o-dropdown-item.focus",
@@ -66,4 +66,4 @@ registry.category("web_tour.tours").add("mail_activity_view", {
         ...setPager("3"),
         checkRows(["Task 1"]),
     ],
-})
+});

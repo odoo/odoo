@@ -55,6 +55,9 @@ function checkEyesIconAfterSave(footerIsHidden = true) {
 registerWebsitePreviewTour(
     "conditional_visibility_1",
     {
+        // Remove this key to get warning should not have any "characterData", "remove"
+        // or "add" mutations in current step when you update the selection
+        undeterministicTour_doNotCopy: true,
         edition: true,
         url: "/",
     },
@@ -115,6 +118,9 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "conditional_visibility_3",
     {
+        // Remove this key to get warning should not have any "characterData", "remove"
+        // or "add" mutations in current step when you update the selection
+        undeterministicTour_doNotCopy: true,
         edition: true,
         url: "/",
     },
@@ -175,6 +181,9 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "conditional_visibility_4",
     {
+        // Remove this key to get warning should not have any "characterData", "remove"
+        // or "add" mutations in current step when you update the selection
+        undeterministicTour_doNotCopy: true,
         edition: true,
         url: "/",
     },
@@ -218,6 +227,7 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "conditional_visibility_5",
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
         url: "/",
     },
