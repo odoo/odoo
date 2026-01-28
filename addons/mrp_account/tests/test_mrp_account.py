@@ -159,6 +159,11 @@ class TestMrpAccount(TestBomPriceCommon):
         self.assertEqual(productB_debit_line.account_id, self.account_stock_valuation)
         self.assertEqual(productB_credit_line.account_id, self.account_production)
 
+    def test_mrp_user_without_account_permissions_can_create_bom(self):
+        mrp_user = new_test_user(self.env, 'temp_mrp_user', 'mrp.group_mrp_user')
+        mo_1 = self._create_mo(self.bom_1, 1)
+        mo_1.with_user(mrp_user).button_mark_done()
+
 
 class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
 
