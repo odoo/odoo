@@ -270,6 +270,33 @@
     <BuilderRow label.translate="Placeholder" t-if="this.isActiveItem('otherOption')" level="1">
         <BuilderTextInput dataAttributeAction="'otherOptionPlaceholder'"/>
     </BuilderRow>
+    <t t-if="this.isTextField">
+        <BuilderRow label.translate="Character Limit">
+            <BuilderCheckbox
+                id="'character_limit_opt'"
+                action="'toggleCharacterLimit'"
+                applyTo="`input, textarea`"
+            />
+        </BuilderRow>
+        <t t-if="this.isActiveItem('character_limit_opt')">
+            <BuilderRow label.translate="Min Characters" level="1">
+                <BuilderNumberInput
+                    title.translate="The minimum number of characters required."
+                    attributeAction="'minlength'"
+                    max="this.domStateCurrentFieldInput.maxLength"
+                    applyTo="`input, textarea`"
+                />
+            </BuilderRow>   
+            <BuilderRow label.translate="Max Characters" level="1">
+                <BuilderNumberInput
+                    title.translate="The maximum number of characters allowed."
+                    attributeAction="'maxlength'"
+                    min="this.domStateCurrentFieldInput.minLength"
+                    applyTo="`input, textarea`"
+                />
+            </BuilderRow>
+        </t>
+    </t>
     <BuilderRow label.translate="Requirement"
             t-if="this.domStateCurrentFieldInput.hasDateTimePicker or this.domStateCurrentFieldInput.isTextArea or this.canHaveTextValidationCondition.includes(this.domStateCurrentFieldInput.type)">
         <BuilderSelect id="'require_condition_text_opt'"

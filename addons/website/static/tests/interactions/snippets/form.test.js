@@ -164,6 +164,35 @@ const formWithRestrictedFieldsTemplate = /* html */ `
     </div>
 `;
 
+const formWithCharacterLimitRuleTemplate = /* html */ `
+    <div id="wrapwrap">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+                <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+                    <div class="s_website_form_rows row s_col_no_bgcolor">
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char" data-translated-name="Your Name">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ok0ney2v8rwf">
+                                    <span class="s_website_form_label_content">Your Name</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input" type="text" name="name" required="" value="" placeholder="" id="ok0ney2v8rwf" data-fill-with="name" maxlength="21" minlength="6">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                            <div style="width: 200px;" class="s_website_form_label"></div>
+                            <span id="s_website_form_result"></span>
+                            <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+`;
+
 function createFileUploadForm(maxFiles = 1) {
     return `
         <div id="wrapwrap">
@@ -811,4 +840,19 @@ test("check multi value restrictions on email and text fields.", async () => {
     // Fill email with a value that meets the requirement.
     await fillAndSubmitForm(emailEl, "example@icloUd.com"); // 'U' to check case insensitivity.
     checkField(emailEl, true, false);
+});
+
+test("checks character limit on (name) input fields", async () => {
+    const { core } = await startInteractions(formWithCharacterLimitRuleTemplate);
+    expect(core.interactions).toHaveLength(1);
+    const nameEl = queryOne("input[name=name]");
+    // Fill name with a value that doesn't meet the requirement.
+    await fillAndSubmitForm(nameEl, "This name is definitely way too long to be accepted");
+    checkField(nameEl, true, true);
+    // Fill name with a value that meets the requirement.
+    await fillAndSubmitForm(nameEl, "Between the limit");
+    checkField(nameEl, true, false);
+    // Fill name with a value that doesn't meet the requirement.
+    await fillAndSubmitForm(nameEl, "short");
+    checkField(nameEl, true, true);
 });

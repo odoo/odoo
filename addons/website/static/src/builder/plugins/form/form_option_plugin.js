@@ -175,6 +175,7 @@ export class FormOptionPlugin extends Plugin {
             ToggleAllowEmptyAction,
             SetEmptyPlaceholderAction,
             ToggleCheckboxLabel,
+            ToggleCharacterLimitAction,
         },
         content_not_editable_selectors: ".s_website_form form",
         content_editable_selectors: [
@@ -1521,6 +1522,26 @@ export class SetDefaultErrorMessageAction extends BuilderAction {
             between,
             type
         );
+    }
+}
+/**
+ * Toggles the character limit on input fields.
+ */
+export class ToggleCharacterLimitAction extends BuilderAction {
+    static id = "toggleCharacterLimit";
+    setup() {
+        this.preview = false;
+    }
+    apply({ editingElement: inputEl }) {
+        inputEl.setAttribute("maxlength", 100);
+        inputEl.setAttribute("minlength", 0);
+    }
+    clean({ editingElement: inputEl }) {
+        inputEl.removeAttribute("maxlength");
+        inputEl.removeAttribute("minlength");
+    }
+    isApplied({ editingElement: inputEl, params: { mainParam: activeValue } }) {
+        return inputEl.hasAttribute("maxlength") && inputEl.hasAttribute("minlength");
     }
 }
 

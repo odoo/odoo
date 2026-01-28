@@ -99,6 +99,8 @@ export class FormFieldOption extends BaseOptionComponent {
                 isFormDateTime: !!currentFieldInputEl.closest(".s_website_form_datetime"),
                 hasDateTimePicker: currentFieldInputEl.classList.contains("datetimepicker-input"),
                 isTextArea: currentFieldInputEl.nodeName === "TEXTAREA",
+                minLength: currentFieldInputEl.minLength,
+                maxLength: currentFieldInputEl.maxLength,
             };
         });
 
@@ -191,8 +193,16 @@ export class FormFieldOption extends BaseOptionComponent {
      */
     get isMultipleTextConditionForRequirementOptionVisible() {
         const el = this.env.getEditingElement();
+        return el.dataset.requirementComparator && this.isTextField;
+    }
+    /**
+     * Determines the visibility of the character limit checkbox used for
+     * validation.
+     *
+     * @returns {boolean} Whether the character limit option should be visible.
+     */
+    get isTextField() {
         return (
-            el.dataset.requirementComparator &&
             !this.domStateCurrentFieldInput.hasDateTimePicker &&
             (this.domStateCurrentFieldInput.isTextArea ||
                 ["text", "email", "tel", "url", "search", "password"].includes(
