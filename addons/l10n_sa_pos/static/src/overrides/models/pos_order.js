@@ -24,21 +24,12 @@ patch(PosOrder.prototype, {
         return false;
     },
     /**
-     * If the order is empty (there are no products)
-     * and all "pay_later" payments are negative,
-     * we are settling a customer's account.
      * If the module pos_settle_due is not installed,
-     * the function always returns false (since "pay_later" doesn't exist)
-     * @returns {boolean} true if the current order is a settlement, else false
+     * the function always returns false (since "isAnySettleLine" doesn't exist)
+     * @returns {boolean} true if the current order is a settlement or deposit, else false
      */
     is_settlement() {
-        return (
-            this.isEmpty() &&
-            !!this.payment_ids.filter(
-                (paymentline) =>
-                    paymentline.payment_method_id.type === "pay_later" && paymentline.amount < 0
-            ).length
-        );
+        return this.lines.some((line) => line.isAnySettleLine?.());
     },
 
     compute_sa_qr_code(name, vat, date_isostring, amount_total, amount_tax) {
