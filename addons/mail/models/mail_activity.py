@@ -10,7 +10,7 @@ from dateutil.relativedelta import MO, relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
-from odoo.tools import is_html_empty
+from odoo.tools import OrderedSet, is_html_empty
 from odoo.tools.misc import clean_context, get_lang, groupby
 from odoo.tools.translate import LazyTranslate
 from odoo.addons.base.models.ir_attachment import condition_values
@@ -344,7 +344,7 @@ class MailActivity(models.Model):
             for res_model, model_activities in new_user_activities.filtered(
                 lambda activity: activity.res_model and activity.res_id
             ).grouped('res_model').items():
-                res_ids = list(set(model_activities.mapped('res_id')))
+                res_ids = OrderedSet(id_ for id_ in model_activities.mapped('res_id') if id_)
                 self.env[res_model].browse(res_ids).message_subscribe(partner_ids=new_user.partner_id.ids)
 
         # update activity counter
