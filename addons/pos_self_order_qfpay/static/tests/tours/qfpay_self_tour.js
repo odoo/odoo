@@ -33,6 +33,7 @@ patch(QFPay.prototype, {
 registry.category("web_tour.tours").add("kiosk_qfpay_order", {
     steps: () => [
         Utils.clickBtn("Order Now"),
+        ProductPage.clickCategory("Chair Test"),
         ProductPage.clickProduct("Letter Tray"),
         Utils.clickBtn("Checkout"),
         Utils.clickBtn("Pay"),

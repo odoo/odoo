@@ -11,6 +11,7 @@ registry.category("web_tour.tours").add("kiosk_bancontact_pay_success", {
     steps: () =>
         [
             Utils.clickBtn("Order Now"),
+            ProductPage.clickCategory("Chair Test"),
             ProductPage.clickProduct("Letter Tray"),
             Utils.clickBtn("Checkout"),
             CartPage.checkProduct("Letter Tray", "5.28"),
@@ -28,6 +29,7 @@ registry.category("web_tour.tours").add("kiosk_bancontact_pay_failed", {
     steps: () =>
         [
             Utils.clickBtn("Order Now"),
+            ProductPage.clickCategory("Chair Test"),
             ProductPage.clickProduct("Letter Tray"),
             Utils.clickBtn("Checkout"),
             CartPage.checkProduct("Letter Tray", "5.28"),
@@ -53,6 +55,7 @@ registry.category("web_tour.tours").add("kiosk_bancontact_pay_failed_create_paym
         [
             BancontactPay.setupBancontactErrorHttp(memo),
             Utils.clickBtn("Order Now"),
+            ProductPage.clickCategory("Chair Test"),
             ProductPage.clickProduct("Letter Tray"),
             Utils.clickBtn("Checkout"),
             CartPage.checkProduct("Letter Tray", "5.28"),
