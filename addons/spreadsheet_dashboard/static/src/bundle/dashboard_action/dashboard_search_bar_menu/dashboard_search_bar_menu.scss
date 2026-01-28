@@ -1,0 +1,34 @@
+.o_favorite_item {
+        &:hover {
+            --show-on-hover: visible;
+        }
+
+        i {
+            visibility: var(--show-on-hover, hidden);
+        }
+    }
+
+.o_accordion_values .o_input {
+        max-width: 17ch;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+@include media-breakpoint-up(lg) {
+    .o_dropdown_container {
+        max-width: 250px;
+    }
+}
+
+.o_bottom_sheet .o_bottom_sheet_sheet{
+    .o_favorite_item.selected i {
+        visibility: visible;
+    }
+
+    .o_bottom_sheet_body:not(.o_custom_bottom_sheet) .dropdown-item{
+        --dropdown-item-padding-y: 4px;
+        &.selected::after{
+            right:40px;
+        }
+    }
+}

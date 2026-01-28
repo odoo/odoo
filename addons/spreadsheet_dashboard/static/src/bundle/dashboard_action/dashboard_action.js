@@ -94,25 +94,6 @@ export class SpreadsheetDashboardAction extends Component {
     }
 
     /**
-     * @returns {object[]}
-     */
-    get filters() {
-        const dashboard = this.loader.getActiveDashboard();
-        if (!dashboard || dashboard.status !== Status.Loaded) {
-            return [];
-        }
-        return dashboard.model.getters.getGlobalFilters();
-    }
-
-    setGlobalFilterValue(id, value, displayNames) {
-        this.loader.getActiveDashboard().model.dispatch("SET_GLOBAL_FILTER_VALUE", {
-            id,
-            value,
-            displayNames,
-        });
-    }
-
-    /**
      * @private
      * @returns {number | undefined}
      */

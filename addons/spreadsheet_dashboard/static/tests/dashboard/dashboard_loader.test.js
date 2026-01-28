@@ -1,7 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getCellValue } from "@spreadsheet/../tests/helpers/getters";
-import { makeSpreadsheetMockEnv } from "@spreadsheet/../tests/helpers/model";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import {
     defineSpreadsheetDashboardModels,
@@ -13,29 +12,9 @@ import {
 } from "@spreadsheet_dashboard/bundle/dashboard_action/dashboard_loader_service";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { RPCError } from "@web/core/network/rpc";
+import { createDashboardLoader } from "../helpers/dashboard_action";
 
 defineSpreadsheetDashboardModels();
-
-/**
- * @param {object} [params]
- * @param {object} [params.serverData]
- * @param {function} [params.mockRPC]
- * @returns {Promise<DashboardLoader>}
- */
-async function createDashboardLoader(params = {}) {
-    const env = await makeSpreadsheetMockEnv({
-        serverData: params.serverData || getDashboardServerData(),
-        mockRPC: params.mockRPC,
-    });
-    return new DashboardLoader(env, env.services.orm, async (dashboardId) => {
-        const [record] = await env.services.orm.read(
-            "spreadsheet.dashboard",
-            [dashboardId],
-            ["spreadsheet_data"]
-        );
-        return { data: JSON.parse(record.spreadsheet_data), revisions: [] };
-    });
-}
 
 test("load all dashboards of all containers", async () => {
     const loader = await createDashboardLoader();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="spreadsheet_dashboard.DashboardSearchBar">
-        <div class="o_sp_dashboard_search d-flex flex-wrap flex-lg-nowrap gap-1 gap-lg-2 w-100 w-lg-auto">
+        <div class="o_sp_dashboard_search d-flex flex-wrap flex-lg-nowrap gap-1 gap-lg-2 w-100 w-lg-auto" t-if="!searchModel.state.isLoading">
             <div class="d-flex flex-grow-1 input-group w-auto" t-if="visibilityState.showSearchBar" >
                 <Dropdown
                     state="inputDropdownState"
@@ -22,9 +22,9 @@
                         </button>
                         <div
                             class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1 mw-100">
-                            <t t-foreach="facets" t-as="facet" t-key="facet.id">
+                            <t t-foreach="searchModel.state.facets" t-as="facet" t-key="facet.id">
                                 <DashboardFacet facet="facet"
-                                    clearFilter="() => this.clearFilter(facet.id)"
+                                    clearFilter="() => searchModel.clearFilter(facet.id)"
                                     onClick.bind="openFilterValueDropdown" />
                             </t>
                             <input type="text"
@@ -46,21 +46,19 @@
 
                     </div>
                 </Dropdown>
-                <Dropdown menuClass="'pt-0 px-2'"
+                <Dropdown menuClass="'o_search_bar_menu py-3 mt-2'"
                     manual="true"
                     position="'bottom-end'"
-                    state="filtersValuesDropdown">
+                    state="searchBarDropdownMenu">
                     <button
                         class="o_searchview_dropdown_toggler btn btn-outline-secondary o-dropdown-caret rounded-start-0 o-dropdown dropdown-toggle dropdown"
                         t-on-click="toggleFilterValueDropdown" />
                     <t t-set-slot="content">
-                        <div class="p-2">
-                            <DashboardSearchBarMenu model="props.model" close.bind="closeFilterValueDropdown" />
-                        </div>
+                        <DashboardSearchBarMenu model="props.model" close.bind="closeFilterValueDropdown" />
                     </t>
                 </Dropdown>
             </div>
-            <div class="o_sp_date_filter_button d-flex" t-if="firstDateFilter">
+            <div class="o_sp_date_filter_button d-flex" t-if="searchModel.firstDateFilter">
                 <DashboardDateFilter value="firstDateFilterValue"
                                 update.bind="updateFirstDateFilter"
                                 model="this.props.model"/>

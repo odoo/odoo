@@ -1,39 +1,13 @@
 import { describe, expect, test, getFixture } from "@odoo/hoot";
-import { getBasicData } from "@spreadsheet/../tests/helpers/data";
 import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
 import {
     defineSpreadsheetDashboardModels,
-    getDashboardServerData,
+    getServerData,
 } from "@spreadsheet_dashboard/../tests/helpers/data";
 import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("mobile");
 defineSpreadsheetDashboardModels();
-
-function getServerData(spreadsheetData) {
-    const serverData = getDashboardServerData();
-    serverData.models = {
-        ...serverData.models,
-        ...getBasicData(),
-    };
-    serverData.models["spreadsheet.dashboard.group"].records = [
-        {
-            published_dashboard_ids: [789],
-            id: 1,
-            name: "Pivot",
-        },
-    ];
-    serverData.models["spreadsheet.dashboard"].records = [
-        {
-            id: 789,
-            name: "Spreadsheet with Pivot",
-            json_data: JSON.stringify(spreadsheetData),
-            spreadsheet_data: JSON.stringify(spreadsheetData),
-            dashboard_group_id: 1,
-        },
-    ];
-    return serverData;
-}
 
 test("Search input can be toggled", async () => {
     const productFilter = { id: "1", type: "relation", label: "Product", modelName: "product" };
