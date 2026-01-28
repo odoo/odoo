@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.NotificationAlert">
-        <div t-if="this.isNotificationBlocked" class="alert alert-primary text-center">
-            Odoo Push notifications have been blocked. Go to your browser settings to allow them.
+        <div t-if="this.isNotificationBlocked" class="alert alert-info text-center">
+            Push notifications are blocked. Enable them in your browser settings to stay updated when you're away.
+            <button class="btn btn-link p-0 align-baseline" t-on-click="this.openNotificationDialog">(?)</button>
         </div>
+    </t>
+
+    <t t-name="web.NotificationAlertDialog">
+        <Dialog title="''" size="'md'">
+            <div>
+                <!-- Space for Design Illustration -->
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="props.close">Got it</button>
+            </t>
+        </Dialog>
     </t>
 </templates>

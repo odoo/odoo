@@ -32,9 +32,9 @@ class ResUsers(models.Model):
         'Notification', required=True, default='email',
         compute='_compute_notification_type', inverse='_inverse_notification_type', store=True,
         user_writeable=True,
-        help="Policy on how to handle Chatter notifications:\n"
-             "- By Emails: notifications are sent to your email address\n"
-             "- In Odoo: notifications appear in your Odoo Inbox")
+        help="How notifications for document messages and system updates are delivered:\n"
+             "- By email: Notifications are sent to your email address.\n"
+             "- In Odoo: Notifications appear in your Odoo inbox.")
     presence_ids = fields.One2many("mail.presence", "user_id", groups="base.group_system")
     # OOO management
     out_of_office_from = fields.Datetime(user_writeable=True)

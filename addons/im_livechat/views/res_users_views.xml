@@ -10,11 +10,12 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='outgoing_mail_server_type']" position="after">
                     <field name="has_access_livechat" invisible="1"/>
-                    <field name="livechat_username" string="Live Chat Name" invisible="not has_access_livechat"/>
+                    <field name="livechat_username" string="Live Chat Name" invisible="not has_access_livechat" help="Nickname used in live chat conversations to protect your real name from visitors."/>
                     <field name="livechat_lang_ids" string="Spoken Languages"
                            options="{'no_create': True, 'no_edit': True, 'no_create_edit': True}"
                            widget="many2many_tags"
-                           invisible="not has_access_livechat"/>
+                           invisible="not has_access_livechat"
+                           help="Languages you can speak for live chat conversations."/>
                     <field name="livechat_expertise_ids" string="Expertise"
                            widget="many2many_tags"
                            options="{'no_create': True}"
@@ -31,11 +32,12 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='outgoing_mail_server_type']" position="after">
                     <field name="has_access_livechat" invisible="1"/>
-                    <field name="livechat_username" string="Live Chat Name" invisible="not has_access_livechat"/>
+                    <field name="livechat_username" string="Live Chat Name" invisible="not has_access_livechat" help="Nickname used in live chat conversations to protect your real name from visitors."/>
                     <field name="livechat_lang_ids" string="Spoken Languages"
                            options="{'no_create': True, 'no_edit': True}"
                            widget="many2many_tags"
-                           invisible="not has_access_livechat"/>
+                           invisible="not has_access_livechat"
+                           help="Languages you can speak for live chat conversations."/>
                     <field name="livechat_expertise_ids" string="Expertise"
                            widget="many2many_tags"
                            options="{'no_create': True}"
