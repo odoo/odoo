@@ -8,8 +8,9 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('o_address_format')]"  position="after">
+                    <field name="l10n_sa_is_vat_group_member" invisible="1"/>
                     <field name="l10n_sa_additional_identification_scheme" invisible="country_code != 'SA'"/>
-                    <field name="l10n_sa_additional_identification_number" invisible="country_code != 'SA' or l10n_sa_additional_identification_scheme == 'TIN'"/>
+                    <field name="l10n_sa_additional_identification_number" invisible="country_code != 'SA' or (l10n_sa_additional_identification_scheme == 'TIN' and not l10n_sa_is_vat_group_member)"/>
                 </xpath>
             </field>
         </record>

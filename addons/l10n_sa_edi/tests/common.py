@@ -40,7 +40,7 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'name': 'SA Company Test',
             'email': 'info@company.saexample.com',
             'phone': '+966 51 234 5678',
-            'vat': '311111111111113',
+            'vat': '311111111101113',
             # Address fields
             'street': 'Al Amir Mohammed Bin Abdul Aziz Street',
             'street2': 'Testomania',
@@ -88,7 +88,7 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'email': 'saudi.aramco@example.com',
             'phone': '+966556666666',
             # Tax info
-            'vat': '311111111111113',
+            'vat': '311111111101113',
             'l10n_sa_additional_identification_scheme': 'CRN',
             'l10n_sa_additional_identification_number': '353535353535353',
             # Address
