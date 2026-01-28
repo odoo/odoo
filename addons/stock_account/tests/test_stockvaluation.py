@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
+from datetime import date, timedelta
 from freezegun import freeze_time
 
 from odoo import Command
@@ -2250,6 +2250,58 @@ class TestStockValuation(TestStockValuationCommon):
         report_value_2 = report_for_company_2.get_report_values(docids=product.ids)
         self.assertEqual(report_value_1['docs']['value'], "U 50.00")
         self.assertEqual(report_value_2['docs']['value'], "48.00 DD")
+
+    @freeze_time("2024-01-10 10:00:00")
+    def test_product_qty_and_value_correct_at_to_date_with_timezone(self):
+        """
+        Ensure that qty_available, free_qty, avg_cost, and total_value are computed
+        correctly for products at a historical to_date, taking the user's timezone into account.
+        """
+        self.env.user.tz = 'Europe/Paris'
+        to_date = date(2024, 1, 10)
+
+        lot_product = self.env['product.product'].create([
+            {
+                'name': 'Product LOT',
+                'tracking': 'lot',
+                'categ_id': self.category_avco.id,
+                'is_storable': True,
+                'standard_price': 10.0,
+                'lot_valuated': True,
+            },
+        ])
+        lot = self.env['stock.lot'].create({
+            'name': 'lot',
+            'product_id': lot_product.id,
+        })
+
+        products = self.product_standard | self.product_avco | self.product_fifo | lot_product
+        for product in products:
+            self._make_in_move(
+                product=product,
+                quantity=10.0,
+                location_id=self.supplier_location.id,
+                location_dest_id=self.stock_location.id,
+                lot_ids=lot if product.tracking == 'lot' else self.env['stock.lot'],
+            )
+
+        expected_values = [
+            {
+                    'qty_available': 10.0,
+                    'free_qty': 10.0,
+                    'avg_cost': 10.0,
+                    'total_value': 100.0,
+            }
+            for _ in products
+        ]
+        self.assertRecordValues(
+            products.with_context(to_date=to_date),
+            expected_values,
+        )
+        self.assertRecordValues(
+            products.with_context(to_date="2024-01-10"),
+            expected_values,
+        )
 
     def test_stock_report_avco_warehouse_dependency(self):
         """ Create two warehouses and check that the total value and the on hand quantity
