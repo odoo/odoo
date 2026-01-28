@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-inherit="point_of_sale.PaymentScreenPaymentLines" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('electronic_payment')]" position="after">
-            <div t-if="line.payment_method_id.payment_method_type === 'glory_cash'" class="d-flex flex-column gap-3">
+            <div t-if="line.payment_method_id.use_payment_terminal === 'glory'" class="d-flex flex-column gap-3">
                 <t t-set="glory" t-value="line.payment_method_id.payment_terminal"/>
 
                 <div class="d-flex gap-2 mt-3 fs-4">

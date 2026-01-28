@@ -3,6 +3,7 @@ import { CancelDialog } from "@pos_glory_cash/app/components/cancel_dialog";
 import { GLORY_STATUS_STRING } from "@pos_glory_cash/utils/constants";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 import { GloryService } from "@pos_glory_cash/glory_service";
 
 const CONNECT_TIMEOUT_MS = 5000;
@@ -278,3 +279,5 @@ export class PaymentGlory extends PaymentInterface {
         });
     }
 }
+
+registry.category("electronic_payment_interfaces").add("glory", PaymentGlory);

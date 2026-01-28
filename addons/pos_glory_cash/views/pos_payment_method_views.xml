@@ -6,11 +6,11 @@
         <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="inside">
-                <notebook invisible="payment_method_type != 'glory_cash'">
+                <notebook invisible="use_payment_terminal != 'glory'">
                     <page name="settings" string="Glory Settings">
                         <group>
                             <group>
-                                <field name="glory_websocket_address" required="payment_method_type == 'glory_cash'"/>
+                                <field name="glory_websocket_address" required="use_payment_terminal == 'glory'"/>
                                 <field name="glory_username"/>
                                 <field name="glory_password" password="True"/>
                             </group>
