@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ctypes
-import datetime
 import logging
 from abc import abstractmethod, ABC
 from queue import Queue
@@ -159,7 +158,6 @@ class CtypesTerminalDriver(Driver, ABC):
         self.terminal_busy = False
 
         self._actions[''] = self._action_default
-        self.next_transaction_min_dt = datetime.datetime.min
 
         self.device_manufacturer = manufacturer
         self.device_name = f"{self.device_manufacturer} terminal {self.device_identifier}"
@@ -193,18 +191,6 @@ class CtypesTerminalDriver(Driver, ABC):
             elif action_type == 'Balance':
                 self.six_terminal_balance(action)  # Only for Worldline "Six" (TIM)
             self.terminal_busy = False
-
-    def _check_transaction_delay(self):
-        # After a payment has been processed, the display on the terminal still shows some
-        # information for about 4-5 seconds. No request can be processed during this period.
-        delay_diff = (self.next_transaction_min_dt - datetime.datetime.now()).total_seconds()
-        if delay_diff > 0:
-            if delay_diff > self.DELAY_TIME_BETWEEN_TRANSACTIONS:
-                # Theoretically not possible, but to avoid sleeping for ages, we cap the value
-                _logger.warning('%s: Transaction delay difference is too high %.2f force set as default', self.device_name, delay_diff)
-                delay_diff = self.DELAY_TIME_BETWEEN_TRANSACTIONS
-            _logger.info('%s: Previous transaction is too recent, will sleep for %.2f seconds', self.device_name, delay_diff)
-            sleep(delay_diff)
 
     def send_status(self, value='', response=False, stage=False, ticket=False, ticket_merchant=False, card=False, card_no=False, transaction_id=False, error=False, disconnected=False, request_data=False):
         self.data['status'] = 'success'  # always success: let service handle errors
@@ -241,7 +227,6 @@ class CtypesTerminalDriver(Driver, ABC):
             )
             return False
 
-        self._check_transaction_delay()  # Force wait before starting transaction if necessary
         self.send_status(stage='WaitingForCard', request_data=transaction)
         return True
 
@@ -261,12 +246,15 @@ class CtypesTerminalDriver(Driver, ABC):
         self._action_default({
             "messageType": "Transaction",
             "transactionType": "Payment",
+            "TransactionID": 1,
+            "actionIdentifier": 1,
             "amount": 1,
             "cid": 1,
             "posId": 1,
             "userId": 1,
             "currency": "EUR",
         })
+        sleep(1)
         self._action_default({
             "messageType": "Cancel",
             "cid": 2,

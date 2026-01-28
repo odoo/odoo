@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ctypes
-import datetime
 import logging
 
 from odoo.addons.iot_drivers.tools.system import IS_RPI
@@ -63,7 +62,6 @@ class WorldlineDriver(CtypesTerminalDriver):
                 card,  # char* card
                 error_code,  # char* error
             )
-            self.next_transaction_min_dt = datetime.datetime.now() + datetime.timedelta(seconds=self.DELAY_TIME_BETWEEN_TRANSACTIONS)
 
             if result == 1:
                 # Transaction successful
@@ -85,7 +83,7 @@ class WorldlineDriver(CtypesTerminalDriver):
                     return self.send_status(error=error_msg, request_data=transaction)
                 # Transaction was cancelled
                 else:
-                    _logger.info("transaction #%d cancelled by PoS user", transaction_id)
+                    _logger.info("transaction #%d cancelled by Odoo user", transaction_id)
                     return self.send_status(stage='Cancel', request_data=transaction)
             elif result == -1:
                 # Terminal disconnection, check status manually
@@ -101,9 +99,10 @@ class WorldlineDriver(CtypesTerminalDriver):
             )
 
     def cancel_transaction(self, transaction):
-        # Force to wait before starting the transaction if necessary
-        self._check_transaction_delay()
-        self.send_status(stage='waitingCancel', request_data=transaction)
+        # Ignore cancel request if no transaction is running
+        if self.data['result']['Stage'] != 'WaitingForCard':
+            _logger.warning("Cancel request ignored because no transaction is running to avoid crashes")
+            return
 
         error_code = create_ctypes_string_buffer()
         _logger.info("cancel transaction request for: %s", transaction)
