@@ -12,6 +12,7 @@ import {
     getModelName,
 } from "./utils";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+import { _t } from "@web/core/l10n/translation";
 
 const { DateTime } = luxon;
 
@@ -159,6 +160,28 @@ export class FormFieldOption extends BaseOptionComponent {
                 dependencyEl.nodeName === "TEXTAREA") &&
             !["set", "!set"].includes(el.dataset.visibilityComparator)
         );
+    }
+    /**
+     * Computes the configuration for the builder list input field used
+     * for validation based on the type of the current field input.
+     *
+     * @returns {Object} An object containing the title and default
+     * value for the builder list.
+     */
+    get multiTextRequirementConfig() {
+        const el = this.env.getEditingElement();
+        const isDomainComparator = el.dataset.requirementComparator === "domain";
+        const isEmail = el.dataset.type === "email";
+        let title = _t("Enter words");
+        if (isDomainComparator) {
+            title = _t("Enter email domains (e.g., gmail.com)");
+        } else if (isEmail) {
+            title = _t("Enter words for local part of the email");
+        }
+        return {
+            title,
+            defaultValue: isDomainComparator ? "example.com" : _t("example"),
+        };
     }
     /**
      * Determines the visibility of the builder list input field used for

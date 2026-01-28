@@ -280,6 +280,7 @@
             <BuilderSelectItem id="'no_requirement_opt'" dataAttributeActionValue="''">None</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'substring'">Contains</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'!substring'">Doesn't contain</BuilderSelectItem>
+            <BuilderSelectItem t-if="domStateCurrentFieldInput.type === 'email'" dataAttributeActionValue="'domain'">Matches domain</BuilderSelectItem>
         </BuilderSelect>
         <BuilderSelect id="'require_condition_num_opt'"
                 t-elif="this.domStateCurrentFieldInput.type === 'number'"
@@ -349,14 +350,15 @@
     <BuilderRow t-if="this.isMultipleTextConditionForRequirementOptionVisible">
         <div class="d-flex flex-column w-100">
             <p class="hb-row-label mb-0 flex-basis-auto">
-                Enter words
+                <t t-out="this.multiTextRequirementConfig.title"/>
             </p>
             <BuilderList
                 dataAttributeAction="'requirementCondition'"
                 action="'setDefaultErrorMessage'"
                 addItemTitle.translate="Add"
                 itemShape="{ requirement_text: 'text'}"
-                defaultNewValue="{ requirement_text: 'example' }"
+                defaultNewValue="{ requirement_text: this.multiTextRequirementConfig.defaultValue }"
+                sortable="false"
             />
         </div>
     </BuilderRow>
