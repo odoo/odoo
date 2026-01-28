@@ -26,6 +26,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch employee (_compute_im_status hr_homeworking override)
     #       - fetch res_users (_read_format)
     #       - fetch hr_employee (user)
+    #   1: public holiday:
+    #       - read_group resource_calendar_leaves (_compute_on_public_leave)
     #   5: settings:
     #       - search res_users_settings (_find_or_create_for_user)
     #       - fetch res_users_settings (_format_settings)
@@ -36,7 +38,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: hasCannedResponses
     #       - fetch res_groups_users_rel
     #       - search mail_canned_response
-    _query_count_init_store = 19
+    _query_count_init_store = 20
     # Queries for _query_count_init_messaging (in order):
     #   1: insert res_device_log
     #   3: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
@@ -52,7 +54,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: _init_messaging_global_fields (mail)
     #       - _get_needaction_count (inbox counter)
     #       - search mail_message (starred counter)
-    #   23: _process_request_for_all (discuss):
+    #   24: _process_request_for_all (discuss):
     #       - search discuss_channel (channels_domain)
     #       22: store add channel:
     #           - read group member (prefetch _compute_self_member_id from _compute_is_member)
@@ -73,13 +75,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #                   - search hr_employee (user override)
     #                   - search hr_leave (leave_date_to)
     #                   - fetch res_users (_compute_main_user_id)
+    #                   - read_group resource_calendar_leaves (_compute_on_public_leave)
     #           - search bus_bus (_bus_last_id)
     #           - count discuss_channel_member (member_count)
     #           - _compute_message_needaction
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - search_fetch ir_attachment (_compute_avatar_cache_key -> _compute_avatar_128)
     #           - fetch res_groups (group_public_id)
-    _query_count_init_messaging = 34
+    _query_count_init_messaging = 35
     # Queries for _query_count_discuss_channels (in order):
     #   1: insert res_device_log
     #   3: _search_is_member (for current user, first occurence channels_as_member)
@@ -89,7 +92,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: channels_as_member
     #       - search_fetch channel (channels)
     #       - search_count member (has_unpinned_channels)
-    #   34: store add channel:
+    #   35: store add channel:
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
@@ -114,6 +117,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #               - fetch res_users_settings (livechat username)
     #               - fetch res_users (_compute_main_user_id)
     #               - fetch res_country (livechat override)
+    #               - read_group resource_calendar_leaves (_compute_on_public_leave)
     #           2: guest:
     #               - fetch mail_presence (_compute_im_status)
     #               - fetch mail_guest
@@ -151,7 +155,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search user (author)
     #       - fetch user (author)
     #       - fetch discuss_call_history
-    _query_count_discuss_channels = 63
+    _query_count_discuss_channels = 64
 
     def setUp(self):
         super().setUp()

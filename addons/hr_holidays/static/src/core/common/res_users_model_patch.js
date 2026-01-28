@@ -8,6 +8,8 @@ const resUsersPatch = {
         super.setup(...arguments);
         /** @type {string} */
         this.leave_date_to = undefined;
+        /** @type {boolean} */
+        this.on_public_leave = undefined;
     },
 };
 patch(ResUsers.prototype, resUsersPatch);

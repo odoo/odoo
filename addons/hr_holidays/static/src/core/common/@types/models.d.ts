@@ -4,5 +4,6 @@ declare module "models" {
     }
     export interface ResUsers {
         leave_date_to: string;
+        on_public_leave: boolean;
     }
 }

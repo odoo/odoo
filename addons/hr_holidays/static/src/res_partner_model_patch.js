@@ -21,7 +21,9 @@ patch(ResPartner.prototype, {
     get outOfOfficeDateEndText() {
         const employee_id = this.employee_id || this.main_user_id?.employee_id;
         if (!employee_id?.leave_date_to) {
-            return "";
+            return this.main_user_id?.on_public_leave && this.notEq(this.store.odoobot)
+                ? _t("Out of office due to public holiday")
+                : "";
         }
         return getOutOfOfficeDateEndText(employee_id.leave_date_to);
     },
