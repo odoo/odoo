@@ -256,6 +256,43 @@ test("Assign & Delete on fields with inverses", async () => {
     expect(thread.messages).toBeEmpty();
 });
 
+test("Assign & Delete on _inherits fields", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        channel = fields.One("Channel", { inverse: "thread" });
+        pluriChannels = fields.Many("PluriChannel", { inverse: "thread" });
+    }).register(localRegistry);
+    (class Channel extends Record {
+        static id = "id";
+        static _inherits = { Thread: "thread" };
+        id;
+        thread = fields.One("Thread", { inverse: "channel" });
+    }).register(localRegistry);
+    (class PluriChannel extends Record {
+        static id = "id";
+        static _inherits = { Thread: "thread" };
+        id;
+        thread = fields.One("Thread", { inverse: "pluriChannels" });
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    const channel = store.Channel.insert({ id: 1, thread: thread });
+    const [pluriChannel1, pluriChannel2] = store.PluriChannel.insert([
+        { id: 1, thread },
+        { id: 2, thread },
+    ]);
+    expectRecord(channel).toEqual(thread.channel);
+    expectRecord(pluriChannel1).toBeIn(thread.pluriChannels);
+    expectRecord(pluriChannel2).toBeIn(thread.pluriChannels);
+    thread.delete();
+    expect(thread.pluriChannels).toBeEmpty();
+    expect(pluriChannel1.exists()).toBe(false);
+    expect(pluriChannel2.exists()).toBe(false);
+    expect(Boolean(thread.channel)).toBe(false);
+    expect(channel.exists()).toBe(false);
+});
+
 test("onAdd/onDelete hooks on relational with inverse", async () => {
     let logs = [];
     (class Thread extends Record {
