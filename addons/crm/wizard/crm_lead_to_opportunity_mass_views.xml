@@ -4,39 +4,39 @@
         <field name="name">crm.lead2opportunity.partner.mass.form</field>
         <field name="model">crm.lead2opportunity.partner.mass</field>
         <field name="arch" type="xml">
-            <!--The info bar should cover the entire dialog, requiring a negative margin.
-            This causes a horizontal scrollbar to appear without 'overflow-x: hidden'-->
-            <form string="Convert to Opportunity" style="overflow-x: hidden">
+            <form string="Convert to Opportunities">
                 <div class="alert alert-info" role="alert" invisible="not duplicated_lead_ids">
-                    <field name="lead_count_message" readonly="1"/>
+                    <field name="lead_count_message"/>
                 </div>
                 <field name="lead_tomerge_ids" invisible="1"/>
                 <group invisible="not duplicated_lead_ids">
                     <field name="name" class="oe_inline" widget="selection_badge" nolabel="1"/>
                 </group>
                 <group>
-                    <group string="Assign these opportunities to" invisible="name == 'convert_and_deduplicate'">
-                        <field name="user_ids" widget="many2many_avatar_user" domain="[('share', '=', False)]"/>
-                        <field name="team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
+                    <group string="Assign these opportunities to" invisible="name == 'deduplicate'">
+                        <field name="user_ids" widget="many2many_avatar_user" domain="[('share', '=', False)]" placeholder="Keep current users"/>
+                        <field name="team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}" placeholder="Keep current teams"/>
                         <field name="force_assignment" invisible="not team_id and not user_ids"/>
                     </group>
-                    <group string="Customers" invisible="name == 'convert_and_deduplicate'" col="1">
+                    <group string="Customers" invisible="name == 'deduplicate'" col="1">
                             <field name="action" widget="radio" nolabel="1" colspan="2"/>
                             <field name="partner_id"
                                 widget="res_partner_many2one"
                                 invisible="action != 'exist'"
                                 required="action == 'exist'"
-                                context="{'show_vat': True }"/>
+                                context="{'show_vat': True }"
+                                placeholder="Select a Customer"
+                            />
                     </group>
                 </group>
                 <notebook>
                     <page string="Duplicate leads" invisible="name == 'convert'">
                         <group>
-                            <field name="duplicated_lead_ids" nolabel="1" readonly="1">
+                            <field name="found_duplicates_ids" nolabel="1">
                                 <list create="false" delete="false">
                                     <field name="create_date"/>
-                                    <field name="name"/>
-                                    <field name="type" optional="hide"/>
+                                    <field name="name" string="Title"/>
+                                    <field name="type" optional="show"/>
                                     <field name="contact_name" optional="show"/>
                                     <field name="country_id" column_invisible="context.get('invisible_country', True)" options="{'no_open': True, 'no_create': True}"/>
                                     <field name="email_from" optional="show"/>
@@ -50,7 +50,8 @@
                 </notebook>
 
                 <footer>
-                    <button string="Convert" name="action_mass_convert" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Convert" name="action_apply" invisible="name == 'deduplicate'" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Deduplicate" name="action_apply" invisible="name != 'deduplicate'" type="object" class="btn-primary" data-hotkey="q"/>
                     <button class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
@@ -66,5 +67,14 @@
         <field name="context">{'dialog_size' : 'large'}</field>
         <field name="binding_model_id" ref="model_crm_lead"/>
         <field name="binding_view_types">list,kanban</field>
+    </record>
+
+    <record id="action_crm_lead2opportunity_mass_convert" model="ir.actions.act_window">
+        <field name="name">Convert to opportunities</field>
+        <field name="res_model">crm.lead2opportunity.partner.mass</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_crm_lead2opportunity_partner_mass"/>
+        <field name="target">new</field>
+        <field name="context">{'dialog_size' : 'large'}</field>
     </record>
 </odoo>

@@ -1320,15 +1320,7 @@ class CrmLead(models.Model):
 
     def action_convert_to_opportunity(self):
         self.ensure_one()
-        wizard = (self.env['crm.lead2opportunity.partner'].with_context(
-            active_ids=self.ids,
-            active_id=self.id
-        ).create([{
-            'action': 'create',
-            'lead_id': self.id,
-        }]))
-
-        return wizard.action_apply()
+        self.convert_opportunity(self.partner_id.id)
 
     # ------------------------------------------------------------
     # VIEWS

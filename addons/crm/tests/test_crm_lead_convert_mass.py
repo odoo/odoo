@@ -70,7 +70,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
             'active_ids': self.leads.ids,
             'active_id': self.leads.ids[0]
         }).create({
-            'user_id': self.user_sales_salesman.id,
+            'user_ids': [self.user_sales_salesman.id],
             'force_assignment': False,
         })
 
@@ -82,7 +82,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         self.assertEqual(mass_convert.user_id, self.user_sales_salesman)
         self.assertEqual(mass_convert.team_id, self.sales_team_convert)
 
-        mass_convert.action_mass_convert()
+        mass_convert.action_apply()
         for lead in self.lead_1 | self.lead_w_partner:
             self.assertEqual(lead.type, 'opportunity')
             if lead == self.lead_w_partner:
@@ -98,7 +98,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         mass_convert.write({
             'user_ids': self.user_sales_salesman.ids,
         })
-        mass_convert.action_mass_convert()
+        mass_convert.action_apply()
         self.assertEqual(self.lead_w_partner.user_id, self.user_sales_salesman)
         self.assertEqual(self.lead_1.user_id, self.user_sales_leads)  # existing value not forced
 
@@ -132,7 +132,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         self.assertEqual(mass_convert.lead_tomerge_ids, self.leads)
         self.assertEqual(mass_convert.duplicated_lead_ids, self.lead_1 | self.lead_w_partner)
 
-        mass_convert.action_mass_convert()
+        mass_convert.action_apply()
 
         self.assertEqual(
             (lead_1_dups | lead_w_partner_dups | lead_w_partner_dups_partner).exists(),
@@ -161,9 +161,32 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
             'action': 'create',
             'name': 'convert_and_deduplicate',
         })
-        mass_convert.action_mass_convert()
+        mass_convert.action_apply()
 
         self.assertNotEqual(lead.partner_id, wrong_partner, "Partner Id should not match the wrong contact")
+
+    @users('user_sales_manager')
+    def test_mass_convert_assign_to_specific_customer(self):
+        partner = self.env['res.partner'].create({
+            'name': 'Asa Depape'
+        })
+
+        mass_convert = self.env['crm.lead2opportunity.partner.mass'].with_context({
+            'active_model': 'crm.lead',
+            'active_ids': self.leads.ids,
+            'active_id': self.leads.ids[0],
+        }).create({
+            'name': 'convert',
+            'action': 'exist',
+            'partner_id': partner.id
+        })
+
+        mass_convert.action_apply()
+
+        for lead in self.leads - self.lead_w_email_lost:
+            self.assertEqual(lead.partner_id, partner, "Partner ID should match the selected partner")
+            self.assertEqual(lead.type, 'opportunity')
+
 
     @users('user_sales_manager')
     def test_mass_convert_do_not_link_partner(self):
@@ -188,7 +211,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
             'name': 'convert',
         })
 
-        mass_convert.action_mass_convert()
+        mass_convert.action_apply()
 
         self.assertFalse(lead.partner_id, "No partner should be linked when using 'do_not_link'")
         self.assertEqual(lead.type, 'opportunity')
@@ -208,9 +231,9 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
                 'user_ids': user_ids,
                 'force_assignment': True,
             })
-            mass_convert.action_mass_convert()
+            mass_convert.action_apply()
 
-        self.assertEqual(set(test_leads.mapped('type')), set(['opportunity']))
+        self.assertEqual(set(test_leads.mapped('type')), {'opportunity'})
         self.assertEqual(len(test_leads.partner_id), len(test_leads))
         # TDE FIXME: strange
         # self.assertEqual(test_leads.team_id, self.sales_team_convert | self.sales_team_1)
@@ -236,7 +259,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         })
 
         # TDE FIXME: what happens if we mix people from different sales team ? currently nothing, to check
-        mass_convert.action_mass_convert()
+        mass_convert.action_apply()
 
         for idx, lead in enumerate(self.leads - self.lead_w_email_lost):
             self.assertEqual(lead.type, 'opportunity')
@@ -254,7 +277,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
             'name': 'convert_and_deduplicate'
         })
 
-        mass_convert.action_mass_convert()
+        mass_convert.action_apply()
 
         remaining_leads = (self.lead_1 + lead_1_dups).exists()
         self.assertEqual(len(remaining_leads), 1)
