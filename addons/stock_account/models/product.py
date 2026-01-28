@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import pytz
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Domain
@@ -145,12 +147,15 @@ class ProductProduct(models.Model):
 
         for product in self:
             at_date = fields.Datetime.to_datetime(product.env.context.get('to_date'))
+            ctx_product = product
             if at_date:
-                at_date = at_date.replace(hour=23, minute=59, second=59)
-                product = product.with_context(at_date=at_date)
-            valuated_product = product.sudo(False)._with_valuation_context()
+                at_date = fields.Datetime.context_timestamp(self, at_date)
+                at_date = at_date.replace(hour=23, minute=59, second=59).astimezone(pytz.UTC).replace(tzinfo=None)
+                ctx_product = product.with_context(at_date=at_date, to_date=at_date)
+            valuated_product = ctx_product.sudo(False)._with_valuation_context()
             qty_valued = valuated_product.qty_available
             qty_available = valuated_product.with_context(warehouse_id=False).qty_available if self.env.context.get('warehouse_id') else qty_valued
+            product.with_context(skip_qty_available_update=True).write({'qty_available': valuated_product.qty_available})
             if product.lot_valuated:
                 product.total_value = product._get_value_from_lots()
             elif product.uom_id.is_zero(qty_valued):

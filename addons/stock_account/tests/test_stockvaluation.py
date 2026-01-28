@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 from freezegun import freeze_time
 
 from odoo import Command
@@ -2262,6 +2262,55 @@ class TestStockValuation(TestStockValuationCommon):
         report_value_2 = report_for_company_2.get_report_values(docids=product.ids)
         self.assertEqual(report_value_1['docs']['value'], "U 50.00")
         self.assertEqual(report_value_2['docs']['value'], "48.00 DD")
+
+    @freeze_time("2024-01-10 10:00:00")
+    def test_product_qty_and_value_correct_at_to_date_with_timezone(self):
+        """
+        Ensure that qty_available, free_qty, avg_cost, and total_value are computed
+        correctly for products at a historical to_date, taking the user's timezone into account.
+        """
+        self.env.user.tz = 'Europe/Paris'
+        to_date = datetime(2024, 1, 9, 23, 0, 0)
+
+        products = self.env['product.product'].create([
+            {
+                'name': f'Product {n}',
+                'valuation': valuation,
+                'is_storable': True,
+                'tracking': tracking,
+                'standard_price': 5.0,
+                'categ_id': categ.id,
+            } for n, categ, valuation, tracking in [
+                ('AVCO', self.category_avco, 'real_time', 'none'),
+                ('FIFO', self.category_fifo, 'real_time', 'none'),
+                ('LOT', self.category_avco, 'real_time', 'lot'),
+            ]
+        ])
+        lot = self.env['stock.lot'].create({
+            'product_id': products[2].id,
+            'name': 'LOT-001',
+        })
+        self.env['stock.quant'].create([
+            {
+                'product_id': product.id,
+                'location_id': self.env.ref('stock.stock_location_stock').id,
+                'quantity': 10.0,
+                'lot_id': lot.id if product.tracking == 'lot' else None,
+            }
+            for product in products
+        ])
+
+        self.assertRecordValues(
+            products.with_context(to_date=to_date),
+            [
+                {
+                    'qty_available': 10.0,
+                    'free_qty': 10.0,
+                    'avg_cost': 5.0,
+                    'total_value': 50.0,
+                } for _ in products
+            ],
+        )
 
     def test_stock_report_avco_warehouse_dependency(self):
         """
