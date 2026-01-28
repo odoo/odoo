@@ -328,7 +328,7 @@ class TestAPI(SavepointCaseWithUserDemo):
                 process(model, field, field_cache)
 
         if invalids:
-            self.fail("Invalid cache: %s", pformat(invalids))
+            self.fail("Invalid cache: %s" % pformat(invalids))
 
     @mute_logger('odoo.models')
     def test_60_prefetch(self):
