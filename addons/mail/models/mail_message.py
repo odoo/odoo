@@ -1283,6 +1283,20 @@ class MailMessage(models.Model):
             return self.env["ir.attachment"]._get_store_ownership_fields()
         return []
 
+    def _get_store_inbox_fields(self):
+        # sudo: bus.bus: reading non-sensitive last id
+        bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
+        return [
+            Store.One(
+                "thread",
+                [
+                    Store.Attr("message_needaction_counter"),
+                    Store.Attr("message_needaction_counter_bus_id", bus_last_id),
+                ],
+                as_thread=True,
+            ),
+        ]
+
     def _get_store_linked_messages_fields(self):
         """Add the messages that are referenced by the current message's body to the given store.
         This method should only return message data that are not sensitive to be broadcasted to
