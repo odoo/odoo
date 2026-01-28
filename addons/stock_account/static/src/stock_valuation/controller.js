@@ -1,6 +1,6 @@
 import { reactive } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
-import { serializeDateTime } from "@web/core/l10n/dates";
+import { serializeDate } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
 
 
@@ -68,7 +68,7 @@ export class StockValuationReportController {
 
     async setDate(date) {
         this.state.date = date;
-        this.dateAsString = serializeDateTime(date);
+        this.dateAsString = serializeDate(date);
         await this.loadReportData();
     }
 
