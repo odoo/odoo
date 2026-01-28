@@ -223,6 +223,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_results", {
     ],
 });
 registry.category("web_tour.tours").add("website_form_contactus_submit", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     url: "/contactus",
     steps: () => [
         // As the demo portal user, only two inputs needs to be filled to send

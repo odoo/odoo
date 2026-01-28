@@ -7,6 +7,7 @@ import {
 registerWebsitePreviewTour(
     "blog_context_and_social_media",
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         url: "/blog",
     },
     () => [

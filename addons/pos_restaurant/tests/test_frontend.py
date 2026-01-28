@@ -345,7 +345,7 @@ class TestFrontend(TestFrontendCommon):
 
     def test_14_change_synced_order(self):
         self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('OrderChange')
+        self.start_pos_tour('OrderChangeTour')
 
     def test_13_crm_team(self):
         if self.env['ir.module.module']._get('pos_sale').state != 'installed':

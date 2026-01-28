@@ -9,6 +9,9 @@ import {
 registerWebsitePreviewTour(
     "snippet_countdown",
     {
+        // Remove this key to get warning should not have any "characterData", "remove"
+        // or "add" mutations in current step when you update the selection
+        undeterministicTour_doNotCopy: true,
         url: "/",
         edition: true,
     },

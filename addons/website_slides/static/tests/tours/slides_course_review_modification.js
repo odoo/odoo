@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("course_review_modification", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     url: "/slides",
     steps: () => [
         {
@@ -249,6 +250,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
 });
 
 registry.category("web_tour.tours").add("course_review_modification_by_admin", {
+    undeterministicTour_doNotCopy: true,
     url: "/slides",
     steps: () => [
         {

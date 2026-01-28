@@ -19,7 +19,7 @@ class TestUi(HttpCaseGamification):
         })
 
     def test_01_admin_forum_tour(self):
-        self.start_tour("/", 'question', login="admin")
+        self.start_tour("/", 'question_tour', login="admin")
 
     def test_02_demo_question(self):
         forum = self.env.ref('website_forum.forum_help')

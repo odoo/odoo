@@ -436,6 +436,7 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
 });
 
 registry.category("web_tour.tours").add("test_form_view_model_id", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             trigger: ".o_field_widget[name='model_id'] input",
@@ -506,6 +507,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
 });
 
 registry.category("web_tour.tours").add("test_form_view_custom_reference_field", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             trigger: ".o_field_widget[name='model_id'] input",
@@ -573,6 +575,7 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
 });
 
 registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             trigger: ".o_field_widget[name='model_id'] input",

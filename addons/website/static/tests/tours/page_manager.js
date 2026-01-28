@@ -221,6 +221,7 @@ const duplicateMultiplePage = [
 registerWebsitePreviewTour(
     "website_page_manager",
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         url: "/",
     },
     () => [
@@ -272,6 +273,7 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_page_manager_session_forced",
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         url: "/",
     },
     () => [
@@ -298,6 +300,7 @@ registerWebsitePreviewTour(
 
 registry.category("web_tour.tours").add("website_page_manager_direct_access", {
     url: "/odoo/action-website.action_website_pages_list",
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             content: "Check that the homepage is the one of Test Website",
@@ -312,6 +315,7 @@ registry.category("web_tour.tours").add("website_page_manager_direct_access", {
 registerWebsitePreviewTour(
     "website_clone_pages",
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         url: "/",
     },
     () => [

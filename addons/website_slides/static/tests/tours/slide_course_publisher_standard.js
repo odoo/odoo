@@ -14,6 +14,7 @@ import {
 registerWebsitePreviewTour(
     "course_publisher_standard",
     {
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         url: "/slides",
     },
     () =>

@@ -15,6 +15,7 @@ import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("SplitBillScreenTour", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -104,6 +105,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTourPay", {
 });
 
 registry.category("web_tour.tours").add("SplitBillScreenTour2", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -294,6 +296,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour5Actions", {
 });
 
 registry.category("web_tour.tours").add("SplitBillScreenTourTransfer", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),

@@ -191,6 +191,9 @@ const ensureEnSite = {
 registerWebsitePreviewTour(
     "translation_single_language_fr_user_fr_site",
     {
+        // Remove this key to get warning should not have any "characterData", "remove"
+        // or "add" mutations in current step when you update the selection
+        undeterministicTour_doNotCopy: true,
         url: "/",
     },
     () => [ensureFrUser, ensureFrSite, ...singleLanguage()]
@@ -199,6 +202,9 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "translation_single_language_en_user_fr_site",
     {
+        // Remove this key to get warning should not have any "characterData", "remove"
+        // or "add" mutations in current step when you update the selection
+        undeterministicTour_doNotCopy: true,
         url: "/",
     },
     () => [ensureEnUser, ensureFrSite, ...singleLanguage()]
@@ -207,6 +213,9 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "translation_single_language_fr_user_en_site",
     {
+        // Remove this key to get warning should not have any "characterData", "remove"
+        // or "add" mutations in current step when you update the selection
+        undeterministicTour_doNotCopy: true,
         url: "/",
     },
     () => [ensureFrUser, ensureEnSite, ...singleLanguage()]
@@ -459,6 +468,7 @@ registerWebsitePreviewTour(
     "translation_multi_language_fr_user_fr_en_site",
     {
         url: "/fr",
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     },
     () => [ensureFrUser, ensureFrSite, ...multiLanguage("fr", "en")]
 );
@@ -467,6 +477,7 @@ registerWebsitePreviewTour(
     "translation_multi_language_fr_user_en_fr_site",
     {
         url: "/en",
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     },
     () => [ensureFrUser, ensureEnSite, ...multiLanguage("en", "fr")]
 );
@@ -475,6 +486,7 @@ registerWebsitePreviewTour(
     "translation_multi_language_en_user_fr_en_site",
     {
         url: "/fr",
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     },
     () => [ensureEnUser, ensureFrSite, ...multiLanguage("fr", "en")]
 );
@@ -483,6 +495,7 @@ registerWebsitePreviewTour(
     "translation_multi_language_en_user_en_fr_site",
     {
         url: "/en",
+        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     },
     () => [ensureEnUser, ensureEnSite, ...multiLanguage("en", "fr")]
 );

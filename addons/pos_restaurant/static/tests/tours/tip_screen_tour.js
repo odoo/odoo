@@ -13,6 +13,7 @@ import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosResTipScreenTour", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             // Create order that is synced when draft.
@@ -166,6 +167,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
 });
 
 registry.category("web_tour.tours").add("test_edit_payments_with_tip", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
@@ -230,6 +232,7 @@ registry.category("web_tour.tours").add("test_edit_payments_with_tip", {
 });
 
 registry.category("web_tour.tours").add("test_tip_after_payment", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
